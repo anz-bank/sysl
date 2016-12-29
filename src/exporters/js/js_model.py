@@ -1,3 +1,6 @@
+#!/usr/local/bin/python
+# -*- encoding: utf-8 -*-
+
 # Copyright 2016 The Sysl Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,9 +14,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License."""Super smart code writer."""
-
-#!/usr/local/bin/python
-# -*- encoding: utf-8 -*-
 
 '''Generate JavaScript encoding of model.'''
 
