@@ -1,5 +1,7 @@
 # Sysl
 
+[![Build Status][travis-img]][travis-url]
+
 Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
 can specify systems, endpoints, endpoint behaviour, data models and data
 transformations. The Sysl compiler automatically generates sequence diagrams,
@@ -27,3 +29,6 @@ TODO
 Sysl is currently targeted at early adopters. It is usable in anger, but has a
 ways to go in terms of usability, especially on the documentation front (as can
 be seen above).
+
+[travis-img]: https://travis-ci.org/orlade/Sysl.svg?branch=master
+[travis-url]: https://travis-ci.org/orlade/Sysl
