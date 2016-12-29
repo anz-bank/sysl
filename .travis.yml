@@ -27,6 +27,8 @@ addons:
       - bc
       - ed
 
+install: pip install -r requirements.txt
+
 matrix:
   include:
     - os: linux
