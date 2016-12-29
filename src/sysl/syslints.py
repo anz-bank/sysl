@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+
 # Copyright 2016 The Sysl Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License."""Super smart code writer."""
 
-#!/usr/bin/env python
-# -*-: encoding: utf-8 -*-
 """Generate integration views from sysl modules."""
 
 import itertools
