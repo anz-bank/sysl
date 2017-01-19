@@ -1,0 +1,7 @@
+TestSimpleTypeModel [package="io.sysl.test.data"]:
+
+    !type TopLevelType:
+        field1 <: SecondLevelType?
+
+    !type SecondLevelType:
+        field1 <: string

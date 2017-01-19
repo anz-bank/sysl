@@ -1,0 +1,14 @@
+Test EPA :: Integrations [title="%(epname)", appfmt="**%(appname)**", epfmt="%(@test_epa?//«%(@test_epa)»//**%(patterns? %(patterns~/\btba|tbd\b/?<color red>%(patterns)</color>|<color green>%(patterns)</color>)| <color red>pattern?</color>)**\n|%(needs_int?<color red>(missing INT%)</color>\n))%(epname)%(args?\n(%(args)%))"]:
+    Integration1:
+        Test EPA :: App2
+
+Test EPA :: App1:
+    App1 Input Method 1
+
+Test EPA :: App2:
+    App2 Input Method 1:
+        Test EPA :: App1 <- App1 Input Method 1
+
+Test EPA :: App2:
+    .. * <- *:
+        Test EPA :: App1 <- App1 Input Method 1 [test_epa='INT-001']

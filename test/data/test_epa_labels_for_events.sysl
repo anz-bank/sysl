@@ -1,0 +1,16 @@
+Test EPA :: Events [title="%(epname)", appfmt="**%(appname)**", epfmt="%(@test_epa?//<color green>**«%(@test_epa)»**</color>//\n|%(needs_int?<color red>(missing INT%)</color>\n))%(epname)%(args?\n(%(args)%))"]:
+    Event1:
+        Test EPA :: App1
+
+Test EPA :: App1:
+    Trigger:
+        . <- App1 Event
+
+    <-> App1 Event: ...   
+
+Test EPA :: App2:
+    Test EPA :: App1 -> App1 Event: ...
+
+Test EPA :: App1:
+    .. * <- *:
+         Test EPA :: App2 <- Test EPA :: App1 -> App1 Event [test_epa='INT-001']
