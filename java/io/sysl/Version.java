@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.package io.sysl;
 
+package io.sysl;
+
 public @interface Version {
     String value();
 }

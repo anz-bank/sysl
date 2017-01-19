@@ -73,7 +73,7 @@ def sysl_model(
       [outpath + e + ".java" for e in entities]
     ),
     deps = [
-      "//java/io/sysl",
+      "//external:sysl_io_java",
       "@org_apache_commons_commons_lang3//jar",
       "@com_fasterxml_jackson_core_jackson_core//jar",
       "@com_fasterxml_jackson_core_jackson_databind//jar",
@@ -104,9 +104,9 @@ def sysl_facade(name, srcs, root, module, app, model, package,
     package = package,
     outs = [prefix + ".java"] + serializer_files,
     deps = [
-      "//java/io/sysl",
       "@com_fasterxml_jackson_core_jackson_core//jar",
       "@com_fasterxml_jackson_core_jackson_databind//jar",
+      "//external:sysl_io_java",
       "@joda_time_joda_time//jar",
       "@org_apache_commons_commons_lang3//jar",
       model
@@ -170,7 +170,10 @@ def sysl_spring_rest_service(name, srcs, root, module, app, package,
       outpath + app + "Controller.java",
     ] + [outpath + e + ".java" for e in entities],
     deps = [
-      # TODO: external deps: lombok, spring {web,beans}, swagger annotations
+      "@io_swagger_swagger_annotations//jar",
+      "@org_projectlombok_lombok//jar",
+      "@org_springframework_spring_beans//jar",
+      "@org_springframework_spring_web//jar",
     ],
     visibility = visibility,
   )
@@ -207,7 +210,7 @@ def _sysl_tool(
     srcs = srcs + [":" + name + "_dummy"],
     outs = outs,
     cmd = " ".join([
-        "$(location //src/exporters:reljam)",
+        "$(location //external:sysl_reljam)",
         "--root '%s'" % root,
         "--out '$(location :%s_dummy)/..'" % name,
         "--package '%s'" % package,
@@ -217,7 +220,7 @@ def _sysl_tool(
         "'%s'" % module,
         "'%s'" % app,
       ]),
-    tools = ["//src/exporters:reljam"],
+    tools = ["//external:sysl_reljam"],
     visibility = visibility,
   )
 
@@ -228,3 +231,118 @@ def _sysl_tool(
       deps = deps or [],
       visibility = visibility,
     )
+
+
+def sysl_repositories(
+  maven_settings_file=None,
+  maven_url=None,
+  ):
+
+  _sysl_repositories(
+    sysl_workspace = "@com_github_anz_bank_sysl",
+    maven_settings_file = maven_settings_file,
+    maven_url = maven_url,
+  )
+
+
+def internal_sysl_repositories(
+  maven_settings_file=None,
+  maven_url=None,
+  ):
+
+  _sysl_repositories(
+    sysl_workspace = "",
+    maven_settings_file = maven_settings_file,
+    maven_url = maven_url,
+  )
+
+def _sysl_repositories(
+  sysl_workspace,
+  maven_settings_file=None,
+  maven_url=None,
+  ):
+
+  native.maven_server(
+    name='sysl_maven_server',
+    settings_file=maven_settings_file,
+    url=maven_url,
+  )
+
+  native.maven_jar(
+    name = "com_fasterxml_jackson_core_jackson_core",
+    artifact = "com.fasterxml.jackson.core:jackson-core:2.8.5",
+    sha1 = "60d059f5d2930ccd1ef03535b713fd9f933d1ba7",
+    server = "sysl_maven_server",
+  )
+
+  native.maven_jar(
+    name = "com_fasterxml_jackson_core_jackson_databind",
+    artifact = "com.fasterxml.jackson.core:jackson-databind:2.8.5",
+    sha1 = "b3035f37e674c04dafe36a660c3815cc59f764e2",
+    server = "sysl_maven_server",
+  )
+
+  native.maven_jar(
+    name = "io_swagger_swagger_annotations",
+    artifact = "io.swagger:swagger-annotations:1.5.12",
+    sha1 = "c7ec660163f3680e8afe2aacf2a14d27d7dcc509",
+    server = "sysl_maven_server",
+  )
+
+  native.maven_jar(
+    name = "joda_time_joda_time",
+    artifact = "joda-time:joda-time:2.9.6",
+    sha1 = "e370a92153bf66da17549ecc78c69ec6c6ec9f41",
+    server = "sysl_maven_server",
+  )
+
+  native.maven_jar(
+    name = "org_apache_commons_commons_lang3",
+    artifact = "org.apache.commons:commons-lang3:3.5",
+    sha1 = "6c6c702c89bfff3cd9e80b04d668c5e190d588c6",
+    server = "sysl_maven_server",
+  )
+
+  native.maven_jar(
+    name = "org_projectlombok_lombok",
+    artifact = "org.projectlombok:lombok:1.16.12",
+    sha1 = "64b2d2e8734b54ddba60a69df68a6dac627366c8",
+    server = "sysl_maven_server",
+  )
+
+  native.maven_jar(
+    name = "org_springframework_spring_beans",
+    artifact = "org.springframework:spring-beans:4.2.9.RELEASE",
+    sha1 = "2b9b6ebb4271c61e307f4eae8e00ccec23891440",
+    server = "sysl_maven_server",
+  )
+
+  native.maven_jar(
+    name = "org_springframework_spring_web",
+    artifact = "org.springframework:spring-web:4.2.9.RELEASE",
+    sha1 = "16cc1e5c3db699f71ef8596d63c961b9c6ed0d1d",
+    server = "sysl_maven_server",
+  )
+
+  native.git_repository(
+    name = "org_pubref_rules_protobuf",
+    remote = "https://github.com/pubref/rules_protobuf",
+    tag = "v0.7.1",
+  )
+
+  # TODO
+  # native.load(
+  #   "@org_pubref_rules_protobuf//python:rules.bzl",
+  #   "py_proto_repositories",
+  # )
+  # native.py_proto_repositories()
+
+  native.bind(
+    name = "sysl_reljam",
+    actual = sysl_workspace + "//src/exporters:reljam",
+  )
+
+  native.bind(
+    name = "sysl_io_java",
+    actual = sysl_workspace + "//java/io/sysl",
+  )
