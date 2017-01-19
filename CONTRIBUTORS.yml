@@ -1,0 +1,23 @@
+# Individuals who have agreed to one of the CLAs and may contribute patches. The
+# AUTHORS file lists the copyright holders; this file lists people. For example,
+# ANZ employees are listed here but not in AUTHORS, because ANZ holds the
+# copyright.
+#
+# Individual: https://goo.gl/f6JjGu
+# Corporate:  https://goo.gl/Q3Fqsa
+#
+# Names should be added to this file as:
+#   - name: contributor's name
+#     email: contributor's email address
+#
+# Corporate contributors must supply a corporate email address.
+#
+# Contributors may appear multiple times if they have made contributions both as
+# individuals and as employees of one or more corporations. For each case, there
+# must be a corresponding CLA.
+
+contributors:
+- name: Marcelo Cantos
+  email: marcelo.cantos@anz.com
+- name: Oliver Lade
+  email: oliver.lade@anz.com

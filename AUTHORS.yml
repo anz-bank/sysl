@@ -1,0 +1,21 @@
+# This the official list of Sysl authors for copyright purposes.
+# This file is distinct from the CONTRIBUTORS files.
+# See the latter for an explanation.
+#
+# Names should be added to this file as:
+#   Companies:
+#     - name: company name
+#       short-name: abbreviated company name (optional)
+#       email: primary contact for Sysl-related comms
+#       www: main company website (optional)
+#   Individuals:
+#     - name: author's name
+#       nickname: widely recognised alias (optional)
+#       email: personal email address
+#       www: personal website (optional)
+
+authors:
+- name: Australia and New Zealand Banking Group Limited
+  short-name: ANZ
+  email: marcelo.cantos@anz.com
+  www: anz.com
