@@ -33,7 +33,9 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      env: TEST_RUNNER=bazel
+      env:
+        - TEST_RUNNER=bazel
+        - SYSL_PLANTUML=http://www.plantuml.com/plantuml
 
       # We cannot use the APT addon because neither the repository nor the Bazel
       # package are whitelisted. This means we must use `sudo` and hence cannot
@@ -77,7 +79,7 @@ matrix:
             - bazel
 
       script:
-        - bazel test //...
+        - bazel test --test_env=SYSL_PLANTUML //...
 
 # Note: we cannot test with Bazel on OS X at this time, because Travis only
 # supports 10.9 Mavericks while Bazel requires 10.10 Yosemite or higher.
