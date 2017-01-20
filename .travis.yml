@@ -79,7 +79,7 @@ matrix:
             - bazel
 
       script:
-        - bazel test --test_env=SYSL_PLANTUML //...
+        - bazel test --verbose_failures --test_output=errors --test_env=SYSL_PLANTUML //...
 
 # Note: we cannot test with Bazel on OS X at this time, because Travis only
 # supports 10.9 Mavericks while Bazel requires 10.10 Yosemite or higher.
