@@ -78,9 +78,6 @@ matrix:
 
       script:
         - bazel test //...
-        # There are no tests, so bazel test exits with code 4.
-        # Exit 0 to force success. Remove this line when tests are added.
-        - exit 0
 
 # Note: we cannot test with Bazel on OS X at this time, because Travis only
 # supports 10.9 Mavericks while Bazel requires 10.10 Yosemite or higher.
