@@ -24,7 +24,7 @@ class TestSetOf(unittest.TestCase):
 
       out = sysldata.dataviews(module, args)
 
-      self.assertTrue('_0  *-- "0..*" _1' in out[0])
+      self.assertTrue('_0  *-- "0..*" _1' in out[0], out[0])
 
     except (IOError, Exception) as e:
       self.fail(traceback.format_exc())
