@@ -98,6 +98,11 @@ def match(obj, pattern):
     objstk.append(obj)
     patstk.append(pattern)
     try:
+      if (isinstance(obj, dict) and
+          'key' in obj and obj['key'] == 'sbosProductCode' and
+          isinstance(pattern, dict) and
+          'type' in pattern and pattern['type'] == 'select'):
+        log()
       if isinstance(pattern, _Assign):
         result = descend(obj, pattern.pattern, [pattern])
         if result:

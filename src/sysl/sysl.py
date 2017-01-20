@@ -22,6 +22,8 @@ Sysl compiler and toolkit.
 
 import argparse
 import cStringIO
+import errno
+import os
 import sys
 
 import src.util.debug as debug
@@ -117,6 +119,15 @@ def main():
   syslseqs.add_subparser(subparser)
 
   args = argp.parse_args()
+
+  # Ensure the output directory exists.
+  if 'output' in args:
+    try:
+      os.makedirs(os.path.dirname(args.output))
+    except OSError as exc:
+      if exc.errno != errno.EEXIST or os.path.isdir(args.output):
+        raise
+
   args.func(args)
 
 

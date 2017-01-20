@@ -370,6 +370,9 @@ def add_subparser(subp):
             eplongname=endpt.long_name,
             **attrs)
 
+          if args.filter and not re.match(args.filter, args.output):
+            continue
+
           bbs2 = [[e.s for e in bbox.a.elt]
               for bbox in syslx.View(endpt.attrs)['blackboxes'].a.elt]
 

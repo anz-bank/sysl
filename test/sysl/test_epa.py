@@ -23,8 +23,8 @@ class TestEpa(unittest.TestCase):
     return syslints.integration_views(module, deps, args)
 
   def test_ints(self):
-    
-    try: 
+
+    try:
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
@@ -33,19 +33,21 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'title'     : 'Test EPA',
         'epa'       : False,
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa', d)
-      
+
       self.assertTrue('_0 --> _1' in out[0])
 
     except (IOError, Exception) as e:
       self.fail(traceback.format_exc())
 
   def test_epa(self):
-    
+
     try:
-  
+
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
@@ -54,21 +56,23 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa', d)
-      
+
       #import pdb; pdb.set_trace()
       self.assertTrue(re.search('_0 -.*> _1', out[0]))
       self.assertTrue(re.search('_1 -.*> _2', out[0]))
 
     except (IOError, Exception) as e:
-      self.fail(traceback.format_exc()) 
+      self.fail(traceback.format_exc())
 
   def test_epa_repeated_calls(self):
-    
+
     try:
- 
+
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
@@ -77,10 +81,12 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Repeated Calls',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa_repeated_calls', d)
-      
+
       #import pdb; pdb.set_trace()
       self.assertTrue('state "**App1 Input Method 1 client**" as _2' in out[0])
       self.assertTrue('state "**App1 Input Method 1**" as _3' in out[0])
@@ -92,7 +98,7 @@ class TestEpa(unittest.TestCase):
       self.fail(traceback.format_exc())
 
   def test_int_repeated_calls(self):
-    
+
     try:
 
       d = {
@@ -103,7 +109,9 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : False,
         'title'     : 'Test EPA Repeated Calls',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa_repeated_calls', d)
 
@@ -112,10 +120,10 @@ class TestEpa(unittest.TestCase):
       self.assertFalse('_2 --> _3' in out[0])
 
     except (IOError, Exception) as e:
-      self.fail(traceback.format_exc()) 
+      self.fail(traceback.format_exc())
 
   def test_ignore_keyword(self):
-    
+
     try:
 
       d = {
@@ -126,7 +134,9 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Ignore Keyword',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa_ignore_keyword', d)
 
@@ -136,7 +146,7 @@ class TestEpa(unittest.TestCase):
       self.fail(traceback.format_exc())
 
   def test_labels(self):
-    
+
     try:
 
       d = {
@@ -147,17 +157,19 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Labels',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa_ignore_keyword', d)
 
       self.assertTrue('**«INT-001»**' in out[0])
 
     except (IOError, Exception) as e:
-      self.fail(traceback.format_exc()) 
+      self.fail(traceback.format_exc())
 
   def test_labels_for_events(self):
-    
+
     try:
 
       d = {
@@ -168,7 +180,9 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Labels',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       #import pdb; pdb.set_trace()
 
@@ -180,7 +194,7 @@ class TestEpa(unittest.TestCase):
       self.fail(traceback.format_exc())
 
   def test_patterns(self):
-    
+
     try:
 
       d = {
@@ -191,17 +205,19 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Patterns',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa_patterns', d)
 
       self.assertTrue('** <color green>soap</color>**' in out[0])
 
     except (IOError, Exception) as e:
-      self.fail(traceback.format_exc()) 
+      self.fail(traceback.format_exc())
 
   def test_missing_patterns(self):
-    
+
     try:
 
       d = {
@@ -212,11 +228,13 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Patterns',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
 
       out = self.integration_view_helper('/test/data/test_epa_missing_patterns', d)
-      
+
       #import pdb; pdb.set_trace()
 
       self.assertTrue('** <color red>pattern?</color>**' in out[0])
@@ -225,7 +243,7 @@ class TestEpa(unittest.TestCase):
       self.fail(traceback.format_exc())
 
   def test_missing_labels(self):
-    
+
     try:
 
       d = {
@@ -236,12 +254,14 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Patterns',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       # import pdb; pdb.set_trace()
 
       out = self.integration_view_helper('/test/data/test_epa_missing_labels', d)
-      
+
       # import pdb; pdb.set_trace()
 
       self.assertTrue('<color red>(missing INT)</color>' in out[0])
@@ -250,7 +270,7 @@ class TestEpa(unittest.TestCase):
       self.fail(traceback.format_exc())
 
   def test_events(self):
-    
+
     try:
 
       d = {
@@ -261,7 +281,9 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'epa'       : True,
         'title'     : 'Test EPA Events',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : None,
+      }
 
       out = self.integration_view_helper('/test/data/test_epa_events', d)
 
@@ -276,7 +298,7 @@ class TestEpa(unittest.TestCase):
       self.assertFalse(re.search('App1 Event client', out[0]))
 
     except (IOError, Exception) as e:
-      self.fail(traceback.format_exc()) 
+      self.fail(traceback.format_exc())
 
 if __name__ == '__main__':
   debug.init()

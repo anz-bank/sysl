@@ -59,6 +59,9 @@ def add_common_diag_options(argp):
   argp.add_argument(
     '--dry-run', action='store_true',
     help="Don't perform confluence uploads, but show what would have happened")
+  argp.add_argument(
+    '--filter',
+    help="Only generate diagrams whose output paths match a pattern")
 
   argp.add_argument(
     'modules', nargs='+',

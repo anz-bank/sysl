@@ -346,6 +346,9 @@ def integration_views(module, deps, args):
         eplongname=endpt.long_name,
         **diagutil.attr_fmt_vars(app.attrs, endpt.attrs))
 
+    if args.filter and not re.match(args.filter, args.output):
+      continue
+
     print args.project, matching_apps
     out.append(_generate_view(module, args, find_integrations(), matching_apps, app, apps, endpt))
 

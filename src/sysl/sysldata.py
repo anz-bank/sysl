@@ -148,6 +148,9 @@ def dataviews(module, args):
       eplongname=endpt.long_name,
       **diagutil.attr_fmt_vars(app.attrs, endpt.attrs))
 
+    if args.filter and not re.match(args.filter, args.output):
+      continue
+
     out.append(_generate_view(module, appname, types))
 
     diagutil.output_plantuml(args, out[-1])
