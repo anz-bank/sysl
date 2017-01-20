@@ -4,4 +4,3 @@ plantuml
 protobuf
 pyyaml
 requests
-six
