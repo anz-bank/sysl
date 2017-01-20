@@ -24,7 +24,11 @@ class TestSetOf(unittest.TestCase):
 
       out = sysldata.dataviews(module, args)
 
-      self.assertTrue('_0  *-- "0..*" _1' in out[0], out[0])
+      self.assertTrue(
+        re.search(r'(?ms)^class "Type1" as _1 .*^_0  \*-- "0..\*" _1', out[0])
+        or
+        re.search(r'(?ms)^class "Type1" as _0 .*^_1  \*-- "0..\*" _0', out[0]),
+        out[0])
 
     except (IOError, Exception) as e:
       self.fail(traceback.format_exc())
