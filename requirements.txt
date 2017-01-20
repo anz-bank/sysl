@@ -1,3 +1,7 @@
+httplib2
 lxml
+plantuml
 protobuf
 pyyaml
+requests
+six
