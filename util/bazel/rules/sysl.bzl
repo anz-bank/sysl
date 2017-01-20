@@ -262,10 +262,14 @@ def _sysl_repositories(
   maven_url=None,
   ):
 
+  mvn_kwargs = {}
+  if maven_settings_file:
+    mvn_kwargs['settings_file'] = maven_settings_file
+
   native.maven_server(
-    name='sysl_maven_server',
-    settings_file=maven_settings_file,
-    url=maven_url,
+    name = 'sysl_maven_server',
+    url = maven_url or "http://central.maven.org/maven2/",
+    **mvn_kwargs
   )
 
   native.maven_jar(
