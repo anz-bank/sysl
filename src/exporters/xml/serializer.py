@@ -30,7 +30,7 @@ XML_GEN_MAP = {
   sysl_pb2.Type.STRING: '',
   sysl_pb2.Type.BYTES: '',
   sysl_pb2.Type.STRING_8: '',
-  sysl_pb2.Type.DATE: ', iso8601Date',
+  sysl_pb2.Type.DATE: '',
   sysl_pb2.Type.DATETIME: ', iso8601DateTime',
   sysl_pb2.Type.XML: '',
   sysl_pb2.Type.UUID: '',
@@ -211,7 +211,7 @@ def serializer(context):
     serialize('BigDecimal', 'value.toString()')
     serialize('UUID', 'value.toString()')
     serialize('DateTime', 'fmt.print(value)', [('DateTimeFormatter', 'fmt')])
-    serialize('LocalDate', 'fmt.print(value)', [('DateTimeFormatter', 'fmt')])
+    serialize('LocalDate', 'iso8601Date.print(value)')
 
     def serializeField(t, access, extra_args=None):
       with java.Method(w, '\nprivate', 'void', 'serializeField',
@@ -239,8 +239,7 @@ def serializer(context):
     serializeField('UUID', 'value.toString()')
     serializeField('DateTime', 'fmt.print(value)',
       [('DateTimeFormatter', 'fmt')])
-    serializeField('LocalDate', 'fmt.print(value)',
-      [('DateTimeFormatter', 'fmt')])
+    serializeField('LocalDate', 'iso8601Date.print(value)')
 
     with java.Method(w, '\nprivate final', 'BigDecimal', 'round',
         [('BigDecimal', 'd'), ('int', 'scale')]):

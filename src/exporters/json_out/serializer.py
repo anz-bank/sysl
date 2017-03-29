@@ -30,8 +30,8 @@ JSON_GEN_MAP = {
   sysl_pb2.Type.STRING: ('String', '{}'),
   sysl_pb2.Type.BYTES: ('Binary', '{}'),
   sysl_pb2.Type.STRING_8: ('String', '{}'),
-  sysl_pb2.Type.DATE: ('LocalDate', '{}, iso8601Date'),
-  sysl_pb2.Type.DATETIME: ('DateTime', '{}, iso8601DateTime'),
+  sysl_pb2.Type.DATE: ('LocalDate', '{}'),
+  sysl_pb2.Type.DATETIME: ('DateTime', '{}'),
   sysl_pb2.Type.XML: ('String', '{}'),
   sysl_pb2.Type.UUID: ('String', '{}'),
 }
@@ -179,21 +179,19 @@ def serializer(context):
     with java.Method(w, 'private', 'void', 'writeField'.format(t),
         [('JsonGenerator', 'g'),
          ('String', 'fieldname'),
-         ('DateTime', 'value'),
-         ('DateTimeFormatter', 'fmt')],
+         ('DateTime', 'value')],
         throws=['IOException']):
       with java.If(w, 'value != null'):
-        w('g.writeStringField(fieldname, fmt.print(value));')
+        w('g.writeStringField(fieldname, iso8601DateTime.print(value));')
 
     w()
     with java.Method(w, 'private', 'void', 'writeField'.format(t),
         [('JsonGenerator', 'g'),
          ('String', 'fieldname'),
-         ('LocalDate', 'value'),
-         ('DateTimeFormatter', 'fmt')],
+         ('LocalDate', 'value')],
         throws=['IOException']):
       with java.If(w, 'value != null'):
-        w('g.writeStringField(fieldname, fmt.print(value));')
+        w('g.writeStringField(fieldname, iso8601Date.print(value));')
 
     w()
     with java.Method(w, 'private', 'void', 'writeField'.format(t),

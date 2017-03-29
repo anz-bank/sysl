@@ -202,7 +202,7 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
 
           for (fname, _, _) in datamodel.foreign_keys(t, context.module):
             jfname = java.name(fname)
-            w(u'table.fk_{}.remove(this);', jfname)
+            w(u'table.fk_{0}.remove({0});', jfname)
 
         with java.Method(w, '\npublic', 'View', 'asView'):
           w('Snapshot result = new Snapshot(_model);')
