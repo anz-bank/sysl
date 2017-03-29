@@ -1145,8 +1145,8 @@ class Parser(object):
           c = type_.constraint.add()
           if lo:
             c.length.min = int(lo)
-            if hi:
-              c.length.max = int(hi)
+          if hi:
+            c.length.max = int(hi)
           elif scale:
             c.precision = int(precision)
             c.scale = int(scale)
