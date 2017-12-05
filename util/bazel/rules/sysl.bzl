@@ -14,7 +14,7 @@
 
 # TODO: Add no_except param to sysl_model.
 
-VALID_SERIALIZERS = set(['json_in', 'json_out', 'xml_in', 'xml_out'])
+VALID_SERIALIZERS = depset(['json_in', 'json_out', 'xml_in', 'xml_out'])
 
 
 def _inouts(prefix, serializers):
@@ -331,7 +331,7 @@ def _sysl_repositories(
   native.git_repository(
     name = "org_pubref_rules_protobuf",
     remote = "https://github.com/pubref/rules_protobuf",
-    tag = "v0.7.1",
+    tag = "v0.8.1",
   )
 
   # TODO
