@@ -370,7 +370,9 @@ def deserializer(context):
       with java.Switch(w, 'tok'):
         for tok in (
           'VALUE_FALSE VALUE_NULL VALUE_NUMBER_FLOAT VALUE_NUMBER_INT '
-          'VALUE_STRING VALUE_TRUE').split():
+          'VALUE_STRING VALUE_TRUE '
+          'NOT_AVAILABLE END_OBJECT END_ARRAY FIELD_NAME VALUE_EMBEDDED_OBJECT'
+          ).split():
           w('case {}: break;', tok)
         with java.Case(w, 'START_ARRAY'):
           with java.While(w, 'p.getCurrentToken() != JsonToken.END_ARRAY'):
