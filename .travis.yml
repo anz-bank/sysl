@@ -27,7 +27,7 @@ addons:
       - bc
       - ed
 
-install: pip install -r requirements.txt
+install: pip install --user -r requirements.txt
 
 matrix:
   include:
