@@ -21,12 +21,13 @@ boilerplate.
 
 ## Installation
 
-TODO
+If you are interested in trying out Sysl, you will need to build it yourself from source. 
 
+Refer to the [Getting Started](doc/getting-started.md) guide for more details on building Sysl
 
 ## Status
 
-Sysl is currently targeted at early adopters. It is usable in anger, but has a
+Sysl is currently targeted at early adopters. It is usable in alpha, but has a
 ways to go in terms of usability, especially on the documentation front (as can
 be seen above).
 
