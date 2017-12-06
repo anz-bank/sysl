@@ -194,10 +194,10 @@ def main():
             # {foo-bar} to {fooBar}
             w(u'\n{}:', re.sub(r'({[^/]*?})', javaParam, path))
             with w.indent():
-
+                
                 if 'parameters' in api:
                     del api['parameters']
-
+                    
                 for (i, (method, body)) in enumerate(sorted(api.iteritems(),
                                                             key=lambda t: METHOD_ORDER[t[0]])):
                     qparams = dict()
@@ -268,7 +268,7 @@ def main():
             with w.indent():
 
                 tspec_items = tspec.get('properties')
-
+                    
                 if tspec_items:
                     for (fname, fspec) in sorted(tspec_items.iteritems()):
 

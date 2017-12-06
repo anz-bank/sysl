@@ -91,7 +91,8 @@ def output_plantuml(args, puml_input):
           print '... not really (dry-run)',
   else:
     (open(args.output, 'w') if args.output else sys.stdout).write(out)
-    # (open(args.output + '.puml', 'w') if args.output else sys.stdout).write(puml_input)
+    # Uncomment this to print out Plant UML
+    #(open(args.output + '.puml', 'w') if args.output else sys.stdout).write(puml_input)
 
   if args.verbose:
     print
@@ -136,6 +137,7 @@ class _FmtParser(simple_parser.SimpleParser):
 
   def expansions(self, term=u'$'):
     """Parse expansions."""
+
     result = [repr(u'')]
     while self.eat(ur'((?:[^%]|%[^(\n]|\n)*?)(?=' + term + ur'|%\()'):
       prefix = self.pop()
@@ -144,16 +146,26 @@ class _FmtParser(simple_parser.SimpleParser):
         ).replace(u'\1', u'%')
       if prefix:
         result.append(repr(prefix))
+      
       if self.eat(ur'%\('):
         if not self.eat(ur'(@?\w+)'):
           raise Exception('missing variable reference')
         var = cond = u"vars.get({!r}, '')".format(self.pop())
+        
+        # conditionals!
+        #import pdb; pdb.set_trace()
+
+        if self.eat(ur'([!=]=)'):
+          cond = var + " {} ".format(self.pop())
+          if not self.eat(ur'\'([\w ]+)\''):
+            raise Exception('missing conditional value')
+          cond = cond + u"{!r}".format(self.pop())
 
         if self.eat(ur'~/([^/]+)/'):
           cond = u're.search({!r}, {})'.format(
             self.pop().replace('\b', r'\b'), var)
-
-        have = self.eat(ur'[?]')
+        
+        have = self.eat(ur'[=?]')
         if have:
           if not self.expansions(ur'$|[|)]'):
             raise Exception('wat?')

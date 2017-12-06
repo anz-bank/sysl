@@ -1,8 +1,8 @@
 py_library(
-    name = "xml",
-    srcs = [
-        "serializer.py",
-        "xsd.py",
-    ],
-    visibility = ["//src/exporters:__pkg__"],
+  name = "xml",
+  srcs = [
+    "serializer.py",
+    "xsd.py",
+  ],
+  visibility = ["//src/exporters:__pkg__"],
 )

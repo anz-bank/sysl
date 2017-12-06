@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-
 """Parse sysl source code."""
 
 # TODO: Allow attr grouping via, e.g.: [~pk]:\n\tfooId...\n\tbarId...
@@ -15,6 +14,7 @@ import sys
 import threading
 import time
 import urlparse
+import re
 
 from src.proto import sysl_pb2
 
@@ -886,7 +886,7 @@ class Parser(object):
                 while indent_stk[-1] > indent:
                   indent_stk.pop()
                 if indent_stk[-1] != indent:
-                  raise Exception('outdentation mismatch')
+                  raise Exception('outdentation mismatch', line_no + 1, line)
               else:
                 raise Exception('indentation mismatch', line_no + 1, line)
             prev_indent = indent
@@ -1008,17 +1008,28 @@ class Parser(object):
 
     path_params = path_params.copy()
 
-    def prepare_endpoint(method, grandchildren):
+    def prepare_endpoint(method, params, grandchildren):
       """Prepare ReST endpoint."""
       epname = method + ' ' + path
       endpt = app.endpoints[epname]
       endpt.name = epname
+
+      if params is not None:
+        if 'pickme' in params:
+            import pdb; pdb.set_trace()
+        for param_pair in rex.split(r'\s*,\s*', params):
+          param = endpt.param.add()
+          if param_pair.count('<:') == 1:
+            (pname, ptname) = rex.split(r'\s*<:\s*', param_pair)
+            param.name = pname
+            self._parseGlobalRef(ptname, param.type, app)
+
       endpt.attrs['patterns'].a.elt.add().s = 'rest'
       (extra_attrs + attrs) >> endpt.attrs
       if grandchildren[0][2].startswith('| '):
         endpt.docstring = grandchildren[0][2][2:]
         del grandchildren[0]
-      self._parse_stmts(endpt.stmt, grandchildren, app)
+      self._parse_stmts(endpt, grandchildren, app)
       return endpt
 
     def prepare_rest_params(method, endpt, line_no):
@@ -1082,14 +1093,16 @@ class Parser(object):
           app, path, subpath, attrp + extra_attrs + extra_extra_attrs,
           path_params, grandchildren)
       elif match(ur'^(\w+)·(\([^)]*\))?(?:\s+(\?\S*))?(?:·\[(.*)\])?·$'):
-        (method, _, query, attrs) = match.groups
+        (method, params, query, attrs) = match.groups
         (attrp + attrs) >> None
         if method not in REST_METHODS:
           raise RuntimeError(
             'Disallowed ReST method (expecting {}): {}'.format(
               '|'.join(REST_METHODS), method))
 
-        endpt = prepare_endpoint(method, grandchildren)
+        if params is not None:
+          params = params[1:-1]
+        endpt = prepare_endpoint(method, params, grandchildren)
         prepare_rest_params(method, endpt, line_no)
       else:
         raise RuntimeError('Invalid ReST syntax: ' + line)
@@ -1133,7 +1146,7 @@ class Parser(object):
             c.length.min = int(lo)
           if hi:
             c.length.max = int(hi)
-          elif scale:
+          if scale:
             c.precision = int(precision)
             c.scale = int(scale)
           elif primitive in [type_.STRING, type_.STRING_8, type_.BYTES]:
@@ -1216,7 +1229,7 @@ class Parser(object):
           match.groups[0]
           + (json.dumps(' '.join(x[2:] for (_, _, x, _) in grandchildren))
              if grandchildren else ''))
-        (_AttrProcessor() + attr) >> app.attrs
+        (_AttrProcessor() + attr) >> typedecl.attrs
         attrp += match.groups[0]
       elif match(r'^!type\s+(\w+)(?:\s+\[(.*)\])?$'):
         [subname, attrs] = match.groups
@@ -1298,18 +1311,20 @@ class Parser(object):
     attrp = _AttrProcessor()
 
     for (_, _, stmt_line, children) in stmts:
-      stmt = field.add()
-
+      stmt = None
       match = _Matcher(stmt_line)
 
       # First, extract attributes from eol.
-      if match(r'^(.*?)(?:\s*\[(.*)\])?\s*$'):
-        (stmt_line, attrs) = match.groups
-        (attrp + attrs) >> stmt.attrs
-        match = _Matcher(stmt_line)
+      if not stmt_line.startswith('@'):
+        if match(r'^(.*?)(?:\s*\[(.*)\])?\s*$'):
+          stmt = field.stmt.add()
+          (stmt_line, attrs) = match.groups
+          (attrp + attrs) >> stmt.attrs
+          match = _Matcher(stmt_line)
 
       if match(r'^@(.*)'):
         attrp += match.groups[0]
+        attrp >> field.attrs
       elif match(r'^(?:(\w+)\s*=\s*)?(.*)\s+<-\s+(.*?)\s*(?:\(([^)]*)\))?$'):
         (_, target, stmt.call.endpoint, args) = match.groups
         self._parse_app_name(stmt.call.target, target, app)
@@ -1318,28 +1333,28 @@ class Parser(object):
             stmt.call.arg.add().name = arg
       elif match(r'(?i)^If\s+(.*)$'):
         (stmt.cond.test,) = match.groups
-        self._parse_stmts(stmt.cond.stmt, children, app)
+        self._parse_stmts(stmt.cond, children, app)
       elif match(r'(?i)^Return\s+(.*)$'):
         (stmt.ret.payload,) = match.groups
         assert not children
       elif match(r'(?i)^(?:Loop\s+)?(while|until)\s+(.*)$'):
         (mode, stmt.loop.criterion) = match.groups
         stmt.loop.mode = stmt.loop.Mode.Value(mode.upper())
-        self._parse_stmts(stmt.loop.stmt, children, app)
+        self._parse_stmts(stmt.loop, children, app)
       elif match(r'(?i)^Loop\s+(\d+)\s+times$'):
         (stmt.loop_n.count,) = match.groups
-        self._parse_stmts(stmt.loop_n.stmt, children, app)
+        self._parse_stmts(stmt.loop_n, children, app)
       elif match(r'(?i)^For\s*each\s+(.*?)\s*$'):
         (stmt.foreach.collection,) = match.groups
-        self._parse_stmts(stmt.foreach.stmt, children, app)
+        self._parse_stmts(stmt.foreach, children, app)
       elif match(r'(?i)^One\s*of$'):
         for (_, _, cond, children) in children:
           choice = stmt.alt.choice.add()
           choice.cond = cond
-          self._parse_stmts(choice.stmt, children, app)
+          self._parse_stmts(choice, children, app)
       elif children:
         stmt.group.title = stmt_line
-        self._parse_stmts(stmt.group.stmt, children, app)
+        self._parse_stmts(stmt.group, children, app)
       else:
         stmt.action.action = stmt_line
 
@@ -1474,26 +1489,31 @@ class Parser(object):
     for p in set(sysl_pb2.Type.Primitive.keys()) - {'NO_Primitive'}
   }
 
+  def _parseGlobalRef(self, ref, typ, app):
+    
+    if not ref:
+      return
+
+    if ref in self.PRIMITIVES:
+      typ.primitive = sysl_pb2.Type.Primitive.Value(ref.upper())
+      return
+
+    m = rex.match(r'set\s+of\s+([\w\.]+)$', ref)
+    if m:
+      ref = m.group(1)
+      typ = typ.set
+    
+    path = ref.split('.')
+
+    # set up the type ref
+    sref = typ.type_ref
+    # TODO: Fill in scopedRef.context
+    sref.ref.appname.part.extend(rex.split(r'\s*::\s*', path[0]))
+    sref.ref.path.extend(path[1:])
+
   def _parse_view(self, parent, line, children):
     """Parse a view specification."""
-    def parseGlobalRef(ref, typ):
-      if ref in self.PRIMITIVES:
-        typ.primitive = sysl_pb2.Type.Primitive.Value(ref.upper())
-        return
-
-      m = rex.match(r'set\s+of\s+([\w\.]+)$', ref)
-      if m:
-        ref = m.group(1)
-        typ = typ.set
-
-      if not ref:
-        return
-      path = ref.split('.')
-      sref = typ.type_ref
-      # TODO: Fill in scopedRef.context
-      sref.ref.appname.part.extend(rex.split(r'\s*::\s*', path[0]))
-      sref.ref.path.extend(path[1:])
-
+    
     m = rex.match(r'''(?x)
       ^!view\s+
       ([\w${}]+)
@@ -1516,12 +1536,12 @@ class Parser(object):
         (pname, ptname) = rex.split(r'\s*<:\s*', param)
         param = view.param.add()
         param.name = pname
-        parseGlobalRef(ptname, param.type)
+        self._parseGlobalRef(ptname, param.type, parent)
 
     self._parse_attrs(attrs, view.attrs)
 
     if ret_type:
-      parseGlobalRef(ret_type, view.ret_type)
+      self._parseGlobalRef(ret_type, view.ret_type, parent)
 
     if 'abstract' not in syslx.patterns(view.attrs):
       self._parse_expr_block(parent, view.expr, children)
@@ -1530,6 +1550,8 @@ class Parser(object):
     """Parse an app."""
     if app is None:
       app = module.apps[name]
+
+    #import pdb; pdb.set_trace()
 
     self._parse_app_name(app.name, name, app)
 
@@ -1556,6 +1578,7 @@ class Parser(object):
         self._parse_rest_api(app, '', path, attrp + extra_attrs, {}, stmts)
         stmts = []
       elif match(r'^!(type|table)\s+(\w+)(?:\s+\[(.*)\])?$'):
+        #import pdb; pdb.set_trace()
         [keyword, name, attrs] = match.groups
         subdecl = self._parse_type_decl(app, keyword, name, stmts)
         self._parse_attrs(attrs, subdecl.attrs)
@@ -1590,11 +1613,21 @@ class Parser(object):
           (?:\s+\[(.*)\])?
           $
           '''):
-        (pubsub, name, _, long_name, child_attrs) = match.groups
+        (pubsub, name, param_string, long_name, child_attrs) = match.groups
 
         # TODO: grok params
         endpt = app.endpoints[name]
         endpt.name = name
+        if param_string:
+          for param_pair in rex.split(r'\s*,\s*', param_string):
+            param = endpt.param.add()
+            if param_pair.count('<:') == 1:
+              (pname, ptname) = rex.split(r'\s*<:\s*', param_pair)
+              param.name = pname
+              self._parseGlobalRef(ptname, param.type, app)
+            else:
+              param.name = param_pair
+              param.type.no_type.SetInParent()
 
         if long_name is not None:
           endpt.long_name = long_name
@@ -1606,7 +1639,8 @@ class Parser(object):
         assert False, "Should be unreachable! " + endpoint_line
 
       if stmts:
-        self._parse_stmts(endpt.stmt, stmts, app)
+        #import pdb; pdb.set_trace()
+        self._parse_stmts(endpt, stmts, app)
 
   def parse(self, src, path, module):
     """Parse source into a sysl_pb2.Module."""
@@ -1622,6 +1656,7 @@ class Parser(object):
 
           if match(r'^(.*?)\s*(\([^)]*\))?(?:\s+"(.*)")?(?:\s*\[(.*)\])?$'):
             (name, _, long_name, attrs) = match.groups
+            #print name, long_name
             self._parse_app(module, None, name, long_name,
                     attrp + attrs, endpoints)
 

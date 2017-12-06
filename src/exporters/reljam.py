@@ -34,7 +34,7 @@ def export(
   assert app, appname
 
   package = syslx.View(app.attrs)['package'].s
-  if mode != 'xsd':
+  if mode != 'xsd' and expected_package != None:
     assert package == expected_package, (package, expected_package)
 
   model_class = '_'.join(app.name.part).replace(' ', '')
@@ -86,7 +86,8 @@ def export(
       xml_export.serializer(context)
 
   if mode == 'model':
-    entities |= { appname, appname + 'Exception'} | serializer_entities()
+    if entities:
+      entities |= { appname, appname + 'Exception'} | serializer_entities()
 
     # Build a foreign key reverse map to enable efficeint navigation
     # in the generated classes
@@ -107,7 +108,8 @@ def export(
     export_serializers()
 
   elif mode == 'facade':
-    entities |= {appname} | serializer_entities()
+    if entities:
+      entities |= {appname} | serializer_entities()
     java_facade.export_facade_class(context)
     export_serializers()
 
@@ -120,19 +122,22 @@ def export(
   elif mode == 'spring-rest-service':
     interfaces = {
       endpt.attrs['interface'].s
-      for endpt in app.endpoints.itervalues()}
+      for endpt in app.endpoints.itervalues()
+      if endpt.attrs['interface'].s != ''}
     assert None not in interfaces, '\n' + '\n'.join(sorted([
       endpt.name
       for endpt in app.endpoints.itervalues()
       for i in [endpt.attrs['interface'].s]
       if not i],
       key=lambda name: reversed(name.split())))
-
-    entities |= {model_class + 'Controller'} | set(interfaces)
+    
+    if entities:
+      entities |= {model_class + 'Controller'} | set(interfaces)
     src.exporters.api.spring_rest.service(interfaces, context)
 
   elif mode == 'view':
-    entities |= {appname}
+    if entities:
+      entities |= {appname}
 
     w = writer.Writer('java')
     java.Package(w, package)
@@ -192,7 +197,7 @@ def main():
 
   (module, _, _) = syslloader.load(args.module, True, args.root)
 
-  entities = set(args.entities.split(',')) if args.entities else set()
+  entities = set(args.entities.split(',')) if args.entities else None
 
   export(args.mode, module, args.app, out, args.package, entities,
     args.serializers.split(',') if args.serializers else [])

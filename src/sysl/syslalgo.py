@@ -1,4 +1,9 @@
 """sysl algorithms"""
+import re
+from src.sysl import syslx
+from src.util import rex
+
+from src.proto import sysl_pb2
 
 def enumerate_calls(stmts):  # pylint: disable=too-many-branches
   """Enumerate all calls under stmts, in the form (parent_stmt, call)."""
@@ -70,3 +75,23 @@ def return_payload(stmts):
       return stmt.ret.payload
     else:
       raise Exception('No statement!', stmt.WhichOneof('stmt'))
+
+def yield_ret_params(payload):
+  if payload is not None:
+    for param_pair in rex.split(r',(?![^{]*\})', payload):
+      ptname = param_pair
+      
+      if param_pair.count('<:') == 1:
+        (pname, ptname) = rex.split(r'\s*<:\s*', param_pair)
+
+      if ptname.upper() not in (set(sysl_pb2.Type.Primitive.keys()) - {'NO_Primitive'}):
+        m = rex.match(r'set\s+of\s+(.+)$', ptname)
+        if m:
+          ptname = m.group(1)
+
+        m = rex.match(r'one\s+of\s*{(.+)}$', ptname)
+        if m:
+          for ptn in rex.split(r'\s*,\s*', m.group(1)):
+            yield ptn
+        else:
+          yield ptname

@@ -1,3 +1,5 @@
+"""Super smart code writer."""
+
 import contextlib
 import cStringIO
 import inspect
@@ -165,6 +167,9 @@ class Writer(object):
     lines = textwrap.wrap(text, width=width, **kwargs)
     for line in lines:
       written = self('{}', line)
+
+    if (text == '' and written == None):
+      written = self('{}', '| ')
     return written
 
   def _write(self, frames, out, fmt, *args, **kwargs):

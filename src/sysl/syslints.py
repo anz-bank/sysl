@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-
+# -*-: encoding: utf-8 -*-
 """Generate integration views from sysl modules."""
 
 import itertools
@@ -12,10 +11,25 @@ from src.sysl import syslx
 from src.util import diagutil
 from src.util import writer
 
+def yield_call_statements(statements):
+  for (_,stmt) in enumerate(statements):
+    field = stmt.WhichOneof('stmt')
+    if field == 'call':
+      yield stmt
+    elif field == 'alt':
+      for (_,choice) in enumerate(stmt.alt.choice):
+        for next_stmt in yield_call_statements(choice.stmt):
+          yield next_stmt
+    elif field in {'cond', 'loop', 'loop_n', 'foreach', 'group'}:
+      for next_stmt in yield_call_statements(getattr(stmt, field).stmt):
+        yield next_stmt
+
 def _generate_view(module, args, integrations, highlights, app, apps, endpt):
   write = writer.Writer('plantuml')
 
   """Output integration view"""
+
+  restrict_by = endpt.attrs.get('restrict_by').s if endpt.attrs.get('restrict_by') else None
 
   app_attrs = syslx.View(app.attrs)
   endpt_attrs = syslx.View(endpt.attrs)
@@ -56,7 +70,9 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
 
       write('hide stereotype')
       write('scale max 16384 height')
-      write('skinparam linetype ortho')
+
+      #write('skinparam nodesep 30')
+      #write('skinparam ranksep 120')
       write('skinparam component {{')
       write('  BackgroundColor FloralWhite')
       write('  BorderColor Black')
@@ -91,7 +107,7 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
       calls_drawn = set()
 
       if endpt_attrs['view'].s == 'system':
-        for ((app_a, _), (app_b, _)) in integrations:
+        for ((app_a, _), (app_b, _), (_,_)) in integrations:
           direct = {app_a, app_b} & highlights
           app_a = app_a.partition(' :: ')[0]
           app_b = app_b.partition(' :: ')[0]
@@ -133,33 +149,29 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
         """Outputs a new definition when VarManager makes a new variable."""
 
         #TODO dodgy, should be using context (look at syslseqs)
+        attrs = {}
+        state_name = ''
+
         if istoplevel:
           template = 'state "{}" as X{}{} {{'
+          attrs = module.apps[name].attrs
+          state_name = name
         else:
           template = '  state "{}" as {}{}'
-          (_,_,name) = name.partition(' : ')
+          (app_name,_,ep_name) = name.partition(' : ')
+          attrs = module.apps[app_name].endpoints[ep_name].attrs
+          state_name = ep_name
+          #if 'ServiceAccount' in ep_name:
+          #  import pdb; pdb.set_trace()
 
-        app = module.apps[name]
+        
         write(template,
-            appfmt(appname=name,
-                   **diagutil.attr_fmt_vars(app.attrs)).replace('\n', r'\n'),
+            appfmt(appname=state_name,
+                   **diagutil.attr_fmt_vars(attrs)).replace('\n', r'\n'),
             var,
             ' <<highlight>>' if name in highlights else '')
 
       return diagutil.VarManager(new_var)
-
-    def yield_call_statements(statements):
-      for (_,stmt) in enumerate(statements):
-        field = stmt.WhichOneof('stmt')
-        if field == 'call':
-          yield stmt
-        elif field == 'alt':
-          for (_,choice) in enumerate(stmt.alt.choice):
-            for next_stmt in yield_call_statements(choice.stmt):
-              yield next_stmt
-        elif field in {'cond', 'loop', 'loop_n', 'foreach', 'group'}:
-          for next_stmt in yield_call_statements(getattr(stmt, field).stmt):
-            yield next_stmt
 
     with write.uml():
 
@@ -168,10 +180,6 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
 
       write('left to right direction')
       write('scale max 16384 height')
-      write('skinparam nodesep 10')
-      #TODO[kirkpatg]: this should probably scale up & down based on nodes & connections
-      write('skinparam ranksep 300')
-      #write('skinparam linetype polyline')
       write('hide empty description')
       write('skinparam state {{')
       write('  BackgroundColor FloralWhite')
@@ -193,13 +201,21 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
 
       # group end points and build the declarations
       for (app_a, ep_a), (app_b, ep_b) in integrations:
+
+        if restrict_by and restrict_by not in module.apps[app_a].attrs.keys() + module.apps[app_b].attrs.keys():
+          continue
+
+        if restrict_by and restrict_by not in module.apps[app_a].endpoints[ep_a].attrs.keys() + module.apps[app_b].endpoints[ep_b].attrs.keys():
+          continue
+          
         if app_a not in clusters: clusters[app_a] = set()
         if app_b not in clusters: clusters[app_b] = set()
 
+        client_ep = ep_b
         # create clients in the calling app
         clusters[app_a].add(ep_a)
         if app_a != app_b and not module.apps[app_a].endpoints[ep_a].is_pubsub:
-          clusters[app_a].add(ep_b + " client")
+          clusters[app_a].add(client_ep + " client")
 
         clusters[app_b].add(ep_b)
 
@@ -211,24 +227,49 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
 
       processed = []
       for ((app_a, ep_a), (app_b, ep_b)) in integrations:
+
+        if restrict_by and restrict_by not in module.apps[app_a].attrs.keys() + module.apps[app_b].attrs.keys():
+          continue
+
+        if restrict_by and restrict_by not in module.apps[app_a].endpoints[ep_a].attrs.keys() + module.apps[app_b].endpoints[ep_b].attrs.keys():
+          continue
+
         direct = {app_a, app_b} & highlights
 
+        (match_app, match_ep) = (app_b, ep_b)
 
         # build the label
         label = ''
-        needs_int = app_a != app_b
-        # if 'App1 Event' in ep_a: import pdb; pdb.set_trace()
+        needs_int = app_a != match_app
 
-        # import pdb; pdb.set_trace()
+        pub_sub_src_ptrns  = syslx.patterns(module.apps[app_a].endpoints[ep_a].attrs)
+
+        tgt_ptrns = syslx.patterns(module.apps[match_app].endpoints[match_ep].attrs) or \
+            syslx.patterns(module.apps[match_app].attrs)
+
         for stmt in yield_call_statements(module.apps[app_a].endpoints[ep_a].stmt):
+
+          #if restrict_by not in stmt.attrs.keys():
+          #  continue
 
           app_b_name = ' :: '.join(part for part in stmt.call.target.part)
 
-          if app_b == app_b_name and ep_b == stmt.call.endpoint:
+          if match_app == app_b_name and match_ep == stmt.call.endpoint:
             fmt_vars = diagutil.attr_fmt_vars(stmt.attrs)
-            ptrns = syslx.patterns(module.apps[app_b].endpoints[ep_b].attrs)
-            label = diagutil.parse_fmt(app.attrs["epfmt"].s)(needs_int=needs_int, patterns=', '.join(sorted(ptrns)), **fmt_vars)
-            break
+
+            src_ptrns = syslx.patterns(stmt.attrs) or pub_sub_src_ptrns
+
+            ptrns = u', '.join(sorted(src_ptrns)) + u' → ' +  u', '.join(sorted(tgt_ptrns)) \
+                if (bool(src_ptrns) or bool(tgt_ptrns)) else ''
+
+            label = diagutil.parse_fmt(app.attrs["epfmt"].s)(needs_int=needs_int, patterns=ptrns, **fmt_vars)
+            #if 'Security Services' in app_b_name:
+            #  import pdb; pdb.set_trace()
+            #break
+
+        #if not label and middle:
+        #  fmt_vars = diagutil.attr_fmt_vars(module.apps[app_b].endpoints[ep_b].attrs)
+        #  label = diagutil.parse_fmt(app.attrs["epfmt"].s)(needs_int=needs_int, patterns=u'→' + middle + u'→', **fmt_vars)
 
         flow = ".".join([app_a, ep_b, app_b, ep_b])
         is_pubsub = module.apps[app_a].endpoints[ep_a].is_pubsub
@@ -237,7 +278,7 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
           if is_pubsub:
             write('{} -{}> {}{}',
               var_name(app_a + ' : ' + ep_a),
-              '[#black]',
+              '[#blue]',
               var_name(app_b + ' : ' + ep_b),
               ' : ' + label if label else '')
           else:
@@ -287,7 +328,7 @@ def integration_views(module, deps, args):
     for ((app1, _), (app2, _)) in deps:
       if not ({app1, app2} & exclude) and ({app1, app2} & matching_apps):
         for app in [app1, app2]:
-          if 'human' not in syslx.patterns(module.apps[app].attrs):
+          if ('human' not in syslx.patterns(module.apps[app].attrs)):
             yield app
 
   out_fmt = diagutil.parse_fmt(args.output)
@@ -304,6 +345,9 @@ def integration_views(module, deps, args):
     exclude_attr = endpt.attrs.get('exclude')
     exclude = set(e.s for e in exclude_attr.a.elt) if exclude_attr else set()
 
+    passthrough_apps_attr = endpt.attrs.get('passthrough')
+    passthrough_apps = set(e.s for e in passthrough_apps_attr.a.elt) if passthrough_apps_attr else set()
+
     integrations = []
 
     # endpt.stmt's "action" will conatain the "apps" whose integration is to be drawn
@@ -311,20 +355,54 @@ def integration_views(module, deps, args):
     for s in endpt.stmt:
       assert s.WhichOneof('stmt') == 'action', str(s)
       integrations.append(s.action.action)
-
+    
     # include the requested "app" and all the apps upon which the requested "app"
     # depends in the app set
     matching_apps = set(find_matching_apps(integrations))
-    apps = set(find_apps(matching_apps)) - exclude
+    apps = set(find_apps(matching_apps)) - exclude - passthrough_apps
 
-    # the meaning of integrations is overloaded in this context: above it means
-    # it is the list of apps whose integration is to be drawn, here it means the
-    # actual integrations between the apps that are in the "apps" set and are not excluded
     def find_integrations():
       """Return all integrations between relevant apps."""
-      return {((app1, ep1),(app2,ep2))
+
+      integration_set = {((app1, ep1),(app2,ep2))
           for ((app1, ep1), (app2, ep2)) in deps
-            if ({app1, app2} <= apps and not ({app1, app2} & exclude)) and not ({ep1, ep2} & {'.. * <- *'})}
+            if ({app1, app2} <= apps and not ({app1, app2} & exclude)) and not {ep1, ep2} & {'.. * <- *'}}
+
+      if passthrough_apps:
+
+        def passthrough_walk(dep, integration_set):
+          """ visit passthrough + 1: dep tuple, integration_set tuples """
+
+          # add to integration set
+          if (not ({dep[1][0]} & exclude) and not ({dep[1][1]} & {'.. * <- *'})):
+            integration_set.add(dep) 
+
+          # find the next outbond dep
+          if dep[1][0] in passthrough_apps:
+            # call visit_endpoints for all calls
+            for stmt in yield_call_statements(module.apps[dep[1][0]].endpoints[dep[1][1]].stmt):
+              app_2_name = ' :: '.join(part for part in stmt.call.target.part)
+              ep_2_name = stmt.call.endpoint
+              passthrough_walk(((dep[1]),(app_2_name, ep_2_name)), integration_set)
+  
+          return
+
+        # collect outbound dependencies
+        outbound_deps = {((app1, ep1),(app2,ep2))
+          for ((app1, ep1), (app2, ep2)) in deps
+            if (({app1, app2} <= apps) or ({app1} <= apps and {app2} <= passthrough_apps)) and not ({app1, app2} & exclude) and not ({ep1, ep2} & {'.. * <- *'})}
+
+        # collect outbound pubsub dependencies
+        #inbound_deps
+        
+        #import pdb; pdb.set_trace()
+        # add passthroughs 
+        for dep in outbound_deps:
+            #if 'Monetary' in dep[0][1]:
+            #  import pdb; pdb.set_trace()
+            passthrough_walk(dep , integration_set)
+
+      return integration_set
 
     args.output = out_fmt(
         appname=args.project,
@@ -335,11 +413,11 @@ def integration_views(module, deps, args):
     if args.filter and not re.match(args.filter, args.output):
       continue
 
-    print args.project, matching_apps
+    #print args.project, matching_apps
     out.append(_generate_view(module, args, find_integrations(), matching_apps, app, apps, endpt))
 
     diagutil.output_plantuml(args, out[-1])
-
+    
   return out
 
 def add_subparser(subp):
@@ -364,7 +442,7 @@ def add_subparser(subp):
   argp.add_argument('--project', '-j',
             help='project pseudo-app to render')
 
-  argp.add_argument('--epa', '--epa', action='store_true',
+  argp.add_argument('--epa', '-epa', action='store_true',
                     help='produce and EPA integration view')
 
   diagutil.add_common_diag_options(argp)

@@ -52,6 +52,28 @@ def xsd(context):
   def xs(_name, **attrs):
     return e('xs:' + _name, **attrs)
 
+  def build_element(attr_fname, attr_f, is_set, is_attr):
+    jfname = java.name(attr_fname)
+    method = java.CamelCase(jfname)
+    type_ = datamodel.typeref(attr_f, context.module)[2]
+    which_type = type_.WhichOneof('type')
+    if which_type == 'primitive':
+      xsdtype = XSD_TYPE_MAP[type_.primitive]
+    elif which_type == 'enum':
+      xsdtype = 'xs:int'
+    elif which_type == 'tuple':
+      offset = -1
+      if is_set:
+        offset = -2
+      xsdtype = datamodel.typeref(attr_f, context.module)[0].split('.')[offset]
+    else:
+      raise RuntimeError(
+        'Unexpected field type for XSD '
+        'export: ' + which_type)
+    if is_attr:
+      xs('attribute/', name=jfname, type=xsdtype, use='optional')
+    else:
+      xs('element/', name=jfname, type=xsdtype, minOccurs=0)
 
   def build_relational_xsd():
     # top level element contains all entities for
@@ -120,44 +142,15 @@ def xsd(context):
                 with xs('all'):
                   for (fname, f) in sorted(
                       t.relation.attr_defs.iteritems()):
-                    jfname = java.name(fname)
-                    method = java.CamelCase(jfname)
-                    type_ = datamodel.typeref(f, context.module)[2]
-                    which_type = type_.WhichOneof('type')
-                    if which_type == 'primitive':
-                      xsdtype = XSD_TYPE_MAP[type_.primitive]
-                    elif which_type == 'enum':
-                      xsdtype = 'xs:int'
-                    else:
-                      raise RuntimeError(
-                        'Unexpected field type for XSD '
-                        'export: ' + which_type)
-                    xs('element/', name=jfname, type=xsdtype, minOccurs=0)
+                    if not 'xml_attribute' in syslx.patterns(f.attrs):
+                      build_element(fname, f, False, False)
+
+                #attributes second
+                for (fname, f) in sorted(t.relation.attr_defs.iteritems()):
+                  if 'xml_attribute' in syslx.patterns(f.attrs):
+                    build_element(fname, f, False, True)
 
   def build_hierarchical_xsd():
-
-    def build_element(attr_fname, attr_f, is_set, is_attr):
-      jfname = java.name(attr_fname)
-      method = java.CamelCase(jfname)
-      type_ = datamodel.typeref(attr_f, context.module)[2]
-      which_type = type_.WhichOneof('type')
-      if which_type == 'primitive':
-        xsdtype = XSD_TYPE_MAP[type_.primitive]
-      elif which_type == 'enum':
-        xsdtype = 'xs:int'
-      elif which_type == 'tuple':
-        offset = -1
-        if is_set:
-          offset = -2
-        xsdtype = datamodel.typeref(f, context.module)[0].split('.')[offset]
-      else:
-        raise RuntimeError(
-          'Unexpected field type for XSD '
-          'export: ' + which_type)
-      if is_attr:
-        xs('attribute/', name=jfname, type=xsdtype, use='optional')
-      else:
-          xs('element/', name=jfname, type=xsdtype, minOccurs=0)
 
     # Top level element
     with xs('element', name=context.model_class):
@@ -187,7 +180,7 @@ def xsd(context):
         #attributes second
         for (fname, f) in sorted(t.tuple.attr_defs.iteritems()):
           if 'xml_attribute' in syslx.patterns(f.attrs):
-            build_element(fname, f, True, True)
+            build_element(fname, f, False, True)
 
   def build_xsd():
     for (_, _, t) in syslx.sorted_types(context):

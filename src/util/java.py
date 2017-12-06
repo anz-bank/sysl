@@ -742,6 +742,7 @@ def codeForExpr(w_, expr, scope, module, let=None):
         'strip': sysl_pb2.Type(primitive=sysl_pb2.Type.STRING),
         'substr': sysl_pb2.Type(primitive=sysl_pb2.Type.STRING),
         'today': sysl_pb2.Type(primitive=sysl_pb2.Type.DATE),
+        'to_date': sysl_pb2.Type(primitive=sysl_pb2.Type.DATE),
       }.get(call.func)
 
       if type_ is None:

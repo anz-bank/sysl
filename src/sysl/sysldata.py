@@ -1,5 +1,4 @@
-# -*- encoding: utf-8 -*-
-
+# -*-: encoding: utf-8 -*-
 """Generate data views from sysl modules."""
 
 import collections
@@ -105,7 +104,6 @@ def _generate_view(module, appname, types):
 
 def dataviews(module, args):
   """Generate a set of data views."""
-
   out = []
 
   parts = re.match(ur'^(.*?)(?:\s*<-\s*(.*?))?$', args.project)

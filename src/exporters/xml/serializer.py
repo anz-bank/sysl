@@ -151,6 +151,9 @@ def serializer(context):
                       access = 'round(entity.get{}(), {})'.format(
                         method, c.scale)
                       break
+                  else:
+                      access = 'round(entity.get{}(), 0)'.format(
+                        method)
                 else:
                   access = 'entity.get{}()'.format(method)
               elif which_type == 'enum':

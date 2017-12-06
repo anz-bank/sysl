@@ -17,7 +17,8 @@ class FileWriter(object):
 
   def java(self, w, name, package):
     assert name
-    assert name in self.entities, ('Unexpected entity generated: ' + name +
-      ' (check BUILD has sysl_model(..., entities=[..., "' + name + ', ...], ...))')
-    self.entities.remove(name)
+    if self.entities:
+      assert name in self.entities, ('Unexpected entity generated: ' + name +
+        ' (check BUILD has sysl_model(..., entities=[..., "' + name + ', ...], ...))')
+      self.entities.remove(name)
     self(w, os.path.join(self.package.replace('.', '/'), name + u'.java'))

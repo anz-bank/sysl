@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-
+# -*-: encoding: utf-8 -*-
 """Generate sequence diagrams from sysl modules."""
 
 import collections
@@ -17,6 +16,7 @@ from src.sysl import syslx
 
 from src.util import diagutil
 from src.util import writer
+from src.util import rex
 
 import pdb
 
@@ -98,6 +98,7 @@ def sequence_diag(module, params, log_integration=None):
 
   def new_var(var, appname):
     """Outputs a new definition when VarManager makes a new variable."""
+
     app = module.apps[appname]
     has_category = syslx.patterns(app.attrs) & {'human', 'cron', 'db', 'external', 'ui'}
     assert len(has_category) <= 1
@@ -110,8 +111,16 @@ def sequence_diag(module, params, log_integration=None):
     }.get(
       ''.join(has_category),
       (3, 'control'))
+
+    isoctrl = []
+
+    for ctrl in app.attrs.keys():
+      if 'iso_ctrl' in ctrl:
+        isoctrl.append(re.sub(r'iso_ctrl_(.*)_txt', r'\1', ctrl))
+
     label = params.appfmt(
       appname=appname,
+      controls=', '.join(i for i in sorted(isoctrl)),
       **diagutil.attr_fmt_vars(app.attrs)
       ).replace(u'\n', ur'\n')
     var_names.append(((order, int(var[1:])), u'{} "{}" as {}'.format(agent, label, var)))
@@ -124,6 +133,7 @@ def sequence_diag(module, params, log_integration=None):
       epname,
       uptos,
       sender_patterns,
+      sender_endpt_patterns=None,
       stmt=None,
       deactivate=None):
     """Recursively visit an endpoint."""
@@ -162,10 +172,12 @@ def sequence_diag(module, params, log_integration=None):
               stmt.call.endpoint,
               uptos,
               app_patterns,
+              syslx.patterns(stmt.attrs) | syslx.patterns(endpt.attrs),
               stmt,
               last_stmt and deactivate)
         elif stmt.HasField('action'):
-          write('{0} -> {0} : {1}', agent, r'\n'.join(textwrap.wrap(stmt.action.action, 40)))
+          #write('{0} -> {0} : {1}', agent, r'\n'.join(textwrap.wrap(stmt.action.action, 40)))
+          write('{0} -> {0} : {1}', agent, stmt.action.action)
         elif stmt.HasField('cond'):
           payload = block_with_end(last_stmt, stmt.cond.stmt,
                        'opt {}',
@@ -196,7 +208,20 @@ def sequence_diag(module, params, log_integration=None):
             prefix = 'else'
           write('end')
         elif stmt.HasField('ret'):
-          write('{}<--{} : {}', sender, agent, stmt.ret.payload)
+          rargs = []
+
+          for param in syslalgo.yield_ret_params(stmt.ret.payload):
+            if  param != '...' and '.' in param:
+              (an,pn) = rex.split(r'\.', param)
+
+              rarg = format_args(an, pn)
+
+              if rarg:
+                rargs.append(rarg)
+            else:
+                rargs.append(param)
+
+          write('{}<--{} : {}', sender, agent, ' | '.join(p for p in rargs))
         else:
           raise Exception('No statement!')
 
@@ -211,25 +236,55 @@ def sequence_diag(module, params, log_integration=None):
     human_sender = 'human' in sender_patterns
     cron = 'cron' in sender_patterns
     needs_int = not (human or human_sender or cron) and sender != agent
-    # pdb.set_trace()
-    label = re.sub(ur'^.*? -> ', u' ⬄ ', r'\n'.join(textwrap.wrap(unicode(epname), 40)))
+    label = re.sub(ur'^.*? -> ', u' ⬄ ', unicode(epname))
 
     cron = 'cron' in app_patterns
 
     if stmt:
       assert stmt.HasField('call')
 
-      # pdb.set_trace()
-      patterns = syslx.patterns(stmt.attrs) or patterns
+      ptrns = ''
+      if bool(sender_endpt_patterns) or bool(patterns):
+        ptrns = u', '.join(sorted(sender_endpt_patterns)) + u' → ' +  u', '.join(sorted(patterns))
+     
+      isoctrl = []
 
+      for ctrl in endpt.attrs.keys():
+          if 'iso_ctrl' in ctrl:
+            isoctrl.append(re.sub(r'iso_ctrl_(.*)_txt', r'\1', ctrl))
+
+      epargs = []
+
+      def format_args(an, pn):
+        arg = '.'.join((an, pn))
+
+        if arg:
+          conf = module.apps[an].types[pn].attrs['iso_conf'].s[:1].upper()
+          integ = module.apps[an].types[pn].attrs['iso_integ'].s[:1].upper()
+          isocolor = 'red' if 'R' in conf else 'green'
+          arg = '<color blue>' + arg + '</color>' + ' <<color ' + isocolor + '>' + (conf if conf else '?') + ', ' + (integ if integ else '?') + '</color>>'
+        
+        return arg
+
+      for p in endpt.param:
+        an = ' :: '.join(p.type.type_ref.ref.appname.part)
+        pn = '.'.join(p.type.type_ref.ref.path)
+
+        eparg = format_args(an, pn)
+
+        if eparg:
+          epargs.append(eparg)
+          
 
       label = params.epfmt(
         epname=label,
         human='human' if human else '',
         human_sender='human sender' if human_sender else '',
         needs_int='needs_int' if needs_int else '',
-        args=', '.join(p.name for p in stmt.call.arg),
-        patterns=', '.join(sorted(patterns)),
+        args=' | '.join(e for e in epargs),
+        #args=', '.join(p.name for p in stmt.call.arg),
+        patterns=ptrns,
+        controls=', '.join(i for i in sorted(isoctrl)),
         **diagutil.attr_fmt_vars(stmt.attrs)
         ).replace('\n', r'\n')
 
@@ -242,7 +297,21 @@ def sequence_diag(module, params, log_integration=None):
       if log_integration and stmt:
         log_integration(app=from_app, stmt=stmt, patterns=patterns)
 
-    payload = syslalgo.return_payload(endpt.stmt)
+    rargs = []
+
+    for param in syslalgo.yield_ret_params(syslalgo.return_payload(endpt.stmt)):
+      if  param != '...' and '.' in param:
+        (an,pn) = rex.split(r'\.', param)
+
+        rarg = format_args(an, pn)
+
+        if rarg:
+          rargs.append(rarg)
+      else:
+          rargs.append(param)
+
+    payload = ' | '.join(p for p in rargs)
+   
     calling_self = from_app and syslx.fmt_app_name(from_app.name) == appname
     if not calling_self and not payload and deactivate:
       deactivate()
@@ -281,6 +350,7 @@ def sequence_diag(module, params, log_integration=None):
 
   with write.uml():
     #write('scale max 8192 height')
+    write('skinparam maxMessageSize 250')
     if params.title:
       write('title {}', params.title)
 

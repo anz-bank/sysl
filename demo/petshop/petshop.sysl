@@ -10,7 +10,8 @@ PetShopModel [package="io.sysl.demo.petshop.model"]:
         breedName <: string?
         species <: string?
         numLegs <: int?
-        avgLifespan <: decimal?
+        avgLifespan <: decimal(14.2)?
+        avgWeight <: decimal(14)?
         legRank <: int?
 
     !table Pet:

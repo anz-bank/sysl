@@ -24,6 +24,11 @@ class TestXsd(unittest.TestCase):
   def test_type_set(self):
     self.genAndCompare("/test/data/test_type_set_xsd", "TestTypeSetXsdModel", "test/data/test_type_set.xsd")
 
+  def test_type_attribute(self):
+    self.genAndCompare("/test/data/test_type_attr_xsd", "TestTypeAttrXsdModel", "test/data/test_type_attr.xsd")
+
+  def test_table_attribute(self):
+    self.genAndCompare("/test/data/test_table_attr_xsd", "TestTableAttrXsdModel", "test/data/test_table_attr.xsd")
 
   def genAndCompare(self, sysl_module, model, xsd_comparison_file):
     outpath  = '.'
