@@ -10,11 +10,11 @@ import errno
 import os
 import sys
 
-import util.debug as debug
-from core import sysldata
-from core import syslints
-from core import syslloader
-from core import syslseqs
+import sysl.util.debug as debug
+from sysl.core import sysldata
+from sysl.core import syslints
+from sysl.core import syslloader
+from sysl.core import syslseqs
 
 
 def _pb_sub_parser(subparser):
