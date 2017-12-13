@@ -1,6 +1,5 @@
 httplib2
 lxml
-nose
 openpyxl
 plantuml
 protobuf
@@ -8,3 +7,4 @@ pylint
 PyYAML
 requests
 six
+pytest

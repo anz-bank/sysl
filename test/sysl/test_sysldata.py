@@ -1,4 +1,4 @@
-from src.sysl import syslloader, sysldata
+from sysl.core import syslloader, sysldata
 import unittest
 import re, os, sys
 
@@ -17,7 +17,8 @@ class TestSetOf(unittest.TestCase):
         'project' : 'TestData :: Data Views', 
         'output'  : 'test_set_of-data.png',
         'plantuml': '',
-        'verbose' : ''}
+        'verbose' : '',
+        'filter' : ''}
       args = ap.Namespace(**d)
 
       out = sysldata.dataviews(module, args)
