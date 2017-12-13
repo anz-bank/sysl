@@ -1,6 +1,6 @@
 """sysl algorithms"""
 import re
-from sysl.sysl import syslx
+from sysl.core import syslx
 from sysl.util import rex
 
 from sysl.proto import sysl_pb2

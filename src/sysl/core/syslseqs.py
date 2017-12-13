@@ -10,9 +10,9 @@ import os
 import re
 import textwrap
 
-from sysl.sysl import syslalgo
-from sysl.sysl import syslloader
-from sysl.sysl import syslx
+from sysl.core import syslalgo
+from sysl.core import syslloader
+from sysl.core import syslx
 
 from sysl.util import diagutil
 from sysl.util import writer

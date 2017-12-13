@@ -2,7 +2,7 @@ import collections
 
 from sysl.proto import sysl_pb2
 
-from sysl.sysl import syslx
+from sysl.core import syslx
 
 from sysl.util import algo
 from sysl.util import java

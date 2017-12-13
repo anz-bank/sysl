@@ -11,7 +11,7 @@ from sysl.util import writer
 
 from sysl.proto import sysl_pb2
 
-from sysl.sysl import syslx
+from sysl.core import syslx
 
 
 TYPE_MAP = {

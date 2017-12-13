@@ -1,4 +1,4 @@
-from sysl.sysl import syslx
+from sysl.core import syslx
 
 from sysl.util import datamodel
 from sysl.util import java

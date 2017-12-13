@@ -4,19 +4,17 @@
 
 Sysl compiler and toolkit.
 """
-
 import argparse
 import cStringIO
 import errno
 import os
 import sys
 
-import sysl.util.debug as debug
-
-from sysl.sysl import sysldata
-from sysl.sysl import syslints
-from sysl.sysl import syslloader
-from sysl.sysl import syslseqs
+import util.debug as debug
+from core import sysldata
+from core import syslints
+from core import syslloader
+from core import syslseqs
 
 
 def _pb_sub_parser(subparser):
@@ -117,5 +115,5 @@ def main():
 
 
 if __name__ == '__main__':
-  debug.init()
+#  debug.init()
   main()

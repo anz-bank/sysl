@@ -7,7 +7,7 @@ import re
 from sysl.util import diagutil
 from sysl.util import writer
 
-from sysl.sysl import syslloader
+from sysl.core import syslloader
 
 def _attr_sort_key(field):
   return field[1].source_context.start.line

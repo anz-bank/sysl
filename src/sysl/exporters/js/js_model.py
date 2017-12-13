@@ -12,8 +12,8 @@ import re
 
 from sysl.proto import sysl_pb2
 
-from sysl.sysl import syslloader
-from sysl.sysl import syslx
+from sysl.core import syslloader
+from sysl.core import syslx
 
 from sysl.util import datamodel
 from sysl.util import debug

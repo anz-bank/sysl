@@ -6,8 +6,8 @@ import collections
 import os
 import re
 
-from sysl.sysl import syslloader
-from sysl.sysl import syslx
+from sysl.core import syslloader
+from sysl.core import syslx
 
 from sysl.util import datamodel
 from sysl.util import debug
@@ -39,7 +39,7 @@ def export(
 
   model_class = '_'.join(app.name.part).replace(' ', '')
 
-  write_file = src.util.file.FileWriter(outdir, package, entities)
+  write_file = sysl.util.file.FileWriter(outdir, package, entities)
 
   inouts = []
   for s in serializers:
