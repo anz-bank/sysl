@@ -10,14 +10,14 @@ import numbers
 import os
 import re
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
-from src.sysl import syslloader
-from src.sysl import syslx
+from sysl.sysl import syslloader
+from sysl.sysl import syslx
 
-from src.util import datamodel
-from src.util import debug
-from src.util import java
+from sysl.util import datamodel
+from sysl.util import debug
+from sysl.util import java
 
 
 def js_dump(appname, obj, indent, outfile):

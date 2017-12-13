@@ -13,10 +13,10 @@ import sys
 
 import src.util.debug as debug
 
-from src.sysl import sysldata
-from src.sysl import syslints
-from src.sysl import syslloader
-from src.sysl import syslseqs
+from sysl.sysl import sysldata
+from sysl.sysl import syslints
+from sysl.sysl import syslloader
+from sysl.sysl import syslseqs
 
 
 def _pb_sub_parser(subparser):

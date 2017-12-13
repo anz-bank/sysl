@@ -5,7 +5,7 @@ import os
 
 import lxml.etree as ET
 
-from src.util import writer
+from sysl.util import writer
 
 
 BASE_TYPE_MAP = {

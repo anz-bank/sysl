@@ -5,8 +5,8 @@ import abc
 import operator
 import sys
 
-from src.proto import sysl_pb2
-from src.util import rex
+from sysl.proto import sysl_pb2
+from sysl.util import rex
 
 
 class SyntaxError(Exception):

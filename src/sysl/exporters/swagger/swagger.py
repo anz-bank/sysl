@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 import yaml
 
-from src.sysl import syslx
+from sysl.sysl import syslx
 
-from src.util import datamodel
-from src.util import java
-from src.util import rex
+from sysl.util import datamodel
+from sysl.util import java
+from sysl.util import rex
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
 
 TYPE_MAP = {

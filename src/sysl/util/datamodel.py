@@ -1,11 +1,11 @@
 import collections
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
-from src.sysl import syslx
+from sysl.sysl import syslx
 
-from src.util import algo
-from src.util import java
+from sysl.util import algo
+from sysl.util import java
 
 
 def typeref(type_, module):

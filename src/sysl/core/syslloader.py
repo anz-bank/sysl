@@ -6,11 +6,11 @@ import os
 import re
 import sys
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
-from src.sysl import syslalgo
-from src.sysl import syslparse
-from src.sysl import syslx
+from sysl.sysl import syslalgo
+from sysl.sysl import syslparse
+from sysl.sysl import syslx
 
 def fmt_app_name(appname):
   """Format a sysl_pb2.AppName as a syntactically valid string."""

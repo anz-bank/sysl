@@ -11,10 +11,10 @@ import textwrap
 
 import yaml
 
-from src.util import debug
-from src.util import writer
+from sysl.util import debug
+from sysl.util import writer
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
 
 # TODO: dedup with //src/exporters/swagger/swagger.py

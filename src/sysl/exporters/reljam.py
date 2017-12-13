@@ -6,13 +6,13 @@ import collections
 import os
 import re
 
-from src.sysl import syslloader
-from src.sysl import syslx
+from sysl.sysl import syslloader
+from sysl.sysl import syslx
 
-from src.util import datamodel
-from src.util import debug
-from src.util import java
-from src.util import writer
+from sysl.util import datamodel
+from sysl.util import debug
+from sysl.util import java
+from sysl.util import writer
 import src.util.file
 
 import src.exporters.api.spring_rest

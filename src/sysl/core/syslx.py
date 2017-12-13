@@ -1,6 +1,6 @@
 import collections
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
 
 def fmt_app_name(appname):

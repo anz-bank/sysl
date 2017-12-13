@@ -4,10 +4,10 @@
 import collections
 import re
 
-from src.util import diagutil
-from src.util import writer
+from sysl.util import diagutil
+from sysl.util import writer
 
-from src.sysl import syslloader
+from sysl.sysl import syslloader
 
 def _attr_sort_key(field):
   return field[1].source_context.start.line

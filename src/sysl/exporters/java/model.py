@@ -8,14 +8,14 @@ import re
 import struct
 import warnings
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
-from src.sysl import syslx
+from sysl.sysl import syslx
 
-from src.util import datamodel
-from src.util import java
-from src.util import scopes
-from src.util import writer
+from sysl.util import datamodel
+from sysl.util import java
+from sysl.util import scopes
+from sysl.util import writer
 
 
 def _autoinc_fields(t, module):

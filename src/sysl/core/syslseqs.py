@@ -10,13 +10,13 @@ import os
 import re
 import textwrap
 
-from src.sysl import syslalgo
-from src.sysl import syslloader
-from src.sysl import syslx
+from sysl.sysl import syslalgo
+from sysl.sysl import syslloader
+from sysl.sysl import syslx
 
-from src.util import diagutil
-from src.util import writer
-from src.util import rex
+from sysl.util import diagutil
+from sysl.util import writer
+from sysl.util import rex
 
 import pdb
 

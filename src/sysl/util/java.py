@@ -9,9 +9,9 @@ import struct
 import sys
 import uuid
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
-from src.sysl import syslx
+from sysl.sysl import syslx
 
 import datamodel
 import scopes

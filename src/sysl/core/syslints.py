@@ -5,11 +5,11 @@
 import itertools
 import re
 
-from src.sysl import syslloader
-from src.sysl import syslx
+from sysl.sysl import syslloader
+from sysl.sysl import syslx
 
-from src.util import diagutil
-from src.util import writer
+from sysl.util import diagutil
+from sysl.util import writer
 
 def yield_call_statements(statements):
   for (_,stmt) in enumerate(statements):

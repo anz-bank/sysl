@@ -13,7 +13,7 @@ import requests
 import sys
 import uuid
 
-from src.util import cache
+from sysl.util import cache
 
 
 USER_ENV = 'CONFLUENCE_USER'

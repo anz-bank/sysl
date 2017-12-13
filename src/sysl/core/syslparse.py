@@ -16,12 +16,12 @@ import time
 import urlparse
 import re
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
-from src.sysl import syslx
+from sysl.sysl import syslx
 
-from src.util import simple_parser
-from src.util import rex
+from sysl.util import simple_parser
+from sysl.util import rex
 
 
 USER_ENV = 'CONFLUENCE_USER'

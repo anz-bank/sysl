@@ -1,9 +1,9 @@
 """sysl algorithms"""
 import re
-from src.sysl import syslx
-from src.util import rex
+from sysl.sysl import syslx
+from sysl.util import rex
 
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
 def enumerate_calls(stmts):  # pylint: disable=too-many-branches
   """Enumerate all calls under stmts, in the form (parent_stmt, call)."""

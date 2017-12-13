@@ -1,6 +1,6 @@
-from src.proto import sysl_pb2
+from sysl.proto import sysl_pb2
 
-from src.sysl import syslx
+from sysl.sysl import syslx
 
 
 class Scope(object):
