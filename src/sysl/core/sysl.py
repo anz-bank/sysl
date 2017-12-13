@@ -11,7 +11,7 @@ import errno
 import os
 import sys
 
-import src.util.debug as debug
+import sysl.util.debug as debug
 
 from sysl.sysl import sysldata
 from sysl.sysl import syslints

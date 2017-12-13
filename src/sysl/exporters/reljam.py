@@ -13,15 +13,15 @@ from sysl.util import datamodel
 from sysl.util import debug
 from sysl.util import java
 from sysl.util import writer
-import src.util.file
+import sysl.util.file
 
-import src.exporters.api.spring_rest
-import src.exporters.java.model as java_model
-import src.exporters.java.facade as java_facade
-import src.exporters.json_out.serializer as json_export
-import src.exporters.swagger.swagger as swagger_export
-import src.exporters.xml.serializer as xml_export
-import src.exporters.xml.xsd as xsd_export
+import sysl.exporters.api.spring_rest
+import sysl.exporters.java.model as java_model
+import sysl.exporters.java.facade as java_facade
+import sysl.exporters.json_out.serializer as json_export
+import sysl.exporters.swagger.swagger as swagger_export
+import sysl.exporters.xml.serializer as xml_export
+import sysl.exporters.xml.xsd as xsd_export
 
 
 Context = collections.namedtuple(
