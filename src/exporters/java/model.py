@@ -334,8 +334,6 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
                 which_ftype == 'set' and
                 f.set.WhichOneof('type') == 'primitive'):
               (_, _, ftype) = datamodel.typeref(f, context.module)
-              if (tname, jfname) == ('EmployeeTendsPet', 'employeeId'):
-                import pdb; pdb.set_trace()
               if 'autoinc' in syslx.patterns(f.attrs) or (
                   ftype and 'autoinc' in syslx.patterns(ftype.attrs)):
                 with java.If(w, 'ids == null'):

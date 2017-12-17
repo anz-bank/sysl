@@ -122,7 +122,6 @@ def _map_subscriptions(module):
       if endpt.HasField('source'):
         src_app = module.apps[syslx.fmt_app_name(endpt.source)]
         src_ep_name = endpt.name.split(' -> ')[1]
-        #if 'PoBusinessEvent' in src_ep_name: import pdb; pdb.set_trace()
         assert src_ep_name in src_app.endpoints, (
           appname, epname, src_ep_name, str(src_app))
         src_ep = src_app.endpoints[src_ep_name]
