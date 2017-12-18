@@ -16,7 +16,6 @@ class TestEpa(unittest.TestCase):
 
     args = ap.Namespace(**d)
 
-    #TODO(kirkpatg): find out what this is doing
     if not args.exclude and args.project:
       args.exclude = {args.project}
 
@@ -33,9 +32,8 @@ class TestEpa(unittest.TestCase):
         'clustered' : '',
         'title'     : 'Test EPA',
         'epa'       : False,
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa', d)
 
@@ -55,10 +53,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA',
+        'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa', d)
 
@@ -80,10 +77,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA Repeated Calls',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Repeated Calls',
+        'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa_repeated_calls', d)
 
@@ -108,10 +104,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : False,
-        'title'     : 'Test EPA Repeated Calls',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Repeated Calls',
+        'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa_repeated_calls', d)
 
@@ -133,10 +128,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA Ignore Keyword',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Ignore Keyword',
+        'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa_ignore_keyword', d)
 
@@ -156,10 +150,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA Labels',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Labels',
+        'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa_ignore_keyword', d)
 
@@ -179,10 +172,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA Labels',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Labels',
+        'verbose'   : ''}
 
       #import pdb; pdb.set_trace()
 
@@ -204,10 +196,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA Patterns',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Patterns',
+        'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa_patterns', d)
 
@@ -227,10 +218,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA Patterns',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Patterns',
+        'verbose'   : ''}
 
 
       out = self.integration_view_helper('/test/data/test_epa_missing_patterns', d)
@@ -253,10 +243,9 @@ class TestEpa(unittest.TestCase):
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
-        'title'     : 'Test EPA Patterns',
-        'verbose'   : '',
         'filter'    : None,
-      }
+        'title'     : 'Test EPA Patterns',
+        'verbose'   : ''}
 
       # import pdb; pdb.set_trace()
 
@@ -269,36 +258,56 @@ class TestEpa(unittest.TestCase):
     except (IOError, Exception) as e:
       self.fail(traceback.format_exc())
 
-  def test_events(self):
+  # def test_events(self):
+    
+  #   try:
+
+  #     d = {
+  #       'project'   : 'Test EPA :: Events',
+  #       'exclude'   : '',
+  #       'output'    : 'test_epa_events-ints.png',
+  #       'plantuml'  : '',
+  #       'clustered' : '',
+  #       'epa'       : True,
+  #       'title'     : 'Test EPA Events',
+  #       'verbose'   : ''}
+
+  #     out = self.integration_view_helper('/test/data/test_epa_events', d)
+
+  #     #import pdb; pdb.set_trace()
+  #     self.assertTrue('state "**Test EPA :: App1 -> App1 Event**" as _0' in out[0])
+  #     self.assertTrue('state "**Trigger**" as _2' in out[0])
+  #     self.assertTrue('state "**App1 Event**" as _1' in out[0])
+
+  #     self.assertTrue(re.search('_2.*_1', out[0]))
+  #     self.assertTrue(re.search('_1.*_0', out[0]))
+
+  #     self.assertFalse(re.search('App1 Event client', out[0]))
+
+  #   except (IOError, Exception) as e:
+  #     self.fail(traceback.format_exc()) 
+
+  def test_int_passthrough(self):
 
     try:
-
+      
       d = {
-        'project'   : 'Test EPA :: Events',
+        'project'   : 'Test EPA :: Passthrough',
         'exclude'   : '',
-        'output'    : 'test_epa_events-ints.png',
+        'output'    : 'test_epa_passthrough-ints.png',
         'plantuml'  : '',
         'clustered' : '',
-        'epa'       : True,
-        'title'     : 'Test EPA Events',
-        'verbose'   : '',
-        'filter'    : None,
-      }
+        'epa'       : False,
+        'title'     : 'Test EPA Passthrough',
+        'verbose'   : ''}
 
-      out = self.integration_view_helper('/test/data/test_epa_events', d)
+      out = self.integration_view_helper('/test/data/test_epa_passthrough', d)
 
-      #import pdb; pdb.set_trace()
-      self.assertTrue('state "**Test EPA :: App1 -> App1 Event**" as _0' in out[0])
-      self.assertTrue('state "**Trigger**" as _2' in out[0])
-      self.assertTrue('state "**App1 Event**" as _1' in out[0])
-
-      self.assertTrue(re.search('_2.*_1', out[0]))
-      self.assertTrue(re.search('_1.*_0', out[0]))
-
-      self.assertFalse(re.search('App1 Event client', out[0]))
-
+      import pdb; pdb.set_trace()
+      
     except (IOError, Exception) as e:
       self.fail(traceback.format_exc())
+
 
 if __name__ == '__main__':
   debug.init()

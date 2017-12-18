@@ -1,6 +1,10 @@
 httplib2
 lxml
+nose
+openpyxl
 plantuml
 protobuf
-pyyaml
+pylint
+PyYAML
 requests
+six

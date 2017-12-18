@@ -1,17 +1,3 @@
-# Copyright 2016 The Sysl Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License."""Super smart code writer."""
-
 """sysl module loader"""
 
 import codecs
@@ -181,31 +167,60 @@ def _apply_call_templates(app):
 
   pseudo = app.endpoints[pseudos.pop()]
 
-  # Discover templates.
   templates = {}
-  for stmt in pseudo.stmt:
-    if not stmt.HasField('call'):
-      raise Exception('Only calls are allowed in ".. * <- *"')
-    templates[fmt_call(stmt.call)] = [stmt.attrs, 0]
 
-  # Apply templates.
-  for (_, endpt) in app.endpoints.iteritems():
-    for (stmt, call) in syslalgo.enumerate_calls(endpt.stmt):
-      fmtcall = fmt_call(call)
-      template = templates.get(fmtcall)
+  def call_templates():
+    # Discover templates.
+    for stmt in pseudo.stmt:
+      if stmt.HasField('call'):
+        templates[fmt_call(stmt.call)] = [stmt.attrs, 0]
+
+    # Apply templates.
+    endpoints = [endpt for (_, endpt) in app.endpoints.iteritems() if not re.match(r'\.\.\s*\*\s*<-\s*\*', endpt.name)]
+
+    for endpt in endpoints:
+      for (stmt, call) in syslalgo.enumerate_calls(endpt.stmt):
+        fmtcall = fmt_call(call)
+        template = templates.get(fmtcall)
+        if template is not None:
+          for (name, attr) in template[0].iteritems():
+            stmt.attrs[name].CopyFrom(attr)
+          template[1] += 1
+
+  def ep_templates():
+     # Discover templates.
+    for stmt in pseudo.stmt:
+      if stmt.HasField('action'):
+        templates[stmt.action.action] = [stmt.attrs, 0]
+      
+    # Apply templates.
+    endpoints = [endpt for (_, endpt) in app.endpoints.iteritems() if not re.match(r'\.\.\s*\*\s*<-\s*\*', endpt.name)]
+
+    for endpt in endpoints:
+      template = templates.get(endpt.name)
       if template is not None:
         for (name, attr) in template[0].iteritems():
-          stmt.attrs[name].CopyFrom(attr)
+          endpt.attrs[name].CopyFrom(attr)
         template[1] += 1
+      #import pdb; pdb.set_trace()
+
+  call_templates()
+  ep_templates()
+
+  #if 'iOS Client' in fmt_app_name(app.name):
+  #  import pdb; pdb.set_trace()
 
   # Error on unused templates, in case of typos.
   call = None  # In case of empty loop
   unused = {
     call
     for (call, n) in templates.iteritems()
-    if n == 0}
+    if n[1] == 0}
+
+  # TODO: add better message
+  # App is referring to an unused app-endpoint
   if unused:
-    raise RuntimeError('Unused templates: {}', ', '.join(repr(c) for c in call))
+    raise RuntimeError('Unused templates in {}: {}', fmt_app_name(app.name), ', '.join(repr(c) for c in unused))
 
 
 def _infer_types(app):
@@ -295,9 +310,10 @@ def load(names, validate, root):
   module = sysl_pb2.Module()
   imports = set()
 
-  def do_import(name):
+  def do_import(name, indent="-"):
     """Import a sysl module and its dependencies."""
     imports.add(name)
+    #print indent, name
     (basedir, _) = os.path.split(name)
     new_imports = {
       root + i if i[:1] == '/' else os.path.join(basedir, i)
@@ -306,7 +322,7 @@ def load(names, validate, root):
     } - imports
     #print >>sys.stderr, '+++++++++++', new_imports
     while new_imports:
-      do_import(new_imports.pop())
+      do_import(new_imports.pop(), indent+"-")
       new_imports -= imports
 
   for name in names:

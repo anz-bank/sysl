@@ -1,17 +1,3 @@
-# Copyright 2016 The Sysl Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License."""Super smart code writer."""
-
 from src.proto import sysl_pb2
 
 from src.sysl import syslx
@@ -369,10 +355,9 @@ def deserializer(context):
       w('p.nextToken();')
       with java.Switch(w, 'tok'):
         for tok in (
-          'VALUE_FALSE VALUE_NULL VALUE_NUMBER_FLOAT VALUE_NUMBER_INT '
-          'VALUE_STRING VALUE_TRUE '
-          'NOT_AVAILABLE END_OBJECT END_ARRAY FIELD_NAME VALUE_EMBEDDED_OBJECT'
-          ).split():
+          'END_ARRAY END_OBJECT FIELD_NAME NOT_AVAILABLE '
+          'VALUE_EMBEDDED_OBJECT VALUE_FALSE VALUE_NULL '
+          'VALUE_NUMBER_FLOAT VALUE_NUMBER_INT VALUE_STRING VALUE_TRUE').split():
           w('case {}: break;', tok)
         with java.Case(w, 'START_ARRAY'):
           with java.While(w, 'p.getCurrentToken() != JsonToken.END_ARRAY'):

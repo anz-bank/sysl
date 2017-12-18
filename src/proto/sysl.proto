@@ -3,7 +3,7 @@ syntax = "proto3";
 package sysl;
 
 // Deltas are diff annotations set for each major element in a model.
-// TODO: Is this reall needed? Investigate protobuf diff tools.
+// TODO: Is this really needed? Investigate protobuf diff tools.
 enum Delta {
     NO_Delta = 0;
     DELTA_SAME      = 1;
@@ -74,7 +74,7 @@ message Endpoint {
     string                  docstring   = 3;
     map<string, Attribute>  attrs       = 4;
     repeated string         flag        = 10; // ~attrs
-    AppName                 source      = 5; // denotes pubsub subscription
+    AppName                 source      = 5;  // denotes pubsub subscription
     bool                    is_pubsub   = 6;
     repeated Param          param       = 9;
     repeated Statement      stmt        = 7;

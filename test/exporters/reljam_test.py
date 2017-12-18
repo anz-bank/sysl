@@ -21,7 +21,7 @@ class TestReljam(unittest.TestCase):
   def test_module_export(self):
     self.checkCounts(self.package_prefix + 'model',
       {'Employee': 0 , 'Breed': 0 , 'Pet': 0 , 'EmployeeTendsPet': 0 },
-      {'Employee': 31, 'Breed': 31, 'Pet': 35, 'EmployeeTendsPet': 35 })
+      {'Employee': 44, 'Breed': 44, 'Pet': 48, 'EmployeeTendsPet': 46 })
 
   def test_facade_export(self):
      self.checkCounts(self.package_prefix + 'facade',

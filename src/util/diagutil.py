@@ -1,17 +1,3 @@
-# Copyright 2016 The Sysl Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License."""Super smart code writer."""
-
 """Diagramming utilities"""
 
 import collections
@@ -105,7 +91,8 @@ def output_plantuml(args, puml_input):
           print '... not really (dry-run)',
   else:
     (open(args.output, 'w') if args.output else sys.stdout).write(out)
-    # (open(args.output + '.puml', 'w') if args.output else sys.stdout).write(puml_input)
+    # Uncomment this to print out Plant UML
+    #(open(args.output + '.puml', 'w') if args.output else sys.stdout).write(puml_input)
 
   if args.verbose:
     print
@@ -150,6 +137,7 @@ class _FmtParser(simple_parser.SimpleParser):
 
   def expansions(self, term=u'$'):
     """Parse expansions."""
+
     result = [repr(u'')]
     while self.eat(ur'((?:[^%]|%[^(\n]|\n)*?)(?=' + term + ur'|%\()'):
       prefix = self.pop()
@@ -158,16 +146,26 @@ class _FmtParser(simple_parser.SimpleParser):
         ).replace(u'\1', u'%')
       if prefix:
         result.append(repr(prefix))
+      
       if self.eat(ur'%\('):
         if not self.eat(ur'(@?\w+)'):
           raise Exception('missing variable reference')
         var = cond = u"vars.get({!r}, '')".format(self.pop())
+        
+        # conditionals!
+        #import pdb; pdb.set_trace()
+
+        if self.eat(ur'([!=]=)'):
+          cond = var + " {} ".format(self.pop())
+          if not self.eat(ur'\'([\w ]+)\''):
+            raise Exception('missing conditional value')
+          cond = cond + u"{!r}".format(self.pop())
 
         if self.eat(ur'~/([^/]+)/'):
           cond = u're.search({!r}, {})'.format(
             self.pop().replace('\b', r'\b'), var)
-
-        have = self.eat(ur'[?]')
+        
+        have = self.eat(ur'[=?]')
         if have:
           if not self.expansions(ur'$|[|)]'):
             raise Exception('wat?')

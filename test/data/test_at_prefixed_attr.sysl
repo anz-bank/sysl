@@ -1,0 +1,9 @@
+TestData :: Top Level App:
+  
+    Second Level App [bracketed_attr='bracketed_attr string', bracketed_array_attr=['bval1','bval2']]:
+        @sla_attribute = 'sla_attribute string'
+        @sla_array_attr = ['val1','val2']
+        Do not attach attribute here
+
+    !type TestType:
+    	@id = 'test id'

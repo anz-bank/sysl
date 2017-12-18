@@ -1,0 +1,26 @@
+App:
+    !enum CustomerType:
+        INDIVIDUAL = 0
+        BUSINESS = 1
+
+    !table Customer:
+        customer_id = 1 <: int [~pk]
+        type = 2 <: CustomerType
+        name = 3 <: string
+
+    !table Individual:
+        customer_id = 1 <: Customer.customer_id [~pk]
+        address = 2 <: string
+        email = 3 <: string
+        phone = 4 <: string
+        fax = 5 <: string
+        foobar = 6 <: int
+
+    !table Business:
+        customer_id = 1 <: Customer.customer_id [~pk]
+        abn = 1 <: string
+
+    !table CustCustRelationship:
+        parent_id <: Customer.customer_id [~pk]
+        child_id <: Customer.customer_id [~pk]
+        relationshipType <: string

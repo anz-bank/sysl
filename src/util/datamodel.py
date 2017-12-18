@@ -1,23 +1,10 @@
-# Copyright 2016 The Sysl Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License."""Super smart code writer."""
-
 import collections
 
 from src.proto import sysl_pb2
 
 from src.sysl import syslx
 
+from src.util import algo
 from src.util import java
 
 
@@ -82,7 +69,7 @@ def sorted_fields(t):
   elif which_t == 'tuple':
     return sorted_fields_tuple(t.tuple)
   else:
-    raise RuntimeError('sorted_fields(): unexpected type: ' + which_t)
+    return []
 
 
 def sorted_fields_relation(r):
@@ -94,6 +81,7 @@ def sorted_fields_relation(r):
       e[0] not in pkey_fields,
       (e[0] not in pkey_fields) ^ e[1].HasField('type_ref'),
       e[0].lower()))
+
 
 def sorted_fields_tuple(t):
   return sorted(t.attr_defs.iteritems(),
@@ -111,11 +99,20 @@ def primary_key_params(t, module):
       if fname in pkey
     ]
 
+
 def foreign_keys(t, module):
   for (fname, f) in sorted_fields(t):
     (java_type, type_info, _) = typeref(f, module)
     if type_info and type_info.parent_path:
       yield (fname, java_type, type_info)
+
+
+def fk_topo_sort(types, module):
+  G = {}
+  for (tname, t) in types.iteritems():
+    G[tname] = {ti.parent_path for (_, _, ti) in foreign_keys(t, module)}
+  return ((p, types[p]) for (_, p) in sorted(algo.topo_sort(G), reverse=True))
+
 
 def build_fk_reverse_map(app, module):
   fk_rmap = collections.defaultdict(lambda: collections.defaultdict(set))
@@ -128,6 +125,7 @@ def build_fk_reverse_map(app, module):
         fk_rmap[fk_type][fk_field].add((tname, fname))
 
   return fk_rmap
+
 
 def all_fields():
   dictdictset = (

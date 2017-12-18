@@ -26,7 +26,7 @@ public class TestLazyLoad {
     }
   }
 
-  // TODO(kirkpatg): refactor
+  // TODO: refactor
   @Test
   public void testMembersAreLazilyConstructed() {
     Field member = null;

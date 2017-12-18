@@ -1,18 +1,9 @@
-# Copyright 2016 The Sysl Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License."""Super smart code writer."""
-
 """sysl algorithms"""
+import re
+from src.sysl import syslx
+from src.util import rex
+
+from src.proto import sysl_pb2
 
 def enumerate_calls(stmts):  # pylint: disable=too-many-branches
   """Enumerate all calls under stmts, in the form (parent_stmt, call)."""
@@ -84,3 +75,23 @@ def return_payload(stmts):
       return stmt.ret.payload
     else:
       raise Exception('No statement!', stmt.WhichOneof('stmt'))
+
+def yield_ret_params(payload):
+  if payload is not None:
+    for param_pair in rex.split(r',(?![^{]*\})', payload):
+      ptname = param_pair
+      
+      if param_pair.count('<:') == 1:
+        (pname, ptname) = rex.split(r'\s*<:\s*', param_pair)
+
+      if ptname.upper() not in (set(sysl_pb2.Type.Primitive.keys()) - {'NO_Primitive'}):
+        m = rex.match(r'set\s+of\s+(.+)$', ptname)
+        if m:
+          ptname = m.group(1)
+
+        m = rex.match(r'one\s+of\s*{(.+)}$', ptname)
+        if m:
+          for ptn in rex.split(r'\s*,\s*', m.group(1)):
+            yield ptn
+        else:
+          yield ptname
