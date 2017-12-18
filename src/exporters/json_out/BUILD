@@ -1,5 +1,5 @@
 py_library(
-    name = "serializer",
-    srcs = ["serializer.py"],
-    visibility = ["//src/exporters:__pkg__"],
+  name = "serializer",
+  srcs = ["serializer.py"],
+  visibility = ["//src/exporters:__pkg__"],
 )

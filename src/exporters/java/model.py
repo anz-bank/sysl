@@ -1,20 +1,6 @@
 #!/usr/local/bin/python
 # -*- encoding: utf-8 -*-
 
-# Copyright 2016 The Sysl Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License."""Super smart code writer."""
-
 import hashlib
 import itertools
 import logging
@@ -30,6 +16,18 @@ from src.util import datamodel
 from src.util import java
 from src.util import scopes
 from src.util import writer
+
+
+def _autoinc_fields(t, module):
+  """Discover all autoinc fields, including those transitively so via FKs."""
+  result = set()
+  for (fname, f) in datamodel.sorted_fields(t):
+    jfname = java.name(fname)
+    method = java.CamelCase(jfname)
+    (java_type, type_info, ftype) = datamodel.typeref(f, module)
+    if ftype and 'autoinc' in syslx.patterns(ftype.attrs):
+      result.add(fname)
+  return result
 
 
 def export_entity_class(w, tname, t, fk_rsubmap, context):
@@ -202,7 +200,11 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
 
           for (fname, _, _) in datamodel.foreign_keys(t, context.module):
             jfname = java.name(fname)
-            w(u'table.fk_{0}.remove({0});', jfname)
+            with java.If(w, '{0} != null', jfname):
+              w('HashSet<{0}> fk = table.fk_{1}.get({1});', tname, jfname)
+              w(u'fk.remove(this);')
+              with java.If(w, 'fk.size() == 0'):
+                w(u'table.fk_{0}.remove({0});', jfname)
 
         with java.Method(w, '\npublic', 'View', 'asView'):
           w('Snapshot result = new Snapshot(_model);')
@@ -229,17 +231,19 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
           w('return false;')
 
         w('{0} that = ({0})object;', tname)
+        if which_type == 'relation':
+          w('assert _model != null && _model == that._model;')
         if pkey:
-          with java.If(w, '_model != null && _model == that._model'):
-            w('return _key != null && _key.equals(that._key);', tname)
-        for (fname, f) in datamodel.sorted_fields(t):
-          jfname = java.name(fname)
-          with java.If(w,
-              ('(this.{0} == null) != (that.{0} == null) || '
-               'this.{0} != null && !this.{0}.equals(that.{0})'),
-              jfname):
-            w('return false;')
-        w('return true;')
+          w('return _key.equals(that._key);', tname)
+        else:
+          for (fname, f) in datamodel.sorted_fields(t):
+            jfname = java.name(fname)
+            with java.If(w,
+                ('this.{0} != that.{0} && '
+                 '(this.{0} == null || !this.{0}.equals(that.{0}))'),
+                jfname):
+              w('return false;')
+          w('return true;')
 
       with java.Method(w, '\npublic', 'int', 'hashCode', override=True):
         if pkey:
@@ -252,37 +256,112 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
               jfname)
           w('return i;')
 
+      with java.Method(w, '\npublic', 'int', 'canonicalHashCode',
+          [('int[]', 'ids')]):
+        w('int i = 0;')
+        for (fname, f) in datamodel.sorted_fields(t):
+          jfname = java.name(fname)
+          ref = 'this.' + jfname
+          if 'autoinc' in syslx.patterns(f.attrs):
+            ref = 'ids[{}]'.format(ref)
+            w('i = 3 * i + (this.{} == null ? 0 : {});', jfname, ref)
+          else:
+            w('i = 3 * i + (this.{} == null ? 0 : {}.hashCode());',
+              jfname, ref)
+        w('return i;')
+
+      ais = _autoinc_fields(t, context.module)
+
+      with java.Method(w, '\n', 'boolean', 'canonicallyEqual',
+          [(tname, 'a'), ('int[]', 'aIds'), (tname, 'b'), ('int[]', 'bIds')],
+          static=True):
+        with java.If(w, 'a == b'):
+          w('return true;')
+        if pkey:
+          with java.If(w, 'a._model != null && a._model == b._model'):
+            w('return a._key.equals(b._key);', tname)
+        for (fname, f) in datamodel.sorted_fields(t):
+          jfname = java.name(fname)
+          if fname in ais:
+            test = 'aIds[a.{0}] != bIds[b.{0}]'.format(jfname)
+          else:
+            test = '!a.{0}.equals(b.{0})'.format(jfname)
+          with java.If(w,
+              'a.{0} != b.{0} && (a.{0} == null || {1})',
+              jfname, test):
+            w('return false;')
+        w('return true;')
+
+      if which_type == 'relation':
+        with java.Method(w, '\npublic', 'int', 'compareTo', [(tname, 'that')]):
+          with java.If(w, 'this == that'):
+            w('return 0;')
+          if pkey:
+            with java.If(w, '_model != null && _model == that._model'):
+              w('return _key.compareTo(that._key);', tname)
+          w('int c;')
+          for (fname, f) in datamodel.sorted_fields(t):
+            jfname = java.name(fname)
+            with java.If(w,
+                ('(c = '
+                 '\vthis.{0} == that.{0} ? 0 : '
+                 '\vthis.{0} == null ? -1 : '
+                 '\vthat.{0} == null ? 1 : '
+                 '\vthis.{0}.compareTo(that.{0})) != 0'),
+                jfname):
+              w('return c;')
+          w('return 0;')
+
       with java.Method(w, '\npublic', 'String', 'toString', override=True):
         w('StringBuilder sb = new StringBuilder();')
-        w('toString(sb, "");')
+        w('canonicalToString(sb, null);')
         w('return sb.toString();')
 
-      with java.Method(w, '\npublic', 'void', 'toString',
-          [('StringBuilder', 'sb'), ('String', 'indent')]):
+      with java.Method(w, '\npublic', 'void', 'canonicalToString',
+          [('StringBuilder', 'sb'), ('int[]', 'ids')]):
         sorted_fields = datamodel.sorted_fields(t)
         if len(sorted_fields) > 1:
-          w('String comma_nl_indent = ",\\n  " + indent;')
-        w('sb.append("{}(\\n");', tname)
+          w('String sep = "";')
+        w('sb.append("{}(");', tname)
         for (i, (fname, f)) in enumerate(datamodel.sorted_fields(t)):
           jfname = java.name(fname)
           with java.If(w, '{} != null', jfname):
-            w('sb.append({});', 'comma_nl_indent' if i else 'indent + "  "')
+            if len(sorted_fields) > 1:
+              w('sb.append(sep); sep = ", ";')
             w('sb.append("{} = ");', jfname)
             which_ftype = f.WhichOneof('type')
             if which_ftype == 'primitive' or (
                 which_ftype == 'set' and
                 f.set.WhichOneof('type') == 'primitive'):
-              w('sb.append({});', jfname)
-            elif which_ftype == 'type_ref':
-              (java_type, type_info, x) = datamodel.typeref(f, context.module)
-              if type_info and type_info.parent_path:
-                w('sb.append({});', jfname)
+              (_, _, ftype) = datamodel.typeref(f, context.module)
+              if 'autoinc' in syslx.patterns(f.attrs) or (
+                  ftype and 'autoinc' in syslx.patterns(ftype.attrs)):
+                with java.If(w, 'ids == null'):
+                  w('sb.append({});', jfname)
+                  with java.Else(w):
+                    w('sb.append("(");')
+                    w('sb.append(ids[{}]);', jfname)
+                    w('sb.append(")");')
               else:
-                w('{}.toString(sb, indent + "  ");', jfname)
+                w('sb.append({});', jfname)
+
+            elif which_ftype == 'type_ref':
+              (java_type, type_info, fktype) = (
+                datamodel.typeref(f, context.module))
+              if type_info and type_info.parent_path:
+                if fktype and 'autoinc' in syslx.patterns(fktype.attrs):
+                  with java.If(w, 'ids == null'):
+                    w('sb.append({});', jfname)
+                    with java.Else(w):
+                      w('sb.append("(");')
+                      w('sb.append(ids[{}]);', jfname)
+                      w('sb.append(")");')
+                else:
+                  w('sb.append({});', jfname)
+              else:
+                w('sb.append({}.toString());', jfname)
             else:
-              w('{}.toString(sb, indent + "  ");', jfname)
-        w('sb.append(",\\n");')
-        w('sb.append(indent);')
+              w('sb.append({}.toString());', jfname)
         w('sb.append(")");')
 
       java.SeparatorComment(w)
@@ -353,19 +432,19 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
   else:
     raise RuntimeError('Unexpected type: {}'.format(t.WhichOneof('type')))
 
-def export_entity_view_class(w, tname, t, fk_rsubmap, context):
 
+def export_entity_view_class(w, tname, t, fk_rsubmap, context):
   if t.WhichOneof('type') in ('relation', 'tuple'):
     with java.Class(w, 'View', context.write_file, static=True, abstract=True,
-        extends='io.sysl.Enumerable<' + tname + '>'):
+        extends='io.sysl.Enumerable<' + tname + '>',
+        implements=['Comparable<View>']):
       pkey = datamodel.primary_key_params(t, context.module)
       pkey_fields = {f for (_, f, _) in pkey}
       param_defs = [(typ, f) for (typ, _, f) in pkey]
       params=''.join(', ' + f for (_, _, f) in pkey)
       param=', '.join(f for (_, _, f) in pkey)
 
-      inner_type = ('HashMap<Key, {}>' if pkey else 'HashSet<{}>'
-        ).format(tname)
+      inner_type = ('HashMap<Key, {}>' if pkey else 'HashSet<{}>').format(tname)
 
       if pkey:
         with java.Method(w, '\npublic', tname, 'lookup', param_defs):
@@ -558,8 +637,7 @@ def export_entity_view_class(w, tname, t, fk_rsubmap, context):
                   'io.sysl.Enumerable<' + fk_tname + '>',
                   'evaluate',
                   [(tname, 'entity')]):
-                w('return model.get{0}Table()\v.getBy{1}(\v'
-                  'entity.{2});',
+                w('return model.get{0}Table()\v.getBy{1}(\ventity.{2});',
                   fk_tname, fk_method, jfname)
             w('}}));')
 
@@ -570,6 +648,10 @@ def export_entity_view_class(w, tname, t, fk_rsubmap, context):
 
       with java.Method(w, '\npublic', 'int', 'hashCode', override=True):
         w('return _snapshot().items.hashCode();', tname)
+
+      with java.Method(w, '\npublic', 'int', 'compareTo', [('View', 'obj')],
+          override=True):
+        w('throw new java.lang.UnsupportedOperationException();')
 
       with java.Method(w, '\npublic', 'String', 'toString', override=True):
         with java.If(w, 'isEmpty()'):
@@ -586,15 +668,134 @@ def export_entity_view_class(w, tname, t, fk_rsubmap, context):
             w('sb.append("[\\n");', tname)
             w('sb.append(indent + "  ");')
             w('boolean first = true;')
+            w('Iterable<{}> iter;', tname)
+            w('iter = this;')
+
             with java.For(w, '{} e : this', tname):
               with java.If(w, 'first'):
                 w('first = false;')
                 with java.Else(w):
                   w('sb.append(",\\n  " + indent);')
-              w('e.toString(sb, "  " + indent);')
+              w('sb.append(e.toString());')
             w('sb.append("\\n");')
             w('sb.append(indent);')
             w('sb.append("]");')
+
+      if t.WhichOneof('type') in 'relation':
+        with java.Method(w, '\npublic', 'void', 'canonicalToString',
+            [('StringBuilder', 'sb'), ('String', 'indent'), ('int[]', 'ids')]):
+          with java.If(w, 'isEmpty()'):
+            w('sb.append("[]");')
+            with java.Else(w):
+              w('sb.append("[\\n");', tname)
+              w('sb.append(indent + "  ");')
+              w('boolean first = true;')
+              #w('Iterable<{}> iter;', tname)
+              with java.If(w, 'ids == null'):
+                with java.For(w, '{} e : this', tname):
+                  with java.If(w, 'first'):
+                    w('first = false;')
+                    with java.Else(w):
+                      w('sb.append(",\\n  " + indent);')
+                  w('e.canonicalToString(sb, ids);')
+
+                with java.Else(w):
+                #   with w.indent(
+                #       ('iter = io.sysl.Enumeration.orderBy('
+                #        'this, new Comparator<{}>() {{'),
+                #       tname):
+                #     with java.Method(w, 'public', 'int', 'compare',
+                #         [(tname, 'a'), (tname, 'b')], override=True):
+                #       w('return 0;')
+                #   w('}});')
+                  
+                  with java.For(w, '{} e : canonicallySorted(ids)', tname):
+                    with java.If(w, 'first'):
+                      w('first = false;')
+                      with java.Else(w):
+                        w('sb.append(",\\n  " + indent);')
+                    w('e.canonicalToString(sb, ids);')
+              w('sb.append("\\n");')
+              w('sb.append(indent);')
+              w('sb.append("]");')
+
+        with java.Method(w, '\nprivate', 'io.sysl.Enumerable<' + tname + '>',
+            'canonicallySorted', [('final int[]', 'ids')]):
+          with w.indent(
+              ('io.sysl.Enumerable<{0}> result = io.sysl.Enumeration.orderBy('
+               '\vthis, new Comparator<{0}>() {{'),
+              tname):
+            autoinc = None
+            with java.Method(w, 'public', 'int', 'compare',
+                [(tname, 'a'), (tname, 'b')], override=True):
+              w('int c;')
+              first_autoinc = True
+              for (fname, f) in datamodel.sorted_fields(t):
+                jfname = java.name(fname)
+                if 'autoinc' in syslx.patterns(f.attrs):
+                  autoinc = fname
+                  continue
+                (_, _, ftype) = datamodel.typeref(f, context.module)
+                if ftype and 'autoinc' in syslx.patterns(ftype.attrs):
+                  if first_autoinc:
+                    w('int aId, bId;')
+                    first_autoinc = False
+                  with java.If(w,
+                      ('(c = '
+                       '\va.{0} == b.{0} ? 0 : '
+                       '\va.{0} == null ? -1 : '
+                       '\vb.{0} == null ? 1 : '
+                       '\v(aId = ids[a.{0}]) == (bId = ids[b.{0}]) ? 0 : '
+                       '\vaId < bId ? -1 : 1) != 0'),
+                      jfname):
+                    w('return c;')
+                else:
+                  with java.If(w,
+                      ('(c = '
+                       '\va.{0} == b.{0} ? 0 : '
+                       '\va.{0} == null ? -1 : '
+                       '\vb.{0} == null ? 1 : '
+                       '\va.{0}.compareTo(b.{0})) != 0'),
+                      jfname):
+                    w('return c;')
+              w('return 0;')
+          w('}});')
+          if autoinc:
+            w('int canonicalId = 0;')
+            with java.For(w, '{} e : result', tname):
+              w('ids[e.{}] = canonicalId++;', autoinc)
+          w('return result;')
+
+        with java.Method(w, '\n', 'boolean', 'canonicallyEqual',
+            [('View', 'a'), ('int[]', 'aIds'), ('View', 'b'), ('int[]', 'bIds')],
+            static=True):
+          with java.If(w, 'a == b'):
+            w('return true;')
+          with java.If(w, 'a == null || b == null'):
+            w('return false;')
+          with java.If(w, 'a.model == b.model'):
+            w('return a.equals(b);')
+
+          w(('io.sysl.Enumerator<{}> aSorted = '
+             'a.canonicallySorted(aIds).enumerator();'),
+            tname)
+          w(('io.sysl.Enumerator<{}> bSorted = '
+             'b.canonicallySorted(bIds).enumerator();'),
+            tname)
+          with java.While(w, 'aSorted.moveNext() && bSorted.moveNext()'):
+            with java.If(w,
+                ('!{}.canonicallyEqual('
+                 'aSorted.current(), aIds, bSorted.current(), bIds)'),
+                tname):
+              w('return false;')
+          w('return !aSorted.moveNext() && !bSorted.moveNext();')
+
+        with java.Method(w, '\npublic', 'int', 'canonicalHashCode',
+            [('int[]', 'ids')]):
+          w('int h = 0;')
+          with java.For(w, '{} e : canonicallySorted(ids)', tname):
+            w('h = 3 * h + e.canonicalHashCode(ids);')
+          w('return h;')
 
       with java.Method(w, '\npublic', 'View', 'snapshot'):
         w('return _snapshot();')
@@ -704,7 +905,8 @@ def export_entity_view_class(w, tname, t, fk_rsubmap, context):
 
       if pkey:
         w()
-        with java.Class(w, 'Key', context.write_file, static=True, final=True):
+        with java.Class(w, 'Key', context.write_file, static=True, final=True,
+            implements=['Comparable<Key>']):
           for (typ, _, f) in pkey:
             w('{} {};', typ, f)
 
@@ -733,6 +935,15 @@ def export_entity_view_class(w, tname, t, fk_rsubmap, context):
                  'return 3 * h + '),
                 f)
 
+          with java.Method(w, '\npublic', 'int', 'compareTo', [('Key', 'that')],
+              override=True):
+            w('int c;')
+            w('return this == that ? 0 :\n' +
+              u'\n       '.join(
+                '(c = this.{0}.compareTo(that.{0})) != 0 ? c :'.format(f)
+                for (typ, _, f) in pkey) +
+              '    0;')
+
       with java.Method(w, '\npublic', context.model_class, 'model'):
         w('return model;')
 
@@ -741,8 +952,8 @@ def export_entity_view_class(w, tname, t, fk_rsubmap, context):
       with java.Ctor(w, '\n', 'View', [(context.model_class, 'model')]):
         w(u'this.model = model;')
 
-def export_entity_snapshot_class(w, tname, t, context):
 
+def export_entity_snapshot_class(w, tname, t, context):
   if t.WhichOneof('type') in ('relation', 'tuple'):
     with java.Class(w, 'Snapshot', context.write_file, static=True,
         extends='View'):
@@ -752,8 +963,7 @@ def export_entity_snapshot_class(w, tname, t, context):
       params=''.join(', ' + f for (_, _, f) in pkey)
       param=', '.join(f for (_, _, f) in pkey)
 
-      inner_type = (
-        'HashMap<Key, {}>' if pkey else 'HashSet<{}>').format(tname)
+      inner_type = ('HashMap<Key, {}>' if pkey else 'HashSet<{}>').format(tname)
 
       if pkey:
         with java.Method(w, '\npublic', tname, 'lookup', param_defs,
@@ -827,8 +1037,8 @@ def export_entity_snapshot_class(w, tname, t, context):
 
       w()
 
-def export_entity_set_class(w, tname, t, context):
 
+def export_entity_set_class(w, tname, t, context):
   if t.WhichOneof('type') in ('relation', 'tuple'):
     with java.Class(w, 'Set', context.write_file, static=True,
         extends='Snapshot'):
@@ -838,8 +1048,7 @@ def export_entity_set_class(w, tname, t, context):
       params=''.join(', ' + f for (_, _, f) in pkey)
       param=', '.join(f for (_, _, f) in pkey)
 
-      inner_type = (
-        'HashMap<Key, {}>' if pkey else 'HashSet<{}>').format(tname)
+      inner_type = ('HashMap<Key, {}>' if pkey else 'HashSet<{}>').format(tname)
 
       with java.Ctor(w, 'public', 'Set'):
         w('super(null);')
@@ -905,8 +1114,8 @@ def export_entity_set_class(w, tname, t, context):
         else:
           w('return items.toArray();')
 
-def export_entity_table_class(w, tname, t, fk_rsubmap, context):
 
+def export_entity_table_class(w, tname, t, fk_rsubmap, context):
   if t.WhichOneof('type') == 'relation':
     with java.Class(w, 'Table', context.write_file, static=True,
         extends='Snapshot'):
@@ -921,8 +1130,7 @@ def export_entity_table_class(w, tname, t, fk_rsubmap, context):
         java.name(fname): type_info
         for (fname, _, type_info) in datamodel.foreign_keys(t, context.module)}
 
-      inner_type = ('HashMap<Key, {}>' if pkey else 'HashSet<{}>'
-        ).format(tname)
+      inner_type = ('HashMap<Key, {}>' if pkey else 'HashSet<{}>').format(tname)
 
       with java.Method(w, '\npublic', 'void', 'clear'):
         for (fname, f) in datamodel.sorted_fields(t):
@@ -955,16 +1163,23 @@ def export_entity_table_class(w, tname, t, fk_rsubmap, context):
       # TODO: make internal
       with java.Method(w, '\npublic', 'boolean', 'insert', [(tname, 'entity')]):
         fks = list(datamodel.foreign_keys(t, context.module))
+        if pkey:
+          for (_, fname, jfname) in pkey:
+            ftype = t.relation.attr_defs[fname]
+            if 'autoinc' in syslx.patterns(ftype.attrs):
+              with java.If(w, 'entity.{} == null', jfname):
+                w('entity.{} = model.nextId;', jfname)
+                w('model.nextId++;')
         if fks:
-          with java.If(w, 'super.insert(entity)'):
-            for (fname, java_type, type_info) in fks:
-              jfname = java.name(fname)
-              method = java.CamelCase(jfname)
-              type_ = type_info.parent_path
-              with java.If(w, 'entity.{} != null', jfname):
-                w(u'getFk_{0}(entity.{0}).add(entity);', jfname)
-            w('return true;')
-          w('return false;')
+            with java.If(w, 'super.insert(entity)'):
+              for (fname, java_type, type_info) in fks:
+                jfname = java.name(fname)
+                method = java.CamelCase(jfname)
+                type_ = type_info.parent_path
+                with java.If(w, 'entity.{} != null', jfname):
+                  w(u'getFk_{0}(entity.{0}).add(entity);', jfname)
+              w('return true;')
+            w('return false;')
         else:
           w('return super.insert(entity);')
 
@@ -1048,11 +1263,15 @@ def export_entity_table_class(w, tname, t, fk_rsubmap, context):
                     w('assert e.{0} == null || e.{0}.length() <= {1};',
                       jfname, c.precision)
 
-      with java.Method(w, '\n', 'boolean', 'equals', [('Table', 'that')]):
-        with java.If(w, 'this == that'):
+      with java.Method(w, '\npublic', 'boolean', 'equals', [('Object', 'obj')]):
+        with java.If(w, 'this == obj'):
           w('return true;')
-        with java.If(w, '!(that instanceof {}.Table)', tname):
+        with java.If(w, '!(obj instanceof {})', tname):
           w('return false;')
+        w('Table that = (Table)obj;')
+        w(('assert model == that.model : '
+           '"inter-model {}.Table.equals() undefined";'),
+          tname)
 
         if pkey:
           w('return this.items.equals(that.items);')
@@ -1125,11 +1344,17 @@ def export_model_class(fk_rmap, context):
     if has_tables:
       with java.Method(w, '\npublic', 'String', 'toString'):
         w('StringBuilder sb = new StringBuilder();')
-        w('toString(sb, "");')
+        w('canonicalToString(sb, "", null);')
         w('return sb.toString();')
 
-      with java.Method(w, '\npublic', 'void', 'toString',
-          [('StringBuilder', 'sb'), ('String', 'indent')]):
+      with java.Method(w, '\npublic', 'String', 'canonicalToString'):
+        w('StringBuilder sb = new StringBuilder();')
+        w('int[] ids = new int[nextId];')
+        w('canonicalToString(sb, "", ids);')
+        w('return sb.toString();')
+
+      with java.Method(w, '\nprivate', 'void', 'canonicalToString',
+          [('StringBuilder', 'sb'), ('String', 'indent'), ('int[]', 'ids')]):
         w('sb.append(indent);', tname)
         w('sb.append("{} {{\\n");', context.model_class)
         for (tname, t) in sorted(context.app.types.iteritems()):
@@ -1137,7 +1362,7 @@ def export_model_class(fk_rmap, context):
             with java.If(w, 'tbl_{0} != null && !tbl_{0}.isEmpty()', tname):
               w('sb.append(indent);')
               w('sb.append("  table of {} ");', tname)
-              w('tbl_{}.toString(sb, indent + "  ");', tname)
+              w('tbl_{}.canonicalToString(sb, indent + "  ", ids);', tname)
               w('sb.append(",\\n");')
         w('sb.append(indent);', tname)
         w('sb.append("}}");')
@@ -1176,36 +1401,53 @@ def export_model_class(fk_rmap, context):
       if empty:
         rollback()
 
+    with java.Method(w, '\npublic', 'boolean', 'equals',
+        [('Object', 'obj')], override=True):
+      with java.If(w, 'this == obj'):
+        w('return true;')
+      with java.If(w, '!(obj instanceof {})', context.model_class):
+        w('return false;')
+      w('{0} that = ({0})obj;', context.model_class)
+      w('int[] thisIds = new int[nextId];')
+      w('int[] thatIds = new int[that.nextId];')
+      w('return equals(this, thisIds, that, thatIds);')
+
+    with java.Method(w, '\nprivate', 'boolean', 'equals',
+        [(context.model_class, 'a'), ('int[]', 'aIds'),
+         (context.model_class, 'b'), ('int[]', 'bIds')],
+        static=True):
+      with java.If(w, 'a == b'):
+        w('return true;')
+
+      for (tname, t) in datamodel.fk_topo_sort(
+          context.app.types, context.module):
+        if t.WhichOneof('type') == 'relation':
+          with java.If(w, 'a.tbl_{0} == null', tname):
+            with java.If(w, 'b.tbl_{0} != null', tname):
+              w('return false;')
+            with java.ElseIf(w,
+                '!{0}.Table.canonicallyEqual(a.tbl_{0}, aIds, b.tbl_{0}, bIds)',
+                tname):
+              w('return false;')
+        w()
+      w('return true;')
+
     with java.Method(w, '\npublic', 'int', 'hashCode'):
       # Lets go for a large odd pseudo-random multiplier seeded by the type.
-      h = hashlib.sha256('\0'.join(
-        [context.package, context.model_class]))
+      h = hashlib.sha256('\0'.join([context.package, context.model_class]))
       m = struct.unpack('>i', h.digest()[-4:])[0] & 0x7fffffff | 1
       w('final int m = {};', m)
       w('int h = 0;', m)
 
-      for (tname, t) in sorted(context.app.types.iteritems()):
+      w('int[] ids = new int[nextId];')
+      for (tname, t) in datamodel.fk_topo_sort(
+          context.app.types, context.module):
         if t.WhichOneof('type') == 'relation':
-          w('h = m * h + (tbl_{0} == null ? 0 : tbl_{0}.hashCode());', tname)
+          w(('h = m * h + (tbl_{0} == null ? 0 :'
+             ' tbl_{0}.canonicalHashCode(ids));'),
+            tname)
 
       w('return h;')
-
-    with java.Method(w, '\npublic', 'boolean', 'equals',
-        [(context.model_class, 'that')]):
-      with java.If(w, 'this == that'):
-        w('return true;')
-      with java.If(w, '!(that instanceof {})', context.model_class):
-        w('return false;')
-
-      for (tname, t) in sorted(context.app.types.iteritems()):
-        if t.WhichOneof('type') == 'relation':
-          with java.If(w, 'tbl_{0} == null', tname):
-            with java.If(w, 'that.tbl_{0} != null', tname):
-              w('return false;')
-            with java.ElseIf(w, '!tbl_{0}.equals(that.tbl_{0})', tname):
-              w('return false;')
-        w()
-      w('return true;')
 
     with java.Method(w, '\npublic', 'void', '_PRIVATE_registerId',
         [('int', 'id')]):
@@ -1220,7 +1462,6 @@ def export_model_class(fk_rmap, context):
 
 
 def export_view_class(w, context):
-
   w()
 
   is_abstract = any(
@@ -1232,8 +1473,8 @@ def export_view_class(w, context):
       abstract=is_abstract):
     export_view_class_body(w)
 
-def export_view_class_body(w, context):
 
+def export_view_class_body(w, context):
   global_scope = scopes.Scope(context.module)
   for (vname, v) in sorted(context.app.views.iteritems()):
     global_scope[vname] = v.ret_type
@@ -1391,8 +1632,8 @@ def export_view_class_body(w, context):
 
   w()
 
-def export_exception_class(context):
 
+def export_exception_class(context):
   w = writer.Writer('java')
 
   java.Package(w, context.package)

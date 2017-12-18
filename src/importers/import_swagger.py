@@ -1,20 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-# Copyright 2016 The Sysl Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License."""Super smart code writer."""
-
 import collections
 import itertools
 import json
@@ -207,11 +193,9 @@ def main():
         for (path, api) in sorted(swag['paths'].iteritems()):
             # {foo-bar} to {fooBar}
             w(u'\n{}:', re.sub(r'({[^/]*?})', javaParam, path))
-            with w.indent():
-
+            with w.indent():  
                 if 'parameters' in api:
                     del api['parameters']
-
                 for (i, (method, body)) in enumerate(sorted(api.iteritems(),
                                                             key=lambda t: METHOD_ORDER[t[0]])):
                     qparams = dict()
@@ -282,7 +266,7 @@ def main():
             with w.indent():
 
                 tspec_items = tspec.get('properties')
-
+                    
                 if tspec_items:
                     for (fname, fspec) in sorted(tspec_items.iteritems()):
 

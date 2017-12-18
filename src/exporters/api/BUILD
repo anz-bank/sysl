@@ -1,7 +1,7 @@
 py_library(
-    name = "spring_rest",
-    srcs = [
-        "spring_rest.py",
-    ],
-    visibility = ["//src/exporters:__pkg__"],
+  name = "spring_rest",
+  srcs = [
+    "spring_rest.py",
+  ],
+  visibility = ["//src/exporters:__pkg__"],
 )
