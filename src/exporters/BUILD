@@ -5,7 +5,6 @@ py_binary(
     "//src/exporters/api:spring_rest",
     "//src/exporters/java",
     "//src/exporters/json_out:serializer",
-    "//src/exporters/plantuml",
     "//src/exporters/swagger",
     "//src/exporters/xml",
     "//src/proto:sysl",
