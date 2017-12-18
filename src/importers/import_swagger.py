@@ -193,11 +193,9 @@ def main():
         for (path, api) in sorted(swag['paths'].iteritems()):
             # {foo-bar} to {fooBar}
             w(u'\n{}:', re.sub(r'({[^/]*?})', javaParam, path))
-            with w.indent():
-                
+            with w.indent():  
                 if 'parameters' in api:
                     del api['parameters']
-                    
                 for (i, (method, body)) in enumerate(sorted(api.iteritems(),
                                                             key=lambda t: METHOD_ORDER[t[0]])):
                     qparams = dict()
