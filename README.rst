@@ -23,10 +23,11 @@ Installation
 ------------
 If you are interested in trying out Sysl, you will need to build it yourself from source::
 
-  > python setup.py install .
-  # install the package with a symlink, so that changes to the source files 
-  > python setup.py install -e .
-  > python setup.py sdist bdist_wheel --universal
+  > python setup.py install
+  > python setup.py test
+  > python -m sysl.core  --root demo/petshop textpb -o out/petshop.txt /petshop
+  > python -m sysl.reljam  --root demo/petshop model /petshop PetShopModel
+
 
 Status
 ------
