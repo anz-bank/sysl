@@ -165,7 +165,8 @@ def serializer(context):
                             else:
                                 raise RuntimeError(
                                     'Unexpected field type for XML export: ' + which_type)
-                            if wantAttrs == ('xml_attribute' in syslx.patterns(f.attrs)):
+                            if wantAttrs == (
+                                    'xml_attribute' in syslx.patterns(f.attrs)):
                                 if wantAttrs:
                                     w('serializeAttr("{}", {}{}, xsw);',
                                       jfname, access, extra)

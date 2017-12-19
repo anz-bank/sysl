@@ -207,10 +207,12 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
             # group end points and build the declarations
             for (app_a, ep_a), (app_b, ep_b) in integrations:
 
-                if restrict_by and restrict_by not in module.apps[app_a].attrs.keys() + module.apps[app_b].attrs.keys():
+                if restrict_by and restrict_by not in module.apps[app_a].attrs.keys(
+                ) + module.apps[app_b].attrs.keys():
                     continue
 
-                if restrict_by and restrict_by not in module.apps[app_a].endpoints[ep_a].attrs.keys() + module.apps[app_b].endpoints[ep_b].attrs.keys():
+                if restrict_by and restrict_by not in module.apps[app_a].endpoints[ep_a].attrs.keys(
+                ) + module.apps[app_b].endpoints[ep_b].attrs.keys():
                     continue
 
                 if app_a not in clusters:
@@ -235,10 +237,12 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
             processed = []
             for ((app_a, ep_a), (app_b, ep_b)) in integrations:
 
-                if restrict_by and restrict_by not in module.apps[app_a].attrs.keys() + module.apps[app_b].attrs.keys():
+                if restrict_by and restrict_by not in module.apps[app_a].attrs.keys(
+                ) + module.apps[app_b].attrs.keys():
                     continue
 
-                if restrict_by and restrict_by not in module.apps[app_a].endpoints[ep_a].attrs.keys() + module.apps[app_b].endpoints[ep_b].attrs.keys():
+                if restrict_by and restrict_by not in module.apps[app_a].endpoints[ep_a].attrs.keys(
+                ) + module.apps[app_b].endpoints[ep_b].attrs.keys():
                     continue
 
                 direct = {app_a, app_b} & highlights
@@ -255,7 +259,8 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
                 tgt_ptrns = syslx.patterns(module.apps[match_app].endpoints[match_ep].attrs) or \
                     syslx.patterns(module.apps[match_app].attrs)
 
-                for stmt in yield_call_statements(module.apps[app_a].endpoints[ep_a].stmt):
+                for stmt in yield_call_statements(
+                        module.apps[app_a].endpoints[ep_a].stmt):
 
                     # if restrict_by not in stmt.attrs.keys():
                     #  continue
@@ -333,7 +338,8 @@ def integration_views(module, deps, args):
         for ((app1, _), (app2, _)) in deps:
             if not ({app1, app2} & exclude):
                 for app in [app1, app2]:
-                    if app_re.match(app) and 'human' not in syslx.patterns(module.apps[app].attrs):
+                    if app_re.match(app) and 'human' not in syslx.patterns(
+                            module.apps[app].attrs):
                         yield app
 
     def find_apps(matching_apps):
@@ -390,13 +396,15 @@ def integration_views(module, deps, args):
                     """ visit passthrough + 1: dep tuple, integration_set tuples """
 
                     # add to integration set
-                    if (not ({dep[1][0]} & exclude) and not ({dep[1][1]} & {'.. * <- *'})):
+                    if (not ({dep[1][0]} & exclude) and not (
+                            {dep[1][1]} & {'.. * <- *'})):
                         integration_set.add(dep)
 
                     # find the next outbond dep
                     if dep[1][0] in passthrough_apps:
                         # call visit_endpoints for all calls
-                        for stmt in yield_call_statements(module.apps[dep[1][0]].endpoints[dep[1][1]].stmt):
+                        for stmt in yield_call_statements(
+                                module.apps[dep[1][0]].endpoints[dep[1][1]].stmt):
                             app_2_name = ' :: '.join(
                                 part for part in stmt.call.target.part)
                             ep_2_name = stmt.call.endpoint

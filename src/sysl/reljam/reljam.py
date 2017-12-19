@@ -32,7 +32,7 @@ def export(
     assert app, appname
 
     package = syslx.View(app.attrs)['package'].s
-    if mode != 'xsd' and expected_package != None:
+    if mode != 'xsd' and expected_package is not None:
         assert package == expected_package, (package, expected_package)
 
     model_class = '_'.join(app.name.part).replace(' ', '')

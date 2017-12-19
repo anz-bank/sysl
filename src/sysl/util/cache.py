@@ -48,7 +48,7 @@ class Connection(object):
             try:
                 [(db_ver,)] = self.conn.execute(
                     'SELECT ver FROM version').fetchall()
-            except:
+            except BaseException:
                 db_ver = None
 
             if db_ver == schema_ver:

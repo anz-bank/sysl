@@ -760,13 +760,13 @@ class TodoNagger(object):
         try:
             self._conn.execute(
                 'CREATE TABLE last_nagged (at_time, __nonce__ PRIMARY KEY DEFAULT 0)')
-        except:
+        except BaseException:
             pass
 
         try:
             [(self._last_nagged,)] = self._conn.execute(
                 'SELECT at_time FROM last_nagged')
-        except:
+        except BaseException:
             self._last_nagged = 0
 
         self._should_nag = None
@@ -908,7 +908,7 @@ class Parser(object):
                 yield (end_line_no + 1, 0, '')
 
             return postprocess()
-        except:
+        except BaseException:
             print >>sys.stderr, 'ERROR @ line ', line_no + 1, line
             raise
 
@@ -962,7 +962,8 @@ class Parser(object):
                     if line.startswith('@'):
                         if not line.endswith('='):
                             raise RuntimeError("@attr: must be @attr =:")
-                        if not all(c.startswith('|') for (_, _, c, _) in children):
+                        if not all(c.startswith('|')
+                                   for (_, _, c, _) in children):
                             raise RuntimeError(
                                 "@attr =: children must be multiline string")
                         no_space = [
@@ -1295,7 +1296,8 @@ class Parser(object):
                                 attrtype = attrtype.list.type
                             self._parse_type(
                                 app, line_no, name, typespec, attrtype)
-                            for (line_no, end_line_no, line, ggrandchildren) in grandchildren:
+                            for (line_no, end_line_no, line,
+                                 ggrandchildren) in grandchildren:
                                 attr = (
                                     line[1:]
                                     + (json.dumps(
@@ -1392,7 +1394,8 @@ class Parser(object):
                 continue
             match = _Matcher(line)
 
-            if match(ur'^(.*?)·(->(?:·<·(set\s+of\b·)?([\w\.]*)·>)?)·\((\w*)$'):
+            if match(
+                    ur'^(.*?)·(->(?:·<·(set\s+of\b·)?([\w\.]*)·>)?)·\((\w*)$'):
                 [expr, transform, setof, out_type, scopevar] = match.groups
                 if not expr:
                     expr = '.'
@@ -1680,7 +1683,8 @@ class Parser(object):
                 if endpoints:
                     match = _Matcher(app_line)
 
-                    if match(r'^(.*?)\s*(\([^)]*\))?(?:\s+"(.*)")?(?:\s*\[(.*)\])?$'):
+                    if match(
+                            r'^(.*?)\s*(\([^)]*\))?(?:\s+"(.*)")?(?:\s*\[(.*)\])?$'):
                         (name, _, long_name, attrs) = match.groups
                         # print name, long_name
                         self._parse_app(module, None, name, long_name,
@@ -1692,7 +1696,7 @@ class Parser(object):
                 else:
                     assert app_line.startswith('import '), app_line
                     imports.add(app_line[7:])
-            except:
+            except BaseException:
                 print >>sys.stderr, "Error @ {}".format(line_no)
                 raise
 

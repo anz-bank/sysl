@@ -346,7 +346,7 @@ def load(names, validate, root):
             _infer_types(app)
         deps = _check_deps(module, validate)
     except RuntimeError as ex:
-        raise Exception('load({!r})'.format(names), ex, sys.exc_traceback)
+        raise Exception('load({!r})'.format(names), ex, sys.exc_info()[2])
 
     syslparse.TODO_NAG.nag()
 

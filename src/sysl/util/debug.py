@@ -58,11 +58,11 @@ if not HAS_ANSI:
         import colorama
         colorama.init()
         HAS_ANSI = True
-    except:
+    except BaseException:
         try:
             # pylint: disable=import-error, unused-import
             import tendo.ansiterm
-        except:
+        except BaseException:
             pass
 
 

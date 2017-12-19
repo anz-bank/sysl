@@ -310,7 +310,8 @@ def sequence_diag(module, params, log_integration=None):
 
         rargs = []
 
-        for param in syslalgo.yield_ret_params(syslalgo.return_payload(endpt.stmt)):
+        for param in syslalgo.yield_ret_params(
+                syslalgo.return_payload(endpt.stmt)):
             if param != '...' and '.' in param:
                 (an, pn) = rex.split(r'\.', param)
 
@@ -330,7 +331,8 @@ def sequence_diag(module, params, log_integration=None):
 
         if len(endpt.stmt):
             hit_blackbox = False
-            for (upto, comment) in itertools.chain(uptos.iteritems(), already_visited.keys()):
+            for (upto, comment) in itertools.chain(
+                    uptos.iteritems(), already_visited.keys()):
                 # Compare the common prefix of the current endpt and upto.
                 upto_parts = upto.split(' <- ')
                 if [appname, epname][:len(upto_parts)] == upto_parts:
@@ -381,7 +383,8 @@ def sequence_diag(module, params, log_integration=None):
         for (appname, epname, upto) in app_eps:
             write('== {} <- {} ==', appname, epname)
             bbs = blackboxes.copy()
-            for bbox in ({upto} if upto else set()) | uptos - {appname + ' <- ' + epname}:
+            for bbox in ({upto} if upto else set()) | uptos - \
+                    {appname + ' <- ' + epname}:
                 bbs[bbox] = 'see below'
             already_visited.clear()
             visit_endpoint(None, appname, epname, bbs, [])
@@ -427,8 +430,10 @@ def add_subparser(subp):
                 appfmt = diagutil.parse_fmt(
                     syslx.View(app.attrs)['appfmt'].s or args.app_format)
 
-                for (name, endpt) in sorted(app.endpoints.iteritems(), key=lambda kv: kv[1].name):
-                    if not any(fnmatch.fnmatch(name, filt) for filt in epfilters):
+                for (name, endpt) in sorted(
+                        app.endpoints.iteritems(), key=lambda kv: kv[1].name):
+                    if not any(fnmatch.fnmatch(name, filt)
+                               for filt in epfilters):
                         continue
 
                     attrs = {u'@' + name: value.s

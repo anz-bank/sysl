@@ -111,7 +111,8 @@ def fk_topo_sort(types, module):
     G = {}
     for (tname, t) in types.iteritems():
         G[tname] = {ti.parent_path for (_, _, ti) in foreign_keys(t, module)}
-    return ((p, types[p]) for (_, p) in sorted(algo.topo_sort(G), reverse=True))
+    return ((p, types[p])
+            for (_, p) in sorted(algo.topo_sort(G), reverse=True))
 
 
 def build_fk_reverse_map(app, module):

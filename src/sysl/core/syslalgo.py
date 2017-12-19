@@ -86,7 +86,8 @@ def yield_ret_params(payload):
             if param_pair.count('<:') == 1:
                 (pname, ptname) = rex.split(r'\s*<:\s*', param_pair)
 
-            if ptname.upper() not in (set(sysl_pb2.Type.Primitive.keys()) - {'NO_Primitive'}):
+            if ptname.upper() not in (
+                    set(sysl_pb2.Type.Primitive.keys()) - {'NO_Primitive'}):
                 m = rex.match(r'set\s+of\s+(.+)$', ptname)
                 if m:
                     ptname = m.group(1)

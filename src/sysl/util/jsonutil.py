@@ -101,7 +101,8 @@ def match(obj, pattern):
                 return ([obj] if isinstance(obj, pattern) else
                         log('type(obj) {!r} != expected {!r}', type(obj), type(pattern)))
 
-            if isinstance(pattern, (type(None), bool, numbers.Number, basestring)):
+            if isinstance(pattern, (type(None), bool,
+                                    numbers.Number, basestring)):
                 return ([obj] if obj == pattern else
                         log('value {!r} != expected {!r}', obj, pattern))
 
@@ -118,11 +119,13 @@ def match(obj, pattern):
                     if isinstance(k, basestring) and k.endswith('?')}
 
                 if not (required <= obj_keys):
-                    return log('missing field(s) {{{}}}', ', '.join(sorted(required)))
+                    return log('missing field(s) {{{}}}', ', '.join(
+                        sorted(required)))
                 surplus = obj_keys - required - optional
                 if surplus:
                     if () not in pattern:
-                        return log('surplus field(s) {{{}}}', ', '.join(sorted(surplus)))
+                        return log(
+                            'surplus field(s) {{{}}}', ', '.join(sorted(surplus)))
                     else:
                         pat = pattern[()]
                         for k in surplus:

@@ -144,13 +144,16 @@ def xsd(context):
                                 with xs('all'):
                                     for (fname, f) in sorted(
                                             t.relation.attr_defs.iteritems()):
-                                        if not 'xml_attribute' in syslx.patterns(f.attrs):
+                                        if not 'xml_attribute' in syslx.patterns(
+                                                f.attrs):
                                             build_element(
                                                 fname, f, False, False)
 
                                 # attributes second
-                                for (fname, f) in sorted(t.relation.attr_defs.iteritems()):
-                                    if 'xml_attribute' in syslx.patterns(f.attrs):
+                                for (fname, f) in sorted(
+                                        t.relation.attr_defs.iteritems()):
+                                    if 'xml_attribute' in syslx.patterns(
+                                            f.attrs):
                                         build_element(fname, f, False, True)
 
     def build_hierarchical_xsd():

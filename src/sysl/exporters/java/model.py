@@ -108,7 +108,8 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
                         if f.type_ref.ref.path[-1:] == [fname]:
                             method_suffix = fk_type
                         else:
-                            # TODO: Mention fk field? What if CustCust had no pk?
+                            # TODO: Mention fk field? What if CustCust had no
+                            # pk?
                             method_suffix = method + 'From'
                         with java.Method(w, '\npublic', tname, 'set' + method_suffix,
                                          [(fk_type, 'entity')]):
@@ -202,7 +203,8 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
                     else:
                         w(u'table.items.remove(this);')
 
-                    for (fname, _, _) in datamodel.foreign_keys(t, context.module):
+                    for (fname, _, _) in datamodel.foreign_keys(
+                            t, context.module):
                         jfname = java.name(fname)
                         with java.If(w, '{0} != null', jfname):
                             w('HashSet<{0}> fk = table.fk_{1}.get({1});',
@@ -355,7 +357,8 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
                             (java_type, type_info, fktype) = (
                                 datamodel.typeref(f, context.module))
                             if type_info and type_info.parent_path:
-                                if fktype and 'autoinc' in syslx.patterns(fktype.attrs):
+                                if fktype and 'autoinc' in syslx.patterns(
+                                        fktype.attrs):
                                     with java.If(w, 'ids == null'):
                                         w('sb.append({});', jfname)
                                         with java.Else(w):
@@ -746,7 +749,8 @@ def export_entity_view_class(w, tname, t, fk_rsubmap, context):
                                     continue
                                 (_, _, ftype) = datamodel.typeref(
                                     f, context.module)
-                                if ftype and 'autoinc' in syslx.patterns(ftype.attrs):
+                                if ftype and 'autoinc' in syslx.patterns(
+                                        ftype.attrs):
                                     if first_autoinc:
                                         w('int aId, bId;')
                                         first_autoinc = False
@@ -1163,14 +1167,16 @@ def export_entity_table_class(w, tname, t, fk_rsubmap, context):
             for _ in datamodel.foreign_keys(t, context.module):
                 w()
                 break
-            for (fname, java_type, _) in datamodel.foreign_keys(t, context.module):
+            for (fname, java_type, _) in datamodel.foreign_keys(
+                    t, context.module):
                 jfname = java.name(fname)
                 w(u'final HashMap<{}, HashSet<{}>> fk_{};', java_type, tname, jfname)
 
             with java.Ctor(w, '\n', 'Table', [(context.model_class, 'model')]):
                 w(u'super(model);')
 
-                for (fname, java_type, _) in datamodel.foreign_keys(t, context.module):
+                for (fname, java_type, _) in datamodel.foreign_keys(
+                        t, context.module):
                     jfname = java.name(fname)
                     w(u'this.fk_{} = new HashMap<{}, HashSet<{}>>();',
                       jfname, java_type, tname)
@@ -1276,7 +1282,8 @@ def export_entity_table_class(w, tname, t, fk_rsubmap, context):
                                 for c in f.constraint:
                                     # TODO: Use length, not precision.
                                     if c.precision:
-                                        # TODO: Special-case for required fields.
+                                        # TODO: Special-case for required
+                                        # fields.
                                         w('assert e.{0} == null || e.{0}.length() <= {1};',
                                           jfname, c.precision)
 
@@ -1451,7 +1458,8 @@ def export_model_class(fk_rmap, context):
             w('return true;')
 
         with java.Method(w, '\npublic', 'int', 'hashCode'):
-            # Lets go for a large odd pseudo-random multiplier seeded by the type.
+            # Lets go for a large odd pseudo-random multiplier seeded by the
+            # type.
             h = hashlib.sha256(
                 '\0'.join([context.package, context.model_class]))
             m = struct.unpack('>i', h.digest()[-4:])[0] & 0x7fffffff | 1

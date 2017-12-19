@@ -154,7 +154,8 @@ def export_facade_class(context):
                                                              [(modelpkg + '.' + fk_type,
                                                                java.mixedCase(fk_type))]):
                                                 with java.If(w, '(_pending & {}) == 0', hex(2**i)):
-                                                    # TODO: More specific exception
+                                                    # TODO: More specific
+                                                    # exception
                                                     w('throw new RuntimeException();')
                                                 w('this.{0} = {0};',
                                                   java.mixedCase(fk_type))
@@ -164,7 +165,8 @@ def export_facade_class(context):
                                             with java.Method(w, 'public', bname, 'with' + method,
                                                              [(rtype, r)]):
                                                 with java.If(w, '(_pending & {}) == 0', hex(2**i)):
-                                                    # TODO: More specific exception
+                                                    # TODO: More specific
+                                                    # exception
                                                     w('throw new RuntimeException();')
                                                 w('this.{0} = {0};', r)
                                                 w('_pending &= ~{};', hex(2**i))

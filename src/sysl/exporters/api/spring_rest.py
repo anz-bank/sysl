@@ -144,12 +144,13 @@ def controller(interfaces, context):
                         if m:
                             [status, descr, expr, empty, setof,
                                 type_, statuses] = m.groups()
-                            for status in rex.split(ur'·,·', status or statuses):
+                            for status in rex.split(
+                                    ur'·,·', status or statuses):
                                 status = int(status)
                                 result[int(status)].append(
                                     cond or descr or STATUS_MAP.get(int(status)) or '???')
                         else:
-                            print `stmt.ret.payload`
+                            print repr(stmt.ret.payload)
                             import pdb
                             pdb.set_trace()
 
@@ -161,7 +162,8 @@ def controller(interfaces, context):
             w('@ApiOperation(value = {})', json.dumps(endpt.docstring))
             w('@ApiResponses({{')
             with w.indent():
-                for (status, conds) in sorted(responses(endpt.stmt).iteritems()):
+                for (status, conds) in sorted(
+                        responses(endpt.stmt).iteritems()):
                     w('@ApiResponse(code = {}, message =', status)
                     with w.indent():
                         for (i, cond) in enumerate(conds):

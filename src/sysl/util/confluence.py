@@ -31,7 +31,8 @@ class _LazySession(object):
 
         def __call__(self, url, *args, **kwargs):
             session = self.lazy_session.session
-            if self.name not in ('get', 'head') and not self.lazy_session._auth_added:
+            if self.name not in (
+                    'get', 'head') and not self.lazy_session._auth_added:
                 print >>sys.stderr, '{} \033[1;36m{}\033[0m'.format(
                     self.name.upper(), url)
                 user = os.getenv(USER_ENV)
@@ -104,7 +105,8 @@ def _confluence_to_http(confluence_url):
     response.raise_for_status()
     root = response.json()
     if att is None:
-        return root['results'][0]['_links']['self'] + (tail or '') + (query or '')
+        return root['results'][0]['_links']['self'] + \
+            (tail or '') + (query or '')
 
     children = [result['id'] for result in root['results']]
 
@@ -128,10 +130,12 @@ def get_storage(confluence_url):
     response.raise_for_status()
     root = response.json()
     body = root['body']
-    return (body['storage']['value'], root['title'], root['ancestors'][-1:], root['version']['number'])
+    return (body['storage']['value'], root['title'],
+            root['ancestors'][-1:], root['version']['number'])
 
 
-def put_storage(confluence_url, storage, title, ancestors, version, minorEdit=False):
+def put_storage(confluence_url, storage, title,
+                ancestors, version, minorEdit=False):
     http_url = _confluence_to_http(confluence_url)
     page_id = http_url.rpartition('/')[-1]
 
@@ -164,7 +168,8 @@ def put_storage(confluence_url, storage, title, ancestors, version, minorEdit=Fa
         verify=VERIFY_CERTS).raise_for_status()
 
 
-def upload_attachment(confluence_att_url, file_handle, expire_cache=False, dry_run=False):
+def upload_attachment(confluence_att_url, file_handle,
+                      expire_cache=False, dry_run=False):
     """Upload an attachment to a confluence url."""
     if expire_cache:
         cache.expire(confluence_att_url)

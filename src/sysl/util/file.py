@@ -11,7 +11,7 @@ class FileWriter(object):
         out_path = os.path.join(self.out_dir, out_path)
         try:
             os.makedirs(os.path.dirname(out_path))
-        except:
+        except BaseException:
             pass
         open(out_path, 'w').write(str(w))
 

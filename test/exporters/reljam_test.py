@@ -41,7 +41,8 @@ class TestReljam(unittest.TestCase):
                              'PetShopModelXmlSerializer': 0},
                          {'PetShopModelJsonSerializer': 5, 'PetShopModelXmlSerializer': 5})
 
-    def checkCounts(self, package, expected_root_counts, expected_model_counts):
+    def checkCounts(self, package, expected_root_counts,
+                    expected_model_counts):
         root_pattern = re.compile('\W_?root\W')
         model_pattern = re.compile(r'[\( ]model[.;]|\.?model[; \)]')
 

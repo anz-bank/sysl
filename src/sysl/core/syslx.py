@@ -56,7 +56,8 @@ class TypeInfoByRef(object):
                 return self.TYPE_INFO(path, type_, None, None, None, app)
 
             # typerefs can be type.type.type or type.type.field. The latter
-            # implies a foreign key. If this is the case, return the field's type.
+            # implies a foreign key. If this is the case, return the field's
+            # type.
             parent_path = u'.'.join(ref.path[:-1])
             parent_type = (
                 app.types.get(parent_path) if parent_path else
@@ -67,7 +68,8 @@ class TypeInfoByRef(object):
                     fmt_app_name(ref.appname), parent_path))
             entity = getattr(parent_type, parent_type.WhichOneof('type'))
             type_ = entity.attr_defs[leaf]
-            return self.TYPE_INFO(None, type_, parent_path, parent_type, leaf, app)
+            return self.TYPE_INFO(None, type_, parent_path,
+                                  parent_type, leaf, app)
 
         import pdb
         pdb.set_trace()

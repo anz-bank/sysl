@@ -99,7 +99,7 @@ def parse_typespec(tspec):
     typ = tspec.get('type')
 
     # skip invalid arrays
-    if not typ and tspec.has_key('items'):
+    if not typ and 'items' in tspec:
         del tspec['items']
 
     descr = tspec.pop('description', None)
@@ -108,7 +108,7 @@ def parse_typespec(tspec):
         assert not (set(tspec.keys()) - {'type', 'items'}), tspec
 
         # skip invalid type
-        if tspec['items'].has_key('$ref') and tspec['items'].has_key('type'):
+        if '$ref' in tspec['items'] and 'type' in tspec['items']:
             del tspec['items']['type']
 
         (itype, idescr) = parse_typespec(tspec['items'])
@@ -198,7 +198,7 @@ def main():
                                                             key=lambda t: METHOD_ORDER[t[0]])):
                     qparams = dict()
 
-                    if body.has_key('parameters') and 'in' in body['parameters']:
+                    if 'parameters' in body and 'in' in body['parameters']:
                         qparams = [p for p in body['parameters']
                                    if p['in'] == 'query']
                     w(u'{}{}{}:',
@@ -212,7 +212,8 @@ def main():
                           '{name}=string'.format(**p))
                           for p in qparams))
                     with w.indent():
-                        for line in textwrap.wrap(body.get('description', 'No description.').strip(), 64):
+                        for line in textwrap.wrap(
+                                body.get('description', 'No description.').strip(), 64):
                             w(u'| {}', line)
 
                         responses = body['responses']
@@ -231,7 +232,7 @@ def main():
                                         ret = ': <: set of ' + itemtype
                                     else:
                                         ret = ': <: ...'
-                                elif ok.has_key('$ref'):
+                                elif '$ref' in ok:
                                     ret = ': <: ' + ok['$ref'][
                                         len('#/definitions/'):]
                                 else:
@@ -275,7 +276,7 @@ def main():
                               'set of ') or ftype.endswith('*') else ftype + '?',
                           ' "' + fdescr + '"' if fdescr else '')
                 # handle top-level arrays
-                elif tspec.has_key('type') and tspec['type'] == 'array':
+                elif 'type' in tspec and tspec['type'] == 'array':
 
                     (ftype, fdescr) = parse_typespec(tspec)
                     w('{} <: {}{}',

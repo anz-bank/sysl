@@ -710,7 +710,8 @@ def codeForExpr(w_, expr, scope, module, let=None):
                 if arg_type.primitive == arg_type.BOOL:
                     return (protect(pc, arg), arg_type)
                 if arg_type.WhichOneof('type') == 'set':
-                    return (protect((1, 'NOT'), '!' + arg + '.isEmpty()'), BOOL_TYPE)
+                    return (protect((1, 'NOT'), '!' +
+                                    arg + '.isEmpty()'), BOOL_TYPE)
             elif func == 'str':
                 assert len(args) == 1
                 return (
@@ -774,7 +775,8 @@ def codeForExpr(w_, expr, scope, module, let=None):
                 expr_type.set.CopyFrom(next(iter(types)))
             else:
                 expr_type.set.primitive = sysl_pb2.Type.ANY
-            return (protect(pc, fmt.format(type_code, ', \v'.join(elems))), expr_type)
+            return (protect(pc, fmt.format(
+                type_code, ', \v'.join(elems))), expr_type)
 
         elif which_expr == 'transform':
             return transformToJava(protect, expr)
@@ -795,7 +797,9 @@ def codeForExpr(w_, expr, scope, module, let=None):
                 if (binexpr.op == sysl_pb2.Expr.BinExpr.EQ and
                     binexpr.rhs.WhichOneof('expr') == 'literal' and
                         binexpr.rhs.literal.WhichOneof('value') == 's'):
-                    lel = (binexpr.lhs, binexpr.rhs.literal.WhichOneof('value'))
+                    lel = (
+                        binexpr.lhs,
+                        binexpr.rhs.literal.WhichOneof('value'))
                     if (ifelse.if_false.WhichOneof('expr') != 'ifelse' or
                             lel == commonLhsEqLiteral(ifelse.if_false.ifelse)):
                         return lel
@@ -959,7 +963,8 @@ def codeForExpr(w_, expr, scope, module, let=None):
             test = None
 
             def attr_names(arg):
-                # We just want type info, so we'll use inner scope to trap any codegen.
+                # We just want type info, so we'll use inner scope to trap any
+                # codegen.
                 with inner_java_scope():
                     (_, arg_type) = E('.', arg)
                     (_, resolved_arg_type) = cur_scope().resolve(arg_type)

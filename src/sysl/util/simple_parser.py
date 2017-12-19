@@ -59,7 +59,7 @@ class SimpleParser(object):
             if self._cur < len(self._text.rstrip()):
                 raise RuntimeError('input not consumed')
             return result
-        except:
+        except BaseException:
             print >>sys.stderr, "Error @ {!s}🔥 {!s}".format(
                 self._text[:self._cur], self._text[self._cur:])
             raise

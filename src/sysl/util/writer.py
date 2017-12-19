@@ -147,7 +147,7 @@ class Writer(object):
 
         try:
             yield rollback
-        except:
+        except BaseException:
             rollback()
             raise
 
@@ -168,7 +168,7 @@ class Writer(object):
         for line in lines:
             written = self('{}', line)
 
-        if (text == '' and written == None):
+        if (text == '' and written is None):
             written = self('{}', '| ')
         return written
 
