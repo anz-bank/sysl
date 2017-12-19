@@ -19,17 +19,17 @@ from sysl.proto import sysl_pb2
 
 # TODO: dedup with //src/exporters/swagger/swagger.py
 TYPE_MAP = {
-  sysl_pb2.Type.ANY: {'type':'object'},
-  sysl_pb2.Type.BOOL: {'type': 'boolean'},
-  sysl_pb2.Type.INT: {'type':'number', 'format':'integer'},
-  sysl_pb2.Type.FLOAT: {'type':'number', 'format':'double'},
-  sysl_pb2.Type.DECIMAL: {'type':'number', 'format':'double'},
-  sysl_pb2.Type.STRING: {'type':'string'},
-  sysl_pb2.Type.BYTES: None,
-  sysl_pb2.Type.STRING_8: {'type':'string'},
-  sysl_pb2.Type.DATE: {'type':'string'},
-  sysl_pb2.Type.DATETIME: {'type':'string'},
-  sysl_pb2.Type.XML: {'type':'string'},
+    sysl_pb2.Type.ANY: {'type': 'object'},
+    sysl_pb2.Type.BOOL: {'type': 'boolean'},
+    sysl_pb2.Type.INT: {'type': 'number', 'format': 'integer'},
+    sysl_pb2.Type.FLOAT: {'type': 'number', 'format': 'double'},
+    sysl_pb2.Type.DECIMAL: {'type': 'number', 'format': 'double'},
+    sysl_pb2.Type.STRING: {'type': 'string'},
+    sysl_pb2.Type.BYTES: None,
+    sysl_pb2.Type.STRING_8: {'type': 'string'},
+    sysl_pb2.Type.DATE: {'type': 'string'},
+    sysl_pb2.Type.DATETIME: {'type': 'string'},
+    sysl_pb2.Type.XML: {'type': 'string'},
 }
 
 WORDS = set()
@@ -115,8 +115,6 @@ def parse_typespec(tspec):
         assert idescr is None
         return ('set of ' + itype, descr)
 
-
-
     def r(t):
         return (t, descr)
 
@@ -193,7 +191,7 @@ def main():
         for (path, api) in sorted(swag['paths'].iteritems()):
             # {foo-bar} to {fooBar}
             w(u'\n{}:', re.sub(r'({[^/]*?})', javaParam, path))
-            with w.indent():  
+            with w.indent():
                 if 'parameters' in api:
                     del api['parameters']
                 for (i, (method, body)) in enumerate(sorted(api.iteritems(),
@@ -207,12 +205,12 @@ def main():
                       method.upper(),
                       ' ?' if qparams else '',
                       '&'.join(('{}={}{}'.format(
-                                    p['name'],
-                                    SWAGGER_TYPE_MAP[p['type']],
-                                    '' if p['required'] else '?')
-                                if p['type'] != 'string' else
-                                '{name}=string'.format(**p))
-                               for p in qparams))
+                          p['name'],
+                          SWAGGER_TYPE_MAP[p['type']],
+                          '' if p['required'] else '?')
+                          if p['type'] != 'string' else
+                          '{name}=string'.format(**p))
+                          for p in qparams))
                     with w.indent():
                         for line in textwrap.wrap(body.get('description', 'No description.').strip(), 64):
                             w(u'| {}', line)
@@ -266,23 +264,25 @@ def main():
             with w.indent():
 
                 tspec_items = tspec.get('properties')
-                    
+
                 if tspec_items:
                     for (fname, fspec) in sorted(tspec_items.iteritems()):
 
                         (ftype, fdescr) = parse_typespec(fspec)
                         w('{} <: {}{}',
                           fname,
-                          ftype if ftype.startswith('set of ') or ftype.endswith('*') else ftype + '?',
+                          ftype if ftype.startswith(
+                              'set of ') or ftype.endswith('*') else ftype + '?',
                           ' "' + fdescr + '"' if fdescr else '')
                 # handle top-level arrays
                 elif tspec.has_key('type') and tspec['type'] == 'array':
 
                     (ftype, fdescr) = parse_typespec(tspec)
                     w('{} <: {}{}',
-                          fname,
-                          ftype if ftype.startswith('set of ') or ftype.endswith('*') else ftype + '?',
-                          ' "' + fdescr + '"' if fdescr else '')
+                      fname,
+                      ftype if ftype.startswith(
+                          'set of ') or ftype.endswith('*') else ftype + '?',
+                      ' "' + fdescr + '"' if fdescr else '')
                 else:
                     assert True, tspec
 
