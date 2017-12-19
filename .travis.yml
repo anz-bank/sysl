@@ -29,6 +29,10 @@ addons:
 
 install: pip install --user -r requirements.txt
 
+branches:
+  only:
+  - /.*/
+
 matrix:
   include:
     - os: linux
