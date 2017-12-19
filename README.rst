@@ -36,8 +36,8 @@ Create distribution::
 
 If you are behind a corporate proxy setting you might want to consider setting up ``pip.conf``:
 
-	- `Stackoverflow <https://stackoverflow.com/a/46410817>`_
-	- `Official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_
+- `Stackoverflow <https://stackoverflow.com/a/46410817>`_
+- `Official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_
 
 Development
 -----------
