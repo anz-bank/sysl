@@ -191,7 +191,7 @@ def _apply_call_templates(app):
                     template[1] += 1
 
     def ep_templates():
-       # Discover templates.
+        # Discover templates.
         for stmt in pseudo.stmt:
             if stmt.HasField('action'):
                 templates[stmt.action.action] = [stmt.attrs, 0]
