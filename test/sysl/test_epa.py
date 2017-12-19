@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from src.sysl import syslloader, syslints
+from sysl.core import syslloader, syslints
+from sysl.util import debug
 import unittest
 import re, os, sys
-
 import traceback
-
 import argparse as ap
-from src.util import debug
+import tempfile
+from os import path 
 
 class TestEpa(unittest.TestCase):
+  def setUp(self):
+    self.outpath  = tempfile.gettempdir()
 
   def integration_view_helper(self, modulename, d):
     (module, deps, _) = syslloader.load(modulename, True, '.')
@@ -27,7 +29,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_ints-ints.png',
+        'output'    : path.join(self.outpath, 'test_ints-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'title'     : 'Test EPA',
@@ -49,7 +51,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_epa-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -73,7 +75,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_epa_repeated_calls-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_repeated_calls-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -100,7 +102,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_int_repeated_calls-ints.png',
+        'output'    : path.join(self.outpath, 'test_int_repeated_calls-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : False,
@@ -124,7 +126,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_epa_ignore_keyword-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_ignore_keyword-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -146,7 +148,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_epa_labels-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_labels-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -168,7 +170,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Events',
         'exclude'   : '',
-        'output'    : 'test_epa_labels_for_events-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_labels_for_events-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -192,7 +194,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_epa_patterns-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_patterns-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -201,8 +203,8 @@ class TestEpa(unittest.TestCase):
         'verbose'   : ''}
 
       out = self.integration_view_helper('/test/data/test_epa_patterns', d)
-
-      self.assertTrue('** <color green>soap</color>**' in out[0])
+      print '==================', out[0]
+      self.assertTrue('** <color green> → soap</color>**' in out[0])
 
     except (IOError, Exception) as e:
       self.fail(traceback.format_exc())
@@ -214,7 +216,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_epa_missing_patterns-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_missing_patterns-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -239,7 +241,7 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Integrations',
         'exclude'   : '',
-        'output'    : 'test_epa_missing_labels-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_missing_labels-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : True,
@@ -265,7 +267,7 @@ class TestEpa(unittest.TestCase):
   #     d = {
   #       'project'   : 'Test EPA :: Events',
   #       'exclude'   : '',
-  #       'output'    : 'test_epa_events-ints.png',
+  #       'output'    : path.join(self.outpath, 'test_epa_events-ints.png'),
   #       'plantuml'  : '',
   #       'clustered' : '',
   #       'epa'       : True,
@@ -294,16 +296,15 @@ class TestEpa(unittest.TestCase):
       d = {
         'project'   : 'Test EPA :: Passthrough',
         'exclude'   : '',
-        'output'    : 'test_epa_passthrough-ints.png',
+        'output'    : path.join(self.outpath, 'test_epa_passthrough-ints.png'),
         'plantuml'  : '',
         'clustered' : '',
         'epa'       : False,
         'title'     : 'Test EPA Passthrough',
-        'verbose'   : ''}
+        'verbose'   : '',
+        'filter'    : ''}
 
       out = self.integration_view_helper('/test/data/test_epa_passthrough', d)
-
-      import pdb; pdb.set_trace()
       
     except (IOError, Exception) as e:
       self.fail(traceback.format_exc())

@@ -1,5 +1,5 @@
-from src.util import algo
-from src.util import debug
+from sysl.util import algo
+from sysl.util import debug
 
 import unittest
 

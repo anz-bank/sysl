@@ -1,12 +1,13 @@
-from src.exporters import reljam
-from src.sysl import syslloader
+from sysl.reljam import reljam
+from sysl.core import syslloader
 import unittest
 import re, os, sys
+import tempfile
 
 class TestReljam(unittest.TestCase):
 
   def setUp(self):
-    self.outpath  = '.'
+    self.outpath  = tempfile.gettempdir()
     self.package_prefix  = 'io.sysl.test.data.petshop.'
     self.entities = {'Employee', 'Breed', 'Pet', 'EmployeeTendsPet'}
     (self.module, _, _) = syslloader.load('/test/data/petshop/petshop', True, '.')
@@ -43,7 +44,7 @@ class TestReljam(unittest.TestCase):
     for entity in keys:
       root_count  = 0
       model_count = 0
-      file_name = package.replace('.','/') + '/' + entity + '.java'
+      file_name = self.outpath + '/' +  package.replace('.','/') + '/' + entity + '.java'
       with open(file_name, 'r') as java_text:
         for line in java_text:
           root_count  += len(root_pattern.findall(line))

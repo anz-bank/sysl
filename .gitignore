@@ -1,1 +1,6 @@
-/bazel-*
+*.pyc
+.cache
+sysl.egg-info
+dist
+build
+.eggs

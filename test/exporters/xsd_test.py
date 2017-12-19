@@ -1,8 +1,8 @@
-from src.exporters import reljam
-
-from src.sysl import syslloader
+from sysl.reljam import reljam
+from sysl.core import syslloader
 import unittest
 import re, os, sys, filecmp
+import tempfile
 
 class TestXsd(unittest.TestCase):
 
@@ -31,13 +31,13 @@ class TestXsd(unittest.TestCase):
     self.genAndCompare("/test/data/test_table_attr_xsd", "TestTableAttrXsdModel", "test/data/test_table_attr.xsd")
 
   def genAndCompare(self, sysl_module, model, xsd_comparison_file):
-    outpath  = '.'
+    outpath  = tempfile.gettempdir()
     package_prefix  = 'io.sysl.test.data'
     (module, _, _) = syslloader.load(sysl_module, True, '.')
 
     reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
 
-    self.assertTrue(filecmp.cmp("./" + xsd_comparison_file, "./" + model + ".xsd"))
+    self.assertTrue(filecmp.cmp("./" + xsd_comparison_file, outpath + "/" + model + ".xsd"))
 
 if __name__ == '__main__':
   unittest.main()

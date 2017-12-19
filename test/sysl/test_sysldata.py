@@ -1,12 +1,14 @@
-from src.sysl import syslloader, sysldata
+from sysl.core import syslloader, sysldata
 import unittest
 import re, os, sys
-
+from os import path
 import traceback
-
+import tempfile
 import argparse as ap
 
 class TestSetOf(unittest.TestCase):
+  def setUp(self):
+    self.outpath  = tempfile.gettempdir()
 
   def test_set_of(self):
     
@@ -15,9 +17,10 @@ class TestSetOf(unittest.TestCase):
   
       d = {
         'project' : 'TestData :: Data Views', 
-        'output'  : 'test_set_of-data.png',
+        'output'  : path.join(self.outpath, 'test_set_of-data.png'),
         'plantuml': '',
-        'verbose' : ''}
+        'verbose' : '',
+        'filter' : ''}
       args = ap.Namespace(**d)
 
       out = sysldata.dataviews(module, args)
