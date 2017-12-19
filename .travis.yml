@@ -7,4 +7,5 @@ branches:
 env:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
 script:
+  - pycodestyle . --ignore=E501,E265,E402,E741
   - python setup.py test
