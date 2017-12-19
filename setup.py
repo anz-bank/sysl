@@ -17,14 +17,14 @@ EMAIL = 'marcelo.cantos@anz.com'
 AUTHOR = 'ANZ'
 
 REQUIRED = [
-  'httplib2',
-  'openpyxl',
-  'plantuml',
-  'protobuf',
-  'pylint',
-  'PyYAML',
-  'requests',
-  'six'
+    'httplib2',
+    'openpyxl',
+    'plantuml',
+    'protobuf',
+    'pylint',
+    'PyYAML',
+    'requests',
+    'six'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -36,39 +36,51 @@ about = {}
 with open(os.path.join(here, 'src', NAME, '__version__.py')) as f:
     exec(f.read(), about)
 
+
 class CleanCommand(Command):
     user_options = []
+
     def initialize_options(self):
         pass
+
     def finalize_options(self):
         pass
+
     def run(self):
         os.system('rm -vrf ./build ./dist ./.eggs ./*.pyc ./*.tgz ./*.egg-info')
 
+
 class PyTest(TestCommand):
     user_options = [('pytest-args=', 'a', "Arguments to pass to pytest")]
+
     def initialize_options(self):
         TestCommand.initialize_options(self)
         self.pytest_args = ''
+
     def run_tests(self):
         import shlex
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(shlex.split(self.pytest_args))
         sys.exit(errno)
 
+
 class DistCommand(Command):
     user_options = []
+
     def initialize_options(self):
         pass
+
     def finalize_options(self):
         pass
+
     def run(self):
         try:
             rmtree(os.path.join(here, 'dist'))
         except OSError:
             pass
-        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        os.system(
+            '{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
         sys.exit()
 
 
@@ -80,7 +92,7 @@ setup(
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
-    package_dir={'':'src'},
+    package_dir={'': 'src'},
     packages=find_packages('src', exclude=('tests',)),
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
@@ -98,6 +110,6 @@ setup(
     cmdclass={
         'clean': CleanCommand,
         'test': PyTest,
-        'dist': DistCommand, 
+        'dist': DistCommand,
     }
 )

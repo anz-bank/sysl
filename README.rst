@@ -35,6 +35,12 @@ Create distribution
 
   > python setup.py bdist_wheel --universal
 
+If you are behind a corporate proxy setting you might want to consider setting up ``pip.conf``:
+
+	- `Stackoverflow <https://stackoverflow.com/a/46410817>`_.
+	- `Official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_.
+
+
 Status
 ------
 Sysl is currently targeted at early adopters. It is usable in alpha, but has a
