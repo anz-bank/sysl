@@ -17,14 +17,14 @@ EMAIL = 'marcelo.cantos@anz.com'
 AUTHOR = 'ANZ'
 
 REQUIRED = [
-  'httplib2',
-  'openpyxl',
-  'plantuml',
-  'protobuf',
-  'pylint',
-  'PyYAML',
-  'requests',
-  'six'
+    'httplib2',
+    'openpyxl',
+    'plantuml',
+    'protobuf',
+    'pylint',
+    'PyYAML',
+    'requests',
+    'six'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -98,6 +98,6 @@ setup(
     cmdclass={
         'clean': CleanCommand,
         'test': PyTest,
-        'dist': DistCommand, 
+        'dist': DistCommand,
     }
 )
