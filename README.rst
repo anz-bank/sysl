@@ -25,9 +25,15 @@ If you are interested in trying out Sysl, you will need to build it yourself fro
 
   > python setup.py install
   > python setup.py test
+
+Run from command line:
+
   > python -m sysl.core  --root demo/petshop textpb -o out/petshop.txt /petshop
   > python -m sysl.reljam  --root demo/petshop model /petshop PetShopModel
 
+Create distribution
+
+  > python setup.py bdist_wheel --universal
 
 Status
 ------
