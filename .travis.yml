@@ -4,5 +4,7 @@ python:
 branches:
   only:
   - /.*/
+env:
+  - SYSL_PLANTUML=http://www.plantuml.com/plantuml
 script:
   - python setup.py test
