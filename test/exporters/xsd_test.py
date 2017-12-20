@@ -21,23 +21,28 @@ class TestXsd(unittest.TestCase):
 
     def test_table_xsd(self):
         self.genAndCompare("/test/data/test_table_xsd",
-                           "TestTableXsdModel", "test/data/test_table.xsd")
+                           "TestTableXsdModel",
+                           os.path.join("test", "data", "test_table.xsd"))
 
     def test_simple_type(self):
         self.genAndCompare("/test/data/test_type_xsd",
-                           "TestTypeXsdModel", "test/data/test_type.xsd")
+                           "TestTypeXsdModel",
+                           os.path.join("test", "data", "test_type.xsd"))
 
     def test_type_set(self):
         self.genAndCompare("/test/data/test_type_set_xsd",
-                           "TestTypeSetXsdModel", "test/data/test_type_set.xsd")
+                           "TestTypeSetXsdModel",
+                           os.path.join("test", "data", "test_type_set.xsd"))
 
     def test_type_attribute(self):
         self.genAndCompare("/test/data/test_type_attr_xsd",
-                           "TestTypeAttrXsdModel", "test/data/test_type_attr.xsd")
+                           "TestTypeAttrXsdModel",
+                           os.path.join("test", "data", "test_type_attr.xsd"))
 
     def test_table_attribute(self):
         self.genAndCompare("/test/data/test_table_attr_xsd",
-                           "TestTableAttrXsdModel", "test/data/test_table_attr.xsd")
+                           "TestTableAttrXsdModel",
+                           os.path.join("test", "data", "test_table_attr.xsd"))
 
     def genAndCompare(self, sysl_module, model, xsd_comparison_file):
         outpath = tempfile.gettempdir()
@@ -46,7 +51,7 @@ class TestXsd(unittest.TestCase):
 
         reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
 
-        self.assertTrue(filecmp.cmp(os.path.join(".", xsd_comparison_file),
+        self.assertTrue(filecmp.cmp(os.path.join('.', xsd_comparison_file),
                                     os.path.join(outpath, model + ".xsd")))
 
 
