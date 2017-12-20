@@ -22,6 +22,7 @@ from sysl.core import syslx
 
 from sysl.util import simple_parser
 from sysl.util import rex
+from sysl.util import cache
 
 
 USER_ENV = 'CONFLUENCE_USER'
@@ -752,7 +753,7 @@ class _ExprParser(simple_parser.SimpleParser):
 
 
 class TodoNagger(object):
-    STATE_PATH = os.path.expandvars('/tmp/.sysl.state.db')
+    STATE_PATH = cache.DBPATH
 
     def __init__(self):
         self._conn = sqlite3.connect(self.STATE_PATH)
