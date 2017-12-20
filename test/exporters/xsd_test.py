@@ -8,8 +8,8 @@ import tempfile
 from itertools import izip
 
 def areFilesIdentical(filename1, filename2):
-    with open(filename1, "rtU") as f1:
-        with open(filename2, "rtU") as f2:
+    with open(filename1, "r") as f1:
+        with open(filename2, "r") as f2:
             return all(line1 == line2
                        for line1, line2 in izip(f1, f2))
 
