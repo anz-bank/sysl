@@ -58,7 +58,7 @@ class Connection(object):
             try:
                 os.remove(DBPATH)
             except IOError:
-                DBPATH = os.path.join(tempfile.mkdtemp(), '.sysl.state.db')
+                print '=== Cannot remove db:', DBPATH
             self._connect()
 
             self.conn.executescript(self._SCHEMA)
