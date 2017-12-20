@@ -1,5 +1,5 @@
 environment:
-  PYTHON: : "C:\\Python27"
+  PYTHON: "C:\\Python27"
 
 install:
   - "%PYTHON%\\python.exe setup.py install"
