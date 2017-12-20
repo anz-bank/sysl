@@ -31,7 +31,8 @@ def findall(node, expr):
 
 def get_attr(node, expr, attr, mapf=None, default=None):
     if mapf is None:
-        def mapf(x): return x
+        def mapf(x):
+            return x
 
     e = find(node, expr)
     return mapf(e.get(attr)) if e is not None else default
