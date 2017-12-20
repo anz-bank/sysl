@@ -48,7 +48,7 @@ setup(
     entry_points={
         'console_scripts': [
             'sysl=sysl.core.__main__:main',
-            'reljam=sysl.reljam.reljam:main'
+            'reljam=sysl.reljam.reljam:main',
         ],
     },
     install_requires=REQUIRED,
