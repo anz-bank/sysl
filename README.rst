@@ -24,22 +24,33 @@ Installation
 If you are interested in trying out Sysl, you will need to build it yourself from source::
 
   > python setup.py install
-  > python setup.py test
 
-Run from command line:
+Execute as command line tool::
 
   > python -m sysl.core  --root demo/petshop textpb -o out/petshop.txt /petshop
   > python -m sysl.reljam  --root demo/petshop model /petshop PetShopModel
 
-Create distribution
+Create distribution::
 
   > python setup.py bdist_wheel --universal
 
 If you are behind a corporate proxy setting you might want to consider setting up ``pip.conf``:
 
-	- `Stackoverflow <https://stackoverflow.com/a/46410817>`_.
-	- `Official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_.
+- `Stackoverflow <https://stackoverflow.com/a/46410817>`_
+- `Official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_
 
+Development
+-----------
+Install dependencies and ``sysl`` package with symlinks::
+
+	> pip install -e .
+
+Test the source code and your changes with::
+
+	> python setup.py test
+	> python setup.py lint
+
+Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to isolate your environment.
 
 Status
 ------
