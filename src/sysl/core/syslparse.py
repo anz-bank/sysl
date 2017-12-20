@@ -15,6 +15,7 @@ import threading
 import time
 import urlparse
 import re
+import tempfile
 
 from sysl.proto import sysl_pb2
 
@@ -752,7 +753,7 @@ class _ExprParser(simple_parser.SimpleParser):
 
 
 class TodoNagger(object):
-    STATE_PATH = os.path.expandvars('/tmp/.sysl.state.db')
+    STATE_PATH = os.path.join(tempfile.mkdtemp, '.sysl.state.db')
 
     def __init__(self):
         self._conn = sqlite3.connect(self.STATE_PATH)
