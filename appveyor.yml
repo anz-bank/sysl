@@ -2,10 +2,12 @@ environment:
   PYTHON: "C:\\Python27"
 
 install:
-  - "%PYTHON%\\python.exe setup.py install"
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "pip install --upgrade setuptools"
+  - "python setup.py install"
 
 build: off
 
 test_script:
-  - "%PYTHON%\\python.exe setup.py test"
-  - "%PYTHON%\\python.exe setup.py lint"
+  - "python setup.py test"
+  - "python setup.py lint"
