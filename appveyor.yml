@@ -1,6 +1,6 @@
 environment:
-  - PYTHON_VERSION: "2.7"
-  - SYSL_PLANTUML: "http://www.plantuml.com/plantuml"
+  PYTHON_VERSION: "2.7"
+  SYSL_PLANTUML: "http://www.plantuml.com/plantuml"
 
 test_script:
   - python setup.py lint
