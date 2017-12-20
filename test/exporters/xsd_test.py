@@ -57,17 +57,7 @@ class TestXsd(unittest.TestCase):
         reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
         expected = os.path.join('.', xsd_comparison_file)
         real = os.path.join(outpath, model + ".xsd")
-        print '============= COMP FILES'
-        print '   expected:', expected
-        print '   real:', real
-        print '================='
-        with open(expected, 'r') as fin:
-            print fin.read()
-        print '================='
-        with open(real, 'r') as fin:
-            print fin.read()
         self.assertTrue(areFilesIdentical(expected,real))
-
 
 if __name__ == '__main__':
     unittest.main()

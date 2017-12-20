@@ -8,6 +8,7 @@ import tempfile
 
 DBPATH = os.path.join(tempfile.mkdtemp(), '.sysl.state.db')
 
+
 class Connection(object):
 
     _SCHEMA = """\
