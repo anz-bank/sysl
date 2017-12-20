@@ -4,9 +4,14 @@ import unittest
 import re
 import os
 import sys
-import filecmp
 import tempfile
+from itertools import izip
 
+def areFilesIdentical(filename1, filename2):
+    with open(filename1, "rtU") as f1:
+        with open(filename2, "rtU") as f2:
+            return all(line1 == line2
+                       for line1, line2 in izip(f1, f2))
 
 class TestXsd(unittest.TestCase):
 
@@ -61,7 +66,7 @@ class TestXsd(unittest.TestCase):
         print '================='
         with open(real, 'r') as fin:
             print fin.read()
-        self.assertTrue(filecmp.cmp(expected,real))
+        self.assertTrue(areFilesIdentical(expected,real))
 
 
 if __name__ == '__main__':
