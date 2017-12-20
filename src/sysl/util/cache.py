@@ -55,8 +55,10 @@ class Connection(object):
                 break
 
             self.conn = None
-            os.remove(DBPATH)
-
+            try:
+                os.remove(DBPATH)
+            except IOError:
+                DBPATH = os.path.join(tempfile.mkdtemp(), '.sysl.state.db')
             self._connect()
 
             self.conn.executescript(self._SCHEMA)
