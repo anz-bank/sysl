@@ -1,8 +1,11 @@
 environment:
-  PYTHON_VERSION: "2.7"
-  SYSL_PLANTUML: "http://www.plantuml.com/plantuml"
+  PYTHON: : "C:\\Python27"
+
+install:
+  - "%PYTHON%\\python.exe setup.py install"
+
+build: off
 
 test_script:
-  - python setup.py lint
-  - python setup.py test
-
+  - "%PYTHON%\\python.exe setup.py test"
+  - "%PYTHON%\\python.exe setup.py lint"
