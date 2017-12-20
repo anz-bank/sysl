@@ -3,8 +3,7 @@ Sysl
 
 .. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?label=Linux%20build%20%40%20Travis%20CI
    :target: http://travis-ci.org/anz-bank/sysl
-
-.. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl.svg?label=Windows%20build%20%40%20Appveyor%20CI
+.. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl_pb2.svg?label=Windows%20build%20%40%20Appveyor%20CI
    :target: https://ci.appveyor.com/project/anz-bank/sysl
 
 Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
