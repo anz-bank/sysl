@@ -27,8 +27,8 @@ If you are interested in trying out Sysl, you will need to build it yourself fro
 
 Execute as command line tool::
 
-  > python -m sysl.core  --root demo/petshop textpb -o out/petshop.txt /petshop
-  > python -m sysl.reljam  --root demo/petshop model /petshop PetShopModel
+  > core  --root demo/petshop textpb -o out/petshop.txt /petshop
+  > reljam  --root demo/petshop model /petshop PetShopModel
 
 Create distribution::
 
