@@ -61,4 +61,4 @@ If ``sysl.proto`` is updated the above command needs to be re-run to update the 
 
 Status
 ------
-Sysl is currently targeted at early adopters. The current focus is to improve usability, especially error messages and warnings, and documentation.
+Sysl is currently targeted at early adopters. The current focus is to improve documentation and usability especially error messages and warnings.
