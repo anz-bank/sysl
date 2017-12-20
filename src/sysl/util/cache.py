@@ -57,7 +57,7 @@ class Connection(object):
             self.conn = None
             try:
                 os.remove(DBPATH)
-            except IOError:
+            except BaseException:
                 print '=== Cannot remove db:', DBPATH
             self._connect()
 
