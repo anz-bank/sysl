@@ -4,11 +4,11 @@ import os
 import sqlite3
 import sys
 import time
+import tempfile
 
+DBPATH = os.path.join(tempfile.mkdtemp(), '.sysl.state.db')
 
 class Connection(object):
-
-    DBPATH = os.path.expandvars('/tmp/.sysl.cache.db')
 
     _SCHEMA = """\
     CREATE TABLE version (
@@ -34,7 +34,7 @@ class Connection(object):
         self.conn = None
 
     def _connect(self):
-        self.conn = sqlite3.connect(self.DBPATH)
+        self.conn = sqlite3.connect(DBPATH)
         self.conn.text_factory = str
         return self.conn
 
@@ -55,7 +55,7 @@ class Connection(object):
                 break
 
             self.conn = None
-            os.remove(self.DBPATH)
+            os.remove(DBPATH)
 
             self._connect()
 
