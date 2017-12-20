@@ -1,0 +1,12 @@
+environment:
+  - PYTHON_VERSION: 2.7
+  - SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
+branches:
+  only:
+  - /.*/
+
+test_script:
+  - python setup.py lint
+  - python setup.py test
+
