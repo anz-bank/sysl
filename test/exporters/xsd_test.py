@@ -46,8 +46,8 @@ class TestXsd(unittest.TestCase):
 
         reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
 
-        self.assertTrue(filecmp.cmp("./" + xsd_comparison_file,
-                                    outpath + "/" + model + ".xsd"))
+        self.assertTrue(filecmp.cmp(os.path.join(".", xsd_comparison_file),
+                                    os.path.join(outpath, model + ".xsd")))
 
 
 if __name__ == '__main__':
