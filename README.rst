@@ -7,42 +7,58 @@ Sysl
 Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
 can specify systems, endpoints, endpoint behaviour, data models and data
 transformations. The Sysl compiler automatically generates sequence diagrams,
-integrations, and other views and also offers a range of code generation
-options, all from a common Sysl spec. The set of outputs is open-ended and will
-grow to support other representations in future.
+integrations, and other views. It also offers a range of code generation
+options, all from one common Sysl specification.
 
-Cross-platform strategy
------------------------
-To make it easy to reuse Sysl across systems, the compiler translates Sysl files
-into an intermediate representation expressed as protocol buffer messages. Using
-the protoc compiler, users can easily consume Sysl models in their programming
-language of choice in a typesafe way without having to write a ton of mapping
-boilerplate.
+The set of outputs is open-ended and allows for your own extensions. Sysl has been created with extensibility in mind and it will grow to support other representations over time.
 
 Installation
 ------------
-If you are interested in trying out Sysl, you will need to build it yourself from source::
+If you are interested in trying out Sysl, you will need to install `Python 2.7 <https://www.python.org/downloads/>`_ and the Python package manager `Pip <https://pip.pypa.io/en/stable/installing/>`_. You can then build sysl from source with ::
 
+  > git clone https://github.com/anz-bank/sysl.git
+  > cd sysl
   > python setup.py install
-  > python setup.py test
 
-Run from command line:
+Now you can execute Sysl as command line tool with ::
 
   > python -m sysl.core  --root demo/petshop textpb -o out/petshop.txt /petshop
   > python -m sysl.reljam  --root demo/petshop model /petshop PetShopModel
 
-Create distribution
+If you are behind a corporate proxy you might want to consider setting up a global ``pip.conf``
+file (details on `Stackoverflow <https://stackoverflow.com/a/46410817>`_ or `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_).
+
+Development
+-----------
+Install dependencies and the ``sysl`` package with symlinks ::
+
+	> pip install -e .
+
+Test the source code and your changes with ::
+
+	> python setup.py test
+	> python setup.py lint
+
+and create a distribution with ::
 
   > python setup.py bdist_wheel --universal
 
-If you are behind a corporate proxy setting you might want to consider setting up ``pip.conf``:
+Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to isolate your environment.
 
-	- `Stackoverflow <https://stackoverflow.com/a/46410817>`_.
-	- `Official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_.
+Extending Sysl
+--------------
+In order to easily reuse and extend Sysl across systems, the Sysl compiler translates Sysl files
+into an intermediate representation expressed as protocol buffer messages. These protobuf messages can be consumed in your favorite porgramming language and transformed to your desired output. In this way you are creating your own Sysl exporter.
 
+Using the `protoc compiler <https://developers.google.com/protocol-buffers/>`_ you can translate the definition file of the intermediate representation ``src/proto/sysl.proto`` into your preferred programming language in a one of step or on every build. You can then easily consume Sysl models in your programming language of choice  in a typesafe way without having to write a ton of mapping
+boilerplate. With that you can create your own customer tailored output diagrams, source code, views, integrations or other desired outputs.
+
+In this projects several Python based exporters exist under ``src/sysl/exporters`` and the relevant Python protobuf definitions ``sysl_pb2.py`` have been created from ``sysl.proto`` with ::
+
+	> protoc --python_out=src/sysl/proto  --proto_path=src/proto sysl.proto
+
+If ``sysl.proto`` is updated the above command needs to be re-run to update the corresponding Python definitions in ``sysl_pb2.py``.
 
 Status
 ------
-Sysl is currently targeted at early adopters. It is usable in alpha, but has a
-ways to go in terms of usability, especially on the documentation front (as can
-be seen above).
+Sysl is currently targeted at early adopters. The current focus is to improve usability, especially error messages and warnings, and documentation.
