@@ -4,9 +4,14 @@ import unittest
 import re
 import os
 import sys
-import filecmp
 import tempfile
+from itertools import izip
 
+def areFilesIdentical(filename1, filename2):
+    with open(filename1, "r") as f1:
+        with open(filename2, "r") as f2:
+            return all(line1 == line2
+                       for line1, line2 in izip(f1, f2))
 
 class TestXsd(unittest.TestCase):
 
@@ -21,23 +26,28 @@ class TestXsd(unittest.TestCase):
 
     def test_table_xsd(self):
         self.genAndCompare("/test/data/test_table_xsd",
-                           "TestTableXsdModel", "test/data/test_table.xsd")
+                           "TestTableXsdModel",
+                           os.path.join("test", "data", "test_table.xsd"))
 
     def test_simple_type(self):
         self.genAndCompare("/test/data/test_type_xsd",
-                           "TestTypeXsdModel", "test/data/test_type.xsd")
+                           "TestTypeXsdModel",
+                           os.path.join("test", "data", "test_type.xsd"))
 
     def test_type_set(self):
         self.genAndCompare("/test/data/test_type_set_xsd",
-                           "TestTypeSetXsdModel", "test/data/test_type_set.xsd")
+                           "TestTypeSetXsdModel",
+                           os.path.join("test", "data", "test_type_set.xsd"))
 
     def test_type_attribute(self):
         self.genAndCompare("/test/data/test_type_attr_xsd",
-                           "TestTypeAttrXsdModel", "test/data/test_type_attr.xsd")
+                           "TestTypeAttrXsdModel",
+                           os.path.join("test", "data", "test_type_attr.xsd"))
 
     def test_table_attribute(self):
         self.genAndCompare("/test/data/test_table_attr_xsd",
-                           "TestTableAttrXsdModel", "test/data/test_table_attr.xsd")
+                           "TestTableAttrXsdModel",
+                           os.path.join("test", "data", "test_table_attr.xsd"))
 
     def genAndCompare(self, sysl_module, model, xsd_comparison_file):
         outpath = tempfile.gettempdir()
@@ -45,10 +55,9 @@ class TestXsd(unittest.TestCase):
         (module, _, _) = syslloader.load(sysl_module, True, '.')
 
         reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
-
-        self.assertTrue(filecmp.cmp("./" + xsd_comparison_file,
-                                    outpath + "/" + model + ".xsd"))
-
+        expected = os.path.join('.', xsd_comparison_file)
+        real = os.path.join(outpath, model + ".xsd")
+        self.assertTrue(areFilesIdentical(expected,real))
 
 if __name__ == '__main__':
     unittest.main()
