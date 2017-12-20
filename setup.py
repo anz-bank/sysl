@@ -94,9 +94,12 @@ setup(
     url=URL,
     package_dir={'': 'src'},
     packages=find_packages('src', exclude=('tests',)),
-    # entry_points={
-    #     'console_scripts': ['mycli=mymodule:cli'],
-    # },
+    entry_points={
+        'console_scripts': [
+            'sysl=sysl.core.__main__:main',
+            'reljam=sysl.reljam.reljam:main'
+        ],
+    },
     install_requires=REQUIRED,
     include_package_data=True,
     license='Apache 2.0',
