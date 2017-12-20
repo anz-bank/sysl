@@ -550,8 +550,8 @@ class _ExprParser(simple_parser.SimpleParser):
                     if not self._expr():
                         raise RuntimeError('missing expr')
                     args.append(self.pop())
-                    desc.append(self.eat(r'(asc|desc)\b')
-                                and self.pop() == 'desc')
+                    desc.append(self.eat(r'(asc|desc)\b') and
+                                self.pop() == 'desc')
                 self.expect(ur'as\s+(\w+)·\)')
                 rank_attr = self.pop()
                 [expr] = self.push(sysl_pb2.Expr(
@@ -596,8 +596,8 @@ class _ExprParser(simple_parser.SimpleParser):
                     if not self._expr():
                         raise RuntimeError('missing expr')
                     args.append(self.pop())
-                    desc.append(self.eat(r'(asc|desc)\b')
-                                and self.pop() == 'desc')
+                    desc.append(self.eat(r'(asc|desc)\b') and
+                                self.pop() == 'desc')
                 self.expect(ur'\)')
                 [expr] = self.push(sysl_pb2.Expr(
                     relexpr=sysl_pb2.Expr.RelExpr(
@@ -1245,9 +1245,9 @@ class Parser(object):
 
             if match(r'^@(.*)'):
                 attr = (
-                    match.groups[0]
-                    + (json.dumps(' '.join(x[2:] for (_, _, x, _) in grandchildren))
-                       if grandchildren else ''))
+                    match.groups[0] +
+                    (json.dumps(' '.join(x[2:] for (_, _, x, _) in grandchildren))
+                     if grandchildren else ''))
                 (_AttrProcessor() + attr) >> typedecl.attrs
                 attrp += match.groups[0]
             elif match(r'^!type\s+(\w+)(?:\s+\[(.*)\])?$'):
@@ -1299,8 +1299,8 @@ class Parser(object):
                             for (line_no, end_line_no, line,
                                  ggrandchildren) in grandchildren:
                                 attr = (
-                                    line[1:]
-                                    + (json.dumps(
+                                    line[1:] +
+                                    (json.dumps(
                                         ' '.join(x[2:] for (_, _, x, _) in ggrandchildren))
                                         if ggrandchildren else ''))
                                 (_AttrProcessor() + attr) >> attrtype.attrs
