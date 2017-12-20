@@ -1254,8 +1254,8 @@ def export_entity_table_class(w, tname, t, fk_rsubmap, context):
                 if 'required' in syslx.patterns(f.attrs)]
 
             constrained_fields = any(
-                (f.primitive == f.STRING
-                 and any(c.precision for c in f.constraint))
+                (f.primitive == f.STRING and
+                    any(c.precision for c in f.constraint))
                 for (_, f) in datamodel.sorted_fields(t)
             )
 

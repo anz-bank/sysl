@@ -144,7 +144,7 @@ def xsd(context):
                                 with xs('all'):
                                     for (fname, f) in sorted(
                                             t.relation.attr_defs.iteritems()):
-                                        if not 'xml_attribute' in syslx.patterns(
+                                        if 'xml_attribute' not in syslx.patterns(
                                                 f.attrs):
                                             build_element(
                                                 fname, f, False, False)
@@ -174,7 +174,7 @@ def xsd(context):
 
                 with xs('all'):
                     for (fname, f) in sorted(t.tuple.attr_defs.iteritems()):
-                        if not 'xml_attribute' in syslx.patterns(f.attrs):
+                        if 'xml_attribute' not in syslx.patterns(f.attrs):
                             if f.HasField('set'):
                                 with xs('element', name=fname + 'List'):
                                     with xs('complexType'):

@@ -7,4 +7,5 @@ branches:
 env:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
 script:
+  - python setup.py lint
   - python setup.py test
