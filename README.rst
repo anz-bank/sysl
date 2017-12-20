@@ -22,8 +22,8 @@ If you are interested in trying out Sysl, you will need to install `Python 2.7 <
 
 Now you can execute Sysl as command line tool with ::
 
-  > python -m sysl.core  --root demo/petshop textpb -o out/petshop.txt /petshop
-  > python -m sysl.reljam  --root demo/petshop model /petshop PetShopModel
+  > core  --root demo/petshop textpb -o out/petshop.txt /petshop
+  > reljam  --root demo/petshop model /petshop PetShopModel
 
 If you are behind a corporate proxy you might want to consider setting up a global ``pip.conf``
 file (details on `Stackoverflow <https://stackoverflow.com/a/46410817>`_ or `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_).
