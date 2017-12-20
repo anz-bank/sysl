@@ -3,6 +3,8 @@ Sysl
 
 .. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?label=Linux%20build%20%40%20Travis%20CI
    :target: http://travis-ci.org/anz-bank/sysl
+.. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl_pb2.svg?label=Windows%20build%20%40%20Appveyor%20CI
+   :target: https://ci.appveyor.com/project/anz-bank/sysl
 
 Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
 can specify systems, endpoints, endpoint behaviour, data models and data
@@ -22,7 +24,7 @@ If you are interested in trying out Sysl, you will need to install `Python 2.7 <
 
 Now you can execute Sysl as command line tool with ::
 
-  > core  --root demo/petshop textpb -o out/petshop.txt /petshop
+  > sysl    --root demo/petshop textpb -o out/petshop.txt /petshop
   > reljam  --root demo/petshop model /petshop PetShopModel
 
 If you are behind a corporate proxy you might want to consider setting up a global ``pip.conf``
