@@ -6,7 +6,7 @@ Sysl
 .. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl.svg?label=Windows%20build%20%40%20Appveyor%20CI
    :target: https://ci.appveyor.com/project/anz-bank/sysl
 
-Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
+Sysl (pronounce "sizzle") is a system specification language. Using Sysl, you
 can specify systems, endpoints, endpoint behaviour, data models and data
 transformations. The Sysl compiler automatically generates sequence diagrams,
 integrations, and other views. It also offers a range of code generation
