@@ -100,8 +100,7 @@ def export_entity_class(w, tname, t, fk_rsubmap, context):
                 else:
                     if fname in fk_rsubmap:
                         logging.error('%s', (tname, fname, fk_rsubmap[fname]))
-                        import pdb
-                        pdb.set_trace()
+                        raise Exception('Error exporting entity class')
                     if jfname in fkeys:
                         fk_type = fkeys[jfname].parent_path
                         fk_field = fkeys[jfname].field
