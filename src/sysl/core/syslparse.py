@@ -163,8 +163,6 @@ class _ExprParser(simple_parser.SimpleParser):
 
     def parse(self):
         if not self._expr():
-            import pdb
-            pdb.set_trace()
             self.__init__(self._text, self._source_context)
             self._expr()
             raise RuntimeError('syntax error')
@@ -1032,9 +1030,6 @@ class Parser(object):
             endpt.name = epname
 
             if params is not None:
-                if 'pickme' in params:
-                    import pdb
-                    pdb.set_trace()
                 for param_pair in rex.split(r'\s*,\s*', params):
                     param = endpt.param.add()
                     if param_pair.count('<:') == 1:
@@ -1213,8 +1208,6 @@ class Parser(object):
 
             type_.source_context.start.line = line_no
         else:
-            import pdb
-            pdb.set_trace()
             raise RuntimeError('Unrecognised typespec: ' + typespec)
 
     def _parse_enum_defn(self, app, name, children):
@@ -1578,8 +1571,6 @@ class Parser(object):
         if app is None:
             app = module.apps[name]
 
-        #import pdb; pdb.set_trace()
-
         self._parse_app_name(app.name, name, app)
 
         if long_name is not None:
@@ -1606,7 +1597,6 @@ class Parser(object):
                     app, '', path, attrp + extra_attrs, {}, stmts)
                 stmts = []
             elif match(r'^!(type|table)\s+(\w+)(?:\s+\[(.*)\])?$'):
-                #import pdb; pdb.set_trace()
                 [keyword, name, attrs] = match.groups
                 subdecl = self._parse_type_decl(app, keyword, name, stmts)
                 self._parse_attrs(attrs, subdecl.attrs)
@@ -1669,7 +1659,6 @@ class Parser(object):
                 assert False, "Should be unreachable! " + endpoint_line
 
             if stmts:
-                #import pdb; pdb.set_trace()
                 self._parse_stmts(endpt, stmts, app)
 
     def parse(self, src, path, module):

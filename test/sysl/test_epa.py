@@ -64,7 +64,6 @@ class TestEpa(unittest.TestCase):
 
             out = self.integration_view_helper('/test/data/test_epa', d)
 
-            #import pdb; pdb.set_trace()
             self.assertTrue(re.search('_0 -.*> _1', out[0]))
             self.assertTrue(re.search('_1 -.*> _2', out[0]))
 
@@ -89,7 +88,6 @@ class TestEpa(unittest.TestCase):
             out = self.integration_view_helper(
                 '/test/data/test_epa_repeated_calls', d)
 
-            #import pdb; pdb.set_trace()
             self.assertTrue(
                 'state "**App1 Input Method 1 client**" as _2' in out[0])
             self.assertTrue('state "**App1 Input Method 1**" as _3' in out[0])
@@ -148,7 +146,7 @@ class TestEpa(unittest.TestCase):
         except (IOError, Exception) as e:
             self.fail(traceback.format_exc())
 
-    def test_labels(self):
+    def test_labelsX(self):
 
         try:
 
@@ -166,6 +164,7 @@ class TestEpa(unittest.TestCase):
             out = self.integration_view_helper(
                 '/test/data/test_epa_ignore_keyword', d)
 
+            #print out[0]
             self.assertTrue('**«INT-001»**' in out[0])
 
         except (IOError, Exception) as e:
@@ -185,8 +184,6 @@ class TestEpa(unittest.TestCase):
                 'filter': None,
                 'title': 'Test EPA Labels',
                 'verbose': ''}
-
-            #import pdb; pdb.set_trace()
 
             out = self.integration_view_helper(
                 '/test/data/test_epa_labels_for_events', d)
@@ -213,7 +210,6 @@ class TestEpa(unittest.TestCase):
 
             out = self.integration_view_helper(
                 '/test/data/test_epa_patterns', d)
-            print '==================', out[0]
             self.assertTrue('** <color green> → soap</color>**' in out[0])
 
         except (IOError, Exception) as e:
@@ -237,8 +233,6 @@ class TestEpa(unittest.TestCase):
             out = self.integration_view_helper(
                 '/test/data/test_epa_missing_patterns', d)
 
-            #import pdb; pdb.set_trace()
-
             self.assertTrue('** <color red>pattern?</color>**' in out[0])
 
         except (IOError, Exception) as e:
@@ -259,12 +253,8 @@ class TestEpa(unittest.TestCase):
                 'title': 'Test EPA Patterns',
                 'verbose': ''}
 
-            # import pdb; pdb.set_trace()
-
             out = self.integration_view_helper(
                 '/test/data/test_epa_missing_labels', d)
-
-            # import pdb; pdb.set_trace()
 
             self.assertTrue('<color red>(missing INT)</color>' in out[0])
 
@@ -287,7 +277,6 @@ class TestEpa(unittest.TestCase):
 
     #     out = self.integration_view_helper('/test/data/test_epa_events', d)
 
-    #     #import pdb; pdb.set_trace()
     #     self.assertTrue('state "**Test EPA :: App1 -> App1 Event**" as _0' in out[0])
     #     self.assertTrue('state "**Trigger**" as _2' in out[0])
     #     self.assertTrue('state "**App1 Event**" as _1' in out[0])

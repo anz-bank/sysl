@@ -172,8 +172,7 @@ def serializer(context):
                                       jfname, access, extra)
                                 else:
                                     if jfname == 'index':
-                                        import pdb
-                                        pdb.set_trace()
+                                        raise Exception('Bad Java name (index)')
                                     w('serializeField("{}", {}{}, xsw);',
                                       jfname, access, extra)
                     w('xsw.writeEndElement();')

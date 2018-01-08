@@ -41,7 +41,6 @@ class TestSetOf(unittest.TestCase):
             (module, _, _) = syslloader.load(
                 '/test/data/test_at_prefixed_attr', True, '.')
 
-            #import pdb; pdb.set_trace()
             val_set = set(
                 elt.s for elt in module.apps['TestData :: Top Level App'].endpoints['Second Level App'].attrs['bracketed_array_attr'].a.elt)
             self.assertTrue({'bval1', 'bval2'} & val_set)

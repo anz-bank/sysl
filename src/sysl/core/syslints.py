@@ -167,8 +167,6 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
                     (app_name, _, ep_name) = name.partition(' : ')
                     attrs = module.apps[app_name].endpoints[ep_name].attrs
                     state_name = ep_name
-                    # if 'ServiceAccount' in ep_name:
-                    #  import pdb; pdb.set_trace()
 
                 write(template,
                       appfmt(appname=state_name,
@@ -279,9 +277,6 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
 
                         label = diagutil.parse_fmt(app.attrs["epfmt"].s)(
                             needs_int=needs_int, patterns=ptrns, **fmt_vars)
-                        # if 'Security Services' in app_b_name:
-                        #  import pdb; pdb.set_trace()
-                        # break
 
                 # if not label and middle:
                 #  fmt_vars = diagutil.attr_fmt_vars(module.apps[app_b].endpoints[ep_b].attrs)
@@ -421,11 +416,8 @@ def integration_views(module, deps, args):
                 # collect outbound pubsub dependencies
                 # inbound_deps
 
-                #import pdb; pdb.set_trace()
                 # add passthroughs
                 for dep in outbound_deps:
-                        # if 'Monetary' in dep[0][1]:
-                        #  import pdb; pdb.set_trace()
                     passthrough_walk(dep, integration_set)
 
             return integration_set
