@@ -143,7 +143,7 @@ def _map_subscriptions(module):
 
 
 def _apply_call_templates(app):
-    """Apply call templates found in '.. * <- *' pseudo-endpoints.
+    """Apply call templates found in '.. * <- *' | '*' pseudo-endpoints.
 
     Project-specific metadata may be applied as follows:
 
@@ -160,7 +160,7 @@ def _apply_call_templates(app):
 
     # Look for the pseudo endpoint.
     pseudos = {name for name in app.endpoints
-               if re.match(r'\.\.\s*\*\s*<-\s*\*', name)}
+               if re.match(r'(\.\.\s*\*\s*<-\s*\*|\*)', name)}
     if not pseudos:
         return
     if len(pseudos) > 1:
@@ -179,7 +179,7 @@ def _apply_call_templates(app):
 
         # Apply templates.
         endpoints = [endpt for (_, endpt) in app.endpoints.iteritems(
-        ) if not re.match(r'\.\.\s*\*\s*<-\s*\*', endpt.name)]
+        ) if not re.match(r'(\.\.\s*\*\s*<-\s*\*|\*)', endpt.name)]
 
         for endpt in endpoints:
             for (stmt, call) in syslalgo.enumerate_calls(endpt.stmt):
@@ -198,7 +198,7 @@ def _apply_call_templates(app):
 
         # Apply templates.
         endpoints = [endpt for (_, endpt) in app.endpoints.iteritems(
-        ) if not re.match(r'\.\.\s*\*\s*<-\s*\*', endpt.name)]
+        ) if not re.match(r'(\.\.\s*\*\s*<-\s*\*|\*)', endpt.name)]
 
         for endpt in endpoints:
             template = templates.get(endpt.name)
@@ -345,5 +345,4 @@ def load(names, validate, root):
         raise Exception('load({!r})'.format(names), ex, sys.exc_info()[2])
 
     syslparse.TODO_NAG.nag()
-
     return (module, deps, imports)

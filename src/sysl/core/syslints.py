@@ -383,7 +383,7 @@ def integration_views(module, deps, args):
 
             integration_set = {((app1, ep1), (app2, ep2))
                                for ((app1, ep1), (app2, ep2)) in deps
-                               if ({app1, app2} <= apps and not ({app1, app2} & exclude)) and not {ep1, ep2} & {'.. * <- *'}}
+                               if ({app1, app2} <= apps and not ({app1, app2} & exclude)) and not {ep1, ep2} & {'.. * <- *', '*'}}
 
             if passthrough_apps:
 
@@ -392,7 +392,7 @@ def integration_views(module, deps, args):
 
                     # add to integration set
                     if (not ({dep[1][0]} & exclude) and not (
-                            {dep[1][1]} & {'.. * <- *'})):
+                            {dep[1][1]} & {'.. * <- *', '*'})):
                         integration_set.add(dep)
 
                     # find the next outbond dep
@@ -411,7 +411,8 @@ def integration_views(module, deps, args):
                 # collect outbound dependencies
                 outbound_deps = {((app1, ep1), (app2, ep2))
                                  for ((app1, ep1), (app2, ep2)) in deps
-                                 if (({app1, app2} <= apps) or ({app1} <= apps and {app2} <= passthrough_apps)) and not ({app1, app2} & exclude) and not ({ep1, ep2} & {'.. * <- *'})}
+                                 if (({app1, app2} <= apps) or ({app1} <= apps and {app2} <= passthrough_apps)) and not
+                                     ({app1, app2} & exclude) and not ({ep1, ep2} & {'.. * <- *', '*'})}
 
                 # collect outbound pubsub dependencies
                 # inbound_deps
