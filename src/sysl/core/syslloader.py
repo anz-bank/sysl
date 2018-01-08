@@ -206,13 +206,9 @@ def _apply_call_templates(app):
                 for (name, attr) in template[0].iteritems():
                     endpt.attrs[name].CopyFrom(attr)
                 template[1] += 1
-            #import pdb; pdb.set_trace()
 
     call_templates()
     ep_templates()
-
-    # if 'iOS Client' in fmt_app_name(app.name):
-    #  import pdb; pdb.set_trace()
 
     # Error on unused templates, in case of typos.
     call = None  # In case of empty loop
