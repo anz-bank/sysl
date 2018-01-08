@@ -16,6 +16,7 @@ from sysl.core import syslints
 from sysl.core import syslloader
 from sysl.core import syslseqs
 
+
 def _pb_sub_parser(subparser):
     """Setup proto subcommand."""
     argp = subparser.add_parser('pb')

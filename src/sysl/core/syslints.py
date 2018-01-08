@@ -412,7 +412,7 @@ def integration_views(module, deps, args):
                 outbound_deps = {((app1, ep1), (app2, ep2))
                                  for ((app1, ep1), (app2, ep2)) in deps
                                  if (({app1, app2} <= apps) or ({app1} <= apps and {app2} <= passthrough_apps)) and not
-                                     ({app1, app2} & exclude) and not ({ep1, ep2} & {'.. * <- *', '*'})}
+                                    ({app1, app2} & exclude) and not ({ep1, ep2} & {'.. * <- *', '*'})}
 
                 # collect outbound pubsub dependencies
                 # inbound_deps
