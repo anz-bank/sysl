@@ -89,9 +89,6 @@ def controller(interfaces, context):
                 endpts_no_interface = [endpt.name for endpt in endpts if not
                                        endpt.attrs['interface'].s]
                 print 'No interfaces for\n' + ('\n').join(endpts_no_interface)
-                # assert interface, 'No interfaces for\n' + ('\n').join(
-                #     [endpt.name for endpt in app.endpoints.itervalues()
-                #     for i in [endpt.attrs['interface'].s] if not i ])
                 continue
             w('\n@Autowired'[not i:])
             w('private {} {};', interface, java.mixedCase(interface))
