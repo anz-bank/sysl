@@ -305,6 +305,14 @@ def _infer_types(app):
         infer_expr_type(v.expr)
 
 
+def infer(module):
+    _resolve_mixins(module)
+    _map_subscriptions(module)
+    for (appname, app) in module.apps.iteritems():
+        _apply_call_templates(app)
+        _infer_types(app)
+
+
 def load(names, validate, root):
     """Load a sysl module."""
     if isinstance(names, basestring):
@@ -335,11 +343,7 @@ def load(names, validate, root):
             do_import(root + name)
 
     try:
-        _resolve_mixins(module)
-        _map_subscriptions(module)
-        for (appname, app) in module.apps.iteritems():
-            _apply_call_templates(app)
-            _infer_types(app)
+        infer(module)
         deps = _check_deps(module, validate)
     except RuntimeError as ex:
         raise Exception('load({!r})'.format(names), ex, sys.exc_info()[2])

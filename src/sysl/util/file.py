@@ -1,4 +1,5 @@
 import os
+from itertools import izip
 
 
 class FileWriter(object):
@@ -22,3 +23,10 @@ class FileWriter(object):
                                            ' (check BUILD has sysl_model(..., entities=[..., "' + name + ', ...], ...))')
             self.entities.remove(name)
         self(w, os.path.join(self.package.replace('.', '/'), name + u'.java'))
+
+
+def areFilesIdentical(fname1, fname2):
+    with open(fname1, "r") as f1:
+        with open(fname2, "r") as f2:
+            return all(line1 == line2
+                       for line1, line2 in izip(f1, f2))

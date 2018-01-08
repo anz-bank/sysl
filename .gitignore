@@ -4,3 +4,5 @@ sysl.egg-info
 dist
 build
 .eggs
+
+/test/e2e/actual_output

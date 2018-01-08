@@ -45,6 +45,11 @@ and create a distribution with ::
 
   > python setup.py bdist_wheel --universal
 
+You can also run tests and lint more interactively with ::
+
+  > pytest # --help
+  > flake8 # --help
+
 Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to isolate your environment.
 
 Extending Sysl
