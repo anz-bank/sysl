@@ -81,15 +81,15 @@ def controller(interfaces, context):
 
     with java.Class(w, model_class + 'Controller', write_file,
                     visibility='public', package=package):
-        for (i, interface) in enumerate(sorted({
-            endpt.attrs['interface'].s
-                for endpt in app.endpoints.itervalues()})):
-            assert interface, '\n' + '\n'.join(sorted([
-                endpt.name.split()[1] + ' ' + endpt.name.split()[0]
-                for endpt in app.endpoints.itervalues()
-                for i in [endpt.attrs['interface'].s]
-                if not i]))
-
+        endpts = app.endpoints.itervalues()
+        interfaces = {endpt.attrs['interface'].s for endpt in endpts}
+        for (i, interface) in enumerate(sorted(interfaces)):
+            if not interface:
+                endpts = app.endpoints.itervalues()
+                endpts_no_interface = [endpt.name for endpt in endpts if not
+                                       endpt.attrs['interface'].s]
+                print 'No interfaces for\n' + ('\n').join(endpts_no_interface)
+                continue
             w('\n@Autowired'[not i:])
             w('private {} {};', interface, java.mixedCase(interface))
 
@@ -151,9 +151,7 @@ def controller(interfaces, context):
                                     cond or descr or STATUS_MAP.get(int(status)) or '???')
                         else:
                             print repr(stmt.ret.payload)
-                            import pdb
-                            pdb.set_trace()
-
+                            raise Exception('Bad return statement')
                 return result
 
             w()

@@ -134,7 +134,7 @@ def export(
 
         if entities:
             entities |= {model_class + 'Controller'} | set(interfaces)
-        src.exporters.api.spring_rest.service(interfaces, context)
+        sysl.exporters.api.spring_rest.service(interfaces, context)
 
     elif mode == 'view':
         if entities:

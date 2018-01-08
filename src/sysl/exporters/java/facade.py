@@ -84,9 +84,7 @@ def export_facade_class(context):
                         if len(keys) > 3:
                             # 4 perms yields 16 builders with 32 setters.
                             logging.error('OUCH! Too many primary key fields')
-                            import pdb
-                            pdb.set_trace()
-
+                            raise Exception('Too many primary key fields')
                         for perm in range(2**len(keys)):
                             bname = 'Builder' + str(perm)
                             w()
