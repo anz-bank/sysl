@@ -146,7 +146,7 @@ class TestEpa(unittest.TestCase):
         except (IOError, Exception) as e:
             self.fail(traceback.format_exc())
 
-    def test_labelsX(self):
+    def test_labels(self):
 
         try:
 
@@ -164,7 +164,6 @@ class TestEpa(unittest.TestCase):
             out = self.integration_view_helper(
                 '/test/data/test_epa_ignore_keyword', d)
 
-            #print out[0]
             self.assertTrue('**«INT-001»**' in out[0])
 
         except (IOError, Exception) as e:
