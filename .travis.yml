@@ -7,7 +7,7 @@ branches:
 env:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
 install:
-  - pip install .
+  - pip install . pytest flake8
 script:
-  - python setup.py lint
-  - python setup.py test
+  - flake8
+  - pytest
