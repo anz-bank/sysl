@@ -1,17 +1,12 @@
 from sysl.reljam import reljam
 from sysl.core import syslloader
+from sysl.util.file import filesAreIdentical
 import unittest
 import re
 import os
 import sys
 import tempfile
-from itertools import izip
 
-def areFilesIdentical(filename1, filename2):
-    with open(filename1, "r") as f1:
-        with open(filename2, "r") as f2:
-            return all(line1 == line2
-                       for line1, line2 in izip(f1, f2))
 
 class TestXsd(unittest.TestCase):
 
@@ -57,7 +52,8 @@ class TestXsd(unittest.TestCase):
         reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
         expected = os.path.join('.', xsd_comparison_file)
         real = os.path.join(outpath, model + ".xsd")
-        self.assertTrue(areFilesIdentical(expected,real))
+        self.assertTrue(filesAreIdentical(expected, real))
+
 
 if __name__ == '__main__':
     unittest.main()

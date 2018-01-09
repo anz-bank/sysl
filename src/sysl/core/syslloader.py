@@ -143,7 +143,7 @@ def _map_subscriptions(module):
 
 
 def _apply_call_templates(app):
-    """Apply call templates found in '.. * <- *' pseudo-endpoints.
+    """Apply call templates found in '.. * <- *' | '*' pseudo-endpoints.
 
     Project-specific metadata may be applied as follows:
 
@@ -160,7 +160,7 @@ def _apply_call_templates(app):
 
     # Look for the pseudo endpoint.
     pseudos = {name for name in app.endpoints
-               if re.match(r'\.\.\s*\*\s*<-\s*\*', name)}
+               if re.match(r'(\.\.\s*\*\s*<-\s*\*|\*)', name)}
     if not pseudos:
         return
     if len(pseudos) > 1:
@@ -179,7 +179,7 @@ def _apply_call_templates(app):
 
         # Apply templates.
         endpoints = [endpt for (_, endpt) in app.endpoints.iteritems(
-        ) if not re.match(r'\.\.\s*\*\s*<-\s*\*', endpt.name)]
+        ) if not re.match(r'(\.\.\s*\*\s*<-\s*\*|\*)', endpt.name)]
 
         for endpt in endpoints:
             for (stmt, call) in syslalgo.enumerate_calls(endpt.stmt):
@@ -198,7 +198,7 @@ def _apply_call_templates(app):
 
         # Apply templates.
         endpoints = [endpt for (_, endpt) in app.endpoints.iteritems(
-        ) if not re.match(r'\.\.\s*\*\s*<-\s*\*', endpt.name)]
+        ) if not re.match(r'(\.\.\s*\*\s*<-\s*\*|\*)', endpt.name)]
 
         for endpt in endpoints:
             template = templates.get(endpt.name)
@@ -206,13 +206,9 @@ def _apply_call_templates(app):
                 for (name, attr) in template[0].iteritems():
                     endpt.attrs[name].CopyFrom(attr)
                 template[1] += 1
-            #import pdb; pdb.set_trace()
 
     call_templates()
     ep_templates()
-
-    # if 'iOS Client' in fmt_app_name(app.name):
-    #  import pdb; pdb.set_trace()
 
     # Error on unused templates, in case of typos.
     call = None  # In case of empty loop
@@ -309,6 +305,14 @@ def _infer_types(app):
         infer_expr_type(v.expr)
 
 
+def postprocess(module):
+    _resolve_mixins(module)
+    _map_subscriptions(module)
+    for (appname, app) in module.apps.iteritems():
+        _apply_call_templates(app)
+        _infer_types(app)
+
+
 def load(names, validate, root):
     """Load a sysl module."""
     if isinstance(names, basestring):
@@ -339,15 +343,10 @@ def load(names, validate, root):
             do_import(root + name)
 
     try:
-        _resolve_mixins(module)
-        _map_subscriptions(module)
-        for (appname, app) in module.apps.iteritems():
-            _apply_call_templates(app)
-            _infer_types(app)
+        postprocess(module)
         deps = _check_deps(module, validate)
     except RuntimeError as ex:
         raise Exception('load({!r})'.format(names), ex, sys.exc_info()[2])
 
     syslparse.TODO_NAG.nag()
-
     return (module, deps, imports)

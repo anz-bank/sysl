@@ -132,7 +132,6 @@ class _FmtParser(simple_parser.SimpleParser):
         """Top-level parse function."""
         if self.expansions():
             code = 'lambda **vars: ' + self.pop()
-            # pdb.set_trace()
             return eval(code)  # pylint: disable=eval-used
 
     def expansions(self, term=u'$'):
@@ -153,8 +152,6 @@ class _FmtParser(simple_parser.SimpleParser):
                 var = cond = u"vars.get({!r}, '')".format(self.pop())
 
                 # conditionals!
-                #import pdb; pdb.set_trace()
-
                 if self.eat(ur'([!=]=)'):
                     cond = var + " {} ".format(self.pop())
                     if not self.eat(ur'\'([\w ]+)\''):

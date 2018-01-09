@@ -10,7 +10,7 @@ import errno
 import os
 import sys
 
-import sysl.util.debug as debug
+# sysl.util.debug as debug
 from sysl.core import sysldata
 from sysl.core import syslints
 from sysl.core import syslloader

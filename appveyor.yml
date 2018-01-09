@@ -6,9 +6,10 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "pip install --upgrade setuptools"
   - "python setup.py install"
+  - "pip install pytest flake8"
 
 build: off
 
 test_script:
-  - "python setup.py test"
-  - "python setup.py lint"
+  - "pytest"
+  - "flake8"

@@ -18,8 +18,6 @@ from sysl.util import diagutil
 from sysl.util import writer
 from sysl.util import rex
 
-import pdb
-
 
 class _Writer(writer.Writer):
     """Output logic helper."""
@@ -303,7 +301,6 @@ def sequence_diag(module, params, log_integration=None):
             ep_patterns = syslx.patterns(endpt.attrs)
 
             icon = '<&timer> ' if 'cron' in ep_patterns else ''
-            # pdb.set_trace()
             write('{}->{} : {}{}', sender, agent, icon, label)
             if log_integration and stmt:
                 log_integration(app=from_app, stmt=stmt, patterns=patterns)
@@ -407,7 +404,6 @@ def add_subparser(subp):
 
         def output_sd(args, params):
             """Generate and output a sequence diagram."""
-            # pdb.set_trace()
             out = sequence_diag(module, params)
 
             diagutil.output_plantuml(args, out)

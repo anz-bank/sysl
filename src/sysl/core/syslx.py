@@ -71,9 +71,6 @@ class TypeInfoByRef(object):
             return self.TYPE_INFO(None, type_, parent_path,
                                   parent_type, leaf, app)
 
-        import pdb
-        pdb.set_trace()
-        self[typeref]
         raise RuntimeError(u'typeref not found: ' + str(typeref))
 
 

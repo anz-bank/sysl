@@ -116,8 +116,7 @@ class SimpleParser(object):
         """Pop a term off the parse stack and return it."""
         if count is None:
             if not self._stk:
-                import pdb
-                pdb.set_trace()
+                raise Exception('Cannot pop empty parse stack!')
             return self._stk.pop()
         assert count <= len(self._stk)
         result = self._stk[-count:]
@@ -126,6 +125,5 @@ class SimpleParser(object):
 
     def top(self):
         if not self._stk:
-            import pdb
-            pdb.set_trace()
+            raise Exception('No top for empty parse stack!')
         return self._stk[-1]

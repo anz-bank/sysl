@@ -225,9 +225,7 @@ def swagger_file(app, module, root_class, write_file):
                                    STATUS_MAP[int(s)])
                 else:
                     print stmt.ret.payload
-                    import pdb
-                    pdb.set_trace()
-                    print
+                    raise Exception('Bad return statement')
 
         body = syslx.View(endpt.attrs)['body'].s
         if body:
@@ -303,6 +301,5 @@ def swagger_file(app, module, root_class, write_file):
                     else:
                         #assert type_.WhichOneof('type') == 'primitive'
                         properties[jfname] = swagger_type(type_)
-                        #import pdb; pdb.set_trace()
 
     write_file(yaml.dump(no_utf8(header)), root_class + '.swagger.yaml')

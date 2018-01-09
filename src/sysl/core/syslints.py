@@ -167,8 +167,6 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
                     (app_name, _, ep_name) = name.partition(' : ')
                     attrs = module.apps[app_name].endpoints[ep_name].attrs
                     state_name = ep_name
-                    # if 'ServiceAccount' in ep_name:
-                    #  import pdb; pdb.set_trace()
 
                 write(template,
                       appfmt(appname=state_name,
@@ -279,9 +277,6 @@ def _generate_view(module, args, integrations, highlights, app, apps, endpt):
 
                         label = diagutil.parse_fmt(app.attrs["epfmt"].s)(
                             needs_int=needs_int, patterns=ptrns, **fmt_vars)
-                        # if 'Security Services' in app_b_name:
-                        #  import pdb; pdb.set_trace()
-                        # break
 
                 # if not label and middle:
                 #  fmt_vars = diagutil.attr_fmt_vars(module.apps[app_b].endpoints[ep_b].attrs)
@@ -388,7 +383,7 @@ def integration_views(module, deps, args):
 
             integration_set = {((app1, ep1), (app2, ep2))
                                for ((app1, ep1), (app2, ep2)) in deps
-                               if ({app1, app2} <= apps and not ({app1, app2} & exclude)) and not {ep1, ep2} & {'.. * <- *'}}
+                               if ({app1, app2} <= apps and not ({app1, app2} & exclude)) and not {ep1, ep2} & {'.. * <- *', '*'}}
 
             if passthrough_apps:
 
@@ -397,7 +392,7 @@ def integration_views(module, deps, args):
 
                     # add to integration set
                     if (not ({dep[1][0]} & exclude) and not (
-                            {dep[1][1]} & {'.. * <- *'})):
+                            {dep[1][1]} & {'.. * <- *', '*'})):
                         integration_set.add(dep)
 
                     # find the next outbond dep
@@ -416,16 +411,14 @@ def integration_views(module, deps, args):
                 # collect outbound dependencies
                 outbound_deps = {((app1, ep1), (app2, ep2))
                                  for ((app1, ep1), (app2, ep2)) in deps
-                                 if (({app1, app2} <= apps) or ({app1} <= apps and {app2} <= passthrough_apps)) and not ({app1, app2} & exclude) and not ({ep1, ep2} & {'.. * <- *'})}
+                                 if (({app1, app2} <= apps) or ({app1} <= apps and {app2} <= passthrough_apps)) and not
+                                    ({app1, app2} & exclude) and not ({ep1, ep2} & {'.. * <- *', '*'})}
 
                 # collect outbound pubsub dependencies
                 # inbound_deps
 
-                #import pdb; pdb.set_trace()
                 # add passthroughs
                 for dep in outbound_deps:
-                        # if 'Monetary' in dep[0][1]:
-                        #  import pdb; pdb.set_trace()
                     passthrough_walk(dep, integration_set)
 
             return integration_set
