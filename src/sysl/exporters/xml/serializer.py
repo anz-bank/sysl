@@ -171,8 +171,8 @@ def serializer(context):
                                     w('serializeAttr("{}", {}{}, xsw);',
                                       jfname, access, extra)
                                 else:
-                                    if jfname == 'index':
-                                        raise Exception('Bad Java name (index)')
+                                    # TODO: Why is 'index' bad? (NB: This was a debug hook, but the author forgot why.)
+                                    assert jfname != 'index'
                                     w('serializeField("{}", {}{}, xsw);',
                                       jfname, access, extra)
                     w('xsw.writeEndElement();')

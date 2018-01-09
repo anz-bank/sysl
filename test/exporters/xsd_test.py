@@ -1,6 +1,6 @@
 from sysl.reljam import reljam
 from sysl.core import syslloader
-from sysl.util.file import areFilesIdentical
+from sysl.util.file import filesAreIdentical
 import unittest
 import re
 import os
@@ -51,7 +51,7 @@ class TestXsd(unittest.TestCase):
         reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
         expected = os.path.join('.', xsd_comparison_file)
         real = os.path.join(outpath, model + ".xsd")
-        self.assertTrue(areFilesIdentical(expected,real))
+        self.assertTrue(filesAreIdentical(expected,real))
 
 if __name__ == '__main__':
     unittest.main()

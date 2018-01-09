@@ -22,7 +22,7 @@ MyApp:
 '''
 	module = sysl_pb2.Module()
 	syslparse.Parser().parse(sysl_input.splitlines(), '', module)
-	syslloader.infer(module)
+	syslloader.postprocess(module)
 	assert 2 == len(module.apps['MyApp'].endpoints)
 	ep1 = module.apps['MyApp'].endpoints['ep1'].stmt
 	assert 1 == len(ep1)
@@ -64,7 +64,7 @@ MyApp:
 	sysl_input = SYSL_INPUT.replace('{ENDPOINT_WILDCARD}', endpoint_wildcard)
 	module = sysl_pb2.Module()
 	syslparse.Parser().parse(sysl_input.splitlines(), '', module)
-	syslloader.infer(module)
+	syslloader.postprocess(module)
 
 	assert 4 == len(module.apps['MyApp'].endpoints)
 

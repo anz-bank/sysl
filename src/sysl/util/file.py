@@ -1,5 +1,5 @@
 import os
-from itertools import izip
+from itertools import izip_longest
 
 
 class FileWriter(object):
@@ -25,8 +25,8 @@ class FileWriter(object):
         self(w, os.path.join(self.package.replace('.', '/'), name + u'.java'))
 
 
-def areFilesIdentical(fname1, fname2):
+def filesAreIdentical(fname1, fname2):
     with open(fname1, "r") as f1:
         with open(fname2, "r") as f2:
             return all(line1 == line2
-                       for line1, line2 in izip(f1, f2))
+                       for line1, line2 in izip_longest(f1, f2))
