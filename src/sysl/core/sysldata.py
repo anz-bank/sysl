@@ -3,10 +3,11 @@
 
 import collections
 import re
+from argparse import RawTextHelpFormatter
 
 from sysl.util import diagutil
 from sysl.util import writer
-
+from sysl.util.argparse import add_common_diag_options
 from sysl.core import syslloader
 
 
@@ -114,6 +115,8 @@ def dataviews(module, args):
     (appname, epname) = parts.groups()
 
     app = module.apps.get(appname)
+    if not app:
+        raise Exception('Invalid project "{}"'.format(args.project))
     if epname is not None:
         endpts = [app.endpoints.get(epname)]
     else:
@@ -126,6 +129,8 @@ def dataviews(module, args):
 
         for stmt in endpt.stmt:
             appname = stmt.action.action
+            if not module.apps.get(appname):
+                continue
             for (name, typespec) in module.apps.get(appname).types.iteritems():
                 if typespec.WhichOneof('type') == 'tuple':
                     types.append((appname, name, typespec))
@@ -148,7 +153,7 @@ def dataviews(module, args):
 
 def add_subparser(subp):
     """Setup data subcommand."""
-    argp = subp.add_parser('data')
+    argp = subp.add_parser('data', formatter_class=RawTextHelpFormatter)
 
     def cmd(args):
         """Handle subcommand."""
@@ -160,6 +165,8 @@ def add_subparser(subp):
     argp.set_defaults(func=cmd)
 
     argp.add_argument('--project', '-j',
-                      help='project pseudo-app to render')
+                      help='project pseudo-app to render \n' +
+                      'eg: PetShopModel, "ATM <- GetBalance"',
+                      required=True)
 
-    diagutil.add_common_diag_options(argp)
+    add_common_diag_options(argp)
