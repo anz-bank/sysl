@@ -7,6 +7,7 @@ import os
 import sys
 import tempfile
 
+
 class TestXsd(unittest.TestCase):
 
     # def setUp(self):
@@ -51,7 +52,8 @@ class TestXsd(unittest.TestCase):
         reljam.export('xsd', module, model, outpath, package_prefix, {}, [])
         expected = os.path.join('.', xsd_comparison_file)
         real = os.path.join(outpath, model + ".xsd")
-        self.assertTrue(filesAreIdentical(expected,real))
+        self.assertTrue(filesAreIdentical(expected, real))
+
 
 if __name__ == '__main__':
     unittest.main()

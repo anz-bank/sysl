@@ -28,7 +28,7 @@ def test_e2e(fname):
     out_fname = path.join(dname, 'actual_output', fname + '.txt')
     remove_file(out_fname)
 
-    cmd = ['sysl', '--root', root, 'textpb', '-o', out_fname, model ]
+    cmd = ['sysl', '--root', root, 'textpb', '-o', out_fname, model]
     print 'calling', ' '.join(cmd)
     call(cmd)
 
