@@ -21,6 +21,8 @@ import sysl.exporters.json_out.serializer as json_export
 import sysl.exporters.swagger.swagger as swagger_export
 import sysl.exporters.xml.serializer as xml_export
 import sysl.exporters.xml.xsd as xsd_export
+from sysl.__version__ import __version__
+
 
 Context = collections.namedtuple(
     'Context', 'app module package model_class write_file appname wrapped_model')
@@ -192,6 +194,10 @@ def main():
     argp.add_argument(
         'app',
         help='Application to export')
+    argp.add_argument('--version', '-v',
+                      help='show version number (semver.org standard)',
+                      action='version', version='%(prog)s ' + __version__)
+
     args = argp.parse_args()
 
     out = os.path.normpath(args.out)
