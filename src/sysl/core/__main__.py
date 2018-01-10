@@ -17,6 +17,7 @@ from sysl.core import syslints
 from sysl.core import syslloader
 from sysl.core import syslseqs
 from sysl.util.argparse import add_modules_option, add_output_option
+from sysl.__version__ import __version__
 
 
 def _pb_sub_parser(subparser):
@@ -98,6 +99,9 @@ def main():
                       help='suppress validations')
     argp.add_argument('--root', '-r', default='.',
                       help='sysl root directory for input files (default: .)')
+    argp.add_argument('--version', '-v',
+                      help='show version number (semver.org standard)',
+                      action='version', version='%(prog)s ' + __version__)
 
     subparser = argp.add_subparsers(help='\n'.join(['sub-commands',
                                                     'more help with: sysl <sub-command> --help', 'eg: sysl pb --help']))
