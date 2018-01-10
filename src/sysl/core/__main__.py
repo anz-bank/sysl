@@ -9,17 +9,21 @@ import cStringIO
 import errno
 import os
 import sys
+from argparse import RawTextHelpFormatter
 
 # sysl.util.debug as debug
 from sysl.core import sysldata
 from sysl.core import syslints
 from sysl.core import syslloader
 from sysl.core import syslseqs
+from sysl.util.argparse import add_modules_option, add_output_option
 
 
 def _pb_sub_parser(subparser):
     """Setup proto subcommand."""
-    argp = subparser.add_parser('pb')
+    argp = subparser.add_parser('pb',
+                                description='Create binary protobuf output',
+                                formatter_class=RawTextHelpFormatter)
 
     def cmd(args):
         """Handle subcommand."""
@@ -31,15 +35,15 @@ def _pb_sub_parser(subparser):
 
     argp.set_defaults(func=cmd)
 
-    argp.add_argument('--output', '-o',
-                      help='output file')
-    argp.add_argument('modules', nargs='+',
-                      help='modules')
+    add_modules_option(argp)
+    add_output_option(argp)
 
 
 def _textpb_sub_parser(subparser):
     """Setup proto subcommand."""
-    argp = subparser.add_parser('textpb')
+    argp = subparser.add_parser('textpb',
+                                description='Create text protobuf output',
+                                formatter_class=RawTextHelpFormatter)
 
     def cmd(args):
         """Handle subcommand."""
@@ -51,15 +55,15 @@ def _textpb_sub_parser(subparser):
 
     argp.set_defaults(func=cmd)
 
-    argp.add_argument('--output', '-o',
-                      help='output file')
-    argp.add_argument('modules', nargs='+',
-                      help='modules')
+    add_modules_option(argp)
+    add_output_option(argp)
 
 
 def _deps_sub_parser(subparser):
     """Setup deps subcommand."""
-    argp = subparser.add_parser('deps')
+    argp = subparser.add_parser('deps',
+                                description='Create module dependency output',
+                                formatter_class=RawTextHelpFormatter)
 
     def cmd(args):
         """Handle subcommand."""
@@ -79,24 +83,24 @@ def _deps_sub_parser(subparser):
 
     argp.add_argument('--target', '-t', default='{}',
                       help='format string for target spec')
-    argp.add_argument('--output', '-o',
-                      help='output file')
-    argp.add_argument('modules', nargs='+',
-                      help='modules')
+    add_output_option(argp)
+    add_modules_option(argp)
 
 
 def main():
     """Main function."""
     argp = argparse.ArgumentParser(
-        description='System Modelling Language Toolkit')
+        description='System Modelling Language Toolkit',
+        formatter_class=RawTextHelpFormatter)
 
     argp.add_argument('--no-validations', '--nv', dest='validations',
                       action='store_false', default=True,
                       help='suppress validations')
     argp.add_argument('--root', '-r', default='.',
-                      help='sysl system root directory')
+                      help='sysl root directory for input files (default: .)')
 
-    subparser = argp.add_subparsers(help='sub-commands')
+    subparser = argp.add_subparsers(help='\n'.join(['sub-commands',
+                                                    'more help with: sysl <sub-command> --help', 'eg: sysl pb --help']))
     _pb_sub_parser(subparser)
     _textpb_sub_parser(subparser)
     _deps_sub_parser(subparser)
@@ -107,7 +111,7 @@ def main():
     args = argp.parse_args()
 
     # Ensure the output directory exists.
-    if 'output' in args:
+    if 'output' in args and os.path.dirname(args.output):
         try:
             os.makedirs(os.path.dirname(args.output))
         except OSError as exc:

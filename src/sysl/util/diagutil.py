@@ -25,36 +25,6 @@ def fmt_app_name(appname):
     return ' :: '.join(appname.part)
 
 
-def add_common_diag_options(argp):
-    """Add common diagramming options to a subcommand parser."""
-    argp.add_argument(
-        '--title', '-t', type=lambda s: unicode(s, 'utf8'),
-        help='diagram title')
-    argp.add_argument(
-        '--output', '-o',
-        help='output file')
-    argp.add_argument(
-        '--plantuml', '-p',
-        help=('base url of plantuml server (default: %(default)s; '
-              'see http://plantuml.com/server.html#install for more info)'))
-    argp.add_argument(
-        '--verbose', '-v', action='store_true',
-        help='Report each output.')
-    argp.add_argument(
-        '--expire-cache', action='store_true',
-        help='Expire cache entries to force checking against real destination')
-    argp.add_argument(
-        '--dry-run', action='store_true',
-        help="Don't perform confluence uploads, but show what would have happened")
-    argp.add_argument(
-        '--filter',
-        help="Only generate diagrams whose output paths match a pattern")
-
-    argp.add_argument(
-        'modules', nargs='+',
-        help='modules')
-
-
 OutputArgs = collections.namedtuple('OutputArgs',
                                     'output plantuml verbose expire_cache dry_run')
 
@@ -62,6 +32,10 @@ OutputArgs = collections.namedtuple('OutputArgs',
 def output_plantuml(args, puml_input):
     """Output a PlantUML diagram."""
     ext = os.path.splitext(args.output or '')[-1][1:]
+    SUPPORTED_MODES = {'png': 'img', 'svg': 'svg', 'uml': None}
+    if ext not in SUPPORTED_MODES:
+        raise Exception('Extension "{}" not supported. Valid extensions: {}.'.format(
+            ext, ', '.join(SUPPORTED_MODES)))
     mode = {'png': 'img', 'svg': 'svg', 'uml': None, '': None}[ext]
     server = (args.plantuml or
               os.getenv('SYSL_PLANTUML', 'http://localhost:8080/plantuml'))

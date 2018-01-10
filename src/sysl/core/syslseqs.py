@@ -17,6 +17,7 @@ from sysl.core import syslx
 from sysl.util import diagutil
 from sysl.util import writer
 from sysl.util import rex
+from sysl.util.argparse import add_common_diag_options
 
 
 class _Writer(writer.Writer):
@@ -500,4 +501,4 @@ def add_subparser(subp):
         '--blackbox', '--bb', action='append',
         help='Apps to be treated as black boxes.')
 
-    diagutil.add_common_diag_options(argp)
+    add_common_diag_options(argp)

@@ -10,6 +10,7 @@ from sysl.core import syslx
 
 from sysl.util import diagutil
 from sysl.util import writer
+from sysl.util.argparse import add_common_diag_options
 
 
 def yield_call_statements(statements):
@@ -467,4 +468,4 @@ def add_subparser(subp):
     argp.add_argument('--epa', '-epa', action='store_true',
                       help='produce and EPA integration view')
 
-    diagutil.add_common_diag_options(argp)
+    add_common_diag_options(argp)
