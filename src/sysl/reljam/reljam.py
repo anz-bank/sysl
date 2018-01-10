@@ -195,8 +195,8 @@ def main():
         'app',
         help='Application to export')
     argp.add_argument('--version', '-v',
-          help='show version number (semver.org standard)',
-          action='version', version='%(prog)s ' + __version__)
+                      help='show version number (semver.org standard)',
+                      action='version', version='%(prog)s ' + __version__)
 
     args = argp.parse_args()
 
