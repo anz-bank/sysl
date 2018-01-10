@@ -20,7 +20,7 @@ If you are interested in trying out Sysl, you will need to install `Python 2.7 <
 
   > git clone https://github.com/anz-bank/sysl.git
   > cd sysl
-  > python setup.py install
+  > pip install .
 
 Now you can execute Sysl as command line tool with ::
 
@@ -34,21 +34,16 @@ Development
 -----------
 Install dependencies and the ``sysl`` package with symlinks ::
 
-  > pip install -e .
+  > pip install -e ".[dev]"
 
-Test the source code and your changes with ::
+Test and lint the source code and your changes with ::
 
-  > python setup.py test
-  > python setup.py lint
+  > pytest
+  > flake
 
 and create a distribution with ::
 
   > python setup.py bdist_wheel --universal
-
-You can also run tests and lint more interactively with ::
-
-  > pytest # --help
-  > flake8 # --help
 
 Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to isolate your environment.
 
