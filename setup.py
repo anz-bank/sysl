@@ -59,6 +59,10 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
     ],
-    setup_requires=['pytest-runner', 'pytest'],
-    tests_require=['pytest'],
+    extras_require={
+        'dev': [
+            'pytest',
+            'flake8',
+        ]
+    }
 )
