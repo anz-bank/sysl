@@ -27,6 +27,12 @@ Now you can execute Sysl as command line tool with ::
   > sysl    --root demo/petshop textpb -o out/petshop.txt /petshop
   > reljam  --root demo/petshop model /petshop PetShopModel
 
+which is equivalent to ::
+
+  > sysl textpb -o out/petshop.txt /demo/petshop/petshop
+  > reljam model /demo/petshop/petshop PetShopModel
+
+See ``sysl --help`` and ``reljam --help`` from more options.
 If you are behind a corporate proxy you might want to consider setting up a global ``pip.conf``
 file (details on `Stackoverflow <https://stackoverflow.com/a/46410817>`_ or `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_).
 
