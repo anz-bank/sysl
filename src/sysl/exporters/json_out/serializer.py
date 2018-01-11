@@ -88,47 +88,111 @@ def serializer(context):
         for (tname, t) in sorted(app.types.iteritems()):
             if not t.WhichOneof('type') in ['relation', 'tuple']:
                 continue
+            java.SeparatorComment(w)
+            if t.WhichOneof('type') == 'relation':
+                w()
+                with java.Method(w, 'public', 'void', 'serialize' + tname + 'View',
+                                [('JsonGenerator', 'g'),
+                                (tname + '.View', 'view')],
+                                throws=['IOException']):
+                    with java.If(w, 'view.isEmpty()'):
+                        w('return;')
+                    w('g.writeArrayFieldStart("{}");', tname)
+                    with java.For(w, '{} item : view', tname):
+                        w('g.writeStartObject();')
+                        for (fname, f) in datamodel.sorted_fields(t):
+                            jfname = java.name(fname)
+                            method = java.CamelCase(jfname)
+                            type_ = datamodel.typeref(f, module)[2]
+                            extra = '{}'
+                            which_type = type_.WhichOneof('type')
+                            if which_type == 'primitive':
+                                (jsontype, extra) = JSON_GEN_MAP[type_.primitive]
+                                if type_.primitive == type_.DECIMAL:
+                                    for c in type_.constraint:
+                                        if c.scale:
+                                            access = (
+                                                '{0} == null ? null : item.{0}.setScale({1}, '
+                                                'java.math.RoundingMode.HALF_UP)').format(
+                                                jfname, c.scale)
+                                            break
+                                else:
+                                    access = jfname
+                            elif which_type == 'enum':
+                                jsontype = 'Number'
+                                access = jfname + '.getValue()'
+                            elif which_type == 'tuple':
+                                access = jfname
+                            else:
+                                raise RuntimeError(
+                                    'Unexpected field type for JSON export: ' + which_type)
+                            w(u'writeField(g, "{}", {});',
+                            jfname, extra.format('item.' + access))
+                        w(u'g.writeEndObject();')
+                    w(u'g.writeEndArray();')
+            else:
+                # fieldname, entity
+                with java.Method(w, 'public', 'void', 'serialize',
+                                 [('JsonGenerator', 'g'),
+                                  ('String', 'fieldname'),
+                                  (tname, 'entity')],
+                                 throws=['IOException']):
+                    with java.If(w, 'entity == null'):
+                        w(u'return;')
+                    w(u'g.writeFieldName(fieldname);')
+                    w(u'serialize(g, entity);')
 
-            w()
-            with java.Method(w, 'public', 'void', 'serialize' + tname + 'View',
-                             [('JsonGenerator', 'g'),
-                              (tname + '.View', 'view')],
-                             throws=['IOException']):
-                with java.If(w, 'view.isEmpty()'):
-                    w('return;')
-                w('g.writeArrayFieldStart("{}");', tname)
-                with java.For(w, '{} item : view', tname):
-                    w('g.writeStartObject();')
+                # entity
+                with java.Method(w, 'public', 'void', 'serialize',
+                                 [('JsonGenerator', 'g'),
+                                  (tname, 'entity')],
+                                 throws=['IOException']):
+                    w(u'g.writeStartObject();')
                     for (fname, f) in datamodel.sorted_fields(t):
                         jfname = java.name(fname)
                         method = java.CamelCase(jfname)
                         type_ = datamodel.typeref(f, module)[2]
+                        if type_ == None:
+                            continue
                         extra = '{}'
                         which_type = type_.WhichOneof('type')
                         if which_type == 'primitive':
+                            access = 'entity.get{}()'.format(method)
                             (jsontype, extra) = JSON_GEN_MAP[type_.primitive]
                             if type_.primitive == type_.DECIMAL:
                                 for c in type_.constraint:
                                     if c.scale:
                                         access = (
-                                            '{0} == null ? null : item.{0}.setScale({1}, '
+                                            'entity.{} == null ? null : entity.get{}().setScale({}, '
                                             'java.math.RoundingMode.HALF_UP)').format(
-                                            jfname, c.scale)
+                                            jfname, method, c.scale)
                                         break
-                            else:
-                                access = jfname
+                            w(u'writeField(g, "{}", {});', jfname, access)
                         elif which_type == 'enum':
-                            jsontype = 'Number'
-                            access = jfname + '.getValue()'
+                            #jsontype = 'Number'
+                            access = 'entity.{} == null ? null : entity.get{}().getValue()'.format(jfname, method)
+                            w(u'writeField(g, "{}", {});', jfname, access)
                         elif which_type == 'tuple':
-                            access = jfname
+                            w(u'serialize(g, "{}", entity.get{}());'.format(
+                                fname, method))
                         else:
                             raise RuntimeError(
                                 'Unexpected field type for JSON export: ' + which_type)
-                        w(u'writeField(g, "{}", {});',
-                          jfname, extra.format('item.' + access))
+                    # end for
                     w(u'g.writeEndObject();')
-                w(u'g.writeEndArray();')
+                w()
+
+                # view, fieldname
+                with java.Method(w, 'public', 'void', 'serialize',
+                                 [('JsonGenerator', 'g'), ('String', 'fieldname'),
+                                  (tname + '.View', 'view')],
+                                 throws=['IOException']):
+                    with java.If(w, 'view == null || view.isEmpty()'):
+                        w(u'return;')
+                    w(u'g.writeArrayFieldStart(fieldname);')
+                    with java.For(w, '{} item : view', tname):
+                        w(u'serialize(g, item);')
+                    w(u'g.writeEndArray();')
 
         for t in ['Boolean', 'String']:
             w()
@@ -235,30 +299,108 @@ def deserializer(context):
     w()
     with java.Class(w, model_class + 'JsonDeserializer', write_file,
                     package=package,
-                    extends=has_tables and 'JsonDeserializer<' + model_class + '>'):
-        if has_tables:
+                    extends='JsonDeserializer<' + model_class + '>'):
+        w()
+        with java.Method(w, 'public', model_class, 'deserialize',
+                            [('JsonParser', 'p'),
+                            ('DeserializationContext', 'provider')],
+                            throws=['IOException', 'JsonParseException'], override=True):
+            w('{0} model = new {0}();', model_name)
+            if facade:
+                w('{0} facade = new {0}(model);', model_class)
             w()
-            with java.Method(w, 'public', model_class, 'deserialize',
-                             [('JsonParser', 'p'),
-                              ('DeserializationContext', 'provider')],
-                             throws=['IOException', 'JsonParseException'], override=True):
-                w('{0} model = new {0}();', model_name)
-                w()
-                w('eatToken(p, JsonToken.START_OBJECT);')
-                with java.While(w, 'p.getCurrentToken() != JsonToken.END_OBJECT'):
-                    with java.Switch(w, 'eatName(p)'):
-                        for (tname, t) in sorted(app.types.iteritems()):
-                            if t.HasField('relation'):
-                                w(('case "{0}": deserialize{0}Table(p, '
-                                   'model.get{0}Table()); break;'),
-                                  tname)
-                        w('default: skipJson(p);')
-                w('expectToken(p, JsonToken.END_OBJECT);')
-                w()
+            w('eatToken(p, JsonToken.START_OBJECT);')
+            with java.While(w, 'p.getCurrentToken() != JsonToken.END_OBJECT'):
+                with java.Switch(w, 'eatName(p)'):
+                    for (tname, t) in sorted(app.types.iteritems()):
+                        if t.HasField('relation'):
+                            w(('case "{0}": deserialize{0}Table(p, '
+                                'model.get{0}Table()); break;'),
+                                tname)
+                    w('default: skipJson(p);')
+            w('expectToken(p, JsonToken.END_OBJECT);')
+            w()
+            if facade:
+                w('return facade;')
+            else:
                 w('return model;')
 
         for (tname, t) in sorted(app.types.iteritems()):
             if not t.HasField('relation'):
+                if t.HasField('tuple'):
+                    with java.Method(w, 'private', tname + '.View', 'deserialize' + tname + 'View',
+                                     [('JsonParser', 'p')],
+                                     throws=['IOException', 'JsonParseException']):
+                        w()
+                        w('{0}.Set view = new {0}.Set();', tname)
+                        w('eatToken(p, JsonToken.START_ARRAY);')
+                        with java.While(w, 'p.getCurrentToken() != JsonToken.END_ARRAY'):
+                            w('{0} entity = {0}._PRIVATE_new();', tname)
+                            w('deserialize(p, entity);')
+                            w('view.add(entity);')
+                        w('p.nextToken();')
+                        w('return view;')
+
+                    # handle tuples here
+                    with java.Method(w, 'public', tname, 'deserialize',
+                                     [('JsonParser', 'p'), (tname, 'entity')],
+                                     throws=['IOException', 'JsonParseException'], override=False):
+                        w()
+                        w('eatToken(p, JsonToken.START_OBJECT);')
+                        with java.If(w, 'entity == null'):
+                            w('entity = {0}._PRIVATE_new();', tname)
+                        with java.While(w, 'p.getCurrentToken() != JsonToken.END_OBJECT'):
+                            with java.Switch(w, 'eatName(p)'):
+                                for (fname, f) in datamodel.sorted_fields(t):
+                                    jfname = java.name(fname)
+                                    (typename, _, type_) = datamodel.typeref(
+                                        f, module)
+                                    extra = '{}'
+                                    if type_ == None:
+                                        continue
+
+                                    which_type = type_.WhichOneof('type')
+                                    if which_type == 'primitive':
+                                        jsontype = JSON_PARSE_MAP[type_.primitive]
+                                        if isinstance(jsontype, tuple):
+                                            (jsontype, extra) = jsontype
+                                    elif which_type == 'enum':
+                                        jsontype = 'IntValue'
+                                        extra = typename + '.from({})'
+                                    elif which_type == 'tuple':
+                                        if f.WhichOneof('type') == 'set':
+                                            extra = 'deserialize{}View(p)'.format(
+                                                f.set.type_ref.ref.path[-1])
+                                        elif f.WhichOneof('type') == 'type_ref':
+                                            extra = 'deserialize(p, entity.get{}())'.format(
+                                                jfname)
+                                        jsontype = ''
+                                    else:
+                                        raise RuntimeError(
+                                            'Unexpected field type for JSON export: ' + which_type)
+                                    private = ''
+                                    if type_.primitive in [
+                                            sysl_pb2.Type.DATE, sysl_pb2.Type.DATETIME]:
+                                        with java.Case(w, '"{}"', jfname):
+                                            w(('entity.{}set{}('
+                                               'p.getCurrentToken() == JsonToken.VALUE_NULL'
+                                               ' ? null : {}); p.nextToken(); break;'),
+                                              private,
+                                              java.CamelCase(jfname),
+                                              extra.format('p.get{}()'.format(jsontype)))
+                                    else:
+                                        w(('case "{}": entity.{}set{}(p.getCurrentToken() == '
+                                           'JsonToken.VALUE_NULL ? null : {}); {} break;'),
+                                          jfname,
+                                          private,
+                                          java.CamelCase(jfname),
+                                          extra.format(
+                                              'p.get{}()'.format(jsontype)),
+                                          '' if which_type == 'tuple' else 'p.nextToken();')
+
+                                w('default: skipJson(p);')
+                        w('p.nextToken();')
+                        w('return entity;')
                 continue
 
             pkey = datamodel.primary_key_params(t, context.module)

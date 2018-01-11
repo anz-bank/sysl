@@ -298,6 +298,8 @@ def deserializer(context):
             w('expect(XMLStreamConstants.END_ELEMENT, xsr.getEventType());')
 
         for (tname, ft, t) in syslx.sorted_types(context):
+            if not t.HasField('relation'):
+                continue
             pkey = datamodel.primary_key_params(t, context.module)
             pkey_fields = {f for (_, f, _) in pkey}
             fkeys = {
@@ -306,8 +308,6 @@ def deserializer(context):
 
             private_setters = pkey_fields | set(fkeys.iterkeys())
 
-            if not t.HasField('relation'):
-                continue
             with java.Method(w, '\nprivate', 'void', 'deserialize',
                              [(modelpkg + '.' + tname + '.Table', 'table'),
                               ('XMLStreamReader', 'xsr')],
