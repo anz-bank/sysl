@@ -92,9 +92,9 @@ def serializer(context):
             if t.WhichOneof('type') == 'relation':
                 w()
                 with java.Method(w, 'public', 'void', 'serialize' + tname + 'View',
-                                [('JsonGenerator', 'g'),
-                                (tname + '.View', 'view')],
-                                throws=['IOException']):
+                                 [('JsonGenerator', 'g'),
+                                  (tname + '.View', 'view')],
+                                 throws=['IOException']):
                     with java.If(w, 'view.isEmpty()'):
                         w('return;')
                     w('g.writeArrayFieldStart("{}");', tname)
@@ -107,7 +107,8 @@ def serializer(context):
                             extra = '{}'
                             which_type = type_.WhichOneof('type')
                             if which_type == 'primitive':
-                                (jsontype, extra) = JSON_GEN_MAP[type_.primitive]
+                                (jsontype,
+                                 extra) = JSON_GEN_MAP[type_.primitive]
                                 if type_.primitive == type_.DECIMAL:
                                     for c in type_.constraint:
                                         if c.scale:
@@ -127,7 +128,7 @@ def serializer(context):
                                 raise RuntimeError(
                                     'Unexpected field type for JSON export: ' + which_type)
                             w(u'writeField(g, "{}", {});',
-                            jfname, extra.format('item.' + access))
+                              jfname, extra.format('item.' + access))
                         w(u'g.writeEndObject();')
                     w(u'g.writeEndArray();')
             else:
@@ -152,7 +153,7 @@ def serializer(context):
                         jfname = java.name(fname)
                         method = java.CamelCase(jfname)
                         type_ = datamodel.typeref(f, module)[2]
-                        if type_ == None:
+                        if type_ is None:
                             continue
                         extra = '{}'
                         which_type = type_.WhichOneof('type')
@@ -303,7 +304,7 @@ def deserializer(context):
         w()
         with java.Method(w, 'public', model_class, 'deserialize',
                             [('JsonParser', 'p'),
-                            ('DeserializationContext', 'provider')],
+                             ('DeserializationContext', 'provider')],
                             throws=['IOException', 'JsonParseException'], override=True):
             w('{0} model = new {0}();', model_name)
             if facade:
@@ -356,7 +357,7 @@ def deserializer(context):
                                     (typename, _, type_) = datamodel.typeref(
                                         f, module)
                                     extra = '{}'
-                                    if type_ == None:
+                                    if type_ is None:
                                         continue
 
                                     which_type = type_.WhichOneof('type')
