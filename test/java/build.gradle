@@ -1,0 +1,47 @@
+apply plugin: 'java-library'
+apply plugin:'application'
+
+mainClassName = "Test"
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+task generateSysl(type:Exec) {
+  commandLine 'reljam',  '--out', 'src/main/java', 'model', '/tuplecomplex', 'UserFormComplex'
+
+  standardOutput = new ByteArrayOutputStream()
+
+  ext.output = {
+    return standardOutput.toString()
+  }
+}
+
+compileJava.dependsOn generateSysl
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "../../src/libs/java"]
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ["src/test/java"]
+        }
+    }
+}
+
+
+dependencies {
+    api "joda-time:joda-time:2.5"
+    api "org.apache.commons:commons-lang3:3.5"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3"
+
+    testImplementation 'junit:junit:4.12'
+}

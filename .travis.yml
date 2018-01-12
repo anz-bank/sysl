@@ -11,3 +11,4 @@ install:
 script:
   - flake8
   - pytest
+  - cd test/java && gradle build

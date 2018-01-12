@@ -1,0 +1,11 @@
+{
+    "FirstName": "John",
+    "LastName": "Smith",
+    "CustomerType": 0,
+    "Amount": 10.11,
+    "DateOfBirth": "2000-02-29",
+    "Emails": [
+        { "Email": "john.smith@anz.com"},
+        { "Email": "jsmith@anz.com"}
+    ]
+}

@@ -1,0 +1,38 @@
+UserFormComplex [package="com.test.example.tuple.complex"]:
+    !type BuyItemFormComplex:
+        FirstName <: string
+        LastName <: string
+        BillingAddress <: Address
+        CustomerType <: CustomerType
+        Amount <: decimal(10,2)
+        Emails <: set of Email
+        Tags <: set of string
+        DateOfBirth <: Date
+        
+    !type Address:    
+        Address1 <: string
+        Address2 <: string
+        City <: string
+        State <: string
+        ZipCode <: string
+        Country <: string
+
+    !type Email:
+        Email <: string
+
+    !enum CustomerType:
+        INDIVIDUAL = 0
+        BUSINESS = 1
+
+UserFacade [package="com.test.example.tuple.complex.facade"]:
+    !wrap UserFormComplex:
+        !type BuyItemFormComplex
+        !type Address
+        !type Email
+        !enum CustomerType
+
+UserFormComplex :: Data Views:
+    BuyItemFormComplex:
+        UserFormComplex
+
+        

@@ -1,0 +1,18 @@
+{
+    "FirstName": "John",
+    "LastName": "Smith",
+    "BillingAddress": {
+        "Address1": "ANZ Building",
+        "Address2": "833 Collins Street",
+        "City": "Melbourne",
+        "State": "VIC",
+        "ZipCode": "3000",
+        "Country": "AU"
+    },
+    "CustomerType": 0,
+    "Amount": 10.11,
+    "Emails": [
+        { "Email": "john.smith@anz.com"},
+        { "Email": "jsmith@anz.com"}
+    ]
+}
