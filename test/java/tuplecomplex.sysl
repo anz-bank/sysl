@@ -8,8 +8,8 @@ UserFormComplex [package="com.test.example.tuple.complex"]:
         Emails <: set of Email
         Tags <: set of string
         DateOfBirth <: Date
-        
-    !type Address:    
+
+    !type Address:
         Address1 <: string
         Address2 <: string
         City <: string
@@ -34,5 +34,3 @@ UserFacade [package="com.test.example.tuple.complex.facade"]:
 UserFormComplex :: Data Views:
     BuyItemFormComplex:
         UserFormComplex
-
-        
