@@ -26,7 +26,7 @@ def test_e2e(fname):
     root = path.join(dname, 'input')
     model = '/' + fname
     out_fname = path.join(dname, '..', '..', 'tmp',
-        'test', 'e2e', 'actual_output', fname + '.txt')
+                          'test', 'e2e', 'actual_output', fname + '.txt')
     remove_file(out_fname)
 
     cmd = ['sysl', '--root', root, 'textpb', '-o', out_fname, model]
