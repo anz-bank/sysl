@@ -2,7 +2,6 @@ from sysl.core import syslloader
 from sysl.util.file import filesAreIdentical
 
 import pytest
-import os
 
 from os import path, remove
 from subprocess import call
@@ -26,7 +25,7 @@ def remove_file(fname):
 ])
 def test_e2e(fname):
     e2e_dir = path.normpath(path.dirname(__file__))
-    e2e_rel_dir = os.path.relpath(e2e_dir, start=REPO_ROOT)
+    e2e_rel_dir = path.relpath(e2e_dir, start=REPO_ROOT)
 
     root = path.join(e2e_dir, 'input')
     model = '/' + fname
