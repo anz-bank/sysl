@@ -210,7 +210,7 @@ def serializer(context):
         w()
         with java.Method(w, 'private', 'void', 'serialize',
                          [('JsonGenerator', 'g'),
-                         ('String', 'fieldname'), ('HashSet<String>', 'value')],
+                          ('String', 'fieldname'), ('HashSet<String>', 'value')],
                          throws=['IOException']):
             with java.If(w, 'value == null || value.isEmpty()'):
                 w(u'return;')
