@@ -1,57 +1,41 @@
+import static org.junit.Assert.*;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.io.File;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 
 import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.test.example.tuple.complex.BuyItemFormComplex;
-import com.test.example.tuple.complex.UserFormComplex;
-import com.test.example.tuple.complex.CustomerType;
-import com.test.example.tuple.complex.Email;
-import com.test.example.tuple.complex.UserFormComplexJsonDeserializer;
-import com.test.example.tuple.complex.UserFormComplexJsonSerializer;
+
+import org.junit.Test;
 
 import org.joda.time.LocalDate;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import io.sysl.reljam.gen.tuple.complex.BuyItemFormComplex;
+import io.sysl.reljam.gen.tuple.complex.CustomerType;
+import io.sysl.reljam.gen.tuple.complex.Email;
+import io.sysl.reljam.gen.tuple.complex.UserFormComplexJsonDeserializer;
+import io.sysl.reljam.gen.tuple.complex.UserFormComplexJsonSerializer;
 
 public class TestJsonSerializer
 {
     @Test
-    public void testSerializeDeserialize() {
-        boolean exception = false;
-        try {
-            BuyItemFormComplex e1 = loadBuyItemFormComplex("src/main/resources/test.json");
-            BuyItemFormComplex e2 = createBuyItemFormComplex();
+    public void testSerializeDeserialize() throws IOException {
+        BuyItemFormComplex e1 = loadBuyItemFormComplex("src/main/resources/test_1.json");
+        BuyItemFormComplex e2 = createBuyItemFormComplex();
+        assertEquals(e1, e2);
 
-            String s1 = serialize(e1);
-            String s2 = serialize(e2);
-            assertTrue(s1.equals(s2));
-        } catch (IOException e) {
-            exception = true;
-        }
-        assertFalse(exception);
+        String s1 = serialize(e1);
+        String s2 = serialize(e2);
+        assertEquals(s1, s2);
     }
 
     @Test
-    public void testSubObject() {
-        boolean exception = false;
-        try {
-            BuyItemFormComplex entity = loadBuyItemFormComplex("src/main/resources/test_2.json");
-            String str = serialize(entity);
-            assertTrue(str.equals(WITH_SUB_OBJECT));
-
-        } catch (IOException e) {
-            exception = true;
-        }
-        assertFalse(exception);
+    public void testSubObject()  throws IOException {
+        BuyItemFormComplex entity = loadBuyItemFormComplex("src/main/resources/test_2.json");
+        String str = serialize(entity);
+        assertTrue(str.equals(WITH_SUB_OBJECT));
     }
 
     public static String serialize(BuyItemFormComplex entity) throws IOException {
@@ -79,7 +63,7 @@ public class TestJsonSerializer
         s.add("two");
 
         BuyItemFormComplex e = new BuyItemFormComplex();
-        e.setAmount(new BigDecimal(10.11))
+        e.setAmount(new BigDecimal("10.11"))
             .setFirstName( new String("John"))
             .setLastName(new String("Smith"))
             .setEmails(emailSet)

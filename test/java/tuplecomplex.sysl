@@ -1,4 +1,4 @@
-UserFormComplex [package="com.test.example.tuple.complex"]:
+UserFormComplex [package="io.sysl.reljam.gen.tuple.complex"]:
     !type BuyItemFormComplex:
         FirstName <: string
         LastName <: string

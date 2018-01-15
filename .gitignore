@@ -6,4 +6,5 @@ build
 .eggs
 
 /test/e2e/actual_output
-test/java/src/main/java/com/test
+test/java/.gradle/
+tmp/
