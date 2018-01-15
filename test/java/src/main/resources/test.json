@@ -7,5 +7,8 @@
     "Emails": [
         { "Email": "john.smith@anz.com"},
         { "Email": "jsmith@anz.com"}
+    ],
+    "Tags": [
+        "one", "two"
     ]
 }

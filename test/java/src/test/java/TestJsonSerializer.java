@@ -5,6 +5,7 @@ import java.io.File;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,13 +74,19 @@ public class TestJsonSerializer
         emailSet.add(one);
         emailSet.add(two);
 
+        HashSet<String> s = new HashSet<String>();
+        s.add("one");
+        s.add("two");
+
         BuyItemFormComplex e = new BuyItemFormComplex();
         e.setAmount(new BigDecimal(10.11))
             .setFirstName( new String("John"))
             .setLastName(new String("Smith"))
             .setEmails(emailSet)
             .setCustomerType( CustomerType.from(0))
-            .setDateOfBirth(LocalDate.parse("2000-02-29"));
+            .setDateOfBirth(LocalDate.parse("2000-02-29"))
+            .setTags(s);
+
         return e;
     }
 

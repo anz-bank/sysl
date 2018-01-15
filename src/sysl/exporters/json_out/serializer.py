@@ -153,10 +153,13 @@ def serializer(context):
                         jfname = java.name(fname)
                         method = java.CamelCase(jfname)
                         type_ = datamodel.typeref(f, module)[2]
+                        which_type = ''
                         if type_ is None:
-                            continue
+                            if f.WhichOneof('type') == 'set' and f.set.HasField('primitive'):
+                                which_type = 'tuple'
+                        else:
+                            which_type = type_.WhichOneof('type')
                         extra = '{}'
-                        which_type = type_.WhichOneof('type')
                         if which_type == 'primitive':
                             access = 'entity.get{}()'.format(method)
                             (jsontype, extra) = JSON_GEN_MAP[type_.primitive]
@@ -170,7 +173,6 @@ def serializer(context):
                                         break
                             w(u'writeField(g, "{}", {});', jfname, access)
                         elif which_type == 'enum':
-                            #jsontype = 'Number'
                             access = 'entity.{} == null ? null : entity.get{}().getValue()'.format(jfname, method)
                             w(u'writeField(g, "{}", {});', jfname, access)
                         elif which_type == 'tuple':
@@ -197,15 +199,28 @@ def serializer(context):
 
         for t in ['Boolean', 'String']:
             w()
-            with java.Method(w, 'private', 'void', 'writeField'.format(t),
+            with java.Method(w, 'private', 'void', 'writeField',
                              [('JsonGenerator', 'g'),
                               ('String', 'fieldname'), (t, 'value')],
                              throws=['IOException']):
                 with java.If(w, 'value != null'):
                     w('g.write{}Field(fieldname, value);', t)
 
+        # TODO: implement for ['Boolean', 'Integer', 'Double', 'BigDecimal', 'DateTime', 'LocalDate', 'UUID']
         w()
-        with java.Method(w, 'private', 'void', 'writeField'.format(t),
+        with java.Method(w, 'private', 'void', 'serialize',
+                         [('JsonGenerator', 'g'),
+                         ('String', 'fieldname'), ('HashSet<String>', 'value')],
+                         throws=['IOException']):
+            with java.If(w, 'value == null || value.isEmpty()'):
+                w(u'return;')
+            w(u'g.writeArrayFieldStart(fieldname);')
+            with java.For(w, 'String item : value', t):
+                w(u'g.writeString(item);')
+            w(u'g.writeEndArray();')
+
+        w()
+        with java.Method(w, 'private', 'void', 'writeField',
                          [('JsonGenerator', 'g'), ('String',
                                                    'fieldname'), ('Integer', 'value')],
                          throws=['IOException']):
@@ -213,7 +228,7 @@ def serializer(context):
                 w('g.writeNumberField(fieldname, value.intValue());')
 
         w()
-        with java.Method(w, 'private', 'void', 'writeField'.format(t),
+        with java.Method(w, 'private', 'void', 'writeField',
                          [('JsonGenerator', 'g'), ('String',
                                                    'fieldname'), ('Double', 'value')],
                          throws=['IOException']):
@@ -221,7 +236,7 @@ def serializer(context):
                 w('g.writeNumberField(fieldname, value.doubleValue());')
 
         w()
-        with java.Method(w, 'private', 'void', 'writeField'.format(t),
+        with java.Method(w, 'private', 'void', 'writeField',
                          [('JsonGenerator', 'g'),
                           ('String', 'fieldname'),
                           ('BigDecimal', 'value')],
@@ -230,7 +245,7 @@ def serializer(context):
                 w('g.writeNumberField(fieldname, value);')
 
         w()
-        with java.Method(w, 'private', 'void', 'writeField'.format(t),
+        with java.Method(w, 'private', 'void', 'writeField',
                          [('JsonGenerator', 'g'),
                           ('String', 'fieldname'),
                           ('DateTime', 'value')],
@@ -239,7 +254,7 @@ def serializer(context):
                 w('g.writeStringField(fieldname, iso8601DateTime.print(value));')
 
         w()
-        with java.Method(w, 'private', 'void', 'writeField'.format(t),
+        with java.Method(w, 'private', 'void', 'writeField',
                          [('JsonGenerator', 'g'),
                           ('String', 'fieldname'),
                           ('LocalDate', 'value')],
@@ -248,7 +263,7 @@ def serializer(context):
                 w('g.writeStringField(fieldname, iso8601Date.print(value));')
 
         w()
-        with java.Method(w, 'private', 'void', 'writeField'.format(t),
+        with java.Method(w, 'private', 'void', 'writeField',
                          [('JsonGenerator', 'g'), ('String',
                                                    'fieldname'), ('UUID', 'value')],
                          throws=['IOException']):
@@ -329,6 +344,7 @@ def deserializer(context):
         for (tname, t) in sorted(app.types.iteritems()):
             if not t.HasField('relation'):
                 if t.HasField('tuple'):
+                    # HashSet<User defined type>
                     with java.Method(w, 'private', tname + '.View', 'deserialize' + tname + 'View',
                                      [('JsonParser', 'p')],
                                      throws=['IOException', 'JsonParseException']):
@@ -342,7 +358,6 @@ def deserializer(context):
                         w('p.nextToken();')
                         w('return view;')
 
-                    # handle tuples here
                     with java.Method(w, 'public', tname, 'deserialize',
                                      [('JsonParser', 'p'), (tname, 'entity')],
                                      throws=['IOException', 'JsonParseException'], override=False):
@@ -357,10 +372,16 @@ def deserializer(context):
                                     (typename, _, type_) = datamodel.typeref(
                                         f, module)
                                     extra = '{}'
-                                    if type_ is None:
-                                        continue
+                                    set_with_primitive = False
 
-                                    which_type = type_.WhichOneof('type')
+                                    if type_ is None:
+                                        if f.WhichOneof('type') == 'set' and f.set.HasField('primitive'):
+                                            which_type = 'tuple'
+                                            set_with_primitive = True
+                                            type_ = f.set
+                                    else:
+                                        which_type = type_.WhichOneof('type')
+
                                     if which_type == 'primitive':
                                         jsontype = JSON_PARSE_MAP[type_.primitive]
                                         if isinstance(jsontype, tuple):
@@ -369,7 +390,9 @@ def deserializer(context):
                                         jsontype = 'IntValue'
                                         extra = typename + '.from({})'
                                     elif which_type == 'tuple':
-                                        if f.WhichOneof('type') == 'set':
+                                        if set_with_primitive:
+                                            extra = 'deserializeArray(p)'
+                                        elif f.WhichOneof('type') == 'set':
                                             extra = 'deserialize{}View(p)'.format(
                                                 f.set.type_ref.ref.path[-1])
                                         elif f.WhichOneof('type') == 'type_ref':
@@ -462,6 +485,20 @@ def deserializer(context):
                     w()
                     w('table.insert(entity);')
                 w('p.nextToken();')
+
+        # HashSet<Primitive Type>
+        with java.Method(w, 'private', 'HashSet<String>', 'deserializeArray',
+                            [('JsonParser', 'p')],
+                            throws=['IOException', 'JsonParseException']):
+            w()
+            w('HashSet<String> view = new HashSet<String>();')
+            w('eatToken(p, JsonToken.START_ARRAY);')
+            with java.While(w, 'p.getCurrentToken() != JsonToken.END_ARRAY'):
+                w('expectToken(p, JsonToken.VALUE_STRING);')
+                w('view.add(p.getText());')
+                w('p.nextToken();')
+            w('p.nextToken();')
+            w('return view;')
 
         with java.Method(w, '\nprivate', 'void', 'eatToken',
                          [('JsonParser', 'p'), ('JsonToken', 'token')],
