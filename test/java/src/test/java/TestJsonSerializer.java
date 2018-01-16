@@ -22,8 +22,8 @@ public class TestJsonSerializer
 {
     @Test
     public void testSerializeDeserialize() throws IOException {
-        BuyItemFormComplex e1 = loadBuyItemFormComplex("src/main/resources/test_1.json");
-        BuyItemFormComplex e2 = createBuyItemFormComplex();
+        BuyItemFormComplex e1 = loadBuyItemFormComplex("src/test/resources/test_1.json");
+        BuyItemFormComplex e2 = createBuyItemFormComplex_1();
         assertEquals(e1, e2);
 
         String s1 = serialize(e1);
@@ -33,9 +33,9 @@ public class TestJsonSerializer
 
     @Test
     public void testSubObject()  throws IOException {
-        BuyItemFormComplex entity = loadBuyItemFormComplex("src/main/resources/test_2.json");
+        BuyItemFormComplex entity = loadBuyItemFormComplex("src/test/resources/test_2.json");
         String str = serialize(entity);
-        assertTrue(str.equals(WITH_SUB_OBJECT));
+        assertTrue(str.equals(TEST_2));
     }
 
     public static String serialize(BuyItemFormComplex entity) throws IOException {
@@ -49,7 +49,7 @@ public class TestJsonSerializer
         return w.toString();
     }
 
-    public static BuyItemFormComplex createBuyItemFormComplex() {
+    public static BuyItemFormComplex createBuyItemFormComplex_1() {
         Email one = new Email();
         one.setEmail(new String("john.smith@anz.com"));
         Email two = new Email();
@@ -82,7 +82,7 @@ public class TestJsonSerializer
         return ser.deserialize(p, (BuyItemFormComplex)null);
     }
 
-    public static String WITH_SUB_OBJECT =   "{\n"
+    public static String TEST_2 =   "{\n"
                                     + "  \"Amount\" : 10.11,\n"
                                     + "  \"BillingAddress\" : {\n"
                                     + "    \"Address1\" : \"ANZ Building\",\n"

@@ -1,4 +1,4 @@
-apply plugin: 'java-library'
+apply plugin: "java-library"
 
 def tempDirectory = "../../tmp/src/test/java"
 
@@ -8,7 +8,7 @@ repositories {
 }
 
 task generateSysl(type:Exec) {
-  commandLine 'reljam',  '--out', "$tempDirectory", 'model', '/tuplecomplex', 'UserFormComplex'
+  commandLine "reljam",  "--out", "$tempDirectory", "model", "/tuplecomplex", "UserFormComplex"
 
   standardOutput = new ByteArrayOutputStream()
 
@@ -22,16 +22,16 @@ compileJava.dependsOn generateSysl
 sourceSets {
     main {
         java {
-            srcDirs = ["src/main/java", "../../src/libs/java", "$tempDirectory"]
-        }
-        resources {
-            srcDir 'src/main/resources'
+            srcDirs = ["../../src/libs/java", "$tempDirectory"]
         }
     }
 
     test {
         java {
             srcDirs = ["src/test/java"]
+        }
+        resources {
+            srcDir "src/test/resources"
         }
     }
 }
@@ -44,5 +44,5 @@ dependencies {
     api "joda-time:joda-time:2.5"
     api "org.apache.commons:commons-lang3:3.5"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3"
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:4.12"
 }
