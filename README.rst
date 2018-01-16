@@ -52,7 +52,7 @@ For Java tests install `Java 8 <https://docs.oracle.com/javase/8/docs/technotes/
 
  > cd test/java && gradle test
 
-If your corporate environment restricts access to ``jcenter`` `this workaround <docs/README.md>`_ might solve the issue.
+If your corporate environment restricts access to ``jcenter`` `this workaround <docs/gradle.md>`_ might solve the issue.
 
 We encourage contributions to this project! Please have a look at the `contributing guide <CONTRIBUTING.md>`_ for more information.
 
