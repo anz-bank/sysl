@@ -4,5 +4,7 @@ sysl.egg-info
 dist
 build
 .eggs
+.gradle
 
+/test/e2e/actual_output
 /tmp
