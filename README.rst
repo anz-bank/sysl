@@ -1,9 +1,9 @@
 Sysl
 ====
 
-.. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?label=Linux%20build%20%40%20Travis%20CI
+.. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?branch=master
    :target: http://travis-ci.org/anz-bank/sysl
-.. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl.svg?label=Windows%20build%20%40%20Appveyor%20CI
+.. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor
    :target: https://ci.appveyor.com/project/anz-bank/sysl
 
 Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
@@ -16,11 +16,10 @@ The set of outputs is open-ended and allows for your own extensions. Sysl has be
 
 Installation
 ------------
-If you are interested in trying out Sysl, you will need to install `Python 2.7 <https://www.python.org/downloads/>`_ and the Python package manager `Pip <https://pip.pypa.io/en/stable/installing/>`_. You can then build sysl from source with ::
+If you are interested in trying out Sysl, you will need to install `Python 2.7 <https://www.python.org/downloads/>`_ .
+You can then install Sysl with ::
 
-  > git clone https://github.com/anz-bank/sysl.git
-  > cd sysl
-  > pip install .
+  > pip install sysl
 
 Now you can execute Sysl as command line tool with ::
 
@@ -32,9 +31,9 @@ which is equivalent to ::
   > sysl textpb -o out/petshop.txt /demo/petshop/petshop
   > reljam model /demo/petshop/petshop PetShopModel
 
-See ``sysl --help`` and ``reljam --help`` from more options.
+See ``sysl --help`` and ``reljam --help`` for more options.
 If you are behind a corporate proxy you might want to consider setting up a global ``pip.conf``
-file (details on `Stackoverflow <https://stackoverflow.com/a/46410817>`_ or `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_).
+file (see `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_ or `Stackoverflow <https://stackoverflow.com/a/46410817>`_).
 
 Development
 -----------
@@ -47,11 +46,18 @@ Test and lint the source code and your changes with ::
   > pytest
   > flake
 
-and create a distribution with ::
+Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to isolate your development environment.
 
-  > python setup.py bdist_wheel --universal
+For Java tests install `Java 8 <https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html>`_ and `gradle <https://gradle.org/install/>`_ and run ::
 
-Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to isolate your environment.
+ > cd test/java && gradle test
+
+If your corporate environment restricts access to ``jcenter`` `this workaround <docs/gradle.md>`_ might solve the issue.
+
+We encourage contributions to this project! Please have a look at the `contributing guide <CONTRIBUTING.md>`_ for more information.
+
+If you need to create a release follow the `release documentation <docs/releasing.md>`_.
+
 
 Extending Sysl
 --------------
