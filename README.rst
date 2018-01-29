@@ -17,6 +17,10 @@ The set of outputs is open-ended and allows for your own extensions. Sysl has be
 Installation
 ------------
 If you are interested in trying out Sysl, you will need to install `Python 2.7 <https://www.python.org/downloads/>`_ .
+OSX users, we recommend installing Python 2.7 with `Homebrew <https://brew.sh/>`_ ::
+
+  > brew install python
+
 You can then install Sysl with ::
 
   > pip install sysl
