@@ -102,6 +102,9 @@ def main():
     argp.add_argument('--version', '-v',
                       help='show version number (semver.org standard)',
                       action='version', version='%(prog)s ' + __version__)
+    argp.add_argument('--trace', '-t',
+                      help=argparse.SUPPRESS,
+                      action='store_true', default=False)
 
     subparser = argp.add_subparsers(help='\n'.join(['sub-commands',
                                                     'more help with: sysl <sub-command> --help', 'eg: sysl pb --help']))
@@ -121,8 +124,13 @@ def main():
         except OSError as exc:
             if exc.errno != errno.EEXIST or os.path.isdir(args.output):
                 raise
-
-    args.func(args)
+    try:
+        args.func(args)
+    except Exception as e:
+        if args.trace:
+            raise
+        else:
+            print e
 
 
 if __name__ == '__main__':
