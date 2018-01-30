@@ -1,6 +1,10 @@
 Sysl
 ====
 
+.. image:: https://badges.gitter.im/anz-bank/sysl.svg
+   :alt: Join the chat at https://gitter.im/anz-bank/sysl
+   :target: https://gitter.im/anz-bank/sysl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 .. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?branch=master
    :target: http://travis-ci.org/anz-bank/sysl
 .. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor
