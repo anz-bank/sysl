@@ -5,18 +5,26 @@ matrix:
   include:
     - os: linux
       dist: trusty
+      after_success:
+        - pip install codecov -e .
+        - coverage run --source=src/sysl -m py.test
+        - codecov
     - os: osx
+      osx_image: xcode8.3
       language: generic
+      before_install:
+        - brew update
+        - brew list python >/dev/null 2>&1 || brew install python
+        - brew install gradle
+        - export PATH=/usr/local/opt/python/libexec/bin:$PATH
+
 env:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
-before_install:
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew list python >/dev/null 2>&1 || brew install python; fi
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export PATH=/usr/local/opt/python/libexec/bin:$PATH; fi
+
 install:
   - pip install . pytest flake8
+
 script:
   - flake8
   - pytest
-  - if [ "$TRAVIS_OS_NAME" != "osx" ]; then cd test/java && gradle test; fi
-fast_finish: true
+  - cd test/java && gradle test && cd ../..

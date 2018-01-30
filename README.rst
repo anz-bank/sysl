@@ -2,9 +2,13 @@ Sysl
 ====
 
 .. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?branch=master
-   :target: http://travis-ci.org/anz-bank/sysl
+   :target: https://travis-ci.org/anz-bank/sysl
 .. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor
    :target: https://ci.appveyor.com/project/anz-bank/sysl
+.. image:: https://img.shields.io/codecov/c/github/anz-bank/sysl/master.svg
+   :target: https://codecov.io/gh/anz-bank/sysl/branch/master
+.. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg
+   :target: https://gitter.im/anz-bank/sysl
 
 Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
 can specify systems, endpoints, endpoint behaviour, data models and data
