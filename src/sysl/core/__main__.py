@@ -126,12 +126,13 @@ def main():
                 raise
     try:
         args.func(args)
+        sys.exit(0)
     except Exception as e:
         if args.trace:
             raise
         else:
             print e
-
+            sys.exit(1)
 
 if __name__ == '__main__':
     #  debug.init()
