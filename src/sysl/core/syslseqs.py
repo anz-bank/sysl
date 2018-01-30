@@ -465,14 +465,19 @@ def add_subparser(subp):
                     diagutil.output_plantuml(args, out)
 
         else:
+            if not args.endpoint:
+                raise Exception(
+                    'sysl sd requires either one specific endpoint, ' +
+                    'e.g. --endpoint "ATM <- GetBalance", or an output ' +
+                    'pattern with %(epname), e.g. -o "out/%(epname).svg".')
             out = sequence_diag(module, SequenceDiagParams(
                 # -s builds list of lists (idkw).
-                endpoints=[i[0] for i in args.endpoint],
+                endpoints=args.endpoint,
                 epfmt=diagutil.parse_fmt(args.endpoint_format),
                 appfmt=diagutil.parse_fmt(args.app_format),
                 activations=args.activations,
                 title=args.title,
-                blackboxes=args.blackboxes))
+                blackboxes=args.blackbox))
             diagutil.output_plantuml(args, out)
 
     argp.set_defaults(func=cmd)
