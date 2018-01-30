@@ -1,6 +1,5 @@
 Sysl
 ====
-
 .. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?branch=master
    :target: https://travis-ci.org/anz-bank/sysl
 .. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor
@@ -18,42 +17,40 @@ options, all from one common Sysl specification.
 
 The set of outputs is open-ended and allows for your own extensions. Sysl has been created with extensibility in mind and it will grow to support other representations over time.
 
-Installation
-------------
-If you are interested in trying out Sysl, you will need to install `Python 2.7 <https://www.python.org/downloads/>`_ .
+Prerequisites
+-------------
+If you are interested in trying out Sysl, you will need `Python 2.7 <https://www.python.org/downloads/>`_ .
 OSX users, we recommend installing Python 2.7 with `Homebrew <https://brew.sh/>`_  and adding it to the `PATH` in you `.bash_profile`::
 
   > brew install python
   > echo export PATH=/usr/local/opt/python/libexec/bin:\$PATH >> ~/.bash_profile
 
-You can then install Sysl with ::
+If you are behind a corporate proxy you might want to set up ``cntlm`` and a global ``pip.conf``
+file (see `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_ or `Stackoverflow <https://stackoverflow.com/a/46410817>`_).
+
+Installation
+------------
+Install Sysl with ::
 
   > pip install sysl
 
-Now you can execute Sysl as command line tool with ::
+Now you can execute Sysl as command line tools with ::
 
-  > sysl    --root demo/petshop textpb -o out/petshop.txt /petshop
-  > reljam  --root demo/petshop model /petshop PetShopModel
-
-which is equivalent to ::
-
-  > sysl textpb -o out/petshop.txt /demo/petshop/petshop
+  > sysl   textpb -o out/petshop.txt /demo/petshop/petshop
   > reljam model /demo/petshop/petshop PetShopModel
 
 See ``sysl --help`` and ``reljam --help`` for more options.
-If you are behind a corporate proxy you might want to consider setting up a global ``pip.conf``
-file (see `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_ or `Stackoverflow <https://stackoverflow.com/a/46410817>`_).
 
 Development
 -----------
 Install dependencies and the ``sysl`` package with symlinks ::
 
-  > pip install -e ".[dev]"
+  > pip install pytest flake8 -e .
 
 Test and lint the source code and your changes with ::
 
   > pytest
-  > flake
+  > flake8
 
 Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to isolate your development environment.
 

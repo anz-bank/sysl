@@ -3,12 +3,34 @@ environment:
   SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
 install:
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "pip install --upgrade setuptools"
-  - "pip install . pytest flake8"
+  - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - pip install --upgrade setuptools
+  - pip install http://sourceforge.net/projects/py2exe/files/latest/download?source=files
+  - pip install . pytest flake8
+  - pip install http://sourceforge.net/projects/py2exe/files/latest/download?source=files
 
 build: off
 
 test_script:
-  - "pytest"
-  - "flake8"
+  - pytest
+  - flake8
+
+after_test:
+  - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"
+  - msiexec /i C:\VCForPython27.msi /quiet /q
+  - XCOPY src\libs\google-site-packages-override\__init__.py  C:\Python27\Lib\site-packages\google /Y
+  - python setup.py py2exe
+
+artifacts:
+  - path: dist\sysl.exe
+
+deploy:
+  - provider: GitHub
+    artifact: /.*\.exe/
+    draft: true
+    prerelease: true
+    on:
+      branch: master
+      appveyor_repo_tag: true
+
+

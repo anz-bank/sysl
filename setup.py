@@ -4,11 +4,14 @@
 import io
 import os
 import sys
+import platform
 from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-# Package meta-data.
+if platform.system() == 'Windows':
+    import py2exe
+
 NAME = 'sysl'
 DESCRIPTION = 'System specification language with compiler and code generator'
 URL = 'https://github.com/anz-bank/sysl'
@@ -64,5 +67,16 @@ setup(
             'pytest',
             'flake8',
         ]
-    }
+    },
+    # py2exe
+    options={'py2exe': {
+        'bundle_files': 1,
+        'dll_excludes': ['w9xpopen.exe']
+    }},
+    console=[{
+        'script': 'src/sysl/core/__main__.py',
+        'dest_base': 'sysl',
+        'icon_resources': [(1, 'docs/favicon.ico')]
+    }],
+    zipfile=None
 )
