@@ -17,19 +17,11 @@ options, all from one common Sysl specification.
 
 The set of outputs is open-ended and allows for your own extensions. Sysl has been created with extensibility in mind and it will grow to support other representations over time.
 
-Prerequisites
--------------
-If you are interested in trying out Sysl, you will need `Python 2.7 <https://www.python.org/downloads/>`_ .
-OSX users, we recommend installing Python 2.7 with `Homebrew <https://brew.sh/>`_  and adding it to the `PATH` in you `.bash_profile`::
-
-  > brew install python
-  > echo export PATH=/usr/local/opt/python/libexec/bin:\$PATH >> ~/.bash_profile
-
-If you are behind a corporate proxy you might want to set up ``cntlm`` and a global ``pip.conf``
-file (see `official docs <https://pip.pypa.io/en/stable/user_guide/#config-file>`_ or `Stackoverflow <https://stackoverflow.com/a/46410817>`_).
-
 Installation
 ------------
+Install `Python 2.7 <https://www.python.org/downloads/>`_.
+If your specific environment causes problems you might find our `guide <docs/environment_guide.md>`_ helpful.
+
 Install Sysl with ::
 
   > pip install sysl
