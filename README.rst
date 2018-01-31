@@ -34,7 +34,7 @@ Install Sysl with ::
 
   > pip install sysl
 
-Now you can execute Sysl as command line tools with ::
+Now you can execute Sysl on the command line with ::
 
   > sysl   textpb -o out/petshop.txt /demo/petshop/petshop
   > reljam model /demo/petshop/petshop PetShopModel
