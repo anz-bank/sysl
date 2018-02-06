@@ -30,6 +30,7 @@ artifacts:
 
 deploy:
   - provider: GitHub
+    tag: v0.1.2
     artifact: dist\sysl.exe
     draft: true
     prerelease: true
