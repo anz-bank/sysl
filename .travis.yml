@@ -27,6 +27,9 @@ script:
 - pytest
 - gradle test -b test/java/build.gradle
 
+before_deploy:
+  python setup.py bdist_wheel
+
 deploy:
   provider: releases
   tag_name: $TRAVIS_TAG
