@@ -25,13 +25,19 @@ if [[ $(git status --porcelain 2> /dev/null | tail -n1) != "" ]]; then
 	exit_error "Repo is not clean please commit or delete files."
 fi
 
-git pull
+echo 'Creating release branch'
 
+git pull
 BRANCH="release-$VERSION"
 git co -b $BRANCH
 
+echo 'Updating __version__'
+
 echo "__version__ = '$VERSION'" > 'src/sysl/__version__.py' || { echo "Could not override src/sysl/__version__.py"; exit 1; }
+
+echo 'Commit and push'
 git commit -am "Bump version to $VERSION"
+git push -u origin
 
 CREDENTIALS=`echo "host=github.com" | git credential fill`
 USERNAME=`echo $CREDENTIALS | sed -n "s/.*username=\([^ ]*\).*/\1/p"`
