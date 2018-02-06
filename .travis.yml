@@ -15,7 +15,7 @@ matrix:
       before_install:
         - brew update
         - brew list python >/dev/null 2>&1 || brew install python
-        - brew install gradle
+        - brew list gradle >/dev/null 2>&1 || brew install gradle
         - export PATH=/usr/local/opt/python/libexec/bin:$PATH
 
 env:
@@ -27,4 +27,4 @@ install:
 script:
   - flake8
   - pytest
-  - cd test/java && gradle test && cd ../..
+  - gradle test -b test/java/build.gradle

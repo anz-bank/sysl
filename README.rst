@@ -48,9 +48,9 @@ Consider using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ and `virtua
 
 For Java tests install `Java 8 <https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html>`_ and `gradle <https://gradle.org/install/>`_ and run ::
 
- > cd test/java && gradle test
+ > gradle test -b test/java/build.gradle
 
-If your corporate environment restricts access to ``jcenter`` `this workaround <docs/gradle.md>`_ might solve the issue.
+If your corporate environment restricts access to ``jcenter`` `this workaround <docs/gradle.md>`_ might solve the issue. Additionally, our `environment guide <docs/environment_guide.md>`_ has tips on using ``virtualenv`` with ``gradle test``.
 
 We encourage contributions to this project! Please have a look at the `contributing guide <CONTRIBUTING.md>`_ for more information.
 

@@ -7,6 +7,13 @@ repositories {
     jcenter()
 }
 
+test {
+    testLogging {
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
+}
+
 task generateSysl(type:Exec) {
   commandLine "reljam",  "--out", "$tempDirectory", "model", "/tuplecomplex", "UserFormComplex"
 
