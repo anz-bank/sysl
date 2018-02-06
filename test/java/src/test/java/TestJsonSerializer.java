@@ -82,23 +82,24 @@ public class TestJsonSerializer
         return ser.deserialize(p, (BuyItemFormComplex)null);
     }
 
-    public static String TEST_2 =   "{\n"
-                                    + "  \"Amount\" : 10.11,\n"
-                                    + "  \"BillingAddress\" : {\n"
-                                    + "    \"Address1\" : \"ANZ Building\",\n"
-                                    + "    \"Address2\" : \"833 Collins Street\",\n"
-                                    + "    \"City\" : \"Melbourne\",\n"
-                                    + "    \"Country\" : \"AU\",\n"
-                                    + "    \"State\" : \"VIC\",\n"
-                                    + "    \"ZipCode\" : \"3000\"\n"
-                                    + "  },\n"
-                                    + "  \"CustomerType\" : 0,\n"
-                                    + "  \"Emails\" : [ {\n"
-                                    + "    \"Email\" : \"jsmith@anz.com\"\n"
-                                    + "  }, {\n"
-                                    + "    \"Email\" : \"john.smith@anz.com\"\n"
-                                    + "  } ],\n"
-                                    + "  \"FirstName\" : \"John\",\n"
-                                    + "  \"LastName\" : \"Smith\"\n"
+    public static String LS = System.getProperty("line.separator");
+    public static String TEST_2 =   "{" + LS
+                                    + "  \"Amount\" : 10.11," + LS
+                                    + "  \"BillingAddress\" : {" + LS
+                                    + "    \"Address1\" : \"ANZ Building\"," + LS
+                                    + "    \"Address2\" : \"833 Collins Street\"," + LS
+                                    + "    \"City\" : \"Melbourne\"," + LS
+                                    + "    \"Country\" : \"AU\"," + LS
+                                    + "    \"State\" : \"VIC\"," + LS
+                                    + "    \"ZipCode\" : \"3000\"" + LS
+                                    + "  }," + LS
+                                    + "  \"CustomerType\" : 0," + LS
+                                    + "  \"Emails\" : [ {" + LS
+                                    + "    \"Email\" : \"jsmith@anz.com\"" + LS
+                                    + "  }, {" + LS
+                                    + "    \"Email\" : \"john.smith@anz.com\"" + LS
+                                    + "  } ]," + LS
+                                    + "  \"FirstName\" : \"John\"," + LS
+                                    + "  \"LastName\" : \"Smith\"" + LS
                                     + "}";
 }

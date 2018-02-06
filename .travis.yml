@@ -1,30 +1,47 @@
 language: python
 python:
-  - "2.7"
+- '2.7'
 matrix:
   include:
-    - os: linux
-      dist: trusty
-      after_success:
-        - pip install codecov -e .
-        - coverage run --source=src/sysl -m py.test
-        - codecov
-    - os: osx
-      osx_image: xcode8.3
-      language: generic
-      before_install:
-        - brew update
-        - brew list python >/dev/null 2>&1 || brew install python
-        - brew install gradle
-        - export PATH=/usr/local/opt/python/libexec/bin:$PATH
+  - os: linux
+    dist: trusty
+    after_success:
+    - pip install codecov -e .
+    - coverage run --source=src/sysl -m py.test
+    - codecov
+  - os: osx
+    osx_image: xcode8.3
+    language: generic
+    before_install:
+    - brew update
+    - brew list python >/dev/null 2>&1 || brew install python
+    - brew list gradle >/dev/null 2>&1 || brew install gradle
+    - export PATH=/usr/local/opt/python/libexec/bin:$PATH
 
 env:
-  - SYSL_PLANTUML=http://www.plantuml.com/plantuml
-
+- SYSL_PLANTUML=http://www.plantuml.com/plantuml
 install:
-  - pip install . pytest flake8
-
+- pip install . pytest flake8
 script:
-  - flake8
-  - pytest
-  - cd test/java && gradle test && cd ../..
+- flake8
+- pytest
+- gradle test -b test/java/build.gradle
+
+before_deploy:
+  python setup.py bdist_wheel
+
+deploy:
+  provider: releases
+  draft: true
+  tag_name: $TRAVIS_TAG
+  name: Sysl $TRAVIS_TAG
+  api_key:
+    secure: DcbUAkVdQp5DVu3gUeq8R3p1Tl3GZDezilcfQOd9SRMbiPEi69tYaMc7XgYJZwP/BG1MCOnRuDR5tIv1ppIqoeOacVO+Hgq1VbSHi9wR2+0GN7ik0ApZJndNgvoIPa2fP6lAa4BhItTe4vtLv6BI3Qo4WxAIIcIs4oHr2hYYCn/V1yYTGBiEOwjeiOuOhr8rLWyARzbbaUjBG8TU000Hpy5HBIjOQIICIKZRyg/5MUkf5Kj4KkkfL2ugG/s/AU6XM5jwGQiA6BmMHK2JmEFXDdofrKbzWKjHP++/MlZ5pxlQzknhBBQDxV2YmlETm3BLprdkgWBLfVVQlCmcRvQkjDrPVdbaA0MpE3VbWJOTAzwpxaVLVMupRujYX9hY792bpv2eKr2x7di1ycwUWLqZKxEGBApxh4G5g5gKEOK8HAED4rTUl6kix5YIAkW0ae/4xJiUasSMWhzaoVd63pV5DesIEwnUWgQWE1EJGAy9oVCiR66ndclu+MvgQZOiCqs8lW6wG69dY13nsS0B5ruRCNdpUE1d/kOoCchbN/54s1qUaJ2rAXSZQgsHUXyQiUTAFAnG8BbNroy34MwwXaJ7Q9KuU16nKmfGy5+X2dsIsM/eN/aDv39E/YGKD6NpcaxiXBxYLXQyGWja85VrGp7GBRifM6lIvXiv2Fg7PeoFY3Y=
+  file_glob: true
+  file: dist/*
+  skip_cleanup: true
+  prerelease: true
+  on:
+    repo: juliaogris/sysl
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux

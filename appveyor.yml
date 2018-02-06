@@ -1,19 +1,21 @@
 environment:
   PYTHON: "C:\\Python27"
   SYSL_PLANTUML: http://www.plantuml.com/plantuml
+  JAVA_HOME: C:\Program Files\Java\jdk1.8.0
 
 install:
-  - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
   - pip install --upgrade setuptools
   - pip install http://sourceforge.net/projects/py2exe/files/latest/download?source=files
   - pip install . pytest flake8
-  - pip install http://sourceforge.net/projects/py2exe/files/latest/download?source=files
+  - choco install gradle
 
 build: off
 
 test_script:
   - pytest
   - flake8
+  - gradle --no-daemon -b test\java\build.gradle test
 
 after_test:
   - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"
@@ -25,12 +27,15 @@ artifacts:
   - path: dist\sysl.exe
 
 deploy:
-  - provider: GitHub
-    artifact: /.*\.exe/
+    provider: GitHub
+    release: Sysl $(APPVEYOR_REPO_TAG_NAME)
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    artifact: dist\sysl.exe
     draft: true
     prerelease: true
+    auth_token:
+      secure: c8Si9cdxi4mqSlUew6RfvXtkC+54AXEw8U9Tid3TjDz2+TAC2v6d9kdoFIvUhwZ0
     on:
-      branch: master
       appveyor_repo_tag: true
 
 
