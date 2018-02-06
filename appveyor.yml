@@ -38,6 +38,5 @@ deploy:
       secure: c8Si9cdxi4mqSlUew6RfvXtkC+54AXEw8U9Tid3TjDz2+TAC2v6d9kdoFIvUhwZ0
     on:
       branch: release
-      appveyor_repo_tag: true
 
 
