@@ -29,8 +29,8 @@ artifacts:
   - path: dist\sysl.exe
 
 deploy:
-  - provider: GitHub
-    tag: v0.1.2
+    provider: GitHub
+    release: Sysl $(APPVEYOR_REPO_TAG_NAME)
     artifact: dist\sysl.exe
     draft: true
     prerelease: true
@@ -38,5 +38,6 @@ deploy:
       secure: c8Si9cdxi4mqSlUew6RfvXtkC+54AXEw8U9Tid3TjDz2+TAC2v6d9kdoFIvUhwZ0
     on:
       branch: release
+      appveyor_repo_tag: true
 
 

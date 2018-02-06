@@ -44,5 +44,5 @@ deploy:
   prerelease: true
   on:
     repo: juliaogris/sysl
-    branch: release
+    tags: true
     condition: $TRAVIS_OS_NAME = linux
