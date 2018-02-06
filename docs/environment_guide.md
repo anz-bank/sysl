@@ -15,8 +15,8 @@ If you are behind an NTLM proxy, you might need to setup `cntlm` to work effecti
 In case of SSL certificate interception you might need to add `--trusted-host pypi.python.org` to your pip commands or setup a global `pip.conf`
 file (see [official docs](https://pip.pypa.io/en/stable/user_guide/#config-file) or [Stackoverflow](https://stackoverflow.com/a/46410817)).
 
-Java test with virutalenv
+Java test with virtualenv
 -------------------------
-If you work with `virtualenv` and `gradle` reports it cannot find `sysl` try using the `--no-daemon` option:
+If you work with `virtualenv` and `gradle` reports it cannot find `sysl`, try using the `--no-daemon` option:
 
 	gradle --no-daemon test -b test/java/build.gradle

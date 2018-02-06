@@ -15,8 +15,6 @@ build: off
 test_script:
   - pytest
   - flake8
-  - java -version
-  - gradle -version
   - gradle --no-daemon -b test\java\build.gradle test
 
 after_test:
