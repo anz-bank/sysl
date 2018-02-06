@@ -27,12 +27,6 @@ script:
 - pytest
 - gradle test -b test/java/build.gradle
 
-before_deploy:
-- export SYSL_VERSION=v`sysl --version 2>&1 | cut -d ' ' -f2`
-- git config --local user.name "juliaogris"
-- git config --local user.email "julia.ogris@gmail.com"
-- git tag $SYSL_VERSION
-
 deploy:
   provider: releases
   api_key:
