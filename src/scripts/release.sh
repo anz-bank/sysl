@@ -7,17 +7,25 @@ function exit_error {
 }
 USAGE="Usage: release.sh <prepare|deploy> MAJOR.MINOR.PATCH"
 
-VERSION=$2
-if ! [[ $VERSION =~ ^[[:digit:]+\\.[:digit:]+\\.[:digit:]]+$ ]]; then
-	exit_error
+if [ "$#" -ne 2 ]; then
+    exit_error $USAGE
 fi
 
+VERSION=$2
+if ! [[ $VERSION =~ ^[[:digit:]+\\.[:digit:]+\\.[:digit:]]+$ ]]; then
+	exit_error $USAGE
+fi
+
+# TODO replace release with master
 CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 if [[ "$CURRENT_BRANCH" != "release" ]]; then
- 	 exit_error 'Must be on release branch'
+ 	 exit_error "Must be on release branch"
 fi
+if [[ $(git status --porcelain 2> /dev/null | tail -n1) != "" ]]; then
+	exit_error "Repo is not clean please commit or delete files."
+fi
+
 git pull
-# TODO ensure clean master branch
 
 BRANCH="release-$VERSION"
 git co -b $BRANCH
