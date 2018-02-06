@@ -15,8 +15,6 @@ build: off
 test_script:
   - pytest
   - flake8
-  - java -version
-  - gradle -version
   - gradle --no-daemon -b test\java\build.gradle test
 
 after_test:
@@ -37,6 +35,6 @@ deploy:
     auth_token:
       secure: c8Si9cdxi4mqSlUew6RfvXtkC+54AXEw8U9Tid3TjDz2+TAC2v6d9kdoFIvUhwZ0
     on:
-      branch: release
+      appveyor_repo_tag: true
 
 
