@@ -30,11 +30,12 @@ artifacts:
 
 deploy:
   - provider: GitHub
-    artifact: /.*\.exe/
+    artifact: dist\sysl.exe
     draft: true
     prerelease: true
+    auth_token:
+      secure: c8Si9cdxi4mqSlUew6RfvXtkC+54AXEw8U9Tid3TjDz2+TAC2v6d9kdoFIvUhwZ0
     on:
-      branch: master
-      appveyor_repo_tag: true
+      branch: release
 
 
