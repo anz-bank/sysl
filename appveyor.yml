@@ -29,6 +29,7 @@ artifacts:
 deploy:
     provider: GitHub
     release: Sysl $(APPVEYOR_REPO_TAG_NAME)
+    tag: $(APPVEYOR_REPO_TAG_NAME)
     artifact: dist\sysl.exe
     draft: true
     prerelease: true
