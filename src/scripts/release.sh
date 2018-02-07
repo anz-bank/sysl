@@ -12,13 +12,13 @@ if [ "$#" -ne 2 ]; then
     fatal "$USAGE"
 fi
 if ! [[ $VERSION =~ ^[[:digit:]+\\.[:digit:]+\\.[:digit:]]+$ ]]; then
-  fatal "$USAGE"
+    fatal "$USAGE"
 fi
 if [[ $COMMAND != "prepare" && $COMMAND != "deploy" ]]; then
-  fatal "$USAGE"
+    fatal "$USAGE"
 fi
 if [[ $(git status --porcelain 2> /dev/null | tail -n1) != "" ]]; then
-  fatal "Repo is not clean please commit or delete dirty files."
+    fatal "Repo is not clean please commit or delete dirty files."
 fi
 
 ORIGIN_URL=$(git remote get-url origin)
@@ -36,10 +36,8 @@ git pull "$UPSTREAM_URL" master || fatal "Cannot pull  upstream master"
 echo "------- Create release branch $RELEASE_BRANCH ---------"
 git co -b "$RELEASE_BRANCH" || fatal "Cannot create release branch $RELEASE_BRANCH"
 
-echo "------- Update version ---------"
+echo "------- Update version and commit ---------"
 echo "__version__ = '$VERSION'" > 'src/sysl/__version__.py' || fatal "Could not override src/sysl/__version__.py"
-
-echo "------- Commit ---------"
 git commit -am "Bump version to $VERSION" || fatal "Cannot commit version update"
 
 echo "------- Push ---------"
@@ -59,7 +57,8 @@ RESPONSE=$(wget --quiet --output-document=- --content-on-error \
                --user="$USERNAME" --password="$PASSWORD" --auth-no-challenge \
                --header="Content-Type: application/json" \
                --header="Accept: application/vnd.github.v3+json" \
-               --post-data="$JSON" "https://api.github.com/repos/$UPSTREAM/$REPO/pulls")
+               --post-data="$JSON" \
+               "https://api.github.com/repos/$UPSTREAM/$REPO/pulls")
 
 WGET_STATUS=$?
 if [ $WGET_STATUS -eq 0 ]; then
