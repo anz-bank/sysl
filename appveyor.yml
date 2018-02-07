@@ -35,7 +35,7 @@ deploy:
     prerelease: true
     repository: anz-bank/sysl
     auth_token:
-      secure: VYvPZaOdYzBG/RS83uX0pS2uldZPq6xA59c2lllyrr5Vnm/V3aE451es8OKGUkLh
+      secure: McTebLt7DvyCd7qa9oHl5DwPZeNHf7NdtSCtNBZre59iWCmC0T0HT+/yiHLDQMtk
     on:
       appveyor_repo_tag: true
 
