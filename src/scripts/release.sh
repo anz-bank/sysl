@@ -12,13 +12,13 @@ if [ "$#" -ne 2 ]; then
     fatal "$USAGE"
 fi
 if ! [[ $VERSION =~ ^[[:digit:]+\\.[:digit:]+\\.[:digit:]]+$ ]]; then
-	fatal "$USAGE"
+  fatal "$USAGE"
 fi
 if [[ $COMMAND != "prepare" && $COMMAND != "deploy" ]]; then
-	fatal "$USAGE"
+  fatal "$USAGE"
 fi
 if [[ $(git status --porcelain 2> /dev/null | tail -n1) != "" ]]; then
-	fatal "Repo is not clean please commit or delete dirty files."
+  fatal "Repo is not clean please commit or delete dirty files."
 fi
 
 ORIGIN_URL=$(git remote get-url origin)
@@ -50,7 +50,7 @@ REPO="sysl"
 CREDENTIALS=$(echo "host=github.com" | git credential fill)
 USERNAME=$(echo "$CREDENTIALS" | sed -n "s/.*username=\\([^ ]*\\).*/\\1/p")
 PASSWORD=$(echo "$CREDENTIALS" | sed -n "s/.*password=\\([^ ]*\\).*/\\1/p")
-if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
+if [ "$USERNAME" = "" ] || [ "$PASSWORD" = "" ]; then
     fatal "Could not get GitHub credentials, please create pull request manually."
 fi
 
@@ -63,12 +63,12 @@ RESPONSE=$(wget --quiet --output-document=- --content-on-error \
 
 WGET_STATUS=$?
 if [ $WGET_STATUS -eq 0 ]; then
-	  GITHUB_PR_URL=$(echo "$RESPONSE" | jq -r '.html_url')
+    GITHUB_PR_URL=$(echo "$RESPONSE" | jq -r '.html_url')
     echo "Pull request opened:"
     echo "$GITHUB_PR_URL"
     open "$GITHUB_PR_URL"
 elif [ $WGET_STATUS -eq 6 ]; then
-	  fatal "Wrong username or password/token"
+    fatal "Wrong username or password/token"
 else
     fatal "Unknown error"
 fi
