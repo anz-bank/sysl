@@ -37,7 +37,7 @@ echo "------- Create release branch $RELEASE_BRANCH ---------"
 git co -b "$RELEASE_BRANCH" || fatal "Cannot create release branch $RELEASE_BRANCH"
 
 echo "------- Update version ---------"
-echo "__version__ = '$VERSION'" > 'src/sysl/__version__.py' || { echo "Could not override src/sysl/__version__.py"; exit 1; }
+echo "__version__ = '$VERSION'" > 'src/sysl/__version__.py' || fatal "Could not override src/sysl/__version__.py"
 
 echo "------- Commit ---------"
 git commit -am "Bump version to $VERSION" || fatal "Cannot commit version update"
@@ -50,7 +50,7 @@ REPO="sysl"
 CREDENTIALS=$(echo "host=github.com" | git credential fill)
 USERNAME=$(echo "$CREDENTIALS" | sed -n "s/.*username=\\([^ ]*\\).*/\\1/p")
 PASSWORD=$(echo "$CREDENTIALS" | sed -n "s/.*password=\\([^ ]*\\).*/\\1/p")
-if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
+if [ -z "$USERNAME" -o -z "$PASSWORD" ]; then
     fatal "Could not get GitHub credentials, please create pull request manually."
 fi
 
