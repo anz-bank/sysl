@@ -23,7 +23,7 @@ fi
 
 ORIGIN_URL=$(git remote get-url origin)
 UPSTREAM="anz-bank"
-UPSTREAM_URL=$(echo "$ORIGIN_URL" | sed -n "s/\\(.*\\/\\/github.com\\/\\)\\(..*\\)\\(\\/..*.git\\)/\\1$UPSTREAM\\3/p")
+UPSTREAM_URL=$(echo "$ORIGIN_URL" | sed -n "s|\\(.*//github.com/\\)\\(..*\\)\\(/..*.git\\)|\\1$UPSTREAM\\3|p")
 
 echo "------- Checkout master ---------"
 git checkout master || fatal "Cannot checkout master"
@@ -31,12 +31,12 @@ git checkout master || fatal "Cannot checkout master"
 echo "------- Pull upstream ---------"
 git pull "$UPSTREAM_URL" master || fatal "Cannot pull  upstream master"
 
-if [[ $COMANND = "prepare" ]]; then
+if [[ $COMMAND = "prepare" ]]; then
     RELEASE_BRANCH="release-v$VERSION"
-    ORIGIN=$(echo "$ORIGIN_URL" | sed -n "s/.*\\/\\/github.com\\/\\(..*\\)\\/..*.git/\\1/p")
-    REPO=$(echo "$ORIGIN_URL" | sed -n "s/.*\\/\\/github.com\\/..*\\/\\(..*\\).git/\\1/p")
+    ORIGIN=$(echo "$ORIGIN_URL" | sed -n "s|.*//github.com/\\(..*\\)/..*.git|\\1|p")
+    REPO=$(echo "$ORIGIN_URL" | sed -n "s|.*//github.com/..*/\\(..*\\).git|\\1|p")
     echo "------- Create release branch $RELEASE_BRANCH ---------"
-    git co -b "$RELEASE_BRANCH" || fatal "Cannot create release branch $RELEASE_BRANCH"
+    git checkout -b "$RELEASE_BRANCH" || fatal "Cannot create release branch $RELEASE_BRANCH"
 
     echo "------- Update version and commit ---------"
     echo "__version__ = '$VERSION'" > 'src/sysl/__version__.py' || fatal "Could not override src/sysl/__version__.py"
@@ -72,7 +72,7 @@ if [[ $COMANND = "prepare" ]]; then
     else
         fatal "Unknown error"
     fi
-elif [[ $COMANND = "prepare" ]]; then
+elif [[ $COMMAND = "deploy" ]]; then
     PY_VERSION=$(sed -n "s/__version__ = '\\([^ ]*\\)'/\\1/p" src/sysl/__version__.py)
     [[  "$VERSION" =  "$PY_VERSION" ]] || fatal "Version ($VERSION) different from __version__.py ($PY_VERSION)"
     echo "------- Tag release ---------"
