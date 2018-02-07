@@ -50,11 +50,11 @@ REPO="sysl"
 CREDENTIALS=$(echo "host=github.com" | git credential fill)
 USERNAME=$(echo "$CREDENTIALS" | sed -n "s/.*username=\\([^ ]*\\).*/\\1/p")
 PASSWORD=$(echo "$CREDENTIALS" | sed -n "s/.*password=\\([^ ]*\\).*/\\1/p")
-if [ -z "$USERNAME" -o -z "$PASSWORD" ]; then
+if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
     fatal "Could not get GitHub credentials, please create pull request manually."
 fi
 
-JSON="{title:\"Bump version to $VERSION\",head:\"$ORIGIN:$RELEASE_BRANCH\",base:\"master\"}"
+JSON="{\"title\":\"Bump version to $VERSION\",\"head\":\"$ORIGIN:$RELEASE_BRANCH\",\"base\":\"master\"}"
 RESPONSE=$(wget --quiet --output-document=- --content-on-error \
                --user="$USERNAME" --password="$PASSWORD" --auth-no-challenge \
                --header="Content-Type: application/json" \
