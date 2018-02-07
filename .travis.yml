@@ -1,30 +1,46 @@
 language: python
 python:
-  - "2.7"
+- '2.7'
 matrix:
   include:
-    - os: linux
-      dist: trusty
-      after_success:
-        - pip install codecov -e .
-        - coverage run --source=src/sysl -m py.test
-        - codecov
-    - os: osx
-      osx_image: xcode8.3
-      language: generic
-      before_install:
-        - brew update
-        - brew list python >/dev/null 2>&1 || brew install python
-        - brew list gradle >/dev/null 2>&1 || brew install gradle
-        - export PATH=/usr/local/opt/python/libexec/bin:$PATH
+  - os: linux
+    dist: trusty
+    after_success:
+    - pip install codecov -e .
+    - coverage run --source=src/sysl -m py.test
+    - codecov
+  - os: osx
+    osx_image: xcode8.3
+    language: generic
+    before_install:
+    - brew update
+    - brew list python >/dev/null 2>&1 || brew install python
+    - brew list gradle >/dev/null 2>&1 || brew install gradle
+    - export PATH=/usr/local/opt/python/libexec/bin:$PATH
 
 env:
-  - SYSL_PLANTUML=http://www.plantuml.com/plantuml
-
+- SYSL_PLANTUML=http://www.plantuml.com/plantuml
 install:
-  - pip install . pytest flake8
-
+- pip install . pytest flake8
 script:
-  - flake8
-  - pytest
-  - gradle test -b test/java/build.gradle
+- flake8
+- pytest
+- gradle test -b test/java/build.gradle
+
+before_deploy:
+  python setup.py bdist_wheel
+deploy:
+  provider: releases
+  draft: true
+  tag_name: $TRAVIS_TAG
+  name: Sysl $TRAVIS_TAG
+  api_key:
+    secure: TkWCKFPiDVTbOup9rQi+VceTbXHWoHphMzB6ZJ3bBGPZsHf2rZeVdknQ/9jcUHiYdnhvFspKpp2Dn2e58At8IJTYRx3F93uBCFu9om/U2UtphccO1X6rZw0rcCVTHIuosvyp7iec3qxxTwmnIliQvHnnVJgRzt6IKw/jjDyMZzvBrch52xQV5eDOacW2PwfMJ3Q03UI+fM6C8F/F7RW1T7k+jBcXTzp4mr1mPm3zYvvKBjFPLQk4+8lT9Nbh+FGAXwc6SVl1ue9jQIH3zK4ED4y9uQcdFaz253QqXpnKCl9kJhyYnlsKCAnqqGm/X9DrZUqxYWuSMz9DWA7T+ulI0LO1w4S/DNkZ4ksaGYuwHqVTBSErEC1cJZgSRSsedjaENZgav/FUFL4+3WQf3wP+vM8UzGVJsUJEWlx9DFW61btRwBEJuflVaL6HqhDBebv1sa/8vskcyaiMszxr7V58/Kh3AGC3KBX6sqU0Oc5KXWwgsYiQbNIctFZR0EbcH4aO2yoQO5RPJW8KkaJgMYec6/si/2jT1KxHsA2PAE7GQOOyhTIrTc0AEAA1/6rb8ksIlREOObv4YZFdNYLP3Kv3PGECbHgDh9Ee15MtnezHQqY9qwbh2+0T6i0heHa/1XgNOiG/Y3OpriB1vil/yerH1FJVr6i73xXAyRpgnl4EC7I=
+  file_glob: true
+  file: dist/*
+  skip_cleanup: true
+  prerelease: true
+  on:
+    repo: anz-bank/sysl
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux

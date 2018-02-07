@@ -27,12 +27,15 @@ artifacts:
   - path: dist\sysl.exe
 
 deploy:
-  - provider: GitHub
-    artifact: /.*\.exe/
+    provider: GitHub
+    release: Sysl $(APPVEYOR_REPO_TAG_NAME)
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    artifact: dist\sysl.exe
     draft: true
     prerelease: true
+    repository: anz-bank/sysl
+    auth_token:
+      secure: 7mE6RzdwrjEUXhoYE6dMaOmEY+gA+XU12+g6YzboUsY1GKNx8ZH52vNKsDiKAj8v
     on:
-      branch: master
       appveyor_repo_tag: true
-
 
