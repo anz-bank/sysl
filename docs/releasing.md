@@ -1,7 +1,7 @@
 Releasing
 =========
 
-Releasing is automated a script `src/scripts/releasing.sh`
+Releasing is automated via a script `src/scripts/releasing.sh`
 
 Travis creates and deploys `sysl-X.Y.Z-py2-none-any.whl` and `sysl-X.Y.Z.tar.gz` to the [Sysl Github Release page](https://github.com/anz-bank/sysl/releases) and Appveyor adds `sysl.exe`. Travis also deploys Sysl's wheel and sdist distributions to PyPI.
 
