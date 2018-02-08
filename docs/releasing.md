@@ -1,34 +1,16 @@
 Releasing
 =========
 
-We intend to automate the releasing process and move it to the CI systems but at the following manual steps are required:
+Releasing is automated a script `src/scripts/releasing.sh`
 
-1. Update `src/sysl/__version__.py` based on the [latest released version](https://github.com/anz-bank/sysl/releases) and [SemVer](https://semver.org/):
+Travis creates and deploys `sysl-X.Y.Z-py2-none-any.whl` and `sysl-X.Y.Z.tar.gz` to the [Sysl Github Release page](https://github.com/anz-bank/sysl/releases) and Appveyor adds `sysl.exe`. Travis also deploys Sysl's wheel and sdist distributions to PyPI.
 
-		VERSION = (X, Y, Z)
-2. Ensure you have a clean repo:
-	- commit all un-committed changes
-	- merge with `upstream master` via pull request
-	- confirm passing CI and local tests
-3. Create and push tag `vX.Y.Z`
-4. Create a wheel distribution file:
+A new release can be started with
 
-		> python setup.py bdist_wheel
+	src/scripts/release.sh prepare X.Y.Z
 
-5. For first time usage only install `twine`
-6. For first time usage only set up your `.pypirc` with credentials provided by Sysl core developers:
+and after the automatically generated pull request is approved and merged
 
-		> pip install twine
-		> cat `~/.pypirc`
-		[distutils]
-		index-servers = pypi
-		[pypi]
-		username = <SYSL-CORE-DEV-PROVIDED>
-		password = <SYSL-CORE-DEV-PROVIDED>
+	src/scripts/release.sh deploy X.Y.Z
 
-
-6. Upload to PyPI
-
-		> twine upload dist/sysl-X.Y.Z-py2-none-any.whl
-
-
+will create and push the tag which will trigger Travis and Appveyor to depoy the new release.
