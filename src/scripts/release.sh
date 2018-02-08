@@ -74,10 +74,11 @@ if [[ $COMMAND = "prepare" ]]; then
     fi
 elif [[ $COMMAND = "deploy" ]]; then
     PY_VERSION=$(sed -n "s/__version__ = '\\([^ ]*\\)'/\\1/p" src/sysl/__version__.py)
+    RELEASE_TAG="v$VERSION"
     [[  "$VERSION" =  "$PY_VERSION" ]] || fatal "Version ($VERSION) different from __version__.py ($PY_VERSION)"
     echo "------- Tag release ---------"
-    git tag "v$VERSION" || fatal "Cannot create tag v$VERSION"
+    git tag  "$RELEASE_TAG" || fatal "Cannot create tag $RELEASE_TAG"
     echo "------- Push tag ---------"
-    git push --tags "$UPSTREAM_URL"
+    git push "$UPSTREAM_URL" "$RELEASE_TAG"
     echo "------- Deployment triggered on Travis and Appveyor ---------"
 fi
