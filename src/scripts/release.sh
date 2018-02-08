@@ -23,7 +23,7 @@ fi
 
 ORIGIN_URL=$(git remote get-url origin)
 UPSTREAM="anz-bank"
-UPSTREAM_URL=$(echo "$ORIGIN_URL" | sed -E 's|(.*//github.com/)(.*)(/.*\.git)|\1'"${UPSTREAM}"'\3|')
+UPSTREAM_URL=$(echo "$ORIGIN_URL" | sed -E 's|(.*//github.com/)(.+)(/.+\.git)|\1'"$UPSTREAM"'\3|')
 
 echo "------- Checkout master ---------"
 git checkout master || fatal "Cannot checkout master"
@@ -33,8 +33,8 @@ git pull "$UPSTREAM_URL" master || fatal "Cannot pull  upstream master"
 
 if [[ $COMMAND = "prepare" ]]; then
     RELEASE_BRANCH="release-v$VERSION"
-    ORIGIN=$(echo "$ORIGIN_URL" | sed -E 's|.*//github.com/(.*)/.*\.git|\1|')
-    REPO=$(echo "$ORIGIN_URL" | sed -E 's|.*//github.com/.*/(.*)\.git|\1|')
+    ORIGIN=$(echo "$ORIGIN_URL" | sed -E 's|.*//github.com/(.+)/.+\.git|\1|')
+    REPO=$(echo "$ORIGIN_URL" | sed -E 's|.*//github.com/.+/(.+)\.git|\1|')
     echo "------- Create release branch $RELEASE_BRANCH ---------"
     git checkout -b "$RELEASE_BRANCH" || fatal "Cannot create release branch $RELEASE_BRANCH"
 
