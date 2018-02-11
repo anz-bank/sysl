@@ -19,7 +19,10 @@ The set of outputs is open-ended and allows for your own extensions. Sysl has be
 
 Installation
 ------------
-Install `Python 2.7 <https://www.python.org/downloads/>`_.
+
+Windows users can download the ``sysl.exe`` from our `release page <https://github.com/anz-bank/sysl/releases>`_.
+
+Users on other operating systems need to install `Python 2.7 <https://www.python.org/downloads/>`_.
 If your specific environment causes problems you might find our `guide <docs/environment_guide.md>`_ helpful.
 
 Install Sysl with ::
