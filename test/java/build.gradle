@@ -1,6 +1,6 @@
 apply plugin: "java-library"
 
-def tempDirectory = "../../tmp/src/test/java"
+def tempDirectory = "../../tmp/src/main/java"
 
 repositories {
     mavenLocal()
@@ -29,7 +29,7 @@ compileJava.dependsOn generateSysl
 sourceSets {
     main {
         java {
-            srcDirs = ["../../src/libs/java", "$tempDirectory"]
+            srcDirs = ["../../src/libs/java/src/main", "$tempDirectory"]
         }
     }
 
