@@ -3,7 +3,7 @@ Sysl
 .. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?branch=master
    :target: https://travis-ci.org/anz-bank/sysl
 .. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor
-   :target: https://ci.appveyor.com/project/anz-bank/sysl
+   :target: https://ci.appveyor.com/project/anz-bank/sysl/branch/master
 .. image:: https://img.shields.io/codecov/c/github/anz-bank/sysl/master.svg
    :target: https://codecov.io/gh/anz-bank/sysl/branch/master
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg
