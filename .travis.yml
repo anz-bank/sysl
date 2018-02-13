@@ -29,7 +29,9 @@ script:
 - flake8
 - pytest
 - gradle test -b test/java/build.gradle
-before_deploy: python setup.py sdist bdist_wheel
+before_deploy:
+- python setup.py sdist bdist_wheel
+- gradle build -b src/libs/java/build.gradle :jar
 deploy:
 - provider: releases
   draft: true
@@ -38,7 +40,9 @@ deploy:
   api_key:
     secure: TkWCKFPiDVTbOup9rQi+VceTbXHWoHphMzB6ZJ3bBGPZsHf2rZeVdknQ/9jcUHiYdnhvFspKpp2Dn2e58At8IJTYRx3F93uBCFu9om/U2UtphccO1X6rZw0rcCVTHIuosvyp7iec3qxxTwmnIliQvHnnVJgRzt6IKw/jjDyMZzvBrch52xQV5eDOacW2PwfMJ3Q03UI+fM6C8F/F7RW1T7k+jBcXTzp4mr1mPm3zYvvKBjFPLQk4+8lT9Nbh+FGAXwc6SVl1ue9jQIH3zK4ED4y9uQcdFaz253QqXpnKCl9kJhyYnlsKCAnqqGm/X9DrZUqxYWuSMz9DWA7T+ulI0LO1w4S/DNkZ4ksaGYuwHqVTBSErEC1cJZgSRSsedjaENZgav/FUFL4+3WQf3wP+vM8UzGVJsUJEWlx9DFW61btRwBEJuflVaL6HqhDBebv1sa/8vskcyaiMszxr7V58/Kh3AGC3KBX6sqU0Oc5KXWwgsYiQbNIctFZR0EbcH4aO2yoQO5RPJW8KkaJgMYec6/si/2jT1KxHsA2PAE7GQOOyhTIrTc0AEAA1/6rb8ksIlREOObv4YZFdNYLP3Kv3PGECbHgDh9Ee15MtnezHQqY9qwbh2+0T6i0heHa/1XgNOiG/Y3OpriB1vil/yerH1FJVr6i73xXAyRpgnl4EC7I=
   file_glob: true
-  file: dist/*
+  file:
+  - dist/*
+  - src/libs/java/build/libs/*
   skip_cleanup: true
   prerelease: true
   on:
