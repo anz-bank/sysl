@@ -342,7 +342,7 @@ def deserializer(context):
                 w('return model;')
 
         for (tname, t) in sorted(app.types.iteritems()):
-            if not t.HasField('relation') and t.HasField('tuple'):
+            if t.HasField('tuple'):
                 # HashSet<User defined type>
                 with java.Method(w, 'private', tname + '.View', 'deserialize' + tname + 'View',
                                     [('JsonParser', 'p')],
@@ -424,7 +424,9 @@ def deserializer(context):
                             w('default: skipJson(p);')
                     w('p.nextToken();')
                     w('return entity;')
-            continue
+
+            if not t.HasField('relation'):
+                continue
 
             pkey = datamodel.primary_key_params(t, context.module)
             pkey_fields = {f for (_, f, _) in pkey}
