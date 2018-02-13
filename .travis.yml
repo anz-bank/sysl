@@ -59,5 +59,6 @@ deploy:
   script: gradle -b src/libs/java/build.gradle bintrayUpload
   skip_cleanup: true
   on:
-    branch: feature-maven
+    repo: anz-bank/sysl
+    tags: true
     condition: "$TRAVIS_OS_NAME = linux"
