@@ -1,0 +1,10 @@
+# This Sysl file generates Java output to test "bad Java Case" issue
+# see: https://github.com/anz-bank/sysl/issues/66
+# <repo>/test/java > reljam --out gen model /article Article
+ArticleModel [package="io.sysl.issue66"]:
+
+    !type Article:
+        content <: Content
+
+    !type Content:
+        Text <: string
