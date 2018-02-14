@@ -24,7 +24,12 @@ task generateSysl(type:Exec) {
   }
 }
 
+task generateArticle(type:Exec) {
+   commandLine "reljam",  "--out", "$tempDirectory", "model", "/article", "ArticleModel"
+}
+
 compileJava.dependsOn generateSysl
+compileJava.dependsOn generateArticle
 
 sourceSets {
     main {
