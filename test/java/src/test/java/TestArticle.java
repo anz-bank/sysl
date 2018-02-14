@@ -18,19 +18,19 @@ public class TestArticle
     }
 
     public static Article articleFromJson() throws IOException {
-		JsonFactory factory = new JsonFactory();
-    	String s = "{\"content\" : { \"Text\" : \"Peace and love\" } }";
-		JsonParser  p  = factory.createParser(s);
-		p.nextToken();
-		ArticleModelJsonDeserializer ad = new ArticleModelJsonDeserializer();
-    	return ad.deserialize(p, (Article)null);
+        JsonFactory factory = new JsonFactory();
+        String s = "{\"content\" : { \"Text\" : \"Peace and love\" } }";
+        JsonParser p = factory.createParser(s);
+        p.nextToken();
+        ArticleModelJsonDeserializer ad = new ArticleModelJsonDeserializer();
+        return ad.deserialize(p, (Article)null);
     }
 
     public static Article buildArticle() {
-    	Content content = new Content();
-    	content.setText("Peace and love");
-    	Article a = new Article();
-    	a.setContent(content);
-    	return a;
+        Content content = new Content();
+        content.setText("Peace and love");
+        Article a = new Article();
+        a.setContent(content);
+        return a;
     }
 }
