@@ -40,6 +40,7 @@ if [[ $COMMAND = "prepare" ]]; then
 
     echo "------- Update version and commit ---------"
     echo "__version__ = '$VERSION'" > 'src/sysl/__version__.py' || fatal "Could not override src/sysl/__version__.py"
+    echo "syslVersion=$VERSION" > 'src/libs/java/gradle.properties' || fatal "Could not override src/sysl/__version__.py"
     git commit -am "Bump version to $VERSION" || fatal "Cannot commit version update"
 
     echo "------- Push ---------"
