@@ -3,7 +3,7 @@ Sysl
 .. image:: https://img.shields.io/travis/anz-bank/sysl/master.svg?branch=master
    :target: https://travis-ci.org/anz-bank/sysl
 .. image:: https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor
-   :target: https://ci.appveyor.com/project/anz-bank/sysl
+   :target: https://ci.appveyor.com/project/anz-bank/sysl/branch/master
 .. image:: https://img.shields.io/codecov/c/github/anz-bank/sysl/master.svg
    :target: https://codecov.io/gh/anz-bank/sysl/branch/master
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg
@@ -19,7 +19,10 @@ The set of outputs is open-ended and allows for your own extensions. Sysl has be
 
 Installation
 ------------
-Install `Python 2.7 <https://www.python.org/downloads/>`_.
+
+Windows users can download the ``sysl.exe`` from our `release page <https://github.com/anz-bank/sysl/releases>`_.
+
+Users on other operating systems need to install `Python 2.7 <https://www.python.org/downloads/>`_.
 If your specific environment causes problems you might find our `guide <docs/environment_guide.md>`_ helpful.
 
 Install Sysl with ::
