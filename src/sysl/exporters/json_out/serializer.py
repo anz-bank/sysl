@@ -396,7 +396,7 @@ def deserializer(context):
                                             f.set.type_ref.ref.path[-1])
                                     elif f.WhichOneof('type') == 'type_ref':
                                         extra = 'deserialize(p, entity.get{}())'.format(
-                                            jfname)
+                                            java.CamelCase(jfname))
                                     jsontype = ''
                                 else:
                                     raise RuntimeError(

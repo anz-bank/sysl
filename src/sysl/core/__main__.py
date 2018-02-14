@@ -88,7 +88,7 @@ def _deps_sub_parser(subparser):
     add_modules_option(argp)
 
 
-def main():
+def main(input_args=sys.argv[1:]):
     """Main function."""
     argp = argparse.ArgumentParser(
         description='System Modelling Language Toolkit',
@@ -115,7 +115,7 @@ def main():
     syslints.add_subparser(subparser)
     syslseqs.add_subparser(subparser)
 
-    args = argp.parse_args()
+    args = argp.parse_args(input_args)
 
     # Ensure the output directory exists.
     if 'output' in args and os.path.dirname(args.output):
@@ -126,7 +126,6 @@ def main():
                 raise
     try:
         args.func(args)
-        sys.exit(0)
     except Exception as e:
         if args.trace:
             raise
@@ -136,5 +135,5 @@ def main():
 
 
 if __name__ == '__main__':
-    #  debug.init()
     main()
+    sys.exit(0)
