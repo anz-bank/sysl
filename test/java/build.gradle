@@ -14,21 +14,27 @@ test {
     }
 }
 
-task generateSysl(type:Exec) {
+task generateUserFormComplex(type:Exec) {
   commandLine "reljam",  "--out", "$tempDirectory", "model", "/tuplecomplex", "UserFormComplex"
+}
 
-  standardOutput = new ByteArrayOutputStream()
+task generateUserModel(type:Exec) {
+  commandLine "reljam",  "--out", "$tempDirectory", "model", "/relationalmodel", "UserModel"
+}
 
-  ext.output = {
-    return standardOutput.toString()
-  }
+task generateUserModelFacade(type:Exec) {
+  commandLine "reljam",  "--out", "$tempDirectory", "facade", "/relationalmodel", "UserFacade"
 }
 
 task generateArticle(type:Exec) {
-   commandLine "reljam",  "--out", "$tempDirectory", "model", "/article", "ArticleModel"
+commandLine "reljam",  "--out", "$tempDirectory", "model", "/article", "ArticleModel"
 }
 
-compileJava.dependsOn generateSysl
+
+compileJava.dependsOn generateUserFormComplex
+compileJava.dependsOn generateUserModel
+generateUserModelFacade.dependsOn generateUserFormComplex
+compileJava.dependsOn generateUserModelFacade
 compileJava.dependsOn generateArticle
 
 sourceSets {

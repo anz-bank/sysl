@@ -1,0 +1,41 @@
+{
+    "Address": [
+        {
+            "AddressID": 1,
+            "Address1": "3000 Flinders Street",
+            "City": "Melbourne",
+            "State": "VIC",
+            "ZipCode": "3001",
+            "Country": "AU"
+        },
+        {
+            "AddressID": 3,
+            "Address1": "ANZ Building",
+            "Address2": "833 Collins Street",
+            "City": "Melbourne",
+            "State": "VIC",
+            "ZipCode": "3000",
+            "Country": "AU"
+        }
+    ],
+    "UserAddressRel": [
+        {
+            "UserID": 2,
+            "AddressID": 1,
+            "AddressType": "Home"
+        },
+        {
+            "UserID": 2,
+            "AddressID": 3,
+            "AddressType": "Office"
+        }
+    ],
+    "Users": [
+        {
+            "UserID": 2,
+            "PrimaryAddressID": 1,
+            "FirstName": "John",
+            "LastName": "Smith"
+        }
+    ]
+}

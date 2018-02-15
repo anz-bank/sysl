@@ -5,6 +5,7 @@ import argparse
 import collections
 import os
 import re
+import sys
 
 from sysl.core import syslloader
 from sysl.core import syslx
@@ -153,7 +154,7 @@ def export(
         java_model.export_view_class(w, context)
 
 
-def main():
+def main(input_args=sys.argv[1:]):
     argp = argparse.ArgumentParser(
         description='sysl relational Java Model exporter')
 
@@ -198,7 +199,7 @@ def main():
                       help='show version number (semver.org standard)',
                       action='version', version='%(prog)s ' + __version__)
 
-    args = argp.parse_args()
+    args = argp.parse_args(input_args)
 
     out = os.path.normpath(args.out)
 
