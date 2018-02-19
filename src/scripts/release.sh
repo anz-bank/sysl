@@ -44,7 +44,7 @@ if [[ $COMMAND = "prepare" ]]; then
     git commit -am "Bump version to $VERSION" || fatal "Cannot commit version update"
 
     echo "------- Push ---------"
-    git push -u origin || fatal "Cannot push release branch to origin"
+    git push -u origin "$RELEASE_BRANCH" || fatal "Cannot push release branch to origin"
 
     echo "------- Create PR ---------"
     CREDENTIALS=$(echo "host=github.com" | git credential fill)
