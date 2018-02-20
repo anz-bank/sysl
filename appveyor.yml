@@ -23,6 +23,9 @@ after_test:
   - XCOPY src\libs\google-site-packages-override\__init__.py  C:\Python27\Lib\site-packages\google /Y
   - python setup.py py2exe
 
+artifacts:
+  - path: dist\sysl.exe
+
 deploy:
     provider: GitHub
     release: Sysl $(APPVEYOR_REPO_TAG_NAME)
