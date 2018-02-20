@@ -38,14 +38,14 @@ See ``sysl --help`` and ``reljam --help`` for more options.
 
 Docker Users can pull the docker image ::
 
-  > docker pull anzbank/sysl:0.1.6
+  > docker pull anzbank/sysl:vX.Y.Z
 
 Consider tagging docker image to make commands shorter ::
 
-  > docker tag anzbank/sysl:0.1.6 sysl
+  > docker tag anzbank/sysl:vX.Y.Z sysl
 
-Note the image tag in ``anzbank/sysl:0.1.6``.
-Replace the tag with the latest tag from `https://hub.docker.com/r/anzbank/sysl/tags/`
+Note the image tag in ``anzbank/sysl:vX.Y.Z``.
+Replace the tag with the latest tag from `https://hub.docker.com/r/anzbank/sysl/tags/`.
 
 Try the following commands ::
 
