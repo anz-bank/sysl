@@ -36,6 +36,23 @@ Now you can execute Sysl on the command line with ::
 
 See ``sysl --help`` and ``reljam --help`` for more options.
 
+Docker Users can pull the docker image ::
+
+  > docker pull anzbank/sysl:vX.Y.Z
+
+Consider tagging docker image to make commands shorter ::
+
+  > docker tag anzbank/sysl:vX.Y.Z sysl
+
+Note the image tag in ``anzbank/sysl:vX.Y.Z``.
+Replace the tag with the latest tag from `https://hub.docker.com/r/anzbank/sysl/tags/`.
+
+Try the following commands ::
+
+  > docker run sysl
+  > docker run sysl sysl -h
+  > docker run sysl reljam -h
+
 Development
 -----------
 Install dependencies and the ``sysl`` package with symlinks ::
