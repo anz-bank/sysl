@@ -21,6 +21,7 @@ matrix:
     - brew list gradle >/dev/null 2>&1 || brew install gradle
     - export PATH=/usr/local/opt/python/libexec/bin:$PATH
 env:
+  global:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
   - DOCKER_IMAGE="anzbank/sysl:$TRAVIS_TAG"
   - secure: zGXXgT7YUCvnwTqn+xCs1VPHNDApvf2UTuVs0Jyz/2mhGt5D1PjqvRx0+OsPmy+/rOYW7hexK3ch51HU53J49cnPhi2sUfrF0GzhAYEBgQ0aULylv+KkGkMzcw9EPmtuKAXaBly8CSE8wLyyEq4Kdc0T8QNpgG3zYA10Cmuwc6jit0ItIpiiusgFX7bD3v4bilDqwjed+FNUAe2sJ7PZRVxRHY7lMs05sopRifxfXxHPXKKhGcz+/N0sEG0h1jk6Au29mhKw++f2njbiC6HjZemI88+sTvDoA1WSyvnvz1Dj3Rbc6pzXzUYOl2M7k7XWxe2R78w0L07KM0jL1LhKkqY8Za8Fg0t9z6hvSbpaEu0ffewq8ltQdzMMuFs/yAOVH9u4aEk8+5biG9iifacX+zufRWBlfXBePuu2gGPv22LsZtYNLvciZgldJ2oXtizipLyL8UGTx8hGIVBZAlfBPzzlbzzdD2AwY4FXJ0Lvc+4sBZSXX48l1GEkaX7Okn+43InKPyd67uZ1N04WA6uw15nHvkuY15rFlaf8/VGEZWJZQ576OozHIWhNqDV2yWohw0GRDeD9B9d3PX0Lnx+GSCdI8D7yylsOLUa7RbO18NH1NWCofbfuKVhmnVKeyhvgFOjtM95v2OeTbLA3jTZOzqGDyIN66JdE6L5oZ1pBLZ8=
