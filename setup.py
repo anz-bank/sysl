@@ -77,6 +77,10 @@ setup(
         'script': 'src/sysl/core/__main__.py',
         'dest_base': 'sysl',
         'icon_resources': [(1, 'docs/favicon.ico')]
+    }, {
+        'script': 'src/sysl/reljam/__main__.py',
+        'dest_base': 'reljam',
+        'icon_resources': [(1, 'docs/favicon.ico')]
     }],
     zipfile=None
 )
