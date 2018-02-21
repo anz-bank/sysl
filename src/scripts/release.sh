@@ -17,9 +17,9 @@ fi
 if [[ $COMMAND != "prepare" && $COMMAND != "deploy" ]]; then
     fatal "$USAGE"
 fi
-if [[ $(git status --porcelain 2> /dev/null | tail -n1) != "" ]]; then
-    fatal "Repo is not clean please commit or delete dirty files."
-fi
+# if [[ $(git status --porcelain 2> /dev/null | tail -n1) != "" ]]; then
+#     fatal "Repo is not clean please commit or delete dirty files."
+# fi
 
 ORIGIN_URL=$(git remote get-url origin)
 UPSTREAM="anz-bank"
@@ -29,7 +29,7 @@ echo "------- Checkout master ---------"
 git checkout master || fatal "Cannot checkout master"
 
 echo "------- Pull upstream ---------"
-git pull "$UPSTREAM_URL" master || fatal "Cannot pull  upstream master"
+# git pull "$UPSTREAM_URL" master || fatal "Cannot pull  upstream master"
 
 if [[ $COMMAND = "prepare" ]]; then
     RELEASE_BRANCH="release-v$VERSION"
@@ -55,22 +55,30 @@ if [[ $COMMAND = "prepare" ]]; then
     fi
 
     JSON="{\"title\":\"Bump version to $VERSION\",\"head\":\"$ORIGIN:$RELEASE_BRANCH\",\"base\":\"master\"}"
-    RESPONSE=$(wget --quiet --output-document=- --content-on-error \
-                   --user="$USERNAME" --password="$PASSWORD" --auth-no-challenge \
-                   --header="Content-Type: application/json" \
-                   --header="Accept: application/vnd.github.v3+json" \
-                   --post-data="$JSON" \
-                   "https://api.github.com/repos/$UPSTREAM/$REPO/pulls")
+    echo "$JSON"
+    # RESPONSE=$(wget --quiet --output-document=- --content-on-error \
+    #                --user="$USERNAME" --password="$PASSWORD" --auth-no-challenge \
+    #                --header="Content-Type: application/json" \
+    #                --header="Accept: application/vnd.github.v3+json" \
+    #                --post-data="$JSON" \
+    #                "https://api.github.com/repos/$UPSTREAM/$REPO/pulls")
+    RESPONSE=$(curl -X POST -s -S \
+            -u "$USERNAME:$PASSWORD" \
+            --header="Content-Type: application/json" \
+            --header="Accept: application/vnd.github.v3+json" \
+            -d "$JSON" "https://api.github.com/repos/$UPSTREAM/$REPO/pulls")
 
-    WGET_STATUS=$?
-    if [ $WGET_STATUS -eq 0 ]; then
+    CURL_STATUS=$?
+    if [ $CURL_STATUS -eq 0 ]; then
         GITHUB_PR_URL=$(echo "$RESPONSE" | jq -r '.html_url')
         echo "Pull request opened:"
         echo "$GITHUB_PR_URL"
         open "$GITHUB_PR_URL"
-    elif [ $WGET_STATUS -eq 6 ]; then
+    elif [ $CURL_STATUS -eq 6 ]; then
         fatal "Wrong username or password/token"
     else
+        echo "$CURL_STATUS"
+        echo "$RESPONSE"
         fatal "Unknown error"
     fi
 elif [[ $COMMAND = "deploy" ]]; then
