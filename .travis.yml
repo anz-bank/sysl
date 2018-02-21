@@ -23,7 +23,8 @@ matrix:
 env:
   global:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
-  - DOCKER_IMAGE="anzbank/sysl:$TRAVIS_TAG"
+  - DOCKER_IMAGE_LATEST="anzbank/sysl"
+  - DOCKER_IMAGE_VERSIONED="$DOCKER_IMAGE_LATEST:${TRAVIS_TAG:1}"
   - secure: zGXXgT7YUCvnwTqn+xCs1VPHNDApvf2UTuVs0Jyz/2mhGt5D1PjqvRx0+OsPmy+/rOYW7hexK3ch51HU53J49cnPhi2sUfrF0GzhAYEBgQ0aULylv+KkGkMzcw9EPmtuKAXaBly8CSE8wLyyEq4Kdc0T8QNpgG3zYA10Cmuwc6jit0ItIpiiusgFX7bD3v4bilDqwjed+FNUAe2sJ7PZRVxRHY7lMs05sopRifxfXxHPXKKhGcz+/N0sEG0h1jk6Au29mhKw++f2njbiC6HjZemI88+sTvDoA1WSyvnvz1Dj3Rbc6pzXzUYOl2M7k7XWxe2R78w0L07KM0jL1LhKkqY8Za8Fg0t9z6hvSbpaEu0ffewq8ltQdzMMuFs/yAOVH9u4aEk8+5biG9iifacX+zufRWBlfXBePuu2gGPv22LsZtYNLvciZgldJ2oXtizipLyL8UGTx8hGIVBZAlfBPzzlbzzdD2AwY4FXJ0Lvc+4sBZSXX48l1GEkaX7Okn+43InKPyd67uZ1N04WA6uw15nHvkuY15rFlaf8/VGEZWJZQ576OozHIWhNqDV2yWohw0GRDeD9B9d3PX0Lnx+GSCdI8D7yylsOLUa7RbO18NH1NWCofbfuKVhmnVKeyhvgFOjtM95v2OeTbLA3jTZOzqGDyIN66JdE6L5oZ1pBLZ8=
   - secure: '08O62/bsc7I9fc6vk5yJ3PXljjyjvVNJwT9UaYmv7pMc2YhrwaH2+MAIGMRQZqXr0dc+24OV7wBeszemKAISHYtWH/7ql5usTkOsL0Cww6wp1M01DUeZKL2YQChMKvNnjF1ajPPDWoaDOLbvt824olz7Gd2AcGR07Jlhp/+8lxovcMIGRlH5O/F/Lv2eZAaRqZ3Fh5QbJxNMquvFRGEW/eomCKGPd/8oDpIfdlDC7bsaG81pD1Y1OdRBPRKwQYy7Ur7mXllDXYonARPwlg3tWrG8i59yVd5ABRKd42+wjozeoEbt32wJgTwZcQDIqoFPSkfezGn1EFWIJoFJJJAikP0Qmof9nRHnypCpV2NPkAUP6dXwwsasrsKkVWOYynsyVWT6sDrbDXUrJhZWWoyMrUS5aoWP7agkqNZSZQkhT7bENgk4ehV/qDrgyorg6zyqugE5G7pLKYIaJ9b57S2ce7YncK27n+kfY0SfrFWhy6SENVK1acUYqzddsfLzs5kScGAyI28vci0Q3zmzQlSFa7OW+h0Kq/w5AAkTkX8apS2Fe2qyGXD46G+59V2TpwhVJu6SrH+uTXdYEg7ti9+7VfiW0Sz+YxqCkWhis3fg5ek3u6zg+mjJOomIGekMorAcpD7Nz3nOhAvIwBkt33wdqvx9hqi+nJQrHpbrBjC2wpg='
   - secure: RjMrJ7eu0rZxVb4+ytSoMy1kxnTeFnpSUo1SWu92B3KlQuIJb4nAE7x2qY4BNzh+d+eUKaeFIlACW1pEN87MYsPNp5wEG5F88Cbp+LELzXfUhMAWrj1LJXFLasHESPipye4gWUkRgUSlVjO2fdPwcM/9A7OLSt/vESBeTTuidrjmtebckX71mZp94Y029qSeXO71Oq+xc/O68Sh8KDg1FD1GSWddA5e2vV8GbJCPHtJ5IgWlqVm58gZQHJUT9pzkvrGws9UtMWeWMLHb227/IxDLE/QYNUn2pKMhz0frqq6Eq8mjCtFYX0wDLtwiBasYCRErU9Pb5zxYSJy3IDqiHDZ5Z/CT1uyplr53EddTUVC95UOCJMq73YKp0tUP5kNEX6v0RMzX54FGEelJ7Pj7AakJYqcVqFlXurMlWvakPBV5KjyLFbsFcWaAvqqgyCgGSlwylAmTGh0n8/RjD2Mw6pTDWYTPlvIzLJi52X4KmWR0ZT2+nqUY798vnO4WMTsmWnb0zi7BHX+u/rPIB20dfYM0lM8h1LuHg1oEYrgoHz0ZnfgP1jyXr/qkYJ31hFRR6vwvJjAHKn0FbAy4KPFNCWSIS8VlLegIjW1UxQddmqmhs60m6Sqg8JQMsm6DLxNb/bbTGSIOBQaVChhxrKaBcVnKNl8lGbdipPD3s18SIwU=
@@ -37,7 +38,8 @@ script:
 before_deploy:
 - python setup.py sdist bdist_wheel
 - gradle build -b src/libs/java/build.gradle :jar
-- docker build -t "$DOCKER_IMAGE" -f Dockerfile .
+- docker build -t "$DOCKER_IMAGE_LATEST" -f Dockerfile .
+- docker tag "$DOCKER_IMAGE_LATEST" "$DOCKER_IMAGE_VERSIONED"
 deploy:
 - provider: releases
   draft: true
@@ -73,7 +75,7 @@ deploy:
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
-  script: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" && docker push "$DOCKER_IMAGE"
+  script: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" && docker push "$DOCKER_IMAGE_VERSIONED" && docker push "$DOCKER_IMAGE_LATEST"
   on:
     repo: anz-bank/sysl
     tags: true
