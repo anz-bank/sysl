@@ -1,10 +1,10 @@
-The Sysl open source setup
-======================
+The Sysl open source set-up
+===========================
 
 We have recently set up what we consider to be good engineering practises for our enterprise-backed open source project [Sysl](https://github.com/anz-bank/sysl). The following is a record of systems and practises we deem essential and the products and platforms we have chosen (in parenthesis):
 
 * Open Source Licence included with source code ([Apache License 2.0](https://github.com/anz-bank/sysl/blob/master/LICENSE))
-* Version control sytem (git & Github)
+* Version control system (git & Github)
 * (Write) access control (Github organisation & teams)
 * One step build (`pip install pytest flake8 -e .`)
 * One step test (`pytest`)
@@ -12,14 +12,14 @@ We have recently set up what we consider to be good engineering practises for ou
 * Code reviews ([Github Code Reviews](https://github.com/features/code-review))
 * Code coverage ([Codecov.io](https://codecov.io/github/anz-bank/sysl/))
 * Automated release process (Tags trigger deployment from CI systems)
-* Automated quality ensurance (Pull requests are blocked until all checks pass)
+* Automated quality assurance (Pull requests are blocked until all checks pass)
 * Issue tracking ([Github Issue](https://github.com/anz-bank/sysl/issues) tracking with [template](https://github.com/anz-bank/sysl/blob/master/ISSUE_TEMPLATE.md))
-* Project Managment ([Github projects](https://github.com/anz-bank/sysl/projects))
-* Documentation in same repo as sources ([README](https://github.com/anz-bank/sysl/blob/master/README.rst) and [docs/](https://github.com/anz-bank/sysl/blob/master/docs) as starting point)
+* Project Management ([Github projects](https://github.com/anz-bank/sysl/projects))
+* Documentation in same repository as source code ([README](https://github.com/anz-bank/sysl/blob/master/README.rst) and [docs/](https://github.com/anz-bank/sysl/blob/master/docs) as starting point)
 * Chat ([Gitter](https://gitter.im/anz-bank/sysl))
 * Status dashboard ([Badges](https://github.com/anz-bank/sysl/blob/master/README.rst))
 
-The most involved pieces have been automated quality ensurance and release automation. These parts of the Sysl project also keep evolving as we add new quality checks and artefact types. They deserve a closer look.
+The most involved pieces have been automated quality assurance and release automation. These parts of the Sysl project also keep evolving as we add new quality checks and artefact types. They deserve a closer look.
 
 Our branch model is simple - we develop feature branches on our own forks and issue pull requests to `master` on `anz-bank/sysl`. As suggested by [Github Flow](https://guides.github.com/introduction/flow/), "There's only one rule: anything in the master branch is always deployable". Releases are linked to tags of commits in `master` on `anz-bank/sysl`.
 
@@ -35,7 +35,7 @@ Our original (upstream, parent) repository is owned by the Github organization [
 
 Sysl releases are available on Sysl's [Github releases page](https://github.com/anz-bank/sysl/releases) and on various package registries (e.g. PyPI, BinTray, Docker Hub).  We follow [Semver](https://semver.org/) for versioning.
 
-Our release process has been automated with script and artefact deployment by CI. A new release can be started with `src/scripts/release.sh prepare X.Y.Z`. After the automatically generated pull request is approved and merged, `src/scripts/release.sh deploy X.Y.Z` will create and push the release tag, which will then trigger Travis and Appveyor to deploy the artefacts (see the [Releasing documentation](https://github.com/anz-bank/sysl/blob/master/docs/releasing.md) for more details). 
+Our release process has been automated with script and artefact deployment by CI. A new release can be started with `src/scripts/release.sh prepare X.Y.Z`. After the automatically generated pull request is approved and merged, `src/scripts/release.sh deploy X.Y.Z` will create and push the release tag, which will then trigger Travis and Appveyor to deploy the artefacts (see the [Releasing documentation](https://github.com/anz-bank/sysl/blob/master/docs/releasing.md) for more details).
 
-Happy coding and project setup!
+Happy coding and project set-up!
 
