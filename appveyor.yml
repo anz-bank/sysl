@@ -24,13 +24,13 @@ after_test:
   - python setup.py py2exe
 
 artifacts:
-  - path: dist\sysl.exe
+  - path: 'dist\*.exe'
 
 deploy:
     provider: GitHub
     release: Sysl $(APPVEYOR_REPO_TAG_NAME)
     tag: $(APPVEYOR_REPO_TAG_NAME)
-    artifact: dist\sysl.exe
+    artifact: 'dist\*.exe'
     draft: true
     prerelease: true
     repository: anz-bank/sysl
