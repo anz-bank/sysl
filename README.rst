@@ -20,9 +20,12 @@ The set of outputs is open-ended and allows for your own extensions. Sysl has be
 Installation
 ------------
 
-Windows users can download the ``sysl.exe`` from our `release page <https://github.com/anz-bank/sysl/releases>`_.
+Windows users can download the ``sysl-bundle-windows.zip``, containing ``sysl.exe`` and ``reljam.exe``, from our `release page <https://github.com/anz-bank/sysl/releases>`_.
 
-Users on other operating systems need to install `Python 2.7 <https://www.python.org/downloads/>`_.
+Users on other operating systems need to work with Python or Docker.
+
+#### Python
+Install `Python 2.7 <https://www.python.org/downloads/>`_.
 If your specific environment causes problems you might find our `guide <docs/environment_guide.md>`_ helpful.
 
 Install Sysl with ::
@@ -36,21 +39,22 @@ Now you can execute Sysl on the command line with ::
 
 See ``sysl --help`` and ``reljam --help`` for more options.
 
-Docker Users can pull the docker image ::
+#### Docker
+Install `Docker <https://docs.docker.com/install/>`_ and pull the Docker Image with ::
 
   > docker pull anzbank/sysl
 
-Consider tagging docker image to make commands shorter ::
+Consider tagging the docker image to make commands shorter ::
 
   > docker tag anzbank/sysl sysl
-
-See `https://hub.docker.com/r/anzbank/sysl/` for more details.
 
 Try the following commands ::
 
   > docker run sysl
   > docker run sysl sysl -h
   > docker run sysl reljam -h
+
+See `https://hub.docker.com/r/anzbank/sysl/` for more details.
 
 Development
 -----------
