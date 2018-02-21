@@ -24,6 +24,8 @@ Travis CI creates and deploys `sysl-X.Y.Z-py2-none-any.whl`, `sysl-X.Y.Z.tar.gz`
 
 Travis also deploys Sysl's wheel and sdist distributions to [PyPI](https://pypi.python.org/pypi/sysl) and the Sysl Java library `sysl-lib-X.Y.Z.jar` to [BinTray](https://bintray.com/anz-bank/maven/sysl-lib/).
 
+Travis also pushes Sysl's Docker Images `anzbank/sysl` and `anzbank/sysl:X.Y.Z` to Docker Hub. See `https://hub.docker.com/r/anzbank/sysl/` for more details.
+
 Sysl generated Java code might have a dependency on `sysl-lib-X.Y.Z.jar`. To resolve this dependency with `gradle`, add `compile 'io.sysl:sysl-lib:X.Y.Z'` to your `build.gradle` file and for `maven` use:
 
 ```
