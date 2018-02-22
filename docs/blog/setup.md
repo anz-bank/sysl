@@ -1,5 +1,5 @@
-The Sysl open source set-up
-===========================
+The Sysl open source setup
+==========================
 
 We, some of the ANZ open source developers, have recently set up what we consider to be good engineering practises for our enterprise-backed open source project [Sysl](https://github.com/anz-bank/sysl). The following is a record of systems and practises we deem essential and the products and platforms we have chosen (in parenthesis):
 
@@ -37,5 +37,5 @@ Sysl releases are available on Sysl's [Github releases page](https://github.com/
 
 Our release process has been automated with script and artefact deployment by CI. A new release can be started with `src/scripts/release.sh prepare X.Y.Z`. After the automatically generated pull request is approved and merged, `src/scripts/release.sh deploy X.Y.Z` will create and push the release tag, which will then trigger Travis and Appveyor to deploy the artefacts (see the [Releasing documentation](https://github.com/anz-bank/sysl/blob/master/docs/releasing.md) for more details).
 
-Happy coding and project set-up!
+Happy coding and project setup!
 
