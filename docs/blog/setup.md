@@ -1,7 +1,7 @@
 The Sysl open source set-up
 ===========================
 
-We have recently set up what we consider to be good engineering practises for our enterprise-backed open source project [Sysl](https://github.com/anz-bank/sysl). The following is a record of systems and practises we deem essential and the products and platforms we have chosen (in parenthesis):
+We, some of the ANZ open source developers, have recently set up what we consider to be good engineering practises for our enterprise-backed open source project [Sysl](https://github.com/anz-bank/sysl). The following is a record of systems and practises we deem essential and the products and platforms we have chosen (in parenthesis):
 
 * Open Source Licence included with source code ([Apache License 2.0](https://github.com/anz-bank/sysl/blob/master/LICENSE))
 * Version control system (git & Github)
