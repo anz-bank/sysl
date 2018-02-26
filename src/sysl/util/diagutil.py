@@ -66,7 +66,7 @@ def output_plantuml(args, puml_input):
                 if args.dry_run:
                     print '... not really (dry-run)',
     else:
-        (open(args.output, 'w') if args.output else sys.stdout).write(out)
+        (open(args.output, 'wb') if args.output else sys.stdout).write(out)
         # Uncomment this to print out Plant UML
         #(open(args.output + '.puml', 'w') if args.output else sys.stdout).write(puml_input)
 
