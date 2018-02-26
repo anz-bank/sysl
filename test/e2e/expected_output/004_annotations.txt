@@ -5,9 +5,9 @@ apps {
       part: "MyApp"
     }
     endpoints {
-      key: "* "
+      key: "*"
       value {
-        name: "* "
+        name: "*"
         stmt {
           call {
             target {
