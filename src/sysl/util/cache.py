@@ -59,7 +59,7 @@ class Connection(object):
             try:
                 os.remove(DBPATH)
             except BaseException:
-                print 'Cannot remove db:', DBPATH
+                print 'Warning: Cannot remove db:', DBPATH
             self._connect()
 
             self.conn.executescript(self._SCHEMA)
