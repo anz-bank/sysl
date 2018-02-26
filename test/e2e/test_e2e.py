@@ -7,6 +7,7 @@ import pytest
 
 from os import path, remove, listdir
 from subprocess import call
+import shutil
 
 REPO_ROOT = path.normpath(path.join(path.dirname(__file__), '..', '..'))
 
@@ -18,19 +19,20 @@ def remove_file(fname):
         pass
 
 
-@pytest.mark.parametrize("fname, subprocess", [
-    ('001_annotations', True),
-    ('002_annotations', True),
-    ('003_annotations', True),
-    ('004_annotations', True),
-    ('005_annotations', True),
-    ('001_annotations', False),
-    ('002_annotations', False),
-    ('003_annotations', False),
-    ('004_annotations', False),
-    ('005_annotations', False)
+@pytest.mark.unit
+@pytest.mark.parametrize("fname", [
+    ('001_annotations'),
+    ('002_annotations'),
+    ('003_annotations'),
+    ('004_annotations'),
+    ('005_annotations'),
+    ('001_annotations'),
+    ('002_annotations'),
+    ('003_annotations'),
+    ('004_annotations'),
+    ('005_annotations')
 ])
-def test_e2e(fname, subprocess):
+def test_e2e(fname, syslexe):
     e2e_dir = path.normpath(path.dirname(__file__))
     e2e_rel_dir = path.relpath(e2e_dir, start=REPO_ROOT)
 
@@ -42,32 +44,38 @@ def test_e2e(fname, subprocess):
 
     args = ['--root', root, 'textpb', '-o', out_fname, model]
 
-    if subprocess:
-        cmd = ['sysl'] + args
-        print 'subprocess call: ', ' '.join(cmd)
-        call(cmd)
+    if syslexe:
+        print 'Sysl exe call'
+        call([syslexe] + args)
     else:
-        print 'python function call: main([{}])'.format(', '.join(args))
+        print 'Sysl python function call'
         main(args)
 
     expected_fname = path.join(e2e_dir, 'expected_output', fname + '.txt')
     assert filesAreIdentical(expected_fname, out_fname)
 
 
-@pytest.mark.parametrize("mode, module, app, output, expected", [
+@pytest.mark.unit
+@pytest.mark.parametrize("mode, module, app, java_pkg, expected", [
     ('model', '/test/java/tuplecomplex', 'UserFormComplex', 'io/sysl/reljam/gen/tuple/complex/', 'test_reljam_1'),
     ('model', '/test/java/relationalmodel', 'UserModel', 'io/sysl/model/', 'test_reljam_2'),
     ('facade', '/test/java/relationalmodel', 'UserFacade', 'io/sysl/facade/', 'test_reljam_3'),
 ])
-def test_reljam(mode, module, app, output, expected):
+def test_reljam(mode, module, app, java_pkg, expected, reljamexe):
     java = 'tmp/src/main/java'
     expected_file = path.join(REPO_ROOT, 'test/e2e/expected_output', expected + '.txt')
     out_dir = path.join(REPO_ROOT, java)
-    output = path.join(REPO_ROOT, java, output)
+    shutil.rmtree(out_dir, ignore_errors=True)
 
     args = ["--out", out_dir, mode, module, app]
-    reljam(args)
+    if reljamexe:
+        print 'Reljam exe call'
+        call([reljamexe] + args)
+    else:
+        print 'Reljam python function call'
+        reljam(args)
+
     with open(expected_file) as f:
         expected = f.read().splitlines().sort()
-    out = listdir(output).sort()
-    assert expected == out
+    actual = listdir(path.join(out_dir, java_pkg)).sort()
+    assert expected == actual
