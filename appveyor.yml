@@ -6,8 +6,7 @@ environment:
 install:
   - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
   - pip install --upgrade setuptools
-  # py2exe for Python 2.7 missing on PyPI (https://stackoverflow.com/q/23734172)
-  - pip install http://sourceforge.net/projects/py2exe/files/latest/download?source=files
+  - pip install py2exe_py2
   - pip install . pytest flake8
   - choco install gradle
 
