@@ -55,11 +55,11 @@ class Connection(object):
             if db_ver == schema_ver:
                 break
 
-            self.conn = None
+            self.conn.close()
             try:
                 os.remove(DBPATH)
             except BaseException:
-                print '=== Cannot remove db:', DBPATH
+                print 'Warning: Cannot remove db:', DBPATH
             self._connect()
 
             self.conn.executescript(self._SCHEMA)
