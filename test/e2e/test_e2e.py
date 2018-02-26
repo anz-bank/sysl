@@ -14,6 +14,7 @@ IN_DIR = path.join(path.normpath(path.dirname(__file__)), 'input')
 EXPECTED_DIR = path.join(path.normpath(path.dirname(__file__)), 'expected_output')
 ACTUAL_DIR = path.join(REPO_ROOT, 'tmp', 'e2e_actual_output')
 
+
 def remove_file(fname):
     try:
         remove(fname)
@@ -69,6 +70,7 @@ def test_reljam(mode, module, app, java_pkg, expected, reljamexe):
         expected = f.read().splitlines().sort()
     actual = listdir(path.join(out_dir, java_pkg)).sort()
     assert expected == actual
+
 
 @pytest.mark.unit
 def test_sysl_diagramm(syslexe):
