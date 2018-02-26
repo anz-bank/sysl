@@ -348,5 +348,4 @@ def load(names, validate, root):
     except RuntimeError as ex:
         raise Exception('load({!r})'.format(names), ex, sys.exc_info()[2])
 
-    syslparse.TODO_NAG.nag()
     return (module, deps, imports)
