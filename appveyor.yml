@@ -6,7 +6,8 @@ environment:
 install:
   - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
   - pip install --upgrade setuptools
-  - pip install py2exe_py2
+  # py2exe for Python 2.7 missing on PyPI (https://stackoverflow.com/q/23734172)
+  - pip install http://sourceforge.net/projects/py2exe/files/latest/download?source=files
   - pip install . pytest flake8
   - choco install gradle
 
@@ -14,6 +15,7 @@ build: off
 
 test_script:
   - pytest
+  - pytest test/e2e --syslexe=sysl --reljamexe=reljam
   - flake8
   - gradle --no-daemon -b test\java\build.gradle test
 
@@ -22,6 +24,7 @@ after_test:
   - msiexec /i C:\VCForPython27.msi /quiet /q
   - XCOPY src\libs\google-site-packages-override\__init__.py  C:\Python27\Lib\site-packages\google /Y
   - python setup.py py2exe
+  - pytest test/e2e --syslexe=dist/sysl.exe --reljamexe=dist/reljam.exe
 
 artifacts:
   - path: 'dist'
