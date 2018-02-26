@@ -24,7 +24,8 @@ Windows users can download the ``sysl-bundle-windows.zip``, containing ``sysl.ex
 
 Users on other operating systems need to work with Python or Docker.
 
-#### Python
+Python
+~~~~~~
 Install `Python 2.7 <https://www.python.org/downloads/>`_.
 If your specific environment causes problems you might find our `guide <docs/environment_guide.md>`_ helpful.
 
@@ -39,7 +40,8 @@ Now you can execute Sysl on the command line with ::
 
 See ``sysl --help`` and ``reljam --help`` for more options.
 
-#### Docker
+Docker
+~~~~~
 Install `Docker <https://docs.docker.com/install/>`_ and pull the Docker Image with ::
 
   > docker pull anzbank/sysl
