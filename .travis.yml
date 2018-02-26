@@ -34,6 +34,7 @@ install:
 script:
 - flake8
 - pytest
+- pytest test/e2e --syslexe=sysl --reljamexe=reljam
 - gradle test -b test/java/build.gradle
 before_deploy:
 - python setup.py sdist bdist_wheel
