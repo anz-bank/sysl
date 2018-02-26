@@ -103,7 +103,6 @@ def main(input_args=sys.argv[1:]):
                       help='show version number (semver.org standard)',
                       action='version', version='%(prog)s ' + __version__)
     argp.add_argument('--trace', '-t',
-                      help=argparse.SUPPRESS,
                       action='store_true', default=False)
 
     subparser = argp.add_subparsers(help='\n'.join(['sub-commands',

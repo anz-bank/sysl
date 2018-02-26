@@ -750,64 +750,6 @@ class _ExprParser(simple_parser.SimpleParser):
         return False
 
 
-class TodoNagger(object):
-    STATE_PATH = cache.DBPATH
-
-    def __init__(self):
-        self._conn = sqlite3.connect(self.STATE_PATH)
-
-        try:
-            self._conn.execute(
-                'CREATE TABLE last_nagged (at_time, __nonce__ PRIMARY KEY DEFAULT 0)')
-        except BaseException:
-            pass
-
-        try:
-            [(self._last_nagged,)] = self._conn.execute(
-                'SELECT at_time FROM last_nagged')
-        except BaseException:
-            self._last_nagged = 0
-
-        self._should_nag = None
-        self._nags = []
-
-    def __call__(self, path, line_no, line):
-        if self._should_nag is None:
-            t = time.time()
-            self._should_nag = self._last_nagged + 3600 < t
-            with self._conn:
-                self._conn.execute(
-                    'INSERT OR REPLACE INTO last_nagged (at_time) VALUES (?)', (t,))
-
-            # TODO: refactor with dup in confluence.py
-            user = os.getenv(USER_ENV)
-            env_hint = ' (={} env var)'.format(USER_ENV)
-            if user is None:
-                user = getpass.getuser()
-
-            self._todo = 'TODO({})'.format(getpass.getuser())
-
-        if self._should_nag:
-            if self._todo in line:
-                self._nags.append(
-                    '\033[1m{}\033[0m@\033[1;33m{}\033[0m: \033[1;35m{}\033[0m'.format(
-                        path, line_no, line))
-
-    def nag(self):
-        if self._nags:
-            for nag in self._nags:
-                print >>sys.stderr, nag
-            del self._nags[:]
-            print >>sys.stderr
-            print >>sys.stderr, (
-                '\033[1;31mPausing to let this hourly reminder sink in...\033[0m'),
-            time.sleep(5)
-            print >>sys.stderr
-
-
-TODO_NAG = TodoNagger()
-
-
 class Parser(object):
     def source_context(self, start=None, end=None):
         if start is None:
@@ -932,9 +874,7 @@ class Parser(object):
                 if new_i is None:
                     return (i, result, last_nonempty_line_no)
                 i = new_i
-                if line.startswith('#'):
-                    TODO_NAG(path, line_no, line)
-                else:
+                if not line.startswith('#'):
                     result.append((line_no, end_line_no, line, children))
 
             if last_nonempty_line_no is None:
