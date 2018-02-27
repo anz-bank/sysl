@@ -41,8 +41,8 @@ def output_plantuml(args, puml_input):
               os.getenv('SYSL_PLANTUML', 'http://localhost:8080/plantuml'))
     if mode:
         def calc():
-            puml = plantuml.PlantUML('{}/{}/'.format(server, mode))
-            response = requests.get(puml.get_url(puml_input))
+            data = plantuml.deflate_and_encode(puml_input)
+            response = requests.get('{}/{}/{}'.format(server, mode, data))
             response.raise_for_status()
             return response.content
         out = cache.get(mode + ':' + puml_input, calc)
