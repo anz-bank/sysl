@@ -10,6 +10,9 @@ from subprocess import call
 import shutil
 
 REPO_ROOT = path.normpath(path.join(path.dirname(__file__), '..', '..'))
+IN_DIR = path.join(path.normpath(path.dirname(__file__)), 'input')
+EXPECTED_DIR = path.join(path.normpath(path.dirname(__file__)), 'expected_output')
+ACTUAL_DIR = path.join(REPO_ROOT, 'tmp', 'e2e_actual_output')
 
 
 def remove_file(fname):
@@ -20,29 +23,18 @@ def remove_file(fname):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("fname", [
+@pytest.mark.parametrize("name", [
+    ('000_annotations'),
     ('001_annotations'),
     ('002_annotations'),
     ('003_annotations'),
-    ('004_annotations'),
-    ('005_annotations'),
-    ('001_annotations'),
-    ('002_annotations'),
-    ('003_annotations'),
-    ('004_annotations'),
-    ('005_annotations')
+    ('004_annotations')
 ])
-def test_e2e(fname, syslexe):
-    e2e_dir = path.normpath(path.dirname(__file__))
-    e2e_rel_dir = path.relpath(e2e_dir, start=REPO_ROOT)
+def test_e2e(name, syslexe):
+    actual = path.join(ACTUAL_DIR, name + '.txt')
+    remove_file(actual)
 
-    root = path.join(e2e_dir, 'input')
-    model = '/' + fname
-    out_dir = path.join(REPO_ROOT, 'tmp', e2e_rel_dir)
-    out_fname = path.join(out_dir, 'actual_output', fname + '.txt')
-    remove_file(out_fname)
-
-    args = ['--root', root, 'textpb', '-o', out_fname, model]
+    args = ['--root', IN_DIR, 'textpb', '-o', actual, '/' + name]
 
     if syslexe:
         print 'Sysl exe call'
@@ -51,23 +43,22 @@ def test_e2e(fname, syslexe):
         print 'Sysl python function call'
         main(args)
 
-    expected_fname = path.join(e2e_dir, 'expected_output', fname + '.txt')
-    assert filesAreIdentical(expected_fname, out_fname)
+    expected = path.join(EXPECTED_DIR, name + '.txt')
+    assert filesAreIdentical(expected, actual)
 
 
 @pytest.mark.unit
 @pytest.mark.parametrize("mode, module, app, java_pkg, expected", [
-    ('model', '/test/java/tuplecomplex', 'UserFormComplex', 'io/sysl/reljam/gen/tuple/complex/', 'test_reljam_1'),
-    ('model', '/test/java/relationalmodel', 'UserModel', 'io/sysl/model/', 'test_reljam_2'),
-    ('facade', '/test/java/relationalmodel', 'UserFacade', 'io/sysl/facade/', 'test_reljam_3'),
+    ('model', '/010_reljam_tuplecomplex', 'UserFormComplex', 'io/sysl/reljam/gen/tuple/complex/', '010_reljam'),
+    ('model', '/011_reljam_relationalmodel', 'UserModel', 'io/sysl/model/', '011_reljam'),
+    ('facade', '/011_reljam_relationalmodel', 'UserFacade', 'io/sysl/facade/', '012_reljam'),
 ])
 def test_reljam(mode, module, app, java_pkg, expected, reljamexe):
-    java = 'tmp/src/main/java'
     expected_file = path.join(REPO_ROOT, 'test/e2e/expected_output', expected + '.txt')
-    out_dir = path.join(REPO_ROOT, java)
+    out_dir = path.join(ACTUAL_DIR, 'reljam')
     shutil.rmtree(out_dir, ignore_errors=True)
 
-    args = ["--out", out_dir, mode, module, app]
+    args = ["--root", IN_DIR, "--out", out_dir, mode, module, app]
     if reljamexe:
         print 'Reljam exe call'
         call([reljamexe] + args)
@@ -79,3 +70,23 @@ def test_reljam(mode, module, app, java_pkg, expected, reljamexe):
         expected = f.read().splitlines().sort()
     actual = listdir(path.join(out_dir, java_pkg)).sort()
     assert expected == actual
+
+
+@pytest.mark.unit
+def test_sysl_diagramm(syslexe):
+    name = '020_diagram'
+    actual_pattern = path.join(ACTUAL_DIR, name + '-%(epname).svg')
+    fname = name + '-SEQ-ATM.svg'
+    actual = path.join(ACTUAL_DIR, fname)
+    remove_file(actual)
+    args = ['--root', IN_DIR, 'sd', '-o', actual_pattern, '/' + name, '-a', 'Bank :: Sequences']
+
+    if syslexe:
+        print 'Sysl exe call'
+        call([syslexe] + args)
+    else:
+        print 'Sysl python function call'
+        main(args)
+
+    expected = path.join(EXPECTED_DIR, fname)
+    assert filesAreIdentical(expected, actual)

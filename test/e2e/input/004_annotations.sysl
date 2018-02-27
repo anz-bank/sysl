@@ -14,5 +14,5 @@ MyApp:
         ThatApp <- bar
 
 MyApp:
-    * :
+    *:
         ThatApp <- foo [~abc]
