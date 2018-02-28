@@ -88,5 +88,18 @@ def test_sysl_diagramm(syslexe):
         print 'Sysl python function call'
         main(args)
 
+    with open(actual, 'r') as f:
+        svg = f.read()
+
+    assert svg.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
+    assert 'SEQ-ATM: Submit Application (Bankers Desktop)</text>' in svg
+    assert 'ATM</text>' in svg
+    assert 'AccountTransactionApi</text>' in svg
+    assert 'BankDatabase</text>' in svg
+    assert 'GetBalance</text>' in svg
+    assert 'GET /accounts/{account_number}</text>' in svg
+    assert "/accounts/{account_number}/deposit</text>" in svg
+    assert '@startuml' in svg
+
     expected = path.join(EXPECTED_DIR, fname)
     assert filesAreIdentical(expected, actual)
