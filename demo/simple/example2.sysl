@@ -3,7 +3,7 @@
 InternetBanking:
     GetCustomer:
         Customer <- GetCustomer
-    GetAccountByCustomer:  
+    GetAccountByCustomer:
         Ledger <- GetAccountByCustomer
 
 Customer:
