@@ -1,4 +1,7 @@
-apply plugin: "java-library"
+apply plugin: "java"
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 def tempDirectory = "../../tmp/src/main/java"
 
@@ -59,8 +62,8 @@ clean {
 }
 
 dependencies {
-    api "joda-time:joda-time:2.5"
-    api "org.apache.commons:commons-lang3:3.5"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3"
-    testImplementation "junit:junit:4.12"
+    compile "joda-time:joda-time:2.5"
+    compile "org.apache.commons:commons-lang3:3.5"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3"
+    testCompile "junit:junit:4.12"
 }

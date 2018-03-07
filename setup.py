@@ -72,7 +72,7 @@ setup(
     # py2exe
     options={'py2exe': {
         'bundle_files': 1,
-        'dll_excludes': ['w9xpopen.exe']
+        'dll_excludes': ['w9xpopen.exe', 'libstdc++-6.dll', 'libgcc_s_dw2-1.dll']
     }},
     console=[{
         'script': 'src/sysl/core/__main__.py',
