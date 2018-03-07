@@ -44,15 +44,9 @@ Download and save the [Bank demo files](https://github.com/anz-bank/sysl/tree/ma
 * [bank.sysl](https://raw.githubusercontent.com/anz-bank/sysl/master/demo/bank/bank.sysl)
 * [project.sysl](https://raw.githubusercontent.com/anz-bank/sysl/master/demo/bank/project.sysl)
 
-Sysl uses [PlantUML](http://plantuml.com/) for its diagram creation. You therefore need to set the `SYSL_PLANTUML` environment variable with
+Sysl uses [PlantUML](http://plantuml.com/) for its diagram creation. You therefore need to set the `SYSL_PLANTUML` environment variable or pass a valid PlantUML service URL via `-p`
 
-* `set SYSL_PLANTUML=http://www.plantuml.com/plantuml` on Windows
-* `export SYSL_PLANTUML=http://www.plantuml.com/plantuml` on MacOS, Linux
-* `-e SYSL_PLANTUML=http://www.plantuml.com/plantuml` as Docker command line option
-
-then generate sequence diagrams with
-
-	sysl sd -o "out/sd-%(epname).png" /project -a "Bank :: Sequences" -v
+	sysl sd -p "http://www.plantuml.com/plantuml" -o "out/sd-%(epname).png" /project -a "Bank :: Sequences" -v
 
 You can also [install PlantUML](http://plantuml.com/starting) locally and update the environment variable accordingly, e.g. `SYSL_PLANTUML=http://localhost:8080/plantuml`.
 

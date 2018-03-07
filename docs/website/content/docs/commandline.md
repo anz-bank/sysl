@@ -8,14 +8,15 @@ bref: "Sysl and reljam command line arguments"
 toc: true
 ---
 
-TODO(juliaogris):
+Sysl consists of two executables: `sysl` and `reljam`. `sysl` is mainly concerned with diagram creation whereas `reljam` generates different types of source code output.
 
-* Explain `--rot`
-* Positional `/module` argument e.g. `sysl pb --help`
-* `sysl|reljam <subcommand> --help`
-* `--help`
-* `--version`
-* `--trace` (missing for `reljam`!)
+[//]: # "TODO(juliaogris):"
+[//]: # "* Explain `--root`"
+[//]: # "* Positional `/module` argument e.g. `sysl pb --help`"
+[//]: # "* `sysl|reljam <subcommand> --help`"
+[//]: # "* `--help`"
+[//]: # "* `--version`"
+[//]: # "* `--trace` (missing for `reljam`!)"
 
 sysl
 ----

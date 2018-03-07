@@ -5,13 +5,13 @@
 
 <div id="hero" class="wrap">
   <h1>{{ .Site.Params.author}} Blog</h1>
-    <p>Our vision, news and ideas, and whatever feels important.<br> 
+    <p>Our vision, news and ideas, and whatever feels important.<br>
 </div>
 <ul id="posts">
  {{ range .Paginator.Pages.ByWeight }} {{ partial "page-summary" . }} {{ end }}
 </ul>
 
-{{ end }} 
-{{ define "footer" }} 
-  {{ partial "footer" . }} 
+{{ end }}
+{{ define "footer" }}
+  {{ partial "footer" . }}
 {{ end }}

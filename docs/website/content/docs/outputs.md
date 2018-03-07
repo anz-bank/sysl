@@ -8,24 +8,25 @@ bref: "Explore various output formats from diagrams to code"
 toc: false
 ---
 
-TODO(juliaogris)
-
 Sysl outputs
 ------------
+| Command | Description |
+|---------|-------------|
+| data    | Data model diagrams |
+| ints    | Integration Diagrams |
+| sd      | Sequence Diagrams |
+| pb      | Binary Protocol Buffer files of the Sysl definitions (plugins)    |
+| textpb  | Text based Protocol Buffer files of the Sysl definitions (plugins, debugging) |
 
-* pb
-* textpb
-* deps
-* data
-* ints
-* sd
+
 
 Reljam outputs
 --------------
-
-* model
-* facade
-* view
-* xsd
-* swagger
-* spring-rest-service
+| Command | Description |
+|---------|-------------|
+| model   | Java model implementation (in memory) | 
+| facade  | Java facade implementation (restricted access to creating and populating models) |
+| view    | Java implementation of sysl model transformatios|
+| xsd     | XSD represtation of sysl model | 
+| swagger | Swagger representation of REST APIs and models |
+| spring-rest-service | Java Spring REST API implementation |

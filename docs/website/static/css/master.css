@@ -1,3 +1,14 @@
+html, body {
+  min-height: 100vh;
+  position: relative;
+}
+
+footer {
+  width: 100%;
+  position:absolute;
+  bottom:0;
+}
+
 body {
   font-family: Lato, Arial, sans-serif; }
 
@@ -344,7 +355,9 @@ h1, h2, h3, h4, h5, h6 {
 
 #main {
   margin: auto;
-  max-width: 1128px; }
+  max-width: 1128px;
+  margin-bottom: 70px;
+}
 
 body.docs #main,
 body.grafs-index #main,
@@ -734,10 +747,6 @@ body.page-account #hero {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.5); }
 
-#post-box {
-  max-width: 740px;
-  margin: auto; }
-
 #post {
   font-size: 18px;
   line-height: 32px;
@@ -774,6 +783,7 @@ body.page-account #hero {
 
 #kube-features {
   margin-top: 104px;
+  margin-bottom: 170px;
   text-align: center; }
   #kube-features h3 {
     margin-top: 0; }
@@ -794,7 +804,7 @@ body.page-account #hero {
   margin: auto;
   font-size: 17px;
   line-height: 28px;
-  margin-bottom: 104px;
+  padding-bottom: 174px;
   border-top: 0px solid rgba(0, 0, 0, 0.07); }
   #kube-faq h2 {
     font-size: 24px;
@@ -805,7 +815,9 @@ body.page-account #hero {
     margin-bottom: 32px; }
 
 #components {
-  text-align: center; }
+  text-align: center;
+  margin-left: 20px;
+  margin-right: 20px; }
   #components.lists {
     text-align: left; }
     #components.lists .item {
@@ -866,6 +878,13 @@ body.page-account #hero {
   #components #docs-search-results p {
     max-width: none;
     margin-bottom: 16px; }
+
+@media (max-width: 768px) {
+  #components {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
 
 .demo-head {
   font-size: 24px;
@@ -973,9 +992,9 @@ tr.border-none td {
   border: 2px solid #eee; }
 
 #footer {
+  width: 100%;
   display: flex;
   border-top: 1px solid #eee;
-  margin: 104px 0;
   padding: 0 28px;
   padding-top: 24px;
   font-size: 13px;
@@ -997,6 +1016,12 @@ tr.border-none td {
   #footer nav ul li a:hover {
     color: #000;
     text-decoration: underline; }
+
+#post-box {
+  max-width: 740px;
+  margin: auto;
+  padding-bottom: 160px;
+}
 
 @media (max-width: 768px) {
   #top {
@@ -1039,7 +1064,9 @@ tr.border-none td {
   #post-box,
   #main {
     padding-left: 20px;
-    padding-right: 20px; }
+    padding-right: 20px;
+    padding-bottom: 240px;
+  }
   #action-buttons .button,
   #action-buttons button {
     margin: 8px 0; }
@@ -1062,7 +1089,8 @@ tr.border-none td {
     font-size: 20px;
     line-height: 32px; }
   #docs-main {
-    display: block; }
+    display: block;
+  }
     #docs-main #side,
     #docs-main #area {
       width: 100%;
@@ -1122,19 +1150,19 @@ tr.border-none td {
   color: #f03c69;
 }
 #docs-area {
-    max-width: 940px;
-    padding-left: 340px;
-    padding-right: 20px;
-    border: 0px solid green;
+  max-width: 940px;
+  padding-left: 340px;
+  padding-right: 20px;
+  padding-bottom: 80px;
 }
+
 @media (max-width: 960px) {
   #docs-area {
     padding-left: 20px;
     padding-right: 20px;
+    padding-bottom: 240px;
   }
-}
-
-#docs-main {
-  border: 0px solid blue;
-  display: flex;
+  #kube-faq {
+    padding-bottom: 240px;
+  }
 }

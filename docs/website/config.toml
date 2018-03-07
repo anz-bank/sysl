@@ -17,5 +17,5 @@ Paginate = 4
     url = "/blog/"
 [[menu.main]]
     weight = 3
-    name = "Faq"
+    name = "FAQ"
     url = "/faq/"
