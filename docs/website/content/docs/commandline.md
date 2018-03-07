@@ -21,15 +21,14 @@ Sysl consists of two executables: `sysl` and `reljam`. `sysl` is mainly concerne
 sysl
 ----
 ```
-
 > sysl --help
 usage: sysl [-h] [--no-validations] [--root ROOT] [--version] [--trace]
-            {pb,textpb,deps,data,ints,sd} ...
+            {pb,textpb,data,ints,sd} ...
 
 System Modelling Language Toolkit
 
 positional arguments:
-  {pb,textpb,deps,data,ints,sd}
+  {pb,textpb,data,ints,sd}
                         sub-commands
                         more help with: sysl <sub-command> --help
                         eg: sysl pb --help
@@ -41,7 +40,7 @@ optional arguments:
   --root ROOT, -r ROOT  sysl root directory for input files (default: .)
   --version, -v         show version number (semver.org standard)
   --trace, -t
-```
+  ```
 
 
 reljam
