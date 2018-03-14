@@ -16,6 +16,6 @@ In order to update CSS, work with the unminified CSS in `static/css/` and change
 3. `rm static/css/styles.min.css`
 4. `hugo`
 5. `npm install -g purify-css` (first time only)
-6. `purifycss static/css/*.css public/*/*.html public/*.html  -im -o static/css/styles.min.css`
+6. `purifycss static/css/*.css public/**/*.html public/*.html static/js/jquery-2.1.4.min.js static/js/kube.min.js -im -o static/css/styles.min.css`
 7. Revert `layouts/_default/baseof.html` to use `styles.min.css` again
 
