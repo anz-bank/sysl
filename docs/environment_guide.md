@@ -15,7 +15,7 @@ If you are behind an NTLM proxy, you might need to setup `cntlm` to work effecti
 In case of SSL certificate interception you might need to add `--trusted-host pypi.python.org` to your pip commands or setup a global `pip.conf`
 file (see [official docs](https://pip.pypa.io/en/stable/user_guide/#config-file) or [Stackoverflow](https://stackoverflow.com/a/46410817)).
 
-Gradle setup in coporate environment
+Gradle setup in corporate environment
 ------------------------------------
 In order to run Java tests install [Java 8](https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html) and [gradle](https://gradle.org/install/) and execute:
 
