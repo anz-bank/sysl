@@ -6,8 +6,13 @@ import (
 
 func TestLexer(t *testing.T) {
 	content := `keywords:
+<<<<<<< HEAD
         while | return |
         if | else | import`
+=======
+			while | return |
+			if | else | import`
+>>>>>>> Rework make grammar calls and other review comments
 
 	regexes := make([]string, 7)
 	regexes[0] = `[|]`
