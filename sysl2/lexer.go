@@ -9,11 +9,11 @@ import (
 )
 
 type lexer struct {
-	currentIndex     int
-	regexs           []*regexp.Regexp
-	content          string
+	currentIndex        int
+	regexs              []*regexp.Regexp
+	content             string
 	WS               *regexp.Regexp
-	ignoreWhiteSpace bool
+	ignoreWhiteSpace    bool
 }
 
 var arr []string
@@ -58,7 +58,7 @@ func buildFromChoice(choice *sysl.Choice) {
 	}
 }
 
-// NOTE: assigns new value to Atom.Id
+// assigns new value to Atom.Id
 func getTerminals(rules map[string]*sysl.Rule) []string {
 	arr = make([]string, 0)
 	tokens = make(map[string]int32)
