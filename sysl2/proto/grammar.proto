@@ -9,7 +9,8 @@ message Grammar {
     // "!grammar" NAME ":" INDENT Rule* OUTDENT
     string name = 1;
     Flags flags = 2;
-    repeated Rule rule = 3;
+    map<string, Rule> rules = 3;
+    string start = 4;
 }
 
 message Flags {
@@ -25,9 +26,8 @@ message Flag {
 
 message Rule {
     // RuleName Flags? ":" INDENT Body OUTDENT
-    string name = 1;
-    string alias = 2;
-    Body body = 3;
+    RuleName name = 1;
+    Choice choices = 2;
 }
 
 message RuleName {
@@ -36,18 +36,9 @@ message RuleName {
     string alias = 2;
 }
 
-message Body {
-    // Union:"\n"
-    repeated Union union = 1;
-}
-
-message Union {
-    // Sequence (INDENT Sequence:"\n")?
-    repeated Sequence sequence = 1;
-}
-
 message Choice {
     // ("<" NAME ">")? Sequence:":"
+    repeated Sequence sequence = 1;
 }
 
 message Sequence {
@@ -62,16 +53,18 @@ message Term {
 }
 
 message Atom {
+    int32 id = 1;
     // ("<" NAME ">")? ( string | regexp | "(" NestedBody ")" )
     oneof union {
-        string string = 1;
-        string regexp = 2;
-        Body body = 3;
+        string string = 2;
+        string regexp = 3;
+        RuleName rulename = 4;
+        Choice choices = 5;
     }
 }
 
 message Quantifier {
-    ( <opt>"?" | <zero_plus>"*" | <one_plus>"+" | ":" <separator>Atom )*
+    //( <opt>"?" | <zero_plus>"*" | <one_plus>"+" | ":" <separator>Atom )*
     oneof union {
         google.protobuf.Empty optional = 1;
         google.protobuf.Empty zero_plus = 2;
@@ -81,9 +74,9 @@ message Quantifier {
 }
 
 extend google.protobuf.FileOptions {
-    optional Grammar base = 50000;
+    Grammar base = 50000;
 }
 
-option (base) = {
-    name:
-}
+// option (base) = {
+//     name:
+// }

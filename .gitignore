@@ -6,5 +6,5 @@ build
 .eggs
 .gradle
 
-/test/e2e/actual_output
 /tmp
+/docs/website/public

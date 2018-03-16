@@ -105,8 +105,8 @@ def main(input_args=sys.argv[1:]):
     argp.add_argument('--trace', '-t',
                       action='store_true', default=False)
 
-    subparser = argp.add_subparsers(help='\n'.join(['sub-commands',
-                                                    'more help with: sysl <sub-command> --help', 'eg: sysl pb --help']))
+    help = '\n'.join(['sub-commands', 'more help with: sysl <sub-command> --help', 'eg: sysl pb --help'])
+    subparser = argp.add_subparsers(help=help, metavar='{pb,textpb,data,ints,sd}')
     _pb_sub_parser(subparser)
     _textpb_sub_parser(subparser)
     _deps_sub_parser(subparser)
