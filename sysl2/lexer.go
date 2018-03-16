@@ -1,101 +1,33 @@
 package main
 
 import (
-	"fmt"
 	"regexp"
-	"sort"
-
-	"anz-bank/sysl/sysl2/proto"
 )
 
 type lexer struct {
-	currentIndex     int
-	regexs           []*regexp.Regexp
-	content          string
-	WS               *regexp.Regexp
-	ignoreWhiteSpace bool
-}
-
-var arr []string
-var tokens map[string]int32
-var index int32
-
-func buildFromChoice(choice *sysl.Choice) {
-
-	for _, s := range choice.Sequence {
-
-		for _, t := range s.Term {
-			if t == nil {
-				continue
-			}
-			var str string
-			a := t.Atom
-			switch a.Union.(type) {
-			case *sysl.Atom_String_:
-				str = t.GetAtom().GetString_()
-			case *sysl.Atom_Regexp:
-				str = t.GetAtom().GetRegexp()
-			case *sysl.Atom_Choices:
-				buildFromChoice(t.GetAtom().GetChoices())
-			}
-			if str != "" {
-				i, has := tokens[str]
-				if !has {
-					fmt.Println("token: [" + str + "]")
-					tokens[str] = index
-					if len(str) == 1 {
-						str = "[" + str + "]"
-					}
-					arr = append(arr, str)
-					a.Id = index
-					index++
-				} else {
-					fmt.Printf("token: [%s] = %d (id=%d)\n", str, i, a.Id)
-
-				}
-			}
-		}
-	}
-}
-
-// NOTE: assigns new value to Atom.Id
-func getTerminals(rules map[string]*sysl.Rule) []string {
-	arr = make([]string, 0)
-	tokens = make(map[string]int32)
-	index = 0
-
-	var ks []string
-	for key := range rules {
-		ks = append(ks, key)
-	}
-	sort.Strings(ks)
-	for _, key := range ks {
-		fmt.Println("Key: " + key)
-		b := rules[key]
-		buildFromChoice(b.Choices)
-	}
-
-	return arr
+	currentIndex        int
+	regexs              []*regexp.Regexp
+	content             string
+	skipWhitespaceRegex *regexp.Regexp
+	ignoreWhiteSpace    bool
 }
 
 // Regular whitespace delimited
 func makeLexer(content string, regexs []string) lexer {
-
 	compiledRegexes := make([]*regexp.Regexp, len(regexs))
+
 	for i, reg := range regexs {
-		compiledRegex, err := regexp.Compile(reg)
-		if err != nil {
-			panic("could not compile regex: " + reg)
-		}
+		compiledRegex := regexp.MustCompile(reg)
 		compiledRegexes[i] = compiledRegex
 	}
-	ws, err := regexp.Compile(`[^ \t\r\n]+`)
 
-	if err != nil {
-		panic("could not compile WS expression")
+	return lexer{
+		ignoreWhiteSpace:    true,
+		regexs:              compiledRegexes,
+		currentIndex:        0,
+		content:             content,
+		skipWhitespaceRegex: regexp.MustCompile(`[^ \t\r\n]+`),
 	}
-
-	return lexer{ignoreWhiteSpace: true, regexs: compiledRegexes, currentIndex: 0, content: content, WS: ws}
 }
 
 func (l *lexer) nextToken() int {
@@ -103,7 +35,7 @@ func (l *lexer) nextToken() int {
 
 	if l.currentIndex < len(l.content) {
 		longestMatchLength := 0
-		locWS := l.WS.FindStringIndex(l.content[l.currentIndex:])
+		locWS := l.skipWhitespaceRegex.FindStringIndex(l.content[l.currentIndex:])
 		if locWS != nil {
 			start := l.currentIndex + locWS[0]
 			end := l.currentIndex + locWS[1]
@@ -123,7 +55,6 @@ func (l *lexer) nextToken() int {
 			if longestMatchIndex != -1 {
 				l.currentIndex = (start + longestMatchLength)
 			}
-
 		}
 	}
 	return longestMatchIndex

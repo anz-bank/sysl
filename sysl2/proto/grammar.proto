@@ -10,6 +10,7 @@ message Grammar {
     string name = 1;
     Flags flags = 2;
     map<string, Rule> rules = 3;
+    string start = 4;
 }
 
 message Flags {
@@ -76,6 +77,6 @@ extend google.protobuf.FileOptions {
     Grammar base = 50000;
 }
 
-option (base) = {
-    name:
-}
+// option (base) = {
+//     name:
+// }

@@ -18,11 +18,7 @@ func makeQuantifierOnePlus() *sysl.Quantifier {
 	return &sysl.Quantifier{Union: &sysl.Quantifier_OnePlus{}}
 }
 
-func makeStringTerm(str string) *sysl.Term {
-	return &sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_String_{String_: str}}, Quantifier: nil}
-}
-
-func makeRegexpTerm(str string) *sysl.Term {
+func makeTerm(str string) *sysl.Term {
 	return &sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_Regexp{Regexp: str}}, Quantifier: nil}
 }
 
@@ -39,112 +35,150 @@ func makeRule(name string) (*sysl.RuleName, *sysl.Term) {
 
 // S –> bab | bA
 // A –> d | cA
-
-func makeGrammar1() sysl.Grammar {
-	a := makeStringTerm("a")
-	b := makeStringTerm("b")
-	c := makeStringTerm("c")
-	d := makeStringTerm("d")
+func makeGrammar1() *sysl.Grammar {
+	a := makeTerm("a")
+	b := makeTerm("b")
+	c := makeTerm("c")
+	d := makeTerm("d")
 
 	ruleNameA, A := makeRule("A")
-
-	a1 := makeSequence(d)
-	a2 := makeSequence(c, A)
-
-	choiceA := sysl.Choice{Sequence: []*sysl.Sequence{a1, a2}}
-	ruleA := sysl.Rule{Name: ruleNameA, Choices: &choiceA}
-
 	ruleNameS, _ := makeRule("S")
-	s1 := makeSequence(b, a, b)
-	s2 := makeSequence(b, A)
-	choiceS := sysl.Choice{Sequence: []*sysl.Sequence{s1, s2}}
-	ruleS := sysl.Rule{Name: ruleNameS, Choices: &choiceS}
 
-	prods := map[string]*sysl.Rule{}
-	prods["S"] = &ruleS
-	prods["A"] = &ruleA
-
-	return sysl.Grammar{Name: "test", Rules: prods}
+	return &sysl.Grammar{
+		Name:  "test",
+		Start: "S",
+		Rules: map[string]*sysl.Rule{
+			"S": &sysl.Rule{
+				Name: ruleNameS,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(b, a, b),
+						makeSequence(b, A)},
+				},
+			},
+			"A": &sysl.Rule{
+				Name: ruleNameA,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(d),
+						makeSequence(c, A),
+					},
+				},
+			},
+		},
+	}
 }
 
-func makeEBNF() sysl.Grammar {
-	star := makeStringTerm("*")
-	plus := makeStringTerm("+")
-	qn := makeStringTerm("?")
+func makeEBNF() *sysl.Grammar {
+	star := makeTerm("[*]")
+	plus := makeTerm("[+]")
+	qn := makeTerm("[?]")
+	alt := makeTerm("[|]")
+	colon := makeTerm("[:]")
+	semiColon := makeTerm("[;]")
+	openParen := makeTerm("[(]")
+	closeParen := makeTerm("[)]")
 
-	alt := makeStringTerm("|")
-	colon := makeStringTerm(":")
-	semiColon := makeStringTerm(";")
-	openParen := makeStringTerm("(")
-	closeParen := makeStringTerm(")")
-
-	tokenName := makeRegexpTerm("[A-Z][0-9A-Z_]+")
-	lowercaseName := makeRegexpTerm("[a-z][0-9a-z_]+")
+	tokenName := makeTerm("[A-Z][0-9A-Z_]+")
+	lowercaseName := makeTerm("[a-z][0-9a-z_]+")
 
 	lhsName, lhsTerm := makeRule("lhs")
 	rhsName, rhsTerm := makeRule("rhs")
 	ruleName, _ := makeRule("rule")
 	choiceName, choiceTerm := makeRule("choice")
 	seqName, seqTerm := makeRule("seq")
-	termName, termTerm := makeRule("term")
 	atomName, atomTerm := makeRule("atom")
-	quantifierName, quantifierTerm := makeRule("quantifier")
-
-	zeroPlusChoiceSeq := makeSequence(alt, seqTerm)
-	zeroPlusChoice := sysl.Choice{Sequence: []*sysl.Sequence{zeroPlusChoiceSeq}}
-
-	zeroPlusChoiceTerm := sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_Choices{Choices: &zeroPlusChoice}}}
-	zeroPlusChoiceTerm.Quantifier = makeQuantifierZeroPlus()
-
-	q1 := makeSequence(star)
-	q2 := makeSequence(plus)
-	q3 := makeSequence(qn)
-	quantifierChoice := sysl.Choice{Sequence: []*sysl.Sequence{q1, q2, q3}}
-	quantifier := sysl.Rule{Name: quantifierName, Choices: &quantifierChoice}
-
-	atom1 := makeSequence(tokenName)
-	atom2 := makeSequence(lowercaseName)
-	atom3 := makeSequence(openParen, choiceTerm, closeParen)
-	atomChoice := sysl.Choice{Sequence: []*sysl.Sequence{atom1, atom2, atom3}}
-	atom := sysl.Rule{Name: atomName, Choices: &atomChoice}
-
-	quantifierTerm.Quantifier = makeQuantifierOptional()
-	term1 := makeSequence(atomTerm, quantifierTerm)
-	termChoice := sysl.Choice{Sequence: []*sysl.Sequence{term1}}
-	term := sysl.Rule{Name: termName, Choices: &termChoice}
-
+	termName, termTerm := makeRule("term")
 	termTerm.Quantifier = makeQuantifierOnePlus()
-	seq1 := makeSequence(termTerm)
-	seqChoice := sysl.Choice{Sequence: []*sysl.Sequence{seq1}}
-	seq := sysl.Rule{Name: seqName, Choices: &seqChoice}
+	quantifierName, quantifierTerm := makeRule("quantifier")
+	quantifierTerm.Quantifier = makeQuantifierOptional()
 
-	choice1 := makeSequence(seqTerm, &zeroPlusChoiceTerm)
-	choiceChoice := sysl.Choice{Sequence: []*sysl.Sequence{choice1}}
-	choice := sysl.Rule{Name: choiceName, Choices: &choiceChoice}
+	zeroPlusChoiceTerm := sysl.Term{
+		Atom: &sysl.Atom{
+			Union: &sysl.Atom_Choices{
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(alt, seqTerm),
+					},
+				},
+			},
+		},
+		Quantifier: makeQuantifierZeroPlus(),
+	}
 
-	lhs1 := makeSequence(lowercaseName)
-	lhsChoice := sysl.Choice{Sequence: []*sysl.Sequence{lhs1}}
-	lhs := sysl.Rule{Name: lhsName, Choices: &lhsChoice}
-
-	rhs1 := makeSequence(choiceTerm)
-	rhsChoice := sysl.Choice{Sequence: []*sysl.Sequence{rhs1}}
-	rhs := sysl.Rule{Name: rhsName, Choices: &rhsChoice}
-
-	rule1 := makeSequence(lhsTerm, colon, rhsTerm, semiColon)
-	ruleChoice := sysl.Choice{Sequence: []*sysl.Sequence{rule1}}
-	rule := sysl.Rule{Name: ruleName, Choices: &ruleChoice}
-
-	prods := map[string]*sysl.Rule{}
-	prods["rule"] = &rule
-	prods["lhs"] = &lhs
-	prods["rhs"] = &rhs
-	prods["choice"] = &choice
-	prods["seq"] = &seq
-	prods["term"] = &term
-	prods["atom"] = &atom
-	prods["quantifier"] = &quantifier
-
-	return sysl.Grammar{Name: "EBNF", Rules: prods}
+	return &sysl.Grammar{
+		Name:  "EBNF",
+		Start: "rule",
+		Rules: map[string]*sysl.Rule{
+			"rule": &sysl.Rule{
+				Name: ruleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(lhsTerm, colon, rhsTerm, semiColon),
+					},
+				},
+			},
+			"lhs": &sysl.Rule{
+				Name: lhsName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(lowercaseName),
+					},
+				},
+			},
+			"rhs": &sysl.Rule{
+				Name: rhsName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(choiceTerm),
+					},
+				},
+			},
+			"choice": &sysl.Rule{
+				Name: choiceName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(seqTerm, &zeroPlusChoiceTerm),
+					},
+				},
+			},
+			"seq": &sysl.Rule{
+				Name: seqName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(termTerm),
+					},
+				},
+			},
+			"term": &sysl.Rule{
+				Name: termName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(atomTerm, quantifierTerm),
+					},
+				},
+			},
+			"atom": &sysl.Rule{
+				Name: atomName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(tokenName),
+						makeSequence(lowercaseName),
+						makeSequence(openParen, choiceTerm, closeParen),
+					},
+				},
+			},
+			"quantifier": &sysl.Rule{
+				Name: quantifierName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(star),
+						makeSequence(plus),
+						makeSequence(qn),
+					},
+				},
+			},
+		}}
 
 }
 
@@ -153,14 +187,14 @@ func makeEBNF() sysl.Grammar {
 // T  -> F T'
 // T' -> * F T' | /FT' |epsilon
 // F  -> (E) | int
-func makeEXPR() sysl.Grammar {
-	plus := makeStringTerm("+")
-	minus := makeStringTerm("-")
-	star := makeStringTerm("*")
-	divide := makeStringTerm("/")
-	openParen := makeStringTerm("(")
-	closeParen := makeStringTerm(")")
-	integer := makeRegexpTerm("[0-9]+")
+func makeEXPR() *sysl.Grammar {
+	plus := makeTerm("[+]")
+	minus := makeTerm("[-]")
+	star := makeTerm("[*]")
+	divide := makeTerm("[/]")
+	openParen := makeTerm("[(]")
+	closeParen := makeTerm("[)]")
+	integer := makeTerm("[0-9]+")
 
 	ERuleName, ETerm := makeRule("E")
 	ETailRuleName, ETailTerm := makeRule("ETail")
@@ -168,39 +202,57 @@ func makeEXPR() sysl.Grammar {
 	TTailRuleName, TTailTerm := makeRule("TTail")
 	factorRuleName, factorTerm := makeRule("factor")
 
-	E1 := makeSequence(TTerm, ETailTerm)
-	EChoice := sysl.Choice{Sequence: []*sysl.Sequence{E1}}
-	ERule := sysl.Rule{Name: ERuleName, Choices: &EChoice}
-
-	ETail1 := makeSequence(plus, TTerm, ETailTerm)
-	ETail2 := makeSequence(minus, TTerm, ETailTerm)
-	ETail3 := makeSequence(nil)
-	ETailChoice := sysl.Choice{Sequence: []*sysl.Sequence{ETail1, ETail2, ETail3}}
-	ETailRule := sysl.Rule{Name: ETailRuleName, Choices: &ETailChoice}
-
-	T1 := makeSequence(factorTerm, TTailTerm)
-	TChoice := sysl.Choice{Sequence: []*sysl.Sequence{T1}}
-	TRule := sysl.Rule{Name: TRuleName, Choices: &TChoice}
-
-	TTail1 := makeSequence(star, factorTerm, TTailTerm)
-	TTail2 := makeSequence(divide, factorTerm, TTailTerm)
-	TTail3 := makeSequence(nil)
-	TTailChoice := sysl.Choice{Sequence: []*sysl.Sequence{TTail1, TTail2, TTail3}}
-	TTailRule := sysl.Rule{Name: TTailRuleName, Choices: &TTailChoice}
-
-	factor1 := makeSequence(openParen, ETerm, closeParen)
-	factor2 := makeSequence(integer)
-	factorChoice := sysl.Choice{Sequence: []*sysl.Sequence{factor1, factor2}}
-	factorRule := sysl.Rule{Name: factorRuleName, Choices: &factorChoice}
-
-	prods := map[string]*sysl.Rule{}
-	prods["E"] = &ERule
-	prods["ETail"] = &ETailRule
-	prods["T"] = &TRule
-	prods["TTail"] = &TTailRule
-	prods["factor"] = &factorRule
-
-	return sysl.Grammar{Name: "EXPR", Rules: prods}
+	return &sysl.Grammar{
+		Name:  "EXPR",
+		Start: "E",
+		Rules: map[string]*sysl.Rule{
+			"E": &sysl.Rule{
+				Name: ERuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(TTerm, ETailTerm),
+					},
+				},
+			},
+			"ETail": &sysl.Rule{
+				Name: ETailRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(plus, TTerm, ETailTerm),
+						makeSequence(minus, TTerm, ETailTerm),
+						makeSequence(nil),
+					},
+				},
+			},
+			"T": &sysl.Rule{
+				Name: TRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(factorTerm, TTailTerm),
+					},
+				},
+			},
+			"TTail": &sysl.Rule{
+				Name: TTailRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(star, factorTerm, TTailTerm),
+						makeSequence(divide, factorTerm, TTailTerm),
+						makeSequence(nil),
+					},
+				},
+			},
+			"factor": &sysl.Rule{
+				Name: factorRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(openParen, ETerm, closeParen),
+						makeSequence(integer),
+					},
+				},
+			},
+		},
+	}
 
 }
 
@@ -208,31 +260,39 @@ func makeEXPR() sysl.Grammar {
 //    : '{' number (',' number)* '}'
 //    | '{' '}'
 //    ;
-func makeRepeatSeq(quantifier *sysl.Quantifier) sysl.Grammar {
-	curlyOpen := makeStringTerm("{")
-	curlyClosed := makeStringTerm("}")
-	comma := makeStringTerm(",")
-	number := makeRegexpTerm("[0-9]+")
+func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
+	curlyOpen := makeTerm("[{]")
+	curlyClosed := makeTerm("[}]")
+	comma := makeTerm("[,]")
+	number := makeTerm("[0-9]+")
 
 	objRuleName, _ := makeRule("obj")
 	obj2RuleName, obj2Term := makeRule("obj2")
-
-	obj2 := makeSequence(comma, number)
 	obj2Term.Quantifier = quantifier
-	obj1 := makeSequence(curlyOpen, number, obj2Term, curlyClosed)
-	obj3 := makeSequence(curlyOpen, curlyClosed)
 
-	obj2Choice := sysl.Choice{Sequence: []*sysl.Sequence{obj2}}
-	obj2Rule := sysl.Rule{Name: obj2RuleName, Choices: &obj2Choice}
-
-	objChoice := sysl.Choice{Sequence: []*sysl.Sequence{obj1, obj3}}
-	objRule := sysl.Rule{Name: objRuleName, Choices: &objChoice}
-
-	prods := map[string]*sysl.Rule{}
-	prods["obj"] = &objRule
-	prods["obj2"] = &obj2Rule
-
-	return sysl.Grammar{Name: "json", Rules: prods}
+	return &sysl.Grammar{
+		Name:  "json",
+		Start: "obj",
+		Rules: map[string]*sysl.Rule{
+			"obj": &sysl.Rule{
+				Name: objRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(curlyOpen, number, obj2Term, curlyClosed),
+						makeSequence(curlyOpen, curlyClosed),
+					},
+				},
+			},
+			"obj2": &sysl.Rule{
+				Name: obj2RuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(comma, number),
+					},
+				},
+			},
+		},
+	}
 
 }
 
@@ -259,17 +319,17 @@ func makeRepeatSeq(quantifier *sysl.Quantifier) sysl.Grammar {
 //    | NUMBER
 //    | obj
 //	  | array
-func makeJSON(quantifier *sysl.Quantifier) sysl.Grammar {
-	// doubleQuote := makeStringTerm("\"")
-	// singleQuote := makeStringTerm("'")
-	curlyOpen := makeStringTerm("{")
-	curlyClosed := makeStringTerm("}")
-	comma := makeStringTerm(",")
-	sqOpen := makeStringTerm("[")
-	sqClose := makeStringTerm("]")
-	colon := makeStringTerm(":")
-	number := makeRegexpTerm("[0-9]+")
-	STRING := makeRegexpTerm(`["][^"]*["]`)
+func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
+	// doubleQuote := makeTerm("\"")
+	// singleQuote := makeTerm("'")
+	curlyOpen := makeTerm("[{]")
+	curlyClosed := makeTerm("[}]")
+	comma := makeTerm("[,]")
+	sqOpen := makeTerm("[[]")
+	sqClose := makeTerm("[]]")
+	colon := makeTerm("[:]")
+	number := makeTerm("[0-9]+")
+	STRING := makeTerm(`["][^"]*["]`)
 
 	jsonRuleName, _ := makeRule("json")
 	valueRuleName, valueTerm := makeRule("value")
@@ -277,50 +337,134 @@ func makeJSON(quantifier *sysl.Quantifier) sysl.Grammar {
 	pairRuleName, pairTerm := makeRule("pair")
 	arrayRuleName, arrayTerm := makeRule("array")
 
-	subSequence := makeSequence(comma, pairTerm)
-	obj2Choice := sysl.Choice{Sequence: []*sysl.Sequence{subSequence}}
+	obj2Term := sysl.Term{
+		Atom: &sysl.Atom{
+			Union: &sysl.Atom_Choices{
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(comma, pairTerm),
+					},
+				},
+			},
+		},
+		Quantifier: quantifier,
+	}
 
-	obj2Term := sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_Choices{Choices: &obj2Choice}}, Quantifier: quantifier}
-	obj1 := makeSequence(curlyOpen, pairTerm, &obj2Term, curlyClosed)
-	obj2 := makeSequence(curlyOpen, curlyClosed)
+	array2Term := sysl.Term{
+		Atom: &sysl.Atom{
+			Union: &sysl.Atom_Choices{
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(comma, valueTerm),
+					},
+				},
+			},
+		},
+		Quantifier: quantifier,
+	}
 
-	objChoice := sysl.Choice{Sequence: []*sysl.Sequence{obj1, obj2}}
-	objRule := sysl.Rule{Name: objRuleName, Choices: &objChoice}
+	return &sysl.Grammar{
+		Name:  "json",
+		Start: "json",
+		Rules: map[string]*sysl.Rule{
+			"obj": &sysl.Rule{
+				Name: objRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(curlyOpen, pairTerm, &obj2Term, curlyClosed),
+						makeSequence(curlyOpen, curlyClosed),
+					},
+				},
+			},
+			"value": &sysl.Rule{
+				Name: valueRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(STRING),
+						makeSequence(number),
+						makeSequence(objTerm),
+						makeSequence(arrayTerm),
+					},
+				},
+			},
+			"json": &sysl.Rule{
+				Name: jsonRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(valueTerm),
+					},
+				},
+			},
+			"pair": &sysl.Rule{
+				Name: pairRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(STRING, colon, valueTerm),
+					},
+				},
+			},
+			"array": &sysl.Rule{
+				Name: arrayRuleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(sqOpen, valueTerm, &array2Term, sqClose),
+						makeSequence(sqOpen, sqClose),
+					},
+				},
+			},
+		},
+	}
 
-	value1 := makeSequence(STRING)
-	value2 := makeSequence(number)
-	value3 := makeSequence(objTerm)
-	value4 := makeSequence(arrayTerm)
-	valueChoice := sysl.Choice{Sequence: []*sysl.Sequence{value1, value2, value3, value4}}
-	valueRule := sysl.Rule{Name: valueRuleName, Choices: &valueChoice}
+}
 
-	json1 := makeSequence(valueTerm)
-	jsonChoice := sysl.Choice{Sequence: []*sysl.Sequence{json1}}
-	jsonRule := sysl.Rule{Name: jsonRuleName, Choices: &jsonChoice}
+func makeG2() *sysl.Grammar {
+	a := makeTerm("a")
+	b := makeTerm("b")
+	d := makeTerm("d")
 
-	pair1 := makeSequence(STRING, colon, valueTerm)
-	pairChoice := sysl.Choice{Sequence: []*sysl.Sequence{pair1}}
-	pairRule := sysl.Rule{Name: pairRuleName, Choices: &pairChoice}
+	SruleName, _ := makeRule("S")
+	AruleName, ATerm := makeRule("A")
+	BruleName, BTerm := makeRule("B")
+	DruleName, DTerm := makeRule("D")
 
-	arraySubSequence := makeSequence(comma, valueTerm)
-	arraySubSequenceChoice := sysl.Choice{Sequence: []*sysl.Sequence{arraySubSequence}}
-
-	array2Term := sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_Choices{Choices: &arraySubSequenceChoice}}, Quantifier: quantifier}
-	array1 := makeSequence(sqOpen, valueTerm, &array2Term, sqClose)
-	array2 := makeSequence(sqOpen, sqClose)
-
-	arrayChoice := sysl.Choice{Sequence: []*sysl.Sequence{array1, array2}}
-	arrayRule := sysl.Rule{Name: arrayRuleName, Choices: &arrayChoice}
-
-	prods := map[string]*sysl.Rule{}
-	prods["obj"] = &objRule
-	prods["value"] = &valueRule
-	prods["json"] = &jsonRule
-	prods["pair"] = &pairRule
-	prods["array"] = &arrayRule
-
-	return sysl.Grammar{Name: "json", Rules: prods}
-
+	return &sysl.Grammar{
+		Name:  "G2",
+		Start: "S",
+		Rules: map[string]*sysl.Rule{
+			"S": &sysl.Rule{
+				Name: SruleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(ATerm, a),
+					},
+				},
+			},
+			"A": &sysl.Rule{
+				Name: AruleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(BTerm, DTerm),
+					},
+				},
+			},
+			"B": &sysl.Rule{
+				Name: BruleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(b), makeSequence(nil),
+					},
+				},
+			},
+			"D": &sysl.Rule{
+				Name: DruleName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(d), makeSequence(nil),
+					},
+				},
+			},
+		},
+	}
 }
 
 func main() {
