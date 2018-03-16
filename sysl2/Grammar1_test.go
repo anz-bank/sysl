@@ -154,9 +154,9 @@ func TestJSON_2(t *testing.T) {
 
 func TestJSON_3(t *testing.T) {
 	text := `{
-				"abc" : 123 ,
-				"def" : 4563456
-			}`
+        "abc" : 123 ,
+        "def" : 4563456
+    }`
 	tokens := []int{3, 5, 6, 7, 1, 5, 6, 7, 4, -1}
 	testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
