@@ -322,7 +322,7 @@ func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
 //    : STRING
 //    | NUMBER
 //    | obj
-//	  | array
+//      | array
 func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 	// doubleQuote := makeTerm("\"")
 	// singleQuote := makeTerm("'")

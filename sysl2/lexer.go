@@ -9,11 +9,11 @@ import (
 )
 
 type lexer struct {
-	currentIndex        int
-	regexs              []*regexp.Regexp
-	content             string
+	currentIndex     int
+	regexs           []*regexp.Regexp
+	content          string
 	WS               *regexp.Regexp
-	ignoreWhiteSpace    bool
+	ignoreWhiteSpace bool
 }
 
 var arr []string
