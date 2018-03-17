@@ -1,37 +1,34 @@
 package main
 
-// Set is Not exported
-type Set map[int]struct{}
+type intSet map[int]struct{}
 
-var empty struct{}
-
-func (s *Set) add(tok int) bool {
+func (s *intSet) add(tok int) bool {
     l := len(*s)
-    (*s)[tok] = empty
+    (*s)[tok] = struct{}{}
     return l != len(*s)
 }
 
-func (s *Set) has(tok int) bool {
+func (s *intSet) has(tok int) bool {
     _, has := (*s)[tok]
     return has
 }
 
-func (s *Set) union(other *Set) bool {
+func (s *intSet) union(other *intSet) bool {
     l := len(*s)
     for k := range *other {
-        (*s)[k] = empty
+        (*s)[k] = struct{}{}
     }
     return l != len(*s)
 }
 
-func (s *Set) clone() *Set {
-    ss := make(Set)
+func (s *intSet) clone() *intSet {
+    ss := make(intSet)
     for k := range *s {
-        ss[k] = empty
+        ss[k] = struct{}{}
     }
     return &ss
 }
 
-func (s *Set) remove(tok int) {
+func (s *intSet) remove(tok int) {
     delete(*s, tok)
 }

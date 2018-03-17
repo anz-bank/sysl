@@ -80,11 +80,11 @@ func makeParser(g *sysl.Grammar, text string) *parser {
 }
 
 func (p *parser) parse(tokens []int) bool {
-    return checkGrammar(p.g, tokens, p.g.Start)
+    return parseGrammar(p.g, tokens, p.g.Start)
 }
 
-func setFromTerm(first map[string]*Set, t *sysl.Term) *Set {
-    var firstSet *Set
+func setFromTerm(first map[string]*intSet, t *sysl.Term) *intSet {
+    var firstSet *intSet
     switch t.Atom.Union.(type) {
     case *sysl.Atom_Choices:
         panic("not handled yet")
@@ -92,14 +92,14 @@ func setFromTerm(first map[string]*Set, t *sysl.Term) *Set {
         nt := t.GetAtom().GetRulename()
         firstSet = first[nt.Name]
     default: //Atom_String_ and Atom_Regexp
-        s := make(Set)
+        s := make(intSet)
         s.add(int(t.GetAtom().Id))
         firstSet = &s
     }
     return firstSet
 }
 
-func hasEpsilon(t *sysl.Term, first map[string]*Set) bool {
+func hasEpsilon(t *sysl.Term, first map[string]*intSet) bool {
     has := false
     switch t.Atom.Union.(type) {
     // case *sysl.Atom_Choices:
@@ -122,13 +122,13 @@ func isNonTerminal(t *sysl.Term) bool {
     return false
 }
 
-func buildFirstFollowSet(g *sysl.Grammar) (map[string]*Set, map[string]*Set) {
-    first := make(map[string]*Set)
-    follow := make(map[string]*Set)
+func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSet) {
+    first := make(map[string]*intSet)
+    follow := make(map[string]*intSet)
 
     for key := range g.Rules {
-        s1 := make(Set)
-        s2 := make(Set)
+        s1 := make(intSet)
+        s2 := make(intSet)
         first[key] = &s1
         follow[key] = &s2
     }
@@ -179,10 +179,10 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*Set, map[string]*Set) {
         updated = false
         for ruleName, rule := range g.Rules {
             for _, seq := range rule.Choices.Sequence {
+                last := len(seq.Term) - 1
                 for i := range seq.Term {
                     // follow
-                    l := len(seq.Term)
-                    if i+1 < l {
+                    if i < last {
                         A := seq.Term[i]
                         B := seq.Term[i+1]
                         Bfirst := setFromTerm(first, B).clone()
@@ -206,7 +206,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*Set, map[string]*Set) {
                             updated = Afollow.union(Bfirst) || updated
                         }
 
-                    } else if i < l {
+                    } else if i == last {
                         // Rule 3
                         // If there is a production X → aB, then everything in FOLLOW(X) is in FOLLOW(B)
                         B := seq.Term[i]
