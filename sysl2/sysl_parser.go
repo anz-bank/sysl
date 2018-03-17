@@ -137,5 +137,5 @@ func parse(g *sysl.Grammar, input []int, val interface{}) (bool, []int, []interf
 func checkGrammar(g *sysl.Grammar, tokens []int, start string) bool {
     result, out, tree := parse(g, tokens, g.Rules[start])
     fmt.Println(tree)
-    return (result && len(out) == 0)
+    return result && len(out) == 0
 }

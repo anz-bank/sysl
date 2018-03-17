@@ -1,8 +1,9 @@
 package main
 
 import (
-    sysl "anz-bank/sysl/sysl2/proto"
     "testing"
+
+    sysl "anz-bank/sysl/sysl2/proto"
 )
 
 func testParser(g *sysl.Grammar, numTerms int, tokens []int, text string, expected bool, t *testing.T) {
@@ -33,29 +34,34 @@ func TestGrammar(t *testing.T) {
     text := "bab"
     testParser(makeGrammar1(), 4, tokens, text, true, t)
 }
+
 func TestGrammar1(t *testing.T) {
     tokens := []int{2, 1, 1, 1, 0, -1}
     text := "bcccd"
     testParser(makeGrammar1(), 4, tokens, text, true, t)
 }
+
 func TestGrammarIncompleteInput(t *testing.T) {
     tokens := []int{2, 3, -1}
     text := "ba"
 
     testParser(makeGrammar1(), 4, tokens, text, false, t)
 }
+
 func TestEXPR1(t *testing.T) {
     text := "1 + 3 * 7"
     tokens := []int{6, 0, 6, 2, 6, -1}
     testParser(makeEXPR(), 7, tokens, text, true, t)
 
 }
+
 func TestOBJ(t *testing.T) {
     text := "{}"
     tokens := []int{0, 2, -1}
 
     testParser(makeRepeatSeq(makeQuantifierZeroPlus()), 4, tokens, text, true, t)
 }
+
 func TestOBJ2(t *testing.T) {
     text := "{123}"
     tokens := []int{0, 1, 2, -1}
@@ -67,6 +73,7 @@ func TestOBJ3(t *testing.T) {
     tokens := []int{0, 1, 3, 1, 3, 1, 2, -1}
     testParser(makeRepeatSeq(makeQuantifierZeroPlus()), 4, tokens, text, true, t)
 }
+
 func TestOBJPlusNegative(t *testing.T) {
     text := "{123}"
     // NOTE THE +
@@ -77,6 +84,7 @@ func TestOBJPlusNegative(t *testing.T) {
     tokens := []int{0, 1, 2, -1}
     testParser(makeRepeatSeq(makeQuantifierOnePlus()), 4, tokens, text, false, t)
 }
+
 func TestOBJPlusPositive(t *testing.T) {
     text := "{123, 234}"
     tokens := []int{0, 1, 3, 1, 2, -1}
@@ -88,6 +96,7 @@ func TestOBJPlusPositive(t *testing.T) {
     //    ;
     testParser(makeRepeatSeq(makeQuantifierOnePlus()), 4, tokens, text, true, t)
 }
+
 func TestOBJOptional(t *testing.T) {
     text := "{}"
     tokens := []int{0, 2, -1}
@@ -98,6 +107,7 @@ func TestOBJOptional(t *testing.T) {
     //    ;
     testParser(makeRepeatSeq(makeQuantifierOptional()), 4, tokens, text, true, t)
 }
+
 func TestOBJOptional1(t *testing.T) {
     text := "{123}"
     tokens := []int{0, 1, 2, -1}
@@ -108,6 +118,7 @@ func TestOBJOptional1(t *testing.T) {
     //    ;
     testParser(makeRepeatSeq(makeQuantifierOptional()), 4, tokens, text, true, t)
 }
+
 func TestOBJOptional2(t *testing.T) {
     text := "{123, 234}"
     tokens := []int{0, 1, 3, 1, 2, -1}
@@ -118,6 +129,7 @@ func TestOBJOptional2(t *testing.T) {
     //    ;
     testParser(makeRepeatSeq(makeQuantifierOptional()), 4, tokens, text, true, t)
 }
+
 func TestOBJOptionalNegative(t *testing.T) {
     text := "{123, 234, 567}"
     tokens := []int{0, 1, 3, 1, 3, 1, 2, -1}
@@ -128,16 +140,19 @@ func TestOBJOptionalNegative(t *testing.T) {
     //    ;
     testParser(makeRepeatSeq(makeQuantifierOptional()), 4, tokens, text, false, t)
 }
+
 func TestJSON_1(t *testing.T) {
     text := "{}"
     tokens := []int{3, 4, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestJSON_2(t *testing.T) {
     text := `{ "abc" : 123 }`
     tokens := []int{3, 5, 6, 7, 4, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestJSON_3(t *testing.T) {
     text := `{
         "abc" : 123 ,
@@ -146,26 +161,31 @@ func TestJSON_3(t *testing.T) {
     tokens := []int{3, 5, 6, 7, 1, 5, 6, 7, 4, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestJSON_Array1(t *testing.T) {
     text := `[]`
     tokens := []int{0, 2, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestJSON_Array2(t *testing.T) {
     text := `[ "abc" ]`
     tokens := []int{0, 5, 2, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestJSON_Array3(t *testing.T) {
     text := `[ "abc" , 123 ]`
     tokens := []int{0, 5, 1, 7, 2, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestJSON_Array4(t *testing.T) {
     text := `[ {"abc" : 123} ]`
     tokens := []int{0, 3, 5, 6, 7, 4, 2, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestJSON_Array5(t *testing.T) {
     text := `{
         "array": [
@@ -178,6 +198,7 @@ func TestJSON_Array5(t *testing.T) {
     tokens := []int{3, 5, 6, 0, 3, 5, 6, 7, 4, 2, 4, -1}
     testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
+
 func TestEBNF1(t *testing.T) {
     text := `expr : INT | ID | expr;`
     tokens := []int{1, 8, 0, 4, 0, 4, 1, 9, -1}
@@ -197,6 +218,7 @@ func TestFirstSet1(t *testing.T) {
         t.Error("failed to calculate first set of E\n")
     }
 }
+
 func TestFirstSet2(t *testing.T) {
     g := makeG2()
     terms := makeBuilder().buildTerminalsList(g.Rules)

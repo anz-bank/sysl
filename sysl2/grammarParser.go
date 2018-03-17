@@ -1,8 +1,9 @@
 package main
 
 import (
-    sysl "anz-bank/sysl/sysl2/proto"
     "sort"
+
+    sysl "anz-bank/sysl/sysl2/proto"
 )
 
 type parser struct {
@@ -14,7 +15,6 @@ type parser struct {
 type builder struct {
     arr    []string
     tokens map[string]int32
-    index  int32
 }
 
 const FIRST = 0
@@ -40,17 +40,16 @@ func (b *builder) handleChoice(choice *sysl.Choice) {
             if str != "" {
                 _, has := b.tokens[str]
                 if !has {
-                    b.tokens[str] = b.index
+                    b.tokens[str] = int32(len(b.arr))
+                    t.Atom.Id = int32(len(b.arr))
                     b.arr = append(b.arr, str)
-                    t.Atom.Id = b.index
-                    b.index++
                 }
             }
         }
     }
 }
 
-// NOTE: assigns new value to Atom.Id
+// assigns new value to Atom.Id
 func (b *builder) buildTerminalsList(rules map[string]*sysl.Rule) []string {
     var ks []string
     for key := range rules {
@@ -67,7 +66,6 @@ func makeBuilder() *builder {
     return &builder{
         arr:    make([]string, 0),
         tokens: make(map[string]int32),
-        index:  FIRST,
     }
 }
 
@@ -165,7 +163,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*Set, map[string]*Set) {
                         break
                     } else {
                         y1 := setFromTerm(first, t).clone()
-                        y1.minus(EPSILON)
+                        y1.remove(EPSILON)
                         updated = first[ruleName].union(y1) || updated
                         numEpsilon++
                     }
@@ -184,7 +182,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*Set, map[string]*Set) {
                 for i := range seq.Term {
                     // follow
                     l := len(seq.Term)
-                    if (i + 1) < l {
+                    if i+1 < l {
                         A := seq.Term[i]
                         B := seq.Term[i+1]
                         Bfirst := setFromTerm(first, B).clone()
@@ -203,7 +201,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*Set, map[string]*Set) {
                         // (where a can be a whole string)
                         // then everything in FIRST(B) except for ε is placed in FOLLOW(A).
                         if isNonTerminal(A) {
-                            Bfirst.minus(EPSILON)
+                            Bfirst.remove(EPSILON)
                             Afollow := setFromTerm(follow, A)
                             updated = Afollow.union(Bfirst) || updated
                         }
