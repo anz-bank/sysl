@@ -79,7 +79,7 @@ func makeParser(g *sysl.Grammar, text string) *parser {
 	}
 }
 
-func (p *parser) parse(tokens []int) bool {
+func (p *parser) parse(tokens []int) (bool, []interface{}) {
 	return parseGrammar(p.g, tokens, p.g.Start)
 }
 
