@@ -8,12 +8,17 @@ import (
 	"github.com/anz-bank/sysl/sysl2/proto"
 )
 
+type token struct {
+	id   int
+	text string
+}
+
 type lexer struct {
-	currentIndex     int
-	regexs           []*regexp.Regexp
-	content          string
+	currentIndex        int
+	regexs              []*regexp.Regexp
+	content             string
 	WS               *regexp.Regexp
-	ignoreWhiteSpace bool
+	ignoreWhiteSpace    bool
 }
 
 var arr []string
@@ -88,17 +93,17 @@ func makeLexer(content string, regexs []string) lexer {
 	}
 
 	return lexer{
-		ignoreWhiteSpace: true,
-		regexs:           compiledRegexes,
-		currentIndex:     0,
-		content:          content,
+		ignoreWhiteSpace:    true,
+		regexs:              compiledRegexes,
+		currentIndex:        0,
+		content:             content,
 		WS:               regexp.MustCompile(`[^ \t\r\n]+`),
 	}
 }
 
-func (l *lexer) nextToken() int {
+func (l *lexer) nextToken() token {
 	longestMatchIndex := -1
-
+	var tokenString string
 	if l.currentIndex < len(l.content) {
 		longestMatchLength := 0
 		locWS := l.WS.FindStringIndex(l.content[l.currentIndex:])
@@ -114,7 +119,7 @@ func (l *lexer) nextToken() int {
 					if loc[0] == 0 && matchLen > longestMatchLength {
 						longestMatchLength = loc[1]
 						longestMatchIndex = i
-
+						tokenString = str[loc[0]:loc[1]]
 					}
 				}
 			}
@@ -123,5 +128,5 @@ func (l *lexer) nextToken() int {
 			}
 		}
 	}
-	return longestMatchIndex
+	return token{longestMatchIndex, tokenString}
 }
