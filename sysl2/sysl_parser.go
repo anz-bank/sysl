@@ -130,7 +130,7 @@ func parse(g *sysl.Grammar, input []int, val interface{}) (bool, []int, []interf
     return result, input, tree
 }
 
-// CheckGrammar returns true if the grammar consumes the whole string
+// parseGrammar returns true if the grammar consumes the whole string
 // g - grammar to use
 // text - to parse
 // Start rule
