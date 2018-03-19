@@ -1,0 +1,11 @@
+Project:
+    _:
+        App
+
+App:
+    !type Order:
+        order_id <: int
+
+    !type Customer:
+        customer_id <: int
+        orders <: set of Order

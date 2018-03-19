@@ -1,0 +1,11 @@
+Project:
+    _:
+        App
+
+App:
+    !table Order:
+        id <: int [~pk]
+        customer_id <: Customer.id
+
+    !table Customer:
+        id <: int [~pk]
