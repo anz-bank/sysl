@@ -7,7 +7,9 @@ install:
   - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
   - pip install --upgrade setuptools
   - pip install py2exe_py2
+  - pip install protobuf==3.5.1 # protobuf 3.5.2 and py2exe don't work together
   - pip install . pytest flake8
+  - pip freeze
   - choco install gradle
 
 build: off
