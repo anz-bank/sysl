@@ -13,14 +13,17 @@ func testParser(g *sysl.Grammar, numTerms int, tokens []int, text string, expect
 		t.Error("got incorrect number of terms", p.terminals)
 	}
 
+	actual := make([]token, 0)
+
 	for i, expected := range tokens {
 		tok := p.l.nextToken()
+		actual = append(actual, tok)
 		if tok.id != expected {
 			t.Errorf("got the wrong token at %d expected: %+v, got %+v", i, expected, tok)
 		}
 	}
-
-	result, tree := p.parse(tokens[:len(tokens)-1])
+	actual = actual[:len(actual)-1]
+	result, tree := p.parseGrammar(&actual)
 
 	if result != expected {
 		t.Error("failed to parse " + text)
@@ -218,17 +221,36 @@ func TestJSON_Array5(t *testing.T) {
 
 func TestEBNF1(t *testing.T) {
 	text := `expr : INT | ID | expr;`
-	tokens := []int{1, 8, 0, 4, 0, 4, 1, 9, -1}
+	tokens := []int{2, 9, 1, 5, 1, 5, 2, 10, -1}
 
-	testParser(makeEBNF(), 10, tokens, text, true, t)
+	testParser(makeEBNF(), 11, tokens, text, true, t)
 }
 
 func TestEBNF2(t *testing.T) {
 	text := `expr : INT*;`
-	tokens := []int{1, 8, 0, 5, 9, -1}
+	tokens := []int{2, 9, 1, 6, 10, -1}
 
-	_, tree := testParser(makeEBNF(), 10, tokens, text, true, t)
+	testParser(makeEBNF(), 11, tokens, text, true, t)
+}
 
+func TestEBNF3(t *testing.T) {
+	text := `obj : "{" number* "}" ;`
+	p := makeParser(makeEBNF(), text)
+
+	actual := make([]token, 0)
+
+	for {
+		tok := p.l.nextToken()
+		if tok.id == -1 {
+			break
+		}
+		actual = append(actual, tok)
+	}
+	// actual = actual[:len(actual)-1]
+	result, tree := p.parseGrammar(&actual)
+	if !result {
+		t.Errorf("unable to parse text=(%s)", text)
+	}
 	buildGrammar(tree)
 }
 
