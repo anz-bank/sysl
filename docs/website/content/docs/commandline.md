@@ -40,8 +40,7 @@ optional arguments:
   --root ROOT, -r ROOT  sysl root directory for input files (default: .)
   --version, -v         show version number (semver.org standard)
   --trace, -t
-  ```
-
+```
 
 reljam
 ------
