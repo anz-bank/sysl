@@ -25,3 +25,4 @@ The following is a collection of unrelated, unevaluated ideas on how to improve 
 * Introduce Top-level, "intent" keywords, e.g. `model`, `app`, `project` (?), etc.
 * Get rid of `project` structure for diagrams.
 * Single word keywords instead of `set of` use `setOf` or `set()`
+* Meta data on types in brackets `[~pk, ~autoinc]` and part of typedef: `int?` (`?` means optional)
