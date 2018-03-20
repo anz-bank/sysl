@@ -24,3 +24,4 @@ The following is a collection of unrelated, unevaluated ideas on how to improve 
 * "Scoping"  - reference syntax needs to be rationalized
 * Introduce Top-level, "intent" keywords, e.g. `model`, `app`, `project` (?), etc.
 * Get rid of `project` structure for diagrams.
+* Single word keywords instead of `set of` use `setOf` or `set()`
