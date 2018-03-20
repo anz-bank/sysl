@@ -14,5 +14,5 @@ Modules, similar to Python modules, are derived from the file name stripping the
 	`import ../utils.sysl`
 * specify paths relative to `root` with `//`
 	`import //utils`
-* allow for filenames rather than modules on the commane line:
+* allow for filenames rather than modules on the command line:
 	`sysl textpb demo/simple.sysl`
