@@ -26,3 +26,5 @@ The following is a collection of unrelated, unevaluated ideas on how to improve 
 * Get rid of `project` structure for diagrams.
 * Single word keywords instead of `set of` use `setOf` or `set()`
 * Meta data on types in brackets `[~pk, ~autoinc]` and part of typedef: `int?` (`?` means optional)
+* Inconsistent naming in `reljam` commandline vs `*.sysl` file: `!wrap` vs `facade`
+* Find a better term for `!type` maybe `!object` (invokes association with JSON)
