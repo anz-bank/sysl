@@ -177,4 +177,67 @@ apps {
 }
 ```
 
+Reljam examples
+---------------
+
+### Java Model
+In the following example we will use `reljam model` to generate Java source code for a sysl data model.
+
+The input file `reljam-model.sysl` contains:
+
+```
+HelloWorld [package="io.sysl.demo"]:
+    !table Message:
+        id <: int [~pk, ~autoinc]
+        text <: string(50)
+```
+When executing
+
+    reljam model reljam-model.sysl HelloWorld
+
+the directory `io/sysl/demo` is created. It contains the following Java source files:
+
+    HelloWorld.java
+    HelloWorldException.java
+    HelloWorldJsonDeserializer.java
+    HelloWorldJsonSerializer.java
+    HelloWorldXmlDeserializer.java
+    HelloWorldXmlSerializer.java
+    Message.java
+
+### XSD
+
+In this example we will create an XSD file from a sysl data model with `reljam xsd`.
+
+The content of the input file `reljam-xsd.sysl` is:
+
+```
+Model:
+    !table Element1:
+        attr <: int [~xml_attribute]
+        element2 <: Element2.key
+
+    !table Element2:
+        key <: int [~pk]
+        field <: string
+```
+When executing
+
+    reljam xsd reljam-xsd.sysl
+
+the following `Model.xsd` file is created:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" [...] >
+  <xs:element name="Model">
+    <xs:complexType>
+      <xs:sequence maxOccurs="1" minOccurs="1">
+        <xs:element type="Element1List" name="Element1List" [...] />
+        <xs:element type="Element2List" name="Element2List" [...] />
+      </xs:sequence>
+    </xs:complexType>
+ [...]
+```
+
 
