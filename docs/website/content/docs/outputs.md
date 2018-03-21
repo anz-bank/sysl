@@ -8,7 +8,7 @@ bref: "Explore various output formats from diagrams to code"
 toc: false
 ---
 
-Sysl consists of two executables: `sysl` and `reljam`. The **Sy**stem **S**pecification **L**anguage `sysl` is mainly concerned with diagram creation whereas the **Rel**ational **Ja**va **M**odels creator `reljam` generates different types of source code output.
+Sysl consists of two executables: `sysl` and `reljam`.</br> The **Sy**stem **S**pecification **L**anguage `sysl` is mainly concerned with diagram creation whereas the **Rel**ational **Ja**va **M**odel program `reljam` generates different types of source code output.
 
 Sysl outputs
 ------------
