@@ -18,7 +18,11 @@ func TestLexer(t *testing.T) {
     regexes[5] = `import`
     regexes[6] = `[a-z][a-z0-9]*`
 
-    tokens := []token{{6, "keywords"}, {1, ":"}, {6, "while"}, {0, "|"}, {6, "return"}, {0, "|"}, {6, "if"}, {0, "|"}, {6, "else"}, {0, "|"}, {5, "import"}, {-1, ""}}
+    tokens := []token{
+                {6, "keywords"}, {1, ":"}, {6, "while"}, {0, "|"},
+                {6, "return"}, {0, "|"}, {6, "if"}, {0, "|"}, {6, "else"},
+                {0, "|"}, {5, "import"}, {-1, ""},
+            }
 
     lex := makeLexer(content, regexes)
     for i, expected := range tokens {
