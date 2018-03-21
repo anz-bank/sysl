@@ -1,5 +1,5 @@
 # sysl ints -o "example2.svg" /example2 --project "Internet Banking" -v
-# sysl ints -o "example2-epa.svg" /example2 --project "My Project :: Integration" --epa -v
+# sysl ints -o "example2-epa.svg" /example2 --project "Integration" --epa -v
 InternetBanking:
     GetCustomer:
         Customer <- GetCustomer
