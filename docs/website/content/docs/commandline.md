@@ -24,6 +24,7 @@ Input
 -----
 Specify one or more `*.sysl` input files relative to the `--root` directory. The default root directory is `.`, the current working directory.
 
+```
 optional arguments:
   -h, --help            show this help message and exit
   --no-validations, --nv

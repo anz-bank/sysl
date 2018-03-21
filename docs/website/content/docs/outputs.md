@@ -20,7 +20,6 @@ Sysl outputs
 | pb      | Binary Protocol Buffer files of the Sysl definitions (plugins)    |
 | textpb  | Text based Protocol Buffer files of the Sysl definitions (plugins, debugging) |
 
-
 Reljam outputs
 --------------
 | Command | Description |
@@ -34,17 +33,76 @@ Reljam outputs
 
 Sysl samples
 ------------
-`sysl` can generate diagrams and Protobuf representations of the `*.sysl` input.
+`sysl` can generate diagrams - Data model diagrams, Integration Diagrams and Sequence Diagrams - and Protobuf intermediate representations from `*.sysl` input files.
+
+`sysl ints -o "sysl-ints.png" /sysl-ints --project Project -v`
 
 ### ints
-![Integration diagram](/img/sysl/simple-sysl-int.svg)
+```
+IntegratedSystem:
+    integrated_endpoint_1:
+        System1 <- endpoint
+    integrated_endpoint_2:
+        System2 <- endpoint
 
-### sd
-![Sequence diagram](/img/sysl/simple-sysl-sd.svg)
+System1:
+    endpoint: ...
+System2:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    _:
+        IntegratedSystem
+        System1
+        System2
+```
+`sysl ints -o "sysl-ints.png" /sysl-ints --project Project -v`
+![Integration diagram](/img/sysl/simple-sysl-ints.svg)
+
+add the `--epa` (endpoint analysis) option for a more detailed diagrams.
+
 
 ### data
+
+`sysl data -o sysl-data.svg -j Project sysl-data.sysl`
+```
+Project:
+    _:
+        App
+
+App:
+    !type Order:
+        order_id <: int
+
+    !type Customer:
+        customer_id <: int
+        orders <: set of Order
+```
 ![Data model diagram](/img/sysl/simple-sysl-data.svg)
 
+### sd
+`sysl sd -a Project -o "sysl-sd-%(epname)".png /sysl-sd`
+```
+Database[~db]:
+    QueryUser (user_id):
+        Return User
+
+Api:
+    /users/{user_id<:int}/profile:
+        GET:
+                Database <- QueryUser(user_id)
+                Return UserProfile
+
+WebFrontend:
+    RequestProfile:
+        Api <- GET /users/{user_id}/profile
+        Return Profile Page
+
+Project [seqtitle="Profile"]:
+    _:
+        WebFrontend <- RequestProfile
+```
+![Sequence diagram](/img/sysl/simple-sysl-sd.svg)
 
 ### textpb
 Protocol buffers is a "language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler". It is a strongly typed binary format used as intermediate representations of Sysl definitions comparable to an abstract syntax tree. The strongly typed protocol buffers are supported in most major programming languages.
