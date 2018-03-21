@@ -1,0 +1,18 @@
+# reljam facade /reljam-facade UserFacade
+UserModel [package="io.sysl.demo.facade.model"]:
+    !table User:
+        id <: int [~pk, ~autoinc]
+        name <: string(50)
+        address_id <: Address.id
+
+    !table Address:
+        id <: int [~pk, ~autoinc]
+        street <: string(100)
+        state <: string(100)
+        zip <: string(10)
+        country <: string(100)
+
+UserFacade [package="io.sysl.demo.facade"]:
+    !wrap UserModel:
+        !type User
+        !type Address

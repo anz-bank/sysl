@@ -1,0 +1,5 @@
+# reljam model /reljam-model HelloWorld
+HelloWorld [package="io.sysl.demo"]:
+    !table Message:
+        id <: int [~pk, ~autoinc]
+        text <: string(50)
