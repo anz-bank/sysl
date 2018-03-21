@@ -6,7 +6,7 @@ import (
 	sysl "github.com/anz-bank/sysl/sysl2/proto"
 )
 
-func testParser(g *sysl.Grammar, numTerms int, tokens []int, text string, expected bool, t *testing.T) (bool, []interface{}) {
+func testParser(g *sysl.Grammar, numTerms int, tokens []int, text string, expectedResult bool, t *testing.T) (bool, []interface{}) {
 	p := makeParser(g, text)
 
 	if len(p.terminals) != numTerms {
@@ -25,7 +25,7 @@ func testParser(g *sysl.Grammar, numTerms int, tokens []int, text string, expect
 	actual = actual[:len(actual)-1]
 	result, tree := p.parseGrammar(&actual)
 
-	if result != expected {
+	if result != expectedResult {
 		t.Error("failed to parse " + text)
 	}
 	return result, tree
@@ -219,41 +219,6 @@ func TestJSON_Array5(t *testing.T) {
 	testParser(makeJSON(makeQuantifierZeroPlus()), 8, tokens, text, true, t)
 }
 
-func TestEBNF1(t *testing.T) {
-	text := `expr : INT | ID | expr;`
-	tokens := []int{2, 9, 1, 5, 1, 5, 2, 10, -1}
-
-	testParser(makeEBNF(), 11, tokens, text, true, t)
-}
-
-func TestEBNF2(t *testing.T) {
-	text := `expr : INT*;`
-	tokens := []int{2, 9, 1, 6, 10, -1}
-
-	testParser(makeEBNF(), 11, tokens, text, true, t)
-}
-
-func TestEBNF3(t *testing.T) {
-	text := `obj : "{" number* "}" ;`
-	p := makeParser(makeEBNF(), text)
-
-	actual := make([]token, 0)
-
-	for {
-		tok := p.l.nextToken()
-		if tok.id == -1 {
-			break
-		}
-		actual = append(actual, tok)
-	}
-	// actual = actual[:len(actual)-1]
-	result, tree := p.parseGrammar(&actual)
-	if !result {
-		t.Errorf("unable to parse text=(%s)", text)
-	}
-	buildGrammar(tree)
-}
-
 func TestFirstSet1(t *testing.T) {
 	g := makeEXPR()
 	terms := makeBuilder().buildTerminalsList(g.Rules)
@@ -281,5 +246,34 @@ func TestFirstSet2(t *testing.T) {
 
 	if len(first) < 0 || len(follow) < 0 {
 		t.Error("failed to calculate first set of E\n")
+	}
+}
+
+func TestEBNF1(t *testing.T) {
+	text := `expr : INT | ID | expr;`
+	tokens := []int{2, 9, 1, 5, 1, 5, 2, 10, -1}
+
+	testParser(makeEBNF(), 11, tokens, text, true, t)
+}
+
+func TestEBNF2(t *testing.T) {
+	text := `expr : INT*;`
+	tokens := []int{2, 9, 1, 6, 10, -1}
+
+	testParser(makeEBNF(), 11, tokens, text, true, t)
+}
+
+func TestBuildEBNFGrammar(t *testing.T) {
+	text := `
+        s : "d" | "c" s ;
+        `
+	g := parseEBNF(text, "obj", "s")
+
+	text = "ccd"
+	tokens := []int{1, 1, 0, -1}
+
+	result, _ := testParser(g, 2, tokens, text, true, t)
+	if !result {
+		t.Errorf("unable to parse text=(%s)", text)
 	}
 }

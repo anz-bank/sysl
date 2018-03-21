@@ -18,11 +18,7 @@ func makeQuantifierOnePlus() *sysl.Quantifier {
 	return &sysl.Quantifier{Union: &sysl.Quantifier_OnePlus{}}
 }
 
-func makeStringTerm(str string) *sysl.Term {
-	return &sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_String_{String_: str}}, Quantifier: nil}
-}
-
-func makeRegexpTerm(str string) *sysl.Term {
+func makeTerm(str string) *sysl.Term {
 	return &sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_Regexp{Regexp: str}}, Quantifier: nil}
 }
 
@@ -40,10 +36,10 @@ func makeRule(name string) (*sysl.RuleName, *sysl.Term) {
 // S –> bab | bA
 // A –> d | cA
 func makeGrammar1() *sysl.Grammar {
-	a := makeStringTerm("a")
-	b := makeStringTerm("b")
-	c := makeStringTerm("c")
-	d := makeStringTerm("d")
+	a := makeTerm("a")
+	b := makeTerm("b")
+	c := makeTerm("c")
+	d := makeTerm("d")
 
 	ruleNameA, A := makeRule("A")
 	ruleNameS, _ := makeRule("S")
@@ -74,22 +70,23 @@ func makeGrammar1() *sysl.Grammar {
 }
 
 func makeEBNF() *sysl.Grammar {
-	star := makeRegexpTerm("[*]")
-	plus := makeRegexpTerm("[+]")
-	qn := makeRegexpTerm("[?]")
-	alt := makeRegexpTerm("[|]")
-	colon := makeRegexpTerm("[:]")
-	semiColon := makeRegexpTerm("[;]")
-	openParen := makeRegexpTerm("[(]")
-	closeParen := makeRegexpTerm("[)]")
-	STRING := makeRegexpTerm(`["][^"]*["]`)
+	star := makeTerm("[*]")
+	plus := makeTerm("[+]")
+	qn := makeTerm("[?]")
+	alt := makeTerm("[|]")
+	colon := makeTerm("[:]")
+	semiColon := makeTerm("[;]")
+	openParen := makeTerm("[(]")
+	closeParen := makeTerm("[)]")
+	STRING := makeTerm(`["][^"]*["]`)
 
-	tokenName := makeRegexpTerm("[A-Z][0-9A-Z_]+")
-	lowercaseName := makeRegexpTerm("[a-z][0-9a-z_]+")
+	tokenName := makeTerm("[A-Z][0-9A-Z_]*")
+	lowercaseName := makeTerm("[a-z][0-9a-z_]*")
 
 	lhsName, lhsTerm := makeRule("lhs")
 	rhsName, rhsTerm := makeRule("rhs")
-	ruleName, _ := makeRule("rule")
+	ruleName, ruleTerm := makeRule("rule")
+	grammarName, _ := makeRule("grammar")
 	choiceName, choiceTerm := makeRule("choice")
 	seqName, seqTerm := makeRule("seq")
 	atomName, atomTerm := makeRule("atom")
@@ -111,10 +108,20 @@ func makeEBNF() *sysl.Grammar {
 		Quantifier: makeQuantifierZeroPlus(),
 	}
 
+	ruleTerm.Quantifier = makeQuantifierOnePlus()
+
 	return &sysl.Grammar{
 		Name:  "EBNF",
-		Start: "rule",
+		Start: "grammar",
 		Rules: map[string]*sysl.Rule{
+			"grammar": &sysl.Rule{
+				Name: grammarName,
+				Choices: &sysl.Choice{
+					Sequence: []*sysl.Sequence{
+						makeSequence(ruleTerm),
+					},
+				},
+			},
 			"rule": &sysl.Rule{
 				Name: ruleName,
 				Choices: &sysl.Choice{
@@ -194,13 +201,13 @@ func makeEBNF() *sysl.Grammar {
 // T' -> * F T' | /FT' |epsilon
 // F  -> (E) | int
 func makeEXPR() *sysl.Grammar {
-	plus := makeRegexpTerm("[+]")
-	minus := makeRegexpTerm("[-]")
-	star := makeRegexpTerm("[*]")
-	divide := makeRegexpTerm("[/]")
-	openParen := makeRegexpTerm("[(]")
-	closeParen := makeRegexpTerm("[)]")
-	integer := makeRegexpTerm("[0-9]+")
+	plus := makeTerm("[+]")
+	minus := makeTerm("[-]")
+	star := makeTerm("[*]")
+	divide := makeTerm("[/]")
+	openParen := makeTerm("[(]")
+	closeParen := makeTerm("[)]")
+	integer := makeTerm("[0-9]+")
 
 	ERuleName, ETerm := makeRule("E")
 	ETailRuleName, ETailTerm := makeRule("ETail")
@@ -267,10 +274,10 @@ func makeEXPR() *sysl.Grammar {
 //    | '{' '}'
 //    ;
 func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
-	curlyOpen := makeRegexpTerm("[{]")
-	curlyClosed := makeRegexpTerm("[}]")
-	comma := makeRegexpTerm("[,]")
-	number := makeRegexpTerm("[0-9]+")
+	curlyOpen := makeTerm("[{]")
+	curlyClosed := makeTerm("[}]")
+	comma := makeTerm("[,]")
+	number := makeTerm("[0-9]+")
 
 	objRuleName, _ := makeRule("obj")
 	obj2RuleName, obj2Term := makeRule("obj2")
@@ -328,14 +335,14 @@ func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
 func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 	// doubleQuote := makeTerm("\"")
 	// singleQuote := makeTerm("'")
-	curlyOpen := makeRegexpTerm("[{]")
-	curlyClosed := makeRegexpTerm("[}]")
-	comma := makeRegexpTerm("[,]")
-	sqOpen := makeRegexpTerm("[[]")
-	sqClose := makeRegexpTerm("[]]")
-	colon := makeRegexpTerm("[:]")
-	number := makeRegexpTerm("[0-9]+")
-	STRING := makeRegexpTerm(`["][^"]*["]`)
+	curlyOpen := makeTerm("[{]")
+	curlyClosed := makeTerm("[}]")
+	comma := makeTerm("[,]")
+	sqOpen := makeTerm("[[]")
+	sqClose := makeTerm("[]]")
+	colon := makeTerm("[:]")
+	number := makeTerm("[0-9]+")
+	STRING := makeTerm(`["][^"]*["]`)
 
 	jsonRuleName, _ := makeRule("json")
 	valueRuleName, valueTerm := makeRule("value")
@@ -424,9 +431,9 @@ func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 }
 
 func makeG2() *sysl.Grammar {
-	a := makeStringTerm("a")
-	b := makeStringTerm("b")
-	d := makeStringTerm("d")
+	a := makeTerm("a")
+	b := makeTerm("b")
+	d := makeTerm("d")
 
 	SruleName, _ := makeRule("S")
 	AruleName, ATerm := makeRule("A")
