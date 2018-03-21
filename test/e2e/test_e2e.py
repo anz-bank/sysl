@@ -34,7 +34,7 @@ def test_e2e(name, syslexe):
     actual = path.join(ACTUAL_DIR, name + '.txt')
     remove_file(actual)
 
-    args = ['--root', IN_DIR, 'textpb', '-o', actual, '/' + name]
+    args = ['--root', IN_DIR, 'textpb', '-o', actual, name + '.sysl']
 
     if syslexe:
         print 'Sysl exe call'

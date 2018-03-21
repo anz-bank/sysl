@@ -24,9 +24,9 @@ Reljam outputs
 --------------
 | Command | Description |
 |---------|-------------|
-| model   | Java model implementation (in memory) | 
+| model   | Java model implementation (in memory) |
 | facade  | Java facade implementation (restricted access to creating and populating models) |
-| view    | Java implementation of sysl model transformatios|
-| xsd     | XSD represtation of sysl model | 
+| view    | Java implementation of Sysl model transformations|
+| xsd     | XSD representation of Sysl model |
 | swagger | Swagger representation of REST APIs and models |
 | spring-rest-service | Java Spring REST API implementation |
