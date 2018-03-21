@@ -1,9 +1,9 @@
 # sysl ints -o "sysl-ints.png" /sysl-ints --project Project -v
 # sysl ints -o "sysl-ints-epa.png" /sysl-ints --project Project --epa -v
 IntegratedSystem:
-    _1:
+    integrated_endpoint_1:
         System1 <- endpoint
-    _2:
+    integrated_endpoint_2:
         System2 <- endpoint
 
 System1:

@@ -1170,3 +1170,6 @@ tr.border-none td {
     padding-bottom: 80px;
   }
 }
+#TableOfContents ul ul ul{
+  display: none;
+}
