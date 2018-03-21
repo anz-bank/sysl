@@ -1,0 +1,8 @@
+Model:
+    !table Element1:
+        attr <: int [~xml_attribute]
+        element2 <: Element2.key
+
+    !table Element2:
+        key <: int [~pk]
+        field <: string

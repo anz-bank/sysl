@@ -7,6 +7,9 @@ draft: false
 bref: "Create your first diagram from a Sysl specification"
 toc: false
 ---
+
+Sysl consists of two executables: `sysl` and `reljam`.</br> The **Sy**stem **S**pecification **L**anguage `sysl` is mainly concerned with diagram creation whereas the **Rel**ational **Ja**va **M**odel program `reljam` generates different types of source code output.
+
 Install Sysl
 ------------
 Windows users can run standalone Sysl executables whereas users of other operating systems need to work with either Python or Docker.

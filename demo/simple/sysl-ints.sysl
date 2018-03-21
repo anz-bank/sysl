@@ -1,0 +1,18 @@
+# sysl ints -o "sysl-ints.png" /sysl-ints --project Project -v
+# sysl ints -o "sysl-ints-epa.png" /sysl-ints --project Project --epa -v
+IntegratedSystem:
+    _1:
+        System1 <- endpoint
+    _2:
+        System2 <- endpoint
+
+System1:
+    endpoint: ...
+System2:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    _:
+        IntegratedSystem
+        System1
+        System2
