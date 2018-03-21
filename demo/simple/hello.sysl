@@ -1,0 +1,4 @@
+# sysl textpb hello.sysl --out hello-pb.textpb
+HelloWorld:
+    !type Message:
+        text <: string
