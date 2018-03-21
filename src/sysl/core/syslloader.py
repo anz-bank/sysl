@@ -1,7 +1,6 @@
 """sysl module loader"""
 
 import codecs
-import collections
 import os
 import re
 import sys
@@ -324,14 +323,12 @@ def load(names, validate, root):
     def do_import(name, indent="-"):
         """Import a sysl module and its dependencies."""
         imports.add(name)
-        # print indent, name
         (basedir, _) = os.path.split(name)
         new_imports = {
             root + i if i[:1] == '/' else os.path.join(basedir, i)
             for i in syslparse.Parser().parse(
                 codecs.open(name + '.sysl', 'r', 'utf8'), name + '.sysl', module)
         } - imports
-        #print >>sys.stderr, '+++++++++++', new_imports
         while new_imports:
             do_import(new_imports.pop(), indent + "-")
             new_imports -= imports
@@ -339,7 +336,9 @@ def load(names, validate, root):
     for name in names:
         if name not in imports:
             if name[:1] != '/':
-                raise RuntimeError('module ref must start with "/"')
+                name = '/' + name
+            if name.endswith('.sysl'):
+                name = name[:-5]
             do_import(root + name)
 
     try:

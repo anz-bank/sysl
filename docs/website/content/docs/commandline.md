@@ -24,10 +24,14 @@ Input
 -----
 Specify one or more `*.sysl` input files relative to the `--root` directory. The default root directory is `.`, the current working directory.
 
-In both `sysl` and `reljam`, you can list your desired input either as relative file paths or with the sysl module notation dropping the extension and adding a leading `/`. Considerthe following two, equivalent command line examples:
-
-    sysl textpb -o out.txt /hello
-    sysl textpb -o out.txt hello.sysl
+optional arguments:
+  -h, --help            show this help message and exit
+  --no-validations, --nv
+                        suppress validations
+  --root ROOT, -r ROOT  sysl root directory for input files (default: .)
+  --version, -v         show version number (semver.org standard)
+  --trace, -t
+```
 
 Output
 ------
