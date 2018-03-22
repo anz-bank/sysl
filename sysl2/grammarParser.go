@@ -46,11 +46,13 @@ func (b *builder) handleChoice(choice *sysl.Choice) {
                 b.handleChoice(t.GetAtom().GetChoices())
             }
             if str != "" {
-                _, has := b.tokens[str]
+                id, has := b.tokens[str]
                 if !has {
                     b.tokens[str] = int32(len(b.arr))
                     t.Atom.Id = int32(len(b.arr))
                     b.arr = append(b.arr, str)
+                } else {
+                    t.Atom.Id = id
                 }
             }
         }

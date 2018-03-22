@@ -7,26 +7,64 @@ import (
 	"github.com/anz-bank/sysl/sysl2/proto"
 )
 
-type createTerm func(string) *sysl.Term
-
-var termMap map[string]*sysl.Term
-
-func init() {
-    termMap = make(map[string]*sysl.Term)
-}
-
-func returnSecond(arg string) *sysl.Term {
-    _, t := makeRule(arg)
-    return t
-}
-
-func getTerm(str string, m createTerm) *sysl.Term {
-    t, has := termMap[str]
-    if has {
-        return t
+func makeStringAtom(str string) *sysl.Atom {
+    return &sysl.Atom{
+        Union: &sysl.Atom_Regexp{
+            Regexp: str,
+        },
     }
-    termMap[str] = m(str)
-    return termMap[str]
+}
+
+func makeRuleNameAtom(ruleName string) *sysl.Atom {
+    return &sysl.Atom{
+        Union: &sysl.Atom_Rulename{
+            Rulename: &sysl.RuleName{
+                Name: ruleName,
+            },
+        },
+    }
+}
+
+func makeQuantifier(item interface{}) *sysl.Quantifier {
+    var q *sysl.Quantifier
+    qs := item.([]interface{})
+    _, quantifier := ruleSeq(qs[0], "quantifier")
+
+    if quantifier != nil {
+        switch symbolTerm(quantifier[0]).tok.text {
+        case "*":
+            q = makeQuantifierZeroPlus()
+        case "+":
+            q = makeQuantifierOnePlus()
+        case "?":
+            q = makeQuantifierOptional()
+        default:
+            panic("not implemented yet.")
+        }
+    }
+    return q
+}
+
+func makeTerm(a *sysl.Atom, q *sysl.Quantifier) *sysl.Term {
+    return &sysl.Term{Atom: a, Quantifier: q}
+}
+
+func makeAtom(term interface{}) *sysl.Atom {
+    var a *sysl.Atom
+
+    atomType, atom := ruleSeq(term, "atom")
+
+    switch atomType {
+    case 0:
+        tokText := symbolTerm(atom[0]).tok.text
+        tokText = strings.Trim(tokText, `"`)
+        a = makeStringAtom(tokText)
+    case 2:
+        a = makeRuleNameAtom(symbolTerm(atom[0]).tok.text)
+    default:
+        panic("not implemented yet.")
+    }
+    return a
 }
 
 func symbolTerm(item interface{}) symbol {
@@ -47,6 +85,7 @@ func getChoice(choice map[int][]interface{}) (int, []interface{}) {
 // ruleSeq returns Rule.Choice.Sequence
 func ruleSeq(item interface{}, rulename string) (int, []interface{}) {
     rule, ok := item.(map[string]map[int][]interface{})
+
     if ok {
         return getChoice(rule[rulename])
     }
@@ -55,30 +94,13 @@ func ruleSeq(item interface{}, rulename string) (int, []interface{}) {
 
 func buildSequence(s0 []interface{}) *sysl.Sequence {
     terms := make([]*sysl.Term, 0)
+
     if s0 != nil {
         for _, term := range s0[0].([]interface{}) {
-            var t *sysl.Term
             _, t0 := ruleSeq(term, "term")
-            atomType, atom := ruleSeq(t0[0], "atom")
-
-            switch atomType {
-            case 0:
-                tokText := symbolTerm(atom[0]).tok.text
-                tokText = strings.Trim(tokText, `"`)
-                t = getTerm(tokText, makeTerm)
-            case 2:
-                t = getTerm(symbolTerm(atom[0]).tok.text, returnSecond)
-            case 3:
-                panic("not implemented yet.")
-            default:
-            }
-            terms = append(terms, t)
-            qs := t0[1].([]interface{})
-            _, quantifier := ruleSeq(qs[0], "quantifier")
-            if quantifier != nil {
-                fmt.Printf("%+v\n", quantifier[0])
-                // TODO: need to handle quantifers
-            }
+            atom := makeAtom(t0[0])
+            quantifier := makeQuantifier(t0[1])
+            terms = append(terms, makeTerm(atom, quantifier))
         }
     }
     return makeSequence(terms...)
@@ -86,10 +108,14 @@ func buildSequence(s0 []interface{}) *sysl.Sequence {
 
 func buildChoice(choice []interface{}) *sysl.Choice {
     choiceS := make([]*sysl.Sequence, 0)
+
     for option, seq := range choice {
         var s0 []interface{}
         if option > 0 {
             t := seq.([]interface{})[0]
+            if t == nil {
+                break
+            }
             tt := t.(map[int][]interface{})[0]
 
             _, s0 = ruleSeq(tt[1], "seq")
@@ -101,8 +127,9 @@ func buildChoice(choice []interface{}) *sysl.Choice {
     return &sysl.Choice{Sequence: choiceS}
 }
 
-func buildRule(ast []interface{}) *sysl.Rule {
-    _, rule := ruleSeq(ast[0], "rule")
+func buildRule(ast interface{}) *sysl.Rule {
+    fmt.Printf("%T\n", ast)
+    _, rule := ruleSeq(ast, "rule")
     _, lhs := ruleSeq(rule[0], "lhs")
     ruleName, _ := makeRule(symbolTerm(lhs[0]).tok.text)
     _, rhs := ruleSeq(rule[2], "rhs")
@@ -127,8 +154,8 @@ func buildGrammar(name string, start string, ast []interface{}) *sysl.Grammar {
     }
     _, grammar := ruleSeq(ast[0], "grammar")
 
-    for _, r := range grammar {
-        rule := buildRule(r.([]interface{}))
+    for _, r := range grammar[0].([]interface{}) {
+        rule := buildRule(r)
         g.Rules[rule.GetName().Name] = rule
     }
     return &g
