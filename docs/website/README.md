@@ -1,4 +1,4 @@
-Sysl webiste
+Sysl website
 ============
 
 This directory contains the source for the [sysl.io](https://sysl.io) website built with [Hugo](https://gohugo.io/), a static site generator which produces html from markdown. In this directory, `<repo>/docs/website` start `hugo serve` and view contents on [http://localhost:1313/](http://localhost:1313/) for updating docs and live reloading.
