@@ -28,7 +28,7 @@ class TestSetOf(unittest.TestCase):
 
             out = sysldata.dataviews(module, args)
 
-            setof_re = re.compile(r'_\d+\s+\*-- "0\.\.\*"\s+_\d+')
+            setof_re = re.compile(r'_\d+\s+\}--\s+"0\.\.\*"\s+"_\d+"')
 
             self.assertTrue(setof_re.search(out[0]))
 
@@ -53,6 +53,27 @@ class TestSetOf(unittest.TestCase):
         except (IOError, Exception) as e:
             self.fail(traceback.format_exc())
 
+    def test_relational_schema(self):
+
+        try:
+            (module, _, _) = syslloader.load('test/java/relationalmodel', True, '.')
+
+            d = {
+                'project': 'DataView',
+                'output': path.join(self.outpath, 'test_relationalmodel.png'),
+                'plantuml': '',
+                'verbose': '',
+                'filter': ''}
+            args = ap.Namespace(**d)
+
+            out = sysldata.dataviews(module, args)
+
+            setof_re = re.compile(r'_\d+\s+\}--\s+" "\s+"_\d+"')
+
+            self.assertTrue(len(setof_re.findall(out[0])) == 3)
+
+        except (IOError, Exception) as e:
+            self.fail(traceback.format_exc())
 
 if __name__ == '__main__':
     unittest.main()
