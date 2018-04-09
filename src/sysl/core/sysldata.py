@@ -23,7 +23,6 @@ def _make_varmgr(module, appname, write):
         app = module.apps[name]
         write('class "{}" as {} << (D,orchid) >> {{', name, var)
         typespec = module.apps.get(appname).types.get(name)
-        # assert typespec.WhichOneof('type') == 'tuple'
         attrs = typespec.tuple if typespec.WhichOneof('type') == 'tuple' else typespec.relation
 
         fields = sorted(attrs.attr_defs.iteritems(),
@@ -73,7 +72,7 @@ def _generate_view(module, appname, types):
             var_name(name)
 
             one_to_one = False
-            many_to_one = False
+            # many_to_one = False
             if typespec.WhichOneof('type') == 'tuple':
                 attrs = typespec.tuple
             else:
@@ -84,32 +83,22 @@ def _generate_view(module, appname, types):
                     continue
 
                 pkeys = attrs.primary_key.attr_name
-
-                if pkeys == fkeys:
-                    if len(pkeys) == 1:
-                        one_to_one = True
-                    else:
-                        many_to_one = True
-                else:
-                    many_to_one = True
-
-                if one_to_one and many_to_one:
-                    print("should not be possible!"), name
+                one_to_one = len(pkeys) == 1 and pkeys == fkeys
 
             fields = sorted(
                 attrs.attr_defs.iteritems(), key=_attr_sort_key)
 
             for (fieldname, fieldtype) in fields:
-                cardinality = u' '
+                line_label = u' '
                 line_style = u'--'
-                relation = u'*'
+                count_style = u'}}'
                 while fieldtype.WhichOneof('type') == 'list':
                     fieldtype = fieldtype.list.type
-                    cardinality = u'0..*'
+                    line_label = u'0..*'
 
                 if fieldtype.WhichOneof('type') == 'set':
                     fieldtype = fieldtype.set
-                    cardinality = u'0..*'
+                    line_label = u'0..*'
 
                 if fieldtype.WhichOneof('type') == 'type_ref':
                     ref = fieldtype.type_ref.ref.path[0]
@@ -120,18 +109,16 @@ def _generate_view(module, appname, types):
                     refs = [n for (_, n, _) in types if n.endswith(ref)]
 
                     if one_to_one:
-                        relation = u''
-                        cardinality = u'1..1'
-                    elif many_to_one:
-                        relation = u'}}'
+                        count_style = u''
+                        line_label = u'1..1'
 
                     if fieldtype.opt:
                         line_style = u'..'
 
-                    line_style = relation + line_style
+                    line_style = count_style + line_style
 
                     line_template = u'{} {} "{}" "{}"'.format(
-                        var_name(name), line_style, cardinality, var_name(refs[0]) if refs else ref)
+                        var_name(name), line_style, line_label, var_name(refs[0]) if refs else ref)
                     write(line_template, '')
 
     return str(write)
