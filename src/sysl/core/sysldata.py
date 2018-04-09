@@ -49,7 +49,7 @@ def _make_varmgr(module, appname, write):
                 typestr = '.'.join(fieldtype.type_ref.ref.path)
                 bold = True
                 if fieldtype.opt:
-                    suffix='?'
+                    suffix = '?'
             else:
                 typestr = '<color red>**{}**</color>'.format(which)
             typestr = prefix + typestr + suffix

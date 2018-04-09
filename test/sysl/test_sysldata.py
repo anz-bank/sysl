@@ -75,5 +75,6 @@ class TestSetOf(unittest.TestCase):
         except (IOError, Exception) as e:
             self.fail(traceback.format_exc())
 
+
 if __name__ == '__main__':
     unittest.main()
