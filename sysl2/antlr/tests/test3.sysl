@@ -1,0 +1,14 @@
+Library:
+    !table User:
+        UserId <: int [~pk, ~autoinc]
+        name <: string
+        city <: string(100)
+        amount <: decimal(14.2)
+    !table Book:
+        BookId <: int [~pk, ~autoinc]
+        name <: string
+        Author <: string
+    !table Borrow:
+        UserId <: User.UserId [~pk]
+        BookId <: int [~pk]
+        DueDate <: date
