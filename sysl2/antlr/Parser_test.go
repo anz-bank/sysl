@@ -28,8 +28,9 @@ func loadAndCompare(filename string, m2 *sysl.Module) bool {
 	if err != nil {
 		return false
 	}
-	TextPB(m2)
-	TextPB(&mod)
+	// uncomment to compare
+	// TextPB(m2)
+	// TextPB(&mod)
 
 	return proto.Equal(&mod, m2)
 }

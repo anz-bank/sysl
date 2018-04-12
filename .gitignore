@@ -5,6 +5,7 @@ dist
 build
 .eggs
 .gradle
+.antlr
 
 /tmp
 /docs/website/public
