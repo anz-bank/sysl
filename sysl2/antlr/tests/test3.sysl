@@ -1,6 +1,6 @@
 Library:
-    !table User:
-        UserId <: int [~pk, ~autoinc]
+    !table Member:
+        MemberId <: int [~pk, ~autoinc]
         name <: string
         city <: string(100)
         amount <: decimal(14.2)
@@ -9,6 +9,6 @@ Library:
         name <: string
         Author <: string
     !table Borrow:
-        UserId <: User.UserId [~pk]
+        MemberId <: Member.MemberId [~pk]
         BookId <: int [~pk]
         DueDate <: date
