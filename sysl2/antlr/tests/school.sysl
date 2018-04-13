@@ -1,0 +1,8 @@
+School:
+    !table Class:
+        Id <: int [~pk, ~autoinc]
+    !table Student:
+        Id <: int [~pk]
+        ClassId <: Class.Id
+
+

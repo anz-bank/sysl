@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -11,8 +12,14 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-func loadAndCompare(filename string, m2 *sysl.Module) bool {
-	cmd := exec.Command("sysl", "pb", "-o", filename+".pb", filename)
+func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
+	args := []string{"pb", "-o", filename + ".pb", filename}
+	if len(root) > 0 {
+		root := []string{"--root", root}
+		args = append(root, args...)
+	}
+
+	cmd := exec.Command("sysl", args...)
 	err := cmd.Run()
 	if err != nil {
 		return false
@@ -29,33 +36,50 @@ func loadAndCompare(filename string, m2 *sysl.Module) bool {
 		return false
 	}
 	// uncomment to compare
-	// TextPB(m2)
-	// TextPB(&mod)
+	fmt.Println("generated")
+	TextPB(m2)
+	fmt.Println("golden")
+	TextPB(&mod)
 
 	return proto.Equal(&mod, m2)
 }
 
 func TestSimpleEP(t *testing.T) {
 	filename := "tests/test1.sysl"
-	if loadAndCompare(filename, Parse(filename, "")) == false {
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }
 func TestSimpleEP2(t *testing.T) {
 	filename := "tests/test4.sysl"
-	if loadAndCompare(filename, Parse(filename, "")) == false {
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }
 func TestTuple(t *testing.T) {
 	filename := "tests/test2.sysl"
-	if loadAndCompare(filename, Parse(filename, "")) == false {
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }
 func TestRelational(t *testing.T) {
-	filename := "tests/test3.sysl"
-	if loadAndCompare(filename, Parse(filename, "")) == false {
+	filename := "tests/school.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestImports(t *testing.T) {
+	filename := "tests/library.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestRootArg(t *testing.T) {
+	filename := "school.sysl"
+	root := "tests"
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
 		t.Error("failed")
 	}
 }

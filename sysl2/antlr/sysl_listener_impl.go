@@ -1,7 +1,6 @@
 package main // SyslParser
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -13,17 +12,25 @@ import (
 // TreeShapeListener ..
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
+	base      string
 	root      string
+	imports   []string
 	module    *sysl.Module
 	appname   string
 	typename  string
-	fieldname string
+	fieldname []string
 	typemap   map[string]*sysl.Type
 }
 
 // NewTreeShapeListener ...
-func NewTreeShapeListener(root string) *TreeShapeListener {
-	return &TreeShapeListener{root: root}
+func NewTreeShapeListener(base, root string) *TreeShapeListener {
+	return &TreeShapeListener{
+		base: base,
+		root: root,
+		module: &sysl.Module{
+			Apps: make(map[string]*sysl.Application),
+		},
+	}
 }
 
 // VisitErrorNode is called when an error node is visited.
@@ -257,7 +264,7 @@ func search(attr string, attrs []*sysl.Attribute) bool {
 
 // EnterField is called when production field is entered.
 func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
-	s.fieldname = ctx.Name().GetText()
+	s.fieldname = append(s.fieldname, ctx.Name().GetText())
 
 	field_type := ctx.Field_type().(*parser.Field_typeContext)
 	size_spec, has_size_spec := field_type.Size_spec().(*parser.Size_specContext)
@@ -318,7 +325,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 			Line: int32(ctx.GetStart().GetLine()),
 		},
 	}
-	s.typemap[s.fieldname] = type1
+	s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
 }
 
 // ExitField is called when production field is exited.
@@ -326,12 +333,14 @@ func (s *TreeShapeListener) ExitField(ctx *parser.FieldContext) {}
 
 // EnterTable is called when production table is entered.
 func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
-	s.typemap = make(map[string]*sysl.Type)
 	s.typename = ctx.Name().GetText()
-
-	// fmt.Printf("Enter Table: %s %s\n", s.appname, s.typename)
+	s.typemap = make(map[string]*sysl.Type)
 
 	if ctx.TABLE() != nil {
+		if s.module.Apps[s.appname].Types[s.typename].GetRelation().GetAttrDefs() != nil {
+			panic("not implemented yet")
+		}
+
 		s.module.Apps[s.appname].Types[s.typename] = &sysl.Type{
 			Type: &sysl.Type_Relation_{
 				Relation: &sysl.Type_Relation{
@@ -353,13 +362,13 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 
 // ExitTable is called when production table is exited.
 func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
-
 	rel := s.module.Apps[s.appname].Types[s.typename].GetRelation()
 	if rel == nil {
 		return
 	}
 	pks := make([]string, 0)
-	for name, f := range rel.AttrDefs {
+	for _, name := range s.fieldname {
+		f := rel.GetAttrDefs()[name]
 		patterns, has := f.GetAttrs()["patterns"]
 		if has {
 			for _, a := range patterns.GetA().Elt {
@@ -375,6 +384,7 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 		}
 	}
 	s.typename = ""
+	s.fieldname = []string{}
 }
 
 // EnterPackage_name is called when production package_name is entered.
@@ -400,15 +410,27 @@ func (s *TreeShapeListener) ExitApp_name(ctx *parser.App_nameContext) {}
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribsContext) {
 	s.appname = ctx.App_name().GetText()
-	s.module.Apps[s.appname] = &sysl.Application{
-		Name: &sysl.AppName{
-			Part: make([]string, 0),
-		},
+	if _, has := s.module.Apps[s.appname]; !has {
+		s.module.Apps[s.appname] = &sysl.Application{
+			Name: &sysl.AppName{
+				Part: make([]string, 0),
+			},
+		}
+	} else {
+		s.module.Apps[s.appname].GetName().Part = []string{}
+	}
+	if ctx.QSTRING() != nil {
+		s.module.Apps[s.appname].LongName = ctx.QSTRING().GetText()
 	}
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		attribMap := make(map[string]*sysl.Attribute)
-		s.module.Apps[s.appname].Attrs = attribMap
+		var attribMap map[string]*sysl.Attribute
+		if s.module.Apps[s.appname].Attrs == nil {
+			attribMap = make(map[string]*sysl.Attribute)
+			s.module.Apps[s.appname].Attrs = attribMap
+		}
+		attribMap = s.module.Apps[s.appname].Attrs
+
 		for _, e := range attribs.AllEntry() {
 			entry := e.(*parser.EntryContext)
 			if nvp, ok := entry.Nvp().(*parser.NvpContext); ok {
@@ -429,6 +451,10 @@ func (s *TreeShapeListener) ExitName_with_attribs(ctx *parser.Name_with_attribsC
 
 // EnterModel_name is called when production model_name is entered.
 func (s *TreeShapeListener) EnterModel_name(ctx *parser.Model_nameContext) {
+	if s.module.Apps[s.appname].Wrapped.Name != nil {
+		panic("not implemented yet?")
+	}
+
 	s.module.Apps[s.appname].Wrapped.Name = &sysl.AppName{
 		Part: []string{ctx.Name().GetText()},
 	}
@@ -646,13 +672,13 @@ func (s *TreeShapeListener) ExitEvent(ctx *parser.EventContext) {}
 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
-	if len(ctx.AllTable()) > 0 {
+	if s.module.Apps[s.appname].Types == nil && len(ctx.AllTable()) > 0 {
 		s.module.Apps[s.appname].Types = make(map[string]*sysl.Type)
 	}
-	if len(ctx.AllApi_endpoint()) > 0 {
+	if s.module.Apps[s.appname].Endpoints == nil && len(ctx.AllApi_endpoint()) > 0 {
 		s.module.Apps[s.appname].Endpoints = make(map[string]*sysl.Endpoint)
 	}
-	if len(ctx.AllFacade()) > 0 {
+	if s.module.Apps[s.appname].Wrapped == nil && len(ctx.AllFacade()) > 0 {
 		s.module.Apps[s.appname].Wrapped = &sysl.Application{
 			Types: make(map[string]*sysl.Type),
 		}
@@ -676,7 +702,15 @@ func (s *TreeShapeListener) EnterPath(ctx *parser.PathContext) {}
 func (s *TreeShapeListener) ExitPath(ctx *parser.PathContext) {}
 
 // EnterImport_stmt is called when production import_stmt is entered.
-func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {}
+func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
+	path := strings.TrimSpace(ctx.TEXT().GetText())
+	if path[0] == '/' {
+		path = s.root + path
+	} else {
+		path = s.base + "/" + path + ".sysl"
+	}
+	s.imports = append(s.imports, path)
+}
 
 // ExitImport_stmt is called when production import_stmt is exited.
 func (s *TreeShapeListener) ExitImport_stmt(ctx *parser.Import_stmtContext) {}
@@ -689,55 +723,9 @@ func (s *TreeShapeListener) ExitImports_decl(ctx *parser.Imports_declContext) {}
 
 // EnterSysl_file is called when production sysl_file is entered.
 func (s *TreeShapeListener) EnterSysl_file(ctx *parser.Sysl_fileContext) {
-	s.module = &sysl.Module{
-		Apps: make(map[string]*sysl.Application),
-	}
 }
 
 // ExitSysl_file is called when production sysl_file is exited.
 func (s *TreeShapeListener) ExitSysl_file(ctx *parser.Sysl_fileContext) {
-	for appName, app := range s.module.Apps {
-
-		for typeName, types := range app.Types {
-			var attrs map[string]*sysl.Type
-
-			switch x := types.Type.(type) {
-			case *sysl.Type_Tuple_:
-				attrs = x.Tuple.GetAttrDefs()
-			case *sysl.Type_Relation_:
-				attrs = x.Relation.GetAttrDefs()
-			}
-			for fieldname, t := range attrs {
-				if x := t.GetTypeRef(); x != nil {
-					refApp := app
-					// refApp := x.GetRef().GetAppname()
-					// if refApp == nil {
-					// }
-					refName := x.GetRef().GetPath()[0]
-					_, has := refApp.Types[refName]
-					if has == false {
-						fmt.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n", fieldname, typeName, refName, appName)
-					} else {
-						var ref_attrs map[string]*sysl.Type
-
-						switch types.Type.(type) {
-						case *sysl.Type_Tuple_:
-							refType, _ := refApp.Types[refName].Type.(*sysl.Type_Tuple_)
-							ref_attrs = refType.Tuple.GetAttrDefs()
-						case *sysl.Type_Relation_:
-							refType, _ := refApp.Types[refName].Type.(*sysl.Type_Relation_)
-							ref_attrs = refType.Relation.GetAttrDefs()
-						}
-
-						field := x.GetRef().GetPath()[1]
-						_, has = ref_attrs[field]
-
-						if has == false {
-							fmt.Printf("2:Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)\n", fieldname, typeName, field, appName, refName)
-						}
-					}
-				}
-			}
-		}
-	}
+	s.appname = ""
 }

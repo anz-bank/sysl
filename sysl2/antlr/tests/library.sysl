@@ -1,6 +1,8 @@
-Library:
+import school
+
+School:
     !table Member:
-        MemberId <: int [~pk, ~autoinc]
+        MemberId <: Student.Id
         name <: string
         city <: string(100)
         amount <: decimal(14.2)
@@ -10,5 +12,5 @@ Library:
         Author <: string
     !table Borrow:
         MemberId <: Member.MemberId [~pk]
-        BookId <: int [~pk]
+        BookId <: Book.BookId [~pk]
         DueDate <: date

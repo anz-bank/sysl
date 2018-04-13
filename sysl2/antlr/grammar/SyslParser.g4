@@ -60,7 +60,6 @@ sub_package    : NAME_SEP package_name;
 app_name       : package_name sub_package*;
 
 name_with_attribs       :   app_name  QSTRING? attribs_or_modifiers?
-                        //     {System.out.println("Name (app_name):"+ $app_name.text);}
                         ;
 
 model_name          :  Name COLON ;
