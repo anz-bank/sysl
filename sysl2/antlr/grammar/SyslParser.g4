@@ -94,8 +94,8 @@ for_stmt                : FOR for_cond
                                 INDENT http_statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;
-group_stmt              : GROUP TEXT_NAME COLON
-                                INDENT http_statements+ DEDENT;
+// group_stmt              : GROUP TEXT_NAME COLON
+//                                 INDENT http_statements+ DEDENT;
 
 one_of_case_label: Name*;
 
@@ -114,7 +114,7 @@ http_statements: doc_string
                 | call_stmt
                 | one_of_stmt
                 | http_method_comment
-                | group_stmt
+                // | group_stmt
                 | QSTRING
                 | WHATEVER
                 | text_stmt

@@ -2,7 +2,8 @@ import school
 
 School:
     !table Member:
-        MemberId <: Student.Id
+        MemberId <: Student.Id:
+            @description = "\n"
         name <: string
         city <: string(100)
         amount <: decimal(14.2)

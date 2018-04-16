@@ -97,6 +97,9 @@ func Parse(filename string, root string) *sysl.Module {
 	root, _ = filepath.Abs(root)
 
 	if !fileExists(filename) {
+		if filename[len(filename)-5:] != ".sysl" {
+			filename = filename + ".sysl"
+		}
 		temp := root + "/" + filename
 
 		if !fileExists(temp) {

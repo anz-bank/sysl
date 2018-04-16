@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"testing"
@@ -13,33 +14,44 @@ import (
 )
 
 func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
-	args := []string{"pb", "-o", filename + ".pb", filename}
+	output := filename + ".pb"
+
+	args := []string{"pb", "-o", output, filename}
 	if len(root) > 0 {
 		root := []string{"--root", root}
+		args[2] = root[1] + args[2]
+		output = args[2]
 		args = append(root, args...)
 	}
 
 	cmd := exec.Command("sysl", args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	err := cmd.Run()
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
 	buf := bytes.NewBuffer(nil)
 
-	f, _ := os.Open(filename + ".pb")
+	f, _ := os.Open(output)
 	io.Copy(buf, f)
 	f.Close()
 
 	mod := sysl.Module{}
 	err = proto.Unmarshal(buf.Bytes(), &mod)
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
 	// uncomment to compare
-	fmt.Println("generated")
-	TextPB(m2)
-	fmt.Println("golden")
-	TextPB(&mod)
+	// fmt.Println("generated")
+	ioutil.WriteFile("generated.txt", []byte(proto.MarshalTextString(m2)), os.ModePerm)
+	ioutil.WriteFile("golden.txt", []byte(proto.MarshalTextString(&mod)), os.ModePerm)
+
+	// TextPB(m2)
+	// fmt.Println("golden")
+	// TextPB(&mod)
 
 	return proto.Equal(&mod, m2)
 }
@@ -72,6 +84,15 @@ func TestRelational(t *testing.T) {
 func TestImports(t *testing.T) {
 	filename := "tests/library.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestPo(t *testing.T) {
+	filename := "/platforms/csp/po/order_model"
+	root := "/Users/singhs93/projects/sysl/system"
+
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
 		t.Error("failed")
 	}
 }

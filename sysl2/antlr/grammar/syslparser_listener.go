@@ -149,9 +149,6 @@ type SyslParserListener interface {
 	// EnterHttp_method_comment is called when entering the http_method_comment production.
 	EnterHttp_method_comment(c *Http_method_commentContext)
 
-	// EnterGroup_stmt is called when entering the group_stmt production.
-	EnterGroup_stmt(c *Group_stmtContext)
-
 	// EnterOne_of_case_label is called when entering the one_of_case_label production.
 	EnterOne_of_case_label(c *One_of_case_labelContext)
 
@@ -349,9 +346,6 @@ type SyslParserListener interface {
 
 	// ExitHttp_method_comment is called when exiting the http_method_comment production.
 	ExitHttp_method_comment(c *Http_method_commentContext)
-
-	// ExitGroup_stmt is called when exiting the group_stmt production.
-	ExitGroup_stmt(c *Group_stmtContext)
 
 	// ExitOne_of_case_label is called when exiting the one_of_case_label production.
 	ExitOne_of_case_label(c *One_of_case_labelContext)
