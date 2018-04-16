@@ -3,7 +3,7 @@ lexer grammar SyslLexer;
 tokens { INDENT, DEDENT}
 
 @lexer::header {
-    import "strings"
+    import "encoding/json"
 }
 
 @lexer::members {
@@ -96,7 +96,10 @@ QSTRING: (
             (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
         )
         {
-            l.SetText(strings.Replace(l.GetText(), "\\n", "\n", -1))
+            var val string
+            if json.Unmarshal([]byte(l.GetText()), &val) == nil {
+                l.SetText(val)
+            }
         }
     ;
 

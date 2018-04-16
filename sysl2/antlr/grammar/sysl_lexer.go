@@ -9,7 +9,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 )
 
-import "strings"
+import "encoding/json"
 
 // Suppress unused import error
 var _ = fmt.Printf
@@ -489,7 +489,10 @@ func (l *SyslLexer) QSTRING_Action(localctx antlr.RuleContext, actionIndex int) 
 	switch actionIndex {
 	case 4:
 
-		l.SetText(strings.Replace(l.GetText(), "\\n", "\n", -1))
+		var val string
+		if json.Unmarshal([]byte(l.GetText()), &val) == nil {
+			l.SetText(val)
+		}
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))

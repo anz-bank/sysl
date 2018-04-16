@@ -97,6 +97,15 @@ func TestPo(t *testing.T) {
 	}
 }
 
+func TestParty(t *testing.T) {
+	filename := "/platforms/csp/party"
+	root := "/Users/singhs93/projects/sysl/system"
+
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
+		t.Error("failed")
+	}
+}
+
 func TestRootArg(t *testing.T) {
 	filename := "school.sysl"
 	root := "tests"
