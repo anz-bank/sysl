@@ -3,7 +3,7 @@ Server [~rest]:
         GET:
             ...
         /{id<:int}:
-            GET:
+            GET ?depth=int&limit=int?&offset=int?:
                 ...
             /second:
                 PUT:

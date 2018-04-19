@@ -13,6 +13,8 @@ var linenum int
 var in_sq_brackets int
 
 var gotNewLine bool
+var gotHttpVerb bool
+
 var prevTokenIndex = -1
 
 func (l *SyslLexer) NextToken() antlr.Token {
@@ -22,7 +24,9 @@ func (l *SyslLexer) NextToken() antlr.Token {
 }
 
 NativeDataTypes     : 'int' | 'string' | 'date' | 'bool' | 'decimal' | 'datetime' ;
-HTTP_VERBS          : 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH';
+HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH')
+                    { gotHttpVerb = true}
+                    ;
 
 WRAP                : '!wrap';
 TABLE               : '!table';
@@ -113,7 +117,7 @@ QSTRING: (
     ;
 
 NEWLINE             : '\r'? '\n'
-                    {gotNewLine = true; spaces=0; linenum++;}
+                    {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
                      -> channel(HIDDEN)
                     ;
 
@@ -123,13 +127,16 @@ SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 // '->', required for events
 // '/', for rest api
 // ':', for everything
-// '='
+// '=' '{' '}' '&' '?'
 fragment
-PRINTABLE       :   ~[ \n\r!"#'\-/:=<?@[\]{}|]+;
+PRINTABLE       :   ~[ \n\r!"#'&\-/:=<?@[\]{}|]+;
 
 // defined before Name
-TEXT_LINE       :  PRINTABLE ([ &\-]+ PRINTABLE)+
+TEXT_LINE       :
+                { !gotHttpVerb}?
+                PRINTABLE ([ &\-]+ PRINTABLE)+
                 { in_sq_brackets == 0 }?
+                { !gotHttpVerb}?
                 { startsWithKeyword(p.GetText()) == false}?
                 //  { (_input.LA(1) == '\n') | ((_input.LA(1) == '\r') && (_input.LA(2) == '\n')) }?
                 ;

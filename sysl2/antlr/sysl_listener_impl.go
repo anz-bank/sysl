@@ -578,25 +578,33 @@ func (s *TreeShapeListener) ExitDocumentation_stmts(ctx *parser.Documentation_st
 func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 	var_name := ctx.Name().GetText()
 	var type1 *sysl.Type
-
 	context_app_part := []string{s.appname}
-	ref_path := []string{
-		ctx.Var_in_curly().GetText(),
-	}
+	var ref_path []string
 
-	type1 = &sysl.Type{
-		Type: &sysl.Type_TypeRef{
-			TypeRef: &sysl.ScopedRef{
-				Context: &sysl.Scope{
-					Appname: &sysl.AppName{
-						Part: context_app_part,
+	if ctx.Var_in_curly() != nil {
+		ref_path = append(ref_path, ctx.Var_in_curly().GetText())
+		type1 = &sysl.Type{
+			Type: &sysl.Type_TypeRef{
+				TypeRef: &sysl.ScopedRef{
+					Context: &sysl.Scope{
+						Appname: &sysl.AppName{
+							Part: context_app_part,
+						},
+					},
+					Ref: &sysl.Scope{
+						Path: ref_path,
 					},
 				},
-				Ref: &sysl.Scope{
-					Path: ref_path,
-				},
 			},
-		},
+		}
+	} else {
+		type_str := strings.ToUpper(ctx.NativeDataTypes().GetText())
+		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[type_str])
+		type1 = &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: primitive_type,
+			},
+		}
 	}
 
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
@@ -605,13 +613,17 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 		Loc:  true,
 	}
 
+	if ctx.QN() != nil {
+		rest_param.Type.Opt = true
+	}
+
 	rest_param.Type.SourceContext = &sysl.SourceContext{
 		Start: &sysl.SourceContext_Location{
 			Line: int32(ctx.GetStart().GetLine()),
 		},
 	}
-
 	s.method_queryparams = append(s.method_queryparams, rest_param)
+
 }
 
 // ExitQuery_var is called when production query_var is exited.
