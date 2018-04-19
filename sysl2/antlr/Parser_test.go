@@ -93,15 +93,6 @@ func TestRestApi(t *testing.T) {
 	}
 }
 
-func TestPo(t *testing.T) {
-	filename := "/platforms/csp/po/order_model"
-	root := "/Users/singhs93/projects/sysl/system"
-
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
-		t.Error("failed")
-	}
-}
-
 func TestRootArg(t *testing.T) {
 	filename := "school.sysl"
 	root := "tests"

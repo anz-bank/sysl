@@ -53,7 +53,7 @@ query_var       : Name EQ (Name | NativeDataTypes | var_in_curly);
 query_param     : QN query_var (AMP query_var)*;
 
 http_path_var_with_type : CURLY_OPEN Name LESS_COLON (NativeDataTypes | Name) CURLY_CLOSE;
-http_path_static : Name;
+http_path_static : Name | TEXT_LINE;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
 http_path       : FORWARD_SLASH | http_path_suffix+;
 
@@ -63,7 +63,7 @@ ret_stmt        : RETURN TEXT;
 
 target          : (DOT | app_name);
 target_endpoint : (TEXT_NAME | Name);
-call_stmt       : target (MEMBER target_endpoint);
+call_stmt       : target (ARROW_LEFT target_endpoint);
 
 if_stmt                 : IF TEXT_NAME COLON INDENT statements* DEDENT;
 if_else                 : if_stmt (ELSE COLON INDENT statements* DEDENT)?;
@@ -133,7 +133,7 @@ collector:  COLLECTOR COLON (WHATEVER | (INDENT collector_stmts+ DEDENT));
 event: DISTANCE EVENT_NAME
         attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
 
-subscribe: Name SUBSCRIBE attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
+subscribe: Name ARROW_RIGHT attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
 
 app_decl: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation )+ DEDENT;
 

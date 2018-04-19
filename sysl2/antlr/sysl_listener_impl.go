@@ -688,7 +688,7 @@ func (s *TreeShapeListener) ExitRet_stmt(ctx *parser.Ret_stmtContext) {}
 // EnterTarget is called when production target is entered.
 func (s *TreeShapeListener) EnterTarget(ctx *parser.TargetContext) {
 	if ctx.DOT() != nil {
-		s.app_name = append(s.app_name, ctx.DOT().GetText())
+		s.app_name = []string{s.appname}
 	}
 }
 
@@ -924,7 +924,19 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {}
 func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {}
 
 // EnterEvent is called when production event is entered.
-func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {}
+func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
+	if ctx.EVENT_NAME() != nil {
+		s.typename = ctx.EVENT_NAME().GetText()
+		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
+			Name:     s.typename,
+			Stmt:     make([]*sysl.Statement, 0),
+			IsPubsub: true,
+		}
+		if ctx.Attribs_or_modifiers() != nil {
+			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		}
+	}
+}
 
 // ExitEvent is called when production event is exited.
 func (s *TreeShapeListener) ExitEvent(ctx *parser.EventContext) {}
@@ -934,7 +946,7 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	if s.module.Apps[s.appname].Types == nil && len(ctx.AllTable()) > 0 {
 		s.module.Apps[s.appname].Types = make(map[string]*sysl.Type)
 	}
-	if s.module.Apps[s.appname].Endpoints == nil && (len(ctx.AllSimple_endpoint()) > 0 || len(ctx.AllRest_endpoint()) > 0) {
+	if s.module.Apps[s.appname].Endpoints == nil && (ctx.Simple_endpoint(0) != nil || ctx.Rest_endpoint(0) != nil || ctx.Event(0) != nil) {
 		s.module.Apps[s.appname].Endpoints = make(map[string]*sysl.Endpoint)
 		s.url_prefix = []string{""}
 		s.rest_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
@@ -945,7 +957,6 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 			Types: make(map[string]*sysl.Type),
 		}
 	}
-	// fmt.Println(len(ctx.AllEvent()))
 }
 
 // ExitApp_decl is called when production app_decl is exited.

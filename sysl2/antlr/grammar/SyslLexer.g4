@@ -50,9 +50,9 @@ ONE_OF              : [oO]'ne of'      ;//-> pushMode(FREE_TEXT_NAME);
 DISTANCE            : '<->'         -> pushMode(EVENT_NAME_MODE);
 NAME_SEP            : '::'          -> pushMode(FREE_TEXT_NAME);
 LESS_COLON          : '<:';
-MEMBER              : '<-'          -> pushMode(FREE_TEXT_NAME);
+ARROW_LEFT          : '<-'          -> pushMode(FREE_TEXT_NAME);
+ARROW_RIGHT         : '->';
 COLLECTOR           : '.. * <- *';
-SUBSCRIBE           : '->';
 PLUS                : '+';
 TILDE               : '~';
 COMMA               : ',';
@@ -119,9 +119,10 @@ NEWLINE             : '\r'? '\n'
 
 SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 
-// add '<', required for transformation syntax
+// '<-', required for transformation syntax
+// '->', required for events
 fragment
-PRINTABLE       :   ~[ :?\r\n@!|<'"#[\\/\]]+;
+PRINTABLE       :   ~[ :?\r\n@!|<\-'"#[\\/\]]+;
 
 // defined before Name
 TEXT_LINE       :  PRINTABLE ([ &\-]+ PRINTABLE)+
