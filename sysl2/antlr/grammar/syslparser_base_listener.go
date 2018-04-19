@@ -213,17 +213,11 @@ func (s *BaseSyslParserListener) EnterDocumentation_stmts(ctx *Documentation_stm
 // ExitDocumentation_stmts is called when production documentation_stmts is exited.
 func (s *BaseSyslParserListener) ExitDocumentation_stmts(ctx *Documentation_stmtsContext) {}
 
-// EnterVariable_substitution is called when production variable_substitution is entered.
-func (s *BaseSyslParserListener) EnterVariable_substitution(ctx *Variable_substitutionContext) {}
+// EnterVar_in_curly is called when production var_in_curly is entered.
+func (s *BaseSyslParserListener) EnterVar_in_curly(ctx *Var_in_curlyContext) {}
 
-// ExitVariable_substitution is called when production variable_substitution is exited.
-func (s *BaseSyslParserListener) ExitVariable_substitution(ctx *Variable_substitutionContext) {}
-
-// EnterStatic_path is called when production static_path is entered.
-func (s *BaseSyslParserListener) EnterStatic_path(ctx *Static_pathContext) {}
-
-// ExitStatic_path is called when production static_path is exited.
-func (s *BaseSyslParserListener) ExitStatic_path(ctx *Static_pathContext) {}
+// ExitVar_in_curly is called when production var_in_curly is exited.
+func (s *BaseSyslParserListener) ExitVar_in_curly(ctx *Var_in_curlyContext) {}
 
 // EnterQuery_var is called when production query_var is entered.
 func (s *BaseSyslParserListener) EnterQuery_var(ctx *Query_varContext) {}
@@ -236,6 +230,24 @@ func (s *BaseSyslParserListener) EnterQuery_param(ctx *Query_paramContext) {}
 
 // ExitQuery_param is called when production query_param is exited.
 func (s *BaseSyslParserListener) ExitQuery_param(ctx *Query_paramContext) {}
+
+// EnterHttp_path_var_with_type is called when production http_path_var_with_type is entered.
+func (s *BaseSyslParserListener) EnterHttp_path_var_with_type(ctx *Http_path_var_with_typeContext) {}
+
+// ExitHttp_path_var_with_type is called when production http_path_var_with_type is exited.
+func (s *BaseSyslParserListener) ExitHttp_path_var_with_type(ctx *Http_path_var_with_typeContext) {}
+
+// EnterHttp_path_static is called when production http_path_static is entered.
+func (s *BaseSyslParserListener) EnterHttp_path_static(ctx *Http_path_staticContext) {}
+
+// ExitHttp_path_static is called when production http_path_static is exited.
+func (s *BaseSyslParserListener) ExitHttp_path_static(ctx *Http_path_staticContext) {}
+
+// EnterHttp_path_suffix is called when production http_path_suffix is entered.
+func (s *BaseSyslParserListener) EnterHttp_path_suffix(ctx *Http_path_suffixContext) {}
+
+// ExitHttp_path_suffix is called when production http_path_suffix is exited.
+func (s *BaseSyslParserListener) ExitHttp_path_suffix(ctx *Http_path_suffixContext) {}
 
 // EnterHttp_path is called when production http_path is entered.
 func (s *BaseSyslParserListener) EnterHttp_path(ctx *Http_pathContext) {}
@@ -327,11 +339,11 @@ func (s *BaseSyslParserListener) EnterText_stmt(ctx *Text_stmtContext) {}
 // ExitText_stmt is called when production text_stmt is exited.
 func (s *BaseSyslParserListener) ExitText_stmt(ctx *Text_stmtContext) {}
 
-// EnterHttp_statements is called when production http_statements is entered.
-func (s *BaseSyslParserListener) EnterHttp_statements(ctx *Http_statementsContext) {}
+// EnterStatements is called when production statements is entered.
+func (s *BaseSyslParserListener) EnterStatements(ctx *StatementsContext) {}
 
-// ExitHttp_statements is called when production http_statements is exited.
-func (s *BaseSyslParserListener) ExitHttp_statements(ctx *Http_statementsContext) {}
+// ExitStatements is called when production statements is exited.
+func (s *BaseSyslParserListener) ExitStatements(ctx *StatementsContext) {}
 
 // EnterMethod_def is called when production method_def is entered.
 func (s *BaseSyslParserListener) EnterMethod_def(ctx *Method_defContext) {}
@@ -339,23 +351,23 @@ func (s *BaseSyslParserListener) EnterMethod_def(ctx *Method_defContext) {}
 // ExitMethod_def is called when production method_def is exited.
 func (s *BaseSyslParserListener) ExitMethod_def(ctx *Method_defContext) {}
 
-// EnterEndpoint_decl is called when production endpoint_decl is entered.
-func (s *BaseSyslParserListener) EnterEndpoint_decl(ctx *Endpoint_declContext) {}
-
-// ExitEndpoint_decl is called when production endpoint_decl is exited.
-func (s *BaseSyslParserListener) ExitEndpoint_decl(ctx *Endpoint_declContext) {}
-
 // EnterShortcut is called when production shortcut is entered.
 func (s *BaseSyslParserListener) EnterShortcut(ctx *ShortcutContext) {}
 
 // ExitShortcut is called when production shortcut is exited.
 func (s *BaseSyslParserListener) ExitShortcut(ctx *ShortcutContext) {}
 
-// EnterApi_endpoint is called when production api_endpoint is entered.
-func (s *BaseSyslParserListener) EnterApi_endpoint(ctx *Api_endpointContext) {}
+// EnterSimple_endpoint is called when production simple_endpoint is entered.
+func (s *BaseSyslParserListener) EnterSimple_endpoint(ctx *Simple_endpointContext) {}
 
-// ExitApi_endpoint is called when production api_endpoint is exited.
-func (s *BaseSyslParserListener) ExitApi_endpoint(ctx *Api_endpointContext) {}
+// ExitSimple_endpoint is called when production simple_endpoint is exited.
+func (s *BaseSyslParserListener) ExitSimple_endpoint(ctx *Simple_endpointContext) {}
+
+// EnterRest_endpoint is called when production rest_endpoint is entered.
+func (s *BaseSyslParserListener) EnterRest_endpoint(ctx *Rest_endpointContext) {}
+
+// ExitRest_endpoint is called when production rest_endpoint is exited.
+func (s *BaseSyslParserListener) ExitRest_endpoint(ctx *Rest_endpointContext) {}
 
 // EnterCollector_stmt is called when production collector_stmt is entered.
 func (s *BaseSyslParserListener) EnterCollector_stmt(ctx *Collector_stmtContext) {}
@@ -380,6 +392,12 @@ func (s *BaseSyslParserListener) EnterEvent(ctx *EventContext) {}
 
 // ExitEvent is called when production event is exited.
 func (s *BaseSyslParserListener) ExitEvent(ctx *EventContext) {}
+
+// EnterSubscribe is called when production subscribe is entered.
+func (s *BaseSyslParserListener) EnterSubscribe(ctx *SubscribeContext) {}
+
+// ExitSubscribe is called when production subscribe is exited.
+func (s *BaseSyslParserListener) ExitSubscribe(ctx *SubscribeContext) {}
 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *BaseSyslParserListener) EnterApp_decl(ctx *App_declContext) {}

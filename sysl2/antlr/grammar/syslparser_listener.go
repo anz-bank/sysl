@@ -104,17 +104,23 @@ type SyslParserListener interface {
 	// EnterDocumentation_stmts is called when entering the documentation_stmts production.
 	EnterDocumentation_stmts(c *Documentation_stmtsContext)
 
-	// EnterVariable_substitution is called when entering the variable_substitution production.
-	EnterVariable_substitution(c *Variable_substitutionContext)
-
-	// EnterStatic_path is called when entering the static_path production.
-	EnterStatic_path(c *Static_pathContext)
+	// EnterVar_in_curly is called when entering the var_in_curly production.
+	EnterVar_in_curly(c *Var_in_curlyContext)
 
 	// EnterQuery_var is called when entering the query_var production.
 	EnterQuery_var(c *Query_varContext)
 
 	// EnterQuery_param is called when entering the query_param production.
 	EnterQuery_param(c *Query_paramContext)
+
+	// EnterHttp_path_var_with_type is called when entering the http_path_var_with_type production.
+	EnterHttp_path_var_with_type(c *Http_path_var_with_typeContext)
+
+	// EnterHttp_path_static is called when entering the http_path_static production.
+	EnterHttp_path_static(c *Http_path_staticContext)
+
+	// EnterHttp_path_suffix is called when entering the http_path_suffix production.
+	EnterHttp_path_suffix(c *Http_path_suffixContext)
 
 	// EnterHttp_path is called when entering the http_path production.
 	EnterHttp_path(c *Http_pathContext)
@@ -161,20 +167,20 @@ type SyslParserListener interface {
 	// EnterText_stmt is called when entering the text_stmt production.
 	EnterText_stmt(c *Text_stmtContext)
 
-	// EnterHttp_statements is called when entering the http_statements production.
-	EnterHttp_statements(c *Http_statementsContext)
+	// EnterStatements is called when entering the statements production.
+	EnterStatements(c *StatementsContext)
 
 	// EnterMethod_def is called when entering the method_def production.
 	EnterMethod_def(c *Method_defContext)
 
-	// EnterEndpoint_decl is called when entering the endpoint_decl production.
-	EnterEndpoint_decl(c *Endpoint_declContext)
-
 	// EnterShortcut is called when entering the shortcut production.
 	EnterShortcut(c *ShortcutContext)
 
-	// EnterApi_endpoint is called when entering the api_endpoint production.
-	EnterApi_endpoint(c *Api_endpointContext)
+	// EnterSimple_endpoint is called when entering the simple_endpoint production.
+	EnterSimple_endpoint(c *Simple_endpointContext)
+
+	// EnterRest_endpoint is called when entering the rest_endpoint production.
+	EnterRest_endpoint(c *Rest_endpointContext)
 
 	// EnterCollector_stmt is called when entering the collector_stmt production.
 	EnterCollector_stmt(c *Collector_stmtContext)
@@ -187,6 +193,9 @@ type SyslParserListener interface {
 
 	// EnterEvent is called when entering the event production.
 	EnterEvent(c *EventContext)
+
+	// EnterSubscribe is called when entering the subscribe production.
+	EnterSubscribe(c *SubscribeContext)
 
 	// EnterApp_decl is called when entering the app_decl production.
 	EnterApp_decl(c *App_declContext)
@@ -302,17 +311,23 @@ type SyslParserListener interface {
 	// ExitDocumentation_stmts is called when exiting the documentation_stmts production.
 	ExitDocumentation_stmts(c *Documentation_stmtsContext)
 
-	// ExitVariable_substitution is called when exiting the variable_substitution production.
-	ExitVariable_substitution(c *Variable_substitutionContext)
-
-	// ExitStatic_path is called when exiting the static_path production.
-	ExitStatic_path(c *Static_pathContext)
+	// ExitVar_in_curly is called when exiting the var_in_curly production.
+	ExitVar_in_curly(c *Var_in_curlyContext)
 
 	// ExitQuery_var is called when exiting the query_var production.
 	ExitQuery_var(c *Query_varContext)
 
 	// ExitQuery_param is called when exiting the query_param production.
 	ExitQuery_param(c *Query_paramContext)
+
+	// ExitHttp_path_var_with_type is called when exiting the http_path_var_with_type production.
+	ExitHttp_path_var_with_type(c *Http_path_var_with_typeContext)
+
+	// ExitHttp_path_static is called when exiting the http_path_static production.
+	ExitHttp_path_static(c *Http_path_staticContext)
+
+	// ExitHttp_path_suffix is called when exiting the http_path_suffix production.
+	ExitHttp_path_suffix(c *Http_path_suffixContext)
 
 	// ExitHttp_path is called when exiting the http_path production.
 	ExitHttp_path(c *Http_pathContext)
@@ -359,20 +374,20 @@ type SyslParserListener interface {
 	// ExitText_stmt is called when exiting the text_stmt production.
 	ExitText_stmt(c *Text_stmtContext)
 
-	// ExitHttp_statements is called when exiting the http_statements production.
-	ExitHttp_statements(c *Http_statementsContext)
+	// ExitStatements is called when exiting the statements production.
+	ExitStatements(c *StatementsContext)
 
 	// ExitMethod_def is called when exiting the method_def production.
 	ExitMethod_def(c *Method_defContext)
 
-	// ExitEndpoint_decl is called when exiting the endpoint_decl production.
-	ExitEndpoint_decl(c *Endpoint_declContext)
-
 	// ExitShortcut is called when exiting the shortcut production.
 	ExitShortcut(c *ShortcutContext)
 
-	// ExitApi_endpoint is called when exiting the api_endpoint production.
-	ExitApi_endpoint(c *Api_endpointContext)
+	// ExitSimple_endpoint is called when exiting the simple_endpoint production.
+	ExitSimple_endpoint(c *Simple_endpointContext)
+
+	// ExitRest_endpoint is called when exiting the rest_endpoint production.
+	ExitRest_endpoint(c *Rest_endpointContext)
 
 	// ExitCollector_stmt is called when exiting the collector_stmt production.
 	ExitCollector_stmt(c *Collector_stmtContext)
@@ -385,6 +400,9 @@ type SyslParserListener interface {
 
 	// ExitEvent is called when exiting the event production.
 	ExitEvent(c *EventContext)
+
+	// ExitSubscribe is called when exiting the subscribe production.
+	ExitSubscribe(c *SubscribeContext)
 
 	// ExitApp_decl is called when exiting the app_decl production.
 	ExitApp_decl(c *App_declContext)

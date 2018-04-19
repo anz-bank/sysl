@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
+	// "io/ioutil"
 	"os"
 	"os/exec"
 	"testing"
@@ -44,16 +44,14 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 		fmt.Println(err)
 		return false
 	}
+	result := proto.Equal(&mod, m2)
 	// uncomment to compare
-	// fmt.Println("generated")
-	ioutil.WriteFile("generated.txt", []byte(proto.MarshalTextString(m2)), os.ModePerm)
-	ioutil.WriteFile("golden.txt", []byte(proto.MarshalTextString(&mod)), os.ModePerm)
+	// if result {
+	//     ioutil.WriteFile("generated.txt", []byte(proto.MarshalTextString(m2)), os.ModePerm)
+	//     ioutil.WriteFile("golden.txt", []byte(proto.MarshalTextString(&mod)), os.ModePerm)
+	// }
 
-	// TextPB(m2)
-	// fmt.Println("golden")
-	// TextPB(&mod)
-
-	return proto.Equal(&mod, m2)
+	return result
 }
 
 func TestSimpleEP(t *testing.T) {
@@ -88,17 +86,15 @@ func TestImports(t *testing.T) {
 	}
 }
 
-func TestPo(t *testing.T) {
-	filename := "/platforms/csp/po/order_model"
-	root := "/Users/singhs93/projects/sysl/system"
-
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
+func TestRestApi(t *testing.T) {
+	filename := "tests/test_rest_api.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }
 
-func TestParty(t *testing.T) {
-	filename := "/platforms/csp/party"
+func TestPo(t *testing.T) {
+	filename := "/platforms/csp/po/order_model"
 	root := "/Users/singhs93/projects/sysl/system"
 
 	if loadAndCompare(Parse(filename, root), filename, root) == false {

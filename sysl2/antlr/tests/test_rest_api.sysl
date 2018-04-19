@@ -1,0 +1,24 @@
+Server [~rest]:
+    /first:
+        GET:
+            ...
+        /{id<:int}:
+            GET:
+                ...
+            /second:
+                PUT:
+                    return 200 ok
+                /third:
+                    POST:
+                        ...
+            /another-second:
+                POST:
+                    ...
+    /first-level/{id<:int}/second/third/{subid<:id}:
+        GET:
+            ...
+
+BrowserApp [~ajax]:
+    On Click:
+        | Comment On click, initiate a server call
+        Server <- GET /first/{id}
