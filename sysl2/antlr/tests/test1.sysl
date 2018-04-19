@@ -1,3 +1,7 @@
+SomeApp:
+    Endpoint:
+        ...
+
 My Todo App [~webapp]:
     Add Note [~somepattern]: ...
 

@@ -125,7 +125,7 @@ fragment
 PRINTABLE       :   ~[ ?\-\r\n@!|'"#[:\\/<>\]]+;
 
 // defined before Name
-TEXT_LINE       :  PRINTABLE ([ ]+ PRINTABLE)+
+TEXT_LINE       :  PRINTABLE ([ &]+ PRINTABLE)+
                 { in_sq_brackets == 0 }?
                 { startsWithKeyword(p.GetText()) == false}?
                 //  { (_input.LA(1) == '\n') | ((_input.LA(1) == '\r') && (_input.LA(2) == '\n')) }?
