@@ -2,9 +2,15 @@ SomeApp:
     Endpoint:
         ...
 
+Test - App:
+    Test - Endpoint:
+        ...
+
 My Todo App [~webapp]:
     Add Note [~somepattern]: ...
 
 A&B:
     C&D:
-        ...
+        Test - App <- Test - Endpoint
+    DDD:
+        Test - App <- Test - Endpoint

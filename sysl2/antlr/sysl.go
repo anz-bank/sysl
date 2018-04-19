@@ -112,6 +112,7 @@ func Parse(filename string, root string) *sysl.Module {
 	base := filepath.Dir(filename)
 	imported := make(map[string]struct{})
 	listener := NewTreeShapeListener(base, root)
+	errorListener := SyslParserErrorListener{}
 
 	for {
 		input := antlr.NewFileStream(filename)
@@ -120,11 +121,11 @@ func Parse(filename string, root string) *sysl.Module {
 		p := parser.NewSyslParser(stream)
 
 		p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-		errorListener := SyslParserErrorListener{}
 		p.AddErrorListener(&errorListener)
 		p.BuildParseTrees = true
 		tree := p.Sysl_file()
 		if errorListener.hasErrors {
+			fmt.Printf("%s has errors\n", filename)
 			break
 		}
 

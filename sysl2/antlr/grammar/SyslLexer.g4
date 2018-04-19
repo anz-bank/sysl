@@ -74,8 +74,8 @@ CURLY_OPEN          : '{';
 CURLY_CLOSE         : '}';
 OPEN_PAREN          : '(';
 CLOSE_PAREN         : ')';
-OPEN_ANGLE          : '<';
-CLOSE_ANGLE         : '>';
+// OPEN_ANGLE          : '<';
+// CLOSE_ANGLE         : '>';
 HASH                : '#'       -> pushMode(NOT_NEWLINE);
 PIPE                : '|'       -> pushMode(NOT_NEWLINE);
 DBL_QT              : ["];
@@ -119,13 +119,12 @@ NEWLINE             : '\r'? '\n'
 
 SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 
-// '<' -> will be required for transformation syntax
-// so add '>'
+// add '<', required for transformation syntax
 fragment
-PRINTABLE       :   ~[ ?\-\r\n@!|'"#[:\\/<>\]]+;
+PRINTABLE       :   ~[ :?\r\n@!|<'"#[\\/\]]+;
 
 // defined before Name
-TEXT_LINE       :  PRINTABLE ([ &]+ PRINTABLE)+
+TEXT_LINE       :  PRINTABLE ([ &\-]+ PRINTABLE)+
                 { in_sq_brackets == 0 }?
                 { startsWithKeyword(p.GetText()) == false}?
                 //  { (_input.LA(1) == '\n') | ((_input.LA(1) == '\r') && (_input.LA(2) == '\n')) }?

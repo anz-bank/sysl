@@ -785,7 +785,6 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 			},
 		},
 	})
-
 }
 
 // ExitText_stmt is called when production text_stmt is exited.
@@ -971,8 +970,9 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	if path[0] == '/' {
 		path = s.root + path
 	} else {
-		path = s.base + "/" + path + ".sysl"
+		path = s.base + "/" + path
 	}
+	path += ".sysl"
 	s.imports = append(s.imports, path)
 }
 
