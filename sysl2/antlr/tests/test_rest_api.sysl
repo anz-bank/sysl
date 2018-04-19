@@ -15,7 +15,7 @@ Server [~rest]:
                 POST:
                     ...
     /first-level/{id<:int}/second/third/{subid<:id}:
-        GET:
+        GET ?q={queryTerms}&limit={pageSize}&offset={startingRecord} [id='id01']:
             ...
 
 BrowserApp [~ajax]:

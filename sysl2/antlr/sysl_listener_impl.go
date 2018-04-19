@@ -28,6 +28,7 @@ type TreeShapeListener struct {
 	typemap              map[string]*sysl.Type
 	prevLineEmpty        bool
 	rest_queryparams     []*sysl.Endpoint_RestParams_QueryParam
+	method_queryparams   []*sysl.Endpoint_RestParams_QueryParam
 	rest_queryparams_len []int
 }
 
@@ -301,8 +302,8 @@ func makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) 
 }
 
 func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]*sysl.Attribute {
-	elt := make([]*sysl.Attribute, 0)
-	modifiers := make(map[string]*sysl.Attribute)
+	patterns := make([]*sysl.Attribute, 0)
+	attributes := make(map[string]*sysl.Attribute)
 
 	for _, e := range attribs.AllEntry() {
 		entry := e.(*parser.EntryContext)
@@ -311,36 +312,36 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 
 			if nvp.Quoted_string() != nil {
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
-				modifiers[nvp.Name().GetText()] = &sysl.Attribute{
+				attributes[nvp.Name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_S{
-						S: strings.Trim(qs.QSTRING().GetText(), `"`),
+						S: strings.Trim(qs.QSTRING().GetText(), `'"`),
 					},
 				}
 			} else if nvp.Array_of_strings() != nil {
 				array_strings := nvp.Array_of_strings().(*parser.Array_of_stringsContext)
-				modifiers[nvp.Name().GetText()] = makeArrayOfStringsAttribute(array_strings)
+				attributes[nvp.Name().GetText()] = makeArrayOfStringsAttribute(array_strings)
 			} else {
 				panic("array of arrays: not handled yet")
 			}
 		} else if entry.Modifier() != nil {
 			mod := entry.Modifier().(*parser.ModifierContext)
-			elt = append(elt, &sysl.Attribute{
+			patterns = append(patterns, &sysl.Attribute{
 				Attribute: &sysl.Attribute_S{
 					S: mod.GetText()[1:],
 				},
 			})
 		}
 	}
-	if len(elt) > 0 {
-		modifiers["patterns"] = &sysl.Attribute{
+	if len(patterns) > 0 {
+		attributes["patterns"] = &sysl.Attribute{
 			Attribute: &sysl.Attribute_A{
 				A: &sysl.Attribute_Array{
-					Elt: elt,
+					Elt: patterns,
 				},
 			},
 		}
 	}
-	return modifiers
+	return attributes
 }
 
 func search(attr string, attrs []*sysl.Attribute) bool {
@@ -574,7 +575,44 @@ func (s *TreeShapeListener) EnterDocumentation_stmts(ctx *parser.Documentation_s
 func (s *TreeShapeListener) ExitDocumentation_stmts(ctx *parser.Documentation_stmtsContext) {}
 
 // EnterQuery_var is called when production query_var is entered.
-func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {}
+func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
+	var_name := ctx.Name().GetText()
+	var type1 *sysl.Type
+
+	context_app_part := []string{s.appname}
+	ref_path := []string{
+		ctx.Var_in_curly().GetText(),
+	}
+
+	type1 = &sysl.Type{
+		Type: &sysl.Type_TypeRef{
+			TypeRef: &sysl.ScopedRef{
+				Context: &sysl.Scope{
+					Appname: &sysl.AppName{
+						Part: context_app_part,
+					},
+				},
+				Ref: &sysl.Scope{
+					Path: ref_path,
+				},
+			},
+		},
+	}
+
+	rest_param := &sysl.Endpoint_RestParams_QueryParam{
+		Name: var_name,
+		Type: type1,
+		Loc:  true,
+	}
+
+	rest_param.Type.SourceContext = &sysl.SourceContext{
+		Start: &sysl.SourceContext_Location{
+			Line: int32(ctx.GetStart().GetLine()),
+		},
+	}
+
+	s.method_queryparams = append(s.method_queryparams, rest_param)
+}
 
 // ExitQuery_var is called when production query_var is exited.
 func (s *TreeShapeListener) ExitQuery_var(ctx *parser.Query_varContext) {}
@@ -811,8 +849,23 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	s.url_prefix = append(s.url_prefix, s.typename)
 	url := s.urlString()
 	s.typename = ctx.HTTP_VERBS().GetText() + " " + url
+	s.method_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
 
-	attrs := make(map[string]*sysl.Attribute)
+	s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
+		Name: s.typename,
+		RestParams: &sysl.Endpoint_RestParams{
+			Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[ctx.HTTP_VERBS().GetText()]),
+			Path:   url,
+		},
+		Stmt: make([]*sysl.Statement, 0),
+	}
+	if ctx.Attribs_or_modifiers() != nil {
+		s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+	} else {
+		s.module.Apps[s.appname].Endpoints[s.typename].Attrs = make(map[string]*sysl.Attribute)
+	}
+
+	attrs := s.module.Apps[s.appname].Endpoints[s.typename].Attrs
 	elt := []*sysl.Attribute{&sysl.Attribute{
 		Attribute: &sysl.Attribute_S{
 			S: "rest",
@@ -826,15 +879,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 			},
 		},
 	}
-	s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
-		Name: s.typename,
-		RestParams: &sysl.Endpoint_RestParams{
-			Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[ctx.HTTP_VERBS().GetText()]),
-			Path:   url,
-		},
-		Attrs: attrs,
-		Stmt:  make([]*sysl.Statement, 0),
-	}
+
 	if len(s.rest_queryparams) > 0 {
 		qparams := make([]*sysl.Endpoint_RestParams_QueryParam, 0)
 		for i := len(s.rest_queryparams) - 1; i >= 0; i-- {
@@ -858,7 +903,16 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 }
 
 // ExitMethod_def is called when production method_def is exited.
-func (s *TreeShapeListener) ExitMethod_def(ctx *parser.Method_defContext) {}
+func (s *TreeShapeListener) ExitMethod_def(ctx *parser.Method_defContext) {
+	if len(s.method_queryparams) > 0 {
+		qparams := s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam
+		if qparams == nil {
+			qparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
+		}
+		qparams = append(qparams, s.method_queryparams...)
+		s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam = qparams
+	}
+}
 
 // EnterShortcut is called when production shortcut is entered.
 func (s *TreeShapeListener) EnterShortcut(ctx *parser.ShortcutContext) {}

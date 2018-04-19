@@ -121,8 +121,11 @@ SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 
 // '<-', required for transformation syntax
 // '->', required for events
+// '/', for rest api
+// ':', for everything
+// '='
 fragment
-PRINTABLE       :   ~[ :?\r\n@!|<\-'"#[\\/\]]+;
+PRINTABLE       :   ~[ \n\r!"#'\-/:=<?@[\]{}|]+;
 
 // defined before Name
 TEXT_LINE       :  PRINTABLE ([ &\-]+ PRINTABLE)+

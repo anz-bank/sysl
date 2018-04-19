@@ -49,7 +49,7 @@ facade              :  SYSL_COMMENT* WRAP model_name INDENT table_refs+ DEDENT;
 documentation_stmts     : AT Name EQ QSTRING NEWLINE;
 
 var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
-query_var       : Name EQ (Name | NativeDataTypes | var_in_curly);
+query_var       : Name EQ var_in_curly;
 query_param     : QN query_var (AMP query_var)*;
 
 http_path_var_with_type : CURLY_OPEN Name LESS_COLON (NativeDataTypes | Name) CURLY_CLOSE;
@@ -102,7 +102,7 @@ statements: ( if_else
             ;
 
 method_def: HTTP_VERBS
-                  query_param? attributes? COLON
+                  query_param? attribs_or_modifiers? COLON
                         INDENT statements+ DEDENT
                 ;
 
