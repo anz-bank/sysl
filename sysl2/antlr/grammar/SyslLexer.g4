@@ -80,6 +80,10 @@ OPEN_PAREN          : '(';
 CLOSE_PAREN         : ')';
 // OPEN_ANGLE          : '<';
 // CLOSE_ANGLE         : '>';
+EMPTY_COMMENT       : ('#' '\r'? '\n')
+                     {gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
+                    -> channel(HIDDEN);
+
 HASH                : '#'       -> pushMode(NOT_NEWLINE);
 PIPE                : '|'       -> pushMode(NOT_NEWLINE);
 DBL_QT              : ["];

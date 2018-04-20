@@ -22,4 +22,10 @@ A&B:
             Test - App -> eventName
             if result not ok:
                 return not ok
+        else:
+            top level else_statment
 
+        do some more stuff
+
+    EEE:
+        ...

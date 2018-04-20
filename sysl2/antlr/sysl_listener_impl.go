@@ -770,26 +770,50 @@ func (s *TreeShapeListener) ExitCall_stmt(ctx *parser.Call_stmtContext) {}
 
 // EnterIf_stmt is called when production if_stmt is entered.
 func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
-	stmt := &sysl.Statement{
+}
+
+// ExitIf_stmt is called when production if_stmt is exited.
+func (s *TreeShapeListener) ExitIf_stmt(ctx *parser.If_stmtContext) {
+	s.popScope()
+}
+
+// EnterIf_else is called when production if_else is entered.
+func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
+	ifstmt := ctx.If_stmt().(*parser.If_stmtContext)
+
+	if_stmt := &sysl.Statement{
 		Stmt: &sysl.Statement_Cond{
 			Cond: &sysl.Cond{
-				Test: ctx.TEXT_NAME().GetText(),
+				Test: ifstmt.TEXT_NAME().GetText(),
 				Stmt: make([]*sysl.Statement, 0),
 			},
 		},
 	}
-	s.addToCurrentScope(stmt)
-	s.pushScope(stmt.GetCond())
+	s.addToCurrentScope(if_stmt)
+
+	// else statements
+	if ctx.Statements(0) != nil {
+		else_stmt := &sysl.Statement{
+			Stmt: &sysl.Statement_Group{
+				Group: &sysl.Group{
+					Title: "else",
+					Stmt:  make([]*sysl.Statement, 0),
+				},
+			},
+		}
+		s.addToCurrentScope(else_stmt)
+		s.pushScope(else_stmt.GetGroup())
+	}
+	// if stmt is on top
+	s.pushScope(if_stmt.GetCond())
 }
 
-// ExitIf_stmt is called when production if_stmt is exited.
-func (s *TreeShapeListener) ExitIf_stmt(ctx *parser.If_stmtContext) {}
-
-// EnterIf_else is called when production if_else is entered.
-func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {}
-
 // ExitIf_else is called when production if_else is exited.
-func (s *TreeShapeListener) ExitIf_else(ctx *parser.If_elseContext) {}
+func (s *TreeShapeListener) ExitIf_else(ctx *parser.If_elseContext) {
+	if _, ok := s.peekScope().(*sysl.Group); ok {
+		s.popScope()
+	}
+}
 
 // EnterFor_cond is called when production for_cond is entered.
 func (s *TreeShapeListener) EnterFor_cond(ctx *parser.For_condContext) {}
@@ -872,6 +896,11 @@ func (s *TreeShapeListener) popScope() {
 	s.stmt_scope = s.stmt_scope[:l]
 }
 
+func (s *TreeShapeListener) peekScope() interface{} {
+	l := len(s.stmt_scope) - 1
+	return s.stmt_scope[l]
+}
+
 func (s *TreeShapeListener) lastStatement() *sysl.Statement {
 	top := len(s.stmt_scope) - 1
 	switch scope := s.stmt_scope[top].(type) {
@@ -889,6 +918,8 @@ func (s *TreeShapeListener) addToCurrentScope(stmt *sysl.Statement) {
 	case *sysl.Endpoint:
 		scope.Stmt = append(scope.Stmt, stmt)
 	case *sysl.Cond:
+		scope.Stmt = append(scope.Stmt, stmt)
+	case *sysl.Group:
 		scope.Stmt = append(scope.Stmt, stmt)
 	default:
 		panic("not implemented")
