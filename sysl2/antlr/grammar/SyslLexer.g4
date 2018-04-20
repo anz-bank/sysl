@@ -40,13 +40,11 @@ SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
 IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE ;
 
-RETURN              : ('return' | 'RETURN') -> pushMode(NOT_NEWLINE); //revisit this?
-IF                  : ([iI][fF])            -> pushMode(FREE_TEXT_NAME);
-ELSE                : ('else' | 'Else')     ;//-> pushMode(FREE_TEXT_NAME);//  do we support else if()??
-
-FOR                 : ('For' | 'for')       -> pushMode(FREE_TEXT_NAME);
-
-LOOP                : 'Loop' | 'loop';
+RETURN              : ( [rR][eE][tT][uU][rR][nN] )  -> pushMode(NOT_NEWLINE); //revisit this?
+IF                  : ([iI][fF])                    -> pushMode(FREE_TEXT_NAME);
+ELSE                : ([eE][lL][sS][eE]);
+FOR                 : ( [fF][oO][rR])               -> pushMode(FREE_TEXT_NAME);
+LOOP                : [lL][oO][oO][pP];
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';
 SET_OF              : 'set of';

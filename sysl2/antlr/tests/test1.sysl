@@ -21,7 +21,7 @@ A&B:
         if some condition is true:
             Test - App -> eventName
             If result not ok:
-                return not ok
+                reTurn not ok1
         else:
             top level else_statment
             IF some constraint:
