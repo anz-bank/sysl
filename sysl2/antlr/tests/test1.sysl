@@ -20,10 +20,14 @@ A&B:
     DDD:
         if some condition is true:
             Test - App -> eventName
-            if result not ok:
+            If result not ok:
                 return not ok
         else:
             top level else_statment
+            IF some constraint:
+                return ok
+            Else:
+                return not ok
 
         do some more stuff
 

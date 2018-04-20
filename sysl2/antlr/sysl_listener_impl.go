@@ -796,7 +796,7 @@ func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
 		else_stmt := &sysl.Statement{
 			Stmt: &sysl.Statement_Group{
 				Group: &sysl.Group{
-					Title: "else",
+					Title: ctx.ELSE().GetText(),
 					Stmt:  make([]*sysl.Statement, 0),
 				},
 			},
