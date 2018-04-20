@@ -30,6 +30,7 @@ type TreeShapeListener struct {
 	rest_queryparams     []*sysl.Endpoint_RestParams_QueryParam
 	method_queryparams   []*sysl.Endpoint_RestParams_QueryParam
 	rest_queryparams_len []int
+	stmt_scope           []interface{} // Endpoint, if, if_else, loop
 }
 
 // NewTreeShapeListener ...
@@ -722,8 +723,7 @@ func (s *TreeShapeListener) ExitEndpoint_name(ctx *parser.Endpoint_nameContext) 
 
 // EnterRet_stmt is called when production ret_stmt is entered.
 func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
-	stmts := s.module.Apps[s.appname].Endpoints[s.typename].Stmt
-	s.module.Apps[s.appname].Endpoints[s.typename].Stmt = append(stmts, &sysl.Statement{
+	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Ret{
 			Ret: &sysl.Return{
 				Payload: strings.Trim(ctx.TEXT().GetText(), " "),
@@ -744,9 +744,7 @@ func (s *TreeShapeListener) EnterTarget(ctx *parser.TargetContext) {
 
 // ExitTarget is called when production target is exited.
 func (s *TreeShapeListener) ExitTarget(ctx *parser.TargetContext) {
-	stmts := s.module.Apps[s.appname].Endpoints[s.typename].Stmt
-	last := len(stmts) - 1
-	stmts[last].GetCall().Target.Part = s.app_name
+	s.lastStatement().GetCall().Target.Part = s.app_name
 }
 
 // EnterTarget_endpoint is called when production target_endpoint is entered.
@@ -757,8 +755,7 @@ func (s *TreeShapeListener) ExitTarget_endpoint(ctx *parser.Target_endpointConte
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
-	stmts := s.module.Apps[s.appname].Endpoints[s.typename].Stmt
-	s.module.Apps[s.appname].Endpoints[s.typename].Stmt = append(stmts, &sysl.Statement{
+	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   &sysl.AppName{},
@@ -772,7 +769,18 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 func (s *TreeShapeListener) ExitCall_stmt(ctx *parser.Call_stmtContext) {}
 
 // EnterIf_stmt is called when production if_stmt is entered.
-func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {}
+func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
+	stmt := &sysl.Statement{
+		Stmt: &sysl.Statement_Cond{
+			Cond: &sysl.Cond{
+				Test: ctx.TEXT_NAME().GetText(),
+				Stmt: make([]*sysl.Statement, 0),
+			},
+		},
+	}
+	s.addToCurrentScope(stmt)
+	s.pushScope(stmt.GetCond())
+}
 
 // ExitIf_stmt is called when production if_stmt is exited.
 func (s *TreeShapeListener) ExitIf_stmt(ctx *parser.If_stmtContext) {}
@@ -827,8 +835,7 @@ func (s *TreeShapeListener) ExitOne_of_stmt(ctx *parser.One_of_stmtContext) {}
 
 // EnterText_stmt is called when production text_stmt is entered.
 func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
-	stmts := s.module.Apps[s.appname].Endpoints[s.typename].Stmt
-	s.module.Apps[s.appname].Endpoints[s.typename].Stmt = append(stmts, &sysl.Statement{
+	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Action{
 			Action: &sysl.Action{
 				Action: ctx.GetText(),
@@ -856,6 +863,38 @@ func (s *TreeShapeListener) urlString() string {
 	return url
 }
 
+func (s *TreeShapeListener) pushScope(scope interface{}) {
+	s.stmt_scope = append(s.stmt_scope, scope)
+}
+
+func (s *TreeShapeListener) popScope() {
+	l := len(s.stmt_scope) - 1
+	s.stmt_scope = s.stmt_scope[:l]
+}
+
+func (s *TreeShapeListener) lastStatement() *sysl.Statement {
+	top := len(s.stmt_scope) - 1
+	switch scope := s.stmt_scope[top].(type) {
+	case *sysl.Endpoint:
+		l := len(scope.Stmt) - 1
+		return scope.Stmt[l]
+	default:
+		panic("not implemented")
+	}
+}
+
+func (s *TreeShapeListener) addToCurrentScope(stmt *sysl.Statement) {
+	top := len(s.stmt_scope) - 1
+	switch scope := s.stmt_scope[top].(type) {
+	case *sysl.Endpoint:
+		scope.Stmt = append(scope.Stmt, stmt)
+	case *sysl.Cond:
+		scope.Stmt = append(scope.Stmt, stmt)
+	default:
+		panic("not implemented")
+	}
+}
+
 // EnterMethod_def is called when production method_def is entered.
 func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	s.url_prefix = append(s.url_prefix, s.typename)
@@ -871,6 +910,8 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 		},
 		Stmt: make([]*sysl.Statement, 0),
 	}
+	s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
+
 	if ctx.Attribs_or_modifiers() != nil {
 		s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	} else {
@@ -924,6 +965,7 @@ func (s *TreeShapeListener) ExitMethod_def(ctx *parser.Method_defContext) {
 		qparams = append(qparams, s.method_queryparams...)
 		s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam = qparams
 	}
+	s.popScope()
 }
 
 // EnterShortcut is called when production shortcut is entered.
@@ -950,10 +992,13 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 	}
+	s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
 }
 
 // ExitSimple_endpoint is called when production simple_endpoint is exited.
-func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointContext) {}
+func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointContext) {
+	s.popScope()
+}
 
 // EnterRest_endpoint is called when production rest_endpoint is entered.
 func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext) {

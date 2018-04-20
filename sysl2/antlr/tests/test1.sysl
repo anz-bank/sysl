@@ -18,4 +18,8 @@ A&B:
     C&D:
         Test - App <- Test - Endpoint
     DDD:
-        Test - App -> eventName
+        if some condition is true:
+            Test - App -> eventName
+            if result not ok:
+                return not ok
+

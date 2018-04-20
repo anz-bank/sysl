@@ -46,10 +46,10 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 	}
 	result := proto.Equal(&mod, m2)
 	// uncomment to compare
-	if !result {
-		ioutil.WriteFile("generated.txt", []byte(proto.MarshalTextString(m2)), os.ModePerm)
-		ioutil.WriteFile("golden.txt", []byte(proto.MarshalTextString(&mod)), os.ModePerm)
-	}
+	// if !result {
+	ioutil.WriteFile("generated.txt", []byte(proto.MarshalTextString(m2)), os.ModePerm)
+	ioutil.WriteFile("golden.txt", []byte(proto.MarshalTextString(&mod)), os.ModePerm)
+	// }
 
 	return result
 }
