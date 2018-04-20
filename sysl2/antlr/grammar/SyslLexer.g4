@@ -38,7 +38,9 @@ IMPORT_KEY: 'import';
 fragment
 SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
-IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE ;
+IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE 
+                     {gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
+                    ;
 
 RETURN              : ( [rR][eE][tT][uU][rR][nN] )  -> pushMode(NOT_NEWLINE); //revisit this?
 IF                  : ([iI][fF])                    -> pushMode(FREE_TEXT_NAME);

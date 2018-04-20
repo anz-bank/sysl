@@ -1023,12 +1023,16 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 	}
-	s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
+	if ctx.Statements(0) != nil {
+		s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
+	}
 }
 
 // ExitSimple_endpoint is called when production simple_endpoint is exited.
 func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointContext) {
-	s.popScope()
+	if ctx.Statements(0) != nil {
+		s.popScope()
+	}
 }
 
 // EnterRest_endpoint is called when production rest_endpoint is entered.
