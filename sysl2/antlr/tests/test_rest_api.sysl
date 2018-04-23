@@ -8,7 +8,7 @@ Server [~rest]:
             /second:
                 PUT:
                     return 200 ok
-                /third:
+                /third/{abc<:int}:
                     POST:
                         ...
             /another-second:

@@ -27,12 +27,14 @@ annotations     : INDENT annotation+ DEDENT;
 field_type      : collection_type
                 |  ((reference | NativeDataTypes | user_defined_type) size_spec? QN? attribs_or_modifiers? (COLON annotations)?) ;
 
-field: Name LESS_COLON field_type;
+array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS CLOSE_PAREN;
+inplace_field: Name array_size? (LESS_COLON (field_type | inplace_tuple))?;
+inplace_tuple: INDENT inplace_field+ DEDENT;
+field: Name (array_size? LESS_COLON (field_type | inplace_tuple))?;
 
 table   :   SYSL_COMMENT*
             (TABLE | TYPE)
-            Name attribs_or_modifiers? COLON
-            INDENT (SYSL_COMMENT | field )+ DEDENT
+            Name attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field )+ DEDENT)
         ;
 
 package_name   : Name (DOT Name)? | TEXT_LINE | TEXT_NAME;
@@ -52,8 +54,9 @@ var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
 query_var       : Name EQ (NativeDataTypes | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
-http_path_var_with_type : CURLY_OPEN Name LESS_COLON (NativeDataTypes | Name) CURLY_CLOSE;
-http_path_static : Name | TEXT_LINE;
+http_path_part : Name | TEXT_LINE;
+http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | Name) CURLY_CLOSE;
+http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
 http_path       : FORWARD_SLASH | http_path_suffix+;
 
@@ -87,6 +90,12 @@ one_of_stmt             : ONE_OF COLON
 
 text_stmt               : doc_string | TEXT_LINE | WHATEVER;
 
+mixin:  MIXIN app_name;
+
+param_list: field (COMMA field)*;
+
+params : OPEN_PAREN param_list CLOSE_PAREN;
+
 statements: ( if_else
                 | for_stmt
                 | ret_stmt
@@ -98,6 +107,7 @@ statements: ( if_else
                 | text_stmt
                 | annotation
             )
+            params?
             attribs_or_modifiers?
             ;
 
@@ -111,7 +121,7 @@ shortcut        : WHATEVER;
 simple_endpoint :
                 WHATEVER
                 | (
-                    endpoint_name QSTRING? attribs_or_modifiers? COLON
+                    endpoint_name QSTRING? params? attribs_or_modifiers? COLON
                     (  shortcut
                         | (INDENT statements+ DEDENT)
                     )
@@ -135,7 +145,7 @@ event: DISTANCE EVENT_NAME
 
 subscribe: Name ARROW_RIGHT attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
 
-app_decl: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation )+ DEDENT;
+app_decl: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin )+ DEDENT;
 
 application:  SYSL_COMMENT*
                 name_with_attribs

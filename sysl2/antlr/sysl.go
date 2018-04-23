@@ -115,6 +115,7 @@ func Parse(filename string, root string) *sysl.Module {
 	errorListener := SyslParserErrorListener{}
 
 	for {
+		fmt.Println(filename)
 		input := antlr.NewFileStream(filename)
 		lexer := parser.NewSyslLexer(input)
 		stream := antlr.NewCommonTokenStream(lexer, 0)

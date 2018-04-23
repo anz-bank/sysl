@@ -1,12 +1,15 @@
 SomeApp:
+    @app_desc = "this comment belongs to the app defined 'above'"
+
     Endpoint:
         ...
 
 Test - App:
-    Test - Endpoint:
+    Test - Endpoint (request <: SomeApp.SomeType):
         ...
 
-    Endpoint2:
+    Endpoint2 (request <: SomeType):
+        @ep_desc = "this comment belongs to the Endpoint2 defined above"
         . <- eventName
 
     <-> eventName: ...
@@ -20,6 +23,7 @@ A&B:
     DDD:
         if some condition is true:
             Test - App -> eventName
+            Test - App <- Endpoint2
             If result not ok:
                 reTurn not ok1
         else:

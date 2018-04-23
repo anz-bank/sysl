@@ -100,3 +100,10 @@ func TestRootArg(t *testing.T) {
 		t.Error("failed")
 	}
 }
+
+func TestRestApi_WrongOrder(t *testing.T) {
+	filename := "tests/bad_order.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == true {
+		t.Error("failed")
+	}
+}

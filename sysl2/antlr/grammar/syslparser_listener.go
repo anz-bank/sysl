@@ -71,6 +71,15 @@ type SyslParserListener interface {
 	// EnterField_type is called when entering the field_type production.
 	EnterField_type(c *Field_typeContext)
 
+	// EnterArray_size is called when entering the array_size production.
+	EnterArray_size(c *Array_sizeContext)
+
+	// EnterInplace_field is called when entering the inplace_field production.
+	EnterInplace_field(c *Inplace_fieldContext)
+
+	// EnterInplace_tuple is called when entering the inplace_tuple production.
+	EnterInplace_tuple(c *Inplace_tupleContext)
+
 	// EnterField is called when entering the field production.
 	EnterField(c *FieldContext)
 
@@ -112,6 +121,9 @@ type SyslParserListener interface {
 
 	// EnterQuery_param is called when entering the query_param production.
 	EnterQuery_param(c *Query_paramContext)
+
+	// EnterHttp_path_part is called when entering the http_path_part production.
+	EnterHttp_path_part(c *Http_path_partContext)
 
 	// EnterHttp_path_var_with_type is called when entering the http_path_var_with_type production.
 	EnterHttp_path_var_with_type(c *Http_path_var_with_typeContext)
@@ -166,6 +178,15 @@ type SyslParserListener interface {
 
 	// EnterText_stmt is called when entering the text_stmt production.
 	EnterText_stmt(c *Text_stmtContext)
+
+	// EnterMixin is called when entering the mixin production.
+	EnterMixin(c *MixinContext)
+
+	// EnterParam_list is called when entering the param_list production.
+	EnterParam_list(c *Param_listContext)
+
+	// EnterParams is called when entering the params production.
+	EnterParams(c *ParamsContext)
 
 	// EnterStatements is called when entering the statements production.
 	EnterStatements(c *StatementsContext)
@@ -278,6 +299,15 @@ type SyslParserListener interface {
 	// ExitField_type is called when exiting the field_type production.
 	ExitField_type(c *Field_typeContext)
 
+	// ExitArray_size is called when exiting the array_size production.
+	ExitArray_size(c *Array_sizeContext)
+
+	// ExitInplace_field is called when exiting the inplace_field production.
+	ExitInplace_field(c *Inplace_fieldContext)
+
+	// ExitInplace_tuple is called when exiting the inplace_tuple production.
+	ExitInplace_tuple(c *Inplace_tupleContext)
+
 	// ExitField is called when exiting the field production.
 	ExitField(c *FieldContext)
 
@@ -319,6 +349,9 @@ type SyslParserListener interface {
 
 	// ExitQuery_param is called when exiting the query_param production.
 	ExitQuery_param(c *Query_paramContext)
+
+	// ExitHttp_path_part is called when exiting the http_path_part production.
+	ExitHttp_path_part(c *Http_path_partContext)
 
 	// ExitHttp_path_var_with_type is called when exiting the http_path_var_with_type production.
 	ExitHttp_path_var_with_type(c *Http_path_var_with_typeContext)
@@ -373,6 +406,15 @@ type SyslParserListener interface {
 
 	// ExitText_stmt is called when exiting the text_stmt production.
 	ExitText_stmt(c *Text_stmtContext)
+
+	// ExitMixin is called when exiting the mixin production.
+	ExitMixin(c *MixinContext)
+
+	// ExitParam_list is called when exiting the param_list production.
+	ExitParam_list(c *Param_listContext)
+
+	// ExitParams is called when exiting the params production.
+	ExitParams(c *ParamsContext)
 
 	// ExitStatements is called when exiting the statements production.
 	ExitStatements(c *StatementsContext)

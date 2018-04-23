@@ -147,6 +147,24 @@ func (s *BaseSyslParserListener) EnterField_type(ctx *Field_typeContext) {}
 // ExitField_type is called when production field_type is exited.
 func (s *BaseSyslParserListener) ExitField_type(ctx *Field_typeContext) {}
 
+// EnterArray_size is called when production array_size is entered.
+func (s *BaseSyslParserListener) EnterArray_size(ctx *Array_sizeContext) {}
+
+// ExitArray_size is called when production array_size is exited.
+func (s *BaseSyslParserListener) ExitArray_size(ctx *Array_sizeContext) {}
+
+// EnterInplace_field is called when production inplace_field is entered.
+func (s *BaseSyslParserListener) EnterInplace_field(ctx *Inplace_fieldContext) {}
+
+// ExitInplace_field is called when production inplace_field is exited.
+func (s *BaseSyslParserListener) ExitInplace_field(ctx *Inplace_fieldContext) {}
+
+// EnterInplace_tuple is called when production inplace_tuple is entered.
+func (s *BaseSyslParserListener) EnterInplace_tuple(ctx *Inplace_tupleContext) {}
+
+// ExitInplace_tuple is called when production inplace_tuple is exited.
+func (s *BaseSyslParserListener) ExitInplace_tuple(ctx *Inplace_tupleContext) {}
+
 // EnterField is called when production field is entered.
 func (s *BaseSyslParserListener) EnterField(ctx *FieldContext) {}
 
@@ -230,6 +248,12 @@ func (s *BaseSyslParserListener) EnterQuery_param(ctx *Query_paramContext) {}
 
 // ExitQuery_param is called when production query_param is exited.
 func (s *BaseSyslParserListener) ExitQuery_param(ctx *Query_paramContext) {}
+
+// EnterHttp_path_part is called when production http_path_part is entered.
+func (s *BaseSyslParserListener) EnterHttp_path_part(ctx *Http_path_partContext) {}
+
+// ExitHttp_path_part is called when production http_path_part is exited.
+func (s *BaseSyslParserListener) ExitHttp_path_part(ctx *Http_path_partContext) {}
 
 // EnterHttp_path_var_with_type is called when production http_path_var_with_type is entered.
 func (s *BaseSyslParserListener) EnterHttp_path_var_with_type(ctx *Http_path_var_with_typeContext) {}
@@ -338,6 +362,24 @@ func (s *BaseSyslParserListener) EnterText_stmt(ctx *Text_stmtContext) {}
 
 // ExitText_stmt is called when production text_stmt is exited.
 func (s *BaseSyslParserListener) ExitText_stmt(ctx *Text_stmtContext) {}
+
+// EnterMixin is called when production mixin is entered.
+func (s *BaseSyslParserListener) EnterMixin(ctx *MixinContext) {}
+
+// ExitMixin is called when production mixin is exited.
+func (s *BaseSyslParserListener) ExitMixin(ctx *MixinContext) {}
+
+// EnterParam_list is called when production param_list is entered.
+func (s *BaseSyslParserListener) EnterParam_list(ctx *Param_listContext) {}
+
+// ExitParam_list is called when production param_list is exited.
+func (s *BaseSyslParserListener) ExitParam_list(ctx *Param_listContext) {}
+
+// EnterParams is called when production params is entered.
+func (s *BaseSyslParserListener) EnterParams(ctx *ParamsContext) {}
+
+// ExitParams is called when production params is exited.
+func (s *BaseSyslParserListener) ExitParams(ctx *ParamsContext) {}
 
 // EnterStatements is called when production statements is entered.
 func (s *BaseSyslParserListener) EnterStatements(ctx *StatementsContext) {}

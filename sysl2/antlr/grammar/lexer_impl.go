@@ -23,10 +23,10 @@ func calcSpaces(text string) int {
 
 func startsWithKeyword(text string) bool {
 	var lower = s.ToLower(text)
-	var first = s.Split(lower, " ")[0]
+	// var first = s.Split(lower, " ")[0]
 
 	for k := range keywords {
-		if s.HasPrefix(first, keywords[k]) {
+		if s.HasPrefix(lower, keywords[k]) {
 			return true
 		}
 	}

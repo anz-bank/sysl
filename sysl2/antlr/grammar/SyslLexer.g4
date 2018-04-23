@@ -4,6 +4,7 @@ tokens { INDENT, DEDENT}
 
 @lexer::header {
     import "encoding/json"
+    import "strings"
 }
 
 @lexer::members {
@@ -38,7 +39,7 @@ IMPORT_KEY: 'import';
 fragment
 SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
-IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE 
+IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE
                      {gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
                     ;
 
@@ -49,8 +50,10 @@ FOR                 : ( [fF][oO][rR])               -> pushMode(FREE_TEXT_NAME);
 LOOP                : [lL][oO][oO][pP];
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';
+DOTDOT              : '..';
 SET_OF              : 'set of';
 ONE_OF              : [oO]'ne of'      ;//-> pushMode(FREE_TEXT_NAME);
+MIXIN               : '-' '|' '>';
 DISTANCE            : '<->'         -> pushMode(EVENT_NAME_MODE);
 NAME_SEP            : '::'          -> pushMode(FREE_TEXT_NAME);
 LESS_COLON          : '<:';
@@ -99,7 +102,7 @@ INDENTED_COMMENT    : [ \t]+ '#' ~[\n]+? '\n'
                     {  l.Skip(); spaces=0; linenum++;}
                     ;
 
-DIGITS              : [1-9][0-9]*;
+DIGITS              : [0-9][0-9]*;
 
 fragment
 WITHIN_DBL_QTS        : (~[\r\n"])*;
@@ -116,6 +119,8 @@ QSTRING: (
             var val string
             if json.Unmarshal([]byte(l.GetText()), &val) == nil {
                 l.SetText(val)
+            } else {
+                l.SetText(strings.Trim(l.GetText(), "'"))
             }
         }
     ;
@@ -132,8 +137,9 @@ SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 // '/', for rest api
 // ':', for everything
 // '=' '{' '}' '&' '?'
+// '(' ')' for passing params
 fragment
-PRINTABLE       :   ~[ \n\r!"#'&\-/:=<?@[\]{}|]+;
+PRINTABLE       :   ~[ ()\n\r!"#'&\-/:=<?@[\]{}|]+;
 
 // defined before Name
 TEXT_LINE       :
