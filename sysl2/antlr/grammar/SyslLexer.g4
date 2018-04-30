@@ -195,6 +195,7 @@ WS              : [ \t]+
 
 mode ARGS;
 SKIP_WS_ARG         : [ ]   -> skip;
+SQ_OPEN_2             : '['   { in_sq_brackets++;} -> popMode;
 
 Q_ARG: (
             (DBL_QT WITHIN_DBL_QTS DBL_QT)

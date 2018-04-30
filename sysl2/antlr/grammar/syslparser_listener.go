@@ -17,6 +17,9 @@ type SyslParserListener interface {
 	// EnterModifier_list is called when entering the modifier_list production.
 	EnterModifier_list(c *Modifier_listContext)
 
+	// EnterSq_open is called when entering the sq_open production.
+	EnterSq_open(c *Sq_openContext)
+
 	// EnterModifiers is called when entering the modifiers production.
 	EnterModifiers(c *ModifiersContext)
 
@@ -250,6 +253,9 @@ type SyslParserListener interface {
 
 	// ExitModifier_list is called when exiting the modifier_list production.
 	ExitModifier_list(c *Modifier_listContext)
+
+	// ExitSq_open is called when exiting the sq_open production.
+	ExitSq_open(c *Sq_openContext)
 
 	// ExitModifiers is called when exiting the modifiers production.
 	ExitModifiers(c *ModifiersContext)

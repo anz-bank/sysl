@@ -39,6 +39,12 @@ func (s *BaseSyslParserListener) EnterModifier_list(ctx *Modifier_listContext) {
 // ExitModifier_list is called when production modifier_list is exited.
 func (s *BaseSyslParserListener) ExitModifier_list(ctx *Modifier_listContext) {}
 
+// EnterSq_open is called when production sq_open is entered.
+func (s *BaseSyslParserListener) EnterSq_open(ctx *Sq_openContext) {}
+
+// ExitSq_open is called when production sq_open is exited.
+func (s *BaseSyslParserListener) ExitSq_open(ctx *Sq_openContext) {}
+
 // EnterModifiers is called when production modifiers is entered.
 func (s *BaseSyslParserListener) EnterModifiers(ctx *ModifiersContext) {}
 

@@ -1210,7 +1210,12 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 func (s *TreeShapeListener) EnterStatements(ctx *parser.StatementsContext) {}
 
 // ExitStatements is called when production statements is exited.
-func (s *TreeShapeListener) ExitStatements(ctx *parser.StatementsContext) {}
+func (s *TreeShapeListener) ExitStatements(ctx *parser.StatementsContext) {
+	if ctx.Attribs_or_modifiers() != nil {
+		stmt := s.lastStatement()
+		stmt.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+	}
+}
 
 func (s *TreeShapeListener) urlString() string {
 	var url string

@@ -26,4 +26,4 @@ Server [~rest]:
 BrowserApp [~ajax]:
     On Click:
         | Comment On click, initiate a server call
-        Server <- GET /first/{id}
+        Server <- GET /first/{id} [~pattern+foo]
