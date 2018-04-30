@@ -1,0 +1,24 @@
+Tuple Model:
+    !type Response:
+        status <: string(10..30)
+        code <: int(0..9999)
+        foo <: decimal(10..9999)
+        baz <: decimal(0..9999)
+    !type Req:
+        Header <:
+            Action
+            AppHostSystem
+            AppDate <: Date
+            AppNbr
+        Application <:
+            PropConsolClgTbl
+            PropClgTbl
+            AppCustType
+            PropCisTbl
+            ThirdPartyGuarantorExist <: bool
+            LiabilityDetail (0..100) <:
+                LiabilityObjectID
+                LiabilityFinInstCode
+                LiabilityAcquisitionStatus
+                ProposedFacilityPurposeCode
+                LiabilityRemainLoanMonths

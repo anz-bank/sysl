@@ -15,7 +15,6 @@ var in_sq_brackets int
 
 var gotNewLine bool
 var gotHttpVerb bool
-
 var prevTokenIndex = -1
 
 func (l *SyslLexer) NextToken() antlr.Token {
@@ -24,7 +23,34 @@ func (l *SyslLexer) NextToken() antlr.Token {
 
 }
 
-NativeDataTypes     : 'int' | 'string' | 'date' | 'bool' | 'decimal' | 'datetime' ;
+fragment A : [aA]; // match either an 'a' or 'A'
+fragment B : [bB];
+fragment C : [cC];
+fragment D : [dD];
+fragment E : [eE];
+fragment F : [fF];
+fragment G : [gG];
+fragment H : [hH];
+fragment I : [iI];
+fragment J : [jJ];
+fragment K : [kK];
+fragment L : [lL];
+fragment M : [mM];
+fragment N : [nN];
+fragment O : [oO];
+fragment P : [pP];
+fragment Q : [qQ];
+fragment R : [rR];
+fragment S : [sS];
+fragment T : [tT];
+fragment U : [uU];
+fragment V : [vV];
+fragment W : [wW];
+fragment X : [xX];
+fragment Y : [yY];
+fragment Z : [zZ];
+
+NativeDataTypes     : (I N T) |( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) ;
 HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH')
                     { gotHttpVerb = true}
                     ;
@@ -40,25 +66,26 @@ fragment
 SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
 IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE
-                     {gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
+                     { gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
                     ;
 
-RETURN              : ( [rR][eE][tT][uU][rR][nN] )  -> pushMode(NOT_NEWLINE); //revisit this?
-IF                  : ([iI][fF])                    -> pushMode(FREE_TEXT_NAME);
-ELSE                : ([eE][lL][sS][eE]);
-FOR                 : ( [fF][oO][rR])               -> pushMode(FREE_TEXT_NAME);
-LOOP                : [lL][oO][oO][pP];
+RETURN              : ( R E T U R N )   -> pushMode(NOT_NEWLINE); //revisit this?
+IF                  : ( I F)            -> pushMode(FREE_TEXT_NAME);
+ELSE                : (E L S E);
+FOR                 : (F O R) [ \t]*   -> pushMode(FREE_TEXT_NAME);
+LOOP                : (L O O P);
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';
 DOTDOT              : '..';
-SET_OF              : 'set of';
-ONE_OF              : [oO]'ne of'      ;//-> pushMode(FREE_TEXT_NAME);
+SET_OF              : S E T [ \t]* O F;
+ONE_OF              : O N E [ \t]* O F      ;//-> pushMode(FREE_TEXT_NAME);
 MIXIN               : '-' '|' '>';
 DISTANCE            : '<->'         -> pushMode(EVENT_NAME_MODE);
-NAME_SEP            : '::'          -> pushMode(FREE_TEXT_NAME);
+DOT_ARROW           : '.' [ \t]+ '<-' -> pushMode(ARGS); // for " '. <-' name" syntax, change mode to all  ". <- GET /rest/api/calls"
+NAME_SEP            : [ \t]* '::' [ \t]*;
 LESS_COLON          : '<:';
-ARROW_LEFT          : '<-'          -> pushMode(FREE_TEXT_NAME);
-ARROW_RIGHT         : '->';
+ARROW_LEFT          : '<-'  -> pushMode(ARGS); // Added for: 'server <- GET /http/path' calls
+ARROW_RIGHT         : [ \t]* '->' [ \t]* ;
 COLLECTOR           : '.. * <- *';
 PLUS                : '+';
 TILDE               : '~';
@@ -66,7 +93,6 @@ COMMA               : ',';
 EQ                  : '=';
 DOLLAR              : '$';
 FORWARD_SLASH       : '/';
-MINUS               : '-';
 STAR                : '*';
 COLON               : ':';
 PERCENT             : '%';
@@ -74,7 +100,7 @@ DOT                 : '.';
 EXCLAIM             : '!';
 QN                  : '?';
 AT                  : '@'       -> pushMode(AT_VAR_DECL);
-AMP                 : '&';
+AMP                 : '&' { gotHttpVerb }? ;
 SQ_OPEN             : '['   { in_sq_brackets++;};
 SQ_CLOSE            : ']'   { in_sq_brackets--;};
 CURLY_OPEN          : '{';
@@ -84,8 +110,9 @@ CLOSE_PAREN         : ')';
 // OPEN_ANGLE          : '<';
 // CLOSE_ANGLE         : '>';
 EMPTY_COMMENT       : ('#' '\r'? '\n')
-                     {gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
-                    -> channel(HIDDEN);
+                    { gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
+                    -> channel(HIDDEN)
+                    ;
 
 HASH                : '#'       -> pushMode(NOT_NEWLINE);
 PIPE                : '|'       -> pushMode(NOT_NEWLINE);
@@ -127,7 +154,7 @@ QSTRING: (
 
 NEWLINE             : '\r'? '\n'
                     {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
-                     -> channel(HIDDEN)
+                    -> channel(HIDDEN)
                     ;
 
 SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
@@ -136,22 +163,23 @@ SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 // '->', required for events
 // '/', for rest api
 // ':', for everything
-// '=' '{' '}' '&' '?'
-// '(' ')' for passing params
+// '=' '{' '}'  '?'
+// '(' ',' ')' for passing params
+// removed '&' as its only required when we get HTTP verb
+// removed '=' as its required only inside sq brackets
+// add '.', required for decimal, reference syntax 'app.epname'
+//      DOT can be in the app or epname!!
 fragment
-PRINTABLE       :   ~[ ()\n\r!"#'&\-/:=<?@[\]{}|]+;
+PRINTABLE       :   ~[ .\-<>,()\n\r!"#'/:?@[\]{}|]+;
 
-// defined before Name
 TEXT_LINE       :
                 { !gotHttpVerb}?
-                PRINTABLE ([ &\-]+ PRINTABLE)+
+                PRINTABLE ([ \-]+ PRINTABLE)+
                 { in_sq_brackets == 0 }?
-                { !gotHttpVerb}?
                 { startsWithKeyword(p.GetText()) == false}?
-                //  { (_input.LA(1) == '\n') | ((_input.LA(1) == '\r') && (_input.LA(2) == '\n')) }?
                 ;
 
-Name            : [a-zA-Z][a-zA-Z0-9_-]*;
+Name            : [a-zA-Z][-a-zA-Z0-9_]*;
 /// end--textline & name
 
 // cim.sysl has spaces and tab in the same line.
@@ -165,12 +193,31 @@ WS              : [ \t]+
                 ;
 
 
+mode ARGS;
+SKIP_WS_ARG         : [ ]   -> skip;
+
+Q_ARG: (
+            (DBL_QT WITHIN_DBL_QTS DBL_QT)
+            |
+            (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
+        );
+
+TEXT_VALUE      : (~[,'"()\r\n:[\]<])+;
+OPEN_PAREN_ARG  : '(';
+CLOSE_PAREN_ARG : ')' -> popMode;
+COMMA_ARG       : ',' [ ]*;
+
+NEWLINE_2           : '\r'? '\n'
+                    {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
+                    -> channel(HIDDEN), popMode
+                    ;
+
 mode NOT_NEWLINE;
 TEXT            : (~[\r\n])+        -> popMode ;
 
 mode FREE_TEXT_NAME;
-SKIP_WS         : [ ]   -> skip;
-TEXT_NAME       : ~[ ](~[\r\n:[\]<])+  -> popMode;
+SKIP_WS_1         : [ ]   -> skip;
+TEXT_NAME       : ~[ ](~['"()\r\n:[\]<])+  -> popMode;
 
 // either add '=' into TEXT_LINE
 // or have this special mode

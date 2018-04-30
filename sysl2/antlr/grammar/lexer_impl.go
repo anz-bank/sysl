@@ -118,7 +118,7 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 	// tokenName := GettokenName(next, l)
 
 	// return NEWLINE
-	if gotNewLine && next.GetTokenType() == SyslLexerNEWLINE {
+	if gotNewLine && (next.GetTokenType() == SyslLexerNEWLINE || next.GetTokenType() == SyslLexerNEWLINE_2) {
 		return next
 	}
 	// regular whitespace, return as is.

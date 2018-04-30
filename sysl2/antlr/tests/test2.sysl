@@ -1,7 +1,12 @@
 Tuple Model:
+    !type Foo:
+        #@description = "some description"
+        id <: int
+
     !type TableName:
         fieldname <: string
         fieldname2 <: set of string
+        ids <: set of Foo
 
 Request:
     !type Input:

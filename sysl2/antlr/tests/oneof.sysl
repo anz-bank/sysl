@@ -1,0 +1,14 @@
+SomeApp:
+    EP1: ...
+    EP2: ...
+    EP3 (status <: string): ...
+
+OtherApp:
+    Endpoint:
+        One of:
+            requested_state = submitted:
+                SomeApp <- EP1
+            requested_state = unsubmitted:
+                SomeApp <- EP2
+            requested_state = referred:
+                SomeApp <- EP3 ("referred")

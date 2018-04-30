@@ -45,6 +45,12 @@ func (s *BaseSyslParserListener) EnterModifiers(ctx *ModifiersContext) {}
 // ExitModifiers is called when production modifiers is exited.
 func (s *BaseSyslParserListener) ExitModifiers(ctx *ModifiersContext) {}
 
+// EnterName_str is called when production name_str is entered.
+func (s *BaseSyslParserListener) EnterName_str(ctx *Name_strContext) {}
+
+// ExitName_str is called when production name_str is exited.
+func (s *BaseSyslParserListener) ExitName_str(ctx *Name_strContext) {}
+
 // EnterReference is called when production reference is entered.
 func (s *BaseSyslParserListener) EnterReference(ctx *ReferenceContext) {}
 
@@ -152,12 +158,6 @@ func (s *BaseSyslParserListener) EnterArray_size(ctx *Array_sizeContext) {}
 
 // ExitArray_size is called when production array_size is exited.
 func (s *BaseSyslParserListener) ExitArray_size(ctx *Array_sizeContext) {}
-
-// EnterInplace_field is called when production inplace_field is entered.
-func (s *BaseSyslParserListener) EnterInplace_field(ctx *Inplace_fieldContext) {}
-
-// ExitInplace_field is called when production inplace_field is exited.
-func (s *BaseSyslParserListener) ExitInplace_field(ctx *Inplace_fieldContext) {}
 
 // EnterInplace_tuple is called when production inplace_tuple is entered.
 func (s *BaseSyslParserListener) EnterInplace_tuple(ctx *Inplace_tupleContext) {}
@@ -302,6 +302,18 @@ func (s *BaseSyslParserListener) EnterTarget_endpoint(ctx *Target_endpointContex
 
 // ExitTarget_endpoint is called when production target_endpoint is exited.
 func (s *BaseSyslParserListener) ExitTarget_endpoint(ctx *Target_endpointContext) {}
+
+// EnterCall_arg is called when production call_arg is entered.
+func (s *BaseSyslParserListener) EnterCall_arg(ctx *Call_argContext) {}
+
+// ExitCall_arg is called when production call_arg is exited.
+func (s *BaseSyslParserListener) ExitCall_arg(ctx *Call_argContext) {}
+
+// EnterCall_args is called when production call_args is entered.
+func (s *BaseSyslParserListener) EnterCall_args(ctx *Call_argsContext) {}
+
+// ExitCall_args is called when production call_args is exited.
+func (s *BaseSyslParserListener) ExitCall_args(ctx *Call_argsContext) {}
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *BaseSyslParserListener) EnterCall_stmt(ctx *Call_stmtContext) {}

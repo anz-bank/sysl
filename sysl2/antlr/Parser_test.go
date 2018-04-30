@@ -18,10 +18,10 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 
 	args := []string{"pb", "-o", output, filename}
 	if len(root) > 0 {
-		root := []string{"--root", root}
-		args[2] = root[1] + args[2]
+		root_array := []string{"--root", root}
+		args[2] = root_array[1] + "/" + args[2]
 		output = args[2]
-		args = append(root, args...)
+		args = append(root_array, args...)
 	}
 
 	cmd := exec.Command("sysl", args...)
@@ -60,18 +60,49 @@ func TestSimpleEP(t *testing.T) {
 		t.Error("failed")
 	}
 }
+
 func TestSimpleEP2(t *testing.T) {
 	filename := "tests/test4.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }
+
+func TestSimpleEndpointParams(t *testing.T) {
+	filename := "tests/ep_params.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestOneOfStatements(t *testing.T) {
+	filename := "tests/oneof.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestForLoops(t *testing.T) {
+	filename := "tests/for_loop.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestTuple(t *testing.T) {
 	filename := "tests/test2.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }
+
+func TestInplaceTuple(t *testing.T) {
+	filename := "tests/inplace_tuple.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestRelational(t *testing.T) {
 	filename := "tests/school.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
@@ -86,17 +117,17 @@ func TestImports(t *testing.T) {
 	}
 }
 
-func TestRestApi(t *testing.T) {
-	filename := "tests/test_rest_api.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
-}
-
 func TestRootArg(t *testing.T) {
 	filename := "school.sysl"
 	root := "tests"
 	if loadAndCompare(Parse(filename, root), filename, root) == false {
+		t.Error("failed")
+	}
+}
+
+func TestRestApi(t *testing.T) {
+	filename := "tests/test_rest_api.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }
@@ -107,3 +138,17 @@ func TestRestApi_WrongOrder(t *testing.T) {
 		t.Error("failed")
 	}
 }
+
+// func TestAppNameWithAmpersand(t *testing.T) {
+// 	filename := "tests/ampersand_name.sysl"
+// 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+// 		t.Error("failed")
+// 	}
+// }
+
+// func TestAppNameWithDot(t *testing.T) {
+// 	filename := "tests/dot_example.sysl"
+// 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+// 		t.Error("failed")
+// 	}
+// }

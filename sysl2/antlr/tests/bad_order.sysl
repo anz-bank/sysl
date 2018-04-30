@@ -1,0 +1,8 @@
+Server [~rest]:
+    /{id<:int}:
+        GET ?depth=int&limit=int?&offset=int?:
+            ...
+
+        /third/{a-bc<:int}:
+            POST:
+                ...

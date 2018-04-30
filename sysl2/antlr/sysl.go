@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"anz-bank/sysl/src/proto"
 	"anz-bank/sysl/sysl2/antlr/grammar"
@@ -29,8 +30,45 @@ func (d *SyslParserErrorListener) SyntaxError(
 	d.hasErrors = true
 }
 
+func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
+	fmt.Println("asf")
+	d.hasErrors = false
+}
+
+func getAppName(app *sysl.AppName, mod *sysl.Module) *sysl.Application {
+	app_name := app.Part[0]
+
+	for i := 1; i < len(app.Part); i++ {
+		app_name = " :: " + app.Part[i]
+	}
+	if app, has := mod.Apps[app_name]; has {
+		return app
+	}
+	return nil
+}
+
 func postProcess(mod *sysl.Module) {
 	for appName, app := range mod.Apps {
+
+		for epname, endpoint := range app.Endpoints {
+			if endpoint.Source != nil {
+				src_app := getAppName(endpoint.Source, mod)
+				if src_app != nil {
+					eventName := strings.TrimSpace(strings.Split(epname, ">")[1])
+					if ep, has := src_app.Endpoints[eventName]; has {
+						stmt := &sysl.Statement{
+							Stmt: &sysl.Statement_Call{
+								Call: &sysl.Call{
+									Target:   app.Name,
+									Endpoint: epname,
+								},
+							},
+						}
+						ep.Stmt = append(ep.Stmt, stmt)
+					}
+				}
+			}
+		}
 
 		for typeName, types := range app.Types {
 			var attrs map[string]*sysl.Type
@@ -44,9 +82,6 @@ func postProcess(mod *sysl.Module) {
 			for fieldname, t := range attrs {
 				if x := t.GetTypeRef(); x != nil {
 					refApp := app
-					// refApp := x.GetRef().GetAppname()
-					// if refApp == nil {
-					// }
 					refName := x.GetRef().GetPath()[0]
 					_, has := refApp.Types[refName]
 					if has == false {
@@ -62,8 +97,8 @@ func postProcess(mod *sysl.Module) {
 							refType, _ := refApp.Types[refName].Type.(*sysl.Type_Relation_)
 							ref_attrs = refType.Relation.GetAttrDefs()
 						}
-
-						field := x.GetRef().GetPath()[1]
+						last := len(x.GetRef().GetPath()) - 1
+						field := x.GetRef().GetPath()[last]
 						_, has = ref_attrs[field]
 
 						if has == false {

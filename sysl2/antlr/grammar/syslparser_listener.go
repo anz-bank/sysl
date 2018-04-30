@@ -20,6 +20,9 @@ type SyslParserListener interface {
 	// EnterModifiers is called when entering the modifiers production.
 	EnterModifiers(c *ModifiersContext)
 
+	// EnterName_str is called when entering the name_str production.
+	EnterName_str(c *Name_strContext)
+
 	// EnterReference is called when entering the reference production.
 	EnterReference(c *ReferenceContext)
 
@@ -73,9 +76,6 @@ type SyslParserListener interface {
 
 	// EnterArray_size is called when entering the array_size production.
 	EnterArray_size(c *Array_sizeContext)
-
-	// EnterInplace_field is called when entering the inplace_field production.
-	EnterInplace_field(c *Inplace_fieldContext)
 
 	// EnterInplace_tuple is called when entering the inplace_tuple production.
 	EnterInplace_tuple(c *Inplace_tupleContext)
@@ -148,6 +148,12 @@ type SyslParserListener interface {
 
 	// EnterTarget_endpoint is called when entering the target_endpoint production.
 	EnterTarget_endpoint(c *Target_endpointContext)
+
+	// EnterCall_arg is called when entering the call_arg production.
+	EnterCall_arg(c *Call_argContext)
+
+	// EnterCall_args is called when entering the call_args production.
+	EnterCall_args(c *Call_argsContext)
 
 	// EnterCall_stmt is called when entering the call_stmt production.
 	EnterCall_stmt(c *Call_stmtContext)
@@ -248,6 +254,9 @@ type SyslParserListener interface {
 	// ExitModifiers is called when exiting the modifiers production.
 	ExitModifiers(c *ModifiersContext)
 
+	// ExitName_str is called when exiting the name_str production.
+	ExitName_str(c *Name_strContext)
+
 	// ExitReference is called when exiting the reference production.
 	ExitReference(c *ReferenceContext)
 
@@ -301,9 +310,6 @@ type SyslParserListener interface {
 
 	// ExitArray_size is called when exiting the array_size production.
 	ExitArray_size(c *Array_sizeContext)
-
-	// ExitInplace_field is called when exiting the inplace_field production.
-	ExitInplace_field(c *Inplace_fieldContext)
 
 	// ExitInplace_tuple is called when exiting the inplace_tuple production.
 	ExitInplace_tuple(c *Inplace_tupleContext)
@@ -376,6 +382,12 @@ type SyslParserListener interface {
 
 	// ExitTarget_endpoint is called when exiting the target_endpoint production.
 	ExitTarget_endpoint(c *Target_endpointContext)
+
+	// ExitCall_arg is called when exiting the call_arg production.
+	ExitCall_arg(c *Call_argContext)
+
+	// ExitCall_args is called when exiting the call_args production.
+	ExitCall_args(c *Call_argsContext)
 
 	// ExitCall_stmt is called when exiting the call_stmt production.
 	ExitCall_stmt(c *Call_stmtContext)

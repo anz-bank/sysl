@@ -1,0 +1,7 @@
+SomeApp:
+    Send document(s) to customer: ...
+    
+
+Another App:
+    EndPoint:
+        SomeApp <- Send document(s) to customer

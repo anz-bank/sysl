@@ -1,9 +1,9 @@
 Server [~rest]:
     /first:
-        GET:
+        GET (something):
             ...
         /{id<:int}:
-            GET ?depth=int&limit=int?&offset=int?:
+            GET ?depth=int&limit=int?&offset=int? [system_id="001"]:
                 ...
             /second:
                 PUT:

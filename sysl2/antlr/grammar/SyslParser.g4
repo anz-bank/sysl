@@ -6,7 +6,8 @@ modifier        : TILDE Name (PLUS Name)*;
 size_spec       : OPEN_PAREN DIGITS ( DOT DIGITS)? CLOSE_PAREN;
 modifier_list   : modifier (COMMA modifier)*;
 modifiers       : SQ_OPEN modifier_list SQ_CLOSE;
-reference       : parent_ref=Name '.' member=Name;
+name_str        : Name|TEXT_LINE;
+reference       : parent_ref=app_name DOT member=name_str;
 doc_string      : PIPE TEXT;
 quoted_string       : QSTRING;
 array_of_strings    : SQ_OPEN quoted_string (COMMA quoted_string)* SQ_CLOSE;
@@ -18,26 +19,25 @@ attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
 set_type            : SET_OF (Name | NativeDataTypes) size_spec?;
 //TODO : allow for other collection types?
 collection_type     : set_type;
-user_defined_type       : Name;
+user_defined_type       : name_str;
 multi_line_docstring    :   COLON INDENT doc_string+ DEDENT;
 annotation_value        :   QSTRING | array_of_strings | multi_line_docstring;
 annotation      : AT VAR_NAME EQ annotation_value;
 annotations     : INDENT annotation+ DEDENT;
 
 field_type      : collection_type
-                |  ((reference | NativeDataTypes | user_defined_type) size_spec? QN? attribs_or_modifiers? (COLON annotations)?) ;
+                |  ((reference | NativeDataTypes | user_defined_type) (array_size | size_spec)? QN? attribs_or_modifiers? (COLON annotations)?) ;
 
 array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS CLOSE_PAREN;
-inplace_field: Name array_size? (LESS_COLON (field_type | inplace_tuple))?;
-inplace_tuple: INDENT inplace_field+ DEDENT;
-field: Name (array_size? LESS_COLON (field_type | inplace_tuple))?;
+inplace_tuple: INDENT field+ DEDENT;
+field: name_str (array_size? LESS_COLON (field_type | inplace_tuple))?;
 
 table   :   SYSL_COMMENT*
             (TABLE | TYPE)
-            Name attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field )+ DEDENT)
+            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field | annotation | WHATEVER )+ DEDENT)
         ;
 
-package_name   : Name (DOT Name)? | TEXT_LINE | TEXT_NAME;
+package_name   : name_str;
 sub_package    : NAME_SEP package_name;
 app_name       : package_name sub_package*;
 
@@ -54,33 +54,35 @@ var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
 query_var       : Name EQ (NativeDataTypes | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
-http_path_part : Name | TEXT_LINE;
-http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | Name) CURLY_CLOSE;
+http_path_part :name_str;
+http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str) CURLY_CLOSE;
 http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
 http_path       : FORWARD_SLASH | http_path_suffix+;
 
-endpoint_name   : ( DOT? Name+ | TEXT_LINE);
+endpoint_name   : ( Name+ | TEXT_LINE);
 
 ret_stmt        : RETURN TEXT;
 
-target          : (DOT | app_name);
-target_endpoint : (TEXT_NAME | Name);
-call_stmt       : target (ARROW_LEFT target_endpoint);
+target          : app_name;
+target_endpoint : TEXT_VALUE;
+call_arg : Q_ARG | TEXT_VALUE;
+call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
+call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
 if_stmt                 : IF TEXT_NAME COLON INDENT statements* DEDENT;
 if_else                 : if_stmt (ELSE COLON INDENT statements* DEDENT)?;
 
-for_cond                : TEXT_NAME COLON;
+for_cond                : TEXT_NAME;
 
-for_stmt                : FOR for_cond
+for_stmt                : FOR for_cond COLON
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;
 //group_stmt              : GROUP TEXT_NAME COLON
 //                                INDENT statements+ DEDENT;
 
-one_of_case_label: Name*;
+one_of_case_label: (Name | TEXT_LINE | QSTRING)+;
 
 one_of_cases: one_of_case_label COLON
                     INDENT statements+ DEDENT;
@@ -88,7 +90,7 @@ one_of_cases: one_of_case_label COLON
 one_of_stmt             : ONE_OF COLON
                            INDENT one_of_cases+ DEDENT;
 
-text_stmt               : doc_string | TEXT_LINE | WHATEVER;
+text_stmt               : doc_string | TEXT_LINE (ARROW_RIGHT (name_str))? | WHATEVER ;
 
 mixin:  MIXIN app_name;
 
@@ -111,7 +113,7 @@ statements: ( if_else
             attribs_or_modifiers?
             ;
 
-method_def: HTTP_VERBS
+method_def: HTTP_VERBS params?
                   query_param? attribs_or_modifiers? COLON
                         INDENT statements+ DEDENT
                 ;
@@ -143,7 +145,7 @@ collector:  COLLECTOR COLON (WHATEVER | (INDENT collector_stmts+ DEDENT));
 event: DISTANCE EVENT_NAME
         attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
 
-subscribe: Name ARROW_RIGHT attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
+subscribe: app_name ARROW_RIGHT name_str attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
 
 app_decl: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin )+ DEDENT;
 

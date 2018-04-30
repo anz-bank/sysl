@@ -1,8 +1,12 @@
-SomeApp:
+SomeApp [version="1.1.1"]:
     @app_desc = "this comment belongs to the app defined 'above'"
 
     Endpoint:
         ...
+
+    # subscribe to an event
+    Test - App -> eventName [~mq]:
+        handle event eventName
 
 Test - App:
     Test - Endpoint (request <: SomeApp.SomeType):
@@ -14,11 +18,22 @@ Test - App:
 
     <-> eventName: ...
 
+External :: App:
+    !type Request:
+        id <: int
+        val <: string
+    !type Response:
+        val <: string
+
 My Todo App [~webapp]:
     Add Note [~somepattern]: ...
 
-A&B:
-    C&D:
+anz_com:
+    homepage: ...
+
+A_B:
+    C_D:
+        anz_com <- homepage
         Test - App <- Test - Endpoint
     DDD:
         if some condition is true:
@@ -37,3 +52,5 @@ A&B:
 
     EEE:
         ...
+
+    Send document to customer: ...

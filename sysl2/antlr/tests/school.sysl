@@ -4,5 +4,3 @@ School:
     !table Student:
         Id <: int [~pk]
         ClassId <: Class.Id
-
-

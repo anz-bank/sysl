@@ -1,2 +1,25 @@
-GO::Sample::My Todo App:
-    ...
+GO ::Sample:: My Todo App:
+    !type Todo:
+        id <: int
+        note <: string
+
+Sample::My Todo App:
+    !type Todo:
+        id <: int
+        note <: string
+
+My Todo App:
+    !type Todo:
+        id <: int
+        note <: string
+
+Browser App:
+    !type Data:
+        id <: GO :: Sample :: My Todo App.id
+        id2 <: Sample :: My Todo App.id
+        id3 <: My Todo App.id
+
+    EP (p1 <: GO :: Sample :: My Todo App.id): ...
+    EP1 (p2 <: Sample :: My Todo App.id): ...
+    EP2 (p3 <:  My Todo App.id): ...
+    EP3 (p4 <:  id): ...
