@@ -85,13 +85,13 @@ http_method_comment     : SYSL_COMMENT;
 
 one_of_case_label: (Name | TEXT_LINE | QSTRING)+;
 
-one_of_cases: one_of_case_label COLON
+one_of_cases: one_of_case_label? COLON
                     INDENT statements+ DEDENT;
 
 one_of_stmt             : ONE_OF COLON
                            INDENT one_of_cases+ DEDENT;
 
-text_stmt               : doc_string | TEXT_LINE (ARROW_RIGHT (name_str))? | WHATEVER ;
+text_stmt               : doc_string | app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
 
 mixin:  MIXIN app_name;
 

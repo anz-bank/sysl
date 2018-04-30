@@ -12,3 +12,10 @@ OtherApp:
                 SomeApp <- EP2
             requested_state = referred:
                 SomeApp <- EP3 ("referred")
+
+    Endpoint with no label:
+        One of:
+            :
+                statement 1
+            :
+                statement 2

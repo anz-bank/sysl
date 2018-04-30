@@ -1083,8 +1083,10 @@ func (s *TreeShapeListener) ExitOne_of_case_label(ctx *parser.One_of_case_labelC
 func (s *TreeShapeListener) EnterOne_of_cases(ctx *parser.One_of_casesContext) {
 	alt := s.peekScope().(*sysl.Alt)
 	choice := &sysl.Alt_Choice{
-		Cond: ctx.One_of_case_label().GetText(),
 		Stmt: make([]*sysl.Statement, 0),
+	}
+	if ctx.One_of_case_label() != nil {
+		choice.Cond = ctx.One_of_case_label().GetText()
 	}
 	alt.Choice = append(alt.Choice, choice)
 	s.pushScope(choice)
