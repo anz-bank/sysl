@@ -971,7 +971,7 @@ func (s *TreeShapeListener) ExitCall_args(ctx *parser.Call_argsContext) {}
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
-	// fmt.Println(ctx.Target_endpoint().GetText())
+	fmt.Println(ctx.Target_endpoint().GetText())
 	appName := &sysl.AppName{}
 	if ctx.DOT_ARROW() != nil {
 		appName.Part = []string{s.appname}
@@ -1034,7 +1034,7 @@ func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
 
 // ExitIf_else is called when production if_else is exited.
 func (s *TreeShapeListener) ExitIf_else(ctx *parser.If_elseContext) {
-	if _, ok := s.peekScope().(*sysl.Group); ok {
+	if ctx.Statements(0) != nil {
 		s.popScope()
 	}
 }

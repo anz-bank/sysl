@@ -7,11 +7,8 @@ Car Models:
 Other App:
     FOO:
         Car Models <- Get All Years
-        For all years:
-            Car Models <- Get All Makes (year)
-            For all makes:
-                Car Models <- Get All Models (year, make)
-                For all models:
-                    Car Models <- Get All Series (year, make, model)
-                    for all series:
-                        evaluate series pricing
+        for all series:
+            evaluate series pricing
+            if has pricing:
+                select series
+            dump pricing information
