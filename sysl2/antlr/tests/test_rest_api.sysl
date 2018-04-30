@@ -1,4 +1,9 @@
 Server [~rest]:
+    /foo:
+        /bar:
+            /baz:
+                GET:
+                    ...
     /first:
         GET (something):
             ...

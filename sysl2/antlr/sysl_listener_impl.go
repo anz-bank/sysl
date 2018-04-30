@@ -913,7 +913,9 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 }
 
 // ExitHttp_path is called when production http_path is exited.
-func (s *TreeShapeListener) ExitHttp_path(ctx *parser.Http_pathContext) {}
+func (s *TreeShapeListener) ExitHttp_path(ctx *parser.Http_pathContext) {
+	s.url_prefix = append(s.url_prefix, s.typename)
+}
 
 // EnterEndpoint_name is called when production endpoint_name is entered.
 func (s *TreeShapeListener) EnterEndpoint_name(ctx *parser.Endpoint_nameContext) {}
@@ -1286,7 +1288,6 @@ func (s *TreeShapeListener) addToCurrentScope(stmt *sysl.Statement) {
 
 // EnterMethod_def is called when production method_def is entered.
 func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
-	s.url_prefix = append(s.url_prefix, s.typename)
 	url := s.urlString()
 	s.typename = ctx.HTTP_VERBS().GetText() + " " + url
 	s.method_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
