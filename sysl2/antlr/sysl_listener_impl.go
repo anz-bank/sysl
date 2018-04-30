@@ -34,9 +34,8 @@ type TreeShapeListener struct {
 }
 
 // NewTreeShapeListener ...
-func NewTreeShapeListener(base, root string) *TreeShapeListener {
+func NewTreeShapeListener(root string) *TreeShapeListener {
 	return &TreeShapeListener{
-		base: base,
 		root: root,
 		module: &sysl.Module{
 			Apps: make(map[string]*sysl.Application),
@@ -955,7 +954,6 @@ func (s *TreeShapeListener) ExitTarget_endpoint(ctx *parser.Target_endpointConte
 
 // EnterCall_arg is called when production call_arg is entered.
 func (s *TreeShapeListener) EnterCall_arg(ctx *parser.Call_argContext) {
-	fmt.Println(ctx.GetText())
 	arg := &sysl.Call_Arg{
 		Name: ctx.GetText(),
 	}
@@ -973,7 +971,6 @@ func (s *TreeShapeListener) ExitCall_args(ctx *parser.Call_argsContext) {}
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
-	fmt.Println(ctx.Target_endpoint().GetText())
 	appName := &sysl.AppName{}
 	if ctx.DOT_ARROW() != nil {
 		appName.Part = []string{s.appname}
@@ -1049,17 +1046,27 @@ func (s *TreeShapeListener) ExitFor_cond(ctx *parser.For_condContext) {}
 
 // EnterFor_stmt is called when production for_stmt is entered.
 func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
-	for_stmt := &sysl.Statement{
-		Stmt: &sysl.Statement_Group{
+	stmt := &sysl.Statement{}
+	s.addToCurrentScope(stmt)
+
+	if ctx.FOR() != nil {
+		stmt.Stmt = &sysl.Statement_Group{
 			Group: &sysl.Group{
 				Title: ctx.FOR().GetText() + ctx.For_cond().GetText(),
 				Stmt:  make([]*sysl.Statement, 0),
 			},
-		},
+		}
+		s.pushScope(stmt.GetGroup())
+	} else if ctx.UNTIL() != nil {
+		stmt.Stmt = &sysl.Statement_Loop{
+			Loop: &sysl.Loop{
+				Mode:      sysl.Loop_UNTIL,
+				Criterion: ctx.For_cond().GetText(),
+				Stmt:      make([]*sysl.Statement, 0),
+			},
+		}
+		s.pushScope(stmt.GetLoop())
 	}
-	s.addToCurrentScope(for_stmt)
-	s.pushScope(for_stmt.GetGroup())
-
 }
 
 // ExitFor_stmt is called when production for_stmt is exited.
@@ -1154,7 +1161,6 @@ func (s *TreeShapeListener) ExitParam_list(ctx *parser.Param_listContext) {}
 // EnterParams is called when production params is entered.
 func (s *TreeShapeListener) EnterParams(ctx *parser.ParamsContext) {
 	s.typemap = make(map[string]*sysl.Type)
-	// fmt.Println("enter param")
 }
 
 // ExitParams is called when production params is exited.
@@ -1163,7 +1169,7 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 
 	for _, fieldname := range s.fieldname {
 		// fieldname := s.fieldname[i]
-		fmt.Printf("%s.%s: enter param \n", s.typename, fieldname)
+		// fmt.Printf("%s.%s: enter param \n", s.typename, fieldname)
 
 		type1 := s.typemap[fieldname]
 		if type1.GetTypeRef() != nil {
@@ -1256,6 +1262,9 @@ func (s *TreeShapeListener) lastStatement() *sysl.Statement {
 	case *sysl.Group:
 		l := len(scope.Stmt) - 1
 		return scope.Stmt[l]
+	case *sysl.Loop:
+		l := len(scope.Stmt) - 1
+		return scope.Stmt[l]
 	default:
 		fmt.Printf("got unexpected %T\n", scope)
 		panic("not implemented")
@@ -1286,6 +1295,8 @@ func (s *TreeShapeListener) addToCurrentScope(stmt *sysl.Statement) {
 	case *sysl.Group:
 		scope.Stmt = append(scope.Stmt, stmt)
 	case *sysl.Alt_Choice:
+		scope.Stmt = append(scope.Stmt, stmt)
+	case *sysl.Loop:
 		scope.Stmt = append(scope.Stmt, stmt)
 	default:
 		fmt.Printf("got unexpected %T\n", scope)
@@ -1544,6 +1555,7 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		path = s.base + "/" + path
 	}
 	path += ".sysl"
+	fmt.Printf("\t import %s\n", path)
 	s.imports = append(s.imports, path)
 }
 

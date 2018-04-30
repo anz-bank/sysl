@@ -69,10 +69,11 @@ IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [
                      { gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
                     ;
 
-RETURN              : ( R E T U R N )   -> pushMode(NOT_NEWLINE); //revisit this?
-IF                  : (I F) [ \t]*      -> pushMode(ARGS);
+RETURN              : ( R E T U R N )           -> pushMode(NOT_NEWLINE); //revisit this?
+IF                  : (I F)  [ \t]*             -> pushMode(ARGS);
+FOR                 : (F O R) [ \t]*            -> pushMode(ARGS);
+UNTIL               : (U N T I L) [ \t]*        -> pushMode(ARGS);
 ELSE                : (E L S E);
-FOR                 : (F O R) [ \t]*    -> pushMode(ARGS);
 LOOP                : (L O O P);
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';

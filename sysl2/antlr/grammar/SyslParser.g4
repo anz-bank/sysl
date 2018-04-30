@@ -67,7 +67,7 @@ ret_stmt        : RETURN TEXT;
 
 target          : app_name;
 target_endpoint : TEXT_VALUE;
-call_arg : Q_ARG | TEXT_VALUE;
+call_arg : (Q_ARG | TEXT_VALUE)+;
 call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
@@ -77,7 +77,7 @@ if_else                 : if_stmt (ELSE COLON INDENT statements* DEDENT)?;
 
 for_cond                : arg_value;
 
-for_stmt                : FOR for_cond COLON_ARG
+for_stmt                : (UNTIL | FOR) for_cond COLON_ARG
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;

@@ -89,6 +89,13 @@ func TestForLoops(t *testing.T) {
 	}
 }
 
+func TestUntilLoop(t *testing.T) {
+	filename := "tests/until_loop.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestTuple(t *testing.T) {
 	filename := "tests/test2.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {

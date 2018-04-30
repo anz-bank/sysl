@@ -1,0 +1,8 @@
+Server:
+    Process Payload: ...
+
+Client:
+    On Click:
+        Until have requests:
+            Server <- Process Payload
+

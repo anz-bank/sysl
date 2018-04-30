@@ -144,14 +144,14 @@ func Parse(filename string, root string) *sysl.Module {
 	}
 	var empty struct{}
 	filename, _ = filepath.Abs(filename)
-	base := filepath.Dir(filename)
 	imported := make(map[string]struct{})
-	listener := NewTreeShapeListener(base, root)
+	listener := NewTreeShapeListener(root)
 	errorListener := SyslParserErrorListener{}
 
 	for {
 		fmt.Println(filename)
 		input := antlr.NewFileStream(filename)
+		listener.base = filepath.Dir(filename)
 		lexer := parser.NewSyslLexer(input)
 		stream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewSyslParser(stream)

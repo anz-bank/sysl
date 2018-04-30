@@ -43,7 +43,7 @@ A_B:
                 reTurn not ok1
         else:
             top level else_statment
-            IF some constraint:
+            IF "some constraint":
                 return ok
             Else:
                 return not ok
