@@ -327,6 +327,12 @@ func (s *BaseSyslParserListener) EnterCall_stmt(ctx *Call_stmtContext) {}
 // ExitCall_stmt is called when production call_stmt is exited.
 func (s *BaseSyslParserListener) ExitCall_stmt(ctx *Call_stmtContext) {}
 
+// EnterArg_value is called when production arg_value is entered.
+func (s *BaseSyslParserListener) EnterArg_value(ctx *Arg_valueContext) {}
+
+// ExitArg_value is called when production arg_value is exited.
+func (s *BaseSyslParserListener) ExitArg_value(ctx *Arg_valueContext) {}
+
 // EnterIf_stmt is called when production if_stmt is entered.
 func (s *BaseSyslParserListener) EnterIf_stmt(ctx *If_stmtContext) {}
 

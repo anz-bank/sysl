@@ -1010,7 +1010,7 @@ func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
 	if_stmt := &sysl.Statement{
 		Stmt: &sysl.Statement_Cond{
 			Cond: &sysl.Cond{
-				Test: ifstmt.TEXT_NAME().GetText(),
+				Test: ifstmt.Arg_value().GetText(),
 				Stmt: make([]*sysl.Statement, 0),
 			},
 		},

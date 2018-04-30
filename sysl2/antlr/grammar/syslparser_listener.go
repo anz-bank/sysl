@@ -161,6 +161,9 @@ type SyslParserListener interface {
 	// EnterCall_stmt is called when entering the call_stmt production.
 	EnterCall_stmt(c *Call_stmtContext)
 
+	// EnterArg_value is called when entering the arg_value production.
+	EnterArg_value(c *Arg_valueContext)
+
 	// EnterIf_stmt is called when entering the if_stmt production.
 	EnterIf_stmt(c *If_stmtContext)
 
@@ -397,6 +400,9 @@ type SyslParserListener interface {
 
 	// ExitCall_stmt is called when exiting the call_stmt production.
 	ExitCall_stmt(c *Call_stmtContext)
+
+	// ExitArg_value is called when exiting the arg_value production.
+	ExitArg_value(c *Arg_valueContext)
 
 	// ExitIf_stmt is called when exiting the if_stmt production.
 	ExitIf_stmt(c *If_stmtContext)

@@ -70,9 +70,9 @@ IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [
                     ;
 
 RETURN              : ( R E T U R N )   -> pushMode(NOT_NEWLINE); //revisit this?
-IF                  : ( I F)            -> pushMode(FREE_TEXT_NAME);
+IF                  : (I F) [ \t]*      -> pushMode(ARGS);
 ELSE                : (E L S E);
-FOR                 : (F O R) [ \t]*   -> pushMode(FREE_TEXT_NAME);
+FOR                 : (F O R) [ \t]*    -> pushMode(ARGS);
 LOOP                : (L O O P);
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';
@@ -205,8 +205,9 @@ Q_ARG: (
 
 TEXT_VALUE      : (~[,'"()\r\n:[\]<])+;
 OPEN_PAREN_ARG  : '(';
-CLOSE_PAREN_ARG : ')' -> popMode;
-COMMA_ARG       : ',' [ ]*;
+CLOSE_PAREN_ARG : ')'   -> popMode;
+COLON_ARG       : ':'   -> popMode;
+COMMA_ARG       : ',';
 
 NEWLINE_2           : '\r'? '\n'
                     {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
@@ -216,9 +217,9 @@ NEWLINE_2           : '\r'? '\n'
 mode NOT_NEWLINE;
 TEXT            : (~[\r\n])+        -> popMode ;
 
-mode FREE_TEXT_NAME;
-SKIP_WS_1         : [ ]   -> skip;
-TEXT_NAME       : ~[ ](~['"()\r\n:[\]<])+  -> popMode;
+// mode FREE_TEXT_NAME;
+// SKIP_WS_1         : [ ]   -> skip;
+// TEXT_NAME       : ~['"()\r\n:[\]<]+  -> popMode;
 
 // either add '=' into TEXT_LINE
 // or have this special mode

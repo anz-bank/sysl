@@ -71,12 +71,13 @@ call_arg : Q_ARG | TEXT_VALUE;
 call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
-if_stmt                 : IF TEXT_NAME COLON INDENT statements* DEDENT;
+arg_value: TEXT_VALUE | Q_ARG;
+if_stmt                 : IF arg_value COLON_ARG INDENT statements* DEDENT;
 if_else                 : if_stmt (ELSE COLON INDENT statements* DEDENT)?;
 
-for_cond                : TEXT_NAME;
+for_cond                : arg_value;
 
-for_stmt                : FOR for_cond COLON
+for_stmt                : FOR for_cond COLON_ARG
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;
