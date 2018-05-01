@@ -797,7 +797,6 @@ func (s *TreeShapeListener) ExitDocumentation_stmts(ctx *parser.Documentation_st
 func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 	var_name := ctx.Name().GetText()
 	var type1 *sysl.Type
-	context_app_part := []string{s.appname}
 	var ref_path []string
 
 	if ctx.Var_in_curly() != nil {
@@ -807,7 +806,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				TypeRef: &sysl.ScopedRef{
 					Context: &sysl.Scope{
 						Appname: &sysl.AppName{
-							Part: context_app_part,
+							Part: s.module.Apps[s.appname].Name.Part,
 						},
 					},
 					Ref: &sysl.Scope{
@@ -867,7 +866,6 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 			},
 		}
 	} else {
-		context_app_part := []string{s.appname}
 		ref_path := []string{
 			ctx.Name_str().GetText(),
 		}
@@ -877,7 +875,7 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 				TypeRef: &sysl.ScopedRef{
 					Context: &sysl.Scope{
 						Appname: &sysl.AppName{
-							Part: context_app_part,
+							Part: s.module.Apps[s.appname].Name.Part,
 						},
 					},
 					Ref: &sysl.Scope{

@@ -212,7 +212,7 @@ TEXT_VALUE      : (~[,'"()\r\n:[\]<])+;
 OPEN_PAREN_ARG  : '(';
 CLOSE_PAREN_ARG : ')'   -> popMode;
 COLON_ARG       : ':'   -> popMode;
-COMMA_ARG       : ',';
+COMMA_ARG       : ',' [ \t]*;
 
 NEWLINE_2           : '\r'? '\n'
                     {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}

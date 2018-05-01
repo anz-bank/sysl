@@ -1,4 +1,4 @@
-Server [~rest]:
+My :: Server [~rest]:
     /foo [zero="0"]:
         /bar [one="1", two="2", three="3"]:
             /baz:
@@ -32,4 +32,4 @@ Server [~rest]:
 BrowserApp [~ajax]:
     On Click:
         | Comment On click, initiate a server call
-        Server <- GET /first/{id} [~pattern+foo]
+        My :: Server <- GET /first/{id} [~pattern+foo]
