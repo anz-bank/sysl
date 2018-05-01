@@ -74,6 +74,7 @@ IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [
 
 RETURN              : ( R E T U R N )           -> pushMode(NOT_NEWLINE); //revisit this?
 IF                  : (I F)  [ \t]*             -> pushMode(ARGS);
+FOR_EACH            : (F O R) [ \t]* (E A C H) [ \t]* -> pushMode(ARGS);
 FOR                 : (F O R) [ \t]*            -> pushMode(ARGS);
 UNTIL               : (U N T I L) [ \t]*        -> pushMode(ARGS);
 ELSE                : (E L S E);

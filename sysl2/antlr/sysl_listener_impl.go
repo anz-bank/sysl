@@ -1084,6 +1084,14 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 			},
 		}
 		s.pushScope(stmt.GetLoop())
+	} else if ctx.FOR_EACH() != nil {
+		stmt.Stmt = &sysl.Statement_Foreach{
+			Foreach: &sysl.Foreach{
+				Collection: ctx.For_cond().GetText(),
+				Stmt:       make([]*sysl.Statement, 0),
+			},
+		}
+		s.pushScope(stmt.GetForeach())
 	}
 }
 
@@ -1309,6 +1317,9 @@ func (s *TreeShapeListener) lastStatement() *sysl.Statement {
 	case *sysl.Loop:
 		l := len(scope.Stmt) - 1
 		return scope.Stmt[l]
+	case *sysl.Foreach:
+		l := len(scope.Stmt) - 1
+		return scope.Stmt[l]
 	default:
 		fmt.Printf("got unexpected %T\n", scope)
 		panic("not implemented")
@@ -1341,6 +1352,8 @@ func (s *TreeShapeListener) addToCurrentScope(stmt *sysl.Statement) {
 	case *sysl.Alt_Choice:
 		scope.Stmt = append(scope.Stmt, stmt)
 	case *sysl.Loop:
+		scope.Stmt = append(scope.Stmt, stmt)
+	case *sysl.Foreach:
 		scope.Stmt = append(scope.Stmt, stmt)
 	default:
 		fmt.Printf("got unexpected %T\n", scope)

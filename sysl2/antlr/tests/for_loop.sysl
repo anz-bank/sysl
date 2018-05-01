@@ -12,3 +12,6 @@ Other App:
             if has pricing:
                 select series
             dump pricing information
+    Profit:
+        For each year:
+            calculate profit

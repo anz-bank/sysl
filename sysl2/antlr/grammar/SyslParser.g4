@@ -78,7 +78,7 @@ if_else                 : if_stmt (ELSE COLON INDENT statements* DEDENT)?;
 
 for_cond                : arg_value;
 
-for_stmt                : (UNTIL | FOR) for_cond COLON_ARG
+for_stmt                : (UNTIL | FOR_EACH | FOR) for_cond COLON_ARG
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;
