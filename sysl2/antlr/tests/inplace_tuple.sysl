@@ -1,9 +1,23 @@
-Tuple Model:
+My :: Tuple Model:
     !type Response:
         status <: string(10..30)
         code <: int(0..9999)
         foo <: decimal(10..9999)
+        bar <: decimal(10..)
         baz <: decimal(0..9999)
+        toplevel <: TopLevelPayload
+        nested <: Payload
+
+        !type Payload:
+            code <: int
+            value <: int(1..)
+            data <: string_8(0..30)
+            footer <: string(0..)
+            XMLDoc <: xml
+
+    !type TopLevelPayload:
+        data <: string
+
     !type Req:
         Header <:
             Action
@@ -11,14 +25,13 @@ Tuple Model:
             AppDate <: Date
             AppNbr
         Application <:
-            PropConsolClgTbl
-            PropClgTbl
-            AppCustType
-            PropCisTbl
-            ThirdPartyGuarantorExist <: bool
-            LiabilityDetail (0..100) <:
-                LiabilityObjectID
-                LiabilityFinInstCode
-                LiabilityAcquisitionStatus
-                ProposedFacilityPurposeCode
-                LiabilityRemainLoanMonths
+            ApplicationType
+            AccountType
+            Applicable <: bool
+            Detail (0..100) <:
+                ObjectID
+                Code
+                Status
+            Purpose (0..) <:
+                PurposeCode
+                RemainDays

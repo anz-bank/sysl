@@ -86,6 +86,9 @@ type SyslParserListener interface {
 	// EnterField is called when entering the field production.
 	EnterField(c *FieldContext)
 
+	// EnterInplace_table is called when entering the inplace_table production.
+	EnterInplace_table(c *Inplace_tableContext)
+
 	// EnterTable is called when entering the table production.
 	EnterTable(c *TableContext)
 
@@ -190,6 +193,9 @@ type SyslParserListener interface {
 
 	// EnterText_stmt is called when entering the text_stmt production.
 	EnterText_stmt(c *Text_stmtContext)
+
+	// EnterMulti_text_stmt is called when entering the multi_text_stmt production.
+	EnterMulti_text_stmt(c *Multi_text_stmtContext)
 
 	// EnterMixin is called when entering the mixin production.
 	EnterMixin(c *MixinContext)
@@ -326,6 +332,9 @@ type SyslParserListener interface {
 	// ExitField is called when exiting the field production.
 	ExitField(c *FieldContext)
 
+	// ExitInplace_table is called when exiting the inplace_table production.
+	ExitInplace_table(c *Inplace_tableContext)
+
 	// ExitTable is called when exiting the table production.
 	ExitTable(c *TableContext)
 
@@ -430,6 +439,9 @@ type SyslParserListener interface {
 
 	// ExitText_stmt is called when exiting the text_stmt production.
 	ExitText_stmt(c *Text_stmtContext)
+
+	// ExitMulti_text_stmt is called when exiting the multi_text_stmt production.
+	ExitMulti_text_stmt(c *Multi_text_stmtContext)
 
 	// ExitMixin is called when exiting the mixin production.
 	ExitMixin(c *MixinContext)

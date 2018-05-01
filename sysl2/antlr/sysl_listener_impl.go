@@ -246,8 +246,9 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 
 	native := ctx.NativeDataTypes()
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-	// fmt.Printf("enter field type:")
-	// fmt.Println(s.fieldname[len(s.fieldname)-1])
+	if type1.GetList() != nil {
+		type1 = type1.GetList().Type
+	}
 
 	if native != nil {
 		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[strings.ToUpper(native.GetText())])
@@ -261,8 +262,8 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 		}
 	} else if ctx.Reference() != nil {
 		// refContext := ctx.Reference().(*parser.ReferenceContext)
-		context_app_part := []string{s.appname}
-		context_path := []string{s.typename}
+		context_app_part := s.module.Apps[s.appname].Name.Part
+		context_path := strings.Split(s.typename, ".")
 
 		type1.Type = &sysl.Type_TypeRef{
 			TypeRef: &sysl.ScopedRef{
@@ -276,8 +277,8 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 		}
 	} else if ctx.User_defined_type() != nil {
 		ctxt := ctx.User_defined_type().(*parser.User_defined_typeContext)
-		context_app_part := []string{s.appname}
-		context_path := []string{s.typename}
+		context_app_part := s.module.Apps[s.appname].Name.Part
+		context_path := strings.Split(s.typename, ".")
 		ref_path := []string{
 			ctxt.GetText(),
 		}
@@ -363,7 +364,6 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 // ExitField_type is called when production field_type is exited.
 func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 	// fmt.Printf("exit field type")
-	// fmt.Println(s.fieldname[len(s.fieldname)-1])
 	if ctx.Reference() != nil {
 		type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 		l := len(s.app_name)
@@ -448,27 +448,24 @@ func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeCon
 		fallthrough
 	case sysl.Type_INT:
 		fallthrough
-	case sysl.Type_STRING:
-		val1 := array_size.DIGITS(1).GetText()
-		if l, err = strconv.Atoi(val1); err == nil {
-			c = append(c, &sysl.Type_Constraint{
-				Length: &sysl.Type_Constraint_Length{
-					Max: int64(l),
-				},
-			})
-		}
 	case sysl.Type_DECIMAL:
-		val0 := array_size.DIGITS(0).GetText()
-		val1 := array_size.DIGITS(1).GetText()
-		l0, _ := strconv.Atoi(val0)
-		l1, _ := strconv.Atoi(val1)
+		fallthrough
+	case sysl.Type_STRING:
 		ct := &sysl.Type_Constraint{
-			Length: &sysl.Type_Constraint_Length{
-				Max: int64(l1),
-			},
+			Length: &sysl.Type_Constraint_Length{},
 		}
-		if l0 != 0 {
-			ct.GetLength().Min = int64(l0)
+		if t != sysl.Type_STRING && array_size.DIGITS(0) != nil {
+			val := array_size.DIGITS(0).GetText()
+			if l, err = strconv.Atoi(val); err == nil && l != 0 {
+				ct.Length.Min = int64(l)
+			}
+		}
+
+		if array_size.DIGITS(1) != nil {
+			val1 := array_size.DIGITS(1).GetText()
+			if l, err = strconv.Atoi(val1); err == nil && l != 0 {
+				ct.Length.Max = int64(l)
+			}
 		}
 		c = append(c, ct)
 	default:
@@ -511,10 +508,10 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 
 			if nvp.Quoted_string() != nil {
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
-				// fmt.Printf("attrib: %s %s\n", nvp.Name().GetText(), qs.QSTRING().GetText())
+				fmt.Printf("attrib: %s %s\n", nvp.Name().GetText(), strings.Trim(qs.QSTRING().GetText(), `'`))
 				attributes[nvp.Name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_S{
-						S: qs.QSTRING().GetText(),
+						S: strings.Trim(qs.QSTRING().GetText(), `'`),
 					},
 				}
 			} else if nvp.Array_of_strings() != nil {
@@ -578,8 +575,12 @@ func (s *TreeShapeListener) ExitInplace_tuple(ctx *parser.Inplace_tupleContext) 
 // EnterField is called when production field is entered.
 func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	s.fieldname = append(s.fieldname, ctx.Name_str().GetText())
-	// fmt.Printf("%d) %s %s\n", len(s.fieldname), s.typename, ctx.Name_str().GetText())
-	type1 := &sysl.Type{}
+	type1, has := s.typemap[s.fieldname[len(s.fieldname)-1]]
+	if has {
+		fmt.Printf("WARNING: %d) %s.%s defined multiple times\n", len(s.fieldname), s.typename, ctx.Name_str().GetText())
+	} else {
+		type1 = &sysl.Type{}
+	}
 
 	type1.SourceContext = &sysl.SourceContext{
 		Start: &sysl.SourceContext_Location{
@@ -594,18 +595,19 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 				},
 			},
 		}
-		if ctx.Array_size() != nil {
-			type1.Type = &sysl.Type_List_{
-				List: &sysl.Type_List{
-					Type: &sysl.Type{
-						Type:          type1.Type,
-						SourceContext: type1.SourceContext,
-					},
-				},
-			}
-			type1.SourceContext = nil
-		}
 	}
+	if ctx.Array_size() != nil {
+		type1.Type = &sysl.Type_List_{
+			List: &sysl.Type_List{
+				Type: &sysl.Type{
+					Type:          type1.Type,
+					SourceContext: type1.SourceContext,
+				},
+			},
+		}
+		type1.SourceContext = nil
+	}
+
 	s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
 	s.app_name = make([]string, 0)
 }
@@ -613,9 +615,19 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 // ExitField is called when production field is exited.
 func (s *TreeShapeListener) ExitField(ctx *parser.FieldContext) {}
 
+// EnterInplace_table is called when production inplace_table is entered.
+func (s *TreeShapeListener) EnterInplace_table(ctx *parser.Inplace_tableContext) {}
+
+// ExitInplace_table is called when production inplace_table is exited.
+func (s *TreeShapeListener) ExitInplace_table(ctx *parser.Inplace_tableContext) {}
+
 // EnterTable is called when production table is entered.
 func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
-	s.typename = ctx.Name_str().GetText()
+	if s.typename == "" {
+		s.typename = ctx.Name_str().GetText()
+	} else {
+		s.typename = s.typename + "." + ctx.Name_str().GetText()
+	}
 	s.typemap = make(map[string]*sysl.Type)
 
 	if ctx.TABLE() != nil {
@@ -679,7 +691,13 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 		s.popScope()
 	}
 
-	s.typename = ""
+	l := strings.LastIndex(s.typename, ".")
+	if l > 0 {
+		s.typename = s.typename[:l]
+	} else {
+		s.typename = ""
+	}
+
 	s.fieldname = []string{}
 	s.typemap = nil
 }
@@ -1122,6 +1140,32 @@ func (s *TreeShapeListener) ExitOne_of_stmt(ctx *parser.One_of_stmtContext) {
 	s.popScope()
 }
 
+// EnterMulti_text_stmt is called when production multi_text_stmt is entered.
+func (s *TreeShapeListener) EnterMulti_text_stmt(ctx *parser.Multi_text_stmtContext) {
+	str := "|"
+	for _, txt := range ctx.AllTEXT() {
+		str += txt.GetText()
+	}
+
+	if s.module.Apps[s.appname].Endpoints[s.typename].GetRestParams() != nil {
+		if x := s.peekScope().(*sysl.Endpoint); x != nil && len(x.Stmt) == 0 {
+			x.Docstring = str[2:]
+			return
+		}
+	}
+
+	s.addToCurrentScope(&sysl.Statement{
+		Stmt: &sysl.Statement_Action{
+			Action: &sysl.Action{
+				Action: str,
+			},
+		},
+	})
+}
+
+// ExitMulti_text_stmt is called when production multi_text_stmt is exited.
+func (s *TreeShapeListener) ExitMulti_text_stmt(ctx *parser.Multi_text_stmtContext) {}
+
 // EnterText_stmt is called when production text_stmt is entered.
 func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 	s.addToCurrentScope(&sysl.Statement{
@@ -1455,8 +1499,8 @@ func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {}
 
 // EnterEvent is called when production event is entered.
 func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
-	if ctx.EVENT_NAME() != nil {
-		s.typename = ctx.EVENT_NAME().GetText()
+	if ctx.Name_str() != nil {
+		s.typename = ctx.Name_str().GetText()
 		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
 			Name:     s.typename,
 			Stmt:     make([]*sysl.Statement, 0),
@@ -1531,6 +1575,7 @@ func (s *TreeShapeListener) ExitApp_decl(ctx *parser.App_declContext) {
 	if ctx.Annotation(0) != nil {
 		s.popScope()
 	}
+	s.typename = ""
 }
 
 // EnterApplication is called when production application is entered.

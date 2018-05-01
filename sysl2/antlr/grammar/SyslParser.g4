@@ -29,13 +29,14 @@ annotations     : INDENT annotation+ DEDENT;
 field_type      : collection_type
                 |  ((reference | NativeDataTypes | user_defined_type) (array_size | size_spec)? QN? attribs_or_modifiers? (COLON annotations)?) ;
 
-array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS CLOSE_PAREN;
+array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS? CLOSE_PAREN;
 inplace_tuple: INDENT field+ DEDENT;
 field: name_str (array_size? LESS_COLON (field_type | inplace_tuple))?;
 
+inplace_table : table;
 table   :   SYSL_COMMENT*
             (TABLE | TYPE)
-            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field | annotation | WHATEVER )+ DEDENT)
+            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field | annotation | inplace_table | WHATEVER )+ DEDENT)
         ;
 
 package_name   : name_str;
@@ -92,7 +93,8 @@ one_of_cases: one_of_case_label? COLON
 one_of_stmt             : ONE_OF COLON
                            INDENT one_of_cases+ DEDENT;
 
-text_stmt               : doc_string | app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
+text_stmt               : app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
+multi_text_stmt         : (PIPE TEXT)+;
 
 mixin:  MIXIN app_name;
 
@@ -109,6 +111,7 @@ statements: ( if_else
                 // | group_stmt
                 | QSTRING
                 | text_stmt
+                | multi_text_stmt
                 | annotation
             )
             params?
@@ -144,7 +147,7 @@ collector_stmts: collector_stmt attribs_or_modifiers;
 
 collector:  COLLECTOR COLON (WHATEVER | (INDENT collector_stmts+ DEDENT));
 
-event: DISTANCE EVENT_NAME
+event: DISTANCE name_str params?
         attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);
 
 subscribe: app_name ARROW_RIGHT name_str attribs_or_modifiers? COLON (WHATEVER | INDENT statements+ DEDENT);

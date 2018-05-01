@@ -50,9 +50,12 @@ fragment X : [xX];
 fragment Y : [yY];
 fragment Z : [zZ];
 
-NativeDataTypes     : (I N T) |( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) ;
-HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH')
-                    { gotHttpVerb = true}
+NativeDataTypes     :
+                    { in_sq_brackets == 0 }?
+                    ((I N T) |( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L));
+
+HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' )
+                    { gotHttpVerb = true; }
                     ;
 
 WRAP                : '!wrap';
@@ -81,7 +84,7 @@ DOTDOT              : '..';
 SET_OF              : S E T [ \t]* O F;
 ONE_OF              : O N E [ \t]* O F      ;//-> pushMode(FREE_TEXT_NAME);
 MIXIN               : '-' '|' '>';
-DISTANCE            : '<->'         -> pushMode(EVENT_NAME_MODE);
+DISTANCE            : '<->';
 DOT_ARROW           : '.' [ \t]+ '<-' -> pushMode(ARGS); // for " '. <-' name" syntax, change mode to all  ". <- GET /rest/api/calls"
 NAME_SEP            : [ \t]* '::' [ \t]*;
 LESS_COLON          : '<:';
@@ -171,7 +174,7 @@ SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 // add '.', required for decimal, reference syntax 'app.epname'
 //      DOT can be in the app or epname!!
 fragment
-PRINTABLE       :   ~[ .\-<>,()\n\r!"#'/:?@[\]{}|]+;
+PRINTABLE       :   ~[ \t.\-<>,()\n\r!"#'/:?@[\]{}|]+;
 
 TEXT_LINE       :
                 { !gotHttpVerb}?
@@ -222,12 +225,6 @@ TEXT            : (~[\r\n])+        -> popMode ;
 // SKIP_WS_1         : [ ]   -> skip;
 // TEXT_NAME       : ~['"()\r\n:[\]<]+  -> popMode;
 
-// either add '=' into TEXT_LINE
-// or have this special mode
 mode AT_VAR_DECL;
 POP_WS          : [ ]   -> skip, popMode;
-VAR_NAME        : [a-zA-Z][a-zA-Z0-9._-]*;
-
-mode EVENT_NAME_MODE;
-SKIP_WS_2         : [ ]   -> skip;
-EVENT_NAME       : ~[ ](~[\r\n:[\]])+  -> popMode;
+VAR_NAME        : [a-zA-Z][a-zA-Z0-9._-]* -> popMode;

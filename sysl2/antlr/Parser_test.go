@@ -146,16 +146,38 @@ func TestRestApi_WrongOrder(t *testing.T) {
 	}
 }
 
-// func TestAppNameWithAmpersand(t *testing.T) {
-// 	filename := "tests/ampersand_name.sysl"
-// 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-// 		t.Error("failed")
-// 	}
-// }
+func TestSmtp(t *testing.T) {
+	filename := "/platforms/external/generic-smtp"
+	root := "/Users/singhs93/projects/sysl/system"
 
-// func TestAppNameWithDot(t *testing.T) {
-// 	filename := "tests/dot_example.sysl"
-// 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-// 		t.Error("failed")
-// 	}
-// }
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
+		t.Error("failed")
+	}
+}
+
+func TestGlasses(t *testing.T) {
+	filename := "/platforms/b2bgw/glasses"
+	root := "/Users/singhs93/projects/sysl/system"
+
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
+		t.Error("failed")
+	}
+}
+
+func TestPo(t *testing.T) {
+	filename := "/platforms/csp/po/order_model"
+	root := "/Users/singhs93/projects/sysl/system"
+
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
+		t.Error("failed")
+	}
+}
+
+func TestVolaData(t *testing.T) {
+	filename := "/platforms/vola/data"
+	root := "/Users/singhs93/projects/sysl/system"
+
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
+		t.Error("failed")
+	}
+}

@@ -82,7 +82,16 @@ func postProcess(mod *sysl.Module) {
 			for fieldname, t := range attrs {
 				if x := t.GetTypeRef(); x != nil {
 					refApp := app
-					refName := x.GetRef().GetPath()[0]
+					// var contextPath string
+					var refName string
+					// if x.GetContext() != nil && len(x.GetRef().GetPath()) == 1 && len(x.GetContext().Path) > 0 {
+					// 	contextPath = strings.Join(x.GetContext().Path, ".")
+					// 	refName = contextPath + "."
+					// }
+					refName = x.GetRef().GetPath()[0]
+					if refName == "string_8" {
+						continue
+					}
 					_, has := refApp.Types[refName]
 					if has == false {
 						fmt.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n", fieldname, typeName, refName, appName)
@@ -97,10 +106,17 @@ func postProcess(mod *sysl.Module) {
 							refType, _ := refApp.Types[refName].Type.(*sysl.Type_Relation_)
 							ref_attrs = refType.Relation.GetAttrDefs()
 						}
-						last := len(x.GetRef().GetPath()) - 1
-						field := x.GetRef().GetPath()[last]
-						_, has = ref_attrs[field]
-
+						var field string
+						var has bool
+						if len(x.GetRef().GetPath()) > 1 {
+							last := len(x.GetRef().GetPath()) - 1
+							field = x.GetRef().GetPath()[last]
+							_, has = ref_attrs[field]
+						} else if len(x.GetRef().GetPath()) == 1 {
+							last := len(x.GetRef().GetPath()) - 1
+							field = x.GetRef().GetPath()[last]
+							_, has = refApp.Types[field]
+						}
 						if has == false {
 							fmt.Printf("2:Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)\n", fieldname, typeName, field, appName, refName)
 						}

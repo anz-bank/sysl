@@ -3,4 +3,4 @@ School:
         Id <: int [~pk, ~autoinc]
     !table Student:
         Id <: int [~pk]
-        ClassId <: Class.Id
+        ClassId <: Class.Idd

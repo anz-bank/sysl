@@ -177,6 +177,12 @@ func (s *BaseSyslParserListener) EnterField(ctx *FieldContext) {}
 // ExitField is called when production field is exited.
 func (s *BaseSyslParserListener) ExitField(ctx *FieldContext) {}
 
+// EnterInplace_table is called when production inplace_table is entered.
+func (s *BaseSyslParserListener) EnterInplace_table(ctx *Inplace_tableContext) {}
+
+// ExitInplace_table is called when production inplace_table is exited.
+func (s *BaseSyslParserListener) ExitInplace_table(ctx *Inplace_tableContext) {}
+
 // EnterTable is called when production table is entered.
 func (s *BaseSyslParserListener) EnterTable(ctx *TableContext) {}
 
@@ -386,6 +392,12 @@ func (s *BaseSyslParserListener) EnterText_stmt(ctx *Text_stmtContext) {}
 
 // ExitText_stmt is called when production text_stmt is exited.
 func (s *BaseSyslParserListener) ExitText_stmt(ctx *Text_stmtContext) {}
+
+// EnterMulti_text_stmt is called when production multi_text_stmt is entered.
+func (s *BaseSyslParserListener) EnterMulti_text_stmt(ctx *Multi_text_stmtContext) {}
+
+// ExitMulti_text_stmt is called when production multi_text_stmt is exited.
+func (s *BaseSyslParserListener) ExitMulti_text_stmt(ctx *Multi_text_stmtContext) {}
 
 // EnterMixin is called when production mixin is entered.
 func (s *BaseSyslParserListener) EnterMixin(ctx *MixinContext) {}

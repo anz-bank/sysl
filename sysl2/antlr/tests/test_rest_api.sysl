@@ -9,6 +9,9 @@ Server [~rest]:
             ...
         /{id<:int}:
             GET ?depth=int&limit=int?&offset=int? [system_id="001"]:
+                |  Multi line statement - 1
+                | Multi line statement - 2
+                | Multi line statement - 3
                 ...
             /second:
                 PUT:

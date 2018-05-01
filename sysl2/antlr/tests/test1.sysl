@@ -6,6 +6,9 @@ SomeApp [version="1.1.1"]:
 
     # subscribe to an event
     Test - App -> eventName [~mq]:
+        | Some multiline comments that
+        | you can use for documentation.
+        | This is last line.
         handle event eventName
 
 Test - App:
@@ -14,9 +17,10 @@ Test - App:
 
     Endpoint2 (request <: SomeType):
         @ep_desc = "this comment belongs to the Endpoint2 defined above"
+        | Single line statement
         . <- eventName
 
-    <-> eventName: ...
+    <-> eventName (in <: string): ...
 
 External :: App:
     !type Request:
