@@ -27,6 +27,7 @@ type TreeShapeListener struct {
 	annotation           string
 	typemap              map[string]*sysl.Type
 	prevLineEmpty        bool
+	rest_attrs           []map[string]*sysl.Attribute
 	rest_queryparams     []*sysl.Endpoint_RestParams_QueryParam
 	method_queryparams   []*sysl.Endpoint_RestParams_QueryParam
 	rest_queryparams_len []int
@@ -931,6 +932,8 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 
 // ExitHttp_path is called when production http_path is exited.
 func (s *TreeShapeListener) ExitHttp_path(ctx *parser.Http_pathContext) {
+	// s.typename is built along as we enter http_path/http_path_suffix/http_path_var_with_type
+	// commit this value to url_prefix
 	s.url_prefix = append(s.url_prefix, s.typename)
 }
 
@@ -1398,6 +1401,12 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 		},
 	}
 
+	for _, parentAttrs := range s.rest_attrs {
+		for k, v := range parentAttrs {
+			attrs[k] = v
+		}
+	}
+
 	if len(s.rest_queryparams) > 0 {
 		qparams := make([]*sysl.Endpoint_RestParams_QueryParam, 0)
 		for i := len(s.rest_queryparams) - 1; i >= 0; i-- {
@@ -1479,6 +1488,12 @@ func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointConte
 // EnterRest_endpoint is called when production rest_endpoint is entered.
 func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext) {
 	s.rest_queryparams_len = append(s.rest_queryparams_len, len(s.rest_queryparams))
+
+	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
+		s.rest_attrs = append(s.rest_attrs, makeAttributeArray(attribs))
+	} else {
+		s.rest_attrs = append(s.rest_attrs, nil)
+	}
 }
 
 // ExitRest_endpoint is called when production rest_endpoint is exited.
@@ -1489,6 +1504,11 @@ func (s *TreeShapeListener) ExitRest_endpoint(ctx *parser.Rest_endpointContext) 
 		l := s.rest_queryparams_len[ltop]
 		s.rest_queryparams = s.rest_queryparams[:l]
 		s.rest_queryparams_len = s.rest_queryparams_len[:ltop]
+	}
+	s.rest_attrs = s.rest_attrs[:len(s.rest_attrs)-1]
+
+	if len(s.url_prefix) != len(s.rest_attrs) {
+		panic("something is wrong")
 	}
 }
 
@@ -1569,6 +1589,7 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 		s.url_prefix = []string{""}
 		s.rest_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
 		s.rest_queryparams_len = []int{0}
+		s.rest_attrs = []map[string]*sysl.Attribute{nil}
 	}
 	if s.module.Apps[s.appname].Wrapped == nil && len(ctx.AllFacade()) > 0 {
 		s.module.Apps[s.appname].Wrapped = &sysl.Application{

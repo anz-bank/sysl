@@ -1,13 +1,16 @@
 Server [~rest]:
-    /foo:
-        /bar:
+    /foo [zero="0"]:
+        /bar [one="1", two="2", three="3"]:
             /baz:
                 GET:
                     ...
+        /blah [four="4"]:
+            GET:
+                ...
     /first:
         GET (something):
             ...
-        /{id<:int}:
+        /{id<:int} [uber="value"]:
             GET ?depth=int&limit=int?&offset=int? [system_id="001"]:
                 |  Multi line statement - 1
                 | Multi line statement - 2
