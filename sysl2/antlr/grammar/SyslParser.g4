@@ -74,7 +74,7 @@ call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
 arg_value: TEXT_VALUE | Q_ARG;
 if_stmt                 : IF arg_value COLON_ARG INDENT statements* DEDENT;
-if_else                 : if_stmt (ELSE COLON INDENT statements* DEDENT)?;
+if_else                 : if_stmt (ELSE name_str? COLON INDENT statements* DEDENT)?;
 
 for_cond                : arg_value;
 

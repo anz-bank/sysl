@@ -1083,10 +1083,14 @@ func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
 
 	// else statements
 	if ctx.Statements(0) != nil {
+		else_cond := ""
+		if ctx.Name_str() != nil {
+			else_cond = " " + ctx.Name_str().GetText()
+		}
 		else_stmt := &sysl.Statement{
 			Stmt: &sysl.Statement_Group{
 				Group: &sysl.Group{
-					Title: ctx.ELSE().GetText(),
+					Title: ctx.ELSE().GetText() + else_cond,
 					Stmt:  make([]*sysl.Statement, 0),
 				},
 			},

@@ -126,12 +126,14 @@ SINGLE_QT           : ['];
 
 
 EMPTY_LINE          : ([ \t]+ ( [\r\n] | EOF ))
-                    {  l.Skip(); spaces=0; gotHttpVerb=false; linenum++;}
+                    { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++;}
+                    -> channel(HIDDEN)
                     ;
 
 // added '#' to skip comments that start with an indent
 INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
-                    {  l.Skip(); spaces=0; gotHttpVerb=false; linenum++; }
+                    { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++; }
+                    -> channel(HIDDEN)
                     ;
 
 DIGITS              : [0-9][0-9]*;

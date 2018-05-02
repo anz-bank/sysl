@@ -1,4 +1,4 @@
-SomeApp [version="1.1.1"]:
+SomeApp [version="1.1.1"]:  
     @app_desc = "this comment belongs to the app defined 'above'"
 
     <-> Event (App.member, request <: SomeApp.SomeType):
@@ -50,7 +50,9 @@ A_B:
             Test - App <- Endpoint2
             If result not ok:
                 reTurn not ok1
-        else:
+            else:
+                return ok
+        else some other condition:
             top level else_statment
             IF "some constraint":
                 return ok
