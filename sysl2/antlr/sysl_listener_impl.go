@@ -212,13 +212,25 @@ func (s *TreeShapeListener) EnterMulti_line_docstring(ctx *parser.Multi_line_doc
 // ExitMulti_line_docstring is called when production multi_line_docstring is exited.
 func (s *TreeShapeListener) ExitMulti_line_docstring(ctx *parser.Multi_line_docstringContext) {}
 
+func fromQString(str string) string {
+	l := len(str)
+	if l > 0 && str[:1] == "'" && str[l-1:] == "'" {
+		str = strings.Trim(str, "'")
+	}
+	l = len(str)
+	if l > 0 && str[:1] == `"` && str[l-1:] == `"` {
+		str = strings.Trim(str, `"`)
+	}
+	return str
+}
+
 // EnterAnnotation_value is called when production annotation_value is entered.
 func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueContext) {
 	attrs := s.peekAttrs()
 
 	if ctx.QSTRING() != nil {
 		attrs[s.annotation].Attribute = &sysl.Attribute_S{
-			S: ctx.QSTRING().GetText(),
+			S: fromQString(ctx.QSTRING().GetText()),
 		}
 	} else if ctx.Multi_line_docstring() != nil {
 		attrs[s.annotation].Attribute = &sysl.Attribute_S{}
@@ -528,9 +540,10 @@ func makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) 
 	arr := make([]*sysl.Attribute, 0)
 	for _, ars := range array_strings.AllQuoted_string() {
 		str := ars.(*parser.Quoted_stringContext)
+
 		arr = append(arr, &sysl.Attribute{
 			Attribute: &sysl.Attribute_S{
-				S: str.QSTRING().GetText(),
+				S: fromQString(str.QSTRING().GetText()),
 			},
 		})
 	}
@@ -554,10 +567,9 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 
 			if nvp.Quoted_string() != nil {
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
-				// fmt.Printf("attrib: %s %s\n", nvp.Name().GetText(), strings.Trim(qs.QSTRING().GetText(), `'`))
 				attributes[nvp.Name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_S{
-						S: strings.Trim(qs.QSTRING().GetText(), `'`),
+						S: fromQString(qs.QSTRING().GetText()),
 					},
 				}
 			} else if nvp.Array_of_strings() != nil {

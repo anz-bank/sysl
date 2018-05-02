@@ -10,7 +10,6 @@ import (
 )
 
 import "encoding/json"
-import "strings"
 
 // Suppress unused import error
 var _ = fmt.Printf
@@ -704,7 +703,9 @@ func (l *SyslLexer) QSTRING_Action(localctx antlr.RuleContext, actionIndex int) 
 		if json.Unmarshal([]byte(l.GetText()), &val) == nil {
 			l.SetText(val)
 		} else {
-			l.SetText(strings.Trim(l.GetText(), "'"))
+			val = l.GetText()[1:]
+			val = val[:len(val)-1]
+			l.SetText(val)
 		}
 
 	default:

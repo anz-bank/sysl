@@ -4,7 +4,6 @@ tokens { INDENT, DEDENT}
 
 @lexer::header {
     import "encoding/json"
-    import "strings"
 }
 
 @lexer::members {
@@ -154,7 +153,9 @@ QSTRING: (
             if json.Unmarshal([]byte(l.GetText()), &val) == nil {
                 l.SetText(val)
             } else {
-                l.SetText(strings.Trim(l.GetText(), "'"))
+                val =l.GetText()[1:]
+                val =val[:len(val)-1]
+                l.SetText(val)
             }
         }
     ;

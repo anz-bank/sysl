@@ -1,6 +1,8 @@
-SomeApp [version="1.1.1"]:  
+SomeApp [package='', version="1.1.1"]:
     @app_desc = "this comment belongs to the app defined 'above'"
-
+    @comment = ''
+    @comment.second = ""
+  
     <-> Event (App.member, request <: SomeApp.SomeType):
     	return "customer details"
 
