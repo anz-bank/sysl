@@ -125,13 +125,13 @@ DBL_QT              : ["];
 SINGLE_QT           : ['];
 
 
-EMPTY_LINE          : [ \t]+ [\r\n]
-                    {  l.Skip(); spaces=0; linenum++;}
+EMPTY_LINE          : ([ \t]+ ( [\r\n] | EOF ))
+                    {  l.Skip(); spaces=0; gotHttpVerb=false; linenum++;}
                     ;
 
 // added '#' to skip comments that start with an indent
-INDENTED_COMMENT    : [ \t]+ '#' ~[\n]+? '\n'
-                    {  l.Skip(); spaces=0; linenum++;}
+INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
+                    {  l.Skip(); spaces=0; gotHttpVerb=false; linenum++; }
                     ;
 
 DIGITS              : [0-9][0-9]*;
@@ -177,9 +177,11 @@ SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 fragment
 PRINTABLE       :   ~[ \t.\-<>,()\n\r!"#'/:?@[\]{}|]+;
 
+fragment
+IN_ANGLE        : '<' PRINTABLE '>';
+
 TEXT_LINE       :
-                { !gotHttpVerb}?
-                PRINTABLE ([ \-]+ PRINTABLE)+
+                PRINTABLE ([ \-]+ (PRINTABLE | IN_ANGLE))+
                 { in_sq_brackets == 0 }?
                 { startsWithKeyword(p.GetText()) == false}?
                 ;
@@ -200,6 +202,7 @@ WS              : [ \t]+
 
 mode ARGS;
 SKIP_WS_ARG         : [ ]   -> skip;
+LESS_COLON_2          : '<:';
 SQ_OPEN_2             : '['   { in_sq_brackets++;} -> popMode;
 
 Q_ARG: (

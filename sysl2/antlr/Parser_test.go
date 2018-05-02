@@ -181,3 +181,12 @@ func TestVolaData(t *testing.T) {
 		t.Error("failed")
 	}
 }
+
+func TestRefData(t *testing.T) {
+	filename := "/platforms/csp/refdata"
+	root := "/Users/singhs93/projects/sysl/system"
+
+	if loadAndCompare(Parse(filename, root), filename, root) == false {
+		t.Error("failed")
+	}
+}

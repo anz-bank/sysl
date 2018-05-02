@@ -17,7 +17,7 @@ nvp                 : Name EQ (quoted_string | array_of_strings| array_of_arrays
 attributes          : sq_open nvp (COMMA nvp)* SQ_CLOSE;
 entry               : nvp | modifier ;
 attribs_or_modifiers: sq_open entry (COMMA entry)* SQ_CLOSE;
-set_type            : SET_OF (Name | NativeDataTypes) size_spec?;
+set_type            : SET_OF (Name | reference | NativeDataTypes) size_spec?;
 //TODO : allow for other collection types?
 collection_type     : set_type;
 user_defined_type       : name_str;
@@ -68,7 +68,7 @@ ret_stmt        : RETURN TEXT;
 
 target          : app_name;
 target_endpoint : TEXT_VALUE;
-call_arg : (Q_ARG | TEXT_VALUE)+;
+call_arg : (Q_ARG | TEXT_VALUE)+ | (TEXT_VALUE LESS_COLON_2 TEXT_VALUE);
 call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
@@ -93,12 +93,13 @@ one_of_cases: one_of_case_label? COLON
 one_of_stmt             : ONE_OF COLON
                            INDENT one_of_cases+ DEDENT;
 
-text_stmt               : app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
-multi_text_stmt         : (PIPE TEXT)+;
+text_stmt               : doc_string | app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
 
 mixin:  MIXIN app_name;
 
-param_list: field (COMMA field)*;
+param: reference | field;
+
+param_list: param (COMMA param)*;
 
 params : OPEN_PAREN param_list CLOSE_PAREN;
 
@@ -111,7 +112,6 @@ statements: ( if_else
                 // | group_stmt
                 | QSTRING
                 | text_stmt
-                | multi_text_stmt
                 | annotation
             )
             params?

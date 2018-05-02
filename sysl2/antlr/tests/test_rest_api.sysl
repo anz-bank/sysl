@@ -30,6 +30,9 @@ My :: Server [~rest]:
             ...
 
 BrowserApp [~ajax]:
+    Show Success:
+        ...
     On Click:
         | Comment On click, initiate a server call
         My :: Server <- GET /first/{id} [~pattern+foo]
+        . <- Show Success

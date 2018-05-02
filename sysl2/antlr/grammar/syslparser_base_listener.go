@@ -393,17 +393,17 @@ func (s *BaseSyslParserListener) EnterText_stmt(ctx *Text_stmtContext) {}
 // ExitText_stmt is called when production text_stmt is exited.
 func (s *BaseSyslParserListener) ExitText_stmt(ctx *Text_stmtContext) {}
 
-// EnterMulti_text_stmt is called when production multi_text_stmt is entered.
-func (s *BaseSyslParserListener) EnterMulti_text_stmt(ctx *Multi_text_stmtContext) {}
-
-// ExitMulti_text_stmt is called when production multi_text_stmt is exited.
-func (s *BaseSyslParserListener) ExitMulti_text_stmt(ctx *Multi_text_stmtContext) {}
-
 // EnterMixin is called when production mixin is entered.
 func (s *BaseSyslParserListener) EnterMixin(ctx *MixinContext) {}
 
 // ExitMixin is called when production mixin is exited.
 func (s *BaseSyslParserListener) ExitMixin(ctx *MixinContext) {}
+
+// EnterParam is called when production param is entered.
+func (s *BaseSyslParserListener) EnterParam(ctx *ParamContext) {}
+
+// ExitParam is called when production param is exited.
+func (s *BaseSyslParserListener) ExitParam(ctx *ParamContext) {}
 
 // EnterParam_list is called when production param_list is entered.
 func (s *BaseSyslParserListener) EnterParam_list(ctx *Param_listContext) {}

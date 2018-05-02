@@ -6,6 +6,6 @@ build
 .eggs
 .gradle
 .antlr
-
+*.pb
 /tmp
 /docs/website/public

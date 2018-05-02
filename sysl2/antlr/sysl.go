@@ -27,12 +27,11 @@ type SyslParserErrorListener struct {
 func (d *SyslParserErrorListener) SyntaxError(
 	recognizer antlr.Recognizer, offendingSymbol interface{},
 	line, column int, msg string, e antlr.RecognitionException) {
-	d.hasErrors = true
+	// d.hasErrors = true
 }
 
 func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-	fmt.Println("asf")
-	d.hasErrors = false
+	// d.hasErrors = false
 }
 
 func getAppName(app *sysl.AppName, mod *sysl.Module) *sysl.Application {

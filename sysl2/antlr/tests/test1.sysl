@@ -1,11 +1,15 @@
 SomeApp [version="1.1.1"]:
     @app_desc = "this comment belongs to the app defined 'above'"
 
+    <-> Event (App.member, request <: SomeApp.SomeType):
+    	return "customer details"
+
     Endpoint:
         ...
 
     # subscribe to an event
     Test - App -> eventName [~mq]:
+        do something
         | Some multiline comments that
         | you can use for documentation.
         | This is last line.
@@ -15,12 +19,13 @@ Test - App:
     Test - Endpoint (request <: SomeApp.SomeType):
         ...
 
-    Endpoint2 (request <: SomeType):
+    Endpoint2 (request <: set of SomeApp.SomeType):
         @ep_desc = "this comment belongs to the Endpoint2 defined above"
         | Single line statement
         . <- eventName
 
     <-> eventName (in <: string): ...
+    <-> another event: ...
 
 External :: App:
     !type Request:
