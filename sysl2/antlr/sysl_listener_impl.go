@@ -283,7 +283,7 @@ func (s *TreeShapeListener) ExitAnnotations(ctx *parser.AnnotationsContext) {}
 func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	size_spec, has_size_spec := ctx.Size_spec().(*parser.Size_specContext)
 	array_spec, has_array_spec := ctx.Array_size().(*parser.Array_sizeContext)
-
+	s.app_name = make([]string, 0)
 	native := ctx.NativeDataTypes()
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 	if type1.GetList() != nil {
@@ -368,8 +368,8 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 				},
 			}
 		} else {
-			context_app_part := []string{s.appname}
-			context_path := []string{s.typename}
+			context_app_part := s.module.Apps[s.appname].Name.Part
+			context_path := strings.Split(s.typename, ".")
 			ref_path := []string{
 				setCtxt.Name().GetText(),
 			}
@@ -435,6 +435,9 @@ func makeScope(app_name []string, ctx *parser.ReferenceContext) *sysl.Scope {
 func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 	if ctx.Reference() != nil {
 		type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
+		if type1.GetList() != nil {
+			type1 = type1.GetList().Type
+		}
 		type1.GetTypeRef().Ref = makeScope(s.app_name, ctx.Reference().(*parser.ReferenceContext))
 	} else if ctx.Collection_type() != nil {
 		ctxt := ctx.Collection_type().(*parser.Collection_typeContext)
@@ -628,6 +631,7 @@ func (s *TreeShapeListener) EnterInplace_tuple(ctx *parser.Inplace_tupleContext)
 
 // ExitInplace_tuple is called when production inplace_tuple is exited.
 func (s *TreeShapeListener) ExitInplace_tuple(ctx *parser.Inplace_tupleContext) {
+	fixFieldDefinitions(s.module.Apps[s.appname].Types[s.typename])
 	l := strings.LastIndex(s.typename, ".")
 	s.typename = s.typename[:l]
 	s.typemap = s.module.Apps[s.appname].Types[s.typename].GetTuple().GetAttrDefs()
@@ -728,6 +732,55 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	}
 }
 
+func fixFieldDefinitions(collection *sysl.Type) {
+	var attrs map[string]*sysl.Type
+	switch x := collection.Type.(type) {
+	case *sysl.Type_Relation_:
+		attrs = x.Relation.AttrDefs
+	case *sysl.Type_Tuple_:
+		attrs = x.Tuple.AttrDefs
+	}
+
+	for name, f := range attrs {
+		// var f *sysl.Type
+		if f.Type == nil {
+			continue
+		}
+		if f.GetPrimitive() == sysl.Type_NO_Primitive {
+			var type1 *sysl.ScopedRef
+			switch f.GetType().(type) {
+			case *sysl.Type_TypeRef:
+				type1 = f.GetTypeRef()
+			case *sysl.Type_Set:
+				type1 = f.GetSet().GetTypeRef()
+			case *sysl.Type_List_:
+				type1 = f.GetList().GetType().GetTypeRef()
+				// type1 = nil
+			default:
+				panic("unhandled type:" + name)
+			}
+
+			// if type1 == nil && f.GetSet() != nil {
+			// 	// f.SourceContext = nil
+			// 	type1 = f.GetTypeRef()
+			// }
+
+			// 	continue
+			// }
+			if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
+				l := len(type1.Ref.Appname.Part)
+				str := []string{strings.TrimSpace(type1.Ref.Appname.Part[l-1])}
+				type1.Ref.Path = append(str, type1.Ref.Path...)
+				type1.Ref.Appname.Part = type1.Ref.Appname.Part[:l-1]
+				if len(type1.Ref.Appname.Part) == 0 {
+					type1.Ref.Appname = nil
+				}
+			}
+		}
+
+	}
+}
+
 // ExitTable is called when production table is exited.
 func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	// wire up primary key
@@ -780,33 +833,7 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	}
 
 	// Match legacy behavior
-	collection := s.module.Apps[s.appname].Types[s.typename]
-	for _, name := range s.fieldname {
-		var f *sysl.Type
-		switch x := collection.Type.(type) {
-		case *sysl.Type_Relation_:
-			f = x.Relation.AttrDefs[name]
-		case *sysl.Type_Tuple_:
-			f = x.Tuple.AttrDefs[name]
-		}
-		type1 := f.GetTypeRef()
-		if type1 == nil && f.GetSet() != nil {
-			f = f.GetSet()
-			// f.SourceContext = nil
-			type1 = f.GetTypeRef()
-		}
-		// 	continue
-		// }
-		if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
-			l := len(type1.Ref.Appname.Part)
-			str := []string{strings.TrimSpace(type1.Ref.Appname.Part[l-1])}
-			type1.Ref.Path = append(str, type1.Ref.Path...)
-			type1.Ref.Appname.Part = type1.Ref.Appname.Part[:l-1]
-			if len(type1.Ref.Appname.Part) == 0 {
-				type1.Ref.Appname = nil
-			}
-		}
-	}
+	fixFieldDefinitions(s.module.Apps[s.appname].Types[s.typename])
 	// End
 
 	l := strings.LastIndex(s.typename, ".")
@@ -859,6 +886,7 @@ func (s *TreeShapeListener) ExitApp_name(ctx *parser.App_nameContext) {}
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribsContext) {
 	s.appname = ctx.App_name().GetText()
+	fmt.Println(s.appname)
 	if _, has := s.module.Apps[s.appname]; !has {
 		s.module.Apps[s.appname] = &sysl.Application{
 			Name: &sysl.AppName{},

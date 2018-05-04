@@ -3,8 +3,13 @@ My :: Service:
 
 SomeApp:
     <-> BusinessEvent [~async, ~mq]: ...
-    My :: Service -> RaiseEvent: ...
+    My :: Service -> RaiseEvent:
+        handle RaiseEvent
 
 SomeOtherApp:
-    SomeApp -> BusinessEvent: ...
+    SomeApp -> BusinessEvent:
+        handle BusinessEvent
+        Another :: Third Party <- Endpoint
 
+Another :: Third Party:
+    Endpoint: ...

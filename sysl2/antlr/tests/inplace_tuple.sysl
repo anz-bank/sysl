@@ -1,4 +1,8 @@
 My :: Client Model:
+    !type Response:
+        requests <: set of Request
+        list (0..10) <: Request
+
     !type Request:
         bar <: decimal(10..9999)
 
@@ -34,13 +38,16 @@ My :: Tuple Model:
         field2 <: My ::    Browser :: Client Model.Request.status
         bars <: My ::   Client Model.Request.status
         foos <: set of Response.foo
+        responseSet <: set of Response
 
     !type Req:
         Header <:
+            Data <: My :: Tuple Model.TopLevelPayload
             Action
             AppHostSystem
             AppDate <: Date
             AppNbr
+            responseList (0..10) <: My :: Tuple Model.Response
         Application <:
             ApplicationType
             AccountType
