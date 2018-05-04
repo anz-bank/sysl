@@ -93,7 +93,7 @@ one_of_cases: one_of_case_label? COLON
 one_of_stmt             : ONE_OF COLON
                            INDENT one_of_cases+ DEDENT;
 
-text_stmt               : doc_string | app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
+text_stmt               : doc_string | QSTRING | app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
 
 mixin:  MIXIN app_name;
 
@@ -110,7 +110,6 @@ statements: ( if_else
                 | one_of_stmt
                 | http_method_comment
                 // | group_stmt
-                | QSTRING
                 | text_stmt
                 | annotation
             )
@@ -132,8 +131,7 @@ simple_endpoint :
                     (  shortcut
                         | (INDENT statements+ DEDENT)
                     )
-                )
-                ;
+                );
 
 
 rest_endpoint: http_path attribs_or_modifiers? COLON

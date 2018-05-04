@@ -1,6 +1,7 @@
 package main // SyslParser
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -215,13 +216,15 @@ func (s *TreeShapeListener) ExitMulti_line_docstring(ctx *parser.Multi_line_docs
 func fromQString(str string) string {
 	l := len(str)
 	if l > 0 && str[:1] == "'" && str[l-1:] == "'" {
-		str = strings.Trim(str, "'")
+		return strings.Trim(str, "'")
 	}
-	l = len(str)
 	if l > 0 && str[:1] == `"` && str[l-1:] == `"` {
-		str = strings.Trim(str, `"`)
+		var val string
+		if json.Unmarshal([]byte(str), &val) == nil {
+			str = val
+		}
 	}
-	return str
+	return strings.Trim(str, `"`)
 }
 
 // EnterAnnotation_value is called when production annotation_value is entered.
@@ -439,7 +442,7 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 		if setCtxt.Reference() != nil {
 			type1 := s.typemap[s.fieldname[len(s.fieldname)-1]].GetSet().GetTypeRef()
 			type1.Ref = makeScope(s.app_name, setCtxt.Reference().(*parser.ReferenceContext))
-			s.typemap[s.fieldname[len(s.fieldname)-1]].GetSet().SourceContext = nil
+			// s.typemap[s.fieldname[len(s.fieldname)-1]].GetSet().SourceContext = nil
 		}
 	}
 	if ctx.Annotations() != nil {
@@ -786,13 +789,21 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 		case *sysl.Type_Tuple_:
 			f = x.Tuple.AttrDefs[name]
 		}
-		if f.GetTypeRef() != nil && f.GetTypeRef().Ref != nil && f.GetTypeRef().Ref.Appname != nil {
-			l := len(f.GetTypeRef().Ref.Appname.Part)
-			str := []string{strings.TrimSpace(f.GetTypeRef().Ref.Appname.Part[l-1])}
-			f.GetTypeRef().Ref.Path = append(str, f.GetTypeRef().Ref.Path...)
-			f.GetTypeRef().Ref.Appname.Part = f.GetTypeRef().Ref.Appname.Part[:l-1]
-			if len(f.GetTypeRef().Ref.Appname.Part) == 0 {
-				f.GetTypeRef().Ref.Appname = nil
+		type1 := f.GetTypeRef()
+		if type1 == nil && f.GetSet() != nil {
+			f = f.GetSet()
+			// f.SourceContext = nil
+			type1 = f.GetTypeRef()
+		}
+		// 	continue
+		// }
+		if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
+			l := len(type1.Ref.Appname.Part)
+			str := []string{strings.TrimSpace(type1.Ref.Appname.Part[l-1])}
+			type1.Ref.Path = append(str, type1.Ref.Path...)
+			type1.Ref.Appname.Part = type1.Ref.Appname.Part[:l-1]
+			if len(type1.Ref.Appname.Part) == 0 {
+				type1.Ref.Appname = nil
 			}
 		}
 	}
@@ -1276,15 +1287,31 @@ func (s *TreeShapeListener) ExitOne_of_stmt(ctx *parser.One_of_stmtContext) {
 	s.popScope()
 }
 
+func withQuotesQString(str string) string {
+	l := len(str)
+	if l > 0 && str[:1] == "'" && str[l-1:] == "'" {
+		return str
+	}
+	l = len(str)
+	if l > 0 && str[:1] == `"` && str[l-1:] == `"` {
+		return str
+	}
+	return `"` + str + `"`
+}
+
 // EnterText_stmt is called when production text_stmt is entered.
 func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 	// Need to Coalesce multiple doc_string's into one
 	// See enterdoc_string.
 	if ctx.Doc_string() == nil {
+		str := ctx.GetText()
+		if ctx.QSTRING() != nil {
+			str = withQuotesQString(str)
+		}
 		s.addToCurrentScope(&sysl.Statement{
 			Stmt: &sysl.Statement_Action{
 				Action: &sysl.Action{
-					Action: ctx.GetText(),
+					Action: str,
 				},
 			},
 		})
@@ -1374,6 +1401,14 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 		type1 := s.typemap[fieldname]
 		if type1.GetSet() != nil {
 			type1.GetSet().GetTypeRef().Context = nil
+			type1.GetSet().SourceContext = nil
+			ref := type1.GetSet().GetTypeRef().GetRef()
+			if ref.Appname == nil {
+				ref.Appname = &sysl.AppName{
+					Part: ref.Path,
+				}
+				ref.Path = nil
+			}
 		} else if type1.GetTypeRef() != nil {
 			type1.GetTypeRef().Context = nil
 			ref := type1.GetTypeRef().GetRef()
@@ -1386,22 +1421,6 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 			for i := range ref.Appname.Part {
 				ref.Appname.Part[i] = strings.TrimSpace(ref.Appname.Part[i])
 			}
-
-			// if len(ref.Path) == 1 {
-			// 	ref.Appname.Part = ref.Path
-			// 	ref.Path = nil
-			// } else {
-			// 	ref.Appname.Part = append(ref.Appname.Part, ref.Path[:len(ref.Path)-1]...)
-			// 	ref.Path = ref.Path[len(ref.Path)-1:]
-			// 	// Hack, to match with legacy
-			// 	// remove the extra space added earlier.
-			// 	for i := range ref.Path {
-			// 		ref.Path[i] = strings.TrimSpace(ref.Path[i])
-			// 	}
-			// 	for i := range ref.Appname.Part {
-			// 		ref.Appname.Part[i] = strings.TrimSpace(ref.Appname.Part[i])
-			// 	}
-			// }
 		} else if type1.Type == nil {
 			type1.Type = &sysl.Type_NoType_{
 				NoType: &sysl.Type_NoType{},

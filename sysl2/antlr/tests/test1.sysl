@@ -11,6 +11,11 @@ SomeApp [package='', version="1.1.1"]:
 
     # subscribe to an event
     Test - App -> eventName [~mq]:
+        ""
+        ''
+        'asdf'
+        "quoted statement: use special chars here like ?? :: etc"
+        "test: single quotes 'above'"
         do something
         | Some multiline comments that
         | you can use for documentation.

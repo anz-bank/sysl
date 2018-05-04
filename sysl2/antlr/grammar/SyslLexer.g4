@@ -2,10 +2,6 @@ lexer grammar SyslLexer;
 
 tokens { INDENT, DEDENT}
 
-@lexer::header {
-    import "encoding/json"
-}
-
 @lexer::members {
 
 var spaces int
@@ -147,18 +143,7 @@ QSTRING: (
             (DBL_QT WITHIN_DBL_QTS DBL_QT)
             |
             (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
-        )
-        {
-            var val string
-            if json.Unmarshal([]byte(l.GetText()), &val) == nil {
-                l.SetText(val)
-            } else {
-                val =l.GetText()[1:]
-                val =val[:len(val)-1]
-                l.SetText(val)
-            }
-        }
-    ;
+        );
 
 NEWLINE             : '\r'? '\n'
                     {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
@@ -227,10 +212,6 @@ NEWLINE_2           : '\r'? '\n'
 
 mode NOT_NEWLINE;
 TEXT            : (~[\r\n])+        -> popMode ;
-
-// mode FREE_TEXT_NAME;
-// SKIP_WS_1         : [ ]   -> skip;
-// TEXT_NAME       : ~['"()\r\n:[\]<]+  -> popMode;
 
 mode AT_VAR_DECL;
 POP_WS          : [ ]   -> skip, popMode;

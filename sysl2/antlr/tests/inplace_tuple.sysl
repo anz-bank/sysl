@@ -33,7 +33,7 @@ My :: Tuple Model:
         field1 <: Model.Request.status
         field2 <: My ::    Browser :: Client Model.Request.status
         bars <: My ::   Client Model.Request.status
-        #foos <: set of Response.foo
+        foos <: set of Response.foo
 
     !type Req:
         Header <:
