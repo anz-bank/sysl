@@ -51,7 +51,7 @@ fragment Z : [zZ];
 
 NativeDataTypes     :
                     { in_sq_brackets == 0 }?
-                    ((I N T) |( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L));
+                    ((I N T) | (F L O A T) | ( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L));
 
 HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' )
                     { gotHttpVerb = true; }

@@ -60,6 +60,12 @@ func TestSimpleEP(t *testing.T) {
 		t.Error("failed")
 	}
 }
+func TestSimpleEPWithSpaces(t *testing.T) {
+	filename := "tests/with_spaces.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
 
 func TestSimpleEP2(t *testing.T) {
 	filename := "tests/test4.sysl"
@@ -77,6 +83,20 @@ func TestSimpleEndpointParams(t *testing.T) {
 
 func TestOneOfStatements(t *testing.T) {
 	filename := "tests/oneof.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestDuplicateEndpoints(t *testing.T) {
+	filename := "tests/duplicate.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestEventing(t *testing.T) {
+	filename := "tests/eventing.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}

@@ -5,7 +5,7 @@ My :: Server [~rest]:
                 GET:
                     ...
         /blah [four="4"]:
-            GET:
+            GET (str <: string):
                 ...
     /first:
         GET (something):
@@ -20,7 +20,7 @@ My :: Server [~rest]:
                 PUT:
                     return 200 ok
                 /third/{abc<:int}:
-                    POST:
+                    POST (value <: Request.val):
                         ...
             /another-second:
                 POST:
@@ -28,6 +28,12 @@ My :: Server [~rest]:
     /first-level/{id<:int}/second/third/{subid<:id}:
         GET ?q={queryTerms}&limit={pageSize}&offset={startingRecord} [id='id01']:
             ...
+
+    !type Request:
+        val <: string
+
+    !type Response:
+        val <: string
 
 BrowserApp [~ajax]:
     Show Success:

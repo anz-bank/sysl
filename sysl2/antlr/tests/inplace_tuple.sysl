@@ -1,3 +1,15 @@
+My :: Client Model:
+    !type Request:
+        bar <: decimal(10..9999)
+
+My :: Browser :: Client Model:
+    !type Request:
+        bar <: decimal(10..9999)
+
+Model:
+    !type Request:
+        bar <: decimal(10..9999)
+
 My :: Tuple Model:
     !type Response:
         status <: string(10..30)
@@ -17,6 +29,11 @@ My :: Tuple Model:
 
     !type TopLevelPayload:
         data <: string
+        status <: Response.status
+        field1 <: Model.Request.status
+        field2 <: My ::    Browser :: Client Model.Request.status
+        bars <: My ::   Client Model.Request.status
+        #foos <: set of Response.foo
 
     !type Req:
         Header <:

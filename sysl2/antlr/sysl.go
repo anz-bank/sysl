@@ -38,7 +38,7 @@ func getAppName(app *sysl.AppName, mod *sysl.Module) *sysl.Application {
 	app_name := app.Part[0]
 
 	for i := 1; i < len(app.Part); i++ {
-		app_name = " :: " + app.Part[i]
+		app_name += " :: " + app.Part[i]
 	}
 	if app, has := mod.Apps[app_name]; has {
 		return app

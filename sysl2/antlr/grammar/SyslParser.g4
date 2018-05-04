@@ -8,7 +8,7 @@ modifier_list   : modifier (COMMA modifier)*;
 sq_open: SQ_OPEN | SQ_OPEN_2;
 modifiers       : sq_open modifier_list SQ_CLOSE;
 name_str        : Name|TEXT_LINE;
-reference       : parent_ref=app_name DOT member=name_str;
+reference       : app_name (DOT name_str)+;
 doc_string      : PIPE TEXT;
 quoted_string       : QSTRING;
 array_of_strings    : sq_open quoted_string (COMMA quoted_string)* SQ_CLOSE;

@@ -2,6 +2,13 @@ App with :: space:
     !type SomeTable:
         Id <: int
 
+My ::  App with :: space:
+    !type SomeTable:
+        Id <: int
+
 AnotherApp:
     !type SecondTable:
         Id <: App with :: space.Id
+        Id2 <: App with  ::  space.Id
+        Id3 <: My :: App with  ::  space.Id
+        Id4 <: My   ::  App with  ::  space.Id

@@ -2,7 +2,7 @@ SomeApp [package='', version="1.1.1"]:
     @app_desc = "this comment belongs to the app defined 'above'"
     @comment = ''
     @comment.second = ""
-  
+
     <-> Event (App.member, request <: SomeApp.SomeType):
     	return "customer details"
 
@@ -41,6 +41,9 @@ My Todo App [~webapp]:
 
 anz_com:
     homepage: ...
+
+    !type Response:
+        val <: string
 
 A_B:
     C_D:

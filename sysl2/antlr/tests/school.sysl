@@ -2,5 +2,6 @@ School:
     !table Class:
         Id <: int [~pk, ~autoinc]
     !table Student:
+        @description = "describe the table"
         Id <: int [~pk]
         ClassId <: Class.Idd
