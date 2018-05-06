@@ -34,24 +34,63 @@ func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.P
 	// d.hasErrors = false
 }
 
-func getAppName(app *sysl.AppName, mod *sysl.Module) *sysl.Application {
-	app_name := app.Part[0]
+func getAppName(appname *sysl.AppName) string {
+	app_name := appname.Part[0]
 
-	for i := 1; i < len(app.Part); i++ {
-		app_name += " :: " + app.Part[i]
+	for i := 1; i < len(appname.Part); i++ {
+		app_name += " :: " + appname.Part[i]
 	}
-	if app, has := mod.Apps[app_name]; has {
+	return app_name
+}
+
+func getApp(appName *sysl.AppName, mod *sysl.Module) *sysl.Application {
+	if app, has := mod.Apps[getAppName(appName)]; has {
 		return app
 	}
 	return nil
 }
 
+func isAbstract(app *sysl.Application) bool {
+	patterns, has := app.Attrs["patterns"]
+	if has == false {
+		return false
+	}
+	if x := patterns.GetA(); x != nil {
+		for _, y := range x.Elt {
+			if y.GetS() == "abstract" {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func postProcess(mod *sysl.Module) {
 	for appName, app := range mod.Apps {
 
+		if app.Mixin2 != nil {
+			for _, src := range app.Mixin2 {
+				src_app := getApp(src.Name, mod)
+				if isAbstract(src_app) == false {
+					fmt.Printf("mixin App (%s) should be ~abstract\n", getAppName(src.Name))
+					continue
+				}
+				if app.Types == nil {
+					app.Types = make(map[string]*sysl.Type)
+				}
+				for k, v := range src_app.Types {
+					if _, has := app.Types[k]; !has {
+						app.Types[k] = v
+					} else {
+						fmt.Printf("Type %s defined in %s and in %s\n", k, appName, getAppName(src.Name))
+					}
+				}
+			}
+		}
+
 		for epname, endpoint := range app.Endpoints {
 			if endpoint.Source != nil {
-				src_app := getAppName(endpoint.Source, mod)
+				src_app := getApp(endpoint.Source, mod)
 				if src_app != nil {
 					eventName := strings.TrimSpace(strings.Split(epname, ">")[1])
 					if ep, has := src_app.Endpoints[eventName]; has {

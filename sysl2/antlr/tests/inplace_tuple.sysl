@@ -1,4 +1,4 @@
-My :: Client Model:
+My :: Client Model "My client Model":
     !type Response:
         requests <: set of Request
         list (0..10) <: Request

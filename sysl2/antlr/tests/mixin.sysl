@@ -1,0 +1,7 @@
+Data Model [~abstract]:
+    !type Foo:
+        ...
+
+API:
+    -|> Data Model
+    Service Call: ...

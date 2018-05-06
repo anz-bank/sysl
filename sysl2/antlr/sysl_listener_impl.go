@@ -894,7 +894,7 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 	}
 
 	if ctx.QSTRING() != nil {
-		s.module.Apps[s.appname].LongName = ctx.QSTRING().GetText()
+		s.module.Apps[s.appname].LongName = fromQString(ctx.QSTRING().GetText())
 	}
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {

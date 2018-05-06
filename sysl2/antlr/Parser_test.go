@@ -102,6 +102,12 @@ func TestEventing(t *testing.T) {
 	}
 }
 
+func TestMixins(t *testing.T) {
+	filename := "tests/mixin.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
 func TestForLoops(t *testing.T) {
 	filename := "tests/for_loop.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
