@@ -333,12 +333,6 @@ func (s *BaseSyslParserListener) EnterCall_stmt(ctx *Call_stmtContext) {}
 // ExitCall_stmt is called when production call_stmt is exited.
 func (s *BaseSyslParserListener) ExitCall_stmt(ctx *Call_stmtContext) {}
 
-// EnterArg_value is called when production arg_value is entered.
-func (s *BaseSyslParserListener) EnterArg_value(ctx *Arg_valueContext) {}
-
-// ExitArg_value is called when production arg_value is exited.
-func (s *BaseSyslParserListener) ExitArg_value(ctx *Arg_valueContext) {}
-
 // EnterIf_stmt is called when production if_stmt is entered.
 func (s *BaseSyslParserListener) EnterIf_stmt(ctx *If_stmtContext) {}
 
@@ -350,12 +344,6 @@ func (s *BaseSyslParserListener) EnterIf_else(ctx *If_elseContext) {}
 
 // ExitIf_else is called when production if_else is exited.
 func (s *BaseSyslParserListener) ExitIf_else(ctx *If_elseContext) {}
-
-// EnterFor_cond is called when production for_cond is entered.
-func (s *BaseSyslParserListener) EnterFor_cond(ctx *For_condContext) {}
-
-// ExitFor_cond is called when production for_cond is exited.
-func (s *BaseSyslParserListener) ExitFor_cond(ctx *For_condContext) {}
 
 // EnterFor_stmt is called when production for_stmt is entered.
 func (s *BaseSyslParserListener) EnterFor_stmt(ctx *For_stmtContext) {}
@@ -470,6 +458,14 @@ func (s *BaseSyslParserListener) EnterCollector_http_stmt_part(ctx *Collector_ht
 
 // ExitCollector_http_stmt_part is called when production collector_http_stmt_part is exited.
 func (s *BaseSyslParserListener) ExitCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {}
+
+// EnterCollector_http_stmt_suffix is called when production collector_http_stmt_suffix is entered.
+func (s *BaseSyslParserListener) EnterCollector_http_stmt_suffix(ctx *Collector_http_stmt_suffixContext) {
+}
+
+// ExitCollector_http_stmt_suffix is called when production collector_http_stmt_suffix is exited.
+func (s *BaseSyslParserListener) ExitCollector_http_stmt_suffix(ctx *Collector_http_stmt_suffixContext) {
+}
 
 // EnterCollector_http_stmt is called when production collector_http_stmt is entered.
 func (s *BaseSyslParserListener) EnterCollector_http_stmt(ctx *Collector_http_stmtContext) {}

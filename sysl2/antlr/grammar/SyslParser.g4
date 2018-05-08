@@ -72,13 +72,13 @@ call_arg : (Q_ARG | TEXT_VALUE)+ | (TEXT_VALUE LESS_COLON_2 TEXT_VALUE);
 call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
-arg_value: TEXT_VALUE | Q_ARG;
-if_stmt                 : IF arg_value COLON_ARG INDENT statements* DEDENT;
-if_else                 : if_stmt (ELSE name_str? COLON INDENT statements* DEDENT)?;
+// arg_value: PREDICATE_VALUE;
+if_stmt                 : (IF | ALT) PREDICATE_VALUE COLON INDENT statements* DEDENT;
+if_else                 : if_stmt (ELSE PREDICATE_VALUE? COLON INDENT statements* DEDENT)?;
 
-for_cond                : arg_value;
+// for_cond                : arg_value;
 
-for_stmt                : (UNTIL | FOR_EACH | FOR) for_cond COLON_ARG
+for_stmt                : (UNTIL | FOR_EACH | FOR | LOOP) PREDICATE_VALUE COLON
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;
@@ -117,8 +117,7 @@ statements: ( if_else
             attribs_or_modifiers?
             ;
 
-method_def: HTTP_VERBS params?
-                  query_param? attribs_or_modifiers? COLON
+method_def: HTTP_VERBS query_param? params? attribs_or_modifiers? COLON
                         INDENT statements+ DEDENT
                 ;
 
@@ -143,7 +142,8 @@ collector_query_var: name_str EQ (NativeDataTypes | name_str);
 collector_query_param: QN collector_query_var (AMP collector_query_var)*;
 collector_call_stmt:  app_name (ARROW_LEFT TEXT_VALUE)?;
 collector_http_stmt_part: name_str | CURLY_OPEN name_str CURLY_CLOSE ;
-collector_http_stmt: HTTP_VERBS (FORWARD_SLASH collector_http_stmt_part)+ collector_query_param?;
+collector_http_stmt_suffix: (FORWARD_SLASH collector_http_stmt_part)+ collector_query_param?;
+collector_http_stmt: HTTP_VERBS collector_http_stmt_suffix;
 collector_stmts: (collector_call_stmt | collector_http_stmt) attribs_or_modifiers;
 
 collector:  COLLECTOR COLON (WHATEVER | (INDENT collector_stmts+ DEDENT));

@@ -626,8 +626,8 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 			} else if nvp.Array_of_strings() != nil {
 				array_strings := nvp.Array_of_strings().(*parser.Array_of_stringsContext)
 				attributes[nvp.Name().GetText()] = makeArrayOfStringsAttribute(array_strings)
-			} else {
-				panic("array of arrays: not handled yet")
+			} else if nvp.Array_of_arrays() != nil {
+				fmt.Println("array of arrays: not handled yet\n" + nvp.Array_of_arrays().GetText())
 			}
 		} else if entry.Modifier() != nil {
 			mod := entry.Modifier().(*parser.ModifierContext)
@@ -1006,13 +1006,17 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				},
 			},
 		}
-	} else {
+	} else if ctx.NativeDataTypes() != nil {
 		type_str := strings.ToUpper(ctx.NativeDataTypes().GetText())
 		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[type_str])
 		type1 = &sysl.Type{
 			Type: &sysl.Type_Primitive_{
 				Primitive: primitive_type,
 			},
+		}
+	} else if ctx.Name_str() != nil {
+		type1 = &sysl.Type{
+			Type: &sysl.Type_NoType_{},
 		}
 	}
 
@@ -1220,7 +1224,7 @@ func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
 	if_stmt := &sysl.Statement{
 		Stmt: &sysl.Statement_Cond{
 			Cond: &sysl.Cond{
-				Test: ifstmt.Arg_value().GetText(),
+				Test: ifstmt.PREDICATE_VALUE().GetText(),
 				Stmt: make([]*sysl.Statement, 0),
 			},
 		},
@@ -1229,14 +1233,15 @@ func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
 
 	// else statements
 	if ctx.Statements(0) != nil {
-		else_cond := ""
-		if ctx.Name_str() != nil {
-			else_cond = " " + ctx.Name_str().GetText()
+		else_cond := ctx.ELSE().GetText()
+		if ctx.PREDICATE_VALUE() != nil {
+			else_cond = else_cond + ctx.PREDICATE_VALUE().GetText()
 		}
+		else_cond = strings.TrimSpace(else_cond)
 		else_stmt := &sysl.Statement{
 			Stmt: &sysl.Statement_Group{
 				Group: &sysl.Group{
-					Title: ctx.ELSE().GetText() + else_cond,
+					Title: else_cond,
 					Stmt:  make([]*sysl.Statement, 0),
 				},
 			},
@@ -1255,21 +1260,23 @@ func (s *TreeShapeListener) ExitIf_else(ctx *parser.If_elseContext) {
 	}
 }
 
-// EnterFor_cond is called when production for_cond is entered.
-func (s *TreeShapeListener) EnterFor_cond(ctx *parser.For_condContext) {}
-
-// ExitFor_cond is called when production for_cond is exited.
-func (s *TreeShapeListener) ExitFor_cond(ctx *parser.For_condContext) {}
-
 // EnterFor_stmt is called when production for_stmt is entered.
 func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 	stmt := &sysl.Statement{}
 	s.addToCurrentScope(stmt)
 
-	if ctx.FOR() != nil {
+	if ctx.FOR() != nil || ctx.LOOP() != nil {
+		var text string
+		if ctx.FOR() != nil {
+			text = ctx.FOR().GetText()
+		} else {
+			text = ctx.LOOP().GetText()
+		}
+		text = text + ctx.PREDICATE_VALUE().GetText()
+		text = strings.TrimSpace(text)
 		stmt.Stmt = &sysl.Statement_Group{
 			Group: &sysl.Group{
-				Title: ctx.FOR().GetText() + ctx.For_cond().GetText(),
+				Title: text,
 				Stmt:  make([]*sysl.Statement, 0),
 			},
 		}
@@ -1278,7 +1285,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 		stmt.Stmt = &sysl.Statement_Loop{
 			Loop: &sysl.Loop{
 				Mode:      sysl.Loop_UNTIL,
-				Criterion: ctx.For_cond().GetText(),
+				Criterion: ctx.PREDICATE_VALUE().GetText(),
 				Stmt:      make([]*sysl.Statement, 0),
 			},
 		}
@@ -1286,7 +1293,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 	} else if ctx.FOR_EACH() != nil {
 		stmt.Stmt = &sysl.Statement_Foreach{
 			Foreach: &sysl.Foreach{
-				Collection: ctx.For_cond().GetText(),
+				Collection: ctx.PREDICATE_VALUE().GetText(),
 				Stmt:       make([]*sysl.Statement, 0),
 			},
 		}
@@ -1628,13 +1635,14 @@ func mergeAttrs(src map[string]*sysl.Attribute, dst map[string]*sysl.Attribute) 
 // EnterMethod_def is called when production method_def is entered.
 func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	url := s.urlString()
-	s.typename = ctx.HTTP_VERBS().GetText() + " " + url
+	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
+	s.typename = method + " " + url
 	s.method_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
 	if _, has := s.module.Apps[s.appname].Endpoints[s.typename]; !has {
 		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
 			Name: s.typename,
 			RestParams: &sysl.Endpoint_RestParams{
-				Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[ctx.HTTP_VERBS().GetText()]),
+				Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[method]),
 				Path:   url,
 			},
 			Stmt: make([]*sysl.Statement, 0),
@@ -1798,17 +1806,117 @@ func (s *TreeShapeListener) ExitRest_endpoint(ctx *parser.Rest_endpointContext) 
 	}
 }
 
+// EnterCollector_query_var is called when production collector_query_var is entered.
+func (s *TreeShapeListener) EnterCollector_query_var(ctx *parser.Collector_query_varContext) {}
+
+// ExitCollector_query_var is called when production collector_query_var is exited.
+func (s *TreeShapeListener) ExitCollector_query_var(ctx *parser.Collector_query_varContext) {}
+
+// EnterCollector_query_param is called when production collector_query_param is entered.
+func (s *TreeShapeListener) EnterCollector_query_param(ctx *parser.Collector_query_paramContext) {}
+
+// ExitCollector_query_param is called when production collector_query_param is exited.
+func (s *TreeShapeListener) ExitCollector_query_param(ctx *parser.Collector_query_paramContext) {}
+
+// EnterCollector_call_stmt is called when production collector_call_stmt is entered.
+func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
+	text := ctx.App_name().GetText()
+
+	if ctx.ARROW_LEFT() == nil {
+		s.addToCurrentScope(&sysl.Statement{
+			Stmt: &sysl.Statement_Action{
+				Action: &sysl.Action{
+					Action: text,
+				},
+			},
+		})
+	} else {
+		appName := &sysl.AppName{}
+		s.app_name = make([]string, 0)
+		s.addToCurrentScope(&sysl.Statement{
+			Stmt: &sysl.Statement_Call{
+				Call: &sysl.Call{
+					Target:   appName,
+					Endpoint: strings.TrimSpace(ctx.TEXT_VALUE().GetText()),
+				},
+			},
+		})
+	}
+}
+
+// ExitCollector_call_stmt is called when production collector_call_stmt is exited.
+func (s *TreeShapeListener) ExitCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
+	if ctx.ARROW_LEFT() != nil {
+		s.lastStatement().GetCall().Target.Part = s.app_name
+		s.app_name = make([]string, 0)
+	}
+}
+
+// EnterCollector_http_stmt_part is called when production collector_http_stmt_part is entered.
+func (s *TreeShapeListener) EnterCollector_http_stmt_part(ctx *parser.Collector_http_stmt_partContext) {
+}
+
+// ExitCollector_http_stmt_part is called when production collector_http_stmt_part is exited.
+func (s *TreeShapeListener) ExitCollector_http_stmt_part(ctx *parser.Collector_http_stmt_partContext) {
+}
+
+// EnterCollector_http_stmt is called when production collector_http_stmt is entered.
+func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_stmtContext) {
+	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " + ctx.Collector_http_stmt_suffix().GetText()
+
+	s.addToCurrentScope(&sysl.Statement{
+		Stmt: &sysl.Statement_Action{
+			Action: &sysl.Action{
+				Action: text,
+			},
+		},
+	})
+}
+
+// ExitCollector_http_stmt is called when production collector_http_stmt is exited.
+func (s *TreeShapeListener) ExitCollector_http_stmt(ctx *parser.Collector_http_stmtContext) {}
+
 // EnterCollector_stmts is called when production collector_stmts is entered.
-func (s *TreeShapeListener) EnterCollector_stmts(ctx *parser.Collector_stmtsContext) {}
+func (s *TreeShapeListener) EnterCollector_stmts(ctx *parser.Collector_stmtsContext) {
+
+}
 
 // ExitCollector_stmts is called when production collector_stmts is exited.
-func (s *TreeShapeListener) ExitCollector_stmts(ctx *parser.Collector_stmtsContext) {}
+func (s *TreeShapeListener) ExitCollector_stmts(ctx *parser.Collector_stmtsContext) {
+	if ctx.Attribs_or_modifiers() != nil {
+		stmt := s.lastStatement()
+		stmt.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+	}
+}
 
 // EnterCollector is called when production collector is entered.
-func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {}
+func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
+	s.typename = ctx.COLLECTOR().GetText()
+	ep := s.module.Apps[s.appname].Endpoints[s.typename]
+
+	if ep == nil {
+		ep = &sysl.Endpoint{
+			Name: s.typename,
+			Stmt: make([]*sysl.Statement, 0),
+		}
+		s.module.Apps[s.appname].Endpoints[s.typename] = ep
+	}
+
+	if ctx.Collector_stmts(0) != nil {
+		if ep.Attrs == nil {
+			ep.Attrs = make(map[string]*sysl.Attribute)
+		}
+		s.pushScope(ep)
+	}
+}
 
 // ExitCollector is called when production collector is exited.
-func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {}
+func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {
+	if ctx.Collector_stmts(0) != nil {
+		s.popScope()
+	}
+	s.typename = ""
+}
 
 // EnterEvent is called when production event is entered.
 func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
@@ -1877,12 +1985,9 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	if s.module.Apps[s.appname].Types == nil && len(ctx.AllTable()) > 0 {
 		s.module.Apps[s.appname].Types = make(map[string]*sysl.Type)
 	}
-	if s.module.Apps[s.appname].Endpoints == nil && (ctx.Simple_endpoint(0) != nil || ctx.Rest_endpoint(0) != nil || ctx.Event(0) != nil || ctx.Subscribe(0) != nil) {
+	has_stmts := (ctx.Simple_endpoint(0) != nil || ctx.Rest_endpoint(0) != nil || ctx.Event(0) != nil || ctx.Subscribe(0) != nil || ctx.Collector(0) != nil)
+	if s.module.Apps[s.appname].Endpoints == nil && has_stmts {
 		s.module.Apps[s.appname].Endpoints = make(map[string]*sysl.Endpoint)
-		s.url_prefix = []string{""}
-		s.rest_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
-		s.rest_queryparams_len = []int{0}
-		s.rest_attrs = []map[string]*sysl.Attribute{nil}
 	}
 	if s.module.Apps[s.appname].Wrapped == nil && len(ctx.AllFacade()) > 0 {
 		s.module.Apps[s.appname].Wrapped = &sysl.Application{
@@ -1895,6 +2000,10 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 		}
 		s.pushScope(s.module.Apps[s.appname])
 	}
+	s.url_prefix = []string{""}
+	s.rest_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
+	s.rest_queryparams_len = []int{0}
+	s.rest_attrs = []map[string]*sysl.Attribute{nil}
 }
 
 // ExitApp_decl is called when production app_decl is exited.

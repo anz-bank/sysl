@@ -164,17 +164,11 @@ type SyslParserListener interface {
 	// EnterCall_stmt is called when entering the call_stmt production.
 	EnterCall_stmt(c *Call_stmtContext)
 
-	// EnterArg_value is called when entering the arg_value production.
-	EnterArg_value(c *Arg_valueContext)
-
 	// EnterIf_stmt is called when entering the if_stmt production.
 	EnterIf_stmt(c *If_stmtContext)
 
 	// EnterIf_else is called when entering the if_else production.
 	EnterIf_else(c *If_elseContext)
-
-	// EnterFor_cond is called when entering the for_cond production.
-	EnterFor_cond(c *For_condContext)
 
 	// EnterFor_stmt is called when entering the for_stmt production.
 	EnterFor_stmt(c *For_stmtContext)
@@ -232,6 +226,9 @@ type SyslParserListener interface {
 
 	// EnterCollector_http_stmt_part is called when entering the collector_http_stmt_part production.
 	EnterCollector_http_stmt_part(c *Collector_http_stmt_partContext)
+
+	// EnterCollector_http_stmt_suffix is called when entering the collector_http_stmt_suffix production.
+	EnterCollector_http_stmt_suffix(c *Collector_http_stmt_suffixContext)
 
 	// EnterCollector_http_stmt is called when entering the collector_http_stmt production.
 	EnterCollector_http_stmt(c *Collector_http_stmtContext)
@@ -422,17 +419,11 @@ type SyslParserListener interface {
 	// ExitCall_stmt is called when exiting the call_stmt production.
 	ExitCall_stmt(c *Call_stmtContext)
 
-	// ExitArg_value is called when exiting the arg_value production.
-	ExitArg_value(c *Arg_valueContext)
-
 	// ExitIf_stmt is called when exiting the if_stmt production.
 	ExitIf_stmt(c *If_stmtContext)
 
 	// ExitIf_else is called when exiting the if_else production.
 	ExitIf_else(c *If_elseContext)
-
-	// ExitFor_cond is called when exiting the for_cond production.
-	ExitFor_cond(c *For_condContext)
 
 	// ExitFor_stmt is called when exiting the for_stmt production.
 	ExitFor_stmt(c *For_stmtContext)
@@ -490,6 +481,9 @@ type SyslParserListener interface {
 
 	// ExitCollector_http_stmt_part is called when exiting the collector_http_stmt_part production.
 	ExitCollector_http_stmt_part(c *Collector_http_stmt_partContext)
+
+	// ExitCollector_http_stmt_suffix is called when exiting the collector_http_stmt_suffix production.
+	ExitCollector_http_stmt_suffix(c *Collector_http_stmt_suffixContext)
 
 	// ExitCollector_http_stmt is called when exiting the collector_http_stmt production.
 	ExitCollector_http_stmt(c *Collector_http_stmtContext)

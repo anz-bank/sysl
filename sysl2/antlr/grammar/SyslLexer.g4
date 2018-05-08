@@ -49,7 +49,7 @@ NativeDataTypes     :
                     { in_sq_brackets == 0 }?
                     ( (I N T '3' '2') | (I N T '6' '4') | (I N T) | (F L O A T) | ( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L) | (A N Y));
 
-HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' )
+HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' ) [ \t]*
                     { gotHttpVerb = true; }
                     ;
 
@@ -68,12 +68,13 @@ IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [
                     ;
 
 RETURN              : ( R E T U R N )           -> pushMode(NOT_NEWLINE); //revisit this?
-IF                  : (I F)  [ \t]*             -> pushMode(ARGS);
-FOR_EACH            : (F O R) [ \t]* (E A C H) [ \t]* -> pushMode(ARGS);
-FOR                 : (F O R) [ \t]*            -> pushMode(ARGS);
-UNTIL               : (U N T I L) [ \t]*        -> pushMode(ARGS);
-ELSE                : (E L S E);
-LOOP                : (L O O P);
+IF                  : (I F)  [ \t]*             -> pushMode(PREDICATE);
+FOR_EACH            : (F O R) [ \t]* (E A C H) [ \t]* -> pushMode(PREDICATE);
+FOR                 : (F O R) [ \t]*            -> pushMode(PREDICATE);
+UNTIL               : (U N T I L) [ \t]*        -> pushMode(PREDICATE);
+ELSE                : (E L S E) [ \t]*            -> pushMode(PREDICATE);
+LOOP                : (L O O P) [ \t]*            -> pushMode(PREDICATE);
+ALT                 : (A L T) [ \t]*            -> pushMode(PREDICATE);
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';
 DOTDOT              : '..';
@@ -187,6 +188,8 @@ WS              : [ \t]+
                 -> channel(HIDDEN)
                 ;
 
+mode PREDICATE;
+PREDICATE_VALUE      : (~[\r\n:])* -> popMode;
 
 mode ARGS;
 SKIP_WS_ARG         : [ ]   -> skip;
@@ -202,7 +205,7 @@ Q_ARG: (
 TEXT_VALUE      : (~[,'"()\r\n:[\]<])+;
 OPEN_PAREN_ARG  : '(';
 CLOSE_PAREN_ARG : ')'   -> popMode;
-COLON_ARG       : ':'   -> popMode;
+// COLON_ARG       : ':'   -> popMode;
 COMMA_ARG       : ',' [ \t]*;
 
 NEWLINE_2           : '\r'? '\n'

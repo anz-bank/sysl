@@ -65,6 +65,18 @@ func isAbstract(app *sysl.Application) bool {
 	return false
 }
 
+func isSameApp(a *sysl.AppName, b *sysl.AppName) bool {
+	if len(a.Part) != len(b.Part) {
+		return false
+	}
+	for i := range a.Part {
+		if a.Part[i] != b.Part[i] {
+			return false
+		}
+	}
+	return true
+}
+
 func postProcess(mod *sysl.Module) {
 	for appName, app := range mod.Apps {
 
@@ -89,6 +101,46 @@ func postProcess(mod *sysl.Module) {
 		}
 
 		for epname, endpoint := range app.Endpoints {
+
+			// add attribtes collected in collector stmts to
+			if endpoint.Name == `.. * <- *` {
+				for _, collector_stmt := range endpoint.Stmt {
+					// var modify_ep *sysl.Endpoint
+					switch x := collector_stmt.Stmt.(type) {
+					case *sysl.Statement_Action:
+						modify_ep := app.Endpoints[x.Action.Action]
+						if modify_ep == nil {
+							fmt.Printf("App (%s) calls non-existant endpoint (%s)\n", appName, x.Action.Action)
+							continue
+						}
+						if modify_ep.Attrs == nil {
+							modify_ep.Attrs = make(map[string]*sysl.Attribute)
+						}
+						mergeAttrs(collector_stmt.Attrs, modify_ep.Attrs)
+					case *sysl.Statement_Call:
+						for call_epname, call_endpoint := range app.Endpoints {
+							if call_epname == `.. * <- *` {
+								continue
+							}
+
+							for _, call_stmt := range call_endpoint.Stmt {
+								y := call_stmt.GetCall()
+								if y != nil {
+									if isSameApp(y.Target, x.Call.Target) && y.Endpoint == x.Call.Endpoint {
+										if call_stmt.Attrs == nil {
+											call_stmt.Attrs = make(map[string]*sysl.Attribute)
+										}
+										mergeAttrs(collector_stmt.Attrs, call_stmt.Attrs)
+									}
+								}
+							}
+						}
+					default:
+						panic("unhandled type:")
+					}
+				}
+			}
+
 			if endpoint.Source != nil {
 				src_app := getApp(endpoint.Source, mod)
 				if src_app != nil {

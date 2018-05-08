@@ -28,6 +28,7 @@ SomeApp [package='', version="1.1.1"]:
 Test - App:
     Test - Endpoint (request <: SomeApp.SomeType):
         External :: App <- Endpoint
+        Rest Service <- GET /foo
 
     Endpoint2 (request <: set of SomeApp.SomeType):
         @ep_desc = "this comment belongs to the Endpoint2 defined above"
@@ -81,3 +82,8 @@ A_B:
         ...
 
     Send document to customer: ...
+
+Rest Service:
+    /foo:
+        GET:
+            ...

@@ -15,3 +15,5 @@ Other App:
     Profit:
         For each year:
             calculate profit
+            Loop "n times":
+                  run simulation
