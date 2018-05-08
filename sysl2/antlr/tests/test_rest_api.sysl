@@ -2,12 +2,13 @@ My :: Server [~rest]:
     /foo [zero="0"]:
         /bar [one="1", two="2", three="3"]:
             /baz:
-                GET:
+                POST:
+                    | "Create" an item
                     ...
         /blah [four="4"]:
             GET (str <: string):
                 ...
-    /first:
+    /first [~deprecated]:
         GET (something):
             ...
         /{id<:int} [uber="value"]:
@@ -19,16 +20,15 @@ My :: Server [~rest]:
             /second:
                 PUT:
                     return 200 ok
-                /third/{abc<:int}:
+                /third:
                     POST (value <: Request.val):
                         ...
             /another-second:
                 POST:
                     ...
-    /first-level/{id<:int}/second/third/{subid<:id}:
+    /first-level/{id<:int}/second/third:
         GET ?q={queryTerms}&limit={pageSize}&offset={startingRecord} [id='id01']:
             ...
-
     !type Request:
         val <: string
 

@@ -27,12 +27,12 @@ type SyslParserErrorListener struct {
 func (d *SyslParserErrorListener) SyntaxError(
 	recognizer antlr.Recognizer, offendingSymbol interface{},
 	line, column int, msg string, e antlr.RecognitionException) {
-	// d.hasErrors = true
+	d.hasErrors = true
 }
 
-func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-	// d.hasErrors = false
-}
+// func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
+// 	// d.hasErrors = false
+// }
 
 func getAppName(appname *sysl.AppName) string {
 	app_name := appname.Part[0]
@@ -120,23 +120,18 @@ func postProcess(mod *sysl.Module) {
 			for fieldname, t := range attrs {
 				if x := t.GetTypeRef(); x != nil {
 					refApp := app
-					// var contextPath string
 					var refName string
-					// if x.GetContext() != nil && len(x.GetRef().GetPath()) == 1 && len(x.GetContext().Path) > 0 {
-					// 	contextPath = strings.Join(x.GetContext().Path, ".")
-					// 	refName = contextPath + "."
-					// }
 					refName = x.GetRef().GetPath()[0]
 					if refName == "string_8" {
 						continue
 					}
-					_, has := refApp.Types[refName]
+					refType, has := refApp.Types[refName]
 					if has == false {
 						fmt.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n", fieldname, typeName, refName, appName)
 					} else {
 						var ref_attrs map[string]*sysl.Type
 
-						switch types.Type.(type) {
+						switch refType.Type.(type) {
 						case *sysl.Type_Tuple_:
 							refType, _ := refApp.Types[refName].Type.(*sysl.Type_Tuple_)
 							ref_attrs = refType.Tuple.GetAttrDefs()
@@ -231,6 +226,9 @@ func Parse(filename string, root string) *sysl.Module {
 			if _, has := imported[filename]; !has {
 				break
 			}
+		}
+		if _, has := imported[filename]; has {
+			break
 		}
 	}
 

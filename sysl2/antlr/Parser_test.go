@@ -46,10 +46,10 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 	}
 	result := proto.Equal(&mod, m2)
 	// uncomment to compare
-	// if !result {
-	ioutil.WriteFile("generated.txt", []byte(proto.MarshalTextString(m2)), os.ModePerm)
-	ioutil.WriteFile("golden.txt", []byte(proto.MarshalTextString(&mod)), os.ModePerm)
-	// }
+	if !result {
+		ioutil.WriteFile("generated.txt", []byte(proto.MarshalTextString(m2)), os.ModePerm)
+		ioutil.WriteFile("golden.txt", []byte(proto.MarshalTextString(&mod)), os.ModePerm)
+	}
 
 	return result
 }
@@ -165,54 +165,23 @@ func TestRestApi(t *testing.T) {
 	}
 }
 
-func TestRestApi_WrongOrder(t *testing.T) {
-	filename := "tests/bad_order.sysl"
+func TestSimpleProject(t *testing.T) {
+	filename := "tests/project.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestUrlParamOrder(t *testing.T) {
+	filename := "tests/rest_url_params.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == true {
 		t.Error("failed")
 	}
 }
 
-func TestSmtp(t *testing.T) {
-	filename := "/platforms/external/generic-smtp"
-	root := "/Users/singhs93/projects/sysl/system"
-
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
-		t.Error("failed")
-	}
-}
-
-func TestGlasses(t *testing.T) {
-	filename := "/platforms/b2bgw/glasses"
-	root := "/Users/singhs93/projects/sysl/system"
-
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
-		t.Error("failed")
-	}
-}
-
-func TestPo(t *testing.T) {
-	filename := "/platforms/csp/po/order_model"
-	root := "/Users/singhs93/projects/sysl/system"
-
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
-		t.Error("failed")
-	}
-}
-
-func TestVolaData(t *testing.T) {
-	filename := "/platforms/vola/data"
-	root := "/Users/singhs93/projects/sysl/system"
-
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
-		t.Error("failed")
-	}
-}
-
-func TestRefData(t *testing.T) {
-	filename := "/platforms/csp/refdata"
-	root := "/Users/singhs93/projects/sysl/system"
-
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
+func TestRestApi_WrongOrder(t *testing.T) {
+	filename := "tests/bad_order.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
 }

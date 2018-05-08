@@ -2,6 +2,7 @@ My :: Client Model "My client Model":
     !type Response:
         requests <: set of Request
         list (0..10) <: Request
+        id (0..10) <: int32
 
     !type Request:
         bar <: decimal(10..9999)

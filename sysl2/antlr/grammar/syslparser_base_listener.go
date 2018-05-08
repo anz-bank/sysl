@@ -447,11 +447,35 @@ func (s *BaseSyslParserListener) EnterRest_endpoint(ctx *Rest_endpointContext) {
 // ExitRest_endpoint is called when production rest_endpoint is exited.
 func (s *BaseSyslParserListener) ExitRest_endpoint(ctx *Rest_endpointContext) {}
 
-// EnterCollector_stmt is called when production collector_stmt is entered.
-func (s *BaseSyslParserListener) EnterCollector_stmt(ctx *Collector_stmtContext) {}
+// EnterCollector_query_var is called when production collector_query_var is entered.
+func (s *BaseSyslParserListener) EnterCollector_query_var(ctx *Collector_query_varContext) {}
 
-// ExitCollector_stmt is called when production collector_stmt is exited.
-func (s *BaseSyslParserListener) ExitCollector_stmt(ctx *Collector_stmtContext) {}
+// ExitCollector_query_var is called when production collector_query_var is exited.
+func (s *BaseSyslParserListener) ExitCollector_query_var(ctx *Collector_query_varContext) {}
+
+// EnterCollector_query_param is called when production collector_query_param is entered.
+func (s *BaseSyslParserListener) EnterCollector_query_param(ctx *Collector_query_paramContext) {}
+
+// ExitCollector_query_param is called when production collector_query_param is exited.
+func (s *BaseSyslParserListener) ExitCollector_query_param(ctx *Collector_query_paramContext) {}
+
+// EnterCollector_call_stmt is called when production collector_call_stmt is entered.
+func (s *BaseSyslParserListener) EnterCollector_call_stmt(ctx *Collector_call_stmtContext) {}
+
+// ExitCollector_call_stmt is called when production collector_call_stmt is exited.
+func (s *BaseSyslParserListener) ExitCollector_call_stmt(ctx *Collector_call_stmtContext) {}
+
+// EnterCollector_http_stmt_part is called when production collector_http_stmt_part is entered.
+func (s *BaseSyslParserListener) EnterCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {}
+
+// ExitCollector_http_stmt_part is called when production collector_http_stmt_part is exited.
+func (s *BaseSyslParserListener) ExitCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {}
+
+// EnterCollector_http_stmt is called when production collector_http_stmt is entered.
+func (s *BaseSyslParserListener) EnterCollector_http_stmt(ctx *Collector_http_stmtContext) {}
+
+// ExitCollector_http_stmt is called when production collector_http_stmt is exited.
+func (s *BaseSyslParserListener) ExitCollector_http_stmt(ctx *Collector_http_stmtContext) {}
 
 // EnterCollector_stmts is called when production collector_stmts is entered.
 func (s *BaseSyslParserListener) EnterCollector_stmts(ctx *Collector_stmtsContext) {}

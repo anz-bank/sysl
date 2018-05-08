@@ -4,3 +4,25 @@ App:
     endpoint [~foo]: ...
     endpoint [~foo, version="1.1"]: ...
     endpoint [~bar]: ...
+
+    Foo:
+        text statement
+    Foo:
+        Server <- GET /first
+        return ok
+
+Server:
+    /first:
+        GET (something):
+            return 200 ok
+
+    /first:
+        GET (something):
+            App <- endpoint
+            return 200 ok
+
+FooApp[~foo]:
+    ...
+
+FooApp [~foo]:
+    ...

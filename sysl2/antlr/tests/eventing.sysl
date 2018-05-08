@@ -1,15 +1,25 @@
-My :: Service:
-    <-> RaiseEvent: ...
-
 SomeApp:
     <-> BusinessEvent [~async, ~mq]: ...
     My :: Service -> RaiseEvent:
         handle RaiseEvent
 
+#CAPP:
+#    SomeApp -> BusinessEvent:
+#        capp got the event too
+
+#Basic :: App:
+#    SomeApp -> BusinessEvent:
+#        basic app got biz event
+
 SomeOtherApp:
     SomeApp -> BusinessEvent:
         handle BusinessEvent
-        Another :: Third Party <- Endpoint
+        #Another :: Third Party <- Endpoint
 
-Another :: Third Party:
-    Endpoint: ...
+My :: Service:
+    <-> RaiseEvent: ...
+
+#Another :: Third Party:
+#    Endpoint: ...
+#    SomeApp -> BusinessEvent:
+#        more handling of the same event

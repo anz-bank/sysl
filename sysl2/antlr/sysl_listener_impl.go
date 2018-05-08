@@ -3,6 +3,7 @@ package main // SyslParser
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 
@@ -93,7 +94,7 @@ func (s *TreeShapeListener) EnterReference(ctx *parser.ReferenceContext) {}
 // ExitReference is called when production reference is exited.
 func (s *TreeShapeListener) ExitReference(ctx *parser.ReferenceContext) {}
 
-func lastChar(str string) string {
+func lastTwoChars(str string) string {
 	return str[len(str)-2:]
 }
 
@@ -102,7 +103,10 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 	if s.typemap == nil {
 		if s.pendingDocString {
 			space := ""
-			text := ctx.TEXT().GetText()[1:]
+			text := ctx.TEXT().GetText()
+			text = strings.Replace(text, `"`, `\"`, -1)
+			text = fromQString(`"` + text[1:] + `"`)
+
 			if s.module.Apps[s.appname].Endpoints[s.typename].GetRestParams() != nil {
 				if x := s.peekScope().(*sysl.Endpoint); x != nil && len(x.Stmt) == 0 {
 					if len(x.Docstring) > 0 {
@@ -135,7 +139,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		return
 	}
 	ss := attrs[s.annotation].Attribute.(*sysl.Attribute_S).S
-	if s.prevLineEmpty && len(ss) > 2 && lastChar(ss) == "\n\n" {
+	if s.prevLineEmpty && len(ss) > 2 && lastTwoChars(ss) == "\n\n" {
 		attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += strings.TrimSpace(str)
 		s.prevLineEmpty = false
 		return
@@ -221,7 +225,7 @@ func fromQString(str string) string {
 	if l > 0 && str[:1] == `"` && str[l-1:] == `"` {
 		var val string
 		if json.Unmarshal([]byte(str), &val) == nil {
-			str = val
+			return val
 		}
 	}
 	return strings.Trim(str, `"`)
@@ -292,6 +296,42 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 
 	if native != nil {
 		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[strings.ToUpper(native.GetText())])
+		var constraint *sysl.Type_Constraint
+		if primitive_type == sysl.Type_NO_Primitive {
+			if native.GetText() == "int32" {
+				primitive_type = sysl.Type_Primitive(sysl.Type_Primitive_value["INT"])
+				constraint = &sysl.Type_Constraint{
+					Range: &sysl.Type_Constraint_Range{
+						Min: &sysl.Value{
+							Value: &sysl.Value_I{
+								I: math.MinInt32,
+							},
+						},
+						Max: &sysl.Value{
+							Value: &sysl.Value_I{
+								I: math.MaxInt32,
+							},
+						},
+					},
+				}
+			} else if native.GetText() == "int64" {
+				primitive_type = sysl.Type_Primitive(sysl.Type_Primitive_value["INT"])
+				constraint = &sysl.Type_Constraint{
+					Range: &sysl.Type_Constraint_Range{
+						Min: &sysl.Value{
+							Value: &sysl.Value_I{
+								I: math.MinInt64,
+							},
+						},
+						Max: &sysl.Value{
+							Value: &sysl.Value_I{
+								I: math.MaxInt64,
+							},
+						},
+					},
+				}
+			}
+		}
 		type1.Type = &sysl.Type_Primitive_{
 			Primitive: primitive_type,
 		}
@@ -300,8 +340,14 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 		} else if has_array_spec {
 			type1.Constraint = makeArrayConstraint(primitive_type, array_spec)
 		}
+		if constraint != nil {
+			if type1.Constraint == nil {
+				type1.Constraint = []*sysl.Type_Constraint{constraint}
+			} else {
+				type1.Constraint = append(type1.Constraint, constraint)
+			}
+		}
 	} else if ctx.Reference() != nil {
-		// refContext := ctx.Reference().(*parser.ReferenceContext)
 		context_app_part := s.module.Apps[s.appname].Name.Part
 		context_path := strings.Split(s.typename, ".")
 
@@ -445,7 +491,6 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 		if setCtxt.Reference() != nil {
 			type1 := s.typemap[s.fieldname[len(s.fieldname)-1]].GetSet().GetTypeRef()
 			type1.Ref = makeScope(s.app_name, setCtxt.Reference().(*parser.ReferenceContext))
-			// s.typemap[s.fieldname[len(s.fieldname)-1]].GetSet().SourceContext = nil
 		}
 	}
 	if ctx.Annotations() != nil {
@@ -742,7 +787,6 @@ func fixFieldDefinitions(collection *sysl.Type) {
 	}
 
 	for name, f := range attrs {
-		// var f *sysl.Type
 		if f.Type == nil {
 			continue
 		}
@@ -755,18 +799,10 @@ func fixFieldDefinitions(collection *sysl.Type) {
 				type1 = f.GetSet().GetTypeRef()
 			case *sysl.Type_List_:
 				type1 = f.GetList().GetType().GetTypeRef()
-				// type1 = nil
 			default:
 				panic("unhandled type:" + name)
 			}
 
-			// if type1 == nil && f.GetSet() != nil {
-			// 	// f.SourceContext = nil
-			// 	type1 = f.GetTypeRef()
-			// }
-
-			// 	continue
-			// }
 			if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
 				l := len(type1.Ref.Appname.Part)
 				str := []string{strings.TrimSpace(type1.Ref.Appname.Part[l-1])}
@@ -848,15 +884,10 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 }
 
 // EnterPackage_name is called when production package_name is entered.
-func (s *TreeShapeListener) EnterPackage_name(ctx *parser.Package_nameContext) {
-
-}
+func (s *TreeShapeListener) EnterPackage_name(ctx *parser.Package_nameContext) {}
 
 // ExitPackage_name is called when production package_name is exited.
-func (s *TreeShapeListener) ExitPackage_name(ctx *parser.Package_nameContext) {
-	// fmt.Printf("package_name: ")
-	// fmt.Println(s.app_name)
-}
+func (s *TreeShapeListener) ExitPackage_name(ctx *parser.Package_nameContext) {}
 
 // EnterSub_package is called when production sub_package is entered.
 func (s *TreeShapeListener) EnterSub_package(ctx *parser.Sub_packageContext) {
@@ -864,7 +895,6 @@ func (s *TreeShapeListener) EnterSub_package(ctx *parser.Sub_packageContext) {
 	str := ctx.NAME_SEP().GetText()
 	sp := strings.Split(str, "::")
 	s.app_name[top] = s.app_name[top] + sp[0]
-
 }
 
 // ExitSub_package is called when production sub_package is exited.
@@ -886,7 +916,6 @@ func (s *TreeShapeListener) ExitApp_name(ctx *parser.App_nameContext) {}
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribsContext) {
 	s.appname = ctx.App_name().GetText()
-	fmt.Println(s.appname)
 	if _, has := s.module.Apps[s.appname]; !has {
 		s.module.Apps[s.appname] = &sysl.Application{
 			Name: &sysl.AppName{},
@@ -898,8 +927,11 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 	}
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
+		attrs := makeAttributeArray(attribs)
 		if s.module.Apps[s.appname].Attrs == nil {
-			s.module.Apps[s.appname].Attrs = makeAttributeArray(attribs)
+			s.module.Apps[s.appname].Attrs = attrs
+		} else {
+			mergeAttrs(attrs, s.module.Apps[s.appname].Attrs)
 		}
 	}
 }
@@ -1423,9 +1455,6 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 	params := make([]*sysl.Param, 0)
 
 	for _, fieldname := range s.fieldname {
-		// fieldname := s.fieldname[i]
-		// fmt.Printf("%s.%s: enter param \n", s.typename, fieldname)
-
 		type1 := s.typemap[fieldname]
 		if type1.GetSet() != nil {
 			type1.GetSet().GetTypeRef().Context = nil
@@ -1462,8 +1491,11 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 		}
 		params = append(params, &p)
 	}
-
-	s.module.Apps[s.appname].Endpoints[s.typename].Param = params
+	if s.module.Apps[s.appname].Endpoints[s.typename].Param == nil {
+		s.module.Apps[s.appname].Endpoints[s.typename].Param = params
+	} else {
+		s.module.Apps[s.appname].Endpoints[s.typename].Param = append(s.module.Apps[s.appname].Endpoints[s.typename].Param, params...)
+	}
 	s.typemap = nil
 	s.fieldname = []string{}
 }
@@ -1581,29 +1613,43 @@ func (s *TreeShapeListener) addToCurrentScope(stmt *sysl.Statement) {
 	}
 }
 
+func mergeAttrs(src map[string]*sysl.Attribute, dst map[string]*sysl.Attribute) {
+	for k, v := range src {
+		if _, has := dst[k]; !has {
+			dst[k] = v
+		} else {
+			if dst[k].GetA() != nil && v.GetA() != nil {
+				dst[k].GetA().Elt = append(dst[k].GetA().Elt, v.GetA().Elt...)
+			}
+		}
+	}
+}
+
 // EnterMethod_def is called when production method_def is entered.
 func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	url := s.urlString()
 	s.typename = ctx.HTTP_VERBS().GetText() + " " + url
 	s.method_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
-
-	s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
-		Name: s.typename,
-		RestParams: &sysl.Endpoint_RestParams{
-			Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[ctx.HTTP_VERBS().GetText()]),
-			Path:   url,
-		},
-		Stmt: make([]*sysl.Statement, 0),
+	if _, has := s.module.Apps[s.appname].Endpoints[s.typename]; !has {
+		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
+			Name: s.typename,
+			RestParams: &sysl.Endpoint_RestParams{
+				Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[ctx.HTTP_VERBS().GetText()]),
+				Path:   url,
+			},
+			Stmt: make([]*sysl.Statement, 0),
+		}
 	}
-	s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
+	restEndpoint := s.module.Apps[s.appname].Endpoints[s.typename]
+	s.pushScope(restEndpoint)
 
+	var attrs map[string]*sysl.Attribute
 	if ctx.Attribs_or_modifiers() != nil {
-		s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	} else {
-		s.module.Apps[s.appname].Endpoints[s.typename].Attrs = make(map[string]*sysl.Attribute)
+		attrs = make(map[string]*sysl.Attribute)
 	}
 
-	attrs := s.module.Apps[s.appname].Endpoints[s.typename].Attrs
 	elt := []*sysl.Attribute{&sysl.Attribute{
 		Attribute: &sysl.Attribute_S{
 			S: "rest",
@@ -1619,14 +1665,18 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	}
 
 	for _, parentAttrs := range s.rest_attrs {
-		for k, v := range parentAttrs {
-			attrs[k] = v
-		}
+		mergeAttrs(parentAttrs, attrs)
+	}
+
+	if restEndpoint.Attrs == nil {
+		restEndpoint.Attrs = attrs
+	} else {
+		mergeAttrs(attrs, restEndpoint.Attrs)
 	}
 
 	if len(s.rest_queryparams) > 0 {
 		qparams := make([]*sysl.Endpoint_RestParams_QueryParam, 0)
-		for i := len(s.rest_queryparams) - 1; i >= 0; i-- {
+		for i := range s.rest_queryparams {
 			q := s.rest_queryparams[i]
 			qcopy := &sysl.Endpoint_RestParams_QueryParam{
 				Name: q.Name,
@@ -1642,7 +1692,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 			}
 			qparams = append(qparams, qcopy)
 		}
-		s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam = qparams
+		restEndpoint.RestParams.QueryParam = qparams
 	}
 }
 
@@ -1692,22 +1742,16 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 		s.module.Apps[s.appname].Endpoints[s.typename] = ep
 	}
 
+	if ctx.QSTRING() != nil {
+		ep.LongName = fromQString(ctx.QSTRING().GetText())
+	}
+
 	if ctx.Attribs_or_modifiers() != nil {
 		attrs := makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		if ep.Attrs == nil {
 			ep.Attrs = attrs
 		} else {
-			for k, v := range attrs {
-				if v.GetA() != nil {
-					if _, has := ep.Attrs[k]; !has {
-						ep.Attrs[k] = v
-						continue
-					}
-					ep.Attrs[k].GetA().Elt = append(ep.Attrs[k].GetA().Elt, attrs[k].GetA().Elt...)
-				} else {
-					ep.Attrs[k] = v
-				}
-			}
+			mergeAttrs(attrs, ep.Attrs)
 		}
 	}
 
@@ -1753,12 +1797,6 @@ func (s *TreeShapeListener) ExitRest_endpoint(ctx *parser.Rest_endpointContext) 
 		panic("something is wrong")
 	}
 }
-
-// EnterCollector_stmt is called when production collector_stmt is entered.
-func (s *TreeShapeListener) EnterCollector_stmt(ctx *parser.Collector_stmtContext) {}
-
-// ExitCollector_stmt is called when production collector_stmt is exited.
-func (s *TreeShapeListener) ExitCollector_stmt(ctx *parser.Collector_stmtContext) {}
 
 // EnterCollector_stmts is called when production collector_stmts is entered.
 func (s *TreeShapeListener) EnterCollector_stmts(ctx *parser.Collector_stmtsContext) {}
@@ -1889,7 +1927,6 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		path = s.base + "/" + path
 	}
 	path += ".sysl"
-	// fmt.Printf("\t import %s\n", path)
 	s.imports = append(s.imports, path)
 }
 

@@ -1,9 +1,12 @@
 Tuple Model:
     !type Foo:
-        #@description = "some description"
+        @description = "some description"
         id <: int
 
     !type TableName:
+        @description =:
+            | Multi-line annotation
+            | statement
         fieldname <: string
         fieldname2 <: set of string
         ids <: set of Foo

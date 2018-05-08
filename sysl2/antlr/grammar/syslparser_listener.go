@@ -221,8 +221,20 @@ type SyslParserListener interface {
 	// EnterRest_endpoint is called when entering the rest_endpoint production.
 	EnterRest_endpoint(c *Rest_endpointContext)
 
-	// EnterCollector_stmt is called when entering the collector_stmt production.
-	EnterCollector_stmt(c *Collector_stmtContext)
+	// EnterCollector_query_var is called when entering the collector_query_var production.
+	EnterCollector_query_var(c *Collector_query_varContext)
+
+	// EnterCollector_query_param is called when entering the collector_query_param production.
+	EnterCollector_query_param(c *Collector_query_paramContext)
+
+	// EnterCollector_call_stmt is called when entering the collector_call_stmt production.
+	EnterCollector_call_stmt(c *Collector_call_stmtContext)
+
+	// EnterCollector_http_stmt_part is called when entering the collector_http_stmt_part production.
+	EnterCollector_http_stmt_part(c *Collector_http_stmt_partContext)
+
+	// EnterCollector_http_stmt is called when entering the collector_http_stmt production.
+	EnterCollector_http_stmt(c *Collector_http_stmtContext)
 
 	// EnterCollector_stmts is called when entering the collector_stmts production.
 	EnterCollector_stmts(c *Collector_stmtsContext)
@@ -467,8 +479,20 @@ type SyslParserListener interface {
 	// ExitRest_endpoint is called when exiting the rest_endpoint production.
 	ExitRest_endpoint(c *Rest_endpointContext)
 
-	// ExitCollector_stmt is called when exiting the collector_stmt production.
-	ExitCollector_stmt(c *Collector_stmtContext)
+	// ExitCollector_query_var is called when exiting the collector_query_var production.
+	ExitCollector_query_var(c *Collector_query_varContext)
+
+	// ExitCollector_query_param is called when exiting the collector_query_param production.
+	ExitCollector_query_param(c *Collector_query_paramContext)
+
+	// ExitCollector_call_stmt is called when exiting the collector_call_stmt production.
+	ExitCollector_call_stmt(c *Collector_call_stmtContext)
+
+	// ExitCollector_http_stmt_part is called when exiting the collector_http_stmt_part production.
+	ExitCollector_http_stmt_part(c *Collector_http_stmt_partContext)
+
+	// ExitCollector_http_stmt is called when exiting the collector_http_stmt production.
+	ExitCollector_http_stmt(c *Collector_http_stmtContext)
 
 	// ExitCollector_stmts is called when exiting the collector_stmts production.
 	ExitCollector_stmts(c *Collector_stmtsContext)

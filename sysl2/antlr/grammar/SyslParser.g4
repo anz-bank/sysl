@@ -93,7 +93,7 @@ one_of_cases: one_of_case_label? COLON
 one_of_stmt             : ONE_OF COLON
                            INDENT one_of_cases+ DEDENT;
 
-text_stmt               : doc_string | QSTRING | app_name ARROW_RIGHT name_str  | TEXT_LINE | WHATEVER ;
+text_stmt               : doc_string | QSTRING | app_name (ARROW_RIGHT name_str)?  | WHATEVER ;
 
 mixin:  MIXIN app_name;
 
@@ -131,17 +131,20 @@ simple_endpoint :
                     (  shortcut
                         | (INDENT statements+ DEDENT)
                     )
-                );
+                )
+                ;
 
 
 rest_endpoint: http_path attribs_or_modifiers? COLON
                                     (INDENT (method_def | rest_endpoint)+ DEDENT)
                 ;
 
-collector_stmt: call_stmt
-                | (HTTP_VERBS http_path);
-
-collector_stmts: collector_stmt attribs_or_modifiers;
+collector_query_var: name_str EQ (NativeDataTypes | name_str);
+collector_query_param: QN collector_query_var (AMP collector_query_var)*;
+collector_call_stmt:  app_name (ARROW_LEFT TEXT_VALUE)?;
+collector_http_stmt_part: name_str | CURLY_OPEN name_str CURLY_CLOSE ;
+collector_http_stmt: HTTP_VERBS (FORWARD_SLASH collector_http_stmt_part)+ collector_query_param?;
+collector_stmts: (collector_call_stmt | collector_http_stmt) attribs_or_modifiers;
 
 collector:  COLLECTOR COLON (WHATEVER | (INDENT collector_stmts+ DEDENT));
 

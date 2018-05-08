@@ -1,7 +1,12 @@
-Data Model [~abstract]:
-    !type Foo:
-        ...
+Relational Model [~abstract]:
+    !table User [~foo]:
+        @description = "some description"
+        id <: int
 
 API:
-    -|> Data Model
+    -|> Relational Model
+
     Service Call: ...
+
+    !type UberUser:
+        user <: User
