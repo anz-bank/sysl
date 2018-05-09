@@ -1,0 +1,8 @@
+Test - App:
+    Test - Endpoint:
+        if value == one:
+            do something
+        else if value == two:
+            do something else
+        else:
+            return ok

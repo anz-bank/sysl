@@ -72,11 +72,9 @@ call_arg : (Q_ARG | TEXT_VALUE)+ | (TEXT_VALUE LESS_COLON_2 TEXT_VALUE);
 call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
-// arg_value: PREDICATE_VALUE;
 if_stmt                 : (IF | ALT) PREDICATE_VALUE COLON INDENT statements* DEDENT;
-if_else                 : if_stmt (ELSE PREDICATE_VALUE? COLON INDENT statements* DEDENT)?;
-
-// for_cond                : arg_value;
+else_stmt               : ELSE PREDICATE_VALUE? COLON INDENT statements* DEDENT;
+if_else                 : if_stmt else_stmt*;
 
 for_stmt                : (UNTIL | FOR_EACH | FOR | LOOP) PREDICATE_VALUE COLON
                                 INDENT statements* DEDENT;

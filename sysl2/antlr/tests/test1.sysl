@@ -29,6 +29,12 @@ Test - App:
     Test - Endpoint (request <: SomeApp.SomeType):
         External :: App <- Endpoint
         Rest Service <- GET /foo
+        if value == one:
+            do something
+        else if value == two:
+            do something else
+        else:
+            return ok
 
     Endpoint2 (request <: set of SomeApp.SomeType):
         @ep_desc = "this comment belongs to the Endpoint2 defined above"

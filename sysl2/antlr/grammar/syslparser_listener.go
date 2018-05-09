@@ -167,6 +167,9 @@ type SyslParserListener interface {
 	// EnterIf_stmt is called when entering the if_stmt production.
 	EnterIf_stmt(c *If_stmtContext)
 
+	// EnterElse_stmt is called when entering the else_stmt production.
+	EnterElse_stmt(c *Else_stmtContext)
+
 	// EnterIf_else is called when entering the if_else production.
 	EnterIf_else(c *If_elseContext)
 
@@ -421,6 +424,9 @@ type SyslParserListener interface {
 
 	// ExitIf_stmt is called when exiting the if_stmt production.
 	ExitIf_stmt(c *If_stmtContext)
+
+	// ExitElse_stmt is called when exiting the else_stmt production.
+	ExitElse_stmt(c *Else_stmtContext)
 
 	// ExitIf_else is called when exiting the if_else production.
 	ExitIf_else(c *If_elseContext)

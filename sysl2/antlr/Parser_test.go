@@ -60,6 +60,14 @@ func TestSimpleEP(t *testing.T) {
 		t.Error("failed")
 	}
 }
+
+func TestIfElse(t *testing.T) {
+	filename := "tests/if_else.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestSimpleEPWithSpaces(t *testing.T) {
 	filename := "tests/with_spaces.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {

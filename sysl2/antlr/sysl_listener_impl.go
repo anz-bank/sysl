@@ -1014,10 +1014,6 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				Primitive: primitive_type,
 			},
 		}
-	} else if ctx.Name_str() != nil {
-		type1 = &sysl.Type{
-			Type: &sysl.Type_NoType_{},
-		}
 	}
 
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
@@ -1210,6 +1206,16 @@ func (s *TreeShapeListener) ExitCall_stmt(ctx *parser.Call_stmtContext) {}
 
 // EnterIf_stmt is called when production if_stmt is entered.
 func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
+	if_stmt := &sysl.Statement{
+		Stmt: &sysl.Statement_Cond{
+			Cond: &sysl.Cond{
+				Test: ctx.PREDICATE_VALUE().GetText(),
+				Stmt: make([]*sysl.Statement, 0),
+			},
+		},
+	}
+	s.addToCurrentScope(if_stmt)
+	s.pushScope(if_stmt.GetCond())
 }
 
 // ExitIf_stmt is called when production if_stmt is exited.
@@ -1217,47 +1223,36 @@ func (s *TreeShapeListener) ExitIf_stmt(ctx *parser.If_stmtContext) {
 	s.popScope()
 }
 
-// EnterIf_else is called when production if_else is entered.
-func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
-	ifstmt := ctx.If_stmt().(*parser.If_stmtContext)
-
-	if_stmt := &sysl.Statement{
-		Stmt: &sysl.Statement_Cond{
-			Cond: &sysl.Cond{
-				Test: ifstmt.PREDICATE_VALUE().GetText(),
-				Stmt: make([]*sysl.Statement, 0),
+// EnterElse_stmt is called when production else_stmt is entered.
+func (s *TreeShapeListener) EnterElse_stmt(ctx *parser.Else_stmtContext) {
+	else_cond := ctx.ELSE().GetText()
+	if ctx.PREDICATE_VALUE() != nil {
+		else_cond = else_cond + ctx.PREDICATE_VALUE().GetText()
+	}
+	else_cond = strings.TrimSpace(else_cond)
+	else_stmt := &sysl.Statement{
+		Stmt: &sysl.Statement_Group{
+			Group: &sysl.Group{
+				Title: else_cond,
+				Stmt:  make([]*sysl.Statement, 0),
 			},
 		},
 	}
-	s.addToCurrentScope(if_stmt)
+	s.addToCurrentScope(else_stmt)
+	s.pushScope(else_stmt.GetGroup())
+}
 
-	// else statements
-	if ctx.Statements(0) != nil {
-		else_cond := ctx.ELSE().GetText()
-		if ctx.PREDICATE_VALUE() != nil {
-			else_cond = else_cond + ctx.PREDICATE_VALUE().GetText()
-		}
-		else_cond = strings.TrimSpace(else_cond)
-		else_stmt := &sysl.Statement{
-			Stmt: &sysl.Statement_Group{
-				Group: &sysl.Group{
-					Title: else_cond,
-					Stmt:  make([]*sysl.Statement, 0),
-				},
-			},
-		}
-		s.addToCurrentScope(else_stmt)
-		s.pushScope(else_stmt.GetGroup())
-	}
-	// if stmt is on top
-	s.pushScope(if_stmt.GetCond())
+// ExitElse_stmt is called when production else_stmt is exited.
+func (s *TreeShapeListener) ExitElse_stmt(ctx *parser.Else_stmtContext) {
+	s.popScope()
+}
+
+// EnterIf_else is called when production if_else is entered.
+func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
 }
 
 // ExitIf_else is called when production if_else is exited.
 func (s *TreeShapeListener) ExitIf_else(ctx *parser.If_elseContext) {
-	if ctx.Statements(0) != nil {
-		s.popScope()
-	}
 }
 
 // EnterFor_stmt is called when production for_stmt is entered.

@@ -339,6 +339,12 @@ func (s *BaseSyslParserListener) EnterIf_stmt(ctx *If_stmtContext) {}
 // ExitIf_stmt is called when production if_stmt is exited.
 func (s *BaseSyslParserListener) ExitIf_stmt(ctx *If_stmtContext) {}
 
+// EnterElse_stmt is called when production else_stmt is entered.
+func (s *BaseSyslParserListener) EnterElse_stmt(ctx *Else_stmtContext) {}
+
+// ExitElse_stmt is called when production else_stmt is exited.
+func (s *BaseSyslParserListener) ExitElse_stmt(ctx *Else_stmtContext) {}
+
 // EnterIf_else is called when production if_else is entered.
 func (s *BaseSyslParserListener) EnterIf_else(ctx *If_elseContext) {}
 
