@@ -1040,7 +1040,7 @@ class Parser(object):
 
             if match(r'^@(.*)'):
                 attrp += match.groups[0]
-            elif match(ur'^(/\S*)(?:·\[(.*)\])?$'):
+            elif match(ur'^(/\S*)(?:·\[(.*)\])?·$'):
                 (subpath, extra_extra_attrs) = match.groups
                 self._parse_rest_api(
                     app, path, subpath, attrp + extra_attrs + extra_extra_attrs,
