@@ -6,3 +6,12 @@ Test - App:
             do something else
         else:
             return ok
+
+        alt condition one:
+            handle one
+        alt condition two:
+            check more details
+            alt condition three:
+                handle three
+            alt condition four:
+                handle four

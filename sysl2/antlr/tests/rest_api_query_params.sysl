@@ -1,0 +1,10 @@
+My :: Server [~rest]:
+    /first:
+        GET ?depth=int&limit=int?&offset=int?:
+            ...
+    /second?depth=int&limit=int?&offset=int?:
+        GET:
+            ...
+    /third?depth=intn&limit=int?&offset=int?:
+        GET:
+            ...

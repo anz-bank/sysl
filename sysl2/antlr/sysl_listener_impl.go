@@ -17,24 +17,25 @@ var _ = fmt.Println
 // TreeShapeListener ..
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
-	base                 string
-	root                 string
-	imports              []string
-	module               *sysl.Module
-	appname              string
-	typename             string
-	fieldname            []string
-	url_prefix           []string
-	app_name             []string
-	annotation           string
-	typemap              map[string]*sysl.Type
-	prevLineEmpty        bool
-	pendingDocString     bool
-	rest_attrs           []map[string]*sysl.Attribute
-	rest_queryparams     []*sysl.Endpoint_RestParams_QueryParam
-	method_queryparams   []*sysl.Endpoint_RestParams_QueryParam
-	rest_queryparams_len []int
-	stmt_scope           []interface{} // Endpoint, if, if_else, loop
+	base                  string
+	root                  string
+	imports               []string
+	module                *sysl.Module
+	appname               string
+	typename              string
+	fieldname             []string
+	url_prefix            []string
+	app_name              []string
+	annotation            string
+	typemap               map[string]*sysl.Type
+	prevLineEmpty         bool
+	pendingDocString      bool
+	rest_attrs            []map[string]*sysl.Attribute
+	rest_queryparams      []*sysl.Endpoint_RestParams_QueryParam
+	method_queryparams    []*sysl.Endpoint_RestParams_QueryParam
+	rest_queryparams_len  []int
+	http_path_query_param string
+	stmt_scope            []interface{} // Endpoint, if, if_else, loop
 }
 
 // NewTreeShapeListener ...
@@ -100,33 +101,32 @@ func lastTwoChars(str string) string {
 
 // EnterDoc_string is called when production doc_string is entered.
 func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
-	if s.typemap == nil {
-		if s.pendingDocString {
-			space := ""
-			text := ctx.TEXT().GetText()
-			text = strings.Replace(text, `"`, `\"`, -1)
-			text = fromQString(`"` + text[1:] + `"`)
+	if s.pendingDocString {
+		s.pendingDocString = false
 
-			if s.module.Apps[s.appname].Endpoints[s.typename].GetRestParams() != nil {
-				if x := s.peekScope().(*sysl.Endpoint); x != nil && len(x.Stmt) == 0 {
-					if len(x.Docstring) > 0 {
-						space = " "
-					}
-					str := x.Docstring + space + text
-					x.Docstring = str
-					return
+		space := ""
+		text := ctx.TEXT().GetText()
+		text = strings.Replace(text, `"`, `\"`, -1)
+		text = fromQString(`"` + text[1:] + `"`)
+
+		if s.module.Apps[s.appname].Endpoints[s.typename].GetRestParams() != nil {
+			if x := s.peekScope().(*sysl.Endpoint); x != nil && len(x.Stmt) == 0 {
+				if len(x.Docstring) > 0 {
+					space = " "
 				}
+				str := x.Docstring + space + text
+				x.Docstring = str
+				return
 			}
-
-			stmt := s.lastStatement()
-			if len(stmt.GetAction().Action) > 0 {
-				space = " "
-			}
-
-			str := stmt.GetAction().Action + space + text
-			stmt.GetAction().Action = str
-			s.pendingDocString = false
 		}
+
+		stmt := s.lastStatement()
+		if len(stmt.GetAction().Action) > 0 {
+			space = " "
+		}
+
+		str := stmt.GetAction().Action + space + text
+		stmt.GetAction().Action = str
 		return
 	}
 	attrs := s.peekAttrs()
@@ -627,7 +627,15 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 				array_strings := nvp.Array_of_strings().(*parser.Array_of_stringsContext)
 				attributes[nvp.Name().GetText()] = makeArrayOfStringsAttribute(array_strings)
 			} else if nvp.Array_of_arrays() != nil {
-				fmt.Println("array of arrays: not handled yet\n" + nvp.Array_of_arrays().GetText())
+				arr := nvp.Array_of_arrays().(*parser.Array_of_arraysContext)
+				array_strings := arr.Array_of_strings().(*parser.Array_of_stringsContext)
+				attributes[nvp.Name().GetText()] = &sysl.Attribute{
+					Attribute: &sysl.Attribute_A{
+						A: &sysl.Attribute_Array{
+							Elt: []*sysl.Attribute{makeArrayOfStringsAttribute(array_strings)},
+						},
+					},
+				}
 			}
 		} else if entry.Modifier() != nil {
 			mod := entry.Modifier().(*parser.ModifierContext)
@@ -986,6 +994,10 @@ func (s *TreeShapeListener) ExitDocumentation_stmts(ctx *parser.Documentation_st
 
 // EnterQuery_var is called when production query_var is entered.
 func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
+
+	// query_var is reused in two places.
+	// 1. inside http_path
+	// 2. after method_def
 	var_name := ctx.Name().GetText()
 	var type1 *sysl.Type
 	var ref_path []string
@@ -1014,6 +1026,8 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				Primitive: primitive_type,
 			},
 		}
+	} else if ctx.Name_str() != nil {
+		type1 = &sysl.Type{}
 	}
 
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
@@ -1116,6 +1130,9 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 	s.typename = ""
 	if ctx.FORWARD_SLASH() != nil {
 		s.typename = ctx.GetText()
+	}
+	if ctx.Query_param() != nil {
+		s.http_path_query_param = ctx.Query_param().GetText()
 	}
 }
 
@@ -1293,6 +1310,16 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 			},
 		}
 		s.pushScope(stmt.GetForeach())
+	} else if ctx.ALT() != nil {
+		text := ctx.ALT().GetText() + ctx.PREDICATE_VALUE().GetText()
+		text = strings.TrimSpace(text)
+		stmt.Stmt = &sysl.Statement_Group{
+			Group: &sysl.Group{
+				Title: text,
+				Stmt:  make([]*sysl.Statement, 0),
+			},
+		}
+		s.pushScope(stmt.GetGroup())
 	}
 }
 
@@ -1622,6 +1649,8 @@ func mergeAttrs(src map[string]*sysl.Attribute, dst map[string]*sysl.Attribute) 
 		} else {
 			if dst[k].GetA() != nil && v.GetA() != nil {
 				dst[k].GetA().Elt = append(dst[k].GetA().Elt, v.GetA().Elt...)
+			} else {
+				dst[k] = v
 			}
 		}
 	}
@@ -1631,14 +1660,14 @@ func mergeAttrs(src map[string]*sysl.Attribute, dst map[string]*sysl.Attribute) 
 func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	url := s.urlString()
 	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
-	s.typename = method + " " + url
+	s.typename = method + " " + url + s.http_path_query_param
 	s.method_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
 	if _, has := s.module.Apps[s.appname].Endpoints[s.typename]; !has {
 		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
 			Name: s.typename,
 			RestParams: &sysl.Endpoint_RestParams{
 				Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[method]),
-				Path:   url,
+				Path:   url + s.http_path_query_param,
 			},
 			Stmt: make([]*sysl.Statement, 0),
 		}
@@ -1646,13 +1675,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	restEndpoint := s.module.Apps[s.appname].Endpoints[s.typename]
 	s.pushScope(restEndpoint)
 
-	var attrs map[string]*sysl.Attribute
-	if ctx.Attribs_or_modifiers() != nil {
-		attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
-	} else {
-		attrs = make(map[string]*sysl.Attribute)
-	}
-
+	attrs := make(map[string]*sysl.Attribute)
 	elt := []*sysl.Attribute{&sysl.Attribute{
 		Attribute: &sysl.Attribute_S{
 			S: "rest",
@@ -1666,9 +1689,12 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 			},
 		},
 	}
-
 	for _, parentAttrs := range s.rest_attrs {
 		mergeAttrs(parentAttrs, attrs)
+	}
+
+	if ctx.Attribs_or_modifiers() != nil {
+		mergeAttrs(makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext)), attrs)
 	}
 
 	if restEndpoint.Attrs == nil {
@@ -1718,6 +1744,7 @@ func (s *TreeShapeListener) ExitMethod_def(ctx *parser.Method_defContext) {
 	}
 	s.popScope()
 	s.typename = ""
+	s.http_path_query_param = ""
 }
 
 // EnterShortcut is called when production shortcut is entered.
@@ -1842,6 +1869,10 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 // ExitCollector_call_stmt is called when production collector_call_stmt is exited.
 func (s *TreeShapeListener) ExitCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
 	if ctx.ARROW_LEFT() != nil {
+		for i := range s.app_name {
+			s.app_name[i] = strings.TrimSpace(s.app_name[i])
+		}
+
 		s.lastStatement().GetCall().Target.Part = s.app_name
 		s.app_name = make([]string, 0)
 	}

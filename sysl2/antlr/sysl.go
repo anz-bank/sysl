@@ -77,6 +77,52 @@ func isSameApp(a *sysl.AppName, b *sysl.AppName) bool {
 	return true
 }
 
+func isSameCall(a *sysl.Call, b *sysl.Call) bool {
+	return isSameApp(a.Target, b.Target) && a.Endpoint == b.Endpoint
+}
+
+func applyAttributes(src *sysl.Statement, dst *sysl.Statement) {
+	var stmts []*sysl.Statement
+
+	switch s := dst.GetStmt().(type) {
+	case *sysl.Statement_Cond:
+		stmts = s.Cond.Stmt
+	case *sysl.Statement_Alt:
+		for _, c := range s.Alt.Choice {
+			for _, ss := range c.Stmt {
+				applyAttributes(src, ss)
+			}
+		}
+		return
+	case *sysl.Statement_Group:
+		stmts = s.Group.Stmt
+	case *sysl.Statement_Loop:
+		stmts = s.Loop.Stmt
+	case *sysl.Statement_LoopN:
+		stmts = s.LoopN.Stmt
+	case *sysl.Statement_Foreach:
+		stmts = s.Foreach.Stmt
+	case *sysl.Statement_Call:
+		if isSameCall(src.GetCall(), s.Call) {
+			if dst.Attrs == nil {
+				dst.Attrs = make(map[string]*sysl.Attribute)
+			}
+			mergeAttrs(src.Attrs, dst.Attrs)
+		}
+		return
+	case *sysl.Statement_Action:
+		return
+	case *sysl.Statement_Ret:
+		return
+	default:
+		panic("collector: unhandled type")
+	}
+
+	for _, stmt := range stmts {
+		applyAttributes(src, stmt)
+	}
+}
+
 func postProcess(mod *sysl.Module) {
 	for appName, app := range mod.Apps {
 
@@ -105,7 +151,6 @@ func postProcess(mod *sysl.Module) {
 			// add attribtes collected in collector stmts to
 			if endpoint.Name == `.. * <- *` {
 				for _, collector_stmt := range endpoint.Stmt {
-					// var modify_ep *sysl.Endpoint
 					switch x := collector_stmt.Stmt.(type) {
 					case *sysl.Statement_Action:
 						modify_ep := app.Endpoints[x.Action.Action]
@@ -124,15 +169,7 @@ func postProcess(mod *sysl.Module) {
 							}
 
 							for _, call_stmt := range call_endpoint.Stmt {
-								y := call_stmt.GetCall()
-								if y != nil {
-									if isSameApp(y.Target, x.Call.Target) && y.Endpoint == x.Call.Endpoint {
-										if call_stmt.Attrs == nil {
-											call_stmt.Attrs = make(map[string]*sysl.Attribute)
-										}
-										mergeAttrs(collector_stmt.Attrs, call_stmt.Attrs)
-									}
-								}
+								applyAttributes(collector_stmt, call_stmt)
 							}
 						}
 					default:

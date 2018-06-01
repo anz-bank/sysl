@@ -110,6 +110,20 @@ func TestEventing(t *testing.T) {
 	}
 }
 
+func TestCollector(t *testing.T) {
+	filename := "tests/collector.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestDocstrings(t *testing.T) {
+	filename := "tests/docstrings.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestMixins(t *testing.T) {
 	filename := "tests/mixin.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
@@ -168,6 +182,13 @@ func TestRootArg(t *testing.T) {
 
 func TestRestApi(t *testing.T) {
 	filename := "tests/test_rest_api.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestRestApiQueryParams(t *testing.T) {
+	filename := "tests/rest_api_query_params.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}

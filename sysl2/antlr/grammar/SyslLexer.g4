@@ -93,7 +93,9 @@ TILDE               : '~';
 COMMA               : ',';
 EQ                  : '=';
 DOLLAR              : '$';
-FORWARD_SLASH       : '/';
+FORWARD_SLASH       : '/'
+                    { gotHttpVerb = true; }
+                    ;
 STAR                : '*';
 COLON               : ':';
 PERCENT             : '%';

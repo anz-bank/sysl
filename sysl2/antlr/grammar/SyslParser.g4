@@ -53,16 +53,16 @@ facade              :  SYSL_COMMENT* WRAP model_name INDENT table_refs+ DEDENT;
 documentation_stmts     : AT Name EQ QSTRING NEWLINE;
 
 var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
-query_var       : Name EQ (NativeDataTypes | var_in_curly) QN?;
+query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
 http_path_part :name_str;
 http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str) CURLY_CLOSE;
 http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
-http_path       : FORWARD_SLASH | http_path_suffix+;
+http_path       : (FORWARD_SLASH | http_path_suffix+) query_param?;
 
-endpoint_name   : ( Name+ | TEXT_LINE);
+endpoint_name   : name_str (FORWARD_SLASH name_str)*;
 
 ret_stmt        : RETURN TEXT;
 
@@ -72,11 +72,11 @@ call_arg : (Q_ARG | TEXT_VALUE)+ | (TEXT_VALUE LESS_COLON_2 TEXT_VALUE);
 call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
-if_stmt                 : (IF | ALT) PREDICATE_VALUE COLON INDENT statements* DEDENT;
+if_stmt                 : IF PREDICATE_VALUE COLON INDENT statements* DEDENT;
 else_stmt               : ELSE PREDICATE_VALUE? COLON INDENT statements* DEDENT;
 if_else                 : if_stmt else_stmt*;
 
-for_stmt                : (UNTIL | FOR_EACH | FOR | LOOP) PREDICATE_VALUE COLON
+for_stmt                : (ALT | UNTIL | FOR_EACH | FOR | LOOP) PREDICATE_VALUE COLON
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;

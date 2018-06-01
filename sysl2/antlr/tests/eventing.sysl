@@ -3,9 +3,9 @@ SomeApp:
     My :: Service -> RaiseEvent:
         handle RaiseEvent
 
-#CAPP:
-#    SomeApp -> BusinessEvent:
-#        capp got the event too
+CAPP:
+    SomeApp -> BusinessEvent:
+        capp got the event too
 
 #Basic :: App:
 #    SomeApp -> BusinessEvent:

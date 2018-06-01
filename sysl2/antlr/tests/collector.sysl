@@ -1,0 +1,27 @@
+My :: Server:
+    Endpoint_One:
+        process request
+        if result ok:
+            do further processing
+
+    Endpoint_Two:
+        process request
+
+App:
+    Endpoint_One:
+        My :: Server <- Endpoint_One
+        if result not ok:
+            My :: Server <- Endpoint_Two [~https]
+        loop:
+            My :: Server <- Endpoint_Two [~https]
+
+    Endpoint_Two:
+        My :: Server <- Endpoint_Two [~https]
+
+App:
+    .. * <- *:
+        Endpoint_One [id="one"]
+        Endpoint_Two [id="two"]
+        My :: Server <- Endpoint_One [id="three"]
+        My :: Server <- Endpoint_Two [id="four"]
+        My :: Server <- Endpoint_Two [id="final"]

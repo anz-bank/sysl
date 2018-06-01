@@ -9,13 +9,10 @@ My :: Server [~rest]:
             GET (str <: string):
                 ...
     /first [~deprecated]:
-        GET (something):
+        GET (something) [~rest, ~https]:
             ...
         /{id<:int} [uber="value"]:
             GET ?depth=int&limit=int?&offset=int? [system_id="001"]:
-                |  Multi line statement - 1
-                | Multi line statement - 2
-                | Multi line statement - 3
                 ...
             /second:
                 PUT:
@@ -28,14 +25,18 @@ My :: Server [~rest]:
                     ...
     /first-level/{id<:int}/second/third:
         GET ?q={queryTerms}&limit={pageSize}&offset={startingRecord} [id='id01']:
-            ...
-    !type Request:
-        val <: string
-
-    !type Response:
-        val <: string
+            |  Multi line statement - 1
+            | Multi line statement - 2
+            | Multi line statement - 3
+            return 200 ok
 
 BrowserApp [~ajax]:
+    !type Request:
+        @description =:
+            | Multi line comment 1
+            | Multi line comment 2
+        val <: string
+
     Show Success:
         ...
     On Click:

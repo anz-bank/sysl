@@ -1,0 +1,36 @@
+App:
+    @description =:
+        | multi-line documentation comment
+        | use it for long comments
+    ...
+
+Another App:
+    Endpoint:
+        @description =:
+            | multi-line documentation comment
+            | use it for long comments
+        ...
+
+Yet Another App:
+    Endpoint:
+        a simple text statement
+
+    AnotherEndpoint:
+        | a multi line text statement
+        | use it to well
+        another text statement
+
+Model:
+    !type TableName:
+        @description =:
+            | multi-line documentation comment
+            | use it for long comments
+        ...
+
+ModelTwo:
+    !type TableName:
+        field <: string:
+            @description =:
+                | multi-line documentation comment
+                | use it for long comments
+
