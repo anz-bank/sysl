@@ -75,6 +75,7 @@ UNTIL               : (U N T I L) [ \t]*        -> pushMode(PREDICATE);
 ELSE                : (E L S E) [ \t]*            -> pushMode(PREDICATE);
 LOOP                : (L O O P) [ \t]*            -> pushMode(PREDICATE);
 ALT                 : (A L T) [ \t]*            -> pushMode(PREDICATE);
+WHILE                : (W H I L E) [ \t]*            -> pushMode(PREDICATE);
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';
 DOTDOT              : '..';

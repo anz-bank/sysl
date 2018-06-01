@@ -56,7 +56,7 @@ func GettokenName(t antlr.Token, l *SyslLexer) string {
 	return fmt.Sprintf("%d", t.GetTokenType())
 }
 
-var keywords = [...]string{"set of", "return", "for", "one of", "else", "if", "loop", "until", "alt"}
+var keywords = [...]string{"set of", "return", "for", "one of", "else", "if", "loop", "until", "alt", "while"}
 var prevToken []antlr.Token
 
 type Stack struct {

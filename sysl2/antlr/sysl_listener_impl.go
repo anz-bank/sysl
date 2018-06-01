@@ -1293,10 +1293,14 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 			},
 		}
 		s.pushScope(stmt.GetGroup())
-	} else if ctx.UNTIL() != nil {
+	} else if ctx.UNTIL() != nil || ctx.WHILE() != nil {
+		mode := sysl.Loop_UNTIL
+		if ctx.WHILE() != nil {
+			mode = sysl.Loop_WHILE
+		}
 		stmt.Stmt = &sysl.Statement_Loop{
 			Loop: &sysl.Loop{
-				Mode:      sysl.Loop_UNTIL,
+				Mode:      mode,
 				Criterion: ctx.PREDICATE_VALUE().GetText(),
 				Stmt:      make([]*sysl.Statement, 0),
 			},

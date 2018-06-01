@@ -76,7 +76,7 @@ if_stmt                 : IF PREDICATE_VALUE COLON INDENT statements* DEDENT;
 else_stmt               : ELSE PREDICATE_VALUE? COLON INDENT statements* DEDENT;
 if_else                 : if_stmt else_stmt*;
 
-for_stmt                : (ALT | UNTIL | FOR_EACH | FOR | LOOP) PREDICATE_VALUE COLON
+for_stmt                : (ALT | UNTIL | FOR_EACH | FOR | LOOP | WHILE) PREDICATE_VALUE COLON
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;

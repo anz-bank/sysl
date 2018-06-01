@@ -17,3 +17,6 @@ Other App:
             calculate profit
             Loop "n times":
                   run simulation
+    WhileTest:
+        while condition not true:
+            "wait for 5 secs"
