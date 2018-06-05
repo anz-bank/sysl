@@ -90,7 +90,7 @@ func applyAttributes(src *sysl.Statement, dst *sysl.Statement) bool {
 	case *sysl.Statement_Alt:
 		for _, c := range s.Alt.Choice {
 			for _, ss := range c.Stmt {
-				applied = applyAttributes(src, ss)
+				applied = applyAttributes(src, ss) || applied
 			}
 		}
 		return applied
@@ -365,7 +365,11 @@ func Parse(filename string, root string) *sysl.Module {
 
 	for {
 		fmt.Println(filename)
-		input, _ := antlr.NewFileStream(filename)
+		input, err := antlr.NewFileStream(filename)
+		if err != nil {
+			fmt.Printf("%v,\n%s has errors\n", err, filename)
+			break
+		}
 		listener.base = filepath.Dir(filename)
 		lexer := parser.NewSyslLexer(input)
 		stream := antlr.NewCommonTokenStream(lexer, 0)

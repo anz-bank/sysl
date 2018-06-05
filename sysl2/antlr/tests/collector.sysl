@@ -7,6 +7,8 @@ My :: Server:
     Endpoint_Two:
         process request
 
+    Endpoint_Three:
+        process request
 App:
     Endpoint_One:
         My :: Server <- Endpoint_One
@@ -15,8 +17,14 @@ App:
         loop:
             My :: Server <- Endpoint_Two [~https]
 
+
     Endpoint_Two:
         My :: Server <- Endpoint_Two [~https]
+        One of:
+            condition = "one":
+                My :: Server <- Endpoint_Three [~https]
+            condition two:
+                My :: Server <- Endpoint_Three [~https]
 
 App:
     .. * <- *:
@@ -25,3 +33,4 @@ App:
         My :: Server <- Endpoint_One [id="three"]
         My :: Server <- Endpoint_Two [id="four"]
         My :: Server <- Endpoint_Two [id="final"]
+        My :: Server <- Endpoint_Three [id="final"]
