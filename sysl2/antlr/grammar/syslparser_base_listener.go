@@ -39,12 +39,6 @@ func (s *BaseSyslParserListener) EnterModifier_list(ctx *Modifier_listContext) {
 // ExitModifier_list is called when production modifier_list is exited.
 func (s *BaseSyslParserListener) ExitModifier_list(ctx *Modifier_listContext) {}
 
-// EnterSq_open is called when production sq_open is entered.
-func (s *BaseSyslParserListener) EnterSq_open(ctx *Sq_openContext) {}
-
-// ExitSq_open is called when production sq_open is exited.
-func (s *BaseSyslParserListener) ExitSq_open(ctx *Sq_openContext) {}
-
 // EnterModifiers is called when production modifiers is entered.
 func (s *BaseSyslParserListener) EnterModifiers(ctx *ModifiersContext) {}
 
@@ -363,6 +357,12 @@ func (s *BaseSyslParserListener) EnterHttp_method_comment(ctx *Http_method_comme
 // ExitHttp_method_comment is called when production http_method_comment is exited.
 func (s *BaseSyslParserListener) ExitHttp_method_comment(ctx *Http_method_commentContext) {}
 
+// EnterGroup_stmt is called when production group_stmt is entered.
+func (s *BaseSyslParserListener) EnterGroup_stmt(ctx *Group_stmtContext) {}
+
+// ExitGroup_stmt is called when production group_stmt is exited.
+func (s *BaseSyslParserListener) ExitGroup_stmt(ctx *Group_stmtContext) {}
+
 // EnterOne_of_case_label is called when production one_of_case_label is entered.
 func (s *BaseSyslParserListener) EnterOne_of_case_label(ctx *One_of_case_labelContext) {}
 
@@ -478,6 +478,30 @@ func (s *BaseSyslParserListener) EnterCollector_http_stmt(ctx *Collector_http_st
 
 // ExitCollector_http_stmt is called when production collector_http_stmt is exited.
 func (s *BaseSyslParserListener) ExitCollector_http_stmt(ctx *Collector_http_stmtContext) {}
+
+// EnterPublisher is called when production publisher is entered.
+func (s *BaseSyslParserListener) EnterPublisher(ctx *PublisherContext) {}
+
+// ExitPublisher is called when production publisher is exited.
+func (s *BaseSyslParserListener) ExitPublisher(ctx *PublisherContext) {}
+
+// EnterSubscriber is called when production subscriber is entered.
+func (s *BaseSyslParserListener) EnterSubscriber(ctx *SubscriberContext) {}
+
+// ExitSubscriber is called when production subscriber is exited.
+func (s *BaseSyslParserListener) ExitSubscriber(ctx *SubscriberContext) {}
+
+// EnterCollector_pubsub_call is called when production collector_pubsub_call is entered.
+func (s *BaseSyslParserListener) EnterCollector_pubsub_call(ctx *Collector_pubsub_callContext) {}
+
+// ExitCollector_pubsub_call is called when production collector_pubsub_call is exited.
+func (s *BaseSyslParserListener) ExitCollector_pubsub_call(ctx *Collector_pubsub_callContext) {}
+
+// EnterCollector_action_stmt is called when production collector_action_stmt is entered.
+func (s *BaseSyslParserListener) EnterCollector_action_stmt(ctx *Collector_action_stmtContext) {}
+
+// ExitCollector_action_stmt is called when production collector_action_stmt is exited.
+func (s *BaseSyslParserListener) ExitCollector_action_stmt(ctx *Collector_action_stmtContext) {}
 
 // EnterCollector_stmts is called when production collector_stmts is entered.
 func (s *BaseSyslParserListener) EnterCollector_stmts(ctx *Collector_stmtsContext) {}

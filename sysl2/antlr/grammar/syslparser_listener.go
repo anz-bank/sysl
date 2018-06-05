@@ -17,9 +17,6 @@ type SyslParserListener interface {
 	// EnterModifier_list is called when entering the modifier_list production.
 	EnterModifier_list(c *Modifier_listContext)
 
-	// EnterSq_open is called when entering the sq_open production.
-	EnterSq_open(c *Sq_openContext)
-
 	// EnterModifiers is called when entering the modifiers production.
 	EnterModifiers(c *ModifiersContext)
 
@@ -179,6 +176,9 @@ type SyslParserListener interface {
 	// EnterHttp_method_comment is called when entering the http_method_comment production.
 	EnterHttp_method_comment(c *Http_method_commentContext)
 
+	// EnterGroup_stmt is called when entering the group_stmt production.
+	EnterGroup_stmt(c *Group_stmtContext)
+
 	// EnterOne_of_case_label is called when entering the one_of_case_label production.
 	EnterOne_of_case_label(c *One_of_case_labelContext)
 
@@ -236,6 +236,18 @@ type SyslParserListener interface {
 	// EnterCollector_http_stmt is called when entering the collector_http_stmt production.
 	EnterCollector_http_stmt(c *Collector_http_stmtContext)
 
+	// EnterPublisher is called when entering the publisher production.
+	EnterPublisher(c *PublisherContext)
+
+	// EnterSubscriber is called when entering the subscriber production.
+	EnterSubscriber(c *SubscriberContext)
+
+	// EnterCollector_pubsub_call is called when entering the collector_pubsub_call production.
+	EnterCollector_pubsub_call(c *Collector_pubsub_callContext)
+
+	// EnterCollector_action_stmt is called when entering the collector_action_stmt production.
+	EnterCollector_action_stmt(c *Collector_action_stmtContext)
+
 	// EnterCollector_stmts is called when entering the collector_stmts production.
 	EnterCollector_stmts(c *Collector_stmtsContext)
 
@@ -274,9 +286,6 @@ type SyslParserListener interface {
 
 	// ExitModifier_list is called when exiting the modifier_list production.
 	ExitModifier_list(c *Modifier_listContext)
-
-	// ExitSq_open is called when exiting the sq_open production.
-	ExitSq_open(c *Sq_openContext)
 
 	// ExitModifiers is called when exiting the modifiers production.
 	ExitModifiers(c *ModifiersContext)
@@ -437,6 +446,9 @@ type SyslParserListener interface {
 	// ExitHttp_method_comment is called when exiting the http_method_comment production.
 	ExitHttp_method_comment(c *Http_method_commentContext)
 
+	// ExitGroup_stmt is called when exiting the group_stmt production.
+	ExitGroup_stmt(c *Group_stmtContext)
+
 	// ExitOne_of_case_label is called when exiting the one_of_case_label production.
 	ExitOne_of_case_label(c *One_of_case_labelContext)
 
@@ -493,6 +505,18 @@ type SyslParserListener interface {
 
 	// ExitCollector_http_stmt is called when exiting the collector_http_stmt production.
 	ExitCollector_http_stmt(c *Collector_http_stmtContext)
+
+	// ExitPublisher is called when exiting the publisher production.
+	ExitPublisher(c *PublisherContext)
+
+	// ExitSubscriber is called when exiting the subscriber production.
+	ExitSubscriber(c *SubscriberContext)
+
+	// ExitCollector_pubsub_call is called when exiting the collector_pubsub_call production.
+	ExitCollector_pubsub_call(c *Collector_pubsub_callContext)
+
+	// ExitCollector_action_stmt is called when exiting the collector_action_stmt production.
+	ExitCollector_action_stmt(c *Collector_action_stmtContext)
 
 	// ExitCollector_stmts is called when exiting the collector_stmts production.
 	ExitCollector_stmts(c *Collector_stmtsContext)

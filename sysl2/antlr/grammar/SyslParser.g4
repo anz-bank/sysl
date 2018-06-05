@@ -5,18 +5,18 @@ options { tokenVocab=SyslLexer; }
 modifier        : TILDE Name (PLUS Name)*;
 size_spec       : OPEN_PAREN DIGITS ( DOT DIGITS)? CLOSE_PAREN;
 modifier_list   : modifier (COMMA modifier)*;
-sq_open: SQ_OPEN | SQ_OPEN_2;
-modifiers       : sq_open modifier_list SQ_CLOSE;
+
+modifiers       : SQ_OPEN modifier_list SQ_CLOSE;
 name_str        : Name|TEXT_LINE;
 reference       : app_name (DOT name_str)+;
 doc_string      : PIPE TEXT;
 quoted_string       : QSTRING;
-array_of_strings    : sq_open quoted_string (COMMA quoted_string)* SQ_CLOSE;
-array_of_arrays     : sq_open array_of_strings SQ_CLOSE;
+array_of_strings    : SQ_OPEN quoted_string (COMMA quoted_string)* SQ_CLOSE;
+array_of_arrays     : SQ_OPEN array_of_strings (COMMA array_of_strings)* SQ_CLOSE;
 nvp                 : Name EQ (quoted_string | array_of_strings| array_of_arrays);
-attributes          : sq_open nvp (COMMA nvp)* SQ_CLOSE;
+attributes          : SQ_OPEN nvp (COMMA nvp)* SQ_CLOSE;
 entry               : nvp | modifier ;
-attribs_or_modifiers: sq_open entry (COMMA entry)* SQ_CLOSE;
+attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
 set_type            : SET_OF (Name | reference | NativeDataTypes) size_spec?;
 //TODO : allow for other collection types?
 collection_type     : set_type;
@@ -67,21 +67,21 @@ endpoint_name   : name_str (FORWARD_SLASH name_str)*;
 ret_stmt        : RETURN TEXT;
 
 target          : app_name;
-target_endpoint : TEXT_VALUE;
-call_arg : (Q_ARG | TEXT_VALUE)+ | (TEXT_VALUE LESS_COLON_2 TEXT_VALUE);
-call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
+target_endpoint : name_str;
+call_arg : (QSTRING | name_str)+ | (name_str LESS_COLON (name_str|NativeDataTypes));
+call_args: OPEN_PAREN call_arg (COMMA call_arg)* CLOSE_PAREN;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
 if_stmt                 : IF PREDICATE_VALUE COLON INDENT statements* DEDENT;
 else_stmt               : ELSE PREDICATE_VALUE? COLON INDENT statements* DEDENT;
 if_else                 : if_stmt else_stmt*;
 
-for_stmt                : (ALT | UNTIL | FOR_EACH | FOR | LOOP | WHILE) PREDICATE_VALUE COLON
+for_stmt                : (ALT | UNTIL | FOR_EACH | FOR | LOOP | WHILE ) PREDICATE_VALUE COLON
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;
-//group_stmt              : GROUP TEXT_NAME COLON
-//                                INDENT statements+ DEDENT;
+group_stmt              : name_str COLON
+                               INDENT statements+ DEDENT;
 
 one_of_case_label: (Name | TEXT_LINE | QSTRING)+;
 
@@ -107,11 +107,10 @@ statements: ( if_else
                 | call_stmt
                 | one_of_stmt
                 | http_method_comment
-                // | group_stmt
+                | group_stmt
                 | text_stmt
                 | annotation
             )
-            params?
             attribs_or_modifiers?
             ;
 
@@ -138,11 +137,18 @@ rest_endpoint: http_path attribs_or_modifiers? COLON
 
 collector_query_var: name_str EQ (NativeDataTypes | name_str);
 collector_query_param: QN collector_query_var (AMP collector_query_var)*;
-collector_call_stmt:  app_name (ARROW_LEFT TEXT_VALUE)?;
+collector_call_stmt:  target ARROW_LEFT target_endpoint;
+
 collector_http_stmt_part: name_str | CURLY_OPEN name_str CURLY_CLOSE ;
 collector_http_stmt_suffix: (FORWARD_SLASH collector_http_stmt_part)+ collector_query_param?;
 collector_http_stmt: HTTP_VERBS collector_http_stmt_suffix;
-collector_stmts: (collector_call_stmt | collector_http_stmt) attribs_or_modifiers;
+
+publisher: app_name;
+subscriber: app_name;
+collector_pubsub_call: subscriber ARROW_LEFT publisher ARROW_RIGHT name_str;
+
+collector_action_stmt: name_str;
+collector_stmts: (collector_action_stmt | collector_call_stmt | collector_http_stmt | collector_pubsub_call) attribs_or_modifiers;
 
 collector:  COLLECTOR COLON (WHATEVER | (INDENT collector_stmts+ DEDENT));
 

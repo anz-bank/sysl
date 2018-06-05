@@ -1,5 +1,13 @@
 My :: Server [~rest]:
+    /:
+        GET:
+            ...
     /foo [zero="0"]:
+        GET:
+            ...
+        /:
+            GET:
+                ...
         /bar [one="1", two="2", three="3"]:
             /baz:
                 POST:
@@ -37,8 +45,17 @@ BrowserApp [~ajax]:
             | Multi line comment 2
         val <: string
 
+    HomePage:
+        My :: Server <- GET /
+
+    Show Foo:
+        My :: Server <- GET /foo
+        My :: Server <- GET /foo/
+
     Show Success:
-        ...
+        My :: Server <- GET /first-level/{id}/second/third
+        return 200 ok
+
     On Click:
         | Comment On click, initiate a server call
         My :: Server <- GET /first/{id} [~pattern+foo]

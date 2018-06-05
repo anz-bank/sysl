@@ -72,11 +72,11 @@ IF                  : (I F)  [ \t]*             -> pushMode(PREDICATE);
 FOR_EACH            : (F O R) [ \t]* (E A C H) [ \t]* -> pushMode(PREDICATE);
 FOR                 : (F O R) [ \t]*            -> pushMode(PREDICATE);
 UNTIL               : (U N T I L) [ \t]*        -> pushMode(PREDICATE);
-ELSE                : (E L S E) [ \t]*            -> pushMode(PREDICATE);
-LOOP                : (L O O P) [ \t]*            -> pushMode(PREDICATE);
+ELSE                : (E L S E) [ \t]*          -> pushMode(PREDICATE);
+LOOP                : (L O O P) [ \t]*          -> pushMode(PREDICATE);
 ALT                 : (A L T) [ \t]*            -> pushMode(PREDICATE);
-WHILE                : (W H I L E) [ \t]*            -> pushMode(PREDICATE);
-//GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
+WHILE                : (W H I L E) [ \t]*       -> pushMode(PREDICATE);
+// GROUP               : (G R O U P) [ \t]*        -> pushMode(PREDICATE);
 WHATEVER            : '...';
 DOTDOT              : '..';
 SET_OF              : S E T [ \t]* O F;
@@ -85,8 +85,8 @@ MIXIN               : '-' '|' '>';
 DISTANCE            : '<->';
 DOT_ARROW           : '.' [ \t]+ '<-' -> pushMode(ARGS); // for " '. <-' name" syntax, change mode to all  ". <- GET /rest/api/calls"
 NAME_SEP            : [ \t]* '::' [ \t]*;
-LESS_COLON          : '<:';
-ARROW_LEFT          : '<-'  -> pushMode(ARGS); // Added for: 'server <- GET /http/path' calls
+LESS_COLON          : [ \t]* '<:' [ \t]*;
+ARROW_LEFT          : '<-' [ \t]* -> pushMode(ARGS); // Added for: 'server <- GET /http/path' calls
 ARROW_RIGHT         : [ \t]* '->' [ \t]* ;
 COLLECTOR           : '.. * <- *';
 PLUS                : '+';
@@ -196,20 +196,28 @@ PREDICATE_VALUE      : (~[\r\n:])* -> popMode;
 
 mode ARGS;
 SKIP_WS_ARG         : [ ]   -> skip;
-LESS_COLON_2          : '<:';
-SQ_OPEN_2             : '['   { in_sq_brackets++;} -> popMode;
+// LESS_COLON_2          : '<:';
+// ARROW_RIGHT_2         : [ \t]* '->' [ \t]* -> popMode;
+// NAME_SEP_2            : [ \t]* '::' [ \t]* -> popMode;
+// SQ_OPEN_2             : '['   { in_sq_brackets++;} -> popMode;
 
-Q_ARG: (
-            (DBL_QT WITHIN_DBL_QTS DBL_QT)
-            |
-            (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
-        );
+// Q_ARG: (
+//             (DBL_QT WITHIN_DBL_QTS DBL_QT)
+//             |
+//             (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
+//         );
+fragment 
+TVALUE          : (~[-<>,'"()\r\n:[\]])+
+                ;
 
-TEXT_VALUE      : (~[,'"()\r\n:[\]<])+;
-OPEN_PAREN_ARG  : '(';
-CLOSE_PAREN_ARG : ')'   -> popMode;
+TEXT_VALUE      : TVALUE ([ \-] TVALUE)*
+                { l.SetType(SyslLexerName)}
+                -> popMode
+                ;
+// OPEN_PAREN_ARG  : '(';
+// CLOSE_PAREN_ARG : ')'   -> popMode;
 // COLON_ARG       : ':'   -> popMode;
-COMMA_ARG       : ',' [ \t]*;
+// COMMA_ARG       : ',' [ \t]*;
 
 NEWLINE_2           : '\r'? '\n'
                     {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}

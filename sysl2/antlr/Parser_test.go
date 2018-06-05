@@ -61,8 +61,22 @@ func TestSimpleEP(t *testing.T) {
 	}
 }
 
+func TestAttribs(t *testing.T) {
+	filename := "tests/attribs.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestIfElse(t *testing.T) {
 	filename := "tests/if_else.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestArgs(t *testing.T) {
+	filename := "tests/args.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}
@@ -117,6 +131,13 @@ func TestCollector(t *testing.T) {
 	}
 }
 
+func TestPubSubCollector(t *testing.T) {
+	filename := "tests/pubsub_collector.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestDocstrings(t *testing.T) {
 	filename := "tests/docstrings.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
@@ -132,6 +153,13 @@ func TestMixins(t *testing.T) {
 }
 func TestForLoops(t *testing.T) {
 	filename := "tests/for_loop.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestGroupStmt(t *testing.T) {
+	filename := "tests/group_stmt.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}

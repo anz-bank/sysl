@@ -81,19 +81,19 @@ func isSameCall(a *sysl.Call, b *sysl.Call) bool {
 	return isSameApp(a.Target, b.Target) && a.Endpoint == b.Endpoint
 }
 
-func applyAttributes(src *sysl.Statement, dst *sysl.Statement) {
+func applyAttributes(src *sysl.Statement, dst *sysl.Statement) bool {
 	var stmts []*sysl.Statement
-
+	applied := false
 	switch s := dst.GetStmt().(type) {
 	case *sysl.Statement_Cond:
 		stmts = s.Cond.Stmt
 	case *sysl.Statement_Alt:
 		for _, c := range s.Alt.Choice {
 			for _, ss := range c.Stmt {
-				applyAttributes(src, ss)
+				applied = applyAttributes(src, ss)
 			}
 		}
-		return
+		return applied
 	case *sysl.Statement_Group:
 		stmts = s.Group.Stmt
 	case *sysl.Statement_Loop:
@@ -104,28 +104,134 @@ func applyAttributes(src *sysl.Statement, dst *sysl.Statement) {
 		stmts = s.Foreach.Stmt
 	case *sysl.Statement_Call:
 		if isSameCall(src.GetCall(), s.Call) {
+			applied = true
 			if dst.Attrs == nil {
 				dst.Attrs = make(map[string]*sysl.Attribute)
 			}
 			mergeAttrs(src.Attrs, dst.Attrs)
 		}
-		return
+		return applied
 	case *sysl.Statement_Action:
-		return
+		return applied
 	case *sysl.Statement_Ret:
-		return
+		return applied
 	default:
 		panic("collector: unhandled type")
 	}
 
 	for _, stmt := range stmts {
-		applyAttributes(src, stmt)
+		applied = applyAttributes(src, stmt) || applied
 	}
+	return applied
+}
+
+func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.Statement) bool {
+	var stmts []*sysl.Statement
+	valid := false
+	switch s := dst.GetStmt().(type) {
+	case *sysl.Statement_Cond:
+		stmts = s.Cond.Stmt
+	case *sysl.Statement_Alt:
+		for _, c := range s.Alt.Choice {
+			for _, ss := range c.Stmt {
+				valid = checkCalls(mod, appname, epname, ss)
+				if !valid {
+					break
+				}
+			}
+		}
+		return valid
+	case *sysl.Statement_Group:
+		stmts = s.Group.Stmt
+	case *sysl.Statement_Loop:
+		stmts = s.Loop.Stmt
+	case *sysl.Statement_LoopN:
+		stmts = s.LoopN.Stmt
+	case *sysl.Statement_Foreach:
+		stmts = s.Foreach.Stmt
+	case *sysl.Statement_Call:
+		app := getApp(s.Call.Target, mod)
+		if app == nil {
+			fmt.Printf("%s::%s calls non-existant App: %s\n", appname, epname, s.Call.Target.Part)
+			return false
+		}
+		_, valid = app.Endpoints[s.Call.Endpoint]
+		if !valid {
+			fmt.Printf("%s::%s calls non-existant App <- Endpoint (%s <- %s)\n", appname, epname, s.Call.Target.Part, s.Call.Endpoint)
+		}
+		return valid
+	case *sysl.Statement_Action:
+		return true
+	case *sysl.Statement_Ret:
+		return true
+	default:
+		panic("collector: unhandled type")
+	}
+
+	for _, stmt := range stmts {
+		valid = checkCalls(mod, appname, epname, stmt)
+		if !valid {
+			break
+		}
+	}
+	return valid
+}
+
+func collectorPubSubCalls(mod *sysl.Module) {
+	for appName, app := range mod.Apps {
+		// add attribtes collected in collector stmts to
+		if endpoint, has := app.Endpoints[`.. * <- *`]; has {
+			for _, collector_stmt := range endpoint.Stmt {
+				switch x := collector_stmt.Stmt.(type) {
+				case *sysl.Statement_Action:
+					modify_ep := app.Endpoints[x.Action.Action]
+					if modify_ep == nil {
+						fmt.Printf("App (%s) calls non-existant endpoint (%s)\n", appName, x.Action.Action)
+						continue
+					}
+					if modify_ep.Attrs == nil {
+						modify_ep.Attrs = make(map[string]*sysl.Attribute)
+					}
+					mergeAttrs(collector_stmt.Attrs, modify_ep.Attrs)
+				case *sysl.Statement_Call:
+					applied := false
+
+					for call_epname, call_endpoint := range app.Endpoints {
+						if call_epname == `.. * <- *` {
+							continue
+						}
+						for _, call_stmt := range call_endpoint.Stmt {
+							applied = applyAttributes(collector_stmt, call_stmt) || applied
+						}
+					}
+					if !applied {
+						fmt.Printf("Unused template (%s <- %s) in app %s\n", x.Call.Target.Part, x.Call.Endpoint, appName)
+					}
+				default:
+					panic("unhandled type:")
+				}
+			}
+		}
+	}
+}
+
+func checkEndpointCalls(mod *sysl.Module) bool {
+	valid := false
+	for appName, app := range mod.Apps {
+		for epname, ep := range app.Endpoints {
+			for _, stmt := range ep.Stmt {
+				valid = checkCalls(mod, appName, epname, stmt)
+				if !valid {
+					return valid
+				}
+			}
+		}
+	}
+	return valid
 }
 
 func postProcess(mod *sysl.Module) {
 	for appName, app := range mod.Apps {
-
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
 				src_app := getApp(src.Name, mod)
@@ -147,37 +253,6 @@ func postProcess(mod *sysl.Module) {
 		}
 
 		for epname, endpoint := range app.Endpoints {
-
-			// add attribtes collected in collector stmts to
-			if endpoint.Name == `.. * <- *` {
-				for _, collector_stmt := range endpoint.Stmt {
-					switch x := collector_stmt.Stmt.(type) {
-					case *sysl.Statement_Action:
-						modify_ep := app.Endpoints[x.Action.Action]
-						if modify_ep == nil {
-							fmt.Printf("App (%s) calls non-existant endpoint (%s)\n", appName, x.Action.Action)
-							continue
-						}
-						if modify_ep.Attrs == nil {
-							modify_ep.Attrs = make(map[string]*sysl.Attribute)
-						}
-						mergeAttrs(collector_stmt.Attrs, modify_ep.Attrs)
-					case *sysl.Statement_Call:
-						for call_epname, call_endpoint := range app.Endpoints {
-							if call_epname == `.. * <- *` {
-								continue
-							}
-
-							for _, call_stmt := range call_endpoint.Stmt {
-								applyAttributes(collector_stmt, call_stmt)
-							}
-						}
-					default:
-						panic("unhandled type:")
-					}
-				}
-			}
-
 			if endpoint.Source != nil {
 				src_app := getApp(endpoint.Source, mod)
 				if src_app != nil {
@@ -247,6 +322,8 @@ func postProcess(mod *sysl.Module) {
 			}
 		}
 	}
+	checkEndpointCalls(mod)
+	collectorPubSubCalls(mod)
 }
 
 func fileExists(filename string) bool {
@@ -288,14 +365,15 @@ func Parse(filename string, root string) *sysl.Module {
 
 	for {
 		fmt.Println(filename)
-		input := antlr.NewFileStream(filename)
+		input, _ := antlr.NewFileStream(filename)
 		listener.base = filepath.Dir(filename)
 		lexer := parser.NewSyslLexer(input)
 		stream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewSyslParser(stream)
-
+		// p.GetInterpreter().SetPredictionMode(antlr.PredictionModeLLExactAmbigDetection)
 		p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 		p.AddErrorListener(&errorListener)
+
 		p.BuildParseTrees = true
 		tree := p.Sysl_file()
 		if errorListener.hasErrors {
