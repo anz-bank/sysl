@@ -31,7 +31,7 @@ field_type      : collection_type
 
 array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS? CLOSE_PAREN;
 inplace_tuple: INDENT field+ DEDENT;
-field: name_str (array_size? LESS_COLON (field_type | inplace_tuple))?;
+field: name_str (array_size? LESS_COLON (field_type | inplace_tuple) QSTRING? )?;
 
 inplace_table : table;
 table   :   SYSL_COMMENT*

@@ -33,4 +33,4 @@ ModelTwo:
             @description =:
                 | multi-line documentation comment
                 | use it for long comments
-
+        field2 <: string "short description here"

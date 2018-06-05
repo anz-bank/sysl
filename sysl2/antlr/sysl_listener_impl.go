@@ -711,6 +711,10 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 			Line: int32(ctx.GetStart().GetLine()),
 		},
 	}
+	if ctx.QSTRING() != nil {
+		type1.Docstring = fromQString(ctx.QSTRING().GetText())
+	}
+
 	if ctx.Inplace_tuple() != nil {
 		type1.Type = &sysl.Type_TypeRef{
 			TypeRef: &sysl.ScopedRef{
