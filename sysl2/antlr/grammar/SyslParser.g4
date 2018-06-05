@@ -17,7 +17,7 @@ nvp                 : Name EQ (quoted_string | array_of_strings| array_of_arrays
 attributes          : SQ_OPEN nvp (COMMA nvp)* SQ_CLOSE;
 entry               : nvp | modifier ;
 attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
-set_type            : SET_OF (Name | reference | NativeDataTypes) size_spec?;
+set_type            : SET_OF (name_str | reference | NativeDataTypes) size_spec?;
 //TODO : allow for other collection types?
 collection_type     : set_type;
 user_defined_type       : name_str;
@@ -56,7 +56,7 @@ var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
 query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
-http_path_part :name_str;
+http_path_part :name_str | DIGITS;
 http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str) CURLY_CLOSE;
 http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);

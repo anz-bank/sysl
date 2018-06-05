@@ -417,7 +417,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 			context_app_part := s.module.Apps[s.appname].Name.Part
 			context_path := strings.Split(s.typename, ".")
 			ref_path := []string{
-				setCtxt.Name().GetText(),
+				setCtxt.Name_str().GetText(),
 			}
 
 			contained_type = &sysl.Type{
