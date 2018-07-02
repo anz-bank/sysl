@@ -1,10 +1,10 @@
 ---
 title: "Installation"
-description: "Sysl can be installed on Windwos, MacOS and Linux - follow this guide."
+description: "Sysl can be installed on Windows, MacOS and Linux - follow this guide."
 date: 2018-02-27T15:51:27+11:00
 weight: 10
 draft: false
-bref: "Sysl can be installed on Windwos, MacOS and Linux - follow this guide"
+bref: "Sysl can be installed on Windows, MacOS and Linux - follow this guide"
 toc: true
 ---
 Sysl is a CLI (Command Line Interface), split between two executables: `sysl` and `reljam` (Relational Java Model generator).

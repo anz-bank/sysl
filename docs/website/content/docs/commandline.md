@@ -1,6 +1,6 @@
   ---
 title: "Command line"
-description: "Learn to use sysl and reljam command line and its arguments"
+description: "Learn to use the sysl and reljam command line tools."
 date: 2018-02-27T15:55:46+11:00
 weight: 20
 draft: false

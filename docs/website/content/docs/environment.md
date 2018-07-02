@@ -1,6 +1,6 @@
 ---
 title: "Environment tips"
-description: "Sysl is often used in Enterprise setups which has many restrictions. Find some tips and workarounds here."
+description: "Trouble setting up a Sysl dev environment inside a restrictive enterprise network? Find some tips and workarounds here."
 date: 2018-02-27T15:51:34+11:00
 weight: 100
 draft: false
