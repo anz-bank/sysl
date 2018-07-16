@@ -46,8 +46,9 @@ fragment Y : [yY];
 fragment Z : [zZ];
 
 NativeDataTypes     :
+                    ( (I N T '3' '2') | (I N T '6' '4') | (I N T) | (F L O A T) | ( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L) | (A N Y))
                     { in_sq_brackets == 0 }?
-                    ( (I N T '3' '2') | (I N T '6' '4') | (I N T) | (F L O A T) | ( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L) | (A N Y));
+                    ;
 
 HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' ) [ \t]*
                     { gotHttpVerb = true; }
@@ -76,7 +77,6 @@ ELSE                : (E L S E) [ \t]*          -> pushMode(PREDICATE);
 LOOP                : (L O O P) [ \t]*          -> pushMode(PREDICATE);
 ALT                 : (A L T) [ \t]*            -> pushMode(PREDICATE);
 WHILE                : (W H I L E) [ \t]*       -> pushMode(PREDICATE);
-// GROUP               : (G R O U P) [ \t]*        -> pushMode(PREDICATE);
 WHATEVER            : '...';
 DOTDOT              : '..';
 SET_OF              : S E T [ \t]* O F;
@@ -93,15 +93,11 @@ PLUS                : '+';
 TILDE               : '~';
 COMMA               : ',';
 EQ                  : '=';
-DOLLAR              : '$';
 FORWARD_SLASH       : '/'
                     { gotHttpVerb = true; }
                     ;
-STAR                : '*';
 COLON               : ':';
-PERCENT             : '%';
 DOT                 : '.';
-EXCLAIM             : '!';
 QN                  : '?';
 AT                  : '@'       -> pushMode(AT_VAR_DECL);
 AMP                 : '&' { gotHttpVerb }? ;
@@ -117,24 +113,24 @@ EMPTY_COMMENT       : ('#' '\r'? '\n')
                     { gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
                     -> channel(HIDDEN)
                     ;
-
 HASH                : '#'       -> pushMode(NOT_NEWLINE);
 PIPE                : '|'       -> pushMode(NOT_NEWLINE);
-DBL_QT              : ["];
-SINGLE_QT           : ['];
 
+fragment
+DBL_QT     : ["];
+
+fragment
+SINGLE_QT  : ['];
 
 EMPTY_LINE          : ([ \t]+ ( [\r\n] | EOF ))
                     { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++;}
                     -> channel(HIDDEN)
                     ;
-
 // added '#' to skip comments that start with an indent
 INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
                     { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++; }
                     -> channel(HIDDEN)
                     ;
-
 DIGITS              : [0-9][0-9]*;
 
 fragment
@@ -143,16 +139,16 @@ WITHIN_DBL_QTS        : (~[\r\n"])*;
 fragment
 WITHIN_SNGL_QTS        : (~[\r\n'])*;
 
-QSTRING: (
+QSTRING     : (
             (DBL_QT WITHIN_DBL_QTS DBL_QT)
             |
             (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
-        );
+            );
 
-NEWLINE             : '\r'? '\n'
-                    {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
-                    -> channel(HIDDEN)
-                    ;
+NEWLINE     : '\r'? '\n'
+            {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
+            -> channel(HIDDEN)
+            ;
 
 SYSL_COMMENT    : HASH TEXT -> channel(HIDDEN);
 
@@ -191,22 +187,17 @@ WS              : [ \t]+
                 -> channel(HIDDEN)
                 ;
 
+ErrorChar   :
+            .
+            ;
+
 mode PREDICATE;
 PREDICATE_VALUE      : (~[\r\n:])* -> popMode;
 
 mode ARGS;
 SKIP_WS_ARG         : [ ]   -> skip;
-// LESS_COLON_2          : '<:';
-// ARROW_RIGHT_2         : [ \t]* '->' [ \t]* -> popMode;
-// NAME_SEP_2            : [ \t]* '::' [ \t]* -> popMode;
-// SQ_OPEN_2             : '['   { in_sq_brackets++;} -> popMode;
 
-// Q_ARG: (
-//             (DBL_QT WITHIN_DBL_QTS DBL_QT)
-//             |
-//             (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
-//         );
-fragment 
+fragment
 TVALUE          : (~[-<>,'"()\r\n:[\]])+
                 ;
 
@@ -214,10 +205,6 @@ TEXT_VALUE      : TVALUE ([ \-] TVALUE)*
                 { l.SetType(SyslLexerName)}
                 -> popMode
                 ;
-// OPEN_PAREN_ARG  : '(';
-// CLOSE_PAREN_ARG : ')'   -> popMode;
-// COLON_ARG       : ':'   -> popMode;
-// COMMA_ARG       : ',' [ \t]*;
 
 NEWLINE_2           : '\r'? '\n'
                     {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}

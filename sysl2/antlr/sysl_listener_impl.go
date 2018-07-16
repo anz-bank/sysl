@@ -1778,6 +1778,11 @@ func (s *TreeShapeListener) ExitMethod_def(ctx *parser.Method_defContext) {
 			}
 		}
 	}
+
+	if len(s.module.Apps[s.appname].Endpoints[s.typename].Stmt) == 0 {
+		s.module.Apps[s.appname].Endpoints[s.typename].Stmt = nil
+	}
+
 	s.popScope()
 	s.typename = ""
 	s.http_path_query_param = ""
@@ -1803,7 +1808,6 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 	if ep == nil {
 		ep = &sysl.Endpoint{
 			Name: s.typename,
-			Stmt: make([]*sysl.Statement, 0),
 		}
 		s.module.Apps[s.appname].Endpoints[s.typename] = ep
 	}
@@ -1820,11 +1824,15 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 			mergeAttrs(attrs, ep.Attrs)
 		}
 	}
+	if ep.Attrs == nil {
+		ep.Attrs = make(map[string]*sysl.Attribute)
+	}
 
 	if ctx.Statements(0) != nil {
-		if ep.Attrs == nil {
-			ep.Attrs = make(map[string]*sysl.Attribute)
+		if ep.Stmt == nil {
+			ep.Stmt = make([]*sysl.Statement, 0)
 		}
+
 		s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
 	}
 }
@@ -1833,6 +1841,10 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointContext) {
 	if ctx.Statements(0) != nil {
 		s.popScope()
+	}
+	ep := s.module.Apps[s.appname].Endpoints[s.typename]
+	if ep != nil && len(ep.Attrs) == 0 {
+		ep.Attrs = nil
 	}
 	s.typename = ""
 }
@@ -1994,12 +2006,12 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 	if ep == nil {
 		ep = &sysl.Endpoint{
 			Name: s.typename,
-			Stmt: make([]*sysl.Statement, 0),
 		}
 		s.module.Apps[s.appname].Endpoints[s.typename] = ep
 	}
 
 	if ctx.Collector_stmts(0) != nil {
+		ep.Stmt = make([]*sysl.Statement, 0)
 		if ep.Attrs == nil {
 			ep.Attrs = make(map[string]*sysl.Attribute)
 		}
@@ -2012,6 +2024,10 @@ func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {
 	if ctx.Collector_stmts(0) != nil {
 		s.popScope()
 	}
+	ep := s.module.Apps[s.appname].Endpoints[s.typename]
+	if len(ep.Attrs) == 0 {
+		ep.Attrs = nil
+	}
 	s.typename = ""
 }
 
@@ -2019,13 +2035,18 @@ func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {
 func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 	if ctx.Name_str() != nil {
 		s.typename = ctx.Name_str().GetText()
-		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
-			Name:     s.typename,
-			Stmt:     make([]*sysl.Statement, 0),
-			IsPubsub: true,
+		// fmt.Printf("Event: %s\n", s.typename)
+		if s.module.Apps[s.appname].Endpoints[s.typename] == nil {
+			s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
+				Name:     s.typename,
+				IsPubsub: true,
+			}
 		}
 		if ctx.Attribs_or_modifiers() != nil {
 			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		}
+		if ctx.Statements(0) != nil && s.module.Apps[s.appname].Endpoints[s.typename].Stmt == nil {
+			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = make([]*sysl.Statement, 0)
 		}
 		if ctx.Statements(0) != nil {
 			s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
@@ -2044,7 +2065,9 @@ func (s *TreeShapeListener) ExitEvent(ctx *parser.EventContext) {
 // EnterSubscribe is called when production subscribe is entered.
 func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 	if ctx.App_name() != nil {
-		s.typename = ctx.App_name().GetText() + ctx.ARROW_RIGHT().GetText() + ctx.Name_str().GetText()
+		eventName := ctx.Name_str().GetText()
+		s.typename = ctx.App_name().GetText() + ctx.ARROW_RIGHT().GetText() + eventName
+		// fmt.Printf("\t%s Subscriber: %s\n", s.appname, s.typename)
 		str := strings.Split(ctx.App_name().GetText(), "::")
 		for i := range str {
 			str[i] = strings.TrimSpace(str[i])
@@ -2054,18 +2077,45 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		}
 		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
 			Name:   s.typename,
-			Stmt:   make([]*sysl.Statement, 0),
 			Source: app_src,
 		}
 		if ctx.Attribs_or_modifiers() != nil {
 			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 		if ctx.Statements(0) != nil {
-			if s.module.Apps[s.appname].Endpoints[s.typename].Attrs == nil {
-				s.module.Apps[s.appname].Endpoints[s.typename].Attrs = make(map[string]*sysl.Attribute)
-			}
+			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = make([]*sysl.Statement, 0)
 			s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
 		}
+		srcAppName := getAppName(app_src)
+		srcApp := getApp(app_src, s.module)
+		if srcApp == nil {
+			s.module.Apps[srcAppName] = &sysl.Application{
+				Name:      app_src,
+				Endpoints: make(map[string]*sysl.Endpoint),
+			}
+			srcApp = s.module.Apps[srcAppName]
+		}
+		ep := srcApp.Endpoints[eventName]
+		if ep == nil {
+			srcApp.Endpoints[eventName] = &sysl.Endpoint{
+				Name:     eventName,
+				Stmt:     make([]*sysl.Statement, 0),
+				IsPubsub: true,
+			}
+			ep = srcApp.Endpoints[eventName]
+		}
+		if ep.Stmt == nil {
+			ep.Stmt = make([]*sysl.Statement, 0)
+		}
+		stmt := &sysl.Statement{
+			Stmt: &sysl.Statement_Call{
+				Call: &sysl.Call{
+					Target:   s.module.Apps[s.appname].Name,
+					Endpoint: s.typename,
+				},
+			},
+		}
+		ep.Stmt = append(ep.Stmt, stmt)
 	}
 }
 

@@ -1,20 +1,58 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
+	"sort"
 
 	"anz-bank/sysl/src/proto"
 	"anz-bank/sysl/sysl2/antlr/grammar"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 )
 
+var (
+	root   = flag.String("root", ".", "sysl root directory for input files (default: .)")
+	output = flag.String("o", "", "output file name")
+)
+
+func init() {
+	flag.Parse()
+}
+
+// JsonPB ...
+func JsonPB(m *sysl.Module, filename string) bool {
+	ma := jsonpb.Marshaler{Indent: " ", EmitDefaults: false}
+	f, err := os.Create(filename)
+	err = ma.Marshal(f, m)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
+}
+
 // TextPB ...
-func TextPB(m *sysl.Module) {
-	fmt.Println(proto.MarshalTextString(m))
+func TextPB(m *sysl.Module, filename string) bool {
+	if m == nil {
+		fmt.Println("input module is nil")
+		return false
+	}
+
+	f, err := os.Create(filename)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	err = proto.MarshalText(f, m)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
 }
 
 // SyslParserErrorListener ...
@@ -231,7 +269,15 @@ func checkEndpointCalls(mod *sysl.Module) bool {
 }
 
 func postProcess(mod *sysl.Module) {
-	for appName, app := range mod.Apps {
+	var appNames []string
+	for a := range mod.Apps {
+		appNames = append(appNames, a)
+	}
+	sort.Strings(appNames)
+
+	for _, appName := range appNames {
+		app := mod.Apps[appName]
+
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
 				src_app := getApp(src.Name, mod)
@@ -247,26 +293,6 @@ func postProcess(mod *sysl.Module) {
 						app.Types[k] = v
 					} else {
 						fmt.Printf("Type %s defined in %s and in %s\n", k, appName, getAppName(src.Name))
-					}
-				}
-			}
-		}
-
-		for epname, endpoint := range app.Endpoints {
-			if endpoint.Source != nil {
-				src_app := getApp(endpoint.Source, mod)
-				if src_app != nil {
-					eventName := strings.TrimSpace(strings.Split(epname, ">")[1])
-					if ep, has := src_app.Endpoints[eventName]; has {
-						stmt := &sysl.Statement{
-							Stmt: &sysl.Statement_Call{
-								Call: &sysl.Call{
-									Target:   app.Name,
-									Endpoint: epname,
-								},
-							},
-						}
-						ep.Stmt = append(ep.Stmt, stmt)
 					}
 				}
 			}
@@ -342,6 +368,7 @@ func Parse(filename string, root string) *sysl.Module {
 		root = "."
 	}
 	if !dirExists(root) {
+		fmt.Println("root directory does not exist")
 		return nil
 	}
 	root, _ = filepath.Abs(root)
@@ -353,6 +380,7 @@ func Parse(filename string, root string) *sysl.Module {
 		temp := root + "/" + filename
 
 		if !fileExists(temp) {
+			fmt.Printf("input file does not exist\nFilename: %s", temp)
 			return nil
 		}
 		filename = temp
@@ -408,7 +436,10 @@ func Parse(filename string, root string) *sysl.Module {
 }
 
 func main() {
-	// fmt.Printf("Reading file %s\n", os.Args[1])
-	mod := Parse(os.Args[1], "")
-	TextPB(mod)
+	fmt.Printf("Args: %v\n", flag.Args())
+	fmt.Printf("Root: %s\n", *root)
+	fmt.Printf("Module: %s\n", flag.Arg(0))
+	mod := Parse(flag.Arg(0), *root)
+	TextPB(mod, *output)
+	// JsonPB(mod, *output)
 }

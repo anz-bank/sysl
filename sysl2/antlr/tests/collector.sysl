@@ -21,7 +21,7 @@ App:
     Endpoint_Two:
         My :: Server <- Endpoint_Two [~https]
         One of:
-            condition = "one":
+            condition = one:
                 My :: Server <- Endpoint_Three [~https]
             condition two:
                 My :: Server <- Endpoint_Three [~https]
