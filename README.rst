@@ -64,6 +64,15 @@ Install dependencies and the ``sysl`` package with symlinks ::
 
   > pip install pytest flake8 -e .
 
+Set up your environment for diagram generation by providing `PlantUML <http://plantuml.com/>` 
+access either via local installation or URL to remote service. Warning, for sensitive data the 
+public service at www.plantuml.com is not suitable. You can use one of the following options:
+
+- execute ``SYSL_PLANTUML=http://www.plantuml.com/plantuml``
+- add ``export SYSL_PLANTUML=http://www.plantuml.com/plantuml`` to you ``.bashrc`` or similar
+- `install PLANTUML <http://plantuml.com/starting>` locally and run on port 8080
+
+
 Test and lint the source code and your changes with ::
 
   > pytest
