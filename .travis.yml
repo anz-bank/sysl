@@ -20,6 +20,8 @@ matrix:
     - brew list python >/dev/null 2>&1 || brew install python
     - brew list gradle >/dev/null 2>&1 || brew install gradle
     - export PATH=/usr/local/opt/python/libexec/bin:$PATH
+    - python --version
+    - pip --version
 env:
   global:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
