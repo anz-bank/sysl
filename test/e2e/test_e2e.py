@@ -99,4 +99,3 @@ def test_sysl_diagramm(syslexe):
     assert 'GetBalance</text>' in svg
     assert 'GET /accounts/{account_number}</text>' in svg
     assert "/accounts/{account_number}/deposit</text>" in svg
-    assert '@startuml' in svg

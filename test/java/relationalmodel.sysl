@@ -24,3 +24,8 @@ UserFacade [package="io.sysl.facade"]:
         !type Users
         !type Address
         !type UserAddressRel
+
+# sysl data --project DataView --output rel.png test/java/relationalmodel.sysl
+DataView:
+    Schema:
+        UserModel

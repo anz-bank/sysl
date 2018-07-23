@@ -5,6 +5,7 @@ import collections
 import re
 from argparse import RawTextHelpFormatter
 
+from sysl.util import datamodel
 from sysl.util import diagutil
 from sysl.util import writer
 from sysl.util.argparse import add_common_diag_options
@@ -22,8 +23,9 @@ def _make_varmgr(module, appname, write):
         app = module.apps[name]
         write('class "{}" as {} << (D,orchid) >> {{', name, var)
         typespec = module.apps.get(appname).types.get(name)
-        assert typespec.WhichOneof('type') == 'tuple'
-        fields = sorted(typespec.tuple.attr_defs.iteritems(),
+        attrs = typespec.tuple if typespec.WhichOneof('type') == 'tuple' else typespec.relation
+
+        fields = sorted(attrs.attr_defs.iteritems(),
                         key=_attr_sort_key)
         for (fieldname, fieldtype) in fields:
             which = fieldtype.WhichOneof('type')
@@ -46,6 +48,8 @@ def _make_varmgr(module, appname, write):
             elif which == 'type_ref':
                 typestr = '.'.join(fieldtype.type_ref.ref.path)
                 bold = True
+                if fieldtype.opt:
+                    suffix = '?'
             else:
                 typestr = '<color red>**{}**</color>'.format(which)
             typestr = prefix + typestr + suffix
@@ -67,42 +71,55 @@ def _generate_view(module, appname, types):
         for (appname, name, typespec) in types:
             var_name(name)
 
-            link_sets = collections.defaultdict(
-                lambda: collections.defaultdict(list))
+            one_to_one = False
+            # many_to_one = False
+            if typespec.WhichOneof('type') == 'tuple':
+                attrs = typespec.tuple
+            else:
+                attrs = typespec.relation
+                fkeys = [fname for (fname, _, _) in datamodel.foreign_keys(attrs, module)]
+                # skip, no relation to draw!
+                if len(fkeys) == 0:
+                    continue
+
+                pkeys = attrs.primary_key.attr_name
+                one_to_one = len(pkeys) == 1 and pkeys == fkeys
 
             fields = sorted(
-                typespec.tuple.attr_defs.iteritems(), key=_attr_sort_key)
+                attrs.attr_defs.iteritems(), key=_attr_sort_key)
+
             for (fieldname, fieldtype) in fields:
-                cardinality = u' '
+                line_label = u' '
+                line_style = u'--'
+                count_style = u'}}'
                 while fieldtype.WhichOneof('type') == 'list':
                     fieldtype = fieldtype.list.type
-                    cardinality = u'0..*'
+                    line_label = u'0..*'
 
                 if fieldtype.WhichOneof('type') == 'set':
                     fieldtype = fieldtype.set
-                    cardinality = u'0..*'
+                    line_label = u'0..*'
 
                 if fieldtype.WhichOneof('type') == 'type_ref':
-                    ref = u'.'.join(fieldtype.type_ref.ref.path)
+                    ref = fieldtype.type_ref.ref.path[0]
                     # Hacky!
-                    if ref.startswith(u'Common Data.'):
+                    if ref.startswith(u'Common Data'):
                         continue
 
                     refs = [n for (_, n, _) in types if n.endswith(ref)]
 
-                    line_template = u'{} {{}} *-- "{}" {}'.format(
-                        var_name(name), cardinality, var_name(refs[0]) if refs else ref)
-                    link_sets[ref][line_template].append(fieldname)
+                    if one_to_one:
+                        count_style = u''
+                        line_label = u'1..1'
 
-            for (_, line_templates) in link_sets.iteritems():
-                if len(line_templates) > 1:
-                    for (line_template, fieldnames) in line_templates.iteritems():
-                        for fieldname in fieldnames:
-                            write(line_template, '"' + fieldname + '"')
-                else:
-                    for (line_template, fieldnames) in line_templates.iteritems():
-                        for _ in fieldnames:
-                            write(line_template, '')
+                    if fieldtype.opt:
+                        line_style = u'..'
+
+                    line_style = count_style + line_style
+
+                    line_template = u'{} {} "{}" "{}"'.format(
+                        var_name(name), line_style, line_label, var_name(refs[0]) if refs else ref)
+                    write(line_template, '')
 
     return str(write)
 
@@ -132,7 +149,7 @@ def dataviews(module, args):
             if not module.apps.get(appname):
                 continue
             for (name, typespec) in module.apps.get(appname).types.iteritems():
-                if typespec.WhichOneof('type') == 'tuple':
+                if typespec.WhichOneof('type') == 'relation' or typespec.WhichOneof('type') == 'tuple':
                     types.append((appname, name, typespec))
 
         args.output = out_fmt(
