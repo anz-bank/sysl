@@ -380,7 +380,7 @@ func Parse(filename string, root string) *sysl.Module {
 		temp := root + "/" + filename
 
 		if !fileExists(temp) {
-			fmt.Printf("input file does not exist\nFilename: %s", temp)
+			fmt.Printf("input file does not exist\nFilename: %s\n", temp)
 			return nil
 		}
 		filename = temp
@@ -440,6 +440,10 @@ func main() {
 	fmt.Printf("Root: %s\n", *root)
 	fmt.Printf("Module: %s\n", flag.Arg(0))
 	mod := Parse(flag.Arg(0), *root)
-	TextPB(mod, *output)
+	if mod != nil {
+		TextPB(mod, *output)
+	} else {
+		os.Exit(1)
+	}
 	// JsonPB(mod, *output)
 }
