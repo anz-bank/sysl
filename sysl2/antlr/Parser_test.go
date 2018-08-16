@@ -13,6 +13,19 @@ import (
 )
 
 func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
+
+	// remove that does not match legacy.
+	for _, app := range m2.Apps {
+		app.SourceContext = nil
+		// app.SourceContext.Start.Col = 0
+		for _, ep := range app.Endpoints {
+			ep.SourceContext = nil
+		}
+		for _, t := range app.Types {
+			t.SourceContext = nil
+		}
+	}
+
 	output := filename + ".pb"
 
 	args := []string{"pb", "-o", output, filename}
