@@ -198,11 +198,12 @@ mode ARGS;
 SKIP_WS_ARG         : [ ]   -> skip;
 
 fragment
-TVALUE          : (~[-<>,'"()\r\n:[\]])+
+TVALUE          : (~[()\][\r\n'"])+
                 ;
 
-TEXT_VALUE      : TVALUE ([ \-] TVALUE)*
+TEXT_VALUE      : TVALUE
                 { l.SetType(SyslLexerName)}
+                { l.SetText(TrimText(l))}
                 -> popMode
                 ;
 

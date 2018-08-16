@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 	s "strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -102,6 +103,11 @@ func getPreviousIndent(l *Stack) int {
 	}
 	// peek, read but not remove HEAD
 	return l.Peek()
+}
+
+// TrimText Token Text
+func TrimText(l *SyslLexer) string {
+	return strings.TrimSpace(l.GetText())
 }
 
 // GetNextToken ...

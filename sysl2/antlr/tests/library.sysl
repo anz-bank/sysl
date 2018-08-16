@@ -1,6 +1,6 @@
 import school
 
-School Library:
+SchoolLibrary:
     !table Member:
         MemberId <: Student.Id:
             @description = "\n"

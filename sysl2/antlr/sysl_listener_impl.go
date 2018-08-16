@@ -19,6 +19,7 @@ type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base                  string
 	root                  string
+	filename              string
 	imports               []string
 	module                *sysl.Module
 	appname               string
@@ -793,6 +794,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 		}
 		s.pushScope(type1)
 	}
+	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
 func fixFieldDefinitions(collection *sysl.Type) {
@@ -952,6 +954,7 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 			mergeAttrs(attrs, s.module.Apps[s.appname].Attrs)
 		}
 	}
+	s.module.Apps[s.appname].SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()+1)
 }
 
 // ExitName_with_attribs is called when production name_with_attribs is exited.
@@ -1220,7 +1223,7 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: strings.TrimSpace(ctx.Target_endpoint().GetText()),
+				Endpoint: ctx.Target_endpoint().GetText(),
 			},
 		},
 	})
@@ -1759,6 +1762,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 		}
 		restEndpoint.RestParams.QueryParam = qparams
 	}
+	restEndpoint.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
 // ExitMethod_def is called when production method_def is exited.
@@ -1835,6 +1839,7 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 
 		s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
 	}
+	ep.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
 // ExitSimple_endpoint is called when production simple_endpoint is exited.
@@ -2017,6 +2022,7 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 		}
 		s.pushScope(ep)
 	}
+	ep.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
 // ExitCollector is called when production collector is exited.
@@ -2038,8 +2044,9 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 		// fmt.Printf("Event: %s\n", s.typename)
 		if s.module.Apps[s.appname].Endpoints[s.typename] == nil {
 			s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
-				Name:     s.typename,
-				IsPubsub: true,
+				Name:          s.typename,
+				IsPubsub:      true,
+				SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
 			}
 		}
 		if ctx.Attribs_or_modifiers() != nil {
@@ -2076,8 +2083,9 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 			Part: str,
 		}
 		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
-			Name:   s.typename,
-			Source: app_src,
+			Name:          s.typename,
+			Source:        app_src,
+			SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
 		}
 		if ctx.Attribs_or_modifiers() != nil {
 			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
@@ -2127,6 +2135,16 @@ func (s *TreeShapeListener) ExitSubscribe(ctx *parser.SubscribeContext) {
 	s.typename = ""
 }
 
+func buildSourceContext(filename string, line int, col int) *sysl.SourceContext {
+	return &sysl.SourceContext{
+		File: filename,
+		Start: &sysl.SourceContext_Location{
+			Line: int32(line),
+			Col:  int32(col),
+		},
+	}
+}
+
 // EnterApp_decl is called when production app_decl is entered.
 func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	if s.module.Apps[s.appname].Types == nil && len(ctx.AllTable()) > 0 {
@@ -2147,6 +2165,7 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 		}
 		s.pushScope(s.module.Apps[s.appname])
 	}
+
 	s.url_prefix = []string{""}
 	s.rest_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
 	s.rest_queryparams_len = []int{0}
@@ -2165,7 +2184,8 @@ func (s *TreeShapeListener) ExitApp_decl(ctx *parser.App_declContext) {
 func (s *TreeShapeListener) EnterApplication(ctx *parser.ApplicationContext) {}
 
 // ExitApplication is called when production application is exited.
-func (s *TreeShapeListener) ExitApplication(ctx *parser.ApplicationContext) {}
+func (s *TreeShapeListener) ExitApplication(ctx *parser.ApplicationContext) {
+}
 
 // EnterPath is called when production path is entered.
 func (s *TreeShapeListener) EnterPath(ctx *parser.PathContext) {}

@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"anz-bank/sysl/src/proto"
 	"anz-bank/sysl/sysl2/antlr/grammar"
@@ -19,6 +20,15 @@ var (
 	output = flag.String("o", "", "output file name")
 )
 
+const (
+	// ParserSuccess is returned by parser when it was able to parse input correctly
+	ParserSuccess = 0
+	// ImportError is returned by parser when its unable to load input modules
+	ImportError = 1
+	// ParseError is returned by parser when one of the input files has syntax errors
+	ParseError = 2
+)
+
 func init() {
 	flag.Parse()
 }
@@ -29,7 +39,7 @@ func JsonPB(m *sysl.Module, filename string) bool {
 	f, err := os.Create(filename)
 	err = ma.Marshal(f, m)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		return false
 	}
 	return true
@@ -44,12 +54,13 @@ func TextPB(m *sysl.Module, filename string) bool {
 
 	f, err := os.Create(filename)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		return false
 	}
 	err = proto.MarshalText(f, m)
+
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		return false
 	}
 	return true
@@ -368,8 +379,8 @@ func Parse(filename string, root string) *sysl.Module {
 		root = "."
 	}
 	if !dirExists(root) {
-		fmt.Println("root directory does not exist")
-		return nil
+		fmt.Fprintln(os.Stderr, "root directory does not exist")
+		os.Exit(ImportError)
 	}
 	root, _ = filepath.Abs(root)
 
@@ -380,8 +391,8 @@ func Parse(filename string, root string) *sysl.Module {
 		temp := root + "/" + filename
 
 		if !fileExists(temp) {
-			fmt.Printf("input file does not exist\nFilename: %s\n", temp)
-			return nil
+			fmt.Fprintln(os.Stderr, fmt.Sprintf("input file does not exist\nFilename: %s\n", temp))
+			os.Exit(ImportError)
 		}
 		filename = temp
 	}
@@ -395,9 +406,10 @@ func Parse(filename string, root string) *sysl.Module {
 		fmt.Println(filename)
 		input, err := antlr.NewFileStream(filename)
 		if err != nil {
-			fmt.Printf("%v,\n%s has errors\n", err, filename)
-			break
+			fmt.Fprintln(os.Stderr, fmt.Sprintf("%v,\n%s has errors\n", err, filename))
+			os.Exit(ImportError)
 		}
+		listener.filename = filename
 		listener.base = filepath.Dir(filename)
 		lexer := parser.NewSyslLexer(input)
 		stream := antlr.NewCommonTokenStream(lexer, 0)
@@ -409,8 +421,8 @@ func Parse(filename string, root string) *sysl.Module {
 		p.BuildParseTrees = true
 		tree := p.Sysl_file()
 		if errorListener.hasErrors {
-			fmt.Printf("%s has errors\n", filename)
-			break
+			fmt.Fprintln(os.Stderr, fmt.Sprintf("%s has syntax errors\n", filename))
+			os.Exit(ParseError)
 		}
 
 		antlr.ParseTreeWalkerDefault.Walk(listener, tree)
@@ -439,11 +451,14 @@ func main() {
 	fmt.Printf("Args: %v\n", flag.Args())
 	fmt.Printf("Root: %s\n", *root)
 	fmt.Printf("Module: %s\n", flag.Arg(0))
+	format := strings.ToLower(*output)
+	toJson := strings.HasSuffix(format, ".json")
 	mod := Parse(flag.Arg(0), *root)
 	if mod != nil {
-		TextPB(mod, *output)
-	} else {
-		os.Exit(1)
+		if toJson {
+			JsonPB(mod, *output)
+		} else {
+			TextPB(mod, *output)
+		}
 	}
-	// JsonPB(mod, *output)
 }
