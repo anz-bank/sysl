@@ -6,8 +6,9 @@ environment:
 
 init:
   - git config --global core.autocrlf input
+  - go env
 
-clone_folder: c:\gopath\src\anz-bank\
+clone_folder: c:\gopath\src\anz-bank\sysl
 
 install:
   - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
