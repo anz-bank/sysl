@@ -8,14 +8,21 @@ matrix:
   include:
   - os: linux
     dist: trusty
-    go_import_path: anz-bank/sysl
+    before_install:
+    - go env
+    - export GOPATH=$HOME/gopath
+    - export PATH=$HOME/gopath/bin:$PATH
+    - mkdir -p $HOME/gopath/src/anz-bank/sysl
+    - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/anz-bank/sysl/
+    - export TRAVIS_BUILD_DIR=$HOME/gopath/src/anz-bank/sysl
+    - cd $HOME/gopath/src/anz-bank/sysl
     after_success:
     - pip install codecov -e .
     - coverage run --source=src/sysl -m py.test
     - codecov
   - os: osx
     osx_image: xcode8.3
-    language: generic
+    language: go
     go_import_path: anz-bank/sysl
     before_install:
     - brew update
