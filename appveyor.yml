@@ -2,6 +2,12 @@ environment:
   PYTHON: "C:\\Python27"
   SYSL_PLANTUML: http://www.plantuml.com/plantuml
   JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+  GOPATH: c:\gopath
+
+init:
+  - git config --global core.autocrlf input
+
+clone_folder: c:\gopath\src\anz-bank\
 
 install:
   - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
@@ -11,6 +17,7 @@ install:
   - pip install . pytest flake8
   - pip freeze
   - choco install gradle
+  - go get -t -v anz-bank/sysl/sysl2/antlr
 
 build: off
 
@@ -19,6 +26,7 @@ test_script:
   - pytest test/e2e --syslexe=sysl --reljamexe=reljam
   - flake8
   - gradle --no-daemon -b test\java\build.gradle test
+  - go test -coverprofile=coverage.txt -covermode=atomic anz-bank/sysl/sysl2/antlr
 
 after_test:
   - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"
@@ -26,6 +34,7 @@ after_test:
   - XCOPY src\libs\google-site-packages-override\__init__.py  C:\Python27\Lib\site-packages\google /Y
   - python setup.py py2exe
   - pytest test/e2e --syslexe=dist/sysl.exe --reljamexe=dist/reljam.exe
+  - go build -o dist/gosysl.exe anz-bank/sysl/sysl2/antlr
 
 artifacts:
   - path: 'dist'
