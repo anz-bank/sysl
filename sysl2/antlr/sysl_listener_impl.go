@@ -44,7 +44,7 @@ func NewTreeShapeListener(root string) *TreeShapeListener {
 	return &TreeShapeListener{
 		root: root,
 		module: &sysl.Module{
-			Apps: make(map[string]*sysl.Application),
+			Apps: map[string]*sysl.Application{},
 		},
 	}
 }
@@ -288,7 +288,7 @@ func (s *TreeShapeListener) ExitAnnotations(ctx *parser.AnnotationsContext) {}
 func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	size_spec, has_size_spec := ctx.Size_spec().(*parser.Size_specContext)
 	array_spec, has_array_spec := ctx.Array_size().(*parser.Array_sizeContext)
-	s.app_name = make([]string, 0)
+	s.app_name = []string{}
 	native := ctx.NativeDataTypes()
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 	if type1.GetList() != nil {
@@ -342,11 +342,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 			type1.Constraint = makeArrayConstraint(primitive_type, array_spec)
 		}
 		if constraint != nil {
-			if type1.Constraint == nil {
-				type1.Constraint = []*sysl.Type_Constraint{constraint}
-			} else {
-				type1.Constraint = append(type1.Constraint, constraint)
-			}
+			type1.Constraint = append(type1.Constraint, constraint)
 		}
 	} else if ctx.Reference() != nil {
 		context_app_part := s.module.Apps[s.appname].Name.Part
@@ -458,7 +454,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 
 	if ctx.Annotations() != nil {
 		if type1.Attrs == nil {
-			type1.Attrs = make(map[string]*sysl.Attribute)
+			type1.Attrs = map[string]*sysl.Attribute{}
 		}
 		s.pushScope(type1)
 	}
@@ -466,15 +462,13 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 
 func makeScope(app_name []string, ctx *parser.ReferenceContext) *sysl.Scope {
 	scope := &sysl.Scope{}
-	countDots := len(ctx.AllDOT())
-	l := len(app_name)
-	if l-countDots > 0 {
+	appComponentCount := len(app_name) - len(ctx.AllDOT())
+	if appComponentCount > 0 {
 		scope.Appname = &sysl.AppName{
-			Part: app_name[:l-countDots],
+			Part: app_name[:appComponentCount],
 		}
 	}
-	scope.Path = app_name[l-countDots:]
-
+	scope.Path = app_name[appComponentCount:]
 	return scope
 }
 
@@ -505,13 +499,7 @@ func makeTypeConstraint(t sysl.Type_Primitive, size_spec *parser.Size_specContex
 	var l int
 
 	switch t {
-	case sysl.Type_DATE:
-		fallthrough
-	case sysl.Type_DATETIME:
-		fallthrough
-	case sysl.Type_INT:
-		fallthrough
-	case sysl.Type_STRING:
+	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_STRING:
 		val1 := size_spec.DIGITS(0).GetText()
 		if l, err = strconv.Atoi(val1); err == nil {
 			c = append(c, &sysl.Type_Constraint{
@@ -552,15 +540,7 @@ func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeCon
 	var l int
 
 	switch t {
-	case sysl.Type_DATE:
-		fallthrough
-	case sysl.Type_DATETIME:
-		fallthrough
-	case sysl.Type_INT:
-		fallthrough
-	case sysl.Type_DECIMAL:
-		fallthrough
-	case sysl.Type_STRING:
+	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING:
 		ct := &sysl.Type_Constraint{
 			Length: &sysl.Type_Constraint_Length{},
 		}
@@ -589,7 +569,7 @@ func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeCon
 }
 
 func makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) *sysl.Attribute {
-	arr := make([]*sysl.Attribute, 0)
+	arr := []*sysl.Attribute{}
 	for _, ars := range array_strings.AllQuoted_string() {
 		str := ars.(*parser.Quoted_stringContext)
 
@@ -609,8 +589,8 @@ func makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) 
 }
 
 func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]*sysl.Attribute {
-	patterns := make([]*sysl.Attribute, 0)
-	attributes := make(map[string]*sysl.Attribute)
+	patterns := []*sysl.Attribute{}
+	attributes := map[string]*sysl.Attribute{}
 
 	for _, e := range attribs.AllEntry() {
 		entry := e.(*parser.EntryContext)
@@ -630,7 +610,7 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 			} else if nvp.Array_of_arrays() != nil {
 				arr := nvp.Array_of_arrays().(*parser.Array_of_arraysContext)
 				attrArray := sysl.Attribute_Array{
-					Elt: make([]*sysl.Attribute, 0),
+					Elt: []*sysl.Attribute{},
 				}
 				for _, astrings := range arr.AllArray_of_strings() {
 					array_strings := astrings.(*parser.Array_of_stringsContext)
@@ -665,21 +645,10 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 	return attributes
 }
 
-func search(attr string, attrs []*sysl.Attribute) bool {
-	for _, a := range attrs {
-		if s, ok := a.Attribute.(*sysl.Attribute_S); ok {
-			if s.S == attr {
-				return true
-			}
-		}
-	}
-	return false
-}
-
 // EnterInplace_tuple is called when production inplace_tuple is entered.
 func (s *TreeShapeListener) EnterInplace_tuple(ctx *parser.Inplace_tupleContext) {
 	s.typename = s.typename + "." + s.fieldname[len(s.fieldname)-1]
-	s.typemap = make(map[string]*sysl.Type)
+	s.typemap = map[string]*sysl.Type{}
 	s.module.Apps[s.appname].Types[s.typename] = &sysl.Type{
 		Type: &sysl.Type_Tuple_{
 			Tuple: &sysl.Type_Tuple{
@@ -738,7 +707,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	}
 
 	s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
-	s.app_name = make([]string, 0)
+	s.app_name = []string{}
 }
 
 // ExitField is called when production field is exited.
@@ -757,7 +726,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	} else {
 		s.typename = s.typename + "." + ctx.Name_str().GetText()
 	}
-	s.typemap = make(map[string]*sysl.Type)
+	s.typemap = map[string]*sysl.Type{}
 
 	if ctx.TABLE() != nil {
 		if s.module.Apps[s.appname].Types[s.typename].GetRelation().GetAttrDefs() != nil {
@@ -790,7 +759,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	}
 	if ctx.Annotation(0) != nil {
 		if type1.Attrs == nil {
-			type1.Attrs = make(map[string]*sysl.Attribute)
+			type1.Attrs = map[string]*sysl.Attribute{}
 		}
 		s.pushScope(type1)
 	}
@@ -841,7 +810,7 @@ func fixFieldDefinitions(collection *sysl.Type) {
 func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	// wire up primary key
 	if rel := s.module.Apps[s.appname].Types[s.typename].GetRelation(); rel != nil {
-		pks := make([]string, 0)
+		pks := []string{}
 		for _, name := range s.fieldname {
 			f := rel.GetAttrDefs()[name]
 			patterns, has := f.GetAttrs()["patterns"]
@@ -878,7 +847,7 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 					f = x.Tuple.AttrDefs[name]
 				}
 				if f.Attrs == nil {
-					f.Attrs = make(map[string]*sysl.Attribute)
+					f.Attrs = map[string]*sysl.Attribute{}
 				}
 				f.Attrs[varname] = attr
 			}
@@ -927,7 +896,7 @@ func (s *TreeShapeListener) ExitSub_package(ctx *parser.Sub_packageContext) {
 
 // EnterApp_name is called when production app_name is entered.
 func (s *TreeShapeListener) EnterApp_name(ctx *parser.App_nameContext) {
-	s.app_name = make([]string, 0)
+	s.app_name = []string{}
 }
 
 // ExitApp_name is called when production app_name is exited.
@@ -1084,9 +1053,7 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 			},
 		}
 	} else {
-		ref_path := []string{
-			ctx.Name_str().GetText(),
-		}
+		ref_path := []string{ctx.Name_str().GetText()}
 
 		type1 = &sysl.Type{
 			Type: &sysl.Type_TypeRef{
@@ -1187,7 +1154,7 @@ func (s *TreeShapeListener) ExitTarget(ctx *parser.TargetContext) {
 		s.app_name[i] = strings.TrimSpace(s.app_name[i])
 	}
 	s.lastStatement().GetCall().Target.Part = s.app_name
-	s.app_name = make([]string, 0)
+	s.app_name = []string{}
 }
 
 // EnterTarget_endpoint is called when production target_endpoint is entered.
@@ -1228,7 +1195,7 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 		},
 	})
 	if ctx.Call_args() != nil {
-		s.lastStatement().GetCall().Arg = make([]*sysl.Call_Arg, 0)
+		s.lastStatement().GetCall().Arg = []*sysl.Call_Arg{}
 	}
 }
 
@@ -1241,7 +1208,7 @@ func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
 		Stmt: &sysl.Statement_Cond{
 			Cond: &sysl.Cond{
 				Test: ctx.PREDICATE_VALUE().GetText(),
-				Stmt: make([]*sysl.Statement, 0),
+				Stmt: []*sysl.Statement{},
 			},
 		},
 	}
@@ -1258,14 +1225,14 @@ func (s *TreeShapeListener) ExitIf_stmt(ctx *parser.If_stmtContext) {
 func (s *TreeShapeListener) EnterElse_stmt(ctx *parser.Else_stmtContext) {
 	else_cond := ctx.ELSE().GetText()
 	if ctx.PREDICATE_VALUE() != nil {
-		else_cond = else_cond + ctx.PREDICATE_VALUE().GetText()
+		else_cond += ctx.PREDICATE_VALUE().GetText()
 	}
 	else_cond = strings.TrimSpace(else_cond)
 	else_stmt := &sysl.Statement{
 		Stmt: &sysl.Statement_Group{
 			Group: &sysl.Group{
 				Title: else_cond,
-				Stmt:  make([]*sysl.Statement, 0),
+				Stmt:  []*sysl.Statement{},
 			},
 		},
 	}
@@ -1303,7 +1270,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 		stmt.Stmt = &sysl.Statement_Group{
 			Group: &sysl.Group{
 				Title: text,
-				Stmt:  make([]*sysl.Statement, 0),
+				Stmt:  []*sysl.Statement{},
 			},
 		}
 		s.pushScope(stmt.GetGroup())
@@ -1316,7 +1283,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 			Loop: &sysl.Loop{
 				Mode:      mode,
 				Criterion: ctx.PREDICATE_VALUE().GetText(),
-				Stmt:      make([]*sysl.Statement, 0),
+				Stmt:      []*sysl.Statement{},
 			},
 		}
 		s.pushScope(stmt.GetLoop())
@@ -1324,7 +1291,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 		stmt.Stmt = &sysl.Statement_Foreach{
 			Foreach: &sysl.Foreach{
 				Collection: ctx.PREDICATE_VALUE().GetText(),
-				Stmt:       make([]*sysl.Statement, 0),
+				Stmt:       []*sysl.Statement{},
 			},
 		}
 		s.pushScope(stmt.GetForeach())
@@ -1334,7 +1301,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 		stmt.Stmt = &sysl.Statement_Group{
 			Group: &sysl.Group{
 				Title: text,
-				Stmt:  make([]*sysl.Statement, 0),
+				Stmt:  []*sysl.Statement{},
 			},
 		}
 		s.pushScope(stmt.GetGroup())
@@ -1361,7 +1328,7 @@ func (s *TreeShapeListener) EnterGroup_stmt(ctx *parser.Group_stmtContext) {
 	stmt.Stmt = &sysl.Statement_Group{
 		Group: &sysl.Group{
 			Title: text,
-			Stmt:  make([]*sysl.Statement, 0),
+			Stmt:  []*sysl.Statement{},
 		},
 	}
 	s.addToCurrentScope(stmt)
@@ -1383,7 +1350,7 @@ func (s *TreeShapeListener) ExitOne_of_case_label(ctx *parser.One_of_case_labelC
 func (s *TreeShapeListener) EnterOne_of_cases(ctx *parser.One_of_casesContext) {
 	alt := s.peekScope().(*sysl.Alt)
 	choice := &sysl.Alt_Choice{
-		Stmt: make([]*sysl.Statement, 0),
+		Stmt: []*sysl.Statement{},
 	}
 	if ctx.One_of_case_label() != nil {
 		choice.Cond = ctx.One_of_case_label().GetText()
@@ -1401,7 +1368,7 @@ func (s *TreeShapeListener) ExitOne_of_cases(ctx *parser.One_of_casesContext) {
 func (s *TreeShapeListener) EnterOne_of_stmt(ctx *parser.One_of_stmtContext) {
 	alt := &sysl.Statement_Alt{
 		Alt: &sysl.Alt{
-			Choice: make([]*sysl.Alt_Choice, 0),
+			Choice: []*sysl.Alt_Choice{},
 		},
 	}
 	s.addToCurrentScope(&sysl.Statement{
@@ -1477,7 +1444,7 @@ func (s *TreeShapeListener) ExitText_stmt(ctx *parser.Text_stmtContext) {}
 // EnterMixin is called when production mixin is entered.
 func (s *TreeShapeListener) EnterMixin(ctx *parser.MixinContext) {
 	if s.module.Apps[s.appname].Mixin2 == nil {
-		s.module.Apps[s.appname].Mixin2 = make([]*sysl.Application, 0)
+		s.module.Apps[s.appname].Mixin2 = []*sysl.Application{}
 	}
 }
 
@@ -1500,7 +1467,7 @@ func (s *TreeShapeListener) EnterParam(ctx *parser.ParamContext) {
 			},
 		}
 		s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
-		s.app_name = make([]string, 0)
+		s.app_name = []string{}
 	}
 }
 
@@ -1515,12 +1482,12 @@ func (s *TreeShapeListener) ExitParam_list(ctx *parser.Param_listContext) {}
 
 // EnterParams is called when production params is entered.
 func (s *TreeShapeListener) EnterParams(ctx *parser.ParamsContext) {
-	s.typemap = make(map[string]*sysl.Type)
+	s.typemap = map[string]*sysl.Type{}
 }
 
 // ExitParams is called when production params is exited.
 func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
-	params := make([]*sysl.Param, 0)
+	params := []*sysl.Param{}
 
 	for _, fieldname := range s.fieldname {
 		type1 := s.typemap[fieldname]
@@ -1700,7 +1667,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	url := s.urlString()
 	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
 	s.typename = method + " " + url + s.http_path_query_param
-	s.method_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
+	s.method_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	if _, has := s.module.Apps[s.appname].Endpoints[s.typename]; !has {
 		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
 			Name: s.typename,
@@ -1708,13 +1675,13 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 				Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[method]),
 				Path:   url + s.http_path_query_param,
 			},
-			Stmt: make([]*sysl.Statement, 0),
+			Stmt: []*sysl.Statement{},
 		}
 	}
 	restEndpoint := s.module.Apps[s.appname].Endpoints[s.typename]
 	s.pushScope(restEndpoint)
 
-	attrs := make(map[string]*sysl.Attribute)
+	attrs := map[string]*sysl.Attribute{}
 	elt := []*sysl.Attribute{&sysl.Attribute{
 		Attribute: &sysl.Attribute_S{
 			S: "rest",
@@ -1743,7 +1710,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	}
 
 	if len(s.rest_queryparams) > 0 {
-		qparams := make([]*sysl.Endpoint_RestParams_QueryParam, 0)
+		qparams := []*sysl.Endpoint_RestParams_QueryParam{}
 		for i := range s.rest_queryparams {
 			q := s.rest_queryparams[i]
 			qcopy := &sysl.Endpoint_RestParams_QueryParam{
@@ -1770,7 +1737,7 @@ func (s *TreeShapeListener) ExitMethod_def(ctx *parser.Method_defContext) {
 	if len(s.method_queryparams) > 0 {
 		qparams := s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam
 		if qparams == nil {
-			qparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
+			qparams = []*sysl.Endpoint_RestParams_QueryParam{}
 		}
 		qparams = append(qparams, s.method_queryparams...)
 		s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam = qparams
@@ -1829,12 +1796,12 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 		}
 	}
 	if ep.Attrs == nil {
-		ep.Attrs = make(map[string]*sysl.Attribute)
+		ep.Attrs = map[string]*sysl.Attribute{}
 	}
 
 	if ctx.Statements(0) != nil {
 		if ep.Stmt == nil {
-			ep.Stmt = make([]*sysl.Statement, 0)
+			ep.Stmt = []*sysl.Statement{}
 		}
 
 		s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
@@ -1897,7 +1864,7 @@ func (s *TreeShapeListener) ExitCollector_query_param(ctx *parser.Collector_quer
 func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
 
 	appName := &sysl.AppName{}
-	s.app_name = make([]string, 0)
+	s.app_name = []string{}
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
@@ -1959,13 +1926,13 @@ func (s *TreeShapeListener) ExitSubscriber(ctx *parser.SubscriberContext) {
 	}
 
 	s.lastStatement().GetCall().Target.Part = s.app_name
-	s.app_name = make([]string, 0)
+	s.app_name = []string{}
 }
 
 // EnterCollector_pubsub_call is called when production collector_pubsub_call is entered.
 func (s *TreeShapeListener) EnterCollector_pubsub_call(ctx *parser.Collector_pubsub_callContext) {
 	appName := &sysl.AppName{}
-	s.app_name = make([]string, 0)
+	s.app_name = []string{}
 	publisher := ctx.Publisher().GetText() + ctx.ARROW_RIGHT().GetText()
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
@@ -2016,9 +1983,9 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 	}
 
 	if ctx.Collector_stmts(0) != nil {
-		ep.Stmt = make([]*sysl.Statement, 0)
+		ep.Stmt = []*sysl.Statement{}
 		if ep.Attrs == nil {
-			ep.Attrs = make(map[string]*sysl.Attribute)
+			ep.Attrs = map[string]*sysl.Attribute{}
 		}
 		s.pushScope(ep)
 	}
@@ -2053,7 +2020,7 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 		if ctx.Statements(0) != nil && s.module.Apps[s.appname].Endpoints[s.typename].Stmt == nil {
-			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = make([]*sysl.Statement, 0)
+			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = []*sysl.Statement{}
 		}
 		if ctx.Statements(0) != nil {
 			s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
@@ -2091,7 +2058,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 		if ctx.Statements(0) != nil {
-			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = make([]*sysl.Statement, 0)
+			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = []*sysl.Statement{}
 			s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
 		}
 		srcAppName := getAppName(app_src)
@@ -2099,7 +2066,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		if srcApp == nil {
 			s.module.Apps[srcAppName] = &sysl.Application{
 				Name:      app_src,
-				Endpoints: make(map[string]*sysl.Endpoint),
+				Endpoints: map[string]*sysl.Endpoint{},
 			}
 			srcApp = s.module.Apps[srcAppName]
 		}
@@ -2107,13 +2074,13 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		if ep == nil {
 			srcApp.Endpoints[eventName] = &sysl.Endpoint{
 				Name:     eventName,
-				Stmt:     make([]*sysl.Statement, 0),
+				Stmt:     []*sysl.Statement{},
 				IsPubsub: true,
 			}
 			ep = srcApp.Endpoints[eventName]
 		}
 		if ep.Stmt == nil {
-			ep.Stmt = make([]*sysl.Statement, 0)
+			ep.Stmt = []*sysl.Statement{}
 		}
 		stmt := &sysl.Statement{
 			Stmt: &sysl.Statement_Call{
@@ -2148,26 +2115,26 @@ func buildSourceContext(filename string, line int, col int) *sysl.SourceContext 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	if s.module.Apps[s.appname].Types == nil && len(ctx.AllTable()) > 0 {
-		s.module.Apps[s.appname].Types = make(map[string]*sysl.Type)
+		s.module.Apps[s.appname].Types = map[string]*sysl.Type{}
 	}
 	has_stmts := (ctx.Simple_endpoint(0) != nil || ctx.Rest_endpoint(0) != nil || ctx.Event(0) != nil || ctx.Subscribe(0) != nil || ctx.Collector(0) != nil)
 	if s.module.Apps[s.appname].Endpoints == nil && has_stmts {
-		s.module.Apps[s.appname].Endpoints = make(map[string]*sysl.Endpoint)
+		s.module.Apps[s.appname].Endpoints = map[string]*sysl.Endpoint{}
 	}
 	if s.module.Apps[s.appname].Wrapped == nil && len(ctx.AllFacade()) > 0 {
 		s.module.Apps[s.appname].Wrapped = &sysl.Application{
-			Types: make(map[string]*sysl.Type),
+			Types: map[string]*sysl.Type{},
 		}
 	}
 	if ctx.Annotation(0) != nil {
 		if s.module.Apps[s.appname].Attrs == nil {
-			s.module.Apps[s.appname].Attrs = make(map[string]*sysl.Attribute, 0)
+			s.module.Apps[s.appname].Attrs = map[string]*sysl.Attribute{}
 		}
 		s.pushScope(s.module.Apps[s.appname])
 	}
 
 	s.url_prefix = []string{""}
-	s.rest_queryparams = make([]*sysl.Endpoint_RestParams_QueryParam, 0)
+	s.rest_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	s.rest_queryparams_len = []int{0}
 	s.rest_attrs = []map[string]*sysl.Attribute{nil}
 }
