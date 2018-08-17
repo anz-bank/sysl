@@ -19,9 +19,11 @@ matrix:
     - brew update
     - brew list python >/dev/null 2>&1 || brew install python
     - brew list gradle >/dev/null 2>&1 || brew install gradle
+    - brew list go >/dev/null 2>&1 || brew install go
     - export PATH=/usr/local/opt/python/libexec/bin:$PATH
     - python --version
     - pip --version
+    - go version
 env:
   global:
   - SYSL_PLANTUML=http://www.plantuml.com/plantuml
@@ -33,14 +35,17 @@ env:
   - secure: Gm5kztwSXiB2sKd8x+plyC9jpDMGhGo8HT9icHheazRNx2ybGI+612CvBCuP2aLQEJ0wy9Ld4F2TOFAzcd8P+/NbtfIQ8HsdoOqqWQCwSwQlgwHhpA47aVKjKnevx7mQBIWuZmvSf6UTaHilNOhXB22P0nZ36vBxOHcgVcMGiHDMK3CRkyvAFMvOkVsOTu3LE95xEn6Eu7sdTWTxeOmSBuGhVCAiJa1Q6T3CiH3y5W7uU8o3O1VI/8ZKcxoxU6HtU2iodRaTh8s/uPh77voU7iGxWfGGBiVdJbWCxAkEZ5IkCMrZuXEz+y09Mk+sn2iqiHAdiqgQvUUOQcOGMeyFmAxI3R430Nd3UOTJziCYYzBKuk8f7dMvtACbcoUPGupWWGnGARutemLEE6Hsm1wYmbhg8OhfRmZNL8+9ZLvK9/Daq9Z0zNzxXaFJHZaTLldpsu5Fh8nPe7hc0ov1+1Qj1rgukZ1AtETTVo9OXN8Nc4aLr09BuLvjOyP5VM8hYEt8mLOd10sePDLYlHXg/yzai638pBJqfNebEQJD+4Ky+T6EKVqVoGnDHQiKXiYbrtE9zoTlxaMwyFDOipOwdPrfOl686Ey1syd7HjXkHqY4qdfMVGkcqOgPEhFJxrk9n14XKT7kxTB/w1UJt27IRldt1asIcxlN4szRWMMT/VAvIqY=
 install:
 - pip install . pytest flake8
+- go get -t -v anz-bank/sysl/sysl2/antlr
 script:
 - flake8
 - pytest
 - pytest test/e2e --syslexe=sysl --reljamexe=reljam
 - gradle test -b test/java/build.gradle
+- go test -coverprofile=coverage.txt -covermode=atomic anz-bank/sysl/sysl2/antlr
 before_deploy:
 - python setup.py sdist bdist_wheel
 - gradle build -b src/libs/java/build.gradle :jar
+- go build -o dist/gosysl.exe anz-bank/sysl/sysl2/antlr
 - docker build -t "$DOCKER_IMAGE_LATEST" -f Dockerfile .
 - docker tag "$DOCKER_IMAGE_LATEST" "$DOCKER_IMAGE_VERSIONED"
 deploy:
