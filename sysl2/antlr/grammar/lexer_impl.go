@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"strings"
 	s "strings"
 
@@ -24,7 +23,6 @@ func calcSpaces(text string) int {
 
 func startsWithKeyword(text string) bool {
 	var lower = s.ToLower(text)
-	// var first = s.Split(lower, " ")[0]
 
 	for k := range keywords {
 		if s.HasPrefix(lower, keywords[k]) {
@@ -35,26 +33,11 @@ func startsWithKeyword(text string) bool {
 }
 
 func createDedentToken(source *antlr.TokenSourceCharStreamPair) *antlr.CommonToken {
-	t := antlr.NewCommonToken(source, SyslLexerDEDENT, 0, 0, 0)
-
-	return t
+	return antlr.NewCommonToken(source, SyslLexerDEDENT, 0, 0, 0)
 }
 
 func createIndentToken(source *antlr.TokenSourceCharStreamPair) *antlr.CommonToken {
-	t := antlr.NewCommonToken(source, SyslLexerINDENT, 0, 0, 0)
-
-	return t
-}
-
-func GettokenName(t antlr.Token, l *SyslLexer) string {
-	if t.GetTokenType() > 0 && t.GetTokenType() < len(l.SymbolicNames) {
-		return l.SymbolicNames[t.GetTokenType()]
-	}
-	if t.GetTokenType() == antlr.TokenEOF {
-		return "EOF"
-	}
-
-	return fmt.Sprintf("%d", t.GetTokenType())
+	return antlr.NewCommonToken(source, SyslLexerINDENT, 0, 0, 0)
 }
 
 var keywords = [...]string{"set of", "return", "for", "one of", "else", "if", "loop", "until", "alt", "while"}
@@ -116,15 +99,18 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 		// poll, retrieve head
 		nextTok := prevToken[0]
 		prevToken = prevToken[1:]
-		// tokenName := GettokenName(nextTok, l)
 		return nextTok
 	}
 
 	next := l.BaseLexer.NextToken()
-	// tokenName := GettokenName(next, l)
 	// return NEWLINE
-	if gotNewLine && (next.GetTokenType() == SyslLexerNEWLINE || next.GetTokenType() == SyslLexerNEWLINE_2 || next.GetTokenType() == SyslLexerEMPTY_LINE || next.GetTokenType() == SyslLexerINDENTED_COMMENT || next.GetTokenType() == SyslLexerEMPTY_COMMENT) {
-		return next
+	if gotNewLine {
+		switch next.GetTokenType() {
+		case SyslLexerNEWLINE, SyslLexerNEWLINE_2, SyslLexerEMPTY_LINE:
+			fallthrough
+		case SyslLexerINDENTED_COMMENT, SyslLexerEMPTY_COMMENT:
+			return next
+		}
 	}
 	// regular whitespace, return as is.
 	// return from here only when we encounter HIDDEN after INDENT has been generated
@@ -142,11 +128,6 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 	} else if !gotNewLine {
 		return next
 	}
-
-	// if spaces != getPreviousIndent(level) {
-	// 	// System.out.println(linenum + " :will_que " + tokenName)
-	// 	fmt.Println(fmt.Sprintf("%d :will_que - %s ", linenum, tokenName))
-	// }
 
 	for spaces != getPreviousIndent(level) {
 		if spaces > getPreviousIndent(level) {

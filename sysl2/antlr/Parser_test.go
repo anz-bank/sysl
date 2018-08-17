@@ -66,191 +66,121 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 	return result
 }
 
-func TestSimpleEP(t *testing.T) {
-	filename := "tests/test1.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+func testParse(t *testing.T, filename, root string) {
+	if !loadAndCompare(Parse(filename, root), filename, root) {
 		t.Error("failed")
 	}
+}
+
+func TestSimpleEP(t *testing.T) {
+	testParse(t, "tests/test1.sysl", "")
 }
 
 func TestAttribs(t *testing.T) {
-	filename := "tests/attribs.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/attribs.sysl", "")
 }
 
 func TestIfElse(t *testing.T) {
-	filename := "tests/if_else.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/if_else.sysl", "")
 }
 
 func TestArgs(t *testing.T) {
-	filename := "tests/args.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/args.sysl", "")
 }
 
 func TestSimpleEPWithSpaces(t *testing.T) {
-	filename := "tests/with_spaces.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/with_spaces.sysl", "")
 }
 
 func TestSimpleEP2(t *testing.T) {
-	filename := "tests/test4.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/test4.sysl", "")
 }
 
 func TestSimpleEndpointParams(t *testing.T) {
-	filename := "tests/ep_params.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/ep_params.sysl", "")
 }
 
 func TestOneOfStatements(t *testing.T) {
-	filename := "tests/oneof.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/oneof.sysl", "")
 }
 
 func TestDuplicateEndpoints(t *testing.T) {
-	filename := "tests/duplicate.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/duplicate.sysl", "")
 }
 
 func TestEventing(t *testing.T) {
-	filename := "tests/eventing.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/eventing.sysl", "")
 }
 
 func TestCollector(t *testing.T) {
-	filename := "tests/collector.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/collector.sysl", "")
 }
 
 func TestPubSubCollector(t *testing.T) {
-	filename := "tests/pubsub_collector.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/pubsub_collector.sysl", "")
 }
 
 func TestDocstrings(t *testing.T) {
-	filename := "tests/docstrings.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/docstrings.sysl", "")
 }
 
 func TestMixins(t *testing.T) {
-	filename := "tests/mixin.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/mixin.sysl", "")
 }
 func TestForLoops(t *testing.T) {
-	filename := "tests/for_loop.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/for_loop.sysl", "")
 }
 
 func TestGroupStmt(t *testing.T) {
-	filename := "tests/group_stmt.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/group_stmt.sysl", "")
 }
 
 func TestUntilLoop(t *testing.T) {
-	filename := "tests/until_loop.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/until_loop.sysl", "")
 }
 
 func TestTuple(t *testing.T) {
-	filename := "tests/test2.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/test2.sysl", "")
 }
 
 func TestInplaceTuple(t *testing.T) {
-	filename := "tests/inplace_tuple.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/inplace_tuple.sysl", "")
 }
 
 func TestRelational(t *testing.T) {
-	filename := "tests/school.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/school.sysl", "")
 }
 
 func TestImports(t *testing.T) {
-	filename := "tests/library.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/library.sysl", "")
 }
 
 func TestRootArg(t *testing.T) {
-	filename := "school.sysl"
-	root := "tests"
-	if loadAndCompare(Parse(filename, root), filename, root) == false {
-		t.Error("failed")
-	}
+	testParse(t, "school.sysl", "tests")
 }
 
 func TestRestApi(t *testing.T) {
-	filename := "tests/test_rest_api.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/test_rest_api.sysl", "")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
-	filename := "tests/rest_api_query_params.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/rest_api_query_params.sysl", "")
 }
 
 func TestSimpleProject(t *testing.T) {
-	filename := "tests/project.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/project.sysl", "")
 }
 
 func TestUrlParamOrder(t *testing.T) {
 	filename := "tests/rest_url_params.sysl"
+	// output does not match with legacy
+	// the order does not match
+	// check the diff.
 	if loadAndCompare(Parse(filename, ""), filename, "") == true {
 		t.Error("failed")
 	}
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
-	filename := "tests/bad_order.sysl"
-	if loadAndCompare(Parse(filename, ""), filename, "") == false {
-		t.Error("failed")
-	}
+	testParse(t, "tests/bad_order.sysl", "")
 }
