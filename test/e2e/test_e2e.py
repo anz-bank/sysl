@@ -92,7 +92,7 @@ def test_sysl_seq_diagramm(syslexe):
         svg = f.read()
 
     assert svg.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
-    assert 'SEQ-ATM: Submit Application (Bankers Desktop)</text>' in svg
+    assert 'SEQ-ATM: Submit Application</text>' in svg
     assert 'ATM</text>' in svg
     assert 'AccountTransactionApi</text>' in svg
     assert 'BankDatabase</text>' in svg
