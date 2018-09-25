@@ -152,23 +152,12 @@ def test_sysl_relational_data_diagramm(syslexe):
         svg = f.read()
 
     assert svg.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
-    assert '--class _0--' in svg
-    assert '--class _1--' in svg
-    assert '--class _2--' in svg
-    assert '--class _3--' in svg
-    assert '--class _4--' in svg
-    assert 'link _0 to _1' in svg
-    assert 'link _3 to _2' in svg
-    assert 'link _4 to _0' in svg
-    assert 'link _4 to _2' in svg
-    assert 'id="_0"' in svg
-    assert 'id="_1"' in svg
-    assert 'id="_2"' in svg
-    assert 'id="_3"' in svg
-    assert 'id="_4"' in svg
-    assert 'id="_0-_1"' in svg
-    assert 'id="_3-_2"' in svg
-    assert 'id="_4-_0"' in svg
-    assert 'id="_4-_2"' in svg
+    assert 'Account</text>' in svg
+    assert 'account_number : int</text>' in svg
+    assert 'account_type : string</text>' in svg
+    assert 'account_status : string</text>' in svg
+    assert 'account_balance : int</text>' in svg
+    assert 'Transaction</text>' in svg
+    assert 'transaction_id : int</text>' in svg
     assert 'from_account_number :</text>' in svg
     assert 'to_account_number :</text>' in svg
