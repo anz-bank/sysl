@@ -73,7 +73,7 @@ def test_reljam(mode, module, app, java_pkg, expected, reljamexe):
 
 
 @pytest.mark.unit
-def test_sysl_diagramm(syslexe):
+def test_sysl_seq_diagramm(syslexe):
     name = '020_diagram'
     actual_pattern = path.join(ACTUAL_DIR, name + '-%(epname).svg')
     fname = name + '-SEQ-ATM.svg'
@@ -92,11 +92,72 @@ def test_sysl_diagramm(syslexe):
         svg = f.read()
 
     assert svg.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
-    assert 'SEQ-ATM: Submit Application (Bankers Desktop)</text>' in svg
+    assert 'SEQ-ATM: Submit Application</text>' in svg
     assert 'ATM</text>' in svg
     assert 'AccountTransactionApi</text>' in svg
     assert 'BankDatabase</text>' in svg
     assert 'GetBalance</text>' in svg
     assert 'GET /accounts/{account_number}</text>' in svg
     assert "/accounts/{account_number}/deposit</text>" in svg
-    assert '@startuml' in svg
+
+
+@pytest.mark.unit
+def test_sysl_tuple_data_diagramm(syslexe):
+    name = '020_diagram'
+    actual_pattern = path.join(ACTUAL_DIR, name + '-%(epname).svg')
+    fname = name + '-AccountTransactionApi.svg'
+    actual = path.join(ACTUAL_DIR, fname)
+    remove_file(actual)
+    args = ['--root', IN_DIR, 'data', '-o', actual_pattern, '/' + name, '-j', 'Bank :: Tuple Views']
+
+    if syslexe:
+        print 'Sysl exe call'
+        call([syslexe] + args)
+    else:
+        print 'Sysl python function call'
+        main(args)
+
+    with open(actual, 'r') as f:
+        svg = f.read()
+
+    assert svg.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
+    assert 'Account</text>' in svg
+    assert 'account_number : int</text>' in svg
+    assert 'account_type : string</text>' in svg
+    assert 'account_status : string</text>' in svg
+    assert 'account_balance : int</text>' in svg
+    assert 'Transaction</text>' in svg
+    assert 'transaction_id : int</text>' in svg
+    assert 'from_account_number :</text>' in svg
+    assert 'to_account_number :</text>' in svg
+
+
+@pytest.mark.unit
+def test_sysl_relational_data_diagramm(syslexe):
+    name = '020_diagram'
+    actual_pattern = path.join(ACTUAL_DIR, name + '-%(epname).svg')
+    fname = name + '-BankModel.svg'
+    actual = path.join(ACTUAL_DIR, fname)
+    remove_file(actual)
+    args = ['--root', IN_DIR, 'data', '-o', actual_pattern, '/' + name, '-j', 'Bank :: Relational Views']
+
+    if syslexe:
+        print 'Sysl exe call'
+        call([syslexe] + args)
+    else:
+        print 'Sysl python function call'
+        main(args)
+
+    with open(actual, 'r') as f:
+        svg = f.read()
+
+    assert svg.startswith('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
+    assert 'Account</text>' in svg
+    assert 'account_number : int</text>' in svg
+    assert 'account_type : string</text>' in svg
+    assert 'account_status : string</text>' in svg
+    assert 'account_balance : int</text>' in svg
+    assert 'Transaction</text>' in svg
+    assert 'transaction_id : int</text>' in svg
+    assert 'from_account_number :</text>' in svg
+    assert 'to_account_number :</text>' in svg

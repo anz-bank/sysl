@@ -22,8 +22,9 @@ def _make_varmgr(module, appname, write):
         app = module.apps[name]
         write('class "{}" as {} << (D,orchid) >> {{', name, var)
         typespec = module.apps.get(appname).types.get(name)
-        assert typespec.WhichOneof('type') == 'tuple'
-        fields = sorted(typespec.tuple.attr_defs.iteritems(),
+        attrs = typespec.tuple if typespec.WhichOneof('type') == 'tuple' else typespec.relation
+
+        fields = sorted(attrs.attr_defs.iteritems(),
                         key=_attr_sort_key)
         for (fieldname, fieldtype) in fields:
             which = fieldtype.WhichOneof('type')
@@ -70,8 +71,10 @@ def _generate_view(module, appname, types):
             link_sets = collections.defaultdict(
                 lambda: collections.defaultdict(list))
 
+            attrs = typespec.tuple if typespec.WhichOneof('type') == 'tuple' else typespec.relation
+
             fields = sorted(
-                typespec.tuple.attr_defs.iteritems(), key=_attr_sort_key)
+                attrs.attr_defs.iteritems(), key=_attr_sort_key)
             for (fieldname, fieldtype) in fields:
                 cardinality = u' '
                 while fieldtype.WhichOneof('type') == 'list':
@@ -83,16 +86,26 @@ def _generate_view(module, appname, types):
                     cardinality = u'0..*'
 
                 if fieldtype.WhichOneof('type') == 'type_ref':
-                    ref = u'.'.join(fieldtype.type_ref.ref.path)
-                    # Hacky!
-                    if ref.startswith(u'Common Data.'):
-                        continue
+                    if typespec.WhichOneof('type') == 'tuple':
+                        ref = u'.'.join(fieldtype.type_ref.ref.path)
+                        # Hacky!
+                        if ref.startswith(u'Common Data.'):
+                            continue
 
-                    refs = [n for (_, n, _) in types if n.endswith(ref)]
+                        refs = [n for (_, n, _) in types if n.endswith(ref)]
 
-                    line_template = u'{} {{}} *-- "{}" {}'.format(
-                        var_name(name), cardinality, var_name(refs[0]) if refs else ref)
-                    link_sets[ref][line_template].append(fieldname)
+                        line_template = u'{} {{}} *-- "{}" {}'.format(
+                            var_name(name), cardinality, var_name(refs[0]) if refs else ref)
+                        link_sets[ref][line_template].append(fieldname)
+                    else:
+                        link_style = u'}}--'
+                        if fieldname in attrs.primary_key.attr_name and len(attrs.primary_key.attr_name) == 1:
+                            link_style = u'||--||'
+
+                        ref = fieldtype.type_ref.ref.path[0]
+                        line_template = u'{} {{}} {} "{}" {}'.format(
+                            var_name(name), link_style, cardinality, var_name(ref))
+                        link_sets[ref][line_template].append(fieldname)
 
             for (_, line_templates) in link_sets.iteritems():
                 if len(line_templates) > 1:
@@ -132,7 +145,7 @@ def dataviews(module, args):
             if not module.apps.get(appname):
                 continue
             for (name, typespec) in module.apps.get(appname).types.iteritems():
-                if typespec.WhichOneof('type') == 'tuple':
+                if typespec.WhichOneof('type') == 'relation' or typespec.WhichOneof('type') == 'tuple':
                     types.append((appname, name, typespec))
 
         args.output = out_fmt(
