@@ -1,3 +1,4 @@
+
 Environment specific tips
 =========================
 
@@ -12,7 +13,11 @@ Corporate environment
 ---------------------
 If you are behind an NTLM proxy, you might need to setup `cntlm` to work effectively from your command line. Your specific environment and OS will determine this setup.
 
-In case of SSL certificate interception you might need to add `--trusted-host pypi.python.org` to your pip commands or setup a global `pip.conf`
+In case of SSL certificate interception you might need to add following to your pip commands.
+
+    --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org
+
+Alternatively, you can setup a global `pip.conf`
 file (see [official docs](https://pip.pypa.io/en/stable/user_guide/#config-file) or [Stackoverflow](https://stackoverflow.com/a/46410817)).
 
 Gradle setup in corporate environment
