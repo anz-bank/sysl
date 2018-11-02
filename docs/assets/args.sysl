@@ -1,0 +1,15 @@
+MobileApp:
+  On Submit:
+    Api <- Register
+
+Api:
+  Register(input <: Api.FormData):
+    process input
+
+  !type FormData:
+    name <: string
+    age <: int
+
+Project [seqtitle="Diagram", epfmt="%(epname)  %(args)"]:
+  Seq:
+    MobileApp <- On Submit

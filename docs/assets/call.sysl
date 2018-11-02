@@ -1,0 +1,23 @@
+MobileApp:
+  Login:
+    Server <- Login
+
+Server:
+  Login:
+    do input validation
+    process data
+    "Use special characters like \n to break long text into multiple lines"
+    DB <- Save
+    return Server.Response
+
+  !type Response:
+    code <: int
+    message <: string
+
+DB:
+  Save:
+    return look up data
+
+Project [seqtitle="Diagram"]:
+  Seq:
+    MobileApp <- Login
