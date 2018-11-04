@@ -3,20 +3,21 @@ MobileApp:
     Server <- Login
 
 Server:
-  Login:
-    do input validation
-    process data
-    "Use special characters like \n to break long text into multiple lines"
-    DB <- Save
-    return Server.Response
+  Login(data <: LoginData):
+    build query
+    DB <- Query
+    check result
+    return success or failure
 
-  !type Response:
-    code <: int
-    message <: string
+  !type LoginData:
+    username <: string
+    password <: string
 
 DB:
+  Query:
+    ...
   Save:
-    return look up data
+    ...
 
 Project [seqtitle="Diagram"]:
   Seq:
