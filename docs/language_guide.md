@@ -25,7 +25,7 @@ In the above example, `:` and `...` have special meaning. `:` is used to create 
 
 `MobileApp` is a user-defined name that `has` three `endpoints` viz `Login`, `Search` and `Orders`. The way to do that is by having a `newline` and `indent` after `:`.
 
-The `...` (aka shortcut) means, we don't have enough details yet to describe how this endpoint behaves. Sysl allows you to take an iterative approach in documenting the behaviour. You add more as you know more.
+The `...` (aka shortcut) means that we don't have enough details yet to describe how this endpoint behaves. Sysl allows you to take an iterative approach in documenting the behaviour. You add more as you know more.
 
 ### Data
 You will have various kinds of data passing through your systems. Sysl allows you to express ownership, information classification and other attributes of your data in one place.
@@ -217,7 +217,7 @@ Our `MobileApp` does not have any detail yet on how it behaves. Let's use sysl s
   * [Arguments](#arguments)
 
 #### Text
-Use simple text to describe behavior. See below for examples of text statements:
+Use simple text to describe behaviour. See below for examples of text statements:
 ```
 Server:
   Login:
@@ -237,14 +237,23 @@ MobileApp:
     Server <- Login
 
 Server:
-  Login:
-    do input validation
-    process data
-    "Use special characters like \n to break long text into multiple lines"
-    DB <- Save
-    return success or failure
+  Login(data <: LoginData):
+    build query
+    DB <- Query
+    check result
+    return Server.LoginResponse
+
+  !type LoginData:
+    username <: string
+    password <: string
+
+  !type LoginResponse:
+    message <: string
 
 DB:
+  Query:
+    lookup data
+    return data
   Save:
     ...
 ```
@@ -278,17 +287,11 @@ Sysl analyzes the starting endpoint and finds all the `call`s that this endpoint
 In the above diagram, `DB` is the last app in this flow. Sysl also captures the return data that each endpoint returns to its caller. See below for more details.
 
 #### Return response
-Express returning response to the caller by using the `return` keyword. See the example above on how to use the `return` keyword.
-```
-App:
-  Endpoint:
-    return STRING | TYPE
-```
-In the above example, everything after `return` keyword till the end-of-line is considered response. You can have:
-  * STRING - a descrition of what is returned
-  * TYPE - Sysl type
+An endpoint can return response to the caller. Everything after `return` keyword till the end-of-line is considered response payload. You can have:
+  * string - a description of what is returned, or
+  * Sysl type - formal type to return to the caller
 
-Sequence diagram will render the response accordingly. In the previous example, `look up data` is a generic description of what `DB <- Save` returns. `Server.Response` is the Sysl type that is returned by `Login` endpoint.
+Sequence diagram will render the response accordingly. In the previous example, `data` is a generic description of what `DB <- Query` returns. `Server.Response` is the Sysl type that is returned by `Login` endpoint.
 
 #### Control statements
 Sysl allows you to express high level of detail about your design. You can specify decisions, processing loops etc.
@@ -306,7 +309,9 @@ Server:
       create new session
     process input
 ```
-See [assets/if-else.sysl](assets/if-else.sysl) for complete example
+See [assets/if-else.sysl](assets/if-else.sysl) for complete example.
+
+`IF` and `ELSE` keywords are case-insensitive.
 
 ![](assets/if-else-Seq.png)
 
@@ -321,9 +326,11 @@ Server:
 ```
 See [assets/for-loop.sysl](assets/for-loop.sysl) for complete example.
 
+`FOR` keyword is case insensitive.
+
 ![](assets/for-loop-Seq.png)
 
-You can use `Loop`, `While`, `Until`, `Loop-N` as well.
+You can use `Loop`, `While`, `Until`, `Loop-N` as well (all case-insensitive).
 
 #### Arguments
 Define the data that you expect your callers to pass you. In the below example, `register` endpoint in service `Api` expects `input` of type `FormData`. `FormData` is defined under the application `Api`.
@@ -379,7 +386,7 @@ SmsNotifier:
 
 #### Collector
 
-Project files use the Collector syntax to add additional layer of information on top of the defintions. Best example of this is where you want to capture how an API evolved over time.
+Project files use the Collector syntax to add additional layer of information on top of the definitions. Best example of this is where you want to capture how an API evolved over time.
 
 E.g. `server.sysl`
 ```
@@ -519,7 +526,7 @@ You can use your attributes in `epfmt` or `appfmt` arguments in the following wa
 
   * `%(@attrib_name)` : use `@` to refer to `attrib_name`.
   * `%(@attrib_name? yes_stmt | no_stmt)`: use `?` to test for existence of value. This is ternary operator, which allows you to to execute `yes_stmt` or `no_stmt` depending on the result.
-  * `%(@attrib_name=='some_value'? yes_stmt | no_stmt)` : compare attribs_value to some constant
+  * `%(@attrib_name=='some_value'? yes_stmt | no_stmt)` : compare attrib's value to some constant.
   * `%(@attrib_name=='some_value'? yes_stmt | @attrib_name=='some_other_value'? | ...)` : nested checks.
 
 
