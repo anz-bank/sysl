@@ -9,23 +9,42 @@ Sysl uses indentation to represent parent child or `has` relationships. E.g. an 
 ## Concepts
 Sysl allows you to specify [Application](#application) behaviour and [Data Model](#data) that is shared between your applications. Another related concept is of software [Projects](#projects) where you can document what changes happened in each project or a release.
 
-More on this below.
+To explain these concepts, we will design an application called `MobileApp` which interacts with another application called `Server`.
 
 ### Application
-An application is an independent entity that provides services via its various `endpoints`. E.g. a `MobileApp` allows users to `Login`, `Search` or `Order` items.
+An application is an independent entity that provides services via its various `endpoints`.
 
-Let's start to define a mobile app with these high level endpoints (or flows):
+Here is how an application is defined in sysl.
+```
+MobileApp:
+  ...
+```
+`MobileApp` is a user-defined Application that does not have any endpoints yet. We will design this app as we move along.
+
+Notes about sysl syntax:
+
+  * `:` and `...` have special meaning. `:` followed by an `indent` is used to create a parent-child relationship.
+    * All lines after `:` should be indented. The only exception to this rule is when you want to use the shortcut `...`.
+    * The `...` (aka shortcut) means that we don't have enough details yet to describe how this endpoint behaves. Sysl allows you to take an iterative approach in documenting the behaviour. You add more as you know more.
+
+The next bit is to add endpoints to this app.
+
+### Endpoints
+Endpoints are the services that an application offers. Let's add endpoints to our `MobileApp`.
 ```
 MobileApp:
   Login: ...
   Search: ...
   Order: ...
 ```
-In the above example, `:` and `...` have special meaning. `:` is used to create a parent-child relationship.
+Now, our `MobileApp` has three `endpoints` viz `Login`, `Search` and `Orders`.
 
-`MobileApp` is a user-defined name that `has` three `endpoints` viz `Login`, `Search` and `Orders`. The way to do that is by having a `newline` and `indent` after `:`.
+Notes about sysl syntax:
+ * Again, `...` is used to show we don't have enough details yet about each endpoint.
+ * All endpoints are indented. Use a `tab` or `spaces` to indent.
+ * These endpoints can also be REST api's. See section on [Rest](#rest) below on how to define rest api endpoints.
 
-The `...` (aka shortcut) means that we don't have enough details yet to describe how this endpoint behaves. Sysl allows you to take an iterative approach in documenting the behaviour. You add more as you know more.
+Each endpoint should have statements that describe its behaviour. Before that lets took at data types and how it can used in sysl.
 
 ### Data
 You will have various kinds of data passing through your systems. Sysl allows you to express ownership, information classification and other attributes of your data in one place.
@@ -33,51 +52,22 @@ You will have various kinds of data passing through your systems. Sysl allows yo
 Continuing with the previous example, let's define a `Server` that expects `LoginData` for the `Login` Flow.
 ```
 Server:
-  !type LoginData
+  Login (request <: Server.LoginData): ...
+
+  !type LoginData:
     username <: string
     password <: string
 ```
-Note: we have not defined how `Server` implements the `Login` flow.
+In the above example, we have defined another application called `Server` that has an endpoint called `Login`. It also defines a new data type called `LoginData` that it expects callers to pass in the login call.
 
-### Projects
-Most of the changes to your system will be done as part of a well defined `project` or a `software release`.
+Notes about sysl syntax:
+  * `<:` is used to define the arguments to `Login` endpoint.
+  * `!type` is used to define a new data type `LoginData`.
+    * Note the indent to create fields `username` and `password` of type `string`.
+    * See [Data Types](#data-types) to see what all the supported data types.
+  * Data types (like `LoginData`) belong to the app under which it is defined.
+  * Refer to the newly defined type by its fully qualified name. e.g. `Server.LoginData`.
 
-`TODO: Elaborate`
-## Generate Diagrams
-
-Sysl supports generating diagrams of following types:
-  * Sequence Diagram
-  * Integration Diagram
-  * Data Diagram
-
-Sysl aims to generate code and documentation from only one source of truth i.e. `.sysl` files.
-
-## Generate Code
-
-A common problem with documentation is that the code and documentation diverge pretty soon. `Sysl` lets to define `Rest API` and generate code for the same. You can describe the behaviour of the api for developers to follow and generate code and diagrams from same `.sysl` code. See section on [Rest](#rest) below.
-
-Currently, Sysl generates Java code for the following
-  * Sprint REST Controller
-  * POJO classes for the types used in your api
-  * Transformation Language to transform your data models e.g. from relational to object model (and vice-versa?)
-
-## Parts of Sysl Language
-Let's see how we can define application and data models in sysl.
-
-### Application, Endpoint
-As described above, here is how you can start to define an application.
-
-`mobile.sysl`
-```
-MobileApp:
-  Login: ...
-  Search: ...
-  Order: ...
-```
-
-Sysl expects all lines after `:` to be indented. The only exception to this rule is when you want to use the shortcut `...`. Sysl has support to generate code for defining `Rest` api servers. See [Rest](#rest) for more details.
-
-### Data Models
 #### Data Types
 Sysl supports following data types out of the box.
   * int, int64, int32
@@ -87,6 +77,223 @@ Sysl supports following data types out of the box.
   * datetime, date
   * any
   * xml
+
+
+Now, we have two apps `MobileApp` and `Server`, but they do not interact with each other. Time to add some statements.
+
+### Statements
+Our `MobileApp` does not have any detail yet on how it behaves. Let's use sysl statements to describe behaviour. Sysl supports following types of statements:
+  * [Text](#text)
+  * [Call](#Call)
+  * [Return](#return-response)
+  * [Control Statements](#control-statements)
+  * [Arguments](#arguments)
+
+#### Text
+Use simple text to describe behaviour. See below for examples of text statements:
+```
+Server:
+  Login:
+    do input validation
+    "Use special characters like \n to break long text into multiple lines"
+    'Cannot use special characters in single quoted statements'
+```
+
+#### Call
+A standalone service that does not interact with anybody is not a very useful service. Use the `call` syntax to show interaction between two services.
+
+In the below example, MobileApp makes a call to backend Server which in turn calls database layer.
+
+```
+MobileApp:
+  Login:
+    Server <- Login
+
+Server:
+  Login(data <: LoginData):
+    build query
+    DB <- Query
+    check result
+    return Server.LoginResponse
+
+  !type LoginData:
+    username <: string
+    password <: string
+
+  !type LoginResponse:
+    message <: string
+
+DB:
+  Query:
+    lookup data
+    return data
+  Save:
+    ...
+```
+See [assets/call.sysl](assets/call.sysl) for complete example.
+
+Now we have all the ingredients to draw a sequence diagram. Here is one generated by sysl for the above example:
+
+![](assets/call-Seq.png)
+
+See [Generate Diagrams](#generate-diagrams) on how to draw sequence and other types of diagrams using sysl.
+
+#### Return response
+An endpoint can return response to the caller. Everything after `return` keyword till the end-of-line is considered response payload. You can have:
+  * string - a description of what is returned, or
+  * Sysl type - formal type to return to the caller
+
+Sequence diagram will render the response accordingly. In the previous example, `data` is a generic description of what `DB <- Query` returns. `Server.Response` is the Sysl type that is returned by `Login` endpoint.
+
+#### Control statements
+Sysl allows you to express high level of detail about your design. You can specify decisions, processing loops etc.
+
+##### If, else
+You can express an endpoint's critical decisions using IF/ELSE statement:
+```
+Server:
+  HandleFormSubmit:
+    validate input
+    IF session exists:
+      use existing session
+    Else:
+      create new session
+    process input
+```
+See [assets/if-else.sysl](assets/if-else.sysl) for complete example.
+
+`IF` and `ELSE` keywords are case-insensitive. Here is how sysl will render these statements:
+
+![](assets/if-else-Seq.png)
+
+##### For, Loop, Until, While
+Express processing loop using FOR:
+```
+Server:
+  HandleFormSubmit:
+    validate input
+    For each element in input:
+      process element
+```
+See [assets/for-loop.sysl](assets/for-loop.sysl) for complete example.
+
+`FOR` keyword is case insensitive. Here is how sysl will render these statements:
+
+![](assets/for-loop-Seq.png)
+
+You can use `Loop`, `While`, `Until`, `Loop-N` as well (all case-insensitive).
+
+### Imports
+To keep things modular, sysl allows you to import definitions created in other `.sysl` files.
+
+E.g. `server.sysl`
+```
+Server:
+  Login: ...
+  Register: ...
+```
+
+and you use `import` in `client.sysl`
+
+```js
+import server
+
+Client:
+  Login:
+    Server <- Login
+```
+
+Above code assumes, server and client files are in the same directory. If they are in different directories, you must have atleast a common root directory and `import /path/from/root`.
+
+All sysl commands accept `--root` argument. Run `sysl -h` or `reljam -h` for more details.
+
+#### Multiple Declarations
+Sysl allows you to define an application in multiple places. There is no redefinition error in sysl.
+
+```
+UserService:
+  Login: ...
+
+UserService:
+  Register: ...
+```
+
+Result will be as-if it was declared like so:
+
+```
+UserService:
+  Login: ...
+  Register: ...
+```
+
+### Projects
+Most of the changes to your system will be done as part of a well defined `project` or a `software release`.
+
+`TODO: Elaborate`
+## Generate Diagrams
+
+Once your design is complete, its time to get some output from Sysl. Sysl supports generating diagrams of following types:
+  * Sequence Diagram
+  * Integration Diagram
+  * Data Diagram
+
+Sysl aims to generate code and documentation from only one source of truth i.e. `.sysl` files.
+
+### Sequence Diagrams
+You can generate the Sequence Diagram using the following command:
+
+```bash
+sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
+```
+You can omit the the `.sysl` and sysl will pickup the correct file.
+```bash
+sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call
+```
+
+Here is the output that you should see:
+
+![](assets/call-Seq.png)
+
+See [assets/call.sysl](assets/call.sysl) for complete example.
+
+#### How sysl generates sequence diagram?
+Let's breakdown the `sd` aka `sequence diagram` command:
+```bash
+sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
+```
+  * `-o` specifies the output filename
+  * `-s` specifies the start endpoint
+  * `call.sysl` the source to start the analysis from
+
+Sysl analyzes the starting endpoint and finds all the `call`s that this endpoint makes to other endpoints (including the ones to other applications). It finds all the transitive dependencies till there are none.
+
+In the above diagram, `DB` is the last app in this flow. Sysl also captures the return data that each endpoint returns to its caller. See below for more details.
+
+#### Format Arguments
+The default diagram by default only shows the data type that is returned by an endpoint. You can instruct `sysl` to show the arguments to your endpoint in a sequence diagram.
+
+Command:
+
+`sysl sd -o 'call-login-sequence.png' --epfmt '%(epname) %(args)' -s 'MobileApp <- Login' assets/call.sysl -v call-login-sequence.png`
+See [assets/args.sysl](assets/args.sysl) for complete example.
+
+![](assets/args-Seq.png)
+
+A bit more explanation is required regarding `epname` and `args` keywords that are used in `epfmt` command line argument. See section on [Attributes](#epfmt) below.
+
+### Integration Diagram
+`TODO`
+
+See: run `sysl ints -h` for more details.
+
+### Data Diagram
+See [Data Models](#data-models) on types of data models and how to render them.
+
+# Advanced
+
+### Data Models
+
+Sysl supports defining two types of data models, one for your database and other for your app. You can refer to these models in your app just like any other app.
 
 #### Relational Data Model
 Relational Data model is the most common way of persisting data in a database. You can define your data model directly in sysl.
@@ -101,15 +308,16 @@ CustomerOrderModel:
     customer_id <: Customer.customer_id
 ```
 In the above example:
-  *  Customer.customer_id is a primary key.
-  *  CustomerOrder has a foreign key customer_id which refers to the primary key of Customer (i.e. customer_id).
+  * `CustomerOrderModel` is a user-defined top-level app that contains definitions of various tables or types in your data model.
+  * Customer.customer_id is a primary key.
+  * CustomerOrder has a foreign key customer_id which refers to the primary key of Customer (i.e. customer_id).
 
 See [data.sysl](assets/data.sysl) for complete example for Relation model.
 
 ![](assets/data-Relational-Model.png)
 
 #### Object Model
-Define a typical in memory Object model of an application
+Define a typical in-memory Object model of an application like so:
 ```java
 CustomerOrderModel:
   !type Address:
@@ -162,203 +370,6 @@ Model:
       details <: string
 ```
 At the moment, reljam does not generate code for this. See issue [#155](https://github.com/anz-bank/sysl/issues/155).
-
-### Imports
-
-To keep things modular, sysl allows you to import definitions created in other `.sysl` files.
-
-E.g. `server.sysl`
-```
-Server:
-  Login: ...
-  Register: ...
-```
-
-and you use `import` in `client.sysl`
-
-```js
-import server
-
-Client:
-  Login:
-    Server <- Login
-```
-
-Above code assumes, server and client files are in the same directory. If they are in different directories, you must have atleast a common root directory and `import /path/from/root`.
-
-All sysl commands accept `--root` argument. Run `sysl -h` or `reljam -h` for more details.
-
-#### Multiple Declarations
-
-Sysl allows you to define an application in multiple places. There is no redefinition error in sysl.
-
-```
-UserService:
-  Login: ...
-
-UserService:
-  Register: ...
-```
-
-Result will be as-if it was declared like so:
-
-```
-UserService:
-  Login: ...
-  Register: ...
-```
-
-### Statements
-Our `MobileApp` does not have any detail yet on how it behaves. Let's use sysl statements to describe behaviour. Sysl supports following types of statements:
-  * [Text](#text)
-  * [Call](#Call)
-  * [Return](#return)
-  * [Control Statements](#control-statements)
-  * [Arguments](#arguments)
-
-#### Text
-Use simple text to describe behaviour. See below for examples of text statements:
-```
-Server:
-  Login:
-    do input validation
-    "Use special characters like \n to break long text into multiple lines"
-    'Cannot use special characters in single quoted statements'
-```
-
-#### Call
-A standalone service that does not interact with anybody is not a very useful service. Use the `call` syntax to show interaction between two services.
-
-In the below example, MobileApp makes a call to backend Server which in turn calls database layer.
-
-```
-MobileApp:
-  Login:
-    Server <- Login
-
-Server:
-  Login(data <: LoginData):
-    build query
-    DB <- Query
-    check result
-    return Server.LoginResponse
-
-  !type LoginData:
-    username <: string
-    password <: string
-
-  !type LoginResponse:
-    message <: string
-
-DB:
-  Query:
-    lookup data
-    return data
-  Save:
-    ...
-```
-##### You can generate the Sequence Diagram using the following command:
-
-```bash
-sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
-```
-You can omit the the `.sysl` and sysl will pickup the correct file.
-```bash
-sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call
-```
-
-Here is the output that you should see:
-
-![](assets/call-Seq.png)
-
-See [assets/call.sysl](assets/call.sysl) for complete example.
-
-#### How sysl generates sequence diagram?
-Let's breakdown the `sd` aka `sequence diagram` command:
-```bash
-sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
-```
-  * `-o` specifies the output filename
-  * `-s` specifies the start endpoint
-  * `call.sysl` the source to start the analysis from
-
-Sysl analyzes the starting endpoint and finds all the `call`s that this endpoint makes to other endpoints (including the ones to other applications). It finds all the transitive dependencies till there are none.
-
-In the above diagram, `DB` is the last app in this flow. Sysl also captures the return data that each endpoint returns to its caller. See below for more details.
-
-#### Return response
-An endpoint can return response to the caller. Everything after `return` keyword till the end-of-line is considered response payload. You can have:
-  * string - a description of what is returned, or
-  * Sysl type - formal type to return to the caller
-
-Sequence diagram will render the response accordingly. In the previous example, `data` is a generic description of what `DB <- Query` returns. `Server.Response` is the Sysl type that is returned by `Login` endpoint.
-
-#### Control statements
-Sysl allows you to express high level of detail about your design. You can specify decisions, processing loops etc.
-
-##### If, else
-You can express an endpoint's critical decisions using IF/ELSE statement:
-
-```
-Server:
-  HandleFormSubmit:
-    validate input
-    IF session exists:
-      use existing session
-    Else:
-      create new session
-    process input
-```
-See [assets/if-else.sysl](assets/if-else.sysl) for complete example.
-
-`IF` and `ELSE` keywords are case-insensitive.
-
-![](assets/if-else-Seq.png)
-
-##### For, Loop, Until, While
-Express processing loop using FOR:
-```
-Server:
-  HandleFormSubmit:
-    validate input
-    For each element in input:
-      process element
-```
-See [assets/for-loop.sysl](assets/for-loop.sysl) for complete example.
-
-`FOR` keyword is case insensitive.
-
-![](assets/for-loop-Seq.png)
-
-You can use `Loop`, `While`, `Until`, `Loop-N` as well (all case-insensitive).
-
-#### Arguments
-Define the data that you expect your callers to pass you. In the below example, `register` endpoint in service `Api` expects `input` of type `FormData`. `FormData` is defined under the application `Api`.
-
-You can instruct `sysl` to show the arguments to your endpoint in a sequence diagram.
-
-```
-MobileApp:
-  Register:
-    Api <- Register
-
-Api:
-  Register(input <: Api.FormData):
-    process input
-
-  !type FormData:
-    name <: string
-    age <: int
-```
-Command:
-
-`sysl sd -o args.png --epfmt '%(epname) %(args)' -s 'MobileApp <- On Submit' args.sysl`
-
-See [assets/args.sysl](assets/args.sysl) for complete example.
-
-![](assets/args-Seq.png)
-
-A bit more explanation is required regarding `epname` and `args` keywords that are used in `epfmt` command line argument. See section on [Attributes](#epfmt) below.
 
 #### Events, publisher and subscriber
 
@@ -543,6 +554,16 @@ epfmt="%(@status? <color green>%(epname)</color>|%(epname))"
 See [attribs.sysl](assets/attribs.sysl) for complete example. Notice how `appfmt` and `epfmt` use `%(@status)`.
 
 ![](assets/attribs-Seq.png)
+
+## Generate Code
+
+A common problem with documentation is that the code and documentation diverge pretty soon. `Sysl` lets to define `Rest API` and generate code for the same. You can describe the behaviour of the api for developers to follow and generate code and diagrams from same `.sysl` code. See section on [Rest](#rest) below.
+
+Currently, Sysl generates Java code for the following
+  * Sprint REST Controller
+  * POJO classes for the types used in your api
+  * Transformation Language to transform your data models e.g. from relational to object model (and vice-versa?)
+
 
 #### Rest
 

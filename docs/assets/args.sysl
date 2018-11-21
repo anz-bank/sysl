@@ -1,15 +1,28 @@
 MobileApp:
-  On Submit:
-    Api <- Register
+  Login:
+    Server <- Login
 
-Api:
-  Register(input <: Api.FormData):
-    process input
+Server:
+  Login(data <: LoginData):
+    build query
+    DB <- Query
+    check result
+    return Server.LoginResponse
 
-  !type FormData:
-    name <: string
-    age <: int
+  !type LoginData:
+    username <: string
+    password <: string
+
+  !type LoginResponse:
+    message <: string
+
+DB:
+  Query:
+    lookup data
+    return data
+  Save:
+    ...
 
 Project [seqtitle="Diagram", epfmt="%(epname)  %(args)"]:
   Seq:
-    MobileApp <- On Submit
+    MobileApp <- Login
