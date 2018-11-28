@@ -1,0 +1,17 @@
+TransformationTest[package="io.sysl.test.views"]:
+  !view TestInbuiltFuncs(number <: int) -> int:
+    number -> (:
+      let out = autoinc()
+      let out = foo any(1)
+      let out = foo max(.bar)
+      let out = foo max(bar.baz)
+      let out = foo where(.x > 0) max(.bar.baz)
+      let out = foo where(.x > 0) count
+      AppDate = to_date(.createdDate ?? now())
+      AppOrderId = str(.orderId)
+      foo = bar(.)
+      foo = concat([1,2], 3)
+      foo = regsub("\\D+", "", .a)
+      foo = "\r\n"
+      withAnonymousSetOfReturnType(10).*
+    )

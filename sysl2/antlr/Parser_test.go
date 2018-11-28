@@ -58,10 +58,10 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 	}
 	result := proto.Equal(&mod, m2)
 	// uncomment to compare
-	if !result {
-		TextPB(m2, "generated.txt")
-		TextPB(&mod, "golden.txt")
-	}
+	// if !result {
+	TextPB(m2, "generated.txt")
+	TextPB(&mod, "golden.txt")
+	// }
 
 	return result
 }
@@ -183,4 +183,44 @@ func TestUrlParamOrder(t *testing.T) {
 
 func TestRestApi_WrongOrder(t *testing.T) {
 	testParse(t, "tests/bad_order.sysl", "")
+}
+
+func TestTransform(t *testing.T) {
+	testParse(t, "tests/transform.sysl", "")
+}
+
+func TestImpliedDot(t *testing.T) {
+	testParse(t, "tests/implied.sysl", "")
+}
+
+func TestStmts(t *testing.T) {
+	testParse(t, "tests/stmts.sysl", "")
+}
+
+func TestMath(t *testing.T) {
+	testParse(t, "tests/math.sysl", "")
+}
+
+func TestTableof(t *testing.T) {
+	testParse(t, "tests/tableof.sysl", "")
+}
+
+func TestRank(t *testing.T) {
+	testParse(t, "tests/rank.sysl", "")
+}
+
+func TestMatching(t *testing.T) {
+	testParse(t, "tests/matching.sysl", "")
+}
+
+func TestNavigate(t *testing.T) {
+	testParse(t, "tests/navigate.sysl", "")
+}
+
+func TestFuncs(t *testing.T) {
+	testParse(t, "tests/funcs.sysl", "")
+}
+
+func TestPetshop(t *testing.T) {
+	testParse(t, "../../demo/petshop/petshop.sysl", "")
 }

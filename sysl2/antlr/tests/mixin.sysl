@@ -3,8 +3,15 @@ Relational Model [~abstract]:
         @description = "some description"
         id <: int
 
+TransformApp[package="com.foo.example", ~abstract]:
+  !view FooTransform(number <: int) -> int:
+    number -> (:
+      out = number + 1
+    )
+
 API:
     -|> Relational Model
+    -|> TransformApp
 
     Service Call: ...
 

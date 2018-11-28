@@ -9,7 +9,9 @@ My :: Client Model "My client Model":
 
 My :: Browser :: Client Model:
     !type Request:
+        foo <: decimal(10)
         bar <: decimal(10..9999)
+        baz <: decimal(10.2)
 
 Model:
     !type Request:
@@ -33,7 +35,8 @@ My :: Tuple Model:
             XMLDoc <: xml
 
     !type TopLevelPayload:
-        data <: string
+        data <: string(500)
+        data2 <: set of string(500)
         status <: Response.status
         field1 <: Model.Request.status
         field2 <: My ::    Browser :: Client Model.Request.status

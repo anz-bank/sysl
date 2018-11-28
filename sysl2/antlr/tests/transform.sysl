@@ -1,0 +1,59 @@
+TransformApp[package="io.sysl.demo.petshop.views"]:
+  !view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:
+    -> (scopeVar:
+      out = number + 1 - scopeVar
+    )
+
+  !view WithArgTransform(number <: int ) -> int [abc="foo"]:
+    argName -> (scopeVar:
+      out = number - 1
+    )
+
+  !view noScopeVar(number <: int ) -> int:
+    argName -> (:
+      out = number * 1.5 + 2
+    )
+
+  !view withAnonymousSetOfReturnType(number <: int ) -> int:
+   argName -> <set of> (:
+     out = number ** 2 ** 3
+   )
+
+  !view withSetOfReturnType(number <: int ) -> set of Some1.Type:
+    argName -> <set of Some.Type> (:
+      out = number / number
+    )
+
+  !view withSomeReturnType(number <: int ) -> Some1.Type:
+    argName -> <Some.Type> (:
+      out = number + "foo"
+    )
+
+  !view withSomeReturnType2(number <: Sometype ) -> set of Sometype:
+    argName -> <Sometype> (:
+      out = number + "foo"
+    )
+
+  !view withSomeReturnType3(foo <: set of Model.SomeType ):
+    argName -> <set of Some.Type> (:
+      out = number + "foo"
+    )
+
+  !view noReturnType(number <: int ):
+    argName -> <Some.Type> (:
+      out = number + "foo"
+    )
+
+  !view nestedTransformWithAnonymousType(number <: int ) -> Some1.Type:
+    argName -> <Some.Type> (:
+      let _breedsAndPets = .breeds -> <set of>(:
+        let breedId = autoinc()
+        breed = -> <PetShopModel.Breed>(:
+            breedName = .name
+        )
+      )
+    )
+
+  !type FooType:
+      id <: int
+      amount <: decimal(14)
