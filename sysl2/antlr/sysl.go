@@ -77,11 +77,23 @@ func (d *SyslParserErrorListener) SyntaxError(
 	recognizer antlr.Recognizer, offendingSymbol interface{},
 	line, column int, msg string, e antlr.RecognitionException) {
 	d.hasErrors = true
+
+	fmt.Printf("SyntaxError: Token: %s\n", recognizer.GetSymbolicNames()[offendingSymbol.(*antlr.CommonToken).GetTokenType()])
+
 }
 
-// func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-// 	// d.hasErrors = false
-// }
+func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
+	// d.hasErrors = false
+	fmt.Printf("ReportAttemptingFullContext: %d %d\n", startIndex, stopIndex)
+}
+func (d *SyslParserErrorListener) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, exact bool, ambigAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
+	fmt.Printf("ReportAmbiguity: %d %d\n", startIndex, stopIndex)
+
+}
+
+func (d *SyslParserErrorListener) ReportContextSensitivity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex, prediction int, configs antlr.ATNConfigSet) {
+	fmt.Printf("ReportContextSensitivity: %d %d\n", startIndex, stopIndex)
+}
 
 func getAppName(appname *sysl.AppName) string {
 	app_name := appname.Part[0]
@@ -99,8 +111,8 @@ func getApp(appName *sysl.AppName, mod *sysl.Module) *sysl.Application {
 	return nil
 }
 
-func isAbstract(app *sysl.Application) bool {
-	patterns, has := app.Attrs["patterns"]
+func hasAbstractPattern(attrs map[string]*sysl.Attribute) bool {
+	patterns, has := attrs["patterns"]
 	if has == false {
 		return false
 	}
@@ -279,6 +291,112 @@ func checkEndpointCalls(mod *sysl.Module) bool {
 	return valid
 }
 
+func infer_expr_type(mod *sysl.Module, appName string, expr *sysl.Expr, top bool, anonCount int) (*sysl.Type, int) {
+	if expr.GetTransform() != nil {
+		for _, stmt := range expr.GetTransform().Stmt {
+			if stmt.GetLet() != nil {
+				_, anonCount = infer_expr_type(mod, appName, stmt.GetLet().Expr, false, anonCount)
+			} else if stmt.GetAssign() != nil {
+				_, anonCount = infer_expr_type(mod, appName, stmt.GetAssign().Expr, false, anonCount)
+			}
+		}
+
+		if !top && expr.Type == nil {
+			// fmt.Printf("found anonymous type\n")
+			newType := &sysl.Type{
+				Type: &sysl.Type_Tuple_{
+					Tuple: &sysl.Type_Tuple{
+						AttrDefs: map[string]*sysl.Type{},
+					},
+				},
+			}
+			typeName := fmt.Sprintf("AnonType_%d__", anonCount)
+			anonCount++
+			if mod.Apps[appName].Types == nil {
+				mod.Apps[appName].Types = map[string]*sysl.Type{}
+			}
+			mod.Apps[appName].Types[typeName] = newType
+			attr := newType.GetTuple().AttrDefs
+			for _, stmt := range expr.GetTransform().Stmt {
+				if stmt.GetAssign() != nil {
+					assign := stmt.GetAssign()
+					aexpr := assign.Expr
+					if aexpr.GetTransform() == nil {
+						panic("expression should be of type transform")
+					}
+					ftype := aexpr.Type
+					setof := ftype.GetSet() != nil
+					if setof {
+						ftype = ftype.GetSet()
+					}
+					if ftype.GetTypeRef() == nil {
+						panic("transform type should be type_ref")
+					}
+					t1 := &sysl.Type{
+						Type: &sysl.Type_TypeRef{
+							TypeRef: &sysl.ScopedRef{
+								Context: &sysl.Scope{
+									Appname: mod.Apps[appName].Name,
+									Path:    []string{typeName},
+								},
+								Ref: ftype.GetTypeRef().Ref,
+							},
+						},
+					}
+					if setof {
+						t1 = &sysl.Type{
+							Type: &sysl.Type_Set{
+								Set: t1,
+							},
+						}
+					}
+					attr[assign.Name] = t1
+				}
+			}
+			expr.Type = &sysl.Type{
+				Type: &sysl.Type_Set{
+					Set: &sysl.Type{
+						Type: &sysl.Type_TypeRef{
+							TypeRef: &sysl.ScopedRef{
+								Context: &sysl.Scope{
+									Appname: mod.Apps[appName].Name,
+								},
+								Ref: &sysl.Scope{
+									Appname: mod.Apps[appName].Name,
+									Path:    []string{typeName},
+								},
+							},
+						},
+					},
+				},
+			}
+		}
+	} else if expr.GetRelexpr() != nil {
+		relexpr := expr.GetRelexpr()
+		if relexpr.Op == sysl.Expr_RelExpr_RANK {
+			if !top && expr.Type == nil {
+				type1, c := infer_expr_type(mod, appName, relexpr.Target, true, anonCount)
+				anonCount = c
+				fmt.Printf(type1.String())
+			}
+		}
+	}
+	return expr.Type, anonCount
+}
+
+func infer_types(mod *sysl.Module, appName string) {
+	for viewName, view := range mod.Apps[appName].Views {
+		if hasAbstractPattern(view.Attrs) {
+			continue
+		}
+		if view.Expr.GetTransform() == nil {
+			fmt.Printf("view %s expression should be of type transform", viewName)
+			continue
+		}
+		infer_expr_type(mod, appName, view.Expr, true, 0)
+	}
+}
+
 func postProcess(mod *sysl.Module) {
 	var appNames []string
 	for a := range mod.Apps {
@@ -292,18 +410,28 @@ func postProcess(mod *sysl.Module) {
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
 				src_app := getApp(src.Name, mod)
-				if isAbstract(src_app) == false {
+				if hasAbstractPattern(src_app.Attrs) == false {
 					fmt.Printf("mixin App (%s) should be ~abstract\n", getAppName(src.Name))
 					continue
 				}
-				if app.Types == nil {
+				if src_app.Types != nil && app.Types == nil {
 					app.Types = make(map[string]*sysl.Type)
+				}
+				if src_app.Views != nil && app.Views == nil {
+					app.Views = make(map[string]*sysl.View)
 				}
 				for k, v := range src_app.Types {
 					if _, has := app.Types[k]; !has {
 						app.Types[k] = v
 					} else {
 						fmt.Printf("Type %s defined in %s and in %s\n", k, appName, getAppName(src.Name))
+					}
+				}
+				for k, v := range src_app.Views {
+					if _, has := app.Views[k]; !has {
+						app.Views[k] = v
+					} else {
+						fmt.Printf("View %s defined in %s and in %s\n", k, appName, getAppName(src.Name))
 					}
 				}
 			}
@@ -358,6 +486,7 @@ func postProcess(mod *sysl.Module) {
 				}
 			}
 		}
+		infer_types(mod, appName)
 	}
 	checkEndpointCalls(mod)
 	collectorPubSubCalls(mod)
@@ -414,7 +543,7 @@ func Parse(filename string, root string) *sysl.Module {
 		lexer := parser.NewSyslLexer(input)
 		stream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewSyslParser(stream)
-		// p.GetInterpreter().SetPredictionMode(antlr.PredictionModeLLExactAmbigDetection)
+		p.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
 		p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 		p.AddErrorListener(&errorListener)
 
