@@ -3211,7 +3211,6 @@ func (s *TreeShapeListener) ExitExpr_dot_assign(ctx *parser.Expr_dot_assignConte
 		names[0] = "."
 	}
 	arg = makeExprName(names[0])
-	fmt.Println(names[1])
 	stmt := &sysl.Expr_Transform_Stmt{
 		Stmt: &sysl.Expr_Transform_Stmt_Assign_{
 			Assign: &sysl.Expr_Transform_Stmt_Assign{
