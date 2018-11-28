@@ -105,6 +105,24 @@ func (s *BaseSyslParserListener) EnterAttribs_or_modifiers(ctx *Attribs_or_modif
 // ExitAttribs_or_modifiers is called when production attribs_or_modifiers is exited.
 func (s *BaseSyslParserListener) ExitAttribs_or_modifiers(ctx *Attribs_or_modifiersContext) {}
 
+// EnterUser_defined_type is called when production user_defined_type is entered.
+func (s *BaseSyslParserListener) EnterUser_defined_type(ctx *User_defined_typeContext) {}
+
+// ExitUser_defined_type is called when production user_defined_type is exited.
+func (s *BaseSyslParserListener) ExitUser_defined_type(ctx *User_defined_typeContext) {}
+
+// EnterTypes is called when production types is entered.
+func (s *BaseSyslParserListener) EnterTypes(ctx *TypesContext) {}
+
+// ExitTypes is called when production types is exited.
+func (s *BaseSyslParserListener) ExitTypes(ctx *TypesContext) {}
+
+// EnterSet_of is called when production set_of is entered.
+func (s *BaseSyslParserListener) EnterSet_of(ctx *Set_ofContext) {}
+
+// ExitSet_of is called when production set_of is exited.
+func (s *BaseSyslParserListener) ExitSet_of(ctx *Set_ofContext) {}
+
 // EnterSet_type is called when production set_type is entered.
 func (s *BaseSyslParserListener) EnterSet_type(ctx *Set_typeContext) {}
 
@@ -116,12 +134,6 @@ func (s *BaseSyslParserListener) EnterCollection_type(ctx *Collection_typeContex
 
 // ExitCollection_type is called when production collection_type is exited.
 func (s *BaseSyslParserListener) ExitCollection_type(ctx *Collection_typeContext) {}
-
-// EnterUser_defined_type is called when production user_defined_type is entered.
-func (s *BaseSyslParserListener) EnterUser_defined_type(ctx *User_defined_typeContext) {}
-
-// ExitUser_defined_type is called when production user_defined_type is exited.
-func (s *BaseSyslParserListener) ExitUser_defined_type(ctx *User_defined_typeContext) {}
 
 // EnterMulti_line_docstring is called when production multi_line_docstring is entered.
 func (s *BaseSyslParserListener) EnterMulti_line_docstring(ctx *Multi_line_docstringContext) {}
@@ -526,6 +538,492 @@ func (s *BaseSyslParserListener) EnterSubscribe(ctx *SubscribeContext) {}
 
 // ExitSubscribe is called when production subscribe is exited.
 func (s *BaseSyslParserListener) ExitSubscribe(ctx *SubscribeContext) {}
+
+// EnterView_type_spec is called when production view_type_spec is entered.
+func (s *BaseSyslParserListener) EnterView_type_spec(ctx *View_type_specContext) {}
+
+// ExitView_type_spec is called when production view_type_spec is exited.
+func (s *BaseSyslParserListener) ExitView_type_spec(ctx *View_type_specContext) {}
+
+// EnterLiteral is called when production literal is entered.
+func (s *BaseSyslParserListener) EnterLiteral(ctx *LiteralContext) {}
+
+// ExitLiteral is called when production literal is exited.
+func (s *BaseSyslParserListener) ExitLiteral(ctx *LiteralContext) {}
+
+// EnterExpr_table_of_op is called when production expr_table_of_op is entered.
+func (s *BaseSyslParserListener) EnterExpr_table_of_op(ctx *Expr_table_of_opContext) {}
+
+// ExitExpr_table_of_op is called when production expr_table_of_op is exited.
+func (s *BaseSyslParserListener) ExitExpr_table_of_op(ctx *Expr_table_of_opContext) {}
+
+// EnterFunc_arg is called when production func_arg is entered.
+func (s *BaseSyslParserListener) EnterFunc_arg(ctx *Func_argContext) {}
+
+// ExitFunc_arg is called when production func_arg is exited.
+func (s *BaseSyslParserListener) ExitFunc_arg(ctx *Func_argContext) {}
+
+// EnterFunc_args is called when production func_args is entered.
+func (s *BaseSyslParserListener) EnterFunc_args(ctx *Func_argsContext) {}
+
+// ExitFunc_args is called when production func_args is exited.
+func (s *BaseSyslParserListener) ExitFunc_args(ctx *Func_argsContext) {}
+
+// EnterExpr_func is called when production expr_func is entered.
+func (s *BaseSyslParserListener) EnterExpr_func(ctx *Expr_funcContext) {}
+
+// ExitExpr_func is called when production expr_func is exited.
+func (s *BaseSyslParserListener) ExitExpr_func(ctx *Expr_funcContext) {}
+
+// EnterRank_expr is called when production rank_expr is entered.
+func (s *BaseSyslParserListener) EnterRank_expr(ctx *Rank_exprContext) {}
+
+// ExitRank_expr is called when production rank_expr is exited.
+func (s *BaseSyslParserListener) ExitRank_expr(ctx *Rank_exprContext) {}
+
+// EnterRank_expr_list is called when production rank_expr_list is entered.
+func (s *BaseSyslParserListener) EnterRank_expr_list(ctx *Rank_expr_listContext) {}
+
+// ExitRank_expr_list is called when production rank_expr_list is exited.
+func (s *BaseSyslParserListener) ExitRank_expr_list(ctx *Rank_expr_listContext) {}
+
+// EnterExpr_rank_func is called when production expr_rank_func is entered.
+func (s *BaseSyslParserListener) EnterExpr_rank_func(ctx *Expr_rank_funcContext) {}
+
+// ExitExpr_rank_func is called when production expr_rank_func is exited.
+func (s *BaseSyslParserListener) ExitExpr_rank_func(ctx *Expr_rank_funcContext) {}
+
+// EnterExpr_agg_func is called when production expr_agg_func is entered.
+func (s *BaseSyslParserListener) EnterExpr_agg_func(ctx *Expr_agg_funcContext) {}
+
+// ExitExpr_agg_func is called when production expr_agg_func is exited.
+func (s *BaseSyslParserListener) ExitExpr_agg_func(ctx *Expr_agg_funcContext) {}
+
+// EnterE_scope_var is called when production e_scope_var is entered.
+func (s *BaseSyslParserListener) EnterE_scope_var(ctx *E_scope_varContext) {}
+
+// ExitE_scope_var is called when production e_scope_var is exited.
+func (s *BaseSyslParserListener) ExitE_scope_var(ctx *E_scope_varContext) {}
+
+// EnterFirst_func_target is called when production first_func_target is entered.
+func (s *BaseSyslParserListener) EnterFirst_func_target(ctx *First_func_targetContext) {}
+
+// ExitFirst_func_target is called when production first_func_target is exited.
+func (s *BaseSyslParserListener) ExitFirst_func_target(ctx *First_func_targetContext) {}
+
+// EnterExpr_first_func is called when production expr_first_func is entered.
+func (s *BaseSyslParserListener) EnterExpr_first_func(ctx *Expr_first_funcContext) {}
+
+// ExitExpr_first_func is called when production expr_first_func is exited.
+func (s *BaseSyslParserListener) ExitExpr_first_func(ctx *Expr_first_funcContext) {}
+
+// EnterE_single_arg_func is called when production e_single_arg_func is entered.
+func (s *BaseSyslParserListener) EnterE_single_arg_func(ctx *E_single_arg_funcContext) {}
+
+// ExitE_single_arg_func is called when production e_single_arg_func is exited.
+func (s *BaseSyslParserListener) ExitE_single_arg_func(ctx *E_single_arg_funcContext) {}
+
+// EnterExpr_single_arg_func is called when production expr_single_arg_func is entered.
+func (s *BaseSyslParserListener) EnterExpr_single_arg_func(ctx *Expr_single_arg_funcContext) {}
+
+// ExitExpr_single_arg_func is called when production expr_single_arg_func is exited.
+func (s *BaseSyslParserListener) ExitExpr_single_arg_func(ctx *Expr_single_arg_funcContext) {}
+
+// EnterExpr_any_func is called when production expr_any_func is entered.
+func (s *BaseSyslParserListener) EnterExpr_any_func(ctx *Expr_any_funcContext) {}
+
+// ExitExpr_any_func is called when production expr_any_func is exited.
+func (s *BaseSyslParserListener) ExitExpr_any_func(ctx *Expr_any_funcContext) {}
+
+// EnterExpr_single_or_null is called when production expr_single_or_null is entered.
+func (s *BaseSyslParserListener) EnterExpr_single_or_null(ctx *Expr_single_or_nullContext) {}
+
+// ExitExpr_single_or_null is called when production expr_single_or_null is exited.
+func (s *BaseSyslParserListener) ExitExpr_single_or_null(ctx *Expr_single_or_nullContext) {}
+
+// EnterExpr_snapshot is called when production expr_snapshot is entered.
+func (s *BaseSyslParserListener) EnterExpr_snapshot(ctx *Expr_snapshotContext) {}
+
+// ExitExpr_snapshot is called when production expr_snapshot is exited.
+func (s *BaseSyslParserListener) ExitExpr_snapshot(ctx *Expr_snapshotContext) {}
+
+// EnterExpr_count is called when production expr_count is entered.
+func (s *BaseSyslParserListener) EnterExpr_count(ctx *Expr_countContext) {}
+
+// ExitExpr_count is called when production expr_count is exited.
+func (s *BaseSyslParserListener) ExitExpr_count(ctx *Expr_countContext) {}
+
+// EnterExpr_navigate_attr is called when production expr_navigate_attr is entered.
+func (s *BaseSyslParserListener) EnterExpr_navigate_attr(ctx *Expr_navigate_attrContext) {}
+
+// ExitExpr_navigate_attr is called when production expr_navigate_attr is exited.
+func (s *BaseSyslParserListener) ExitExpr_navigate_attr(ctx *Expr_navigate_attrContext) {}
+
+// EnterExpr_navigate is called when production expr_navigate is entered.
+func (s *BaseSyslParserListener) EnterExpr_navigate(ctx *Expr_navigateContext) {}
+
+// ExitExpr_navigate is called when production expr_navigate is exited.
+func (s *BaseSyslParserListener) ExitExpr_navigate(ctx *Expr_navigateContext) {}
+
+// EnterMatching_rhs is called when production matching_rhs is entered.
+func (s *BaseSyslParserListener) EnterMatching_rhs(ctx *Matching_rhsContext) {}
+
+// ExitMatching_rhs is called when production matching_rhs is exited.
+func (s *BaseSyslParserListener) ExitMatching_rhs(ctx *Matching_rhsContext) {}
+
+// EnterSquiggly_args is called when production squiggly_args is entered.
+func (s *BaseSyslParserListener) EnterSquiggly_args(ctx *Squiggly_argsContext) {}
+
+// ExitSquiggly_args is called when production squiggly_args is exited.
+func (s *BaseSyslParserListener) ExitSquiggly_args(ctx *Squiggly_argsContext) {}
+
+// EnterExpr_matching is called when production expr_matching is entered.
+func (s *BaseSyslParserListener) EnterExpr_matching(ctx *Expr_matchingContext) {}
+
+// ExitExpr_matching is called when production expr_matching is exited.
+func (s *BaseSyslParserListener) ExitExpr_matching(ctx *Expr_matchingContext) {}
+
+// EnterRelop is called when production relop is entered.
+func (s *BaseSyslParserListener) EnterRelop(ctx *RelopContext) {}
+
+// ExitRelop is called when production relop is exited.
+func (s *BaseSyslParserListener) ExitRelop(ctx *RelopContext) {}
+
+// EnterList_item is called when production list_item is entered.
+func (s *BaseSyslParserListener) EnterList_item(ctx *List_itemContext) {}
+
+// ExitList_item is called when production list_item is exited.
+func (s *BaseSyslParserListener) ExitList_item(ctx *List_itemContext) {}
+
+// EnterExpr_list is called when production expr_list is entered.
+func (s *BaseSyslParserListener) EnterExpr_list(ctx *Expr_listContext) {}
+
+// ExitExpr_list is called when production expr_list is exited.
+func (s *BaseSyslParserListener) ExitExpr_list(ctx *Expr_listContext) {}
+
+// EnterExpr_set is called when production expr_set is entered.
+func (s *BaseSyslParserListener) EnterExpr_set(ctx *Expr_setContext) {}
+
+// ExitExpr_set is called when production expr_set is exited.
+func (s *BaseSyslParserListener) ExitExpr_set(ctx *Expr_setContext) {}
+
+// EnterEmpty_tuple is called when production empty_tuple is entered.
+func (s *BaseSyslParserListener) EnterEmpty_tuple(ctx *Empty_tupleContext) {}
+
+// ExitEmpty_tuple is called when production empty_tuple is exited.
+func (s *BaseSyslParserListener) ExitEmpty_tuple(ctx *Empty_tupleContext) {}
+
+// EnterAtom_dot_relop is called when production atom_dot_relop is entered.
+func (s *BaseSyslParserListener) EnterAtom_dot_relop(ctx *Atom_dot_relopContext) {}
+
+// ExitAtom_dot_relop is called when production atom_dot_relop is exited.
+func (s *BaseSyslParserListener) ExitAtom_dot_relop(ctx *Atom_dot_relopContext) {}
+
+// EnterAtomT_implied_dot is called when production atomT_implied_dot is entered.
+func (s *BaseSyslParserListener) EnterAtomT_implied_dot(ctx *AtomT_implied_dotContext) {}
+
+// ExitAtomT_implied_dot is called when production atomT_implied_dot is exited.
+func (s *BaseSyslParserListener) ExitAtomT_implied_dot(ctx *AtomT_implied_dotContext) {}
+
+// EnterAtomT_name is called when production atomT_name is entered.
+func (s *BaseSyslParserListener) EnterAtomT_name(ctx *AtomT_nameContext) {}
+
+// ExitAtomT_name is called when production atomT_name is exited.
+func (s *BaseSyslParserListener) ExitAtomT_name(ctx *AtomT_nameContext) {}
+
+// EnterAtomT_paren is called when production atomT_paren is entered.
+func (s *BaseSyslParserListener) EnterAtomT_paren(ctx *AtomT_parenContext) {}
+
+// ExitAtomT_paren is called when production atomT_paren is exited.
+func (s *BaseSyslParserListener) ExitAtomT_paren(ctx *AtomT_parenContext) {}
+
+// EnterExpr_atom_list is called when production expr_atom_list is entered.
+func (s *BaseSyslParserListener) EnterExpr_atom_list(ctx *Expr_atom_listContext) {}
+
+// ExitExpr_atom_list is called when production expr_atom_list is exited.
+func (s *BaseSyslParserListener) ExitExpr_atom_list(ctx *Expr_atom_listContext) {}
+
+// EnterAtomT is called when production atomT is entered.
+func (s *BaseSyslParserListener) EnterAtomT(ctx *AtomTContext) {}
+
+// ExitAtomT is called when production atomT is exited.
+func (s *BaseSyslParserListener) ExitAtomT(ctx *AtomTContext) {}
+
+// EnterAtom is called when production atom is entered.
+func (s *BaseSyslParserListener) EnterAtom(ctx *AtomContext) {}
+
+// ExitAtom is called when production atom is exited.
+func (s *BaseSyslParserListener) ExitAtom(ctx *AtomContext) {}
+
+// EnterPowerT is called when production powerT is entered.
+func (s *BaseSyslParserListener) EnterPowerT(ctx *PowerTContext) {}
+
+// ExitPowerT is called when production powerT is exited.
+func (s *BaseSyslParserListener) ExitPowerT(ctx *PowerTContext) {}
+
+// EnterPower is called when production power is entered.
+func (s *BaseSyslParserListener) EnterPower(ctx *PowerContext) {}
+
+// ExitPower is called when production power is exited.
+func (s *BaseSyslParserListener) ExitPower(ctx *PowerContext) {}
+
+// EnterUnaryTerm is called when production unaryTerm is entered.
+func (s *BaseSyslParserListener) EnterUnaryTerm(ctx *UnaryTermContext) {}
+
+// ExitUnaryTerm is called when production unaryTerm is exited.
+func (s *BaseSyslParserListener) ExitUnaryTerm(ctx *UnaryTermContext) {}
+
+// EnterTermT is called when production termT is entered.
+func (s *BaseSyslParserListener) EnterTermT(ctx *TermTContext) {}
+
+// ExitTermT is called when production termT is exited.
+func (s *BaseSyslParserListener) ExitTermT(ctx *TermTContext) {}
+
+// EnterTerm is called when production term is entered.
+func (s *BaseSyslParserListener) EnterTerm(ctx *TermContext) {}
+
+// ExitTerm is called when production term is exited.
+func (s *BaseSyslParserListener) ExitTerm(ctx *TermContext) {}
+
+// EnterBinexprT is called when production binexprT is entered.
+func (s *BaseSyslParserListener) EnterBinexprT(ctx *BinexprTContext) {}
+
+// ExitBinexprT is called when production binexprT is exited.
+func (s *BaseSyslParserListener) ExitBinexprT(ctx *BinexprTContext) {}
+
+// EnterBinexpr is called when production binexpr is entered.
+func (s *BaseSyslParserListener) EnterBinexpr(ctx *BinexprContext) {}
+
+// ExitBinexpr is called when production binexpr is exited.
+func (s *BaseSyslParserListener) ExitBinexpr(ctx *BinexprContext) {}
+
+// EnterE_compare_ops is called when production e_compare_ops is entered.
+func (s *BaseSyslParserListener) EnterE_compare_ops(ctx *E_compare_opsContext) {}
+
+// ExitE_compare_ops is called when production e_compare_ops is exited.
+func (s *BaseSyslParserListener) ExitE_compare_ops(ctx *E_compare_opsContext) {}
+
+// EnterExpr_rel is called when production expr_rel is entered.
+func (s *BaseSyslParserListener) EnterExpr_rel(ctx *Expr_relContext) {}
+
+// ExitExpr_rel is called when production expr_rel is exited.
+func (s *BaseSyslParserListener) ExitExpr_rel(ctx *Expr_relContext) {}
+
+// EnterExpr_bitand is called when production expr_bitand is entered.
+func (s *BaseSyslParserListener) EnterExpr_bitand(ctx *Expr_bitandContext) {}
+
+// ExitExpr_bitand is called when production expr_bitand is exited.
+func (s *BaseSyslParserListener) ExitExpr_bitand(ctx *Expr_bitandContext) {}
+
+// EnterExpr_bitxor is called when production expr_bitxor is entered.
+func (s *BaseSyslParserListener) EnterExpr_bitxor(ctx *Expr_bitxorContext) {}
+
+// ExitExpr_bitxor is called when production expr_bitxor is exited.
+func (s *BaseSyslParserListener) ExitExpr_bitxor(ctx *Expr_bitxorContext) {}
+
+// EnterExpr_bitor is called when production expr_bitor is entered.
+func (s *BaseSyslParserListener) EnterExpr_bitor(ctx *Expr_bitorContext) {}
+
+// ExitExpr_bitor is called when production expr_bitor is exited.
+func (s *BaseSyslParserListener) ExitExpr_bitor(ctx *Expr_bitorContext) {}
+
+// EnterExpr_and is called when production expr_and is entered.
+func (s *BaseSyslParserListener) EnterExpr_and(ctx *Expr_andContext) {}
+
+// ExitExpr_and is called when production expr_and is exited.
+func (s *BaseSyslParserListener) ExitExpr_and(ctx *Expr_andContext) {}
+
+// EnterExpr_or is called when production expr_or is entered.
+func (s *BaseSyslParserListener) EnterExpr_or(ctx *Expr_orContext) {}
+
+// ExitExpr_or is called when production expr_or is exited.
+func (s *BaseSyslParserListener) ExitExpr_or(ctx *Expr_orContext) {}
+
+// EnterExpr_but_not is called when production expr_but_not is entered.
+func (s *BaseSyslParserListener) EnterExpr_but_not(ctx *Expr_but_notContext) {}
+
+// ExitExpr_but_not is called when production expr_but_not is exited.
+func (s *BaseSyslParserListener) ExitExpr_but_not(ctx *Expr_but_notContext) {}
+
+// EnterExpr_coalesce is called when production expr_coalesce is entered.
+func (s *BaseSyslParserListener) EnterExpr_coalesce(ctx *Expr_coalesceContext) {}
+
+// ExitExpr_coalesce is called when production expr_coalesce is exited.
+func (s *BaseSyslParserListener) ExitExpr_coalesce(ctx *Expr_coalesceContext) {}
+
+// EnterIf_one_liner is called when production if_one_liner is entered.
+func (s *BaseSyslParserListener) EnterIf_one_liner(ctx *If_one_linerContext) {}
+
+// ExitIf_one_liner is called when production if_one_liner is exited.
+func (s *BaseSyslParserListener) ExitIf_one_liner(ctx *If_one_linerContext) {}
+
+// EnterElse_block_stmt is called when production else_block_stmt is entered.
+func (s *BaseSyslParserListener) EnterElse_block_stmt(ctx *Else_block_stmtContext) {}
+
+// ExitElse_block_stmt is called when production else_block_stmt is exited.
+func (s *BaseSyslParserListener) ExitElse_block_stmt(ctx *Else_block_stmtContext) {}
+
+// EnterControl_item is called when production control_item is entered.
+func (s *BaseSyslParserListener) EnterControl_item(ctx *Control_itemContext) {}
+
+// ExitControl_item is called when production control_item is exited.
+func (s *BaseSyslParserListener) ExitControl_item(ctx *Control_itemContext) {}
+
+// EnterIf_controls is called when production if_controls is entered.
+func (s *BaseSyslParserListener) EnterIf_controls(ctx *If_controlsContext) {}
+
+// ExitIf_controls is called when production if_controls is exited.
+func (s *BaseSyslParserListener) ExitIf_controls(ctx *If_controlsContext) {}
+
+// EnterCond_block is called when production cond_block is entered.
+func (s *BaseSyslParserListener) EnterCond_block(ctx *Cond_blockContext) {}
+
+// ExitCond_block is called when production cond_block is exited.
+func (s *BaseSyslParserListener) ExitCond_block(ctx *Cond_blockContext) {}
+
+// EnterFinal_else is called when production final_else is entered.
+func (s *BaseSyslParserListener) EnterFinal_else(ctx *Final_elseContext) {}
+
+// ExitFinal_else is called when production final_else is exited.
+func (s *BaseSyslParserListener) ExitFinal_else(ctx *Final_elseContext) {}
+
+// EnterIfvar is called when production ifvar is entered.
+func (s *BaseSyslParserListener) EnterIfvar(ctx *IfvarContext) {}
+
+// ExitIfvar is called when production ifvar is exited.
+func (s *BaseSyslParserListener) ExitIfvar(ctx *IfvarContext) {}
+
+// EnterIf_multiple_lines is called when production if_multiple_lines is entered.
+func (s *BaseSyslParserListener) EnterIf_multiple_lines(ctx *If_multiple_linesContext) {}
+
+// ExitIf_multiple_lines is called when production if_multiple_lines is exited.
+func (s *BaseSyslParserListener) ExitIf_multiple_lines(ctx *If_multiple_linesContext) {}
+
+// EnterExpr_if_else is called when production expr_if_else is entered.
+func (s *BaseSyslParserListener) EnterExpr_if_else(ctx *Expr_if_elseContext) {}
+
+// ExitExpr_if_else is called when production expr_if_else is exited.
+func (s *BaseSyslParserListener) ExitExpr_if_else(ctx *Expr_if_elseContext) {}
+
+// EnterExpr is called when production expr is entered.
+func (s *BaseSyslParserListener) EnterExpr(ctx *ExprContext) {}
+
+// ExitExpr is called when production expr is exited.
+func (s *BaseSyslParserListener) ExitExpr(ctx *ExprContext) {}
+
+// EnterExpr_assign is called when production expr_assign is entered.
+func (s *BaseSyslParserListener) EnterExpr_assign(ctx *Expr_assignContext) {}
+
+// ExitExpr_assign is called when production expr_assign is exited.
+func (s *BaseSyslParserListener) ExitExpr_assign(ctx *Expr_assignContext) {}
+
+// EnterExpr_simple_assign is called when production expr_simple_assign is entered.
+func (s *BaseSyslParserListener) EnterExpr_simple_assign(ctx *Expr_simple_assignContext) {}
+
+// ExitExpr_simple_assign is called when production expr_simple_assign is exited.
+func (s *BaseSyslParserListener) ExitExpr_simple_assign(ctx *Expr_simple_assignContext) {}
+
+// EnterExpr_let_statement is called when production expr_let_statement is entered.
+func (s *BaseSyslParserListener) EnterExpr_let_statement(ctx *Expr_let_statementContext) {}
+
+// ExitExpr_let_statement is called when production expr_let_statement is exited.
+func (s *BaseSyslParserListener) ExitExpr_let_statement(ctx *Expr_let_statementContext) {}
+
+// EnterExpr_table_of_statement is called when production expr_table_of_statement is entered.
+func (s *BaseSyslParserListener) EnterExpr_table_of_statement(ctx *Expr_table_of_statementContext) {}
+
+// ExitExpr_table_of_statement is called when production expr_table_of_statement is exited.
+func (s *BaseSyslParserListener) ExitExpr_table_of_statement(ctx *Expr_table_of_statementContext) {}
+
+// EnterExpr_dot_assign is called when production expr_dot_assign is entered.
+func (s *BaseSyslParserListener) EnterExpr_dot_assign(ctx *Expr_dot_assignContext) {}
+
+// ExitExpr_dot_assign is called when production expr_dot_assign is exited.
+func (s *BaseSyslParserListener) ExitExpr_dot_assign(ctx *Expr_dot_assignContext) {}
+
+// EnterExpr_statement_no_nl is called when production expr_statement_no_nl is entered.
+func (s *BaseSyslParserListener) EnterExpr_statement_no_nl(ctx *Expr_statement_no_nlContext) {}
+
+// ExitExpr_statement_no_nl is called when production expr_statement_no_nl is exited.
+func (s *BaseSyslParserListener) ExitExpr_statement_no_nl(ctx *Expr_statement_no_nlContext) {}
+
+// EnterExpr_statement is called when production expr_statement is entered.
+func (s *BaseSyslParserListener) EnterExpr_statement(ctx *Expr_statementContext) {}
+
+// ExitExpr_statement is called when production expr_statement is exited.
+func (s *BaseSyslParserListener) ExitExpr_statement(ctx *Expr_statementContext) {}
+
+// EnterExpr_inject_stmt is called when production expr_inject_stmt is entered.
+func (s *BaseSyslParserListener) EnterExpr_inject_stmt(ctx *Expr_inject_stmtContext) {}
+
+// ExitExpr_inject_stmt is called when production expr_inject_stmt is exited.
+func (s *BaseSyslParserListener) ExitExpr_inject_stmt(ctx *Expr_inject_stmtContext) {}
+
+// EnterExpr_stmt is called when production expr_stmt is entered.
+func (s *BaseSyslParserListener) EnterExpr_stmt(ctx *Expr_stmtContext) {}
+
+// ExitExpr_stmt is called when production expr_stmt is exited.
+func (s *BaseSyslParserListener) ExitExpr_stmt(ctx *Expr_stmtContext) {}
+
+// EnterTransform_return_type is called when production transform_return_type is entered.
+func (s *BaseSyslParserListener) EnterTransform_return_type(ctx *Transform_return_typeContext) {}
+
+// ExitTransform_return_type is called when production transform_return_type is exited.
+func (s *BaseSyslParserListener) ExitTransform_return_type(ctx *Transform_return_typeContext) {}
+
+// EnterView_return_type is called when production view_return_type is entered.
+func (s *BaseSyslParserListener) EnterView_return_type(ctx *View_return_typeContext) {}
+
+// ExitView_return_type is called when production view_return_type is exited.
+func (s *BaseSyslParserListener) ExitView_return_type(ctx *View_return_typeContext) {}
+
+// EnterTransform_scope_var is called when production transform_scope_var is entered.
+func (s *BaseSyslParserListener) EnterTransform_scope_var(ctx *Transform_scope_varContext) {}
+
+// ExitTransform_scope_var is called when production transform_scope_var is exited.
+func (s *BaseSyslParserListener) ExitTransform_scope_var(ctx *Transform_scope_varContext) {}
+
+// EnterTransform_arg is called when production transform_arg is entered.
+func (s *BaseSyslParserListener) EnterTransform_arg(ctx *Transform_argContext) {}
+
+// ExitTransform_arg is called when production transform_arg is exited.
+func (s *BaseSyslParserListener) ExitTransform_arg(ctx *Transform_argContext) {}
+
+// EnterTransform is called when production transform is entered.
+func (s *BaseSyslParserListener) EnterTransform(ctx *TransformContext) {}
+
+// ExitTransform is called when production transform is exited.
+func (s *BaseSyslParserListener) ExitTransform(ctx *TransformContext) {}
+
+// EnterExpr_block is called when production expr_block is entered.
+func (s *BaseSyslParserListener) EnterExpr_block(ctx *Expr_blockContext) {}
+
+// ExitExpr_block is called when production expr_block is exited.
+func (s *BaseSyslParserListener) ExitExpr_block(ctx *Expr_blockContext) {}
+
+// EnterView_param is called when production view_param is entered.
+func (s *BaseSyslParserListener) EnterView_param(ctx *View_paramContext) {}
+
+// ExitView_param is called when production view_param is exited.
+func (s *BaseSyslParserListener) ExitView_param(ctx *View_paramContext) {}
+
+// EnterView_params is called when production view_params is entered.
+func (s *BaseSyslParserListener) EnterView_params(ctx *View_paramsContext) {}
+
+// ExitView_params is called when production view_params is exited.
+func (s *BaseSyslParserListener) ExitView_params(ctx *View_paramsContext) {}
+
+// EnterAbstract_view is called when production abstract_view is entered.
+func (s *BaseSyslParserListener) EnterAbstract_view(ctx *Abstract_viewContext) {}
+
+// ExitAbstract_view is called when production abstract_view is exited.
+func (s *BaseSyslParserListener) ExitAbstract_view(ctx *Abstract_viewContext) {}
+
+// EnterView is called when production view is entered.
+func (s *BaseSyslParserListener) EnterView(ctx *ViewContext) {}
+
+// ExitView is called when production view is exited.
+func (s *BaseSyslParserListener) ExitView(ctx *ViewContext) {}
 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *BaseSyslParserListener) EnterApp_decl(ctx *App_declContext) {}

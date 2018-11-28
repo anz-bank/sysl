@@ -2,7 +2,8 @@ EXE=$(GOPATH)/bin/antlr
 JS=js/SyslParser.js
 
 .PHONY : all
-all: $(EXE) $(JS)
+# all: $(EXE) $(JS)
+all: $(EXE)
 
 $(EXE): grammar/sysl_parser.go grammar/sysl_lexer.go sysl.go sysl_listener_impl.go
 	go install -v -buildmode=exe .

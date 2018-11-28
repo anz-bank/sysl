@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"strings"
 	s "strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -90,7 +89,7 @@ func getPreviousIndent(l *Stack) int {
 
 // TrimText Token Text
 func TrimText(l *SyslLexer) string {
-	return strings.TrimSpace(l.GetText())
+	return s.TrimSpace(l.GetText())
 }
 
 // GetNextToken ...
@@ -106,9 +105,11 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 	// return NEWLINE
 	if gotNewLine {
 		switch next.GetTokenType() {
-		case SyslLexerNEWLINE, SyslLexerNEWLINE_2, SyslLexerEMPTY_LINE:
+		case SyslLexerNEWLINE, SyslLexerNEWLINE_2, SyslLexerEMPTY_LINE, SyslLexerE_NL, SyslLexerE_EMPTY_LINE:
 			fallthrough
-		case SyslLexerINDENTED_COMMENT, SyslLexerEMPTY_COMMENT:
+		case SyslLexerINDENTED_COMMENT, SyslLexerEMPTY_COMMENT, SyslLexerE_INDENTED_COMMENT:
+			fallthrough
+		case SyslLexerE_DOT_NAME_NL:
 			return next
 		}
 	}
