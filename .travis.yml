@@ -46,7 +46,6 @@ install:
 - pip install . pytest flake8
 - go get -t -v anz-bank/sysl/sysl2/antlr
 script:
-- flake8
 - pytest
 - pytest test/e2e --syslexe=sysl --reljamexe=reljam
 - gradle test -b test/java/build.gradle

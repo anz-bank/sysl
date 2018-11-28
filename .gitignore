@@ -9,3 +9,5 @@ build
 *.pb
 /tmp
 /docs/website/public
+.sysl-tmp
+.vscode
