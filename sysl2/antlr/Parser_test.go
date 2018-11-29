@@ -58,10 +58,10 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 	}
 	result := proto.Equal(&mod, m2)
 	// uncomment to compare
-	// if !result {
-	TextPB(m2, "generated.txt")
-	TextPB(&mod, "golden.txt")
-	// }
+	if !result {
+		TextPB(m2, "generated.txt")
+		TextPB(&mod, "golden.txt")
+	}
 
 	return result
 }
