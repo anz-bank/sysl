@@ -77,49 +77,45 @@ func (d *SyslParserErrorListener) SyntaxError(
 	recognizer antlr.Recognizer, offendingSymbol interface{},
 	line, column int, msg string, e antlr.RecognitionException) {
 	d.hasErrors = true
-
 	fmt.Printf("SyntaxError: Token: %s\n", recognizer.GetSymbolicNames()[offendingSymbol.(*antlr.CommonToken).GetTokenType()])
-
 }
 
-func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-	// d.hasErrors = false
+// ReportAttemptingFullContext ...
+func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser,
+	dfa *antlr.DFA, startIndex, stopIndex int,
+	conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
 	fmt.Printf("ReportAttemptingFullContext: %d %d\n", startIndex, stopIndex)
 }
-func (d *SyslParserErrorListener) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, exact bool, ambigAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-	fmt.Printf("ReportAmbiguity: %d %d\n", startIndex, stopIndex)
 
+// ReportAmbiguity ...
+func (d *SyslParserErrorListener) ReportAmbiguity(recognizer antlr.Parser,
+	dfa *antlr.DFA, startIndex, stopIndex int, exact bool,
+	ambigAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
+	fmt.Printf("ReportAmbiguity: %d %d\n", startIndex, stopIndex)
 }
 
-func (d *SyslParserErrorListener) ReportContextSensitivity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex, prediction int, configs antlr.ATNConfigSet) {
+// ReportContextSensitivity ...
+func (d *SyslParserErrorListener) ReportContextSensitivity(recognizer antlr.Parser,
+	dfa *antlr.DFA, startIndex, stopIndex, prediction int, configs antlr.ATNConfigSet) {
 	fmt.Printf("ReportContextSensitivity: %d %d\n", startIndex, stopIndex)
 }
 
 func getAppName(appname *sysl.AppName) string {
-	app_name := appname.Part[0]
-
-	for i := 1; i < len(appname.Part); i++ {
-		app_name += " :: " + appname.Part[i]
-	}
-	return app_name
+	return strings.Join(appname.Part, " :: ")
 }
 
 func getApp(appName *sysl.AppName, mod *sysl.Module) *sysl.Application {
-	if app, has := mod.Apps[getAppName(appName)]; has {
-		return app
-	}
-	return nil
+	return mod.Apps[getAppName(appName)]
 }
 
 func hasAbstractPattern(attrs map[string]*sysl.Attribute) bool {
 	patterns, has := attrs["patterns"]
-	if has == false {
-		return false
-	}
-	if x := patterns.GetA(); x != nil {
-		for _, y := range x.Elt {
-			if y.GetS() == "abstract" {
-				return true
+	if has {
+		if x := patterns.GetA(); x != nil {
+			for _, y := range x.Elt {
+				if y.GetS() == "abstract" {
+					return true
+				}
 			}
 		}
 	}
@@ -142,6 +138,8 @@ func isSameCall(a *sysl.Call, b *sysl.Call) bool {
 	return isSameApp(a.Target, b.Target) && a.Endpoint == b.Endpoint
 }
 
+// apply attributes from src to dst statement and all of its
+// child statements as well (e.g. For / Loop statements).
 func applyAttributes(src *sysl.Statement, dst *sysl.Statement) bool {
 	var stmts []*sysl.Statement
 	applied := false
@@ -165,11 +163,11 @@ func applyAttributes(src *sysl.Statement, dst *sysl.Statement) bool {
 		stmts = s.Foreach.Stmt
 	case *sysl.Statement_Call:
 		if isSameCall(src.GetCall(), s.Call) {
-			applied = true
 			if dst.Attrs == nil {
-				dst.Attrs = make(map[string]*sysl.Attribute)
+				dst.Attrs = map[string]*sysl.Attribute{}
 			}
 			mergeAttrs(src.Attrs, dst.Attrs)
+			applied = true
 		}
 		return applied
 	case *sysl.Statement_Action:
@@ -188,20 +186,18 @@ func applyAttributes(src *sysl.Statement, dst *sysl.Statement) bool {
 
 func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.Statement) bool {
 	var stmts []*sysl.Statement
-	valid := false
 	switch s := dst.GetStmt().(type) {
 	case *sysl.Statement_Cond:
 		stmts = s.Cond.Stmt
 	case *sysl.Statement_Alt:
 		for _, c := range s.Alt.Choice {
 			for _, ss := range c.Stmt {
-				valid = checkCalls(mod, appname, epname, ss)
-				if !valid {
-					break
+				if !checkCalls(mod, appname, epname, ss) {
+					return false
 				}
 			}
 		}
-		return valid
+		return true
 	case *sysl.Statement_Group:
 		stmts = s.Group.Stmt
 	case *sysl.Statement_Loop:
@@ -213,12 +209,14 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	case *sysl.Statement_Call:
 		app := getApp(s.Call.Target, mod)
 		if app == nil {
-			fmt.Printf("%s::%s calls non-existant App: %s\n", appname, epname, s.Call.Target.Part)
+			fmt.Printf("%s::%s calls non-existant App: %s\n",
+				appname, epname, s.Call.Target.Part)
 			return false
 		}
-		_, valid = app.Endpoints[s.Call.Endpoint]
+		_, valid := app.Endpoints[s.Call.Endpoint]
 		if !valid {
-			fmt.Printf("%s::%s calls non-existant App <- Endpoint (%s <- %s)\n", appname, epname, s.Call.Target.Part, s.Call.Endpoint)
+			fmt.Printf("%s::%s calls non-existant App <- Endpoint (%s <- %s)\n",
+				appname, epname, s.Call.Target.Part, s.Call.Endpoint)
 		}
 		return valid
 	case *sysl.Statement_Action:
@@ -230,12 +228,11 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	}
 
 	for _, stmt := range stmts {
-		valid = checkCalls(mod, appname, epname, stmt)
-		if !valid {
-			break
+		if !checkCalls(mod, appname, epname, stmt) {
+			return false
 		}
 	}
-	return valid
+	return true
 }
 
 func collectorPubSubCalls(mod *sysl.Module) {
@@ -247,11 +244,12 @@ func collectorPubSubCalls(mod *sysl.Module) {
 				case *sysl.Statement_Action:
 					modify_ep := app.Endpoints[x.Action.Action]
 					if modify_ep == nil {
-						fmt.Printf("App (%s) calls non-existant endpoint (%s)\n", appName, x.Action.Action)
+						fmt.Printf("App (%s) calls non-existant endpoint (%s)\n",
+							appName, x.Action.Action)
 						continue
 					}
 					if modify_ep.Attrs == nil {
-						modify_ep.Attrs = make(map[string]*sysl.Attribute)
+						modify_ep.Attrs = map[string]*sysl.Attribute{}
 					}
 					mergeAttrs(collector_stmt.Attrs, modify_ep.Attrs)
 				case *sysl.Statement_Call:
@@ -266,7 +264,8 @@ func collectorPubSubCalls(mod *sysl.Module) {
 						}
 					}
 					if !applied {
-						fmt.Printf("Unused template (%s <- %s) in app %s\n", x.Call.Target.Part, x.Call.Endpoint, appName)
+						fmt.Printf("Unused template (%s <- %s) in app %s\n",
+							x.Call.Target.Part, x.Call.Endpoint, appName)
 					}
 				default:
 					panic("unhandled type:")
@@ -291,7 +290,12 @@ func checkEndpointCalls(mod *sysl.Module) bool {
 	return valid
 }
 
-func infer_expr_type(mod *sysl.Module, appName string, expr *sysl.Expr, top bool, anonCount int) (*sysl.Type, int) {
+// for nested transform's Type
+func infer_expr_type(mod *sysl.Module,
+	appName string,
+	expr *sysl.Expr, top bool,
+	anonCount int) (*sysl.Type, int) {
+
 	if expr.GetTransform() != nil {
 		for _, stmt := range expr.GetTransform().Stmt {
 			if stmt.GetLet() != nil {
@@ -415,23 +419,25 @@ func postProcess(mod *sysl.Module) {
 					continue
 				}
 				if src_app.Types != nil && app.Types == nil {
-					app.Types = make(map[string]*sysl.Type)
+					app.Types = map[string]*sysl.Type{}
 				}
 				if src_app.Views != nil && app.Views == nil {
-					app.Views = make(map[string]*sysl.View)
+					app.Views = map[string]*sysl.View{}
 				}
 				for k, v := range src_app.Types {
 					if _, has := app.Types[k]; !has {
 						app.Types[k] = v
 					} else {
-						fmt.Printf("Type %s defined in %s and in %s\n", k, appName, getAppName(src.Name))
+						fmt.Printf("Type %s defined in %s and in %s\n",
+							k, appName, getAppName(src.Name))
 					}
 				}
 				for k, v := range src_app.Views {
 					if _, has := app.Views[k]; !has {
 						app.Views[k] = v
 					} else {
-						fmt.Printf("View %s defined in %s and in %s\n", k, appName, getAppName(src.Name))
+						fmt.Printf("View %s defined in %s and in %s\n",
+							k, appName, getAppName(src.Name))
 					}
 				}
 			}
@@ -456,7 +462,8 @@ func postProcess(mod *sysl.Module) {
 					}
 					refType, has := refApp.Types[refName]
 					if has == false {
-						fmt.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n", fieldname, typeName, refName, appName)
+						fmt.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n",
+							fieldname, typeName, refName, appName)
 					} else {
 						var ref_attrs map[string]*sysl.Type
 
@@ -480,7 +487,8 @@ func postProcess(mod *sysl.Module) {
 							_, has = refApp.Types[field]
 						}
 						if has == false {
-							fmt.Printf("2:Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)\n", fieldname, typeName, field, appName, refName)
+							fmt.Printf("2:Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)\n",
+								fieldname, typeName, field, appName, refName)
 						}
 					}
 				}
@@ -496,10 +504,10 @@ func fileExists(filename string) bool {
 	_, err := os.Stat(filename)
 	return err == nil
 }
+
 func dirExists(dirName string) bool {
 	info, err := os.Stat(dirName)
 	return err == nil && info.IsDir()
-
 }
 
 // Parse ...
@@ -514,20 +522,18 @@ func Parse(filename string, root string) *sysl.Module {
 	root, _ = filepath.Abs(root)
 
 	if !fileExists(filename) {
-		if filename[len(filename)-5:] != ".sysl" {
+		if !strings.HasSuffix(filename, ".sysl") {
 			filename = filename + ".sysl"
 		}
-		temp := root + "/" + filename
+		filename = root + "/" + filename
 
-		if !fileExists(temp) {
-			fmt.Fprintln(os.Stderr, fmt.Sprintf("input file does not exist\nFilename: %s\n", temp))
+		if !fileExists(filename) {
+			fmt.Fprintln(os.Stderr, fmt.Sprintf("input file does not exist\nFilename: %s\n", filename))
 			os.Exit(ImportError)
 		}
-		filename = temp
 	}
-	var empty struct{}
 	filename, _ = filepath.Abs(filename)
-	imported := make(map[string]struct{})
+	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener(root)
 	errorListener := SyslParserErrorListener{}
 
@@ -558,7 +564,7 @@ func Parse(filename string, root string) *sysl.Module {
 		if len(listener.imports) == 0 {
 			break
 		}
-		imported[filename] = empty
+		imported[filename] = struct{}{}
 
 		for len(listener.imports) > 0 {
 			filename = listener.imports[0]

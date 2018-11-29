@@ -325,9 +325,7 @@ func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_type
 
 	context_app_part := s.module.Apps[s.appname].Name.Part
 	context_path := strings.Split(s.typename, ".")
-	ref_path := []string{
-		ctx.GetText(),
-	}
+	ref_path := []string{ctx.GetText()}
 
 	type1.Type = &sysl.Type_TypeRef{
 		TypeRef: &sysl.ScopedRef{
@@ -355,10 +353,10 @@ func (s *TreeShapeListener) ExitMulti_line_docstring(ctx *parser.Multi_line_docs
 
 func fromQString(str string) string {
 	l := len(str)
-	if l > 0 && str[:1] == "'" && str[l-1:] == "'" {
+	if l > 0 && strings.HasPrefix(str, "'") && strings.HasSuffix(str, "'") {
 		return strings.Trim(str, "'")
 	}
-	if l > 0 && str[:1] == `"` && str[l-1:] == `"` {
+	if l > 0 && strings.HasPrefix(str, `"`) && strings.HasSuffix(str, `"`) {
 		var val string
 		if json.Unmarshal([]byte(str), &val) == nil {
 			return val
@@ -583,9 +581,7 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 
 	for _, e := range attribs.AllEntry() {
 		entry := e.(*parser.EntryContext)
-		if entry.Nvp() != nil {
-			nvp := entry.Nvp().(*parser.NvpContext)
-
+		if nvp, ok := entry.Nvp().(*parser.NvpContext); ok {
 			if nvp.Quoted_string() != nil {
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
 				attributes[nvp.Name().GetText()] = &sysl.Attribute{
@@ -613,8 +609,7 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 					},
 				}
 			}
-		} else if entry.Modifier() != nil {
-			mod := entry.Modifier().(*parser.ModifierContext)
+		} else if mod, ok := entry.Modifier().(*parser.ModifierContext); ok {
 			patterns = append(patterns, &sysl.Attribute{
 				Attribute: &sysl.Attribute_S{
 					S: mod.GetText()[1:],
@@ -657,10 +652,12 @@ func (s *TreeShapeListener) ExitInplace_tuple(ctx *parser.Inplace_tupleContext) 
 
 // EnterField is called when production field is entered.
 func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
-	s.fieldname = append(s.fieldname, ctx.Name_str().GetText())
-	type1, has := s.typemap[s.fieldname[len(s.fieldname)-1]]
+	fieldName := ctx.Name_str().GetText()
+	s.fieldname = append(s.fieldname, fieldName)
+	type1, has := s.typemap[fieldName]
 	if has {
-		fmt.Printf("WARNING: %d) %s.%s defined multiple times\n", len(s.fieldname), s.typename, ctx.Name_str().GetText())
+		fmt.Printf("WARNING: %d) %s.%s defined multiple times\n",
+			len(s.fieldname), s.typename, fieldName)
 	} else {
 		type1 = &sysl.Type{}
 	}
@@ -678,12 +675,12 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 		type1.Type = &sysl.Type_TypeRef{
 			TypeRef: &sysl.ScopedRef{
 				Ref: &sysl.Scope{
-					Path: []string{s.fieldname[len(s.fieldname)-1]},
+					Path: []string{fieldName},
 				},
 			},
 		}
 	}
-	s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
+	s.typemap[fieldName] = type1
 	s.app_name = []string{}
 }
 
@@ -763,16 +760,20 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
-func fixFieldDefinitions(collection *sysl.Type) {
+func attributesForType(collection *sysl.Type) map[string]*sysl.Type {
 	var attrs map[string]*sysl.Type
+
 	switch x := collection.Type.(type) {
 	case *sysl.Type_Relation_:
 		attrs = x.Relation.AttrDefs
 	case *sysl.Type_Tuple_:
 		attrs = x.Tuple.AttrDefs
 	}
+	return attrs
+}
 
-	for name, f := range attrs {
+func fixFieldDefinitions(collection *sysl.Type) {
+	for name, f := range attributesForType(collection) {
 		if f.Type == nil {
 			continue
 		}
@@ -809,8 +810,7 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 		pks := []string{}
 		for _, name := range s.fieldname {
 			f := rel.GetAttrDefs()[name]
-			patterns, has := f.GetAttrs()["patterns"]
-			if has {
+			if patterns, has := f.GetAttrs()["patterns"]; has {
 				for _, a := range patterns.GetA().Elt {
 					if a.GetS() == "pk" {
 						pks = append(pks, name)
@@ -835,13 +835,8 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 			varname := arr[i].(*parser.AnnotationContext).VAR_NAME().GetText()
 			attr := collection.Attrs[varname]
 			for _, name := range s.fieldname {
-				var f *sysl.Type
-				switch x := collection.Type.(type) {
-				case *sysl.Type_Relation_:
-					f = x.Relation.AttrDefs[name]
-				case *sysl.Type_Tuple_:
-					f = x.Tuple.AttrDefs[name]
-				}
+				f := attributesForType(collection)[name]
+
 				if f.Attrs == nil {
 					f.Attrs = map[string]*sysl.Attribute{}
 				}
