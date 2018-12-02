@@ -1,0 +1,22 @@
+Car Models:
+    Get All Years: ...
+    Get All Makes (year): ...
+    Get All Models (year, make): ...
+    Get All Series (year, make, model): ...
+
+Other App:
+    FOO:
+        Car Models <- Get All Years
+        for all series:
+            evaluate series pricing
+            if has pricing:
+                select series
+            dump pricing information
+    Profit:
+        For each year:
+            calculate profit
+            Loop "n times":
+                  run simulation
+    WhileTest:
+        while condition not true:
+            "wait for 5 secs"

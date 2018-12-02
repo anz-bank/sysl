@@ -1,0 +1,62 @@
+My :: Server [~rest]:
+    /:
+        GET:
+            ...
+    /foo [zero="0"]:
+        GET:
+            ...
+        /:
+            GET:
+                ...
+        /bar [one="1", two="2", three="3"]:
+            /baz:
+                POST:
+                    | "Create" an item
+                    ...
+        /blah [four="4"]:
+            GET (str <: string):
+                ...
+    /first [~deprecated]:
+        GET (something) [~rest, ~https]:
+            ...
+        /{id<:int} [uber="value"]:
+            GET ?depth=int&limit=int?&offset=int? [system_id="001"]:
+                ...
+            /second:
+                PUT:
+                    return 200 ok
+                /third:
+                    POST (value <: Request.val):
+                        ...
+            /another-second:
+                POST:
+                    ...
+    /first-level/{id<:int}/second/third:
+        GET ?q={queryTerms}&limit={pageSize}&offset={startingRecord} [id='id01']:
+            |  Multi line statement - 1
+            | Multi line statement - 2
+            | Multi line statement - 3
+            return 200 ok
+
+BrowserApp [~ajax]:
+    !type Request:
+        @description =:
+            | Multi line comment 1
+            | Multi line comment 2
+        val <: string
+
+    HomePage:
+        My :: Server <- GET /
+
+    Show Foo:
+        My :: Server <- GET /foo
+        My :: Server <- GET /foo/
+
+    Show Success:
+        My :: Server <- GET /first-level/{id}/second/third
+        return 200 ok
+
+    On Click:
+        | Comment On click, initiate a server call
+        My :: Server <- GET /first/{id} [~pattern+foo]
+        . <- Show Success

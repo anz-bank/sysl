@@ -1,0 +1,22 @@
+import test1
+
+Project :: Integrations [title="%(epname): %(eplongname)"]:
+
+    PROJECT-E2E "End to End Integrations" [page="Solution Design Doc", passthrough=["anz_com", "My Todo App", "A_B"]]:
+        SomeApp
+        Test - App
+
+Project :: Sequences:
+
+    SEQ-One:
+        SomeApp <- FooEndpoint
+
+
+SomeApp:
+    .. * <- *:
+        FooEndpoint [some_id="project_id"]
+        Test - App <- Test - Endpoint [some_id="project_id"]
+
+Rest Service:
+    .. * <- *:
+        GET /foo [some_id="project_id"]

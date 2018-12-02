@@ -5,6 +5,9 @@ dist
 build
 .eggs
 .gradle
-
+.antlr
+*.pb
 /tmp
 /docs/website/public
+.sysl-tmp
+.vscode

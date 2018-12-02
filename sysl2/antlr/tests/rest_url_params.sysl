@@ -1,0 +1,8 @@
+Server:
+    /{id1<:int}:
+        /{id2<:int}:
+            /{aid3<:int}:
+                /{id4<:int}:
+                    /{bid5<:int}:
+                        GET:
+                            ...

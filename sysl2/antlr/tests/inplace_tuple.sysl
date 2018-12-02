@@ -1,0 +1,65 @@
+My :: Client Model "My client Model":
+    !type Response:
+        requests <: set of Request
+        list (0..10) <: Request
+        id (0..10) <: int32
+
+    !type Request:
+        bar <: decimal(10..9999)
+
+My :: Browser :: Client Model:
+    !type Request:
+        foo <: decimal(10)
+        bar <: decimal(10..9999)
+        baz <: decimal(10.2)
+
+Model:
+    !type Request:
+        bar <: decimal(10..9999)
+
+My :: Tuple Model:
+    !type Response:
+        status <: string(10..30)
+        code <: int(0..9999)
+        foo <: decimal(10..9999)
+        bar <: decimal(10..)
+        baz <: decimal(0..9999)
+        toplevel <: TopLevelPayload
+        nested <: Payload
+
+        !type Payload:
+            code <: int
+            value <: int(1..)
+            data <: string_8(0..30)
+            footer <: string(0..)
+            XMLDoc <: xml
+
+    !type TopLevelPayload:
+        data <: string(500)
+        data2 <: set of string(500)
+        status <: Response.status
+        field1 <: Model.Request.status
+        field2 <: My ::    Browser :: Client Model.Request.status
+        bars <: My ::   Client Model.Request.status
+        foos <: set of Response.foo
+        responseSet <: set of Response
+
+    !type Req:
+        Header <:
+            Data <: My :: Tuple Model.TopLevelPayload
+            Action
+            AppHostSystem
+            AppDate <: Date
+            AppNbr
+            responseList (0..10) <: My :: Tuple Model.Response
+        Application <:
+            ApplicationType
+            AccountType
+            Applicable <: bool
+            Detail (0..100) <:
+                ObjectID
+                Code
+                Status
+            Purpose (0..) <:
+                PurposeCode
+                RemainDays

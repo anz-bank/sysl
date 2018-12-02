@@ -1,0 +1,17 @@
+import school
+
+SchoolLibrary:
+    !table Member:
+        MemberId <: Student.Id:
+            @description = "\n"
+        name <: string
+        city <: string(100)
+        amount <: decimal(14.2)
+    !table Book:
+        BookId <: int [~pk, ~autoinc]
+        name <: string
+        Author <: string
+    !table Borrow:
+        MemberId <: Member.MemberId [~pk]
+        BookId <: Book.BookId [~pk]
+        DueDate <: date

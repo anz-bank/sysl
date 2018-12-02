@@ -1,0 +1,13 @@
+TransformationTest[package="io.sysl.test.views"]:
+  !view TestRank(number <: int) -> int:
+    number -> (:
+      let out1 = . rank(abc as foo)
+      let out2 = .abc rank(abc as foo)
+      let out3 = input.abc rank(abc as foo)
+      let out4 = 1 rank(abc as foo)
+      let out5 = foo rank(abc as foo)
+      let out6 = foo rank(abc as foo) .bar
+      let out7 = foo rank(abc as foo) ~> bar
+      let out8 = .table of Pet rank(.numLegs as legRank) ~> bar
+      let out9 = .table of Pet rank(.numLegs as legRank) ~> .table of Bar
+    )

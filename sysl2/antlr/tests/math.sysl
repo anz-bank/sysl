@@ -1,0 +1,38 @@
+Calculator[package="io.sysl.demo.petshop.views"]:
+  !view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type:
+    -> (scopeVar:
+      out = number + 1 - scopeVar
+      out = 2 ** 3 ** 4
+      out = 2 ** 3 ** -4 - 10
+      expr_not = !foo
+      expr_nota = ~foo
+      expr_notb = -foo
+      expr_notc = +foo
+      expr_but_not = a || b but not c || d but not e || f
+      expr_or = a || b && c || d && e || f
+      expr_and = a ^ b && c ^ d && e ^ f
+      expr_bitor = a ^ b or c ^ d or e ^ f
+      expr_bitor = a ^ b | c ^ d | e ^ f
+      expr_bit_xor = a & b ^ c & d ^ e & f
+      expr_rel = a + b <= c - d
+      expr_rel = a * b >= c / d
+      expr_rel = a ** b > c ** d
+      expr_rel = a ** b < c ** d
+      expr_rel = a + b != c + d
+      expr_rel = a + b == c + d
+      expr_rel = a in d
+      expr_rel = a !in d
+      expr_rel = a !contains d
+      expr_rel = a contains d
+      expr_set1 = a in {"abc", "def"}
+      expr_set2 = {"abc", "def"}
+      expr_set3 = {{:}}
+      expr_set4 = {1,2,"abc"}
+      literal1 = false
+      literal2 = true
+      literal3 = null
+      literal4 = "abc"
+      literal5 = 123
+      literal6 = 123.45
+    )
+

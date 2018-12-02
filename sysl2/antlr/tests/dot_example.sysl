@@ -1,0 +1,12 @@
+with.example:
+    !table User:
+        UserId <: int
+
+App :: Package:
+    !table User:
+        Id <: int
+
+DW:
+    !table Customer:
+        CustomerId <: with.example.UserId
+        AnotherId <: App :: Package.UserId
