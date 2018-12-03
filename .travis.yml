@@ -53,7 +53,9 @@ script:
 before_deploy:
 - python setup.py sdist bdist_wheel
 - gradle build -b src/libs/java/build.gradle :jar
-- go build -o dist/gosysl.exe anz-bank/sysl/sysl2/antlr
+- GOOS=darwin GOARCH=amd64 go build -o dist/gosysl-darwin anz-bank/sysl/sysl2/antlr
+- GOOS=linux GOARCH=amd64 go build -o dist/gosysl-linux anz-bank/sysl/sysl2/antlr
+- GOOS=windows GOARCH=amd64 go build -o dist/gosysl.exe anz-bank/sysl/sysl2/antlr
 - docker build -t "$DOCKER_IMAGE_LATEST" -f Dockerfile .
 - docker tag "$DOCKER_IMAGE_LATEST" "$DOCKER_IMAGE_VERSIONED"
 deploy:
