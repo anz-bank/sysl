@@ -1,0 +1,20 @@
+Browser:
+  On Submit Button:
+    Server <- HandleFormSubmit
+
+Server:
+  HandleFormSubmit:
+    validate input
+    For each element in input:
+      process element
+    DB <- Save
+    return response
+
+DB:
+  Save:
+    ...
+
+Project [seqtitle="Diagram"]:
+  Seq:
+    Browser <- On Submit Button
+

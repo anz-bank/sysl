@@ -1,0 +1,44 @@
+Relational [package="io.sysl.example.relational"]:
+  !table Customer:
+    customer_id <: int [~pk]
+
+  !table CustomerAddresses:
+    address_id <: int [~pk]
+    customer_id <: Customer.customer_id
+
+  !table Product:
+    product_id <: int [~pk]
+
+  !table ProductDetails:
+    product_id <: Product.product_id [~pk]
+    description <: string
+
+  !table Orders:
+    order_id <: int [~pk]
+    customer_id <: Customer.customer_id
+
+  !table CustomerOrderProducts:
+    order_id <: Orders.order_id [~pk]
+    product_id <: Product.product_id
+    quantity <: int
+    comments <: string
+
+ObjectModel [package="io.sysl.example.ObjectModel"]:
+  !type Address:
+    line_1 <: string
+    city <: string
+
+  !type Customer:
+    customer_id <: int
+    addresses <: set of Address
+
+  !type Order:
+    order_id <: int
+    customer <: Customer
+
+Project [seqtitle="DataModel"]:
+  Relational-Model:
+    Relational
+
+  Object-Model:
+    ObjectModel
