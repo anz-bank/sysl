@@ -1,0 +1,28 @@
+User [~human]:
+  Check Balance:
+    MobileApp <- Login
+    MobileApp <- Check Balance
+
+MobileApp [~ui]:
+  Login:
+    Server <- Login
+  Check Balance:
+    Server <- Read User Balance
+
+Server:
+  Login:
+    do input validation
+    DB <- Save
+    return success or failure
+
+  Read User Balance:
+    DB <- Load
+    return balance
+
+DB [~db]:
+  Save: ...
+  Load: ...
+
+Project [seqtitle="Diagram"]:
+  Seq:
+    User <- Check Balance
