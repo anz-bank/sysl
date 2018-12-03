@@ -1,0 +1,13 @@
+TransformationTest[package="io.sysl.test.views"]:
+  !view TestTableOf(number <: int) -> int:
+    number -> (:
+      # atomT
+      let out1 = .table of abc
+      let out2 = .table of abc.def
+      # relops
+      let out3 = input .table of abc
+      let out4 = input .table of abc.def
+      let out4a = input.table of abc.def
+      let out5 = input.foo .table of abc.def
+      let out6 = .foo .table of abc.def
+    )

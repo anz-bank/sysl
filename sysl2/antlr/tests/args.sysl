@@ -1,0 +1,16 @@
+Server:
+    Endpoint:
+        ...
+
+    /foo:
+        PUT:
+            ...
+        /:
+            PUT:
+                ...
+Client:
+    OnClick (arg1 <: type1, arg2 <: type2):
+        Server <- Endpoint (id) [~https, ~soap]
+        Server <- PUT /foo/
+        Server <- PUT /foo (bar)
+        Server <- PUT /foo (bar <: String)

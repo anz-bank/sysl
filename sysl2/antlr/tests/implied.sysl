@@ -1,0 +1,26 @@
+TransformationTest[package="io.sysl.test.views"]:
+  !view impliedTest(number <: int ) -> int:
+    number -> (:
+      abc2 = ... * 2
+      abc3a = ?.abc
+      abc3b1 = -> abc
+      abc3b2 = -> set of abc via foo
+      abc3b3 = -> set of .abc via foo
+      abc3c = ~~> abc
+      abc3c1 = ~~> .abc
+      abc3d = ~~[abc]> abc
+      abc3e = ~!~[abc]> abc
+      abc3f = ~~[abc,def]> abc
+      abc3g = ~!~[abc,def]> abc
+      abc3h = ~~> foo.abc.def
+      abc4a = . where(abcdef: true)
+      #abc4b = . first null by (def: .abc desc)
+      abc5a = .table of abc
+      abc5a1 = .table of abc.def
+      abc5b = .table of abc.def.ghi
+      abc5c = ?.table of abc.def
+      abc5d = abc.def
+      abc5e = abc.def.ghi
+      abc5f = .abc.def
+      abc6 = {{:}}
+    )

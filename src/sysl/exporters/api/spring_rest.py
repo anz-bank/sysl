@@ -150,7 +150,9 @@ def controller(interfaces, context):
                                 result[int(status)].append(
                                     cond or descr or STATUS_MAP.get(int(status)) or '???')
                         else:
+                            print "--------"
                             print repr(stmt.ret.payload)
+                            print "--------"
                             raise Exception('Bad return statement')
                 return result
 

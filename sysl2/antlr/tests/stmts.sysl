@@ -1,0 +1,34 @@
+TransformationTest[package="io.sysl.test.views"]:
+  !view TestStatements(number <: int) -> int:
+    number -> (:
+      .abcdef
+      .abc
+      name.abcdef
+      let out = .a + 2
+      table of abc = number
+      foo1 = if (bar.baz != null) then "Y" else "N"
+      foo2 = if bar.baz? then "Y" else "N"
+      foo3 = if bar.id == null then null else transform(bar.id)
+      foo4 = if:
+        .a1 == true => .aa + 3 .pqr
+        .a2 => if:
+          .bar => .a3 + 4
+      foo5 = if:
+        .a1 == 2 => .aa + 2 .pqr
+        .a1 == 3 => .aa + 3 .pqr
+      foo6 = if .a1 ==:
+        2 => .aa + 2 .pqr
+        3 => .aa + 3 .pqr
+      foo7 = if .a1 ==:
+        2, 3 => .aa + 3 .pqr
+        4 => if:
+          .aa == "b" => .bb
+          else null
+        else null
+      foo8 = if .a1 ==:
+        2, 3 => .aa + 3 .pqr
+        else if .a1 ==:
+          2, 3 => .aa + 3 .pqr
+          else null
+      funccall("arg").*
+    )

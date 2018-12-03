@@ -1,0 +1,26 @@
+Tuple Model:
+    !type Foo:
+        @description = "some description"
+        id <: int
+
+    !type TableName:
+        @description =:
+            | Multi-line annotation
+            | statement
+        fieldname <: string
+        fieldname2 <: set of string
+        ids <: set of Foo
+
+    !type PersonName:
+        title <: string
+        first_name <: string
+        middle_name (0..) <: string
+        last_name <: string
+
+Request:
+    !type Input:
+        field1 <: int
+
+Response:
+    !type Output:
+        field1 <: Request

@@ -1,0 +1,14 @@
+TransformationTest[package="io.sysl.test.views"]:
+  !view TestNavigate(number <: int) -> int:
+    number -> (:
+      let out1 = -> foo
+      let out2 = abc -> foo
+      let out2a = abc ?-> foo
+      let out2b = abc -> foo.bar
+      let out3 = .abc -> foo
+      let out4 = .abc -> .foo
+      let out5 = .abc -> set of .foo
+      let out6 = .abc -> set of foo
+      let out7 = .abc -> set of foo via bar
+      let out8 = .abc -> set of foo via bar where(.a == true) snapshot
+    )

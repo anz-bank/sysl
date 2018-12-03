@@ -1,0 +1,34 @@
+Publisher:
+    <-> BusinessEvent: ...
+
+External:
+    Endpoint: ...
+
+Another :: Publisher:
+    <-> BusinessEvent: ...
+
+Yet :: Another :: Publisher:
+    <-> BusinessEvent: ...
+
+My :: Subscriber:
+    Publisher -> BusinessEvent:
+        External <- Endpoint
+
+    Another :: Publisher -> BusinessEvent:
+        External <- Endpoint
+
+    Yet :: Another :: Publisher -> BusinessEvent:
+        External <- Endpoint
+
+Publisher:
+    .. * <- *:
+        My :: Subscriber <- Publisher -> BusinessEvent [id="one"]
+
+Another :: Publisher:
+    .. * <- *:
+        My :: Subscriber <- Another :: Publisher -> BusinessEvent [id="two"]
+
+Yet :: Another :: Publisher:
+    .. * <- *:
+        My :: Subscriber <- Yet :: Another :: Publisher -> BusinessEvent [id="three"]
+
