@@ -235,42 +235,42 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	return true
 }
 
-func collectorPubSubCalls(mod *sysl.Module) {
-	for appName, app := range mod.Apps {
-		// add attribtes collected in collector stmts to
-		if endpoint, has := app.Endpoints[`.. * <- *`]; has {
-			for _, collector_stmt := range endpoint.Stmt {
-				switch x := collector_stmt.Stmt.(type) {
-				case *sysl.Statement_Action:
-					modify_ep := app.Endpoints[x.Action.Action]
-					if modify_ep == nil {
-						fmt.Printf("App (%s) calls non-existant endpoint (%s)\n",
-							appName, x.Action.Action)
-						continue
-					}
-					if modify_ep.Attrs == nil {
-						modify_ep.Attrs = map[string]*sysl.Attribute{}
-					}
-					mergeAttrs(collector_stmt.Attrs, modify_ep.Attrs)
-				case *sysl.Statement_Call:
-					applied := false
+func collectorPubSubCalls(appName string, app *sysl.Application) {
+	endpoint := app.Endpoints[`.. * <- *`]
+	if endpoint == nil {
+		return
+	}
 
-					for call_epname, call_endpoint := range app.Endpoints {
-						if call_epname == `.. * <- *` {
-							continue
-						}
-						for _, call_stmt := range call_endpoint.Stmt {
-							applied = applyAttributes(collector_stmt, call_stmt) || applied
-						}
-					}
-					if !applied {
-						fmt.Printf("Unused template (%s <- %s) in app %s\n",
-							x.Call.Target.Part, x.Call.Endpoint, appName)
-					}
-				default:
-					panic("unhandled type:")
+	for _, collector_stmt := range endpoint.Stmt {
+		switch x := collector_stmt.Stmt.(type) {
+		case *sysl.Statement_Action:
+			modify_ep := app.Endpoints[x.Action.Action]
+			if modify_ep == nil {
+				fmt.Printf("App (%s) calls non-existant endpoint (%s)\n",
+					appName, x.Action.Action)
+				continue
+			}
+			if modify_ep.Attrs == nil {
+				modify_ep.Attrs = map[string]*sysl.Attribute{}
+			}
+			mergeAttrs(collector_stmt.Attrs, modify_ep.Attrs)
+		case *sysl.Statement_Call:
+			applied := false
+
+			for call_epname, call_endpoint := range app.Endpoints {
+				if call_epname == `.. * <- *` {
+					continue
+				}
+				for _, call_stmt := range call_endpoint.Stmt {
+					applied = applyAttributes(collector_stmt, call_stmt) || applied
 				}
 			}
+			if !applied {
+				fmt.Printf("Unused template (%s <- %s) in app %s\n",
+					x.Call.Target.Part, x.Call.Endpoint, appName)
+			}
+		default:
+			panic("unhandled type:")
 		}
 	}
 }
@@ -495,9 +495,9 @@ func postProcess(mod *sysl.Module) {
 			}
 		}
 		infer_types(mod, appName)
+		collectorPubSubCalls(appName, app)
 	}
 	checkEndpointCalls(mod)
-	collectorPubSubCalls(mod)
 }
 
 func fileExists(filename string) bool {

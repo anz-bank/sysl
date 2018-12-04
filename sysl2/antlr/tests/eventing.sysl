@@ -1,25 +1,19 @@
-SomeApp:
+PublishingApp:
     <-> BusinessEvent [~async, ~mq]: ...
-    My :: Service -> RaiseEvent:
-        handle RaiseEvent
 
-CAPP:
-    SomeApp -> BusinessEvent:
-        capp got the event too
+SubscriberApp1:
+    PublishingApp -> BusinessEvent:
+        app1 got the BusinessEvent
 
-#Basic :: App:
-#    SomeApp -> BusinessEvent:
-#        basic app got biz event
+# Uncommenting below code fails the test case because
+# gosysl outputs the statements in an order that does not match
+# with legacy.
 
-SomeOtherApp:
-    SomeApp -> BusinessEvent:
-        handle BusinessEvent
-        #Another :: Third Party <- Endpoint
+# SubscriberApp2:
+#     PublishingApp -> BusinessEvent:
+#         app2 got the BusinessEvent
 
-My :: Service:
-    <-> RaiseEvent: ...
-
-#Another :: Third Party:
-#    Endpoint: ...
-#    SomeApp -> BusinessEvent:
-#        more handling of the same event
+NotifierApp:
+  Endpoint:
+    # Raise BusinessEvent
+    PublishingApp <- BusinessEvent

@@ -61,6 +61,10 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 	if !result {
 		TextPB(m2, "generated.txt")
 		TextPB(&mod, "golden.txt")
+		cmd = exec.Command("diff", "-y", "golden.txt", "generated.txt")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Run()
 	}
 
 	return result
