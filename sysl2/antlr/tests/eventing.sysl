@@ -5,9 +5,9 @@ SubscriberApp1:
     PublishingApp -> BusinessEvent:
         app1 got the BusinessEvent
 
-SubscriberApp2:
-    PublishingApp -> BusinessEvent:
-        app2 got the BusinessEvent
+# SubscriberApp2:
+#     PublishingApp -> BusinessEvent:
+#         app2 got the BusinessEvent
 
 NotifierApp:
   Endpoint:
