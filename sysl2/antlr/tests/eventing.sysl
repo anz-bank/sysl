@@ -1,25 +1,15 @@
-SomeApp:
+PublishingApp:
     <-> BusinessEvent [~async, ~mq]: ...
-    My :: Service -> RaiseEvent:
-        handle RaiseEvent
 
-CAPP:
-    SomeApp -> BusinessEvent:
-        capp got the event too
+SubscriberApp1:
+    PublishingApp -> BusinessEvent:
+        app1 got the BusinessEvent
 
-#Basic :: App:
-#    SomeApp -> BusinessEvent:
-#        basic app got biz event
+SubscriberApp2:
+    PublishingApp -> BusinessEvent:
+        app2 got the BusinessEvent
 
-SomeOtherApp:
-    SomeApp -> BusinessEvent:
-        handle BusinessEvent
-        #Another :: Third Party <- Endpoint
-
-My :: Service:
-    <-> RaiseEvent: ...
-
-#Another :: Third Party:
-#    Endpoint: ...
-#    SomeApp -> BusinessEvent:
-#        more handling of the same event
+NotifierApp:
+  Endpoint:
+    # Raise BusinessEvent
+    PublishingApp <- BusinessEvent
