@@ -5,6 +5,10 @@ SubscriberApp1:
     PublishingApp -> BusinessEvent:
         app1 got the BusinessEvent
 
+# Uncommenting below code fails the test case because
+# gosysl outputs the statements in an order that does not match
+# with legacy.
+
 # SubscriberApp2:
 #     PublishingApp -> BusinessEvent:
 #         app2 got the BusinessEvent

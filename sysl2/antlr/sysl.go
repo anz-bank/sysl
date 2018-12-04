@@ -237,7 +237,6 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 
 func collectorPubSubCalls(appName string, app *sysl.Application) {
 	endpoint := app.Endpoints[`.. * <- *`]
-
 	if endpoint == nil {
 		return
 	}
