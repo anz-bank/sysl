@@ -361,7 +361,7 @@ view_params: view_param (COMMA view_param)*;
 abstract_view: ABSTRACT;
 view returns [bool abstractView]: VIEW name_str OPEN_PAREN view_params CLOSE_PAREN (ARROW_RIGHT view_return_type)? ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
-app_decl: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view  )+ ( {$view.abstractView == true}? | DEDENT );
+app_decl locals [bool check]: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view { $check = $view.abstractView}  )+ ( {$check}? | DEDENT );
 
 application:  SYSL_COMMENT*
                 name_with_attribs

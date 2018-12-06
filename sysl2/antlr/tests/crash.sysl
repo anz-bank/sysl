@@ -1,0 +1,11 @@
+Desktop:
+
+    Customer:
+        call foo
+
+    Financial:
+        ...
+
+    Endpoint [~button]:
+        call foo
+

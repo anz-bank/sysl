@@ -228,3 +228,7 @@ func TestFuncs(t *testing.T) {
 func TestPetshop(t *testing.T) {
 	testParse(t, "../../demo/petshop/petshop.sysl", "")
 }
+
+func TestCrash(t *testing.T) {
+	testParse(t, "tests/crash.sysl", "")
+}
