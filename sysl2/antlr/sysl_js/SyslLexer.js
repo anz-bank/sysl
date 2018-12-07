@@ -1358,7 +1358,7 @@ SyslLexer.prototype.nextToken = function () {
 		// poll, retrieve head
 		let nextTok = this.prevToken.shift();
     let tokenName = this.symbolicNames[nextTok.type]
-    console.log("Q: " + tokenName + " " + nextTok.text);
+    //console.log("Q: " + tokenName + " " + nextTok.text);
 		return nextTok
 	}
 
@@ -1393,7 +1393,7 @@ SyslLexer.prototype.nextToken = function () {
 	if (next.type == antlr4.Token.EOF) {
 		this.spaces = 0 // done with the file
 	} else if (!this.gotNewLine) {
-    console.log("NOT NL: " + tokenName + " " + next.text);
+    //console.log("NOT NL: " + tokenName + " " + next.text);
 		return next
 	}
 

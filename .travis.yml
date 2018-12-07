@@ -46,12 +46,14 @@ install:
 - pip install flake8==3.5.0
 - pip install . pytest
 - go get -t -v anz-bank/sysl/sysl2/antlr
+- npm install --prefix sysl2/antlr/sysl_js
 script:
 - flake8
 - pytest
 - pytest test/e2e --syslexe=sysl --reljamexe=reljam
 - gradle test -b test/java/build.gradle
 - go test -coverprofile=coverage.txt -covermode=atomic anz-bank/sysl/sysl2/antlr
+- npm test --prefix sysl2/antlr/sysl_js
 before_deploy:
 - python setup.py sdist bdist_wheel
 - gradle build -b src/libs/java/build.gradle :jar
