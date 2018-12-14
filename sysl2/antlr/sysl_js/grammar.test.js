@@ -7,14 +7,14 @@ describe('parse', function() {
     const listener = new SyslParserErrorListener();
     const text = "App:\n\t...\n";
     sysl.SyslParse(text, listener);
-    expect(listener.hasErrors == false);
+    expect(listener.hasErrors).toBeFalsy();
   });
 
   it('expected syntax error', function() {
     const listener = new SyslParserErrorListener();
     const text = "App:...";
     sysl.SyslParse(text, listener);
-    expect(listener.hasErrors);
+    expect(listener.hasErrors).toBeTruthy();
   });
 
   it('parses all test files', function() {
@@ -27,7 +27,10 @@ describe('parse', function() {
         const filename = prefix + f;
         const text = fs.readFileSync(filename, "utf8");
         sysl.SyslParse(text, listener);
-        expect(listener.hasErrors === false);
+        if (listener.hasErrors === true) {
+          console.log(filename + " has errors");
+        }
+        expect(listener.hasErrors).toBeFalsy();
       }
     });
   });

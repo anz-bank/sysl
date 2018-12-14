@@ -170,7 +170,7 @@ expr_table_of_op: (E_DOT | E_NULLSAFE_DOT) E_TABLE_OF? E_Name;
 
 func_arg: expr;
 func_args: func_arg (E_COMMA func_arg)*;
-expr_func: ( E_FUNC | E_Name) E_OPEN_PAREN func_args? E_CLOSE_PAREN;
+expr_func: ( E_FUNC | E_Name | NativeDataTypes) E_OPEN_PAREN func_args? E_CLOSE_PAREN;
 
 rank_expr: expr (E_ASC | E_DESC)?;
 rank_expr_list: rank_expr (E_COMMA rank_expr)*;

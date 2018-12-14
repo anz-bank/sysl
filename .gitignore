@@ -11,3 +11,5 @@ build
 /docs/website/public
 .sysl-tmp
 .vscode
+**/node_modules/
+**/coverage/
