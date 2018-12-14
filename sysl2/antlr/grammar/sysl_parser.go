@@ -16,7 +16,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 139, 1602,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 139, 1604,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
@@ -194,34 +194,34 @@ var parserATN = []uint16{
 	168, 3, 168, 3, 168, 3, 168, 5, 168, 1527, 10, 168, 3, 168, 5, 168, 1530,
 	10, 168, 3, 168, 3, 168, 3, 168, 3, 168, 3, 168, 5, 168, 1537, 10, 168,
 	3, 169, 3, 169, 3, 169, 3, 169, 3, 169, 3, 169, 3, 169, 3, 169, 3, 169,
-	3, 169, 3, 169, 3, 169, 6, 169, 1551, 10, 169, 13, 169, 14, 169, 1552,
-	3, 169, 3, 169, 5, 169, 1557, 10, 169, 3, 170, 7, 170, 1560, 10, 170, 12,
-	170, 14, 170, 1563, 11, 170, 3, 170, 3, 170, 3, 170, 3, 170, 3, 171, 5,
-	171, 1570, 10, 171, 3, 171, 3, 171, 3, 171, 7, 171, 1575, 10, 171, 12,
-	171, 14, 171, 1578, 11, 171, 3, 172, 3, 172, 7, 172, 1582, 10, 172, 12,
-	172, 14, 172, 1585, 11, 172, 3, 173, 6, 173, 1588, 10, 173, 13, 173, 14,
-	173, 1589, 3, 174, 5, 174, 1593, 10, 174, 3, 174, 6, 174, 1596, 10, 174,
-	13, 174, 14, 174, 1597, 3, 174, 3, 174, 3, 174, 2, 2, 175, 2, 4, 6, 8,
-	10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44,
-	46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80,
-	82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112,
-	114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 142,
-	144, 146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172,
-	174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 202,
-	204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232,
-	234, 236, 238, 240, 242, 244, 246, 248, 250, 252, 254, 256, 258, 260, 262,
-	264, 266, 268, 270, 272, 274, 276, 278, 280, 282, 284, 286, 288, 290, 292,
-	294, 296, 298, 300, 302, 304, 306, 308, 310, 312, 314, 316, 318, 320, 322,
-	324, 326, 328, 330, 332, 334, 336, 338, 340, 342, 344, 346, 2, 18, 4, 2,
-	59, 60, 135, 135, 4, 2, 40, 40, 136, 136, 3, 2, 8, 9, 4, 2, 14, 16, 18,
-	20, 4, 2, 56, 56, 59, 60, 4, 2, 114, 116, 131, 133, 4, 2, 84, 84, 136,
-	136, 4, 2, 130, 130, 135, 135, 3, 2, 119, 120, 4, 2, 126, 126, 128, 128,
-	4, 2, 72, 72, 135, 136, 5, 2, 93, 93, 96, 96, 98, 99, 4, 2, 94, 95, 107,
-	107, 4, 2, 93, 93, 96, 96, 4, 2, 75, 76, 79, 80, 4, 2, 103, 103, 105, 105,
-	2, 1655, 2, 348, 3, 2, 2, 2, 4, 357, 3, 2, 2, 2, 6, 365, 3, 2, 2, 2, 8,
-	373, 3, 2, 2, 2, 10, 377, 3, 2, 2, 2, 12, 379, 3, 2, 2, 2, 14, 386, 3,
-	2, 2, 2, 16, 389, 3, 2, 2, 2, 18, 391, 3, 2, 2, 2, 20, 402, 3, 2, 2, 2,
-	22, 413, 3, 2, 2, 2, 24, 420, 3, 2, 2, 2, 26, 433, 3, 2, 2, 2, 28, 435,
+	3, 169, 3, 169, 3, 169, 3, 169, 3, 169, 6, 169, 1553, 10, 169, 13, 169,
+	14, 169, 1554, 3, 169, 3, 169, 5, 169, 1559, 10, 169, 3, 170, 7, 170, 1562,
+	10, 170, 12, 170, 14, 170, 1565, 11, 170, 3, 170, 3, 170, 3, 170, 3, 170,
+	3, 171, 5, 171, 1572, 10, 171, 3, 171, 3, 171, 3, 171, 7, 171, 1577, 10,
+	171, 12, 171, 14, 171, 1580, 11, 171, 3, 172, 3, 172, 7, 172, 1584, 10,
+	172, 12, 172, 14, 172, 1587, 11, 172, 3, 173, 6, 173, 1590, 10, 173, 13,
+	173, 14, 173, 1591, 3, 174, 5, 174, 1595, 10, 174, 3, 174, 6, 174, 1598,
+	10, 174, 13, 174, 14, 174, 1599, 3, 174, 3, 174, 3, 174, 2, 2, 175, 2,
+	4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40,
+	42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+	78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
+	112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140,
+	142, 144, 146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170,
+	172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200,
+	202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230,
+	232, 234, 236, 238, 240, 242, 244, 246, 248, 250, 252, 254, 256, 258, 260,
+	262, 264, 266, 268, 270, 272, 274, 276, 278, 280, 282, 284, 286, 288, 290,
+	292, 294, 296, 298, 300, 302, 304, 306, 308, 310, 312, 314, 316, 318, 320,
+	322, 324, 326, 328, 330, 332, 334, 336, 338, 340, 342, 344, 346, 2, 18,
+	4, 2, 59, 60, 135, 135, 4, 2, 40, 40, 136, 136, 3, 2, 8, 9, 4, 2, 14, 16,
+	18, 20, 4, 2, 56, 56, 59, 60, 4, 2, 114, 116, 131, 133, 4, 2, 84, 84, 136,
+	136, 5, 2, 5, 5, 130, 130, 135, 135, 3, 2, 119, 120, 4, 2, 126, 126, 128,
+	128, 4, 2, 72, 72, 135, 136, 5, 2, 93, 93, 96, 96, 98, 99, 4, 2, 94, 95,
+	107, 107, 4, 2, 93, 93, 96, 96, 4, 2, 75, 76, 79, 80, 4, 2, 103, 103, 105,
+	105, 2, 1657, 2, 348, 3, 2, 2, 2, 4, 357, 3, 2, 2, 2, 6, 365, 3, 2, 2,
+	2, 8, 373, 3, 2, 2, 2, 10, 377, 3, 2, 2, 2, 12, 379, 3, 2, 2, 2, 14, 386,
+	3, 2, 2, 2, 16, 389, 3, 2, 2, 2, 18, 391, 3, 2, 2, 2, 20, 402, 3, 2, 2,
+	2, 22, 413, 3, 2, 2, 2, 24, 420, 3, 2, 2, 2, 26, 433, 3, 2, 2, 2, 28, 435,
 	3, 2, 2, 2, 30, 446, 3, 2, 2, 2, 32, 451, 3, 2, 2, 2, 34, 455, 3, 2, 2,
 	2, 36, 457, 3, 2, 2, 2, 38, 462, 3, 2, 2, 2, 40, 464, 3, 2, 2, 2, 42, 476,
 	3, 2, 2, 2, 44, 478, 3, 2, 2, 2, 46, 483, 3, 2, 2, 2, 48, 507, 3, 2, 2,
@@ -269,8 +269,8 @@ var parserATN = []uint16{
 	316, 1467, 3, 2, 2, 2, 318, 1469, 3, 2, 2, 2, 320, 1471, 3, 2, 2, 2, 322,
 	1473, 3, 2, 2, 2, 324, 1476, 3, 2, 2, 2, 326, 1501, 3, 2, 2, 2, 328, 1505,
 	3, 2, 2, 2, 330, 1509, 3, 2, 2, 2, 332, 1517, 3, 2, 2, 2, 334, 1519, 3,
-	2, 2, 2, 336, 1538, 3, 2, 2, 2, 338, 1561, 3, 2, 2, 2, 340, 1569, 3, 2,
-	2, 2, 342, 1579, 3, 2, 2, 2, 344, 1587, 3, 2, 2, 2, 346, 1592, 3, 2, 2,
+	2, 2, 2, 336, 1538, 3, 2, 2, 2, 338, 1563, 3, 2, 2, 2, 340, 1571, 3, 2,
+	2, 2, 342, 1581, 3, 2, 2, 2, 344, 1589, 3, 2, 2, 2, 346, 1594, 3, 2, 2,
 	2, 348, 349, 7, 35, 2, 2, 349, 354, 7, 60, 2, 2, 350, 351, 7, 33, 2, 2,
 	351, 353, 7, 60, 2, 2, 352, 350, 3, 2, 2, 2, 353, 356, 3, 2, 2, 2, 354,
 	352, 3, 2, 2, 2, 354, 355, 3, 2, 2, 2, 355, 3, 3, 2, 2, 2, 356, 354, 3,
@@ -726,48 +726,48 @@ var parserATN = []uint16{
 	1528, 3, 2, 2, 2, 1529, 1530, 3, 2, 2, 2, 1530, 1531, 3, 2, 2, 2, 1531,
 	1532, 7, 39, 2, 2, 1532, 1537, 5, 326, 164, 2, 1533, 1534, 5, 332, 167,
 	2, 1534, 1535, 8, 168, 1, 2, 1535, 1537, 3, 2, 2, 2, 1536, 1529, 3, 2,
-	2, 2, 1536, 1533, 3, 2, 2, 2, 1537, 335, 3, 2, 2, 2, 1538, 1550, 7, 3,
-	2, 2, 1539, 1551, 5, 58, 30, 2, 1540, 1551, 5, 74, 38, 2, 1541, 1551, 7,
-	58, 2, 2, 1542, 1551, 5, 144, 73, 2, 1543, 1551, 5, 142, 72, 2, 1544, 1551,
-	5, 168, 85, 2, 1545, 1551, 5, 170, 86, 2, 1546, 1551, 5, 172, 87, 2, 1547,
-	1551, 5, 44, 23, 2, 1548, 1551, 5, 128, 65, 2, 1549, 1551, 5, 334, 168,
-	2, 1550, 1539, 3, 2, 2, 2, 1550, 1540, 3, 2, 2, 2, 1550, 1541, 3, 2, 2,
-	2, 1550, 1542, 3, 2, 2, 2, 1550, 1543, 3, 2, 2, 2, 1550, 1544, 3, 2, 2,
-	2, 1550, 1545, 3, 2, 2, 2, 1550, 1546, 3, 2, 2, 2, 1550, 1547, 3, 2, 2,
-	2, 1550, 1548, 3, 2, 2, 2, 1550, 1549, 3, 2, 2, 2, 1551, 1552, 3, 2, 2,
-	2, 1552, 1550, 3, 2, 2, 2, 1552, 1553, 3, 2, 2, 2, 1553, 1556, 3, 2, 2,
-	2, 1554, 1557, 6, 169, 5, 3, 1555, 1557, 7, 4, 2, 2, 1556, 1554, 3, 2,
-	2, 2, 1556, 1555, 3, 2, 2, 2, 1557, 337, 3, 2, 2, 2, 1558, 1560, 7, 58,
-	2, 2, 1559, 1558, 3, 2, 2, 2, 1560, 1563, 3, 2, 2, 2, 1561, 1559, 3, 2,
-	2, 2, 1561, 1562, 3, 2, 2, 2, 1562, 1564, 3, 2, 2, 2, 1563, 1561, 3, 2,
-	2, 2, 1564, 1565, 5, 66, 34, 2, 1565, 1566, 7, 39, 2, 2, 1566, 1567, 5,
-	336, 169, 2, 1567, 339, 3, 2, 2, 2, 1568, 1570, 7, 38, 2, 2, 1569, 1568,
-	3, 2, 2, 2, 1569, 1570, 3, 2, 2, 2, 1570, 1571, 3, 2, 2, 2, 1571, 1576,
-	7, 60, 2, 2, 1572, 1573, 7, 38, 2, 2, 1573, 1575, 7, 60, 2, 2, 1574, 1572,
-	3, 2, 2, 2, 1575, 1578, 3, 2, 2, 2, 1576, 1574, 3, 2, 2, 2, 1576, 1577,
-	3, 2, 2, 2, 1577, 341, 3, 2, 2, 2, 1578, 1576, 3, 2, 2, 2, 1579, 1583,
-	7, 11, 2, 2, 1580, 1582, 7, 58, 2, 2, 1581, 1580, 3, 2, 2, 2, 1582, 1585,
-	3, 2, 2, 2, 1583, 1581, 3, 2, 2, 2, 1583, 1584, 3, 2, 2, 2, 1584, 343,
-	3, 2, 2, 2, 1585, 1583, 3, 2, 2, 2, 1586, 1588, 5, 342, 172, 2, 1587, 1586,
-	3, 2, 2, 2, 1588, 1589, 3, 2, 2, 2, 1589, 1587, 3, 2, 2, 2, 1589, 1590,
-	3, 2, 2, 2, 1590, 345, 3, 2, 2, 2, 1591, 1593, 5, 344, 173, 2, 1592, 1591,
-	3, 2, 2, 2, 1592, 1593, 3, 2, 2, 2, 1593, 1595, 3, 2, 2, 2, 1594, 1596,
-	5, 338, 170, 2, 1595, 1594, 3, 2, 2, 2, 1596, 1597, 3, 2, 2, 2, 1597, 1595,
-	3, 2, 2, 2, 1597, 1598, 3, 2, 2, 2, 1598, 1599, 3, 2, 2, 2, 1599, 1600,
-	7, 2, 2, 3, 1600, 347, 3, 2, 2, 2, 172, 354, 361, 370, 384, 397, 408, 418,
-	426, 433, 441, 451, 455, 460, 469, 476, 487, 495, 498, 501, 505, 507, 513,
-	521, 527, 532, 535, 537, 544, 550, 560, 562, 565, 576, 581, 584, 593, 597,
-	604, 609, 618, 637, 640, 648, 653, 660, 669, 675, 677, 680, 687, 699, 701,
-	707, 709, 717, 726, 730, 739, 746, 753, 762, 772, 785, 792, 795, 802, 812,
-	821, 824, 831, 838, 854, 857, 861, 864, 867, 874, 883, 886, 889, 897, 901,
-	903, 907, 913, 915, 923, 931, 943, 949, 952, 973, 984, 988, 993, 996, 1004,
-	1008, 1014, 1022, 1026, 1030, 1036, 1047, 1053, 1059, 1066, 1074, 1085,
-	1095, 1102, 1112, 1129, 1134, 1138, 1143, 1149, 1157, 1163, 1167, 1183,
-	1192, 1212, 1218, 1238, 1244, 1252, 1255, 1266, 1276, 1287, 1295, 1303,
-	1311, 1319, 1327, 1335, 1343, 1348, 1365, 1373, 1379, 1385, 1393, 1396,
-	1405, 1411, 1420, 1449, 1453, 1463, 1467, 1476, 1483, 1487, 1495, 1514,
-	1526, 1529, 1536, 1550, 1552, 1556, 1561, 1569, 1576, 1583, 1589, 1592,
-	1597,
+	2, 2, 1536, 1533, 3, 2, 2, 2, 1537, 335, 3, 2, 2, 2, 1538, 1552, 7, 3,
+	2, 2, 1539, 1553, 5, 58, 30, 2, 1540, 1553, 5, 74, 38, 2, 1541, 1553, 7,
+	58, 2, 2, 1542, 1553, 5, 144, 73, 2, 1543, 1553, 5, 142, 72, 2, 1544, 1553,
+	5, 168, 85, 2, 1545, 1553, 5, 170, 86, 2, 1546, 1553, 5, 172, 87, 2, 1547,
+	1553, 5, 44, 23, 2, 1548, 1553, 5, 128, 65, 2, 1549, 1550, 5, 334, 168,
+	2, 1550, 1551, 8, 169, 1, 2, 1551, 1553, 3, 2, 2, 2, 1552, 1539, 3, 2,
+	2, 2, 1552, 1540, 3, 2, 2, 2, 1552, 1541, 3, 2, 2, 2, 1552, 1542, 3, 2,
+	2, 2, 1552, 1543, 3, 2, 2, 2, 1552, 1544, 3, 2, 2, 2, 1552, 1545, 3, 2,
+	2, 2, 1552, 1546, 3, 2, 2, 2, 1552, 1547, 3, 2, 2, 2, 1552, 1548, 3, 2,
+	2, 2, 1552, 1549, 3, 2, 2, 2, 1553, 1554, 3, 2, 2, 2, 1554, 1552, 3, 2,
+	2, 2, 1554, 1555, 3, 2, 2, 2, 1555, 1558, 3, 2, 2, 2, 1556, 1559, 6, 169,
+	5, 3, 1557, 1559, 7, 4, 2, 2, 1558, 1556, 3, 2, 2, 2, 1558, 1557, 3, 2,
+	2, 2, 1559, 337, 3, 2, 2, 2, 1560, 1562, 7, 58, 2, 2, 1561, 1560, 3, 2,
+	2, 2, 1562, 1565, 3, 2, 2, 2, 1563, 1561, 3, 2, 2, 2, 1563, 1564, 3, 2,
+	2, 2, 1564, 1566, 3, 2, 2, 2, 1565, 1563, 3, 2, 2, 2, 1566, 1567, 5, 66,
+	34, 2, 1567, 1568, 7, 39, 2, 2, 1568, 1569, 5, 336, 169, 2, 1569, 339,
+	3, 2, 2, 2, 1570, 1572, 7, 38, 2, 2, 1571, 1570, 3, 2, 2, 2, 1571, 1572,
+	3, 2, 2, 2, 1572, 1573, 3, 2, 2, 2, 1573, 1578, 7, 60, 2, 2, 1574, 1575,
+	7, 38, 2, 2, 1575, 1577, 7, 60, 2, 2, 1576, 1574, 3, 2, 2, 2, 1577, 1580,
+	3, 2, 2, 2, 1578, 1576, 3, 2, 2, 2, 1578, 1579, 3, 2, 2, 2, 1579, 341,
+	3, 2, 2, 2, 1580, 1578, 3, 2, 2, 2, 1581, 1585, 7, 11, 2, 2, 1582, 1584,
+	7, 58, 2, 2, 1583, 1582, 3, 2, 2, 2, 1584, 1587, 3, 2, 2, 2, 1585, 1583,
+	3, 2, 2, 2, 1585, 1586, 3, 2, 2, 2, 1586, 343, 3, 2, 2, 2, 1587, 1585,
+	3, 2, 2, 2, 1588, 1590, 5, 342, 172, 2, 1589, 1588, 3, 2, 2, 2, 1590, 1591,
+	3, 2, 2, 2, 1591, 1589, 3, 2, 2, 2, 1591, 1592, 3, 2, 2, 2, 1592, 345,
+	3, 2, 2, 2, 1593, 1595, 5, 344, 173, 2, 1594, 1593, 3, 2, 2, 2, 1594, 1595,
+	3, 2, 2, 2, 1595, 1597, 3, 2, 2, 2, 1596, 1598, 5, 338, 170, 2, 1597, 1596,
+	3, 2, 2, 2, 1598, 1599, 3, 2, 2, 2, 1599, 1597, 3, 2, 2, 2, 1599, 1600,
+	3, 2, 2, 2, 1600, 1601, 3, 2, 2, 2, 1601, 1602, 7, 2, 2, 3, 1602, 347,
+	3, 2, 2, 2, 172, 354, 361, 370, 384, 397, 408, 418, 426, 433, 441, 451,
+	455, 460, 469, 476, 487, 495, 498, 501, 505, 507, 513, 521, 527, 532, 535,
+	537, 544, 550, 560, 562, 565, 576, 581, 584, 593, 597, 604, 609, 618, 637,
+	640, 648, 653, 660, 669, 675, 677, 680, 687, 699, 701, 707, 709, 717, 726,
+	730, 739, 746, 753, 762, 772, 785, 792, 795, 802, 812, 821, 824, 831, 838,
+	854, 857, 861, 864, 867, 874, 883, 886, 889, 897, 901, 903, 907, 913, 915,
+	923, 931, 943, 949, 952, 973, 984, 988, 993, 996, 1004, 1008, 1014, 1022,
+	1026, 1030, 1036, 1047, 1053, 1059, 1066, 1074, 1085, 1095, 1102, 1112,
+	1129, 1134, 1138, 1143, 1149, 1157, 1163, 1167, 1183, 1192, 1212, 1218,
+	1238, 1244, 1252, 1255, 1266, 1276, 1287, 1295, 1303, 1311, 1319, 1327,
+	1335, 1343, 1348, 1365, 1373, 1379, 1385, 1393, 1396, 1405, 1411, 1420,
+	1449, 1453, 1463, 1467, 1476, 1483, 1487, 1495, 1514, 1526, 1529, 1536,
+	1552, 1554, 1558, 1563, 1571, 1578, 1585, 1591, 1594, 1599,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
@@ -14117,6 +14117,10 @@ func (s *Expr_funcContext) E_Name() antlr.TerminalNode {
 	return s.GetToken(SyslParserE_Name, 0)
 }
 
+func (s *Expr_funcContext) NativeDataTypes() antlr.TerminalNode {
+	return s.GetToken(SyslParserNativeDataTypes, 0)
+}
+
 func (s *Expr_funcContext) Func_args() IFunc_argsContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IFunc_argsContext)(nil)).Elem(), 0)
 
@@ -14172,7 +14176,7 @@ func (p *SyslParser) Expr_func() (localctx IExpr_funcContext) {
 	p.SetState(1048)
 	_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserE_FUNC || _la == SyslParserE_Name) {
+	if !(_la == SyslParserNativeDataTypes || _la == SyslParserE_FUNC || _la == SyslParserE_Name) {
 		p.GetErrorHandler().RecoverInline(p)
 	} else {
 		p.GetErrorHandler().ReportMatch(p)
@@ -14186,7 +14190,7 @@ func (p *SyslParser) Expr_func() (localctx IExpr_funcContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
+	if _la == SyslParserNativeDataTypes || (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
 		{
 			p.SetState(1050)
 			p.Func_args()
@@ -21483,7 +21487,7 @@ func (p *SyslParser) If_multiple_lines() (localctx IIf_multiple_linesContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
+	if _la == SyslParserNativeDataTypes || (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
 		{
 			p.SetState(1382)
 			p.Ifvar()
@@ -21506,7 +21510,7 @@ func (p *SyslParser) If_multiple_lines() (localctx IIf_multiple_linesContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
+	for ok := true; ok; ok = _la == SyslParserNativeDataTypes || (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
 		{
 			p.SetState(1388)
 			p.Cond_block()
@@ -21809,7 +21813,7 @@ func (p *SyslParser) Expr() (localctx IExprContext) {
 		}
 		localctx.(*ExprContext).SetNested(localctx.(*ExprContext).Get_expr_if_else().GetNested())
 
-	case SyslParserE_WHATEVER, SyslParserE_ARROW_RIGHT, SyslParserE_SQ_OPEN, SyslParserE_EMPTY_TUPLE, SyslParserE_CURLY_OPEN, SyslParserE_NULLSAFE_DOT, SyslParserE_OPEN_PAREN, SyslParserE_PLUS, SyslParserE_MINUS, SyslParserE_QN, SyslParserE_TILDE, SyslParserE_NOT, SyslParserE_TRUE, SyslParserE_FALSE, SyslParserE_NULL, SyslParserE_FUNC, SyslParserE_STRING, SyslParserE_DECIMAL, SyslParserE_DIGITS, SyslParserE_Name, SyslParserE_DOT:
+	case SyslParserNativeDataTypes, SyslParserE_WHATEVER, SyslParserE_ARROW_RIGHT, SyslParserE_SQ_OPEN, SyslParserE_EMPTY_TUPLE, SyslParserE_CURLY_OPEN, SyslParserE_NULLSAFE_DOT, SyslParserE_OPEN_PAREN, SyslParserE_PLUS, SyslParserE_MINUS, SyslParserE_QN, SyslParserE_TILDE, SyslParserE_NOT, SyslParserE_TRUE, SyslParserE_FALSE, SyslParserE_NULL, SyslParserE_FUNC, SyslParserE_STRING, SyslParserE_DECIMAL, SyslParserE_DIGITS, SyslParserE_Name, SyslParserE_DOT:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(1408)
@@ -23701,7 +23705,7 @@ func (p *SyslParser) Transform() (localctx ITransformContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = _la == SyslParserE_TABLE_OF || _la == SyslParserE_LET || (((_la-128)&-(0x1f+1)) == 0 && ((1<<uint((_la-128)))&((1<<(SyslParserE_FUNC-128))|(1<<(SyslParserE_DOT_NAME_NL-128))|(1<<(SyslParserE_Name-128)))) != 0) {
+	for ok := true; ok; ok = _la == SyslParserNativeDataTypes || _la == SyslParserE_TABLE_OF || _la == SyslParserE_LET || (((_la-128)&-(0x1f+1)) == 0 && ((1<<uint((_la-128)))&((1<<(SyslParserE_FUNC-128))|(1<<(SyslParserE_DOT_NAME_NL-128))|(1<<(SyslParserE_Name-128)))) != 0) {
 		{
 			p.SetState(1490)
 			p.Expr_stmt()
@@ -24445,6 +24449,12 @@ type IApp_declContext interface {
 	// Set_view sets the _view rule contexts.
 	Set_view(IViewContext)
 
+	// GetCheck returns the check attribute.
+	GetCheck() bool
+
+	// SetCheck sets the check attribute.
+	SetCheck(bool)
+
 	// IsApp_declContext differentiates from other interfaces.
 	IsApp_declContext()
 }
@@ -24452,6 +24462,7 @@ type IApp_declContext interface {
 type App_declContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
+	check  bool
 	_view  IViewContext
 }
 
@@ -24480,6 +24491,10 @@ func (s *App_declContext) GetParser() antlr.Parser { return s.parser }
 func (s *App_declContext) Get_view() IViewContext { return s._view }
 
 func (s *App_declContext) Set_view(v IViewContext) { s._view = v }
+
+func (s *App_declContext) GetCheck() bool { return s.check }
+
+func (s *App_declContext) SetCheck(v bool) { s.check = v }
 
 func (s *App_declContext) INDENT() antlr.TerminalNode {
 	return s.GetToken(SyslParserINDENT, 0)
@@ -24774,13 +24789,13 @@ func (p *SyslParser) App_decl() (localctx IApp_declContext) {
 		p.SetState(1536)
 		p.Match(SyslParserINDENT)
 	}
-	p.SetState(1548)
+	p.SetState(1550)
 	p.GetErrorHandler().Sync(p)
 	_alt = 1
 	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		switch _alt {
 		case 1:
-			p.SetState(1548)
+			p.SetState(1550)
 			p.GetErrorHandler().Sync(p)
 			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 160, p.GetParserRuleContext()) {
 			case 1:
@@ -24851,6 +24866,7 @@ func (p *SyslParser) App_decl() (localctx IApp_declContext) {
 
 					localctx.(*App_declContext)._view = _x
 				}
+				localctx.(*App_declContext).check = localctx.(*App_declContext).Get_view().GetAbstractView()
 
 			}
 
@@ -24858,23 +24874,23 @@ func (p *SyslParser) App_decl() (localctx IApp_declContext) {
 			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 		}
 
-		p.SetState(1550)
+		p.SetState(1552)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 161, p.GetParserRuleContext())
 	}
-	p.SetState(1554)
+	p.SetState(1556)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 162, p.GetParserRuleContext()) {
 	case 1:
-		p.SetState(1552)
+		p.SetState(1554)
 
-		if !(localctx.(*App_declContext).Get_view().GetAbstractView() == true) {
-			panic(antlr.NewFailedPredicateException(p, "$view.abstractView == true", ""))
+		if !(localctx.(*App_declContext).check) {
+			panic(antlr.NewFailedPredicateException(p, "$check", ""))
 		}
 
 	case 2:
 		{
-			p.SetState(1553)
+			p.SetState(1555)
 			p.Match(SyslParserDEDENT)
 		}
 
@@ -24995,30 +25011,30 @@ func (p *SyslParser) Application() (localctx IApplicationContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1559)
+	p.SetState(1561)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == SyslParserSYSL_COMMENT {
 		{
-			p.SetState(1556)
+			p.SetState(1558)
 			p.Match(SyslParserSYSL_COMMENT)
 		}
 
-		p.SetState(1561)
+		p.SetState(1563)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(1562)
+		p.SetState(1564)
 		p.Name_with_attribs()
 	}
 	{
-		p.SetState(1563)
+		p.SetState(1565)
 		p.Match(SyslParserCOLON)
 	}
 	{
-		p.SetState(1564)
+		p.SetState(1566)
 		p.App_decl()
 	}
 
@@ -25121,36 +25137,36 @@ func (p *SyslParser) Path() (localctx IPathContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1567)
+	p.SetState(1569)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == SyslParserFORWARD_SLASH {
 		{
-			p.SetState(1566)
+			p.SetState(1568)
 			p.Match(SyslParserFORWARD_SLASH)
 		}
 
 	}
 	{
-		p.SetState(1569)
+		p.SetState(1571)
 		p.Match(SyslParserName)
 	}
-	p.SetState(1574)
+	p.SetState(1576)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == SyslParserFORWARD_SLASH {
 		{
-			p.SetState(1570)
+			p.SetState(1572)
 			p.Match(SyslParserFORWARD_SLASH)
 		}
 		{
-			p.SetState(1571)
+			p.SetState(1573)
 			p.Match(SyslParserName)
 		}
 
-		p.SetState(1576)
+		p.SetState(1578)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -25252,22 +25268,22 @@ func (p *SyslParser) Import_stmt() (localctx IImport_stmtContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(1577)
+		p.SetState(1579)
 		p.Match(SyslParserIMPORT)
 	}
-	p.SetState(1581)
+	p.SetState(1583)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 166, p.GetParserRuleContext())
 
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
-				p.SetState(1578)
+				p.SetState(1580)
 				p.Match(SyslParserSYSL_COMMENT)
 			}
 
 		}
-		p.SetState(1583)
+		p.SetState(1585)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 166, p.GetParserRuleContext())
 	}
@@ -25378,17 +25394,17 @@ func (p *SyslParser) Imports_decl() (localctx IImports_declContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1585)
+	p.SetState(1587)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for ok := true; ok; ok = _la == SyslParserIMPORT {
 		{
-			p.SetState(1584)
+			p.SetState(1586)
 			p.Import_stmt()
 		}
 
-		p.SetState(1587)
+		p.SetState(1589)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -25513,33 +25529,33 @@ func (p *SyslParser) Sysl_file() (localctx ISysl_fileContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1590)
+	p.SetState(1592)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == SyslParserIMPORT {
 		{
-			p.SetState(1589)
+			p.SetState(1591)
 			p.Imports_decl()
 		}
 
 	}
-	p.SetState(1593)
+	p.SetState(1595)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for ok := true; ok; ok = (((_la-56)&-(0x1f+1)) == 0 && ((1<<uint((_la-56)))&((1<<(SyslParserSYSL_COMMENT-56))|(1<<(SyslParserTEXT_LINE-56))|(1<<(SyslParserName-56)))) != 0) || _la == SyslParserE_Name {
 		{
-			p.SetState(1592)
+			p.SetState(1594)
 			p.Application()
 		}
 
-		p.SetState(1595)
+		p.SetState(1597)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(1597)
+		p.SetState(1599)
 		p.Match(SyslParserEOF)
 	}
 
@@ -25614,7 +25630,7 @@ func (p *SyslParser) Expr_statement_Sempred(localctx antlr.RuleContext, predInde
 func (p *SyslParser) App_decl_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 3:
-		return localctx.(*App_declContext).Get_view().GetAbstractView() == true
+		return localctx.(*App_declContext).check
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))

@@ -1,0 +1,5 @@
+sysl2/antlr/grammar/sysl*.go linguist-generated=true
+sysl2/antlr/sysl_js/SyslParser.js linguist-generated=true
+sysl2/antlr/sysl_js/SyslLexer.js linguist-generated=true
+sysl2/antlr/sysl_js/SyslParserListener.js linguist-generated=true
+sysl2/antlr/sysl_js/*.tokens linguist-generated=true

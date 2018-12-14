@@ -285,7 +285,7 @@ expr_coalesce: expr_but_not (E_COALESCE expr_but_not)*;
 
 if_one_liner: expr E_QN? E_THEN expr E_ELSE expr;
 
-else_block_stmt returns [bool nested]:
+else_block_stmt returns [nested = false;]:
       expr
       { $nested=$expr.nested;}
       ;
@@ -305,7 +305,7 @@ ifvar: expr E_DOUBLE_EQ;
 if_multiple_lines: ifvar? E_COLON E_NL
                     INDENT cond_block+ final_else? DEDENT;
 
-expr_if_else returns [bool nested] :
+expr_if_else returns [nested = false;] :
         E_IF (
             if_one_liner
             | if_multiple_lines { $nested=true;}
@@ -315,22 +315,22 @@ expr_if_else returns [bool nested] :
 //
 //  EXPR
 //
-expr returns [bool nested]:
+expr returns [nested = false;]:
       expr_if_else { $nested=$expr_if_else.nested;}
       | expr_coalesce
       ;
 
 expr_assign
-    returns [bool nested]
+    returns [nested = false;]
             : E_EQ (expr { $nested=$expr.nested;} | transform { $nested=true;});
-expr_simple_assign returns [bool nested] : E_Name expr_assign {$nested = $expr_assign.nested;};
-expr_let_statement returns [bool nested] : E_LET E_Name expr_assign {$nested = $expr_assign.nested;};
-expr_table_of_statement returns [bool nested]: E_TABLE_OF E_Name expr_assign {$nested = $expr_assign.nested;};
+expr_simple_assign returns [nested = false;] : E_Name expr_assign {$nested = $expr_assign.nested;};
+expr_let_statement returns [nested = false;] : E_LET E_Name expr_assign {$nested = $expr_assign.nested;};
+expr_table_of_statement returns [nested]: E_TABLE_OF E_Name expr_assign {$nested = $expr_assign.nested;};
 expr_dot_assign: E_DOT_NAME_NL;
 
 expr_statement_no_nl: expr_dot_assign;
 
-expr_statement locals [bool nested]:
+expr_statement locals [nested = false;]:
                   (expr_let_statement {$nested = $expr_let_statement.nested;}
                 | expr_table_of_statement {$nested = $expr_table_of_statement.nested;}
                 // NL is not required when we got nested expression (like if_multiple_lines or transform)
@@ -359,9 +359,9 @@ view_param: name_str LESS_COLON view_type_spec;
 view_params: view_param (COMMA view_param)*;
 
 abstract_view: ABSTRACT;
-view returns [bool abstractView]: VIEW name_str OPEN_PAREN view_params CLOSE_PAREN (ARROW_RIGHT view_return_type)? ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
+view returns [abstractView = false;]: VIEW name_str OPEN_PAREN view_params CLOSE_PAREN (ARROW_RIGHT view_return_type)? ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
-app_decl locals [bool check]: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view { $check = $view.abstractView}  )+ ( {$check}? | DEDENT );
+app_decl locals [check = false;]: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view {$check == $view.abstractView} )+ ( { $check === true}? | DEDENT );
 
 application:  SYSL_COMMENT*
                 name_with_attribs

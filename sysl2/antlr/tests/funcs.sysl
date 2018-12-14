@@ -1,12 +1,14 @@
 TransformationTest[package="io.sysl.test.views"]:
   !view TestInbuiltFuncs(number <: int) -> int:
     number -> (:
+      AppOrderId2 = int(.orderId, null)
       let out = autoinc()
       let out = foo any(1)
       let out = foo max(.bar)
       let out = foo max(bar.baz)
       let out = foo where(.x > 0) max(.bar.baz)
       let out = foo where(.x > 0) count
+      let out = -> set of fo first 1 by (.id) single
       AppDate = to_date(.createdDate ?? now())
       AppOrderId = str(.orderId)
       foo = bar(.)

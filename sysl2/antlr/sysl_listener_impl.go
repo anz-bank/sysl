@@ -2317,8 +2317,10 @@ func (s *TreeShapeListener) EnterExpr_func(ctx *parser.Expr_funcContext) {
 	var funcName string
 	if ctx.E_FUNC() != nil {
 		funcName = ctx.E_FUNC().GetText()
-	} else {
+	} else if ctx.E_Name() != nil {
 		funcName = ctx.E_Name().GetText()
+	} else {
+		funcName = ctx.NativeDataTypes().GetText()
 	}
 
 	expr := &sysl.Expr{
