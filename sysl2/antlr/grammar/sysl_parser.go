@@ -215,13 +215,13 @@ var parserATN = []uint16{
 	322, 324, 326, 328, 330, 332, 334, 336, 338, 340, 342, 344, 346, 2, 18,
 	4, 2, 59, 60, 135, 135, 4, 2, 40, 40, 136, 136, 3, 2, 8, 9, 4, 2, 14, 16,
 	18, 20, 4, 2, 56, 56, 59, 60, 4, 2, 114, 116, 131, 133, 4, 2, 84, 84, 136,
-	136, 4, 2, 130, 130, 135, 135, 3, 2, 119, 120, 4, 2, 126, 126, 128, 128,
-	4, 2, 72, 72, 135, 136, 5, 2, 93, 93, 96, 96, 98, 99, 4, 2, 94, 95, 107,
-	107, 4, 2, 93, 93, 96, 96, 4, 2, 75, 76, 79, 80, 4, 2, 103, 103, 105, 105,
-	2, 1657, 2, 348, 3, 2, 2, 2, 4, 357, 3, 2, 2, 2, 6, 365, 3, 2, 2, 2, 8,
-	373, 3, 2, 2, 2, 10, 377, 3, 2, 2, 2, 12, 379, 3, 2, 2, 2, 14, 386, 3,
-	2, 2, 2, 16, 389, 3, 2, 2, 2, 18, 391, 3, 2, 2, 2, 20, 402, 3, 2, 2, 2,
-	22, 413, 3, 2, 2, 2, 24, 420, 3, 2, 2, 2, 26, 433, 3, 2, 2, 2, 28, 435,
+	136, 5, 2, 5, 5, 130, 130, 135, 135, 3, 2, 119, 120, 4, 2, 126, 126, 128,
+	128, 4, 2, 72, 72, 135, 136, 5, 2, 93, 93, 96, 96, 98, 99, 4, 2, 94, 95,
+	107, 107, 4, 2, 93, 93, 96, 96, 4, 2, 75, 76, 79, 80, 4, 2, 103, 103, 105,
+	105, 2, 1657, 2, 348, 3, 2, 2, 2, 4, 357, 3, 2, 2, 2, 6, 365, 3, 2, 2,
+	2, 8, 373, 3, 2, 2, 2, 10, 377, 3, 2, 2, 2, 12, 379, 3, 2, 2, 2, 14, 386,
+	3, 2, 2, 2, 16, 389, 3, 2, 2, 2, 18, 391, 3, 2, 2, 2, 20, 402, 3, 2, 2,
+	2, 22, 413, 3, 2, 2, 2, 24, 420, 3, 2, 2, 2, 26, 433, 3, 2, 2, 2, 28, 435,
 	3, 2, 2, 2, 30, 446, 3, 2, 2, 2, 32, 451, 3, 2, 2, 2, 34, 455, 3, 2, 2,
 	2, 36, 457, 3, 2, 2, 2, 38, 462, 3, 2, 2, 2, 40, 464, 3, 2, 2, 2, 42, 476,
 	3, 2, 2, 2, 44, 478, 3, 2, 2, 2, 46, 483, 3, 2, 2, 2, 48, 507, 3, 2, 2,
@@ -14117,6 +14117,10 @@ func (s *Expr_funcContext) E_Name() antlr.TerminalNode {
 	return s.GetToken(SyslParserE_Name, 0)
 }
 
+func (s *Expr_funcContext) NativeDataTypes() antlr.TerminalNode {
+	return s.GetToken(SyslParserNativeDataTypes, 0)
+}
+
 func (s *Expr_funcContext) Func_args() IFunc_argsContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IFunc_argsContext)(nil)).Elem(), 0)
 
@@ -14172,7 +14176,7 @@ func (p *SyslParser) Expr_func() (localctx IExpr_funcContext) {
 	p.SetState(1048)
 	_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserE_FUNC || _la == SyslParserE_Name) {
+	if !(_la == SyslParserNativeDataTypes || _la == SyslParserE_FUNC || _la == SyslParserE_Name) {
 		p.GetErrorHandler().RecoverInline(p)
 	} else {
 		p.GetErrorHandler().ReportMatch(p)
@@ -14186,7 +14190,7 @@ func (p *SyslParser) Expr_func() (localctx IExpr_funcContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
+	if _la == SyslParserNativeDataTypes || (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
 		{
 			p.SetState(1050)
 			p.Func_args()
@@ -21483,7 +21487,7 @@ func (p *SyslParser) If_multiple_lines() (localctx IIf_multiple_linesContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
+	if _la == SyslParserNativeDataTypes || (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
 		{
 			p.SetState(1382)
 			p.Ifvar()
@@ -21506,7 +21510,7 @@ func (p *SyslParser) If_multiple_lines() (localctx IIf_multiple_linesContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
+	for ok := true; ok; ok = _la == SyslParserNativeDataTypes || (((_la-70)&-(0x1f+1)) == 0 && ((1<<uint((_la-70)))&((1<<(SyslParserE_WHATEVER-70))|(1<<(SyslParserE_ARROW_RIGHT-70))|(1<<(SyslParserE_SQ_OPEN-70))|(1<<(SyslParserE_EMPTY_TUPLE-70))|(1<<(SyslParserE_CURLY_OPEN-70))|(1<<(SyslParserE_NULLSAFE_DOT-70))|(1<<(SyslParserE_OPEN_PAREN-70))|(1<<(SyslParserE_PLUS-70))|(1<<(SyslParserE_MINUS-70))|(1<<(SyslParserE_QN-70))|(1<<(SyslParserE_TILDE-70))|(1<<(SyslParserE_NOT-70)))) != 0) || (((_la-108)&-(0x1f+1)) == 0 && ((1<<uint((_la-108)))&((1<<(SyslParserE_IF-108))|(1<<(SyslParserE_TRUE-108))|(1<<(SyslParserE_FALSE-108))|(1<<(SyslParserE_NULL-108))|(1<<(SyslParserE_FUNC-108))|(1<<(SyslParserE_STRING-108))|(1<<(SyslParserE_DECIMAL-108))|(1<<(SyslParserE_DIGITS-108))|(1<<(SyslParserE_Name-108))|(1<<(SyslParserE_DOT-108)))) != 0) {
 		{
 			p.SetState(1388)
 			p.Cond_block()
@@ -21809,7 +21813,7 @@ func (p *SyslParser) Expr() (localctx IExprContext) {
 		}
 		localctx.(*ExprContext).SetNested(localctx.(*ExprContext).Get_expr_if_else().GetNested())
 
-	case SyslParserE_WHATEVER, SyslParserE_ARROW_RIGHT, SyslParserE_SQ_OPEN, SyslParserE_EMPTY_TUPLE, SyslParserE_CURLY_OPEN, SyslParserE_NULLSAFE_DOT, SyslParserE_OPEN_PAREN, SyslParserE_PLUS, SyslParserE_MINUS, SyslParserE_QN, SyslParserE_TILDE, SyslParserE_NOT, SyslParserE_TRUE, SyslParserE_FALSE, SyslParserE_NULL, SyslParserE_FUNC, SyslParserE_STRING, SyslParserE_DECIMAL, SyslParserE_DIGITS, SyslParserE_Name, SyslParserE_DOT:
+	case SyslParserNativeDataTypes, SyslParserE_WHATEVER, SyslParserE_ARROW_RIGHT, SyslParserE_SQ_OPEN, SyslParserE_EMPTY_TUPLE, SyslParserE_CURLY_OPEN, SyslParserE_NULLSAFE_DOT, SyslParserE_OPEN_PAREN, SyslParserE_PLUS, SyslParserE_MINUS, SyslParserE_QN, SyslParserE_TILDE, SyslParserE_NOT, SyslParserE_TRUE, SyslParserE_FALSE, SyslParserE_NULL, SyslParserE_FUNC, SyslParserE_STRING, SyslParserE_DECIMAL, SyslParserE_DIGITS, SyslParserE_Name, SyslParserE_DOT:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(1408)
@@ -23701,7 +23705,7 @@ func (p *SyslParser) Transform() (localctx ITransformContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = _la == SyslParserE_TABLE_OF || _la == SyslParserE_LET || (((_la-128)&-(0x1f+1)) == 0 && ((1<<uint((_la-128)))&((1<<(SyslParserE_FUNC-128))|(1<<(SyslParserE_DOT_NAME_NL-128))|(1<<(SyslParserE_Name-128)))) != 0) {
+	for ok := true; ok; ok = _la == SyslParserNativeDataTypes || _la == SyslParserE_TABLE_OF || _la == SyslParserE_LET || (((_la-128)&-(0x1f+1)) == 0 && ((1<<uint((_la-128)))&((1<<(SyslParserE_FUNC-128))|(1<<(SyslParserE_DOT_NAME_NL-128))|(1<<(SyslParserE_Name-128)))) != 0) {
 		{
 			p.SetState(1490)
 			p.Expr_stmt()

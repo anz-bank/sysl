@@ -3,6 +3,7 @@ My :: Client Model "My client Model":
         requests <: set of Request
         list (0..10) <: Request
         id (0..10) <: int32
+        id2 (0..10) <: int64
 
     !type Request:
         bar <: decimal(10..9999)
