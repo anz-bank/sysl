@@ -58,9 +58,10 @@ script:
 before_deploy:
 - python setup.py sdist bdist_wheel
 - gradle build -b src/libs/java/build.gradle :jar
-- GOOS=darwin GOARCH=amd64 go build -o dist/gosysl-darwin anz-bank/sysl/sysl2/antlr
-- GOOS=linux GOARCH=amd64 go build -o dist/gosysl-linux anz-bank/sysl/sysl2/antlr
-- GOOS=windows GOARCH=amd64 go build -o dist/gosysl.exe anz-bank/sysl/sysl2/antlr
+- GOOS=darwin GOARCH=amd64 go build -o gosysl/gosysl-darwin anz-bank/sysl/sysl2/antlr
+- GOOS=linux GOARCH=amd64 go build -o gosysl/gosysl-linux anz-bank/sysl/sysl2/antlr
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; gosysl/gosysl-darwin -h; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; gosysl/gosysl-linux -h; fi
 - docker build -t "$DOCKER_IMAGE_LATEST" -f Dockerfile .
 - docker tag "$DOCKER_IMAGE_LATEST" "$DOCKER_IMAGE_VERSIONED"
 deploy:
@@ -73,6 +74,7 @@ deploy:
   file_glob: true
   file:
   - dist/*
+  - gosysl/*
   - src/libs/java/build/libs/*
   skip_cleanup: true
   prerelease: true
