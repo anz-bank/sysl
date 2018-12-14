@@ -47,6 +47,7 @@ install:
 - pip install flake8==3.5.0
 - pip install . pytest
 - go get -t -v anz-bank/sysl/sysl2/antlr
+- if [[ -z $NPM_AUTH_TOKEN ]]; export NPM_AUTH_TOKEN="SOME-RANDOM-KEY"; fi
 - npm install --prefix sysl2/antlr/sysl_js
 script:
 - flake8
