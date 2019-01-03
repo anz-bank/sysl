@@ -92,6 +92,11 @@ We encourage contributions to this project! Please have a look at the `contribut
 
 If you need to create a release follow the `release documentation <docs/releasing.md>`_.
 
+Local Travis CI builds (experimental)
+-------------------------------------
+
+``./run-travis.sh`` runs a local Travis CI build. This is intended primarily to
+test Travis builds offline.
 
 Extending Sysl
 --------------
