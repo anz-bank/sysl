@@ -13,3 +13,4 @@ build
 .vscode
 **/node_modules/
 **/coverage/
+coverage.txt
