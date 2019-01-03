@@ -19,7 +19,7 @@ install:
   - pip install . pytest
   - pip freeze
   - choco install gradle
-  - go get -t -v anz-bank/sysl/sysl2/antlr
+  - go get -t -v github.com/anz-bank/sysl/sysl2/antlr
 
 build: off
 
@@ -28,7 +28,7 @@ test_script:
   - pytest
   - pytest test/e2e --syslexe=sysl --reljamexe=reljam
   - gradle --no-daemon -b test\java\build.gradle test
-  - go test -coverprofile=coverage.txt -covermode=atomic anz-bank/sysl/sysl2/antlr
+  - go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/sysl2/antlr
 
 after_test:
   - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"
@@ -36,7 +36,7 @@ after_test:
   - XCOPY src\libs\google-site-packages-override\__init__.py  C:\Python27\Lib\site-packages\google /Y
   - python setup.py py2exe
   - pytest test/e2e --syslexe=dist/sysl.exe --reljamexe=dist/reljam.exe
-  - go build -o dist/gosysl.exe anz-bank/sysl/sysl2/antlr
+  - go build -o dist/gosysl.exe github.com/anz-bank/sysl/sysl2/antlr
 
 artifacts:
   - path: 'dist'
@@ -49,7 +49,7 @@ deploy:
     tag: $(APPVEYOR_REPO_TAG_NAME)
     draft: true
     prerelease: true
-    repository: anz-bank/sysl
+    repository: github.com/anz-bank/sysl
     auth_token:
       secure: McTebLt7DvyCd7qa9oHl5DwPZeNHf7NdtSCtNBZre59iWCmC0T0HT+/yiHLDQMtk
     on:

@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
 )
 

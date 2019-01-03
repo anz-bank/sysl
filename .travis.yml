@@ -12,10 +12,10 @@ matrix:
     - go env
     - export GOPATH=$HOME/gopath
     - export PATH=$HOME/gopath/bin:$PATH
-    - mkdir -p $HOME/gopath/src/anz-bank/sysl
-    - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/anz-bank/sysl/
-    - export TRAVIS_BUILD_DIR=$HOME/gopath/src/anz-bank/sysl
-    - cd $HOME/gopath/src/anz-bank/sysl
+    - mkdir -p $HOME/gopath/src/github.com/anz-bank/sysl
+    - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/anz-bank/sysl/
+    - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/anz-bank/sysl
+    - cd $HOME/gopath/src/github.com/anz-bank/sysl
     after_success:
     - pip install codecov -e .
     - coverage run --source=src/sysl -m py.test
@@ -23,7 +23,7 @@ matrix:
   - os: osx
     osx_image: xcode8.3
     language: go
-    go_import_path: anz-bank/sysl
+    go_import_path: github.com/anz-bank/sysl
     before_install:
     - brew update
     - brew list python >/dev/null 2>&1 || brew install python
@@ -47,17 +47,17 @@ env:
 install:
 - pip install flake8==3.5.0
 - pip install . pytest
-- go get -t -v anz-bank/sysl/sysl2/antlr
+- go get -t -v github.com/anz-bank/sysl/sysl2/antlr
 - npm install --prefix sysl2/antlr/sysl_js
 script:
 - flake8
 - pytest
 - pytest test/e2e --syslexe=sysl --reljamexe=reljam
 - gradle test -b test/java/build.gradle
-- go test -coverprofile=coverage.txt -covermode=atomic anz-bank/sysl/sysl2/antlr
+- go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/sysl2/antlr
 - npm test --prefix sysl2/antlr/sysl_js
-- GOOS=darwin GOARCH=amd64 go build -o gosysl/gosysl-darwin anz-bank/sysl/sysl2/antlr
-- GOOS=linux GOARCH=amd64 go build -o gosysl/gosysl-linux anz-bank/sysl/sysl2/antlr
+- GOOS=darwin GOARCH=amd64 go build -o gosysl/gosysl-darwin github.com/anz-bank/sysl/sysl2/antlr
+- GOOS=linux GOARCH=amd64 go build -o gosysl/gosysl-linux github.com/anz-bank/sysl/sysl2/antlr
 before_deploy:
 - python setup.py sdist bdist_wheel
 - gradle build -b src/libs/java/build.gradle :jar
@@ -78,7 +78,7 @@ deploy:
   skip_cleanup: true
   prerelease: true
   on:
-    repo: anz-bank/sysl
+    repo: github.com/anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: pypi
@@ -88,25 +88,25 @@ deploy:
   password:
     secure: j9NRzqbk/hq9U25Ig5r2aA1+Y/asG2jqP4T35x4cwdosE3r4i9delxG0ZyLa4D44OYM7joIPdMyr9khlfK5HBXqNC9ZzhlDyYlg5/LJmsM4TeS5KaKyPL89bqDAX2NhNgVjb8J68XsKkizYjzVeKbPl5UYdoyv7t4yLytlsAjRBBYmIo5mJ9Obx1Hb+nUP7Ny4Pwl43Oxkr2qS91iD074V4B0czHjMvtizqttOGTr81TzPbuDsd4/DW8GVQF0gPazg1/UqhN37oAKpIH9k5u4ScrKQkUGDO1eOEkwogTqOAcOTu91AZST/1OHN2ZRcMtvcyY1QJWq88s9p9DIWqsSK42bb4L0SziNa23hvFUpkaxsnl6MCLPaHP2zpo3cyKOGmWT6JElv9hJBVFimCG1V1b/YNHVuoNfz6J3gbW8ILw9e6vebfQRHHqAwBQWtRilHnO5jRcLRIvBSZyApYw6rBUGtuDD2GbXwcFVbIde1xqfvt3dlB/ZC4PiyXqdwAKadjTxycP/Aexzg4YpoWnHUS+aeFJVy+Qb/3H3lZLNIz9zRqCnIvpIR0+hzTgNVuVRrr1WlupIPxY47+cy7s0dhi3gf+/j+YxNgKnTlZin+RvcU9+49CL9DYyMYYRA/RauJi/pa7hbEvxtY/AykcvRpQcv4Crl1mTOn+zqvrFdCDw=
   on:
-    repo: anz-bank/sysl
+    repo: github.com/anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
   script: gradle -b src/libs/java/build.gradle bintrayUpload
   skip_cleanup: true
   on:
-    repo: anz-bank/sysl
+    repo: github.com/anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
   script: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" && docker push "$DOCKER_IMAGE_VERSIONED" && docker push "$DOCKER_IMAGE_LATEST"
   on:
-    repo: anz-bank/sysl
+    repo: github.com/anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
   script: cd sysl2/antlr/sysl_js && npm publish
   on:
-    repo: anz-bank/sysl
+    repo: github.com/anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"

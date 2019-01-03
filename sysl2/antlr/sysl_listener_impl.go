@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"anz-bank/sysl/src/proto"
-	"anz-bank/sysl/sysl2/antlr/grammar"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/antlr/grammar"
 )
 
 var _ = fmt.Println
