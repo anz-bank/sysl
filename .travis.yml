@@ -11,7 +11,6 @@ matrix:
     before_install:
     - go env
     - export GOPATH=$HOME/gopath
-    - export PATH=$HOME/gopath/bin:$PATH
     - mkdir -p $HOME/gopath/src/github.com/anz-bank/sysl
     - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/anz-bank/sysl/
     - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/anz-bank/sysl
@@ -30,6 +29,7 @@ matrix:
     - brew list gradle >/dev/null 2>&1 || brew install gradle
     - brew list go >/dev/null 2>&1 || brew install go
     - export PATH=/usr/local/opt/python/libexec/bin:$PATH
+    - export SYSL_PYTHON_DIR=/usr/local/bin/
     - python --version
     - pip --version
     - go version
@@ -52,9 +52,9 @@ install:
 script:
 - flake8
 - pytest
-- pytest test/e2e --syslexe=sysl --reljamexe=reljam
+- pytest test/e2e --syslexe=${SYSL_PYTHON_DIR}sysl --reljamexe=${SYSL_PYTHON_DIR}reljam
 - gradle test -b test/java/build.gradle
-- go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/sysl2/sysl
+- SYSL_PYTHON_BIN=${SYSL_PYTHON_DIR}sysl go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/sysl2/sysl
 - npm test --prefix sysl2/sysl/sysl_js
 - GOOS=darwin GOARCH=amd64 go build -o gosysl/gosysl-darwin github.com/anz-bank/sysl/sysl2/sysl
 - GOOS=linux GOARCH=amd64 go build -o gosysl/gosysl-linux github.com/anz-bank/sysl/sysl2/sysl
