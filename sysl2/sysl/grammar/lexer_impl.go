@@ -1,9 +1,11 @@
 package parser
 
 import (
+	"os"
 	s "strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/sirupsen/logrus"
 )
 
 func calcSpaces(text string) int {
@@ -102,6 +104,9 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 	}
 
 	next := l.BaseLexer.NextToken()
+	if os.Getenv("SYSL_LEXER_LOG") != "" {
+		logrus.Info(next)
+	}
 	// return NEWLINE
 	if gotNewLine {
 		switch next.GetTokenType() {
