@@ -10,6 +10,7 @@ import (
 
 	"github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
+	"github.com/stretchr/testify/assert"
 )
 
 func pyParse(filename, root string) (*sysl.Module, error) {
@@ -48,7 +49,8 @@ func pyParse(filename, root string) (*sysl.Module, error) {
 }
 
 func parseComparable(filename, root string) (*sysl.Module, error) {
-	module, err := Parse(filename, root)
+	fs := &osFileSystem{root}
+	module, err := FSParse(filename, fs)
 	if err != nil {
 		return nil, err
 	}
@@ -111,12 +113,18 @@ func parseAndPrint(t *testing.T, filename, root string) error {
 
 func testParse(t *testing.T, filename, root string) {
 	equal, err := parseAndCompare(filename, root)
-	if err != nil {
-		t.Errorf("Parsing error: %v", err)
-	}
-	if !equal {
-		t.Error("Mismatch")
-	}
+	assert.NoError(t, err)
+	assert.True(t, equal, "Mismatch")
+}
+
+func TestParseMissingFile(t *testing.T) {
+	_, err := parseAndCompare("tests/doesn't.exist", "")
+	assert.Error(t, err)
+}
+
+func TestParseBadFile(t *testing.T) {
+	_, err := parseAndCompare("sysl.go", "")
+	assert.Error(t, err)
 }
 
 func TestSimpleEP(t *testing.T) {
@@ -219,8 +227,9 @@ func TestSimpleProject(t *testing.T) {
 }
 
 func TestUrlParamOrder(t *testing.T) {
-	// Output won't match legacy; visually inspect the diff.
-	parseAndCompare("tests/rest_url_params.sysl", "")
+	filename := "tests/rest_url_params.sysl"
+	parseAndCompare(filename, "")
+	fmt.Printf("Output for %#v won't match legacy. Visually inspect the above diff.\n", filename)
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
