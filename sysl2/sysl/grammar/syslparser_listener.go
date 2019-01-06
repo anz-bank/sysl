@@ -95,6 +95,12 @@ type SyslParserListener interface {
 	// EnterTable is called when entering the table production.
 	EnterTable(c *TableContext)
 
+	// EnterUnion is called when entering the union production.
+	EnterUnion(c *UnionContext)
+
+	// EnterType_ref is called when entering the type_ref production.
+	EnterType_ref(c *Type_refContext)
+
 	// EnterPackage_name is called when entering the package_name production.
 	EnterPackage_name(c *Package_nameContext)
 
@@ -613,6 +619,12 @@ type SyslParserListener interface {
 
 	// ExitTable is called when exiting the table production.
 	ExitTable(c *TableContext)
+
+	// ExitUnion is called when exiting the union production.
+	ExitUnion(c *UnionContext)
+
+	// ExitType_ref is called when exiting the type_ref production.
+	ExitType_ref(c *Type_refContext)
 
 	// ExitPackage_name is called when exiting the package_name production.
 	ExitPackage_name(c *Package_nameContext)

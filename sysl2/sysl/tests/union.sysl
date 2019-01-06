@@ -1,0 +1,9 @@
+Test:
+    !type A: ...
+    !type B: ...
+    !type C: ...
+
+    !union U:
+        A
+        B
+        C

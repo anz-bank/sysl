@@ -1,0 +1,51 @@
+apps: <
+  key: "Test"
+  value: <
+    name: <
+      part: "Test"
+    >
+    types: <
+      key: "A"
+      value: <
+      >
+    >
+    types: <
+      key: "B"
+      value: <
+      >
+    >
+    types: <
+      key: "C"
+      value: <
+      >
+    >
+    types: <
+      key: "U"
+      value: <
+        one_of: <
+          type: <
+            type_ref: <
+              ref: <
+                path: "A"
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              ref: <
+                path: "B"
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              ref: <
+                path: "C"
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

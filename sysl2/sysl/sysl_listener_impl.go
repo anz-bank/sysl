@@ -723,12 +723,13 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	}
 	s.typemap = map[string]*sysl.Type{}
 
+	types := s.module.Apps[s.appname].Types
 	if ctx.TABLE() != nil {
-		if s.module.Apps[s.appname].Types[s.typename].GetRelation().GetAttrDefs() != nil {
+		if types[s.typename].GetRelation().GetAttrDefs() != nil {
 			panic("not implemented yet")
 		}
 
-		s.module.Apps[s.appname].Types[s.typename] = &sysl.Type{
+		types[s.typename] = &sysl.Type{
 			Type: &sysl.Type_Relation_{
 				Relation: &sysl.Type_Relation{
 					AttrDefs: s.typemap,
@@ -737,7 +738,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 		}
 	}
 	if ctx.TYPE() != nil {
-		s.module.Apps[s.appname].Types[s.typename] = &sysl.Type{
+		types[s.typename] = &sysl.Type{
 			Type: &sysl.Type_Tuple_{
 				Tuple: &sysl.Type_Tuple{
 					AttrDefs: s.typemap,
@@ -745,7 +746,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 			},
 		}
 	}
-	type1 := s.module.Apps[s.appname].Types[s.typename]
+	type1 := types[s.typename]
 	if len(ctx.AllField()) == 0 {
 		type1.Type = nil
 	}
@@ -756,8 +757,8 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 		if type1.Attrs == nil {
 			type1.Attrs = map[string]*sysl.Attribute{}
 		}
-		s.pushScope(type1)
 	}
+	s.pushScope(type1)
 	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
@@ -826,28 +827,8 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 		}
 	}
 
-	if ctx.Annotation(0) != nil {
-		// Match legacy behavior
-		// Copy the annotations from the parent (tuple or relation) to each child
-		arr := ctx.AllAnnotation()
-		collection := s.module.Apps[s.appname].Types[s.typename]
-
-		for i := range arr {
-			varname := arr[i].(*parser.AnnotationContext).VAR_NAME().GetText()
-			attr := collection.Attrs[varname]
-			for _, name := range s.fieldname {
-				f := attributesForType(collection)[name]
-
-				if f.Attrs == nil {
-					f.Attrs = map[string]*sysl.Attribute{}
-				}
-				f.Attrs[varname] = attr
-			}
-		}
-		// End
-
-		s.popScope()
-	}
+	s.applyAnnotations(ctx.AllAnnotation())
+	s.popScope()
 
 	// Match legacy behavior
 	fixFieldDefinitions(s.module.Apps[s.appname].Types[s.typename])
@@ -859,6 +840,98 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	} else {
 		s.typename = ""
 	}
+
+	s.fieldname = []string{}
+	s.typemap = nil
+}
+
+func (s *TreeShapeListener) applyAnnotations(
+	annotations []parser.IAnnotationContext,
+) {
+	// Match legacy behavior
+	// Copy the annotations from the parent (tuple or relation) to each child
+	collection := s.module.Apps[s.appname].Types[s.typename]
+
+	for _, annotation := range annotations {
+		varname := annotation.(*parser.AnnotationContext).VAR_NAME().GetText()
+		attr := collection.Attrs[varname]
+		for _, name := range s.fieldname {
+			f := attributesForType(collection)[name]
+
+			if f.Attrs == nil {
+				f.Attrs = map[string]*sysl.Attribute{}
+			}
+			f.Attrs[varname] = attr
+		}
+	}
+}
+
+func (s *TreeShapeListener) pushTypename(typename string) string {
+	if s.typename != "" {
+		s.typename += "."
+	}
+	s.typename += typename
+	return s.typename
+}
+
+func (s *TreeShapeListener) popTypename() string {
+	if lastDot := strings.LastIndex(s.typename, "."); lastDot != -1 {
+		s.typename = s.typename[:lastDot]
+	} else {
+		s.typename = ""
+	}
+	return s.typename
+}
+
+// EnterUnion is called when production union is entered.
+func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
+	s.pushTypename(ctx.Name_str().GetText())
+	s.typemap = map[string]*sysl.Type{}
+
+	types := s.module.Apps[s.appname].Types
+
+	if types[s.typename].GetOneOf().GetType() != nil {
+		panic("not implemented yet")
+	}
+
+	types[s.typename] = &sysl.Type{
+		Type: &sysl.Type_OneOf_{
+			OneOf: &sysl.Type_OneOf{},
+		},
+	}
+
+	type1 := types[s.typename]
+	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
+		type1.Attrs = makeAttributeArray(attribs)
+	}
+	if ctx.Annotation(0) != nil {
+		if type1.Attrs == nil {
+			type1.Attrs = map[string]*sysl.Attribute{}
+		}
+	}
+	s.pushScope(type1)
+	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+}
+
+// ExitUnion is called when production union is exited.
+func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
+	s.applyAnnotations(ctx.AllAnnotation())
+	s.popScope()
+
+	oneof := s.module.Apps[s.appname].Types[s.typename].GetOneOf()
+	for _, ref := range ctx.AllType_ref() {
+		oneof.Type = append(oneof.Type, &sysl.Type{
+			Type: &sysl.Type_TypeRef{
+				TypeRef: &sysl.ScopedRef{
+					Ref: &sysl.Scope{
+						Path: []string{ref.(*parser.Type_refContext).Name_str().GetText()},
+					},
+				},
+			},
+		})
+	}
+
+	s.popTypename()
 
 	s.fieldname = []string{}
 	s.typemap = nil

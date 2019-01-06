@@ -213,6 +213,10 @@ func TestSimpleEP2(t *testing.T) {
 	testParseAgainstPython(t, "tests/test4.sysl", "")
 }
 
+func TestUnion(t *testing.T) {
+	testParseAgainstGolden(t, "tests/union.sysl", "")
+}
+
 func TestSimpleEndpointParams(t *testing.T) {
 	testParseAgainstPython(t, "tests/ep_params.sysl", "")
 }
