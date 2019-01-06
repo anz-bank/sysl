@@ -42,8 +42,6 @@ func pyParse(filename, root, output string) (*sysl.Module, error) {
 	args := []string{"textpb", "-o", output, filename}
 	if len(root) > 0 {
 		rootArg := []string{"--root", root}
-		// TODO: This looks dubious
-		args[2] = root + "/" + args[2]
 		output = args[2]
 		args = append(rootArg, args...)
 	}
