@@ -39,11 +39,11 @@ var pySysl = func() string {
 }()
 
 func pyParse(filename, root, output string) (*sysl.Module, error) {
-	args := []string{"textpb", "-o", output, filename}
+	var args []string
 	if len(root) > 0 {
-		rootArg := []string{"--root", root}
-		args = append(rootArg, args...)
+		args = append(args, "--root", root)
 	}
+	args = append(args, "textpb", "-o", output, filename)
 
 	cmd := exec.Command(pySysl, args...)
 	cmd.Stdout = os.Stdout
