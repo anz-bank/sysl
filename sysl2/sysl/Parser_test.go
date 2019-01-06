@@ -52,7 +52,7 @@ func pyParse(filename, root, output string) (*sysl.Module, error) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error running %#v %#v: %s", pySysl(), args, err)
 	}
 
 	return readSyslModule(output)
