@@ -264,7 +264,7 @@ func TestFuncs(t *testing.T) {
 }
 
 func TestPetshop(t *testing.T) {
-	testParse(t, "../../demo/petshop/petshop.sysl", "")
+	testParse(t, "petshop.sysl", "../../demo/petshop")
 }
 
 func TestCrash(t *testing.T) {
