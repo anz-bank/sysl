@@ -72,6 +72,7 @@ func TextPB(m *sysl.Module, filename string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 	return FTextPB(f, m)
 }
 
@@ -585,7 +586,6 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 	errorListener := SyslParserErrorListener{}
 
 	for {
-		fmt.Println(filename)
 		input, err := newFSFileStream(filename, fs)
 		if err != nil {
 			return nil, exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
