@@ -156,8 +156,14 @@ func parseAndPrint(t *testing.T, filename, root string) error {
 	return nil
 }
 
-func testParse(t *testing.T, filename, root string) {
+func testParseAgainstPython(t *testing.T, filename, root string) {
 	equal, err := parseAndCompareWithPython(filename, root)
+	assert.NoError(t, err)
+	assert.True(t, equal, "Mismatch")
+}
+
+func testParseAgainstGolden(t *testing.T, filename, root string) {
+	equal, err := parseAndCompareWithGolden(filename, root)
 	assert.NoError(t, err)
 	assert.True(t, equal, "Mismatch")
 }
@@ -173,102 +179,102 @@ func TestParseBadFile(t *testing.T) {
 }
 
 func TestSimpleEP(t *testing.T) {
-	testParse(t, "tests/test1.sysl", "")
+	testParseAgainstPython(t, "tests/test1.sysl", "")
 }
 
 func TestAttribs(t *testing.T) {
-	testParse(t, "tests/attribs.sysl", "")
+	testParseAgainstPython(t, "tests/attribs.sysl", "")
 }
 
 func TestIfElse(t *testing.T) {
-	testParse(t, "tests/if_else.sysl", "")
+	testParseAgainstPython(t, "tests/if_else.sysl", "")
 }
 
 func TestArgs(t *testing.T) {
-	testParse(t, "tests/args.sysl", "")
+	testParseAgainstPython(t, "tests/args.sysl", "")
 }
 
 func TestSimpleEPWithSpaces(t *testing.T) {
-	testParse(t, "tests/with_spaces.sysl", "")
+	testParseAgainstPython(t, "tests/with_spaces.sysl", "")
 }
 
 func TestSimpleEP2(t *testing.T) {
-	testParse(t, "tests/test4.sysl", "")
+	testParseAgainstPython(t, "tests/test4.sysl", "")
 }
 
 func TestSimpleEndpointParams(t *testing.T) {
-	testParse(t, "tests/ep_params.sysl", "")
+	testParseAgainstPython(t, "tests/ep_params.sysl", "")
 }
 
 func TestOneOfStatements(t *testing.T) {
-	testParse(t, "tests/oneof.sysl", "")
+	testParseAgainstPython(t, "tests/oneof.sysl", "")
 }
 
 func TestDuplicateEndpoints(t *testing.T) {
-	testParse(t, "tests/duplicate.sysl", "")
+	testParseAgainstPython(t, "tests/duplicate.sysl", "")
 }
 
 func TestEventing(t *testing.T) {
-	testParse(t, "tests/eventing.sysl", "")
+	testParseAgainstPython(t, "tests/eventing.sysl", "")
 }
 
 func TestCollector(t *testing.T) {
-	testParse(t, "tests/collector.sysl", "")
+	testParseAgainstPython(t, "tests/collector.sysl", "")
 }
 
 func TestPubSubCollector(t *testing.T) {
-	testParse(t, "tests/pubsub_collector.sysl", "")
+	testParseAgainstPython(t, "tests/pubsub_collector.sysl", "")
 }
 
 func TestDocstrings(t *testing.T) {
-	testParse(t, "tests/docstrings.sysl", "")
+	testParseAgainstPython(t, "tests/docstrings.sysl", "")
 }
 
 func TestMixins(t *testing.T) {
-	testParse(t, "tests/mixin.sysl", "")
+	testParseAgainstPython(t, "tests/mixin.sysl", "")
 }
 func TestForLoops(t *testing.T) {
-	testParse(t, "tests/for_loop.sysl", "")
+	testParseAgainstPython(t, "tests/for_loop.sysl", "")
 }
 
 func TestGroupStmt(t *testing.T) {
-	testParse(t, "tests/group_stmt.sysl", "")
+	testParseAgainstPython(t, "tests/group_stmt.sysl", "")
 }
 
 func TestUntilLoop(t *testing.T) {
-	testParse(t, "tests/until_loop.sysl", "")
+	testParseAgainstPython(t, "tests/until_loop.sysl", "")
 }
 
 func TestTuple(t *testing.T) {
-	testParse(t, "tests/test2.sysl", "")
+	testParseAgainstPython(t, "tests/test2.sysl", "")
 }
 
 func TestInplaceTuple(t *testing.T) {
-	testParse(t, "tests/inplace_tuple.sysl", "")
+	testParseAgainstPython(t, "tests/inplace_tuple.sysl", "")
 }
 
 func TestRelational(t *testing.T) {
-	testParse(t, "tests/school.sysl", "")
+	testParseAgainstPython(t, "tests/school.sysl", "")
 }
 
 func TestImports(t *testing.T) {
-	testParse(t, "tests/library.sysl", "")
+	testParseAgainstPython(t, "tests/library.sysl", "")
 }
 
 func TestRootArg(t *testing.T) {
-	testParse(t, "school.sysl", "tests")
+	testParseAgainstPython(t, "school.sysl", "tests")
 }
 
 func TestRestApi(t *testing.T) {
-	testParse(t, "tests/test_rest_api.sysl", "")
+	testParseAgainstPython(t, "tests/test_rest_api.sysl", "")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
-	testParse(t, "tests/rest_api_query_params.sysl", "")
+	testParseAgainstPython(t, "tests/rest_api_query_params.sysl", "")
 }
 
 func TestSimpleProject(t *testing.T) {
-	testParse(t, "tests/project.sysl", "")
+	testParseAgainstPython(t, "tests/project.sysl", "")
 }
 
 func TestUrlParamOrder(t *testing.T) {
@@ -278,53 +284,53 @@ func TestUrlParamOrder(t *testing.T) {
 }
 
 func TestUrlParamOrderAgainstGolden(t *testing.T) {
-	parseAndCompareWithGolden("tests/rest_url_params.sysl", "")
+	testParseAgainstGolden(t, "tests/rest_url_params.sysl", "")
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
-	testParse(t, "tests/bad_order.sysl", "")
+	testParseAgainstPython(t, "tests/bad_order.sysl", "")
 }
 
 func TestTransform(t *testing.T) {
-	testParse(t, "tests/transform.sysl", "")
+	testParseAgainstPython(t, "tests/transform.sysl", "")
 }
 
 func TestImpliedDot(t *testing.T) {
-	testParse(t, "tests/implied.sysl", "")
+	testParseAgainstPython(t, "tests/implied.sysl", "")
 }
 
 func TestStmts(t *testing.T) {
-	testParse(t, "tests/stmts.sysl", "")
+	testParseAgainstPython(t, "tests/stmts.sysl", "")
 }
 
 func TestMath(t *testing.T) {
-	testParse(t, "tests/math.sysl", "")
+	testParseAgainstPython(t, "tests/math.sysl", "")
 }
 
 func TestTableof(t *testing.T) {
-	testParse(t, "tests/tableof.sysl", "")
+	testParseAgainstPython(t, "tests/tableof.sysl", "")
 }
 
 func TestRank(t *testing.T) {
-	testParse(t, "tests/rank.sysl", "")
+	testParseAgainstPython(t, "tests/rank.sysl", "")
 }
 
 func TestMatching(t *testing.T) {
-	testParse(t, "tests/matching.sysl", "")
+	testParseAgainstPython(t, "tests/matching.sysl", "")
 }
 
 func TestNavigate(t *testing.T) {
-	testParse(t, "tests/navigate.sysl", "")
+	testParseAgainstPython(t, "tests/navigate.sysl", "")
 }
 
 func TestFuncs(t *testing.T) {
-	testParse(t, "tests/funcs.sysl", "")
+	testParseAgainstPython(t, "tests/funcs.sysl", "")
 }
 
 func TestPetshop(t *testing.T) {
-	testParse(t, "petshop.sysl", "../../demo/petshop")
+	testParseAgainstPython(t, "petshop.sysl", "../../demo/petshop")
 }
 
 func TestCrash(t *testing.T) {
-	testParse(t, "tests/crash.sysl", "")
+	testParseAgainstPython(t, "tests/crash.sysl", "")
 }

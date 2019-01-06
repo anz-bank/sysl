@@ -1,0 +1,93 @@
+apps: <
+    key: "Server"
+    value: <
+        name: <
+            part: "Server"
+        >
+        endpoints: <
+            key: "GET /{id1}/{id2}/{aid3}/{id4}/{bid5}"
+            value: <
+                name: "GET /{id1}/{id2}/{aid3}/{id4}/{bid5}"
+                attrs: <
+                    key: "patterns"
+                    value: <
+                        a: <
+                            elt: <
+                                s: "rest"
+                            >
+                        >
+                    >
+                >
+                stmt: <
+                    action: <
+                        action: "..."
+                    >
+                >
+                rest_params: <
+                    method: GET
+                    path: "/{id1}/{id2}/{aid3}/{id4}/{bid5}"
+                    query_param: <
+                        name: "id1"
+                        type: <
+                            primitive: INT
+                            source_context: <
+                                start: <
+                                    line: 7
+                                >
+                            >
+                        >
+                        loc: true
+                    >
+                    query_param: <
+                        name: "id2"
+                        type: <
+                            primitive: INT
+                            source_context: <
+                                start: <
+                                    line: 7
+                                >
+                            >
+                        >
+                        loc: true
+                    >
+                    query_param: <
+                        name: "aid3"
+                        type: <
+                            primitive: INT
+                            source_context: <
+                                start: <
+                                    line: 7
+                                >
+                            >
+                        >
+                        loc: true
+                    >
+                    query_param: <
+                        name: "id4"
+                        type: <
+                            primitive: INT
+                            source_context: <
+                                start: <
+                                    line: 7
+                                >
+                            >
+                        >
+                        loc: true
+                    >
+                    query_param: <
+                        name: "bid5"
+                        type: <
+                            primitive: INT
+                            source_context: <
+                                start: <
+                                    line: 7
+                                >
+                            >
+                        >
+                        loc: true
+                    >
+                >
+            >
+        >
+    >
+>
