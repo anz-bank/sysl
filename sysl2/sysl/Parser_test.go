@@ -131,14 +131,19 @@ func parseAndCompareWithPython(filename, root string) (bool, error) {
 		return false, err
 	}
 	defer golden.Close()
-	defer os.Remove(golden.Name())
 
 	pyModule, err := pyParse(filename, root, golden.Name())
 	if err != nil {
+		fmt.Printf("%#v retained for checking", golden.Name())
 		return false, err
 	}
 
-	return parseAndCompare(filename, root, golden.Name(), pyModule)
+	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule)
+	if err != nil {
+		fmt.Printf("%#v retained for checking", golden.Name())
+	}
+	os.Remove(golden.Name())
+	return equal, err
 }
 
 func parseAndCompareWithGolden(filename, root string) (bool, error) {
