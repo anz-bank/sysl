@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -18,7 +19,7 @@ var _ = fmt.Println
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base                  string
-	root                  string
+	fs                    http.FileSystem
 	filename              string
 	imports               []string
 	module                *sysl.Module
@@ -42,7 +43,7 @@ type TreeShapeListener struct {
 }
 
 // NewTreeShapeListener ...
-func NewTreeShapeListener(root string) *TreeShapeListener {
+func NewTreeShapeListener(fs http.FileSystem) *TreeShapeListener {
 	opmap := map[string]sysl.Expr_BinExpr_Op{
 		"==":        sysl.Expr_BinExpr_EQ,
 		"!=":        sysl.Expr_BinExpr_NE,
@@ -57,7 +58,7 @@ func NewTreeShapeListener(root string) *TreeShapeListener {
 	}
 
 	return &TreeShapeListener{
-		root: root,
+		fs: fs,
 		module: &sysl.Module{
 			Apps: map[string]*sysl.Application{},
 		},
@@ -3501,9 +3502,7 @@ func (s *TreeShapeListener) ExitPath(ctx *parser.PathContext) {}
 func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	p := strings.Split(strings.TrimSpace(ctx.IMPORT().GetText()), " ")
 	path := p[len(p)-1]
-	if path[0] == '/' {
-		path = s.root + path
-	} else {
+	if path[0] != '/' {
 		path = s.base + "/" + path
 	}
 	path += ".sysl"

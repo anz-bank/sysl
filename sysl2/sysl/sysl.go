@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -15,11 +19,6 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-var (
-	root   = flag.String("root", ".", "sysl root directory for input files (default: .)")
-	output = flag.String("o", "", "output file name")
-)
-
 const (
 	// ParserSuccess is returned by parser when it was able to parse input correctly
 	ParserSuccess = 0
@@ -29,41 +28,59 @@ const (
 	ParseError = 2
 )
 
-func init() {
-	flag.Parse()
+type exit struct {
+	code    int
+	message string
 }
 
-// JsonPB ...
-func JsonPB(m *sysl.Module, filename string) bool {
-	ma := jsonpb.Marshaler{Indent: " ", EmitDefaults: false}
-	f, err := os.Create(filename)
-	err = ma.Marshal(f, m)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return false
+func exitf(code int, format string, args ...interface{}) exit {
+	return exit{code, fmt.Sprintf(format, args...)}
+}
+
+func (e exit) Error() string {
+	return e.message
+}
+
+// JSONPB ...
+func JSONPB(m *sysl.Module, filename string) error {
+	if m == nil {
+		return fmt.Errorf("module is nil: %#v", filename)
 	}
-	return true
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	return FJSONPB(f, m)
+}
+
+// FJSONPB ...
+func FJSONPB(w io.Writer, m *sysl.Module) error {
+	if m == nil {
+		return fmt.Errorf("module is nil")
+	}
+	ma := jsonpb.Marshaler{Indent: " ", EmitDefaults: false}
+	return ma.Marshal(w, m)
 }
 
 // TextPB ...
-func TextPB(m *sysl.Module, filename string) bool {
+func TextPB(m *sysl.Module, filename string) error {
 	if m == nil {
-		fmt.Println("input module is nil")
-		return false
+		return fmt.Errorf("module is nil: %#v", filename)
 	}
 
 	f, err := os.Create(filename)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return false
+		return err
 	}
-	err = proto.MarshalText(f, m)
+	return FTextPB(f, m)
+}
 
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return false
+// FTextPB ...
+func FTextPB(w io.Writer, m *sysl.Module) error {
+	if m == nil {
+		return fmt.Errorf("module is nil")
 	}
-	return true
+	return proto.MarshalText(w, m)
 }
 
 // SyslParserErrorListener ...
@@ -500,8 +517,12 @@ func postProcess(mod *sysl.Module) {
 	checkEndpointCalls(mod)
 }
 
-func fileExists(filename string) bool {
-	_, err := os.Stat(filename)
+func fileExists(filename string, fs http.FileSystem) bool {
+	f, err := fs.Open(filename)
+	if err != nil {
+		return false
+	}
+	_, err = f.Stat()
 	return err == nil
 }
 
@@ -510,39 +531,64 @@ func dirExists(dirName string) bool {
 	return err == nil && info.IsDir()
 }
 
-// Parse ...
-func Parse(filename string, root string) *sysl.Module {
+type osFileSystem struct {
+	root string
+}
+
+func (fs *osFileSystem) Open(name string) (http.File, error) {
+	return os.Open(path.Join(fs.root, name))
+}
+
+type fsFileStream struct {
+	*antlr.InputStream
+	filename string
+}
+
+func newFSFileStream(filename string, fs http.FileSystem) (*fsFileStream, error) {
+	f, err := fs.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	var buf bytes.Buffer
+	if _, err = io.Copy(&buf, f); err != nil {
+		return nil, err
+	}
+
+	s := string(buf.Bytes())
+	return &fsFileStream{antlr.NewInputStream(s), filename}, nil
+}
+
+// Parse parses a Sysl file under a specified root.
+func Parse(filename string, root string) (*sysl.Module, error) {
 	if root == "" {
 		root = "."
 	}
 	if !dirExists(root) {
-		fmt.Fprintln(os.Stderr, "root directory does not exist")
-		os.Exit(ImportError)
+		return nil, exitf(ImportError, "root directory does not exist")
 	}
 	root, _ = filepath.Abs(root)
+	return FSParse(filename, &osFileSystem{root})
+}
 
-	if !fileExists(filename) {
-		if !strings.HasSuffix(filename, ".sysl") {
-			filename = filename + ".sysl"
-		}
-		filename = root + "/" + filename
-
-		if !fileExists(filename) {
-			fmt.Fprintln(os.Stderr, fmt.Sprintf("input file does not exist\nFilename: %s\n", filename))
-			os.Exit(ImportError)
-		}
+// FSParse ...
+func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
+	if !strings.HasSuffix(filename, ".sysl") {
+		filename = filename + ".sysl"
 	}
-	filename, _ = filepath.Abs(filename)
+	if !fileExists(filename, fs) {
+		return nil, exitf(ImportError, "input file does not exist: %#v", filename)
+	}
 	imported := map[string]struct{}{}
-	listener := NewTreeShapeListener(root)
+	listener := NewTreeShapeListener(fs)
 	errorListener := SyslParserErrorListener{}
 
 	for {
 		fmt.Println(filename)
-		input, err := antlr.NewFileStream(filename)
+		input, err := newFSFileStream(filename, fs)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, fmt.Sprintf("%v,\n%s has errors\n", err, filename))
-			os.Exit(ImportError)
+			return nil, exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 		listener.filename = filename
 		listener.base = filepath.Dir(filename)
@@ -556,8 +602,7 @@ func Parse(filename string, root string) *sysl.Module {
 		p.BuildParseTrees = true
 		tree := p.Sysl_file()
 		if errorListener.hasErrors {
-			fmt.Fprintln(os.Stderr, fmt.Sprintf("%s has syntax errors\n", filename))
-			os.Exit(ParseError)
+			return nil, exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
 		}
 
 		antlr.ParseTreeWalkerDefault.Walk(listener, tree)
@@ -579,21 +624,74 @@ func Parse(filename string, root string) *sysl.Module {
 	}
 
 	postProcess(listener.module)
-	return listener.module
+	return listener.module, nil
 }
 
-func main() {
-	fmt.Printf("Args: %v\n", flag.Args())
-	fmt.Printf("Root: %s\n", *root)
-	fmt.Printf("Module: %s\n", flag.Arg(0))
+// main3 is the real main function. It takes its output streams and command-line
+// arguments as parameters to support testability.
+func main3(stdout, stderr io.Writer, args []string) error {
+	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
+
+	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
+	output := flags.String("o", "", "output file name")
+	mode := flags.String("mode", "textpb", "output mode")
+
+	flags.Parse(args[1:])
+
+	switch *mode {
+	case "", "textpb", "json":
+	default:
+		return fmt.Errorf("Invalid -mode %#v", *mode)
+	}
+
+	filename := flags.Arg(0)
+
+	fmt.Fprintf(stderr, "Args: %v\n", flags.Args())
+	fmt.Fprintf(stderr, "Root: %s\n", *root)
+	fmt.Fprintf(stderr, "Module: %s\n", filename)
+	fmt.Fprintf(stderr, "Mode: %s\n", *mode)
 	format := strings.ToLower(*output)
-	toJson := strings.HasSuffix(format, ".json")
-	mod := Parse(flag.Arg(0), *root)
+	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
+	fmt.Fprintf(stderr, "%s\n", filename)
+	mod, err := Parse(filename, *root)
+	if err != nil {
+		return err
+	}
 	if mod != nil {
-		if toJson {
-			JsonPB(mod, *output)
-		} else {
-			TextPB(mod, *output)
+		if toJSON {
+			if *output == "-" {
+				return FJSONPB(stdout, mod)
+			}
+			return JSONPB(mod, *output)
 		}
+		if *output == "-" {
+			return FTextPB(stdout, mod)
+		}
+		return TextPB(mod, *output)
+	}
+	return nil
+}
+
+// main2 calls main3 and handles any errors it returns. It takes its output
+// streams and command-line arguments and even main3 as parameters to support
+// testability.
+func main2(
+	stdout, stderr io.Writer, args []string,
+	main3 func(stdout, stderr io.Writer, args []string) error,
+) int {
+	if err := main3(stdout, stderr, args); err != nil {
+		fmt.Fprintln(stderr, err.Error())
+		if err, ok := err.(exit); ok {
+			return err.code
+		}
+		return 1
+	}
+	return 0
+}
+
+// main is as small as possible to minimise its no-coverage footprint.
+func main() {
+	if rc := main2(os.Stdout, os.Stderr, os.Args, main3); rc != 0 {
+		os.Exit(rc)
 	}
 }

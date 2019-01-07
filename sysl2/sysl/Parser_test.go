@@ -10,12 +10,53 @@ import (
 
 	"github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
+	"github.com/stretchr/testify/assert"
 )
 
-func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
+func pyParse(filename, root string) (*sysl.Module, error) {
+	output := filename + ".pb"
 
-	// remove that does not match legacy.
-	for _, app := range m2.Apps {
+	args := []string{"pb", "-o", output, filename}
+	if len(root) > 0 {
+		rootArg := []string{"--root", root}
+		// TODO: This looks dubious
+		args[2] = root + "/" + args[2]
+		output = args[2]
+		args = append(rootArg, args...)
+	}
+
+	pySysl, found := os.LookupEnv("SYSL_PYTHON_BIN")
+	if !found {
+		pySysl = "sysl"
+	}
+	cmd := exec.Command(pySysl, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return nil, err
+	}
+	buf := bytes.NewBuffer(nil)
+
+	f, _ := os.Open(output)
+	io.Copy(buf, f)
+	f.Close()
+
+	module := &sysl.Module{}
+	if err := proto.Unmarshal(buf.Bytes(), module); err != nil {
+		return nil, err
+	}
+	return module, nil
+}
+
+func parseComparable(filename, root string) (*sysl.Module, error) {
+	fs := &osFileSystem{root}
+	module, err := FSParse(filename, fs)
+	if err != nil {
+		return nil, err
+	}
+
+	// remove stuff that does not match legacy.
+	for _, app := range module.Apps {
 		app.SourceContext = nil
 		// app.SourceContext.Start.Col = 0
 		for _, ep := range app.Endpoints {
@@ -26,58 +67,64 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 		}
 	}
 
-	output := filename + ".pb"
+	return module, nil
+}
 
-	args := []string{"pb", "-o", output, filename}
-	if len(root) > 0 {
-		root_array := []string{"--root", root}
-		args[2] = root_array[1] + "/" + args[2]
-		output = args[2]
-		args = append(root_array, args...)
+func parseAndCompare(filename, root string) (bool, error) {
+	goModule, err := parseComparable(filename, root)
+	if err != nil {
+		return false, err
 	}
 
-	pySysl, found := os.LookupEnv("SYSL_PYTHON_BIN")
-	if !found {
-		pySysl = "sysl"
+	pyModule, err := pyParse(filename, root)
+	if err != nil {
+		return false, err
 	}
-	cmd := exec.Command(pySysl, args...)
+	if proto.Equal(pyModule, goModule) {
+		return true, nil
+	}
+
+	golden := "golden.txt"
+	generated := "generated.txt"
+	if err = TextPB(pyModule, golden); err != nil {
+		return false, err
+	}
+	if err = TextPB(goModule, generated); err != nil {
+		return false, err
+	}
+	cmd := exec.Command("diff", "-y", golden, generated)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Run()
+	cmd.Run()
+
+	return false, nil
+}
+
+func parseAndPrint(t *testing.T, filename, root string) error {
+	goModule, err := parseComparable(filename, root)
 	if err != nil {
-		fmt.Println(err)
-		return false
+		return err
 	}
-	buf := bytes.NewBuffer(nil)
-
-	f, _ := os.Open(output)
-	io.Copy(buf, f)
-	f.Close()
-
-	mod := sysl.Module{}
-	err = proto.Unmarshal(buf.Bytes(), &mod)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	result := proto.Equal(&mod, m2)
-	// uncomment to compare
-	if !result {
-		TextPB(m2, "generated.txt")
-		TextPB(&mod, "golden.txt")
-		cmd = exec.Command("diff", "-y", "golden.txt", "generated.txt")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Run()
-	}
-
-	return result
+	fmt.Fprintf(os.Stderr, "Outputting %#v:\n", filename)
+	FTextPB(os.Stderr, goModule)
+	fmt.Fprintf(os.Stderr, "------------------------\n")
+	return nil
 }
 
 func testParse(t *testing.T, filename, root string) {
-	if !loadAndCompare(Parse(filename, root), filename, root) {
-		t.Error("failed")
-	}
+	equal, err := parseAndCompare(filename, root)
+	assert.NoError(t, err)
+	assert.True(t, equal, "Mismatch")
+}
+
+func TestParseMissingFile(t *testing.T) {
+	_, err := parseAndCompare("tests/doesn't.exist", "")
+	assert.Error(t, err)
+}
+
+func TestParseBadFile(t *testing.T) {
+	_, err := parseAndCompare("sysl.go", "")
+	assert.Error(t, err)
 }
 
 func TestSimpleEP(t *testing.T) {
@@ -181,12 +228,8 @@ func TestSimpleProject(t *testing.T) {
 
 func TestUrlParamOrder(t *testing.T) {
 	filename := "tests/rest_url_params.sysl"
-	// output does not match with legacy
-	// the order does not match
-	// check the diff.
-	if loadAndCompare(Parse(filename, ""), filename, "") == true {
-		t.Error("failed")
-	}
+	parseAndCompare(filename, "")
+	fmt.Printf("Output for %#v won't match legacy. Visually inspect the above diff.\n", filename)
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
@@ -230,7 +273,7 @@ func TestFuncs(t *testing.T) {
 }
 
 func TestPetshop(t *testing.T) {
-	testParse(t, "../../demo/petshop/petshop.sysl", "")
+	testParse(t, "petshop.sysl", "../../demo/petshop")
 }
 
 func TestCrash(t *testing.T) {
