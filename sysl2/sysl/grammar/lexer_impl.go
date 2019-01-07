@@ -8,6 +8,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var syslLexerLog = os.Getenv("SYSL_LEXER_LOG") != ""
+
 func calcSpaces(text string) int {
 	s := 0
 
@@ -116,7 +118,7 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 	}
 
 	next := l.BaseLexer.NextToken()
-	if os.Getenv("SYSL_LEXER_LOG") != "" {
+	if syslLexerLog {
 		logrus.Info(next)
 	}
 	// return NEWLINE
