@@ -64,10 +64,10 @@ Install dependencies and the ``sysl`` package with symlinks ::
 
   > pip install pytest flake8 -e .
 
-Sysl depends upon `PlantUML <http://plantuml.com/>`_ for diagram generation. 
+Sysl depends upon `PlantUML <http://plantuml.com/>`_ for diagram generation.
 Some of the automated tests require a PlantUML dependency.
-Provide PlantUML access either via local installation or URL to remote service. 
-Warning, for sensitive data the public service at www.plantuml.com is not suitable. 
+Provide PlantUML access either via local installation or URL to remote service.
+Warning, for sensitive data the public service at www.plantuml.com is not suitable.
 You can use one of the following options to set up your environment:
 
 - execute ``SYSL_PLANTUML=http://www.plantuml.com/plantuml``
@@ -92,6 +92,11 @@ We encourage contributions to this project! Please have a look at the `contribut
 
 If you need to create a release follow the `release documentation <docs/releasing.md>`_.
 
+Local Travis CI builds (experimental)
+-------------------------------------
+
+``./run-travis.sh`` runs a local Travis CI build. This is intended primarily to
+test Travis builds offline.
 
 Extending Sysl
 --------------

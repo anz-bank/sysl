@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -36,7 +36,11 @@ func loadAndCompare(m2 *sysl.Module, filename string, root string) bool {
 		args = append(root_array, args...)
 	}
 
-	cmd := exec.Command("sysl", args...)
+	pySysl, found := os.LookupEnv("SYSL_PYTHON_BIN")
+	if !found {
+		pySysl = "sysl"
+	}
+	cmd := exec.Command(pySysl, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()

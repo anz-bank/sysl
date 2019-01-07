@@ -6,13 +6,22 @@ from sysl.util.file import filesAreIdentical
 import pytest
 
 from os import path, remove, listdir
-from subprocess import call
+from subprocess import check_call
 import shutil
 
 REPO_ROOT = path.normpath(path.join(path.dirname(__file__), '..', '..'))
 IN_DIR = path.join(path.normpath(path.dirname(__file__)), 'input')
 EXPECTED_DIR = path.join(path.normpath(path.dirname(__file__)), 'expected_output')
 ACTUAL_DIR = path.join(REPO_ROOT, 'tmp', 'e2e_actual_output')
+
+
+def run(program, f, exe, args):
+    if exe:
+        print program + ' exe call'
+        check_call([exe] + args)
+    else:
+        print program + ' python call'
+        f(args)
 
 
 def remove_file(fname):
@@ -28,7 +37,7 @@ def remove_file(fname):
     ('001_annotations'),
     ('002_annotations'),
     ('003_annotations'),
-    ('004_annotations')
+    ('004_annotations'),
 ])
 def test_e2e(name, syslexe):
     actual = path.join(ACTUAL_DIR, name + '.txt')
@@ -36,12 +45,7 @@ def test_e2e(name, syslexe):
 
     args = ['--root', IN_DIR, 'textpb', '-o', actual, name + '.sysl']
 
-    if syslexe:
-        print 'Sysl exe call'
-        call([syslexe] + args)
-    else:
-        print 'Sysl python function call'
-        main(args)
+    run('Sysl', main, syslexe, args)
 
     expected = path.join(EXPECTED_DIR, name + '.txt')
     assert filesAreIdentical(expected, actual)
@@ -59,16 +63,11 @@ def test_reljam(mode, module, app, java_pkg, expected, reljamexe):
     shutil.rmtree(out_dir, ignore_errors=True)
 
     args = ["--root", IN_DIR, "--out", out_dir, mode, module, app]
-    if reljamexe:
-        print 'Reljam exe call'
-        call([reljamexe] + args)
-    else:
-        print 'Reljam python function call'
-        reljam(args)
+    run('Reljam', reljam, reljamexe, args)
 
     with open(expected_file) as f:
-        expected = f.read().splitlines().sort()
-    actual = listdir(path.join(out_dir, java_pkg)).sort()
+        expected = frozenset(f.read().splitlines())
+    actual = frozenset(listdir(path.join(out_dir, java_pkg)))
     assert expected == actual
 
 
@@ -81,12 +80,7 @@ def test_sysl_seq_diagramm(syslexe):
     remove_file(actual)
     args = ['--root', IN_DIR, 'sd', '-o', actual_pattern, '/' + name, '-a', 'Bank :: Sequences']
 
-    if syslexe:
-        print 'Sysl exe call'
-        call([syslexe] + args)
-    else:
-        print 'Sysl python function call'
-        main(args)
+    run('Sysl', main, syslexe, args)
 
     with open(actual, 'r') as f:
         svg = f.read()
@@ -110,12 +104,7 @@ def test_sysl_tuple_data_diagramm(syslexe):
     remove_file(actual)
     args = ['--root', IN_DIR, 'data', '-o', actual_pattern, '/' + name, '-j', 'Bank :: Tuple Views']
 
-    if syslexe:
-        print 'Sysl exe call'
-        call([syslexe] + args)
-    else:
-        print 'Sysl python function call'
-        main(args)
+    run('Sysl', main, syslexe, args)
 
     with open(actual, 'r') as f:
         svg = f.read()
@@ -141,12 +130,7 @@ def test_sysl_relational_data_diagramm(syslexe):
     remove_file(actual)
     args = ['--root', IN_DIR, 'data', '-o', actual_pattern, '/' + name, '-j', 'Bank :: Relational Views']
 
-    if syslexe:
-        print 'Sysl exe call'
-        call([syslexe] + args)
-    else:
-        print 'Sysl python function call'
-        main(args)
+    run('Sysl', main, syslexe, args)
 
     with open(actual, 'r') as f:
         svg = f.read()
