@@ -31,12 +31,12 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	return module, nil
 }
 
-func pySysl() string {
-	if pySysl, found := os.LookupEnv("SYSL_PYTHON_BIN"); found {
+var pySysl = func() string {
+	if pySysl, ok := os.LookupEnv("SYSL_PYTHON_BIN"); ok {
 		return pySysl
 	}
 	return "sysl"
-}
+}()
 
 func pyParse(filename, root, output string) (*sysl.Module, error) {
 	args := []string{"textpb", "-o", output, filename}
@@ -46,11 +46,11 @@ func pyParse(filename, root, output string) (*sysl.Module, error) {
 		args = append(rootArg, args...)
 	}
 
-	cmd := exec.Command(pySysl(), args...)
+	cmd := exec.Command(pySysl, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return nil, fmt.Errorf("Error running %#v %#v: %s", pySysl(), args, err)
+		return nil, fmt.Errorf("Error running %#v %#v: %s", pySysl, args, err)
 	}
 
 	return readSyslModule(output)
@@ -124,7 +124,7 @@ func parseAndCompare(filename, root, golden string, goldenModule *sysl.Module) (
 }
 
 func parseAndCompareWithPython(filename, root string) (bool, error) {
-	fmt.Printf("%35s <=> $(%s %[1]s)\n", filename, pySysl())
+	fmt.Printf("%35s <=> $(%s %[1]s)\n", filename, pySysl)
 
 	golden, err := ioutil.TempFile("", "sysl-test-golden-*.textpb")
 	if err != nil {
