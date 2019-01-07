@@ -66,7 +66,6 @@ func parseComparable(filename, root string) (*sysl.Module, error) {
 	// remove stuff that does not match legacy.
 	for _, app := range module.Apps {
 		app.SourceContext = nil
-		// app.SourceContext.Start.Col = 0
 		for _, ep := range app.Endpoints {
 			ep.SourceContext = nil
 		}
@@ -88,29 +87,39 @@ func parseAndCompare(filename, root, golden string, goldenModule *sysl.Module) (
 		return true, nil
 	}
 
-	generated, err := ioutil.TempFile("", "sysl-test-*.textpb")
-	if err != nil {
-		return false, err
-	}
-	defer generated.Close()
-	defer os.Remove(generated.Name())
-
 	if err = TextPB(goldenModule, golden); err != nil {
 		return false, err
 	}
 
-	if err = FTextPB(generated, module); err != nil {
+	generated, err := ioutil.TempFile("", "sysl-test-*.textpb")
+	if err != nil {
 		return false, err
 	}
-	generated.Close()
+	generatedClosed := false
+	defer func() {
+		if !generatedClosed {
+			generated.Close()
+		}
+	}()
+
+	if err = FTextPB(generated, module); err != nil {
+		fmt.Printf("%#v retained for checking", generated.Name())
+		return false, err
+	}
+	if err := generated.Close(); err != nil {
+		return false, err
+	}
+	generatedClosed = true
 
 	cmd := exec.Command("diff", "-y", golden, generated.Name())
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
+		fmt.Printf("%#v retained for checking", generated.Name())
 		return false, err
 	}
 
+	os.Remove(generated.Name())
 	return false, nil
 }
 
