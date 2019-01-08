@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"testing"
@@ -13,39 +14,45 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func pyParse(filename, root string) (*sysl.Module, error) {
-	output := filename + ".pb"
+func readSyslModule(filename string) (*sysl.Module, error) {
+	var buf bytes.Buffer
 
-	args := []string{"pb", "-o", output, filename}
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	io.Copy(&buf, f)
+	f.Close()
+
+	module := &sysl.Module{}
+	if err := proto.UnmarshalText(buf.String(), module); err != nil {
+		return nil, err
+	}
+	return module, nil
+}
+
+var pySysl = func() string {
+	if pySysl, ok := os.LookupEnv("SYSL_PYTHON_BIN"); ok {
+		return pySysl
+	}
+	return "sysl"
+}()
+
+func pyParse(filename, root, output string) (*sysl.Module, error) {
+	args := []string{"textpb", "-o", output, filename}
 	if len(root) > 0 {
 		rootArg := []string{"--root", root}
-		// TODO: This looks dubious
-		args[2] = root + "/" + args[2]
-		output = args[2]
 		args = append(rootArg, args...)
 	}
 
-	pySysl, found := os.LookupEnv("SYSL_PYTHON_BIN")
-	if !found {
-		pySysl = "sysl"
-	}
 	cmd := exec.Command(pySysl, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error running %#v %#v: %s", pySysl, args, err)
 	}
-	buf := bytes.NewBuffer(nil)
 
-	f, _ := os.Open(output)
-	io.Copy(buf, f)
-	f.Close()
-
-	module := &sysl.Module{}
-	if err := proto.Unmarshal(buf.Bytes(), module); err != nil {
-		return nil, err
-	}
-	return module, nil
+	return readSyslModule(output)
 }
 
 func parseComparable(filename, root string) (*sysl.Module, error) {
@@ -58,7 +65,6 @@ func parseComparable(filename, root string) (*sysl.Module, error) {
 	// remove stuff that does not match legacy.
 	for _, app := range module.Apps {
 		app.SourceContext = nil
-		// app.SourceContext.Start.Col = 0
 		for _, ep := range app.Endpoints {
 			ep.SourceContext = nil
 		}
@@ -70,34 +76,84 @@ func parseComparable(filename, root string) (*sysl.Module, error) {
 	return module, nil
 }
 
-func parseAndCompare(filename, root string) (bool, error) {
-	goModule, err := parseComparable(filename, root)
+func parseAndCompare(filename, root, golden string, goldenModule *sysl.Module) (bool, error) {
+	module, err := parseComparable(filename, root)
 	if err != nil {
 		return false, err
 	}
 
-	pyModule, err := pyParse(filename, root)
-	if err != nil {
-		return false, err
-	}
-	if proto.Equal(pyModule, goModule) {
+	if proto.Equal(goldenModule, module) {
 		return true, nil
 	}
 
-	golden := "golden.txt"
-	generated := "generated.txt"
-	if err = TextPB(pyModule, golden); err != nil {
+	if err = TextPB(goldenModule, golden); err != nil {
 		return false, err
 	}
-	if err = TextPB(goModule, generated); err != nil {
+
+	generated, err := ioutil.TempFile("", "sysl-test-*.textpb")
+	if err != nil {
 		return false, err
 	}
-	cmd := exec.Command("diff", "-y", golden, generated)
+	generatedClosed := false
+	defer func() {
+		if !generatedClosed {
+			generated.Close()
+		}
+	}()
+
+	if err = FTextPB(generated, module); err != nil {
+		fmt.Printf("%#v retained for checking", generated.Name())
+		return false, err
+	}
+	if err := generated.Close(); err != nil {
+		return false, err
+	}
+	generatedClosed = true
+
+	cmd := exec.Command("diff", "-y", golden, generated.Name())
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Run()
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("%#v retained for checking", generated.Name())
+		return false, err
+	}
 
+	os.Remove(generated.Name())
 	return false, nil
+}
+
+func parseAndCompareWithPython(filename, root string) (bool, error) {
+	fmt.Printf("%35s <=> $(%s %[1]s)\n", filename, pySysl)
+
+	golden, err := ioutil.TempFile("", "sysl-test-golden-*.textpb")
+	if err != nil {
+		return false, err
+	}
+	defer golden.Close()
+
+	pyModule, err := pyParse(filename, root, golden.Name())
+	if err != nil {
+		fmt.Printf("%#v retained for checking", golden.Name())
+		return false, err
+	}
+
+	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule)
+	if err != nil {
+		fmt.Printf("%#v retained for checking", golden.Name())
+	}
+	os.Remove(golden.Name())
+	return equal, err
+}
+
+func parseAndCompareWithGolden(filename, root string) (bool, error) {
+	golden := filename + ".golden.textpb"
+	fmt.Printf("%35s <=> %s\n", filename, golden)
+
+	goldenModule, err := readSyslModule(golden)
+	if err != nil {
+		return false, err
+	}
+	return parseAndCompare(filename, root, golden, goldenModule)
 }
 
 func parseAndPrint(t *testing.T, filename, root string) error {
@@ -111,171 +167,181 @@ func parseAndPrint(t *testing.T, filename, root string) error {
 	return nil
 }
 
-func testParse(t *testing.T, filename, root string) {
-	equal, err := parseAndCompare(filename, root)
+func testParseAgainstPython(t *testing.T, filename, root string) {
+	equal, err := parseAndCompareWithPython(filename, root)
+	assert.NoError(t, err)
+	assert.True(t, equal, "Mismatch")
+}
+
+func testParseAgainstGolden(t *testing.T, filename, root string) {
+	equal, err := parseAndCompareWithGolden(filename, root)
 	assert.NoError(t, err)
 	assert.True(t, equal, "Mismatch")
 }
 
 func TestParseMissingFile(t *testing.T) {
-	_, err := parseAndCompare("tests/doesn't.exist", "")
+	_, err := parseAndCompareWithGolden("tests/doesn't.exist", "")
 	assert.Error(t, err)
 }
 
 func TestParseBadFile(t *testing.T) {
-	_, err := parseAndCompare("sysl.go", "")
+	_, err := parseAndCompareWithGolden("sysl.go", "")
 	assert.Error(t, err)
 }
 
 func TestSimpleEP(t *testing.T) {
-	testParse(t, "tests/test1.sysl", "")
+	testParseAgainstPython(t, "tests/test1.sysl", "")
 }
 
 func TestAttribs(t *testing.T) {
-	testParse(t, "tests/attribs.sysl", "")
+	testParseAgainstPython(t, "tests/attribs.sysl", "")
 }
 
 func TestIfElse(t *testing.T) {
-	testParse(t, "tests/if_else.sysl", "")
+	testParseAgainstPython(t, "tests/if_else.sysl", "")
 }
 
 func TestArgs(t *testing.T) {
-	testParse(t, "tests/args.sysl", "")
+	testParseAgainstPython(t, "tests/args.sysl", "")
 }
 
 func TestSimpleEPWithSpaces(t *testing.T) {
-	testParse(t, "tests/with_spaces.sysl", "")
+	testParseAgainstPython(t, "tests/with_spaces.sysl", "")
 }
 
 func TestSimpleEP2(t *testing.T) {
-	testParse(t, "tests/test4.sysl", "")
+	testParseAgainstPython(t, "tests/test4.sysl", "")
 }
 
 func TestSimpleEndpointParams(t *testing.T) {
-	testParse(t, "tests/ep_params.sysl", "")
+	testParseAgainstPython(t, "tests/ep_params.sysl", "")
 }
 
 func TestOneOfStatements(t *testing.T) {
-	testParse(t, "tests/oneof.sysl", "")
+	testParseAgainstPython(t, "tests/oneof.sysl", "")
 }
 
 func TestDuplicateEndpoints(t *testing.T) {
-	testParse(t, "tests/duplicate.sysl", "")
+	testParseAgainstPython(t, "tests/duplicate.sysl", "")
 }
 
 func TestEventing(t *testing.T) {
-	testParse(t, "tests/eventing.sysl", "")
+	testParseAgainstPython(t, "tests/eventing.sysl", "")
 }
 
 func TestCollector(t *testing.T) {
-	testParse(t, "tests/collector.sysl", "")
+	testParseAgainstPython(t, "tests/collector.sysl", "")
 }
 
 func TestPubSubCollector(t *testing.T) {
-	testParse(t, "tests/pubsub_collector.sysl", "")
+	testParseAgainstPython(t, "tests/pubsub_collector.sysl", "")
 }
 
 func TestDocstrings(t *testing.T) {
-	testParse(t, "tests/docstrings.sysl", "")
+	testParseAgainstPython(t, "tests/docstrings.sysl", "")
 }
 
 func TestMixins(t *testing.T) {
-	testParse(t, "tests/mixin.sysl", "")
+	testParseAgainstPython(t, "tests/mixin.sysl", "")
 }
 func TestForLoops(t *testing.T) {
-	testParse(t, "tests/for_loop.sysl", "")
+	testParseAgainstPython(t, "tests/for_loop.sysl", "")
 }
 
 func TestGroupStmt(t *testing.T) {
-	testParse(t, "tests/group_stmt.sysl", "")
+	testParseAgainstPython(t, "tests/group_stmt.sysl", "")
 }
 
 func TestUntilLoop(t *testing.T) {
-	testParse(t, "tests/until_loop.sysl", "")
+	testParseAgainstPython(t, "tests/until_loop.sysl", "")
 }
 
 func TestTuple(t *testing.T) {
-	testParse(t, "tests/test2.sysl", "")
+	testParseAgainstPython(t, "tests/test2.sysl", "")
 }
 
 func TestInplaceTuple(t *testing.T) {
-	testParse(t, "tests/inplace_tuple.sysl", "")
+	testParseAgainstPython(t, "tests/inplace_tuple.sysl", "")
 }
 
 func TestRelational(t *testing.T) {
-	testParse(t, "tests/school.sysl", "")
+	testParseAgainstPython(t, "tests/school.sysl", "")
 }
 
 func TestImports(t *testing.T) {
-	testParse(t, "tests/library.sysl", "")
+	testParseAgainstPython(t, "tests/library.sysl", "")
 }
 
 func TestRootArg(t *testing.T) {
-	testParse(t, "school.sysl", "tests")
+	testParseAgainstPython(t, "school.sysl", "tests")
 }
 
 func TestRestApi(t *testing.T) {
-	testParse(t, "tests/test_rest_api.sysl", "")
+	testParseAgainstPython(t, "tests/test_rest_api.sysl", "")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
-	testParse(t, "tests/rest_api_query_params.sysl", "")
+	testParseAgainstPython(t, "tests/rest_api_query_params.sysl", "")
 }
 
 func TestSimpleProject(t *testing.T) {
-	testParse(t, "tests/project.sysl", "")
+	testParseAgainstPython(t, "tests/project.sysl", "")
 }
 
 func TestUrlParamOrder(t *testing.T) {
 	filename := "tests/rest_url_params.sysl"
-	parseAndCompare(filename, "")
+	parseAndCompareWithPython(filename, "")
 	fmt.Printf("Output for %#v won't match legacy. Visually inspect the above diff.\n", filename)
 }
 
+func TestUrlParamOrderAgainstGolden(t *testing.T) {
+	testParseAgainstGolden(t, "tests/rest_url_params.sysl", "")
+}
+
 func TestRestApi_WrongOrder(t *testing.T) {
-	testParse(t, "tests/bad_order.sysl", "")
+	testParseAgainstPython(t, "tests/bad_order.sysl", "")
 }
 
 func TestTransform(t *testing.T) {
-	testParse(t, "tests/transform.sysl", "")
+	testParseAgainstPython(t, "tests/transform.sysl", "")
 }
 
 func TestImpliedDot(t *testing.T) {
-	testParse(t, "tests/implied.sysl", "")
+	testParseAgainstPython(t, "tests/implied.sysl", "")
 }
 
 func TestStmts(t *testing.T) {
-	testParse(t, "tests/stmts.sysl", "")
+	testParseAgainstPython(t, "tests/stmts.sysl", "")
 }
 
 func TestMath(t *testing.T) {
-	testParse(t, "tests/math.sysl", "")
+	testParseAgainstPython(t, "tests/math.sysl", "")
 }
 
 func TestTableof(t *testing.T) {
-	testParse(t, "tests/tableof.sysl", "")
+	testParseAgainstPython(t, "tests/tableof.sysl", "")
 }
 
 func TestRank(t *testing.T) {
-	testParse(t, "tests/rank.sysl", "")
+	testParseAgainstPython(t, "tests/rank.sysl", "")
 }
 
 func TestMatching(t *testing.T) {
-	testParse(t, "tests/matching.sysl", "")
+	testParseAgainstPython(t, "tests/matching.sysl", "")
 }
 
 func TestNavigate(t *testing.T) {
-	testParse(t, "tests/navigate.sysl", "")
+	testParseAgainstPython(t, "tests/navigate.sysl", "")
 }
 
 func TestFuncs(t *testing.T) {
-	testParse(t, "tests/funcs.sysl", "")
+	testParseAgainstPython(t, "tests/funcs.sysl", "")
 }
 
 func TestPetshop(t *testing.T) {
-	testParse(t, "petshop.sysl", "../../demo/petshop")
+	testParseAgainstPython(t, "petshop.sysl", "../../demo/petshop")
 }
 
 func TestCrash(t *testing.T) {
-	testParse(t, "tests/crash.sysl", "")
+	testParseAgainstPython(t, "tests/crash.sysl", "")
 }
