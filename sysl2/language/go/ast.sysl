@@ -1,0 +1,341 @@
+Go [package="golang"]:
+    !type Token:
+        kind <: string
+        # TODO: Update text to commented version, after implementing "slice of".
+        # text <: slice of string
+        text <: string
+
+    !type ArrayType:
+        lbrack     <: Token             # "["
+        len        <: Expr?             # Ellipsis node for [...]T array types, nil for slice types
+        elt        <: Expr              # element type
+
+    !type AssignStmt:
+        lhs        <: sequence of Expr
+        tok        <: Token
+        rhs        <: sequence of Expr
+
+    !type BadDecl:
+        token      <: Token
+
+    !type BadExpr:
+        token      <: Token
+
+    !type BadStmt:
+        token      <: Token
+
+    !type BasicLit:
+        token      <: Token
+
+    !type BinaryExpr:
+        x          <: Expr
+        op         <: Token
+        y          <: Expr
+
+    !type BlockStmt:
+        lbrace     <: Token             # "{"
+        list       <: sequence of Stmt
+        rbrace     <: Token             # "}"
+
+    !type BranchStmt:
+        tok        <: Token             # keyword token (BREAK, CONTINUE, GOTO, FALLTHROUGH)
+        label      <: Ident?            # label name; or nil
+
+    !type CallExpr:
+        fun        <: Expr              # function expression
+        lparen     <: Token             # "("
+        args       <: sequence of Expr  # function arguments; or nil
+        ellipsis   <: Token             # "..." (token.NoPos if there is no "...")
+        rparen     <: Token             # ")"
+
+    !type CaseClause:
+        case       <: Token             # "case" or "default" keyword
+        list       <: sequence of Expr  # list of expressions or types; nil means default case
+        colon      <: Token
+        body       <: sequence of Stmt  # statement list; or nil
+
+    !type ChanType:
+        begin      <: Token             # "chan" keyword or "<-" (whichever comes first)
+        arrow      <: Token             # "<-" (token.NoPos if there is no "<-"); added in Go 1.1
+        #dir        <: {|"SEND", "RECV"|} powerset without {||}
+        value      <: Expr              # value type
+
+    !type CommClause:
+        case       <: Token             # "case" or "default" keyword
+        comm       <: Stmt?             # send or receive statement; nil means default case
+        colon      <: Token             # ":"
+        body       <: sequence of Stmt  # statement list; or nil
+
+    !type Comment:
+        token      <: Token
+
+    !type CommentGroup:
+        list       <: sequence of Comment  # len(List) > 0
+
+    !type CompositeLit:
+        type       <: Expr?             # literal type; or nil
+        lbrace     <: Token             # "{"
+        elts       <: sequence of Expr  # list of composite elements; or nil
+        rbrace     <: Token             # "}"
+        incomplete <: bool              # true if (source) expressions are missing in the Elts list; added in Go 1.11
+
+    !type DeclStmt:
+        decl       <: Decl              # GenDecl with CONST, TYPE, or VAR token
+
+    !type DeferStmt:
+        defer      <: Token             # "defer" keyword
+        call       <: CallExpr
+
+    !type Ellipsis:
+        ellipsis   <: Token             # "..."
+        elt        <: Expr?             # ellipsis element type (parameter lists only); or nil
+
+    !type EmptyStmt:
+        semicolon  <: Token             # following ";"
+        implicit   <: bool              # if set, ";" was omitted in the source; added in Go 1.5
+
+    !type ExprStmt:
+        x          <: Expr              # expression
+
+    !type Field:
+        doc        <: CommentGroup?     # associated documentation; or nil
+        names      <: sequence of Ident # field/method/parameter names; or nil
+        type       <: Expr              # field/method/parameter type
+        tag        <: BasicLit?         # field tag; or nil
+        comment    <: CommentGroup?     # line comments; or nil
+
+    !type FieldList:
+        opening    <: Token             # opening parenthesis/brace, if any
+        list       <: sequence of Field # field list; or nil
+        closing    <: Token             # closing parenthesis/brace, if any
+
+    !type File:
+        doc        <: CommentGroup?             # associated documentation; or nil
+        package    <: Token                     # "package" keyword
+        name       <: Ident                     # package name
+        decls      <: sequence of Decl          # top-level declarations; or nil
+        imports    <: sequence of ImportSpec    # imports in this file
+        unresolved <: sequence of Ident         # unresolved identifiers in this file
+        comments   <: sequence of CommentGroup  # list of all comments in the source file
+
+    !type ForStmt:
+        for_       <: Token             # "for" keyword
+        init       <: Stmt?             # initialization statement; or nil
+        cond       <: Expr              # condition; or nil
+        post       <: Stmt?             # post iteration statement; or nil
+        body       <: BlockStmt
+
+    !type FuncDecl:
+        doc        <: CommentGroup?     # associated documentation; or nil
+        recv       <: FieldList?        # receiver (methods); or nil (functions)
+        name       <: Ident             # function/method name
+        type       <: FuncType          # function signature: parameters, results, and "func" keyword
+        body       <: BlockStmt?        # function body; or nil for external (non-Go) function
+
+    !type FuncLit:
+        type       <: FuncType          # function type
+        body       <: BlockStmt         # function body
+
+    !type FuncType:
+        func       <: Token             # "func" keyword (token.NoPos if there is no "func")
+        params     <: FieldList         # (incoming) parameters; non-nil
+        results    <: FieldList?        # (outgoing) results; or nil
+
+    !type GenDecl:
+        doc        <: CommentGroup?     # associated documentation; or nil
+        tok        <: Token             # IMPORT, CONST, TYPE, VAR
+        lparen     <: Token             # '(', if any
+        specs      <: sequence of Spec
+        rparen     <: Token             # ')', if any
+
+    !type GoStmt:
+        go         <: Token             # "go" keyword
+        call       <: CallExpr
+
+    !type Ident:
+        name       <: Token             # identifier name
+
+    !type IfStmt:
+        if_        <: Token             # "if" keyword
+        init       <: Stmt?             # initialization statement; or nil
+        cond       <: Expr              # condition
+        body       <: BlockStmt
+        else_      <: Stmt?             # else branch; or nil
+
+    !type ImportSpec:
+        doc        <: CommentGroup?     # associated documentation; or nil
+        name       <: Ident?            # local package name (including "."); or nil
+        path       <: BasicLit          # import path
+        comment    <: CommentGroup?     # line comments; or nil
+        endPos     <: Token             # end of spec (overrides Path.Pos if nonzero)
+
+    !type IncDecStmt:
+        x          <: Expr
+        tok        <: Token
+
+    !type IndexExpr:
+        x          <: Expr
+        lbrack     <: Token             # "["
+        index      <: Expr
+        rbrack     <: Token             # "]"
+
+    !type InterfaceType:
+        interface  <: Token             # "interface" keyword
+        methods    <: FieldList         # list of methods
+        incomplete <: bool              # true if (source) methods are missing in the Methods list
+
+    !type KeyValueExpr:
+        key        <: Expr
+        colon      <: Token
+        value      <: Expr
+
+    !type LabeledStmt:
+        label      <: Ident
+        colon      <: Token
+        stmt       <: Stmt
+
+    !type MapType:
+        map        <: Token             # "map" keyword
+        key        <: Expr
+        value      <: Expr
+
+    !type ParenExpr:
+        lparen     <: Token             # "("
+        x          <: Expr              # parenthesized expression
+        rparen     <: Token             # ")"
+
+    !type RangeStmt:
+        for_        <: Token            # "for" keyword
+        key        <: Expr?             # Key may be nil
+        value      <: Expr?             # Value may be nil
+        tok        <: Token             # invalid if Key == nil
+        x          <: Expr              # value to range over
+        body       <: BlockStmt
+
+    !type ReturnStmt:
+        return_     <: Token            # "return" keyword
+        results    <: sequence of Expr  # result expressions; or nil
+
+    !type SelectStmt:
+        select     <: Token             # "select" keyword
+        body       <: BlockStmt         # CommClauses only
+
+    !type SelectorExpr:
+        x          <: Expr              # expression
+        sel        <: Ident             # field selector
+
+    !type SendStmt:
+        chan       <: Expr
+        arrow      <: Token             # "<-"
+        value      <: Expr
+
+    !type SliceExpr:
+        x          <: Expr              # expression
+        lbrack     <: Token             # "["
+        low        <: Expr?             # begin of slice range; or nil
+        high       <: Expr?             # end of slice range; or nil
+        max        <: Expr?             # maximum capacity of slice; or nil; added in Go 1.2
+        slice3     <: bool              # true if 3-index slice (2 colons present); added in Go 1.2
+        rbrack     <: Token             # "]"
+
+    !type StarExpr:
+        star       <: Token             # "*"
+        x          <: Expr              # operand
+
+    !type StructType:
+        struct     <: Token             # "struct" keyword
+        fields     <: FieldList         # list of field declarations
+        incomplete <: bool              # true if (source) fields are missing in the Fields list
+
+    !type SwitchStmt:
+        switch     <: Token             # "switch" keyword
+        init       <: Stmt?             # initialization statement; or nil
+        tag        <: Expr?             # tag expression; or nil
+        body       <: BlockStmt         # CaseClauses only
+
+    !type TypeAssertExpr:
+        x          <: Expr              # expression
+        lparen     <: Token             # "("; added in Go 1.2
+        type       <: Expr              # asserted type; nil means type switch X.(type)
+        rparen     <: Token             # ")"; added in Go 1.2
+
+    !type TypeSpec:
+        doc        <: CommentGroup?     # associated documentation; or nil
+        name       <: Ident             # type name
+        assign     <: Token             # '=', if any; added in Go 1.9
+        type       <: Expr              # Ident, ParenExpr, SelectorExpr, StarExpr, or any of the XxxTypes
+        comment    <: CommentGroup?     # line comments; or nil
+
+    !type TypeSwitchStmt:
+        switch     <: Token             # "switch" keyword
+        init       <: Stmt?             # initialization statement; or nil
+        assign     <: Stmt              # x := y.(type) or y.(type)
+        body       <: BlockStmt         # CaseClauses only
+
+    !type UnaryExpr:
+        op         <: Token
+        x          <: Expr
+
+    !type ValueSpec:
+        doc        <: CommentGroup?     # associated documentation; or nil
+        names      <: sequence of Ident # value names (len(Names) > 0)
+        type       <: Expr?             # value type; or nil
+        values     <: sequence of Expr  # initial values; or nil
+        comment    <: CommentGroup?     # line comments; or nil
+
+    !union Expr:
+        BadExpr
+        Ident
+        Ellipsis
+        BasicLit
+        FuncLit
+        CompositeLit
+        ParenExpr
+        SelectorExpr
+        IndexExpr
+        SliceExpr
+        TypeAssertExpr
+        CallExpr
+        StarExpr
+        UnaryExpr
+        BinaryExpr
+        KeyValueExpr
+        ArrayType
+        StructType
+        FuncType
+        InterfaceType
+        MapType
+        ChanType
+
+    !union Stmt:
+        AssignStmt
+        BadStmt
+        BlockStmt
+        BranchStmt
+        CaseClause
+        CommClause
+        DeclStmt
+        DeferStmt
+        EmptyStmt
+        ExprStmt
+        ForStmt
+        GoStmt
+        IfStmt
+        IncDecStmt
+        LabeledStmt
+        RangeStmt
+        ReturnStmt
+        SelectStmt
+        SendStmt
+        SwitchStmt
+        TypeSwitchStmt
+
+    !union Decl:
+        BadDecl
+        FuncDecl
+        GenDecl
+
+    !union Spec:
+        ImportSpec
+        TypeSpec
+        ValueSpec
