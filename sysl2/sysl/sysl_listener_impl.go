@@ -921,11 +921,20 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.applyAnnotations(ctx.AllAnnotation())
 	s.popScope()
 
+	context_app_part := s.module.Apps[s.appname].Name.Part
+	context_path := strings.Split(s.typename, ".")
+
 	oneof := s.module.Apps[s.appname].Types[s.typename].GetOneOf()
 	for _, ref := range ctx.AllUser_defined_type() {
 		oneof.Type = append(oneof.Type, &sysl.Type{
 			Type: &sysl.Type_TypeRef{
 				TypeRef: &sysl.ScopedRef{
+					Context: &sysl.Scope{
+						Appname: &sysl.AppName{
+							Part: context_app_part,
+						},
+						Path: context_path,
+					},
 					Ref: &sysl.Scope{
 						Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
 					},

@@ -25,6 +25,12 @@ apps: <
         one_of: <
           type: <
             type_ref: <
+              context: <
+                appname: <
+                  part: "Test"
+                >
+                path: "U"
+              >
               ref: <
                 path: "A"
               >
@@ -32,6 +38,12 @@ apps: <
           >
           type: <
             type_ref: <
+              context: <
+                appname: <
+                  part: "Test"
+                >
+                path: "U"
+              >
               ref: <
                 path: "B"
               >
@@ -39,6 +51,12 @@ apps: <
           >
           type: <
             type_ref: <
+              context: <
+                appname: <
+                  part: "Test"
+                >
+                path: "U"
+              >
               ref: <
                 path: "C"
               >
