@@ -201,12 +201,6 @@ func (s *BaseSyslParserListener) EnterUnion(ctx *UnionContext) {}
 // ExitUnion is called when production union is exited.
 func (s *BaseSyslParserListener) ExitUnion(ctx *UnionContext) {}
 
-// EnterType_ref is called when production type_ref is entered.
-func (s *BaseSyslParserListener) EnterType_ref(ctx *Type_refContext) {}
-
-// ExitType_ref is called when production type_ref is exited.
-func (s *BaseSyslParserListener) ExitType_ref(ctx *Type_refContext) {}
-
 // EnterPackage_name is called when production package_name is entered.
 func (s *BaseSyslParserListener) EnterPackage_name(ctx *Package_nameContext) {}
 

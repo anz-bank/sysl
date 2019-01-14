@@ -44,9 +44,8 @@ table   :   SYSL_COMMENT*
         ;
 union   :   SYSL_COMMENT*
             UNION
-            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | type_ref | annotation | inplace_table | WHATEVER )+ DEDENT)
+            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | user_defined_type | annotation | inplace_table | WHATEVER )+ DEDENT)
         ;
-type_ref       : name_str;
 
 package_name   : name_str;
 sub_package    : NAME_SEP package_name;

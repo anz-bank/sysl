@@ -322,6 +322,9 @@ func (s *TreeShapeListener) ExitCollection_type(ctx *parser.Collection_typeConte
 
 // EnterUser_defined_type is called when production user_defined_type is entered.
 func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_typeContext) {
+	if len(s.fieldname) == 0 {
+		return
+	}
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
 	context_app_part := s.module.Apps[s.appname].Name.Part
@@ -919,12 +922,12 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.popScope()
 
 	oneof := s.module.Apps[s.appname].Types[s.typename].GetOneOf()
-	for _, ref := range ctx.AllType_ref() {
+	for _, ref := range ctx.AllUser_defined_type() {
 		oneof.Type = append(oneof.Type, &sysl.Type{
 			Type: &sysl.Type_TypeRef{
 				TypeRef: &sysl.ScopedRef{
 					Ref: &sysl.Scope{
-						Path: []string{ref.(*parser.Type_refContext).Name_str().GetText()},
+						Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
 					},
 				},
 			},
