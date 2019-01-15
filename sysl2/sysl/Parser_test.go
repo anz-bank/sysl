@@ -55,6 +55,17 @@ func pyParse(filename, root, output string) (*sysl.Module, error) {
 	return readSyslModule(output)
 }
 
+func retainOrRemove(err error, file *os.File, retainOnError bool) error {
+	if err != nil {
+		if retainOnError {
+			fmt.Printf("%#v retained for checking\n", file.Name())
+		} else {
+			os.Remove(file.Name())
+		}
+	}
+	return err
+}
+
 func parseComparable(filename, root string) (*sysl.Module, error) {
 	fs := &osFileSystem{root}
 	module, err := FSParse(filename, fs)
@@ -76,7 +87,11 @@ func parseComparable(filename, root string) (*sysl.Module, error) {
 	return module, nil
 }
 
-func parseAndCompare(filename, root, golden string, goldenModule *sysl.Module) (bool, error) {
+func parseAndCompare(
+	filename, root, golden string,
+	goldenModule *sysl.Module,
+	retainOnError bool,
+) (bool, error) {
 	module, err := parseComparable(filename, root)
 	if err != nil {
 		return false, err
@@ -101,8 +116,7 @@ func parseAndCompare(filename, root, golden string, goldenModule *sysl.Module) (
 		}
 	}()
 
-	if err = FTextPB(generated, module); err != nil {
-		fmt.Printf("%#v retained for checking", generated.Name())
+	if err = retainOrRemove(FTextPB(generated, module), generated, retainOnError); err != nil {
 		return false, err
 	}
 	if err := generated.Close(); err != nil {
@@ -114,7 +128,11 @@ func parseAndCompare(filename, root, golden string, goldenModule *sysl.Module) (
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		fmt.Printf("%#v retained for checking", generated.Name())
+		if retainOnError {
+			fmt.Printf("%#v retained for checking\n", generated.Name())
+		} else {
+			os.Remove(generated.Name())
+		}
 		return false, err
 	}
 
@@ -122,7 +140,7 @@ func parseAndCompare(filename, root, golden string, goldenModule *sysl.Module) (
 	return false, nil
 }
 
-func parseAndCompareWithPython(filename, root string) (bool, error) {
+func parseAndCompareWithPython(filename, root string, retainOnError bool) (bool, error) {
 	fmt.Printf("%35s <=> $(%s %[1]s)\n", filename, pySysl)
 
 	golden, err := ioutil.TempFile("", "sysl-test-golden-*.textpb")
@@ -132,17 +150,15 @@ func parseAndCompareWithPython(filename, root string) (bool, error) {
 	defer golden.Close()
 
 	pyModule, err := pyParse(filename, root, golden.Name())
-	if err != nil {
-		fmt.Printf("%#v retained for checking", golden.Name())
+	if retainOrRemove(err, golden, retainOnError); err != nil {
 		return false, err
 	}
 
-	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule)
-	if err != nil {
-		fmt.Printf("%#v retained for checking", golden.Name())
+	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule, retainOnError)
+	if retainOrRemove(err, golden, retainOnError); err != nil {
+		return false, err
 	}
-	os.Remove(golden.Name())
-	return equal, err
+	return equal, nil
 }
 
 func parseAndCompareWithGolden(filename, root string) (bool, error) {
@@ -153,7 +169,7 @@ func parseAndCompareWithGolden(filename, root string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return parseAndCompare(filename, root, golden, goldenModule)
+	return parseAndCompare(filename, root, golden, goldenModule, true)
 }
 
 func parseAndPrint(t *testing.T, filename, root string) error {
@@ -168,7 +184,7 @@ func parseAndPrint(t *testing.T, filename, root string) error {
 }
 
 func testParseAgainstPython(t *testing.T, filename, root string) {
-	equal, err := parseAndCompareWithPython(filename, root)
+	equal, err := parseAndCompareWithPython(filename, root, true)
 	assert.NoError(t, err)
 	assert.True(t, equal, "Mismatch")
 }
@@ -298,7 +314,7 @@ func TestSimpleProject(t *testing.T) {
 
 func TestUrlParamOrder(t *testing.T) {
 	filename := "tests/rest_url_params.sysl"
-	parseAndCompareWithPython(filename, "")
+	parseAndCompareWithPython(filename, "", false)
 	fmt.Printf("Output for %#v won't match legacy. Visually inspect the above diff.\n", filename)
 }
 
