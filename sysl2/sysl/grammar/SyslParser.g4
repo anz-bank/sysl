@@ -80,7 +80,7 @@ call_arg : (QSTRING | name_str)+ | (name_str LESS_COLON (name_str|NativeDataType
 call_args: OPEN_PAREN call_arg (COMMA call_arg)* CLOSE_PAREN;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
-if_stmt                 : IF PREDICATE_VALUE? COLON INDENT statements* DEDENT;
+if_stmt                 : IF PREDICATE_VALUE COLON INDENT statements* DEDENT;
 else_stmt               : ELSE PREDICATE_VALUE? COLON INDENT statements* DEDENT;
 if_else                 : if_stmt else_stmt*;
 
