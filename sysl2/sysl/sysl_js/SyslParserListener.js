@@ -272,6 +272,15 @@ SyslParserListener.prototype.exitTable = function(ctx) {
 };
 
 
+// Enter a parse tree produced by SyslParser#union.
+SyslParserListener.prototype.enterUnion = function(ctx) {
+};
+
+// Exit a parse tree produced by SyslParser#union.
+SyslParserListener.prototype.exitUnion = function(ctx) {
+};
+
+
 // Enter a parse tree produced by SyslParser#package_name.
 SyslParserListener.prototype.enterPackage_name = function(ctx) {
 };

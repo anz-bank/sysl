@@ -39,11 +39,11 @@ var pySysl = func() string {
 }()
 
 func pyParse(filename, root, output string) (*sysl.Module, error) {
-	args := []string{"textpb", "-o", output, filename}
+	var args []string
 	if len(root) > 0 {
-		rootArg := []string{"--root", root}
-		args = append(rootArg, args...)
+		args = append(args, "--root", root)
 	}
+	args = append(args, "textpb", "-o", output, filename)
 
 	cmd := exec.Command(pySysl, args...)
 	cmd.Stdout = os.Stdout
@@ -211,6 +211,10 @@ func TestSimpleEPWithSpaces(t *testing.T) {
 
 func TestSimpleEP2(t *testing.T) {
 	testParseAgainstPython(t, "tests/test4.sysl", "")
+}
+
+func TestUnion(t *testing.T) {
+	testParseAgainstGolden(t, "tests/union.sysl", "")
 }
 
 func TestSimpleEndpointParams(t *testing.T) {

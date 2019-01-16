@@ -161,6 +161,7 @@ HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' ) [ \t]*
 WRAP                : '!wrap';
 TABLE               : '!table';
 TYPE                : '!type';
+UNION               : '!union';
 VIEW                : '!view' { this.gotView = true;};
 
 fragment

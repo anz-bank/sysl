@@ -1,0 +1,6 @@
+/SyslLexer.tokens               linguist-generated=true
+/SyslParser.tokens              linguist-generated=true
+/sysl_lexer.go                  linguist-generated=true
+/sysl_parser.go                 linguist-generated=true
+/syslparser_base_listener.go    linguist-generated=true
+/syslparser_listener.go         linguist-generated=true

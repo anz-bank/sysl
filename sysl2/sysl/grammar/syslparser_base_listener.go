@@ -195,6 +195,12 @@ func (s *BaseSyslParserListener) EnterTable(ctx *TableContext) {}
 // ExitTable is called when production table is exited.
 func (s *BaseSyslParserListener) ExitTable(ctx *TableContext) {}
 
+// EnterUnion is called when production union is entered.
+func (s *BaseSyslParserListener) EnterUnion(ctx *UnionContext) {}
+
+// ExitUnion is called when production union is exited.
+func (s *BaseSyslParserListener) ExitUnion(ctx *UnionContext) {}
+
 // EnterPackage_name is called when production package_name is entered.
 func (s *BaseSyslParserListener) EnterPackage_name(ctx *Package_nameContext) {}
 

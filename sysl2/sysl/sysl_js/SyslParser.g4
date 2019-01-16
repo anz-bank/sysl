@@ -42,6 +42,10 @@ table   :   SYSL_COMMENT*
             (TABLE | TYPE)
             name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field | annotation | inplace_table | WHATEVER )+ DEDENT)
         ;
+union   :   SYSL_COMMENT*
+            UNION
+            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | user_defined_type | annotation | WHATEVER )+ DEDENT)
+        ;
 
 package_name   : name_str;
 sub_package    : NAME_SEP package_name;
@@ -51,7 +55,7 @@ name_with_attribs       :   app_name  QSTRING? attribs_or_modifiers?;
 
 model_name          :  Name COLON ;
 inplace_table_def   :  COLON INDENT (Name attribs_or_modifiers?)+ DEDENT;
-table_refs          :  (TABLE | TYPE) Name inplace_table_def?;
+table_refs          :  (TABLE | TYPE | UNION) Name inplace_table_def?;
 facade              :  SYSL_COMMENT* WRAP model_name INDENT table_refs+ DEDENT;
 
 documentation_stmts     : AT Name EQ QSTRING NEWLINE;
@@ -361,7 +365,7 @@ view_params: view_param (COMMA view_param)*;
 abstract_view: ABSTRACT;
 view returns [abstractView = false;]: VIEW name_str OPEN_PAREN view_params CLOSE_PAREN (ARROW_RIGHT view_return_type)? ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
-app_decl locals [check = false;]: INDENT  (table | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view {$check == $view.abstractView} )+ ( { $check === true}? | DEDENT );
+app_decl locals [check = false;]: INDENT  (table | union | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view {$check == $view.abstractView} )+ ( { $check === true}? | DEDENT );
 
 application:  SYSL_COMMENT*
                 name_with_attribs
