@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package sysl;
 
+option go_package = "github.com/anz-bank/sysl/src/proto;sysl";
+
 // Deltas are diff annotations set for each major element in a model.
 // TODO: Is this really needed? Investigate protobuf diff tools.
 enum Delta {
