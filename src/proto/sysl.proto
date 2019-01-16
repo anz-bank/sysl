@@ -213,6 +213,7 @@ message Type {
         Relation    relation    = 7;
         ScopedRef   type_ref    = 9;
         Type        set         = 13;
+        Type        sequence    = 15;
         NoType      no_type     = 14;
     }
     map<string, Attribute>  attrs       = 8;

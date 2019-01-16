@@ -129,6 +129,18 @@ func (s *BaseSyslParserListener) EnterSet_type(ctx *Set_typeContext) {}
 // ExitSet_type is called when production set_type is exited.
 func (s *BaseSyslParserListener) ExitSet_type(ctx *Set_typeContext) {}
 
+// EnterSequence_of is called when production sequence_of is entered.
+func (s *BaseSyslParserListener) EnterSequence_of(ctx *Sequence_ofContext) {}
+
+// ExitSequence_of is called when production sequence_of is exited.
+func (s *BaseSyslParserListener) ExitSequence_of(ctx *Sequence_ofContext) {}
+
+// EnterSequence_type is called when production sequence_type is entered.
+func (s *BaseSyslParserListener) EnterSequence_type(ctx *Sequence_typeContext) {}
+
+// ExitSequence_type is called when production sequence_type is exited.
+func (s *BaseSyslParserListener) ExitSequence_type(ctx *Sequence_typeContext) {}
+
 // EnterCollection_type is called when production collection_type is entered.
 func (s *BaseSyslParserListener) EnterCollection_type(ctx *Collection_typeContext) {}
 

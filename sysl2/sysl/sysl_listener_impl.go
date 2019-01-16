@@ -314,6 +314,32 @@ func (s *TreeShapeListener) ExitSet_type(ctx *parser.Set_typeContext) {
 	}
 }
 
+// EnterSequence_type is called when production set_type is entered.
+func (s *TreeShapeListener) EnterSequence_type(ctx *parser.Sequence_typeContext) {}
+
+// ExitSequence_type is called when production set_type is exited.
+func (s *TreeShapeListener) ExitSequence_type(ctx *parser.Sequence_typeContext) {
+	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
+
+	s.typemap[s.fieldname[len(s.fieldname)-1]] = &sysl.Type{
+		Type: &sysl.Type_Sequence{
+			Sequence: type1,
+		},
+		SourceContext: &sysl.SourceContext{
+			Start: &sysl.SourceContext_Location{
+				Line: int32(ctx.GetStart().GetLine()),
+			},
+		},
+	}
+
+	if ctx.Size_spec() != nil {
+		if type1.GetPrimitive() != sysl.Type_NO_Primitive {
+			spec := ctx.Size_spec().(*parser.Size_specContext)
+			type1.Constraint = makeTypeConstraint(type1.GetPrimitive(), spec)
+		}
+	}
+}
+
 // EnterCollection_type is called when production collection_type is entered.
 func (s *TreeShapeListener) EnterCollection_type(ctx *parser.Collection_typeContext) {}
 
@@ -784,13 +810,15 @@ func fixFieldDefinitions(collection *sysl.Type) {
 		}
 		if f.GetPrimitive() == sysl.Type_NO_Primitive {
 			var type1 *sysl.ScopedRef
-			switch f.GetType().(type) {
+			switch t := f.GetType().(type) {
 			case *sysl.Type_TypeRef:
-				type1 = f.GetTypeRef()
+				type1 = t.TypeRef
+			case *sysl.Type_Sequence:
+				type1 = t.Sequence.GetTypeRef()
 			case *sysl.Type_Set:
-				type1 = f.GetSet().GetTypeRef()
+				type1 = t.Set.GetTypeRef()
 			case *sysl.Type_List_:
-				type1 = f.GetList().GetType().GetTypeRef()
+				type1 = t.List.GetType().GetTypeRef()
 			default:
 				panic("unhandled type:" + name)
 			}

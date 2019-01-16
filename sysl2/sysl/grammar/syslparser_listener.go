@@ -62,6 +62,12 @@ type SyslParserListener interface {
 	// EnterSet_type is called when entering the set_type production.
 	EnterSet_type(c *Set_typeContext)
 
+	// EnterSequence_of is called when entering the sequence_of production.
+	EnterSequence_of(c *Sequence_ofContext)
+
+	// EnterSequence_type is called when entering the sequence_type production.
+	EnterSequence_type(c *Sequence_typeContext)
+
 	// EnterCollection_type is called when entering the collection_type production.
 	EnterCollection_type(c *Collection_typeContext)
 
@@ -583,6 +589,12 @@ type SyslParserListener interface {
 
 	// ExitSet_type is called when exiting the set_type production.
 	ExitSet_type(c *Set_typeContext)
+
+	// ExitSequence_of is called when exiting the sequence_of production.
+	ExitSequence_of(c *Sequence_ofContext)
+
+	// ExitSequence_type is called when exiting the sequence_type production.
+	ExitSequence_type(c *Sequence_typeContext)
 
 	// ExitCollection_type is called when exiting the collection_type production.
 	ExitCollection_type(c *Collection_typeContext)

@@ -173,6 +173,24 @@ SyslParserListener.prototype.exitSet_type = function(ctx) {
 };
 
 
+// Enter a parse tree produced by SyslParser#sequence_of.
+SyslParserListener.prototype.enterSequence_of = function(ctx) {
+};
+
+// Exit a parse tree produced by SyslParser#sequence_of.
+SyslParserListener.prototype.exitSequence_of = function(ctx) {
+};
+
+
+// Enter a parse tree produced by SyslParser#sequence_type.
+SyslParserListener.prototype.enterSequence_type = function(ctx) {
+};
+
+// Exit a parse tree produced by SyslParser#sequence_type.
+SyslParserListener.prototype.exitSequence_type = function(ctx) {
+};
+
+
 // Enter a parse tree produced by SyslParser#collection_type.
 SyslParserListener.prototype.enterCollection_type = function(ctx) {
 };
