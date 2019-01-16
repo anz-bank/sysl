@@ -41,7 +41,19 @@ func createIndentToken(source *antlr.TokenSourceCharStreamPair) *antlr.CommonTok
 	return antlr.NewCommonToken(source, SyslLexerINDENT, 0, 0, 0)
 }
 
-var keywords = [...]string{"set of", "return", "for", "one of", "else", "if", "loop", "until", "alt", "while"}
+var keywords = [...]string{
+	"sequence of",
+	"set of",
+	"return",
+	"for",
+	"one of",
+	"else",
+	"if",
+	"loop",
+	"until",
+	"alt",
+	"while",
+}
 var prevToken []antlr.Token
 
 type Stack struct {

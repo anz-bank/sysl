@@ -1,0 +1,3 @@
+SequenceType:
+    !type A:
+        x <: sequence of int

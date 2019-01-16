@@ -280,6 +280,10 @@ func TestRootArg(t *testing.T) {
 	testParseAgainstPython(t, "school.sysl", "tests")
 }
 
+func TestSequenceType(t *testing.T) {
+	testParseAgainstGolden(t, "tests/sequence_type.sysl", "")
+}
+
 func TestRestApi(t *testing.T) {
 	testParseAgainstPython(t, "tests/test_rest_api.sysl", "")
 }

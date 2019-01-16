@@ -1,0 +1,33 @@
+apps: <
+  key: "SequenceType"
+  value: <
+    name: <
+      part: "SequenceType"
+    >
+    types: <
+      key: "A"
+      value: <
+        tuple: <
+          attr_defs: <
+            key: "x"
+            value: <
+              sequence: <
+                primitive: INT
+                source_context: <
+                  start: <
+                    line: 3
+                  >
+                >
+              >
+              source_context: <
+                start: <
+                  line: 3
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

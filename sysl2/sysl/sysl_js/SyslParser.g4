@@ -23,8 +23,10 @@ user_defined_type       : name_str;
 types: user_defined_type | reference | NativeDataTypes;
 set_of: SET_OF | (E_SET_OF);
 set_type            : set_of types size_spec?;
+sequence_of: SEQUENCE_OF | (E_SEQUENCE_OF);
+sequence_type            : sequence_of types size_spec?;
 //TODO : allow for other collection types?
-collection_type     : set_type;
+collection_type     : set_type | sequence_type;
 multi_line_docstring    :   COLON INDENT doc_string+ DEDENT;
 annotation_value        :   QSTRING | array_of_strings | multi_line_docstring;
 annotation      : AT VAR_NAME EQ annotation_value;
@@ -347,7 +349,7 @@ expr_statement locals [nested = false;]:
 expr_inject_stmt: expr_func E_DOT E_STAR E_NL;
 expr_stmt: expr_statement_no_nl | expr_statement | expr_inject_stmt;
 
-transform_return_type:  set_of | view_type_spec;
+transform_return_type:  set_of | sequence_of | view_type_spec;
 view_return_type: view_type_spec;
 
 transform_scope_var: E_Name;
