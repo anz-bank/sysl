@@ -1,8 +1,6 @@
-package main
+package parser
 
 import (
-	"fmt"
-
 	"github.com/anz-bank/sysl/sysl2/proto"
 )
 
@@ -19,6 +17,10 @@ func makeQuantifierOnePlus() *sysl.Quantifier {
 }
 
 func makeStringTerm(str string) *sysl.Term {
+	return &sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_String_{String_: str}}, Quantifier: nil}
+}
+
+func makeRegexpTerm(str string) *sysl.Term {
 	return &sysl.Term{Atom: &sysl.Atom{Union: &sysl.Atom_Regexp{Regexp: str}}, Quantifier: nil}
 }
 
@@ -78,18 +80,18 @@ func makeGrammar1() *sysl.Grammar {
 // term := atom quantifier?
 // atom := STRING | ruleName | '(' choice  ')'
 func makeEBNF() *sysl.Grammar {
-	star := makeStringTerm("[*]")
-	plus := makeStringTerm("[+]")
-	qn := makeStringTerm("[?]")
-	alt := makeStringTerm("[|]")
-	colon := makeStringTerm("[:]")
-	semiColon := makeStringTerm("[;]")
-	openParen := makeStringTerm("[(]")
-	closeParen := makeStringTerm("[)]")
-	STRING := makeStringTerm(`["][^"]*["]`)
+	star := makeRegexpTerm("[*]")
+	plus := makeRegexpTerm("[+]")
+	qn := makeRegexpTerm("[?]")
+	alt := makeRegexpTerm("[|]")
+	colon := makeRegexpTerm("[:]")
+	semiColon := makeRegexpTerm("[;]")
+	openParen := makeRegexpTerm("[(]")
+	closeParen := makeRegexpTerm("[)]")
+	STRING := makeRegexpTerm(`['][^']*[']`)
 
-	tokenName := makeStringTerm("[A-Z][0-9A-Z_]*")
-	lowercaseName := makeStringTerm("[a-z][0-9a-z_]*")
+	tokenName := makeRegexpTerm("[A-Z][0-9A-Z_]*")
+	lowercaseName := makeRegexpTerm("[a-z][0-9a-zA-Z_]*")
 
 	lhsName, lhsTerm := makeRule("lhs")
 	rhsName, rhsTerm := makeRule("rhs")
@@ -209,13 +211,13 @@ func makeEBNF() *sysl.Grammar {
 // T' -> * F T' | /FT' |epsilon
 // F  -> (E) | int
 func makeEXPR() *sysl.Grammar {
-	plus := makeStringTerm("[+]")
-	minus := makeStringTerm("[-]")
-	star := makeStringTerm("[*]")
-	divide := makeStringTerm("[/]")
-	openParen := makeStringTerm("[(]")
-	closeParen := makeStringTerm("[)]")
-	integer := makeStringTerm("[0-9]+")
+	plus := makeRegexpTerm("[+]")
+	minus := makeRegexpTerm("[-]")
+	star := makeRegexpTerm("[*]")
+	divide := makeRegexpTerm("[/]")
+	openParen := makeRegexpTerm("[(]")
+	closeParen := makeRegexpTerm("[)]")
+	integer := makeRegexpTerm("[0-9]+")
 
 	ERuleName, ETerm := makeRule("E")
 	ETailRuleName, ETailTerm := makeRule("ETail")
@@ -282,10 +284,10 @@ func makeEXPR() *sysl.Grammar {
 //    | '{' '}'
 //    ;
 func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
-	curlyOpen := makeStringTerm("[{]")
-	curlyClosed := makeStringTerm("[}]")
-	comma := makeStringTerm("[,]")
-	number := makeStringTerm("[0-9]+")
+	curlyOpen := makeRegexpTerm("[{]")
+	curlyClosed := makeRegexpTerm("[}]")
+	comma := makeRegexpTerm("[,]")
+	number := makeRegexpTerm("[0-9]+")
 
 	objRuleName, _ := makeRule("obj")
 	obj2RuleName, obj2Term := makeRule("obj2")
@@ -343,14 +345,14 @@ func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
 func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 	// doubleQuote := makeStringTerm("\"")
 	// singleQuote := makeStringTerm("'")
-	curlyOpen := makeStringTerm("[{]")
-	curlyClosed := makeStringTerm("[}]")
-	comma := makeStringTerm("[,]")
-	sqOpen := makeStringTerm("[[]")
-	sqClose := makeStringTerm("[]]")
-	colon := makeStringTerm("[:]")
-	number := makeStringTerm("[0-9]+")
-	STRING := makeStringTerm(`["][^"]*["]`)
+	curlyOpen := makeRegexpTerm("[{]")
+	curlyClosed := makeRegexpTerm("[}]")
+	comma := makeRegexpTerm("[,]")
+	sqOpen := makeRegexpTerm("[[]")
+	sqClose := makeRegexpTerm("[]]")
+	colon := makeRegexpTerm("[:]")
+	number := makeRegexpTerm("[0-9]+")
+	STRING := makeRegexpTerm(`["][^"]*["]`)
 
 	jsonRuleName, _ := makeRule("json")
 	valueRuleName, valueTerm := makeRule("value")
@@ -489,7 +491,7 @@ func makeG2() *sysl.Grammar {
 }
 
 func makeNestedGrammar() *sysl.Grammar {
-	a := makeStringTerm("{[A-Za-z]+:")
+	a := makeRegexpTerm("{[A-Za-z]+:")
 	b := makeStringTerm(":}")
 	SruleName, _ := makeRule("S")
 
@@ -510,7 +512,7 @@ func makeNestedGrammar() *sysl.Grammar {
 	}
 }
 
-func main() {
-	fmt.Println("parsing grammar")
+// func main() {
+// 	fmt.Println("parsing grammar")
 
-}
+// }

@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
 	"fmt"
@@ -14,11 +14,11 @@ type token struct {
 }
 
 type lexer struct {
-	currentIndex        int
-	regexs              []*regexp.Regexp
-	content             string
+	currentIndex     int
+	regexs           []*regexp.Regexp
+	content          string
 	WS               *regexp.Regexp
-	ignoreWhiteSpace    bool
+	ignoreWhiteSpace bool
 }
 
 var arr []string
@@ -93,10 +93,10 @@ func makeLexer(content string, regexs []string) lexer {
 	}
 
 	return lexer{
-		ignoreWhiteSpace:    true,
-		regexs:              compiledRegexes,
-		currentIndex:        0,
-		content:             content,
+		ignoreWhiteSpace: true,
+		regexs:           compiledRegexes,
+		currentIndex:     0,
+		content:          content,
 		WS:               regexp.MustCompile(`[^ \t\r\n]+`),
 	}
 }

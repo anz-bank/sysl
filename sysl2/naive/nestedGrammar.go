@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
 	"github.com/anz-bank/sysl/sysl2/proto"
