@@ -1,0 +1,45 @@
+Model [package="com.example.gen"]:
+  !type Request:
+    id <: int
+    payload <: string
+
+  !type Response:
+    code <: int
+    message <: string
+
+TransformApp:
+  !view add(lhs <: int, rhs <: int) -> int:
+    lhs -> (:
+      out1 = lhs + rhs
+      out2 = lhs -> <int> (:
+        out3 = 5 + 1
+      )
+    )
+
+  !view Getters(t <: app.Type) -> memberFunction:
+    t -> (t:
+      access = "public"
+      returnType = t.value.type
+      methodName = "get" + t.key
+    )
+
+  !view classDef(types <: app.Types) -> classDef [~file]:
+    types -> (t:
+      className = t.key + "Impl"
+      classBody = Getters(t.value.fields)
+    )
+
+  !view GetAppAttributes(app <: sysl.App) -> int:
+    app -> (:
+      out = app.attrs.package
+
+      package = .attrs.package -> <package> (name:
+        packageName = name
+      )
+
+      import = {"package1", "package2"} -> <set of import>(name:
+        importPath = name
+      )
+
+      definition = classDef(app.types)
+    )
