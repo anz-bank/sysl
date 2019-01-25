@@ -91,7 +91,8 @@ func makeParser(g *sysl.Grammar, text string) *parser {
 	}
 }
 
-func getMinMaxCount(t *sysl.Term) (int, int) {
+// GetMinMaxCount for the term's quantifier
+func GetMinMaxCount(t *sysl.Term) (int, int) {
 	if t.Quantifier == nil {
 		return 1, 1
 	}
@@ -126,7 +127,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 				result = true
 				continue
 			}
-			minCount, maxCount := getMinMaxCount(t)
+			minCount, maxCount := GetMinMaxCount(t)
 			matchCount := 0
 			res := false
 			subTree := make([]interface{}, 0)
@@ -226,7 +227,6 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 func (p *parser) parseGrammar(arr *[]token) (bool, []interface{}) {
 	p.tokens = arr
 	result, out, tree := p.parse(p.g, 0, p.g.Rules[p.g.Start])
-	fmt.Println(tree)
 	return result && len(*p.tokens) == out, tree
 }
 

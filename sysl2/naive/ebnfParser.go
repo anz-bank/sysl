@@ -9,8 +9,8 @@ import (
 
 func makeStringAtom(str string) *sysl.Atom {
 	return &sysl.Atom{
-		Union: &sysl.Atom_Regexp{
-			Regexp: str,
+		Union: &sysl.Atom_String_{
+			String_: str,
 		},
 	}
 }
@@ -57,7 +57,7 @@ func makeAtom(term interface{}) *sysl.Atom {
 	switch atomType {
 	case 0:
 		tokText := symbolTerm(atom[0]).tok.text
-		tokText = strings.Trim(tokText, `"`)
+		tokText = strings.Trim(tokText, `'`)
 		a = makeStringAtom(tokText)
 	case 2:
 		a = makeRuleNameAtom(symbolTerm(atom[0]).tok.text)
@@ -128,7 +128,7 @@ func buildChoice(choice []interface{}) *sysl.Choice {
 }
 
 func buildRule(ast interface{}) *sysl.Rule {
-	fmt.Printf("%T\n", ast)
+	fmt.Printf("buildRule: %T\n", ast)
 	_, rule := ruleSeq(ast, "rule")
 	_, lhs := ruleSeq(rule[0], "lhs")
 	ruleName, _ := makeRule(symbolTerm(lhs[0]).tok.text)

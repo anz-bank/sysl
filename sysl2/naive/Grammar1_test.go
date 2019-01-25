@@ -266,8 +266,8 @@ func TestEBNF2(t *testing.T) {
 func TestBuildEBNFGrammar(t *testing.T) {
 	// Both grammars are equivalent
 	grammars := []string{
-		`s : "d" | "c" s ; `,
-		`s : "c"* "d" ; `,
+		`s : 'd' | 'c' s ; `,
+		`s : 'c'* 'd' ; `,
 	}
 	text := "ccd"
 	tokens := [][]int{
@@ -292,8 +292,8 @@ func TestBuildEBNFGrammar(t *testing.T) {
 
 func TestBuildEBNFGrammar2(t *testing.T) {
 	text := `
-        s : "b" "a" "b" | "b" a;
-        a : "d" | "c" a;
+        s : 'b' 'a' 'b' | 'b' a;
+        a : 'd' | 'c' a;
         `
 	g := ParseEBNF(text, "obj", "s")
 	if len(g.Rules) != 2 {
