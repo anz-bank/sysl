@@ -1,0 +1,113 @@
+apps {
+  key: "School"
+  value {
+    name {
+      part: "School"
+    }
+    types {
+      key: "Class"
+      value {
+        relation {
+          attr_defs {
+            key: "Id"
+            value {
+              primitive: INT
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "pk"
+                    }
+                    elt {
+                      s: "autoinc"
+                    }
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+          }
+          primary_key {
+            attr_name: "Id"
+          }
+        }
+      }
+    }
+    types {
+      key: "Student"
+      value {
+        relation {
+          attr_defs {
+            key: "ClassId"
+            value {
+              attrs {
+                key: "description"
+                value {
+                  s: "describe the table"
+                }
+              }
+              type_ref {
+                context {
+                  appname {
+                    part: "School"
+                  }
+                  path: "Student"
+                }
+                ref {
+                  path: "Class"
+                  path: "Idd"
+                }
+              }
+              source_context {
+                start {
+                  line: 7
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Id"
+            value {
+              primitive: INT
+              attrs {
+                key: "description"
+                value {
+                  s: "describe the table"
+                }
+              }
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "pk"
+                    }
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 6
+                }
+              }
+            }
+          }
+          primary_key {
+            attr_name: "Id"
+          }
+        }
+        attrs {
+          key: "description"
+          value {
+            s: "describe the table"
+          }
+        }
+      }
+    }
+  }
+}

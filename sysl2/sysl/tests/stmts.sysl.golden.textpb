@@ -1,0 +1,918 @@
+apps {
+  key: "TransformationTest"
+  value {
+    name {
+      part: "TransformationTest"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "io.sysl.test.views"
+      }
+    }
+    views {
+      key: "TestStatements"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "number"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "abcdef"
+                expr {
+                  get_attr {
+                    arg {
+                      name: "."
+                    }
+                    attr: "abcdef"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc"
+                expr {
+                  get_attr {
+                    arg {
+                      name: "."
+                    }
+                    attr: "abc"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abcdef"
+                expr {
+                  get_attr {
+                    arg {
+                      name: "name"
+                    }
+                    attr: "abcdef"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "a"
+                      }
+                    }
+                    rhs {
+                      literal {
+                        i: 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc"
+                expr {
+                  name: "number"
+                }
+                table: true
+              }
+            }
+            stmt {
+              assign {
+                name: "foo1"
+                expr {
+                  ifelse {
+                    cond {
+                      binexpr {
+                        op: NE
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "bar"
+                            }
+                            attr: "baz"
+                          }
+                        }
+                        rhs {
+                          literal {
+                            null {
+                            }
+                          }
+                          type {
+                            primitive: EMPTY
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      literal {
+                        s: "Y"
+                      }
+                    }
+                    if_false {
+                      literal {
+                        s: "N"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo2"
+                expr {
+                  ifelse {
+                    cond {
+                      get_attr {
+                        arg {
+                          name: "bar"
+                        }
+                        attr: "baz"
+                      }
+                    }
+                    if_true {
+                      literal {
+                        s: "Y"
+                      }
+                    }
+                    if_false {
+                      literal {
+                        s: "N"
+                      }
+                    }
+                    nullsafe: true
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo3"
+                expr {
+                  ifelse {
+                    cond {
+                      binexpr {
+                        op: EQ
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "bar"
+                            }
+                            attr: "id"
+                          }
+                        }
+                        rhs {
+                          literal {
+                            null {
+                            }
+                          }
+                          type {
+                            primitive: EMPTY
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      literal {
+                        null {
+                        }
+                      }
+                      type {
+                        primitive: EMPTY
+                      }
+                    }
+                    if_false {
+                      call {
+                        func: "transform"
+                        arg {
+                          get_attr {
+                            arg {
+                              name: "bar"
+                            }
+                            attr: "id"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo4"
+                expr {
+                  ifelse {
+                    cond {
+                      call {
+                        func: "bool"
+                        arg {
+                          binexpr {
+                            op: EQ
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "a1"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                b: true
+                              }
+                              type {
+                                primitive: BOOL
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "aa"
+                          }
+                        }
+                        rhs {
+                          get_attr {
+                            arg {
+                              literal {
+                                i: 3
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                        }
+                      }
+                    }
+                    if_false {
+                      ifelse {
+                        cond {
+                          call {
+                            func: "bool"
+                            arg {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "a2"
+                              }
+                            }
+                          }
+                        }
+                        if_true {
+                          ifelse {
+                            cond {
+                              call {
+                                func: "bool"
+                                arg {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "bar"
+                                  }
+                                }
+                              }
+                            }
+                            if_true {
+                              binexpr {
+                                op: ADD
+                                lhs {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "a3"
+                                  }
+                                }
+                                rhs {
+                                  literal {
+                                    i: 4
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo5"
+                expr {
+                  ifelse {
+                    cond {
+                      call {
+                        func: "bool"
+                        arg {
+                          binexpr {
+                            op: EQ
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "a1"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                i: 2
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "aa"
+                          }
+                        }
+                        rhs {
+                          get_attr {
+                            arg {
+                              literal {
+                                i: 2
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                        }
+                      }
+                    }
+                    if_false {
+                      ifelse {
+                        cond {
+                          call {
+                            func: "bool"
+                            arg {
+                              binexpr {
+                                op: EQ
+                                lhs {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "a1"
+                                  }
+                                }
+                                rhs {
+                                  literal {
+                                    i: 3
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                        if_true {
+                          binexpr {
+                            op: ADD
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "aa"
+                              }
+                            }
+                            rhs {
+                              get_attr {
+                                arg {
+                                  literal {
+                                    i: 3
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo6"
+                expr {
+                  ifelse {
+                    cond {
+                      binexpr {
+                        op: EQ
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "a1"
+                          }
+                        }
+                        rhs {
+                          literal {
+                            i: 2
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "aa"
+                          }
+                        }
+                        rhs {
+                          get_attr {
+                            arg {
+                              literal {
+                                i: 2
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                        }
+                      }
+                    }
+                    if_false {
+                      ifelse {
+                        cond {
+                          binexpr {
+                            op: EQ
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "a1"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                i: 3
+                              }
+                            }
+                          }
+                        }
+                        if_true {
+                          binexpr {
+                            op: ADD
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "aa"
+                              }
+                            }
+                            rhs {
+                              get_attr {
+                                arg {
+                                  literal {
+                                    i: 3
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo7"
+                expr {
+                  ifelse {
+                    cond {
+                      binexpr {
+                        op: EQ
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "a1"
+                          }
+                        }
+                        rhs {
+                          literal {
+                            i: 2
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "aa"
+                          }
+                        }
+                        rhs {
+                          get_attr {
+                            arg {
+                              literal {
+                                i: 3
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                        }
+                      }
+                    }
+                    if_false {
+                      ifelse {
+                        cond {
+                          binexpr {
+                            op: EQ
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "a1"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                i: 3
+                              }
+                            }
+                          }
+                        }
+                        if_true {
+                          binexpr {
+                            op: ADD
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "aa"
+                              }
+                            }
+                            rhs {
+                              get_attr {
+                                arg {
+                                  literal {
+                                    i: 3
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                            }
+                          }
+                        }
+                        if_false {
+                          ifelse {
+                            cond {
+                              binexpr {
+                                op: EQ
+                                lhs {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "a1"
+                                  }
+                                }
+                                rhs {
+                                  literal {
+                                    i: 4
+                                  }
+                                }
+                              }
+                            }
+                            if_true {
+                              ifelse {
+                                cond {
+                                  call {
+                                    func: "bool"
+                                    arg {
+                                      binexpr {
+                                        op: EQ
+                                        lhs {
+                                          get_attr {
+                                            arg {
+                                              name: "."
+                                            }
+                                            attr: "aa"
+                                          }
+                                        }
+                                        rhs {
+                                          literal {
+                                            s: "b"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                                if_true {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "bb"
+                                  }
+                                }
+                                if_false {
+                                  literal {
+                                    null {
+                                    }
+                                  }
+                                  type {
+                                    primitive: EMPTY
+                                  }
+                                }
+                              }
+                            }
+                            if_false {
+                              literal {
+                                null {
+                                }
+                              }
+                              type {
+                                primitive: EMPTY
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo8"
+                expr {
+                  ifelse {
+                    cond {
+                      binexpr {
+                        op: EQ
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "a1"
+                          }
+                        }
+                        rhs {
+                          literal {
+                            i: 2
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "aa"
+                          }
+                        }
+                        rhs {
+                          get_attr {
+                            arg {
+                              literal {
+                                i: 3
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                        }
+                      }
+                    }
+                    if_false {
+                      ifelse {
+                        cond {
+                          binexpr {
+                            op: EQ
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "a1"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                i: 3
+                              }
+                            }
+                          }
+                        }
+                        if_true {
+                          binexpr {
+                            op: ADD
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "aa"
+                              }
+                            }
+                            rhs {
+                              get_attr {
+                                arg {
+                                  literal {
+                                    i: 3
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                            }
+                          }
+                        }
+                        if_false {
+                          ifelse {
+                            cond {
+                              binexpr {
+                                op: EQ
+                                lhs {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "a1"
+                                  }
+                                }
+                                rhs {
+                                  literal {
+                                    i: 2
+                                  }
+                                }
+                              }
+                            }
+                            if_true {
+                              binexpr {
+                                op: ADD
+                                lhs {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "aa"
+                                  }
+                                }
+                                rhs {
+                                  get_attr {
+                                    arg {
+                                      literal {
+                                        i: 3
+                                      }
+                                    }
+                                    attr: "pqr"
+                                  }
+                                }
+                              }
+                            }
+                            if_false {
+                              ifelse {
+                                cond {
+                                  binexpr {
+                                    op: EQ
+                                    lhs {
+                                      get_attr {
+                                        arg {
+                                          name: "."
+                                        }
+                                        attr: "a1"
+                                      }
+                                    }
+                                    rhs {
+                                      literal {
+                                        i: 3
+                                      }
+                                    }
+                                  }
+                                }
+                                if_true {
+                                  binexpr {
+                                    op: ADD
+                                    lhs {
+                                      get_attr {
+                                        arg {
+                                          name: "."
+                                        }
+                                        attr: "aa"
+                                      }
+                                    }
+                                    rhs {
+                                      get_attr {
+                                        arg {
+                                          literal {
+                                            i: 3
+                                          }
+                                        }
+                                        attr: "pqr"
+                                      }
+                                    }
+                                  }
+                                }
+                                if_false {
+                                  literal {
+                                    null {
+                                    }
+                                  }
+                                  type {
+                                    primitive: EMPTY
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              inject {
+                call {
+                  func: "funccall"
+                  arg {
+                    literal {
+                      s: "arg"
+                    }
+                  }
+                  arg {
+                    name: "out"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

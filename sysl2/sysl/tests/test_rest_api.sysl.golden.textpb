@@ -1,0 +1,731 @@
+apps {
+  key: "BrowserApp"
+  value {
+    name {
+      part: "BrowserApp"
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "ajax"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "HomePage"
+      value {
+        name: "HomePage"
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "GET /"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "On Click"
+      value {
+        name: "On Click"
+        stmt {
+          action {
+            action: "| Comment On click, initiate a server call"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "GET /first/{id}"
+          }
+          attrs {
+            key: "patterns"
+            value {
+              a {
+                elt {
+                  s: "pattern+foo"
+                }
+              }
+            }
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "BrowserApp"
+            }
+            endpoint: "Show Success"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Show Foo"
+      value {
+        name: "Show Foo"
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "GET /foo"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "GET /foo/"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Show Success"
+      value {
+        name: "Show Success"
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "GET /first-level/{id}/second/third"
+          }
+        }
+        stmt {
+          ret {
+            payload: "200 ok"
+          }
+        }
+      }
+    }
+    types {
+      key: "Request"
+      value {
+        tuple {
+          attr_defs {
+            key: "val"
+            value {
+              primitive: STRING
+              attrs {
+                key: "description"
+                value {
+                  s: "Multi line comment 1 Multi line comment 2"
+                }
+              }
+              source_context {
+                start {
+                  line: 46
+                }
+              }
+            }
+          }
+        }
+        attrs {
+          key: "description"
+          value {
+            s: "Multi line comment 1 Multi line comment 2"
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My :: Server"
+  value {
+    name {
+      part: "My"
+      part: "Server"
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "rest"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "GET /"
+      value {
+        name: "GET /"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/"
+        }
+      }
+    }
+    endpoints {
+      key: "GET /first"
+      value {
+        name: "GET /first"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+              elt {
+                s: "deprecated"
+              }
+              elt {
+                s: "rest"
+              }
+              elt {
+                s: "https"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/first"
+        }
+        param {
+        }
+      }
+    }
+    endpoints {
+      key: "GET /first-level/{id}/second/third"
+      value {
+        name: "GET /first-level/{id}/second/third"
+        docstring: " Multi line statement - 1 Multi line statement - 2 Multi line statement - 3"
+        attrs {
+          key: "id"
+          value {
+            s: "id01"
+          }
+        }
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          ret {
+            payload: "200 ok"
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/first-level/{id}/second/third"
+          query_param {
+            name: "id"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 35
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "q"
+            type {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Server"
+                  }
+                }
+                ref {
+                  path: "{queryTerms}"
+                }
+              }
+              source_context {
+                start {
+                  line: 35
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "limit"
+            type {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Server"
+                  }
+                }
+                ref {
+                  path: "{pageSize}"
+                }
+              }
+              source_context {
+                start {
+                  line: 35
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "offset"
+            type {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Server"
+                  }
+                }
+                ref {
+                  path: "{startingRecord}"
+                }
+              }
+              source_context {
+                start {
+                  line: 35
+                }
+              }
+            }
+            loc: true
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "GET /first/{id}"
+      value {
+        name: "GET /first/{id}"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+              elt {
+                s: "deprecated"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "system_id"
+          value {
+            s: "001"
+          }
+        }
+        attrs {
+          key: "uber"
+          value {
+            s: "value"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/first/{id}"
+          query_param {
+            name: "id"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 23
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "depth"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 23
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "limit"
+            type {
+              primitive: INT
+              opt: true
+              source_context {
+                start {
+                  line: 23
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "offset"
+            type {
+              primitive: INT
+              opt: true
+              source_context {
+                start {
+                  line: 23
+                }
+              }
+            }
+            loc: true
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "GET /foo"
+      value {
+        name: "GET /foo"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "zero"
+          value {
+            s: "0"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/foo"
+        }
+      }
+    }
+    endpoints {
+      key: "GET /foo/"
+      value {
+        name: "GET /foo/"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "zero"
+          value {
+            s: "0"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/foo/"
+        }
+      }
+    }
+    endpoints {
+      key: "GET /foo/blah"
+      value {
+        name: "GET /foo/blah"
+        attrs {
+          key: "four"
+          value {
+            s: "4"
+          }
+        }
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "zero"
+          value {
+            s: "0"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/foo/blah"
+        }
+        param {
+          name: "str"
+          type {
+            primitive: STRING
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "POST /first/{id}/another-second"
+      value {
+        name: "POST /first/{id}/another-second"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+              elt {
+                s: "deprecated"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "uber"
+          value {
+            s: "value"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: POST
+          path: "/first/{id}/another-second"
+          query_param {
+            name: "id"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 32
+                }
+              }
+            }
+            loc: true
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "POST /first/{id}/second/third"
+      value {
+        name: "POST /first/{id}/second/third"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+              elt {
+                s: "deprecated"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "uber"
+          value {
+            s: "value"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: POST
+          path: "/first/{id}/second/third"
+          query_param {
+            name: "id"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 29
+                }
+              }
+            }
+            loc: true
+          }
+        }
+        param {
+          name: "value"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "Request"
+                }
+                path: "val"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "POST /foo/bar/baz"
+      value {
+        name: "POST /foo/bar/baz"
+        docstring: "\"Create\" an item"
+        attrs {
+          key: "one"
+          value {
+            s: "1"
+          }
+        }
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "three"
+          value {
+            s: "3"
+          }
+        }
+        attrs {
+          key: "two"
+          value {
+            s: "2"
+          }
+        }
+        attrs {
+          key: "zero"
+          value {
+            s: "0"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: POST
+          path: "/foo/bar/baz"
+        }
+      }
+    }
+    endpoints {
+      key: "PUT /first/{id}/second"
+      value {
+        name: "PUT /first/{id}/second"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+              elt {
+                s: "deprecated"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "uber"
+          value {
+            s: "value"
+          }
+        }
+        stmt {
+          ret {
+            payload: "200 ok"
+          }
+        }
+        rest_params {
+          method: PUT
+          path: "/first/{id}/second"
+          query_param {
+            name: "id"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 26
+                }
+              }
+            }
+            loc: true
+          }
+        }
+      }
+    }
+  }
+}

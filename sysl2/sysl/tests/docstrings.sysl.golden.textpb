@@ -1,0 +1,143 @@
+apps {
+  key: "Another App"
+  value {
+    name {
+      part: "Another App"
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        attrs {
+          key: "description"
+          value {
+            s: "multi-line documentation comment use it for long comments"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "App"
+  value {
+    name {
+      part: "App"
+    }
+    attrs {
+      key: "description"
+      value {
+        s: "multi-line documentation comment use it for long comments"
+      }
+    }
+    endpoints {
+      key: "..."
+      value {
+        name: "..."
+      }
+    }
+  }
+}
+apps {
+  key: "Model"
+  value {
+    name {
+      part: "Model"
+    }
+    types {
+      key: "TableName"
+      value {
+        attrs {
+          key: "description"
+          value {
+            s: "multi-line documentation comment use it for long comments"
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "ModelTwo"
+  value {
+    name {
+      part: "ModelTwo"
+    }
+    types {
+      key: "TableName"
+      value {
+        tuple {
+          attr_defs {
+            key: "field"
+            value {
+              primitive: STRING
+              attrs {
+                key: "description"
+                value {
+                  s: "multi-line documentation comment use it for long comments"
+                }
+              }
+              source_context {
+                start {
+                  line: 33
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "field2"
+            value {
+              primitive: STRING
+              docstring: "short description here"
+              source_context {
+                start {
+                  line: 36
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Yet Another App"
+  value {
+    name {
+      part: "Yet Another App"
+    }
+    endpoints {
+      key: "AnotherEndpoint"
+      value {
+        name: "AnotherEndpoint"
+        stmt {
+          action {
+            action: "| a multi line text statement use it to well"
+          }
+        }
+        stmt {
+          action {
+            action: "another text statement"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        stmt {
+          action {
+            action: "a simple text statement"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,416 @@
+apps {
+  key: "TransformationTest"
+  value {
+    name {
+      part: "TransformationTest"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "io.sysl.test.views"
+      }
+    }
+    views {
+      key: "TestInbuiltFuncs"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "number"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "AppOrderId2"
+                expr {
+                  call {
+                    func: "int"
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "orderId"
+                      }
+                    }
+                    arg {
+                      literal {
+                        null {
+                        }
+                      }
+                      type {
+                        primitive: EMPTY
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  call {
+                    func: "autoinc"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  call {
+                    func: ".any"
+                    arg {
+                      name: "foo"
+                    }
+                    arg {
+                      literal {
+                        i: 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  relexpr {
+                    op: MAX
+                    target {
+                      name: "foo"
+                    }
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "bar"
+                      }
+                    }
+                    scopevar: "."
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  relexpr {
+                    op: MAX
+                    target {
+                      name: "foo"
+                    }
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "bar"
+                        }
+                        attr: "baz"
+                      }
+                    }
+                    scopevar: "."
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  relexpr {
+                    op: MAX
+                    target {
+                      binexpr {
+                        op: WHERE
+                        lhs {
+                          name: "foo"
+                        }
+                        rhs {
+                          binexpr {
+                            op: GT
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "x"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                i: 0
+                              }
+                            }
+                          }
+                        }
+                        scopevar: "."
+                      }
+                    }
+                    arg {
+                      get_attr {
+                        arg {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "bar"
+                          }
+                        }
+                        attr: "baz"
+                      }
+                    }
+                    scopevar: "."
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  call {
+                    func: ".count"
+                    arg {
+                      binexpr {
+                        op: WHERE
+                        lhs {
+                          name: "foo"
+                        }
+                        rhs {
+                          binexpr {
+                            op: GT
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "x"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                i: 0
+                              }
+                            }
+                          }
+                        }
+                        scopevar: "."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  unexpr {
+                    op: SINGLE
+                    arg {
+                      relexpr {
+                        op: FIRST_BY
+                        target {
+                          navigate {
+                            arg {
+                              name: "."
+                            }
+                            attr: "fo"
+                            setof: true
+                          }
+                        }
+                        arg {
+                          literal {
+                            i: 1
+                          }
+                        }
+                        arg {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "id"
+                          }
+                        }
+                        arg {
+                          literal {
+                            i: 1
+                          }
+                        }
+                        arg {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "id"
+                          }
+                        }
+                        scopevar: "."
+                        descending: false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "AppDate"
+                expr {
+                  call {
+                    func: "to_date"
+                    arg {
+                      binexpr {
+                        op: COALESCE
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "createdDate"
+                          }
+                        }
+                        rhs {
+                          call {
+                            func: "now"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "AppOrderId"
+                expr {
+                  call {
+                    func: "str"
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "orderId"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo"
+                expr {
+                  call {
+                    func: "bar"
+                    arg {
+                      name: "."
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo"
+                expr {
+                  call {
+                    func: "concat"
+                    arg {
+                      list {
+                        expr {
+                          literal {
+                            i: 1
+                          }
+                        }
+                        expr {
+                          literal {
+                            i: 2
+                          }
+                        }
+                      }
+                    }
+                    arg {
+                      literal {
+                        i: 3
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo"
+                expr {
+                  call {
+                    func: "regsub"
+                    arg {
+                      literal {
+                        s: "\\D+"
+                      }
+                    }
+                    arg {
+                      literal {
+                        s: ""
+                      }
+                    }
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "a"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "foo"
+                expr {
+                  literal {
+                    s: "\r\n"
+                  }
+                }
+              }
+            }
+            stmt {
+              inject {
+                call {
+                  func: "withAnonymousSetOfReturnType"
+                  arg {
+                    literal {
+                      i: 10
+                    }
+                  }
+                  arg {
+                    name: "out"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

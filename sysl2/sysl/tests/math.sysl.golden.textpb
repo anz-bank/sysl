@@ -1,0 +1,928 @@
+apps {
+  key: "Calculator"
+  value {
+    name {
+      part: "Calculator"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "io.sysl.demo.petshop.views"
+      }
+    }
+    views {
+      key: "NoArgTransform"
+      value {
+        param {
+          name: "number1"
+          type {
+            primitive: INT
+          }
+        }
+        param {
+          name: "foo"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "Some"
+                }
+                path: "Type"
+              }
+            }
+          }
+        }
+        ret_type {
+          type_ref {
+            ref {
+              appname {
+                part: "Model"
+              }
+              path: "Type"
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "."
+            }
+            scopevar: "scopeVar"
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: SUB
+                    lhs {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          name: "number"
+                        }
+                        rhs {
+                          literal {
+                            i: 1
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      name: "scopeVar"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: POW
+                    lhs {
+                      literal {
+                        i: 2
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: POW
+                        lhs {
+                          literal {
+                            i: 3
+                          }
+                        }
+                        rhs {
+                          literal {
+                            i: 4
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: SUB
+                    lhs {
+                      binexpr {
+                        op: POW
+                        lhs {
+                          literal {
+                            i: 2
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: POW
+                            lhs {
+                              literal {
+                                i: 3
+                              }
+                            }
+                            rhs {
+                              unexpr {
+                                op: NEG
+                                arg {
+                                  literal {
+                                    i: 4
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      literal {
+                        i: 10
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_not"
+                expr {
+                  unexpr {
+                    op: NOT
+                    arg {
+                      name: "foo"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_nota"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      name: "foo"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_notb"
+                expr {
+                  unexpr {
+                    op: NEG
+                    arg {
+                      name: "foo"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_notc"
+                expr {
+                  unexpr {
+                    op: POS
+                    arg {
+                      name: "foo"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_but_not"
+                expr {
+                  binexpr {
+                    op: BUTNOT
+                    lhs {
+                      binexpr {
+                        op: BUTNOT
+                        lhs {
+                          binexpr {
+                            op: OR
+                            lhs {
+                              name: "a"
+                            }
+                            rhs {
+                              name: "b"
+                            }
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: OR
+                            lhs {
+                              name: "c"
+                            }
+                            rhs {
+                              name: "d"
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: OR
+                        lhs {
+                          name: "e"
+                        }
+                        rhs {
+                          name: "f"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_or"
+                expr {
+                  binexpr {
+                    op: OR
+                    lhs {
+                      binexpr {
+                        op: OR
+                        lhs {
+                          binexpr {
+                            op: OR
+                            lhs {
+                              name: "a"
+                            }
+                            rhs {
+                              binexpr {
+                                op: AND
+                                lhs {
+                                  name: "b"
+                                }
+                                rhs {
+                                  name: "c"
+                                }
+                              }
+                            }
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: AND
+                            lhs {
+                              name: "d"
+                            }
+                            rhs {
+                              name: "e"
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      name: "f"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_and"
+                expr {
+                  binexpr {
+                    op: AND
+                    lhs {
+                      binexpr {
+                        op: AND
+                        lhs {
+                          binexpr {
+                            op: BITXOR
+                            lhs {
+                              name: "a"
+                            }
+                            rhs {
+                              name: "b"
+                            }
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: BITXOR
+                            lhs {
+                              name: "c"
+                            }
+                            rhs {
+                              name: "d"
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: BITXOR
+                        lhs {
+                          name: "e"
+                        }
+                        rhs {
+                          name: "f"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_bitor"
+                expr {
+                  binexpr {
+                    op: BITOR
+                    lhs {
+                      binexpr {
+                        op: BITOR
+                        lhs {
+                          binexpr {
+                            op: BITXOR
+                            lhs {
+                              name: "a"
+                            }
+                            rhs {
+                              name: "b"
+                            }
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: BITXOR
+                            lhs {
+                              name: "c"
+                            }
+                            rhs {
+                              name: "d"
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: BITXOR
+                        lhs {
+                          name: "e"
+                        }
+                        rhs {
+                          name: "f"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_bitor"
+                expr {
+                  binexpr {
+                    op: BITOR
+                    lhs {
+                      binexpr {
+                        op: BITOR
+                        lhs {
+                          binexpr {
+                            op: BITXOR
+                            lhs {
+                              name: "a"
+                            }
+                            rhs {
+                              name: "b"
+                            }
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: BITXOR
+                            lhs {
+                              name: "c"
+                            }
+                            rhs {
+                              name: "d"
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: BITXOR
+                        lhs {
+                          name: "e"
+                        }
+                        rhs {
+                          name: "f"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_bit_xor"
+                expr {
+                  binexpr {
+                    op: BITXOR
+                    lhs {
+                      binexpr {
+                        op: BITXOR
+                        lhs {
+                          binexpr {
+                            op: BITAND
+                            lhs {
+                              name: "a"
+                            }
+                            rhs {
+                              name: "b"
+                            }
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: BITAND
+                            lhs {
+                              name: "c"
+                            }
+                            rhs {
+                              name: "d"
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: BITAND
+                        lhs {
+                          name: "e"
+                        }
+                        rhs {
+                          name: "f"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: LE
+                    lhs {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          name: "a"
+                        }
+                        rhs {
+                          name: "b"
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: SUB
+                        lhs {
+                          name: "c"
+                        }
+                        rhs {
+                          name: "d"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: GE
+                    lhs {
+                      binexpr {
+                        op: MUL
+                        lhs {
+                          name: "a"
+                        }
+                        rhs {
+                          name: "b"
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: DIV
+                        lhs {
+                          name: "c"
+                        }
+                        rhs {
+                          name: "d"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: GT
+                    lhs {
+                      binexpr {
+                        op: POW
+                        lhs {
+                          name: "a"
+                        }
+                        rhs {
+                          name: "b"
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: POW
+                        lhs {
+                          name: "c"
+                        }
+                        rhs {
+                          name: "d"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: LT
+                    lhs {
+                      binexpr {
+                        op: POW
+                        lhs {
+                          name: "a"
+                        }
+                        rhs {
+                          name: "b"
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: POW
+                        lhs {
+                          name: "c"
+                        }
+                        rhs {
+                          name: "d"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: NE
+                    lhs {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          name: "a"
+                        }
+                        rhs {
+                          name: "b"
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          name: "c"
+                        }
+                        rhs {
+                          name: "d"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: EQ
+                    lhs {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          name: "a"
+                        }
+                        rhs {
+                          name: "b"
+                        }
+                      }
+                    }
+                    rhs {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          name: "c"
+                        }
+                        rhs {
+                          name: "d"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: IN
+                    lhs {
+                      name: "a"
+                    }
+                    rhs {
+                      name: "d"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: NOT_IN
+                    lhs {
+                      name: "a"
+                    }
+                    rhs {
+                      name: "d"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: NOT_CONTAINS
+                    lhs {
+                      name: "a"
+                    }
+                    rhs {
+                      name: "d"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_rel"
+                expr {
+                  binexpr {
+                    op: CONTAINS
+                    lhs {
+                      name: "a"
+                    }
+                    rhs {
+                      name: "d"
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_set1"
+                expr {
+                  binexpr {
+                    op: IN
+                    lhs {
+                      name: "a"
+                    }
+                    rhs {
+                      set {
+                        expr {
+                          literal {
+                            s: "abc"
+                          }
+                        }
+                        expr {
+                          literal {
+                            s: "def"
+                          }
+                        }
+                      }
+                      type {
+                        set {
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_set2"
+                expr {
+                  set {
+                    expr {
+                      literal {
+                        s: "abc"
+                      }
+                    }
+                    expr {
+                      literal {
+                        s: "def"
+                      }
+                    }
+                  }
+                  type {
+                    set {
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_set3"
+                expr {
+                  set {
+                    expr {
+                      type {
+                        tuple {
+                        }
+                      }
+                      tuple {
+                      }
+                    }
+                  }
+                  type {
+                    set {
+                      tuple {
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_set4"
+                expr {
+                  set {
+                    expr {
+                      literal {
+                        i: 1
+                      }
+                    }
+                    expr {
+                      literal {
+                        i: 2
+                      }
+                    }
+                    expr {
+                      literal {
+                        s: "abc"
+                      }
+                    }
+                  }
+                  type {
+                    set {
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "literal1"
+                expr {
+                  literal {
+                    b: false
+                  }
+                  type {
+                    primitive: BOOL
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "literal2"
+                expr {
+                  literal {
+                    b: true
+                  }
+                  type {
+                    primitive: BOOL
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "literal3"
+                expr {
+                  literal {
+                    null {
+                    }
+                  }
+                  type {
+                    primitive: EMPTY
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "literal4"
+                expr {
+                  literal {
+                    s: "abc"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "literal5"
+                expr {
+                  literal {
+                    i: 123
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "literal6"
+                expr {
+                  literal {
+                    decimal: "123.45"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

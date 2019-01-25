@@ -1,0 +1,42 @@
+apps {
+  key: "Client"
+  value {
+    name {
+      part: "Client"
+    }
+    endpoints {
+      key: "On Click"
+      value {
+        name: "On Click"
+        stmt {
+          loop {
+            mode: UNTIL
+            criterion: "have requests"
+            stmt {
+              call {
+                target {
+                  part: "Server"
+                }
+                endpoint: "Process Payload"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Server"
+  value {
+    name {
+      part: "Server"
+    }
+    endpoints {
+      key: "Process Payload"
+      value {
+        name: "Process Payload"
+      }
+    }
+  }
+}

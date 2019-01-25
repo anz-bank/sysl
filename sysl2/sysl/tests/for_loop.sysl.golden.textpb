@@ -1,0 +1,164 @@
+apps {
+  key: "Car Models"
+  value {
+    name {
+      part: "Car Models"
+    }
+    endpoints {
+      key: "Get All Makes"
+      value {
+        name: "Get All Makes"
+        param {
+          name: "year"
+          type {
+            no_type {
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Get All Models"
+      value {
+        name: "Get All Models"
+        param {
+          name: "year"
+          type {
+            no_type {
+            }
+          }
+        }
+        param {
+          name: "make"
+          type {
+            no_type {
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Get All Series"
+      value {
+        name: "Get All Series"
+        param {
+          name: "year"
+          type {
+            no_type {
+            }
+          }
+        }
+        param {
+          name: "make"
+          type {
+            no_type {
+            }
+          }
+        }
+        param {
+          name: "model"
+          type {
+            no_type {
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Get All Years"
+      value {
+        name: "Get All Years"
+      }
+    }
+  }
+}
+apps {
+  key: "Other App"
+  value {
+    name {
+      part: "Other App"
+    }
+    endpoints {
+      key: "FOO"
+      value {
+        name: "FOO"
+        stmt {
+          call {
+            target {
+              part: "Car Models"
+            }
+            endpoint: "Get All Years"
+          }
+        }
+        stmt {
+          group {
+            title: "for all series"
+            stmt {
+              action {
+                action: "evaluate series pricing"
+              }
+            }
+            stmt {
+              cond {
+                test: "has pricing"
+                stmt {
+                  action {
+                    action: "select series"
+                  }
+                }
+              }
+            }
+            stmt {
+              action {
+                action: "dump pricing information"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Profit"
+      value {
+        name: "Profit"
+        stmt {
+          foreach {
+            collection: "year"
+            stmt {
+              action {
+                action: "calculate profit"
+              }
+            }
+            stmt {
+              group {
+                title: "Loop \"n times\""
+                stmt {
+                  action {
+                    action: "run simulation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "WhileTest"
+      value {
+        name: "WhileTest"
+        stmt {
+          loop {
+            mode: WHILE
+            criterion: "condition not true"
+            stmt {
+              action {
+                action: "\"wait for 5 secs\""
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
