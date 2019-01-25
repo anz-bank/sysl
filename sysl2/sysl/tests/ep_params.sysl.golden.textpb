@@ -1,0 +1,128 @@
+apps {
+  key: "Some App"
+  value {
+    name {
+      part: "Some App"
+    }
+    endpoints {
+      key: "EP1"
+      value {
+        name: "EP1"
+        param {
+          name: "p1"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "My"
+                  part: "Sample"
+                  part: "Todo App"
+                }
+                path: "Request"
+                path: "id"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP2"
+      value {
+        name: "EP2"
+        param {
+          name: "p1"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "My"
+                  part: "Sample"
+                  part: "Todo App"
+                }
+                path: "id"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP3"
+      value {
+        name: "EP3"
+        param {
+          name: "p2"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "Sample"
+                  part: "Todo App"
+                }
+                path: "id"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP4"
+      value {
+        name: "EP4"
+        param {
+          name: "p3"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "Todo App"
+                }
+                path: "id"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP5"
+      value {
+        name: "EP5"
+        param {
+          name: "p4"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "id"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP6"
+      value {
+        name: "EP6"
+        param {
+          name: "p4"
+          type {
+            set {
+              type_ref {
+                ref {
+                  appname {
+                    part: "id"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

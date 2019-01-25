@@ -1,0 +1,132 @@
+apps {
+  key: "My :: Server"
+  value {
+    name {
+      part: "My"
+      part: "Server"
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "rest"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "GET /first"
+      value {
+        name: "GET /first"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/first"
+          query_param {
+            name: "depth"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "limit"
+            type {
+              primitive: INT
+              opt: true
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "offset"
+            type {
+              primitive: INT
+              opt: true
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+            loc: true
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "GET /second?depth=int&limit=int?&offset=int?"
+      value {
+        name: "GET /second?depth=int&limit=int?&offset=int?"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/second?depth=int&limit=int?&offset=int?"
+        }
+      }
+    }
+    endpoints {
+      key: "GET /third?depth=intn&limit=int?&offset=int?"
+      value {
+        name: "GET /third?depth=intn&limit=int?&offset=int?"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/third?depth=intn&limit=int?&offset=int?"
+        }
+      }
+    }
+  }
+}

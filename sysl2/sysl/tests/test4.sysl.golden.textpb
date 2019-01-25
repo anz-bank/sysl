@@ -1,0 +1,280 @@
+apps {
+  key: "Browser App"
+  value {
+    name {
+      part: "Browser App"
+    }
+    endpoints {
+      key: "EP"
+      value {
+        name: "EP"
+        param {
+          name: "p1"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "GO"
+                  part: "Sample"
+                  part: "My Todo App"
+                }
+                path: "id"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP1"
+      value {
+        name: "EP1"
+        param {
+          name: "p2"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "Sample"
+                  part: "My Todo App"
+                }
+                path: "id"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP2"
+      value {
+        name: "EP2"
+        param {
+          name: "p3"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "My Todo App"
+                }
+                path: "id"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EP3"
+      value {
+        name: "EP3"
+        param {
+          name: "p4"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "id"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Data"
+      value {
+        tuple {
+          attr_defs {
+            key: "id"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "Browser App"
+                  }
+                  path: "Data"
+                }
+                ref {
+                  appname {
+                    part: "GO "
+                    part: " Sample "
+                  }
+                  path: "My Todo App"
+                  path: "id"
+                }
+              }
+              source_context {
+                start {
+                  line: 18
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "id2"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "Browser App"
+                  }
+                  path: "Data"
+                }
+                ref {
+                  appname {
+                    part: "Sample "
+                  }
+                  path: "My Todo App"
+                  path: "id"
+                }
+              }
+              source_context {
+                start {
+                  line: 19
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "id3"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "Browser App"
+                  }
+                  path: "Data"
+                }
+                ref {
+                  path: "My Todo App"
+                  path: "id"
+                }
+              }
+              source_context {
+                start {
+                  line: 20
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "GO ::Sample:: My Todo App"
+  value {
+    name {
+      part: "GO"
+      part: "Sample"
+      part: "My Todo App"
+    }
+    types {
+      key: "Todo"
+      value {
+        tuple {
+          attr_defs {
+            key: "id"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "note"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 4
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My Todo App"
+  value {
+    name {
+      part: "My Todo App"
+    }
+    types {
+      key: "Todo"
+      value {
+        tuple {
+          attr_defs {
+            key: "id"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 13
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "note"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 14
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Sample::My Todo App"
+  value {
+    name {
+      part: "Sample"
+      part: "My Todo App"
+    }
+    types {
+      key: "Todo"
+      value {
+        tuple {
+          attr_defs {
+            key: "id"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 8
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "note"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 9
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

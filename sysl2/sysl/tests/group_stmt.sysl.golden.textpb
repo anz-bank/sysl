@@ -1,0 +1,29 @@
+apps {
+  key: "App"
+  value {
+    name {
+      part: "App"
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        stmt {
+          group {
+            title: "group in series"
+            stmt {
+              action {
+                action: "do something"
+              }
+            }
+            stmt {
+              action {
+                action: "do another thing"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

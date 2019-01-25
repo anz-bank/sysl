@@ -1,0 +1,240 @@
+apps {
+  key: "TransformationTest"
+  value {
+    name {
+      part: "TransformationTest"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "io.sysl.test.views"
+      }
+    }
+    views {
+      key: "TestNavigate"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "number"
+            }
+            scopevar: "."
+            stmt {
+              let {
+                name: "out1"
+                expr {
+                  navigate {
+                    arg {
+                      name: "."
+                    }
+                    attr: "foo"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out2"
+                expr {
+                  navigate {
+                    arg {
+                      name: "abc"
+                    }
+                    attr: "foo"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out2a"
+                expr {
+                  navigate {
+                    arg {
+                      name: "abc"
+                    }
+                    attr: "foo"
+                    nullsafe: true
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out2b"
+                expr {
+                  get_attr {
+                    arg {
+                      navigate {
+                        arg {
+                          name: "abc"
+                        }
+                        attr: "foo"
+                      }
+                    }
+                    attr: "bar"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out3"
+                expr {
+                  navigate {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    attr: "foo"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out4"
+                expr {
+                  navigate {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    attr: ".foo"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out5"
+                expr {
+                  navigate {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    attr: ".foo"
+                    setof: true
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out6"
+                expr {
+                  navigate {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    attr: "foo"
+                    setof: true
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out7"
+                expr {
+                  navigate {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    attr: "foo"
+                    setof: true
+                    via: "bar"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out8"
+                expr {
+                  relexpr {
+                    op: SNAPSHOT
+                    target {
+                      binexpr {
+                        op: WHERE
+                        lhs {
+                          navigate {
+                            arg {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "abc"
+                              }
+                            }
+                            attr: "foo"
+                            setof: true
+                            via: "bar"
+                          }
+                        }
+                        rhs {
+                          binexpr {
+                            op: EQ
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "a"
+                              }
+                            }
+                            rhs {
+                              literal {
+                                b: true
+                              }
+                              type {
+                                primitive: BOOL
+                              }
+                            }
+                          }
+                        }
+                        scopevar: "."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

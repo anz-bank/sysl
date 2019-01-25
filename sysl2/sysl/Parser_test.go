@@ -7,10 +7,12 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 	"testing"
 
 	"github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,14 +21,14 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 
 	f, err := os.Open(filename)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Open file %#v", filename)
 	}
 	io.Copy(&buf, f)
 	f.Close()
 
 	module := &sysl.Module{}
 	if err := proto.UnmarshalText(buf.String(), module); err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Unmarshal proto: %s", filename)
 	}
 	return module, nil
 }
@@ -49,7 +51,7 @@ func pyParse(filename, root, output string) (*sysl.Module, error) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return nil, fmt.Errorf("Error running %#v %#v: %s", pySysl, args, err)
+		return nil, errors.Wrapf(err, "Running %#v %#v", pySysl, args)
 	}
 
 	return readSyslModule(output)
@@ -66,21 +68,26 @@ func retainOrRemove(err error, file *os.File, retainOnError bool) error {
 	return err
 }
 
-func parseComparable(filename, root string) (*sysl.Module, error) {
+func parseComparable(
+	filename, root string,
+	stripSourceContext bool,
+) (*sysl.Module, error) {
 	fs := &osFileSystem{root}
 	module, err := FSParse(filename, fs)
 	if err != nil {
 		return nil, err
 	}
 
-	// remove stuff that does not match legacy.
-	for _, app := range module.Apps {
-		app.SourceContext = nil
-		for _, ep := range app.Endpoints {
-			ep.SourceContext = nil
-		}
-		for _, t := range app.Types {
-			t.SourceContext = nil
+	if stripSourceContext {
+		// remove stuff that does not match legacy.
+		for _, app := range module.Apps {
+			app.SourceContext = nil
+			for _, ep := range app.Endpoints {
+				ep.SourceContext = nil
+			}
+			for _, t := range app.Types {
+				t.SourceContext = nil
+			}
 		}
 	}
 
@@ -91,8 +98,9 @@ func parseAndCompare(
 	filename, root, golden string,
 	goldenModule *sysl.Module,
 	retainOnError bool,
+	stripSourceContext bool,
 ) (bool, error) {
-	module, err := parseComparable(filename, root)
+	module, err := parseComparable(filename, root, stripSourceContext)
 	if err != nil {
 		return false, err
 	}
@@ -105,9 +113,10 @@ func parseAndCompare(
 		return false, err
 	}
 
-	generated, err := ioutil.TempFile("", "sysl-test-*.textpb")
+	pat := "sysl-test-*.textpb"
+	generated, err := ioutil.TempFile("", pat)
 	if err != nil {
-		return false, err
+		return false, errors.Wrapf(err, "Create tempfile: %s", pat)
 	}
 	generatedClosed := false
 	defer func() {
@@ -117,10 +126,10 @@ func parseAndCompare(
 	}()
 
 	if err = retainOrRemove(FTextPB(generated, module), generated, retainOnError); err != nil {
-		return false, err
+		return false, errors.Wrapf(err, "Generate %#v", generated)
 	}
 	if err := generated.Close(); err != nil {
-		return false, err
+		return false, errors.Wrapf(err, "Close %#v", generated)
 	}
 	generatedClosed = true
 
@@ -133,7 +142,7 @@ func parseAndCompare(
 		} else {
 			os.Remove(generated.Name())
 		}
-		return false, err
+		return false, errors.Wrapf(err, "diff -y %#v %#v", golden, generated.Name())
 	}
 
 	os.Remove(generated.Name())
@@ -141,92 +150,88 @@ func parseAndCompare(
 }
 
 func parseAndCompareWithPython(filename, root string, retainOnError bool) (bool, error) {
-	fmt.Printf("%35s <=> $(%s %[1]s)\n", filename, pySysl)
-
-	golden, err := ioutil.TempFile("", "sysl-test-golden-*.textpb")
+	pat := "sysl-test-golden-*.textpb"
+	golden, err := ioutil.TempFile("", pat)
 	if err != nil {
-		return false, err
+		return false, errors.Wrapf(err, "Create tempfile %#v", pat)
 	}
 	defer golden.Close()
 
 	pyModule, err := pyParse(filename, root, golden.Name())
 	if retainOrRemove(err, golden, retainOnError); err != nil {
-		return false, err
+		return false, errors.Wrapf(err, "pyParse(%#v, %#v, %#v)", filename, root, golden.Name())
 	}
 
-	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule, retainOnError)
+	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule, retainOnError, true)
 	if retainOrRemove(err, golden, retainOnError); err != nil {
-		return false, err
+		return false, errors.Wrapf(err, "parseAndCompare(%#v, %#v, %#v, …, %#v)", filename, root, golden.Name(), retainOnError)
 	}
 	return equal, nil
 }
 
-func parseAndCompareWithGolden(filename, root string) (bool, error) {
-	golden := filename + ".golden.textpb"
-	fmt.Printf("%35s <=> %s\n", filename, golden)
+func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
+	golden := path.Join(root, filename+".golden.textpb")
 
 	goldenModule, err := readSyslModule(golden)
 	if err != nil {
 		return false, err
 	}
-	return parseAndCompare(filename, root, golden, goldenModule, true)
-}
-
-func parseAndPrint(t *testing.T, filename, root string) error {
-	goModule, err := parseComparable(filename, root)
-	if err != nil {
-		return err
-	}
-	fmt.Fprintf(os.Stderr, "Outputting %#v:\n", filename)
-	FTextPB(os.Stderr, goModule)
-	fmt.Fprintf(os.Stderr, "------------------------\n")
-	return nil
+	return parseAndCompare(filename, root, golden, goldenModule, true, stripSourceContext)
 }
 
 func testParseAgainstPython(t *testing.T, filename, root string) {
 	equal, err := parseAndCompareWithPython(filename, root, true)
-	assert.NoError(t, err)
-	assert.True(t, equal, "Mismatch")
+	if assert.NoError(t, err) {
+		assert.True(t, equal, "Mismatch between go-sysl and py-sysl: %s", path.Join(root, filename))
+	}
 }
 
 func testParseAgainstGolden(t *testing.T, filename, root string) {
-	equal, err := parseAndCompareWithGolden(filename, root)
-	assert.NoError(t, err)
-	assert.True(t, equal, "Mismatch")
+	equal, err := parseAndCompareWithGolden(filename, root, true)
+	if assert.NoError(t, err) {
+		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", path.Join(root, filename))
+	}
+}
+
+func testParseAgainstGoldenWithSourceContext(t *testing.T, filename, root string) {
+	equal, err := parseAndCompareWithGolden(filename, root, false)
+	if assert.NoError(t, err) {
+		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", path.Join(root, filename))
+	}
 }
 
 func TestParseMissingFile(t *testing.T) {
-	_, err := parseAndCompareWithGolden("tests/doesn't.exist", "")
+	_, err := parseAndCompareWithGolden("tests/doesn't.exist", "", false)
 	assert.Error(t, err)
 }
 
 func TestParseBadFile(t *testing.T) {
-	_, err := parseAndCompareWithGolden("sysl.go", "")
+	_, err := parseAndCompareWithGolden("sysl.go", "", false)
 	assert.Error(t, err)
 }
 
 func TestSimpleEP(t *testing.T) {
-	testParseAgainstPython(t, "tests/test1.sysl", "")
+	testParseAgainstGolden(t, "tests/test1.sysl", "")
 }
 
 func TestAttribs(t *testing.T) {
-	testParseAgainstPython(t, "tests/attribs.sysl", "")
+	testParseAgainstGolden(t, "tests/attribs.sysl", "")
 }
 
 func TestIfElse(t *testing.T) {
-	testParseAgainstPython(t, "tests/if_else.sysl", "")
+	testParseAgainstGolden(t, "tests/if_else.sysl", "")
 }
 
 func TestArgs(t *testing.T) {
-	testParseAgainstPython(t, "tests/args.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/args.sysl", "")
 }
 
 func TestSimpleEPWithSpaces(t *testing.T) {
-	testParseAgainstPython(t, "tests/with_spaces.sysl", "")
+	testParseAgainstGolden(t, "tests/with_spaces.sysl", "")
 }
 
 func TestSimpleEP2(t *testing.T) {
-	testParseAgainstPython(t, "tests/test4.sysl", "")
+	testParseAgainstGolden(t, "tests/test4.sysl", "")
 }
 
 func TestUnion(t *testing.T) {
@@ -234,66 +239,66 @@ func TestUnion(t *testing.T) {
 }
 
 func TestSimpleEndpointParams(t *testing.T) {
-	testParseAgainstPython(t, "tests/ep_params.sysl", "")
+	testParseAgainstGolden(t, "tests/ep_params.sysl", "")
 }
 
 func TestOneOfStatements(t *testing.T) {
-	testParseAgainstPython(t, "tests/oneof.sysl", "")
+	testParseAgainstGolden(t, "tests/oneof.sysl", "")
 }
 
 func TestDuplicateEndpoints(t *testing.T) {
-	testParseAgainstPython(t, "tests/duplicate.sysl", "")
+	testParseAgainstGolden(t, "tests/duplicate.sysl", "")
 }
 
 func TestEventing(t *testing.T) {
-	testParseAgainstPython(t, "tests/eventing.sysl", "")
+	testParseAgainstGolden(t, "tests/eventing.sysl", "")
 }
 
 func TestCollector(t *testing.T) {
-	testParseAgainstPython(t, "tests/collector.sysl", "")
+	testParseAgainstGolden(t, "tests/collector.sysl", "")
 }
 
 func TestPubSubCollector(t *testing.T) {
-	testParseAgainstPython(t, "tests/pubsub_collector.sysl", "")
+	testParseAgainstGolden(t, "tests/pubsub_collector.sysl", "")
 }
 
 func TestDocstrings(t *testing.T) {
-	testParseAgainstPython(t, "tests/docstrings.sysl", "")
+	testParseAgainstGolden(t, "tests/docstrings.sysl", "")
 }
 
 func TestMixins(t *testing.T) {
-	testParseAgainstPython(t, "tests/mixin.sysl", "")
+	testParseAgainstGolden(t, "tests/mixin.sysl", "")
 }
 func TestForLoops(t *testing.T) {
-	testParseAgainstPython(t, "tests/for_loop.sysl", "")
+	testParseAgainstGolden(t, "tests/for_loop.sysl", "")
 }
 
 func TestGroupStmt(t *testing.T) {
-	testParseAgainstPython(t, "tests/group_stmt.sysl", "")
+	testParseAgainstGolden(t, "tests/group_stmt.sysl", "")
 }
 
 func TestUntilLoop(t *testing.T) {
-	testParseAgainstPython(t, "tests/until_loop.sysl", "")
+	testParseAgainstGolden(t, "tests/until_loop.sysl", "")
 }
 
 func TestTuple(t *testing.T) {
-	testParseAgainstPython(t, "tests/test2.sysl", "")
+	testParseAgainstGolden(t, "tests/test2.sysl", "")
 }
 
 func TestInplaceTuple(t *testing.T) {
-	testParseAgainstPython(t, "tests/inplace_tuple.sysl", "")
+	testParseAgainstGolden(t, "tests/inplace_tuple.sysl", "")
 }
 
 func TestRelational(t *testing.T) {
-	testParseAgainstPython(t, "tests/school.sysl", "")
+	testParseAgainstGolden(t, "tests/school.sysl", "")
 }
 
 func TestImports(t *testing.T) {
-	testParseAgainstPython(t, "tests/library.sysl", "")
+	testParseAgainstGolden(t, "tests/library.sysl", "")
 }
 
 func TestRootArg(t *testing.T) {
-	testParseAgainstPython(t, "school.sysl", "tests")
+	testParseAgainstGolden(t, "school.sysl", "tests")
 }
 
 func TestSequenceType(t *testing.T) {
@@ -301,21 +306,19 @@ func TestSequenceType(t *testing.T) {
 }
 
 func TestRestApi(t *testing.T) {
-	testParseAgainstPython(t, "tests/test_rest_api.sysl", "")
+	testParseAgainstGolden(t, "tests/test_rest_api.sysl", "")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
-	testParseAgainstPython(t, "tests/rest_api_query_params.sysl", "")
+	testParseAgainstGolden(t, "tests/rest_api_query_params.sysl", "")
 }
 
 func TestSimpleProject(t *testing.T) {
-	testParseAgainstPython(t, "tests/project.sysl", "")
+	testParseAgainstGolden(t, "tests/project.sysl", "")
 }
 
 func TestUrlParamOrder(t *testing.T) {
-	filename := "tests/rest_url_params.sysl"
-	parseAndCompareWithPython(filename, "", false)
-	fmt.Printf("Output for %#v won't match legacy. Visually inspect the above diff.\n", filename)
+	testParseAgainstGolden(t, "tests/rest_url_params.sysl", "")
 }
 
 func TestUrlParamOrderAgainstGolden(t *testing.T) {
@@ -323,43 +326,43 @@ func TestUrlParamOrderAgainstGolden(t *testing.T) {
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
-	testParseAgainstPython(t, "tests/bad_order.sysl", "")
+	testParseAgainstGolden(t, "tests/bad_order.sysl", "")
 }
 
 func TestTransform(t *testing.T) {
-	testParseAgainstPython(t, "tests/transform.sysl", "")
+	testParseAgainstGolden(t, "tests/transform.sysl", "")
 }
 
 func TestImpliedDot(t *testing.T) {
-	testParseAgainstPython(t, "tests/implied.sysl", "")
+	testParseAgainstGolden(t, "tests/implied.sysl", "")
 }
 
 func TestStmts(t *testing.T) {
-	testParseAgainstPython(t, "tests/stmts.sysl", "")
+	testParseAgainstGolden(t, "tests/stmts.sysl", "")
 }
 
 func TestMath(t *testing.T) {
-	testParseAgainstPython(t, "tests/math.sysl", "")
+	testParseAgainstGolden(t, "tests/math.sysl", "")
 }
 
 func TestTableof(t *testing.T) {
-	testParseAgainstPython(t, "tests/tableof.sysl", "")
+	testParseAgainstGolden(t, "tests/tableof.sysl", "")
 }
 
 func TestRank(t *testing.T) {
-	testParseAgainstPython(t, "tests/rank.sysl", "")
+	testParseAgainstGolden(t, "tests/rank.sysl", "")
 }
 
 func TestMatching(t *testing.T) {
-	testParseAgainstPython(t, "tests/matching.sysl", "")
+	testParseAgainstGolden(t, "tests/matching.sysl", "")
 }
 
 func TestNavigate(t *testing.T) {
-	testParseAgainstPython(t, "tests/navigate.sysl", "")
+	testParseAgainstGolden(t, "tests/navigate.sysl", "")
 }
 
 func TestFuncs(t *testing.T) {
-	testParseAgainstPython(t, "tests/funcs.sysl", "")
+	testParseAgainstGolden(t, "tests/funcs.sysl", "")
 }
 
 func TestPetshop(t *testing.T) {
@@ -367,5 +370,5 @@ func TestPetshop(t *testing.T) {
 }
 
 func TestCrash(t *testing.T) {
-	testParseAgainstPython(t, "tests/crash.sysl", "")
+	testParseAgainstGolden(t, "tests/crash.sysl", "")
 }

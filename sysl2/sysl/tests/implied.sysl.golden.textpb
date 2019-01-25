@@ -1,0 +1,452 @@
+apps {
+  key: "TransformationTest"
+  value {
+    name {
+      part: "TransformationTest"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "io.sysl.test.views"
+      }
+    }
+    views {
+      key: "impliedTest"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "number"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "abc2"
+                expr {
+                  binexpr {
+                    op: MUL
+                    lhs {
+                    }
+                    rhs {
+                      literal {
+                        i: 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3a"
+                expr {
+                  get_attr {
+                    arg {
+                      name: "."
+                    }
+                    attr: "abc"
+                    nullsafe: true
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3b1"
+                expr {
+                  navigate {
+                    arg {
+                      name: "."
+                    }
+                    attr: "abc"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3b2"
+                expr {
+                  navigate {
+                    arg {
+                      name: "."
+                    }
+                    attr: "abc"
+                    setof: true
+                    via: "foo"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3b3"
+                expr {
+                  navigate {
+                    arg {
+                      name: "."
+                    }
+                    attr: ".abc"
+                    setof: true
+                    via: "foo"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3c"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      binexpr {
+                        op: TO_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          name: "abc"
+                        }
+                        attr_name: "*"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3c1"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      binexpr {
+                        op: TO_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "abc"
+                          }
+                        }
+                        attr_name: "*"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3d"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      binexpr {
+                        op: TO_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          name: "abc"
+                        }
+                        attr_name: "abc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3e"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      binexpr {
+                        op: TO_NOT_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          name: "abc"
+                        }
+                        attr_name: "abc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3f"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      binexpr {
+                        op: TO_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          name: "abc"
+                        }
+                        attr_name: "abc"
+                        attr_name: "def"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3g"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      binexpr {
+                        op: TO_NOT_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          name: "abc"
+                        }
+                        attr_name: "abc"
+                        attr_name: "def"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc3h"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      get_attr {
+                        arg {
+                          get_attr {
+                            arg {
+                              binexpr {
+                                op: TO_MATCHING
+                                lhs {
+                                  name: "."
+                                }
+                                rhs {
+                                  name: "foo"
+                                }
+                                attr_name: "*"
+                              }
+                            }
+                            attr: "abc"
+                          }
+                        }
+                        attr: "def"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc4a"
+                expr {
+                  binexpr {
+                    op: WHERE
+                    lhs {
+                      name: "."
+                    }
+                    rhs {
+                      literal {
+                        b: true
+                      }
+                      type {
+                        primitive: BOOL
+                      }
+                    }
+                    scopevar: "abcdef"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc5a"
+                expr {
+                  get_attr {
+                    arg {
+                      name: "."
+                    }
+                    attr: "abc"
+                    setof: true
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc5a1"
+                expr {
+                  get_attr {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                        setof: true
+                      }
+                    }
+                    attr: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc5b"
+                expr {
+                  get_attr {
+                    arg {
+                      get_attr {
+                        arg {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "abc"
+                            setof: true
+                          }
+                        }
+                        attr: "def"
+                      }
+                    }
+                    attr: "ghi"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc5c"
+                expr {
+                  get_attr {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                        nullsafe: true
+                        setof: true
+                      }
+                    }
+                    attr: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc5d"
+                expr {
+                  get_attr {
+                    arg {
+                      name: "abc"
+                    }
+                    attr: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc5e"
+                expr {
+                  get_attr {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "abc"
+                        }
+                        attr: "def"
+                      }
+                    }
+                    attr: "ghi"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc5f"
+                expr {
+                  get_attr {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    attr: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "abc6"
+                expr {
+                  set {
+                    expr {
+                      type {
+                        tuple {
+                        }
+                      }
+                      tuple {
+                      }
+                    }
+                  }
+                  type {
+                    set {
+                      tuple {
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

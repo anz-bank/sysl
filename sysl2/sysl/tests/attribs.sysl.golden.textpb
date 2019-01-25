@@ -1,0 +1,46 @@
+apps {
+  key: "App"
+  value {
+    name {
+      part: "App"
+    }
+    attrs {
+      key: "blackbox"
+      value {
+        a {
+          elt {
+            a {
+              elt {
+                s: "one"
+              }
+              elt {
+                s: "two"
+              }
+            }
+          }
+          elt {
+            a {
+              elt {
+                s: "one"
+              }
+              elt {
+                s: "two"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+      }
+    }
+  }
+}

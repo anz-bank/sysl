@@ -1,0 +1,146 @@
+apps {
+  key: "App"
+  value {
+    name {
+      part: "App"
+    }
+    attrs {
+      key: "iso_ctrl_118_txt"
+      value {
+        s: ""
+      }
+    }
+    endpoints {
+      key: "Foo"
+      value {
+        name: "Foo"
+        stmt {
+          action {
+            action: "text statement"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "Server"
+            }
+            endpoint: "GET /first"
+          }
+        }
+        stmt {
+          ret {
+            payload: "ok"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "endpoint"
+      value {
+        name: "endpoint"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "foo"
+              }
+              elt {
+                s: "foo"
+              }
+              elt {
+                s: "bar"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "version"
+          value {
+            s: "1.1"
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "FooApp"
+  value {
+    name {
+      part: "FooApp"
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "foo"
+          }
+          elt {
+            s: "foo"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "..."
+      value {
+        name: "..."
+      }
+    }
+  }
+}
+apps {
+  key: "Server"
+  value {
+    name {
+      part: "Server"
+    }
+    endpoints {
+      key: "GET /first"
+      value {
+        name: "GET /first"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          ret {
+            payload: "200 ok"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "App"
+            }
+            endpoint: "endpoint"
+          }
+        }
+        stmt {
+          ret {
+            payload: "200 ok"
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/first"
+        }
+        param {
+        }
+        param {
+        }
+      }
+    }
+  }
+}

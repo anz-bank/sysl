@@ -1,0 +1,332 @@
+apps {
+  key: "App"
+  value {
+    name {
+      part: "App"
+    }
+    endpoints {
+      key: ".. * <- *"
+      value {
+        name: ".. * <- *"
+        stmt {
+          action {
+            action: "Endpoint_One"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "one"
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "Endpoint_Two"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "two"
+            }
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "Endpoint_One"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "three"
+            }
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "Endpoint_Two"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "four"
+            }
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "Endpoint_Two"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "final"
+            }
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "Endpoint_Three"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "final"
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint_One"
+      value {
+        name: "Endpoint_One"
+        attrs {
+          key: "id"
+          value {
+            s: "one"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "Endpoint_One"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "three"
+            }
+          }
+        }
+        stmt {
+          cond {
+            test: "result not ok"
+            stmt {
+              call {
+                target {
+                  part: "My"
+                  part: "Server"
+                }
+                endpoint: "Endpoint_Two"
+              }
+              attrs {
+                key: "id"
+                value {
+                  s: "final"
+                }
+              }
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "https"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "loop"
+            stmt {
+              call {
+                target {
+                  part: "My"
+                  part: "Server"
+                }
+                endpoint: "Endpoint_Two"
+              }
+              attrs {
+                key: "id"
+                value {
+                  s: "final"
+                }
+              }
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "https"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint_Two"
+      value {
+        name: "Endpoint_Two"
+        attrs {
+          key: "id"
+          value {
+            s: "two"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "My"
+              part: "Server"
+            }
+            endpoint: "Endpoint_Two"
+          }
+          attrs {
+            key: "id"
+            value {
+              s: "final"
+            }
+          }
+          attrs {
+            key: "patterns"
+            value {
+              a {
+                elt {
+                  s: "https"
+                }
+              }
+            }
+          }
+        }
+        stmt {
+          alt {
+            choice {
+              cond: "condition = one"
+              stmt {
+                call {
+                  target {
+                    part: "My"
+                    part: "Server"
+                  }
+                  endpoint: "Endpoint_Three"
+                }
+                attrs {
+                  key: "id"
+                  value {
+                    s: "final"
+                  }
+                }
+                attrs {
+                  key: "patterns"
+                  value {
+                    a {
+                      elt {
+                        s: "https"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            choice {
+              cond: "condition two"
+              stmt {
+                call {
+                  target {
+                    part: "My"
+                    part: "Server"
+                  }
+                  endpoint: "Endpoint_Three"
+                }
+                attrs {
+                  key: "id"
+                  value {
+                    s: "final"
+                  }
+                }
+                attrs {
+                  key: "patterns"
+                  value {
+                    a {
+                      elt {
+                        s: "https"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My :: Server"
+  value {
+    name {
+      part: "My"
+      part: "Server"
+    }
+    endpoints {
+      key: "Endpoint_One"
+      value {
+        name: "Endpoint_One"
+        stmt {
+          action {
+            action: "process request"
+          }
+        }
+        stmt {
+          cond {
+            test: "result ok"
+            stmt {
+              action {
+                action: "do further processing"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint_Three"
+      value {
+        name: "Endpoint_Three"
+        stmt {
+          action {
+            action: "process request"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint_Two"
+      value {
+        name: "Endpoint_Two"
+        stmt {
+          action {
+            action: "process request"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,960 @@
+apps {
+  key: "Model"
+  value {
+    name {
+      part: "Model"
+    }
+    types {
+      key: "Request"
+      value {
+        tuple {
+          attr_defs {
+            key: "bar"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  min: 10
+                  max: 9999
+                }
+              }
+              source_context {
+                start {
+                  line: 19
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My :: Browser :: Client Model"
+  value {
+    name {
+      part: "My"
+      part: "Browser"
+      part: "Client Model"
+    }
+    types {
+      key: "Request"
+      value {
+        tuple {
+          attr_defs {
+            key: "bar"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  min: 10
+                  max: 9999
+                }
+              }
+              source_context {
+                start {
+                  line: 14
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "baz"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  max: 10
+                }
+                precision: 10
+                scale: 2
+              }
+              source_context {
+                start {
+                  line: 15
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "foo"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  max: 10
+                }
+              }
+              source_context {
+                start {
+                  line: 13
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My :: Client Model"
+  value {
+    name {
+      part: "My"
+      part: "Client Model"
+    }
+    long_name: "My client Model"
+    types {
+      key: "Request"
+      value {
+        tuple {
+          attr_defs {
+            key: "bar"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  min: 10
+                  max: 9999
+                }
+              }
+              source_context {
+                start {
+                  line: 9
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Response"
+      value {
+        tuple {
+          attr_defs {
+            key: "id"
+            value {
+              list {
+                type {
+                  primitive: INT
+                  constraint {
+                    range {
+                      min {
+                        i: -2147483648
+                      }
+                      max {
+                        i: 2147483647
+                      }
+                    }
+                  }
+                  source_context {
+                    start {
+                      line: 5
+                    }
+                  }
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "id2"
+            value {
+              list {
+                type {
+                  primitive: INT
+                  constraint {
+                    range {
+                      min {
+                        i: -9223372036854775808
+                      }
+                      max {
+                        i: 9223372036854775807
+                      }
+                    }
+                  }
+                  source_context {
+                    start {
+                      line: 6
+                    }
+                  }
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "list"
+            value {
+              list {
+                type {
+                  type_ref {
+                    context {
+                      appname {
+                        part: "My"
+                        part: "Client Model"
+                      }
+                      path: "Response"
+                    }
+                    ref {
+                      path: "Request"
+                    }
+                  }
+                  source_context {
+                    start {
+                      line: 4
+                    }
+                  }
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "requests"
+            value {
+              set {
+                type_ref {
+                  context {
+                    appname {
+                      part: "My"
+                      part: "Client Model"
+                    }
+                    path: "Response"
+                  }
+                  ref {
+                    path: "Request"
+                  }
+                }
+                source_context {
+                  start {
+                    line: 3
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My :: Tuple Model"
+  value {
+    name {
+      part: "My"
+      part: "Tuple Model"
+    }
+    types {
+      key: "Req"
+      value {
+        tuple {
+          attr_defs {
+            key: "Application"
+            value {
+              type_ref {
+                ref {
+                  path: "Application"
+                }
+              }
+              source_context {
+                start {
+                  line: 56
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Header"
+            value {
+              type_ref {
+                ref {
+                  path: "Header"
+                }
+              }
+              source_context {
+                start {
+                  line: 49
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Req.Application"
+      value {
+        tuple {
+          attr_defs {
+            key: "AccountType"
+            value {
+              source_context {
+                start {
+                  line: 58
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Applicable"
+            value {
+              primitive: BOOL
+              source_context {
+                start {
+                  line: 59
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "ApplicationType"
+            value {
+              source_context {
+                start {
+                  line: 57
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Detail"
+            value {
+              list {
+                type {
+                  type_ref {
+                    ref {
+                      path: "Detail"
+                    }
+                  }
+                  source_context {
+                    start {
+                      line: 60
+                    }
+                  }
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Purpose"
+            value {
+              list {
+                type {
+                  type_ref {
+                    ref {
+                      path: "Purpose"
+                    }
+                  }
+                  source_context {
+                    start {
+                      line: 64
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Req.Application.Detail"
+      value {
+        tuple {
+          attr_defs {
+            key: "Code"
+            value {
+              source_context {
+                start {
+                  line: 62
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "ObjectID"
+            value {
+              source_context {
+                start {
+                  line: 61
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Status"
+            value {
+              source_context {
+                start {
+                  line: 63
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Req.Application.Purpose"
+      value {
+        tuple {
+          attr_defs {
+            key: "PurposeCode"
+            value {
+              source_context {
+                start {
+                  line: 65
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "RemainDays"
+            value {
+              source_context {
+                start {
+                  line: 66
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Req.Header"
+      value {
+        tuple {
+          attr_defs {
+            key: "Action"
+            value {
+              source_context {
+                start {
+                  line: 51
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "AppDate"
+            value {
+              primitive: DATE
+              source_context {
+                start {
+                  line: 53
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "AppHostSystem"
+            value {
+              source_context {
+                start {
+                  line: 52
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "AppNbr"
+            value {
+              source_context {
+                start {
+                  line: 54
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Data"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "Req"
+                  path: "Header"
+                }
+                ref {
+                  appname {
+                    part: "My "
+                  }
+                  path: "Tuple Model"
+                  path: "TopLevelPayload"
+                }
+              }
+              source_context {
+                start {
+                  line: 50
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "responseList"
+            value {
+              list {
+                type {
+                  type_ref {
+                    context {
+                      appname {
+                        part: "My"
+                        part: "Tuple Model"
+                      }
+                      path: "Req"
+                      path: "Header"
+                    }
+                    ref {
+                      appname {
+                        part: "My "
+                      }
+                      path: "Tuple Model"
+                      path: "Response"
+                    }
+                  }
+                  source_context {
+                    start {
+                      line: 55
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Response"
+      value {
+        tuple {
+          attr_defs {
+            key: "bar"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  min: 10
+                }
+              }
+              source_context {
+                start {
+                  line: 26
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "baz"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  max: 9999
+                }
+              }
+              source_context {
+                start {
+                  line: 27
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "code"
+            value {
+              primitive: INT
+              constraint {
+                length {
+                  max: 9999
+                }
+              }
+              source_context {
+                start {
+                  line: 24
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "foo"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  min: 10
+                  max: 9999
+                }
+              }
+              source_context {
+                start {
+                  line: 25
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "nested"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "Response"
+                }
+                ref {
+                  path: "Payload"
+                }
+              }
+              source_context {
+                start {
+                  line: 29
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "status"
+            value {
+              primitive: STRING
+              constraint {
+                length {
+                  max: 30
+                }
+              }
+              source_context {
+                start {
+                  line: 23
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "toplevel"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "Response"
+                }
+                ref {
+                  path: "TopLevelPayload"
+                }
+              }
+              source_context {
+                start {
+                  line: 28
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Response.Payload"
+      value {
+        tuple {
+          attr_defs {
+            key: "XMLDoc"
+            value {
+              primitive: XML
+              source_context {
+                start {
+                  line: 36
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "code"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 32
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "data"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "Response"
+                  path: "Payload"
+                }
+                ref {
+                  path: "string_8"
+                }
+              }
+              source_context {
+                start {
+                  line: 34
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "footer"
+            value {
+              primitive: STRING
+              constraint {
+                length {
+                }
+              }
+              source_context {
+                start {
+                  line: 35
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "value"
+            value {
+              primitive: INT
+              constraint {
+                length {
+                  min: 1
+                }
+              }
+              source_context {
+                start {
+                  line: 33
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "TopLevelPayload"
+      value {
+        tuple {
+          attr_defs {
+            key: "bars"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "TopLevelPayload"
+                }
+                ref {
+                  appname {
+                    part: "My "
+                  }
+                  path: "Client Model"
+                  path: "Request"
+                  path: "status"
+                }
+              }
+              source_context {
+                start {
+                  line: 44
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "data"
+            value {
+              primitive: STRING
+              constraint {
+                length {
+                  max: 500
+                }
+              }
+              source_context {
+                start {
+                  line: 39
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "data2"
+            value {
+              set {
+                primitive: STRING
+                constraint {
+                  length {
+                    max: 500
+                  }
+                }
+                source_context {
+                  start {
+                    line: 40
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 40
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "field1"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "TopLevelPayload"
+                }
+                ref {
+                  path: "Model"
+                  path: "Request"
+                  path: "status"
+                }
+              }
+              source_context {
+                start {
+                  line: 42
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "field2"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "TopLevelPayload"
+                }
+                ref {
+                  appname {
+                    part: "My "
+                    part: "    Browser "
+                  }
+                  path: "Client Model"
+                  path: "Request"
+                  path: "status"
+                }
+              }
+              source_context {
+                start {
+                  line: 43
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "foos"
+            value {
+              set {
+                type_ref {
+                  context {
+                    appname {
+                      part: "My"
+                      part: "Tuple Model"
+                    }
+                    path: "TopLevelPayload"
+                  }
+                  ref {
+                    path: "Response"
+                    path: "foo"
+                  }
+                }
+                source_context {
+                  start {
+                    line: 45
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 45
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "responseSet"
+            value {
+              set {
+                type_ref {
+                  context {
+                    appname {
+                      part: "My"
+                      part: "Tuple Model"
+                    }
+                    path: "TopLevelPayload"
+                  }
+                  ref {
+                    path: "Response"
+                  }
+                }
+                source_context {
+                  start {
+                    line: 46
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 46
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "status"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "My"
+                    part: "Tuple Model"
+                  }
+                  path: "TopLevelPayload"
+                }
+                ref {
+                  path: "Response"
+                  path: "status"
+                }
+              }
+              source_context {
+                start {
+                  line: 41
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
