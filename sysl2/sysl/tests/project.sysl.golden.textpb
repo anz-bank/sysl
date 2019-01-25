@@ -1,0 +1,761 @@
+apps {
+  key: "A_B"
+  value {
+    name {
+      part: "A_B"
+    }
+    endpoints {
+      key: "C_D"
+      value {
+        name: "C_D"
+        stmt {
+          call {
+            target {
+              part: "anz_com"
+            }
+            endpoint: "homepage"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "Test - App"
+            }
+            endpoint: "Test - Endpoint"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "DDD"
+      value {
+        name: "DDD"
+        stmt {
+          cond {
+            test: "some condition is true"
+            stmt {
+              action {
+                action: "Test - App -> eventName"
+              }
+            }
+            stmt {
+              call {
+                target {
+                  part: "Test - App"
+                }
+                endpoint: "Endpoint2"
+              }
+            }
+            stmt {
+              cond {
+                test: "result not ok"
+                stmt {
+                  ret {
+                    payload: "not ok1"
+                  }
+                }
+              }
+            }
+            stmt {
+              group {
+                title: "else"
+                stmt {
+                  ret {
+                    payload: "ok"
+                  }
+                }
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "else some other condition"
+            stmt {
+              action {
+                action: "top level else_statment"
+              }
+            }
+            stmt {
+              cond {
+                test: "\"some constraint\""
+                stmt {
+                  ret {
+                    payload: "ok"
+                  }
+                }
+              }
+            }
+            stmt {
+              group {
+                title: "Else"
+                stmt {
+                  ret {
+                    payload: "not ok"
+                  }
+                }
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "do some more stuff"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "EEE"
+      value {
+        name: "EEE"
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Send document to customer"
+      value {
+        name: "Send document to customer"
+      }
+    }
+  }
+}
+apps {
+  key: "External :: App"
+  value {
+    name {
+      part: "External"
+      part: "App"
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+      }
+    }
+    types {
+      key: "Request"
+      value {
+        tuple {
+          attr_defs {
+            key: "id"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 52
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "val"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 53
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "Response"
+      value {
+        tuple {
+          attr_defs {
+            key: "val"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 55
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My Todo App"
+  value {
+    name {
+      part: "My Todo App"
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "webapp"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Add Note"
+      value {
+        name: "Add Note"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "somepattern"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Project :: Integrations"
+  value {
+    name {
+      part: "Project"
+      part: "Integrations"
+    }
+    attrs {
+      key: "title"
+      value {
+        s: "%(epname): %(eplongname)"
+      }
+    }
+    endpoints {
+      key: "PROJECT-E2E"
+      value {
+        name: "PROJECT-E2E"
+        long_name: "End to End Integrations"
+        attrs {
+          key: "page"
+          value {
+            s: "Solution Design Doc"
+          }
+        }
+        attrs {
+          key: "passthrough"
+          value {
+            a {
+              elt {
+                s: "anz_com"
+              }
+              elt {
+                s: "My Todo App"
+              }
+              elt {
+                s: "A_B"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "SomeApp"
+          }
+        }
+        stmt {
+          action {
+            action: "Test - App"
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Project :: Sequences"
+  value {
+    name {
+      part: "Project"
+      part: "Sequences"
+    }
+    endpoints {
+      key: "SEQ-One"
+      value {
+        name: "SEQ-One"
+        stmt {
+          call {
+            target {
+              part: "SomeApp"
+            }
+            endpoint: "FooEndpoint"
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Rest Service"
+  value {
+    name {
+      part: "Rest Service"
+    }
+    endpoints {
+      key: ".. * <- *"
+      value {
+        name: ".. * <- *"
+        stmt {
+          action {
+            action: "GET /foo"
+          }
+          attrs {
+            key: "some_id"
+            value {
+              s: "project_id"
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "GET /foo"
+      value {
+        name: "GET /foo"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        attrs {
+          key: "some_id"
+          value {
+            s: "project_id"
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/foo"
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "SomeApp"
+  value {
+    name {
+      part: "SomeApp"
+    }
+    attrs {
+      key: "app_desc"
+      value {
+        s: "this comment belongs to the app defined \'above\'"
+      }
+    }
+    attrs {
+      key: "array"
+      value {
+        a {
+          elt {
+            s: "one"
+          }
+          elt {
+            s: "two"
+          }
+        }
+      }
+    }
+    attrs {
+      key: "array_of_arrays"
+      value {
+        a {
+          elt {
+            a {
+              elt {
+                s: "one"
+              }
+              elt {
+                s: "two"
+              }
+            }
+          }
+        }
+      }
+    }
+    attrs {
+      key: "comment"
+      value {
+        s: ""
+      }
+    }
+    attrs {
+      key: "comment.second"
+      value {
+        s: ""
+      }
+    }
+    attrs {
+      key: "package"
+      value {
+        s: ""
+      }
+    }
+    attrs {
+      key: "version"
+      value {
+        s: "1.1.1"
+      }
+    }
+    endpoints {
+      key: ".. * <- *"
+      value {
+        name: ".. * <- *"
+        stmt {
+          action {
+            action: "FooEndpoint"
+          }
+          attrs {
+            key: "some_id"
+            value {
+              s: "project_id"
+            }
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "Test - App"
+            }
+            endpoint: "Test - Endpoint"
+          }
+          attrs {
+            key: "some_id"
+            value {
+              s: "project_id"
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Event"
+      value {
+        name: "Event"
+        is_pubsub: true
+        stmt {
+          ret {
+            payload: "\"customer details\""
+          }
+        }
+        param {
+          name: "App.member"
+          type {
+            no_type {
+            }
+          }
+        }
+        param {
+          name: "request"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "SomeApp"
+                }
+                path: "SomeType"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "FooEndpoint"
+      value {
+        name: "FooEndpoint"
+        attrs {
+          key: "some_id"
+          value {
+            s: "project_id"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "Test - App"
+            }
+            endpoint: "Test - Endpoint"
+          }
+          attrs {
+            key: "some_id"
+            value {
+              s: "project_id"
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Test - App -> eventName"
+      value {
+        name: "Test - App -> eventName"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "mq"
+              }
+            }
+          }
+        }
+        source {
+          part: "Test - App"
+        }
+        stmt {
+          action {
+            action: "\"\""
+          }
+        }
+        stmt {
+          action {
+            action: "\'\'"
+          }
+        }
+        stmt {
+          action {
+            action: "\'asdf\'"
+          }
+        }
+        stmt {
+          action {
+            action: "\"quoted statement: use special chars here like ?? :: etc\""
+          }
+        }
+        stmt {
+          action {
+            action: "\"test: single quotes \'above\'\""
+          }
+        }
+        stmt {
+          action {
+            action: "do something"
+          }
+        }
+        stmt {
+          action {
+            action: "| Some multiline comments that you can use for documentation. This is last line."
+          }
+        }
+        stmt {
+          action {
+            action: "handle event eventName"
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Test - App"
+  value {
+    name {
+      part: "Test - App"
+    }
+    endpoints {
+      key: "Endpoint2"
+      value {
+        name: "Endpoint2"
+        attrs {
+          key: "ep_desc"
+          value {
+            s: "this comment belongs to the Endpoint2 defined above"
+          }
+        }
+        stmt {
+          action {
+            action: "| Single line statement"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "Test - App"
+            }
+            endpoint: "eventName"
+          }
+        }
+        param {
+          name: "request"
+          type {
+            set {
+              type_ref {
+                ref {
+                  appname {
+                    part: "SomeApp"
+                  }
+                  path: "SomeType"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Test - Endpoint"
+      value {
+        name: "Test - Endpoint"
+        stmt {
+          call {
+            target {
+              part: "External"
+              part: "App"
+            }
+            endpoint: "Endpoint"
+          }
+        }
+        stmt {
+          call {
+            target {
+              part: "Rest Service"
+            }
+            endpoint: "GET /foo"
+          }
+        }
+        stmt {
+          cond {
+            test: "value == one"
+            stmt {
+              action {
+                action: "do something"
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "else if value == two"
+            stmt {
+              action {
+                action: "do something else"
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "else"
+            stmt {
+              ret {
+                payload: "ok"
+              }
+            }
+          }
+        }
+        param {
+          name: "request"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "SomeApp"
+                }
+                path: "SomeType"
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "another event"
+      value {
+        name: "another event"
+        is_pubsub: true
+      }
+    }
+    endpoints {
+      key: "eventName"
+      value {
+        name: "eventName"
+        is_pubsub: true
+        stmt {
+          call {
+            target {
+              part: "SomeApp"
+            }
+            endpoint: "Test - App -> eventName"
+          }
+        }
+        param {
+          name: "in"
+          type {
+            primitive: STRING
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "anz_com"
+  value {
+    name {
+      part: "anz_com"
+    }
+    endpoints {
+      key: "homepage"
+      value {
+        name: "homepage"
+      }
+    }
+    types {
+      key: "Response"
+      value {
+        tuple {
+          attr_defs {
+            key: "val"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 64
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

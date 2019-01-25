@@ -1,0 +1,343 @@
+apps {
+  key: "School"
+  value {
+    name {
+      part: "School"
+    }
+    types {
+      key: "Class"
+      value {
+        relation {
+          attr_defs {
+            key: "Id"
+            value {
+              primitive: INT
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "pk"
+                    }
+                    elt {
+                      s: "autoinc"
+                    }
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+          }
+          primary_key {
+            attr_name: "Id"
+          }
+        }
+      }
+    }
+    types {
+      key: "Student"
+      value {
+        relation {
+          attr_defs {
+            key: "ClassId"
+            value {
+              attrs {
+                key: "description"
+                value {
+                  s: "describe the table"
+                }
+              }
+              type_ref {
+                context {
+                  appname {
+                    part: "School"
+                  }
+                  path: "Student"
+                }
+                ref {
+                  path: "Class"
+                  path: "Idd"
+                }
+              }
+              source_context {
+                start {
+                  line: 7
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Id"
+            value {
+              primitive: INT
+              attrs {
+                key: "description"
+                value {
+                  s: "describe the table"
+                }
+              }
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "pk"
+                    }
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 6
+                }
+              }
+            }
+          }
+          primary_key {
+            attr_name: "Id"
+          }
+        }
+        attrs {
+          key: "description"
+          value {
+            s: "describe the table"
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "SchoolLibrary"
+  value {
+    name {
+      part: "SchoolLibrary"
+    }
+    types {
+      key: "Book"
+      value {
+        relation {
+          attr_defs {
+            key: "Author"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 13
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "BookId"
+            value {
+              primitive: INT
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "pk"
+                    }
+                    elt {
+                      s: "autoinc"
+                    }
+                  }
+                }
+              }
+              source_context {
+                start {
+                  line: 11
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "name"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 12
+                }
+              }
+            }
+          }
+          primary_key {
+            attr_name: "BookId"
+          }
+        }
+      }
+    }
+    types {
+      key: "Borrow"
+      value {
+        relation {
+          attr_defs {
+            key: "BookId"
+            value {
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "pk"
+                    }
+                  }
+                }
+              }
+              type_ref {
+                context {
+                  appname {
+                    part: "SchoolLibrary"
+                  }
+                  path: "Borrow"
+                }
+                ref {
+                  path: "Book"
+                  path: "BookId"
+                }
+              }
+              source_context {
+                start {
+                  line: 16
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "DueDate"
+            value {
+              primitive: DATE
+              source_context {
+                start {
+                  line: 17
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "MemberId"
+            value {
+              attrs {
+                key: "patterns"
+                value {
+                  a {
+                    elt {
+                      s: "pk"
+                    }
+                  }
+                }
+              }
+              type_ref {
+                context {
+                  appname {
+                    part: "SchoolLibrary"
+                  }
+                  path: "Borrow"
+                }
+                ref {
+                  path: "Member"
+                  path: "MemberId"
+                }
+              }
+              source_context {
+                start {
+                  line: 15
+                }
+              }
+            }
+          }
+          primary_key {
+            attr_name: "MemberId"
+            attr_name: "BookId"
+          }
+        }
+      }
+    }
+    types {
+      key: "Member"
+      value {
+        relation {
+          attr_defs {
+            key: "MemberId"
+            value {
+              attrs {
+                key: "description"
+                value {
+                  s: "\n"
+                }
+              }
+              type_ref {
+                context {
+                  appname {
+                    part: "SchoolLibrary"
+                  }
+                  path: "Member"
+                }
+                ref {
+                  path: "Student"
+                  path: "Id"
+                }
+              }
+              source_context {
+                start {
+                  line: 6
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "amount"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  max: 14
+                }
+                precision: 14
+                scale: 2
+              }
+              source_context {
+                start {
+                  line: 9
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "city"
+            value {
+              primitive: STRING
+              constraint {
+                length {
+                  max: 100
+                }
+              }
+              source_context {
+                start {
+                  line: 8
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "name"
+            value {
+              primitive: STRING
+              source_context {
+                start {
+                  line: 7
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

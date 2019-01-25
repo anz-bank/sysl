@@ -1,0 +1,110 @@
+apps {
+  key: "OtherApp"
+  value {
+    name {
+      part: "OtherApp"
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        stmt {
+          alt {
+            choice {
+              cond: "requested_state = submitted"
+              stmt {
+                call {
+                  target {
+                    part: "SomeApp"
+                  }
+                  endpoint: "EP1"
+                }
+              }
+            }
+            choice {
+              cond: "requested_state = unsubmitted"
+              stmt {
+                call {
+                  target {
+                    part: "SomeApp"
+                  }
+                  endpoint: "EP2"
+                }
+              }
+            }
+            choice {
+              cond: "requested_state = referred"
+              stmt {
+                call {
+                  target {
+                    part: "SomeApp"
+                  }
+                  endpoint: "EP3"
+                  arg {
+                    name: "\"referred\""
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint with no label"
+      value {
+        name: "Endpoint with no label"
+        stmt {
+          alt {
+            choice {
+              stmt {
+                action {
+                  action: "statement 1"
+                }
+              }
+            }
+            choice {
+              stmt {
+                action {
+                  action: "statement 2"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "SomeApp"
+  value {
+    name {
+      part: "SomeApp"
+    }
+    endpoints {
+      key: "EP1"
+      value {
+        name: "EP1"
+      }
+    }
+    endpoints {
+      key: "EP2"
+      value {
+        name: "EP2"
+      }
+    }
+    endpoints {
+      key: "EP3"
+      value {
+        name: "EP3"
+        param {
+          name: "status"
+          type {
+            primitive: STRING
+          }
+        }
+      }
+    }
+  }
+}

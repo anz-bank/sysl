@@ -1,0 +1,254 @@
+apps {
+  key: "API"
+  value {
+    name {
+      part: "API"
+    }
+    endpoints {
+      key: "Service Call"
+      value {
+        name: "Service Call"
+      }
+    }
+    types {
+      key: "UberUser"
+      value {
+        tuple {
+          attr_defs {
+            key: "user"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "API"
+                  }
+                  path: "UberUser"
+                }
+                ref {
+                  path: "User"
+                }
+              }
+              source_context {
+                start {
+                  line: 19
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "User"
+      value {
+        relation {
+          attr_defs {
+            key: "id"
+            value {
+              primitive: INT
+              attrs {
+                key: "description"
+                value {
+                  s: "some description"
+                }
+              }
+              source_context {
+                start {
+                  line: 4
+                }
+              }
+            }
+          }
+        }
+        attrs {
+          key: "description"
+          value {
+            s: "some description"
+          }
+        }
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "foo"
+              }
+            }
+          }
+        }
+      }
+    }
+    mixin2 {
+      name {
+        part: "Relational Model"
+      }
+    }
+    mixin2 {
+      name {
+        part: "TransformApp"
+      }
+    }
+    views {
+      key: "FooTransform"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "number"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      literal {
+                        i: 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "Relational Model"
+  value {
+    name {
+      part: "Relational Model"
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "abstract"
+          }
+        }
+      }
+    }
+    types {
+      key: "User"
+      value {
+        relation {
+          attr_defs {
+            key: "id"
+            value {
+              primitive: INT
+              attrs {
+                key: "description"
+                value {
+                  s: "some description"
+                }
+              }
+              source_context {
+                start {
+                  line: 4
+                }
+              }
+            }
+          }
+        }
+        attrs {
+          key: "description"
+          value {
+            s: "some description"
+          }
+        }
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "foo"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "TransformApp"
+  value {
+    name {
+      part: "TransformApp"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "com.foo.example"
+      }
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "abstract"
+          }
+        }
+      }
+    }
+    views {
+      key: "FooTransform"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "number"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      literal {
+                        i: 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

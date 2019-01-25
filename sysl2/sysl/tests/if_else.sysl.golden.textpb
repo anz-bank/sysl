@@ -1,0 +1,84 @@
+apps {
+  key: "Test - App"
+  value {
+    name {
+      part: "Test - App"
+    }
+    endpoints {
+      key: "Test - Endpoint"
+      value {
+        name: "Test - Endpoint"
+        stmt {
+          cond {
+            test: "value == one"
+            stmt {
+              action {
+                action: "do something"
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "else if value == two"
+            stmt {
+              action {
+                action: "do something else"
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "else"
+            stmt {
+              ret {
+                payload: "ok"
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "alt condition one"
+            stmt {
+              action {
+                action: "handle one"
+              }
+            }
+          }
+        }
+        stmt {
+          group {
+            title: "alt condition two"
+            stmt {
+              action {
+                action: "check more details"
+              }
+            }
+            stmt {
+              group {
+                title: "alt condition three"
+                stmt {
+                  action {
+                    action: "handle three"
+                  }
+                }
+              }
+            }
+            stmt {
+              group {
+                title: "alt condition four"
+                stmt {
+                  action {
+                    action: "handle four"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

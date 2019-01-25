@@ -1,0 +1,172 @@
+apps {
+  key: "AnotherApp"
+  value {
+    name {
+      part: "AnotherApp"
+    }
+    types {
+      key: "SecondTable"
+      value {
+        tuple {
+          attr_defs {
+            key: "Id"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "AnotherApp"
+                  }
+                  path: "SecondTable"
+                }
+                ref {
+                  appname {
+                    part: "App with "
+                  }
+                  path: "space"
+                  path: "Id"
+                }
+              }
+              source_context {
+                start {
+                  line: 11
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Id2"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "AnotherApp"
+                  }
+                  path: "SecondTable"
+                }
+                ref {
+                  appname {
+                    part: "App with  "
+                  }
+                  path: "space"
+                  path: "Id"
+                }
+              }
+              source_context {
+                start {
+                  line: 12
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Id3"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "AnotherApp"
+                  }
+                  path: "SecondTable"
+                }
+                ref {
+                  appname {
+                    part: "My "
+                    part: " App with  "
+                  }
+                  path: "space"
+                  path: "Id"
+                }
+              }
+              source_context {
+                start {
+                  line: 13
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "Id4"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "AnotherApp"
+                  }
+                  path: "SecondTable"
+                }
+                ref {
+                  appname {
+                    part: "My   "
+                    part: "  App with  "
+                  }
+                  path: "space"
+                  path: "Id"
+                }
+              }
+              source_context {
+                start {
+                  line: 14
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "App with :: space"
+  value {
+    name {
+      part: "App with"
+      part: "space"
+    }
+    types {
+      key: "SomeTable"
+      value {
+        tuple {
+          attr_defs {
+            key: "Id"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+apps {
+  key: "My ::  App with :: space"
+  value {
+    name {
+      part: "My"
+      part: "App with"
+      part: "space"
+    }
+    types {
+      key: "SomeTable"
+      value {
+        tuple {
+          attr_defs {
+            key: "Id"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 7
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+apps {
+  key: "Server"
+  value {
+    name {
+      part: "Server"
+    }
+    attrs {
+      key: "patterns"
+      value {
+        a {
+          elt {
+            s: "rest"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "GET /{id}"
+      value {
+        name: "GET /{id}"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: GET
+          path: "/{id}"
+          query_param {
+            name: "id"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "depth"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "limit"
+            type {
+              primitive: INT
+              opt: true
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "offset"
+            type {
+              primitive: INT
+              opt: true
+              source_context {
+                start {
+                  line: 3
+                }
+              }
+            }
+            loc: true
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "POST /{id}/third/{a-bc}"
+      value {
+        name: "POST /{id}/third/{a-bc}"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "rest"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+        rest_params {
+          method: POST
+          path: "/{id}/third/{a-bc}"
+          query_param {
+            name: "id"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 7
+                }
+              }
+            }
+            loc: true
+          }
+          query_param {
+            name: "a-bc"
+            type {
+              primitive: INT
+              source_context {
+                start {
+                  line: 7
+                }
+              }
+            }
+            loc: true
+          }
+        }
+      }
+    }
+  }
+}

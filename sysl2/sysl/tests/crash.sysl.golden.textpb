@@ -1,0 +1,51 @@
+apps {
+  key: "Desktop"
+  value {
+    name {
+      part: "Desktop"
+    }
+    endpoints {
+      key: "Customer"
+      value {
+        name: "Customer"
+        stmt {
+          action {
+            action: "call foo"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Endpoint"
+      value {
+        name: "Endpoint"
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "button"
+              }
+            }
+          }
+        }
+        stmt {
+          action {
+            action: "call foo"
+          }
+        }
+      }
+    }
+    endpoints {
+      key: "Financial"
+      value {
+        name: "Financial"
+        stmt {
+          action {
+            action: "..."
+          }
+        }
+      }
+    }
+  }
+}

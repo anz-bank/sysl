@@ -1,0 +1,513 @@
+apps {
+  key: "TransformationTest"
+  value {
+    name {
+      part: "TransformationTest"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "io.sysl.test.views"
+      }
+    }
+    views {
+      key: "TestMatching"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "number"
+            }
+            scopevar: "."
+            stmt {
+              let {
+                name: "out"
+                expr {
+                  unexpr {
+                    op: INV
+                    arg {
+                      binexpr {
+                        op: TO_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          name: "foo1"
+                        }
+                        attr_name: "*"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out1"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      name: "."
+                    }
+                    rhs {
+                      name: "foo1"
+                    }
+                    attr_name: "*"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out2"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      name: "abc"
+                    }
+                    rhs {
+                      name: "foo1"
+                    }
+                    attr_name: "*"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out3"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    rhs {
+                      name: "foo1"
+                    }
+                    attr_name: "*"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out4"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    rhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "def"
+                      }
+                    }
+                    attr_name: "*"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out5"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    rhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                        setof: true
+                      }
+                    }
+                    attr_name: "*"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out6"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    rhs {
+                      navigate {
+                        arg {
+                          name: "."
+                        }
+                        attr: "foo"
+                      }
+                    }
+                    attr_name: "*"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out7"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    rhs {
+                      name: "foo"
+                    }
+                    attr_name: "abc"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out7a"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    rhs {
+                      name: "foo"
+                    }
+                    attr_name: "abc"
+                    attr_name: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out7b"
+                expr {
+                  binexpr {
+                    op: TO_NOT_MATCHING
+                    lhs {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "abc"
+                      }
+                    }
+                    rhs {
+                      name: "foo"
+                    }
+                    attr_name: "abc"
+                    attr_name: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out8"
+                expr {
+                  get_attr {
+                    arg {
+                      binexpr {
+                        op: TO_NOT_MATCHING
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "abc"
+                          }
+                        }
+                        rhs {
+                          name: "foo"
+                        }
+                        attr_name: "abc"
+                        attr_name: "def"
+                      }
+                    }
+                    attr: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out8b"
+                expr {
+                  get_attr {
+                    arg {
+                      binexpr {
+                        op: TO_NOT_MATCHING
+                        lhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "abc"
+                          }
+                        }
+                        rhs {
+                          get_attr {
+                            arg {
+                              name: "."
+                            }
+                            attr: "foo"
+                          }
+                        }
+                        attr_name: "abc"
+                        attr_name: "def"
+                      }
+                    }
+                    attr: "def"
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out9"
+                expr {
+                  binexpr {
+                    op: WHERE
+                    lhs {
+                      get_attr {
+                        arg {
+                          binexpr {
+                            op: TO_NOT_MATCHING
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "abc"
+                              }
+                            }
+                            rhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "foo"
+                              }
+                            }
+                            attr_name: "abc"
+                            attr_name: "def"
+                          }
+                        }
+                        attr: "def"
+                      }
+                    }
+                    rhs {
+                      literal {
+                        b: true
+                      }
+                      type {
+                        primitive: BOOL
+                      }
+                    }
+                    scopevar: "."
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out9"
+                expr {
+                  unexpr {
+                    op: SINGLE
+                    arg {
+                      get_attr {
+                        arg {
+                          binexpr {
+                            op: TO_NOT_MATCHING
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "abc"
+                              }
+                            }
+                            rhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "foo"
+                              }
+                            }
+                            attr_name: "abc"
+                            attr_name: "def"
+                          }
+                        }
+                        attr: "def"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out9"
+                expr {
+                  unexpr {
+                    op: SINGLE_OR_NULL
+                    arg {
+                      get_attr {
+                        arg {
+                          binexpr {
+                            op: TO_NOT_MATCHING
+                            lhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "abc"
+                              }
+                            }
+                            rhs {
+                              get_attr {
+                                arg {
+                                  name: "."
+                                }
+                                attr: "foo"
+                              }
+                            }
+                            attr_name: "abc"
+                            attr_name: "def"
+                          }
+                        }
+                        attr: "def"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out10"
+                expr {
+                  ifelse {
+                    cond {
+                      call {
+                        func: "bool"
+                        arg {
+                          binexpr {
+                            op: EQ
+                            lhs {
+                              name: "a"
+                            }
+                            rhs {
+                              literal {
+                                b: true
+                              }
+                              type {
+                                primitive: BOOL
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    if_true {
+                      binexpr {
+                        op: TO_MATCHING
+                        lhs {
+                          name: "."
+                        }
+                        rhs {
+                          name: "foo"
+                        }
+                        attr_name: "*"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              let {
+                name: "out11"
+                expr {
+                  binexpr {
+                    op: TO_MATCHING
+                    lhs {
+                      name: "rankedSecurityDetailsSet"
+                    }
+                    rhs {
+                      get_attr {
+                        arg {
+                          name: "input"
+                        }
+                        attr: "SecurityDetails"
+                        setof: true
+                      }
+                    }
+                    attr_name: "securityDetailsId"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

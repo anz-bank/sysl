@@ -1,0 +1,769 @@
+apps {
+  key: "TransformApp"
+  value {
+    name {
+      part: "TransformApp"
+    }
+    attrs {
+      key: "package"
+      value {
+        s: "io.sysl.demo.petshop.views"
+      }
+    }
+    types {
+      key: "AnonType_0__"
+      value {
+        tuple {
+          attr_defs {
+            key: "breed"
+            value {
+              type_ref {
+                context {
+                  appname {
+                    part: "TransformApp"
+                  }
+                  path: "AnonType_0__"
+                }
+                ref {
+                  appname {
+                    part: "PetShopModel"
+                  }
+                  path: "Breed"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types {
+      key: "FooType"
+      value {
+        tuple {
+          attr_defs {
+            key: "amount"
+            value {
+              primitive: DECIMAL
+              constraint {
+                length {
+                  max: 14
+                }
+              }
+              source_context {
+                start {
+                  line: 59
+                }
+              }
+            }
+          }
+          attr_defs {
+            key: "id"
+            value {
+              primitive: INT
+              source_context {
+                start {
+                  line: 58
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "NoArgTransform"
+      value {
+        param {
+          name: "number1"
+          type {
+            primitive: INT
+          }
+        }
+        param {
+          name: "foo"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "Some"
+                }
+                path: "Type"
+              }
+            }
+          }
+        }
+        ret_type {
+          type_ref {
+            ref {
+              appname {
+                part: "Model"
+              }
+              path: "Type"
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "."
+            }
+            scopevar: "scopeVar"
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: SUB
+                    lhs {
+                      binexpr {
+                        op: ADD
+                        lhs {
+                          name: "number"
+                        }
+                        rhs {
+                          literal {
+                            i: 1
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      name: "scopeVar"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        attrs {
+          key: "patterns"
+          value {
+            a {
+              elt {
+                s: "partial"
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "WithArgTransform"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "scopeVar"
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: SUB
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      literal {
+                        i: 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        attrs {
+          key: "abc"
+          value {
+            s: "foo"
+          }
+        }
+      }
+    }
+    views {
+      key: "nestedTransformWithAnonymousType"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          type_ref {
+            ref {
+              appname {
+                part: "Some1"
+              }
+              path: "Type"
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              let {
+                name: "_breedsAndPets"
+                expr {
+                  transform {
+                    arg {
+                      get_attr {
+                        arg {
+                          name: "."
+                        }
+                        attr: "breeds"
+                      }
+                    }
+                    scopevar: "."
+                    stmt {
+                      let {
+                        name: "breedId"
+                        expr {
+                          call {
+                            func: "autoinc"
+                          }
+                        }
+                      }
+                    }
+                    stmt {
+                      assign {
+                        name: "breed"
+                        expr {
+                          transform {
+                            arg {
+                              name: "."
+                            }
+                            scopevar: "."
+                            stmt {
+                              assign {
+                                name: "breedName"
+                                expr {
+                                  get_attr {
+                                    arg {
+                                      name: "."
+                                    }
+                                    attr: "name"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          type {
+                            type_ref {
+                              context {
+                                appname {
+                                  part: "TransformApp"
+                                }
+                              }
+                              ref {
+                                appname {
+                                  part: "PetShopModel"
+                                }
+                                path: "Breed"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  type {
+                    set {
+                      type_ref {
+                        context {
+                          appname {
+                            part: "TransformApp"
+                          }
+                        }
+                        ref {
+                          appname {
+                            part: "TransformApp"
+                          }
+                          path: "AnonType_0__"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          type {
+            type_ref {
+              context {
+                appname {
+                  part: "TransformApp"
+                }
+              }
+              ref {
+                appname {
+                  part: "Some"
+                }
+                path: "Type"
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "noReturnType"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          type_ref {
+            context {
+              appname {
+                part: "TransformApp"
+              }
+            }
+            ref {
+              appname {
+                part: "Some"
+              }
+              path: "Type"
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      literal {
+                        s: "foo"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          type {
+            type_ref {
+              context {
+                appname {
+                  part: "TransformApp"
+                }
+              }
+              ref {
+                appname {
+                  part: "Some"
+                }
+                path: "Type"
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "noScopeVar"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      binexpr {
+                        op: MUL
+                        lhs {
+                          name: "number"
+                        }
+                        rhs {
+                          literal {
+                            decimal: "1.5"
+                          }
+                        }
+                      }
+                    }
+                    rhs {
+                      literal {
+                        i: 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "withAnonymousSetOfReturnType"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          primitive: INT
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: POW
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      binexpr {
+                        op: POW
+                        lhs {
+                          literal {
+                            i: 2
+                          }
+                        }
+                        rhs {
+                          literal {
+                            i: 3
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "withSetOfReturnType"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          set {
+            type_ref {
+              ref {
+                appname {
+                  part: "Some1"
+                }
+                path: "Type"
+              }
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: DIV
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      name: "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+          type {
+            set {
+              type_ref {
+                context {
+                  appname {
+                    part: "TransformApp"
+                  }
+                }
+                ref {
+                  appname {
+                    part: "Some"
+                  }
+                  path: "Type"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "withSomeReturnType"
+      value {
+        param {
+          name: "number"
+          type {
+            primitive: INT
+          }
+        }
+        ret_type {
+          type_ref {
+            ref {
+              appname {
+                part: "Some1"
+              }
+              path: "Type"
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      literal {
+                        s: "foo"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          type {
+            type_ref {
+              context {
+                appname {
+                  part: "TransformApp"
+                }
+              }
+              ref {
+                appname {
+                  part: "Some"
+                }
+                path: "Type"
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "withSomeReturnType2"
+      value {
+        param {
+          name: "number"
+          type {
+            type_ref {
+              ref {
+                appname {
+                  part: "Sometype"
+                }
+              }
+            }
+          }
+        }
+        ret_type {
+          set {
+            type_ref {
+              ref {
+                appname {
+                  part: "Sometype"
+                }
+              }
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      literal {
+                        s: "foo"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          type {
+            type_ref {
+              context {
+                appname {
+                  part: "TransformApp"
+                }
+              }
+              ref {
+                appname {
+                  part: "Sometype"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    views {
+      key: "withSomeReturnType3"
+      value {
+        param {
+          name: "foo"
+          type {
+            set {
+              type_ref {
+                ref {
+                  appname {
+                    part: "Model"
+                  }
+                  path: "SomeType"
+                }
+              }
+            }
+          }
+        }
+        ret_type {
+          set {
+            type_ref {
+              context {
+                appname {
+                  part: "TransformApp"
+                }
+              }
+              ref {
+                appname {
+                  part: "Some"
+                }
+                path: "Type"
+              }
+            }
+          }
+        }
+        expr {
+          transform {
+            arg {
+              name: "argName"
+            }
+            scopevar: "."
+            stmt {
+              assign {
+                name: "out"
+                expr {
+                  binexpr {
+                    op: ADD
+                    lhs {
+                      name: "number"
+                    }
+                    rhs {
+                      literal {
+                        s: "foo"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          type {
+            set {
+              type_ref {
+                context {
+                  appname {
+                    part: "TransformApp"
+                  }
+                }
+                ref {
+                  appname {
+                    part: "Some"
+                  }
+                  path: "Type"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
