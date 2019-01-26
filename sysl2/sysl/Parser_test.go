@@ -113,10 +113,10 @@ func parseAndCompare(
 		return false, err
 	}
 
-	pat := "sysl-test-*.textpb"
-	generated, err := ioutil.TempFile("", pat)
+	pattern := "sysl-test-*.textpb"
+	generated, err := ioutil.TempFile("", pattern)
 	if err != nil {
-		return false, errors.Wrapf(err, "Create tempfile: %s", pat)
+		return false, errors.Wrapf(err, "Create tempfile: %s", pattern)
 	}
 	generatedClosed := false
 	defer func() {
@@ -150,10 +150,10 @@ func parseAndCompare(
 }
 
 func parseAndCompareWithPython(filename, root string, retainOnError bool) (bool, error) {
-	pat := "sysl-test-golden-*.textpb"
-	golden, err := ioutil.TempFile("", pat)
+	pattern := "sysl-test-golden-*.textpb"
+	golden, err := ioutil.TempFile("", pattern)
 	if err != nil {
-		return false, errors.Wrapf(err, "Create tempfile %#v", pat)
+		return false, errors.Wrapf(err, "Create tempfile %#v", pattern)
 	}
 	defer golden.Close()
 
