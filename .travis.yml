@@ -9,6 +9,9 @@ matrix:
   - os: linux
     dist: trusty
     before_install:
+    - curl https://dl.google.com/go/go1.11.linux-amd64.tar.gz | tar -C /home/travis/.local -xz
+    - PATH=/home/travis/.local/go/bin:$PATH
+    - go version
     - go env
     - export GOPATH=$HOME/gopath
     - mkdir -p $HOME/gopath/src/github.com/anz-bank/sysl
