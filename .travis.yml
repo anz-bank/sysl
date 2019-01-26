@@ -24,12 +24,23 @@ matrix:
     osx_image: xcode10.1
     language: go
     go:
-    - 1.11
+    - 1.11.x
     go_import_path: github.com/anz-bank/sysl
     before_install:
-    - export PATH=/usr/local/opt/python/libexec/bin:$PATH
+    # - export PATH=/usr/local/opt/python/libexec/bin:$PATH
     - export SYSL_PYTHON_DIR=/usr/local/bin/
     - python --version
+    - which -a python || true
+    - which -a python2 || true
+    - which -a python3 || true
+    - find /usr/local -type f -name 'python' || true
+    - find /usr/local -type f -name 'python2' || true
+    - find /usr/local -type f -name 'python3' || true
+    - /usr/local/opt/python/libexec/bin/python --version || true
+    - /usr/local/bin/python --version || true
+    - /usr/bin/python --version || true
+    - /usr/local/bin/python2 --version || true
+    - /usr/local/bin/python3 --version || true
     - pip --version
     - go version
 env:
