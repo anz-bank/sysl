@@ -166,7 +166,7 @@ func TestFTextPBNilModule(t *testing.T) {
 	assert.Equal(t, "", output.String())
 }
 
-func testMain2(t *testing.T, args []string, golden string) {
+func testMain2(t *testing.T, golden string, args ...string) {
 	if output := testTempFilename(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestTextPBNilModule-*.textpb"); output != "" {
 		var stdout, stderr bytes.Buffer
 		rc := main2(&stdout, &stderr, append([]string{"sysl", "-o", output}, args...), main3)
@@ -186,14 +186,14 @@ func testMain2(t *testing.T, args []string, golden string) {
 }
 
 func TestMain2TextPB(t *testing.T) {
-	testMain2(t, []string{"tests/args.sysl"}, "tests/args.sysl.golden.textpb")
+	testMain2(t, "tests/args.sysl.golden.textpb", "textpb", "tests/args.sysl")
 }
 
 func TestMain2JSON(t *testing.T) {
-	testMain2(t, []string{"-mode", "json", "tests/args.sysl"}, "tests/args.sysl.golden.json")
+	testMain2(t, "tests/args.sysl.golden.json", "json", "tests/args.sysl")
 }
 
-func testMain2Stdout(t *testing.T, args []string, golden string) {
+func testMain2Stdout(t *testing.T, golden string, args ...string) {
 	var stdout, stderr bytes.Buffer
 	rc := main2(&stdout, &stderr, append([]string{"sysl", "-o", "-"}, args...), main3)
 	if !assert.Zero(t, rc) {
@@ -210,16 +210,16 @@ func testMain2Stdout(t *testing.T, args []string, golden string) {
 }
 
 func TestMain2TextPBStdout(t *testing.T) {
-	testMain2Stdout(t, []string{"tests/args.sysl"}, "tests/args.sysl.golden.textpb")
+	testMain2Stdout(t, "tests/args.sysl.golden.textpb", "textpb", "tests/args.sysl")
 }
 
 func TestMain2JSONStdout(t *testing.T) {
-	testMain2Stdout(t, []string{"-mode", "json", "tests/args.sysl"}, "tests/args.sysl.golden.json")
+	testMain2Stdout(t, "tests/args.sysl.golden.json", "json", "tests/args.sysl")
 }
 
 func TestMain2BadMode(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	rc := main2(&stdout, &stderr, []string{"sysl", "-o", "-", "-mode", "BAD", "tests/args.sysl"}, main3)
+	rc := main2(&stdout, &stderr, []string{"sysl", "-o", "-", "BAD", "tests/args.sysl"}, main3)
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
