@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"path"
@@ -72,8 +73,7 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	fs := &osFileSystem{root}
-	module, err := FSParse(filename, fs)
+	module, err := FSParse(filename, http.Dir(root))
 	if err != nil {
 		return nil, err
 	}

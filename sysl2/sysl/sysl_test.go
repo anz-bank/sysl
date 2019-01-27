@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"testing"
 
@@ -12,39 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-type testTempFile struct {
-	f *os.File
-}
-
-func newTestTempFile(t *testing.T, dir, pattern string) *testTempFile {
-	f, err := ioutil.TempFile("", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json")
-	if assert.NoError(t, err, "newTestTempFile(%#v, %#v)", dir, pattern) {
-		return &testTempFile{f}
-	}
-	return nil
-}
-
-func testTempFilename(t *testing.T, dir, pattern string) string {
-	if tf := newTestTempFile(t, dir, pattern); tf != nil {
-		defer tf.CloseAndRemove()
-		return tf.Name()
-	}
-	return ""
-}
-
-func (tf *testTempFile) File() *os.File {
-	return tf.f
-}
-
-func (tf *testTempFile) Name() string {
-	return tf.f.Name()
-}
-
-func (tf *testTempFile) CloseAndRemove() {
-	tf.f.Close()
-	os.Remove(tf.Name())
-}
 
 func TestExit(t *testing.T) {
 	format := "Exiting: %s"
@@ -58,24 +26,8 @@ func TestExit(t *testing.T) {
 	assert.Equal(t, 42, e.code)
 }
 
-func TestOSFileSystem(t *testing.T) {
-	fs := &osFileSystem{root: "."}
-
-	f, err := fs.Open("sysl.go")
-	assert.NoError(t, err)
-	stat, err := f.Stat()
-	assert.NoError(t, err)
-	assert.False(t, stat.IsDir())
-	assert.True(t, stat.Size() > 0)
-
-	_, err = fs.Open("doesn't.exist")
-	assert.Error(t, err)
-}
-
 func TestFSFileStream(t *testing.T) {
-	fs := &osFileSystem{root: "."}
-
-	s, err := newFSFileStream("sysl.go", fs)
+	s, err := newFSFileStream("sysl.go", http.Dir("."))
 	assert.NoError(t, err)
 	assert.Equal(t, "package main", s.GetText(0, 11))
 }
