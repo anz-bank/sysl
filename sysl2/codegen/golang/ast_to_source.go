@@ -63,7 +63,9 @@ func cSprintf(c rune, format string, args ...fmt.Formatter) string {
 
 func separator(w io.Writer, i int, sep string) {
 	if i > 0 {
-		w.Write([]byte(sep))
+		if _, err := w.Write([]byte(sep)); err != nil {
+			panic(err)
+		}
 	}
 }
 

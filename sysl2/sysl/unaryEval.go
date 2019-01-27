@@ -1,13 +1,11 @@
 package main
 
 import (
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 )
 
 type unaryFunc func(*sysl.Value) *sysl.Value
-
-type unaryFuncMap map[sysl.Expr_UnExpr_Op]unaryFunc
 
 var unaryFunctions = map[sysl.Expr_UnExpr_Op]unaryFunc{
 	sysl.Expr_UnExpr_NEG: unaryNeg,

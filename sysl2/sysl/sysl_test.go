@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -96,7 +96,7 @@ var testModuleTextPB = `apps: <
 
 func TestJSONPB(t *testing.T) {
 	if filename := testTempFilename(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json"); filename != "" {
-		JSONPB(testModule, filename)
+		require.NoError(t, JSONPB(testModule, filename))
 		output, err := ioutil.ReadFile(filename)
 		require.NoError(t, err)
 		assert.Equal(t, testModuleJSONPB, string(output))
@@ -107,28 +107,27 @@ func TestJSONPBNilModule(t *testing.T) {
 	if tf := newTestTempFile(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json"); tf != nil {
 		filename := tf.Name()
 		tf.CloseAndRemove()
-		err := JSONPB(nil, filename)
-		_, err = os.Stat(filename)
+		require.Error(t, JSONPB(nil, filename))
+		_, err := os.Stat(filename)
 		assert.True(t, os.IsNotExist(err))
 	}
 }
 
 func TestFJSONPB(t *testing.T) {
 	var output bytes.Buffer
-	FJSONPB(&output, testModule)
+	require.NoError(t, FJSONPB(&output, testModule))
 	assert.Equal(t, testModuleJSONPB, output.String())
 }
 
 func TestFJSONPBNilModule(t *testing.T) {
 	var output bytes.Buffer
-	err := FJSONPB(&output, nil)
-	assert.Error(t, err)
+	require.Error(t, FJSONPB(&output, nil))
 	assert.Equal(t, "", output.String())
 }
 
 func TestTextPB(t *testing.T) {
 	if filename := testTempFilename(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json"); filename != "" {
-		TextPB(testModule, filename)
+		require.NoError(t, TextPB(testModule, filename))
 		output, err := ioutil.ReadFile(filename)
 		require.NoError(t, err)
 		assert.Equal(t, testModuleTextPB, string(output))
@@ -139,23 +138,21 @@ func TestTextPBNilModule(t *testing.T) {
 	if tf := newTestTempFile(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestTextPBNilModule-*.textpb"); tf != nil {
 		filename := tf.Name()
 		tf.CloseAndRemove()
-		err := TextPB(nil, filename)
-		assert.Error(t, err)
-		_, err = os.Stat(filename)
+		require.Error(t, TextPB(nil, filename))
+		_, err := os.Stat(filename)
 		assert.True(t, os.IsNotExist(err))
 	}
 }
 
 func TestFTextPB(t *testing.T) {
 	var output bytes.Buffer
-	FTextPB(&output, testModule)
+	require.NoError(t, FTextPB(&output, testModule))
 	assert.Equal(t, testModuleTextPB, output.String())
 }
 
 func TestFTextPBNilModule(t *testing.T) {
 	var output bytes.Buffer
-	err := FTextPB(&output, nil)
-	assert.Error(t, err)
+	require.Error(t, FTextPB(&output, nil))
 	assert.Equal(t, "", output.String())
 }
 

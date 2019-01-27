@@ -122,7 +122,6 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 			if t == nil {
 				// nil => epsilon, see makeEXPR()
 				logrus.Debug("matched nil")
-				result = true
 				continue
 			}
 			minCount, maxCount := GetTermMinMaxCount(t)
@@ -283,7 +282,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 					if t == nil {
 						continue
 					}
-					if hasEpsilon(t, first) == false {
+					if !hasEpsilon(t, first) {
 						updated = first[ruleName].union(setFromTerm(first, t)) || updated
 						break
 					} else {

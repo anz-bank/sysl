@@ -7,7 +7,7 @@ import (
 	"os"
 	"sort"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
 	"github.com/pkg/errors"
@@ -72,7 +72,6 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 					default:
 						logrus.Warnf("Expecting a collection type, got %T for rule %s", vv, x.Rulename.Name)
 						fullScan = false
-						break
 					}
 					ruleInstances := Node{}
 
@@ -194,15 +193,20 @@ func applyTranformToModel(modelName, transformAppName, viewName string, model, t
 }
 
 // Serialize serializes node to string
-func Serialize(w io.Writer, delim string, node Node) {
+func Serialize(w io.Writer, delim string, node Node) error {
 	for _, n := range node {
 		switch x := n.(type) {
 		case string:
-			io.WriteString(w, x+delim)
+			if _, err := io.WriteString(w, x+delim); err != nil {
+				return err
+			}
 		case Node:
-			Serialize(w, delim, x)
+			if err := Serialize(w, delim, x); err != nil {
+				return err
+			}
 		}
 	}
+	return nil
 }
 
 // return the one and only app defined in the module
@@ -256,22 +260,26 @@ func GenerateCode(root_model, model, root_transform, transform, grammar, start s
 	return codeOutput
 }
 
-func outputToFiles(outDir string, output []*codeGenOutput) {
+func outputToFiles(outDir string, output []*codeGenOutput) error {
 	for _, o := range output {
 		f, err := os.Create(outDir + "/" + o.filename)
-		if f == nil {
-			logrus.Errorf("Unable to open file: %s\nGot error:\n%s", f.Name(), err.Error())
-			continue
+		if err != nil {
+			return err
 		}
 		logrus.Warningln("Writing file: " + f.Name())
-		Serialize(f, " ", o.output)
-		f.Close()
+		if err := Serialize(f, " ", o.output); err != nil {
+			return err
+		}
+		if err := f.Close(); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 // DoGenerateCode generate code for the given model, using transform
 // and the grammar of the target language
-func DoGenerateCode(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) int {
+func DoGenerateCode(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) error {
 	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
 	root_transform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
 	model := flags.String("model", ".", "model.sysl")
@@ -280,7 +288,9 @@ func DoGenerateCode(stdout, stderr io.Writer, flags *flag.FlagSet, args []string
 	start := flags.String("start", ".", "start rule for the grammar")
 	outDir := flags.String("outdir", ".", "output directory")
 
-	flags.Parse(args[1:])
+	if err := flags.Parse(args[1:]); err != nil {
+		return err
+	}
 	logrus.Warnf("root_model: %s\n", *root_model)
 	logrus.Warnf("root_transform: %s\n", *root_transform)
 	logrus.Warnf("model: %s\n", *model)
@@ -288,6 +298,5 @@ func DoGenerateCode(stdout, stderr io.Writer, flags *flag.FlagSet, args []string
 	logrus.Warnf("grammar: %s\n", *grammar)
 	logrus.Warnf("start: %s\n", *start)
 	output := GenerateCode(*root_model, *model, *root_transform, *transform, *grammar, *start)
-	outputToFiles(*outDir, output)
-	return 0
+	return outputToFiles(*outDir, output)
 }

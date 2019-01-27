@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 )
 
 // Scope holds the value of the variables during the execution of a transform
@@ -79,12 +79,6 @@ func IsCollectionType(obj *sysl.Value) bool {
 // expects m.Value to be of type Value_Map
 func addItemToValueMap(m *sysl.Value, name string, val *sysl.Value) {
 	m.GetMap().Items[name] = val
-}
-
-func appendListToValueList(m *sysl.Value_List, val *sysl.Value_List) {
-	for _, v := range val.Value {
-		appendItemToValueList(m, v)
-	}
 }
 
 func appendItemToValueList(m *sysl.Value_List, val *sysl.Value) {

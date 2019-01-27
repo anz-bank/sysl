@@ -36,10 +36,11 @@ func TestDeflateAndEncode(t *testing.T) {
 	const expected = "UDfSaKbhmp0GXU_pAnwvYqY6NaniKkXoAgGRFUGW9l4qY7gh99SkzByN9GvnUfBGzmrwZw5bYEpZqDIqxThekngp5zdS-AwDqbOpS83L9tRPkyEReOeZRpW8PbVZxK0o2c-kxTbpWuO_xoG4ticZ-nPa5vgYYxLWvRjNLmiL1IRVOQ7m8E-3X3WAA0fQgz9gvFy8yJQw3uwIyi5gLLg37BVNJvWFGNoO_wJ3kkftteyZECqO0gnHfSsGutuG__KSn1CcIhPN5ahjdH5NSYPOdRWP-J7QcMLedPpKu5XgnJkXgQDfAMsLjl0N003__swwWGu0"
 
 	//When
-	actual := DeflateAndEncode([]byte(testPlantumlInput))
+	actual, err := DeflateAndEncode([]byte(testPlantumlInput))
+	require.NoError(t, err)
 
 	//Then
-	require.Equal(t, expected, actual, "Unexpected output")
+	assert.Equal(t, expected, actual, "Unexpected output")
 }
 
 func TestOutputPlantumlWithPng(t *testing.T) {
@@ -49,7 +50,7 @@ func TestOutputPlantumlWithPng(t *testing.T) {
 	umlInput := testPlantumlInput
 
 	//When
-	OutputPlantuml(output, plantuml, umlInput)
+	require.NoError(t, OutputPlantuml(output, plantuml, umlInput))
 
 	//Then
 	_, err := os.Stat(output)
@@ -63,7 +64,7 @@ func TestOutputPlantumlWithSvg(t *testing.T) {
 	umlInput := testPlantumlInput
 
 	//When
-	OutputPlantuml(output, plantuml, umlInput)
+	require.NoError(t, OutputPlantuml(output, plantuml, umlInput))
 
 	//Then
 	_, err := os.Stat(output)
@@ -77,7 +78,7 @@ func TestOutputPlantumlWithUml(t *testing.T) {
 	umlInput := testPlantumlInput
 
 	//When
-	OutputPlantuml(output, plantuml, umlInput)
+	require.NoError(t, OutputPlantuml(output, plantuml, umlInput))
 
 	//Then
 	_, err := os.Stat("test.puml")

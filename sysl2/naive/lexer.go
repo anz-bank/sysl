@@ -2,10 +2,6 @@ package parser
 
 import (
 	"regexp"
-	"sort"
-
-	"github.com/anz-bank/sysl/sysl2/proto"
-	"github.com/sirupsen/logrus"
 )
 
 type token struct {
@@ -19,66 +15,6 @@ type lexer struct {
 	content          string
 	ws               *regexp.Regexp
 	ignoreWhiteSpace bool
-}
-
-type terminalBuilder struct {
-	arr    []string
-	tokens map[string]int32
-	index  int32
-}
-
-func (b *terminalBuilder) buildFromChoice(choice *sysl.Choice) {
-	for _, s := range choice.Sequence {
-		for _, t := range s.Term {
-			if t == nil {
-				continue
-			}
-			var str string
-			a := t.Atom
-			switch x := a.Union.(type) {
-			case *sysl.Atom_String_:
-				str = x.String_
-			case *sysl.Atom_Regexp:
-				str = x.Regexp
-			case *sysl.Atom_Choices:
-				b.buildFromChoice(x.Choices)
-			}
-			if str != "" {
-				if _, has := b.tokens[str]; !has {
-					b.tokens[str] = b.index
-					if len(str) == 1 {
-						str = "[" + str + "]"
-					}
-					b.arr = append(b.arr, str)
-					a.Id = b.index
-					b.index++
-				}
-				logrus.Printf("token: [%s] (id=%d)\n", str, a.Id)
-			}
-		}
-	}
-}
-
-// assigns new value to Atom.Id
-func getTerminals(rules map[string]*sysl.Rule) []string {
-	builder := terminalBuilder{
-		arr:    []string{},
-		tokens: map[string]int32{},
-		index:  0,
-	}
-
-	var ks []string
-	for key := range rules {
-		ks = append(ks, key)
-	}
-	sort.Strings(ks)
-	for _, key := range ks {
-		logrus.Println("Key: " + key)
-		b := rules[key]
-		builder.buildFromChoice(b.Choices)
-	}
-
-	return builder.arr
 }
 
 // Regular whitespace delimited

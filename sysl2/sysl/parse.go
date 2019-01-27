@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/grammar"
+	sysl "github.com/anz-bank/sysl/src/proto"
+	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
 	"github.com/sirupsen/logrus"
 )
 
@@ -356,7 +356,7 @@ func postProcess(mod *sysl.Module) {
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
 				src_app := getApp(src.Name, mod)
-				if hasAbstractPattern(src_app.Attrs) == false {
+				if !hasAbstractPattern(src_app.Attrs) {
 					logrus.Warnf("mixin App (%s) should be ~abstract", getAppName(src.Name))
 					continue
 				}
@@ -397,16 +397,11 @@ func postProcess(mod *sysl.Module) {
 			for fieldname, t := range attrs {
 				if x := t.GetTypeRef(); x != nil {
 					refApp := app
-					var refName string
-					refName = x.GetRef().GetPath()[0]
+					refName := x.GetRef().GetPath()[0]
 					if refName == "string_8" {
 						continue
 					}
-					refType, has := refApp.Types[refName]
-					if has == false {
-						logrus.Warnf("Field %s (type %s) refers to type (%s) in app (%s)",
-							fieldname, typeName, refName, appName)
-					} else {
+					if refType, has := refApp.Types[refName]; has {
 						var ref_attrs map[string]*sysl.Type
 
 						switch refType.Type.(type) {
@@ -428,10 +423,13 @@ func postProcess(mod *sysl.Module) {
 							field = x.GetRef().GetPath()[last]
 							_, has = refApp.Types[field]
 						}
-						if has == false {
+						if !has {
 							logrus.Warnf("Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)",
 								fieldname, typeName, field, appName, refName)
 						}
+					} else {
+						logrus.Warnf("Field %s (type %s) refers to type (%s) in app (%s)",
+							fieldname, typeName, refName, appName)
 					}
 				}
 			}

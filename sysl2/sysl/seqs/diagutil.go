@@ -12,23 +12,28 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func OutputPlantuml(output, plantuml, umlInput string) {
+func OutputPlantuml(output, plantuml, umlInput string) error {
 	l := len(output)
 	mode := output[l-3:]
 
 	switch mode {
 	case "png", "svg":
-		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, DeflateAndEncode([]byte(umlInput)))
+		encoded, err := DeflateAndEncode([]byte(umlInput))
+		if err != nil {
+			return err
+		}
+		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, encoded)
 		out, _ := sendHttpRequest(plantuml)
-		ioutil.WriteFile(output, out, os.ModePerm)
+		return ioutil.WriteFile(output, out, os.ModePerm)
 
 	case "uml":
 		output := output[:l-3]
 		output += "puml"
-		ioutil.WriteFile(output, []byte(umlInput), os.ModePerm)
+		return ioutil.WriteFile(output, []byte(umlInput), os.ModePerm)
 
 	default:
 		log.Errorf("Extension %s not supported. Valid extensions: svg, png, uml.", mode)
+		return nil
 	}
 }
 
@@ -47,15 +52,19 @@ func sendHttpRequest(url string) ([]byte, error) {
 }
 
 // The functions below ported from https://github.com/dougn/python-plantuml/blob/master/plantuml.py
-func DeflateAndEncode(text []byte) string {
+func DeflateAndEncode(text []byte) (string, error) {
 	var buf bytes.Buffer
 	zw, err := zlib.NewWriterLevel(&buf, zlib.BestCompression)
 	if err != nil {
-		errors.Errorf("Unable to encode []byte, Error:%s", err.Error())
+		return "", err
 	}
-	zw.Write(text)
-	zw.Close()
-	return encode(buf.Bytes())
+	if _, err := zw.Write(text); err != nil {
+		return "", err
+	}
+	if err := zw.Close(); err != nil {
+		return "", err
+	}
+	return encode(buf.Bytes()), nil
 }
 
 func encode(data []byte) string {

@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	itemRE                   = regexp.MustCompile(`(%\(\w+\))`)
 	isoCtrlRE                = regexp.MustCompile("^iso_ctrl_(.*)_txt$")
 	returnTypeValueSpliterRE = regexp.MustCompile(`\s*<:\s*`)
 	typeSetOfRE              = regexp.MustCompile(`set\s+of\s+(.+)$`)

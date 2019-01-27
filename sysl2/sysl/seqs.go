@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -26,7 +26,9 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 	w := seqs.MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	v := seqs.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
 	e := seqs.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
-	e.Accept(v)
+	if err := e.Accept(v); err != nil {
+		return "", err
+	}
 
 	return w.String(), nil
 }
@@ -54,7 +56,9 @@ func escapeWordBoundary(src string) string {
 	result, _ := json.Marshal(src)
 	escapeStr := strings.Replace(string(result), `\u0008`, `\\b`, -1)
 	var val string
-	json.Unmarshal([]byte(escapeStr), &val)
+	if err := json.Unmarshal([]byte(escapeStr), &val); err != nil {
+		panic(err)
+	}
 
 	return val
 }
@@ -130,7 +134,7 @@ func DoConstructSequenceDiagrams(
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
-func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) {
+func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) error {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
@@ -158,10 +162,8 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 		"eg: /project_dir/my_models",
 		"combine with --root if needed"}, "\n")).String()
 
-	_, err := sd.Parse(args[1:])
-
-	if err != nil {
-		log.Errorf("arguments parse error: %v", err)
+	if _, err := sd.Parse(args[1:]); err != nil {
+		return err
 	}
 
 	if level, has := defaultLevel[*loglevel]; has {
@@ -190,6 +192,9 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	result := DoConstructSequenceDiagrams(*root, *endpoint_format, *app_format, *title, *output, *modules_flag,
 		*endpoints_flag, *apps_flag, seqs.ParseBlackBoxesFromArgument(*blackboxes_flag))
 	for k, v := range result {
-		seqs.OutputPlantuml(k, *plantuml, v)
+		if err := seqs.OutputPlantuml(k, *plantuml, v); err != nil {
+			return err
+		}
 	}
+	return nil
 }

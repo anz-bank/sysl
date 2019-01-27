@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/grammar"
+	sysl "github.com/anz-bank/sysl/src/proto"
+	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
 	"github.com/sirupsen/logrus"
 )
 
@@ -2395,15 +2395,6 @@ func makeBinaryExpr(op sysl.Expr_BinExpr_Op, lhs, rhs *sysl.Expr) *sysl.Expr {
 	}
 }
 
-func makeGetAttrFromRefName(arg *sysl.Expr, names []string, nullsafe, setof bool) *sysl.Expr {
-	for _, name := range names {
-		arg = makeGetAttr(arg, name, nullsafe, setof)
-		nullsafe = false
-		setof = false
-	}
-	return arg
-}
-
 func addStmt(ifelse *sysl.Expr, stmt *sysl.Expr) {
 	if ifelse == nil {
 		return
@@ -3032,7 +3023,7 @@ func (s *TreeShapeListener) EnterBinexprT(ctx *parser.BinexprTContext) {}
 
 // ExitBinexprT is called when production binexprT is exited.
 func (s *TreeShapeListener) ExitBinexprT(ctx *parser.BinexprTContext) {
-	op := sysl.Expr_BinExpr_NO_Op
+	var op sysl.Expr_BinExpr_Op
 
 	if ctx.E_PLUS() != nil {
 		op = sysl.Expr_BinExpr_ADD

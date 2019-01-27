@@ -1,0 +1,5 @@
+run:
+  skip-files:
+    - sysl2/sysl/grammar/sysl_lexer.go
+    - sysl2/sysl/grammar/sysl_parser.go
+    - sysl2/sysl/grammar/syslparser_base_listener.go

@@ -5,9 +5,10 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type labeler struct {
@@ -280,9 +281,9 @@ title Profile
 == WebFrontend <- RequestProfile ==
 [->_0 : RequestProfile
 activate _0
- _0->_1 : 
+ _0->_1 :` + " " + `
  activate _1
-  _1->_2 : 
+  _1->_2 :` + " " + `
   activate _2
   _1<--_2 : User
   deactivate _2
@@ -368,13 +369,9 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			stdout := &bytes.Buffer{}
 			stderr := &bytes.Buffer{}
-			DoGenerateSequenceDiagrams(stdout, stderr, tt.args.flags, tt.args.args)
-			if gotStdout := stdout.String(); gotStdout != tt.wantStdout {
-				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", gotStdout, tt.wantStdout)
-			}
-			if gotStderr := stderr.String(); gotStderr != tt.wantStderr {
-				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", gotStderr, tt.wantStderr)
-			}
+			require.NoError(t, DoGenerateSequenceDiagrams(stdout, stderr, tt.args.flags, tt.args.args))
+			assert.Equal(t, tt.wantStdout, stdout.String())
+			assert.Equal(t, tt.wantStderr, stderr.String())
 		})
 	}
 }

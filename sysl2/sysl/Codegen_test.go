@@ -6,6 +6,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func init() {
@@ -111,7 +112,7 @@ func TestGenerateCodePerType(t *testing.T) {
 func TestSerialize(t *testing.T) {
 	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
 	out := new(bytes.Buffer)
-	Serialize(out, " ", output[0].output)
+	require.NoError(t, Serialize(out, " ", output[0].output))
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
 	assert.Equal(t, golden, out.String(), "unexpected value of out string")
 }

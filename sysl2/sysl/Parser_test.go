@@ -11,7 +11,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -24,8 +24,12 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "Open file %#v", filename)
 	}
-	io.Copy(&buf, f)
-	f.Close()
+	if _, err := io.Copy(&buf, f); err != nil {
+		return nil, err
+	}
+	if err := f.Close(); err != nil {
+		return nil, err
+	}
 
 	module := &sysl.Module{}
 	if err := proto.UnmarshalText(buf.String(), module); err != nil {
@@ -161,12 +165,12 @@ func parseAndCompareWithPython(filename, root string, retainOnError bool) (bool,
 	defer golden.Close()
 
 	pyModule, err := pyParse(filename, root, golden.Name())
-	if retainOrRemove(err, golden, retainOnError); err != nil {
+	if err := retainOrRemove(err, golden, retainOnError); err != nil {
 		return false, errors.Wrapf(err, "pyParse(%#v, %#v, %#v)", filename, root, golden.Name())
 	}
 
 	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule, retainOnError, true)
-	if retainOrRemove(err, golden, retainOnError); err != nil {
+	if err := retainOrRemove(err, golden, retainOnError); err != nil {
 		return false, errors.Wrapf(err, "parseAndCompare(%#v, %#v, %#v, …, %#v)", filename, root, golden.Name(), retainOnError)
 	}
 	return equal, nil

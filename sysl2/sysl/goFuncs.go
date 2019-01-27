@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -15,8 +15,6 @@ type goFunc struct {
 	args []*sysl.Type
 	ret  []*sysl.Type
 }
-
-type goFuncMap map[string]goFunc
 
 var kindToPrimitiveType = map[reflect.Kind]sysl.Type_Primitive{
 	reflect.Bool:   sysl.Type_BOOL,
@@ -179,7 +177,7 @@ func isReflectValueExpectedType(r reflect.Value, typ *sysl.Type) bool {
 }
 
 func reflectToValue(r reflect.Value, typ *sysl.Type) *sysl.Value {
-	if isReflectValueExpectedType(r, typ) == false {
+	if !isReflectValueExpectedType(r, typ) {
 		logrus.Warnf("Got %s, Expected Value type: %v \n", r.Kind(), typ.Type)
 	}
 
