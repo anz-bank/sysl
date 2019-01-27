@@ -8,8 +8,8 @@ GRAMMARS = SyslParser.g4 SyslLexer.g4
 .PHONY : all
 all: tests $(EXE) $(JS)
 
-$(EXE): grammar/sysl_parser.go grammar/sysl_lexer.go sysl.go sysl_listener_impl.go
-	go install -v -buildmode=exe .
+$(EXE):
+	go install -v
 
 grammar/sysl_parser.go grammar/sysl_lexer.go: grammar/SyslParser.g4 grammar/SyslLexer.g4
 	$(ANTLR) -Dlanguage=Go -lib grammar $^
