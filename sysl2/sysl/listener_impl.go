@@ -557,11 +557,11 @@ func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeCon
 	var l int
 
 	switch t {
-	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING:
+	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING, sysl.Type_STRING_8:
 		ct := &sysl.Type_Constraint{
 			Length: &sysl.Type_Constraint_Length{},
 		}
-		if t != sysl.Type_STRING && array_size.DIGITS(0) != nil {
+		if t != sysl.Type_STRING && t != sysl.Type_STRING_8 && array_size.DIGITS(0) != nil {
 			val := array_size.DIGITS(0).GetText()
 			if l, err = strconv.Atoi(val); err == nil && l != 0 {
 				ct.Length.Min = int64(l)

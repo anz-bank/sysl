@@ -695,17 +695,10 @@ apps {
           attr_defs {
             key: "data"
             value {
-              type_ref {
-                context {
-                  appname {
-                    part: "My"
-                    part: "Tuple Model"
-                  }
-                  path: "Response"
-                  path: "Payload"
-                }
-                ref {
-                  path: "string_8"
+              primitive: STRING_8
+              constraint {
+                length {
+                  max: 30
                 }
               }
               source_context {

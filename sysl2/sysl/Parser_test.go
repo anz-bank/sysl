@@ -109,7 +109,12 @@ func parseAndCompare(
 		return true, nil
 	}
 
-	if err = TextPB(goldenModule, golden); err != nil {
+	goldenAngleBracketsPattern := "sysl-test-golden-*.textpb"
+	goldenAngleBrackets, err := ioutil.TempFile("", goldenAngleBracketsPattern)
+	if err != nil {
+		return false, errors.Wrapf(err, "Create tempfile: %s", goldenAngleBracketsPattern)
+	}
+	if err = TextPB(goldenModule, goldenAngleBrackets.Name()); err != nil {
 		return false, err
 	}
 
@@ -133,7 +138,7 @@ func parseAndCompare(
 	}
 	generatedClosed = true
 
-	cmd := exec.Command("diff", "-y", golden, generated.Name())
+	cmd := exec.Command("diff", "-y", goldenAngleBrackets.Name(), generated.Name())
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
@@ -142,7 +147,7 @@ func parseAndCompare(
 		} else {
 			os.Remove(generated.Name())
 		}
-		return false, errors.Wrapf(err, "diff -y %#v %#v", golden, generated.Name())
+		return false, errors.Wrapf(err, "diff -y %#v %#v", goldenAngleBrackets.Name(), generated.Name())
 	}
 
 	os.Remove(generated.Name())

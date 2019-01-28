@@ -3,9 +3,10 @@ package golang
 import (
 	"bytes"
 	"fmt"
-	"go/format"
 	"io"
 	"strings"
+
+	"golang.org/x/tools/imports"
 )
 
 type genFormatter struct {
@@ -17,14 +18,14 @@ func (f genFormatter) Format(s fmt.State, c rune) {
 }
 
 // Format formats a node as a snippet of Go source code.
-func Format(node fmt.Formatter) []byte {
+func Format(filename string, node fmt.Formatter) ([]byte, error) {
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "%s", node)
-	formatted, err := format.Source(buf.Bytes())
+	formatted, err := imports.Process(filename, buf.Bytes(), nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return formatted
+	return formatted, nil
 }
 
 // fixupFormat replaces `"%c"` with `"%"+c`, but skips `/(?<!%)(%%)+c/`.
@@ -349,13 +350,23 @@ func (n *File) Format(s fmt.State, c rune) {
 		return
 	}
 	n.Doc.Format(s, c)
-	scPrintf(s, c, "package %s\n\nimport (\n", &n.Name)
-	for _, importSpec := range n.Imports {
-		scPrintf(s, c, "%c\n", &importSpec)
+	scPrintf(s, c, "package %s", &n.Name)
+	switch len(n.Imports) {
+	case 1:
+		scPrintf(s, c, "\n\nimport %c", &n.Imports[0])
+	case 0:
+	default:
+		fmt.Fprint(s, "\n\nimport (")
+		for _, importSpec := range n.Imports {
+			scPrintf(s, c, "\n%c", &importSpec)
+		}
+		fmt.Fprint(s, ")")
 	}
-	fmt.Fprint(s, ")\n\n")
-	for i, decl := range n.Decls {
-		sepFormat(s, c, i, decl, ", ")
+	if len(n.Decls) > 0 {
+		fmt.Fprint(s, "\n\n")
+	}
+	for _, decl := range n.Decls {
+		scPrintf(s, c, "%c\n", decl)
 	}
 }
 

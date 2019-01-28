@@ -39,7 +39,6 @@ SYSL_TEST_FILES = \
 	group_stmt \
 	if_else \
 	implied \
-	inplace_tuple \
 	library \
 	matching \
 	math \
