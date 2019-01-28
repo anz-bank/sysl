@@ -1,9 +1,11 @@
-Go [package="golang"]:
+Go:
+    @go_package = "github.com/anz-bank/sysl/sysl2/language/go;golang"
+
     !type Token:
-        kind <: string
+        kind <: string_8
         # TODO: Update text to commented version, after implementing "slice of".
         # text <: slice of string
-        text <: string
+        text <: string_8
 
     !type ArrayType:
         lbrack     <: Token             # "["

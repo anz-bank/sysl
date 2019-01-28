@@ -2,10 +2,50 @@ package golang
 
 import (
 	"fmt"
+	"go/token"
 	"regexp"
+	"strings"
+	"unicode"
+
+	"github.com/mitchellh/go-wordwrap"
+
+	"github.com/go-errors/errors"
 )
 
 var idRE = regexp.MustCompile("^[\\pL_][\\pL_\\pN]*$")
+
+var underscoreRE = regexp.MustCompile("_([a-z])")
+
+// https://github.com/golang/lint/blob/8f45f776aaf18cebc8d65861cc70c33c60471952/lint.go#L771
+var commonInitialismsRE = regexp.MustCompile("(" +
+	"Acl|Api|Asc|Cpu|Css|Dns|Eof|Guid|Html|Http|Htt|Id|Ip|Json|Lhs|Qps|Ram|" +
+	"Rhs|Rpc|Sla|Smtp|Sql|Ssh|Tcp|Tls|Ttl|Udp|Ui|Uid|Uuid|Uri|Url|Utf8|Vm|" +
+	"Xml|Xmpp|Xsrf|Xss" +
+	")([A-Z]|$)")
+
+func underscoresToCapsCase(s string, first func(rune) rune) string {
+	noUnderscores := underscoreRE.ReplaceAllStringFunc(
+		string(first(rune(s[0])))+s[1:],
+		func(match string) string {
+			return strings.ToUpper(match[1:])
+		},
+	)
+	return commonInitialismsRE.ReplaceAllStringFunc(noUnderscores, strings.ToUpper)
+}
+
+// Public creates a public ident with caps-case.
+func Public(name string) string {
+	return underscoresToCapsCase(name, unicode.ToUpper)
+}
+
+// Private creates a private ident with caps-case but lowercase first letter.
+func Private(name string) string {
+	name = underscoresToCapsCase(name, unicode.ToLower)
+	if token.Lookup(name).IsKeyword() {
+		return name + "_"
+	}
+	return name
+}
 
 // ArrayN creates a `[n]elt` ArrayType.
 func ArrayN(n int, elt Expr) *ArrayType {
@@ -18,8 +58,8 @@ func ArrayEllipsis(elt Expr) *ArrayType {
 }
 
 // Assert creates a TypeAssertExpr.
-func Assert(x, t Expr) *TypeAssertExpr {
-	return &TypeAssertExpr{X: x, Type: t}
+func Assert(x, typ Expr) *TypeAssertExpr {
+	return &TypeAssertExpr{X: x, Type: typ}
 }
 
 // AssertType creates a TypeAssertExpr.
@@ -70,6 +110,27 @@ func Case(list []Expr, stmts ...Stmt) *CaseClause {
 	return &CaseClause{List: list, Body: stmts}
 }
 
+// Comments creates a CommentGroup from a sequence of comments.
+func Comments(comments ...string) *CommentGroup {
+	list := make([]Comment, 0, len(comments))
+	for _, c := range comments {
+		list = append(list, Comment{Token: *T(c)})
+	}
+	return &CommentGroup{List: list}
+}
+
+// BeforeGenDecl returns a copy of a GenDecl with Doc added.
+func (doc *CommentGroup) BeforeGenDecl(gd GenDecl) *GenDecl {
+	gd.Doc = doc
+	return &gd
+}
+
+// BeforeFuncDecl returns a copy of a FuncDecl with Doc added.
+func (doc *CommentGroup) BeforeFuncDecl(fd FuncDecl) *FuncDecl {
+	fd.Doc = doc
+	return &fd
+}
+
 // Const creates a `const` GenDecl.
 func Const(values ...ValueSpec) *GenDecl {
 	specs := make([]Spec, 0, len(values))
@@ -91,8 +152,8 @@ func ContinueTo(label string) *BranchStmt {
 }
 
 // Composite creates a CompositeLit.
-func Composite(t Expr, elts ...Expr) *CompositeLit {
-	return &CompositeLit{Type: t, Elts: elts}
+func Composite(typ Expr, elts ...Expr) *CompositeLit {
+	return &CompositeLit{Type: typ, Elts: elts}
 }
 
 // CopyChain copies an IfStmt and, recursively, n.Else if it is an IfStmt.
@@ -144,17 +205,107 @@ func Fallthrough() *BranchStmt {
 	return &BranchStmt{Tok: *T("fallthrough")}
 }
 
+// NewField creates a Field.
+func NewField(typ Expr, ids ...string) *Field {
+	return &Field{Names: Idents(ids...), Type: typ}
+}
+
 // Float creates a BasicLit for a float64.
 func Float(v float64) *BasicLit {
 	return &BasicLit{Token{Text: fmt.Sprintf("%#v", v)}}
 }
 
 // Func creates a FuncLit.
-func Func(params FieldList, results *FieldList, stmts ...Stmt) *FuncLit {
+func Func(params *FieldList, results *FieldList, stmts ...Stmt) *FuncLit {
 	return &FuncLit{
-		Type: FuncType{Params: params, Results: results},
+		Type: *NewFuncType(params, results),
 		Body: BlockStmt{List: stmts},
 	}
+}
+
+// NewFuncType create a FuncType.
+func NewFuncType(fieldLists ...*FieldList) *FuncType {
+	var params, results *FieldList
+	switch len(fieldLists) {
+	case 2:
+		results = fieldLists[1]
+		fallthrough
+	case 1:
+		params = fieldLists[0]
+	case 0:
+	default:
+		panic("Too many field lists")
+	}
+	if len(fieldLists) > 1 {
+	}
+
+	if params == nil {
+		params = &FieldList{
+			Opening: *T("("),
+			Closing: *T(")"),
+		}
+	} else {
+		paramsWithParens := *params
+		paramsWithParens.Opening = *T("(")
+		paramsWithParens.Closing = *T(")")
+		params = &paramsWithParens
+	}
+	if results != nil {
+		resultsWithParens := *results
+		resultsWithParens.Opening = *T("(")
+		resultsWithParens.Closing = *T(")")
+		results = &resultsWithParens
+	}
+
+	return &FuncType{Params: *params, Results: results}
+}
+
+// WordWrappedComment creates an automatically word-wrapped CommentGroup from a
+// string of text.
+func WordWrappedComment(s string) *CommentGroup {
+	lines := strings.Split(wordwrap.WrapString(s, 76), "\n")
+	list := make([]Comment, 0, len(lines))
+	for _, line := range lines {
+		list = append(list, Comment{Token: *T("// " + line)})
+	}
+	return &CommentGroup{List: list}
+}
+
+// WithDoc adds a doc string to FuncDecl, automatically wrapping long strings.
+func (fd FuncDecl) WithDoc(doc string) *FuncDecl {
+	return WordWrappedComment(fd.Name.Name.Text + " " + doc).BeforeFuncDecl(fd)
+}
+
+// WithDocf adds a formatted string to FuncDecl, automatically wrapping long
+// strings.
+func (fd FuncDecl) WithDocf(format string, a ...interface{}) *FuncDecl {
+	return fd.WithDoc(fmt.Sprintf(format, a...))
+}
+
+// WithDoc adds a doc string to GenDecl, automatically wrapping long strings.
+func (gd GenDecl) WithDoc(doc string) *GenDecl {
+	if len(gd.Specs) != 1 {
+		panic(errors.Errorf("WithDoc: GenDecl must have exactly one spec"))
+	}
+	var tname string
+	switch spec := gd.Specs[0].(type) {
+	case *TypeSpec:
+		tname = spec.Name.Name.Text
+	case *ValueSpec:
+		if len(spec.Names) != 1 {
+			panic(errors.Errorf("WithDoc: ValueSpec must have exactly one name"))
+		}
+		tname = spec.Names[0].Name.Text
+	default:
+		panic(errors.Errorf("WithDoc: spec must be TypeSpec or ImportSpec"))
+	}
+	return WordWrappedComment(tname + " " + doc).BeforeGenDecl(gd)
+}
+
+// WithDocf adds a formatted string to GenDecl, automatically wrapping long
+// strings.
+func (gd GenDecl) WithDocf(format string, a ...interface{}) *GenDecl {
+	return gd.WithDoc(fmt.Sprintf(format, a...))
 }
 
 // Goto creates a `goto label` BranchStmt.
@@ -238,6 +389,11 @@ func Int(v int) *BasicLit {
 	return &BasicLit{Token{Text: fmt.Sprintf("%#v", v)}}
 }
 
+// Interface creates an InterfaceType.
+func Interface(fields ...Field) *InterfaceType {
+	return &InterfaceType{Methods: FieldList{List: fields}}
+}
+
 // KV creates a KeyValueExpr
 func KV(key, value Expr) *KeyValueExpr {
 	return &KeyValueExpr{Key: key, Value: value}
@@ -246,6 +402,32 @@ func KV(key, value Expr) *KeyValueExpr {
 // Map creates a MapType.
 func Map(key, value Expr) *MapType {
 	return &MapType{Key: key, Value: value}
+}
+
+// Method creates a method FuncDecl.
+func Method(recvName string, recv Expr, name string, ft FuncType, stmts ...Stmt) *FuncDecl {
+	recvArgs := []string{}
+	if recvName != "" {
+		recvArgs = append(recvArgs, recvName)
+	}
+	return &FuncDecl{
+		Recv: ParenFields(*NewField(recv, recvArgs...)),
+		Name: *I(name),
+		Type: ft,
+		Body: Block(stmts...),
+	}
+}
+
+// WithParams creates a copy of FuncType with Params containing fields.
+func (ft FuncType) WithParams(fields ...Field) *FuncType {
+	ft.Params = *ParenFields(fields...)
+	return &ft
+}
+
+// WithResults creates a copy of FuncType with Result containing fields.
+func (ft FuncType) WithResults(fields ...Field) *FuncType {
+	ft.Results = ParenFields(fields...)
+	return &ft
 }
 
 // Nil creates a `nil` Ident.
@@ -339,6 +521,22 @@ func Switch(init Expr, body ...Stmt) *SwitchStmt {
 // T creates a Token.
 func T(text string) *Token {
 	return &Token{Text: text}
+}
+
+// TypeDecl creates a "type" GenDecl.
+func TypeDecl(specs ...Spec) *GenDecl {
+	return &GenDecl{
+		Tok:   *T("type"),
+		Specs: specs,
+	}
+}
+
+// NewTypeSpec create a TypeSpec.
+func NewTypeSpec(name string, typ Expr) *TypeSpec {
+	return &TypeSpec{
+		Name: *I(name),
+		Type: typ,
+	}
 }
 
 // Types creates a `type` GenDecl.

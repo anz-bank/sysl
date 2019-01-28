@@ -317,7 +317,7 @@ func TestDeferStmt(t *testing.T) {
 		}(x, y)`,
 		Defer(
 			Func(
-				*ParenFields(Field{Names: Idents("a", "b"), Type: I("int")}),
+				ParenFields(Field{Names: Idents("a", "b"), Type: I("int")}),
 				nil,
 				&ExprStmt{
 					X: Call(Dot(I("log"), "Infof"), String("(%d, %d)"), I("a"), I("b"))},
@@ -508,7 +508,7 @@ func TestFuncLit(t *testing.T) {
 		Composite(
 			&ArrayType{Elt: &InterfaceType{}},
 			Func(
-				*ParenFields(Field{Names: Idents("a", "b"), Type: I("int")}),
+				ParenFields(Field{Names: Idents("a", "b"), Type: I("int")}),
 				nil,
 				&ExprStmt{
 					X: Call(Dot(I("log"), "Infof"),

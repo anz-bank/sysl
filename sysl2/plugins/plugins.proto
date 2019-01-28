@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package plugins;
+
+option go_package = "github.com/anz-bank/sysl/sysl2/plugins";
+
+import "github.com/anz-bank/sysl/src/proto/sysl.proto";
+
+service CodeGenerator {
+    rpc GenerateCode(GenerateCodeRequest) returns (GenerateCodeResponse);
+}
+
+message GenerateCodeRequest {
+    string generator_name = 3;
+    string parameter = 1;
+    sysl.Module module = 2;
+}
+
+message GenerateCodeResponse {
+    // Error message if code generator failed. The Plugin should exit with zero
+    // status code. Don't use this field to report problems with sysl itself
+    // (e.g., failure to parse GenerateCodeRequest). Write an error message to
+    // stderr and return a non-zero exit code instead.
+    string error = 1;
+
+    repeated OutputFile output_file = 2;
+
+    message OutputFile {
+        // Relative to the output directory, without '..' path elements.
+        string filename = 1;
+        string contents = 2;
+    }
+}

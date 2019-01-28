@@ -1,0 +1,32 @@
+Backend1:
+    /txs/{crn<:string}:
+        GET:
+            return <: set of TxModel.Tx
+
+Backend2:
+    FetchTrans(custid<:string):
+        return <: set of TxModel.Tx
+
+TxModel:
+    !type Tx:
+        txid  <: int64
+        from  <: string
+        to    <: string
+        amt   <: decimal
+        when  <: datetime
+        descr <: string
+
+TransactionService:
+    /transactions/{crn<:string}:
+        GET:
+            Backend1 <- GET /tx
+            Backend2 <- FetchTrans
+            return <: set of Transaction
+
+    !type Transaction:
+        txid  <: int64
+        from  <: string
+        to    <: string
+        amt   <: decimal
+        when  <: datetime
+        descr <: string

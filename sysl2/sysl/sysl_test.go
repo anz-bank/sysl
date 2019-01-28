@@ -186,11 +186,11 @@ func testMain2(t *testing.T, golden string, args ...string) {
 }
 
 func TestMain2TextPB(t *testing.T) {
-	testMain2(t, "tests/args.sysl.golden.textpb", "tests/args.sysl")
+	testMain2(t, "tests/args.sysl.golden.textpb", "textpb", "tests/args.sysl")
 }
 
 func TestMain2JSON(t *testing.T) {
-	testMain2(t, "tests/args.sysl.golden.json", "-mode", "json", "tests/args.sysl")
+	testMain2(t, "tests/args.sysl.golden.json", "json", "tests/args.sysl")
 }
 
 func testMain2Stdout(t *testing.T, golden string, args ...string) {
@@ -210,11 +210,11 @@ func testMain2Stdout(t *testing.T, golden string, args ...string) {
 }
 
 func TestMain2TextPBStdout(t *testing.T) {
-	testMain2Stdout(t, "tests/args.sysl.golden.textpb", "tests/args.sysl")
+	testMain2Stdout(t, "tests/args.sysl.golden.textpb", "textpb", "tests/args.sysl")
 }
 
 func TestMain2JSONStdout(t *testing.T) {
-	testMain2Stdout(t, "tests/args.sysl.golden.json", "-mode", "json", "tests/args.sysl")
+	testMain2Stdout(t, "tests/args.sysl.golden.json", "json", "tests/args.sysl")
 }
 
 func TestMain2BadMode(t *testing.T) {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 )
 
 func (e exit) Error() string {
@@ -19,40 +18,43 @@ func main3(stdout, stderr io.Writer, args []string) error {
 
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
 	output := flags.String("o", "", "output file name")
-	mode := flags.String("mode", "textpb", "output mode")
+	debugPlugin := flags.Bool("dbgplugin", false, "debug plugin")
 
 	flags.Parse(args[1:])
-
-	switch *mode {
-	case "", "textpb", "json":
-	default:
-		return fmt.Errorf("Invalid -mode %#v", *mode)
-	}
-
-	filename := flags.Arg(0)
+	generate := flags.Arg(0)
+	filename := flags.Arg(1)
 
 	fmt.Fprintf(stderr, "Args: %v\n", flags.Args())
 	fmt.Fprintf(stderr, "Root: %s\n", *root)
+	fmt.Fprintf(stderr, "Generator: %s\n", generate)
 	fmt.Fprintf(stderr, "Module: %s\n", filename)
-	fmt.Fprintf(stderr, "Mode: %s\n", *mode)
-	format := strings.ToLower(*output)
-	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
 	fmt.Fprintf(stderr, "%s\n", filename)
-	mod, err := Parse(filename, *root)
+	module, err := Parse(filename, *root)
 	if err != nil {
 		return err
 	}
-	if mod != nil {
-		if toJSON {
-			if *output == "-" {
-				return FJSONPB(stdout, mod)
+	if module != nil {
+		switch generate {
+		case "json":
+			outfile, err := fileOrStdout(*output, stdout)
+			if err != nil {
+				return err
 			}
-			return JSONPB(mod, *output)
+			return FJSONPB(outfile, module)
+		case "textpb":
+			outfile, err := fileOrStdout(*output, stdout)
+			if err != nil {
+				return err
+			}
+			return FTextPB(outfile, module)
+		default:
+			openOutfile := func() (io.Writer, error) {
+				return fileOrStdout(*output, stdout)
+			}
+			if err := runPlugin(generate, openOutfile, module, *debugPlugin); err != nil {
+				return err
+			}
 		}
-		if *output == "-" {
-			return FTextPB(stdout, mod)
-		}
-		return TextPB(mod, *output)
 	}
 	return nil
 }
