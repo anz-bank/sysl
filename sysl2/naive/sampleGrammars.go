@@ -88,7 +88,7 @@ func makeEBNF() *sysl.Grammar {
 	semiColon := makeRegexpTerm("[;]")
 	openParen := makeRegexpTerm("[(]")
 	closeParen := makeRegexpTerm("[)]")
-	STRING := makeRegexpTerm(`['][^']*[']`)
+	STRING := makeRegexpTerm(`["][^"]*["]`)
 
 	tokenName := makeRegexpTerm("[A-Z][0-9A-Z_]*")
 	lowercaseName := makeRegexpTerm("[a-z][0-9a-zA-Z_]*")

@@ -1,10 +1,10 @@
 package parser
 
 import (
-	"fmt"
-	"strings"
+	"encoding/json"
 
 	"github.com/anz-bank/sysl/sysl2/proto"
+	"github.com/sirupsen/logrus"
 )
 
 func makeStringAtom(str string) *sysl.Atom {
@@ -57,7 +57,10 @@ func makeAtom(term interface{}) *sysl.Atom {
 	switch atomType {
 	case 0:
 		tokText := symbolTerm(atom[0]).tok.text
-		tokText = strings.Trim(tokText, `'`)
+		var val string
+		if json.Unmarshal([]byte(tokText), &val) == nil {
+			tokText = val
+		}
 		a = makeStringAtom(tokText)
 	case 2:
 		a = makeRuleNameAtom(symbolTerm(atom[0]).tok.text)
@@ -128,7 +131,6 @@ func buildChoice(choice []interface{}) *sysl.Choice {
 }
 
 func buildRule(ast interface{}) *sysl.Rule {
-	fmt.Printf("buildRule: %T\n", ast)
 	_, rule := ruleSeq(ast, "rule")
 	_, lhs := ruleSeq(rule[0], "lhs")
 	ruleName, _ := makeRule(symbolTerm(lhs[0]).tok.text)
@@ -176,7 +178,7 @@ func ParseEBNF(ebnfText string, name string, start string) *sysl.Grammar {
 
 	result, tree := p.parseGrammar(&actual)
 	if !result {
-		fmt.Printf("unable to parse text=\n%s\n", ebnfText)
+		logrus.Printf("unable to parse text=\n%s\n", ebnfText)
 		return nil
 	}
 	return buildGrammar(name, start, tree)
