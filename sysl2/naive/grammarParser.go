@@ -1,11 +1,11 @@
 package parser
 
 import (
-	"fmt"
 	"math"
 	"sort"
 
 	sysl "github.com/anz-bank/sysl/sysl2/proto"
+	"github.com/sirupsen/logrus"
 )
 
 type parser struct {
@@ -111,7 +111,7 @@ func GetMinMaxCount(t *sysl.Term) (int, int) {
 
 func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, []interface{}) {
 	if input == len(*(p.tokens)) {
-		fmt.Println("got input length zero!!!")
+		logrus.Println("got input length zero!!!")
 	}
 	result := false
 	tree := make([]interface{}, 0)
@@ -123,7 +123,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 		for index, t := range tok.Term {
 			if t == nil {
 				// nil == epsilon
-				fmt.Println("matched nil")
+				logrus.Println("matched nil")
 				result = true
 				continue
 			}
@@ -144,13 +144,13 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 					matchedTerm = parseResult[0]
 				case *sysl.Atom_Rulename:
 					nt := t.GetAtom().GetRulename()
-					fmt.Printf("checking %s (%v)\n", nt.Name, singleTerm)
+					logrus.Printf("checking %s (%v)\n", nt.Name, singleTerm)
 					var parseResult []interface{}
 					res, remaining, parseResult = p.parse(g, input, g.Rules[nt.Name])
 					matchedTerm = parseResult[0]
 				default: //Atom_String_ and Atom_Regexp
 					if input == len(*p.tokens) {
-						fmt.Printf("input is empty\n")
+						logrus.Printf("input is empty\n")
 						res = false
 					} else {
 						term := t.GetAtom().Id
@@ -164,7 +164,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 					matchCount++
 					input = remaining
 					subTree = append(subTree, matchedTerm)
-					fmt.Printf("%d >> matched: %d  -- len(subtree=%d)\n", index, matchCount, len(subTree))
+					logrus.Printf("%d >> matched: %d  -- len(subtree=%d)\n", index, matchCount, len(subTree))
 				} else {
 					if matchCount < minCount {
 						return false, EOF, nil
@@ -183,31 +183,31 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 				tree = append(tree, subTree)
 			}
 		}
-		fmt.Println("out of loop")
+		logrus.Println("out of loop")
 		result = true
 		return result, input, tree
 	case *sysl.Rule:
 		r := val.(*sysl.Rule)
-		fmt.Println("got " + r.GetName().Name)
+		logrus.Println("got " + r.GetName().Name)
 		res, remaining, subTree := p.parse(g, input, r.Choices)
 		if res {
-			fmt.Printf("matched rulename (%s)\n", r.GetName().Name)
-			fmt.Printf("got choice (%T)\n", subTree[0])
+			logrus.Printf("matched rulename (%s)\n", r.GetName().Name)
+			logrus.Printf("got choice (%T)\n", subTree[0])
 			rule := make(map[string]map[int][]interface{})
 			rule[r.GetName().Name] = subTree[0].(map[int][]interface{})
 			tree = append(tree, rule)
 			return true, remaining, tree
 		}
-		fmt.Println("did not match " + r.GetName().Name)
+		logrus.Println("did not match " + r.GetName().Name)
 		tree = append(tree, nil)
 	case *sysl.Choice:
 		c := val.(*sysl.Choice)
-		fmt.Printf("choices count : (%d)\n", len(c.Sequence))
+		logrus.Printf("choices count : (%d)\n", len(c.Sequence))
 		for i, alt := range c.Sequence {
-			fmt.Printf("trying choice (%d)\n", i)
+			logrus.Printf("trying choice (%d)\n", i)
 			res, remaining, subTree := p.parse(g, input, alt)
 			if res {
-				fmt.Printf("matched choice :(%d)\n", i)
+				logrus.Printf("matched choice :(%d)\n", i)
 				choice := make(map[int][]interface{})
 				choice[i] = subTree
 				tree = append(tree, choice)
