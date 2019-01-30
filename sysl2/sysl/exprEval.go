@@ -98,7 +98,8 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			// HACK: scopevar == '.', then we are not unpacking the map entries
 			scopeVar := x.Transform.Scopevar
 			if argValue.GetMap() != nil && scopeVar != "." {
-				listResult := MakeValueList()
+				// TODO: add check that return type is defined as 'set of ...'
+				listResult := MakeValueSet()
 				// Sort keys, to get stable output
 				var keys []string
 				for key := range argValue.GetMap().Items {
@@ -113,7 +114,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 					addItemToValueMap(a.GetMap(), "value", item)
 					(*assign)[scopeVar] = a
 					res := evalTransformStmts(txApp, assign, x.Transform)
-					listResult.GetList().Value = append(listResult.GetList().Value, res)
+					listResult.GetSet().Value = append(listResult.GetSet().Value, res)
 				}
 				delete(*assign, scopeVar)
 				return listResult

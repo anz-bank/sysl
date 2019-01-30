@@ -21,7 +21,7 @@ TransformApp:
       out = {"lhs"} + {"rhs"}
     )
 
-  !view Getters(t <: app.Type) -> memberFunction:
+  !view Getters(t <: app.Type) -> set of memberFunction:
     t -> (t:
       access = "public"
       returnType = t.value.type

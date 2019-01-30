@@ -73,14 +73,14 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	assert.True(t, m.GetList().Value[1].GetMap().Items["importPath"].GetS() == "package2", "import unexpected value")
 
 	m = out.GetMap().Items["definition"]
-	assert.True(t, len(m.GetList().Value) == 2, "definition length is incorrect")
-	assert.True(t, m.GetList().Value[0].GetMap().Items["className"].GetS() == "RequestImpl", "Request unexpected value")
-	assert.True(t, m.GetList().Value[1].GetMap().Items["className"].GetS() == "ResponseImpl", "Response unexpected value")
+	assert.True(t, len(m.GetSet().Value) == 2, "definition length is incorrect")
+	assert.True(t, m.GetSet().Value[0].GetMap().Items["className"].GetS() == "RequestImpl", "Request unexpected value")
+	assert.True(t, m.GetSet().Value[1].GetMap().Items["className"].GetS() == "ResponseImpl", "Response unexpected value")
 
-	classBody := m.GetList().Value[0].GetMap().Items["classBody"]
-	assert.True(t, len(classBody.GetList().Value) == 2, "classBody unexpected value")
+	classBody := m.GetSet().Value[0].GetMap().Items["classBody"]
+	assert.True(t, len(classBody.GetSet().Value) == 2, "classBody unexpected value")
 
-	requestId := classBody.GetList().Value[0].GetMap().Items
+	requestId := classBody.GetSet().Value[0].GetMap().Items
 	assert.True(t, len(requestId) == 3, "requestId unexpected count")
 	assert.True(t, requestId["access"].GetS() == "public", "access unexpected typename")
 	assert.True(t, requestId["returnType"].GetS() == "primitive", "returnType unexpected typename")
