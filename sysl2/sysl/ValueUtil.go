@@ -58,6 +58,17 @@ func MakeValueSet() *sysl.Value {
 	}
 }
 
+// IsCollectionType does obj holds multiple instances of the same thing?
+func IsCollectionType(obj *sysl.Value) bool {
+	switch obj.Value.(type) {
+	case *sysl.Value_List_:
+		return true
+	case *sysl.Value_Set:
+		return true
+	}
+	return false
+}
+
 func addItemToValueMap(m *sysl.Value_Map, name string, val *sysl.Value) {
 	m.Items[name] = val
 }
