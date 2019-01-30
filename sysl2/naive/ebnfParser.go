@@ -64,6 +64,17 @@ func makeAtom(term interface{}) *sysl.Atom {
 		a = makeStringAtom(tokText)
 	case 2:
 		a = makeRuleNameAtom(symbolTerm(atom[0]).tok.text)
+	case 3: // '(' choice ')'
+		choice := atom[1]
+		c, r := ruleSeq(choice, "choice")
+		if c != 0 {
+			panic("unexpected index for rule choice")
+		}
+		a = &sysl.Atom{
+			Union: &sysl.Atom_Choices{
+				Choices: buildChoice(r),
+			},
+		}
 	default:
 		panic("not implemented yet.")
 	}
