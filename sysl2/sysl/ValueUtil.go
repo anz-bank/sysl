@@ -73,6 +73,12 @@ func addItemToValueMap(m *sysl.Value_Map, name string, val *sysl.Value) {
 	m.Items[name] = val
 }
 
+func appendListToValueList(m *sysl.Value_List, val *sysl.Value_List) {
+	for _, v := range val.Value {
+		appendItemToValueList(m, v)
+	}
+}
+
 func appendItemToValueList(m *sysl.Value_List, val *sysl.Value) {
 	m.Value = append(m.Value, val)
 }

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 
 	"github.com/anz-bank/sysl/src/proto"
+	"github.com/sirupsen/logrus"
 )
 
 func evalPrimitiveI(op sysl.Expr_BinExpr_Op, lhs int64, rhs int64) *sysl.Value {
@@ -31,6 +31,20 @@ func evalPrimitiveS(op sysl.Expr_BinExpr_Op, lhs string, rhs string) *sysl.Value
 		panic("binary ops on strings not supported!")
 	}
 	return MakeValueString(result)
+}
+
+func evalSets(op sysl.Expr_BinExpr_Op, lhs *sysl.Value_List, rhs *sysl.Value_List) *sysl.Value {
+	switch op {
+	case sysl.Expr_BinExpr_ADD:
+		// TODO: add checks for uniqueness
+		res := MakeValueSet()
+		appendListToValueList(res.GetSet(), lhs)
+		appendListToValueList(res.GetSet(), rhs)
+		return res
+	default:
+		logrus.Warningln("binary ops on sets not supported!")
+	}
+	return nil
 }
 
 func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr_Transform) *sysl.Value {
@@ -70,7 +84,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 		arg := x.Transform.Arg
 		if arg.GetName() == "." {
 			// TODO: return error
-			fmt.Printf("Expr Arg is empty\n")
+			logrus.Println("Expr Arg is empty")
 			return nil
 		}
 		argValue := Eval(txApp, assign, arg)
@@ -122,13 +136,18 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			{
 				return evalPrimitiveS(x.Binexpr.Op, lhs_v.GetS(), rhs_v.GetS())
 			}
+		case *sysl.Value_Set:
+			return evalSets(x.Binexpr.Op, lhs_v.GetSet(), rhs_v.GetSet())
+		default:
+			logrus.Warnf("Skipping: Binary Op: %d for lhs(%T), rhs(%T)", x.Binexpr.Op, lhs_v.Value, rhs_v.Value)
+			return nil
 		}
 	case *sysl.Expr_Call_:
 		if callTransform, has := txApp.Views[x.Call.Func]; has {
 
 			params := callTransform.Param
 			if len(params) != len(x.Call.Arg) {
-				fmt.Printf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n", x.Call.Func, len(x.Call.Arg), len(params))
+				logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n", x.Call.Func, len(x.Call.Arg), len(params))
 				return nil
 			}
 			callScope := make(Scope)
@@ -142,8 +161,11 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 	case *sysl.Expr_Name:
 		return (*assign)[x.Name]
 	case *sysl.Expr_GetAttr_:
+		logrus.Printf("Evaluating x: %v:\n", x)
 		arg := Eval(txApp, assign, x.GetAttr.Arg)
-		return arg.GetMap().Items[x.GetAttr.Attr]
+		val := arg.GetMap().Items[x.GetAttr.Attr]
+		logrus.Printf("result: %v: ", val)
+		return val
 	case *sysl.Expr_Literal:
 		return x.Literal
 	case *sysl.Expr_Set:
@@ -157,7 +179,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			return setResult
 		}
 	default:
-		fmt.Printf("Skipping Expr of type %T\n", x)
+		logrus.Warnf("Skipping Expr of type %T\n", x)
 	}
 	return nil
 }

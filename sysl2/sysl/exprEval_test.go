@@ -41,6 +41,20 @@ func TestEvalIntegerAdd(t *testing.T) {
 	assert.True(t, out.GetMap().Items["out2"].GetMap().Items["out3"].GetI() == 6, "unexpected value")
 }
 
+func TestEvalAddSet(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+	assert.True(t, mod != nil, "Module not loaded")
+	txApp := mod.Apps["TransformApp"]
+
+	assert.True(t, txApp.Views["addSet"] != nil, "View not loaded")
+	assert.True(t, len(txApp.Views["addSet"].Param) == 1, "Params not correct")
+	s := make(Scope)
+	s.AddInt("lhs", 1)
+	out := Eval(txApp, &s, txApp.Views["addSet"].Expr)
+	assert.True(t, len(out.GetMap().Items["out"].GetSet().Value) == 2, "unexpected value")
+	// assert.True(t, out.GetMap().Items["out2"].GetMap().Items["out3"].GetI() == 6, "unexpected value")
+}
+
 func TestEvalGetAppAttributes(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 

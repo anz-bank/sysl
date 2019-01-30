@@ -16,6 +16,11 @@ TransformApp:
       )
     )
 
+  !view addSet(lhs <: string) -> set of string:
+    lhs -> (:
+      out = {"lhs"} + {"rhs"}
+    )
+
   !view Getters(t <: app.Type) -> memberFunction:
     t -> (t:
       access = "public"
@@ -23,7 +28,7 @@ TransformApp:
       methodName = "get" + t.key
     )
 
-  !view classDef(types <: app.Types) -> classDef [~file]:
+  !view classDef(types <: app.Types) -> classDef:
     types -> (t:
       className = t.key + "Impl"
       classBody = Getters(t.value.fields)
