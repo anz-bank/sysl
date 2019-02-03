@@ -144,7 +144,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 					matchedTerm = parseResult[0]
 				case *sysl.Atom_Rulename:
 					nt := t.GetAtom().GetRulename()
-					logrus.Printf("checking %s (%v)\n", nt.Name, singleTerm)
+					logrus.Printf("checking Rule %s (singleTerm: %v)\n", nt.Name, singleTerm)
 					var parseResult []interface{}
 					res, remaining, parseResult = p.parse(g, input, g.Rules[nt.Name])
 					matchedTerm = parseResult[0]
@@ -164,7 +164,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 					matchCount++
 					input = remaining
 					subTree = append(subTree, matchedTerm)
-					logrus.Printf("%d >> matched: %d  -- len(subtree=%d)\n", index, matchCount, len(subTree))
+					logrus.Printf("%d >> matched (%v): %d  -- len(subtree=%d)\n", index, matchedTerm, matchCount, len(subTree))
 				} else {
 					if matchCount < minCount {
 						return false, EOF, nil
@@ -188,7 +188,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 		return result, input, tree
 	case *sysl.Rule:
 		r := val.(*sysl.Rule)
-		logrus.Println("got " + r.GetName().Name)
+		logrus.Println("Entering Rule " + r.GetName().Name)
 		res, remaining, subTree := p.parse(g, input, r.Choices)
 		if res {
 			logrus.Printf("matched rulename (%s)\n", r.GetName().Name)

@@ -2,6 +2,7 @@ package parser
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/anz-bank/sysl/sysl2/proto"
 	"github.com/sirupsen/logrus"
@@ -55,16 +56,17 @@ func makeAtom(term interface{}) *sysl.Atom {
 	atomType, atom := ruleSeq(term, "atom")
 
 	switch atomType {
-	case 0:
+	case 0: // STRING
 		tokText := symbolTerm(atom[0]).tok.text
+		tokText = strings.Replace(tokText, `'`, `"`, 2)
 		var val string
 		if json.Unmarshal([]byte(tokText), &val) == nil {
 			tokText = val
 		}
 		a = makeStringAtom(tokText)
-	case 2:
+	case 1: // lowercaseName
 		a = makeRuleNameAtom(symbolTerm(atom[0]).tok.text)
-	case 3: // '(' choice ')'
+	case 2: // '(' choice ')'
 		choice := atom[1]
 		c, r := ruleSeq(choice, "choice")
 		if c != 0 {
@@ -122,21 +124,19 @@ func buildSequence(s0 []interface{}) *sysl.Sequence {
 
 func buildChoice(choice []interface{}) *sysl.Choice {
 	choiceS := make([]*sysl.Sequence, 0)
+	var s0 []interface{}
+	_, s0 = ruleSeq(choice[0], "seq")
 
-	for option, seq := range choice {
-		var s0 []interface{}
-		if option > 0 {
-			t := seq.([]interface{})[0]
-			if t == nil {
-				break
+	choiceS = append(choiceS, buildSequence(s0))
+	if len(choice) > 1 {
+		x := choice[1].([]interface{})
+		if x[0] != nil {
+			for _, seq := range x {
+				tt := seq.(map[int][]interface{})
+				_, s0 = ruleSeq(tt[0][1], "seq")
+				choiceS = append(choiceS, buildSequence(s0))
 			}
-			tt := t.(map[int][]interface{})[0]
-
-			_, s0 = ruleSeq(tt[1], "seq")
-		} else {
-			_, s0 = ruleSeq(seq, "seq")
 		}
-		choiceS = append(choiceS, buildSequence(s0))
 	}
 	return &sysl.Choice{Sequence: choiceS}
 }

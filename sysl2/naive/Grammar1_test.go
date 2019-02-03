@@ -251,23 +251,23 @@ func TestFirstSet2(t *testing.T) {
 
 func TestEBNF1(t *testing.T) {
 	text := `expr : INT | ID | expr;`
-	tokens := []int{2, 9, 1, 5, 1, 5, 2, 10, -1}
+	tokens := []int{1, 8, 1, 4, 1, 4, 1, 9, -1}
 
-	testParser(makeEBNF(), 11, tokens, text, true, t)
+	testParser(makeEBNF(), 10, tokens, text, true, t)
 }
 
 func TestEBNF2(t *testing.T) {
 	text := `expr : INT*;`
-	tokens := []int{2, 9, 1, 6, 10, -1}
+	tokens := []int{1, 8, 1, 5, 9, -1}
 
-	testParser(makeEBNF(), 11, tokens, text, true, t)
+	testParser(makeEBNF(), 10, tokens, text, true, t)
 }
 
 func TestBuildEBNFGrammar(t *testing.T) {
 	// Both grammars are equivalent
 	grammars := []string{
-		`s : "d" | "c" s ; `,
-		`s : "c"* "d" ; `,
+		`s : 'd' | 'c' s ; `,
+		`s : 'c'* 'd' ; `,
 	}
 	text := "ccd"
 	tokens := [][]int{
@@ -292,8 +292,8 @@ func TestBuildEBNFGrammar(t *testing.T) {
 
 func TestBuildEBNFGrammar2(t *testing.T) {
 	text := `
-        s : "b" "a" "b" | "b" a;
-        a : "d" | "c" a;
+        s : 'b' 'a' 'b' | 'b' a;
+        a : 'd' | 'c' a;
         `
 	g := ParseEBNF(text, "obj", "s")
 	if len(g.Rules) != 2 {
@@ -316,8 +316,8 @@ func TestBuildEBNFGrammar2(t *testing.T) {
 
 func TestBuildEBNFGrammar3(t *testing.T) {
 	text := `
-        s : a ("," a)*;
-        a : "d";
+        s : a (',' a)*;
+        a : 'd';
         `
 	g := ParseEBNF(text, "obj", "s")
 	if len(g.Rules) != 2 {
@@ -334,6 +334,30 @@ func TestBuildEBNFGrammar3(t *testing.T) {
 
 	choiceActual, s := ruleSeq(ast[0], "s")
 	if 0 != choiceActual && len(s) != 2 {
+		t.Errorf("parse returned incorrect ast for text=(%s)", text)
+	}
+}
+
+func TestBuildEBNFGrammar4(t *testing.T) {
+	text := `
+          s: a a a;
+          a: 'a' | 'b' | 'c' | 'd';
+        `
+	g := ParseEBNF(text, "obj", "s")
+	if len(g.Rules) != 2 {
+		t.Errorf("incorrect number of rules")
+	}
+	text = "bad"
+	tokens := []int{1, 0, 3, -1}
+
+	result, ast := testParser(g, 4, tokens, text, true, t)
+
+	if !result {
+		t.Errorf("unable to parse text=(%s)", text)
+	}
+
+	choiceActual, s := ruleSeq(ast[0], "s")
+	if 0 != choiceActual && len(s) != 3 {
 		t.Errorf("parse returned incorrect ast for text=(%s)", text)
 	}
 }

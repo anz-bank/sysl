@@ -88,10 +88,9 @@ func makeEBNF() *sysl.Grammar {
 	semiColon := makeRegexpTerm("[;]")
 	openParen := makeRegexpTerm("[(]")
 	closeParen := makeRegexpTerm("[)]")
-	STRING := makeRegexpTerm(`["][^"]*["]`)
+	STRING := makeRegexpTerm(`['][^']*[']`)
 
-	tokenName := makeRegexpTerm("[A-Z][0-9A-Z_]*")
-	lowercaseName := makeRegexpTerm("[a-z][0-9a-zA-Z_]*")
+	ruleNameRef := makeRegexpTerm("[a-zA-Z][0-9a-zA-Z_]*")
 
 	lhsName, lhsTerm := makeRule("lhs")
 	rhsName, rhsTerm := makeRule("rhs")
@@ -144,7 +143,7 @@ func makeEBNF() *sysl.Grammar {
 				Name: lhsName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
-						makeSequence(lowercaseName),
+						makeSequence(ruleNameRef),
 					},
 				},
 			},
@@ -185,8 +184,7 @@ func makeEBNF() *sysl.Grammar {
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
 						makeSequence(STRING),
-						makeSequence(tokenName),
-						makeSequence(lowercaseName),
+						makeSequence(ruleNameRef),
 						makeSequence(openParen, choiceTerm, closeParen),
 					},
 				},
