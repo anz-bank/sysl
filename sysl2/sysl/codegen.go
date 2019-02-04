@@ -21,6 +21,10 @@ type codeGenOutput struct {
 	output   Node
 }
 
+func init() {
+	logrus.SetLevel(logrus.WarnLevel)
+}
+
 func getKeyFromValueMap(v *sysl.Value, key string) *sysl.Value {
 	if m := v.GetMap(); m != nil {
 		return m.Items[key]
@@ -306,7 +310,6 @@ func DoGenerateCode(stdout, stderr io.Writer, flags *flag.FlagSet, args []string
 	logrus.Warnf("transform: %s\n", *transform)
 	logrus.Warnf("grammar: %s\n", *grammar)
 	logrus.Warnf("start: %s\n", *start)
-	logrus.SetLevel(logrus.WarnLevel)
 	output := GenerateCode(*root_model, *model, *root_transform, *transform, *grammar, *start)
 	outputToFiles(*outDir, output)
 	return 0
