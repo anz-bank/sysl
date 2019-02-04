@@ -634,7 +634,7 @@ func main3(stdout, stderr io.Writer, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
 
 	switch filepath.Base(args[0]) {
-	case "gen":
+	case "syslgen":
 		DoGenerateCode(stdout, stderr, flags, args)
 		return nil
 	}
