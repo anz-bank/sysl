@@ -344,6 +344,7 @@ func infer_expr_type(mod *sysl.Module,
 					assign := stmt.GetAssign()
 					aexpr := assign.Expr
 					if aexpr.GetTransform() == nil {
+						fmt.Printf("%s: %v\n", assign.Name, aexpr)
 						panic("expression should be of type transform")
 					}
 					ftype := aexpr.Type
@@ -632,6 +633,11 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 func main3(stdout, stderr io.Writer, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
 
+	switch filepath.Base(args[0]) {
+	case "gen":
+		DoGenerateCode(stdout, stderr, flags, args)
+		return nil
+	}
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
 	output := flags.String("o", "", "output file name")
 	mode := flags.String("mode", "textpb", "output mode")

@@ -7,56 +7,20 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func evalPrimitiveI(op sysl.Expr_BinExpr_Op, lhs int64, rhs int64) *sysl.Value {
-	var result int64
-	switch op {
-	case sysl.Expr_BinExpr_ADD:
-		result = lhs + rhs
-	case sysl.Expr_BinExpr_SUB:
-		result = lhs - rhs
-	case sysl.Expr_BinExpr_MUL:
-		result = lhs * rhs
-	case sysl.Expr_BinExpr_DIV:
-		result = lhs / rhs
-	}
-	return MakeValueI64(result)
-}
-
-func evalPrimitiveS(op sysl.Expr_BinExpr_Op, lhs string, rhs string) *sysl.Value {
-	var result string
-	switch op {
-	case sysl.Expr_BinExpr_ADD:
-		result = lhs + rhs
-	default:
-		panic("binary ops on strings not supported!")
-	}
-	return MakeValueString(result)
-}
-
-func evalSets(op sysl.Expr_BinExpr_Op, lhs *sysl.Value_List, rhs *sysl.Value_List) *sysl.Value {
-	switch op {
-	case sysl.Expr_BinExpr_ADD:
-		// TODO: add checks for uniqueness
-		res := MakeValueSet()
-		appendListToValueList(res.GetSet(), lhs)
-		appendListToValueList(res.GetSet(), rhs)
-		return res
-	default:
-		logrus.Warningln("binary ops on sets not supported!")
-	}
-	return nil
-}
-
 func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr_Transform) *sysl.Value {
-	local := make(Scope)
 	result := MakeValueMap()
 
 	for _, s := range tform.Stmt {
 		switch ss := s.Stmt.(type) {
 		case *sysl.Expr_Transform_Stmt_Let:
-			local[ss.Let.Name] = Eval(txApp, assign, ss.Let.Expr)
+			res := Eval(txApp, assign, ss.Let.Expr)
+			(*assign)[ss.Let.Name] = res
+			logrus.Printf("Eval %s: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
-			addItemToValueMap(result.GetMap(), ss.Assign.Name, Eval(txApp, assign, ss.Assign.Expr))
+			logrus.Printf("Eval %s:\n", ss.Assign.Name)
+			res := Eval(txApp, assign, ss.Assign.Expr)
+			logrus.Printf("Eval %s ==\n\t\t %v:\n", ss.Assign.Name, res)
+			addItemToValueMap(result.GetMap(), ss.Assign.Name, res)
 			// case *sysl.Expr_Transform_Stmt_Inject:
 		}
 	}
@@ -73,6 +37,7 @@ func evalTransformUsingValueList(txApp *sysl.Application, x *sysl.Expr_Transform
 		listResult.GetList().Value = append(listResult.GetList().Value, res)
 	}
 	delete(*assign, scopeVar)
+	logrus.Printf("Transform Result (As List/Set): %v", listResult)
 	return listResult
 }
 
@@ -81,6 +46,8 @@ func evalTransformUsingValueList(txApp *sysl.Application, x *sysl.Expr_Transform
 func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 	switch x := e.Expr.(type) {
 	case *sysl.Expr_Transform_:
+		logrus.Printf("Evaluating Transform:\tRet Type: %v\n", e.Type)
+		logrus.Println("Evaluating Transform")
 		arg := x.Transform.Arg
 		if arg.GetName() == "." {
 			// TODO: return error
@@ -91,8 +58,10 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 
 		switch argValue.Value.(type) {
 		case *sysl.Value_Set:
+			logrus.Printf("Evaluation Argvalue as a set: %d times\n", len(argValue.GetSet().Value))
 			return evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetSet().Value)
 		case *sysl.Value_List_:
+			logrus.Printf("Evaluation Argvalue as a list: %d times\n", len(argValue.GetList().Value))
 			return evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetList().Value)
 		default:
 			// HACK: scopevar == '.', then we are not unpacking the map entries
@@ -110,6 +79,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 				for _, key := range keys {
 					item := items[key]
 					a := MakeValueMap()
+					logrus.Printf("Evaluation Argvalue as a map: key=(%s), value=(%v)\n", key, item)
 					addItemToValueMap(a.GetMap(), "key", MakeValueString(key))
 					addItemToValueMap(a.GetMap(), "value", item)
 					(*assign)[scopeVar] = a
@@ -118,34 +88,23 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 				}
 				delete(*assign, scopeVar)
 				return listResult
+			} else {
+				logrus.Printf("Argvalue: %v", argValue)
 			}
 
 			(*assign)[scopeVar] = argValue
 			res := evalTransformStmts(txApp, assign, x.Transform)
 			delete(*assign, scopeVar)
+			logrus.Printf("Transform Result: %v", res)
 			return res
 		}
 	case *sysl.Expr_Binexpr:
 		lhs_v := Eval(txApp, assign, x.Binexpr.Lhs)
 		rhs_v := Eval(txApp, assign, x.Binexpr.Rhs)
-		switch lhs_v.Value.(type) {
-		case *sysl.Value_I:
-			{
-				return evalPrimitiveI(x.Binexpr.Op, lhs_v.GetI(), rhs_v.GetI())
-			}
-		case *sysl.Value_S:
-			{
-				return evalPrimitiveS(x.Binexpr.Op, lhs_v.GetS(), rhs_v.GetS())
-			}
-		case *sysl.Value_Set:
-			return evalSets(x.Binexpr.Op, lhs_v.GetSet(), rhs_v.GetSet())
-		default:
-			logrus.Warnf("Skipping: Binary Op: %d for lhs(%T), rhs(%T)", x.Binexpr.Op, lhs_v.Value, rhs_v.Value)
-			return nil
-		}
+		return evalBinExpr(x.Binexpr.Op, lhs_v, rhs_v)
 	case *sysl.Expr_Call_:
 		if callTransform, has := txApp.Views[x.Call.Func]; has {
-
+			logrus.Printf("Calling %s\n", x.Call.Func)
 			params := callTransform.Param
 			if len(params) != len(x.Call.Arg) {
 				logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n", x.Call.Func, len(x.Call.Arg), len(params))
@@ -158,15 +117,23 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 				callScope[params[i].Name] = Eval(txApp, assign, argExpr)
 			}
 			return Eval(txApp, &callScope, callTransform.Expr)
+		} else {
+			// TODO: see if the func is in strings package
 		}
 	case *sysl.Expr_Name:
 		return (*assign)[x.Name]
 	case *sysl.Expr_GetAttr_:
 		logrus.Printf("Evaluating x: %v:\n", x)
 		arg := Eval(txApp, assign, x.GetAttr.Arg)
-		val := arg.GetMap().Items[x.GetAttr.Attr]
-		logrus.Printf("result: %v: ", val)
+		val, has := arg.GetMap().Items[x.GetAttr.Attr]
+		logrus.Printf("GetAttribute: %v result: %v: ", has, val)
 		return val
+	case *sysl.Expr_Ifelse:
+		cond := Eval(txApp, assign, x.Ifelse.Cond)
+		if cond.GetB() {
+			return Eval(txApp, assign, x.Ifelse.IfTrue)
+		}
+		return Eval(txApp, assign, x.Ifelse.IfFalse)
 	case *sysl.Expr_Literal:
 		return x.Literal
 	case *sysl.Expr_Set:

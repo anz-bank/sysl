@@ -6,6 +6,11 @@ Model [package="com.example.gen"]:
   !type Response:
     code <: int
     message <: string
+    names <: sequence of string
+
+  !union Message:
+    Request
+    Response
 
 TransformApp:
   !view add(lhs <: int, rhs <: int) -> int:
@@ -18,14 +23,34 @@ TransformApp:
 
   !view addSet(lhs <: string) -> set of string:
     lhs -> (:
-      out = {"lhs"} + {"rhs"}
+      out = {"lhs"} | {"rhs"}
     )
 
-  !view Getters(t <: app.Type) -> set of memberFunction:
-    t -> (t:
+  !view IsKeyword(word <: string) -> bool:
+    word -> (:
+      out = word in {"break", "default","func","interface","select","case","defer"}
+    )
+
+  # t is map
+  !view JavaType(t <: sysl.Type) -> string:
+    t -> (:
+      out = if t.type ==:
+        "primitive" => if t.primitive ==:
+          "INT" => "int"
+          "BOOL" => "Boolean"
+          "DECIMAL" => "BigDecimal"
+          "STRING" => "String"
+          "STRING_8" => "String"
+        "sequence" => "List<" + JavaType(t.sequence).out + ">"
+        else t.type_ref
+    )
+
+  !view Getters(fields <: set of app.Type) -> set of memberFunction:
+    fields -> (field:
       access = "public"
-      returnType = t.value.type
-      methodName = "get" + t.key
+      let IsPtr = if field.value.optional == false then "*" else ""
+      returnType = IsPtr + JavaType(field.value).out
+      methodName = "get" + field.key
     )
 
   !view classDef(types <: app.Types) -> classDef:

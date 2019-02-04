@@ -8,7 +8,7 @@ import (
 )
 
 func TestGenerateCode(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
 	root := output[0].output
 	assert.True(t, len(output) == 1, "unexpected length of output")
 	assert.True(t, len(root) == 1, "unexpected length of root")
@@ -46,7 +46,7 @@ func TestGenerateCode(t *testing.T) {
 }
 
 func TestGenerateCodeNoComment(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", "tests/test.gen_no_comment.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl", "tests/test.gen.g", "javaFile")
 	assert.True(t, len(output) == 1, "unexpected length of output")
 
 	root := output[0].output
@@ -75,19 +75,19 @@ func TestGenerateCodeNoComment(t *testing.T) {
 }
 
 func TestGenerateCodeNoPackage(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", "tests/test.gen_no_package.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl", "tests/test.gen.g", "javaFile")
 	root := output[0].output
 	assert.True(t, root == nil, "unexpected length of root")
 }
 
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", "tests/test.gen_multiple_annotations.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl", "tests/test.gen.g", "javaFile")
 	root := output[0].output
 	assert.True(t, root == nil, "unexpected length of root")
 }
 
 func TestGenerateCodePerType(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", "tests/multiple_file.gen.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl", "tests/test.gen.g", "javaFile")
 	assert.True(t, len(output) == 1, "unexpected length of output")
 	assert.True(t, output[0].filename == "Request.java", "unexpected length of output")
 
@@ -108,7 +108,7 @@ func TestGenerateCodePerType(t *testing.T) {
 }
 
 func TestSerialize(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
 	out := new(bytes.Buffer)
 	Serialize(out, " ", output[0].output)
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
