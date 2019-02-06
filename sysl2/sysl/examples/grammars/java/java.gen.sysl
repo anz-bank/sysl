@@ -39,7 +39,7 @@ CodeGenTransform:
       access = "public"
       returnType = "void"
       methodName = "set" + field.key
-      methodArgs = field.key -> <methodArgs> (:
+      methodArgs = {field.key} -> <methodArgs> (:
         argPair = field.key -> <argPair> (:
           datatype = JavaType(field.value).out
           fieldName = field.key
