@@ -48,8 +48,7 @@ func (b *builder) handleChoice(choice *sysl.Choice) {
 				b.handleChoice(t.GetAtom().GetChoices())
 			}
 			if str != "" {
-				id, has := b.tokens[str]
-				if !has {
+				if id, has := b.tokens[str]; !has {
 					b.tokens[str] = int32(len(b.arr))
 					t.Atom.Id = int32(len(b.arr))
 					b.arr = append(b.arr, str)
@@ -91,8 +90,9 @@ func makeParser(g *sysl.Grammar, text string) *parser {
 	}
 }
 
-// GetMinMaxCount for the term's quantifier
-func GetMinMaxCount(t *sysl.Term) (int, int) {
+// GetTermMinMaxCount returns acceptable min and max counts
+// by looking at term's quantifier
+func GetTermMinMaxCount(t *sysl.Term) (int, int) {
 	if t.Quantifier == nil {
 		return 1, 1
 	}
@@ -114,20 +114,18 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 		logrus.Println("got input length zero!!!")
 	}
 	result := false
-	tree := make([]interface{}, 0)
+	tree := []interface{}{}
 
 	switch val.(type) {
 	case *sysl.Sequence:
-		tok := val.(*sysl.Sequence)
-
-		for index, t := range tok.Term {
+		for index, t := range val.(*sysl.Sequence).Term {
 			if t == nil {
-				// nil == epsilon
+				// nil => epsilon, see makeEXPR()
 				logrus.Println("matched nil")
 				result = true
 				continue
 			}
-			minCount, maxCount := GetMinMaxCount(t)
+			minCount, maxCount := GetTermMinMaxCount(t)
 			matchCount := 0
 			res := false
 			subTree := make([]interface{}, 0)
@@ -136,26 +134,23 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 			for matchCount < maxCount {
 				var remaining int
 				var matchedTerm interface{}
-				switch t.Atom.Union.(type) {
+				switch x := t.Atom.Union.(type) {
 				case *sysl.Atom_Choices:
-					choice := t.GetAtom().GetChoices()
 					var parseResult []interface{}
-					res, remaining, parseResult = p.parse(g, input, choice)
+					res, remaining, parseResult = p.parse(g, input, x.Choices)
 					matchedTerm = parseResult[0]
 				case *sysl.Atom_Rulename:
-					nt := t.GetAtom().GetRulename()
-					logrus.Printf("checking Rule %s (singleTerm: %v)\n", nt.Name, singleTerm)
+					logrus.Printf("checking Rule %s (singleTerm: %v)\n", x.Rulename.Name, singleTerm)
 					var parseResult []interface{}
-					res, remaining, parseResult = p.parse(g, input, g.Rules[nt.Name])
+					res, remaining, parseResult = p.parse(g, input, g.Rules[x.Rulename.Name])
 					matchedTerm = parseResult[0]
 				default: //Atom_String_ and Atom_Regexp
 					if input == len(*p.tokens) {
 						logrus.Printf("input is empty\n")
 						res = false
 					} else {
-						term := t.GetAtom().Id
 						in := (*p.tokens)[input]
-						res = int(term) == in.id
+						res = int(t.GetAtom().Id) == in.id
 						remaining = input + 1
 						matchedTerm = symbol{in, t}
 					}
@@ -184,8 +179,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 			}
 		}
 		logrus.Println("out of loop")
-		result = true
-		return result, input, tree
+		return true, input, tree
 	case *sysl.Rule:
 		r := val.(*sysl.Rule)
 		logrus.Println("Entering Rule " + r.GetName().Name)
@@ -193,10 +187,10 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 		if res {
 			logrus.Printf("matched rulename (%s)\n", r.GetName().Name)
 			logrus.Printf("got choice (%T)\n", subTree[0])
-			rule := make(map[string]map[int][]interface{})
-			rule[r.GetName().Name] = subTree[0].(map[int][]interface{})
-			tree = append(tree, rule)
-			return true, remaining, tree
+			rule := map[string]map[int][]interface{}{
+				r.GetName().Name: subTree[0].(map[int][]interface{}),
+			}
+			return true, remaining, append(tree, rule)
 		}
 		logrus.Println("did not match " + r.GetName().Name)
 		tree = append(tree, nil)
@@ -208,10 +202,8 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 			res, remaining, subTree := p.parse(g, input, alt)
 			if res {
 				logrus.Printf("matched choice :(%d)\n", i)
-				choice := make(map[int][]interface{})
-				choice[i] = subTree
-				tree = append(tree, choice)
-				return true, remaining, tree
+				choice := map[int][]interface{}{i: subTree}
+				return true, remaining, append(tree, choice)
 			}
 		}
 		result = false
@@ -220,10 +212,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 	return result, input, tree
 }
 
-// parseGrammar returns true if the grammar consumes the whole string
-// g - grammar to use
-// text - to parse
-// Start rule
+// parseGrammar returns (true, ast) if the grammar consumes the whole string
 func (p *parser) parseGrammar(arr *[]token) (bool, []interface{}) {
 	p.tokens = arr
 	result, out, tree := p.parse(p.g, 0, p.g.Rules[p.g.Start])
@@ -247,23 +236,16 @@ func setFromTerm(first map[string]*intSet, t *sysl.Term) *intSet {
 }
 
 func hasEpsilon(t *sysl.Term, first map[string]*intSet) bool {
-	has := false
 	switch t.Atom.Union.(type) {
-	// case *sysl.Atom_Choices:
-	// firstChoice = gset.firstSetChoice(t.GetAtom().GetChoices())
 	case *sysl.Atom_Rulename:
-		has = setFromTerm(first, t).has(EPSILON)
-	default: //Atom_String_ and Atom_Regexp
-		has = false
+		return setFromTerm(first, t).has(EPSILON)
 	}
-	return has
+	return false
 }
 
 func isNonTerminal(t *sysl.Term) bool {
 	switch t.Atom.Union.(type) {
-	case *sysl.Atom_Choices:
-		return true
-	case *sysl.Atom_Rulename:
+	case *sysl.Atom_Choices, *sysl.Atom_Rulename:
 		return true
 	}
 	return false
@@ -274,10 +256,8 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 	follow := make(map[string]*intSet)
 
 	for key := range g.Rules {
-		s1 := make(intSet)
-		s2 := make(intSet)
-		first[key] = &s1
-		follow[key] = &s2
+		first[key] = &intSet{}
+		follow[key] = &intSet{}
 	}
 
 	// Follow Set Rule 1
@@ -287,8 +267,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 	// check for epsilon
 	for ruleName, rule := range g.Rules {
 		for _, seq := range rule.Choices.Sequence {
-			t := seq.Term[0]
-			if t == nil {
+			if seq.Term[0] == nil {
 				first[ruleName].add(EPSILON)
 			}
 		}
@@ -304,8 +283,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 					if t == nil {
 						continue
 					}
-					hasEpsilon := hasEpsilon(t, first)
-					if hasEpsilon == false {
+					if hasEpsilon(t, first) == false {
 						updated = first[ruleName].union(setFromTerm(first, t)) || updated
 						break
 					} else {

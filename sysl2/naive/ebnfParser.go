@@ -27,23 +27,21 @@ func makeRuleNameAtom(ruleName string) *sysl.Atom {
 }
 
 func makeQuantifier(item interface{}) *sysl.Quantifier {
-	var q *sysl.Quantifier
 	qs := item.([]interface{})
-	_, quantifier := ruleSeq(qs[0], "quantifier")
 
-	if quantifier != nil {
+	if _, quantifier := ruleSeq(qs[0], "quantifier"); quantifier != nil {
 		switch symbolTerm(quantifier[0]).tok.text {
 		case "*":
-			q = makeQuantifierZeroPlus()
+			return makeQuantifierZeroPlus()
 		case "+":
-			q = makeQuantifierOnePlus()
+			return makeQuantifierOnePlus()
 		case "?":
-			q = makeQuantifierOptional()
+			return makeQuantifierOptional()
 		default:
 			panic("not implemented yet.")
 		}
 	}
-	return q
+	return nil
 }
 
 func makeTerm(a *sysl.Atom, q *sysl.Quantifier) *sysl.Term {
@@ -51,8 +49,6 @@ func makeTerm(a *sysl.Atom, q *sysl.Quantifier) *sysl.Term {
 }
 
 func makeAtom(term interface{}) *sysl.Atom {
-	var a *sysl.Atom
-
 	atomType, atom := ruleSeq(term, "atom")
 
 	switch atomType {
@@ -63,16 +59,16 @@ func makeAtom(term interface{}) *sysl.Atom {
 		if json.Unmarshal([]byte(tokText), &val) == nil {
 			tokText = val
 		}
-		a = makeStringAtom(tokText)
+		return makeStringAtom(tokText)
 	case 1: // lowercaseName
-		a = makeRuleNameAtom(symbolTerm(atom[0]).tok.text)
+		return makeRuleNameAtom(symbolTerm(atom[0]).tok.text)
 	case 2: // '(' choice ')'
-		choice := atom[1]
-		c, r := ruleSeq(choice, "choice")
+		c, r := ruleSeq(atom[1], "choice")
 		if c != 0 {
+			logrus.Errorf("unexpected index for choice: %d", c)
 			panic("unexpected index for rule choice")
 		}
-		a = &sysl.Atom{
+		return &sysl.Atom{
 			Union: &sysl.Atom_Choices{
 				Choices: buildChoice(r),
 			},
@@ -80,7 +76,6 @@ func makeAtom(term interface{}) *sysl.Atom {
 	default:
 		panic("not implemented yet.")
 	}
-	return a
 }
 
 func symbolTerm(item interface{}) symbol {
@@ -100,16 +95,14 @@ func getChoice(choice map[int][]interface{}) (int, []interface{}) {
 
 // ruleSeq returns Rule.Choice.Sequence
 func ruleSeq(item interface{}, rulename string) (int, []interface{}) {
-	rule, ok := item.(map[string]map[int][]interface{})
-
-	if ok {
+	if rule, ok := item.(map[string]map[int][]interface{}); ok {
 		return getChoice(rule[rulename])
 	}
 	return -1, nil
 }
 
 func buildSequence(s0 []interface{}) *sysl.Sequence {
-	terms := make([]*sysl.Term, 0)
+	terms := []*sysl.Term{}
 
 	if s0 != nil {
 		for _, term := range s0[0].([]interface{}) {
@@ -123,11 +116,8 @@ func buildSequence(s0 []interface{}) *sysl.Sequence {
 }
 
 func buildChoice(choice []interface{}) *sysl.Choice {
-	choiceS := make([]*sysl.Sequence, 0)
-	var s0 []interface{}
-	_, s0 = ruleSeq(choice[0], "seq")
-
-	choiceS = append(choiceS, buildSequence(s0))
+	_, s0 := ruleSeq(choice[0], "seq")
+	choiceS := []*sysl.Sequence{buildSequence(s0)}
 	if len(choice) > 1 {
 		x := choice[1].([]interface{})
 		if x[0] != nil {
@@ -160,24 +150,24 @@ func buildRule(ast interface{}) *sysl.Rule {
 // term := atom quantifier?
 // atom := STRING | ruleName | '(' choice  ')'
 func buildGrammar(name string, start string, ast []interface{}) *sysl.Grammar {
-	g := sysl.Grammar{
-		Name:  name,
-		Start: start,
-		Rules: make(map[string]*sysl.Rule),
-	}
 	_, grammar := ruleSeq(ast[0], "grammar")
-
+	rules := map[string]*sysl.Rule{}
 	for _, r := range grammar[0].([]interface{}) {
 		rule := buildRule(r)
-		g.Rules[rule.GetName().Name] = rule
+		rules[rule.GetName().Name] = rule
 	}
-	return &g
+
+	return &sysl.Grammar{
+		Name:  name,
+		Start: start,
+		Rules: rules,
+	}
 }
 
 // ParseEBNF Parses and build the EBNF grammar
 func ParseEBNF(ebnfText string, name string, start string) *sysl.Grammar {
 	p := makeParser(makeEBNF(), ebnfText)
-	actual := make([]token, 0)
+	actual := []token{}
 
 	for {
 		tok := p.l.nextToken()
@@ -188,9 +178,9 @@ func ParseEBNF(ebnfText string, name string, start string) *sysl.Grammar {
 	}
 
 	result, tree := p.parseGrammar(&actual)
-	if !result {
-		logrus.Printf("unable to parse text=\n%s\n", ebnfText)
-		return nil
+	if result {
+		return buildGrammar(name, start, tree)
 	}
-	return buildGrammar(name, start, tree)
+	logrus.Printf("unable to parse text=\n%s\n", ebnfText)
+	return nil
 }

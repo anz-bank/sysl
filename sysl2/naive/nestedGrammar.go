@@ -28,8 +28,8 @@ type nestedParser struct {
 
 func makeNestedGrammarParser(text string, grammars ...*sysl.Grammar) *nestedParser {
 	nested := nestedParser{
-		stack:    make(parserStack, 0),
-		grammars: make(map[string]*parser),
+		stack:    parserStack{},
+		grammars: map[string]*parser{},
 		nested:   makeParser(makeNestedGrammar(), text),
 	}
 

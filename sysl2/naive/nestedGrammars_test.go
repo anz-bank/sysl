@@ -1,15 +1,16 @@
 package parser
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/sirupsen/logrus"
 )
 
 func TestNestedGrammar(t *testing.T) {
 	text := `{ 123, {EXPR: 1 + 2 * 3 :} }`
 
 	nested := makeNestedGrammarParser(text, makeRepeatSeq(makeQuantifierOptional()), makeEXPR())
-	actual := make([]token, 0)
+	actual := []token{}
 
 	nested.stack.push(nested.grammars["array"])
 
@@ -25,11 +26,11 @@ func TestNestedGrammar(t *testing.T) {
 		} else {
 			switch tok.id {
 			case 0:
-				fmt.Printf("%s\n", tok.text)
+				logrus.Println("%s", tok.text)
 				nested.pushGrammar(tok.text)
 				tok.id = PUSH_GRAMMAR
 			case 1:
-				fmt.Printf("%s\n", tok.text)
+				logrus.Println("%s", tok.text)
 				nested.popGrammar()
 				tok.id = POP_GRAMMAR
 			}
@@ -38,5 +39,5 @@ func TestNestedGrammar(t *testing.T) {
 		}
 		actual = append(actual, tok)
 	}
-	fmt.Print(actual)
+	logrus.Println(actual)
 }
