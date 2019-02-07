@@ -49,14 +49,14 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 			case *ebnfGrammar.Atom_Rulename:
 				var ruleResult interface{}
 
-				minc, maxc := parser.GetMinMaxCount(term)
+				minc, maxc := parser.GetTermMinMaxCount(term)
 				v := getKeyFromValueMap(obj, x.Rulename.Name)
 
 				// raise error if required
 				//  i.e.  no quantifier or +
 				//        and missing from obj map
 				if minc > 0 && v == nil {
-					logrus.Printf("required key ( %s ) not present in the map", x.Rulename.Name)
+					logrus.Warnf("required key ( %s ) not present in the map", x.Rulename.Name)
 					fullScan = false
 					break
 				}
@@ -65,7 +65,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 				//    quantifier == * or ?
 				//    and does not exist in obj map
 				if minc == 0 && v == nil {
-					logrus.Printf("Skipping: Optional key ( %s ) not present in the map", x.Rulename.Name)
+					logrus.Warnf("Skipping: Optional key ( %s ) not present in the map", x.Rulename.Name)
 					continue
 				}
 
@@ -79,7 +79,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 					case *sysl.Value_Set:
 						valueList = vv.Set.Value
 					default:
-						logrus.Printf("Expecting a collection type, got %T for rule %s", vv, x.Rulename.Name)
+						logrus.Warnf("Expecting a collection type, got %T for rule %s", vv, x.Rulename.Name)
 						fullScan = false
 						break
 					}
@@ -94,7 +94,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 						node := processRule(g, valueItem, x.Rulename.Name)
 						// Check post-conditions
 						if len(node) == 0 {
-							logrus.Printf("could not process rule: ( %s )", x.Rulename.Name)
+							logrus.Warnf("could not process rule: ( %s )", x.Rulename.Name)
 							fullScan = false
 							break
 						}
@@ -107,12 +107,12 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 					// Drill down the rule
 					logrus.Printf("Executing Rule %s for 1 time only", x.Rulename.Name)
 					if v.GetList() != nil || v.GetSet() != nil {
-						logrus.Printf("Got List or Set instead of map")
+						logrus.Warnf("Got List or Set instead of map")
 					}
 					node := processRule(g, v, x.Rulename.Name)
 					// Check post-conditions
 					if len(node) == 0 {
-						logrus.Printf("could not process rule: ( %s )", x.Rulename.Name)
+						logrus.Warnf("could not process rule: ( %s )", x.Rulename.Name)
 						fullScan = false
 						break
 					}
@@ -127,7 +127,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 				// minc, maxc := parser.GetMinMaxCount(term)
 				node := processChoice(g, obj, x.Choices)
 				if len(node) == 0 {
-					logrus.Printf("could not process Choice")
+					logrus.Warnf("could not process Choice\n")
 					fullScan = false
 					break
 				}
@@ -170,7 +170,7 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 	}
 	root := processChoice(g, obj, rule.Choices)
 	if root == nil {
-		logrus.Printf("could not process rule: ( %s )", ruleName)
+		logrus.Warnf("could not process rule: ( %s )", ruleName)
 	}
 	logrus.Printf("Processed rule: ( %s ), len(%d)", ruleName, len(root))
 	return root
