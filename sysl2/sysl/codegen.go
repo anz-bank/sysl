@@ -178,7 +178,11 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 }
 
 func readGrammar(filename, grammarName, startRule string) *ebnfGrammar.Grammar {
-	dat, _ := ioutil.ReadFile(filename)
+	dat, err := ioutil.ReadFile(filename)
+	if err != nil {
+		logrus.Errorf("Unable to open grammar file: %s\nGot Error: %s", filename, err.Error())
+		return nil
+	}
 	return parser.ParseEBNF(string(dat), grammarName, startRule)
 }
 
@@ -230,11 +234,10 @@ func Serialize(w io.Writer, delim string, node Node) {
 
 // return the one and only app defined in the module
 func getDefaultAppName(mod *sysl.Module) string {
-	var apps []string
 	for app := range mod.Apps {
-		apps = append(apps, app)
+		return app
 	}
-	return apps[0]
+	return ""
 }
 
 func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
@@ -257,7 +260,7 @@ func GenerateCode(root_model, model, root_transform, transform, grammar, start s
 	tx, transformAppName := loadAndGetDefaultApp(root_transform, transform)
 	g := readGrammar(grammar, "gen", start)
 	if g == nil {
-		panic("unable to parse grammar")
+		return nil
 	}
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {
