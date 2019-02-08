@@ -8,69 +8,69 @@ import (
 
 func TestScopeAddApp(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
-	s := make(Scope)
+	s := Scope{}
 	appName := "Model"
 	s.AddApp("app", mod.Apps[appName])
 	app := s["app"].GetMap().Items
-	assert.True(t, app["name"].GetS() == "Model", "unexpected app name")
+	assert.Equal(t, appName, app["name"].GetS(), "unexpected app name")
 	types := app["types"].GetMap().Items
-	assert.True(t, len(types) == 2, "unexpected types count")
+	assert.Equal(t, 2, len(types), "unexpected types count")
 	typeRequest := types["Request"].GetMap().Items
-	assert.True(t, len(typeRequest) == 4, "unexpected type attribute count")
-	assert.True(t, typeRequest["type"].GetS() == "tuple", "unexpected typename")
+	assert.Equal(t, 4, len(typeRequest), "unexpected type attribute count")
+	assert.Equal(t, "tuple", typeRequest["type"].GetS(), "unexpected typename")
 	fields := typeRequest["fields"].GetMap().Items
-	assert.True(t, len(fields) == 2, "unexpected field count")
+	assert.Equal(t, 2, len(fields), "unexpected field count")
 	idField := fields["id"].GetMap().Items
-	assert.True(t, len(idField) == 5, "unexpected id Field count")
-	assert.True(t, idField["type"].GetS() == "primitive", "unexpected id field type")
-	assert.True(t, idField["primitive"].GetS() == "INT", "unexpected id field type name")
+	assert.Equal(t, 5, len(idField), "unexpected id Field count")
+	assert.Equal(t, "primitive", idField["type"].GetS(), "unexpected id field type")
+	assert.Equal(t, "INT", idField["primitive"].GetS(), "unexpected id field type name")
 
 	union := app["union"].GetMap().Items
 	unionMessage := union["Message"].GetMap().Items
-	assert.True(t, unionMessage["type"].GetS() == "union", "unexpected id Field count")
-	assert.True(t, len(unionMessage["fields"].GetSet().Value) == 2, "unexpected id Field count")
-	assert.True(t, unionMessage["fields"].GetSet().Value[0].GetS() == "Request", "unexpected id Field count")
-	assert.True(t, unionMessage["fields"].GetSet().Value[1].GetS() == "Response", "unexpected id Field count")
+	assert.Equal(t, "union", unionMessage["type"].GetS(), "unexpected id Field count")
+	assert.Equal(t, 2, len(unionMessage["fields"].GetSet().Value), "unexpected id Field count")
+	assert.Equal(t, "Request", unionMessage["fields"].GetSet().Value[0].GetS(), "unexpected id Field count")
+	assert.Equal(t, "Response", unionMessage["fields"].GetSet().Value[1].GetS(), "unexpected id Field count")
 }
 
 func TestEvalIntegerAdd(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
-	assert.True(t, mod != nil, "Module not loaded")
+	assert.NotNil(t, mod, "Module not loaded")
 	txApp := mod.Apps["TransformApp"]
 
-	assert.True(t, txApp.Views["add"] != nil, "View not loaded")
-	assert.True(t, len(txApp.Views["add"].Param) == 2, "Params not correct")
-	s := make(Scope)
+	assert.NotNil(t, txApp.Views["add"], "View not loaded")
+	assert.Equal(t, 2, len(txApp.Views["add"].Param), "Params not correct")
+	s := Scope{}
 	s.AddInt("lhs", 1)
 	s.AddInt("rhs", 1)
 	out := Eval(txApp, &s, txApp.Views["add"].Expr)
-	assert.True(t, out.GetMap().Items["out1"].GetI() == 2, "unexpected value")
-	assert.True(t, out.GetMap().Items["out2"].GetMap().Items["out3"].GetI() == 6, "unexpected value")
+	assert.Equal(t, int64(2), out.GetMap().Items["out1"].GetI(), "unexpected value")
+	assert.Equal(t, int64(6), out.GetMap().Items["out2"].GetMap().Items["out3"].GetI(), "unexpected value")
 }
 
 func TestEvalAddSet(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
-	assert.True(t, mod != nil, "Module not loaded")
+	assert.NotNil(t, mod, "Module not loaded")
 	txApp := mod.Apps["TransformApp"]
 	viewName := "addSet"
 
-	assert.True(t, txApp.Views[viewName] != nil, "View not loaded")
-	assert.True(t, len(txApp.Views[viewName].Param) == 1, "Params not correct")
-	s := make(Scope)
+	assert.NotNil(t, txApp.Views[viewName], "View not loaded")
+	assert.Equal(t, 1, len(txApp.Views[viewName].Param), "Params not correct")
+	s := Scope{}
 	s.AddInt("lhs", 1)
 	out := Eval(txApp, &s, txApp.Views[viewName].Expr)
-	assert.True(t, len(out.GetMap().Items["out"].GetSet().Value) == 2, "unexpected value")
+	assert.Equal(t, 2, len(out.GetMap().Items["out"].GetSet().Value), "unexpected value")
 }
 
 func TestEvalIsKeyword(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
-	assert.True(t, mod != nil, "Module not loaded")
+	assert.NotNil(t, mod, "Module not loaded")
 	txApp := mod.Apps["TransformApp"]
 	viewName := "IsKeyword"
 
-	assert.True(t, txApp.Views[viewName] != nil, "View not loaded")
-	assert.True(t, len(txApp.Views[viewName].Param) == 1, "Params not correct")
-	s := make(Scope)
+	assert.NotNil(t, txApp.Views[viewName], "View not loaded")
+	assert.Equal(t, 1, len(txApp.Views[viewName].Param), "Params not correct")
+	s := Scope{}
 	s.AddString("word", "defer")
 	out := Eval(txApp, &s, txApp.Views[viewName].Expr)
 	assert.True(t, out.GetMap().Items["out"].GetB(), "unexpected value")
@@ -78,55 +78,55 @@ func TestEvalIsKeyword(t *testing.T) {
 
 func TestEvalIfElseAlt(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
-	assert.True(t, mod != nil, "Module not loaded")
+	assert.NotNil(t, mod, "Module not loaded")
 	txApp := mod.Apps["TransformApp"]
 	viewName := "JavaType"
 
-	assert.True(t, txApp.Views[viewName] != nil, "View not loaded")
-	assert.True(t, len(txApp.Views[viewName].Param) == 1, "Params not correct")
-	s := make(Scope)
+	assert.NotNil(t, txApp.Views[viewName], "View not loaded")
+	assert.Equal(t, 1, len(txApp.Views[viewName].Param), "Params not correct")
+	s := Scope{}
 	appName := "Model"
 	s.AddApp("app", mod.Apps[appName])
 	s["t"] = s["app"].GetMap().Items["types"].GetMap().Items["Request"].GetMap().Items["fields"].GetMap().Items["payload"]
 	out := Eval(txApp, &s, txApp.Views[viewName].Expr)
-	assert.True(t, out.GetMap().Items["out"].GetS() == "String", "unexpected value")
+	assert.Equal(t, "String", out.GetMap().Items["out"].GetS(), "unexpected value")
 
 	s["t"] = s["app"].GetMap().Items["types"].GetMap().Items["Response"].GetMap().Items["fields"].GetMap().Items["names"]
 	out = Eval(txApp, &s, txApp.Views[viewName].Expr)
-	assert.True(t, out.GetMap().Items["out"].GetS() == "List<String>", "unexpected value")
+	assert.Equal(t, "List<String>", out.GetMap().Items["out"].GetS(), "unexpected value")
 }
 
 func TestEvalGetAppAttributes(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
-	s := make(Scope)
+	s := Scope{}
 	appName := "Model"
 	s.AddApp("app", mod.Apps[appName])
 	out := EvalView(mod, "TransformApp", "GetAppAttributes", &s)
-	assert.True(t, out.GetMap().Items["out"].GetS() == "com.example.gen", "unexpected value")
+	assert.Equal(t, "com.example.gen", out.GetMap().Items["out"].GetS(), "unexpected value")
 
 	m := out.GetMap().Items["package"]
-	assert.True(t, m.GetMap().Items["packageName"].GetS() == "com.example.gen", "packageName unexpected value")
+	assert.Equal(t, "com.example.gen", m.GetMap().Items["packageName"].GetS(), "packageName unexpected value")
 
 	m = out.GetMap().Items["import"]
-	assert.True(t, m.GetList().Value[0].GetMap().Items["importPath"].GetS() == "package1", "import unexpected value")
-	assert.True(t, m.GetList().Value[1].GetMap().Items["importPath"].GetS() == "package2", "import unexpected value")
+	assert.Equal(t, "package1", m.GetList().Value[0].GetMap().Items["importPath"].GetS(), "import unexpected value")
+	assert.Equal(t, "package2", m.GetList().Value[1].GetMap().Items["importPath"].GetS(), "import unexpected value")
 
 	m = out.GetMap().Items["definition"]
-	assert.True(t, len(m.GetSet().Value) == 2, "definition length is incorrect")
-	assert.True(t, m.GetSet().Value[0].GetMap().Items["className"].GetS() == "RequestImpl", "Request unexpected value")
-	assert.True(t, m.GetSet().Value[1].GetMap().Items["className"].GetS() == "ResponseImpl", "Response unexpected value")
+	assert.Equal(t, 2, len(m.GetSet().Value), "definition length is incorrect")
+	assert.Equal(t, "RequestImpl", m.GetSet().Value[0].GetMap().Items["className"].GetS(), "Request unexpected value")
+	assert.Equal(t, "ResponseImpl", m.GetSet().Value[1].GetMap().Items["className"].GetS(), "Response unexpected value")
 
 	classBody := m.GetSet().Value[0].GetMap().Items["classBody"]
-	assert.True(t, len(classBody.GetSet().Value) == 2, "classBody unexpected value")
+	assert.Equal(t, 2, len(classBody.GetSet().Value), "classBody unexpected value")
 
 	requestId := classBody.GetSet().Value[0].GetMap().Items
-	assert.True(t, len(requestId) == 3, "requestId unexpected count")
-	assert.True(t, requestId["access"].GetS() == "public", "access unexpected typename")
-	assert.True(t, requestId["returnType"].GetS() == "*int", "returnType unexpected typename")
-	assert.True(t, requestId["methodName"].GetS() == "getid", "returnType unexpected typename")
+	assert.Equal(t, 3, len(requestId), "requestId unexpected count")
+	assert.Equal(t, "public", requestId["access"].GetS(), "access unexpected typename")
+	assert.Equal(t, "*int", requestId["returnType"].GetS(), "returnType unexpected typename")
+	assert.Equal(t, "getid", requestId["methodName"].GetS(), "returnType unexpected typename")
 
 	responseId := classBody.GetSet().Value[1].GetMap().Items
-	assert.True(t, len(responseId) == 3, "requestId unexpected count")
+	assert.Equal(t, 3, len(responseId), "requestId unexpected count")
 
 }

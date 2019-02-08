@@ -37,7 +37,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 	logrus.Printf("Number of Choices: %d", len(choice.Sequence))
 
 	for i, seq := range choice.Sequence {
-		seqResult := make(Node, 0)
+		seqResult := Node{}
 		fullScan := true
 		logrus.Printf("Trying Choice: %d", i)
 		for _, term := range seq.Term {
@@ -83,7 +83,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 						fullScan = false
 						break
 					}
-					ruleInstances := make(Node, 0)
+					ruleInstances := Node{}
 					logrus.Printf("Executing Rule %s for %d times", x.Rulename.Name, len(valueList))
 
 					for i, valueItem := range valueList {
@@ -155,13 +155,13 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 	var str string
 	if x := obj.GetMap(); x != nil {
 		for key := range x.Items {
-			str = key + ", "
+			str += key + ", "
 		}
 	}
 	logrus.Printf("processRule: %s, obj keys (%s)", ruleName, str)
 	rule := g.Rules[ruleName]
 	if rule == nil {
-		root := make(Node, 0)
+		root := Node{}
 		if IsCollectionType(obj) {
 			return nil
 		}
@@ -171,8 +171,9 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 	root := processChoice(g, obj, rule.Choices)
 	if root == nil {
 		logrus.Warnf("could not process rule: ( %s )", ruleName)
+	} else {
+		logrus.Printf("Processed rule: ( %s ), len(%d)", ruleName, len(root))
 	}
-	logrus.Printf("Processed rule: ( %s ), len(%d)", ruleName, len(root))
 	return root
 }
 
@@ -189,7 +190,7 @@ func applyTranformToModel(modelName, transformAppName, viewName string, model, t
 		logrus.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
 		return nil
 	}
-	s := make(Scope)
+	s := Scope{}
 	s.AddApp("app", modelApp)
 	var result *sysl.Value
 	// assume args are
