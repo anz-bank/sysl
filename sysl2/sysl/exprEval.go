@@ -20,7 +20,7 @@ func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr
 			logrus.Printf("Eval %s:\n", ss.Assign.Name)
 			res := Eval(txApp, assign, ss.Assign.Expr)
 			logrus.Printf("Eval %s ==\n\t\t %v:\n", ss.Assign.Name, res)
-			addItemToValueMap(result.GetMap(), ss.Assign.Name, res)
+			addItemToValueMap(result, ss.Assign.Name, res)
 			// case *sysl.Expr_Transform_Stmt_Inject:
 		}
 	}
@@ -80,8 +80,8 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 					item := items[key]
 					a := MakeValueMap()
 					logrus.Printf("Evaluation Argvalue as a map: key=(%s), value=(%v)\n", key, item)
-					addItemToValueMap(a.GetMap(), "key", MakeValueString(key))
-					addItemToValueMap(a.GetMap(), "value", item)
+					addItemToValueMap(a, "key", MakeValueString(key))
+					addItemToValueMap(a, "value", item)
 					(*assign)[scopeVar] = a
 					res := evalTransformStmts(txApp, assign, x.Transform)
 					listResult.GetSet().Value = append(listResult.GetSet().Value, res)
