@@ -48,11 +48,11 @@ func TestEvalIntegerAdd(t *testing.T) {
 	assert.Equal(t, int64(6), out.GetMap().Items["out2"].GetMap().Items["out3"].GetI(), "unexpected value")
 }
 
-func TestEvalAddSet(t *testing.T) {
+func TestEvalUnionSet(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 	assert.NotNil(t, mod, "Module not loaded")
 	txApp := mod.Apps["TransformApp"]
-	viewName := "addSet"
+	viewName := "UnionSet"
 
 	assert.NotNil(t, txApp.Views[viewName], "View not loaded")
 	assert.Equal(t, 1, len(txApp.Views[viewName].Param), "Params not correct")

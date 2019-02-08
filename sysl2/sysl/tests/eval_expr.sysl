@@ -33,7 +33,7 @@ TransformApp:
       )
     )
 
-  !view addSet(lhs <: string) -> set of string:
+  !view UnionSet(lhs <: string) -> set of string:
     lhs -> (:
       out = {"lhs"} | {"rhs"}
     )
