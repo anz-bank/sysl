@@ -32,21 +32,19 @@ func TestGenerateCode(t *testing.T) {
 	assert.Equal(t, 3, len(package2), "unexpected length of package2")
 	assert.Equal(t, "com.example.gen", package2[1].(string), "unexpected length of package2")
 
-	comment := []string{"comment1", "comment2"}
-	for i := range comment {
+	for i, comment := range []string{"comment1", "comment2"} {
 		comment_0 := comment1[i].(Node)
 		assert.Equal(t, 1, len(comment_0), "unexpected length of comment2")
 		comment_0_0 := comment_0[0].(string)
-		assert.Equal(t, comment[i], comment_0_0, "unexpected length of comment_i")
+		assert.Equal(t, comment, comment_0_0, "unexpected length of comment_i")
 	}
 
-	imports := []string{"import1", "import2"}
-	for i := range imports {
+	for i, imports := range []string{"import1", "import2"} {
 		import_0 := import1[i].(Node)
 		assert.Equal(t, 1, len(import_0), "unexpected length of import2")
 		import_0_0 := import_0[0].(Node)
 		assert.Equal(t, 3, len(import_0_0), "unexpected length of import2")
-		assert.Equal(t, imports[i], import_0_0[1].(string), "unexpected length of import_i")
+		assert.Equal(t, imports, import_0_0[1].(string), "unexpected length of import_i")
 	}
 }
 
@@ -68,13 +66,12 @@ func TestGenerateCodeNoComment(t *testing.T) {
 	assert.Equal(t, 3, len(package2), "unexpected length of package2")
 	assert.Equal(t, "com.example.gen", package2[1].(string), "unexpected length of package2")
 
-	imports := []string{"import1", "import2"}
-	for i := range imports {
+	for i, imports := range []string{"import1", "import2"} {
 		import_0 := import1[i].(Node)
 		assert.Equal(t, 1, len(import_0), "unexpected length of import2")
 		import_0_0 := import_0[0].(Node)
 		assert.Equal(t, 3, len(import_0_0), "unexpected length of import2")
-		assert.Equal(t, imports[i], import_0_0[1].(string), "unexpected length of import_i")
+		assert.Equal(t, imports, import_0_0[1].(string), "unexpected length of import_i")
 	}
 }
 
@@ -117,4 +114,32 @@ func TestSerialize(t *testing.T) {
 	Serialize(out, " ", output[0].output)
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
 	assert.Equal(t, golden, out.String(), "unexpected value of out string")
+}
+
+func TestOutputForPureTokenOnlyRule(t *testing.T) {
+	g := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
+	obj := MakeValueMap()
+	m := MakeValueMap()
+	addItemToValueMap(m.GetMap(), "text", MakeValueString("hello"))
+	addItemToValueMap(obj.GetMap(), "header", MakeValueBool(true))
+	addItemToValueMap(obj.GetMap(), "tail", MakeValueBool(true))
+	addItemToValueMap(obj.GetMap(), "body", m)
+	output := processRule(g, obj, "pureToken")
+	assert.NotNil(t, output)
+
+	root := output[0].(Node)
+	assert.NotNil(t, root)
+	assert.Equal(t, 3, len(root))
+
+	header := root[0].(Node)
+	assert.Equal(t, 1, len(header))
+	assert.Equal(t, "head", header[0].(Node)[0].(string))
+
+	body := root[1].(Node)
+	assert.Equal(t, 1, len(body))
+	assert.Equal(t, "hello", body[0].(Node)[1].(string))
+
+	tail := root[2].(Node)
+	assert.Equal(t, 1, len(tail))
+	assert.Equal(t, "tail", tail[0].(Node)[0].(string))
 }
