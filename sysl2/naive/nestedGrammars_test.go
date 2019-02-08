@@ -26,11 +26,11 @@ func TestNestedGrammar(t *testing.T) {
 		} else {
 			switch tok.id {
 			case 0:
-				logrus.Println("%s", tok.text)
+				logrus.Println(tok.text)
 				nested.pushGrammar(tok.text)
 				tok.id = PUSH_GRAMMAR
 			case 1:
-				logrus.Println("%s", tok.text)
+				logrus.Println(tok.text)
 				nested.popGrammar()
 				tok.id = POP_GRAMMAR
 			}
