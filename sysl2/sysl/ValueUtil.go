@@ -4,10 +4,10 @@ import (
 	"github.com/anz-bank/sysl/src/proto"
 )
 
-// Scope ...
+// Scope holds the value of the variables during the execution of a transform
 type Scope map[string]*sysl.Value
 
-// MakeValueI64 ...
+// MakeValueBool returns sysl.Value of type Value_B (bool)
 func MakeValueBool(val bool) *sysl.Value {
 	return &sysl.Value{
 		Value: &sysl.Value_B{
@@ -16,7 +16,7 @@ func MakeValueBool(val bool) *sysl.Value {
 	}
 }
 
-// MakeValueI64 ...
+// MakeValueI64 returns sysl.Value of type Value_I (int64)
 func MakeValueI64(val int64) *sysl.Value {
 	return &sysl.Value{
 		Value: &sysl.Value_I{
@@ -25,7 +25,7 @@ func MakeValueI64(val int64) *sysl.Value {
 	}
 }
 
-// MakeValueString ...
+// MakeValueString returns sysl.Value of type Value_S (string)
 func MakeValueString(val string) *sysl.Value {
 	return &sysl.Value{
 		Value: &sysl.Value_S{
@@ -34,7 +34,7 @@ func MakeValueString(val string) *sysl.Value {
 	}
 }
 
-// MakeValueMap ...
+// MakeValueMap returns sysl.Value of type Value_Map_ (map[string]*sysl.Value)
 func MakeValueMap() *sysl.Value {
 	return &sysl.Value{
 		Value: &sysl.Value_Map_{
@@ -45,7 +45,7 @@ func MakeValueMap() *sysl.Value {
 	}
 }
 
-// MakeValueList ...
+// MakeValueList returns sysl.Value of type Value_List_ ([]*sysl.Value)
 func MakeValueList() *sysl.Value {
 	return &sysl.Value{
 		Value: &sysl.Value_List_{
@@ -56,7 +56,7 @@ func MakeValueList() *sysl.Value {
 	}
 }
 
-// MakeValueSet ...
+// MakeValueSet returns sysl.Value of type Value_Set ([]*sysl.Value)
 func MakeValueSet() *sysl.Value {
 	return &sysl.Value{
 		Value: &sysl.Value_Set{
@@ -70,9 +70,7 @@ func MakeValueSet() *sysl.Value {
 // IsCollectionType does obj holds multiple instances of the same thing?
 func IsCollectionType(obj *sysl.Value) bool {
 	switch obj.Value.(type) {
-	case *sysl.Value_List_:
-		return true
-	case *sysl.Value_Set:
+	case *sysl.Value_List_, *sysl.Value_Set:
 		return true
 	}
 	return false
