@@ -136,6 +136,7 @@ func fieldsToValueMap(fields map[string]*sysl.Type) *sysl.Value {
 		typeName, typeDetail := getTypeDetail(t)
 		addItemToValueMap(m, "type", MakeValueString(typeName))
 		addItemToValueMap(m, typeName, MakeValueString(typeDetail))
+
 		if typeName == "sequence" {
 			seqMap := MakeValueMap()
 			addItemToValueMap(m, typeName, seqMap)
@@ -145,10 +146,11 @@ func fieldsToValueMap(fields map[string]*sysl.Type) *sysl.Value {
 			addItemToValueMap(seqMap, typeName, MakeValueString(typeDetail))
 		}
 
-		addItemToValueMap(fieldMap, key, m)
 		addItemToValueMap(m, "name", MakeValueString(key))
 		addItemToValueMap(m, "optional", MakeValueBool(t.Opt))
 		addItemToValueMap(m, "docstring", MakeValueString(t.Docstring))
+
+		addItemToValueMap(fieldMap, key, m)
 	}
 	return fieldMap
 }
@@ -192,7 +194,7 @@ func typesToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	for key, t := range types {
 		switch t.Type.(type) {
 		case *sysl.Type_OneOf_:
-			continue
+			// skipping union types
 		default:
 			addItemToValueMap(m, key, typeToValue(t))
 		}
