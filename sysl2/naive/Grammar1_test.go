@@ -144,7 +144,8 @@ func TestFirstSet1(t *testing.T) {
 
 	first, follow := buildFirstFollowSet(g)
 
-	if len(first) < 0 || len(follow) < 0 {
+	//TODO: revisit this test
+	if len(first) < 1 || len(follow) < 1 {
 		t.Error("failed to calculate first set of E\n")
 	}
 }
@@ -159,7 +160,8 @@ func TestFirstSet2(t *testing.T) {
 
 	first, follow := buildFirstFollowSet(g)
 
-	if len(first) < 0 || len(follow) < 0 {
+	//TODO: revisit this test
+	if len(first) < 1 || len(follow) < 1 {
 		t.Error("failed to calculate first set of E\n")
 	}
 }
