@@ -212,6 +212,67 @@ func unionToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	return m
 }
 
+func queryParamsToValue(qp *sysl.Endpoint_RestParams_QueryParam) *sysl.Value {
+	m := MakeValueMap()
+	addItemToValueMap(m.GetMap(), "name", MakeValueString(qp.Name))
+	typeName, typeDetail := getTypeDetail(qp.Type)
+	addItemToValueMap(m.GetMap(), "type", MakeValueString(typeName))
+	addItemToValueMap(m.GetMap(), typeName, MakeValueString(typeDetail))
+	return m
+}
+
+func stmtToValue(s *sysl.Statement) *sysl.Value {
+	m := MakeValueMap()
+	var stmt_type string
+	switch x := s.Stmt.(type) {
+	case *sysl.Statement_Action:
+		stmt_type = "action"
+		addItemToValueMap(m.GetMap(), "action", MakeValueString(x.Action.Action))
+	case *sysl.Statement_Call:
+		stmt_type = "call"
+		addItemToValueMap(m.GetMap(), "endpoint", MakeValueString(x.Call.Endpoint))
+		addItemToValueMap(m.GetMap(), "target", MakeValueString(getAppName(x.Call.Target)))
+	case *sysl.Statement_Ret:
+		stmt_type = "return"
+		addItemToValueMap(m.GetMap(), "payload", MakeValueString(x.Ret.Payload))
+	}
+	addItemToValueMap(m.GetMap(), "type", MakeValueString(stmt_type))
+	return m
+}
+
+func endpointToValue(e *sysl.Endpoint) *sysl.Value {
+	m := MakeValueMap()
+	addItemToValueMap(m.GetMap(), "name", MakeValueString(e.Name))
+	addItemToValueMap(m.GetMap(), "longname", MakeValueString(e.LongName))
+	addItemToValueMap(m.GetMap(), "docstring", MakeValueString(e.Docstring))
+	addItemToValueMap(m.GetMap(), "attrs", attrsToValueMap(e.Attrs))
+	addItemToValueMap(m.GetMap(), "is_rest", MakeValueBool(e.RestParams != nil))
+	addItemToValueMap(m.GetMap(), "is_pubsub", MakeValueBool(e.IsPubsub))
+	if e.RestParams != nil {
+		addItemToValueMap(m.GetMap(), "method", MakeValueString(sysl.Endpoint_RestParams_Method_name[int32(e.RestParams.Method)]))
+		addItemToValueMap(m.GetMap(), "path", MakeValueString(e.RestParams.Path))
+		for _, query_param := range e.RestParams.QueryParam {
+			paramList := MakeValueList()
+			appendItemToValueList(paramList.GetList(), queryParamsToValue(query_param))
+		}
+	}
+	stmtsList := MakeValueList()
+	for _, stmt := range e.Stmt {
+		appendItemToValueList(stmtsList.GetList(), stmtToValue(stmt))
+	}
+	addItemToValueMap(m.GetMap(), "stmts", stmtsList)
+
+	return m
+}
+
+func endpointsToValueMap(endpoints map[string]*sysl.Endpoint) *sysl.Value {
+	m := MakeValueMap()
+	for key, e := range endpoints {
+		addItemToValueMap(m.GetMap(), key, endpointToValue(e))
+	}
+	return m
+}
+
 // AddInt add int to scope
 func (s *Scope) AddInt(name string, val int64) {
 	(*s)[name] = MakeValueI64(val)
@@ -230,4 +291,5 @@ func (s *Scope) AddApp(name string, app *sysl.Application) {
 	addItemToValueMap(m.GetMap(), "attrs", attrsToValueMap(app.Attrs))
 	addItemToValueMap(m.GetMap(), "types", typesToValueMap(app.Types))
 	addItemToValueMap(m.GetMap(), "union", unionToValueMap(app.Types))
+	addItemToValueMap(m.GetMap(), "endpoints", endpointsToValueMap(app.Endpoints))
 }

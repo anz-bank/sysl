@@ -130,3 +130,21 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	assert.Equal(t, 3, len(responseId), "requestId unexpected count")
 
 }
+
+func TestScopeAddRestApp(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+	s := Scope{}
+	appName := "TodoApp"
+	s.AddApp("app", mod.Apps[appName])
+	app := s["app"].GetMap().Items
+	assert.Equal(t, appName, app["name"].GetS(), "unexpected app name")
+	endpoints := app["endpoints"].GetMap().Items
+	assert.Equal(t, 3, len(endpoints), "unexpected endpoint count")
+	root := endpoints["GET /todos"].GetMap().Items
+	assert.Equal(t, "GET /todos", root["name"].GetS(), "unexpected endpoint name")
+	assert.Equal(t, "GET", root["method"].GetS(), "unexpected endpoint name")
+	assert.Equal(t, "/todos", root["path"].GetS(), "unexpected endpoint name")
+	assert.Equal(t, true, root["is_rest"].GetB(), "unexpected endpoint kind")
+	assert.Equal(t, false, root["is_pubsub"].GetB(), "unexpected is_pubsub value")
+	assert.Equal(t, "rest", root["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS(), "unexpected endpoint attrs")
+}

@@ -12,6 +12,18 @@ Model [package="com.example.gen"]:
     Request
     Response
 
+TodoApp:
+  /todos:
+    GET:
+      return todos
+
+    POST:
+      return todo
+
+    /{id<:int}:
+      GET:
+        return todo
+
 TransformApp:
   !view add(lhs <: int, rhs <: int) -> int:
     lhs -> (:
