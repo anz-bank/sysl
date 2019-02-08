@@ -1,0 +1,86 @@
+CodeGenTransform:
+  !view IsKeyword(word <: string) -> bool:
+    word -> (:
+      out = word in {"break", "default","func","interface","select","case","defer","go","map","struct","chan","else","goto","package","switch","const","fallthrough","if","range","type","continue","for","import","return","var"}
+    )
+
+  !view GoType(t <: sysl.Type) -> string:
+    t -> (:
+      out = if t.type ==:
+        "primitive" => if t.primitive ==:
+          "DECIMAL" => "double"
+          "INT" => "int64"
+          "FLOAT" => "float64"
+          "STRING" => "string"
+          "STRING_8" => "string"
+          "BOOL" => "bool"
+        "sequence" => "[]" + GoType(t.sequence).out
+        else t.type_ref
+    )
+
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename = app.name + ".go"
+    )
+
+  !view GoStructFields(fields <: set of Type) -> set of FieldDecl:
+    fields -> (field:
+      let isKeyword = IsKeyword(field.key).out
+      let prefix = if isKeyword == true then "_" else ""
+      identifier = prefix + field.key
+      let IsPtr = if field.value.optional == true then "*" else ""
+      Type = IsPtr + GoType(field.value).out
+    )
+
+  !view GoStructs(types <: set of Type) -> set of TopLevelDecl:
+    types -> (type:
+        Declaration = type -> <Declaration>(:
+          StructType = type -> <StructType>(:
+            StructName = .key
+            FieldDecl = GoStructFields(.value.fields)
+          )
+        )
+    )
+
+  !view GoInterfaces(unions <: set of Type) -> set of TopLevelDecl:
+    unions -> (union:
+        Declaration = union -> <Declaration>(:
+          InterfaceType = union -> <InterfaceType>(:
+            InterfaceName = .key
+            MethodSpec = {"fmt.Formatter", "GoIsExpr" } -> <MethodSpec> (name:
+              MethodName = name
+            )
+            let methodName = "GoIs" + .key
+            MethodDecl = union.value.fields -> <set of MethodDecl> (receiverName:
+              Receiver = receiverName -> <Receiver>(:
+                ReceiverType = "*" + receiverName
+              )
+              FunctionName = methodName
+              Signature = receiverName -> <Signature> (:
+                Parameters = {""} -> <Parameters> (t:
+                  ParameterList = t
+                )
+              )
+              Block = receiverName -> <Block> (:
+                out = ""
+              )
+            )
+          )
+        )
+    )
+
+  !view goFile(app <: sysl.App) -> string:
+    app -> (:
+
+      PackageClause = .name -> <package> (name:
+        PackageName = name
+      )
+
+      # ImportDecl = app -> <ImportDecl>(:
+      #   ImportSpec = {"package1", "package2"} -> <set of ImportSpec> (name:
+      #     Import = name
+      #   )
+      # )
+
+      TopLevelDecl = GoStructs(app.types) | GoInterfaces(app.union)
+    )

@@ -17,6 +17,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/grammar"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -95,27 +96,27 @@ func (d *SyslParserErrorListener) SyntaxError(
 	recognizer antlr.Recognizer, offendingSymbol interface{},
 	line, column int, msg string, e antlr.RecognitionException) {
 	d.hasErrors = true
-	fmt.Printf("SyntaxError: Token: %s\n", recognizer.GetSymbolicNames()[offendingSymbol.(*antlr.CommonToken).GetTokenType()])
+	logrus.Printf("SyntaxError: Token: %s\n", recognizer.GetSymbolicNames()[offendingSymbol.(*antlr.CommonToken).GetTokenType()])
 }
 
 // ReportAttemptingFullContext ...
 func (d *SyslParserErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser,
 	dfa *antlr.DFA, startIndex, stopIndex int,
 	conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-	fmt.Printf("ReportAttemptingFullContext: %d %d\n", startIndex, stopIndex)
+	logrus.Printf("ReportAttemptingFullContext: %d %d\n", startIndex, stopIndex)
 }
 
 // ReportAmbiguity ...
 func (d *SyslParserErrorListener) ReportAmbiguity(recognizer antlr.Parser,
 	dfa *antlr.DFA, startIndex, stopIndex int, exact bool,
 	ambigAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-	fmt.Printf("ReportAmbiguity: %d %d\n", startIndex, stopIndex)
+	logrus.Printf("ReportAmbiguity: %d %d\n", startIndex, stopIndex)
 }
 
 // ReportContextSensitivity ...
 func (d *SyslParserErrorListener) ReportContextSensitivity(recognizer antlr.Parser,
 	dfa *antlr.DFA, startIndex, stopIndex, prediction int, configs antlr.ATNConfigSet) {
-	fmt.Printf("ReportContextSensitivity: %d %d\n", startIndex, stopIndex)
+	logrus.Printf("ReportContextSensitivity: %d %d\n", startIndex, stopIndex)
 }
 
 func getAppName(appname *sysl.AppName) string {
@@ -227,13 +228,13 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	case *sysl.Statement_Call:
 		app := getApp(s.Call.Target, mod)
 		if app == nil {
-			fmt.Printf("%s::%s calls non-existant App: %s\n",
+			logrus.Printf("%s::%s calls non-existant App: %s\n",
 				appname, epname, s.Call.Target.Part)
 			return false
 		}
 		_, valid := app.Endpoints[s.Call.Endpoint]
 		if !valid {
-			fmt.Printf("%s::%s calls non-existant App <- Endpoint (%s <- %s)\n",
+			logrus.Printf("%s::%s calls non-existant App <- Endpoint (%s <- %s)\n",
 				appname, epname, s.Call.Target.Part, s.Call.Endpoint)
 		}
 		return valid
@@ -264,7 +265,7 @@ func collectorPubSubCalls(appName string, app *sysl.Application) {
 		case *sysl.Statement_Action:
 			modify_ep := app.Endpoints[x.Action.Action]
 			if modify_ep == nil {
-				fmt.Printf("App (%s) calls non-existant endpoint (%s)\n",
+				logrus.Printf("App (%s) calls non-existant endpoint (%s)\n",
 					appName, x.Action.Action)
 				continue
 			}
@@ -284,7 +285,7 @@ func collectorPubSubCalls(appName string, app *sysl.Application) {
 				}
 			}
 			if !applied {
-				fmt.Printf("Unused template (%s <- %s) in app %s\n",
+				logrus.Printf("Unused template (%s <- %s) in app %s\n",
 					x.Call.Target.Part, x.Call.Endpoint, appName)
 			}
 		default:
@@ -324,7 +325,7 @@ func infer_expr_type(mod *sysl.Module,
 		}
 
 		if !top && expr.Type == nil {
-			// fmt.Printf("found anonymous type\n")
+			// logrus.Printf("found anonymous type\n")
 			newType := &sysl.Type{
 				Type: &sysl.Type_Tuple_{
 					Tuple: &sysl.Type_Tuple{
@@ -344,6 +345,7 @@ func infer_expr_type(mod *sysl.Module,
 					assign := stmt.GetAssign()
 					aexpr := assign.Expr
 					if aexpr.GetTransform() == nil {
+						logrus.Printf("%s: %v\n", assign.Name, aexpr)
 						panic("expression should be of type transform")
 					}
 					ftype := aexpr.Type
@@ -399,7 +401,7 @@ func infer_expr_type(mod *sysl.Module,
 			if !top && expr.Type == nil {
 				type1, c := infer_expr_type(mod, appName, relexpr.Target, true, anonCount)
 				anonCount = c
-				fmt.Printf(type1.String())
+				logrus.Printf(type1.String())
 			}
 		}
 	}
@@ -412,7 +414,7 @@ func infer_types(mod *sysl.Module, appName string) {
 			continue
 		}
 		if view.Expr.GetTransform() == nil {
-			fmt.Printf("view %s expression should be of type transform", viewName)
+			logrus.Printf("view %s expression should be of type transform", viewName)
 			continue
 		}
 		infer_expr_type(mod, appName, view.Expr, true, 0)
@@ -433,7 +435,7 @@ func postProcess(mod *sysl.Module) {
 			for _, src := range app.Mixin2 {
 				src_app := getApp(src.Name, mod)
 				if hasAbstractPattern(src_app.Attrs) == false {
-					fmt.Printf("mixin App (%s) should be ~abstract\n", getAppName(src.Name))
+					logrus.Printf("mixin App (%s) should be ~abstract\n", getAppName(src.Name))
 					continue
 				}
 				if src_app.Types != nil && app.Types == nil {
@@ -446,7 +448,7 @@ func postProcess(mod *sysl.Module) {
 					if _, has := app.Types[k]; !has {
 						app.Types[k] = v
 					} else {
-						fmt.Printf("Type %s defined in %s and in %s\n",
+						logrus.Printf("Type %s defined in %s and in %s\n",
 							k, appName, getAppName(src.Name))
 					}
 				}
@@ -454,7 +456,7 @@ func postProcess(mod *sysl.Module) {
 					if _, has := app.Views[k]; !has {
 						app.Views[k] = v
 					} else {
-						fmt.Printf("View %s defined in %s and in %s\n",
+						logrus.Printf("View %s defined in %s and in %s\n",
 							k, appName, getAppName(src.Name))
 					}
 				}
@@ -480,7 +482,7 @@ func postProcess(mod *sysl.Module) {
 					}
 					refType, has := refApp.Types[refName]
 					if has == false {
-						fmt.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n",
+						logrus.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n",
 							fieldname, typeName, refName, appName)
 					} else {
 						var ref_attrs map[string]*sysl.Type
@@ -505,7 +507,7 @@ func postProcess(mod *sysl.Module) {
 							_, has = refApp.Types[field]
 						}
 						if has == false {
-							fmt.Printf("2:Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)\n",
+							logrus.Printf("2:Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)\n",
 								fieldname, typeName, field, appName, refName)
 						}
 					}
@@ -632,6 +634,11 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 func main3(stdout, stderr io.Writer, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
 
+	switch filepath.Base(args[0]) {
+	case "syslgen":
+		DoGenerateCode(stdout, stderr, flags, args)
+		return nil
+	}
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
 	output := flags.String("o", "", "output file name")
 	mode := flags.String("mode", "textpb", "output mode")

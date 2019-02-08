@@ -1,0 +1,20 @@
+TransformApp:
+  !view filename(app <: sysl.App, typeName <: string, type <: sysl.Type) -> string:
+    app -> (:
+      filename = typeName + ".java"
+    )
+
+  !view javaFile(app <: sysl.App, typeName <: string, type <: sysl.Type) -> string:
+    app -> (:
+
+      package = .attrs.package -> <package> (name1:
+        packageName = name1
+      )
+      comment = {"comment1", "comment2"}
+
+      import = {"import1", "import2"} -> <set of import>(name:
+        importPath = name
+      )
+
+      definition = typeName
+    )

@@ -1,0 +1,14 @@
+TransformApp:
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename = app.name + ".java"
+    )
+
+  !view javaFile(app <: sysl.App) -> string:
+    app -> (:
+      import = {"import1", "import2"} -> <set of import>(name:
+        importPath = name
+      )
+
+      definition = "some_value"
+    )

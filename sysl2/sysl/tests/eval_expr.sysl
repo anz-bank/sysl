@@ -1,0 +1,87 @@
+Model [package="com.example.gen"]:
+  !type Request:
+    id <: int
+    payload <: string
+
+  !type Response:
+    code <: int
+    message <: string
+    names <: sequence of string
+
+  !union Message:
+    Request
+    Response
+
+TodoApp:
+  /todos:
+    GET:
+      return todos
+
+    POST:
+      return todo
+
+    /{id<:int}:
+      GET:
+        return todo
+
+TransformApp:
+  !view add(lhs <: int, rhs <: int) -> int:
+    lhs -> (:
+      out1 = lhs + rhs
+      out2 = lhs -> <int> (:
+        out3 = 5 + 1
+      )
+    )
+
+  !view UnionSet(lhs <: string) -> set of string:
+    lhs -> (:
+      out = {"lhs"} | {"rhs"}
+    )
+
+  !view IsKeyword(word <: string) -> bool:
+    word -> (:
+      out = word in {"break", "default","func","interface","select","case","defer"}
+    )
+
+  # t is map
+  !view JavaType(t <: sysl.Type) -> string:
+    t -> (:
+      out = if t.type ==:
+        "primitive" => if t.primitive ==:
+          "INT" => "int"
+          "BOOL" => "Boolean"
+          "DECIMAL" => "BigDecimal"
+          "STRING" => "String"
+          "STRING_8" => "String"
+        "sequence" => "List<" + JavaType(t.sequence).out + ">"
+        else t.type_ref
+    )
+
+  !view Getters(fields <: set of app.Type) -> set of memberFunction:
+    fields -> (field:
+      access = "public"
+      let IsPtr = if field.value.optional == false then "*" else ""
+      returnType = IsPtr + JavaType(field.value).out
+      methodName = "get" + field.key
+    )
+
+  !view classDef(types <: app.Types) -> classDef:
+    types -> (t:
+      className = t.key + "Impl"
+      classBody = Getters(t.value.fields)
+    )
+
+  !view GetAppAttributes(app <: sysl.App) -> int:
+    app -> (:
+      out = app.attrs.package
+
+      package = .attrs.package -> <package> (name:
+        packageName = name
+      )
+
+      import = {"package1", "package2"} -> <set of import>(name:
+        importPath = name
+      )
+
+      definition = classDef(app.types)
+    )
