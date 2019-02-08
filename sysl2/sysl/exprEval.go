@@ -21,7 +21,7 @@ func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr
 			res := Eval(txApp, assign, ss.Assign.Expr)
 			logrus.Printf("Eval %s ==\n\t\t %v:\n", ss.Assign.Name, res)
 			addItemToValueMap(result, ss.Assign.Name, res)
-			// case *sysl.Expr_Transform_Stmt_Inject:
+			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
 	}
 	return result
@@ -50,7 +50,6 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 		logrus.Println("Evaluating Transform")
 		arg := x.Transform.Arg
 		if arg.GetName() == "." {
-			// TODO: return error
 			logrus.Println("Expr Arg is empty")
 			return nil
 		}
@@ -139,11 +138,9 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 	case *sysl.Expr_Set:
 		{
 			setResult := MakeValueSet()
-			v := []*sysl.Value{}
 			for _, s := range x.Set.Expr {
-				v = append(v, Eval(txApp, assign, s))
+				appendItemToValueList(setResult.GetSet(), Eval(txApp, assign, s))
 			}
-			setResult.GetSet().Value = v
 			return setResult
 		}
 	default:
