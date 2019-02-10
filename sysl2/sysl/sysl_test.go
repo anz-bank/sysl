@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"testing"
 
@@ -24,12 +23,6 @@ func TestExit(t *testing.T) {
 	assert.Equal(t, message, e.message)
 	assert.Equal(t, message, e.Error())
 	assert.Equal(t, 42, e.code)
-}
-
-func TestFSFileStream(t *testing.T) {
-	s, err := newFSFileStream("sysl.go", http.Dir("."))
-	assert.NoError(t, err)
-	assert.Equal(t, "package main", s.GetText(0, 11))
 }
 
 var testModule = &sysl.Module{

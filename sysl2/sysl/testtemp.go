@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type testTempFile struct {
@@ -13,24 +13,20 @@ type testTempFile struct {
 }
 
 func newTestTempFile(t *testing.T, dir, pattern string) *testTempFile {
-	f, err := ioutil.TempFile("", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json")
-	if assert.NoError(t, err, "newTestTempFile(%#v, %#v)", dir, pattern) {
-		return &testTempFile{f}
-	}
-	return nil
+	f, err := ioutil.TempFile("", "sysl_test.go-TestJSONPB-*.json")
+	require.NoError(t, err, "newTestTempFile(%#v, %#v)", dir, pattern)
+	return &testTempFile{f}
 }
 
 func testTempFilename(t *testing.T, dir, pattern string) string {
-	if tf := newTestTempFile(t, dir, pattern); tf != nil {
-		defer tf.CloseAndRemove()
-		return tf.Name()
-	}
-	return ""
+	tf := newTestTempFile(t, dir, pattern)
+	defer tf.CloseAndRemove()
+	return tf.Name()
 }
 
-func (tf *testTempFile) File() *os.File {
-	return tf.f
-}
+// func (tf *testTempFile) File() *os.File {
+// 	return tf.f
+// }
 
 func (tf *testTempFile) Name() string {
 	return tf.f.Name()
