@@ -43,7 +43,7 @@ func assertLog(t *testing.T, msg string, level logrus.Level, f func()) {
 
 	f()
 
-	timeRE := `time="\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[-+]\d\d:\d\d"`
+	timeRE := `time="\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(?:Z|[-+]\d\d:\d\d)?"`
 	expected := fmt.Sprintf(` level=%s msg="%s"\n`, level, regexp.QuoteMeta(msg))
 	assert.Regexp(t, timeRE+expected, buf.String())
 }
