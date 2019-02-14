@@ -26,7 +26,7 @@ func TestScopeAddApp(t *testing.T) {
 	fields := typeRequest["fields"].GetMap().Items
 	assert.Equal(t, 2, len(fields), "unexpected field count")
 	idField := fields["id"].GetMap().Items
-	assert.Equal(t, 5, len(idField), "unexpected id Field count")
+	assert.Equal(t, 6, len(idField), "unexpected id Field count")
 	assert.Equal(t, "primitive", idField["type"].GetS(), "unexpected id field type")
 	assert.Equal(t, "INT", idField["primitive"].GetS(), "unexpected id field type name")
 
