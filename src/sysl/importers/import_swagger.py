@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+import argparse
 import collections
 import itertools
 import json
@@ -159,10 +160,19 @@ def parse_typespec(tspec):
         return r(str(tspec))
 
 
-def main():
-    [swagger_path, appname, package, outfile] = sys.argv[1:]
+def parse_args(argv):
+    p = argparse.ArgumentParser(description='Converts Swagger (aka Open API Specification) documents to a Sysl spec')
+    p.add_argument('swagger_path', help='path of input swagger document')
+    p.add_argument('appname', help='appname')
+    p.add_argument('package', help='package')
+    p.add_argument('outfile', help='path of output file')
+    return p.parse_args(args=argv[1:])
 
-    swag = yaml.load(open(swagger_path))
+def main():
+    args = parse_args(sys.argv)
+
+    with open(args.swagger_path, 'r') as f:
+        swag = yaml.load(f)
 
     w = writer.Writer('sysl')
 
@@ -183,7 +193,7 @@ def main():
         w('@host = {}', json.dumps(swag['host']))
 
     w(u'{}{} [package={}]:',
-        appname, title and ' ' + json.dumps(title), json.dumps(package))
+        args.appname, title and ' ' + json.dumps(title), json.dumps(args.package))
 
     with w.indent():
         w(u'| {}', swag['info'].get('description', 'No description.'))
@@ -287,7 +297,8 @@ def main():
                 else:
                     assert True, tspec
 
-    open(outfile, 'w').write(str(w))
+    with open(args.outfile, 'w') as f_out:
+        f_out.write(str(w))
 
 
 if __name__ == '__main__':
