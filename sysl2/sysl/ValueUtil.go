@@ -136,6 +136,7 @@ func fieldsToValueMap(fields map[string]*sysl.Type) *sysl.Value {
 		typeName, typeDetail := getTypeDetail(t)
 		addItemToValueMap(m, "type", MakeValueString(typeName))
 		addItemToValueMap(m, typeName, MakeValueString(typeDetail))
+		addItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
 
 		if typeName == "sequence" {
 			seqMap := MakeValueMap()
@@ -252,14 +253,19 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 	if e.RestParams != nil {
 		addItemToValueMap(m, "method", MakeValueString(sysl.Endpoint_RestParams_Method_name[int32(e.RestParams.Method)]))
 		addItemToValueMap(m, "path", MakeValueString(e.RestParams.Path))
+		paramList := MakeValueList()
 		for _, query_param := range e.RestParams.QueryParam {
-			paramList := MakeValueList()
 			appendItemToValueList(paramList.GetList(), queryParamsToValue(query_param))
 		}
+		addItemToValueMap(m, "params", paramList)
 	}
 	stmtsList := MakeValueList()
 	for _, stmt := range e.Stmt {
-		appendItemToValueList(stmtsList.GetList(), stmtToValue(stmt))
+		if stmt.GetRet() != nil {
+			addItemToValueMap(m, "ret", stmtToValue(stmt))
+		} else {
+			appendItemToValueList(stmtsList.GetList(), stmtToValue(stmt))
+		}
 	}
 	addItemToValueMap(m, "stmts", stmtsList)
 
