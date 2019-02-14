@@ -3,8 +3,13 @@ package main
 import (
 	"testing"
 
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
+
+func init() {
+	logrus.SetLevel(logrus.WarnLevel)
+}
 
 func TestScopeAddApp(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
@@ -93,7 +98,7 @@ func TestEvalIfElseAlt(t *testing.T) {
 
 	s["t"] = s["app"].GetMap().Items["types"].GetMap().Items["Response"].GetMap().Items["fields"].GetMap().Items["names"]
 	out = Eval(txApp, &s, txApp.Views[viewName].Expr)
-	assert.Equal(t, "List<String>", out.GetMap().Items["out"].GetS(), "unexpected value")
+	assert.Equal(t, "List<Request>", out.GetMap().Items["out"].GetS(), "unexpected value")
 }
 
 func TestEvalGetAppAttributes(t *testing.T) {
@@ -109,8 +114,8 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	assert.Equal(t, "com.example.gen", m.GetMap().Items["packageName"].GetS(), "packageName unexpected value")
 
 	m = out.GetMap().Items["import"]
-	assert.Equal(t, "package1", m.GetList().Value[0].GetMap().Items["importPath"].GetS(), "import unexpected value")
-	assert.Equal(t, "package2", m.GetList().Value[1].GetMap().Items["importPath"].GetS(), "import unexpected value")
+	assert.Equal(t, "Package1", m.GetList().Value[0].GetMap().Items["importPath"].GetS(), "import unexpected value")
+	assert.Equal(t, "Package2", m.GetList().Value[1].GetMap().Items["importPath"].GetS(), "import unexpected value")
 
 	m = out.GetMap().Items["definition"]
 	assert.Equal(t, 2, len(m.GetSet().Value), "definition length is incorrect")
@@ -139,7 +144,7 @@ func TestScopeAddRestApp(t *testing.T) {
 	app := s["app"].GetMap().Items
 	assert.Equal(t, appName, app["name"].GetS(), "unexpected app name")
 	endpoints := app["endpoints"].GetMap().Items
-	assert.Equal(t, 3, len(endpoints), "unexpected endpoint count")
+	assert.Equal(t, 4, len(endpoints), "unexpected endpoint count")
 	root := endpoints["GET /todos"].GetMap().Items
 	assert.Equal(t, "GET /todos", root["name"].GetS(), "unexpected endpoint name")
 	assert.Equal(t, "GET", root["method"].GetS(), "unexpected endpoint name")
@@ -147,4 +152,83 @@ func TestScopeAddRestApp(t *testing.T) {
 	assert.Equal(t, true, root["is_rest"].GetB(), "unexpected endpoint kind")
 	assert.Equal(t, false, root["is_pubsub"].GetB(), "unexpected is_pubsub value")
 	assert.Equal(t, "rest", root["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS(), "unexpected endpoint attrs")
+}
+
+func TestEvalStringOps(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "TodoApp"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "StringOps", &s)
+	assert.NotNil(t, out.GetMap())
+	items := out.GetMap().Items
+
+	// Check if all functions have been tested
+	assert.Equal(t, len(items), len(GoFuncMap))
+
+	for name := range GoFuncMap {
+		assert.NotNil(t, items[name])
+	}
+
+	assert.True(t, items["Contains"].GetB())
+	assert.Equal(t, int64(3), items["Count"].GetI())
+	assert.Equal(t, 2, len(items["Fields"].GetList().Value))
+	assert.True(t, items["HasPrefix"].GetB())
+	assert.True(t, items["HasSuffix"].GetB())
+	assert.Equal(t, "Hello_World", items["Join"].GetS())
+	assert.Equal(t, int64(12), items["LastIndex"].GetI())
+	assert.Equal(t, "Hello_World", items["Replace"].GetS())
+	assert.Equal(t, "Hello World!", items["Title"].GetS())
+	assert.Equal(t, "hello world!", items["ToLower"].GetS())
+	assert.Equal(t, "HELLO WORLD!", items["ToTitle"].GetS())
+	assert.Equal(t, "HELLO WORLD!", items["ToUpper"].GetS())
+	assert.Equal(t, "hello world!", items["Trim"].GetS())
+	assert.Equal(t, "hello world! ", items["TrimLeft"].GetS())
+	assert.Equal(t, " world! ", items["TrimPrefix"].GetS())
+	assert.Equal(t, " hello world!", items["TrimRight"].GetS())
+	assert.Equal(t, "hello world!", items["TrimSpace"].GetS())
+	assert.Equal(t, " hello ", items["TrimSuffix"].GetS())
+}
+
+func TestEvalFlatten(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "TodoApp"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "FlattenEndpointParams", &s)
+	assert.NotNil(t, out.GetMap().Items["names"].GetSet())
+	l := out.GetMap().Items["names"].GetSet().Value
+	assert.Equal(t, 4, len(l))
+	assert.Equal(t, "GET", l[0].GetS())
+	assert.Equal(t, "GETid", l[1].GetS())
+	assert.Equal(t, "GETidstatus", l[2].GetS())
+	assert.Equal(t, "POST", l[3].GetS())
+}
+
+func TestEvalLinks(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "Model"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "Links", &s)
+	assert.NotNil(t, out.GetMap().Items["links"].GetSet())
+	l := out.GetMap().Items["links"].GetSet().Value
+	assert.Equal(t, 5, len(l))
+	assert.Equal(t, "id", l[0].GetMap().Items["Left"].GetS())
+	assert.Equal(t, "int", l[0].GetMap().Items["Right"].GetS())
+
+	assert.Equal(t, "payload", l[1].GetMap().Items["Left"].GetS())
+	assert.Equal(t, "String", l[1].GetMap().Items["Right"].GetS())
+
+	assert.Equal(t, "code", l[2].GetMap().Items["Left"].GetS())
+	assert.Equal(t, "int", l[2].GetMap().Items["Right"].GetS())
+
+	assert.Equal(t, "message", l[3].GetMap().Items["Left"].GetS())
+	assert.Equal(t, "String", l[3].GetMap().Items["Right"].GetS())
+
+	assert.Equal(t, "names", l[4].GetMap().Items["Left"].GetS())
+	assert.Equal(t, "List<Request>", l[4].GetMap().Items["Right"].GetS())
 }

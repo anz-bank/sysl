@@ -117,7 +117,11 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			}
 			return Eval(txApp, &callScope, callTransform.Expr)
 		} else {
-			// TODO: see if the func is in strings package
+			list := MakeValueList()
+			for _, argExpr := range x.Call.Arg {
+				appendItemToValueList(list.GetList(), Eval(txApp, assign, argExpr))
+			}
+			return evalGoFunc(x.Call.Func, list)
 		}
 	case *sysl.Expr_Name:
 		return (*assign)[x.Name]
@@ -143,6 +147,8 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			}
 			return setResult
 		}
+	case *sysl.Expr_Unexpr:
+		return evalUnaryFunc(x.Unexpr.Op, Eval(txApp, assign, x.Unexpr.Arg))
 	default:
 		logrus.Warnf("Skipping Expr of type %T\n", x)
 	}

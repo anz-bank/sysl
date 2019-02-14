@@ -6,7 +6,7 @@ Model [package="com.example.gen"]:
   !type Response:
     code <: int
     message <: string
-    names <: sequence of string
+    names <: sequence of Request
 
   !union Message:
     Request
@@ -23,6 +23,9 @@ TodoApp:
     /{id<:int}:
       GET:
         return todo
+      /{status<:string}:
+        GET:
+          return todo
 
 TransformApp:
   !view add(lhs <: int, rhs <: int) -> int:
@@ -80,8 +83,49 @@ TransformApp:
       )
 
       import = {"package1", "package2"} -> <set of import>(name:
-        importPath = name
+        importPath = Title(name)
       )
 
       definition = classDef(app.types)
+    )
+
+  !view StringOps(app <: sysl.App) -> int:
+    app -> (:
+      Contains = Contains("Hello World!", "World")
+      Count = Count("Hello World!", "l")
+      Fields = Fields("Hello World!")
+      HasPrefix = HasPrefix("Hello World!", "Hello")
+      HasSuffix = HasSuffix("Hello World!", "World!")
+      Join = Join({"Hello", "World"}, "_")
+      LastIndex = LastIndex("Hello! World!", "!")
+      Replace = Replace("Hello/World", "/","_", -1)
+      Title = Title("hello world!")
+      ToLower = ToLower("HELLO WORLD!")
+      ToTitle = ToTitle("hello world!")
+      ToUpper = ToUpper("hello world!")
+      Trim = Trim(" hello world! ", " ")
+      TrimLeft = TrimLeft(" hello world! ", " ")
+      TrimPrefix = TrimPrefix("hello world! ", "hello")
+      TrimRight = TrimRight(" hello world! ", " ")
+      TrimSpace = TrimSpace(" hello world! ")
+      TrimSuffix = TrimSuffix(" hello world", "world")
+    )
+
+  !view FlattenEndpointParams(app <: sysl.App) -> int:
+    app -> (:
+      let n = app.endpoints -> <set of string>(ep:
+        name = ep.value.method  + Join(ep.value.params flatten("name"), "")
+      )
+      names = n flatten("name")
+    )
+
+  !view Links(app <: sysl.App) -> int:
+    app -> (:
+      let out =  app.types -> <set of link>(type:
+        inner = type.value.fields -> <set of link>(field:
+          Left = field.key
+          Right = JavaType(field.value).out
+        )
+      )
+      links = out flatten("inner")
     )

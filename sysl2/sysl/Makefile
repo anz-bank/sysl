@@ -8,7 +8,25 @@ GRAMMARS = SyslParser.g4 SyslLexer.g4
 .PHONY : all
 all: tests $(EXE) $(JS)
 
-$(EXE):
+CODE_FILES = \
+ValueUtil.go \
+codegen.go \
+constants.go \
+error_listener.go \
+exit.go \
+exprEval.go \
+exprOp.go \
+fs.go \
+helpers.go \
+listener_impl.go \
+output.go \
+parse.go \
+sysl.go \
+testtemp.go \
+grammar/sysl_parser.go \
+grammar/sysl_lexer.go
+
+$(EXE): $(CODE_FILES)
 	go install -v
 
 grammar/sysl_parser.go grammar/sysl_lexer.go: grammar/SyslParser.g4 grammar/SyslLexer.g4

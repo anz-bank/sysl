@@ -8,9 +8,11 @@ import (
 )
 
 type evalFunc func(*sysl.Value, *sysl.Value) *sysl.Value
+type unaryFunc func(*sysl.Value) *sysl.Value
 
 // OpMap is map of string to Function of type BinFunc
 type OpMap map[string]evalFunc
+type unaryFuncMap map[sysl.Expr_UnExpr_Op]unaryFunc
 
 // Consts for ValueTypes
 const (
@@ -27,6 +29,7 @@ const (
 
 // FuncMap ...
 var FuncMap OpMap
+var UnaryFuncMap unaryFuncMap
 
 // OpArgs represents valid combination of an operator, lhs and rhs value types
 type OpArgs struct {
@@ -81,6 +84,54 @@ func stringInSet(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
+func listFlatten(lhs, rhs *sysl.Value) *sysl.Value {
+	list := MakeValueList()
+	name := rhs.GetS()
+	for _, l := range lhs.GetList().Value {
+		v := l.GetMap().Items[name]
+		appendItemToValueList(list.GetList(), v)
+		// for _, ll := range v.GetList().Value {
+		// }
+	}
+	return list
+}
+
+func setFlatten(lhs, rhs *sysl.Value) *sysl.Value {
+	s := MakeValueSet()
+	name := rhs.GetS()
+	if name == "." {
+		for _, l := range lhs.GetSet().Value {
+			var v []*sysl.Value
+			if l.GetList() == nil {
+				v = l.GetList().Value
+			} else {
+				v = l.GetSet().Value
+			}
+			for _, ll := range v {
+				appendItemToValueList(s.GetSet(), ll)
+			}
+		}
+	} else {
+		for _, l := range lhs.GetSet().Value {
+			v := l.GetMap().Items[name]
+			var value []*sysl.Value
+			switch v.Value.(type) {
+			case *sysl.Value_List_:
+				value = v.GetList().Value
+			case *sysl.Value_Set:
+				value = v.GetSet().Value
+			case *sysl.Value_S, *sysl.Value_I, *sysl.Value_B:
+				appendItemToValueList(s.GetSet(), v)
+				continue
+			}
+			for _, ll := range value {
+				appendItemToValueList(s.GetSet(), ll)
+			}
+		}
+	}
+	return s
+}
+
 func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 	str := lhs.GetS()
 	for _, v := range rhs.GetList().Value {
@@ -89,6 +140,14 @@ func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 		}
 	}
 	return MakeValueBool(false)
+}
+
+func unaryNeg(arg *sysl.Value) *sysl.Value {
+	switch x := arg.Value.(type) {
+	case *sysl.Value_I:
+		return MakeValueI64(-x.I)
+	}
+	panic("unary not supported")
 }
 
 func getValueType(v *sysl.Value) int {
@@ -109,7 +168,7 @@ func getValueType(v *sysl.Value) int {
 	case *sysl.Value_Set:
 		return VALUE_SET
 	case *sysl.Value_List_:
-		return VALUE_SET
+		return VALUE_LIST
 	case *sysl.Value_Map_:
 		return VALUE_MAP
 	default:
@@ -137,6 +196,7 @@ func evalBinExpr(op sysl.Expr_BinExpr_Op, lhs, rhs *sysl.Value) *sysl.Value {
 }
 
 func addBinaryOps() {
+	FuncMap = map[string]evalFunc{}
 	var ops = []OpArgs{
 		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_EQ)], VALUE_BOOL, VALUE_BOOL, cmpBool},
 		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_ADD)], VALUE_INT, VALUE_INT, addInt64},
@@ -149,13 +209,31 @@ func addBinaryOps() {
 		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_IN)], VALUE_STRING, VALUE_SET, stringInSet},
 		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_IN)], VALUE_STRING, VALUE_LIST, stringInList},
 		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_BITOR)], VALUE_SET, VALUE_SET, setUnion},
+		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_FLATTEN)], VALUE_SET, VALUE_STRING, setFlatten},
+		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_FLATTEN)], VALUE_LIST, VALUE_STRING, listFlatten},
+		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_FLATTEN)], VALUE_SET, VALUE_INT, setFlatten},
+		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_FLATTEN)], VALUE_SET, VALUE_BOOL, setFlatten},
 	}
 	for _, op := range ops {
 		addToFuncMap(op.op, op.lhs, op.rhs, op.f)
 	}
 }
 
+func evalUnaryFunc(op sysl.Expr_UnExpr_Op, arg *sysl.Value) *sysl.Value {
+	if x, has := UnaryFuncMap[op]; has {
+		return x(arg)
+	}
+	logrus.Errorf("Op: %v not supported\n", op)
+	panic("unary func not supported")
+}
+
+func addUnaryOps() {
+	UnaryFuncMap = map[sysl.Expr_UnExpr_Op]unaryFunc{
+		sysl.Expr_UnExpr_NEG: unaryNeg,
+	}
+}
+
 func init() {
-	FuncMap = make(OpMap)
 	addBinaryOps()
+	addUnaryOps()
 }
