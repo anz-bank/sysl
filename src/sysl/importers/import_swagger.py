@@ -5,6 +5,7 @@ import argparse
 import collections
 import itertools
 import json
+import logging
 import os
 import re
 import sys
@@ -36,11 +37,6 @@ TYPE_MAP = {
 WORDS = set()
 
 PARAM_CACHE = {}
-
-
-def warn(msg):
-    sys.stderr.write(msg + '\n')
-    sys.stderr.flush()
 
 
 def words():
@@ -108,73 +104,6 @@ METHOD_ORDER = {
     m: i for (i, m) in enumerate('get put post delete patch parameters'.split())}
 
 
-def parse_typespec(tspec):
-
-    typ = tspec.get('type')
-
-    # skip invalid arrays
-    if not typ and 'items' in tspec:
-        warn('Ignoring unexpected "items". Schema has "items" but did not have defined "type". Note: %r' % (tspec, ))
-        del tspec['items']
-
-    descr = tspec.pop('description', None)
-
-    if typ == 'array':
-        assert not (set(tspec.keys()) - {'type', 'items', 'example'}), tspec
-
-        # skip invalid type
-        if '$ref' in tspec['items'] and 'type' in tspec['items']:
-            warn('Ignoring unexpected "type". Schema has "$ref" but also has unexpected "type". Note: %r' % (tspec, ))
-            del tspec['items']['type']
-
-        (itype, idescr) = parse_typespec(tspec['items'])
-        assert idescr is None
-        return ('set of ' + itype, descr)
-
-    def r(t):
-        return (t, descr)
-
-    fmt = tspec.get('format')
-    ref = tspec.get('$ref')
-
-    if ref:
-        assert not set(tspec.keys()) - {'$ref'}, tspec
-        return r(ref.lstrip('#/definitions/'))
-    if (typ, fmt) == ('string', None):
-        return r('string')
-    if (typ, fmt) == ('boolean', None):
-        return r('bool')
-    elif (typ, fmt) == ('string', 'date'):
-        return r('date')
-    elif (typ, fmt) == ('string', 'date-time'):
-        return r('datetime')
-    elif (typ, fmt) == ('integer', None):
-        return r('int')
-    elif (typ, fmt) == ('integer', 'int32'):
-        return r('int32')
-    elif (typ, fmt) == ('integer', 'int64'):
-        return r('int64')
-    elif (typ, fmt) == ('number', 'double'):
-        return r('float')
-    elif (typ, fmt) == ('number', 'float'):
-        return r('float')
-    elif (typ, fmt) == ('number', None):
-        return r('float')
-    elif (typ, fmt) == ('object', None):
-        descrs = {
-            k: descr
-            for (k, v) in extract_properties(tspec).iteritems()
-            for descr in [parse_typespec(v)[1]]
-            if descr
-        }
-        assert not descrs, descrs
-        fields = ('{} <: {}'.format(k, parse_typespec(v)[0])
-                  for (k, v) in sorted(extract_properties(tspec).iteritems()))
-        return r('{' + ', '.join(fields) + '}')
-    else:
-        return r(str(tspec))
-
-
 def parse_args(argv):
     p = argparse.ArgumentParser(description='Converts Swagger (aka Open API Specification) documents to a Sysl spec')
     p.add_argument('swagger_path', help='path of input swagger document')
@@ -182,6 +111,207 @@ def parse_args(argv):
     p.add_argument('package', help='package')
     p.add_argument('outfile', help='path of output file')
     return p.parse_args(args=argv[1:])
+
+
+def make_default_logger():
+    logger = logging.getLogger('import_swagger')
+    logger.setLevel(logging.WARN)
+    return logger
+
+
+class SwaggerTranslator:
+    def __init__(self, logger):
+        self._logger = logger
+
+    def warn(self, msg):
+        self._logger.warn(msg)
+
+    def translate(self, swag, appname, package, w):
+
+        if 'info' in swag:
+            def info_attrs(info, prefix=''):
+                for (name, value) in sorted(info.iteritems()):
+                    if isinstance(value, dict):
+                        info_attrs(value, prefix + name + '.')
+                    else:
+                        w('@{}{} = {}', prefix, name, json.dumps(value))
+
+            title = swag['info'].pop('title', '')
+            info_attrs(swag['info'])
+        else:
+            title = ''
+
+        if 'host' in swag:
+            w('@host = {}', json.dumps(swag['host']))
+
+        w(u'{}{} [package={}]:',
+            appname, title and ' ' + json.dumps(title), json.dumps(package))
+
+        with w.indent():
+            w(u'| {}', swag['info'].get('description', 'No description.'))
+
+            for (path, api) in sorted(swag['paths'].iteritems()):
+                # {foo-bar} to {fooBar}
+                w(u'\n{}:', re.sub(r'({[^/]*?})', javaParam, path))
+                with w.indent():
+                    if 'parameters' in api:
+                        del api['parameters']
+                    for (i, (method, body)) in enumerate(sorted(api.iteritems(),
+                                                                key=lambda t: METHOD_ORDER[t[0]])):
+                        qparams = dict()
+
+                        if 'parameters' in body and 'in' in body['parameters']:
+                            qparams = [p for p in body['parameters']
+                                    if p['in'] == 'query']
+                        w(u'{}{}{}:',
+                        method.upper(),
+                        ' ?' if qparams else '',
+                        '&'.join(('{}={}{}'.format(
+                            p['name'],
+                            SWAGGER_TYPE_MAP[p['type']],
+                            '' if p['required'] else '?')
+                            if p['type'] != 'string' else
+                            '{name}=string'.format(**p))
+                            for p in qparams))
+                        with w.indent():
+                            for line in textwrap.wrap(
+                                    body.get('description', 'No description.').strip(), 64):
+                                w(u'| {}', line)
+
+                            responses = body['responses']
+                            errors = ','.join(
+                                sorted(str(e) for e in responses if e >= 400))
+
+                            if 200 in responses:
+                                r200 = responses[200]
+                                if 'schema' in r200:
+                                    ok = r200['schema']
+                                    if ok.get('type') == 'array':
+                                        items = ok['items']
+                                        if '$ref' in items:
+                                            itemtype = items['$ref'][
+                                                len('#/definitions/'):]
+                                            ret = ': <: set of ' + itemtype
+                                        else:
+                                            ret = ': <: ...'
+                                    elif '$ref' in ok:
+                                        ret = ': <: ' + ok['$ref'][
+                                            len('#/definitions/'):]
+                                    else:
+                                        ret = ' (' + r200.get('description') + ')'
+                                else:
+                                    ret = ' (' + r200.get('description') + ')'
+                                w(u'return 200{} or {{{}}}', ret, errors)
+                            elif 201 in responses:
+                                r201 = responses[201]
+                                if 'headers' in r201:
+                                    ok = r201['headers']
+                                    w(u'return 201 ({}) or {{{}}}',
+                                    ok['Location']['description'],
+                                    errors)
+                                else:
+                                    w(u'return 201 ({})',
+                                    r201['description'])
+
+                        if i < len(api) - 1:
+                            w()
+
+            w()
+            w('#' + '-' * 75)
+            w('# definitions')
+
+            for (tname, tspec) in sorted(swag['definitions'].iteritems()):
+                w()
+                w('!type {}:', tname)
+
+                with w.indent():
+                    properties = extract_properties(tspec)
+                    if properties:
+                        for (fname, fspec) in sorted(properties.iteritems()):
+                            (ftype, fdescr) = self.parse_typespec(fspec)
+                            w('{} <: {}{}',
+                            fname,
+                            ftype if ftype.startswith(
+                                'set of ') or ftype.endswith('*') else ftype + '?',
+                            ' "' + fdescr + '"' if fdescr else '')
+                    # handle top-level arrays
+                    elif tspec.get('type') == 'array':
+
+                        (ftype, fdescr) = self.parse_typespec(tspec)
+                        w('{} <: {}{}',
+                        fname,
+                        ftype if ftype.startswith(
+                            'set of ') or ftype.endswith('*') else ftype + '?',
+                        ' "' + fdescr + '"' if fdescr else '')
+                    else:
+                        assert True, tspec
+
+    def parse_typespec(self, tspec):
+
+        typ = tspec.get('type')
+
+        # skip invalid arrays
+        if not typ and 'items' in tspec:
+            self.warn('Ignoring unexpected "items". Schema has "items" but did not have defined "type". Note: %r' % (tspec, ))
+            del tspec['items']
+
+        descr = tspec.pop('description', None)
+
+        if typ == 'array':
+            assert not (set(tspec.keys()) - {'type', 'items', 'example'}), tspec
+
+            # skip invalid type
+            if '$ref' in tspec['items'] and 'type' in tspec['items']:
+                self.warn('Ignoring unexpected "type". Schema has "$ref" but also has unexpected "type". Note: %r' % (tspec, ))
+                del tspec['items']['type']
+
+            (itype, idescr) = self.parse_typespec(tspec['items'])
+            assert idescr is None
+            return ('set of ' + itype, descr)
+
+        def r(t):
+            return (t, descr)
+
+        fmt = tspec.get('format')
+        ref = tspec.get('$ref')
+
+        if ref:
+            assert not set(tspec.keys()) - {'$ref'}, tspec
+            return r(ref.lstrip('#/definitions/'))
+        if (typ, fmt) == ('string', None):
+            return r('string')
+        if (typ, fmt) == ('boolean', None):
+            return r('bool')
+        elif (typ, fmt) == ('string', 'date'):
+            return r('date')
+        elif (typ, fmt) == ('string', 'date-time'):
+            return r('datetime')
+        elif (typ, fmt) == ('integer', None):
+            return r('int')
+        elif (typ, fmt) == ('integer', 'int32'):
+            return r('int32')
+        elif (typ, fmt) == ('integer', 'int64'):
+            return r('int64')
+        elif (typ, fmt) == ('number', 'double'):
+            return r('float')
+        elif (typ, fmt) == ('number', 'float'):
+            return r('float')
+        elif (typ, fmt) == ('number', None):
+            return r('float')
+        elif (typ, fmt) == ('object', None):
+            descrs = {
+                k: descr
+                for (k, v) in extract_properties(tspec).iteritems()
+                for descr in [self.parse_typespec(v)[1]]
+                if descr
+            }
+            assert not descrs, descrs
+            fields = ('{} <: {}'.format(k, self.parse_typespec(v)[0])
+                    for (k, v) in sorted(extract_properties(tspec).iteritems()))
+            return r('{' + ', '.join(fields) + '}')
+        else:
+            return r(str(tspec))
+
 
 def main():
     args = parse_args(sys.argv)
@@ -191,126 +321,12 @@ def main():
 
     w = writer.Writer('sysl')
 
-    if 'info' in swag:
-        def info_attrs(info, prefix=''):
-            for (name, value) in sorted(info.iteritems()):
-                if isinstance(value, dict):
-                    info_attrs(value, prefix + name + '.')
-                else:
-                    w('@{}{} = {}', prefix, name, json.dumps(value))
-
-        title = swag['info'].pop('title', '')
-        info_attrs(swag['info'])
-    else:
-        title = ''
-
-    if 'host' in swag:
-        w('@host = {}', json.dumps(swag['host']))
-
-    w(u'{}{} [package={}]:',
-        args.appname, title and ' ' + json.dumps(title), json.dumps(args.package))
-
-    with w.indent():
-        w(u'| {}', swag['info'].get('description', 'No description.'))
-
-        for (path, api) in sorted(swag['paths'].iteritems()):
-            # {foo-bar} to {fooBar}
-            w(u'\n{}:', re.sub(r'({[^/]*?})', javaParam, path))
-            with w.indent():
-                if 'parameters' in api:
-                    del api['parameters']
-                for (i, (method, body)) in enumerate(sorted(api.iteritems(),
-                                                            key=lambda t: METHOD_ORDER[t[0]])):
-                    qparams = dict()
-
-                    if 'parameters' in body and 'in' in body['parameters']:
-                        qparams = [p for p in body['parameters']
-                                   if p['in'] == 'query']
-                    w(u'{}{}{}:',
-                      method.upper(),
-                      ' ?' if qparams else '',
-                      '&'.join(('{}={}{}'.format(
-                          p['name'],
-                          SWAGGER_TYPE_MAP[p['type']],
-                          '' if p['required'] else '?')
-                          if p['type'] != 'string' else
-                          '{name}=string'.format(**p))
-                          for p in qparams))
-                    with w.indent():
-                        for line in textwrap.wrap(
-                                body.get('description', 'No description.').strip(), 64):
-                            w(u'| {}', line)
-
-                        responses = body['responses']
-                        errors = ','.join(
-                            sorted(str(e) for e in responses if e >= 400))
-
-                        if 200 in responses:
-                            r200 = responses[200]
-                            if 'schema' in r200:
-                                ok = r200['schema']
-                                if ok.get('type') == 'array':
-                                    items = ok['items']
-                                    if '$ref' in items:
-                                        itemtype = items['$ref'][
-                                            len('#/definitions/'):]
-                                        ret = ': <: set of ' + itemtype
-                                    else:
-                                        ret = ': <: ...'
-                                elif '$ref' in ok:
-                                    ret = ': <: ' + ok['$ref'][
-                                        len('#/definitions/'):]
-                                else:
-                                    ret = ' (' + r200.get('description') + ')'
-                            else:
-                                ret = ' (' + r200.get('description') + ')'
-                            w(u'return 200{} or {{{}}}', ret, errors)
-                        elif 201 in responses:
-                            r201 = responses[201]
-                            if 'headers' in r201:
-                                ok = r201['headers']
-                                w(u'return 201 ({}) or {{{}}}',
-                                  ok['Location']['description'],
-                                  errors)
-                            else:
-                                w(u'return 201 ({})',
-                                  r201['description'])
-
-                    if i < len(api) - 1:
-                        w()
-
-        w()
-        w('#' + '-' * 75)
-        w('# definitions')
-
-        for (tname, tspec) in sorted(swag['definitions'].iteritems()):
-            w()
-            w('!type {}:', tname)
-
-            with w.indent():
-                properties = extract_properties(tspec)
-                if properties:
-                    for (fname, fspec) in sorted(properties.iteritems()):
-                        (ftype, fdescr) = parse_typespec(fspec)
-                        w('{} <: {}{}',
-                          fname,
-                          ftype if ftype.startswith(
-                              'set of ') or ftype.endswith('*') else ftype + '?',
-                          ' "' + fdescr + '"' if fdescr else '')
-                # handle top-level arrays
-                elif tspec.get('type') == 'array':
-
-                    (ftype, fdescr) = parse_typespec(tspec)
-                    w('{} <: {}{}',
-                      fname,
-                      ftype if ftype.startswith(
-                          'set of ') or ftype.endswith('*') else ftype + '?',
-                      ' "' + fdescr + '"' if fdescr else '')
-                else:
-                    assert True, tspec
+    translator = SwaggerTranslator(logger=make_default_logger())
+    translator.translate(swag, args.appname, args.package, w=w)
 
     with open(args.outfile, 'w') as f_out:
         f_out.write(str(w))
+
 
 
 if __name__ == '__main__':
