@@ -74,6 +74,14 @@ def javaParam(match):
     return ident
 
 
+def extract_properties(tspec):
+    # Some schemas for object types might lack a properties attribute.
+    # As per Open API Spec 2.0, partially defined via JSON Schema draft 4,
+    # if properties is missing we assume it is the empty object.
+    # https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.4
+    return tspec.get('properties', {})
+
+
 # Swagger offers multiple ways to describe the same type, hence this mess.
 SWAGGER_TYPE_MAP = dict({
     (type_as_key(swagt), sysl_pb2.Type.Primitive.Name(syslt).lower())
@@ -148,13 +156,13 @@ def parse_typespec(tspec):
     elif (typ, fmt) == ('object', None):
         descrs = {
             k: descr
-            for (k, v) in tspec['properties'].iteritems()
+            for (k, v) in extract_properties(tspec).iteritems()
             for descr in [parse_typespec(v)[1]]
             if descr
         }
         assert not descrs, descrs
         fields = ('{} <: {}'.format(k, parse_typespec(v)[0])
-                  for (k, v) in sorted(tspec['properties'].iteritems()))
+                  for (k, v) in sorted(extract_properties(tspec).iteritems()))
         return r('{' + ', '.join(fields) + '}')
     else:
         return r(str(tspec))
@@ -273,12 +281,9 @@ def main():
             w('!type {}:', tname)
 
             with w.indent():
-
-                tspec_items = tspec.get('properties')
-
-                if tspec_items:
-                    for (fname, fspec) in sorted(tspec_items.iteritems()):
-
+                properties = extract_properties(tspec)
+                if properties:
+                    for (fname, fspec) in sorted(properties.iteritems()):
                         (ftype, fdescr) = parse_typespec(fspec)
                         w('{} <: {}{}',
                           fname,
