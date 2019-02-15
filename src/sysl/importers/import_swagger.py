@@ -298,7 +298,7 @@ def main():
                               'set of ') or ftype.endswith('*') else ftype + '?',
                           ' "' + fdescr + '"' if fdescr else '')
                 # handle top-level arrays
-                elif 'type' in tspec and tspec['type'] == 'array':
+                elif tspec.get('type') == 'array':
 
                     (ftype, fdescr) = parse_typespec(tspec)
                     w('{} <: {}{}',
