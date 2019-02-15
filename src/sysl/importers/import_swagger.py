@@ -38,6 +38,11 @@ WORDS = set()
 PARAM_CACHE = {}
 
 
+def warn(msg):
+    sys.stderr.write(msg + '\n')
+    sys.stderr.flush()
+
+
 def words():
     """Lazy-load WORDS."""
     if not WORDS:
@@ -109,6 +114,7 @@ def parse_typespec(tspec):
 
     # skip invalid arrays
     if not typ and 'items' in tspec:
+        warn('Ignoring unexpected "items". Schema has "items" but did not have defined "type". Note: %r' % (tspec, ))
         del tspec['items']
 
     descr = tspec.pop('description', None)
@@ -118,6 +124,7 @@ def parse_typespec(tspec):
 
         # skip invalid type
         if '$ref' in tspec['items'] and 'type' in tspec['items']:
+            warn('Ignoring unexpected "type". Schema has "$ref" but also has unexpected "type". Note: %r' % (tspec, ))
             del tspec['items']['type']
 
         (itype, idescr) = parse_typespec(tspec['items'])
