@@ -114,7 +114,7 @@ def parse_typespec(tspec):
     descr = tspec.pop('description', None)
 
     if typ == 'array':
-        assert not (set(tspec.keys()) - {'type', 'items'}), tspec
+        assert not (set(tspec.keys()) - {'type', 'items', 'example'}), tspec
 
         # skip invalid type
         if '$ref' in tspec['items'] and 'type' in tspec['items']:
