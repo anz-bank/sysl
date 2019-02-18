@@ -111,6 +111,14 @@ TransformApp:
       TrimSuffix = TrimSuffix(" hello world", "world")
     )
 
+  !view IncorrectArgsToGoFunc(app <: sysl.App) -> int:
+    app -> (:
+      WrongNumberOfArgs = Contains("Hello World")
+      Contains = Contains("Hello World", 1)
+      Join = Join(["Hello", "World"], "_")
+      JoinInts = Join([1,2], "_")
+    )
+
   !view FlattenEndpointParams(app <: sysl.App) -> int:
     app -> (:
       let n = app.endpoints -> <set of string>(ep:

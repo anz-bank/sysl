@@ -147,6 +147,14 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			}
 			return setResult
 		}
+	case *sysl.Expr_List_:
+		{
+			listResult := MakeValueList()
+			for _, s := range x.List.Expr {
+				appendItemToValueList(listResult.GetList(), Eval(txApp, assign, s))
+			}
+			return listResult
+		}
 	case *sysl.Expr_Unexpr:
 		return evalUnaryFunc(x.Unexpr.Op, Eval(txApp, assign, x.Unexpr.Arg))
 	default:

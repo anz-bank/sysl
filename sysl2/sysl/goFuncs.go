@@ -21,6 +21,7 @@ type goFuncMap map[string]goFunc
 var GoFuncMap goFuncMap
 
 var kindToPrimitiveType map[reflect.Kind]sysl.Type_Primitive
+var valueTypeToPrimitiveType map[int]sysl.Type_Primitive
 
 func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
 	switch x := t.Type.(type) {
@@ -44,12 +45,13 @@ func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
 
 		if p := listOf.GetPrimitive(); p != sysl.Type_NO_Primitive {
 			switch p {
-			case sysl.Type_INT:
-				intSlice := []int{}
-				for _, listItem := range valueList {
-					intSlice = append(intSlice, int(listItem.GetI()))
-				}
-				return reflect.ValueOf(intSlice)
+			// Uncomment if required in future.
+			// case sysl.Type_INT:
+			// 	intSlice := []int{}
+			// 	for _, listItem := range valueList {
+			// 		intSlice = append(intSlice, int(listItem.GetI()))
+			// 	}
+			// 	return reflect.ValueOf(intSlice)
 			case sysl.Type_STRING:
 				stringSlice := []string{}
 				for _, listItem := range valueList {
@@ -63,7 +65,39 @@ func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
 	panic("valueToReflectValue: unsupported value type")
 }
 
-func isValueExpectedType(r reflect.Value, typ *sysl.Type) bool {
+func isValueExpectedType(v *sysl.Value, t *sysl.Type) bool {
+	vType := getValueType(v)
+	type1, has := valueTypeToPrimitiveType[vType]
+	inType := t.GetPrimitive()
+	// if both are primitive types
+	if has && inType != sysl.Type_NO_Primitive {
+		return inType == type1
+	}
+
+	if vType == VALUE_LIST && len(v.GetList().Value) == 0 {
+		return true
+	}
+
+	if vType == VALUE_SET && len(v.GetSet().Value) == 0 {
+		return true
+	}
+
+	if vType == VALUE_LIST && t.GetList() != nil {
+		return isValueExpectedType(v.GetList().Value[0], t.GetList().Type)
+	}
+
+	if vType == VALUE_SET && t.GetSet() != nil {
+		return isValueExpectedType(v.GetSet().Value[0], t.GetSet())
+	}
+
+	// Pass elements of sets as a slice to Go funcs.
+	if vType == VALUE_SET && t.GetList() != nil {
+		return isValueExpectedType(v.GetSet().Value[0], t.GetList().Type)
+	}
+	return false
+}
+
+func isReflectValueExpectedType(r reflect.Value, typ *sysl.Type) bool {
 	kind := r.Kind()
 	_, has := kindToPrimitiveType[kind]
 	if has {
@@ -82,7 +116,7 @@ func isValueExpectedType(r reflect.Value, typ *sysl.Type) bool {
 }
 
 func reflectToValue(r reflect.Value, typ *sysl.Type) *sysl.Value {
-	if isValueExpectedType(r, typ) == false {
+	if isReflectValueExpectedType(r, typ) == false {
 		logrus.Warnf("Got %s, Expected Value type: %v \n", r.Kind(), typ.Type)
 	}
 
@@ -101,12 +135,8 @@ func reflectToValue(r reflect.Value, typ *sysl.Type) *sysl.Value {
 		return MakeValueString(r.String())
 	case reflect.Slice:
 		list := MakeValueList()
-		var primitiveType *sysl.Type
-		if x := typ.GetList(); x != nil {
-			primitiveType = x.GetType()
-		} else {
-			primitiveType = typ.GetSet()
-		}
+		primitiveType := typ.GetList().GetType()
+
 		for i := 0; i < r.Len(); i++ {
 			appendItemToValueList(list.GetList(), reflectToValue(r.Index(i), primitiveType))
 		}
@@ -127,7 +157,11 @@ func evalGoFunc(name string, list *sysl.Value) *sysl.Value {
 		}
 
 		for i, l := range list.GetList().Value {
-			in = append(in, valueToReflectValue(l, f.args[i]))
+			if isValueExpectedType(l, f.args[i]) {
+				in = append(in, valueToReflectValue(l, f.args[i]))
+			} else {
+				return nil
+			}
 		}
 		result := f.val.Call(in)
 		if len(f.ret) != len(result) {
@@ -135,15 +169,7 @@ func evalGoFunc(name string, list *sysl.Value) *sysl.Value {
 			logrus.Errorf("Expected number of return types: (%d)\n", len(f.ret))
 			logrus.Errorf("Got result: (%d)\n", len(result))
 		}
-
-		if len(result) == 1 {
-			return reflectToValue(result[0], f.ret[0])
-		}
-		list2 := MakeValueList()
-		for i, r := range result {
-			appendItemToValueList(list2.GetList(), reflectToValue(r, f.ret[i]))
-		}
-		return list2
+		return reflectToValue(result[0], f.ret[0])
 	}
 	return nil
 }
@@ -156,6 +182,13 @@ func init() {
 		reflect.Int32:  sysl.Type_INT,
 		reflect.Int64:  sysl.Type_INT,
 		reflect.String: sysl.Type_STRING,
+	}
+
+	valueTypeToPrimitiveType = map[int]sysl.Type_Primitive{
+		VALUE_BOOL:   sysl.Type_BOOL,
+		VALUE_INT:    sysl.Type_INT,
+		VALUE_FLOAT:  sysl.Type_FLOAT,
+		VALUE_STRING: sysl.Type_STRING,
 	}
 
 	stringType := &sysl.Type{

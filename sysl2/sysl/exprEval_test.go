@@ -191,6 +191,23 @@ func TestEvalStringOps(t *testing.T) {
 	assert.Equal(t, " hello ", items["TrimSuffix"].GetS())
 }
 
+func TestIncorrectArgsToGoFunc(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "TodoApp"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "IncorrectArgsToGoFunc", &s)
+	assert.NotNil(t, out.GetMap())
+	items := out.GetMap().Items
+	contains, has := items["Contains"]
+	assert.True(t, has)
+	assert.Nil(t, contains)
+	wrongNumberOfArgs, has_Args := items["WrongNumberOfArgs"]
+	assert.True(t, has_Args)
+	assert.Nil(t, wrongNumberOfArgs)
+}
+
 func TestEvalFlatten(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
