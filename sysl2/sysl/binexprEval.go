@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 )
 
@@ -45,6 +45,10 @@ var valueFunctions = map[string]evalValueFunc{
 	makeKey(sysl.Expr_BinExpr_EQ, VALUE_INT, VALUE_INT):        cmpInt,
 	makeKey(sysl.Expr_BinExpr_EQ, VALUE_BOOL, VALUE_BOOL):      cmpBool,
 	makeKey(sysl.Expr_BinExpr_EQ, VALUE_STRING, VALUE_STRING):  cmpString,
+	makeKey(sysl.Expr_BinExpr_EQ, VALUE_NULL, VALUE_NULL):      cmpNullTrue,
+	makeKey(sysl.Expr_BinExpr_NE, VALUE_NULL, VALUE_NULL):      cmpNullFalse,
+	makeKey(sysl.Expr_BinExpr_EQ, VALUE_STRING, VALUE_NULL):    cmpNullFalse,
+	makeKey(sysl.Expr_BinExpr_NE, VALUE_STRING, VALUE_NULL):    cmpNullTrue,
 	makeKey(sysl.Expr_BinExpr_ADD, VALUE_INT, VALUE_INT):       addInt64,
 	makeKey(sysl.Expr_BinExpr_ADD, VALUE_STRING, VALUE_STRING): addString,
 	makeKey(sysl.Expr_BinExpr_SUB, VALUE_INT, VALUE_INT):       subInt64,

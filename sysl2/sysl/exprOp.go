@@ -65,6 +65,14 @@ func cmpBool(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(lhs.GetB() == rhs.GetB())
 }
 
+func cmpNullTrue(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(true)
+}
+
+func cmpNullFalse(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(false)
+}
+
 func flattenListMap(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
 	s := Scope{}
 	listResult := MakeValueList()

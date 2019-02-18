@@ -1,4 +1,4 @@
-Model [package="com.example.gen"]:
+Model [package="com.example.gen", name="Model"]:
   !type Request:
     id <: int?
     payload <: string
@@ -173,3 +173,11 @@ TransformApp:
       )
       links = out flatten(.inner)
     )
+  !view NullCheckAppAttrs(app <: sysl.App) -> int:
+    app -> (:
+      NotHasAttrName = .attrs.name == null
+      NotHasAttrFoo = .attrs.foo == null
+      hasAttrName = .attrs.name != null
+      hasAttrFoo = .attrs.foo != null
+    )
+
