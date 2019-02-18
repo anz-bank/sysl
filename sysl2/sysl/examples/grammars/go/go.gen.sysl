@@ -18,6 +18,12 @@ CodeGenTransform:
         else t.type_ref
     )
 
+  !view GetGoField(word <: string) -> string:
+    word -> (:
+      let wordUpper = ToTitle(word)
+      out = if (wordUpper in {"ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "LHS", "QPS", "RAM", "RHS", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "UID", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS"}) == true then wordUpper else Title(ToLower(word))
+    )
+
   !view filename(app <: sysl.App) -> string:
     app -> (:
       filename = app.name + ".go"
@@ -26,10 +32,12 @@ CodeGenTransform:
   !view GoStructFields(fields <: set of Type) -> set of FieldDecl:
     fields -> (field:
       let isKeyword = IsKeyword(field.key).out
-      let prefix = if isKeyword == true then "_" else ""
-      identifier = prefix + field.key
+      let fieldName = GetGoField(field.key).out
+      identifier = fieldName
       let IsPtr = if field.value.optional == true then "*" else ""
       Type = IsPtr + GoType(field.value).out
+      let fieldTag = '`json:"' + ToLower(fieldName)
+      Tag = if field.value.optional == true then (fieldTag + ',omitempty"`') else (fieldTag + '"`')
     )
 
   !view GoStructs(types <: set of Type) -> set of TopLevelDecl:
@@ -73,7 +81,7 @@ CodeGenTransform:
     app -> (:
 
       PackageClause = .name -> <package> (name:
-        PackageName = name
+        PackageName = ToLower(name)
       )
 
       # ImportDecl = app -> <ImportDecl>(:

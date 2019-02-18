@@ -1,8 +1,10 @@
 Model [package="com.example.gen"]:
   !type Request:
-    id <: int
+    id <: int?:
+      @name="Index"
     payload <: string
   !type Response:
-    req <: Request
+    req <: Request?
     code <: int
     response <: string
+    lhs <: float
