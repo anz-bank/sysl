@@ -197,11 +197,26 @@ class SwaggerTranslator:
                                 w(u'| {}', line)
 
                             responses = body['responses']
-                            errors = ','.join(
-                                sorted(str(e) for e in responses if e >= 400))
+                            # Backwards compat: support integer response keys.
+                            responses = {str(k): v for (k, v) in responses.iteritems()}
 
-                            if 200 in responses:
-                                r200 = responses[200]
+                            # Valid keys of responses can be:
+                            # - http status codes (I believe they must be string values, NOT integers, but spec is unclear).
+                            # - "default"
+                            # - any string matching the pattern "^x-(.*)$""
+                            # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
+
+                            errors = []
+                            for key in responses:
+                                if key == 'default' or key.startswith('x-'):
+                                    self.warn('default responses and x-* responses are not implemented')
+                                elif int(key) >= 400:
+                                    errors.append(key)
+
+                            errors = ','.join(sorted(errors))
+
+                            if '200' in responses:
+                                r200 = responses['200']
                                 if 'schema' in r200:
                                     ok = r200['schema']
                                     if ok.get('type') == 'array':
@@ -220,8 +235,8 @@ class SwaggerTranslator:
                                 else:
                                     ret = ' (' + r200.get('description') + ')'
                                 w(u'return 200{} or {{{}}}', ret, errors)
-                            elif 201 in responses:
-                                r201 = responses[201]
+                            elif '201' in responses:
+                                r201 = responses['201']
                                 if 'headers' in r201:
                                     ok = r201['headers']
                                     w(u'return 201 ({}) or {{{}}}',
