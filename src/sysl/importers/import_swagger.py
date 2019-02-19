@@ -7,7 +7,7 @@ import logging
 import re
 import sys
 import textwrap
-
+import os.path
 import yaml
 
 from sysl.util import debug
@@ -31,17 +31,6 @@ TYPE_MAP = {
     sysl_pb2.Type.XML: {'type': 'string'},
 }
 
-WORDS = set()
-
-PARAM_CACHE = {}
-
-
-def words():
-    """Lazy-load WORDS."""
-    if not WORDS:
-        WORDS.update(w.strip() for w in open('/usr/share/dict/words'))
-    return WORDS
-
 
 def sysl_array_type_of(itemtype):
     return 'sequence of ' + itemtype
@@ -56,28 +45,6 @@ def type_as_key(swagt):
         return frozenset(sorted(swagt.iteritems()))
     assert isinstance(swagt, basestring)
     return swagt
-
-
-def javaParam(match):
-    param = match.group(1)
-    ident = PARAM_CACHE.get(param)
-
-    if ident is None:
-        # foo-bar to fooBar
-        ident = re.sub(r'-(\w?)', lambda m: m.group(1).upper(), param)
-
-        # {fooid} -> fooId (only if foo is in WORDS but fooid isn't)
-        m = re.match(r'{([a-z]+)id}$', ident)
-        if m:
-            word = m.group(1)
-            if word in words() and word + 'id' not in words():
-                ident = '{' + word + 'Id}'
-
-        ident = ident.replace('}', '<:string}')
-
-        PARAM_CACHE[param] = ident
-
-    return ident
 
 
 def extract_properties(tspec):
@@ -124,12 +91,60 @@ def make_default_logger():
     return logger
 
 
+def load_vocabulary(words_fn='/usr/share/dict/words'):
+    if not os.path.exists(words_fn):
+        return []
+    else:
+        return (w.strip() for w in open(words_fn))
+
+
 class SwaggerTranslator:
-    def __init__(self, logger):
+    def __init__(self, logger, vocabulary_factory=None):
+        if vocabulary_factory is None:
+            vocabulary_factory = load_vocabulary
         self._logger = logger
+        self._param_cache = {}
+        self._words = set()
+        self._vocabulary_factory = vocabulary_factory
 
     def warn(self, msg):
         self._logger.warn(msg)
+
+    def words(self):
+        """Lazy-load WORDS."""
+        if not self._words:
+            self._words.update(self._vocabulary_factory())
+            if not self._words:
+                self.warn("could not load any vocabulary, janky environment-specific heuristics for renaming path template names may fail")
+        return self._words
+
+    def javaParam(self, match):
+        # TODO(anz-rfc) this seems janky and fragile.
+        param = match.group(1)
+        ident = self._param_cache.get(param)
+
+        if ident is None:
+            # foo-bar to fooBar
+            ident = re.sub(r'-(\w?)', lambda m: m.group(1).upper(), param)
+
+            # {fooid} -> fooId (only if foo is in WORDS but fooid isn't)
+            m = re.match(r'{([a-z]+)id}$', ident)
+            if m:
+                word = m.group(1)
+                if word in self.words() and word + 'id' not in self.words():
+                    ident = '{' + word + 'Id}'
+
+            ident = ident.replace('}', '<:string}')
+
+            self._param_cache[param] = ident
+
+        return ident
+
+    def translate_path_template_params(self, path):
+        # OAS 2.0 supports path templating.
+        # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#pathTemplating
+        # For some reason, we rename these params via javaParam
+        return re.sub(r'({[^/]*?})', self.javaParam, path)
 
     def translate(self, swag, appname, package, w):
 
@@ -156,8 +171,7 @@ class SwaggerTranslator:
             w(u'| {}', swag['info'].get('description', 'No description.'))
 
             for (path, api) in sorted(swag['paths'].iteritems()):
-                # {foo-bar} to {fooBar}
-                w(u'\n{}:', re.sub(r'({[^/]*?})', javaParam, path))
+                w(u'\n{}:', self.translate_path_template_params(path))
                 with w.indent():
                     if 'parameters' in api:
                         del api['parameters']
