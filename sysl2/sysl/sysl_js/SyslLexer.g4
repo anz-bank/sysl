@@ -246,16 +246,11 @@ INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
 DIGITS              : [0-9][0-9]*;
 
 fragment
-WITHIN_DBL_QTS        : (~[\r\n"])*;
-
+DOUBLE_QUOTE_STRING: ["] (~["\\] | [\\][\\brn'"])* ["];
 fragment
-WITHIN_SNGL_QTS        : (~[\r\n'])*;
+SINGLE_QUOTE_STRING: ['] (~['])* ['];
 
-QSTRING     : (
-            (DBL_QT WITHIN_DBL_QTS DBL_QT)
-            |
-            (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
-            );
+QSTRING     : DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING;
 
 NEWLINE     : '\r'? '\n'
             {this.gotNewLine = true; this.gotHttpVerb=false; this.spaces=0; this.linenum++;}
@@ -403,7 +398,9 @@ E_RELOPS_COUNT         : 'count';
 E_RELOPS_FLATTEN       : 'flatten';
 E_RELOPS_FIRST         : 'first';
 E_FUNC          : 'autoinc' | 'str' | 'substr';
-E_STRING        : ["] ~["]* ["];
+
+E_STRING_DBL           : ["] (~["\\] | [\\][\\brn'"])* ["];
+E_STRING_SINGLE        : ['] ~[']* ['];
 
 fragment
 F_DIGITS   : [0-9];

@@ -16,7 +16,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 142, 1648,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 143, 1648,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
@@ -219,10 +219,10 @@ var parserATN = []uint16{
 	272, 274, 276, 278, 280, 282, 284, 286, 288, 290, 292, 294, 296, 298, 300,
 	302, 304, 306, 308, 310, 312, 314, 316, 318, 320, 322, 324, 326, 328, 330,
 	332, 334, 336, 338, 340, 342, 344, 346, 348, 350, 352, 2, 20, 4, 2, 61,
-	62, 138, 138, 4, 2, 42, 42, 139, 139, 3, 2, 8, 9, 3, 2, 8, 10, 4, 2, 15,
-	17, 19, 21, 4, 2, 58, 58, 61, 62, 4, 2, 116, 118, 134, 136, 4, 2, 86, 86,
-	139, 139, 5, 2, 5, 5, 133, 133, 138, 138, 3, 2, 122, 123, 4, 2, 129, 129,
-	131, 131, 3, 2, 120, 121, 4, 2, 74, 74, 138, 139, 5, 2, 95, 95, 98, 98,
+	62, 139, 139, 4, 2, 42, 42, 140, 140, 3, 2, 8, 9, 3, 2, 8, 10, 4, 2, 15,
+	17, 19, 21, 4, 2, 58, 58, 61, 62, 4, 2, 116, 118, 134, 137, 4, 2, 86, 86,
+	140, 140, 5, 2, 5, 5, 133, 133, 139, 139, 3, 2, 122, 123, 4, 2, 129, 129,
+	131, 131, 3, 2, 120, 121, 4, 2, 74, 74, 139, 140, 5, 2, 95, 95, 98, 98,
 	100, 101, 4, 2, 96, 97, 109, 109, 4, 2, 95, 95, 98, 98, 4, 2, 77, 78, 81,
 	82, 4, 2, 105, 105, 107, 107, 2, 1710, 2, 354, 3, 2, 2, 2, 4, 363, 3, 2,
 	2, 2, 6, 371, 3, 2, 2, 2, 8, 379, 3, 2, 2, 2, 10, 383, 3, 2, 2, 2, 12,
@@ -547,7 +547,7 @@ var parserATN = []uint16{
 	1070, 3, 2, 2, 2, 1072, 1071, 3, 2, 2, 2, 1073, 181, 3, 2, 2, 2, 1074,
 	1075, 9, 8, 2, 2, 1075, 183, 3, 2, 2, 2, 1076, 1078, 9, 9, 2, 2, 1077,
 	1079, 7, 87, 2, 2, 1078, 1077, 3, 2, 2, 2, 1078, 1079, 3, 2, 2, 2, 1079,
-	1080, 3, 2, 2, 2, 1080, 1081, 7, 138, 2, 2, 1081, 185, 3, 2, 2, 2, 1082,
+	1080, 3, 2, 2, 2, 1080, 1081, 7, 139, 2, 2, 1081, 185, 3, 2, 2, 2, 1082,
 	1083, 5, 302, 152, 2, 1083, 187, 3, 2, 2, 2, 1084, 1089, 5, 186, 94, 2,
 	1085, 1086, 7, 93, 2, 2, 1086, 1088, 5, 186, 94, 2, 1087, 1085, 3, 2, 2,
 	2, 1088, 1091, 3, 2, 2, 2, 1089, 1087, 3, 2, 2, 2, 1089, 1090, 3, 2, 2,
@@ -563,11 +563,11 @@ var parserATN = []uint16{
 	5, 180, 91, 2, 1114, 1115, 7, 82, 2, 2, 1115, 1117, 3, 2, 2, 2, 1116, 1112,
 	3, 2, 2, 2, 1116, 1117, 3, 2, 2, 2, 1117, 1118, 3, 2, 2, 2, 1118, 1119,
 	7, 91, 2, 2, 1119, 1120, 5, 194, 98, 2, 1120, 1121, 7, 110, 2, 2, 1121,
-	1122, 7, 138, 2, 2, 1122, 1123, 7, 92, 2, 2, 1123, 197, 3, 2, 2, 2, 1124,
+	1122, 7, 139, 2, 2, 1122, 1123, 7, 92, 2, 2, 1123, 197, 3, 2, 2, 2, 1124,
 	1125, 7, 125, 2, 2, 1125, 1127, 7, 91, 2, 2, 1126, 1128, 5, 200, 101, 2,
 	1127, 1126, 3, 2, 2, 2, 1127, 1128, 3, 2, 2, 2, 1128, 1129, 3, 2, 2, 2,
 	1129, 1130, 5, 188, 95, 2, 1130, 1131, 7, 92, 2, 2, 1131, 199, 3, 2, 2,
-	2, 1132, 1133, 7, 138, 2, 2, 1133, 1134, 7, 90, 2, 2, 1134, 201, 3, 2,
+	2, 1132, 1133, 7, 139, 2, 2, 1133, 1134, 7, 90, 2, 2, 1134, 201, 3, 2,
 	2, 2, 1135, 1138, 7, 118, 2, 2, 1136, 1138, 5, 302, 152, 2, 1137, 1135,
 	3, 2, 2, 2, 1137, 1136, 3, 2, 2, 2, 1138, 203, 3, 2, 2, 2, 1139, 1140,
 	7, 132, 2, 2, 1140, 1141, 5, 202, 102, 2, 1141, 1142, 7, 106, 2, 2, 1142,
@@ -581,18 +581,18 @@ var parserATN = []uint16{
 	7, 91, 2, 2, 1161, 1162, 5, 302, 152, 2, 1162, 1163, 7, 92, 2, 2, 1163,
 	211, 3, 2, 2, 2, 1164, 1165, 7, 127, 2, 2, 1165, 213, 3, 2, 2, 2, 1166,
 	1167, 7, 128, 2, 2, 1167, 215, 3, 2, 2, 2, 1168, 1169, 7, 130, 2, 2, 1169,
-	217, 3, 2, 2, 2, 1170, 1172, 7, 139, 2, 2, 1171, 1170, 3, 2, 2, 2, 1171,
-	1172, 3, 2, 2, 2, 1172, 1173, 3, 2, 2, 2, 1173, 1174, 7, 138, 2, 2, 1174,
+	217, 3, 2, 2, 2, 1170, 1172, 7, 140, 2, 2, 1171, 1170, 3, 2, 2, 2, 1171,
+	1172, 3, 2, 2, 2, 1172, 1173, 3, 2, 2, 2, 1173, 1174, 7, 139, 2, 2, 1174,
 	219, 3, 2, 2, 2, 1175, 1177, 7, 99, 2, 2, 1176, 1175, 3, 2, 2, 2, 1176,
 	1177, 3, 2, 2, 2, 1177, 1178, 3, 2, 2, 2, 1178, 1180, 7, 76, 2, 2, 1179,
 	1181, 9, 13, 2, 2, 1180, 1179, 3, 2, 2, 2, 1180, 1181, 3, 2, 2, 2, 1181,
 	1182, 3, 2, 2, 2, 1182, 1185, 5, 218, 110, 2, 1183, 1184, 7, 111, 2, 2,
-	1184, 1186, 7, 138, 2, 2, 1185, 1183, 3, 2, 2, 2, 1185, 1186, 3, 2, 2,
+	1184, 1186, 7, 139, 2, 2, 1185, 1183, 3, 2, 2, 2, 1185, 1186, 3, 2, 2,
 	2, 1186, 221, 3, 2, 2, 2, 1187, 1192, 5, 184, 93, 2, 1188, 1192, 5, 220,
-	111, 2, 1189, 1192, 5, 244, 123, 2, 1190, 1192, 7, 138, 2, 2, 1191, 1187,
+	111, 2, 1189, 1192, 5, 244, 123, 2, 1190, 1192, 7, 139, 2, 2, 1191, 1187,
 	3, 2, 2, 2, 1191, 1188, 3, 2, 2, 2, 1191, 1189, 3, 2, 2, 2, 1191, 1190,
 	3, 2, 2, 2, 1192, 223, 3, 2, 2, 2, 1193, 1194, 7, 79, 2, 2, 1194, 1199,
-	7, 138, 2, 2, 1195, 1196, 7, 93, 2, 2, 1196, 1198, 7, 138, 2, 2, 1197,
+	7, 139, 2, 2, 1195, 1196, 7, 93, 2, 2, 1196, 1198, 7, 139, 2, 2, 1197,
 	1195, 3, 2, 2, 2, 1198, 1201, 3, 2, 2, 2, 1199, 1197, 3, 2, 2, 2, 1199,
 	1200, 3, 2, 2, 2, 1200, 1202, 3, 2, 2, 2, 1201, 1199, 3, 2, 2, 2, 1202,
 	1203, 7, 80, 2, 2, 1203, 225, 3, 2, 2, 2, 1204, 1206, 7, 101, 2, 2, 1205,
@@ -614,7 +614,7 @@ var parserATN = []uint16{
 	2, 2, 1235, 233, 3, 2, 2, 2, 1236, 1234, 3, 2, 2, 2, 1237, 1238, 7, 84,
 	2, 2, 1238, 1239, 5, 232, 117, 2, 1239, 1240, 7, 85, 2, 2, 1240, 235, 3,
 	2, 2, 2, 1241, 1242, 7, 83, 2, 2, 1242, 237, 3, 2, 2, 2, 1243, 1254, 7,
-	139, 2, 2, 1244, 1255, 5, 196, 99, 2, 1245, 1255, 5, 198, 100, 2, 1246,
+	140, 2, 2, 1244, 1255, 5, 196, 99, 2, 1245, 1255, 5, 198, 100, 2, 1246,
 	1255, 5, 208, 105, 2, 1247, 1255, 5, 210, 106, 2, 1248, 1255, 5, 216, 109,
 	2, 1249, 1255, 5, 212, 107, 2, 1250, 1255, 5, 214, 108, 2, 1251, 1255,
 	5, 204, 103, 2, 1252, 1255, 5, 220, 111, 2, 1253, 1255, 5, 226, 114, 2,
@@ -685,13 +685,13 @@ var parserATN = []uint16{
 	1406, 1409, 3, 2, 2, 2, 1407, 1405, 3, 2, 2, 2, 1407, 1408, 3, 2, 2, 2,
 	1408, 291, 3, 2, 2, 2, 1409, 1407, 3, 2, 2, 2, 1410, 1411, 5, 290, 146,
 	2, 1411, 1412, 7, 75, 2, 2, 1412, 1415, 5, 286, 144, 2, 1413, 1416, 6,
-	147, 2, 3, 1414, 1416, 7, 142, 2, 2, 1415, 1413, 3, 2, 2, 2, 1415, 1414,
+	147, 2, 3, 1414, 1416, 7, 143, 2, 2, 1415, 1413, 3, 2, 2, 2, 1415, 1414,
 	3, 2, 2, 2, 1416, 293, 3, 2, 2, 2, 1417, 1418, 7, 114, 2, 2, 1418, 1421,
-	5, 302, 152, 2, 1419, 1422, 6, 148, 3, 3, 1420, 1422, 7, 142, 2, 2, 1421,
+	5, 302, 152, 2, 1419, 1422, 6, 148, 3, 3, 1420, 1422, 7, 143, 2, 2, 1421,
 	1419, 3, 2, 2, 2, 1421, 1420, 3, 2, 2, 2, 1422, 295, 3, 2, 2, 2, 1423,
 	1424, 5, 302, 152, 2, 1424, 1425, 7, 77, 2, 2, 1425, 297, 3, 2, 2, 2, 1426,
 	1428, 5, 296, 149, 2, 1427, 1426, 3, 2, 2, 2, 1427, 1428, 3, 2, 2, 2, 1428,
-	1429, 3, 2, 2, 2, 1429, 1430, 7, 90, 2, 2, 1430, 1431, 7, 142, 2, 2, 1431,
+	1429, 3, 2, 2, 2, 1429, 1430, 7, 90, 2, 2, 1430, 1431, 7, 143, 2, 2, 1431,
 	1433, 7, 3, 2, 2, 1432, 1434, 5, 292, 147, 2, 1433, 1432, 3, 2, 2, 2, 1434,
 	1435, 3, 2, 2, 2, 1435, 1433, 3, 2, 2, 2, 1435, 1436, 3, 2, 2, 2, 1436,
 	1438, 3, 2, 2, 2, 1437, 1439, 5, 294, 148, 2, 1438, 1437, 3, 2, 2, 2, 1438,
@@ -705,38 +705,38 @@ var parserATN = []uint16{
 	5, 302, 152, 2, 1457, 1458, 8, 153, 1, 2, 1458, 1463, 3, 2, 2, 2, 1459,
 	1460, 5, 330, 166, 2, 1460, 1461, 8, 153, 1, 2, 1461, 1463, 3, 2, 2, 2,
 	1462, 1456, 3, 2, 2, 2, 1462, 1459, 3, 2, 2, 2, 1463, 305, 3, 2, 2, 2,
-	1464, 1465, 7, 138, 2, 2, 1465, 1466, 5, 304, 153, 2, 1466, 1467, 8, 154,
-	1, 2, 1467, 307, 3, 2, 2, 2, 1468, 1469, 7, 115, 2, 2, 1469, 1470, 7, 138,
+	1464, 1465, 7, 139, 2, 2, 1465, 1466, 5, 304, 153, 2, 1466, 1467, 8, 154,
+	1, 2, 1467, 307, 3, 2, 2, 2, 1468, 1469, 7, 115, 2, 2, 1469, 1470, 7, 139,
 	2, 2, 1470, 1471, 5, 304, 153, 2, 1471, 1472, 8, 155, 1, 2, 1472, 309,
-	3, 2, 2, 2, 1473, 1474, 7, 87, 2, 2, 1474, 1475, 7, 138, 2, 2, 1475, 1476,
+	3, 2, 2, 2, 1473, 1474, 7, 87, 2, 2, 1474, 1475, 7, 139, 2, 2, 1475, 1476,
 	5, 304, 153, 2, 1476, 1477, 8, 156, 1, 2, 1477, 311, 3, 2, 2, 2, 1478,
-	1479, 7, 137, 2, 2, 1479, 313, 3, 2, 2, 2, 1480, 1481, 5, 312, 157, 2,
+	1479, 7, 138, 2, 2, 1479, 313, 3, 2, 2, 2, 1480, 1481, 5, 312, 157, 2,
 	1481, 315, 3, 2, 2, 2, 1482, 1483, 5, 308, 155, 2, 1483, 1484, 8, 159,
 	1, 2, 1484, 1492, 3, 2, 2, 2, 1485, 1486, 5, 310, 156, 2, 1486, 1487, 8,
 	159, 1, 2, 1487, 1492, 3, 2, 2, 2, 1488, 1489, 5, 306, 154, 2, 1489, 1490,
 	8, 159, 1, 2, 1490, 1492, 3, 2, 2, 2, 1491, 1482, 3, 2, 2, 2, 1491, 1485,
 	3, 2, 2, 2, 1491, 1488, 3, 2, 2, 2, 1492, 1495, 3, 2, 2, 2, 1493, 1496,
-	6, 159, 4, 3, 1494, 1496, 7, 142, 2, 2, 1495, 1493, 3, 2, 2, 2, 1495, 1494,
+	6, 159, 4, 3, 1494, 1496, 7, 143, 2, 2, 1495, 1493, 3, 2, 2, 2, 1495, 1494,
 	3, 2, 2, 2, 1496, 317, 3, 2, 2, 2, 1497, 1498, 5, 190, 96, 2, 1498, 1499,
-	7, 139, 2, 2, 1499, 1500, 7, 109, 2, 2, 1500, 1501, 7, 142, 2, 2, 1501,
+	7, 140, 2, 2, 1499, 1500, 7, 109, 2, 2, 1500, 1501, 7, 143, 2, 2, 1501,
 	319, 3, 2, 2, 2, 1502, 1506, 5, 314, 158, 2, 1503, 1506, 5, 316, 159, 2,
 	1504, 1506, 5, 318, 160, 2, 1505, 1502, 3, 2, 2, 2, 1505, 1503, 3, 2, 2,
 	2, 1505, 1504, 3, 2, 2, 2, 1506, 321, 3, 2, 2, 2, 1507, 1511, 5, 34, 18,
 	2, 1508, 1511, 5, 38, 20, 2, 1509, 1511, 5, 180, 91, 2, 1510, 1507, 3,
 	2, 2, 2, 1510, 1508, 3, 2, 2, 2, 1510, 1509, 3, 2, 2, 2, 1511, 323, 3,
 	2, 2, 2, 1512, 1513, 5, 180, 91, 2, 1513, 325, 3, 2, 2, 2, 1514, 1515,
-	7, 138, 2, 2, 1515, 327, 3, 2, 2, 2, 1516, 1517, 5, 302, 152, 2, 1517,
+	7, 139, 2, 2, 1515, 327, 3, 2, 2, 2, 1516, 1517, 5, 302, 152, 2, 1517,
 	329, 3, 2, 2, 2, 1518, 1520, 5, 328, 165, 2, 1519, 1518, 3, 2, 2, 2, 1519,
 	1520, 3, 2, 2, 2, 1520, 1521, 3, 2, 2, 2, 1521, 1526, 7, 76, 2, 2, 1522,
 	1523, 7, 81, 2, 2, 1523, 1524, 5, 322, 162, 2, 1524, 1525, 7, 82, 2, 2,
 	1525, 1527, 3, 2, 2, 2, 1526, 1522, 3, 2, 2, 2, 1526, 1527, 3, 2, 2, 2,
 	1527, 1528, 3, 2, 2, 2, 1528, 1530, 7, 91, 2, 2, 1529, 1531, 5, 326, 164,
 	2, 1530, 1529, 3, 2, 2, 2, 1530, 1531, 3, 2, 2, 2, 1531, 1532, 3, 2, 2,
-	2, 1532, 1533, 7, 90, 2, 2, 1533, 1534, 7, 142, 2, 2, 1534, 1536, 7, 3,
+	2, 1532, 1533, 7, 90, 2, 2, 1533, 1534, 7, 143, 2, 2, 1534, 1536, 7, 3,
 	2, 2, 1535, 1537, 5, 320, 161, 2, 1536, 1535, 3, 2, 2, 2, 1537, 1538, 3,
 	2, 2, 2, 1538, 1536, 3, 2, 2, 2, 1538, 1539, 3, 2, 2, 2, 1539, 1540, 3,
 	2, 2, 2, 1540, 1541, 7, 4, 2, 2, 1541, 1542, 7, 92, 2, 2, 1542, 1543, 7,
-	142, 2, 2, 1543, 331, 3, 2, 2, 2, 1544, 1545, 7, 3, 2, 2, 1545, 1546, 5,
+	143, 2, 2, 1543, 331, 3, 2, 2, 2, 1544, 1545, 7, 3, 2, 2, 1545, 1546, 5,
 	330, 166, 2, 1546, 1547, 7, 4, 2, 2, 1547, 333, 3, 2, 2, 2, 1548, 1549,
 	5, 10, 6, 2, 1549, 1550, 7, 31, 2, 2, 1550, 1551, 5, 180, 91, 2, 1551,
 	335, 3, 2, 2, 2, 1552, 1557, 5, 334, 168, 2, 1553, 1554, 7, 38, 2, 2, 1554,
@@ -831,8 +831,9 @@ var symbolicNames = []string{
 	"E_TRUE", "E_FALSE", "E_NULL", "E_BUTNOT", "E_SEQUENCE_OF", "E_SET_OF",
 	"E_ASC", "E_DESC", "E_RELOPS_RANK", "E_RELOPS_AGG", "E_RELOPS_ANY", "E_RELOPS_SINGLE_NULL",
 	"E_RELOPS_SNAPSHOT", "E_RELOPS_WHERE", "E_RELOPS_COUNT", "E_RELOPS_FLATTEN",
-	"E_RELOPS_FIRST", "E_FUNC", "E_STRING", "E_DECIMAL", "E_DIGITS", "E_DOT_NAME_NL",
-	"E_Name", "E_DOT", "E_WS", "E_EMPTY_LINE", "E_NL",
+	"E_RELOPS_FIRST", "E_FUNC", "E_STRING_DBL", "E_STRING_SINGLE", "E_DECIMAL",
+	"E_DIGITS", "E_DOT_NAME_NL", "E_Name", "E_DOT", "E_WS", "E_EMPTY_LINE",
+	"E_NL",
 }
 
 var ruleNames = []string{
@@ -1032,15 +1033,16 @@ const (
 	SyslParserE_RELOPS_FLATTEN     = 129
 	SyslParserE_RELOPS_FIRST       = 130
 	SyslParserE_FUNC               = 131
-	SyslParserE_STRING             = 132
-	SyslParserE_DECIMAL            = 133
-	SyslParserE_DIGITS             = 134
-	SyslParserE_DOT_NAME_NL        = 135
-	SyslParserE_Name               = 136
-	SyslParserE_DOT                = 137
-	SyslParserE_WS                 = 138
-	SyslParserE_EMPTY_LINE         = 139
-	SyslParserE_NL                 = 140
+	SyslParserE_STRING_DBL         = 132
+	SyslParserE_STRING_SINGLE      = 133
+	SyslParserE_DECIMAL            = 134
+	SyslParserE_DIGITS             = 135
+	SyslParserE_DOT_NAME_NL        = 136
+	SyslParserE_Name               = 137
+	SyslParserE_DOT                = 138
+	SyslParserE_WS                 = 139
+	SyslParserE_EMPTY_LINE         = 140
+	SyslParserE_NL                 = 141
 )
 
 // SyslParser rules.
@@ -14224,8 +14226,12 @@ func (s *LiteralContext) E_DECIMAL() antlr.TerminalNode {
 	return s.GetToken(SyslParserE_DECIMAL, 0)
 }
 
-func (s *LiteralContext) E_STRING() antlr.TerminalNode {
-	return s.GetToken(SyslParserE_STRING, 0)
+func (s *LiteralContext) E_STRING_DBL() antlr.TerminalNode {
+	return s.GetToken(SyslParserE_STRING_DBL, 0)
+}
+
+func (s *LiteralContext) E_STRING_SINGLE() antlr.TerminalNode {
+	return s.GetToken(SyslParserE_STRING_SINGLE, 0)
 }
 
 func (s *LiteralContext) E_NULL() antlr.TerminalNode {
@@ -14285,7 +14291,7 @@ func (p *SyslParser) Literal() (localctx ILiteralContext) {
 	p.SetState(1072)
 	_la = p.GetTokenStream().LA(1)
 
-	if !(((_la-114)&-(0x1f+1)) == 0 && ((1<<uint((_la-114)))&((1<<(SyslParserE_TRUE-114))|(1<<(SyslParserE_FALSE-114))|(1<<(SyslParserE_NULL-114))|(1<<(SyslParserE_STRING-114))|(1<<(SyslParserE_DECIMAL-114))|(1<<(SyslParserE_DIGITS-114)))) != 0) {
+	if !(((_la-114)&-(0x1f+1)) == 0 && ((1<<uint((_la-114)))&((1<<(SyslParserE_TRUE-114))|(1<<(SyslParserE_FALSE-114))|(1<<(SyslParserE_NULL-114))|(1<<(SyslParserE_STRING_DBL-114))|(1<<(SyslParserE_STRING_SINGLE-114))|(1<<(SyslParserE_DECIMAL-114))|(1<<(SyslParserE_DIGITS-114)))) != 0) {
 		p.GetErrorHandler().RecoverInline(p)
 	} else {
 		p.GetErrorHandler().ReportMatch(p)
@@ -14780,7 +14786,7 @@ func (p *SyslParser) Expr_func() (localctx IExpr_funcContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == SyslParserNativeDataTypes || (((_la-72)&-(0x1f+1)) == 0 && ((1<<uint((_la-72)))&((1<<(SyslParserE_WHATEVER-72))|(1<<(SyslParserE_ARROW_RIGHT-72))|(1<<(SyslParserE_SQ_OPEN-72))|(1<<(SyslParserE_EMPTY_TUPLE-72))|(1<<(SyslParserE_CURLY_OPEN-72))|(1<<(SyslParserE_NULLSAFE_DOT-72))|(1<<(SyslParserE_OPEN_PAREN-72))|(1<<(SyslParserE_PLUS-72))|(1<<(SyslParserE_MINUS-72))|(1<<(SyslParserE_QN-72))|(1<<(SyslParserE_TILDE-72))|(1<<(SyslParserE_NOT-72)))) != 0) || (((_la-110)&-(0x1f+1)) == 0 && ((1<<uint((_la-110)))&((1<<(SyslParserE_IF-110))|(1<<(SyslParserE_TRUE-110))|(1<<(SyslParserE_FALSE-110))|(1<<(SyslParserE_NULL-110))|(1<<(SyslParserE_FUNC-110))|(1<<(SyslParserE_STRING-110))|(1<<(SyslParserE_DECIMAL-110))|(1<<(SyslParserE_DIGITS-110))|(1<<(SyslParserE_Name-110))|(1<<(SyslParserE_DOT-110)))) != 0) {
+	if _la == SyslParserNativeDataTypes || (((_la-72)&-(0x1f+1)) == 0 && ((1<<uint((_la-72)))&((1<<(SyslParserE_WHATEVER-72))|(1<<(SyslParserE_ARROW_RIGHT-72))|(1<<(SyslParserE_SQ_OPEN-72))|(1<<(SyslParserE_EMPTY_TUPLE-72))|(1<<(SyslParserE_CURLY_OPEN-72))|(1<<(SyslParserE_NULLSAFE_DOT-72))|(1<<(SyslParserE_OPEN_PAREN-72))|(1<<(SyslParserE_PLUS-72))|(1<<(SyslParserE_MINUS-72))|(1<<(SyslParserE_QN-72))|(1<<(SyslParserE_TILDE-72))|(1<<(SyslParserE_NOT-72)))) != 0) || (((_la-110)&-(0x1f+1)) == 0 && ((1<<uint((_la-110)))&((1<<(SyslParserE_IF-110))|(1<<(SyslParserE_TRUE-110))|(1<<(SyslParserE_FALSE-110))|(1<<(SyslParserE_NULL-110))|(1<<(SyslParserE_FUNC-110))|(1<<(SyslParserE_STRING_DBL-110))|(1<<(SyslParserE_STRING_SINGLE-110))|(1<<(SyslParserE_DECIMAL-110))|(1<<(SyslParserE_DIGITS-110))|(1<<(SyslParserE_Name-110))|(1<<(SyslParserE_DOT-110)))) != 0) {
 		{
 			p.SetState(1092)
 			p.Func_args()
@@ -22086,7 +22092,7 @@ func (p *SyslParser) If_multiple_lines() (localctx IIf_multiple_linesContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == SyslParserNativeDataTypes || (((_la-72)&-(0x1f+1)) == 0 && ((1<<uint((_la-72)))&((1<<(SyslParserE_WHATEVER-72))|(1<<(SyslParserE_ARROW_RIGHT-72))|(1<<(SyslParserE_SQ_OPEN-72))|(1<<(SyslParserE_EMPTY_TUPLE-72))|(1<<(SyslParserE_CURLY_OPEN-72))|(1<<(SyslParserE_NULLSAFE_DOT-72))|(1<<(SyslParserE_OPEN_PAREN-72))|(1<<(SyslParserE_PLUS-72))|(1<<(SyslParserE_MINUS-72))|(1<<(SyslParserE_QN-72))|(1<<(SyslParserE_TILDE-72))|(1<<(SyslParserE_NOT-72)))) != 0) || (((_la-110)&-(0x1f+1)) == 0 && ((1<<uint((_la-110)))&((1<<(SyslParserE_IF-110))|(1<<(SyslParserE_TRUE-110))|(1<<(SyslParserE_FALSE-110))|(1<<(SyslParserE_NULL-110))|(1<<(SyslParserE_FUNC-110))|(1<<(SyslParserE_STRING-110))|(1<<(SyslParserE_DECIMAL-110))|(1<<(SyslParserE_DIGITS-110))|(1<<(SyslParserE_Name-110))|(1<<(SyslParserE_DOT-110)))) != 0) {
+	if _la == SyslParserNativeDataTypes || (((_la-72)&-(0x1f+1)) == 0 && ((1<<uint((_la-72)))&((1<<(SyslParserE_WHATEVER-72))|(1<<(SyslParserE_ARROW_RIGHT-72))|(1<<(SyslParserE_SQ_OPEN-72))|(1<<(SyslParserE_EMPTY_TUPLE-72))|(1<<(SyslParserE_CURLY_OPEN-72))|(1<<(SyslParserE_NULLSAFE_DOT-72))|(1<<(SyslParserE_OPEN_PAREN-72))|(1<<(SyslParserE_PLUS-72))|(1<<(SyslParserE_MINUS-72))|(1<<(SyslParserE_QN-72))|(1<<(SyslParserE_TILDE-72))|(1<<(SyslParserE_NOT-72)))) != 0) || (((_la-110)&-(0x1f+1)) == 0 && ((1<<uint((_la-110)))&((1<<(SyslParserE_IF-110))|(1<<(SyslParserE_TRUE-110))|(1<<(SyslParserE_FALSE-110))|(1<<(SyslParserE_NULL-110))|(1<<(SyslParserE_FUNC-110))|(1<<(SyslParserE_STRING_DBL-110))|(1<<(SyslParserE_STRING_SINGLE-110))|(1<<(SyslParserE_DECIMAL-110))|(1<<(SyslParserE_DIGITS-110))|(1<<(SyslParserE_Name-110))|(1<<(SyslParserE_DOT-110)))) != 0) {
 		{
 			p.SetState(1424)
 			p.Ifvar()
@@ -22109,7 +22115,7 @@ func (p *SyslParser) If_multiple_lines() (localctx IIf_multiple_linesContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = _la == SyslParserNativeDataTypes || (((_la-72)&-(0x1f+1)) == 0 && ((1<<uint((_la-72)))&((1<<(SyslParserE_WHATEVER-72))|(1<<(SyslParserE_ARROW_RIGHT-72))|(1<<(SyslParserE_SQ_OPEN-72))|(1<<(SyslParserE_EMPTY_TUPLE-72))|(1<<(SyslParserE_CURLY_OPEN-72))|(1<<(SyslParserE_NULLSAFE_DOT-72))|(1<<(SyslParserE_OPEN_PAREN-72))|(1<<(SyslParserE_PLUS-72))|(1<<(SyslParserE_MINUS-72))|(1<<(SyslParserE_QN-72))|(1<<(SyslParserE_TILDE-72))|(1<<(SyslParserE_NOT-72)))) != 0) || (((_la-110)&-(0x1f+1)) == 0 && ((1<<uint((_la-110)))&((1<<(SyslParserE_IF-110))|(1<<(SyslParserE_TRUE-110))|(1<<(SyslParserE_FALSE-110))|(1<<(SyslParserE_NULL-110))|(1<<(SyslParserE_FUNC-110))|(1<<(SyslParserE_STRING-110))|(1<<(SyslParserE_DECIMAL-110))|(1<<(SyslParserE_DIGITS-110))|(1<<(SyslParserE_Name-110))|(1<<(SyslParserE_DOT-110)))) != 0) {
+	for ok := true; ok; ok = _la == SyslParserNativeDataTypes || (((_la-72)&-(0x1f+1)) == 0 && ((1<<uint((_la-72)))&((1<<(SyslParserE_WHATEVER-72))|(1<<(SyslParserE_ARROW_RIGHT-72))|(1<<(SyslParserE_SQ_OPEN-72))|(1<<(SyslParserE_EMPTY_TUPLE-72))|(1<<(SyslParserE_CURLY_OPEN-72))|(1<<(SyslParserE_NULLSAFE_DOT-72))|(1<<(SyslParserE_OPEN_PAREN-72))|(1<<(SyslParserE_PLUS-72))|(1<<(SyslParserE_MINUS-72))|(1<<(SyslParserE_QN-72))|(1<<(SyslParserE_TILDE-72))|(1<<(SyslParserE_NOT-72)))) != 0) || (((_la-110)&-(0x1f+1)) == 0 && ((1<<uint((_la-110)))&((1<<(SyslParserE_IF-110))|(1<<(SyslParserE_TRUE-110))|(1<<(SyslParserE_FALSE-110))|(1<<(SyslParserE_NULL-110))|(1<<(SyslParserE_FUNC-110))|(1<<(SyslParserE_STRING_DBL-110))|(1<<(SyslParserE_STRING_SINGLE-110))|(1<<(SyslParserE_DECIMAL-110))|(1<<(SyslParserE_DIGITS-110))|(1<<(SyslParserE_Name-110))|(1<<(SyslParserE_DOT-110)))) != 0) {
 		{
 			p.SetState(1430)
 			p.Cond_block()
@@ -22412,7 +22418,7 @@ func (p *SyslParser) Expr() (localctx IExprContext) {
 		}
 		localctx.(*ExprContext).SetNested(localctx.(*ExprContext).Get_expr_if_else().GetNested())
 
-	case SyslParserNativeDataTypes, SyslParserE_WHATEVER, SyslParserE_ARROW_RIGHT, SyslParserE_SQ_OPEN, SyslParserE_EMPTY_TUPLE, SyslParserE_CURLY_OPEN, SyslParserE_NULLSAFE_DOT, SyslParserE_OPEN_PAREN, SyslParserE_PLUS, SyslParserE_MINUS, SyslParserE_QN, SyslParserE_TILDE, SyslParserE_NOT, SyslParserE_TRUE, SyslParserE_FALSE, SyslParserE_NULL, SyslParserE_FUNC, SyslParserE_STRING, SyslParserE_DECIMAL, SyslParserE_DIGITS, SyslParserE_Name, SyslParserE_DOT:
+	case SyslParserNativeDataTypes, SyslParserE_WHATEVER, SyslParserE_ARROW_RIGHT, SyslParserE_SQ_OPEN, SyslParserE_EMPTY_TUPLE, SyslParserE_CURLY_OPEN, SyslParserE_NULLSAFE_DOT, SyslParserE_OPEN_PAREN, SyslParserE_PLUS, SyslParserE_MINUS, SyslParserE_QN, SyslParserE_TILDE, SyslParserE_NOT, SyslParserE_TRUE, SyslParserE_FALSE, SyslParserE_NULL, SyslParserE_FUNC, SyslParserE_STRING_DBL, SyslParserE_STRING_SINGLE, SyslParserE_DECIMAL, SyslParserE_DIGITS, SyslParserE_Name, SyslParserE_DOT:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(1450)
