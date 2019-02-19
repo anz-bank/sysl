@@ -3,12 +3,14 @@ import yaml
 from sysl.importers.import_swagger import SwaggerTranslator
 from sysl.util import writer
 
+
 class FakeLogger:
     def __init__(self):
         self.warnings = []
 
     def warn(self, msg):
         self.warnings.append(msg)
+
 
 SWAGGER_WITH_ARRAY_TYPE_WITH_EXAMPLE = r"""swagger: "2.0"
 basePath: /fruit-basket
