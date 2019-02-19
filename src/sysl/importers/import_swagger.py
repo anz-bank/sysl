@@ -253,7 +253,7 @@ class SwaggerTranslator:
             w('#' + '-' * 75)
             w('# definitions')
 
-            for (tname, tspec) in sorted(swag['definitions'].iteritems()):
+            for (tname, tspec) in sorted(swag.get('definitions', {}).iteritems()):
                 w()
                 w('!type {}:', tname)
 
