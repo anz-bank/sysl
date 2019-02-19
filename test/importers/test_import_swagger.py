@@ -62,7 +62,7 @@ def test_importing_swagger_array_type_with_example_produces_sysl_type():
     t = SwaggerTranslator(logger=FakeLogger())
     t.translate(swag, appname='', package='', w=w)
     output = str(w)
-    expected_fragment = '    !type FruitBasket:\n        fruit <: set of {}'
+    expected_fragment = '    !type FruitBasket:\n        fruit <: sequence of {}'
     assert expected_fragment in output
 
 
