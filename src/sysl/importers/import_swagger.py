@@ -159,17 +159,15 @@ class SwaggerTranslator:
 
                         if 'parameters' in body and 'in' in body['parameters']:
                             qparams = [p for p in body['parameters']
-                                    if p['in'] == 'query']
+                                       if p['in'] == 'query']
                         w(u'{}{}{}:',
-                        method.upper(),
-                        ' ?' if qparams else '',
-                        '&'.join(('{}={}{}'.format(
-                            p['name'],
-                            SWAGGER_TYPE_MAP[p['type']],
-                            '' if p['required'] else '?')
-                            if p['type'] != 'string' else
-                            '{name}=string'.format(**p))
-                            for p in qparams))
+                          method.upper(),
+                          ' ?' if qparams else '',
+                          '&'.join(('{}={}{}'.format(p['name'],
+                                                     SWAGGER_TYPE_MAP[p['type']],
+                                                     '' if p['required'] else '?')
+                                    if p['type'] != 'string' else '{name}=string'.format(**p))
+                                   for p in qparams))
                         with w.indent():
                             for line in textwrap.wrap(
                                     body.get('description', 'No description.').strip(), 64):
@@ -204,11 +202,11 @@ class SwaggerTranslator:
                                 if 'headers' in r201:
                                     ok = r201['headers']
                                     w(u'return 201 ({}) or {{{}}}',
-                                    ok['Location']['description'],
-                                    errors)
+                                      ok['Location']['description'],
+                                      errors)
                                 else:
                                     w(u'return 201 ({})',
-                                    r201['description'])
+                                      r201['description'])
 
                         if i < len(api) - 1:
                             w()
@@ -227,19 +225,17 @@ class SwaggerTranslator:
                         for (fname, fspec) in sorted(properties.iteritems()):
                             (ftype, fdescr) = self.parse_typespec(fspec)
                             w('{} <: {}{}',
-                            fname,
-                            ftype if ftype.startswith(
-                                'set of ') or ftype.endswith('*') else ftype + '?',
-                            ' "' + fdescr + '"' if fdescr else '')
+                              fname,
+                              ftype if ftype.startswith('set of ') or ftype.endswith('*') else ftype + '?',
+                              ' "' + fdescr + '"' if fdescr else '')
                     # handle top-level arrays
                     elif tspec.get('type') == 'array':
 
                         (ftype, fdescr) = self.parse_typespec(tspec)
                         w('{} <: {}{}',
-                        fname,
-                        ftype if ftype.startswith(
-                            'set of ') or ftype.endswith('*') else ftype + '?',
-                        ' "' + fdescr + '"' if fdescr else '')
+                          fname,
+                          ftype if ftype.startswith('set of ') or ftype.endswith('*') else ftype + '?',
+                          ' "' + fdescr + '"' if fdescr else '')
                     else:
                         assert True, tspec
 
@@ -304,7 +300,7 @@ class SwaggerTranslator:
             }
             assert not descrs, descrs
             fields = ('{} <: {}'.format(k, self.parse_typespec(v)[0])
-                    for (k, v) in sorted(extract_properties(tspec).iteritems()))
+                      for (k, v) in sorted(extract_properties(tspec).iteritems()))
             return r('{' + ', '.join(fields) + '}')
         else:
             return r(str(tspec))
@@ -323,7 +319,6 @@ def main():
 
     with open(args.outfile, 'w') as f_out:
         f_out.write(str(w))
-
 
 
 if __name__ == '__main__':
