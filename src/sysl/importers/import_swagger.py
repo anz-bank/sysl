@@ -2,11 +2,8 @@
 # -*- encoding: utf-8 -*-
 
 import argparse
-import collections
-import itertools
 import json
 import logging
-import os
 import re
 import sys
 import textwrap
