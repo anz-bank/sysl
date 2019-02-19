@@ -43,6 +43,14 @@ def words():
     return WORDS
 
 
+def sysl_array_type_of(itemtype):
+    return 'sequence of ' + itemtype
+
+
+def is_sysl_array_type(ftype):
+    return ftype.startswith('sequence of ')
+
+
 def type_as_key(swagt):
     if isinstance(swagt, dict):
         return frozenset(sorted(swagt.iteritems()))
@@ -186,7 +194,7 @@ class SwaggerTranslator:
                                         if '$ref' in items:
                                             itemtype = items['$ref'][
                                                 len('#/definitions/'):]
-                                            ret = ': <: set of ' + itemtype
+                                            ret = ': <: ' + sysl_array_type_of(itemtype)
                                         else:
                                             ret = ': <: ...'
                                     elif '$ref' in ok:
@@ -226,7 +234,7 @@ class SwaggerTranslator:
                             (ftype, fdescr) = self.parse_typespec(fspec)
                             w('{} <: {}{}',
                               fname,
-                              ftype if ftype.startswith('set of ') or ftype.endswith('*') else ftype + '?',
+                              ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
                               ' "' + fdescr + '"' if fdescr else '')
                     # handle top-level arrays
                     elif tspec.get('type') == 'array':
@@ -234,7 +242,7 @@ class SwaggerTranslator:
                         (ftype, fdescr) = self.parse_typespec(tspec)
                         w('{} <: {}{}',
                           fname,
-                          ftype if ftype.startswith('set of ') or ftype.endswith('*') else ftype + '?',
+                          ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
                           ' "' + fdescr + '"' if fdescr else '')
                     else:
                         assert True, tspec
@@ -260,7 +268,7 @@ class SwaggerTranslator:
 
             (itype, idescr) = self.parse_typespec(tspec['items'])
             assert idescr is None
-            return ('set of ' + itype, descr)
+            return (sysl_array_type_of(itype), descr)
 
         def r(t):
             return (t, descr)
