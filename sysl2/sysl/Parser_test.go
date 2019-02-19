@@ -372,3 +372,7 @@ func TestPetshop(t *testing.T) {
 func TestCrash(t *testing.T) {
 	testParseAgainstGolden(t, "tests/crash.sysl", "")
 }
+
+func TestStrings(t *testing.T) {
+	testParseAgainstGolden(t, "tests/strings_expr.sysl", "")
+}

@@ -169,7 +169,7 @@ subscribe: app_name ARROW_RIGHT name_str attribs_or_modifiers? COLON (WHATEVER |
 
 view_type_spec: collection_type | types;
 
-literal: E_DIGITS | E_DECIMAL | E_STRING | E_NULL | E_TRUE | E_FALSE;
+literal: E_DIGITS | E_DECIMAL | E_STRING_DBL | E_STRING_SINGLE | E_NULL | E_TRUE | E_FALSE;
 
 // expr_qualified_name: E_QN? E_RefName;
 expr_table_of_op: (E_DOT | E_NULLSAFE_DOT) E_TABLE_OF? E_Name;
