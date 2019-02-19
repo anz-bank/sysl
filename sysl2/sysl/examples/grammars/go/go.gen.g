@@ -5,7 +5,7 @@ ImportDecl: 'import' '(\n' ImportSpec* '\n)\n';
 ImportSpec: Import '\n';
 TopLevelDecl: Declaration | FunctionDecl | MethodDecl;
 Declaration: VarDecl | ConstDecl | StructType | InterfaceType ;
-StructType : '\n//' StructName '...\n' 'type' StructName 'struct' '{\n' FieldDecl* '}\n';
+StructType : Comment? '\n' 'type' StructName 'struct' '{\n' FieldDecl* '}\n';
 FieldDecl: '\t' identifier Type? Tag? '\n';
 IdentifierList: identifier IdentifierListC*;
 IdentifierListC: ',' identifier;

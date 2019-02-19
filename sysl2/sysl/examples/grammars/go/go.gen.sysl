@@ -44,6 +44,7 @@ CodeGenTransform:
     types -> (type:
         Declaration = type -> <Declaration>(:
           StructType = type -> <StructType>(:
+            Comment = "\n//" + .key + " ..." 
             StructName = .key
             FieldDecl = GoStructFields(.value.fields)
           )
