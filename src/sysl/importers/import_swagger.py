@@ -179,9 +179,10 @@ class SwaggerTranslator:
                                                                 key=lambda t: METHOD_ORDER[t[0]])):
                         qparams = dict()
 
-                        if 'parameters' in body and 'in' in body['parameters']:
+                        if 'parameters' in body:
                             qparams = [p for p in body['parameters']
-                                       if p['in'] == 'query']
+                                       if p.get('in') == 'query']
+
                         w(u'{}{}{}:',
                           method.upper(),
                           ' ?' if qparams else '',
