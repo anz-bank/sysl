@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 )
 

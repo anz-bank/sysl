@@ -211,17 +211,10 @@ func TestEvalNullCheckAppAttrs(t *testing.T) {
 	s.AddApp("app", mod.Apps[appName])
 	out := EvalView(mod, "TransformApp", "NullCheckAppAttrs", &s)
 
-	m := out.GetMap().Items["NotHasAttrName"].GetB()
-	assert.False(t, m)
-
-	m = out.GetMap().Items["NotHasAttrFoo"].GetB()
-	assert.True(t, m)
-
-	m = out.GetMap().Items["hasAttrName"].GetB()
-	assert.True(t, m)
-
-	m = out.GetMap().Items["hasAttrFoo"].GetB()
-	assert.False(t, m)
+	assert.False(t, out.GetMap().Items["NotHasAttrName"].GetB())
+	assert.True(t, out.GetMap().Items["NotHasAttrFoo"].GetB())
+	assert.True(t, out.GetMap().Items["hasAttrName"].GetB())
+	assert.False(t, out.GetMap().Items["hasAttrFoo"].GetB())
 }
 
 func TestScopeAddRestApp(t *testing.T) {

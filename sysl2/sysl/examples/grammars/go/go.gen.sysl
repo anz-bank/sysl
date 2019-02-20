@@ -21,6 +21,7 @@ CodeGenTransform:
   !view GetGoField(word <: string) -> string:
     word -> (:
       let wordUpper = ToTitle(word)
+      # Common initialisms https://github.com/golang/lint/blob/8f45f776aaf18cebc8d65861cc70c33c60471952/lint.go#L771
       out = if (wordUpper in {"ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "LHS", "QPS", "RAM", "RHS", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "UID", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS"}) == true then wordUpper else Title(ToLower(word))
     )
 
@@ -31,7 +32,6 @@ CodeGenTransform:
 
   !view GoStructFields(fields <: set of Type) -> set of FieldDecl:
     fields -> (field:
-      let isKeyword = IsKeyword(field.key).out
       let fieldName = GetGoField(field.key).out
       identifier = fieldName
       let IsPtr = if field.value.optional == true then "*" else ""
