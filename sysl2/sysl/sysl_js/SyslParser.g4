@@ -40,10 +40,15 @@ inplace_tuple: INDENT field+ DEDENT;
 field: name_str (array_size? LESS_COLON (field_type | inplace_tuple) QSTRING? )?;
 
 inplace_table : table;
-table   :   SYSL_COMMENT*
-            (TABLE | TYPE)
-            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field | annotation | inplace_table | WHATEVER )+ DEDENT)
-        ;
+
+table_stmts:  INDENT
+                (SYSL_COMMENT | field | annotation | inplace_table | WHATEVER)+
+              DEDENT;
+
+table_def: attribs_or_modifiers? COLON ( WHATEVER | table_stmts);
+
+table   :  SYSL_COMMENT* (TYPE | TABLE) name_str table_def;
+
 union   :   SYSL_COMMENT*
             UNION
             name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | user_defined_type | annotation | WHATEVER )+ DEDENT)
@@ -203,7 +208,7 @@ expr_single_or_null: E_RELOPS_SINGLE_NULL;
 expr_snapshot: E_RELOPS_SNAPSHOT;
 expr_count: E_RELOPS_COUNT;
 expr_navigate_attr: (E_DOT? E_Name);
-expr_navigate: E_QN? E_ARROW_RIGHT (E_SET_OF)? expr_navigate_attr (E_VIA E_Name)?;
+expr_navigate: E_QN? E_ARROW_RIGHT (E_SET_OF | E_SEQUENCE_OF)? expr_navigate_attr (E_VIA E_Name)?;
 
 matching_rhs: expr_table_of_op
     | expr_navigate
@@ -355,8 +360,14 @@ view_return_type: view_type_spec;
 transform_scope_var: E_Name;
 transform_arg: expr;
 
-transform: transform_arg? E_ARROW_RIGHT (E_ANGLE_OPEN transform_return_type E_ANGLE_CLOSE)? E_OPEN_PAREN transform_scope_var? E_COLON E_NL
-              INDENT (expr_stmt)+ DEDENT E_CLOSE_PAREN E_NL;
+transform: transform_arg?
+    E_ARROW_RIGHT
+    (E_ANGLE_OPEN transform_return_type E_ANGLE_CLOSE)?
+    E_OPEN_PAREN transform_scope_var? E_COLON E_NL
+      INDENT
+        (expr_stmt)+
+      DEDENT E_CLOSE_PAREN
+      E_NL;
 
 expr_block: INDENT transform DEDENT;
 
@@ -365,9 +376,35 @@ view_param: name_str LESS_COLON view_type_spec;
 view_params: view_param (COMMA view_param)*;
 
 abstract_view: ABSTRACT;
-view returns [abstractView = false;]: VIEW name_str OPEN_PAREN view_params CLOSE_PAREN (ARROW_RIGHT view_return_type)? ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
-app_decl locals [check = false;]: INDENT  (table | union | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view {$check == $view.abstractView} )+ ( { $check === true}? | DEDENT );
+view
+  returns [abstractView = false;]:
+  VIEW name_str
+    OPEN_PAREN view_params CLOSE_PAREN
+    (ARROW_RIGHT view_return_type)?
+    ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
+
+alias: ALIAS name_str attribs_or_modifiers? COLON
+        INDENT annotation* types DEDENT;
+
+app_decl
+    locals [check = false;]:
+    INDENT  (
+        alias
+        | annotation
+        | collector
+        | event
+        | facade
+        | mixin
+        | rest_endpoint
+        | simple_endpoint
+        | subscribe
+        | SYSL_COMMENT
+        | union
+        | view { $check = $view.abstractView;}
+        | table
+      )+
+      ( {$check}? | DEDENT );
 
 application:  SYSL_COMMENT*
                 name_with_attribs

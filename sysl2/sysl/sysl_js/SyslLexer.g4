@@ -161,6 +161,7 @@ HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' ) [ \t]*
 WRAP                : '!wrap';
 TABLE               : '!table';
 TYPE                : '!type';
+ALIAS               : '!alias';
 UNION               : '!union';
 VIEW                : '!view' { this.gotView = true;};
 
@@ -228,12 +229,6 @@ EMPTY_COMMENT       : ('#' '\r'? '\n')
 HASH                : '#'       -> pushMode(NOT_NEWLINE);
 PIPE                : '|'       -> pushMode(NOT_NEWLINE);
 
-fragment
-DBL_QT     : ["];
-
-fragment
-SINGLE_QT  : ['];
-
 EMPTY_LINE          : ([ \t]+ ( [\r\n] | EOF ))
                     { this.gotNewLine = true; this.spaces=0; this.gotHttpVerb=false; this.linenum++;}
                     -> channel(HIDDEN)
@@ -246,7 +241,7 @@ INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
 DIGITS              : [0-9][0-9]*;
 
 fragment
-DOUBLE_QUOTE_STRING: ["] (~["\\] | [\\][\\brn'"])* ["];
+DOUBLE_QUOTE_STRING: ["] (~["\\] | [\\][\\brnt'"])* ["];
 fragment
 SINGLE_QUOTE_STRING: ['] (~['])* ['];
 
@@ -399,7 +394,7 @@ E_RELOPS_FLATTEN       : 'flatten';
 E_RELOPS_FIRST         : 'first';
 E_FUNC          : 'autoinc' | 'str' | 'substr';
 
-E_STRING_DBL           : ["] (~["\\] | [\\][\\brn'"])* ["];
+E_STRING_DBL           : ["] (~["\\] | [\\][\\brnt'"])* ["];
 E_STRING_SINGLE        : ['] ~[']* ['];
 
 fragment
