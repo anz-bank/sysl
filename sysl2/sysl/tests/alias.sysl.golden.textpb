@@ -1,0 +1,115 @@
+apps: <
+  key: "Model"
+  value: <
+    name: <
+      part: "Model"
+    >
+    types: <
+      key: "Error"
+      value: <
+        primitive: STRING
+        attrs: <
+          key: "comment"
+          value: <
+            s: "some description"
+          >
+        >
+        attrs: <
+          key: "patterns"
+          value: <
+            a: <
+              elt: <
+                s: "foo"
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/alias.sysl"
+          start: <
+            line: 3
+            col: 2
+          >
+        >
+      >
+    >
+    types: <
+      key: "Request"
+      value: <
+        tuple: <
+          attr_defs: <
+            key: "requests"
+            value: <
+              primitive: STRING
+              source_context: <
+                start: <
+                  line: 7
+                >
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/alias.sysl"
+          start: <
+            line: 6
+            col: 2
+          >
+        >
+      >
+    >
+    types: <
+      key: "Response"
+      value: <
+        tuple: <
+          attr_defs: <
+            key: "error"
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
+                    part: "Model"
+                  >
+                  path: "Response"
+                >
+                ref: <
+                  path: "Error"
+                >
+              >
+              source_context: <
+                start: <
+                  line: 10
+                >
+              >
+            >
+          >
+          attr_defs: <
+            key: "response"
+            value: <
+              primitive: STRING
+              source_context: <
+                start: <
+                  line: 11
+                >
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/alias.sysl"
+          start: <
+            line: 9
+            col: 2
+          >
+        >
+      >
+    >
+    source_context: <
+      file: "tests/alias.sysl"
+      start: <
+        line: 1
+        col: 1
+      >
+    >
+  >
+>

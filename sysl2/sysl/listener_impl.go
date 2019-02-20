@@ -743,6 +743,36 @@ func (s *TreeShapeListener) EnterInplace_table(ctx *parser.Inplace_tableContext)
 // ExitInplace_table is called when production inplace_table is exited.
 func (s *TreeShapeListener) ExitInplace_table(ctx *parser.Inplace_tableContext) {}
 
+// EnterTable_stmts is called when production table_stmts is entered.
+func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
+	type1 := s.module.Apps[s.appname].Types[s.typename]
+	if ctx.Annotation(0) != nil {
+		if type1.Attrs == nil {
+			type1.Attrs = map[string]*sysl.Attribute{}
+		}
+	}
+	if ctx.Field(0) == nil {
+		type1.Type = nil
+	}
+}
+
+// ExitTable_stmts is called when production table_stmts is exited.
+func (s *TreeShapeListener) ExitTable_stmts(ctx *parser.Table_stmtsContext) {}
+
+// EnterTable_def is called when production table_def is entered.
+func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
+	type1 := s.module.Apps[s.appname].Types[s.typename]
+	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
+		type1.Attrs = makeAttributeArray(attribs)
+	}
+	if ctx.WHATEVER() != nil {
+		type1.Type = nil
+	}
+}
+
+// ExitTable_def is called when production table_def is exited.
+func (s *TreeShapeListener) ExitTable_def(ctx *parser.Table_defContext) {}
+
 // EnterTable is called when production table is entered.
 func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	if s.typename == "" {
@@ -776,17 +806,6 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 		}
 	}
 	type1 := types[s.typename]
-	if len(ctx.AllField()) == 0 {
-		type1.Type = nil
-	}
-	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		type1.Attrs = makeAttributeArray(attribs)
-	}
-	if ctx.Annotation(0) != nil {
-		if type1.Attrs == nil {
-			type1.Attrs = map[string]*sysl.Attribute{}
-		}
-	}
 	s.pushScope(type1)
 	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
@@ -857,8 +876,10 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 			}
 		}
 	}
-
-	s.applyAnnotations(ctx.AllAnnotation())
+	tableDef := ctx.Table_def().(*parser.Table_defContext)
+	if tableStmts := tableDef.Table_stmts(); tableStmts != nil {
+		s.applyAnnotations(tableStmts.(*parser.Table_stmtsContext).AllAnnotation())
+	}
 	s.popScope()
 
 	// Match legacy behavior
@@ -3561,9 +3582,39 @@ func buildSourceContext(filename string, line int, col int) *sysl.SourceContext 
 	}
 }
 
+// EnterAlias is called when production alias is entered.
+func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
+	if s.typename == "" {
+		s.typename = ctx.Name_str().GetText()
+	} else {
+		s.typename = s.typename + "." + ctx.Name_str().GetText()
+	}
+	type1 := &sysl.Type{}
+
+	s.typemap = map[string]*sysl.Type{
+		s.typename: type1,
+	}
+	s.fieldname = []string{s.typename}
+	s.module.Apps[s.appname].Types[s.typename] = type1
+
+	if ctx.Attribs_or_modifiers() != nil {
+		type1.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+	}
+
+	s.pushScope(type1)
+	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+}
+
+// ExitAlias is called when production alias is exited.
+func (s *TreeShapeListener) ExitAlias(ctx *parser.AliasContext) {
+	s.typename = ""
+	s.fieldname = []string{}
+	s.typemap = map[string]*sysl.Type{}
+}
+
 // EnterApp_decl is called when production app_decl is entered.
 func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
-	if s.module.Apps[s.appname].Types == nil && len(ctx.AllTable()) > 0 {
+	if s.module.Apps[s.appname].Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil) {
 		s.module.Apps[s.appname].Types = map[string]*sysl.Type{}
 	}
 	has_stmts := (ctx.Simple_endpoint(0) != nil || ctx.Rest_endpoint(0) != nil || ctx.Event(0) != nil || ctx.Subscribe(0) != nil || ctx.Collector(0) != nil)

@@ -201,6 +201,18 @@ func (s *BaseSyslParserListener) EnterInplace_table(ctx *Inplace_tableContext) {
 // ExitInplace_table is called when production inplace_table is exited.
 func (s *BaseSyslParserListener) ExitInplace_table(ctx *Inplace_tableContext) {}
 
+// EnterTable_stmts is called when production table_stmts is entered.
+func (s *BaseSyslParserListener) EnterTable_stmts(ctx *Table_stmtsContext) {}
+
+// ExitTable_stmts is called when production table_stmts is exited.
+func (s *BaseSyslParserListener) ExitTable_stmts(ctx *Table_stmtsContext) {}
+
+// EnterTable_def is called when production table_def is entered.
+func (s *BaseSyslParserListener) EnterTable_def(ctx *Table_defContext) {}
+
+// ExitTable_def is called when production table_def is exited.
+func (s *BaseSyslParserListener) ExitTable_def(ctx *Table_defContext) {}
+
 // EnterTable is called when production table is entered.
 func (s *BaseSyslParserListener) EnterTable(ctx *TableContext) {}
 
@@ -1042,6 +1054,12 @@ func (s *BaseSyslParserListener) EnterView(ctx *ViewContext) {}
 
 // ExitView is called when production view is exited.
 func (s *BaseSyslParserListener) ExitView(ctx *ViewContext) {}
+
+// EnterAlias is called when production alias is entered.
+func (s *BaseSyslParserListener) EnterAlias(ctx *AliasContext) {}
+
+// ExitAlias is called when production alias is exited.
+func (s *BaseSyslParserListener) ExitAlias(ctx *AliasContext) {}
 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *BaseSyslParserListener) EnterApp_decl(ctx *App_declContext) {}

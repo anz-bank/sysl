@@ -376,3 +376,7 @@ func TestCrash(t *testing.T) {
 func TestStrings(t *testing.T) {
 	testParseAgainstGolden(t, "tests/strings_expr.sysl", "")
 }
+
+func TestTypeAlias(t *testing.T) {
+	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl", "")
+}
