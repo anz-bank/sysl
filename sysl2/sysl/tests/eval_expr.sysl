@@ -1,6 +1,6 @@
 Model [package="com.example.gen"]:
   !type Request:
-    id <: int
+    id <: int?
     payload <: string
 
   !type Response:
@@ -28,17 +28,32 @@ TodoApp:
           return todo
 
 TransformApp:
-  !view add(lhs <: int, rhs <: int) -> int:
+  !view math(lhs <: int, rhs <: int) -> int:
     lhs -> (:
       out1 = lhs + rhs
       out2 = lhs -> <int> (:
         out3 = 5 + 1
       )
+      out3 = lhs - rhs
+      out4 = lhs * rhs
+      out5 = lhs / rhs
+      out6 = lhs % rhs
+    )
+
+  !view compare(lhs <: int, rhs <: int) -> int:
+    lhs -> (:
+      eq = lhs == rhs
+      gt = lhs > rhs
+      lt = lhs < rhs
+      ge = lhs >= rhs
+      le = lhs <= rhs
+      ne = lhs != rhs
     )
 
   !view UnionSet(lhs <: string) -> set of string:
     lhs -> (:
-      out = {"lhs"} | {"rhs"}
+      strs = {"rhs", "lhs"} | {"lhs"}
+      numbers = {1} | {1,2}
     )
 
   !view IsKeyword(word <: string) -> bool:
@@ -63,15 +78,21 @@ TransformApp:
   !view Getters(fields <: set of app.Type) -> set of memberFunction:
     fields -> (field:
       access = "public"
-      let IsPtr = if field.value.optional == false then "*" else ""
+      let IsPtr = if field.value.optional == false then "" else "*"
       returnType = IsPtr + JavaType(field.value).out
       methodName = "get" + field.key
+    )
+
+  !view Setters(fields <: set of app.Type) -> set of memberFunction:
+    fields -> (field:
+      access = "public"
+      methodName = "set" + field.key
     )
 
   !view classDef(types <: app.Types) -> classDef:
     types -> (t:
       className = t.key + "Impl"
-      classBody = Getters(t.value.fields)
+      classBody = Getters(t.value.fields) | Setters(t.value.fields)
     )
 
   !view GetAppAttributes(app <: sysl.App) -> int:
@@ -109,6 +130,7 @@ TransformApp:
       TrimRight = TrimRight(" hello world! ", " ")
       TrimSpace = TrimSpace(" hello world! ")
       TrimSuffix = TrimSuffix(" hello world", "world")
+      hasHello = "Hello" in Fields("Hello World!")
     )
 
   !view IncorrectArgsToGoFunc(app <: sysl.App) -> int:
@@ -119,21 +141,35 @@ TransformApp:
       JoinInts = Join([1,2], "_")
     )
 
-  !view FlattenEndpointParams(app <: sysl.App) -> int:
+  !view Flatten(app <: sysl.App) -> int:
     app -> (:
       let n = app.endpoints -> <set of string>(ep:
-        name = ep.value.method  + Join(ep.value.params flatten("name"), "")
+        name = ep.value.method  + Join(ep.value.params flatten(.name), "")
       )
-      names = n flatten("name")
+      names = n flatten(.name)
+      listOfNumbers1 = [[1,2,3], [4,5,6]] flatten(.)
+      listOfNumbers2 = [{1,2,3}, {4,5,6}] flatten(.)
+      setOfNumbers1 = {{1,2,3}, {4,5,6}} flatten(.)
+    )
+
+  !view Where(app <: sysl.App) -> int:
+    app -> (:
+      greaterThanOne = {1,2,3} where(. > 1)
+      strOne = {"1","2","3"} where(. == "1")
+
+      let fieldNames = app.types -> <set of name>(type:
+        name = type.key
+      )
+      Request = fieldNames where(.name == "Request")
     )
 
   !view Links(app <: sysl.App) -> int:
     app -> (:
-      let out =  app.types -> <set of link>(type:
+      let out =  app.types -> <set of inner>(type:
         inner = type.value.fields -> <set of link>(field:
           Left = field.key
           Right = JavaType(field.value).out
         )
       )
-      links = out flatten("inner")
+      links = out flatten(.inner)
     )

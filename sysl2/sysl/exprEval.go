@@ -67,7 +67,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			scopeVar := x.Transform.Scopevar
 			if argValue.GetMap() != nil && scopeVar != "." {
 				// TODO: add check that return type is defined as 'set of ...'
-				listResult := MakeValueSet()
+				setResult := MakeValueSet()
 				// Sort keys, to get stable output
 				var keys []string
 				for key := range argValue.GetMap().Items {
@@ -83,14 +83,12 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 					addItemToValueMap(a, "value", item)
 					(*assign)[scopeVar] = a
 					res := evalTransformStmts(txApp, assign, x.Transform)
-					listResult.GetSet().Value = append(listResult.GetSet().Value, res)
+					appendItemToValueList(setResult.GetSet(), res)
 				}
 				delete(*assign, scopeVar)
-				return listResult
-			} else {
-				logrus.Printf("Argvalue: %v", argValue)
+				return setResult
 			}
-
+			logrus.Printf("Argvalue: %v", argValue)
 			(*assign)[scopeVar] = argValue
 			res := evalTransformStmts(txApp, assign, x.Transform)
 			delete(*assign, scopeVar)
@@ -98,9 +96,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			return res
 		}
 	case *sysl.Expr_Binexpr:
-		lhs_v := Eval(txApp, assign, x.Binexpr.Lhs)
-		rhs_v := Eval(txApp, assign, x.Binexpr.Rhs)
-		return evalBinExpr(x.Binexpr.Op, lhs_v, rhs_v)
+		return evalBinExpr(txApp, assign, x.Binexpr)
 	case *sysl.Expr_Call_:
 		if callTransform, has := txApp.Views[x.Call.Func]; has {
 			logrus.Printf("Calling %s\n", x.Call.Func)
@@ -116,13 +112,12 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 				callScope[params[i].Name] = Eval(txApp, assign, argExpr)
 			}
 			return Eval(txApp, &callScope, callTransform.Expr)
-		} else {
-			list := MakeValueList()
-			for _, argExpr := range x.Call.Arg {
-				appendItemToValueList(list.GetList(), Eval(txApp, assign, argExpr))
-			}
-			return evalGoFunc(x.Call.Func, list)
 		}
+		list := MakeValueList()
+		for _, argExpr := range x.Call.Arg {
+			appendItemToValueList(list.GetList(), Eval(txApp, assign, argExpr))
+		}
+		return evalGoFunc(x.Call.Func, list)
 	case *sysl.Expr_Name:
 		return (*assign)[x.Name]
 	case *sysl.Expr_GetAttr_:
