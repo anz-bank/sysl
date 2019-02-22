@@ -32,8 +32,8 @@ annotation_value        :   QSTRING | array_of_strings | multi_line_docstring;
 annotation      : AT VAR_NAME EQ annotation_value;
 annotations     : INDENT annotation+ DEDENT;
 
-field_type      : collection_type
-                |  (types (array_size | size_spec)? QN? attribs_or_modifiers? (COLON annotations)?) ;
+field_type      : (collection_type |  (types (array_size | size_spec)?))
+                    QN? attribs_or_modifiers? (COLON annotations)?;
 
 array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS? CLOSE_PAREN;
 inplace_tuple: INDENT field+ DEDENT;

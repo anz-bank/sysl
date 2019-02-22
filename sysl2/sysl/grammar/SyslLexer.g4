@@ -175,7 +175,7 @@ TEXT_LINE       :
                 { startsWithKeyword(p.GetText()) == false}?
                 ;
 
-Name            : [a-zA-Z][-a-zA-Z0-9_]*;
+Name            : [a-zA-Z_][-a-zA-Z0-9_]*;
 /// end--textline & name
 
 // cim.sysl has spaces and tab in the same line.

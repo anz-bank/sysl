@@ -6,7 +6,7 @@ Model [package="com.example.gen"]:
   !type Response:
     code <: int
     message <: string
-    names <: sequence of Request
+    names <: sequence of Request?
 
   !union Message:
     Request
