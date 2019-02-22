@@ -121,6 +121,14 @@ func getTypeDetail(t *sysl.Type) (string, string) {
 		typeName = "sequence"
 		_, d := getTypeDetail(x.Sequence)
 		typeDetail = d
+	case *sysl.Type_Set:
+		typeName = "set"
+		_, d := getTypeDetail(x.Set)
+		typeDetail = d
+	case *sysl.Type_List_:
+		typeName = "list"
+		_, d := getTypeDetail(x.List.Type)
+		typeDetail = d
 	case *sysl.Type_Tuple_:
 		typeName = "tuple"
 	case *sysl.Type_Relation_:
