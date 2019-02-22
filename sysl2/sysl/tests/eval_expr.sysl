@@ -12,6 +12,13 @@ Model [package="com.example.gen"]:
     Request
     Response
 
+  !alias Error [~foo]:
+    @comment = "some description"
+    string
+
+  !alias Object:
+    Ignored
+
 TodoApp:
   /todos:
     GET:

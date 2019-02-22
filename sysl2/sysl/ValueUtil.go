@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/anz-bank/sysl/src/proto"
+	"github.com/pkg/errors"
 )
 
 // Scope holds the value of the variables during the execution of a transform
@@ -176,7 +177,7 @@ func typeToValue(t *sysl.Type) *sysl.Value {
 		}
 		addItemToValueMap(m, "fields", unionSet)
 	default:
-		panic("typeToValue: unsupported type")
+		panic(errors.Errorf("typeToValue: unsupported type: %v", x))
 	}
 	addItemToValueMap(m, "type", MakeValueString(typeName))
 	return m
@@ -194,9 +195,7 @@ func typesToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	m := MakeValueMap()
 	for key, t := range types {
 		switch t.Type.(type) {
-		case *sysl.Type_OneOf_:
-			// skipping union types
-		default:
+		case *sysl.Type_Tuple_, *sysl.Type_Relation_:
 			addItemToValueMap(m, key, typeToValue(t))
 		}
 	}
@@ -209,6 +208,27 @@ func unionToValueMap(types map[string]*sysl.Type) *sysl.Value {
 		switch t.Type.(type) {
 		case *sysl.Type_OneOf_:
 			addItemToValueMap(m, key, typeToValue(t))
+		}
+	}
+	return m
+}
+
+func aliasTypeToValueMap(t *sysl.Type) *sysl.Value {
+	m := MakeValueMap()
+	typeName, typeDetail := getTypeDetail(t)
+	addItemToValueMap(m, "type", MakeValueString(typeName))
+	addItemToValueMap(m, typeName, MakeValueString(typeDetail))
+	addItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
+	return m
+}
+
+func aliasToValueMap(types map[string]*sysl.Type) *sysl.Value {
+	m := MakeValueMap()
+	for key, t := range types {
+		switch t.Type.(type) {
+		case *sysl.Type_OneOf_, *sysl.Type_Tuple_, *sysl.Type_Relation_:
+		default:
+			addItemToValueMap(m, key, aliasTypeToValueMap(t))
 		}
 	}
 	return m
@@ -298,5 +318,6 @@ func (s *Scope) AddApp(name string, app *sysl.Application) {
 	addItemToValueMap(m, "attrs", attrsToValueMap(app.Attrs))
 	addItemToValueMap(m, "types", typesToValueMap(app.Types))
 	addItemToValueMap(m, "union", unionToValueMap(app.Types))
+	addItemToValueMap(m, "alias", aliasToValueMap(app.Types))
 	addItemToValueMap(m, "endpoints", endpointsToValueMap(app.Endpoints))
 }
