@@ -4,7 +4,7 @@ tokens { INDENT, DEDENT}
 
 @lexer::members {
 
-var keywords = ["set of", "return", "for", "one of", "else", "if", "loop", "until", "alt", "while"];
+var keywords = ["sequence of", "set of", "return", "for", "one of", "else", "if", "loop", "until", "alt", "while"];
 
 SyslLexer.prototype.linenum = 0;
 SyslLexer.prototype.in_sq_brackets = false;
@@ -277,7 +277,7 @@ TEXT_LINE       :
                 { startsWithKeyword(this.text) == false}?
                 ;
 
-Name            : [a-zA-Z][-a-zA-Z0-9_]*;
+Name            : [a-zA-Z_][-a-zA-Z0-9_]*;
 /// end--textline & name
 
 // cim.sysl has spaces and tab in the same line.

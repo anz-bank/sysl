@@ -32,8 +32,8 @@ annotation_value        :   QSTRING | array_of_strings | multi_line_docstring;
 annotation      : AT VAR_NAME EQ annotation_value;
 annotations     : INDENT annotation+ DEDENT;
 
-field_type      : collection_type
-                |  (types (array_size | size_spec)? QN? attribs_or_modifiers? (COLON annotations)?) ;
+field_type      : (collection_type |  (types (array_size | size_spec)?))
+                    QN? attribs_or_modifiers? (COLON annotations)?;
 
 array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS? CLOSE_PAREN;
 inplace_tuple: INDENT field+ DEDENT;
@@ -385,7 +385,7 @@ view
     ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
 alias: ALIAS name_str attribs_or_modifiers? COLON
-        INDENT annotation* types DEDENT;
+        INDENT annotation* (types | collection_type) DEDENT;
 
 app_decl
     locals [check = false;]:
