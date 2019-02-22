@@ -22,6 +22,9 @@ Model [package="com.example.gen"]:
   !alias Terms:
     sequence of Term
 
+  !alias Accounts:
+    set of Term
+
 TodoApp:
   /todos:
     GET:
