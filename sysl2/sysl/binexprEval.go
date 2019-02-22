@@ -54,6 +54,7 @@ var valueFunctions = map[string]evalValueFunc{
 	makeKey(sysl.Expr_BinExpr_IN, VALUE_STRING, VALUE_SET):     stringInSet,
 	makeKey(sysl.Expr_BinExpr_IN, VALUE_STRING, VALUE_LIST):    stringInList,
 	makeKey(sysl.Expr_BinExpr_BITOR, VALUE_SET, VALUE_SET):     setUnion,
+	makeKey(sysl.Expr_BinExpr_BITOR, VALUE_LIST, VALUE_LIST):   concatList,
 	makeKey(sysl.Expr_BinExpr_GT, VALUE_INT, VALUE_INT):        gtInt64,
 	makeKey(sysl.Expr_BinExpr_LT, VALUE_INT, VALUE_INT):        ltInt64,
 	makeKey(sysl.Expr_BinExpr_GE, VALUE_INT, VALUE_INT):        geInt64,
@@ -88,7 +89,7 @@ func (op DefaultBinExprStrategy) eval(txApp *sysl.Application, assign *Scope, bi
 	if f, has := valueFunctions[key]; has {
 		return f(lhs_v, rhs_v)
 	}
-	panic(errors.Errorf("Unsupported operation: %s", key))
+	panic(errors.Errorf("Unsupported operation:DefaultBinExprStrategy: %s", key))
 }
 
 func (op Eval_LHS_Over_RhsStrategy) eval(txApp *sysl.Application, assign *Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {

@@ -27,14 +27,14 @@ func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr
 	return result
 }
 
-func evalTransformUsingValueList(txApp *sysl.Application, x *sysl.Expr_Transform, assign *Scope, v []*sysl.Value) *sysl.Value {
-	listResult := MakeValueList()
+func evalTransformUsingValueList(txApp *sysl.Application, x *sysl.Expr_Transform, assign *Scope, v []*sysl.Value) []*sysl.Value {
+	listResult := []*sysl.Value{}
 	scopeVar := x.Scopevar
 
 	for _, svar := range v {
 		(*assign)[scopeVar] = svar
 		res := evalTransformStmts(txApp, assign, x)
-		listResult.GetList().Value = append(listResult.GetList().Value, res)
+		listResult = append(listResult, res)
 	}
 	delete(*assign, scopeVar)
 	logrus.Printf("Transform Result (As List/Set): %v", listResult)
@@ -64,10 +64,14 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 		switch argValue.Value.(type) {
 		case *sysl.Value_Set:
 			logrus.Printf("Evaluation Argvalue as a set: %d times\n", len(argValue.GetSet().Value))
-			return evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetSet().Value)
+			setResult := MakeValueSet()
+			setResult.GetSet().Value = evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetSet().Value)
+			return setResult
 		case *sysl.Value_List_:
 			logrus.Printf("Evaluation Argvalue as a list: %d times\n", len(argValue.GetList().Value))
-			return evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetList().Value)
+			listResult := MakeValueList()
+			listResult.GetList().Value = evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetList().Value)
+			return listResult
 		default:
 			// HACK: scopevar == '.', then we are not unpacking the map entries
 			scopeVar := x.Transform.Scopevar

@@ -182,9 +182,9 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	packageMap := out.GetMap().Items["package"].GetMap().Items
 	assert.Equal(t, "com.example.gen", packageMap["packageName"].GetS())
 
-	importList := out.GetMap().Items["import"].GetList().Value
-	assert.Equal(t, "Package1", importList[0].GetMap().Items["importPath"].GetS())
-	assert.Equal(t, "Package2", importList[1].GetMap().Items["importPath"].GetS())
+	importSet := out.GetMap().Items["import"].GetSet().Value
+	assert.Equal(t, "Package1", importSet[0].GetMap().Items["importPath"].GetS())
+	assert.Equal(t, "Package2", importSet[1].GetMap().Items["importPath"].GetS())
 
 	defSet := out.GetMap().Items["definition"].GetSet().Value
 	assert.Equal(t, 2, len(defSet), "definition length is incorrect")
@@ -250,7 +250,7 @@ func TestEvalStringOps(t *testing.T) {
 	items := out.GetMap().Items
 
 	// Check if all functions have been tested
-	assert.Equal(t, 19, len(items))
+	assert.Equal(t, 20, len(items))
 
 	for name := range GoFuncMap {
 		assert.NotNil(t, items[name])
@@ -264,6 +264,7 @@ func TestEvalStringOps(t *testing.T) {
 	assert.Equal(t, "Hello_World", items["Join"].GetS())
 	assert.Equal(t, int64(12), items["LastIndex"].GetI())
 	assert.Equal(t, "Hello_World", items["Replace"].GetS())
+	assert.Equal(t, 3, len(items["Split"].GetList().Value))
 	assert.Equal(t, "Hello World!", items["Title"].GetS())
 	assert.Equal(t, "hello world!", items["ToLower"].GetS())
 	assert.Equal(t, "HELLO WORLD!", items["ToTitle"].GetS())

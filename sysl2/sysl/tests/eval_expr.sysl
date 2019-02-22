@@ -144,6 +144,7 @@ TransformApp:
       Join = Join({"Hello", "World"}, "_")
       LastIndex = LastIndex("Hello! World!", "!")
       Replace = Replace("Hello/World", "/","_", -1)
+      Split = Split("/Hello/World", "/")
       Title = Title("hello world!")
       ToLower = ToLower("HELLO WORLD!")
       ToTitle = ToTitle("hello world!")
