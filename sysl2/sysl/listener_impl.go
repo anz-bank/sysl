@@ -299,11 +299,17 @@ func (s *TreeShapeListener) ExitSet_type(ctx *parser.Set_typeContext) {
 		Type: &sysl.Type_Set{
 			Set: type1,
 		},
-		SourceContext: &sysl.SourceContext{
-			Start: &sysl.SourceContext_Location{
-				Line: int32(ctx.GetStart().GetLine()),
-			},
-		},
+		SourceContext: type1.SourceContext,
+		Opt:           type1.Opt,
+		Attrs:         type1.Attrs,
+	}
+
+	type1.Opt = false
+
+	if type1.Attrs != nil {
+		type1.Attrs = nil
+		s.popScope()
+		s.pushScope(s.typemap[s.fieldname[len(s.fieldname)-1]])
 	}
 
 	if ctx.Size_spec() != nil {
@@ -325,11 +331,16 @@ func (s *TreeShapeListener) ExitSequence_type(ctx *parser.Sequence_typeContext) 
 		Type: &sysl.Type_Sequence{
 			Sequence: type1,
 		},
-		SourceContext: &sysl.SourceContext{
-			Start: &sysl.SourceContext_Location{
-				Line: int32(ctx.GetStart().GetLine()),
-			},
-		},
+		SourceContext: type1.SourceContext,
+		Opt:           type1.Opt,
+		Attrs:         type1.Attrs,
+	}
+	type1.Opt = false
+
+	if type1.Attrs != nil {
+		type1.Attrs = nil
+		s.popScope()
+		s.pushScope(s.typemap[s.fieldname[len(s.fieldname)-1]])
 	}
 
 	if ctx.Size_spec() != nil {

@@ -302,7 +302,7 @@ func TestRootArg(t *testing.T) {
 }
 
 func TestSequenceType(t *testing.T) {
-	testParseAgainstGolden(t, "tests/sequence_type.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/sequence_type.sysl", "")
 }
 
 func TestRestApi(t *testing.T) {

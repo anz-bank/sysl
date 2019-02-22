@@ -1,3 +1,4 @@
 SequenceType:
     !type A:
-        x <: sequence of int
+        x <: sequence of int?:
+          @comment = "array of int"
