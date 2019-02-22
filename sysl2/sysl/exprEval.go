@@ -54,6 +54,12 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			return nil
 		}
 		argValue := Eval(txApp, assign, arg)
+		dotValue, hasDot := (*assign)["."]
+		defer func() {
+			if hasDot {
+				(*assign)["."] = dotValue
+			}
+		}()
 
 		switch argValue.Value.(type) {
 		case *sysl.Value_Set:

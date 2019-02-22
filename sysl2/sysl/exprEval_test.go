@@ -354,3 +354,13 @@ func TestEvalLinks(t *testing.T) {
 	assert.Equal(t, "names", l[4].GetMap().Items["Left"].GetS())
 	assert.Equal(t, "List<Request>", l[4].GetMap().Items["Right"].GetS())
 }
+
+func TestDotScope(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "Model"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "TestDotScope", &s).GetMap().Items
+	assert.Equal(t, 3, len(out))
+}

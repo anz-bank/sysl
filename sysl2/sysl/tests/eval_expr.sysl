@@ -117,6 +117,17 @@ TransformApp:
       definition = classDef(app.types)
     )
 
+  !view TestDotScope(app <: sysl.App) -> int:
+    app -> (:
+      out = .name
+
+      package = .name -> <package> (:
+        packageName = .
+      )
+
+      import = .name
+    )
+
   !view StringOps(app <: sysl.App) -> int:
     app -> (:
       Contains = Contains("Hello World!", "World")
