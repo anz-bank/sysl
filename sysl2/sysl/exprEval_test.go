@@ -56,7 +56,7 @@ func TestScopeAddApp(t *testing.T) {
 	assert.Equal(t, "Response", unionMessage["fields"].GetSet().Value[1].GetS(), "unexpected id Field count")
 
 	alias := app["alias"].GetMap().Items
-	assert.Equal(t, 2, len(alias))
+	assert.Equal(t, 3, len(alias))
 	aliasError := alias["Error"].GetMap().Items
 	assert.Equal(t, "primitive", aliasError["type"].GetS())
 	assert.Equal(t, "STRING", aliasError["primitive"].GetS())
@@ -64,6 +64,10 @@ func TestScopeAddApp(t *testing.T) {
 	aliasObject := alias["Object"].GetMap().Items
 	assert.Equal(t, "type_ref", aliasObject["type"].GetS())
 	assert.Equal(t, "Ignored", aliasObject["type_ref"].GetS())
+
+	aliasTerms := alias["Terms"].GetMap().Items
+	assert.Equal(t, "sequence", aliasTerms["type"].GetS())
+	assert.Equal(t, "Term", aliasTerms["sequence"].GetS())
 }
 
 func TestEvalIntegerMath(t *testing.T) {

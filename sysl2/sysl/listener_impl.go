@@ -3611,16 +3611,22 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	if ctx.Attribs_or_modifiers() != nil {
 		type1.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
-
-	s.pushScope(type1)
+	if ctx.Annotation(0) != nil {
+		s.pushScope(type1)
+	}
 	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
 // ExitAlias is called when production alias is exited.
 func (s *TreeShapeListener) ExitAlias(ctx *parser.AliasContext) {
+	s.module.Apps[s.appname].Types[s.typename] = s.typemap[s.fieldname[len(s.fieldname)-1]]
+
 	s.typename = ""
 	s.fieldname = []string{}
 	s.typemap = map[string]*sysl.Type{}
+	if ctx.Annotation(0) != nil {
+		s.popScope()
+	}
 }
 
 // EnterApp_decl is called when production app_decl is entered.

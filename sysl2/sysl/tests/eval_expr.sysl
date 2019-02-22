@@ -19,6 +19,9 @@ Model [package="com.example.gen"]:
   !alias Object:
     Ignored
 
+  !alias Terms:
+    sequence of Term
+
 TodoApp:
   /todos:
     GET:

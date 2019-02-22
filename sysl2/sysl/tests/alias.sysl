@@ -10,3 +10,5 @@ Model:
       error <: Error
       response <: string
 
+  !alias Terms:
+    sequence of Term

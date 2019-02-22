@@ -385,7 +385,7 @@ view
     ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
 alias: ALIAS name_str attribs_or_modifiers? COLON
-        INDENT annotation* types DEDENT;
+        INDENT annotation* (types | collection_type) DEDENT;
 
 app_decl
   locals [bool check]:

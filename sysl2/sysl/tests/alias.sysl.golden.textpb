@@ -104,6 +104,38 @@ apps: <
         >
       >
     >
+    types: <
+      key: "Terms"
+      value: <
+        sequence: <
+          type_ref: <
+            context: <
+              appname: <
+                part: "Model"
+              >
+              path: "Terms"
+            >
+            ref: <
+              path: "Term"
+            >
+          >
+          source_context: <
+            file: "tests/alias.sysl"
+            start: <
+              line: 13
+              col: 2
+            >
+          >
+        >
+        source_context: <
+          file: "tests/alias.sysl"
+          start: <
+            line: 13
+            col: 2
+          >
+        >
+      >
+    >
     source_context: <
       file: "tests/alias.sysl"
       start: <
