@@ -1,52 +1,50 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"sort"
 
 	"github.com/anz-bank/sysl/src/proto"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
-
-type evalFunc func(*sysl.Value, *sysl.Value) *sysl.Value
-
-// OpMap is map of string to Function of type BinFunc
-type OpMap map[string]evalFunc
-
-// Consts for ValueTypes
-const (
-	VALUE_NO_ARG     = -1
-	VALUE_BOOL   int = iota
-	VALUE_INT
-	VALUE_FLOAT
-	VALUE_STRING
-	VALUE_STRING_DECIMAL
-	VALUE_LIST
-	VALUE_MAP
-	VALUE_SET
-)
-
-// FuncMap ...
-var FuncMap OpMap
-
-// OpArgs represents valid combination of an operator, lhs and rhs value types
-type OpArgs struct {
-	op       string // String representation of the function name, See Expr_BinExpr_Op_value or Expr_RelExpr_Op_name.
-	lhs, rhs int    // VALUE_BOOL etc
-	f        evalFunc
-}
 
 func addInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueI64(lhs.GetI() + rhs.GetI())
 }
+
+func gtInt64(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetI() > rhs.GetI())
+}
+
+func ltInt64(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetI() < rhs.GetI())
+}
+
+func geInt64(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetI() >= rhs.GetI())
+}
+
+func leInt64(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetI() <= rhs.GetI())
+}
+
+func neInt64(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetI() != rhs.GetI())
+}
+
 func subInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueI64(lhs.GetI() - rhs.GetI())
 }
+
 func mulInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueI64(lhs.GetI() * rhs.GetI())
 }
+
 func divInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueI64(lhs.GetI() / rhs.GetI())
 }
+
 func modInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueI64(lhs.GetI() % rhs.GetI())
 }
@@ -59,16 +57,106 @@ func cmpString(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(lhs.GetS() == rhs.GetS())
 }
 
+func cmpInt(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetI() == rhs.GetI())
+}
+
 func cmpBool(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(lhs.GetB() == rhs.GetB())
 }
 
+func flattenListMap(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	listResult := MakeValueList()
+	for _, l := range list.GetList().Value {
+		s[scopeVar] = l
+		appendItemToValueList(listResult.GetList(), Eval(txApp, &s, rhs))
+	}
+	return listResult
+}
+
+func flattenListList(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	listResult := MakeValueList()
+	for _, l := range list.GetList().Value {
+		for _, ll := range l.GetList().Value {
+			s[scopeVar] = ll
+			appendItemToValueList(listResult.GetList(), Eval(txApp, &s, rhs))
+		}
+	}
+	return listResult
+}
+
+func flattenListSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	listResult := MakeValueList()
+	for _, l := range list.GetList().Value {
+		for _, ll := range l.GetSet().Value {
+			s[scopeVar] = ll
+			appendItemToValueList(listResult.GetList(), Eval(txApp, &s, rhs))
+		}
+	}
+	return listResult
+}
+
+func flattenSetMap(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	setResult := MakeValueSet()
+	for _, l := range list.GetSet().Value {
+		if l.GetMap() == nil {
+			panic(errors.Errorf("flattenSetMap: expecting map instead of %v ", l))
+		}
+		s[scopeVar] = l
+		res := Eval(txApp, &s, rhs)
+		switch x := res.Value.(type) {
+		case *sysl.Value_Set:
+			for _, ll := range x.Set.Value {
+				appendItemToValueList(setResult.GetSet(), ll)
+			}
+		default:
+			appendItemToValueList(setResult.GetSet(), res)
+		}
+	}
+	return setResult
+}
+
+func flattenSetSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	setResult := MakeValueSet()
+	for _, l := range list.GetSet().Value {
+		for _, ll := range l.GetSet().Value {
+			s[scopeVar] = ll
+			appendItemToValueList(setResult.GetSet(), Eval(txApp, &s, rhs))
+		}
+	}
+	return setResult
+}
+
 func setUnion(lhs, rhs *sysl.Value) *sysl.Value {
-	res := MakeValueSet()
-	appendListToValueList(res.GetSet(), lhs.GetSet())
-	appendListToValueList(res.GetSet(), rhs.GetSet())
-	logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(res.GetSet().Value))
-	return res
+	itemType := getContainedType(lhs)
+	if itemType == VALUE_NO_ARG {
+		itemType = getContainedType(rhs)
+	}
+
+	if itemType == VALUE_NO_ARG {
+		return MakeValueSet()
+	}
+
+	switch itemType {
+	case VALUE_INT:
+		unionSet := unionIntSets(intSet(lhs.GetSet().Value), intSet(rhs.GetSet().Value))
+		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		return intSetToValueSet(unionSet)
+	case VALUE_STRING:
+		unionSet := unionStringSets(stringSet(lhs.GetSet().Value), stringSet(rhs.GetSet().Value))
+		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		return stringSetToValueSet(unionSet)
+	case VALUE_MAP:
+		unionSet := unionMapSets(mapSet(lhs.GetSet().Value), mapSet(rhs.GetSet().Value))
+		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		return mapSetToValueSet(unionSet)
+	}
+	panic(errors.Errorf("union of itemType: %s not supported", itemType.String()))
 }
 
 func stringInSet(lhs, rhs *sysl.Value) *sysl.Value {
@@ -81,6 +169,101 @@ func stringInSet(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
+func intSet(list []*sysl.Value) map[int64]struct{} {
+	m := map[int64]struct{}{}
+	for _, item := range list {
+		m[item.GetI()] = struct{}{}
+	}
+	return m
+}
+
+func unionIntSets(lhs, rhs map[int64]struct{}) map[int64]struct{} {
+	for key := range rhs {
+		lhs[key] = struct{}{}
+	}
+	return lhs
+}
+
+func intSetToValueSet(lhs map[int64]struct{}) *sysl.Value {
+	m := MakeValueSet()
+	var keys []int
+
+	for key := range lhs {
+		keys = append(keys, int(key))
+	}
+	sort.Ints(keys)
+
+	for _, key := range keys {
+		appendItemToValueList(m.GetSet(), MakeValueI64(int64(key)))
+	}
+	return m
+}
+
+func stringSet(list []*sysl.Value) map[string]struct{} {
+	m := map[string]struct{}{}
+
+	for _, item := range list {
+		m[item.GetS()] = struct{}{}
+	}
+	return m
+}
+
+func unionStringSets(lhs, rhs map[string]struct{}) map[string]struct{} {
+	for key := range rhs {
+		lhs[key] = struct{}{}
+	}
+	return lhs
+}
+
+func stringSetToValueSet(lhs map[string]struct{}) *sysl.Value {
+	m := MakeValueSet()
+
+	// for stable output
+	var keys []string
+	for key := range lhs {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		appendItemToValueList(m.GetSet(), MakeValueString(key))
+	}
+	return m
+}
+
+func mapSet(m []*sysl.Value) map[string]*sysl.Value {
+	resultMap := map[string]*sysl.Value{}
+	for _, item := range m {
+		// Marshal() sorts the keys, so should get stable output.
+		bytes, err := json.Marshal(item.GetMap().Items)
+		if err == nil {
+			resultMap[string(bytes)] = item
+		}
+	}
+	return resultMap
+}
+
+func unionMapSets(lhs, rhs map[string]*sysl.Value) map[string]*sysl.Value {
+	for key, val := range rhs {
+		lhs[key] = val
+	}
+	return lhs
+}
+
+func mapSetToValueSet(lhs map[string]*sysl.Value) *sysl.Value {
+	m := MakeValueSet()
+	var keys []string
+	for key := range lhs {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		appendItemToValueList(m.GetSet(), lhs[key])
+	}
+	return m
+}
+
 func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 	str := lhs.GetS()
 	for _, v := range rhs.GetList().Value {
@@ -91,71 +274,15 @@ func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
-func getValueType(v *sysl.Value) int {
-	if v == nil {
-		return VALUE_NO_ARG
+func whereSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	setResult := MakeValueSet()
+	for _, l := range list.GetSet().Value {
+		s[scopeVar] = l
+		predicate := Eval(txApp, &s, rhs)
+		if predicate.GetB() {
+			appendItemToValueList(setResult.GetSet(), l)
+		}
 	}
-	switch v.Value.(type) {
-	case *sysl.Value_B:
-		return VALUE_BOOL
-	case *sysl.Value_I:
-		return VALUE_INT
-	case *sysl.Value_D:
-		return VALUE_FLOAT
-	case *sysl.Value_S:
-		return VALUE_STRING
-	case *sysl.Value_Decimal:
-		return VALUE_STRING_DECIMAL
-	case *sysl.Value_Set:
-		return VALUE_SET
-	case *sysl.Value_List_:
-		return VALUE_SET
-	case *sysl.Value_Map_:
-		return VALUE_MAP
-	default:
-		panic("exprOp: getValueType: unhandled type")
-	}
-}
-
-func makeKey(op_name string, lhs, rhs int) string {
-	return fmt.Sprintf("%s_%d_%d", op_name, lhs, rhs)
-}
-
-func addToFuncMap(op_name string, lhs, rhs int, f evalFunc) {
-	if _, has := FuncMap[makeKey(op_name, lhs, rhs)]; has {
-		panic("adding duplicate entries in the func map")
-	}
-	FuncMap[makeKey(op_name, lhs, rhs)] = f
-}
-
-func evalBinExpr(op sysl.Expr_BinExpr_Op, lhs, rhs *sysl.Value) *sysl.Value {
-	key := makeKey(sysl.Expr_BinExpr_Op_name[int32(op)], getValueType(lhs), getValueType(rhs))
-	if fn, has := FuncMap[key]; has {
-		return fn(lhs, rhs)
-	}
-	panic("unsupported operation: " + key)
-}
-
-func addBinaryOps() {
-	var ops = []OpArgs{
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_EQ)], VALUE_BOOL, VALUE_BOOL, cmpBool},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_ADD)], VALUE_INT, VALUE_INT, addInt64},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_SUB)], VALUE_INT, VALUE_INT, subInt64},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_MUL)], VALUE_INT, VALUE_INT, mulInt64},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_DIV)], VALUE_INT, VALUE_INT, divInt64},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_MOD)], VALUE_INT, VALUE_INT, modInt64},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_ADD)], VALUE_STRING, VALUE_STRING, addString},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_EQ)], VALUE_STRING, VALUE_STRING, cmpString},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_IN)], VALUE_STRING, VALUE_SET, stringInSet},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_IN)], VALUE_STRING, VALUE_LIST, stringInList},
-		OpArgs{sysl.Expr_BinExpr_Op_name[int32(sysl.Expr_BinExpr_BITOR)], VALUE_SET, VALUE_SET, setUnion},
-	}
-	for _, op := range ops {
-		addToFuncMap(op.op, op.lhs, op.rhs, op.f)
-	}
-}
-
-func init() {
-	FuncMap = make(OpMap)
-	addBinaryOps()
+	return setResult
 }
