@@ -39,7 +39,7 @@ func TestScopeAddApp(t *testing.T) {
 	types := app["types"].GetMap().Items
 	assert.Equal(t, 2, len(types), "unexpected types count")
 	typeRequest := types["Request"].GetMap().Items
-	assert.Equal(t, 4, len(typeRequest), "unexpected type attribute count")
+	assert.Equal(t, 6, len(typeRequest), "unexpected type attribute count")
 	assert.Equal(t, "tuple", typeRequest["type"].GetS(), "unexpected typename")
 	fields := typeRequest["fields"].GetMap().Items
 	assert.Equal(t, 2, len(fields), "unexpected field count")
@@ -67,7 +67,8 @@ func TestScopeAddApp(t *testing.T) {
 
 	aliasTerms := alias["Terms"].GetMap().Items
 	assert.Equal(t, "sequence", aliasTerms["type"].GetS())
-	assert.Equal(t, "Term", aliasTerms["sequence"].GetS())
+	aliasSeqType := aliasTerms["sequence"].GetMap().Items
+	assert.Equal(t, "Term", aliasSeqType["type_ref"].GetS())
 
 	aliasAccounts := alias["Accounts"].GetMap().Items
 	assert.Equal(t, "set", aliasAccounts["type"].GetS())

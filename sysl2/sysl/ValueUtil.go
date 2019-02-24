@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/anz-bank/sysl/src/proto"
-	"github.com/pkg/errors"
 )
 
 // Scope holds the value of the variables during the execution of a transform
@@ -133,6 +132,8 @@ func getTypeDetail(t *sysl.Type) (string, string) {
 		typeName = "tuple"
 	case *sysl.Type_Relation_:
 		typeName = "relation"
+	case *sysl.Type_OneOf_:
+		typeName = "union"
 	}
 	return typeName, typeDetail
 }
@@ -141,25 +142,8 @@ func fieldsToValueMap(fields map[string]*sysl.Type) *sysl.Value {
 	fieldMap := MakeValueMap()
 
 	for key, t := range fields {
-		m := MakeValueMap()
-		typeName, typeDetail := getTypeDetail(t)
-		addItemToValueMap(m, "type", MakeValueString(typeName))
-		addItemToValueMap(m, typeName, MakeValueString(typeDetail))
-		addItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
-
-		if typeName == "sequence" {
-			seqMap := MakeValueMap()
-			addItemToValueMap(m, typeName, seqMap)
-
-			typeName, typeDetail = getTypeDetail(t.GetSequence())
-			addItemToValueMap(seqMap, "type", MakeValueString(typeName))
-			addItemToValueMap(seqMap, typeName, MakeValueString(typeDetail))
-		}
-
+		m := typeToValue(t)
 		addItemToValueMap(m, "name", MakeValueString(key))
-		addItemToValueMap(m, "optional", MakeValueBool(t.Opt))
-		addItemToValueMap(m, "docstring", MakeValueString(t.Docstring))
-
 		addItemToValueMap(fieldMap, key, m)
 	}
 	return fieldMap
@@ -169,25 +153,29 @@ func typeToValue(t *sysl.Type) *sysl.Value {
 	m := MakeValueMap()
 	addItemToValueMap(m, "docstring", MakeValueString(t.Docstring))
 	addItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
-	var typeName string
+	typeName, typeDetail := getTypeDetail(t)
+	addItemToValueMap(m, "type", MakeValueString(typeName))
+	addItemToValueMap(m, typeName, MakeValueString(typeDetail))
+	addItemToValueMap(m, "optional", MakeValueBool(t.Opt))
+
 	switch x := t.Type.(type) {
 	case *sysl.Type_Tuple_:
-		typeName = "tuple"
 		addItemToValueMap(m, "fields", fieldsToValueMap(x.Tuple.AttrDefs))
 	case *sysl.Type_Relation_:
-		typeName = "relation"
 		addItemToValueMap(m, "fields", fieldsToValueMap(x.Relation.AttrDefs))
 	case *sysl.Type_OneOf_:
 		unionSet := MakeValueSet()
-		typeName = "union"
 		for _, embeddedType := range x.OneOf.Type {
 			appendItemToValueList(unionSet.GetSet(), MakeValueString(embeddedType.GetTypeRef().Ref.Path[0]))
 		}
 		addItemToValueMap(m, "fields", unionSet)
-	default:
-		panic(errors.Errorf("typeToValue: unsupported type: %v", x))
+	case *sysl.Type_Sequence:
+		seqMap := MakeValueMap()
+		addItemToValueMap(m, typeName, seqMap)
+		typeName, typeDetail = getTypeDetail(t.GetSequence())
+		addItemToValueMap(seqMap, "type", MakeValueString(typeName))
+		addItemToValueMap(seqMap, typeName, MakeValueString(typeDetail))
 	}
-	addItemToValueMap(m, "type", MakeValueString(typeName))
 	return m
 }
 
@@ -221,22 +209,13 @@ func unionToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	return m
 }
 
-func aliasTypeToValueMap(t *sysl.Type) *sysl.Value {
-	m := MakeValueMap()
-	typeName, typeDetail := getTypeDetail(t)
-	addItemToValueMap(m, "type", MakeValueString(typeName))
-	addItemToValueMap(m, typeName, MakeValueString(typeDetail))
-	addItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
-	return m
-}
-
 func aliasToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	m := MakeValueMap()
 	for key, t := range types {
 		switch t.Type.(type) {
 		case *sysl.Type_OneOf_, *sysl.Type_Tuple_, *sysl.Type_Relation_:
 		default:
-			addItemToValueMap(m, key, aliasTypeToValueMap(t))
+			addItemToValueMap(m, key, typeToValue(t))
 		}
 	}
 	return m
