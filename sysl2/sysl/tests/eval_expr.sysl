@@ -6,11 +6,24 @@ Model [package="com.example.gen"]:
   !type Response:
     code <: int
     message <: string
-    names <: sequence of Request
+    names <: sequence of Request?
 
   !union Message:
     Request
     Response
+
+  !alias Error [~foo]:
+    @comment = "some description"
+    string
+
+  !alias Object:
+    Ignored
+
+  !alias Terms:
+    sequence of Term
+
+  !alias Accounts:
+    set of Term
 
 TodoApp:
   /todos:
@@ -110,6 +123,17 @@ TransformApp:
       definition = classDef(app.types)
     )
 
+  !view TestDotScope(app <: sysl.App) -> int:
+    app -> (:
+      out = .name
+
+      package = .name -> <package> (:
+        packageName = .
+      )
+
+      import = .name
+    )
+
   !view StringOps(app <: sysl.App) -> int:
     app -> (:
       Contains = Contains("Hello World!", "World")
@@ -120,6 +144,7 @@ TransformApp:
       Join = Join({"Hello", "World"}, "_")
       LastIndex = LastIndex("Hello! World!", "!")
       Replace = Replace("Hello/World", "/","_", -1)
+      Split = Split("/Hello/World", "/")
       Title = Title("hello world!")
       ToLower = ToLower("HELLO WORLD!")
       ToTitle = ToTitle("hello world!")

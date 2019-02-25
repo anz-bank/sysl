@@ -302,7 +302,7 @@ func TestRootArg(t *testing.T) {
 }
 
 func TestSequenceType(t *testing.T) {
-	testParseAgainstGolden(t, "tests/sequence_type.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/sequence_type.sysl", "")
 }
 
 func TestRestApi(t *testing.T) {
@@ -375,4 +375,8 @@ func TestCrash(t *testing.T) {
 
 func TestStrings(t *testing.T) {
 	testParseAgainstGolden(t, "tests/strings_expr.sysl", "")
+}
+
+func TestTypeAlias(t *testing.T) {
+	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl", "")
 }

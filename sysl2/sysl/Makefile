@@ -9,22 +9,26 @@ GRAMMARS = SyslParser.g4 SyslLexer.g4
 all: tests $(EXE) $(JS)
 
 CODE_FILES = \
-ValueUtil.go \
-codegen.go \
-constants.go \
-error_listener.go \
-exit.go \
-exprEval.go \
-exprOp.go \
-fs.go \
-helpers.go \
-listener_impl.go \
-output.go \
-parse.go \
-sysl.go \
-testtemp.go \
-grammar/sysl_parser.go \
-grammar/sysl_lexer.go
+	ValueUtil.go \
+	codegen.go \
+	constants.go \
+	error_listener.go \
+	exit.go \
+	exprEval.go \
+	exprOp.go \
+	fs.go \
+	helpers.go \
+	listener_impl.go \
+	output.go \
+	parse.go \
+	sysl.go \
+	testtemp.go \
+	binexprEval.go \
+	valueType.go \
+	unaryEval.go \
+	goFuncs.go \
+	grammar/sysl_parser.go \
+	grammar/sysl_lexer.go
 
 $(EXE): $(CODE_FILES)
 	go install -v

@@ -39,7 +39,7 @@ func TestScopeAddApp(t *testing.T) {
 	types := app["types"].GetMap().Items
 	assert.Equal(t, 2, len(types), "unexpected types count")
 	typeRequest := types["Request"].GetMap().Items
-	assert.Equal(t, 4, len(typeRequest), "unexpected type attribute count")
+	assert.Equal(t, 6, len(typeRequest), "unexpected type attribute count")
 	assert.Equal(t, "tuple", typeRequest["type"].GetS(), "unexpected typename")
 	fields := typeRequest["fields"].GetMap().Items
 	assert.Equal(t, 2, len(fields), "unexpected field count")
@@ -54,6 +54,25 @@ func TestScopeAddApp(t *testing.T) {
 	assert.Equal(t, 2, len(unionMessage["fields"].GetSet().Value), "unexpected id Field count")
 	assert.Equal(t, "Request", unionMessage["fields"].GetSet().Value[0].GetS(), "unexpected id Field count")
 	assert.Equal(t, "Response", unionMessage["fields"].GetSet().Value[1].GetS(), "unexpected id Field count")
+
+	alias := app["alias"].GetMap().Items
+	assert.Equal(t, 4, len(alias))
+	aliasError := alias["Error"].GetMap().Items
+	assert.Equal(t, "primitive", aliasError["type"].GetS())
+	assert.Equal(t, "STRING", aliasError["primitive"].GetS())
+
+	aliasObject := alias["Object"].GetMap().Items
+	assert.Equal(t, "type_ref", aliasObject["type"].GetS())
+	assert.Equal(t, "Ignored", aliasObject["type_ref"].GetS())
+
+	aliasTerms := alias["Terms"].GetMap().Items
+	assert.Equal(t, "sequence", aliasTerms["type"].GetS())
+	aliasSeqType := aliasTerms["sequence"].GetMap().Items
+	assert.Equal(t, "Term", aliasSeqType["type_ref"].GetS())
+
+	aliasAccounts := alias["Accounts"].GetMap().Items
+	assert.Equal(t, "set", aliasAccounts["type"].GetS())
+	assert.Equal(t, "Term", aliasAccounts["set"].GetS())
 }
 
 func TestEvalIntegerMath(t *testing.T) {
@@ -164,9 +183,9 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	packageMap := out.GetMap().Items["package"].GetMap().Items
 	assert.Equal(t, "com.example.gen", packageMap["packageName"].GetS())
 
-	importList := out.GetMap().Items["import"].GetList().Value
-	assert.Equal(t, "Package1", importList[0].GetMap().Items["importPath"].GetS())
-	assert.Equal(t, "Package2", importList[1].GetMap().Items["importPath"].GetS())
+	importSet := out.GetMap().Items["import"].GetSet().Value
+	assert.Equal(t, "Package1", importSet[0].GetMap().Items["importPath"].GetS())
+	assert.Equal(t, "Package2", importSet[1].GetMap().Items["importPath"].GetS())
 
 	defSet := out.GetMap().Items["definition"].GetSet().Value
 	assert.Equal(t, 2, len(defSet), "definition length is incorrect")
@@ -232,7 +251,7 @@ func TestEvalStringOps(t *testing.T) {
 	items := out.GetMap().Items
 
 	// Check if all functions have been tested
-	assert.Equal(t, 19, len(items))
+	assert.Equal(t, 20, len(items))
 
 	for name := range GoFuncMap {
 		assert.NotNil(t, items[name])
@@ -246,6 +265,7 @@ func TestEvalStringOps(t *testing.T) {
 	assert.Equal(t, "Hello_World", items["Join"].GetS())
 	assert.Equal(t, int64(12), items["LastIndex"].GetI())
 	assert.Equal(t, "Hello_World", items["Replace"].GetS())
+	assert.Equal(t, 3, len(items["Split"].GetList().Value))
 	assert.Equal(t, "Hello World!", items["Title"].GetS())
 	assert.Equal(t, "hello world!", items["ToLower"].GetS())
 	assert.Equal(t, "HELLO WORLD!", items["ToTitle"].GetS())
@@ -343,4 +363,14 @@ func TestEvalLinks(t *testing.T) {
 
 	assert.Equal(t, "names", l[4].GetMap().Items["Left"].GetS())
 	assert.Equal(t, "List<Request>", l[4].GetMap().Items["Right"].GetS())
+}
+
+func TestDotScope(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "Model"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "TestDotScope", &s).GetMap().Items
+	assert.Equal(t, 3, len(out))
 }

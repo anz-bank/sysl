@@ -98,6 +98,12 @@ type SyslParserListener interface {
 	// EnterInplace_table is called when entering the inplace_table production.
 	EnterInplace_table(c *Inplace_tableContext)
 
+	// EnterTable_stmts is called when entering the table_stmts production.
+	EnterTable_stmts(c *Table_stmtsContext)
+
+	// EnterTable_def is called when entering the table_def production.
+	EnterTable_def(c *Table_defContext)
+
 	// EnterTable is called when entering the table production.
 	EnterTable(c *TableContext)
 
@@ -518,6 +524,9 @@ type SyslParserListener interface {
 	// EnterView is called when entering the view production.
 	EnterView(c *ViewContext)
 
+	// EnterAlias is called when entering the alias production.
+	EnterAlias(c *AliasContext)
+
 	// EnterApp_decl is called when entering the app_decl production.
 	EnterApp_decl(c *App_declContext)
 
@@ -625,6 +634,12 @@ type SyslParserListener interface {
 
 	// ExitInplace_table is called when exiting the inplace_table production.
 	ExitInplace_table(c *Inplace_tableContext)
+
+	// ExitTable_stmts is called when exiting the table_stmts production.
+	ExitTable_stmts(c *Table_stmtsContext)
+
+	// ExitTable_def is called when exiting the table_def production.
+	ExitTable_def(c *Table_defContext)
 
 	// ExitTable is called when exiting the table production.
 	ExitTable(c *TableContext)
@@ -1045,6 +1060,9 @@ type SyslParserListener interface {
 
 	// ExitView is called when exiting the view production.
 	ExitView(c *ViewContext)
+
+	// ExitAlias is called when exiting the alias production.
+	ExitAlias(c *AliasContext)
 
 	// ExitApp_decl is called when exiting the app_decl production.
 	ExitApp_decl(c *App_declContext)

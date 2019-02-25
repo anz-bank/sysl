@@ -15,18 +15,39 @@ apps: <
                 primitive: INT
                 source_context: <
                   start: <
-                    line: 3
+                    line: 4
                   >
                 >
               >
+              attrs: <
+                key: "comment"
+                value: <
+                  s: "array of int"
+                >
+              >
+              opt: true
               source_context: <
                 start: <
-                  line: 3
+                  line: 4
                 >
               >
             >
           >
         >
+        source_context: <
+          file: "tests/sequence_type.sysl"
+          start: <
+            line: 2
+            col: 4
+          >
+        >
+      >
+    >
+    source_context: <
+      file: "tests/sequence_type.sysl"
+      start: <
+        line: 1
+        col: 1
       >
     >
   >
