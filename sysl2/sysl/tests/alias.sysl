@@ -1,0 +1,14 @@
+Model:
+  !alias Error [~foo]:
+    @comment = "some description"
+    string
+
+  !type Request:
+      requests <: string
+
+  !type Response:
+      error <: Error
+      response <: string
+
+  !alias Terms:
+    sequence of Term

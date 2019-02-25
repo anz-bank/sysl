@@ -74,6 +74,7 @@ var GoFuncMap = map[string]goFunc{
 	"Join":       {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, []*sysl.Type{stringType}},
 	"LastIndex":  {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
 	"Replace":    {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, []*sysl.Type{stringType}},
+	"Split":      {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, []*sysl.Type{listStringType}},
 	"Title":      {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
 	"ToLower":    {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
 	"ToTitle":    {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, []*sysl.Type{stringType}},

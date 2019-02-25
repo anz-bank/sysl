@@ -302,15 +302,15 @@ func TestRootArg(t *testing.T) {
 }
 
 func TestSequenceType(t *testing.T) {
-	testParseAgainstGolden(t, "tests/sequence_type.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/sequence_type.sysl", "")
 }
 
 func TestRestApi(t *testing.T) {
-	testParseAgainstGolden(t, "tests/test_rest_api.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/test_rest_api.sysl", "")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
-	testParseAgainstGolden(t, "tests/rest_api_query_params.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/rest_api_query_params.sysl", "")
 }
 
 func TestSimpleProject(t *testing.T) {
@@ -318,15 +318,11 @@ func TestSimpleProject(t *testing.T) {
 }
 
 func TestUrlParamOrder(t *testing.T) {
-	testParseAgainstGolden(t, "tests/rest_url_params.sysl", "")
-}
-
-func TestUrlParamOrderAgainstGolden(t *testing.T) {
-	testParseAgainstGolden(t, "tests/rest_url_params.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/rest_url_params.sysl", "")
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
-	testParseAgainstGolden(t, "tests/bad_order.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/bad_order.sysl", "")
 }
 
 func TestTransform(t *testing.T) {
@@ -375,4 +371,8 @@ func TestCrash(t *testing.T) {
 
 func TestStrings(t *testing.T) {
 	testParseAgainstGolden(t, "tests/strings_expr.sysl", "")
+}
+
+func TestTypeAlias(t *testing.T) {
+	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl", "")
 }

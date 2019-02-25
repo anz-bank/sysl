@@ -6,18 +6,31 @@ Model [package="com.example.gen", name="Model"]:
   !type Response:
     code <: int
     message <: string
-    names <: sequence of Request
+    names <: sequence of Request?
 
   !union Message:
     Request
     Response
+
+  !alias Error [~foo]:
+    @comment = "some description"
+    string
+
+  !alias Object:
+    Ignored
+
+  !alias Terms:
+    sequence of Term
+
+  !alias Accounts:
+    set of Term
 
 TodoApp:
   /todos:
     GET:
       return todos
 
-    POST:
+    POST (todo <: Todo):
       return todo
 
     /{id<:int}:
@@ -25,7 +38,7 @@ TodoApp:
         return todo
       /{status<:string}:
         GET:
-          return todo
+          return todoWithStatus
 
 TransformApp:
   !view math(lhs <: int, rhs <: int) -> int:
@@ -110,6 +123,17 @@ TransformApp:
       definition = classDef(app.types)
     )
 
+  !view TestDotScope(app <: sysl.App) -> int:
+    app -> (:
+      out = .name
+
+      package = .name -> <package> (:
+        packageName = .
+      )
+
+      import = .name
+    )
+
   !view StringOps(app <: sysl.App) -> int:
     app -> (:
       Contains = Contains("Hello World!", "World")
@@ -120,6 +144,7 @@ TransformApp:
       Join = Join({"Hello", "World"}, "_")
       LastIndex = LastIndex("Hello! World!", "!")
       Replace = Replace("Hello/World", "/","_", -1)
+      Split = Split("/Hello/World", "/")
       Title = Title("hello world!")
       ToLower = ToLower("HELLO WORLD!")
       ToTitle = ToTitle("hello world!")
@@ -144,7 +169,7 @@ TransformApp:
   !view Flatten(app <: sysl.App) -> int:
     app -> (:
       let n = app.endpoints -> <set of string>(ep:
-        name = ep.value.method  + Join(ep.value.params flatten(.name), "")
+        name = ep.value.method  + Join(ep.value.pathvars flatten(.name), "")
       )
       names = n flatten(.name)
       listOfNumbers1 = [[1,2,3], [4,5,6]] flatten(.)

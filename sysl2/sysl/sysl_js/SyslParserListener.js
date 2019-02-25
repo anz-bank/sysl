@@ -281,6 +281,24 @@ SyslParserListener.prototype.exitInplace_table = function(ctx) {
 };
 
 
+// Enter a parse tree produced by SyslParser#table_stmts.
+SyslParserListener.prototype.enterTable_stmts = function(ctx) {
+};
+
+// Exit a parse tree produced by SyslParser#table_stmts.
+SyslParserListener.prototype.exitTable_stmts = function(ctx) {
+};
+
+
+// Enter a parse tree produced by SyslParser#table_def.
+SyslParserListener.prototype.enterTable_def = function(ctx) {
+};
+
+// Exit a parse tree produced by SyslParser#table_def.
+SyslParserListener.prototype.exitTable_def = function(ctx) {
+};
+
+
 // Enter a parse tree produced by SyslParser#table.
 SyslParserListener.prototype.enterTable = function(ctx) {
 };
@@ -1538,6 +1556,15 @@ SyslParserListener.prototype.enterView = function(ctx) {
 
 // Exit a parse tree produced by SyslParser#view.
 SyslParserListener.prototype.exitView = function(ctx) {
+};
+
+
+// Enter a parse tree produced by SyslParser#alias.
+SyslParserListener.prototype.enterAlias = function(ctx) {
+};
+
+// Exit a parse tree produced by SyslParser#alias.
+SyslParserListener.prototype.exitAlias = function(ctx) {
 };
 
 

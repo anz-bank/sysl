@@ -140,6 +140,12 @@ func flattenSetSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, sco
 	return setResult
 }
 
+func concatList(lhs, rhs *sysl.Value) *sysl.Value {
+	list := MakeValueList()
+	list.GetList().Value = append(lhs.GetList().Value, rhs.GetList().Value...)
+	return list
+}
+
 func setUnion(lhs, rhs *sysl.Value) *sysl.Value {
 	itemType := getContainedType(lhs)
 	if itemType == VALUE_NO_ARG {

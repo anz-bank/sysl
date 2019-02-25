@@ -115,15 +115,30 @@ func getTypeDetail(t *sysl.Type) (string, string) {
 		typeDetail = sysl.Type_Primitive_name[int32(x.Primitive)]
 	case *sysl.Type_TypeRef:
 		typeName = "type_ref"
-		typeDetail = x.TypeRef.Ref.Path[0]
+		if x.TypeRef.Ref != nil && len(x.TypeRef.Ref.Path) == 1 {
+			typeDetail = x.TypeRef.Ref.Path[0]
+		} else {
+			typeDetail = x.TypeRef.Ref.Appname.Part[0]
+		}
+
 	case *sysl.Type_Sequence:
 		typeName = "sequence"
 		_, d := getTypeDetail(x.Sequence)
+		typeDetail = d
+	case *sysl.Type_Set:
+		typeName = "set"
+		_, d := getTypeDetail(x.Set)
+		typeDetail = d
+	case *sysl.Type_List_:
+		typeName = "list"
+		_, d := getTypeDetail(x.List.Type)
 		typeDetail = d
 	case *sysl.Type_Tuple_:
 		typeName = "tuple"
 	case *sysl.Type_Relation_:
 		typeName = "relation"
+	case *sysl.Type_OneOf_:
+		typeName = "union"
 	}
 	return typeName, typeDetail
 }
@@ -132,25 +147,8 @@ func fieldsToValueMap(fields map[string]*sysl.Type) *sysl.Value {
 	fieldMap := MakeValueMap()
 
 	for key, t := range fields {
-		m := MakeValueMap()
-		typeName, typeDetail := getTypeDetail(t)
-		addItemToValueMap(m, "type", MakeValueString(typeName))
-		addItemToValueMap(m, typeName, MakeValueString(typeDetail))
-		addItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
-
-		if typeName == "sequence" {
-			seqMap := MakeValueMap()
-			addItemToValueMap(m, typeName, seqMap)
-
-			typeName, typeDetail = getTypeDetail(t.GetSequence())
-			addItemToValueMap(seqMap, "type", MakeValueString(typeName))
-			addItemToValueMap(seqMap, typeName, MakeValueString(typeDetail))
-		}
-
+		m := typeToValue(t)
 		addItemToValueMap(m, "name", MakeValueString(key))
-		addItemToValueMap(m, "optional", MakeValueBool(t.Opt))
-		addItemToValueMap(m, "docstring", MakeValueString(t.Docstring))
-
 		addItemToValueMap(fieldMap, key, m)
 	}
 	return fieldMap
@@ -160,25 +158,29 @@ func typeToValue(t *sysl.Type) *sysl.Value {
 	m := MakeValueMap()
 	addItemToValueMap(m, "docstring", MakeValueString(t.Docstring))
 	addItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
-	var typeName string
+	typeName, typeDetail := getTypeDetail(t)
+	addItemToValueMap(m, "type", MakeValueString(typeName))
+	addItemToValueMap(m, typeName, MakeValueString(typeDetail))
+	addItemToValueMap(m, "optional", MakeValueBool(t.Opt))
+
 	switch x := t.Type.(type) {
 	case *sysl.Type_Tuple_:
-		typeName = "tuple"
 		addItemToValueMap(m, "fields", fieldsToValueMap(x.Tuple.AttrDefs))
 	case *sysl.Type_Relation_:
-		typeName = "relation"
 		addItemToValueMap(m, "fields", fieldsToValueMap(x.Relation.AttrDefs))
 	case *sysl.Type_OneOf_:
 		unionSet := MakeValueSet()
-		typeName = "union"
 		for _, embeddedType := range x.OneOf.Type {
 			appendItemToValueList(unionSet.GetSet(), MakeValueString(embeddedType.GetTypeRef().Ref.Path[0]))
 		}
 		addItemToValueMap(m, "fields", unionSet)
-	default:
-		panic("typeToValue: unsupported type")
+	case *sysl.Type_Sequence:
+		seqMap := MakeValueMap()
+		addItemToValueMap(m, typeName, seqMap)
+		typeName, typeDetail = getTypeDetail(t.GetSequence())
+		addItemToValueMap(seqMap, "type", MakeValueString(typeName))
+		addItemToValueMap(seqMap, typeName, MakeValueString(typeDetail))
 	}
-	addItemToValueMap(m, "type", MakeValueString(typeName))
 	return m
 }
 
@@ -194,9 +196,7 @@ func typesToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	m := MakeValueMap()
 	for key, t := range types {
 		switch t.Type.(type) {
-		case *sysl.Type_OneOf_:
-			// skipping union types
-		default:
+		case *sysl.Type_Tuple_, *sysl.Type_Relation_:
 			addItemToValueMap(m, key, typeToValue(t))
 		}
 	}
@@ -214,7 +214,28 @@ func unionToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	return m
 }
 
+func aliasToValueMap(types map[string]*sysl.Type) *sysl.Value {
+	m := MakeValueMap()
+	for key, t := range types {
+		switch t.Type.(type) {
+		case *sysl.Type_OneOf_, *sysl.Type_Tuple_, *sysl.Type_Relation_:
+		default:
+			addItemToValueMap(m, key, typeToValue(t))
+		}
+	}
+	return m
+}
+
 func queryParamsToValue(qp *sysl.Endpoint_RestParams_QueryParam) *sysl.Value {
+	m := MakeValueMap()
+	addItemToValueMap(m, "name", MakeValueString(qp.Name))
+	typeName, typeDetail := getTypeDetail(qp.Type)
+	addItemToValueMap(m, "type", MakeValueString(typeName))
+	addItemToValueMap(m, typeName, MakeValueString(typeDetail))
+	return m
+}
+
+func paramToValue(qp *sysl.Param) *sysl.Value {
 	m := MakeValueMap()
 	addItemToValueMap(m, "name", MakeValueString(qp.Name))
 	typeName, typeDetail := getTypeDetail(qp.Type)
@@ -250,15 +271,30 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 	addItemToValueMap(m, "attrs", attrsToValueMap(e.Attrs))
 	addItemToValueMap(m, "is_rest", MakeValueBool(e.RestParams != nil))
 	addItemToValueMap(m, "is_pubsub", MakeValueBool(e.IsPubsub))
+
 	if e.RestParams != nil {
 		addItemToValueMap(m, "method", MakeValueString(sysl.Endpoint_RestParams_Method_name[int32(e.RestParams.Method)]))
 		addItemToValueMap(m, "path", MakeValueString(e.RestParams.Path))
-		paramList := MakeValueList()
+
+		queryvars := MakeValueList()
 		for _, query_param := range e.RestParams.QueryParam {
-			appendItemToValueList(paramList.GetList(), queryParamsToValue(query_param))
+			appendItemToValueList(queryvars.GetList(), queryParamsToValue(query_param))
 		}
-		addItemToValueMap(m, "params", paramList)
+		addItemToValueMap(m, "queryvars", queryvars)
+
+		pathvars := MakeValueList()
+		for _, query_param := range e.RestParams.UrlParam {
+			appendItemToValueList(pathvars.GetList(), queryParamsToValue(query_param))
+		}
+		addItemToValueMap(m, "pathvars", pathvars)
+
+		params := MakeValueList()
+		for _, param := range e.Param {
+			appendItemToValueList(params.GetList(), paramToValue(param))
+		}
+		addItemToValueMap(m, "params", params)
 	}
+
 	stmtsList := MakeValueList()
 	for _, stmt := range e.Stmt {
 		if stmt.GetRet() != nil {
@@ -298,5 +334,6 @@ func (s *Scope) AddApp(name string, app *sysl.Application) {
 	addItemToValueMap(m, "attrs", attrsToValueMap(app.Attrs))
 	addItemToValueMap(m, "types", typesToValueMap(app.Types))
 	addItemToValueMap(m, "union", unionToValueMap(app.Types))
+	addItemToValueMap(m, "alias", aliasToValueMap(app.Types))
 	addItemToValueMap(m, "endpoints", endpointsToValueMap(app.Endpoints))
 }

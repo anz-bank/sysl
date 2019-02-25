@@ -1,142 +1,157 @@
-apps {
+apps: <
   key: "Server"
-  value {
-    name {
+  value: <
+    name: <
       part: "Server"
-    }
-    attrs {
+    >
+    attrs: <
       key: "patterns"
-      value {
-        a {
-          elt {
+      value: <
+        a: <
+          elt: <
             s: "rest"
-          }
-        }
-      }
-    }
-    endpoints {
+          >
+        >
+      >
+    >
+    endpoints: <
       key: "GET /{id}"
-      value {
+      value: <
         name: "GET /{id}"
-        attrs {
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "rest"
-              }
-            }
-          }
-        }
-        stmt {
-          action {
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
             action: "..."
-          }
-        }
-        rest_params {
+          >
+        >
+        rest_params: <
           method: GET
           path: "/{id}"
-          query_param {
-            name: "id"
-            type {
-              primitive: INT
-              source_context {
-                start {
-                  line: 3
-                }
-              }
-            }
-            loc: true
-          }
-          query_param {
+          query_param: <
             name: "depth"
-            type {
+            type: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 3
-                }
-              }
-            }
-            loc: true
-          }
-          query_param {
+                >
+              >
+            >
+          >
+          query_param: <
             name: "limit"
-            type {
+            type: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 3
-                }
-              }
-            }
-            loc: true
-          }
-          query_param {
+                >
+              >
+            >
+          >
+          query_param: <
             name: "offset"
-            type {
+            type: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 3
-                }
-              }
-            }
-            loc: true
-          }
-        }
-      }
-    }
-    endpoints {
+                >
+              >
+            >
+          >
+          url_param: <
+            name: "id"
+            type: <
+              primitive: INT
+              source_context: <
+                start: <
+                  line: 2
+                >
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/bad_order.sysl"
+          start: <
+            line: 3
+            col: 8
+          >
+        >
+      >
+    >
+    endpoints: <
       key: "POST /{id}/third/{a-bc}"
-      value {
+      value: <
         name: "POST /{id}/third/{a-bc}"
-        attrs {
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "rest"
-              }
-            }
-          }
-        }
-        stmt {
-          action {
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
             action: "..."
-          }
-        }
-        rest_params {
+          >
+        >
+        rest_params: <
           method: POST
           path: "/{id}/third/{a-bc}"
-          query_param {
+          url_param: <
             name: "id"
-            type {
+            type: <
               primitive: INT
-              source_context {
-                start {
-                  line: 7
-                }
-              }
-            }
-            loc: true
-          }
-          query_param {
+              source_context: <
+                start: <
+                  line: 2
+                >
+              >
+            >
+          >
+          url_param: <
             name: "a-bc"
-            type {
+            type: <
               primitive: INT
-              source_context {
-                start {
-                  line: 7
-                }
-              }
-            }
-            loc: true
-          }
-        }
-      }
-    }
-  }
-}
+              source_context: <
+                start: <
+                  line: 6
+                >
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/bad_order.sysl"
+          start: <
+            line: 7
+            col: 12
+          >
+        >
+      >
+    >
+    source_context: <
+      file: "tests/bad_order.sysl"
+      start: <
+        line: 1
+        col: 1
+      >
+    >
+  >
+>
