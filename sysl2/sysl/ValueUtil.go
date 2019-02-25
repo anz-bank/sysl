@@ -115,7 +115,12 @@ func getTypeDetail(t *sysl.Type) (string, string) {
 		typeDetail = sysl.Type_Primitive_name[int32(x.Primitive)]
 	case *sysl.Type_TypeRef:
 		typeName = "type_ref"
-		typeDetail = x.TypeRef.Ref.Path[0]
+		if x.TypeRef.Ref != nil && len(x.TypeRef.Ref.Path) == 1 {
+			typeDetail = x.TypeRef.Ref.Path[0]
+		} else {
+			typeDetail = x.TypeRef.Ref.Appname.Part[0]
+		}
+
 	case *sysl.Type_Sequence:
 		typeName = "sequence"
 		_, d := getTypeDetail(x.Sequence)
@@ -230,6 +235,15 @@ func queryParamsToValue(qp *sysl.Endpoint_RestParams_QueryParam) *sysl.Value {
 	return m
 }
 
+func paramToValue(qp *sysl.Param) *sysl.Value {
+	m := MakeValueMap()
+	addItemToValueMap(m, "name", MakeValueString(qp.Name))
+	typeName, typeDetail := getTypeDetail(qp.Type)
+	addItemToValueMap(m, "type", MakeValueString(typeName))
+	addItemToValueMap(m, typeName, MakeValueString(typeDetail))
+	return m
+}
+
 func stmtToValue(s *sysl.Statement) *sysl.Value {
 	m := MakeValueMap()
 	var stmt_type string
@@ -257,15 +271,30 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 	addItemToValueMap(m, "attrs", attrsToValueMap(e.Attrs))
 	addItemToValueMap(m, "is_rest", MakeValueBool(e.RestParams != nil))
 	addItemToValueMap(m, "is_pubsub", MakeValueBool(e.IsPubsub))
+
 	if e.RestParams != nil {
 		addItemToValueMap(m, "method", MakeValueString(sysl.Endpoint_RestParams_Method_name[int32(e.RestParams.Method)]))
 		addItemToValueMap(m, "path", MakeValueString(e.RestParams.Path))
-		paramList := MakeValueList()
+
+		queryvars := MakeValueList()
 		for _, query_param := range e.RestParams.QueryParam {
-			appendItemToValueList(paramList.GetList(), queryParamsToValue(query_param))
+			appendItemToValueList(queryvars.GetList(), queryParamsToValue(query_param))
 		}
-		addItemToValueMap(m, "params", paramList)
+		addItemToValueMap(m, "queryvars", queryvars)
+
+		pathvars := MakeValueList()
+		for _, query_param := range e.RestParams.UrlParam {
+			appendItemToValueList(pathvars.GetList(), queryParamsToValue(query_param))
+		}
+		addItemToValueMap(m, "pathvars", pathvars)
+
+		params := MakeValueList()
+		for _, param := range e.Param {
+			appendItemToValueList(params.GetList(), paramToValue(param))
+		}
+		addItemToValueMap(m, "params", params)
 	}
+
 	stmtsList := MakeValueList()
 	for _, stmt := range e.Stmt {
 		if stmt.GetRet() != nil {

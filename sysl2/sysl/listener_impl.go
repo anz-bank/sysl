@@ -34,8 +34,10 @@ type TreeShapeListener struct {
 	pendingDocString      bool
 	rest_attrs            []map[string]*sysl.Attribute
 	rest_queryparams      []*sysl.Endpoint_RestParams_QueryParam
-	method_queryparams    []*sysl.Endpoint_RestParams_QueryParam
+	rest_urlparams        []*sysl.Endpoint_RestParams_QueryParam
+	method_urlparams      []*sysl.Endpoint_RestParams_QueryParam
 	rest_queryparams_len  []int
+	rest_urlparams_len    []int
 	http_path_query_param string
 	stmt_scope            []interface{} // Endpoint, if, if_else, loop
 	expr_stack            []*sysl.Expr
@@ -1113,10 +1115,6 @@ func (s *TreeShapeListener) ExitDocumentation_stmts(ctx *parser.Documentation_st
 
 // EnterQuery_var is called when production query_var is entered.
 func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
-
-	// query_var is reused in two places.
-	// 1. inside http_path
-	// 2. after method_def
 	var_name := ctx.Name().GetText()
 	var type1 *sysl.Type
 	var ref_path []string
@@ -1152,7 +1150,6 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
 		Name: var_name,
 		Type: type1,
-		Loc:  true,
 	}
 
 	if ctx.QN() != nil {
@@ -1164,8 +1161,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 			Line: int32(ctx.GetStart().GetLine()),
 		},
 	}
-	s.method_queryparams = append(s.method_queryparams, rest_param)
-
+	s.method_urlparams = append(s.method_urlparams, rest_param)
 }
 
 // ExitQuery_var is called when production query_var is exited.
@@ -1210,7 +1206,6 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
 		Name: var_name,
 		Type: type1,
-		Loc:  true,
 	}
 
 	rest_param.Type.SourceContext = &sysl.SourceContext{
@@ -1219,7 +1214,7 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 		},
 	}
 
-	s.rest_queryparams = append(s.rest_queryparams, rest_param)
+	s.rest_urlparams = append(s.rest_urlparams, rest_param)
 	s.typename += ctx.CURLY_OPEN().GetText() + var_name + ctx.CURLY_CLOSE().GetText()
 }
 
@@ -1247,9 +1242,6 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 	s.typename = ""
 	if ctx.FORWARD_SLASH() != nil {
 		s.typename = ctx.GetText()
-	}
-	if ctx.Query_param() != nil {
-		s.http_path_query_param = ctx.Query_param().GetText()
 	}
 }
 
@@ -1825,14 +1817,14 @@ func mergeAttrs(src map[string]*sysl.Attribute, dst map[string]*sysl.Attribute) 
 func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	url := s.urlString()
 	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
-	s.typename = method + " " + url + s.http_path_query_param
-	s.method_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
+	s.typename = method + " " + url
+	s.method_urlparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	if _, has := s.module.Apps[s.appname].Endpoints[s.typename]; !has {
 		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
 			Name: s.typename,
 			RestParams: &sysl.Endpoint_RestParams{
 				Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[method]),
-				Path:   url + s.http_path_query_param,
+				Path:   url,
 			},
 			Stmt: []*sysl.Statement{},
 		}
@@ -1882,23 +1874,30 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 						},
 					},
 				},
-				Loc: true,
 			}
 			qparams = append(qparams, qcopy)
 		}
 		restEndpoint.RestParams.QueryParam = qparams
+	}
+
+	if len(s.rest_urlparams) > 0 {
+		qparams := []*sysl.Endpoint_RestParams_QueryParam{}
+		for i := range s.rest_urlparams {
+			qparams = append(qparams, s.rest_urlparams[i])
+		}
+		restEndpoint.RestParams.UrlParam = qparams
 	}
 	restEndpoint.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 }
 
 // ExitMethod_def is called when production method_def is exited.
 func (s *TreeShapeListener) ExitMethod_def(ctx *parser.Method_defContext) {
-	if len(s.method_queryparams) > 0 {
+	if len(s.method_urlparams) > 0 {
 		qparams := s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam
 		if qparams == nil {
 			qparams = []*sysl.Endpoint_RestParams_QueryParam{}
 		}
-		qparams = append(qparams, s.method_queryparams...)
+		qparams = append(qparams, s.method_urlparams...)
 		s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam = qparams
 	}
 	if s.module.Apps[s.appname].Endpoints[s.typename].Param != nil {
@@ -1983,6 +1982,7 @@ func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointConte
 // EnterRest_endpoint is called when production rest_endpoint is entered.
 func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext) {
 	s.rest_queryparams_len = append(s.rest_queryparams_len, len(s.rest_queryparams))
+	s.rest_urlparams_len = append(s.rest_urlparams_len, len(s.rest_urlparams))
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		s.rest_attrs = append(s.rest_attrs, makeAttributeArray(attribs))
@@ -1994,11 +1994,11 @@ func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext)
 // ExitRest_endpoint is called when production rest_endpoint is exited.
 func (s *TreeShapeListener) ExitRest_endpoint(ctx *parser.Rest_endpointContext) {
 	s.url_prefix = s.url_prefix[:len(s.url_prefix)-1]
-	ltop := len(s.rest_queryparams_len) - 1
+	ltop := len(s.rest_urlparams_len) - 1
 	if ltop >= 0 {
-		l := s.rest_queryparams_len[ltop]
-		s.rest_queryparams = s.rest_queryparams[:l]
-		s.rest_queryparams_len = s.rest_queryparams_len[:ltop]
+		l := s.rest_urlparams_len[ltop]
+		s.rest_urlparams = s.rest_urlparams[:l]
+		s.rest_urlparams_len = s.rest_urlparams_len[:ltop]
 	}
 	s.rest_attrs = s.rest_attrs[:len(s.rest_attrs)-1]
 
