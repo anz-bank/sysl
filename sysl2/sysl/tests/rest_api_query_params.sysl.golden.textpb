@@ -1,132 +1,190 @@
-apps {
+apps: <
   key: "My :: Server"
-  value {
-    name {
+  value: <
+    name: <
       part: "My"
       part: "Server"
-    }
-    attrs {
+    >
+    attrs: <
       key: "patterns"
-      value {
-        a {
-          elt {
+      value: <
+        a: <
+          elt: <
             s: "rest"
-          }
-        }
-      }
-    }
-    endpoints {
+          >
+        >
+      >
+    >
+    endpoints: <
       key: "GET /first"
-      value {
+      value: <
         name: "GET /first"
-        attrs {
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "rest"
-              }
-            }
-          }
-        }
-        stmt {
-          action {
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
             action: "..."
-          }
-        }
-        rest_params {
+          >
+        >
+        rest_params: <
           method: GET
           path: "/first"
-          query_param {
+          query_param: <
             name: "depth"
-            type {
+            type: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 3
-                }
-              }
-            }
-            loc: true
-          }
-          query_param {
+                >
+              >
+            >
+          >
+          query_param: <
             name: "limit"
-            type {
+            type: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 3
-                }
-              }
-            }
-            loc: true
-          }
-          query_param {
+                >
+              >
+            >
+          >
+          query_param: <
             name: "offset"
-            type {
+            type: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 3
-                }
-              }
-            }
-            loc: true
-          }
-        }
-      }
-    }
-    endpoints {
-      key: "GET /second?depth=int&limit=int?&offset=int?"
-      value {
-        name: "GET /second?depth=int&limit=int?&offset=int?"
-        attrs {
+                >
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/rest_api_query_params.sysl"
+          start: <
+            line: 3
+            col: 8
+          >
+        >
+      >
+    >
+    endpoints: <
+      key: "GET /first/{id}"
+      value: <
+        name: "GET /first/{id}"
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "rest"
-              }
-            }
-          }
-        }
-        stmt {
-          action {
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
             action: "..."
-          }
-        }
-        rest_params {
+          >
+        >
+        rest_params: <
           method: GET
-          path: "/second?depth=int&limit=int?&offset=int?"
-        }
-      }
-    }
-    endpoints {
-      key: "GET /third?depth=intn&limit=int?&offset=int?"
-      value {
-        name: "GET /third?depth=intn&limit=int?&offset=int?"
-        attrs {
+          path: "/first/{id}"
+          url_param: <
+            name: "id"
+            type: <
+              primitive: INT
+              source_context: <
+                start: <
+                  line: 5
+                >
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/rest_api_query_params.sysl"
+          start: <
+            line: 6
+            col: 10
+          >
+        >
+      >
+    >
+    endpoints: <
+      key: "GET /first/{id}/second"
+      value: <
+        name: "GET /first/{id}/second"
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "rest"
-              }
-            }
-          }
-        }
-        stmt {
-          action {
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
             action: "..."
-          }
-        }
-        rest_params {
+          >
+        >
+        rest_params: <
           method: GET
-          path: "/third?depth=intn&limit=int?&offset=int?"
-        }
-      }
-    }
-  }
-}
+          path: "/first/{id}/second"
+          query_param: <
+            name: "depth"
+            type: <
+              primitive: INT
+              source_context: <
+                start: <
+                  line: 9
+                >
+              >
+            >
+          >
+          url_param: <
+            name: "id"
+            type: <
+              primitive: INT
+              source_context: <
+                start: <
+                  line: 5
+                >
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/rest_api_query_params.sysl"
+          start: <
+            line: 9
+            col: 14
+          >
+        >
+      >
+    >
+    source_context: <
+      file: "tests/rest_api_query_params.sysl"
+      start: <
+        line: 1
+        col: 1
+      >
+    >
+  >
+>

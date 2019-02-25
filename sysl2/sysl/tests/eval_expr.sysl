@@ -30,7 +30,7 @@ TodoApp:
     GET:
       return todos
 
-    POST:
+    POST (todo <: Todo):
       return todo
 
     /{id<:int}:
@@ -38,7 +38,7 @@ TodoApp:
         return todo
       /{status<:string}:
         GET:
-          return todo
+          return todoWithStatus
 
 TransformApp:
   !view math(lhs <: int, rhs <: int) -> int:
@@ -169,7 +169,7 @@ TransformApp:
   !view Flatten(app <: sysl.App) -> int:
     app -> (:
       let n = app.endpoints -> <set of string>(ep:
-        name = ep.value.method  + Join(ep.value.params flatten(.name), "")
+        name = ep.value.method  + Join(ep.value.pathvars flatten(.name), "")
       )
       names = n flatten(.name)
       listOfNumbers1 = [[1,2,3], [4,5,6]] flatten(.)

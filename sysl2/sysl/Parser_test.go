@@ -306,11 +306,11 @@ func TestSequenceType(t *testing.T) {
 }
 
 func TestRestApi(t *testing.T) {
-	testParseAgainstGolden(t, "tests/test_rest_api.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/test_rest_api.sysl", "")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
-	testParseAgainstGolden(t, "tests/rest_api_query_params.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/rest_api_query_params.sysl", "")
 }
 
 func TestSimpleProject(t *testing.T) {
@@ -318,15 +318,11 @@ func TestSimpleProject(t *testing.T) {
 }
 
 func TestUrlParamOrder(t *testing.T) {
-	testParseAgainstGolden(t, "tests/rest_url_params.sysl", "")
-}
-
-func TestUrlParamOrderAgainstGolden(t *testing.T) {
-	testParseAgainstGolden(t, "tests/rest_url_params.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/rest_url_params.sysl", "")
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
-	testParseAgainstGolden(t, "tests/bad_order.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/bad_order.sysl", "")
 }
 
 func TestTransform(t *testing.T) {
