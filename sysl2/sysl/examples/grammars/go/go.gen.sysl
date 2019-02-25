@@ -36,7 +36,8 @@ CodeGenTransform:
       identifier = fieldName
       let IsPtr = if field.value.optional == true then "*" else ""
       Type = IsPtr + GoType(field.value).out
-      let fieldTag = '`json:"' + ToLower(fieldName)
+      let jsonPrefix = '`json:"'
+      let fieldTag = if field.value.attrs.json_tag == null then (jsonPrefix + ToLower(fieldName)) else (jsonPrefix + field.value.attrs.json_tag)
       Tag = if field.value.optional == true then (fieldTag + ',omitempty"`') else (fieldTag + '"`')
     )
 
