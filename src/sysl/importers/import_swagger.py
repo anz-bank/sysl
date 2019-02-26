@@ -149,25 +149,28 @@ class SwaggerTranslator:
     def translate(self, swag, appname, package, w):
 
         if 'info' in swag:
-            def info_attrs(info, prefix=''):
-                for (name, value) in sorted(info.iteritems()):
-                    if isinstance(value, dict):
-                        info_attrs(value, prefix + name + '.')
-                    else:
-                        w('@{}{} = {}', prefix, name, json.dumps(value))
-
             title = swag['info'].pop('title', '')
-            info_attrs(swag['info'])
+            hasInfo = True
         else:
             title = ''
-
-        if 'host' in swag:
-            w('@host = {}', json.dumps(swag['host']))
 
         w(u'{}{} [package={}]:',
             appname, title and ' ' + json.dumps(title), json.dumps(package))
 
         with w.indent():
+            if hasInfo:
+                def info_attrs(info, prefix=''):
+                    for (name, value) in sorted(info.iteritems()):
+                        if isinstance(value, dict):
+                            info_attrs(value, prefix + name + '.')
+                        else:
+                            w('@{}{} = {}', prefix, name, json.dumps(value))
+
+                info_attrs(swag['info'])
+
+            if 'host' in swag:
+                w('@host = {}', json.dumps(swag['host']))
+
             w(u'| {}', swag['info'].get('description', 'No description.'))
 
             for (path, api) in sorted(swag['paths'].iteritems()):
