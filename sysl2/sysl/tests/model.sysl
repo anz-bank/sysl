@@ -1,0 +1,4 @@
+Model [package="com.example.gen"]:
+  !type Request:
+    id <: int
+    payload <: string

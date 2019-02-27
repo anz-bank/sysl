@@ -1,15 +1,18 @@
-package main
+package parser
 
 import (
+	"math"
 	"sort"
 
 	sysl "github.com/anz-bank/sysl/sysl2/proto"
+	"github.com/sirupsen/logrus"
 )
 
 type parser struct {
 	g         *sysl.Grammar
 	l         *lexer
 	terminals []string
+	tokens    *[]token
 }
 
 type builder struct {
@@ -17,9 +20,16 @@ type builder struct {
 	tokens map[string]int32
 }
 
+type symbol struct {
+	tok  token
+	term *sysl.Term
+}
+
 const FIRST = 0
 const EPSILON = -2
 const EOF = -1
+const PUSH_GRAMMAR = -3
+const POP_GRAMMAR = -4
 
 func (b *builder) handleChoice(choice *sysl.Choice) {
 	for _, s := range choice.Sequence {
@@ -38,11 +48,12 @@ func (b *builder) handleChoice(choice *sysl.Choice) {
 				b.handleChoice(t.GetAtom().GetChoices())
 			}
 			if str != "" {
-				_, has := b.tokens[str]
-				if !has {
+				if id, has := b.tokens[str]; !has {
 					b.tokens[str] = int32(len(b.arr))
 					t.Atom.Id = int32(len(b.arr))
 					b.arr = append(b.arr, str)
+				} else {
+					t.Atom.Id = id
 				}
 			}
 		}
@@ -79,8 +90,133 @@ func makeParser(g *sysl.Grammar, text string) *parser {
 	}
 }
 
-func (p *parser) parse(tokens []int) bool {
-	return parseGrammar(p.g, tokens, p.g.Start)
+// GetTermMinMaxCount returns acceptable min and max counts
+// by looking at term's quantifier
+func GetTermMinMaxCount(t *sysl.Term) (int, int) {
+	if t.Quantifier == nil {
+		return 1, 1
+	}
+
+	switch t.Quantifier.Union.(type) {
+	case *sysl.Quantifier_Optional: // 0 or 1
+		return 0, 1
+	case *sysl.Quantifier_ZeroPlus: // *
+		return 0, math.MaxInt32
+	case *sysl.Quantifier_OnePlus: // +
+		return 1, math.MaxInt32
+		// case *sysl.Quantifier_Separator:
+	}
+	return 1, 1
+}
+
+func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, []interface{}) {
+	if input == len(*(p.tokens)) {
+		logrus.Println("got input length zero!!!")
+	}
+	result := false
+	tree := []interface{}{}
+
+	switch val.(type) {
+	case *sysl.Sequence:
+		for index, t := range val.(*sysl.Sequence).Term {
+			if t == nil {
+				// nil => epsilon, see makeEXPR()
+				logrus.Println("matched nil")
+				result = true
+				continue
+			}
+			minCount, maxCount := GetTermMinMaxCount(t)
+			matchCount := 0
+			res := false
+			subTree := make([]interface{}, 0)
+			singleTerm := minCount == maxCount && minCount == 1
+
+			for matchCount < maxCount {
+				var remaining int
+				var matchedTerm interface{}
+				switch x := t.Atom.Union.(type) {
+				case *sysl.Atom_Choices:
+					var parseResult []interface{}
+					res, remaining, parseResult = p.parse(g, input, x.Choices)
+					matchedTerm = parseResult[0]
+				case *sysl.Atom_Rulename:
+					logrus.Printf("checking Rule %s (singleTerm: %v)\n", x.Rulename.Name, singleTerm)
+					var parseResult []interface{}
+					res, remaining, parseResult = p.parse(g, input, g.Rules[x.Rulename.Name])
+					matchedTerm = parseResult[0]
+				default: //Atom_String_ and Atom_Regexp
+					if input == len(*p.tokens) {
+						logrus.Printf("input is empty\n")
+						res = false
+					} else {
+						in := (*p.tokens)[input]
+						res = int(t.GetAtom().Id) == in.id
+						remaining = input + 1
+						matchedTerm = symbol{in, t}
+					}
+				}
+				if res {
+					matchCount++
+					input = remaining
+					subTree = append(subTree, matchedTerm)
+					logrus.Printf("%d >> matched (%v): %d  -- len(subtree=%d)\n", index, matchedTerm, matchCount, len(subTree))
+				} else {
+					if matchCount < minCount {
+						return false, EOF, nil
+					} else if minCount == 0 && matchCount == 0 {
+						//TODO: check maxCount?
+						subTree = append(subTree, matchedTerm)
+						break
+					} else if matchCount >= minCount {
+						break
+					}
+				}
+			}
+			if singleTerm {
+				tree = append(tree, subTree[0])
+			} else {
+				tree = append(tree, subTree)
+			}
+		}
+		logrus.Println("out of loop")
+		return true, input, tree
+	case *sysl.Rule:
+		r := val.(*sysl.Rule)
+		logrus.Println("Entering Rule " + r.GetName().Name)
+		res, remaining, subTree := p.parse(g, input, r.Choices)
+		if res {
+			logrus.Printf("matched rulename (%s)\n", r.GetName().Name)
+			logrus.Printf("got choice (%T)\n", subTree[0])
+			rule := map[string]map[int][]interface{}{
+				r.GetName().Name: subTree[0].(map[int][]interface{}),
+			}
+			return true, remaining, append(tree, rule)
+		}
+		logrus.Println("did not match " + r.GetName().Name)
+		tree = append(tree, nil)
+	case *sysl.Choice:
+		c := val.(*sysl.Choice)
+		logrus.Printf("choices count : (%d)\n", len(c.Sequence))
+		for i, alt := range c.Sequence {
+			logrus.Printf("trying choice (%d)\n", i)
+			res, remaining, subTree := p.parse(g, input, alt)
+			if res {
+				logrus.Printf("matched choice :(%d)\n", i)
+				choice := map[int][]interface{}{i: subTree}
+				return true, remaining, append(tree, choice)
+			}
+		}
+		result = false
+		tree = append(tree, nil)
+	}
+	return result, input, tree
+}
+
+// parseGrammar returns (true, ast) if the grammar consumes the whole string
+func (p *parser) parseGrammar(arr *[]token) (bool, []interface{}) {
+	p.tokens = arr
+	result, out, tree := p.parse(p.g, 0, p.g.Rules[p.g.Start])
+	return result && len(*p.tokens) == out, tree
 }
 
 func setFromTerm(first map[string]*intSet, t *sysl.Term) *intSet {
@@ -100,23 +236,16 @@ func setFromTerm(first map[string]*intSet, t *sysl.Term) *intSet {
 }
 
 func hasEpsilon(t *sysl.Term, first map[string]*intSet) bool {
-	has := false
 	switch t.Atom.Union.(type) {
-	// case *sysl.Atom_Choices:
-	// firstChoice = gset.firstSetChoice(t.GetAtom().GetChoices())
 	case *sysl.Atom_Rulename:
-		has = setFromTerm(first, t).has(EPSILON)
-	default: //Atom_String_ and Atom_Regexp
-		has = false
+		return setFromTerm(first, t).has(EPSILON)
 	}
-	return has
+	return false
 }
 
 func isNonTerminal(t *sysl.Term) bool {
 	switch t.Atom.Union.(type) {
-	case *sysl.Atom_Choices:
-		return true
-	case *sysl.Atom_Rulename:
+	case *sysl.Atom_Choices, *sysl.Atom_Rulename:
 		return true
 	}
 	return false
@@ -127,10 +256,8 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 	follow := make(map[string]*intSet)
 
 	for key := range g.Rules {
-		s1 := make(intSet)
-		s2 := make(intSet)
-		first[key] = &s1
-		follow[key] = &s2
+		first[key] = &intSet{}
+		follow[key] = &intSet{}
 	}
 
 	// Follow Set Rule 1
@@ -140,8 +267,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 	// check for epsilon
 	for ruleName, rule := range g.Rules {
 		for _, seq := range rule.Choices.Sequence {
-			t := seq.Term[0]
-			if t == nil {
+			if seq.Term[0] == nil {
 				first[ruleName].add(EPSILON)
 			}
 		}
@@ -157,8 +283,7 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 					if t == nil {
 						continue
 					}
-					hasEpsilon := hasEpsilon(t, first)
-					if hasEpsilon == false {
+					if hasEpsilon(t, first) == false {
 						updated = first[ruleName].union(setFromTerm(first, t)) || updated
 						break
 					} else {
@@ -205,7 +330,6 @@ func buildFirstFollowSet(g *sysl.Grammar) (map[string]*intSet, map[string]*intSe
 							Afollow := setFromTerm(follow, A)
 							updated = Afollow.union(Bfirst) || updated
 						}
-
 					} else if i == last {
 						// Rule 3
 						// If there is a production X → aB, then everything in FOLLOW(X) is in FOLLOW(B)

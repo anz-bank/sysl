@@ -1,0 +1,127 @@
+apps: <
+  key: "TransformApp"
+  value: <
+    name: <
+      part: "TransformApp"
+    >
+    long_name: "The \"App\""
+    attrs: <
+      key: "package"
+      value: <
+        s: "io.sysl.demo.petshop.views"
+      >
+    >
+    views: <
+      key: "NoArgTransform"
+      value: <
+        param: <
+          name: "number1"
+          type: <
+            primitive: INT
+          >
+        >
+        param: <
+          name: "foo"
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
+                  part: "Some"
+                >
+                path: "Type"
+              >
+            >
+          >
+        >
+        ret_type: <
+          type_ref: <
+            ref: <
+              appname: <
+                part: "Model"
+              >
+              path: "Type"
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
+              name: "."
+            >
+            scopevar: "scopeVar"
+            stmt: <
+              assign: <
+                name: "out"
+                expr: <
+                  literal: <
+                    s: "abc"
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
+                name: "out1"
+                expr: <
+                  literal: <
+                    s: "'abc'"
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
+                name: "out2"
+                expr: <
+                  literal: <
+                    s: "\"On\nMultiple\nLines\""
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
+                name: "out3"
+                expr: <
+                  literal: <
+                    s: "\"abc\""
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
+                name: "out4"
+                expr: <
+                  literal: <
+                    s: "abc"
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
+                name: "out5"
+                expr: <
+                  literal: <
+                    s: "\"abc\\ndef\""
+                  >
+                >
+              >
+            >
+          >
+        >
+        attrs: <
+          key: "patterns"
+          value: <
+            a: <
+              elt: <
+                s: "partial"
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

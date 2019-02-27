@@ -59,6 +59,7 @@ HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' ) [ \t]*
 WRAP                : '!wrap';
 TABLE               : '!table';
 TYPE                : '!type';
+ALIAS               : '!alias';
 UNION               : '!union';
 VIEW                : '!view' { gotView = true;};
 
@@ -126,12 +127,6 @@ EMPTY_COMMENT       : ('#' '\r'? '\n')
 HASH                : '#'       -> pushMode(NOT_NEWLINE);
 PIPE                : '|'       -> pushMode(NOT_NEWLINE);
 
-fragment
-DBL_QT     : ["];
-
-fragment
-SINGLE_QT  : ['];
-
 EMPTY_LINE          : ([ \t]+ ( [\r\n] | EOF ))
                     { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++;}
                     -> channel(HIDDEN)
@@ -144,16 +139,11 @@ INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
 DIGITS              : [0-9][0-9]*;
 
 fragment
-WITHIN_DBL_QTS        : (~[\r\n"])*;
-
+DOUBLE_QUOTE_STRING: ["] (~["\\] | [\\][\\brnt'"])* ["];
 fragment
-WITHIN_SNGL_QTS        : (~[\r\n'])*;
+SINGLE_QUOTE_STRING: ['] (~['])* ['];
 
-QSTRING     : (
-            (DBL_QT WITHIN_DBL_QTS DBL_QT)
-            |
-            (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
-            );
+QSTRING     : DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING;
 
 NEWLINE     : '\r'? '\n'
             {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
@@ -185,7 +175,7 @@ TEXT_LINE       :
                 { startsWithKeyword(p.GetText()) == false}?
                 ;
 
-Name            : [a-zA-Z][-a-zA-Z0-9_]*;
+Name            : [a-zA-Z_][-a-zA-Z0-9_]*;
 /// end--textline & name
 
 // cim.sysl has spaces and tab in the same line.
@@ -301,7 +291,9 @@ E_RELOPS_COUNT         : 'count';
 E_RELOPS_FLATTEN       : 'flatten';
 E_RELOPS_FIRST         : 'first';
 E_FUNC          : 'autoinc' | 'str' | 'substr';
-E_STRING        : ["] ~["]* ["];
+
+E_STRING_DBL           : ["] (~["\\] | [\\][\\brnt'"])* ["];
+E_STRING_SINGLE        : ['] ~[']* ['];
 
 fragment
 F_DIGITS   : [0-9];

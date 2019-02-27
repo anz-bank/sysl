@@ -1,0 +1,209 @@
+Model [package="com.example.gen"]:
+  !type Request:
+    id <: int?
+    payload <: string
+
+  !type Response:
+    code <: int
+    message <: string
+    names <: sequence of Request?
+
+  !union Message:
+    Request
+    Response
+
+  !alias Error [~foo]:
+    @comment = "some description"
+    string
+
+  !alias Object:
+    Ignored
+
+  !alias Terms:
+    sequence of Term
+
+  !alias Accounts:
+    set of Term
+
+TodoApp:
+  /todos:
+    GET:
+      return todos
+
+    POST (newTodo <: Todo):
+      return todo
+
+    /{id<:int}:
+      GET:
+        return todo
+      /{status<:string}:
+        GET:
+          return todoWithStatus
+
+TransformApp:
+  !view math(lhs <: int, rhs <: int) -> int:
+    lhs -> (:
+      out1 = lhs + rhs
+      out2 = lhs -> <int> (:
+        out3 = 5 + 1
+      )
+      out3 = lhs - rhs
+      out4 = lhs * rhs
+      out5 = lhs / rhs
+      out6 = lhs % rhs
+    )
+
+  !view compare(lhs <: int, rhs <: int) -> int:
+    lhs -> (:
+      eq = lhs == rhs
+      gt = lhs > rhs
+      lt = lhs < rhs
+      ge = lhs >= rhs
+      le = lhs <= rhs
+      ne = lhs != rhs
+    )
+
+  !view UnionSet(lhs <: string) -> set of string:
+    lhs -> (:
+      strs = {"rhs", "lhs"} | {"lhs"}
+      numbers = {1} | {1,2}
+    )
+
+  !view IsKeyword(word <: string) -> bool:
+    word -> (:
+      out = word in {"break", "default","func","interface","select","case","defer"}
+    )
+
+  # t is map
+  !view JavaType(t <: sysl.Type) -> string:
+    t -> (:
+      out = if t.type ==:
+        "primitive" => if t.primitive ==:
+          "INT" => "int"
+          "BOOL" => "Boolean"
+          "DECIMAL" => "BigDecimal"
+          "STRING" => "String"
+          "STRING_8" => "String"
+        "sequence" => "List<" + JavaType(t.sequence).out + ">"
+        else t.type_ref
+    )
+
+  !view Getters(fields <: set of app.Type) -> set of memberFunction:
+    fields -> (field:
+      access = "public"
+      let IsPtr = if field.value.optional == false then "" else "*"
+      returnType = IsPtr + JavaType(field.value).out
+      methodName = "get" + field.key
+    )
+
+  !view Setters(fields <: set of app.Type) -> set of memberFunction:
+    fields -> (field:
+      access = "public"
+      methodName = "set" + field.key
+    )
+
+  !view classDef(types <: app.Types) -> set of classDef:
+    types -> (t:
+      className = t.key + "Impl"
+      classBody = Getters(t.value.fields) | Setters(t.value.fields)
+    )
+
+  !view GetAppAttributes(app <: sysl.App) -> object:
+    app -> (:
+      out = app.attrs.package
+
+      package = .attrs.package -> <set of package> (name:
+        packageName = name
+      )
+
+      import = {"package1", "package2"} -> <set of import>(name:
+        importPath = Title(name)
+      )
+
+      definition = classDef(app.types)
+    )
+
+  !view TestDotScope(app <: sysl.App) -> int:
+    app -> (:
+      out = .name
+
+      package = .name -> <package> (:
+        packageName = .
+      )
+
+      import = .name
+    )
+
+  !view StringOps(app <: sysl.App) -> int:
+    app -> (:
+      Contains = Contains("Hello World!", "World")
+      Count = Count("Hello World!", "l")
+      Fields = Fields("Hello World!")
+      HasPrefix = HasPrefix("Hello World!", "Hello")
+      HasSuffix = HasSuffix("Hello World!", "World!")
+      Join = Join({"Hello", "World"}, "_")
+      LastIndex = LastIndex("Hello! World!", "!")
+      Replace = Replace("Hello/World", "/","_", -1)
+      Split = Split("/Hello/World", "/")
+      Title = Title("hello world!")
+      ToLower = ToLower("HELLO WORLD!")
+      ToTitle = ToTitle("hello world!")
+      ToUpper = ToUpper("hello world!")
+      Trim = Trim(" hello world! ", " ")
+      TrimLeft = TrimLeft(" hello world! ", " ")
+      TrimPrefix = TrimPrefix("hello world! ", "hello")
+      TrimRight = TrimRight(" hello world! ", " ")
+      TrimSpace = TrimSpace(" hello world! ")
+      TrimSuffix = TrimSuffix(" hello world", "world")
+      hasHello = "Hello" in Fields("Hello World!")
+    )
+
+  !view IncorrectArgsToGoFunc(app <: sysl.App) -> int:
+    app -> (:
+      WrongNumberOfArgs = Contains("Hello World")
+      Contains = Contains("Hello World", 1)
+      Join = Join(["Hello", "World"], "_")
+      JoinInts = Join([1,2], "_")
+    )
+
+  !view Flatten(app <: sysl.App) -> int:
+    app -> (:
+      let n = app.endpoints -> <set of string>(ep:
+        name = ep.value.method  + Join(ep.value.pathvars flatten(.name), "")
+      )
+      names = n flatten(.name)
+      listOfNumbers1 = [[1,2,3], [4,5,6]] flatten(.)
+      listOfNumbers2 = [{1,2,3}, {4,5,6}] flatten(.)
+      setOfNumbers1 = {{1,2,3}, {4,5,6}} flatten(.)
+    )
+
+  !view Where(app <: sysl.App) -> int:
+    app -> (:
+      greaterThanOne = {1,2,3} where(. > 1)
+      strOne = {"1","2","3"} where(. == "1")
+
+      let fieldNames = app.types -> <set of name>(type:
+        name = type.key
+      )
+      Request = fieldNames where(.name == "Request")
+
+      ListofNames = app.types -> <sequence of name>(type:
+        name = type.key
+      )
+    )
+
+  !view Links(app <: sysl.App) -> int:
+    app -> (:
+      let out =  app.types -> <set of inner>(type:
+        inner = type.value.fields -> <set of link>(field:
+          Left = field.key
+          Right = JavaType(field.value).out
+        )
+      )
+      links = out flatten(.inner)
+    )
+
+  !view ListOfTypeNames(app <: sysl.App) -> sequence of types:
+    app.types -> (type:
+      name = type.key
+    )

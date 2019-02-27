@@ -88,6 +88,7 @@ message Endpoint {
         Method              method      = 1;
         string              path        = 2;
         repeated QueryParam query_param = 3;
+        repeated QueryParam url_param = 4;
 
         enum Method {
             NO_Method = 0;
@@ -104,15 +105,7 @@ message Endpoint {
         message QueryParam {
             string  name    = 1;  // Name used in url
             Type    type    = 2;
-            bool    loc  = 4;
-
-            enum Loc {
-                NO_In = 0;
-                QUERY = 1;
-                PATH = 2;
-                BODY = 3;
-            }
-
+            bool    loc  = 4; // no longer used
             string  DONOTUSE_param   = 3;  // Internal name
         }
     }

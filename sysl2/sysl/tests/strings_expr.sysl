@@ -1,0 +1,13 @@
+TransformApp "The \"App\"" [package="io.sysl.demo.petshop.views"]:
+  !view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:
+    -> (scopeVar:
+      out = "abc"
+      out1 = "'abc'"
+      out2 = "\"On\nMultiple\nLines\""
+
+      out3 = '"abc"'
+      out4 = 'abc'
+      # output does not match legacy!
+      # golden output had to be modified for this test to work.
+      out5 = '"abc\ndef"'
+    )

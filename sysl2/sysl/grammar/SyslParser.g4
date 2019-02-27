@@ -32,18 +32,23 @@ annotation_value        :   QSTRING | array_of_strings | multi_line_docstring;
 annotation      : AT VAR_NAME EQ annotation_value;
 annotations     : INDENT annotation+ DEDENT;
 
-field_type      : collection_type
-                |  (types (array_size | size_spec)? QN? attribs_or_modifiers? (COLON annotations)?) ;
+field_type      : (collection_type |  (types (array_size | size_spec)?))
+                    QN? attribs_or_modifiers? (COLON annotations)?;
 
 array_size  :  OPEN_PAREN DIGITS DOTDOT DIGITS? CLOSE_PAREN;
 inplace_tuple: INDENT field+ DEDENT;
 field: name_str (array_size? LESS_COLON (field_type | inplace_tuple) QSTRING? )?;
 
 inplace_table : table;
-table   :   SYSL_COMMENT*
-            (TABLE | TYPE)
-            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | field | annotation | inplace_table | WHATEVER )+ DEDENT)
-        ;
+
+table_stmts:  INDENT
+                (SYSL_COMMENT | field | annotation | inplace_table | WHATEVER)+
+              DEDENT;
+
+table_def: attribs_or_modifiers? COLON ( WHATEVER | table_stmts);
+
+table   :  SYSL_COMMENT* (TYPE | TABLE) name_str table_def;
+
 union   :   SYSL_COMMENT*
             UNION
             name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | user_defined_type | annotation | WHATEVER )+ DEDENT)
@@ -70,7 +75,7 @@ http_path_part :name_str | DIGITS;
 http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str) CURLY_CLOSE;
 http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
-http_path       : (FORWARD_SLASH | http_path_suffix+) query_param?;
+http_path       : (FORWARD_SLASH | http_path_suffix+);
 
 endpoint_name   : name_str (FORWARD_SLASH name_str)*;
 
@@ -169,7 +174,7 @@ subscribe: app_name ARROW_RIGHT name_str attribs_or_modifiers? COLON (WHATEVER |
 
 view_type_spec: collection_type | types;
 
-literal: E_DIGITS | E_DECIMAL | E_STRING | E_NULL | E_TRUE | E_FALSE;
+literal: E_DIGITS | E_DECIMAL | E_STRING_DBL | E_STRING_SINGLE | E_NULL | E_TRUE | E_FALSE;
 
 // expr_qualified_name: E_QN? E_RefName;
 expr_table_of_op: (E_DOT | E_NULLSAFE_DOT) E_TABLE_OF? E_Name;
@@ -355,8 +360,14 @@ view_return_type: view_type_spec;
 transform_scope_var: E_Name;
 transform_arg: expr;
 
-transform: transform_arg? E_ARROW_RIGHT (E_ANGLE_OPEN transform_return_type E_ANGLE_CLOSE)? E_OPEN_PAREN transform_scope_var? E_COLON E_NL
-              INDENT (expr_stmt)+ DEDENT E_CLOSE_PAREN E_NL;
+transform: transform_arg?
+    E_ARROW_RIGHT
+    (E_ANGLE_OPEN transform_return_type E_ANGLE_CLOSE)?
+    E_OPEN_PAREN transform_scope_var? E_COLON E_NL
+      INDENT
+        (expr_stmt)+
+      DEDENT E_CLOSE_PAREN
+      E_NL;
 
 expr_block: INDENT transform DEDENT;
 
@@ -365,9 +376,35 @@ view_param: name_str LESS_COLON view_type_spec;
 view_params: view_param (COMMA view_param)*;
 
 abstract_view: ABSTRACT;
-view returns [bool abstractView]: VIEW name_str OPEN_PAREN view_params CLOSE_PAREN (ARROW_RIGHT view_return_type)? ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
-app_decl locals [bool check]: INDENT  (table | union | facade | SYSL_COMMENT | rest_endpoint | simple_endpoint | collector | event | subscribe | annotation | mixin | view { $check = $view.abstractView}  )+ ( {$check}? | DEDENT );
+view
+  returns [bool abstractView]:
+  VIEW name_str
+    OPEN_PAREN view_params CLOSE_PAREN
+    (ARROW_RIGHT view_return_type)?
+    ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
+
+alias: ALIAS name_str attribs_or_modifiers? COLON
+        INDENT annotation* (types | collection_type) DEDENT;
+
+app_decl
+  locals [bool check]:
+    INDENT  (
+        alias
+        | annotation
+        | collector
+        | event
+        | facade
+        | mixin
+        | rest_endpoint
+        | simple_endpoint
+        | subscribe
+        | SYSL_COMMENT
+        | union
+        | view { $check = $view.abstractView;}
+        | table
+      )+
+      ( {$check}? | DEDENT );
 
 application:  SYSL_COMMENT*
                 name_with_attribs

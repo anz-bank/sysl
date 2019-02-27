@@ -826,6 +826,35 @@ apps {
               assign {
                 name: "expr_set4"
                 expr {
+                  call {
+                    func: "someFunc"
+                    arg {
+                      list {
+                        expr {
+                          literal {
+                            s: "1"
+                          }
+                        }
+                        expr {
+                          literal {
+                            s: "2"
+                          }
+                        }
+                        expr {
+                          literal {
+                            s: "abc"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_set4"
+                expr {
                   set {
                     expr {
                       literal {
@@ -845,6 +874,83 @@ apps {
                   }
                   type {
                     set {
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_list1"
+                expr {
+                  list {
+                    expr {
+                      literal {
+                        i: 1
+                      }
+                    }
+                    expr {
+                      literal {
+                        i: 2
+                      }
+                    }
+                    expr {
+                      literal {
+                        s: "abc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_list2"
+                expr {
+                  list {
+                    expr {
+                      literal {
+                        s: "1"
+                      }
+                    }
+                    expr {
+                      literal {
+                        s: "2"
+                      }
+                    }
+                    expr {
+                      literal {
+                        s: "abc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stmt {
+              assign {
+                name: "expr_list3"
+                expr {
+                  call {
+                    func: "someFunc"
+                    arg {
+                      list {
+                        expr {
+                          literal {
+                            s: "1"
+                          }
+                        }
+                        expr {
+                          literal {
+                            s: "2"
+                          }
+                        }
+                        expr {
+                          literal {
+                            s: "abc"
+                          }
+                        }
+                      }
                     }
                   }
                 }
