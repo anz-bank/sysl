@@ -257,7 +257,10 @@ func TestScopeAddRestApp(t *testing.T) {
 
 	postTodo := endpoints["POST /todos"].GetMap().Items
 	assert.Equal(t, "POST /todos", postTodo["name"].GetS(), "unexpected endpoint name")
-	assert.Equal(t, 1, len(postTodo["params"].GetList().Value))
+	paramList := postTodo["params"].GetList().Value
+	assert.Equal(t, 1, len(paramList))
+	paramItem0 := paramList[0].GetMap().Items
+	assert.Equal(t, "newTodo", paramItem0["name"].GetS())
 
 	todosById := endpoints["GET /todos/{id}"].GetMap().Items
 	assert.Equal(t, "GET /todos/{id}", todosById["name"].GetS(), "unexpected endpoint name")
@@ -378,6 +381,9 @@ func TestEvalWhere(t *testing.T) {
 
 	request := out.GetMap().Items["Request"].GetSet().Value
 	assert.Equal(t, 1, len(request))
+
+	listofNames := out.GetMap().Items["ListofNames"].GetList().Value
+	assert.Equal(t, 2, len(listofNames))
 }
 
 func TestEvalLinks(t *testing.T) {
@@ -414,4 +420,16 @@ func TestDotScope(t *testing.T) {
 	s.AddApp("app", mod.Apps[appName])
 	out := EvalView(mod, "TransformApp", "TestDotScope", &s).GetMap().Items
 	assert.Equal(t, 3, len(out))
+}
+
+func TestListOfTypeNames(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "Model"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "ListOfTypeNames", &s)
+	l := out.GetList()
+	assert.NotNil(t, l)
+	assert.Equal(t, 2, len(l.Value))
 }

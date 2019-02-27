@@ -77,7 +77,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			scopeVar := x.Transform.Scopevar
 			if argValue.GetMap() != nil && scopeVar != "." {
 				// TODO: add check that return type is defined as 'set of ...'
-				setResult := MakeValueSet()
+				resultList := &sysl.Value_List{}
 				// Sort keys, to get stable output
 				var keys []string
 				for key := range argValue.GetMap().Items {
@@ -93,10 +93,21 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 					addItemToValueMap(a, "value", item)
 					(*assign)[scopeVar] = a
 					res := evalTransformStmts(txApp, assign, x.Transform)
-					appendItemToValueList(setResult.GetSet(), res)
+					appendItemToValueList(resultList, res)
 				}
 				delete(*assign, scopeVar)
-				return setResult
+				if e.Type.GetSet() != nil {
+					return &sysl.Value{
+						Value: &sysl.Value_Set{
+							Set: resultList,
+						},
+					}
+				}
+				return &sysl.Value{
+					Value: &sysl.Value_List_{
+						List: resultList,
+					},
+				}
 			}
 			logrus.Printf("Argvalue: %v", argValue)
 			(*assign)[scopeVar] = argValue
@@ -120,6 +131,9 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			for i, argExpr := range x.Call.Arg {
 				// TODO: Add type checks
 				callScope[params[i].Name] = Eval(txApp, assign, argExpr)
+			}
+			if callTransform.Expr.Type == nil {
+				callTransform.Expr.Type = callTransform.RetType
 			}
 			return Eval(txApp, &callScope, callTransform.Expr)
 		}
@@ -178,5 +192,9 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 // EvalView evaluate the view using the Scope
 func EvalView(mod *sysl.Module, appName, viewName string, s *Scope) *sysl.Value {
 	txApp := mod.Apps[appName]
-	return Eval(txApp, s, txApp.Views[viewName].Expr)
+	view := txApp.Views[viewName]
+	if view.Expr.Type == nil {
+		view.Expr.Type = view.RetType
+	}
+	return Eval(txApp, s, view.Expr)
 }
