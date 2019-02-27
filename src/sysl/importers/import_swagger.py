@@ -163,7 +163,7 @@ class SwaggerTranslator:
                     for (name, value) in sorted(info.iteritems()):
                         if isinstance(value, dict):
                             info_attrs(value, prefix + name + '.')
-                        else:
+                        elif name != "description":
                             w('@{}{} = {}', prefix, name, json.dumps(value))
 
                 info_attrs(swag['info'])
@@ -171,7 +171,9 @@ class SwaggerTranslator:
             if 'host' in swag:
                 w('@host = {}', json.dumps(swag['host']))
 
-            w(u'| {}', swag['info'].get('description', 'No description.'))
+            w(u'@description =:')
+            with w.indent():
+                w(u'| {}', swag['info'].get('description', 'No description.').replace("\n", "\n|"))
 
             for (path, api) in sorted(swag['paths'].iteritems()):
                 w(u'\n{}:', self.translate_path_template_params(path))
@@ -340,9 +342,9 @@ class SwaggerTranslator:
                 if descr
             }
             assert not descrs, descrs
-            fields = ('{} <: {}'.format(k, self.parse_typespec(v)[0])
+            fields = ('\n\t{} <: {}'.format(k, self.parse_typespec(v)[0])
                       for (k, v) in sorted(extract_properties(tspec).iteritems()))
-            return r('{' + ', '.join(fields) + '}')
+            return r(''.join(fields))
         else:
             return r(str(tspec))
 
