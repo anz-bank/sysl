@@ -222,6 +222,20 @@ func TestEvalGetAppAttributes(t *testing.T) {
 
 }
 
+func TestEvalNullCheckAppAttrs(t *testing.T) {
+	mod, _ := Parse("tests/eval_expr.sysl", "")
+
+	s := Scope{}
+	appName := "Model"
+	s.AddApp("app", mod.Apps[appName])
+	out := EvalView(mod, "TransformApp", "NullCheckAppAttrs", &s)
+
+	assert.False(t, out.GetMap().Items["NotHasAttrName"].GetB())
+	assert.True(t, out.GetMap().Items["NotHasAttrFoo"].GetB())
+	assert.True(t, out.GetMap().Items["hasAttrName"].GetB())
+	assert.False(t, out.GetMap().Items["hasAttrFoo"].GetB())
+}
+
 func TestScopeAddRestApp(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 	s := Scope{}

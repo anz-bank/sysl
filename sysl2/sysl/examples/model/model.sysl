@@ -1,8 +1,11 @@
 Model [package="com.example.gen"]:
   !type Request:
-    id <: int
+    id <: int?:
+      @json_tag="index"
     payload <: string
   !type Response:
-    req <: Request
+    req <: Request?
     code <: int
     response <: string
+    lhs <: float:
+      @json_tag="lhs_value"

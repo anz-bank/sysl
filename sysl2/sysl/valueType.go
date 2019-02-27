@@ -18,6 +18,7 @@ const (
 	VALUE_LIST
 	VALUE_MAP
 	VALUE_SET
+	VALUE_NULL
 )
 
 var valueTypeNames = map[valueType]string{
@@ -30,6 +31,7 @@ var valueTypeNames = map[valueType]string{
 	VALUE_LIST:           "VALUE_LIST",
 	VALUE_MAP:            "VALUE_MAP",
 	VALUE_SET:            "VALUE_SET",
+	VALUE_NULL:           "VALUE_NULL",
 }
 
 func (v valueType) String() string {
@@ -57,6 +59,8 @@ func getValueType(v *sysl.Value) valueType {
 		return VALUE_LIST
 	case *sysl.Value_Map_:
 		return VALUE_MAP
+	case *sysl.Value_Null_:
+		return VALUE_NULL
 	default:
 		panic(errors.Errorf("exprOp: getValueType: unhandled type: %v", v))
 	}

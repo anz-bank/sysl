@@ -149,6 +149,13 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 		arg := Eval(txApp, assign, x.GetAttr.Arg)
 		val, has := arg.GetMap().Items[x.GetAttr.Attr]
 		logrus.Printf("GetAttribute: %v result: %v: ", has, val)
+		if !has {
+			return &sysl.Value{
+				Value: &sysl.Value_Null_{
+					Null: &sysl.Value_Null{},
+				},
+			}
+		}
 		return val
 	case *sysl.Expr_Ifelse:
 		cond := Eval(txApp, assign, x.Ifelse.Cond)

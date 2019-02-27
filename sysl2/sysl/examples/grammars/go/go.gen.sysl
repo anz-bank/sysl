@@ -18,6 +18,13 @@ CodeGenTransform:
         else t.type_ref
     )
 
+  !view GetGoField(word <: string) -> string:
+    word -> (:
+      let wordUpper = ToTitle(word)
+      # Common initialisms https://github.com/golang/lint/blob/8f45f776aaf18cebc8d65861cc70c33c60471952/lint.go#L771
+      out = if (wordUpper in {"ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "LHS", "QPS", "RAM", "RHS", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "UID", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS"}) == true then wordUpper else Title(ToLower(word))
+    )
+
   !view filename(app <: sysl.App) -> string:
     app -> (:
       filename = app.name + ".go"
@@ -25,17 +32,20 @@ CodeGenTransform:
 
   !view GoStructFields(fields <: set of Type) -> set of FieldDecl:
     fields -> (field:
-      let isKeyword = IsKeyword(field.key).out
-      let prefix = if isKeyword == true then "_" else ""
-      identifier = prefix + field.key
+      let fieldName = GetGoField(field.key).out
+      identifier = fieldName
       let IsPtr = if field.value.optional == true then "*" else ""
       Type = IsPtr + GoType(field.value).out
+      let jsonPrefix = '`json:"'
+      let fieldTag = if field.value.attrs.json_tag == null then (jsonPrefix + ToLower(fieldName)) else (jsonPrefix + field.value.attrs.json_tag)
+      Tag = if field.value.optional == true then (fieldTag + ',omitempty"`') else (fieldTag + '"`')
     )
 
   !view GoStructs(types <: set of Type) -> set of TopLevelDecl:
     types -> (type:
         Declaration = type -> <Declaration>(:
           StructType = type -> <StructType>(:
+            Comment = "\n//" + .key + " ..." 
             StructName = .key
             FieldDecl = GoStructFields(.value.fields)
           )
@@ -73,7 +83,7 @@ CodeGenTransform:
     app -> (:
 
       PackageClause = .name -> <package> (name:
-        PackageName = name
+        PackageName = ToLower(name)
       )
 
       # ImportDecl = app -> <ImportDecl>(:
