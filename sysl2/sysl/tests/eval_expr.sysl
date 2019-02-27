@@ -186,6 +186,10 @@ TransformApp:
         name = type.key
       )
       Request = fieldNames where(.name == "Request")
+
+      ListofNames = app.types -> <sequence of name>(type:
+        name = type.key
+      )
     )
 
   !view Links(app <: sysl.App) -> int:
@@ -197,4 +201,9 @@ TransformApp:
         )
       )
       links = out flatten(.inner)
+    )
+
+  !view ListOfTypeNames(app <: sysl.App) -> sequence of types:
+    app.types -> (type:
+      name = type.key
     )
