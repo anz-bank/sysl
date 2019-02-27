@@ -30,7 +30,7 @@ TodoApp:
     GET:
       return todos
 
-    POST (todo <: Todo):
+    POST (newTodo <: Todo):
       return todo
 
     /{id<:int}:
@@ -102,17 +102,17 @@ TransformApp:
       methodName = "set" + field.key
     )
 
-  !view classDef(types <: app.Types) -> classDef:
+  !view classDef(types <: app.Types) -> set of classDef:
     types -> (t:
       className = t.key + "Impl"
       classBody = Getters(t.value.fields) | Setters(t.value.fields)
     )
 
-  !view GetAppAttributes(app <: sysl.App) -> int:
+  !view GetAppAttributes(app <: sysl.App) -> object:
     app -> (:
       out = app.attrs.package
 
-      package = .attrs.package -> <package> (name:
+      package = .attrs.package -> <set of package> (name:
         packageName = name
       )
 

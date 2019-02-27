@@ -243,7 +243,10 @@ func TestScopeAddRestApp(t *testing.T) {
 
 	postTodo := endpoints["POST /todos"].GetMap().Items
 	assert.Equal(t, "POST /todos", postTodo["name"].GetS(), "unexpected endpoint name")
-	assert.Equal(t, 1, len(postTodo["params"].GetList().Value))
+	paramList := postTodo["params"].GetList().Value
+	assert.Equal(t, 1, len(paramList))
+	paramItem0 := paramList[0].GetMap().Items
+	assert.Equal(t, "newTodo", paramItem0["name"].GetS())
 
 	todosById := endpoints["GET /todos/{id}"].GetMap().Items
 	assert.Equal(t, "GET /todos/{id}", todosById["name"].GetS(), "unexpected endpoint name")
