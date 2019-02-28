@@ -32,6 +32,15 @@ TYPE_MAP = {
 }
 
 
+class TypeSpec:
+    def __init__(self, element, parentRef, typeRef):
+        self.element = element
+        self.parentRef = parentRef
+        self.typeRef = typeRef
+
+
+typeSpecList = []
+
 def sysl_array_type_of(itemtype):
     return 'sequence of ' + itemtype
 
@@ -82,6 +91,8 @@ def parse_args(argv):
     p.add_argument('appname', help='appname')
     p.add_argument('package', help='package')
     p.add_argument('outfile', help='path of output file')
+    p.add_argument('--tag', help='Meta tag type [json]')
+
     return p.parse_args(args=argv[1:])
 
 
@@ -106,6 +117,7 @@ class SwaggerTranslator:
         self._param_cache = {}
         self._words = set()
         self._vocabulary_factory = vocabulary_factory
+        self.duplicateCount = 1
 
     def warn(self, msg):
         self._logger.warn(msg)
@@ -146,7 +158,7 @@ class SwaggerTranslator:
         # For some reason, we rename these params via javaParam
         return re.sub(r'({[^/]*?})', self.javaParam, path)
 
-    def translate(self, swag, appname, package, w):
+    def translate(self, swag, appname, package, tag, w):
 
         if 'info' in swag:
             title = swag['info'].pop('title', '')
@@ -266,23 +278,43 @@ class SwaggerTranslator:
                     properties = extract_properties(tspec)
                     if properties:
                         for (fname, fspec) in sorted(properties.iteritems()):
-                            (ftype, fdescr) = self.parse_typespec(fspec)
-                            w('{} <: {}{}',
+                            (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
+                            w('{} <: {}{}{}',
                               fname,
                               ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
-                              ' "' + fdescr + '"' if fdescr else '')
+                              ' "' + fdescr + '"' if fdescr else '', self.getTag(fname, tag))
                     # handle top-level arrays
                     elif tspec.get('type') == 'array':
 
-                        (ftype, fdescr) = self.parse_typespec(tspec)
-                        w('{} <: {}{}',
+                        (ftype, fdescr) = self.parse_typespec(tspec, fname, tname)
+                        w('{} <: {}{}{}',
                           fname,
                           ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
-                          ' "' + fdescr + '"' if fdescr else '')
+                          ' "' + fdescr + '"' if fdescr else '', self.getTag(fname, tag))
                     else:
                         assert True, tspec
 
-    def parse_typespec(self, tspec):
+            # w()
+            # w("#-...-...-...-...-...-...-...-...-^...-...-...-...-...-...-...-...-")
+
+            index = 0
+            while len(typeSpecList) > index:
+                w()
+                w('!type {}_{}:',
+                  typeSpecList[index].typeRef, typeSpecList[index].parentRef)
+                with w.indent():
+                    for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
+                        typeRef = typeSpecList[index].typeRef + \
+                            "_" + typeSpecList[index].parentRef
+                        fields = '{} <: {}{}'.format(
+                            k, self.parse_typespec(v, k, typeRef)[0], self.getTag(k, tag))
+                        w(fields)
+                index += 1
+                # w()
+                # w("#"+str(index) + "-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.^.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.")
+
+
+    def parse_typespec(self, tspec, parentRef="", typeRef=""):
 
         typ = tspec.get('type')
 
@@ -301,8 +333,8 @@ class SwaggerTranslator:
                 self.warn('Ignoring unexpected "type". Schema has "$ref" but also has unexpected "type". Note: %r' % (tspec, ))
                 del tspec['items']['type']
 
-            (itype, idescr) = self.parse_typespec(tspec['items'])
-            assert idescr is None
+            (itype, idescr) = self.parse_typespec(tspec['items'], parentRef, typeRef)
+            # assert idescr is None
             return (sysl_array_type_of(itype), descr)
 
         def r(t):
@@ -335,19 +367,26 @@ class SwaggerTranslator:
         elif (typ, fmt) == ('number', None):
             return r('float')
         elif (typ, fmt) == ('object', None):
-            descrs = {
-                k: descr
-                for (k, v) in extract_properties(tspec).iteritems()
-                for descr in [self.parse_typespec(v)[1]]
-                if descr
-            }
-            assert not descrs, descrs
-            fields = ('\n\t{} <: {}'.format(k, self.parse_typespec(v)[0])
-                      for (k, v) in sorted(extract_properties(tspec).iteritems()))
-            return r(''.join(fields))
+            typeSpecList.append(TypeSpec(tspec, parentRef, typeRef))
+            return r(typeRef +"_"+ parentRef)
+
         else:
             return r(str(tspec))
 
+    def isDuplicate(self, tspecPrev, tspecCurr):
+        if 'properties' in tspecPrev and 'properties' in tspecCurr:
+            if tspecPrev['properties'] == tspecCurr['properties']:
+                # print "Found duplicate: " + str(tspecPrev)
+                return True
+
+        return False
+
+    def getTag(self, tagName, tagType):
+        if tagType is None:
+            return ''
+        if tagType == "json":
+            return ':\n\t@json_tag="{}"'.format(tagName)
+        return ':\n\t@{}="{}"'.format(tagType, tagName)
 
 def main():
     args = parse_args(sys.argv)
@@ -358,7 +397,7 @@ def main():
     w = writer.Writer('sysl')
 
     translator = SwaggerTranslator(logger=make_default_logger())
-    translator.translate(swag, args.appname, args.package, w=w)
+    translator.translate(swag, args.appname, args.package, args.tag, w=w)
 
     with open(args.outfile, 'w') as f_out:
         f_out.write(str(w))
