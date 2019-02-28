@@ -31,6 +31,9 @@ TYPE_MAP = {
     sysl_pb2.Type.XML: {'type': 'string'},
 }
 
+#TODO Add all types
+SYSL_TYPES = {"int32","int64","int","float","string","date","bool","decimal","datetime","xml"}
+
 
 class TypeSpec:
     def __init__(self, element, parentRef, typeRef):
@@ -278,19 +281,25 @@ class SwaggerTranslator:
                     properties = extract_properties(tspec)
                     if properties:
                         for (fname, fspec) in sorted(properties.iteritems()):
-                            (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
-                            w('{} <: {}{}{}',
-                              fname,
-                              ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
-                              ' "' + fdescr + '"' if fdescr else '', self.getTag(fname, tag))
+                            (ftype, fdescr) = self.parse_typespec(
+                                fspec, fname, tname)
+                            w('{} <: {}{}{}{}',
+                              fname if fname not in SYSL_TYPES else fname + "_",
+                              ftype if is_sysl_array_type(
+                                  ftype) or ftype.endswith('*') else ftype + '?',
+                              ':' if fdescr or tag else '',
+                              self.getTag(fdescr, "description"), self.getTag(fname, tag))
                     # handle top-level arrays
                     elif tspec.get('type') == 'array':
 
-                        (ftype, fdescr) = self.parse_typespec(tspec, fname, tname)
-                        w('{} <: {}{}{}',
-                          fname,
-                          ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
-                          ' "' + fdescr + '"' if fdescr else '', self.getTag(fname, tag))
+                        (ftype, fdescr) = self.parse_typespec(
+                            tspec, fname, tname)
+                        w('{} <: {}{}{}{}',
+                          fname if fname not in SYSL_TYPES else fname + "_",
+                          ftype if is_sysl_array_type(
+                              ftype) or ftype.endswith('*') else ftype + '?',
+                          ':' if fdescr or tag else '',
+                          self.getTag(fdescr, "description"), self.getTag(fname, tag))
                     else:
                         assert True, tspec
 
@@ -306,8 +315,10 @@ class SwaggerTranslator:
                     for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
                         typeRef = typeSpecList[index].typeRef + \
                             "_" + typeSpecList[index].parentRef
-                        fields = '{} <: {}{}'.format(
-                            k, self.parse_typespec(v, k, typeRef)[0], self.getTag(k, tag))
+                        fields = '{} <: {}{}{}'.format(
+                            k if k not in SYSL_TYPES else k + "_",
+                            self.parse_typespec(v, k, typeRef)[0],
+                            ':' if tag else '', self.getTag(k, tag))
                         w(fields)
                 index += 1
                 # w()
@@ -382,11 +393,11 @@ class SwaggerTranslator:
         return False
 
     def getTag(self, tagName, tagType):
-        if tagType is None:
+        if tagType is None or tagName is None:
             return ''
         if tagType == "json":
-            return ':\n\t@json_tag="{}"'.format(tagName)
-        return ':\n\t@{}="{}"'.format(tagType, tagName)
+            return '\n\t@json_tag="{}"'.format(tagName)
+        return '\n\t@{}="{}"'.format(tagType, tagName)
 
 def main():
     args = parse_args(sys.argv)
