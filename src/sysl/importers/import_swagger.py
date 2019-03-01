@@ -10,6 +10,7 @@ import textwrap
 import os.path
 import yaml
 
+from collections import OrderedDict
 from sysl.util import debug
 from sysl.util import writer
 
@@ -32,7 +33,8 @@ TYPE_MAP = {
 }
 
 #TODO Add all types
-SYSL_TYPES = {"int32","int64","int","float","string","date","bool","decimal","datetime","xml"}
+SYSL_TYPES = {"int32", "int64", "int", "float", "string",
+              "date", "bool", "decimal", "datetime", "xml"}
 
 
 class TypeSpec:
@@ -43,6 +45,7 @@ class TypeSpec:
 
 
 typeSpecList = []
+
 
 def sysl_array_type_of(itemtype):
     return 'sequence of ' + itemtype
@@ -190,6 +193,8 @@ class SwaggerTranslator:
             with w.indent():
                 w(u'| {}', swag['info'].get('description', 'No description.').replace("\n", "\n|"))
 
+            alias = {}
+
             for (path, api) in sorted(swag['paths'].iteritems()):
                 w(u'\n{}:', self.translate_path_template_params(path))
                 with w.indent():
@@ -200,17 +205,48 @@ class SwaggerTranslator:
                         qparams = dict()
 
                         if 'parameters' in body:
-                            qparams = [p for p in body['parameters']
-                                       if p.get('in') == 'query']
+                            qparams = []
+                            headerParams = []
 
-                        w(u'{}{}{}:',
+                            for key in body['parameters']:
+                                if key.get('in') == 'query':
+                                    qparams.append(key)
+                                if '$ref' in key:
+                                    headerParams.append(key['$ref'].rpartition('/')[2])
+
+                        if 'parameters' in swag:
+                            optionals = []
+                            requires = []
+
+                            for headerParam in headerParams:
+                                formattedParam = headerParam.replace("-", "_")
+                                if swag['parameters'][headerParam]['required']:
+                                    requires.append("\"{}\"".format(formattedParam))
+                                else:
+                                    optionals.append("\"{}\"".format(formattedParam))
+                                alias[formattedParam] = swag['parameters'][headerParam]['type']
+
+                        header = []
+                        requiredHeader = ''
+                        optionalHeader = ''
+
+                        if len(requires) > 0:
+                            requiredHeader = 'required_headers=[{}]'.format(', '.join(requires))
+                            header.append(requiredHeader)
+                        if len(optionals) > 0:
+                            optionalHeader = 'optional_headers=[{}]'.format(', '.join(optionals))
+                            header.append(optionalHeader)
+
+                        header = '[{}]'.format(','.join(header))
+
+                        w(u'{}{}{} {}:',
                           method.upper(),
                           ' ?' if qparams else '',
                           '&'.join(('{}={}{}'.format(p['name'],
                                                      SWAGGER_TYPE_MAP[p['type']],
                                                      '' if p['required'] else '?')
                                     if p['type'] != 'string' else '{name}=string'.format(**p))
-                                   for p in qparams))
+                                   for p in qparams), header)
                         with w.indent():
                             for line in textwrap.wrap(
                                     body.get('description', 'No description.').strip(), 64):
@@ -226,45 +262,14 @@ class SwaggerTranslator:
                             # - any string matching the pattern "^x-(.*)$""
                             # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
 
-                            errors = []
-                            for key in responses:
+                            returnValues = OrderedDict()
+                            for key in sorted(responses):
+                                if 'schema' in responses[key]:
+                                    returnValues[responses[key]['schema']['$ref'].rpartition('/')[2]] = True
                                 if key == 'default' or key.startswith('x-'):
                                     self.warn('default responses and x-* responses are not implemented')
-                                elif int(key) >= 400:
-                                    errors.append(key)
 
-                            errors = ','.join(sorted(errors))
-
-                            if '200' in responses:
-                                r200 = responses['200']
-                                if 'schema' in r200:
-                                    ok = r200['schema']
-                                    if ok.get('type') == 'array':
-                                        items = ok['items']
-                                        if '$ref' in items:
-                                            itemtype = items['$ref'][
-                                                len('#/definitions/'):]
-                                            ret = ': <: ' + sysl_array_type_of(itemtype)
-                                        else:
-                                            ret = ': <: ...'
-                                    elif '$ref' in ok:
-                                        ret = ': <: ' + ok['$ref'][
-                                            len('#/definitions/'):]
-                                    else:
-                                        ret = ' (' + r200.get('description') + ')'
-                                else:
-                                    ret = ' (' + r200.get('description') + ')'
-                                w(u'return 200{} or {{{}}}', ret, errors)
-                            elif '201' in responses:
-                                r201 = responses['201']
-                                if 'headers' in r201:
-                                    ok = r201['headers']
-                                    w(u'return 201 ({}) or {{{}}}',
-                                      ok['Location']['description'],
-                                      errors)
-                                else:
-                                    w(u'return 201 ({})',
-                                      r201['description'])
+                            w(u'return {}'.format(', '.join(returnValues)))
 
                         if i < len(api) - 1:
                             w()
@@ -303,9 +308,6 @@ class SwaggerTranslator:
                     else:
                         assert True, tspec
 
-            # w()
-            # w("#-...-...-...-...-...-...-...-...-^...-...-...-...-...-...-...-...-")
-
             index = 0
             while len(typeSpecList) > index:
                 w()
@@ -321,9 +323,15 @@ class SwaggerTranslator:
                             ':' if tag else '', self.getTag(k, tag))
                         w(fields)
                 index += 1
-                # w()
-                # w("#"+str(index) + "-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.^.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.")
 
+            self.writeAlias(alias, w)
+
+    def writeAlias(self, alias, w):
+        for key in alias:
+            w()
+            w('!alias {} [~http_header]:', key)
+            with w.indent():
+                w(alias[key])
 
     def parse_typespec(self, tspec, parentRef="", typeRef=""):
 
@@ -379,7 +387,7 @@ class SwaggerTranslator:
             return r('float')
         elif (typ, fmt) == ('object', None):
             typeSpecList.append(TypeSpec(tspec, parentRef, typeRef))
-            return r(typeRef +"_"+ parentRef)
+            return r(typeRef + "_" + parentRef)
 
         else:
             return r(str(tspec))
@@ -398,6 +406,7 @@ class SwaggerTranslator:
         if tagType == "json":
             return '\n\t@json_tag="{}"'.format(tagName)
         return '\n\t@{}="{}"'.format(tagType, tagName)
+
 
 def main():
     args = parse_args(sys.argv)
