@@ -32,9 +32,14 @@ TYPE_MAP = {
     sysl_pb2.Type.XML: {'type': 'string'},
 }
 
-#TODO Add all types
-SYSL_TYPES = {"int32", "int64", "int", "float", "string",
-              "date", "bool", "decimal", "datetime", "xml"}
+SWAGGER_FORMATS = {
+    'int32', 'int64', 'float', 'double', 'date', 'date-time', 
+}
+
+SYSL_TYPES = {
+    'int32', 'int64', 'int', 'float', 'string',
+    'date', 'bool', 'decimal', 'datetime', 'xml'
+}
 
 
 class TypeSpec:
@@ -93,12 +98,11 @@ METHOD_ORDER = {
 
 def parse_args(argv):
     p = argparse.ArgumentParser(description='Converts Swagger (aka Open API Specification) documents to a Sysl spec')
+    p.add_argument('--tag', help='Meta tag type [json]')
     p.add_argument('swagger_path', help='path of input swagger document')
     p.add_argument('appname', help='appname')
     p.add_argument('package', help='package')
     p.add_argument('outfile', help='path of output file')
-    p.add_argument('--tag', help='Meta tag type [json]')
-
     return p.parse_args(args=argv[1:])
 
 
@@ -127,6 +131,9 @@ class SwaggerTranslator:
 
     def warn(self, msg):
         self._logger.warn(msg)
+
+    def error(self, msg):
+        self._logger.error(msg)
 
     def words(self):
         """Lazy-load WORDS."""
@@ -181,7 +188,7 @@ class SwaggerTranslator:
                     for (name, value) in sorted(info.iteritems()):
                         if isinstance(value, dict):
                             info_attrs(value, prefix + name + '.')
-                        elif name != "description":
+                        elif name != 'description':
                             w('@{}{} = {}', prefix, name, json.dumps(value))
 
                 info_attrs(swag['info'])
@@ -193,8 +200,6 @@ class SwaggerTranslator:
             with w.indent():
                 w(u'| {}', swag['info'].get('description', 'No description.').replace("\n", "\n|"))
 
-            alias = {}
-
             for (path, api) in sorted(swag['paths'].iteritems()):
                 w(u'\n{}:', self.translate_path_template_params(path))
                 with w.indent():
@@ -202,45 +207,27 @@ class SwaggerTranslator:
                         del api['parameters']
                     for (i, (method, body)) in enumerate(sorted(api.iteritems(),
                                                                 key=lambda t: METHOD_ORDER[t[0]])):
-                        qparams = dict()
+                        qparams = []
+                        headerParams = []
+                        bodyParams = []
 
                         if 'parameters' in body:
-                            qparams = []
-                            headerParams = []
+                            for param in body['parameters']:
+                                if param.get('in') == 'query':
+                                    qparams.append(param)
+                                if param.get('in') == 'body':
+                                    bodyParams.append(param)
+                                if param.get('in') == 'header':
+                                    headerParams.append(param)
+                                if '$ref' in param:
+                                    headerParams.append(swag['parameters'][param['$ref'].rpartition('/')[2]])
 
-                            for key in body['parameters']:
-                                if key.get('in') == 'query':
-                                    qparams.append(key)
-                                if '$ref' in key:
-                                    headerParams.append(key['$ref'].rpartition('/')[2])
+                        
+                        header, alias = self.getHeaders(headerParams)
+                        methodBody = self.getBody(bodyParams)
 
-                        if 'parameters' in swag:
-                            optionals = []
-                            requires = []
-
-                            for headerParam in headerParams:
-                                formattedParam = headerParam.replace("-", "_")
-                                if swag['parameters'][headerParam]['required']:
-                                    requires.append("\"{}\"".format(formattedParam))
-                                else:
-                                    optionals.append("\"{}\"".format(formattedParam))
-                                alias[formattedParam] = swag['parameters'][headerParam]['type']
-
-                        header = []
-                        requiredHeader = ''
-                        optionalHeader = ''
-
-                        if len(requires) > 0:
-                            requiredHeader = 'required_headers=[{}]'.format(', '.join(requires))
-                            header.append(requiredHeader)
-                        if len(optionals) > 0:
-                            optionalHeader = 'optional_headers=[{}]'.format(', '.join(optionals))
-                            header.append(optionalHeader)
-
-                        header = '[{}]'.format(','.join(header))
-
-                        w(u'{}{}{} {}:',
-                          method.upper(),
+                        w(u'{}{}{}{}{}:',
+                          method.upper(), methodBody,
                           ' ?' if qparams else '',
                           '&'.join(('{}={}{}'.format(p['name'],
                                                      SWAGGER_TYPE_MAP[p['type']],
@@ -279,46 +266,51 @@ class SwaggerTranslator:
             w('# definitions')
 
             for (tname, tspec) in sorted(swag.get('definitions', {}).iteritems()):
+                properties = extract_properties(tspec)
                 w()
-                w('!type {}:', tname)
+
+                if properties:
+                    w('!type {}:', tname)
+                elif tspec.get('type') == 'array':
+                    w('!alias {}:', tname)
 
                 with w.indent():
-                    properties = extract_properties(tspec)
+                    def getfields(fname, ftype, fdescr, tag, isArray = False):
+                        fieldTemplate = '{} <: {}{}{}{}'
+
+                        if isArray:
+                            fieldTemplate = '{}{}{}{}{}'
+
+                        return fieldTemplate.format(
+                            fname if fname not in SYSL_TYPES else fname + '_',
+                            ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
+                            ':' if fdescr or tag else '',
+                            self.getTag(fdescr, 'description'), self.getTag(fname, tag))
+
                     if properties:
                         for (fname, fspec) in sorted(properties.iteritems()):
-                            (ftype, fdescr) = self.parse_typespec(
-                                fspec, fname, tname)
-                            w('{} <: {}{}{}{}',
-                              fname if fname not in SYSL_TYPES else fname + "_",
-                              ftype if is_sysl_array_type(
-                                  ftype) or ftype.endswith('*') else ftype + '?',
-                              ':' if fdescr or tag else '',
-                              self.getTag(fdescr, "description"), self.getTag(fname, tag))
+                            (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
+                            w(getfields(fname, ftype, fdescr, tag))
                     # handle top-level arrays
                     elif tspec.get('type') == 'array':
-
-                        (ftype, fdescr) = self.parse_typespec(
-                            tspec, fname, tname)
-                        w('{} <: {}{}{}{}',
-                          fname if fname not in SYSL_TYPES else fname + "_",
-                          ftype if is_sysl_array_type(
-                              ftype) or ftype.endswith('*') else ftype + '?',
-                          ':' if fdescr or tag else '',
-                          self.getTag(fdescr, "description"), self.getTag(fname, tag))
+                        (ftype, fdescr) = self.parse_typespec(tspec, '', tname)
+                        w(getfields('', ftype, fdescr, tag, True))
                     else:
                         assert True, tspec
 
             index = 0
             while len(typeSpecList) > index:
                 w()
-                w('!type {}_{}:',
-                  typeSpecList[index].typeRef, typeSpecList[index].parentRef)
+                w('!type {}{}_obj:',
+                  typeSpecList[index].typeRef,
+                  ('_' + typeSpecList[index].parentRef) if len(typeSpecList[index].parentRef) > 0 else ''
+                )
                 with w.indent():
                     for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
                         typeRef = typeSpecList[index].typeRef + \
-                            "_" + typeSpecList[index].parentRef
+                            '_' + typeSpecList[index].parentRef
                         fields = '{} <: {}{}{}'.format(
-                            k if k not in SYSL_TYPES else k + "_",
+                            k if k not in SYSL_TYPES else k + '_',
                             self.parse_typespec(v, k, typeRef)[0],
                             ':' if tag else '', self.getTag(k, tag))
                         w(fields)
@@ -333,7 +325,7 @@ class SwaggerTranslator:
             with w.indent():
                 w(alias[key])
 
-    def parse_typespec(self, tspec, parentRef="", typeRef=""):
+    def parse_typespec(self, tspec, parentRef='', typeRef=''):
 
         typ = tspec.get('type')
 
@@ -362,6 +354,9 @@ class SwaggerTranslator:
         fmt = tspec.get('format')
         ref = tspec.get('$ref')
 
+        if fmt is not None and fmt not in SWAGGER_FORMATS:
+            self.error('Invalid format: %s at %s -> %s' % (fmt, typeRef, parentRef))
+
         if ref:
             assert not set(tspec.keys()) - {'$ref'}, tspec
             return r(ref.lstrip('#/definitions/'))
@@ -387,25 +382,56 @@ class SwaggerTranslator:
             return r('float')
         elif (typ, fmt) == ('object', None):
             typeSpecList.append(TypeSpec(tspec, parentRef, typeRef))
-            return r(typeRef + "_" + parentRef)
+            return r(typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj')
 
         else:
             return r(str(tspec))
 
-    def isDuplicate(self, tspecPrev, tspecCurr):
-        if 'properties' in tspecPrev and 'properties' in tspecCurr:
-            if tspecPrev['properties'] == tspecCurr['properties']:
-                # print "Found duplicate: " + str(tspecPrev)
-                return True
-
-        return False
-
     def getTag(self, tagName, tagType):
         if tagType is None or tagName is None:
             return ''
-        if tagType == "json":
+        if tagType == 'json':
             return '\n\t@json_tag="{}"'.format(tagName)
         return '\n\t@{}="{}"'.format(tagType, tagName)
+
+    def getHeaders(self, headerParams):
+        optionals = []
+        requires = []
+        alias = {}
+
+        for headerParam in headerParams:
+            paramName = headerParam['name']
+            if headerParam['required']:
+                requires.append('"{}"'.format(paramName))
+            else:
+                optionals.append('"{}"'.format(paramName))
+            alias[paramName.replace('-', '_')] = headerParam['type']
+
+        headerList = []
+        requiredHeader = ''
+        optionalHeader = ''
+
+        if len(requires) > 0:
+            requiredHeader = 'required_headers=[{}]'.format(', '.join(requires))
+            headerList.append(requiredHeader)
+        if len(optionals) > 0:
+            optionalHeader = 'optional_headers=[{}]'.format(', '.join(optionals))
+            headerList.append(optionalHeader)
+
+        if len(headerList) > 0:
+            return ' [{}]'.format(', '.join(headerList)), alias
+
+        return '', alias
+
+    def getBody(self, bodyParams):
+        if len(bodyParams) == 0:
+            return ''
+
+        paramList = []
+        for param in bodyParams:
+            paramList.append('{} <: {}'.format(param['name'], param['schema']['$ref'].rpartition('/')[2]))
+        
+        return ' ({})'.format(', '.join(paramList))
 
 
 def main():
