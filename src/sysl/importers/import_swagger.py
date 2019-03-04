@@ -52,6 +52,7 @@ class TypeSpec:
 typeSpecList = []
 
 
+
 def sysl_array_type_of(itemtype):
     return 'sequence of ' + itemtype
 
@@ -226,14 +227,20 @@ class SwaggerTranslator:
                         header, alias = self.getHeaders(headerParams)
                         methodBody = self.getBody(bodyParams)
 
-                        w(u'{}{}{}{}{}:',
-                          method.upper(), methodBody,
+                        paramStr = ' ({})'.format(methodBody + header)
+                        if len(header) > 0 and len(methodBody) > 0:
+                            paramStr = ' ({})'.format(methodBody + ',' + header)
+                        elif len(header) == 0 and len(methodBody) == 0:
+                            paramStr = ''
+
+                        w(u'{}{}{}{}:',
+                          method.upper(),
                           ' ?' if qparams else '',
                           '&'.join(('{}={}{}'.format(p['name'],
                                                      SWAGGER_TYPE_MAP[p['type']],
                                                      '' if p['required'] else '?')
                                     if p['type'] != 'string' else '{name}=string'.format(**p))
-                                   for p in qparams), header)
+                                   for p in qparams), paramStr)
                         with w.indent():
                             for line in textwrap.wrap(
                                     body.get('description', 'No description.').strip(), 64):
@@ -271,7 +278,7 @@ class SwaggerTranslator:
 
                 if properties:
                     w('!type {}:', tname)
-                elif tspec.get('type') == 'array':
+                elif tspec.get('type') == 'array' or 'enum' in tspec:
                     w('!alias {}:', tname)
 
                 with w.indent():
@@ -279,7 +286,7 @@ class SwaggerTranslator:
                         fieldTemplate = '{} <: {}{}{}{}'
 
                         if isArray:
-                            fieldTemplate = '{}{}{}{}{}'
+                            fieldTemplate = '{}{}{}{}'
 
                         return fieldTemplate.format(
                             fname if fname not in SYSL_TYPES else fname + '_',
@@ -295,25 +302,33 @@ class SwaggerTranslator:
                     elif tspec.get('type') == 'array':
                         (ftype, fdescr) = self.parse_typespec(tspec, '', tname)
                         w(getfields('', ftype, fdescr, tag, True))
+                    elif 'enum' in tspec:
+                        w(tspec.get('type'))
                     else:
                         assert True, tspec
 
             index = 0
             while len(typeSpecList) > index:
                 w()
-                w('!type {}{}_obj:',
-                  typeSpecList[index].typeRef,
-                  ('_' + typeSpecList[index].parentRef) if len(typeSpecList[index].parentRef) > 0 else ''
-                )
-                with w.indent():
-                    for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
-                        typeRef = typeSpecList[index].typeRef + \
-                            '_' + typeSpecList[index].parentRef
-                        fields = '{} <: {}{}{}'.format(
-                            k if k not in SYSL_TYPES else k + '_',
-                            self.parse_typespec(v, k, typeRef)[0],
-                            ':' if tag else '', self.getTag(k, tag))
-                        w(fields)
+                typeName = '{}_obj'.format(typeSpecList[index].typeRef +
+                    ('_' + typeSpecList[index].parentRef) if len(typeSpecList[index].parentRef) > 0 else '')
+
+                if 'properties' in typeSpecList[index].element:
+                    w('!type {}:', typeName)
+                    with w.indent():
+                        for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
+                            typeRef = typeSpecList[index].typeRef + \
+                                '_' + typeSpecList[index].parentRef
+                            fields = '{} <: {}{}{}'.format(
+                                k if k not in SYSL_TYPES else k + '_',
+                                self.parse_typespec(v, k, typeRef)[0],
+                                ':' if tag else '', self.getTag(k, tag))
+                            w(fields)
+                else:
+                    w('!alias {}:', typeName)
+                    with w.indent():
+                        w('JsonObject')
+
                 index += 1
 
             self.writeAlias(alias, w)
@@ -321,7 +336,7 @@ class SwaggerTranslator:
     def writeAlias(self, alias, w):
         for key in alias:
             w()
-            w('!alias {} [~http_header]:', key)
+            w('!alias {}:', key)
             with w.indent():
                 w(alias[key])
 
@@ -391,37 +406,23 @@ class SwaggerTranslator:
         if tagType is None or tagName is None:
             return ''
         if tagType == 'json':
-            return '\n\t@json_tag="{}"'.format(tagName)
-        return '\n\t@{}="{}"'.format(tagType, tagName)
+            return '\n\t@json_tag = "{}"'.format(tagName)
+        return '\n\t@{} = "{}"'.format(tagType, tagName)
 
     def getHeaders(self, headerParams):
-        optionals = []
-        requires = []
+        headerList = []
         alias = {}
 
         for headerParam in headerParams:
             paramName = headerParam['name']
+            typeName = paramName.replace('-', '_')
             if headerParam['required']:
-                requires.append('"{}"'.format(paramName))
+                headerList.append('{} <: {} [~header, ~required, name="{}"]'.format(typeName.lower(), typeName, paramName))
             else:
-                optionals.append('"{}"'.format(paramName))
-            alias[paramName.replace('-', '_')] = headerParam['type']
+                headerList.append('{} <: {} [~header, ~optional, name="{}"]'.format(typeName.lower(), typeName, paramName))
+            alias[typeName] = headerParam['type']
 
-        headerList = []
-        requiredHeader = ''
-        optionalHeader = ''
-
-        if len(requires) > 0:
-            requiredHeader = 'required_headers=[{}]'.format(', '.join(requires))
-            headerList.append(requiredHeader)
-        if len(optionals) > 0:
-            optionalHeader = 'optional_headers=[{}]'.format(', '.join(optionals))
-            headerList.append(optionalHeader)
-
-        if len(headerList) > 0:
-            return ' [{}]'.format(', '.join(headerList)), alias
-
-        return '', alias
+        return ', '.join(headerList), alias
 
     def getBody(self, bodyParams):
         if len(bodyParams) == 0:
@@ -429,9 +430,9 @@ class SwaggerTranslator:
 
         paramList = []
         for param in bodyParams:
-            paramList.append('{} <: {}'.format(param['name'], param['schema']['$ref'].rpartition('/')[2]))
+            paramList.append('{} <: {} [~body]'.format(param['name'], param['schema']['$ref'].rpartition('/')[2]))
         
-        return ' ({})'.format(', '.join(paramList))
+        return ', '.join(paramList)
 
 
 def main():
