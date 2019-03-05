@@ -201,137 +201,146 @@ class SwaggerTranslator:
             with w.indent():
                 w(u'| {}', swag['info'].get('description', 'No description.').replace("\n", "\n|"))
 
-            for (path, api) in sorted(swag['paths'].iteritems()):
-                w(u'\n{}:', self.translate_path_template_params(path))
-                with w.indent():
-                    if 'parameters' in api:
-                        del api['parameters']
-                    for (i, (method, body)) in enumerate(sorted(api.iteritems(),
-                                                                key=lambda t: METHOD_ORDER[t[0]])):
-                        qparams = []
-                        headerParams = []
-                        bodyParams = []
-
-                        if 'parameters' in body:
-                            for param in body['parameters']:
-                                if param.get('in') == 'query':
-                                    qparams.append(param)
-                                if param.get('in') == 'body':
-                                    bodyParams.append(param)
-                                if param.get('in') == 'header':
-                                    headerParams.append(param)
-                                if '$ref' in param:
-                                    headerParams.append(swag['parameters'][param['$ref'].rpartition('/')[2]])
-
-                        
-                        header, alias = self.getHeaders(headerParams)
-                        methodBody = self.getBody(bodyParams)
-
-                        paramStr = ' ({})'.format(methodBody + header)
-                        if len(header) > 0 and len(methodBody) > 0:
-                            paramStr = ' ({})'.format(methodBody + ',' + header)
-                        elif len(header) == 0 and len(methodBody) == 0:
-                            paramStr = ''
-
-                        w(u'{}{}{}{}:',
-                          method.upper(),
-                          ' ?' if qparams else '',
-                          '&'.join(('{}={}{}'.format(p['name'],
-                                                     SWAGGER_TYPE_MAP[p['type']],
-                                                     '' if p['required'] else '?')
-                                    if p['type'] != 'string' else '{name}=string'.format(**p))
-                                   for p in qparams), paramStr)
-                        with w.indent():
-                            for line in textwrap.wrap(
-                                    body.get('description', 'No description.').strip(), 64):
-                                w(u'| {}', line)
-
-                            responses = body['responses']
-                            # Backwards compat: support integer response keys.
-                            responses = {str(k): v for (k, v) in responses.iteritems()}
-
-                            # Valid keys of responses can be:
-                            # - http status codes (I believe they must be string values, NOT integers, but spec is unclear).
-                            # - "default"
-                            # - any string matching the pattern "^x-(.*)$""
-                            # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
-
-                            returnValues = OrderedDict()
-                            for key in sorted(responses):
-                                if 'schema' in responses[key]:
-                                    returnValues[responses[key]['schema']['$ref'].rpartition('/')[2]] = True
-                                if key == 'default' or key.startswith('x-'):
-                                    self.warn('default responses and x-* responses are not implemented')
-
-                            w(u'return {}'.format(', '.join(returnValues)))
-
-                        if i < len(api) - 1:
-                            w()
-
-            w()
-            w('#' + '-' * 75)
-            w('# definitions')
-
-            for (tname, tspec) in sorted(swag.get('definitions', {}).iteritems()):
-                properties = extract_properties(tspec)
+            if 'basePath' in swag:
                 w()
+                w('{}:'.format(swag['basePath']))
+                with w.indent():
+                    self.writeBody(swag, tag, w)
+            else:
+                self.writeBody(swag, tag, w)
+
+    def writeBody(self, swag, tag, w):
+        for (path, api) in sorted(swag['paths'].iteritems()):
+            w(u'\n{}:', self.translate_path_template_params(path))
+            with w.indent():
+                if 'parameters' in api:
+                    del api['parameters']
+                for (i, (method, body)) in enumerate(sorted(api.iteritems(),
+                                                            key=lambda t: METHOD_ORDER[t[0]])):
+                    qparams = []
+                    headerParams = []
+                    bodyParams = []
+
+                    if 'parameters' in body:
+                        for param in body['parameters']:
+                            if param.get('in') == 'query':
+                                qparams.append(param)
+                            if param.get('in') == 'body':
+                                bodyParams.append(param)
+                            if param.get('in') == 'header':
+                                headerParams.append(param)
+                            if '$ref' in param:
+                                headerParams.append(swag['parameters'][param['$ref'].rpartition('/')[2]])
+
+                    
+                    header, alias = self.getHeaders(headerParams)
+                    methodBody = self.getBody(bodyParams)
+
+                    paramStr = ' ({})'.format(methodBody + header)
+                    if len(header) > 0 and len(methodBody) > 0:
+                        paramStr = ' ({})'.format(methodBody + ',' + header)
+                    elif len(header) == 0 and len(methodBody) == 0:
+                        paramStr = ''
+
+                    w(u'{}{}{}{}:',
+                        method.upper(),
+                        ' ?' if qparams else '',
+                        '&'.join(('{}={}{}'.format(p['name'],
+                                                    SWAGGER_TYPE_MAP[p['type']],
+                                                    '' if p['required'] else '?')
+                                if p['type'] != 'string' else '{name}=string'.format(**p))
+                                for p in qparams), paramStr)
+                    with w.indent():
+                        for line in textwrap.wrap(
+                                body.get('description', 'No description.').strip(), 64):
+                            w(u'| {}', line)
+
+                        responses = body['responses']
+                        # Backwards compat: support integer response keys.
+                        responses = {str(k): v for (k, v) in responses.iteritems()}
+
+                        # Valid keys of responses can be:
+                        # - http status codes (I believe they must be string values, NOT integers, but spec is unclear).
+                        # - "default"
+                        # - any string matching the pattern "^x-(.*)$""
+                        # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
+
+                        returnValues = OrderedDict()
+                        for key in sorted(responses):
+                            if 'schema' in responses[key]:
+                                returnValues[responses[key]['schema']['$ref'].rpartition('/')[2]] = True
+                            if key == 'default' or key.startswith('x-'):
+                                self.warn('default responses and x-* responses are not implemented')
+
+                        w(u'return {}'.format(', '.join(returnValues)))
+
+                    if i < len(api) - 1:
+                        w()
+
+        w()
+        w('#' + '-' * 75)
+        w('# definitions')
+
+        for (tname, tspec) in sorted(swag.get('definitions', {}).iteritems()):
+            properties = extract_properties(tspec)
+            w()
+
+            if properties:
+                w('!type {}:', tname)
+            elif tspec.get('type') == 'array' or 'enum' in tspec:
+                w('!alias {}:', tname)
+
+            with w.indent():
+                def getfields(fname, ftype, fdescr, tag, isArray = False):
+                    fieldTemplate = '{} <: {}{}{}{}'
+
+                    if isArray:
+                        fieldTemplate = '{}{}{}{}'
+
+                    return fieldTemplate.format(
+                        fname if fname not in SYSL_TYPES else fname + '_',
+                        ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
+                        ':' if fdescr or tag else '',
+                        self.getTag(fdescr, 'description'), self.getTag(fname, tag))
 
                 if properties:
-                    w('!type {}:', tname)
-                elif tspec.get('type') == 'array' or 'enum' in tspec:
-                    w('!alias {}:', tname)
-
-                with w.indent():
-                    def getfields(fname, ftype, fdescr, tag, isArray = False):
-                        fieldTemplate = '{} <: {}{}{}{}'
-
-                        if isArray:
-                            fieldTemplate = '{}{}{}{}'
-
-                        return fieldTemplate.format(
-                            fname if fname not in SYSL_TYPES else fname + '_',
-                            ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
-                            ':' if fdescr or tag else '',
-                            self.getTag(fdescr, 'description'), self.getTag(fname, tag))
-
-                    if properties:
-                        for (fname, fspec) in sorted(properties.iteritems()):
-                            (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
-                            w(getfields(fname, ftype, fdescr, tag))
-                    # handle top-level arrays
-                    elif tspec.get('type') == 'array':
-                        (ftype, fdescr) = self.parse_typespec(tspec, '', tname)
-                        w(getfields('', ftype, fdescr, tag, True))
-                    elif 'enum' in tspec:
-                        w(tspec.get('type'))
-                    else:
-                        assert True, tspec
-
-            index = 0
-            while len(typeSpecList) > index:
-                w()
-                typeName = '{}_obj'.format(typeSpecList[index].typeRef +
-                    ('_' + typeSpecList[index].parentRef) if len(typeSpecList[index].parentRef) > 0 else '')
-
-                if 'properties' in typeSpecList[index].element:
-                    w('!type {}:', typeName)
-                    with w.indent():
-                        for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
-                            typeRef = typeSpecList[index].typeRef + \
-                                '_' + typeSpecList[index].parentRef
-                            fields = '{} <: {}{}{}'.format(
-                                k if k not in SYSL_TYPES else k + '_',
-                                self.parse_typespec(v, k, typeRef)[0],
-                                ':' if tag else '', self.getTag(k, tag))
-                            w(fields)
+                    for (fname, fspec) in sorted(properties.iteritems()):
+                        (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
+                        w(getfields(fname, ftype, fdescr, tag))
+                # handle top-level arrays
+                elif tspec.get('type') == 'array':
+                    (ftype, fdescr) = self.parse_typespec(tspec, '', tname)
+                    w(getfields('', ftype, fdescr, tag, True))
+                elif 'enum' in tspec:
+                    w(tspec.get('type'))
                 else:
-                    w('!alias {}:', typeName)
-                    with w.indent():
-                        w('JsonObject')
+                    assert True, tspec
 
-                index += 1
+        index = 0
+        while len(typeSpecList) > index:
+            w()
+            typeName = '{}_obj'.format(typeSpecList[index].typeRef +
+                ('_' + typeSpecList[index].parentRef) if len(typeSpecList[index].parentRef) > 0 else '')
 
-            self.writeAlias(alias, w)
+            if 'properties' in typeSpecList[index].element:
+                w('!type {}:', typeName)
+                with w.indent():
+                    for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
+                        typeRef = typeSpecList[index].typeRef + \
+                            '_' + typeSpecList[index].parentRef
+                        fields = '{} <: {}{}{}'.format(
+                            k if k not in SYSL_TYPES else k + '_',
+                            self.parse_typespec(v, k, typeRef)[0],
+                            ':' if tag else '', self.getTag(k, tag))
+                        w(fields)
+            else:
+                w('!alias {}:', typeName)
+                with w.indent():
+                    w('JsonObject')
+
+            index += 1
+
+        self.writeAlias(alias, w)
 
     def writeAlias(self, alias, w):
         for key in alias:
@@ -416,7 +425,7 @@ class SwaggerTranslator:
         for headerParam in headerParams:
             paramName = headerParam['name']
             typeName = paramName.replace('-', '_')
-            if headerParam['required']:
+            if 'required' in headerParam and headerParam['required']:
                 headerList.append('{} <: {} [~header, ~required, name="{}"]'.format(typeName.lower(), typeName, paramName))
             else:
                 headerList.append('{} <: {} [~header, ~optional, name="{}"]'.format(typeName.lower(), typeName, paramName))
