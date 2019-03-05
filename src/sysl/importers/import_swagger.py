@@ -17,28 +17,20 @@ from sysl.util import writer
 from sysl.proto import sysl_pb2
 
 
-# TODO: dedup with //src/exporters/swagger/swagger.py
-TYPE_MAP = {
-    sysl_pb2.Type.ANY: {'type': 'object'},
-    sysl_pb2.Type.BOOL: {'type': 'boolean'},
-    sysl_pb2.Type.INT: {'type': 'number', 'format': 'integer'},
-    sysl_pb2.Type.FLOAT: {'type': 'number', 'format': 'double'},
-    sysl_pb2.Type.DECIMAL: {'type': 'number', 'format': 'double'},
-    sysl_pb2.Type.STRING: {'type': 'string'},
-    sysl_pb2.Type.BYTES: None,
-    sysl_pb2.Type.STRING_8: {'type': 'string'},
-    sysl_pb2.Type.DATE: {'type': 'string'},
-    sysl_pb2.Type.DATETIME: {'type': 'string'},
-    sysl_pb2.Type.XML: {'type': 'string'},
-}
-
 SWAGGER_FORMATS = {
-    'int32', 'int64', 'float', 'double', 'date', 'date-time', 
+    'int32', 'int64', 'float', 'double', 'date', 'date-time',
 }
 
 SYSL_TYPES = {
     'int32', 'int64', 'int', 'float', 'string',
     'date', 'bool', 'decimal', 'datetime', 'xml'
+}
+
+TYPE_MAP = {
+    "string": "string",
+    "boolean": "bool",
+    "number": "float",
+    "integer": "int"
 }
 
 
@@ -50,7 +42,6 @@ class TypeSpec:
 
 
 typeSpecList = []
-
 
 
 def sysl_array_type_of(itemtype):
@@ -74,23 +65,6 @@ def extract_properties(tspec):
     # if properties is missing we assume it is the empty object.
     # https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.4
     return tspec.get('properties', {})
-
-
-# Swagger offers multiple ways to describe the same type, hence this mess.
-SWAGGER_TYPE_MAP = dict({
-    (type_as_key(swagt), sysl_pb2.Type.Primitive.Name(syslt).lower())
-    for (syslt, swagt) in TYPE_MAP.iteritems()
-    if swagt
-} | {
-    (swagt['format'], sysl_pb2.Type.Primitive.Name(syslt).lower())
-    for (syslt, swagt) in TYPE_MAP.iteritems()
-    if swagt and swagt.get('type') == 'number'
-} | {
-    ('int32', sysl_pb2.Type.INT),
-    ('uint32', sysl_pb2.Type.INT),
-    ('int64', sysl_pb2.Type.INT),
-    ('uint64', sysl_pb2.Type.INT),
-})
 
 
 METHOD_ORDER = {
@@ -232,7 +206,6 @@ class SwaggerTranslator:
                             if '$ref' in param:
                                 headerParams.append(swag['parameters'][param['$ref'].rpartition('/')[2]])
 
-                    
                     header, alias = self.getHeaders(headerParams)
                     methodBody = self.getBody(bodyParams)
 
@@ -245,11 +218,9 @@ class SwaggerTranslator:
                     w(u'{}{}{}{}:',
                         method.upper(),
                         ' ?' if qparams else '',
-                        '&'.join(('{}={}{}'.format(p['name'],
-                                                    SWAGGER_TYPE_MAP[p['type']],
-                                                    '' if p['required'] else '?')
-                                if p['type'] != 'string' else '{name}=string'.format(**p))
-                                for p in qparams), paramStr)
+                        '&'.join('{}={}{}'.format(
+                            p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')for p in qparams),
+                        paramStr)
                     with w.indent():
                         for line in textwrap.wrap(
                                 body.get('description', 'No description.').strip(), 64):
@@ -291,7 +262,7 @@ class SwaggerTranslator:
                 w('!alias {}:', tname)
 
             with w.indent():
-                def getfields(fname, ftype, fdescr, tag, isArray = False):
+                def getfields(fname, ftype, fdescr, tag, isArray=False):
                     fieldTemplate = '{} <: {}{}{}{}'
 
                     if isArray:
@@ -319,8 +290,10 @@ class SwaggerTranslator:
         index = 0
         while len(typeSpecList) > index:
             w()
-            typeName = '{}_obj'.format(typeSpecList[index].typeRef +
-                ('_' + typeSpecList[index].parentRef) if len(typeSpecList[index].parentRef) > 0 else '')
+            typeName = '{}_obj'.format(
+                typeSpecList[index].typeRef + ('_' + typeSpecList[index].parentRef if len(
+                    typeSpecList[index].parentRef) > 0 else '')
+            )
 
             if 'properties' in typeSpecList[index].element:
                 w('!type {}:', typeName)
@@ -440,7 +413,7 @@ class SwaggerTranslator:
         paramList = []
         for param in bodyParams:
             paramList.append('{} <: {} [~body]'.format(param['name'], param['schema']['$ref'].rpartition('/')[2]))
-        
+
         return ', '.join(paramList)
 
 
