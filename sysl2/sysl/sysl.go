@@ -33,7 +33,10 @@ func main3(stdout, stderr io.Writer, args []string) error {
 		DoGenerateCode(stdout, stderr, flags, args)
 		return nil
 	case "sd":
-		DoGenerateSequenceDiagrams(stdout, stderr, flags, args)
+		err := DoGenerateSequenceDiagrams(stdout, stderr, flags, args)
+		if err != nil {
+			return err
+		}
 		return nil
 	}
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
