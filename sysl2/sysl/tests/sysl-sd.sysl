@@ -14,6 +14,6 @@ WebFrontend:
         Api <- GET /users/{user_id}/profile
         Return Profile Page
 
-Project [seqtitle="Profile"]:
-    _:
+Project [seqtitle="Profile", blackboxes=[["你好", "bb"], ["aaa", "bbb"]]]:
+    _ [ddd="testddd", blackboxes=[["你好!", "cc"], ["eee", "fff"]]]:
         WebFrontend <- RequestProfile
