@@ -115,11 +115,11 @@ func TestEvalCompare(t *testing.T) {
 	assert.False(t, out["ne"].GetB())
 }
 
-func TestEvalUnionSet(t *testing.T) {
+func TestEvalListSetOps(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 	assert.NotNil(t, mod, "Module not loaded")
 	txApp := mod.Apps["TransformApp"]
-	viewName := "UnionSet"
+	viewName := "ListSetOps"
 
 	assert.NotNil(t, txApp.Views[viewName], "View not loaded")
 	assert.Equal(t, 1, len(txApp.Views[viewName].Param), "Params not correct")
@@ -131,6 +131,8 @@ func TestEvalUnionSet(t *testing.T) {
 	assert.Equal(t, 2, len(strs.Value))
 	assert.Equal(t, "lhs", strs.Value[0].GetS())
 	assert.Equal(t, "rhs", strs.Value[1].GetS())
+
+	assert.Equal(t, int64(2), out.GetMap().Items["fcount"].GetI())
 
 	numbers := out.GetMap().Items["numbers"].GetSet()
 	assert.NotNil(t, numbers)
@@ -258,9 +260,14 @@ func TestScopeAddRestApp(t *testing.T) {
 	postTodo := endpoints["POST /todos"].GetMap().Items
 	assert.Equal(t, "POST /todos", postTodo["name"].GetS(), "unexpected endpoint name")
 	paramList := postTodo["params"].GetList().Value
-	assert.Equal(t, 1, len(paramList))
+	assert.Equal(t, 2, len(paramList))
 	paramItem0 := paramList[0].GetMap().Items
 	assert.Equal(t, "newTodo", paramItem0["name"].GetS())
+	assert.Equal(t, "body", paramItem0["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
+
+	paramItem1 := paramList[1].GetMap().Items
+	assert.Equal(t, "accept", paramItem1["name"].GetS())
+	assert.Equal(t, "header", paramItem1["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
 
 	todosById := endpoints["GET /todos/{id}"].GetMap().Items
 	assert.Equal(t, "GET /todos/{id}", todosById["name"].GetS(), "unexpected endpoint name")

@@ -30,7 +30,7 @@ TodoApp:
     GET:
       return todos
 
-    POST (newTodo <: Todo):
+    POST (newTodo <: Todo [~body], accept <: string [~header]):
       return todo
 
     /{id<:int}:
@@ -63,8 +63,9 @@ TransformApp:
       ne = lhs != rhs
     )
 
-  !view UnionSet(lhs <: string) -> set of string:
+  !view ListSetOps(lhs <: string) -> set of string:
     lhs -> (:
+      fcount = [1,2] count
       strs = {"rhs", "lhs"} | {"lhs"}
       numbers = {1} | {1,2}
     )
