@@ -127,6 +127,8 @@ TransformApp:
       Nil = . -> <some> (:
         out = .
       )
+      stringInNull = "abc" in app.attrs.patterns
+      stringInList = "pqr" in ["abc", "def"]
     )
 
   !view TestDotScope(app <: sysl.App) -> int:
@@ -193,9 +195,11 @@ TransformApp:
       )
       Request = fieldNames where(.name == "Request")
 
-      ListofNames = app.types -> <sequence of name>(type:
+      let listOfTypes = app.types -> <sequence of name>(type:
         name = type.key
       )
+      ListofNames = listOfTypes
+      RequestFromList = listOfTypes where (.name == "Request")
     )
 
   !view Links(app <: sysl.App) -> int:

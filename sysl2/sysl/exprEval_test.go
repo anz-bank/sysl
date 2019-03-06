@@ -186,6 +186,8 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	out := EvalView(mod, "TransformApp", "GetAppAttributes", &s)
 	assert.Equal(t, "com.example.gen", out.GetMap().Items["out"].GetS())
 	assert.Nil(t, out.GetMap().Items["Nil"])
+	assert.False(t, out.GetMap().Items["stringInNull"].GetB())
+	assert.False(t, out.GetMap().Items["stringInList"].GetB())
 
 	packageMap := out.GetMap().Items["package"].GetMap().Items
 	assert.Equal(t, "com.example.gen", packageMap["packageName"].GetS())
@@ -387,6 +389,9 @@ func TestEvalWhere(t *testing.T) {
 
 	numbers1 := out.GetMap().Items["greaterThanOne"].GetSet().Value
 	assert.Equal(t, 2, len(numbers1))
+
+	RequestFromList := out.GetMap().Items["RequestFromList"].GetList().Value
+	assert.Equal(t, 1, len(RequestFromList))
 
 	strOne := out.GetMap().Items["strOne"].GetSet().Value
 	assert.Equal(t, 1, len(strOne))
