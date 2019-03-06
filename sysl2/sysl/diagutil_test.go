@@ -81,7 +81,7 @@ func TestOutputPlantumlWithUml(t *testing.T) {
 	OutputPlantuml(output, plantuml, umlInput)
 
 	//Then
-	_, err := os.Stat("test.puml")
+	_, err := os.Stat(output)
 	assert.False(t, os.IsNotExist(err))
 }
 
