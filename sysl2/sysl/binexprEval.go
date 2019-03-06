@@ -36,6 +36,7 @@ var functionEvalStrategy = map[sysl.Expr_BinExpr_Op]EvalStrategy{
 	sysl.Expr_BinExpr_GE:      DefaultBinExprStrategy{},
 	sysl.Expr_BinExpr_LE:      DefaultBinExprStrategy{},
 	sysl.Expr_BinExpr_NE:      DefaultBinExprStrategy{},
+	sysl.Expr_BinExpr_AND:     DefaultBinExprStrategy{},
 	sysl.Expr_BinExpr_FLATTEN: Eval_LHS_Over_RhsStrategy{},
 	sysl.Expr_BinExpr_WHERE:   Eval_LHS_Over_RhsStrategy{},
 }
@@ -57,6 +58,7 @@ var valueFunctions = map[string]evalValueFunc{
 	makeKey(sysl.Expr_BinExpr_MOD, VALUE_INT, VALUE_INT):       modInt64,
 	makeKey(sysl.Expr_BinExpr_IN, VALUE_STRING, VALUE_SET):     stringInSet,
 	makeKey(sysl.Expr_BinExpr_IN, VALUE_STRING, VALUE_LIST):    stringInList,
+	makeKey(sysl.Expr_BinExpr_IN, VALUE_STRING, VALUE_NULL):    stringInNull,
 	makeKey(sysl.Expr_BinExpr_BITOR, VALUE_SET, VALUE_SET):     setUnion,
 	makeKey(sysl.Expr_BinExpr_BITOR, VALUE_LIST, VALUE_LIST):   concatList,
 	makeKey(sysl.Expr_BinExpr_GT, VALUE_INT, VALUE_INT):        gtInt64,
@@ -64,6 +66,7 @@ var valueFunctions = map[string]evalValueFunc{
 	makeKey(sysl.Expr_BinExpr_GE, VALUE_INT, VALUE_INT):        geInt64,
 	makeKey(sysl.Expr_BinExpr_LE, VALUE_INT, VALUE_INT):        leInt64,
 	makeKey(sysl.Expr_BinExpr_NE, VALUE_INT, VALUE_INT):        neInt64,
+	makeKey(sysl.Expr_BinExpr_AND, VALUE_BOOL, VALUE_BOOL):     andBool,
 }
 
 // key = op, outer container_type, inner container type
@@ -74,6 +77,8 @@ var exprFunctions = map[string]evalExprFunc{
 	makeKey(sysl.Expr_BinExpr_FLATTEN, VALUE_LIST, VALUE_MAP):    flattenListMap,
 	makeKey(sysl.Expr_BinExpr_FLATTEN, VALUE_SET, VALUE_MAP):     flattenSetMap,
 	makeKey(sysl.Expr_BinExpr_FLATTEN, VALUE_SET, VALUE_SET):     flattenSetSet,
+	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_LIST, VALUE_NO_ARG):   whereList,
+	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_LIST, VALUE_MAP):      whereList,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_SET, VALUE_NO_ARG):    whereSet,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_SET, VALUE_MAP):       whereSet,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_SET, VALUE_INT):       whereSet,

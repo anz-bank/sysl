@@ -30,7 +30,7 @@ TodoApp:
     GET:
       return todos
 
-    POST (newTodo <: Todo):
+    POST (newTodo <: Todo [~body], accept <: string [~header]):
       return todo
 
     /{id<:int}:
@@ -63,10 +63,14 @@ TransformApp:
       ne = lhs != rhs
     )
 
-  !view UnionSet(lhs <: string) -> set of string:
+  !view ListSetOps(lhs <: string) -> set of string:
     lhs -> (:
+      count1 = [1,2] count
+      count2 = {1,2} count
       strs = {"rhs", "lhs"} | {"lhs"}
       numbers = {1} | {1,2}
+      numbers2 =  {1,2} where(. > 2) | {1} where(. > 2)
+      list = [1] | [1,2]
     )
 
   !view IsKeyword(word <: string) -> bool:
@@ -121,6 +125,11 @@ TransformApp:
       )
 
       definition = classDef(app.types)
+      Nil = . -> <some> (:
+        out = .
+      )
+      stringInNull = "abc" in app.attrs.patterns
+      stringInList = "pqr" in ["abc", "def"]
     )
 
   !view TestDotScope(app <: sysl.App) -> int:
@@ -187,9 +196,11 @@ TransformApp:
       )
       Request = fieldNames where(.name == "Request")
 
-      ListofNames = app.types -> <sequence of name>(type:
+      let listOfTypes = app.types -> <sequence of name>(type:
         name = type.key
       )
+      ListofNames = listOfTypes
+      RequestFromList = listOfTypes where (.name == "Request")
     )
 
   !view Links(app <: sysl.App) -> int:

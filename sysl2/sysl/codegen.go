@@ -10,6 +10,7 @@ import (
 	"github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,10 +22,6 @@ type codeGenOutput struct {
 	output   Node
 }
 
-func init() {
-	logrus.SetLevel(logrus.WarnLevel)
-}
-
 func getKeyFromValueMap(v *sysl.Value, key string) *sysl.Value {
 	if m := v.GetMap(); m != nil {
 		return m.Items[key]
@@ -34,12 +31,10 @@ func getKeyFromValueMap(v *sysl.Value, key string) *sysl.Value {
 
 func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.Choice) Node {
 	var result Node
-	logrus.Printf("Number of Choices: %d", len(choice.Sequence))
 
 	for i, seq := range choice.Sequence {
 		seqResult := Node{}
 		fullScan := true
-		logrus.Printf("Trying Choice: %d", i)
 		for _, term := range seq.Term {
 			switch x := term.Atom.Union.(type) {
 
@@ -56,7 +51,6 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 				//  i.e.  no quantifier or +
 				//        and missing from obj map
 				if minc > 0 && v == nil {
-					logrus.Warnf("required key ( %s ) not present in the map", x.Rulename.Name)
 					fullScan = false
 					break
 				}
@@ -65,11 +59,8 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 				//    quantifier == * or ?
 				//    and does not exist in obj map
 				if minc == 0 && v == nil {
-					logrus.Warnf("Skipping: Optional key ( %s ) not present in the map", x.Rulename.Name)
 					continue
 				}
-
-				logrus.Printf("ValueMap has %T for rule %s", v.Value, x.Rulename.Name)
 
 				if maxc > 1 {
 					var valueList []*sysl.Value
@@ -84,28 +75,20 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 						break
 					}
 					ruleInstances := Node{}
-					logrus.Printf("Executing Rule %s for %d times", x.Rulename.Name, len(valueList))
 
-					for i, valueItem := range valueList {
-						logrus.Printf("Executing Rule %s %d of %d times", x.Rulename.Name, i, len(valueList))
-						logrus.Printf("value: %v", valueItem)
-
+					for _, valueItem := range valueList {
 						// Drill down the rule
 						node := processRule(g, valueItem, x.Rulename.Name)
 						// Check post-conditions
 						if len(node) == 0 {
-							logrus.Warnf("could not process rule: ( %s )", x.Rulename.Name)
 							fullScan = false
 							break
 						}
 						ruleInstances = append(ruleInstances, node)
-						logrus.Printf("Executed Rule %s %d of %d times, ruleInstances: %d\n", x.Rulename.Name, i, len(valueList), len(ruleInstances))
 					}
-					logrus.Printf("Executed Rule %s for %d times, result count %d, fullScan %v\n", x.Rulename.Name, len(valueList), len(ruleInstances), fullScan)
 					ruleResult = ruleInstances
 				} else { //maxc == 1
 					// Drill down the rule
-					logrus.Printf("Executing Rule %s for 1 time only", x.Rulename.Name)
 					if v.GetList() != nil || v.GetSet() != nil {
 						logrus.Warnf("Got List or Set instead of map")
 					}
@@ -139,13 +122,9 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 			if !fullScan {
 				break
 			}
-			logrus.Printf("\t seqResult Len(%d)", len(seqResult))
 		}
 		if fullScan {
-			logrus.Printf("Processed one sequence successfully Len(%d)", len(seqResult))
 			result = append(result, seqResult)
-		} else {
-			logrus.Printf("Failed to generate text using choice : %d", i)
 		}
 	}
 	return result
@@ -158,7 +137,7 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 			str += key + ", "
 		}
 	}
-	logrus.Printf("processRule: %s, obj keys (%s)", ruleName, str)
+	// logrus.Debugf("processRule: %s, obj keys (%s)", ruleName, str)
 	rule := g.Rules[ruleName]
 	if rule == nil {
 		root := Node{}
@@ -169,11 +148,6 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 		return append(root, obj.GetS())
 	}
 	root := processChoice(g, obj, rule.Choices)
-	if root == nil {
-		logrus.Warnf("could not process rule: ( %s )", ruleName)
-	} else {
-		logrus.Printf("Processed rule: ( %s ), len(%d)", ruleName, len(root))
-	}
 	return root
 }
 
@@ -191,8 +165,7 @@ func applyTranformToModel(modelName, transformAppName, viewName string, model, t
 	modelApp := model.Apps[modelName]
 	view := transform.Apps[transformAppName].Views[viewName]
 	if view == nil {
-		logrus.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
-		return nil
+		panic(errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName))
 	}
 	s := Scope{}
 	s.AddApp("app", modelApp)
@@ -260,7 +233,7 @@ func GenerateCode(root_model, model, root_transform, transform, grammar, start s
 	tx, transformAppName := loadAndGetDefaultApp(root_transform, transform)
 	g := readGrammar(grammar, "gen", start)
 	if g == nil {
-		return nil
+		panic(errors.Errorf("Unable to load grammar"))
 	}
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {

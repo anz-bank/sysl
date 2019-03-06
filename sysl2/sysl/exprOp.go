@@ -65,6 +65,10 @@ func cmpBool(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(lhs.GetB() == rhs.GetB())
 }
 
+func andBool(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetB() && rhs.GetB())
+}
+
 func cmpNullTrue(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(true)
 }
@@ -142,7 +146,9 @@ func flattenSetSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, sco
 
 func concatList(lhs, rhs *sysl.Value) *sysl.Value {
 	list := MakeValueList()
+
 	list.GetList().Value = append(lhs.GetList().Value, rhs.GetList().Value...)
+	logrus.Printf("concatList: lhs %d, rhs %d res %d\n", len(lhs.GetList().Value), len(rhs.GetList().Value), len(list.GetList().Value))
 	return list
 }
 
@@ -278,6 +284,10 @@ func mapSetToValueSet(lhs map[string]*sysl.Value) *sysl.Value {
 	return m
 }
 
+func stringInNull(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(false)
+}
+
 func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 	str := lhs.GetS()
 	for _, v := range rhs.GetList().Value {
@@ -299,4 +309,18 @@ func whereSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar
 		}
 	}
 	return setResult
+}
+
+func whereList(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	listResult := MakeValueList()
+	logrus.Printf("scope: %s, list len: %d", scopeVar, len(list.GetList().Value))
+	for _, l := range list.GetList().Value {
+		s[scopeVar] = l
+		predicate := Eval(txApp, &s, rhs)
+		if predicate.GetB() {
+			appendItemToValueList(listResult.GetList(), l)
+		}
+	}
+	return listResult
 }

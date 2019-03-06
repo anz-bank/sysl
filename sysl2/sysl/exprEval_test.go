@@ -115,11 +115,11 @@ func TestEvalCompare(t *testing.T) {
 	assert.False(t, out["ne"].GetB())
 }
 
-func TestEvalUnionSet(t *testing.T) {
+func TestEvalListSetOps(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 	assert.NotNil(t, mod, "Module not loaded")
 	txApp := mod.Apps["TransformApp"]
-	viewName := "UnionSet"
+	viewName := "ListSetOps"
 
 	assert.NotNil(t, txApp.Views[viewName], "View not loaded")
 	assert.Equal(t, 1, len(txApp.Views[viewName].Param), "Params not correct")
@@ -132,9 +132,16 @@ func TestEvalUnionSet(t *testing.T) {
 	assert.Equal(t, "lhs", strs.Value[0].GetS())
 	assert.Equal(t, "rhs", strs.Value[1].GetS())
 
+	assert.Equal(t, int64(2), out.GetMap().Items["count1"].GetI())
+	assert.Equal(t, int64(2), out.GetMap().Items["count2"].GetI())
+	assert.Equal(t, 3, len(out.GetMap().Items["list"].GetList().Value))
+
 	numbers := out.GetMap().Items["numbers"].GetSet()
 	assert.NotNil(t, numbers)
 	assert.Equal(t, 2, len(numbers.Value))
+	numbers2 := out.GetMap().Items["numbers2"].GetSet()
+	assert.NotNil(t, numbers2)
+	assert.Equal(t, 0, len(numbers2.Value))
 }
 
 func TestEvalIsKeyword(t *testing.T) {
@@ -179,6 +186,9 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	s.AddApp("app", mod.Apps[appName])
 	out := EvalView(mod, "TransformApp", "GetAppAttributes", &s)
 	assert.Equal(t, "com.example.gen", out.GetMap().Items["out"].GetS())
+	assert.Nil(t, out.GetMap().Items["Nil"])
+	assert.False(t, out.GetMap().Items["stringInNull"].GetB())
+	assert.False(t, out.GetMap().Items["stringInList"].GetB())
 
 	packageMap := out.GetMap().Items["package"].GetMap().Items
 	assert.Equal(t, "com.example.gen", packageMap["packageName"].GetS())
@@ -258,9 +268,14 @@ func TestScopeAddRestApp(t *testing.T) {
 	postTodo := endpoints["POST /todos"].GetMap().Items
 	assert.Equal(t, "POST /todos", postTodo["name"].GetS(), "unexpected endpoint name")
 	paramList := postTodo["params"].GetList().Value
-	assert.Equal(t, 1, len(paramList))
+	assert.Equal(t, 2, len(paramList))
 	paramItem0 := paramList[0].GetMap().Items
 	assert.Equal(t, "newTodo", paramItem0["name"].GetS())
+	assert.Equal(t, "body", paramItem0["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
+
+	paramItem1 := paramList[1].GetMap().Items
+	assert.Equal(t, "accept", paramItem1["name"].GetS())
+	assert.Equal(t, "header", paramItem1["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
 
 	todosById := endpoints["GET /todos/{id}"].GetMap().Items
 	assert.Equal(t, "GET /todos/{id}", todosById["name"].GetS(), "unexpected endpoint name")
@@ -375,6 +390,9 @@ func TestEvalWhere(t *testing.T) {
 
 	numbers1 := out.GetMap().Items["greaterThanOne"].GetSet().Value
 	assert.Equal(t, 2, len(numbers1))
+
+	RequestFromList := out.GetMap().Items["RequestFromList"].GetList().Value
+	assert.Equal(t, 1, len(RequestFromList))
 
 	strOne := out.GetMap().Items["strOne"].GetSet().Value
 	assert.Equal(t, 1, len(strOne))

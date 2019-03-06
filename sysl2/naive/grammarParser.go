@@ -111,7 +111,7 @@ func GetTermMinMaxCount(t *sysl.Term) (int, int) {
 
 func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, []interface{}) {
 	if input == len(*(p.tokens)) {
-		logrus.Println("got input length zero!!!")
+		logrus.Debugln("got input length zero!!!")
 	}
 	result := false
 	tree := []interface{}{}
@@ -121,7 +121,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 		for index, t := range val.(*sysl.Sequence).Term {
 			if t == nil {
 				// nil => epsilon, see makeEXPR()
-				logrus.Println("matched nil")
+				logrus.Debugln("matched nil")
 				result = true
 				continue
 			}
@@ -140,13 +140,13 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 					res, remaining, parseResult = p.parse(g, input, x.Choices)
 					matchedTerm = parseResult[0]
 				case *sysl.Atom_Rulename:
-					logrus.Printf("checking Rule %s (singleTerm: %v)\n", x.Rulename.Name, singleTerm)
+					logrus.Debugf("checking Rule %s (singleTerm: %v)", x.Rulename.Name, singleTerm)
 					var parseResult []interface{}
 					res, remaining, parseResult = p.parse(g, input, g.Rules[x.Rulename.Name])
 					matchedTerm = parseResult[0]
 				default: //Atom_String_ and Atom_Regexp
 					if input == len(*p.tokens) {
-						logrus.Printf("input is empty\n")
+						logrus.Debugf("input is empty")
 						res = false
 					} else {
 						in := (*p.tokens)[input]
@@ -159,7 +159,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 					matchCount++
 					input = remaining
 					subTree = append(subTree, matchedTerm)
-					logrus.Printf("%d >> matched (%v): %d  -- len(subtree=%d)\n", index, matchedTerm, matchCount, len(subTree))
+					logrus.Debugf("%d >> matched (%v): %d  -- len(subtree=%d)", index, matchedTerm, matchCount, len(subTree))
 				} else {
 					if matchCount < minCount {
 						return false, EOF, nil
@@ -178,30 +178,30 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 				tree = append(tree, subTree)
 			}
 		}
-		logrus.Println("out of loop")
+		logrus.Debugln("out of loop")
 		return true, input, tree
 	case *sysl.Rule:
 		r := val.(*sysl.Rule)
-		logrus.Println("Entering Rule " + r.GetName().Name)
+		logrus.Debugln("Entering Rule " + r.GetName().Name)
 		res, remaining, subTree := p.parse(g, input, r.Choices)
 		if res {
-			logrus.Printf("matched rulename (%s)\n", r.GetName().Name)
-			logrus.Printf("got choice (%T)\n", subTree[0])
+			logrus.Debugf("matched rulename (%s)", r.GetName().Name)
+			logrus.Debugf("got choice (%T)", subTree[0])
 			rule := map[string]map[int][]interface{}{
 				r.GetName().Name: subTree[0].(map[int][]interface{}),
 			}
 			return true, remaining, append(tree, rule)
 		}
-		logrus.Println("did not match " + r.GetName().Name)
+		logrus.Debugln("did not match " + r.GetName().Name)
 		tree = append(tree, nil)
 	case *sysl.Choice:
 		c := val.(*sysl.Choice)
-		logrus.Printf("choices count : (%d)\n", len(c.Sequence))
+		logrus.Debugf("choices count : (%d)", len(c.Sequence))
 		for i, alt := range c.Sequence {
-			logrus.Printf("trying choice (%d)\n", i)
+			logrus.Debugf("trying choice (%d)", i)
 			res, remaining, subTree := p.parse(g, input, alt)
 			if res {
-				logrus.Printf("matched choice :(%d)\n", i)
+				logrus.Debugf("matched choice :(%d)", i)
 				choice := map[int][]interface{}{i: subTree}
 				return true, remaining, append(tree, choice)
 			}
