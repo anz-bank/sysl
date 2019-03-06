@@ -133,10 +133,14 @@ func TestEvalListSetOps(t *testing.T) {
 	assert.Equal(t, "rhs", strs.Value[1].GetS())
 
 	assert.Equal(t, int64(2), out.GetMap().Items["fcount"].GetI())
+	assert.Equal(t, 3, len(out.GetMap().Items["list"].GetList().Value))
 
 	numbers := out.GetMap().Items["numbers"].GetSet()
 	assert.NotNil(t, numbers)
 	assert.Equal(t, 2, len(numbers.Value))
+	numbers2 := out.GetMap().Items["numbers2"].GetSet()
+	assert.NotNil(t, numbers2)
+	assert.Equal(t, 0, len(numbers2.Value))
 }
 
 func TestEvalIsKeyword(t *testing.T) {
@@ -181,6 +185,7 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	s.AddApp("app", mod.Apps[appName])
 	out := EvalView(mod, "TransformApp", "GetAppAttributes", &s)
 	assert.Equal(t, "com.example.gen", out.GetMap().Items["out"].GetS())
+	assert.Nil(t, out.GetMap().Items["Nil"])
 
 	packageMap := out.GetMap().Items["package"].GetMap().Items
 	assert.Equal(t, "com.example.gen", packageMap["packageName"].GetS())

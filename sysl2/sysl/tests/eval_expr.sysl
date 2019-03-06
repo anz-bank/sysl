@@ -68,6 +68,8 @@ TransformApp:
       fcount = [1,2] count
       strs = {"rhs", "lhs"} | {"lhs"}
       numbers = {1} | {1,2}
+      numbers2 =  {1,2} where(. > 2) | {1} where(. > 2)
+      list = [1] | [1,2]
     )
 
   !view IsKeyword(word <: string) -> bool:
@@ -122,6 +124,9 @@ TransformApp:
       )
 
       definition = classDef(app.types)
+      Nil = . -> <some> (:
+        out = .
+      )
     )
 
   !view TestDotScope(app <: sysl.App) -> int:
