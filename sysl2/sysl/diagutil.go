@@ -23,13 +23,13 @@ func OutputPlantuml(output, plantuml, umlInput string) {
 		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, DeflateAndEncode([]byte(umlInput)))
 		resp, err := http.Get(plantuml)
 		if err != nil {
-			logrus.Errorf("Unable to create http request to %s, Error:", plantuml, err.Error())
+			logrus.Errorf("Unable to create http request to %s, Error:%s", plantuml, err.Error())
 		}
 		defer resp.Body.Close()
 
 		out, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			logrus.Errorf("Unable to read from response, Error:", err.Error())
+			logrus.Errorf("Unable to read from response, Error:%s", err.Error())
 		}
 		createFile(output, out)
 
@@ -44,13 +44,13 @@ func OutputPlantuml(output, plantuml, umlInput string) {
 func createFile(output string, out []byte) {
 	f, err := os.Create(output)
 	if err != nil {
-		logrus.Errorf("Unable to create file, Error:", err.Error())
+		logrus.Errorf("Unable to create file, Error:%s", err.Error())
 	}
 	_, err = f.Write(out)
 	defer f.Close()
 
 	if err != nil {
-		logrus.Errorf("Unable to create file, Error:", err.Error())
+		logrus.Errorf("Unable to create file, Error:%s", err.Error())
 	}
 }
 
@@ -61,7 +61,7 @@ func DeflateAndEncode(text []byte) string {
 	var buf bytes.Buffer
 	zw, err := zlib.NewWriterLevel(&buf, zlib.BestCompression)
 	if err != nil {
-		logrus.Errorf("Unable to encode []byte, Error:", err.Error())
+		logrus.Errorf("Unable to encode []byte, Error:%s", err.Error())
 	}
 	zw.Write(text)
 	zw.Flush()
