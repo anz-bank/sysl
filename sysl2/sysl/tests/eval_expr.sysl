@@ -65,7 +65,8 @@ TransformApp:
 
   !view ListSetOps(lhs <: string) -> set of string:
     lhs -> (:
-      fcount = [1,2] count
+      count1 = [1,2] count
+      count2 = {1,2} count
       strs = {"rhs", "lhs"} | {"lhs"}
       numbers = {1} | {1,2}
       numbers2 =  {1,2} where(. > 2) | {1} where(. > 2)
