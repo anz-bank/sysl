@@ -42,6 +42,7 @@ class TypeSpec:
 
 
 typeSpecList = []
+externAlias = {}
 
 
 def sysl_array_type_of(itemtype):
@@ -179,11 +180,15 @@ class SwaggerTranslator:
                 w()
                 w('{}:'.format(swag['basePath']))
                 with w.indent():
-                    self.writeBody(swag, tag, w)
+                    alias = self.writeEndpoints(swag, tag, w)
             else:
-                self.writeBody(swag, tag, w)
+                alias = self.writeEndpoints(swag, tag, w)
 
-    def writeBody(self, swag, tag, w):
+            self.writeDefs(swag, tag, w, alias)
+
+    def writeEndpoints(self, swag, tag, w):
+        alias = {}
+
         for (path, api) in sorted(swag['paths'].iteritems()):
             w(u'\n{}:', self.translate_path_template_params(path))
             with w.indent():
@@ -247,7 +252,9 @@ class SwaggerTranslator:
 
                     if i < len(api) - 1:
                         w()
+        return alias
 
+    def writeDefs(self, swag, tag, w, alias):
         w()
         w('#' + '-' * 75)
         w('# definitions')
@@ -314,6 +321,7 @@ class SwaggerTranslator:
             index += 1
 
         self.writeAlias(alias, w)
+        self.writeAlias(externAlias, w)
 
     def writeAlias(self, alias, w):
         for key in alias:
@@ -382,7 +390,9 @@ class SwaggerTranslator:
             return r(typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj')
 
         else:
-            return r(str(tspec))
+            aliasName = 'EXTERNAL_' + typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'
+            externAlias[aliasName] = 'string'
+            return r(aliasName)
 
     def getTag(self, tagName, tagType):
         if tagType is None or tagName is None:
