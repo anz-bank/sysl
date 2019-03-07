@@ -244,7 +244,12 @@ class SwaggerTranslator:
                         returnValues = OrderedDict()
                         for key in sorted(responses):
                             if 'schema' in responses[key]:
-                                returnValues[responses[key]['schema']['$ref'].rpartition('/')[2]] = True
+                                if 'type' in responses[key]['schema'] and responses[key]['schema']['type'] == 'array':
+                                    returnValues['sequence of ' + responses[key]['schema']['items']['$ref'].rpartition('/')[2]] = True
+                                else:
+                                    returnValues[responses[key]['schema']['$ref'].rpartition('/')[2]] = True
+                            else:
+                                returnValues[', '.join(responses.keys())] = True
                             if key == 'default' or key.startswith('x-'):
                                 self.warn('default responses and x-* responses are not implemented')
 
@@ -268,6 +273,10 @@ class SwaggerTranslator:
             elif tspec.get('type') == 'array' or 'enum' in tspec:
                 w('!alias {}:', tname)
 
+            requiredFields = []
+            if 'required' in tspec:
+                requiredFields = tspec['required']
+
             with w.indent():
                 def getfields(fname, ftype, fdescr, tag, isArray=False):
                     fieldTemplate = '{} <: {}{}{}{}'
@@ -275,9 +284,14 @@ class SwaggerTranslator:
                     if isArray:
                         fieldTemplate = '{}{}{}{}'
 
+                    if is_sysl_array_type(ftype) or ftype.endswith('*') or fname in requiredFields:
+                        ftypeSyntax = ftype
+                    else:
+                        ftypeSyntax = ftype + '?'
+
                     return fieldTemplate.format(
                         fname if fname not in SYSL_TYPES else fname + '_',
-                        ftype if is_sysl_array_type(ftype) or ftype.endswith('*') else ftype + '?',
+                        ftypeSyntax,
                         ':' if fdescr or tag else '',
                         self.getTag(fdescr, 'description'), self.getTag(fname, tag))
 
@@ -292,6 +306,7 @@ class SwaggerTranslator:
                 elif 'enum' in tspec:
                     w(tspec.get('type'))
                 else:
+                    externAlias['EXTERNAL_' + tname] = 'string'
                     assert True, tspec
 
         index = 0
