@@ -46,7 +46,8 @@ definitions:
 paths: {}
 """
 
-SWAGGER_OBJECT_WITH_NO_PROPERTIES = r"""swagger: "2.0"
+SWAGGER_OBJECT_WITH_NO_PROPERTIES = r"""
+swagger: "2.0"
 basePath: /fruit-basket
 info:
     title: Fruit API
@@ -85,6 +86,7 @@ paths:
         - name: goat_id
           in: query
           type: string
+          required: true
       produces:
         - application/json
       responses:
@@ -96,15 +98,18 @@ paths:
 """
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL = r"""
-@version = "1.2.3"
-@host = "goat.example.com"
  "Goat CRUD API" [package=""]:
-    | No description.
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
 
-    /goat/delete-goat:
-        POST ?goat_id=string:
-            | Delete a goat.
-            return 200: <: Acknowledgement or {}
+    /api/v1:
+
+        /goat/delete-goat:
+            POST ?goat_id=string:
+                | Delete a goat.
+                return Acknowledgement
 
     #---------------------------------------------------------------------------
     # definitions
@@ -167,15 +172,19 @@ paths:
       summary: Gotta get goats
 """
 
-EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECTED_SYSL = r"""@version = "1.2.3"
-@host = "goat.example.com"
+EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECTED_SYSL = r"""
  "Goat CRUD API" [package=""]:
-    | No description.
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
 
-    /goat/get-goats:
-        GET:
-            | Gotta get goats.
-            return 200: <: sequence of Goat or {}
+    /api/v1:
+
+        /goat/get-goats:
+            GET:
+                | Gotta get goats.
+                return sequence of Goat
 
     #---------------------------------------------------------------------------
     # definitions
@@ -217,9 +226,11 @@ paths:
         - name: name
           in: query
           type: string
+          required: true
         - name: birthday
           in: query
           type: string
+          required: true
       responses:
         '201':
           description: ''
@@ -230,15 +241,18 @@ paths:
 """
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECTED_SYSL = r"""
-@version = "1.2.3"
-@host = "goat.example.com"
  "Goat CRUD API" [package=""]:
-    | No description.
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
 
-    /goat/create-goat:
-        POST ?name=string&birthday=string:
-            | Creates a goat.
-            return 201 (Location of the newly allocated goat.) or {}
+    /api/v1:
+
+        /goat/create-goat:
+            POST ?name=string&birthday=string:
+                | Creates a goat.
+                return 201
 
     #---------------------------------------------------------------------------
     # definitions
@@ -292,15 +306,18 @@ paths:
 """
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL = r"""
-@version = "1.2.3"
-@host = "goat.example.com"
  "Goat CRUD API" [package=""]:
-    | No description.
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
 
-    /goat/create-goat <: Goat:
-        POST:
-            | Creates a goat.
-            return 201 (Location of the newly allocated goat.) or {}
+    /api/v1:
+
+        /goat/create-goat:
+            POST (body <: Goat [~body]):
+                | Creates a goat.
+                return 201
 
     #---------------------------------------------------------------------------
     # definitions
@@ -311,7 +328,8 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL = r"""
 """
 
 
-EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE = r"""swagger: "2.0"
+EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE = r"""
+swagger: "2.0"
 basePath: /api/v1
 
 host: goat.example.com
@@ -336,15 +354,18 @@ paths:
 
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE_EXPECTED_SYSL = r"""
-@version = "1.2.3"
-@host = "goat.example.com"
  "Goat CRUD API" [package=""]:
-    | No description.
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
 
-    /goat/status:
-        GET:
-            | Check goat status
-            return 200 (here be status) or {500}
+    /api/v1:
+
+        /goat/status:
+            GET:
+                | Check goat status
+                return 200, 500
 
     #---------------------------------------------------------------------------
     # definitions
@@ -416,15 +437,18 @@ paths:
 """
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL = r"""
-@version = "1.2.3"
-@host = "goat.example.com"
  "Goat CRUD API" [package=""]:
-    | No description.
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
 
-    /goat/status:
-        GET:
-            | Get goat status
-            return 200 (okay) or {}
+    /api/v1:
+
+        /goat/status:
+            GET:
+                | Get goat status
+                return 200
 
     #---------------------------------------------------------------------------
     # definitions
@@ -452,15 +476,18 @@ paths:
 """
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL = r"""
-@version = "1.2.3"
-@host = "goat.example.com"
  "Goat CRUD API" [package=""]:
-    | No description.
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
 
-    /goat/status:
-        POST:
-            | Update goat status
-            return 201 (created)
+    /api/v1:
+
+        /goat/status:
+            POST:
+                | Update goat status
+                return 201
 
     #---------------------------------------------------------------------------
     # definitions
@@ -471,9 +498,9 @@ def test_importing_swagger_array_type_with_example_produces_sysl_type():
     swag = yaml.load(SWAGGER_WITH_ARRAY_TYPE_WITH_EXAMPLE)
     w = writer.Writer('sysl')
     t = SwaggerTranslator(logger=FakeLogger())
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
-    expected_fragment = '    !type FruitBasket:\n        fruit <: sequence of {}'
+    expected_fragment = '    !type FruitBasket:\n        fruit <: sequence of FruitBasket_fruit_obj'
     assert expected_fragment in output
 
 
@@ -482,7 +509,7 @@ def test_importing_swagger_typeless_thing_with_items_produces_warning():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     expected_warnings = ['Ignoring unexpected "items". Schema has "items" but did not have defined "type". Note: {\'items\': {\'type\': \'object\'}}']
     assert logger.warnings == expected_warnings
 
@@ -492,10 +519,10 @@ def test_importing_swagger_propertyless_object_works_without_warnings():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
 
-    expected_fragment = '    !type MysteriousObject:\n'
+    expected_fragment = '    !alias EXTERNAL_MysteriousObject:\n'
     assert expected_fragment in output
 
     expected_warnings = []
@@ -507,7 +534,7 @@ def test_importing_swagger_spec_with_a_path_works_without_warnings():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL in output
@@ -516,13 +543,13 @@ def test_importing_swagger_spec_with_a_path_works_without_warnings():
     assert logger.warnings == expected_warnings
 
 
-@pytest.mark.xfail(reason="import_swagger doesnt handle required fields")
+# @pytest.mark.xfail(reason="import_swagger doesnt handle required fields")
 def test_importing_swagger_object_with_required_field_produces_sysl_type_with_required_field():
     swag = yaml.load(SWAGGER_OBJECT_WITH_A_REQUIRED_PROPERTY)
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
 
     expected_fragment = '!type Apple:\n        colour <: string\n'
@@ -534,9 +561,8 @@ def test_import_of_swagger_path_that_returns_array_of_defined_object_type():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
-
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECTED_SYSL in output
 
     expected_warnings = []
@@ -548,22 +574,20 @@ def test_import_of_swagger_path_that_has_a_defined_201_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
-
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECTED_SYSL in output
 
     expected_warnings = []
     assert logger.warnings == expected_warnings
 
 
-@pytest.mark.xfail(reason="import_swagger doesnt handle body parameters")
 def test_import_of_swagger_path_that_has_a_body_parameter():
     swag = yaml.load(EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER)
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL in output
@@ -578,9 +602,8 @@ def test_import_of_swagger_path_with_error_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
-
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE_EXPECTED_SYSL in output
 
     expected_warnings = []
@@ -592,7 +615,7 @@ def test_import_of_swagger_path_with_default_response_is_not_implemented():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
 
     expected_warnings = ['default responses and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
@@ -603,7 +626,7 @@ def test_import_of_swagger_path_with_x_dash_whatever_response_is_not_implemented
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
 
     expected_warnings = ['default responses and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
@@ -614,7 +637,7 @@ def test_import_of_swagger_path_with_description_only_200_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL in output
@@ -628,7 +651,7 @@ def test_import_of_swagger_path_with_description_only_201_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', w=w)
+    t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL in output
@@ -679,7 +702,7 @@ def test_parse_typespec_double_is_translated_to_float():
 
 def test_parse_typespec_object():
     t = SwaggerTranslator(None)
-    assert t.parse_typespec({'type': 'object', 'description': 'foo'}) == ('{}', 'foo')
+    assert t.parse_typespec({'type': 'object', 'description': 'foo'}, '', 'Object') == ('Object_obj', 'foo')
 
 
 def test_parse_typespec_ref():
