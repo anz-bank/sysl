@@ -10,11 +10,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+<<<<<<< HEAD
 type sequenceDiagParam struct {
 	seqs.Labeler
 	endpoints  []string
 	title      string
 	blackboxes [][]string
+=======
+type SimpleParser struct {
+	self string
+}
+
+type epFmtParam struct {
+	epname, human, human_sender, needs_int, args, patterns, controls string
+	attrs                                                            map[string]*sysl.Attribute
+>>>>>>> Sysl generate sequence diagram
 }
 
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
@@ -82,11 +92,23 @@ func parseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
 	return bbs
 }
 
-func fmtEp(p *epFmtParam) string {
+func (sp *SimpleParser) fmtEp(p *epFmtParam) string {
+
 	return ""
 }
 
-func fmtApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
+func (sp *SimpleParser) fmtApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
+
+	return ""
+}
+
+func (sp *SimpleParser) fmtSeq() string {
+
+	return ""
+}
+
+func (sp *SimpleParser) fmtOutput() string {
+
 	return ""
 }
 
@@ -151,10 +173,17 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 					sdEndpoints = append(sdEndpoints, strings.Join(parts, " :: ")+" <- "+ep)
 				}
 
+				spEp := &SimpleParser{self: "%(appname)"}
 				sd := &sequenceDiagParam{
+<<<<<<< HEAD
 					endpoints:   sdEndpoints,
 					epfmt:       SfmtEP(fmtEp),
 					appfmt:      SfmtApp(fmtApp),
+=======
+					endpoints: sdEndpoints,
+					epfmt: SfmtEP(spEp.fmtEp),
+					appfmt: SfmtApp(spEp.fmtApp),
+>>>>>>> Sysl generate sequence diagram
 					activations: no_activations,
 					title:       "",
 					blackboxes:  append(bbs, bbs2...),
@@ -167,10 +196,17 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 			return
 		}
 
+		spEp := &SimpleParser{self: "%(appname)"}
 		sd := &sequenceDiagParam{
+<<<<<<< HEAD
 			endpoints:   endpoints,
 			epfmt:       SfmtEP(fmtEp),
 			appfmt:      SfmtApp(fmtApp),
+=======
+			endpoints: endpoints,
+			epfmt: SfmtEP(spEp.fmtEp),
+			appfmt: SfmtApp(spEp.fmtApp),
+>>>>>>> Sysl generate sequence diagram
 			activations: no_activations,
 			title:       title,
 			blackboxes:  blackboxes,
