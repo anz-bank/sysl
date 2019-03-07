@@ -74,7 +74,7 @@ METHOD_ORDER = {
 
 def parse_args(argv):
     p = argparse.ArgumentParser(description='Converts Swagger (aka Open API Specification) documents to a Sysl spec')
-    p.add_argument('--tag', help='Meta tag type [json]')
+    p.add_argument('--tag', help='Meta tag type. Default: json. Use "no-tag" to avoid tags')
     p.add_argument('swagger_path', help='path of input swagger document')
     p.add_argument('appname', help='appname')
     p.add_argument('package', help='package')
@@ -103,7 +103,6 @@ class SwaggerTranslator:
         self._param_cache = {}
         self._words = set()
         self._vocabulary_factory = vocabulary_factory
-        self.duplicateCount = 1
 
     def warn(self, msg):
         self._logger.warn(msg)
@@ -180,13 +179,13 @@ class SwaggerTranslator:
                 w()
                 w('{}:'.format(swag['basePath']))
                 with w.indent():
-                    alias = self.writeEndpoints(swag, tag, w)
+                    alias = self.writeEndpoints(swag, w)
             else:
-                alias = self.writeEndpoints(swag, tag, w)
+                alias = self.writeEndpoints(swag, w)
 
             self.writeDefs(swag, tag, w, alias)
 
-    def writeEndpoints(self, swag, tag, w):
+    def writeEndpoints(self, swag, w):
         alias = {}
 
         for (path, api) in sorted(swag['paths'].iteritems()):
@@ -292,7 +291,7 @@ class SwaggerTranslator:
                     return fieldTemplate.format(
                         fname if fname not in SYSL_TYPES else fname + '_',
                         ftypeSyntax,
-                        ':' if fdescr or tag else '',
+                        ':' if len(fname) > 0 and (fdescr or tag) else '',
                         self.getTag(fdescr, 'description'), self.getTag(fname, tag))
 
                 if properties:
@@ -329,9 +328,9 @@ class SwaggerTranslator:
                             ':' if tag else '', self.getTag(k, tag))
                         w(fields)
             else:
-                w('!alias {}:', typeName)
+                w('!alias EXTERNAL_{}:', typeName)
                 with w.indent():
-                    w('JsonObject')
+                    w('string')
 
             index += 1
 
@@ -402,7 +401,10 @@ class SwaggerTranslator:
             return r('float')
         elif (typ, fmt) == ('object', None):
             typeSpecList.append(TypeSpec(tspec, parentRef, typeRef))
-            return r(typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj')
+            retVal = typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'
+            if ('properties' not in tspec):
+                return r('EXTERNAL_' + retVal)
+            return r(retVal)
 
         else:
             aliasName = 'EXTERNAL_' + typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'
@@ -451,7 +453,14 @@ def main():
     w = writer.Writer('sysl')
 
     translator = SwaggerTranslator(logger=make_default_logger())
-    translator.translate(swag, args.appname, args.package, args.tag, w=w)
+
+    tag = 'json'
+    if args.tag is not None:
+        tag = args.tag
+    if args.tag == 'no-tag':
+        tag = None
+
+    translator.translate(swag, args.appname, args.package, tag, w=w)
 
     with open(args.outfile, 'w') as f_out:
         f_out.write(str(w))

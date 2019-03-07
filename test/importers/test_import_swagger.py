@@ -14,6 +14,120 @@ class FakeLogger:
         self.warnings.append(msg)
 
 
+SIMPLE_SWAGGER_EXAMPLE = r"""
+swagger: "2.0"
+info:
+  title: Simple
+paths:
+  /test:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/SimpleObj'
+definitions:
+  SimpleObj:
+    type: object
+    properties:
+      name:
+        type: string
+"""
+
+SWAGGER_QUERY_PARAM_EXAMPLE = r"""
+swagger: "2.0"
+info:
+  title: Simple
+paths:
+  /test:
+    get:
+      responses:
+        200:
+          description: 200 OK
+      parameters:
+        - name: key
+          type: string
+          required: false
+          in: query
+        - name: min_date
+          type: string
+          required: true
+          in: query
+          format: date
+"""
+
+SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE = r"""
+swagger: "2.0"
+info:
+  title: Simple
+paths:
+  /test:
+    post:
+      responses:
+        200:
+          description: 200 OK
+      parameters:
+        - name: key
+          type: string
+          required: false
+          in: header
+        - name: min_date
+          type: string
+          required: true
+          in: header
+          format: date
+        - name: createrequest
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/SimpleObj'
+definitions:
+  SimpleObj:
+    type: object
+    properties:
+      name:
+        type: string
+"""
+
+SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL = r"""
+ "Simple" [package=""]:
+    @description =:
+        | No description.
+
+    /test:
+        POST (createrequest <: SimpleObj [~body],key <: key [~header, ~optional, name="key"], min_date <: min_date [~header, ~required, name="min_date"]):
+            | No description.
+            return 200
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type SimpleObj:
+        name <: string?
+
+    !alias key:
+        string
+
+    !alias min_date:
+        string
+"""
+
+SWAGGER_WITH_SYSL_KEYWORDS_EXAMPLE = r"""swagger: "2.0"
+basePath: /fruit-basket
+info:
+  title: Fruit API
+  version: 1.0.0
+definitions:
+  SimpleObj:
+    type: object
+    properties:
+      date:
+        type: string
+      string:
+        type: string
+paths: {}
+"""
+
 SWAGGER_WITH_ARRAY_TYPE_WITH_EXAMPLE = r"""swagger: "2.0"
 basePath: /fruit-basket
 info:
@@ -494,13 +608,54 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPEC
 """
 
 
+def test_importing_simple_swagger_with_json_tags():
+    swag = yaml.load(SIMPLE_SWAGGER_EXAMPLE)
+    w = writer.Writer('sysl')
+    t = SwaggerTranslator(logger=FakeLogger())
+    t.translate(swag, appname='', package='', tag='json', w=w)
+    output = str(w)
+
+    assert 'name <: string?:\n        	@json_tag = "name"' in output
+
+
+def test_importing_swagger_with_query_params():
+    swag = yaml.load(SWAGGER_QUERY_PARAM_EXAMPLE)
+    w = writer.Writer('sysl')
+    t = SwaggerTranslator(logger=FakeLogger())
+    t.translate(swag, appname='', package='', tag=None, w=w)
+    output = str(w)
+
+    assert 'GET ?key=string?&min_date=string:' in output
+
+
+def test_importing_swagger_with_header_body_params():
+    swag = yaml.load(SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE)
+    w = writer.Writer('sysl')
+    t = SwaggerTranslator(logger=FakeLogger())
+    t.translate(swag, appname='', package='', tag=None, w=w)
+    output = str(w)
+
+    assert SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL in output
+
+
+def test_importing_swagger_with_sysl_keywords():
+    swag = yaml.load(SWAGGER_WITH_SYSL_KEYWORDS_EXAMPLE)
+    w = writer.Writer('sysl')
+    t = SwaggerTranslator(logger=FakeLogger())
+    t.translate(swag, appname='', package='', tag=None, w=w)
+    output = str(w)
+
+    assert 'date_ <: string?\n        string_ <: string?' in output
+
+
 def test_importing_swagger_array_type_with_example_produces_sysl_type():
     swag = yaml.load(SWAGGER_WITH_ARRAY_TYPE_WITH_EXAMPLE)
     w = writer.Writer('sysl')
     t = SwaggerTranslator(logger=FakeLogger())
     t.translate(swag, appname='', package='', tag=None, w=w)
     output = str(w)
-    expected_fragment = '    !type FruitBasket:\n        fruit <: sequence of FruitBasket_fruit_obj'
+
+    expected_fragment = '    !type FruitBasket:\n        fruit <: sequence of EXTERNAL_FruitBasket_fruit_obj'
     assert expected_fragment in output
 
 
@@ -702,7 +857,7 @@ def test_parse_typespec_double_is_translated_to_float():
 
 def test_parse_typespec_object():
     t = SwaggerTranslator(None)
-    assert t.parse_typespec({'type': 'object', 'description': 'foo'}, '', 'Object') == ('Object_obj', 'foo')
+    assert t.parse_typespec({'type': 'object', 'description': 'foo'}, '', 'Object') == ('EXTERNAL_Object_obj', 'foo')
 
 
 def test_parse_typespec_ref():
