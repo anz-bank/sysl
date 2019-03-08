@@ -287,10 +287,11 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 					title: spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), app.GetEndpoints()[k].GetLongName(), varrefs),
 					blackboxes: append(bbs, bbs2...),
 				}
-				logrus.Warnf("sd: %v", sd)
+				out, _ := generateSequenceDiag(mod, sd)
+				logrus.Warnf("out: %s", out)
 
 				logrus.Warnf("output_dir: %s", output_dir)
-				OutputPlantuml(output_dir, plantuml, "")
+				OutputPlantuml(output_dir, plantuml, out)
 			}
 		}
 	} else {
@@ -307,9 +308,10 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 			title: title,
 			blackboxes: blackboxes,
 		}
+		out, _ := generateSequenceDiag(mod, sd)
 
 		logrus.Warnf("sd: %v", sd)
-		OutputPlantuml(output, plantuml, "")
+		OutputPlantuml(output, plantuml, out)
 	}
 }
 
