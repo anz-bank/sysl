@@ -201,6 +201,7 @@ TransformApp:
       )
       ListofNames = listOfTypes
       RequestFromList = listOfTypes where (.name == "Request")
+      NotObjectAliases = app.alias where(.key != "Object")
     )
 
   !view Links(app <: sysl.App) -> int:

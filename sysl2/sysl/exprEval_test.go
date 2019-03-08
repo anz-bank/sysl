@@ -402,6 +402,9 @@ func TestEvalWhere(t *testing.T) {
 
 	listofNames := out.GetMap().Items["ListofNames"].GetList().Value
 	assert.Equal(t, 2, len(listofNames))
+
+	NotObjectAliases := out.GetMap().Items["NotObjectAliases"].GetMap().Items
+	assert.Equal(t, 3, len(NotObjectAliases))
 }
 
 func TestEvalLinks(t *testing.T) {

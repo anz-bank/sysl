@@ -33,6 +33,10 @@ func neInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(lhs.GetI() != rhs.GetI())
 }
 
+func neString(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetS() != rhs.GetS())
+}
+
 func subInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueI64(lhs.GetI() - rhs.GetI())
 }
@@ -323,4 +327,21 @@ func whereList(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVa
 		}
 	}
 	return listResult
+}
+
+func whereMap(txApp *sysl.Application, assign *Scope, map_ *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+	s := Scope{}
+	mapResult := MakeValueMap()
+	logrus.Printf("scope: %s, list len: %d", scopeVar, len(map_.GetMap().Items))
+	for key, val := range map_.GetMap().Items {
+		m := MakeValueMap()
+		addItemToValueMap(m, "key", MakeValueString(key))
+		addItemToValueMap(m, "value", val)
+		s[scopeVar] = m
+		predicate := Eval(txApp, &s, rhs)
+		if predicate.GetB() {
+			addItemToValueMap(mapResult, key, val)
+		}
+	}
+	return mapResult
 }

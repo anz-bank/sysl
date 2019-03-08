@@ -50,6 +50,7 @@ var valueFunctions = map[string]evalValueFunc{
 	makeKey(sysl.Expr_BinExpr_NE, VALUE_NULL, VALUE_NULL):      cmpNullFalse,
 	makeKey(sysl.Expr_BinExpr_EQ, VALUE_STRING, VALUE_NULL):    cmpNullFalse,
 	makeKey(sysl.Expr_BinExpr_NE, VALUE_STRING, VALUE_NULL):    cmpNullTrue,
+	makeKey(sysl.Expr_BinExpr_NE, VALUE_NULL, VALUE_STRING):    cmpNullTrue,
 	makeKey(sysl.Expr_BinExpr_ADD, VALUE_INT, VALUE_INT):       addInt64,
 	makeKey(sysl.Expr_BinExpr_ADD, VALUE_STRING, VALUE_STRING): addString,
 	makeKey(sysl.Expr_BinExpr_SUB, VALUE_INT, VALUE_INT):       subInt64,
@@ -66,6 +67,7 @@ var valueFunctions = map[string]evalValueFunc{
 	makeKey(sysl.Expr_BinExpr_GE, VALUE_INT, VALUE_INT):        geInt64,
 	makeKey(sysl.Expr_BinExpr_LE, VALUE_INT, VALUE_INT):        leInt64,
 	makeKey(sysl.Expr_BinExpr_NE, VALUE_INT, VALUE_INT):        neInt64,
+	makeKey(sysl.Expr_BinExpr_NE, VALUE_STRING, VALUE_STRING):  neString,
 	makeKey(sysl.Expr_BinExpr_AND, VALUE_BOOL, VALUE_BOOL):     andBool,
 }
 
@@ -79,6 +81,7 @@ var exprFunctions = map[string]evalExprFunc{
 	makeKey(sysl.Expr_BinExpr_FLATTEN, VALUE_SET, VALUE_SET):     flattenSetSet,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_LIST, VALUE_NO_ARG):   whereList,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_LIST, VALUE_MAP):      whereList,
+	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_MAP, VALUE_NO_ARG):    whereMap,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_SET, VALUE_NO_ARG):    whereSet,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_SET, VALUE_MAP):       whereSet,
 	makeKey(sysl.Expr_BinExpr_WHERE, VALUE_SET, VALUE_INT):       whereSet,
