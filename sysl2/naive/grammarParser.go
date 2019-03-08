@@ -111,7 +111,7 @@ func GetTermMinMaxCount(t *sysl.Term) (int, int) {
 
 func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, []interface{}) {
 	if input == len(*(p.tokens)) {
-		logrus.Debugln("got input length zero!!!")
+		logrus.Debug("got input length zero!!!")
 	}
 	result := false
 	tree := []interface{}{}
@@ -121,7 +121,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 		for index, t := range val.(*sysl.Sequence).Term {
 			if t == nil {
 				// nil => epsilon, see makeEXPR()
-				logrus.Debugln("matched nil")
+				logrus.Debug("matched nil")
 				result = true
 				continue
 			}
@@ -178,11 +178,11 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 				tree = append(tree, subTree)
 			}
 		}
-		logrus.Debugln("out of loop")
+		logrus.Debug("out of loop")
 		return true, input, tree
 	case *sysl.Rule:
 		r := val.(*sysl.Rule)
-		logrus.Debugln("Entering Rule " + r.GetName().Name)
+		logrus.Debug("Entering Rule " + r.GetName().Name)
 		res, remaining, subTree := p.parse(g, input, r.Choices)
 		if res {
 			logrus.Debugf("matched rulename (%s)", r.GetName().Name)
@@ -192,7 +192,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 			}
 			return true, remaining, append(tree, rule)
 		}
-		logrus.Debugln("did not match " + r.GetName().Name)
+		logrus.Debug("did not match " + r.GetName().Name)
 		tree = append(tree, nil)
 	case *sysl.Choice:
 		c := val.(*sysl.Choice)
