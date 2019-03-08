@@ -698,7 +698,6 @@ def test_importing_swagger_spec_with_a_path_works_without_warnings():
     assert logger.warnings == expected_warnings
 
 
-# @pytest.mark.xfail(reason="import_swagger doesnt handle required fields")
 def test_importing_swagger_object_with_required_field_produces_sysl_type_with_required_field():
     swag = yaml.load(SWAGGER_OBJECT_WITH_A_REQUIRED_PROPERTY)
     w = writer.Writer('sysl')

@@ -364,7 +364,6 @@ class SwaggerTranslator:
                 del tspec['items']['type']
 
             (itype, idescr) = self.parse_typespec(tspec['items'], parentRef, typeRef)
-            # assert idescr is None
             return (sysl_array_type_of(itype), descr)
 
         def r(t):
