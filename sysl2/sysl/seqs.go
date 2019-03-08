@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"io"
 	"os"
 	"regexp"
 	"sort"
@@ -11,21 +13,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-<<<<<<< HEAD
+type SimpleParser struct {
+	self string
+}
+
 type sequenceDiagParam struct {
 	seqs.Labeler
 	endpoints  []string
 	title      string
 	blackboxes [][]string
-=======
-type SimpleParser struct {
-	self string
-}
-
-type epFmtParam struct {
-	epname, human, human_sender, needs_int, args, patterns, controls string
-	attrs                                                            map[string]*sysl.Attribute
->>>>>>> Sysl generate sequence diagram
 }
 
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
@@ -275,7 +271,6 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 
 				varrefs := mergeAttributes(app.GetAttrs(), app.GetEndpoints()[k].GetAttrs())
 
-
 				sdEndpoints := []string{}
 				statements := app.GetEndpoints()[k].GetStmt()
 				logrus.Warnf("end points: %v", app.GetEndpoints())
@@ -286,26 +281,12 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 				}
 
 				sd := &sequenceDiagParam{
-<<<<<<< HEAD
 					endpoints:   sdEndpoints,
-					epfmt:       SfmtEP(fmtEp),
-					appfmt:      SfmtApp(fmtApp),
-=======
-					endpoints: sdEndpoints,
-<<<<<<< HEAD
-					epfmt: SfmtEP(spEp.fmtEp),
-					appfmt: SfmtApp(spEp.fmtApp),
->>>>>>> Sysl generate sequence diagram
+					epfmt:       SfmtEP(spep.fmtEp),
+					appfmt:      SfmtApp(spapp.fmtApp),
 					activations: no_activations,
-					title:       "",
+					title:       spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), app.GetEndpoints()[k].GetLongName(), varrefs),
 					blackboxes:  append(bbs, bbs2...),
-=======
-					epfmt: SfmtEP(spep.fmtEp),
-					appfmt: SfmtApp(spapp.fmtApp),
-					activations: no_activations,
-					title: spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), app.GetEndpoints()[k].GetLongName(), varrefs),
-					blackboxes: append(bbs, bbs2...),
->>>>>>> Sysl generate sequence diagram
 				}
 				out, _ := generateSequenceDiag(mod, sd)
 				logrus.Warnf("out: %s", out)
@@ -318,18 +299,14 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 		if endpoints == nil {
 			return
 		}
+		spep := constructSimpleParser("", endpoint_format)
 
-		spEp := &SimpleParser{self: "%(appname)"}
+		spapp := constructSimpleParser("", app_format)
+
 		sd := &sequenceDiagParam{
-<<<<<<< HEAD
 			endpoints:   endpoints,
-			epfmt:       SfmtEP(fmtEp),
-			appfmt:      SfmtApp(fmtApp),
-=======
-			endpoints: endpoints,
-			epfmt: SfmtEP(spEp.fmtEp),
-			appfmt: SfmtApp(spEp.fmtApp),
->>>>>>> Sysl generate sequence diagram
+			epfmt:       SfmtEP(spep.fmtEp),
+			appfmt:      SfmtApp(spapp.fmtApp),
 			activations: no_activations,
 			title:       title,
 			blackboxes:  blackboxes,
@@ -339,4 +316,54 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 		logrus.Warnf("sd: %v", sd)
 		OutputPlantuml(output, plantuml, out)
 	}
+}
+
+// DoGenerateSequenceDiagrams generate sequence diagrams for the given model
+func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) int {
+	var endpoints_flag, apps_flag, blackboxes_flag, modules_flag arrayFlags
+	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
+	flags.Var(&endpoints_flag, "endpoint", "Include endpoint in sequence diagram")
+	flags.Var(&apps_flag, "app", "Include all endpoints for app in sequence diagram (currently "+
+		"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
+		"comma-list of shell globs) to limit the diagrams generated")
+	no_activations := flags.Bool("no-activations", true, "Suppress sequence diagram activation bars(default: true)")
+	endpoint_format := flags.String("endpoint_format", "%(epname)", "Specify the format string for sequence diagram endpoints. "+
+		"May include %%(epname), %%(eplongname) and %%(@foo) for attribute foo(default: %(epname))")
+	app_format := flags.String("app_format", "%(appname)", "Specify the format string for sequence diagram participants. "+
+		"May include %%(appname) and %%(@foo) for attribute foo(default: %(appname))")
+	flags.Var(&blackboxes_flag, "blackbox", "Apps to be treated as black boxes")
+	title := flags.String("title", "", "diagram title")
+	plantuml := flags.String("plantuml", "", strings.Join([]string{"base url of plantuml server",
+		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
+		"see http://plantuml.com/server.html#install for more info)"}, "\n"))
+	verbose := flags.Bool("verbose", false, "Report each output(default: false)")
+	expire_cache := flags.Bool("expire-cache", false, "Expire cache entries to force checking against real destination(default: false)")
+	dry_run := flags.Bool("dry-run", false, "Don't perform confluence uploads, but show what would have happened(default: false)")
+	filter := flags.String("filter", "", "Only generate diagrams whose output paths match a pattern")
+	flags.Var(&modules_flag, "modules", strings.Join([]string{"input files without .sysl extension and with leading /",
+		"eg: /project_dir/my_models",
+		"combine with --root if needed"}, "\n"))
+	output := flags.String("output", "%(epname).png", "output file(default: %(epname).png)")
+
+	flags.Parse(args[1:])
+	logrus.Warnf("root_model: %s\n", *root_model)
+	logrus.Warnf("endpoints: %v\n", endpoints_flag)
+	logrus.Warnf("app: %v\n", apps_flag)
+	logrus.Warnf("no_activations: %t\n", *no_activations)
+	logrus.Warnf("endpoint_format: %s\n", *endpoint_format)
+	logrus.Warnf("app_format: %s\n", *app_format)
+	logrus.Warnf("blackbox: %s\n", blackboxes_flag)
+	logrus.Warnf("title: %s\n", *title)
+	logrus.Warnf("plantuml: %s\n", *plantuml)
+	logrus.Warnf("verbose: %t\n", *verbose)
+	logrus.Warnf("expire_cache: %t\n", *expire_cache)
+	logrus.Warnf("dry_run: %t\n", *dry_run)
+	logrus.Warnf("filter: %s\n", *filter)
+	logrus.Warnf("modules: %s\n", modules_flag)
+	logrus.Warnf("output: %s\n", *output)
+
+	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *filter, *output, *no_activations,
+		*verbose, *expire_cache, *dry_run, endpoints_flag, apps_flag, modules_flag, parseBlackBoxesFromArgument(blackboxes_flag))
+
+	return 0
 }
