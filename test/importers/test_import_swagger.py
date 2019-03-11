@@ -68,7 +68,7 @@ paths:
           description: 200 OK
       parameters:
         - name: key
-          type: string
+          type: integer
           required: false
           in: header
         - name: min_date
@@ -95,7 +95,7 @@ SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL = r"""
         | No description.
 
     /test:
-        POST (createrequest <: SimpleObj [~body],key <: key [~header, ~optional, name="key"], min_date <: min_date [~header, ~required, name="min_date"]):
+        POST (createrequest <: SimpleObj [~body], key <: int [~header, ~optional, name="key"], min_date <: string [~header, ~required, name="min_date"]):
             | No description.
             return 200
 
@@ -104,12 +104,6 @@ SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL = r"""
 
     !type SimpleObj:
         name <: string?
-
-    !alias key:
-        string
-
-    !alias min_date:
-        string
 """
 
 SWAGGER_WITH_SYSL_KEYWORDS_EXAMPLE = r"""swagger: "2.0"

@@ -17,9 +17,7 @@ from sysl.util import writer
 from sysl.proto import sysl_pb2
 
 
-SWAGGER_FORMATS = {
-    'int32', 'int64', 'float', 'double', 'date', 'date-time',
-}
+SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time'}
 
 SYSL_TYPES = {
     'int32', 'int64', 'int', 'float', 'string',
@@ -147,6 +145,7 @@ class SwaggerTranslator:
         return re.sub(r'({[^/]*?})', self.javaParam, path)
 
     def translate(self, swag, appname, package, tag, w):
+        hasInfo = False
 
         if 'info' in swag:
             title = swag['info'].pop('title', '')
@@ -179,15 +178,13 @@ class SwaggerTranslator:
                 w()
                 w('{}:'.format(swag['basePath']))
                 with w.indent():
-                    alias = self.writeEndpoints(swag, w)
+                    self.writeEndpoints(swag, w)
             else:
-                alias = self.writeEndpoints(swag, w)
+                self.writeEndpoints(swag, w)
 
-            self.writeDefs(swag, tag, w, alias)
+            self.writeDefs(swag, tag, w)
 
     def writeEndpoints(self, swag, w):
-        alias = {}
-
         for (path, api) in sorted(swag['paths'].iteritems()):
             w(u'\n{}:', self.translate_path_template_params(path))
             with w.indent():
@@ -210,14 +207,15 @@ class SwaggerTranslator:
                             if '$ref' in param:
                                 headerParams.append(swag['parameters'][param['$ref'].rpartition('/')[2]])
 
-                    header, alias = self.getHeaders(headerParams)
+                    header = self.getHeaders(headerParams)
                     methodBody = self.getBody(bodyParams)
 
-                    paramStr = ' ({})'.format(methodBody + header)
                     if len(header) > 0 and len(methodBody) > 0:
-                        paramStr = ' ({})'.format(methodBody + ',' + header)
+                        paramStr = ' ({})'.format(methodBody + ', ' + header)
                     elif len(header) == 0 and len(methodBody) == 0:
                         paramStr = ''
+                    else:
+                        paramStr = ' ({})'.format(methodBody + header)
 
                     w(u'{}{}{}{}:',
                         method.upper(),
@@ -230,9 +228,8 @@ class SwaggerTranslator:
                                 body.get('description', 'No description.').strip(), 64):
                             w(u'| {}', line)
 
-                        responses = body['responses']
                         # Backwards compat: support integer response keys.
-                        responses = {str(k): v for (k, v) in responses.iteritems()}
+                        responses = {str(k): v for (k, v) in body['responses'].iteritems()}
 
                         # Valid keys of responses can be:
                         # - http status codes (I believe they must be string values, NOT integers, but spec is unclear).
@@ -256,9 +253,8 @@ class SwaggerTranslator:
 
                     if i < len(api) - 1:
                         w()
-        return alias
 
-    def writeDefs(self, swag, tag, w, alias):
+    def writeDefs(self, swag, tag, w):
         w()
         w('#' + '-' * 75)
         w('# definitions')
@@ -306,7 +302,6 @@ class SwaggerTranslator:
                     w(tspec.get('type'))
                 else:
                     externAlias['EXTERNAL_' + tname] = 'string'
-                    assert True, tspec
 
         index = 0
         while len(typeSpecList) > index:
@@ -334,7 +329,6 @@ class SwaggerTranslator:
 
             index += 1
 
-        self.writeAlias(alias, w)
         self.writeAlias(externAlias, w)
 
     def writeAlias(self, alias, w):
@@ -401,7 +395,7 @@ class SwaggerTranslator:
         elif (typ, fmt) == ('object', None):
             typeSpecList.append(TypeSpec(tspec, parentRef, typeRef))
             retVal = typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'
-            if ('properties' not in tspec):
+            if 'properties' not in tspec:
                 return r('EXTERNAL_' + retVal)
             return r(retVal)
 
@@ -419,18 +413,21 @@ class SwaggerTranslator:
 
     def getHeaders(self, headerParams):
         headerList = []
-        alias = {}
 
         for headerParam in headerParams:
             paramName = headerParam['name']
-            typeName = paramName.replace('-', '_')
-            if 'required' in headerParam and headerParam['required']:
-                headerList.append('{} <: {} [~header, ~required, name="{}"]'.format(typeName.lower(), typeName, paramName))
-            else:
-                headerList.append('{} <: {} [~header, ~optional, name="{}"]'.format(typeName.lower(), typeName, paramName))
-            alias[typeName] = headerParam['type']
+            typeName = 'string'
+            necessity = '~optional'
 
-        return ', '.join(headerList), alias
+            if 'required' in headerParam and headerParam['required']:
+                necessity = '~required'
+
+            if 'type' in headerParam:
+                typeName = TYPE_MAP[headerParam['type']]
+
+            headerList.append('{} <: {} [~header, {}, name="{}"]'.format(paramName.replace('-', '_').lower(), typeName, necessity, paramName))
+
+        return ', '.join(headerList)
 
     def getBody(self, bodyParams):
         if len(bodyParams) == 0:
