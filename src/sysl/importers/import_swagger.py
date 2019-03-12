@@ -72,7 +72,6 @@ METHOD_ORDER = {
 
 def parse_args(argv):
     p = argparse.ArgumentParser(description='Converts Swagger (aka Open API Specification) documents to a Sysl spec')
-    p.add_argument('--tag', help='Meta tag type. Default: json. Use "no-tag" to avoid tags')
     p.add_argument('swagger_path', help='path of input swagger document')
     p.add_argument('appname', help='appname')
     p.add_argument('package', help='package')
@@ -144,7 +143,7 @@ class SwaggerTranslator:
         # For some reason, we rename these params via javaParam
         return re.sub(r'({[^/]*?})', self.javaParam, path)
 
-    def translate(self, swag, appname, package, tag, w):
+    def translate(self, swag, appname, package, w):
         hasInfo = False
 
         if 'info' in swag:
@@ -182,7 +181,7 @@ class SwaggerTranslator:
             else:
                 self.writeEndpoints(swag, w)
 
-            self.writeDefs(swag, tag, w)
+            self.writeDefs(swag, w)
 
     def writeEndpoints(self, swag, w):
         for (path, api) in sorted(swag['paths'].iteritems()):
@@ -254,7 +253,7 @@ class SwaggerTranslator:
                     if i < len(api) - 1:
                         w()
 
-    def writeDefs(self, swag, tag, w):
+    def writeDefs(self, swag, w):
         w()
         w('#' + '-' * 75)
         w('# definitions')
@@ -273,7 +272,7 @@ class SwaggerTranslator:
                 requiredFields = tspec['required']
 
             with w.indent():
-                def getfields(fname, ftype, fdescr, tag, isArray=False):
+                def getfields(fname, ftype, fdescr, isArray=False):
                     fieldTemplate = '{} <: {}{}{}{}'
 
                     if isArray:
@@ -287,17 +286,17 @@ class SwaggerTranslator:
                     return fieldTemplate.format(
                         fname if fname not in SYSL_TYPES else fname + '_',
                         ftypeSyntax,
-                        ':' if len(fname) > 0 and (fdescr or tag) else '',
-                        self.getTag(fdescr, 'description'), self.getTag(fname, tag))
+                        ':' if len(fname) > 0 or fdescr is not None else '',
+                        self.getTag(fdescr, 'description'), self.getTag(fname, 'json_tag'))
 
                 if properties:
                     for (fname, fspec) in sorted(properties.iteritems()):
                         (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
-                        w(getfields(fname, ftype, fdescr, tag))
+                        w(getfields(fname, ftype, fdescr))
                 # handle top-level arrays
                 elif tspec.get('type') == 'array':
                     (ftype, fdescr) = self.parse_typespec(tspec, '', tname)
-                    w(getfields('', ftype, fdescr, tag, True))
+                    w(getfields('', ftype, fdescr, True))
                 elif 'enum' in tspec:
                     w(tspec.get('type'))
                 else:
@@ -317,10 +316,10 @@ class SwaggerTranslator:
                     for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
                         typeRef = typeSpecList[index].typeRef + \
                             '_' + typeSpecList[index].parentRef
-                        fields = '{} <: {}{}{}'.format(
+                        fields = '{} <: {}:{}'.format(
                             k if k not in SYSL_TYPES else k + '_',
                             self.parse_typespec(v, k, typeRef)[0],
-                            ':' if tag else '', self.getTag(k, tag))
+                            self.getTag(k, 'json_tag'))
                         w(fields)
             else:
                 w('!alias EXTERNAL_{}:', typeName)
@@ -407,8 +406,6 @@ class SwaggerTranslator:
     def getTag(self, tagName, tagType):
         if tagType is None or tagName is None:
             return ''
-        if tagType == 'json':
-            return '\n\t@json_tag = "{}"'.format(tagName)
         return '\n\t@{} = "{}"'.format(tagType, tagName)
 
     def getHeaders(self, headerParams):
@@ -449,14 +446,7 @@ def main():
     w = writer.Writer('sysl')
 
     translator = SwaggerTranslator(logger=make_default_logger())
-
-    tag = 'json'
-    if args.tag is not None:
-        tag = args.tag
-    if args.tag == 'no-tag':
-        tag = None
-
-    translator.translate(swag, args.appname, args.package, tag, w=w)
+    translator.translate(swag, args.appname, args.package, w=w)
 
     with open(args.outfile, 'w') as f_out:
         f_out.write(str(w))

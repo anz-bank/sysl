@@ -103,7 +103,8 @@ SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL = r"""
     # definitions
 
     !type SimpleObj:
-        name <: string?
+        name <: string?:
+        	@json_tag = "name"
 """
 
 SWAGGER_WITH_SYSL_KEYWORDS_EXAMPLE = r"""swagger: "2.0"
@@ -223,7 +224,8 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL = r"""
     # definitions
 
     !type Acknowledgement:
-        message <: string?
+        message <: string?:
+        	@json_tag = "message"
 """
 
 SWAGGER_OBJECT_WITH_A_REQUIRED_PROPERTY = r"""swagger: "2.0"
@@ -298,8 +300,10 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECT
     # definitions
 
     !type Goat:
-        birthday <: date?
-        name <: string?
+        birthday <: date?:
+        	@json_tag = "birthday"
+        name <: string?:
+        	@json_tag = "name"
 """
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE = r"""swagger: "2.0"
@@ -366,8 +370,10 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECT
     # definitions
 
     !type Goat:
-        birthday <: date?
-        name <: string?
+        birthday <: date?:
+        	@json_tag = "birthday"
+        name <: string?:
+        	@json_tag = "name"
 """
 
 
@@ -431,8 +437,10 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL = r"""
     # definitions
 
     !type Goat:
-        birthday <: date?
-        name <: string?
+        birthday <: date?:
+        	@json_tag = "birthday"
+        name <: string?:
+        	@json_tag = "name"
 """
 
 
@@ -606,7 +614,7 @@ def test_importing_simple_swagger_with_json_tags():
     swag = yaml.load(SIMPLE_SWAGGER_EXAMPLE)
     w = writer.Writer('sysl')
     t = SwaggerTranslator(logger=FakeLogger())
-    t.translate(swag, appname='', package='', tag='json', w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     assert 'name <: string?:\n        	@json_tag = "name"' in output
@@ -616,7 +624,7 @@ def test_importing_swagger_with_query_params():
     swag = yaml.load(SWAGGER_QUERY_PARAM_EXAMPLE)
     w = writer.Writer('sysl')
     t = SwaggerTranslator(logger=FakeLogger())
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     assert 'GET ?key=string?&min_date=string:' in output
@@ -626,7 +634,7 @@ def test_importing_swagger_with_header_body_params():
     swag = yaml.load(SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE)
     w = writer.Writer('sysl')
     t = SwaggerTranslator(logger=FakeLogger())
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     assert SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL in output
@@ -636,17 +644,18 @@ def test_importing_swagger_with_sysl_keywords():
     swag = yaml.load(SWAGGER_WITH_SYSL_KEYWORDS_EXAMPLE)
     w = writer.Writer('sysl')
     t = SwaggerTranslator(logger=FakeLogger())
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
-    assert 'date_ <: string?\n        string_ <: string?' in output
+    assert 'date_ <: string?' in output
+    assert 'string_ <: string?' in output
 
 
 def test_importing_swagger_array_type_with_example_produces_sysl_type():
     swag = yaml.load(SWAGGER_WITH_ARRAY_TYPE_WITH_EXAMPLE)
     w = writer.Writer('sysl')
     t = SwaggerTranslator(logger=FakeLogger())
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     expected_fragment = '    !type FruitBasket:\n        fruit <: sequence of EXTERNAL_FruitBasket_fruit_obj'
@@ -658,7 +667,7 @@ def test_importing_swagger_typeless_thing_with_items_produces_warning():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     expected_warnings = ['Ignoring unexpected "items". Schema has "items" but did not have defined "type". Note: {\'items\': {\'type\': \'object\'}}']
     assert logger.warnings == expected_warnings
 
@@ -668,7 +677,7 @@ def test_importing_swagger_propertyless_object_works_without_warnings():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     expected_fragment = '    !alias EXTERNAL_MysteriousObject:\n'
@@ -683,7 +692,7 @@ def test_importing_swagger_spec_with_a_path_works_without_warnings():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL in output
@@ -697,10 +706,10 @@ def test_importing_swagger_object_with_required_field_produces_sysl_type_with_re
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
-    expected_fragment = '!type Apple:\n        colour <: string\n'
+    expected_fragment = '!type Apple:\n        colour <: string:\n'
     assert expected_fragment in output
 
 
@@ -709,7 +718,7 @@ def test_import_of_swagger_path_that_returns_array_of_defined_object_type():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECTED_SYSL in output
 
@@ -722,7 +731,7 @@ def test_import_of_swagger_path_that_has_a_defined_201_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECTED_SYSL in output
 
@@ -735,7 +744,7 @@ def test_import_of_swagger_path_that_has_a_body_parameter():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL in output
@@ -750,7 +759,7 @@ def test_import_of_swagger_path_with_error_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE_EXPECTED_SYSL in output
 
@@ -763,7 +772,7 @@ def test_import_of_swagger_path_with_default_response_is_not_implemented():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
 
     expected_warnings = ['default responses and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
@@ -774,7 +783,7 @@ def test_import_of_swagger_path_with_x_dash_whatever_response_is_not_implemented
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
 
     expected_warnings = ['default responses and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
@@ -785,7 +794,7 @@ def test_import_of_swagger_path_with_description_only_200_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL in output
@@ -799,7 +808,7 @@ def test_import_of_swagger_path_with_description_only_201_response():
     w = writer.Writer('sysl')
     logger = FakeLogger()
     t = SwaggerTranslator(logger=logger)
-    t.translate(swag, appname='', package='', tag=None, w=w)
+    t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL in output
