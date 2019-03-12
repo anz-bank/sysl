@@ -29,12 +29,10 @@ func leInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(lhs.GetI() <= rhs.GetI())
 }
 
-func neInt64(lhs, rhs *sysl.Value) *sysl.Value {
-	return MakeValueBool(lhs.GetI() != rhs.GetI())
-}
-
-func neString(lhs, rhs *sysl.Value) *sysl.Value {
-	return MakeValueBool(lhs.GetS() != rhs.GetS())
+func not(f func(lhs, rhs *sysl.Value) *sysl.Value) func(lhs, rhs *sysl.Value) *sysl.Value {
+	return func(lhs, rhs *sysl.Value) *sysl.Value {
+		return MakeValueBool(!f(lhs, rhs).GetB())
+	}
 }
 
 func subInt64(lhs, rhs *sysl.Value) *sysl.Value {
