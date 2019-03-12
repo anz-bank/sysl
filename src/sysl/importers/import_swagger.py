@@ -279,7 +279,7 @@ class SwaggerTranslator:
                     if isArray:
                         fieldTemplate = '{}{}'
 
-                    if is_sysl_array_type(ftype) or ftype.endswith('*') or fname in requiredFields:
+                    if fname in requiredFields:
                         ftypeSyntax = ftype
                     else:
                         ftypeSyntax = ftype + '?'
@@ -321,9 +321,12 @@ class SwaggerTranslator:
                 with w.indent():
                     for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
                         typeRef = typeSpecList[index].typeRef + '_' + typeSpecList[index].parentRef
+                        ftypeSyntax = self.parse_typespec(v, k, typeRef)[0]
+                        if 'required' not in typeSpecList[index].element or k not in typeSpecList[index].element['required']:
+                            ftypeSyntax = ftypeSyntax + '?'
                         fields = '{} <: {}:'.format(
                             k if k not in SYSL_TYPES else k + '_',
-                            self.parse_typespec(v, k, typeRef)[0])
+                            ftypeSyntax)
                         w(fields)
                         with w.indent():
                             w(self.getTag(k, 'json_tag'))
