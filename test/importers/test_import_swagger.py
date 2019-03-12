@@ -104,7 +104,7 @@ SWAGGER_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL = r"""
 
     !type SimpleObj:
         name <: string?:
-        	@json_tag = "name"
+            @json_tag = "name"
 """
 
 SWAGGER_WITH_SYSL_KEYWORDS_EXAMPLE = r"""swagger: "2.0"
@@ -225,7 +225,7 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL = r"""
 
     !type Acknowledgement:
         message <: string?:
-        	@json_tag = "message"
+            @json_tag = "message"
 """
 
 SWAGGER_OBJECT_WITH_A_REQUIRED_PROPERTY = r"""swagger: "2.0"
@@ -301,9 +301,9 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECT
 
     !type Goat:
         birthday <: date?:
-        	@json_tag = "birthday"
+            @json_tag = "birthday"
         name <: string?:
-        	@json_tag = "name"
+            @json_tag = "name"
 """
 
 EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE = r"""swagger: "2.0"
@@ -371,9 +371,9 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECT
 
     !type Goat:
         birthday <: date?:
-        	@json_tag = "birthday"
+            @json_tag = "birthday"
         name <: string?:
-        	@json_tag = "name"
+            @json_tag = "name"
 """
 
 
@@ -438,9 +438,9 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL = r"""
 
     !type Goat:
         birthday <: date?:
-        	@json_tag = "birthday"
+            @json_tag = "birthday"
         name <: string?:
-        	@json_tag = "name"
+            @json_tag = "name"
 """
 
 
@@ -617,7 +617,7 @@ def test_importing_simple_swagger_with_json_tags():
     t.translate(swag, appname='', package='', w=w)
     output = str(w)
 
-    assert 'name <: string?:\n        	@json_tag = "name"' in output
+    assert 'name <: string?:\n            @json_tag = "name"' in output
 
 
 def test_importing_swagger_with_query_params():

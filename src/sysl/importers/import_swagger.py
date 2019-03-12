@@ -28,7 +28,8 @@ TYPE_MAP = {
     "string": "string",
     "boolean": "bool",
     "number": "float",
-    "integer": "int"
+    "integer": "int",
+    "date": "date"
 }
 
 
@@ -272,11 +273,11 @@ class SwaggerTranslator:
                 requiredFields = tspec['required']
 
             with w.indent():
-                def getfields(fname, ftype, fdescr, isArray=False):
-                    fieldTemplate = '{} <: {}{}{}{}'
+                def getfields(fname, ftype, isArray=False):
+                    fieldTemplate = '{} <: {}:'
 
                     if isArray:
-                        fieldTemplate = '{}{}{}{}'
+                        fieldTemplate = '{}{}'
 
                     if is_sysl_array_type(ftype) or ftype.endswith('*') or fname in requiredFields:
                         ftypeSyntax = ftype
@@ -285,18 +286,23 @@ class SwaggerTranslator:
 
                     return fieldTemplate.format(
                         fname if fname not in SYSL_TYPES else fname + '_',
-                        ftypeSyntax,
-                        ':' if len(fname) > 0 or fdescr is not None else '',
-                        self.getTag(fdescr, 'description'), self.getTag(fname, 'json_tag'))
+                        ftypeSyntax)
 
                 if properties:
                     for (fname, fspec) in sorted(properties.iteritems()):
                         (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
-                        w(getfields(fname, ftype, fdescr))
+                        w(getfields(fname, ftype))
+                        with w.indent():
+                            w(self.getTag(fname, 'json_tag'))
+                            if fdescr is not None and len(fdescr) > 0:
+                                w(self.getTag(fdescr, 'description'))
                 # handle top-level arrays
                 elif tspec.get('type') == 'array':
                     (ftype, fdescr) = self.parse_typespec(tspec, '', tname)
-                    w(getfields('', ftype, fdescr, True))
+                    w(getfields('', ftype, True))
+                    with w.indent():
+                        if fdescr is not None and len(fdescr) > 0:
+                            w(self.getTag(fdescr, 'description'))
                 elif 'enum' in tspec:
                     w(tspec.get('type'))
                 else:
@@ -314,13 +320,13 @@ class SwaggerTranslator:
                 w('!type {}:', typeName)
                 with w.indent():
                     for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
-                        typeRef = typeSpecList[index].typeRef + \
-                            '_' + typeSpecList[index].parentRef
-                        fields = '{} <: {}:{}'.format(
+                        typeRef = typeSpecList[index].typeRef + '_' + typeSpecList[index].parentRef
+                        fields = '{} <: {}:'.format(
                             k if k not in SYSL_TYPES else k + '_',
-                            self.parse_typespec(v, k, typeRef)[0],
-                            self.getTag(k, 'json_tag'))
+                            self.parse_typespec(v, k, typeRef)[0])
                         w(fields)
+                        with w.indent():
+                            w(self.getTag(k, 'json_tag'))
             else:
                 w('!alias EXTERNAL_{}:', typeName)
                 with w.indent():
@@ -406,7 +412,7 @@ class SwaggerTranslator:
     def getTag(self, tagName, tagType):
         if tagType is None or tagName is None:
             return ''
-        return '\n\t@{} = "{}"'.format(tagType, tagName)
+        return '@{} = "{}"'.format(tagType, tagName)
 
     def getHeaders(self, headerParams):
         headerList = []
