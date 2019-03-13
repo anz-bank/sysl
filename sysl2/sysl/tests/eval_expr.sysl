@@ -181,9 +181,10 @@ TransformApp:
         name = ep.value.method  + Join(ep.value.pathvars flatten(.name), "")
       )
       names = n flatten(.name)
-      listOfNumbers1 = [[1,2,3], [4,5,6]] flatten(.)
-      listOfNumbers2 = [{1,2,3}, {4,5,6}] flatten(.)
-      setOfNumbers1 = {{1,2,3}, {4,5,6}} flatten(.)
+      let two = 2
+      listOfNumbers1 = [[1,2,3], [4,5,6]] flatten(. + two)
+      listOfNumbers2 = [{1,2,3}, {4,5,6}] flatten(. * two)
+      setOfNumbers1 = {{1,2,3}, {4,5,6}} flatten(. * two)
     )
 
   !view Where(app <: sysl.App) -> int:
@@ -194,13 +195,14 @@ TransformApp:
       let fieldNames = app.types -> <set of name>(type:
         name = type.key
       )
-      Request = fieldNames where(.name == "Request")
+      let requestStr = "Request"
+      Request = fieldNames where(.name == requestStr)
 
       let listOfTypes = app.types -> <sequence of name>(type:
         name = type.key
       )
       ListofNames = listOfTypes
-      RequestFromList = listOfTypes where (.name == "Request")
+      RequestFromList = listOfTypes where (.name == requestStr)
       NotObjectAliases = app.alias where(.key != "Object")
     )
 

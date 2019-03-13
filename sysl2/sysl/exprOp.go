@@ -80,48 +80,44 @@ func cmpNullFalse(lhs, rhs *sysl.Value) *sysl.Value {
 }
 
 func flattenListMap(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
-		s[scopeVar] = l
-		appendItemToValueList(listResult.GetList(), Eval(txApp, &s, rhs))
+		(*assign)[scopeVar] = l
+		appendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
 	}
 	return listResult
 }
 
 func flattenListList(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetList().Value {
-			s[scopeVar] = ll
-			appendItemToValueList(listResult.GetList(), Eval(txApp, &s, rhs))
+			(*assign)[scopeVar] = ll
+			appendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
 		}
 	}
 	return listResult
 }
 
 func flattenListSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetSet().Value {
-			s[scopeVar] = ll
-			appendItemToValueList(listResult.GetList(), Eval(txApp, &s, rhs))
+			(*assign)[scopeVar] = ll
+			appendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
 		}
 	}
 	return listResult
 }
 
 func flattenSetMap(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
 		if l.GetMap() == nil {
 			panic(errors.Errorf("flattenSetMap: expecting map instead of %v ", l))
 		}
-		s[scopeVar] = l
-		res := Eval(txApp, &s, rhs)
+		(*assign)[scopeVar] = l
+		res := Eval(txApp, assign, rhs)
 		switch x := res.Value.(type) {
 		case *sysl.Value_Set:
 			for _, ll := range x.Set.Value {
@@ -135,12 +131,11 @@ func flattenSetMap(txApp *sysl.Application, assign *Scope, list *sysl.Value, sco
 }
 
 func flattenSetSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
 		for _, ll := range l.GetSet().Value {
-			s[scopeVar] = ll
-			appendItemToValueList(setResult.GetSet(), Eval(txApp, &s, rhs))
+			(*assign)[scopeVar] = ll
+			appendItemToValueList(setResult.GetSet(), Eval(txApp, assign, rhs))
 		}
 	}
 	return setResult
@@ -301,11 +296,10 @@ func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 }
 
 func whereSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
-		s[scopeVar] = l
-		predicate := Eval(txApp, &s, rhs)
+		(*assign)[scopeVar] = l
+		predicate := Eval(txApp, assign, rhs)
 		if predicate.GetB() {
 			appendItemToValueList(setResult.GetSet(), l)
 		}
@@ -314,12 +308,11 @@ func whereSet(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar
 }
 
 func whereList(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	listResult := MakeValueList()
 	logrus.Printf("scope: %s, list len: %d", scopeVar, len(list.GetList().Value))
 	for _, l := range list.GetList().Value {
-		s[scopeVar] = l
-		predicate := Eval(txApp, &s, rhs)
+		(*assign)[scopeVar] = l
+		predicate := Eval(txApp, assign, rhs)
 		if predicate.GetB() {
 			appendItemToValueList(listResult.GetList(), l)
 		}
@@ -328,15 +321,14 @@ func whereList(txApp *sysl.Application, assign *Scope, list *sysl.Value, scopeVa
 }
 
 func whereMap(txApp *sysl.Application, assign *Scope, map_ *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
-	s := Scope{}
 	mapResult := MakeValueMap()
 	logrus.Printf("scope: %s, list len: %d", scopeVar, len(map_.GetMap().Items))
 	for key, val := range map_.GetMap().Items {
 		m := MakeValueMap()
 		addItemToValueMap(m, "key", MakeValueString(key))
 		addItemToValueMap(m, "value", val)
-		s[scopeVar] = m
-		predicate := Eval(txApp, &s, rhs)
+		(*assign)[scopeVar] = m
+		predicate := Eval(txApp, assign, rhs)
 		if predicate.GetB() {
 			addItemToValueMap(mapResult, key, val)
 		}

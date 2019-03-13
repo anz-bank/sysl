@@ -372,12 +372,15 @@ func TestEvalFlatten(t *testing.T) {
 
 	numbers1 := out.GetMap().Items["listOfNumbers1"].GetList().Value
 	assert.Equal(t, 6, len(numbers1))
+	assert.Equal(t, int64(3), numbers1[0].GetI())
 
 	numbers2 := out.GetMap().Items["listOfNumbers2"].GetList().Value
 	assert.Equal(t, 6, len(numbers2))
+	assert.Equal(t, int64(2), numbers2[0].GetI())
 
 	numbers3 := out.GetMap().Items["setOfNumbers1"].GetSet().Value
 	assert.Equal(t, 6, len(numbers3))
+	assert.Equal(t, int64(2), numbers3[0].GetI())
 }
 
 func TestEvalWhere(t *testing.T) {

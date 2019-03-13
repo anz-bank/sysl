@@ -113,9 +113,16 @@ func (op Eval_LHS_Over_RhsStrategy) eval(txApp *sysl.Application, assign *Scope,
 	vType := getValueType(lhs_v)
 	itemType := getContainedType(lhs_v)
 	key := makeKey(binexpr.Op, vType, itemType)
-
+	scopeVarValue, hasScopeVar := (*assign)[binexpr.Scopevar]
 	if f, has := exprFunctions[key]; has {
-		return f(txApp, assign, lhs_v, binexpr.Scopevar, binexpr.Rhs)
+		var result *sysl.Value
+
+		result = f(txApp, assign, lhs_v, binexpr.Scopevar, binexpr.Rhs)
+		delete(*assign, binexpr.Scopevar)
+		if hasScopeVar {
+			(*assign)[binexpr.Scopevar] = scopeVarValue
+		}
+		return result
 	}
 	panic(errors.Errorf("Unsupported operation: Cannot Execute %s", key))
 }
