@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	sd "sysl/sysl2/sysl/sequence_diagram"
 
 	"github.com/anz-bank/sysl/src/proto"
 	"github.com/sirupsen/logrus"
@@ -776,35 +777,11 @@ func loadApp(root string, models []string) *sysl.Module {
 	return nil
 }
 
-func transformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {
-	bbs := [][]string{}
-	for _, vals := range blackboxes {
-		sub_bbs := []string{}
-		for _, val := range vals.GetA().Elt {
-			sub_bbs = append(sub_bbs, val.GetS())
-		}
-		bbs = append(bbs, sub_bbs)
-	}
-
-	return bbs
-}
-
-func parseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
-	bbs := [][]string{}
-	for _, blackboxFlag := range blackboxFlags {
-		sub_bbs := []string{}
-		sub_bbs = append(sub_bbs, strings.Split(blackboxFlag, ",")...)
-		bbs = append(bbs, sub_bbs)
-	}
-
-	return bbs
-}
-
 func (sp *SimpleParser) fmtEp(p *epFmtParam) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := sd.FindMatchItems(initialStr)
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := sd.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "epname":
@@ -827,14 +804,14 @@ func (sp *SimpleParser) fmtEp(p *epFmtParam) string {
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
+	return sd.RemovePercentSymbol(initialStr)
 }
 
 func (sp *SimpleParser) fmtApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := sd.FindMatchItems(initialStr)
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := sd.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "appname":
@@ -847,14 +824,14 @@ func (sp *SimpleParser) fmtApp(appname, controls string, attrs map[string]*sysl.
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
+	return sd.RemovePercentSymbol(initialStr)
 }
 
 func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := sd.FindMatchItems(initialStr)
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := sd.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "epname":
@@ -867,15 +844,15 @@ func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
+	return sd.RemovePercentSymbol(initialStr)
 }
 
 func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := sd.FindMatchItems(initialStr)
 
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := sd.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "appname":
@@ -890,22 +867,7 @@ func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
-}
-
-func findMatchItems(origin string) []string {
-	re := regexp.MustCompile(`(%\(\w+\))`)
-	return re.FindAllString(origin, -1)
-}
-
-func removeWrapper(origin string) string {
-	replaced := strings.Replace(origin, "%(", "", 1)
-	replaced = strings.Replace(replaced, ")", "", 1)
-	return replaced
-}
-
-func removePercentSymbol(origin string) string {
-	return strings.Replace(origin, "%", "", -1)
+	return sd.RemovePercentSymbol(initialStr)
 }
 
 func constructSimpleParser(former, latter string) *SimpleParser {
@@ -915,18 +877,6 @@ func constructSimpleParser(former, latter string) *SimpleParser {
 	}
 
 	return &SimpleParser{self: fmtstr}
-}
-
-func mergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Attribute {
-	result := make(map[string]*sysl.Attribute)
-	for k, v := range app {
-		result[k] = v
-	}
-	for k, v := range edpnt {
-		result[k] = v
-	}
-
-	return result
 }
 
 func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title, plantuml, filter, output string,
@@ -945,7 +895,7 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 		spout := &SimpleParser{self: output}
 		for _, appName := range apps {
 			app := mod.Apps[appName]
-			bbs := transformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
+			bbs := sd.TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
 			spseqtitle := constructSimpleParser(app.GetAttrs()["seqtitle"].GetS(), title)
 			spep := constructSimpleParser(app.GetAttrs()["epfmt"].GetS(), endpoint_format)
 			spapp := constructSimpleParser(app.GetAttrs()["appfmt"].GetS(), app_format)
@@ -966,8 +916,8 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 
 				epAttrs := app.GetEndpoints()[k].GetAttrs()
 				output_dir := spout.fmtOutput(appName, k, app.GetEndpoints()[k].GetLongName(), epAttrs)
-				bbs2 := transformBlackBoxes(app.GetEndpoints()[k].GetAttrs()["blackboxes"].GetA().GetElt())
-				varrefs := mergeAttributes(app.GetAttrs(), app.GetEndpoints()[k].GetAttrs())
+				bbs2 := sd.TransformBlackBoxes(app.GetEndpoints()[k].GetAttrs()["blackboxes"].GetA().GetElt())
+				varrefs := sd.MergeAttributes(app.GetAttrs(), app.GetEndpoints()[k].GetAttrs())
 				sdEndpoints := []string{}
 				statements := app.GetEndpoints()[k].GetStmt()
 				for _, stmt := range statements {
@@ -1034,7 +984,10 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 		"combine with --root if needed"}, "\n"))
 	output := flags.String("output", "%(epname).png", "output file(default: %(epname).png)")
 
-	flags.Parse(args[1:])
+	err := flags.Parse(args[1:])
+	if err != nil {
+		logrus.Errorf("arguments parse error: %v", err)
+	}
 	logrus.Warnf("root_model: %s\n", *root_model)
 	logrus.Warnf("endpoints: %v\n", endpoints_flag)
 	logrus.Warnf("app: %v\n", apps_flag)
@@ -1052,7 +1005,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	logrus.Warnf("output: %s\n", *output)
 
 	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *filter, *output, *no_activations,
-		*verbose, *expire_cache, *dry_run, endpoints_flag, apps_flag, modules_flag, parseBlackBoxesFromArgument(blackboxes_flag))
+		*verbose, *expire_cache, *dry_run, endpoints_flag, apps_flag, modules_flag, sd.ParseBlackBoxesFromArgument(blackboxes_flag))
 
 	return 0
 }
