@@ -1,0 +1,4 @@
+# ./sd -app Project -output "sysl-sd-%(epname)".png -modules ./test/sysl-sd.sysl
+Database[~db]:
+    QueryUser (user_id):
+        Return User
