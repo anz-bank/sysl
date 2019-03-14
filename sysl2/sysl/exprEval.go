@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr_Transform) *sysl.Value {
+func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_Transform) *sysl.Value {
 	result := MakeValueMap()
 
 	for _, s := range tform.Stmt {
@@ -17,7 +17,7 @@ func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr
 		case *sysl.Expr_Transform_Stmt_Let:
 			logrus.Infof("Evaluating var %s", ss.Let.Name)
 			res := Eval(txApp, assign, ss.Let.Expr)
-			(*assign)[ss.Let.Name] = res
+			assign[ss.Let.Name] = res
 			logrus.Debugf("Eval Result %s =: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
 			logrus.Infof("Evaluating %s", ss.Assign.Name)
@@ -30,24 +30,24 @@ func evalTransformStmts(txApp *sysl.Application, assign *Scope, tform *sysl.Expr
 	return result
 }
 
-func evalTransformUsingValueList(txApp *sysl.Application, x *sysl.Expr_Transform, assign *Scope, v []*sysl.Value) []*sysl.Value {
+func evalTransformUsingValueList(txApp *sysl.Application, x *sysl.Expr_Transform, assign Scope, v []*sysl.Value) []*sysl.Value {
 	listResult := []*sysl.Value{}
 	scopeVar := x.Scopevar
 	logrus.Infof("Scopevar: %s", scopeVar)
 
 	for _, svar := range v {
-		(*assign)[scopeVar] = svar
+		assign[scopeVar] = svar
 		res := evalTransformStmts(txApp, assign, x)
 		listResult = append(listResult, res)
 	}
-	delete(*assign, scopeVar)
+	delete(assign, scopeVar)
 	logrus.Debugf("Transform Result (As List/Set): %v", listResult)
 	return listResult
 }
 
 // Eval expr
 // TODO: Add type checks
-func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
+func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
 	switch x := e.Expr.(type) {
 	case *sysl.Expr_Transform_:
 		logrus.Debugf("Evaluating Transform:\tRet Type: %v", e.Type)
@@ -57,10 +57,10 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			return nil
 		}
 		argValue := Eval(txApp, assign, arg)
-		dotValue, hasDot := (*assign)["."]
+		dotValue, hasDot := assign["."]
 		defer func() {
 			if hasDot {
-				(*assign)["."] = dotValue
+				assign["."] = dotValue
 			}
 		}()
 
@@ -95,11 +95,11 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 					logrus.Debugf("Evaluation Argvalue as a map: key=(%s), value=(%v)\n", key, item)
 					addItemToValueMap(a, "key", MakeValueString(key))
 					addItemToValueMap(a, "value", item)
-					(*assign)[scopeVar] = a
+					assign[scopeVar] = a
 					res := evalTransformStmts(txApp, assign, x.Transform)
 					appendItemToValueList(resultList, res)
 				}
-				delete(*assign, scopeVar)
+				delete(assign, scopeVar)
 				if e.Type.GetSet() != nil {
 					return &sysl.Value{
 						Value: &sysl.Value_Set{
@@ -114,9 +114,9 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 				}
 			}
 			logrus.Debugf("Argvalue: %v", argValue)
-			(*assign)[scopeVar] = argValue
+			assign[scopeVar] = argValue
 			res := evalTransformStmts(txApp, assign, x.Transform)
-			delete(*assign, scopeVar)
+			delete(assign, scopeVar)
 			logrus.Debugf("Transform Result: %v", res)
 			return res
 		}
@@ -139,7 +139,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 			if callTransform.Expr.Type == nil {
 				callTransform.Expr.Type = callTransform.RetType
 			}
-			return Eval(txApp, &callScope, callTransform.Expr)
+			return Eval(txApp, callScope, callTransform.Expr)
 		} else if strings.HasPrefix(x.Call.Func, ".") {
 			switch x.Call.Func[1:] {
 			case "count":
@@ -160,7 +160,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 		}
 		return evalGoFunc(x.Call.Func, list)
 	case *sysl.Expr_Name:
-		val, has := (*assign)[x.Name]
+		val, has := assign[x.Name]
 		if !has {
 			logrus.Errorf("Key: %s does not exist in scope", x.Name)
 		}
@@ -218,7 +218,7 @@ func Eval(txApp *sysl.Application, assign *Scope, e *sysl.Expr) *sysl.Value {
 }
 
 // EvalView evaluate the view using the Scope
-func EvalView(mod *sysl.Module, appName, viewName string, s *Scope) *sysl.Value {
+func EvalView(mod *sysl.Module, appName, viewName string, s Scope) *sysl.Value {
 	txApp := mod.Apps[appName]
 	view := txApp.Views[viewName]
 	if view.Expr.Type == nil {
