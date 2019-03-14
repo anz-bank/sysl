@@ -147,11 +147,8 @@ class SwaggerTranslator:
     def translate(self, swag, appname, package, w):
         hasInfo = False
 
-        if 'info' in swag:
-            title = swag['info'].pop('title', '')
-            hasInfo = True
-        else:
-            title = ''
+        hasInfo = 'info' in swag
+        title = swag['info'].pop('title', '') if hasInfo else ''
 
         w(u'{}{} [package={}]:',
             appname, title and ' ' + json.dumps(title), json.dumps(package))
@@ -192,23 +189,18 @@ class SwaggerTranslator:
                     del api['parameters']
                 for (i, (method, body)) in enumerate(sorted(api.iteritems(),
                                                             key=lambda t: METHOD_ORDER[t[0]])):
-                    qparams = []
-                    headerParams = []
-                    bodyParams = []
+                    params = {where: [] for where in ['query', 'body', 'header']}
 
                     if 'parameters' in body:
                         for param in body['parameters']:
-                            if param.get('in') == 'query':
-                                qparams.append(param)
-                            if param.get('in') == 'body':
-                                bodyParams.append(param)
-                            if param.get('in') == 'header':
-                                headerParams.append(param)
+                            paramIn = param.get('in')
+                            if paramIn and paramIn != 'path':
+                                params[paramIn].append(param)
                             if '$ref' in param:
-                                headerParams.append(swag['parameters'][param['$ref'].rpartition('/')[2]])
+                                params['header'].append(swag['parameters'][param['$ref'].rpartition('/')[2]])
 
-                    header = self.getHeaders(headerParams)
-                    methodBody = self.getBody(bodyParams)
+                    header = self.getHeaders(params['header'])
+                    methodBody = self.getBody(params['body'])
 
                     if len(header) > 0 and len(methodBody) > 0:
                         paramStr = ' ({})'.format(methodBody + ', ' + header)
@@ -219,9 +211,11 @@ class SwaggerTranslator:
 
                     w(u'{}{}{}{}:',
                         method.upper(),
-                        ' ?' if qparams else '',
-                        '&'.join('{}={}{}'.format(
-                            p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')for p in qparams),
+                        ' ?' if params['query'] else '',
+                        '&'.join(
+                            '{}={}{}'.format(p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
+                            for p in params['query']
+                        ),
                         paramStr)
                     with w.indent():
                         for line in textwrap.wrap(
@@ -239,11 +233,12 @@ class SwaggerTranslator:
 
                         returnValues = OrderedDict()
                         for key in sorted(responses):
-                            if 'schema' in responses[key]:
-                                if 'type' in responses[key]['schema'] and responses[key]['schema']['type'] == 'array':
-                                    returnValues['sequence of ' + responses[key]['schema']['items']['$ref'].rpartition('/')[2]] = True
+                            schema = responses.get(key, {}).get('schema')
+                            if schema is not None:
+                                if schema.get('type') == 'array':
+                                    returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
                                 else:
-                                    returnValues[responses[key]['schema']['$ref'].rpartition('/')[2]] = True
+                                    returnValues[schema['$ref'].rpartition('/')[2]] = True
                             else:
                                 returnValues[', '.join(responses.keys())] = True
                             if key == 'default' or key.startswith('x-'):
@@ -275,13 +270,11 @@ class SwaggerTranslator:
             with w.indent():
                 def getfields(fname, ftype, isArray=False):
                     fieldTemplate = '{} <: {}:'
+                    ftypeSyntax = ftype
 
                     if isArray:
                         fieldTemplate = '{}{}'
-
-                    if fname in requiredFields:
-                        ftypeSyntax = ftype
-                    else:
+                    elif fname not in requiredFields:
                         ftypeSyntax = ftype + '?'
 
                     return fieldTemplate.format(
@@ -425,7 +418,7 @@ class SwaggerTranslator:
             typeName = 'string'
             necessity = '~optional'
 
-            if 'required' in headerParam and headerParam['required']:
+            if headerParam.get('required'):
                 necessity = '~required'
 
             if 'type' in headerParam:
