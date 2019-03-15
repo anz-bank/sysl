@@ -6,8 +6,8 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"sysl/sysl2/sysl/seqs"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	"github.com/anz-bank/sysl/src/proto"
 	log "github.com/sirupsen/logrus"
 )
