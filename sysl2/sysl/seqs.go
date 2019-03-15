@@ -4,13 +4,12 @@ import (
 	"flag"
 	"io"
 	"os"
-	"regexp"
 	"sort"
 	"strings"
+	"sysl/sysl2/sysl/seqs"
 
 	"github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 type SimpleParser struct {
@@ -18,7 +17,8 @@ type SimpleParser struct {
 }
 
 type sequenceDiagParam struct {
-	seqs.Labeler
+	seqs.AppLabeler
+	seqs.EndpointLabeler
 	endpoints  []string
 	title      string
 	blackboxes [][]string
@@ -27,7 +27,7 @@ type sequenceDiagParam struct {
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
 	w := seqs.MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 
-	v := seqs.MakeSequenceDiagramVisitor(p.Labeler, w, m)
+	v := seqs.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
 
 	e := seqs.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 
@@ -38,10 +38,12 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 
 type arrayFlags []string
 
+// implement the String method of Value interface in flag.go
 func (i *arrayFlags) String() string {
 	return strings.Join(*i, ",")
 }
 
+// implement the Set method of Value interface in flag.go
 func (i *arrayFlags) Set(value string) error {
 	*i = append(*i, value)
 	return nil
@@ -58,70 +60,45 @@ func loadApp(root string, models []string) *sysl.Module {
 	if err == nil {
 		return mod
 	}
-	logrus.Errorf("unable to load module:\n\troot: " + root + "\n\tmodel:" + model)
+	log.Errorf("unable to load module:\n\troot: " + root + "\n\tmodel:" + model)
 	return nil
 }
 
-func transformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {
-	bbs := [][]string{}
-	logrus.Warnf("transform blackboxes: %v", blackboxes)
-	for _, vals := range blackboxes {
-		sub_bbs := []string{}
-		for _, val := range vals.GetA().Elt {
-			sub_bbs = append(sub_bbs, val.GetS())
-		}
-		bbs = append(bbs, sub_bbs)
-	}
-
-	return bbs
-}
-
-func parseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
-	bbs := [][]string{}
-	for _, blackboxFlag := range blackboxFlags {
-		sub_bbs := []string{}
-		sub_bbs = append(sub_bbs, strings.Split(blackboxFlag, ",")...)
-		bbs = append(bbs, sub_bbs)
-	}
-
-	return bbs
-}
-
-func (sp *SimpleParser) fmtEp(p *epFmtParam) string {
+func (sp *SimpleParser) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := seqs.FindMatchItems(initialStr)
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := seqs.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "epname":
-			value = p.epname
+			value = p.EndpointName
 		case "human":
-			value = p.human
+			value = p.Human
 		case "human_sender":
-			value = p.human_sender
+			value = p.HumanSender
 		case "needs_int":
-			value = p.needs_int
+			value = p.NeedsInt
 		case "args":
-			value = p.args
+			value = p.Args
 		case "patterns":
-			value = p.patterns
+			value = p.Patterns
 		case "controls":
-			value = p.controls
+			value = p.Controls
 		default:
-			value = p.attrs[attr].GetS()
+			value = p.Attrs[attr].GetS()
 		}
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
+	return seqs.RemovePercentSymbol(initialStr)
 }
 
-func (sp *SimpleParser) fmtApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
+func (sp *SimpleParser) LabelApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := seqs.FindMatchItems(initialStr)
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := seqs.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "appname":
@@ -134,14 +111,14 @@ func (sp *SimpleParser) fmtApp(appname, controls string, attrs map[string]*sysl.
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
+	return seqs.RemovePercentSymbol(initialStr)
 }
 
 func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := seqs.FindMatchItems(initialStr)
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := seqs.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "epname":
@@ -154,15 +131,15 @@ func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
+	return seqs.RemovePercentSymbol(initialStr)
 }
 
 func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := findMatchItems(initialStr)
+	matchItems := seqs.FindMatchItems(initialStr)
 
 	for _, item := range matchItems {
-		attr := removeWrapper(item)
+		attr := seqs.RemoveWrapper(item)
 		var value string
 		switch attr {
 		case "appname":
@@ -177,22 +154,7 @@ func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[
 		initialStr = strings.Replace(initialStr, item, value, 1)
 	}
 
-	return removePercentSymbol(initialStr)
-}
-
-func findMatchItems(origin string) []string {
-	re := regexp.MustCompile(`(%\(\w+\))`)
-	return re.FindAllString(origin, -1)
-}
-
-func removeWrapper(origin string) string {
-	replaced := strings.Replace(origin, "%(", "", 1)
-	replaced = strings.Replace(replaced, ")", "", 1)
-	return replaced
-}
-
-func removePercentSymbol(origin string) string {
-	return strings.Replace(origin, "%", "", -1)
+	return seqs.RemovePercentSymbol(initialStr)
 }
 
 func constructSimpleParser(former, latter string) *SimpleParser {
@@ -202,18 +164,6 @@ func constructSimpleParser(former, latter string) *SimpleParser {
 	}
 
 	return &SimpleParser{self: fmtstr}
-}
-
-func mergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Attribute {
-	result := make(map[string]*sysl.Attribute)
-	for k, v := range app {
-		result[k] = v
-	}
-	for k, v := range edpnt {
-		result[k] = v
-	}
-
-	return result
 }
 
 func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title, plantuml, filter, output string,
@@ -227,34 +177,24 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 	} else {
 		epFilters = append(epFilters, "*")
 	}
-	logrus.Warnf("mod: %v", mod)
 
 	if strings.Contains(output, "%(epname)") {
 		spout := &SimpleParser{self: output}
 		for _, appName := range apps {
 			app := mod.Apps[appName]
-
-			bbs := transformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
-			logrus.Warnf("bbs: %v", bbs)
-
+			bbs := seqs.TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
 			spseqtitle := constructSimpleParser(app.GetAttrs()["seqtitle"].GetS(), title)
-
 			spep := constructSimpleParser(app.GetAttrs()["epfmt"].GetS(), endpoint_format)
-
 			spapp := constructSimpleParser(app.GetAttrs()["appfmt"].GetS(), app_format)
-
 			keys := []string{}
 			for k := range app.GetEndpoints() {
 				keys = append(keys, k)
 			}
 			sort.Strings(keys)
 			for _, k := range keys {
-				logrus.Warnf("key: %s", k)
-				logrus.Warnf("val: %v", app.GetEndpoints()[k])
-
 				is_continue := false
 				for _, filt := range epFilters {
-					logrus.Warn(filt)
+					log.Warn(filt)
 				}
 
 				if is_continue {
@@ -262,18 +202,11 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 				}
 
 				epAttrs := app.GetEndpoints()[k].GetAttrs()
-
 				output_dir := spout.fmtOutput(appName, k, app.GetEndpoints()[k].GetLongName(), epAttrs)
-
-				bbs2 := transformBlackBoxes(app.GetEndpoints()[k].GetAttrs()["blackboxes"].GetA().GetElt())
-				logrus.Warnf("bbs2: %v", bbs2)
-				logrus.Warnf("union bbs: %v", append(bbs, bbs2...))
-
-				varrefs := mergeAttributes(app.GetAttrs(), app.GetEndpoints()[k].GetAttrs())
-
+				bbs2 := seqs.TransformBlackBoxes(app.GetEndpoints()[k].GetAttrs()["blackboxes"].GetA().GetElt())
+				varrefs := seqs.MergeAttributes(app.GetAttrs(), app.GetEndpoints()[k].GetAttrs())
 				sdEndpoints := []string{}
 				statements := app.GetEndpoints()[k].GetStmt()
-				logrus.Warnf("end points: %v", app.GetEndpoints())
 				for _, stmt := range statements {
 					parts := stmt.GetCall().GetTarget().GetPart()
 					ep := stmt.GetCall().GetEndpoint()
@@ -282,17 +215,13 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 
 				sd := &sequenceDiagParam{
 					endpoints:   sdEndpoints,
-					epfmt:       SfmtEP(spep.fmtEp),
-					appfmt:      SfmtApp(spapp.fmtApp),
-					activations: no_activations,
+					AppLabeler:  spapp,
+					EndpointLabeler: spep,
 					title:       spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), app.GetEndpoints()[k].GetLongName(), varrefs),
 					blackboxes:  append(bbs, bbs2...),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
-				logrus.Warnf("out: %s", out)
-
-				logrus.Warnf("output_dir: %s", output_dir)
-				OutputPlantuml(output_dir, plantuml, out)
+				seqs.OutputPlantuml(output_dir, plantuml, out)
 			}
 		}
 	} else {
@@ -300,21 +229,16 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 			return
 		}
 		spep := constructSimpleParser("", endpoint_format)
-
 		spapp := constructSimpleParser("", app_format)
-
 		sd := &sequenceDiagParam{
 			endpoints:   endpoints,
-			epfmt:       SfmtEP(spep.fmtEp),
-			appfmt:      SfmtApp(spapp.fmtApp),
-			activations: no_activations,
+			AppLabeler:  spapp,
+			EndpointLabeler: spep,
 			title:       title,
 			blackboxes:  blackboxes,
 		}
 		out, _ := generateSequenceDiag(mod, sd)
-
-		logrus.Warnf("sd: %v", sd)
-		OutputPlantuml(output, plantuml, out)
+		seqs.OutputPlantuml(output, plantuml, out)
 	}
 }
 
@@ -345,25 +269,28 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 		"combine with --root if needed"}, "\n"))
 	output := flags.String("output", "%(epname).png", "output file(default: %(epname).png)")
 
-	flags.Parse(args[1:])
-	logrus.Warnf("root_model: %s\n", *root_model)
-	logrus.Warnf("endpoints: %v\n", endpoints_flag)
-	logrus.Warnf("app: %v\n", apps_flag)
-	logrus.Warnf("no_activations: %t\n", *no_activations)
-	logrus.Warnf("endpoint_format: %s\n", *endpoint_format)
-	logrus.Warnf("app_format: %s\n", *app_format)
-	logrus.Warnf("blackbox: %s\n", blackboxes_flag)
-	logrus.Warnf("title: %s\n", *title)
-	logrus.Warnf("plantuml: %s\n", *plantuml)
-	logrus.Warnf("verbose: %t\n", *verbose)
-	logrus.Warnf("expire_cache: %t\n", *expire_cache)
-	logrus.Warnf("dry_run: %t\n", *dry_run)
-	logrus.Warnf("filter: %s\n", *filter)
-	logrus.Warnf("modules: %s\n", modules_flag)
-	logrus.Warnf("output: %s\n", *output)
+	err := flags.Parse(args[1:])
+	if err != nil {
+		log.Errorf("arguments parse error: %v", err)
+	}
+	log.Warnf("root_model: %s\n", *root_model)
+	log.Warnf("endpoints: %v\n", endpoints_flag)
+	log.Warnf("app: %v\n", apps_flag)
+	log.Warnf("no_activations: %t\n", *no_activations)
+	log.Warnf("endpoint_format: %s\n", *endpoint_format)
+	log.Warnf("app_format: %s\n", *app_format)
+	log.Warnf("blackbox: %s\n", blackboxes_flag)
+	log.Warnf("title: %s\n", *title)
+	log.Warnf("plantuml: %s\n", *plantuml)
+	log.Warnf("verbose: %t\n", *verbose)
+	log.Warnf("expire_cache: %t\n", *expire_cache)
+	log.Warnf("dry_run: %t\n", *dry_run)
+	log.Warnf("filter: %s\n", *filter)
+	log.Warnf("modules: %s\n", modules_flag)
+	log.Warnf("output: %s\n", *output)
 
 	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *filter, *output, *no_activations,
-		*verbose, *expire_cache, *dry_run, endpoints_flag, apps_flag, modules_flag, parseBlackBoxesFromArgument(blackboxes_flag))
+		*verbose, *expire_cache, *dry_run, endpoints_flag, apps_flag, modules_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
 
 	return 0
 }

@@ -1,23 +1,35 @@
 package main
 
 import (
+	"bytes"
+	"flag"
+	"os"
+	"reflect"
 	"testing"
-
+	"sysl/sysl2/sysl/seqs"
 	"github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
 )
 
+type labeler struct {
+
+}
+
+func (l *labeler) LabelApp(appName, controls string, attrs map[string]*sysl.Attribute) string  {
+	return appName
+}
+
+func (l *labeler) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
+	return p.EndpointName
+}
+
 func TestGenerateSequenceDiag(t *testing.T) {
 	m, _ := Parse("demo/simple/sysl-sd.sysl", "../../")
+	l := &labeler{}
 	p := &sequenceDiagParam{}
 	p.endpoints = []string{"WebFrontend <- RequestProfile"}
-	p.epfmt = func(ep *epFmtParam) string {
-		return ep.epname
-	}
-	p.appfmt = func(appname, controls string, attrs map[string]*sysl.Attribute) string {
-		return appname
-	}
-	p.activations = true
+	p.AppLabeler = l
+	p.EndpointLabeler = l
 	p.title = "Profile"
 	r, err := generateSequenceDiag(m, p)
 
@@ -52,4 +64,389 @@ deactivate _0
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, r)
+}
+
+func TestArrayFlagsString(t *testing.T) {
+	tests := []struct {
+		name string
+		i    *arrayFlags
+		want string
+	}{
+		{
+			name: "Success",
+			i: &arrayFlags{"FlagA"},
+			want: "FlagA",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.i.String(); got != tt.want {
+				t.Errorf("arrayFlags.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestArrayFlagsSet(t *testing.T) {
+	type args struct {
+		value string
+	}
+	tests := []struct {
+		name    string
+		i       *arrayFlags
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "",
+			i: &arrayFlags{"FlagA"},
+			args: args{"FlagB"},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := tt.i.Set(tt.args.value); (err != nil) != tt.wantErr {
+				t.Errorf("arrayFlags.Set() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+type loadAppArgs struct {
+	root   string
+	models []string
+}
+
+func TestLoadAppReturnError(t *testing.T)  {
+	test := loadAppArgs {
+		"../../demo/simple/", []string{},
+	}
+	mod := loadApp(test.root, test.models)
+	assert.Nil(t, mod)
+}
+
+func TestLoadApp(t *testing.T) {
+	test := loadAppArgs {
+		"./tests/", []string{"test-sd.sysl"},
+	}
+	mod := loadApp(test.root, test.models)
+	assert.NotNil(t, mod)
+	apps := mod.GetApps()
+	app := apps["Database"]
+	assert.Equal(t, []string{"Database"}, app.GetName().GetPart())
+	var expectedPatterns []string
+	for _, val := range app.GetAttrs()["patterns"].GetA().GetElt()  {
+		expectedPatterns = append(expectedPatterns, val.GetS())
+	}
+	assert.Equal(t, []string{"db"}, expectedPatterns)
+	var expectedParams []string
+	for _, val := range app.GetEndpoints()["QueryUser"].GetParam() {
+		expectedParams = append(expectedParams, val.GetName())
+	}
+	assert.Equal(t, []string{"user_id"}, expectedParams)
+}
+
+//func TestSimpleParserFmtEp(t *testing.T) {
+//	type fields struct {
+//		self string
+//	}
+//	type args struct {
+//		p *epFmtParam
+//	}
+//	tests := []struct {
+//		name   string
+//		fields fields
+//		args   args
+//		want   string
+//	}{
+//		{
+//			name: "Case-Null",
+//			fields: fields{"Hello"},
+//			args: args{&epFmtParam{}},
+//			want: "Hello",
+//		},
+//		{
+//			name: "Case-Convert epname",
+//			fields: fields{"Hello %(epname)"},
+//			args: args{&epFmtParam{epname: "World"}},
+//			want: "Hello World",
+//		},
+//	}
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			sp := &SimpleParser{
+//				self: tt.fields.self,
+//			}
+//			if got := sp.fmtEp(tt.args.p); got != tt.want {
+//				t.Errorf("SimpleParser.fmtEp() = %v, want %v", got, tt.want)
+//			}
+//		})
+//	}
+//}
+//
+//func TestSimpleParserFmtApp(t *testing.T) {
+//	type fields struct {
+//		self string
+//	}
+//	type args struct {
+//		appname  string
+//		controls string
+//		attrs    map[string]*sysl.Attribute
+//	}
+//	tests := []struct {
+//		name   string
+//		fields fields
+//		args   args
+//		want   string
+//	}{
+//		{
+//			name: "Case-Null",
+//			fields: fields{"Hello"},
+//			args: args{appname: "World"},
+//			want: "Hello",
+//		},
+//		{
+//			name: "Case-Convert epname",
+//			fields: fields{"Hello %(appname)"},
+//			args: args{appname: "World"},
+//			want: "Hello World",
+//		},
+//	}
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			sp := &SimpleParser{
+//				self: tt.fields.self,
+//			}
+//			if got := sp.fmtApp(tt.args.appname, tt.args.controls, tt.args.attrs); got != tt.want {
+//				t.Errorf("SimpleParser.fmtApp() = %v, want %v", got, tt.want)
+//			}
+//		})
+//	}
+//}
+
+func TestSimpleParserFmtSeq(t *testing.T) {
+	type fields struct {
+		self string
+	}
+	type args struct {
+		epname     string
+		eplongname string
+		attrs      map[string]*sysl.Attribute
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "Case-Null",
+			fields: fields{"Hello"},
+			args: args{eplongname: "World"},
+			want: "Hello",
+		},
+		{
+			name: "Case-Convert epname",
+			fields: fields{"Hello %(eplongname)"},
+			args: args{eplongname: "World"},
+			want: "Hello World",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sp := &SimpleParser{
+				self: tt.fields.self,
+			}
+			if got := sp.fmtSeq(tt.args.epname, tt.args.eplongname, tt.args.attrs); got != tt.want {
+				t.Errorf("SimpleParser.fmtSeq() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSimpleParserFmtOutput(t *testing.T) {
+	type fields struct {
+		self string
+	}
+	type args struct {
+		appname    string
+		epname     string
+		eplongname string
+		attrs      map[string]*sysl.Attribute
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "Case-Null",
+			fields: fields{"Hello"},
+			args: args{appname: "Project"},
+			want: "Hello",
+		},
+		{
+			name: "Case-Convert epname",
+			fields: fields{"Hello %(appname)"},
+			args: args{appname: "Project"},
+			want: "Hello Project",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sp := &SimpleParser{
+				self: tt.fields.self,
+			}
+			if got := sp.fmtOutput(tt.args.appname, tt.args.epname, tt.args.eplongname, tt.args.attrs); got != tt.want {
+				t.Errorf("SimpleParser.fmtOutput() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_constructSimpleParser(t *testing.T) {
+	type args struct {
+		former string
+		latter string
+	}
+	tests := []struct {
+		name string
+		args args
+		want *SimpleParser
+	}{
+		{
+			"Case-Null",
+			args{"", ""},
+			&SimpleParser{""},
+		},
+		{
+			"Case-Use former string",
+			args{"%(appname)", "%(epname)"},
+			&SimpleParser{"%(appname)"},
+		},
+		{
+			"Case-Use latter string",
+			args{"", "%(epname)"},
+			&SimpleParser{"%(epname)"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := constructSimpleParser(tt.args.former, tt.args.latter); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("constructSimpleParser() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+type sdArgs struct {
+	root_model      string
+	endpoint_format string
+	app_format      string
+	title           string
+	plantuml        string
+	filter          string
+	output          string
+	no_activations  bool
+	verbose         bool
+	expire_cache    bool
+	dry_run         bool
+	endpoints       []string
+	apps            []string
+	modules         []string
+	blackboxes      [][]string
+}
+
+func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
+	tests := []struct {
+		name string
+		args sdArgs
+	}{
+		{
+			"Case-No endpoints",
+			sdArgs{root_model: "./tests/", modules: []string{"test-sd.sysl"}},
+		},
+		{
+			"Case-Set endpoints",
+			sdArgs{
+				root_model: "./tests/",
+				modules: []string{"test-sd.sysl"},
+				endpoints: []string{"QueryUser"},
+				output: "_.png",
+				plantuml: "http://localhost:8080",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			DoConstructSequenceDiagrams(tt.args.root_model, tt.args.endpoint_format, tt.args.app_format, tt.args.title, tt.args.plantuml, tt.args.filter, tt.args.output, tt.args.no_activations, tt.args.verbose, tt.args.expire_cache, tt.args.dry_run, tt.args.endpoints, tt.args.apps, tt.args.modules, tt.args.blackboxes)
+		})
+	}
+}
+
+func TestDoConstructSequenceDiagrams(t *testing.T) {
+	tests := []struct {
+		name string
+		args sdArgs
+	}{
+		{
+			"Case-Construct sequence diagram",
+			sdArgs{
+				root_model: "./tests/",
+				modules: []string{"sysl-sd.sysl"},
+				output: "%(epname).png",
+				plantuml: "http://localhost:8080",
+				apps: []string{"Project"},
+			},
+		},
+	}
+	os.Setenv("SYSL_SD_FILTERS", "*")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			DoConstructSequenceDiagrams(tt.args.root_model, tt.args.endpoint_format, tt.args.app_format, tt.args.title, tt.args.plantuml, tt.args.filter, tt.args.output, tt.args.no_activations, tt.args.verbose, tt.args.expire_cache, tt.args.dry_run, tt.args.endpoints, tt.args.apps, tt.args.modules, tt.args.blackboxes)
+		})
+	}
+}
+
+func TestDoGenerateSequenceDiagrams(t *testing.T) {
+	type args struct {
+		flags *flag.FlagSet
+		args  []string
+	}
+	argsData := []string{"sd"}
+	tests := []struct {
+		name       string
+		args       args
+		want       int
+		wantStdout string
+		wantStderr string
+	}{
+		{
+			"Case-Do generate sequence diagrams",
+			args{
+				flag.NewFlagSet(argsData[0], flag.PanicOnError),
+				argsData,
+			},
+			0,
+			"",
+			"",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			stdout := &bytes.Buffer{}
+			stderr := &bytes.Buffer{}
+			if got := DoGenerateSequenceDiagrams(stdout, stderr, tt.args.flags, tt.args.args); got != tt.want {
+				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", got, tt.want)
+			}
+			if gotStdout := stdout.String(); gotStdout != tt.wantStdout {
+				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", gotStdout, tt.wantStdout)
+			}
+			if gotStderr := stderr.String(); gotStderr != tt.wantStderr {
+				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", gotStderr, tt.wantStderr)
+			}
+		})
+	}
 }
