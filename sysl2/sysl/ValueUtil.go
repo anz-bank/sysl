@@ -321,19 +321,19 @@ func endpointsToValueMap(endpoints map[string]*sysl.Endpoint) *sysl.Value {
 }
 
 // AddInt add int to scope
-func (s *Scope) AddInt(name string, val int64) {
-	(*s)[name] = MakeValueI64(val)
+func (s Scope) AddInt(name string, val int64) {
+	s[name] = MakeValueI64(val)
 }
 
 // AddString add string to scope
-func (s *Scope) AddString(name string, val string) {
-	(*s)[name] = MakeValueString(val)
+func (s Scope) AddString(name string, val string) {
+	s[name] = MakeValueString(val)
 }
 
 // AddApp add sysl.App to scope
-func (s *Scope) AddApp(name string, app *sysl.Application) {
+func (s Scope) AddApp(name string, app *sysl.Application) {
 	m := MakeValueMap()
-	(*s)[name] = m
+	s[name] = m
 	addItemToValueMap(m, "name", MakeValueString(getAppName(app.Name)))
 	addItemToValueMap(m, "attrs", attrsToValueMap(app.Attrs))
 	addItemToValueMap(m, "types", typesToValueMap(app.Types))

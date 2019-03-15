@@ -184,10 +184,10 @@ func applyTranformToModel(modelName, transformAppName, viewName string, model, t
 			t := modelApp.Types[tName]
 			s["typeName"] = MakeValueString(tName)
 			s["type"] = typeToValue(t)
-			appendItemToValueList(result.GetList(), EvalView(transform, transformAppName, viewName, &s))
+			appendItemToValueList(result.GetList(), EvalView(transform, transformAppName, viewName, s))
 		}
 	} else {
-		result = EvalView(transform, transformAppName, viewName, &s)
+		result = EvalView(transform, transformAppName, viewName, s)
 	}
 
 	return result
