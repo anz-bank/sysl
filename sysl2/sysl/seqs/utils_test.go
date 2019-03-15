@@ -106,92 +106,92 @@ func TestParseBlackBoxesFromArgument(t *testing.T) {
 	}
 }
 
-func TestFindMatchItems(t *testing.T) {
-	type args struct {
-		origin string
-	}
-	tests := []struct {
-		name string
-		args args
-		want []string
-	}{
-		{
-			name: "Case-Null",
-			args: args{""},
-			want: nil,
-		},
-		{
-			name: "Case-Convert Success",
-			args: args{"%(appname)"},
-			want: []string{"%(appname)"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := FindMatchItems(tt.args.origin); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FindMatchItems() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+//func TestFindMatchItems(t *testing.T) {
+//	type args struct {
+//		origin string
+//	}
+//	tests := []struct {
+//		name string
+//		args args
+//		want []string
+//	}{
+//		{
+//			name: "Case-Null",
+//			args: args{""},
+//			want: nil,
+//		},
+//		{
+//			name: "Case-Convert Success",
+//			args: args{"%(appname)"},
+//			want: []string{"%(appname)"},
+//		},
+//	}
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			if got := FindMatchItems(tt.args.origin); !reflect.DeepEqual(got, tt.want) {
+//				t.Errorf("FindMatchItems() = %v, want %v", got, tt.want)
+//			}
+//		})
+//	}
+//}
 
-func TestRemoveWrapper(t *testing.T) {
-	type args struct {
-		origin string
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "Case-Null",
-			args: args{""},
-			want: "",
-		},
-		{
-			name: "Case-Convert Success",
-			args: args{"%(appname)"},
-			want: "appname",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := RemoveWrapper(tt.args.origin); got != tt.want {
-				t.Errorf("RemoveWrapper() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+//func TestRemoveWrapper(t *testing.T) {
+//	type args struct {
+//		origin string
+//	}
+//	tests := []struct {
+//		name string
+//		args args
+//		want string
+//	}{
+//		{
+//			name: "Case-Null",
+//			args: args{""},
+//			want: "",
+//		},
+//		{
+//			name: "Case-Convert Success",
+//			args: args{"%(appname)"},
+//			want: "appname",
+//		},
+//	}
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			if got := RemoveWrapper(tt.args.origin); got != tt.want {
+//				t.Errorf("RemoveWrapper() = %v, want %v", got, tt.want)
+//			}
+//		})
+//	}
+//}
 
-func TestRemovePercentSymbol(t *testing.T) {
-	type args struct {
-		origin string
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			"Case-Null",
-			args{""},
-			"",
-		},
-		{
-			"Case-Remove Percent",
-			args{"%VariableA, %VariableB"},
-			"VariableA, VariableB",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := RemovePercentSymbol(tt.args.origin); got != tt.want {
-				t.Errorf("RemovePercentSymbol() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+//func TestRemovePercentSymbol(t *testing.T) {
+//	type args struct {
+//		origin string
+//	}
+//	tests := []struct {
+//		name string
+//		args args
+//		want string
+//	}{
+//		{
+//			"Case-Null",
+//			args{""},
+//			"",
+//		},
+//		{
+//			"Case-Remove Percent",
+//			args{"%VariableA, %VariableB"},
+//			"VariableA, VariableB",
+//		},
+//	}
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			if got := RemovePercentSymbol(tt.args.origin); got != tt.want {
+//				t.Errorf("RemovePercentSymbol() = %v, want %v", got, tt.want)
+//			}
+//		})
+//	}
+//}
 
 func TestMergeAttributes(t *testing.T) {
 	type args struct {

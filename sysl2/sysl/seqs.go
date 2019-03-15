@@ -6,9 +6,10 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"sysl/sysl2/sysl/seqs"
 
+	//"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	"github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -64,97 +65,57 @@ func loadApp(root string, models []string) *sysl.Module {
 	return nil
 }
 
-func (sp *SimpleParser) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
-	initialStr := sp.self
-	matchItems := seqs.FindMatchItems(initialStr)
-	for _, item := range matchItems {
-		attr := seqs.RemoveWrapper(item)
-		var value string
-		switch attr {
-		case "epname":
-			value = p.EndpointName
-		case "human":
-			value = p.Human
-		case "human_sender":
-			value = p.HumanSender
-		case "needs_int":
-			value = p.NeedsInt
-		case "args":
-			value = p.Args
-		case "patterns":
-			value = p.Patterns
-		case "controls":
-			value = p.Controls
-		default:
-			value = p.Attrs[attr].GetS()
-		}
-		initialStr = strings.Replace(initialStr, item, value, 1)
+func mergeAttributesMap(val map[string]string, attrs map[string]*sysl.Attribute) map[string]string {
+	for k, v := range attrs {
+		val[k] = v.GetS()
 	}
 
-	return seqs.RemovePercentSymbol(initialStr)
+	return val
+}
+
+func (sp *SimpleParser) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
+	initialStr := sp.self
+	attrs := map[string]string{}
+	attrs["epname"] = p.EndpointName
+	attrs["human"] = p.Human
+	attrs["human_sender"] = p.HumanSender
+	attrs["args"] = p.Args
+	attrs["patterns"] = p.Patterns
+	attrs["controls"] = p.Controls
+	attrs = mergeAttributesMap(attrs, p.Attrs)
+
+	return seqs.ParseAttributesFormat(initialStr, initialStr, attrs)
 }
 
 func (sp *SimpleParser) LabelApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := seqs.FindMatchItems(initialStr)
-	for _, item := range matchItems {
-		attr := seqs.RemoveWrapper(item)
-		var value string
-		switch attr {
-		case "appname":
-			value = appname
-		case "controls":
-			value = controls
-		default:
-			value = attrs[attr].GetS()
-		}
-		initialStr = strings.Replace(initialStr, item, value, 1)
-	}
+	valMap := map[string]string{}
+	valMap["appname"] = appname
+	valMap["controls"] = controls
+	valMap = mergeAttributesMap(valMap, attrs)
 
-	return seqs.RemovePercentSymbol(initialStr)
+	return seqs.ParseAttributesFormat(initialStr, initialStr, valMap)
 }
 
 func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := seqs.FindMatchItems(initialStr)
-	for _, item := range matchItems {
-		attr := seqs.RemoveWrapper(item)
-		var value string
-		switch attr {
-		case "epname":
-			value = epname
-		case "eplongname":
-			value = eplongname
-		default:
-			value = attrs[attr].GetS()
-		}
-		initialStr = strings.Replace(initialStr, item, value, 1)
-	}
+	valMap := map[string]string{}
+	valMap["epname"] = epname
+	valMap["eplongname"] = eplongname
+	valMap = mergeAttributesMap(valMap, attrs)
 
-	return seqs.RemovePercentSymbol(initialStr)
+	return seqs.ParseAttributesFormat(initialStr, initialStr, valMap)
 }
 
 func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	matchItems := seqs.FindMatchItems(initialStr)
+	valMap := map[string]string{}
+	valMap["appname"] = appname
+	valMap["epname"] = epname
+	valMap["eplongname"] = eplongname
+	valMap = mergeAttributesMap(valMap, attrs)
 
-	for _, item := range matchItems {
-		attr := seqs.RemoveWrapper(item)
-		var value string
-		switch attr {
-		case "appname":
-			value = appname
-		case "epname":
-			value = epname
-		case "eplongname":
-			value = eplongname
-		default:
-			value = attrs[attr].GetS()
-		}
-		initialStr = strings.Replace(initialStr, item, value, 1)
-	}
-
-	return seqs.RemovePercentSymbol(initialStr)
+	return seqs.ParseAttributesFormat(initialStr, initialStr, valMap)
 }
 
 func constructSimpleParser(former, latter string) *SimpleParser {
