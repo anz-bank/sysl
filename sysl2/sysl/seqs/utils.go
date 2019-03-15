@@ -115,12 +115,8 @@ func formatArgs(s *sysl.Module, appName, parameterTypeName string) string {
 	integ := ""
 	if app, ok := s.Apps[appName]; ok {
 		if t, ok := app.Types[parameterTypeName]; ok {
-			if v, ok := t.Attrs["iso_conf"]; ok {
-				conf = val(v)
-			}
-			if v, ok := t.Attrs["iso_integ"]; ok {
-				integ = val(v)
-			}
+			conf = val(t.Attrs["iso_conf"])
+			integ = val(t.Attrs["iso_integ"])
 		}
 	}
 
@@ -210,8 +206,8 @@ func getReturnPayload(s *sysl.Module, stmts []*sysl.Statement) string {
 func getAndFmtParam(s *sysl.Module, params []*sysl.Param) []string {
 	r := make([]string, 0, len(params))
 	for _, v := range params {
-		if ref_type := v.GetType().GetTypeRef(); ref_type != nil {
-			if ref := ref_type.GetRef(); ref != nil {
+		if refType := v.GetType().GetTypeRef(); refType != nil {
+			if ref := refType.GetRef(); ref != nil {
 				an := getAppName(ref.GetAppname())
 				pn := strings.Join(ref.GetPath(), ".")
 				eparg := formatArgs(s, an, pn)

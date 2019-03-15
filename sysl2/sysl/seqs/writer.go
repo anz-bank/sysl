@@ -57,7 +57,7 @@ func (s *SequenceDiagramWriter) Write(p []byte) (n int, err error) {
 			return n, err
 		}
 		if i+1 < len(frags) {
-			if _, err := s.body.Write(newline); err != nil {
+			if err := s.WriteByte('\n'); err != nil {
 				return n, err
 			}
 			n++
@@ -69,6 +69,17 @@ func (s *SequenceDiagramWriter) Write(p []byte) (n int, err error) {
 
 func (s *SequenceDiagramWriter) WriteString(v string) (n int, err error) {
 	return s.Write([]byte(v))
+}
+
+func (s *SequenceDiagramWriter) WriteByte(c byte) error {
+	if s.isEndOfLine {
+		s.writeIndent()
+	}
+
+	err := s.body.WriteByte(c)
+	s.isEndOfLine = c == '\n'
+
+	return err
 }
 
 func (s *SequenceDiagramWriter) WriteHead(v string) {
