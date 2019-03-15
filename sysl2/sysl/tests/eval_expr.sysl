@@ -165,6 +165,9 @@ TransformApp:
       TrimSpace = TrimSpace(" hello world! ")
       TrimSuffix = TrimSuffix(" hello world", "world")
       hasHello = "Hello" in Fields("Hello World!")
+      MatchString = MatchString("^([A-Z]+[a-z]+|[A-Z]+|[a-z]+)$", "HTTPCODE")
+      FindAllString = FindAllString("[a-z]+|[A-Z][a-z]+|[A-Z]+", "httpCode", -1)
+      tabs = FindAllString("\\t", "\tXXX\t", -1)
     )
 
   !view IncorrectArgsToGoFunc(app <: sysl.App) -> int:

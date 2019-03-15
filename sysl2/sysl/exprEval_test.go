@@ -309,11 +309,12 @@ func TestEvalStringOps(t *testing.T) {
 	assert.NotNil(t, out.GetMap())
 	items := out.GetMap().Items
 
-	// Check if all functions have been tested
-	assert.Equal(t, 20, len(items))
+	for name := range items {
+		assert.NotNilf(t, items[name], "%s", name)
+	}
 
 	for name := range GoFuncMap {
-		assert.NotNil(t, items[name])
+		assert.NotNilf(t, items[name], "%s", name)
 	}
 
 	assert.True(t, items["Contains"].GetB())
@@ -336,6 +337,10 @@ func TestEvalStringOps(t *testing.T) {
 	assert.Equal(t, "hello world!", items["TrimSpace"].GetS())
 	assert.Equal(t, " hello ", items["TrimSuffix"].GetS())
 	assert.True(t, items["hasHello"].GetB())
+	assert.True(t, items["MatchString"].GetB())
+	assert.Equal(t, 2, len(items["FindAllString"].GetList().Value))
+	assert.Equal(t, 2, len(items["tabs"].GetList().Value))
+
 }
 
 func TestIncorrectArgsToGoFunc(t *testing.T) {
