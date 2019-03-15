@@ -64,8 +64,7 @@ var boolType = &sysl.Type{
 	},
 }
 
-// GoFuncMap is map of function name to go functions defined
-// (currently) in strings package
+// GoFuncMap is Map of Function Names to goFunc{}
 var GoFuncMap = map[string]goFunc{
 	"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
 	"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
