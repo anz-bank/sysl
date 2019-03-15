@@ -2,6 +2,7 @@ package main
 
 import (
 	"reflect"
+	"regexp"
 	"strings"
 
 	"github.com/anz-bank/sysl/src/proto"
@@ -63,28 +64,29 @@ var boolType = &sysl.Type{
 	},
 }
 
-// GoFuncMap is map of function name to go functions defined
-// (currently) in strings package
+// GoFuncMap is Map of Function Names to goFunc{}
 var GoFuncMap = map[string]goFunc{
-	"Contains":   {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Count":      {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
-	"Fields":     {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, []*sysl.Type{listStringType}},
-	"HasPrefix":  {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"HasSuffix":  {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Join":       {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, []*sysl.Type{stringType}},
-	"LastIndex":  {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
-	"Replace":    {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, []*sysl.Type{stringType}},
-	"Split":      {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, []*sysl.Type{listStringType}},
-	"Title":      {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToLower":    {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToTitle":    {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToUpper":    {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"Trim":       {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimLeft":   {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimPrefix": {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimRight":  {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimSpace":  {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"TrimSuffix": {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
+	"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
+	"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
+	"Fields":        {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, []*sysl.Type{listStringType}},
+	"FindAllString": {reflect.ValueOf(FindAllString), []*sysl.Type{stringType, stringType, intType}, []*sysl.Type{listStringType}},
+	"HasPrefix":     {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
+	"HasSuffix":     {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
+	"Join":          {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, []*sysl.Type{stringType}},
+	"LastIndex":     {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
+	"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
+	"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, []*sysl.Type{stringType}},
+	"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, []*sysl.Type{listStringType}},
+	"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
+	"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
+	"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
+	"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
+	"Trim":          {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
+	"TrimLeft":      {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
+	"TrimPrefix":    {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
+	"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
+	"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
+	"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
 }
 
 func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
@@ -232,4 +234,15 @@ func evalGoFunc(name string, list *sysl.Value) *sysl.Value {
 		return reflectToValue(result[0], f.ret[0])
 	}
 	return nil
+}
+
+// MatchString exposes regexp.MatchString to sysl transforms
+func MatchString(pattern, word string) bool {
+	return regexp.MustCompile(pattern).MatchString(word)
+
+}
+
+// FindAllString exposes regexp.FindAllString to sysl transforms
+func FindAllString(pattern, word string, n int) []string {
+	return regexp.MustCompile(pattern).FindAllString(word, n)
 }
