@@ -180,21 +180,22 @@ type SequenceDiagramVisitor struct {
 	symbols map[string]*_var
 }
 
-func MakeSequenceDiagramVisitor(a AppLabeler, e EndpointLabeler, w *SequenceDiagramWriter, m *sysl.Module) *SequenceDiagramVisitor {
+func MakeSequenceDiagramVisitor(a AppLabeler, e EndpointLabeler,
+	w *SequenceDiagramWriter, m *sysl.Module) *SequenceDiagramVisitor {
 	return &SequenceDiagramVisitor{
-		AppLabeler: a,
+		AppLabeler:      a,
 		EndpointLabeler: e,
-		w:       w,
-		m:       m,
-		visited: make(map[string]int),
-		symbols: make(map[string]*_var),
+		w:               w,
+		m:               m,
+		visited:         make(map[string]int),
+		symbols:         make(map[string]*_var),
 	}
 }
 
 func (v *SequenceDiagramVisitor) Visit(e Element) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Fatalln(err)
+			log.Errorln(err)
 		}
 	}()
 
@@ -205,20 +206,6 @@ func (v *SequenceDiagramVisitor) Visit(e Element) {
 		v.visitEndpoint(t)
 	case *StatementElement:
 		v.visitStatment(t)
-	}
-
-	s := make([]*_var, 0, len(v.symbols))
-	for _, item := range v.symbols {
-		s = append(s, item)
-	}
-	sort.Slice(s, func(i, j int) bool {
-		if s[i].category == s[j].category {
-			return s[i].order < s[j].order
-		}
-		return s[i].category < s[j].category
-	})
-	for _, item := range s {
-		v.w.WriteHead(item.String())
 	}
 }
 
@@ -264,14 +251,28 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 			delete(v.visited, k)
 		}
 		e := &EndpointElement{
-			appName:      entry.appName,
-			endpointName: entry.endpointName,
-			uptos:        bbs,
-			senderPatterns: makeStrSet(),
+			appName:                entry.appName,
+			endpointName:           entry.endpointName,
+			uptos:                  bbs,
+			senderPatterns:         makeStrSet(),
 			senderEndpointPatterns: makeStrSet(),
 		}
 
-		v.visitEndpoint(e)
+		e.Accept(v)
+	}
+
+	s := make([]*_var, 0, len(v.symbols))
+	for _, item := range v.symbols {
+		s = append(s, item)
+	}
+	sort.Slice(s, func(i, j int) bool {
+		if s[i].category == s[j].category {
+			return s[i].order < s[j].order
+		}
+		return s[i].category < s[j].category
+	})
+	for _, item := range s {
+		v.w.WriteHead(item.String())
 	}
 }
 
@@ -302,7 +303,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 		fmt.Fprintf(v.w, "%s->%s : %s%s\n", sender, agent, icon, label)
 	}
 
-	payload := strings.Join(formatReturnParam(v.m, getReturnPayload(v.m, endpoint.Stmt)), " | ")
+	payload := strings.Join(formatReturnParam(v.m, getReturnPayload(endpoint.Stmt)), " | ")
 
 	isCallingSelf := e.fromApp != nil && getAppName(e.fromApp) == e.appName
 
@@ -311,7 +312,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 	}
 
 	if len(endpoint.Stmt) > 0 {
-		visiting := fmt.Sprintf(" %s <- %s\n", e.appName, e.endpointName)
+		visiting := fmt.Sprintf(" %s <- %s", e.appName, e.endpointName)
 		comment, hitUpto := e.uptos[visiting]
 		_, hitVisited := v.visited[visiting]
 
@@ -342,7 +343,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 				deactivate:       deactivate,
 				isLastParentStmt: true,
 			}
-			v.visitStatment(p)
+			p.Accept(v)
 
 			deactivate()
 			v.visited[visiting]--
@@ -402,7 +403,7 @@ func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.C
 		},
 	}
 	v.w.Indent()
-	v.visitEndpoint(p)
+	p.Accept(v)
 	v.w.Unindent()
 }
 

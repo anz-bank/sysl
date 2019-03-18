@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	"github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -31,7 +31,7 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 
 	e := seqs.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 
-	v.Visit(e)
+	e.Accept(v)
 
 	return w.String(), nil
 }
@@ -214,11 +214,11 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 				}
 
 				sd := &sequenceDiagParam{
-					endpoints:   sdEndpoints,
-					AppLabeler:  spapp,
+					endpoints:       sdEndpoints,
+					AppLabeler:      spapp,
 					EndpointLabeler: spep,
-					title:       spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), app.GetEndpoints()[k].GetLongName(), varrefs),
-					blackboxes:  append(bbs, bbs2...),
+					title:           spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), app.GetEndpoints()[k].GetLongName(), varrefs),
+					blackboxes:      append(bbs, bbs2...),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
 				seqs.OutputPlantuml(output_dir, plantuml, out)
@@ -231,11 +231,11 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 		spep := constructSimpleParser("", endpoint_format)
 		spapp := constructSimpleParser("", app_format)
 		sd := &sequenceDiagParam{
-			endpoints:   endpoints,
-			AppLabeler:  spapp,
+			endpoints:       endpoints,
+			AppLabeler:      spapp,
 			EndpointLabeler: spep,
-			title:       title,
-			blackboxes:  blackboxes,
+			title:           title,
+			blackboxes:      blackboxes,
 		}
 		out, _ := generateSequenceDiag(mod, sd)
 		seqs.OutputPlantuml(output, plantuml, out)

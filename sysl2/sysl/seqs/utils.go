@@ -10,8 +10,8 @@ import (
 )
 
 var (
+	itemRE                   = regexp.MustCompile(`(%\(\w+\))`)
 	isoCtrlRE                = regexp.MustCompile("^iso_ctrl_(.*)_txt$")
-	returnParamSpliterRE     = regexp.MustCompile(`,?(![^{]*\})`)
 	returnTypeValueSpliterRE = regexp.MustCompile(`\s*<:\s*`)
 	typeSetOfRE              = regexp.MustCompile(`set\s+of\s+(.+)$`)
 	typeOneOfRE              = regexp.MustCompile(`one\s+of\s*{(.+)}$`)
@@ -21,32 +21,35 @@ var (
 )
 
 func TransformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {
-	bbs := [][]string{}
+	bbs := make([][]string, 0, len(blackboxes))
 	for _, vals := range blackboxes {
-		sub_bbs := []string{}
+		subBbs := make([]string, 0)
 		for _, val := range vals.GetA().Elt {
-			sub_bbs = append(sub_bbs, val.GetS())
+			subBbs = append(subBbs, val.GetS())
 		}
-		bbs = append(bbs, sub_bbs)
+		if len(subBbs) > 0 {
+			bbs = append(bbs, subBbs)
+		}
 	}
 
 	return bbs
 }
 
 func ParseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
-	bbs := [][]string{}
+	bbs := make([][]string, 0, len(blackboxFlags))
 	for _, blackboxFlag := range blackboxFlags {
-		sub_bbs := []string{}
-		sub_bbs = append(sub_bbs, strings.Split(blackboxFlag, ",")...)
-		bbs = append(bbs, sub_bbs)
+		subBbs := make([]string, 0)
+		subBbs = append(subBbs, strings.Split(blackboxFlag, ",")...)
+		if len(subBbs) > 0 {
+			bbs = append(bbs, subBbs)
+		}
 	}
 
 	return bbs
 }
 
 func FindMatchItems(origin string) []string {
-	re := regexp.MustCompile(`(%\(\w+\))`)
-	return re.FindAllString(origin, -1)
+	return itemRE.FindAllString(origin, -1)
 }
 
 func RemoveWrapper(origin string) string {
@@ -129,9 +132,34 @@ func formatArgs(s *sysl.Module, appName, parameterTypeName string) string {
 }
 
 func formatReturnParam(s *sysl.Module, payload string) []string {
+	// the original regex from python is `,(?![^{]*\})`
+	// however golang regex does not support negative look ahead
+	// that is the reason why I write this split function
+	split := func(s string) []string {
+		slice := make([]string, 0)
+		inBrace := 0
+		startIndex := 0
+		for i, v := range s {
+			switch v {
+			case ',':
+				if inBrace == 0 {
+					slice = append(slice, s[startIndex:i])
+					startIndex = i + 1
+				}
+			case '{':
+				inBrace++
+			case '}':
+				inBrace--
+			}
+		}
+		if startIndex < len(s) {
+			slice = append(slice, s[startIndex:])
+		}
+		return slice
+	}
 	types := make([]string, 0)
 	if len(payload) > 0 {
-		paramSlice := returnParamSpliterRE.Split(payload, -1)
+		paramSlice := split(payload)
 		for _, param := range paramSlice {
 			ptype := param
 
@@ -170,7 +198,7 @@ func formatReturnParam(s *sysl.Module, payload string) []string {
 	return rargs
 }
 
-func getReturnPayload(s *sysl.Module, stmts []*sysl.Statement) string {
+func getReturnPayload(stmts []*sysl.Statement) string {
 	for _, v := range stmts {
 		var subStmts []*sysl.Statement
 		switch stmt := v.Stmt.(type) {
@@ -180,7 +208,7 @@ func getReturnPayload(s *sysl.Module, stmts []*sysl.Statement) string {
 			return stmt.Ret.GetPayload()
 		case *sysl.Statement_Alt:
 			for _, c := range stmt.Alt.Choice {
-				if p := getReturnPayload(s, c.Stmt); len(p) > 0 {
+				if p := getReturnPayload(c.Stmt); len(p) > 0 {
 					return p
 				}
 			}
@@ -196,7 +224,7 @@ func getReturnPayload(s *sysl.Module, stmts []*sysl.Statement) string {
 			subStmts = stmt.Group.Stmt
 		}
 
-		if p := getReturnPayload(s, subStmts); len(p) > 0 {
+		if p := getReturnPayload(subStmts); len(p) > 0 {
 			return p
 		}
 	}

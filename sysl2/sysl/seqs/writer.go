@@ -9,7 +9,7 @@ import (
 
 type SequenceDiagramWriter struct {
 	ind            int
-	isEndOfLine    bool
+	atBeginOfLine  bool
 	autogenWarning bool
 	active         map[string]int
 	properties     []string
@@ -21,6 +21,7 @@ func MakeSequenceDiagramWriter(autogenWarning bool, properties ...string) *Seque
 	p := make([]string, 0, len(properties))
 	p = append(p, properties...)
 	return &SequenceDiagramWriter{
+		atBeginOfLine:  true,
 		autogenWarning: autogenWarning,
 		properties:     p,
 		active:         make(map[string]int),
@@ -37,21 +38,22 @@ func (s *SequenceDiagramWriter) Write(p []byte) (n int, err error) {
 	newline := []byte("\n")
 	newlines := bytes.Count(p, newline)
 	if newlines == 0 {
-		if s.isEndOfLine {
+		if s.atBeginOfLine {
 			s.writeIndent()
 		}
 		n, err = s.body.Write(p)
-		s.isEndOfLine = false
+		s.atBeginOfLine = false
 		return n, err
 	}
 
 	frags := bytes.SplitN(p, newline, newlines+1)
 
 	for i, frag := range frags {
-		if s.isEndOfLine {
+		if s.atBeginOfLine && len(frag) != 0 {
 			s.writeIndent()
 		}
 		nn, err := s.body.Write(frag)
+		s.atBeginOfLine = false
 		n += nn
 		if err != nil {
 			return n, err
@@ -63,7 +65,7 @@ func (s *SequenceDiagramWriter) Write(p []byte) (n int, err error) {
 			n++
 		}
 	}
-	s.isEndOfLine = len(frags[len(frags)-1]) == 0
+	s.atBeginOfLine = len(frags[len(frags)-1]) == 0
 	return n, nil
 }
 
@@ -72,12 +74,12 @@ func (s *SequenceDiagramWriter) WriteString(v string) (n int, err error) {
 }
 
 func (s *SequenceDiagramWriter) WriteByte(c byte) error {
-	if s.isEndOfLine {
+	if s.atBeginOfLine {
 		s.writeIndent()
 	}
 
 	err := s.body.WriteByte(c)
-	s.isEndOfLine = c == '\n'
+	s.atBeginOfLine = c == '\n'
 
 	return err
 }
@@ -99,7 +101,8 @@ func (s *SequenceDiagramWriter) Unindent() {
 
 func (s *SequenceDiagramWriter) Activate(agent string) {
 	s.active[agent]++
-	s.WriteString(fmt.Sprintf("activate %s\n", agent))
+
+	fmt.Fprintf(s, "activate %s\n", agent)
 }
 
 func (s *SequenceDiagramWriter) Activated(agent string, suppressed bool) func() {
@@ -123,7 +126,7 @@ func (s *SequenceDiagramWriter) Deactivate(agent string) {
 	}
 
 	s.active[agent]--
-	s.WriteString(fmt.Sprintf("deactivate %s\n", agent))
+	fmt.Fprintf(s, "deactivate %s\n", agent)
 
 	if s.active[agent] == 0 {
 		delete(s.active, agent)
@@ -131,7 +134,7 @@ func (s *SequenceDiagramWriter) Deactivate(agent string) {
 }
 
 func (s *SequenceDiagramWriter) writeIndent() {
-	if !s.isEndOfLine {
+	if !s.atBeginOfLine {
 		return
 	}
 
@@ -140,7 +143,7 @@ func (s *SequenceDiagramWriter) writeIndent() {
 		spaces = append(spaces, ' ')
 	}
 	s.body.Write(spaces)
-	s.isEndOfLine = false
+	s.atBeginOfLine = false
 }
 
 func (s *SequenceDiagramWriter) String() string {

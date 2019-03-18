@@ -515,3 +515,285 @@ func TestFormatArgsWithoutAppNameAndParameterTypeName(t *testing.T) {
 
 	assert.Equal(t, "", actual)
 }
+
+func TestFormatReturnParam(t *testing.T) {
+	// given
+	m := &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"test": {
+				Types: map[string]*sysl.Type{
+					"User": {
+						Attrs: make(map[string]*sysl.Attribute),
+					},
+				},
+			},
+		},
+	}
+
+	// when
+	actual := formatReturnParam(m, "test.User")
+
+	assert.Equal(t, []string{"<color blue>test.User</color> <<color green>?, ?</color>>"}, actual)
+}
+
+func TestFormatReturnParamSplit(t *testing.T) {
+	// given
+	m := &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"test": {
+				Types: map[string]*sysl.Type{
+					"User": {
+						Attrs: make(map[string]*sysl.Attribute),
+					},
+				},
+			},
+		},
+	}
+
+	// when
+	actual := formatReturnParam(m, "test.User,profile<:test.User,Bool,set of test.User, one of {test.User,ab}")
+
+	expected := []string{
+		"<color blue>test.User</color> <<color green>?, ?</color>>",
+		"<color blue>test.User</color> <<color green>?, ?</color>>",
+		"<color blue>test.User</color> <<color green>?, ?</color>>",
+		"<color blue>test.User</color> <<color green>?, ?</color>>",
+		"ab",
+	}
+
+	assert.Equal(t, expected, actual)
+}
+
+func TestGetReturnPayload(t *testing.T) {
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_Call{},
+		},
+		{
+			Stmt: &sysl.Statement_Action{},
+		},
+		{
+			Stmt: &sysl.Statement_Ret{
+				Ret: &sysl.Return{
+					Payload: "test",
+				},
+			},
+		},
+	}
+
+	actual := getReturnPayload(stmts)
+
+	assert.Equal(t, "test", actual)
+}
+
+func TestGetReturnPayloadWithAlt(t *testing.T) {
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_Alt{
+				Alt: &sysl.Alt{
+					Choice: []*sysl.Alt_Choice{
+						{
+							Cond: "cond 1",
+							Stmt: []*sysl.Statement{},
+						},
+						{
+							Cond: "cond 2",
+							Stmt: []*sysl.Statement{
+								{
+									Stmt: &sysl.Statement_Ret{
+										Ret: &sysl.Return{
+											Payload: "test",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual := getReturnPayload(stmts)
+
+	assert.Equal(t, "test", actual)
+}
+
+func TestGetReturnPayloadWithCond(t *testing.T) {
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_Cond{
+				Cond: &sysl.Cond{
+					Test: "cond 1",
+					Stmt: []*sysl.Statement{
+						{
+							Stmt: &sysl.Statement_Ret{
+								Ret: &sysl.Return{
+									Payload: "test",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual := getReturnPayload(stmts)
+
+	assert.Equal(t, "test", actual)
+}
+
+func TestGetReturnPayloadWithLoop(t *testing.T) {
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_Loop{
+				Loop: &sysl.Loop{
+					Mode:      sysl.Loop_WHILE,
+					Criterion: "criterion",
+					Stmt: []*sysl.Statement{
+						{
+							Stmt: &sysl.Statement_Ret{
+								Ret: &sysl.Return{
+									Payload: "test",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual := getReturnPayload(stmts)
+
+	assert.Equal(t, "test", actual)
+}
+
+func TestGetReturnPayloadWithLoopN(t *testing.T) {
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_LoopN{
+				LoopN: &sysl.LoopN{
+					Count: 10,
+					Stmt: []*sysl.Statement{
+						{
+							Stmt: &sysl.Statement_Ret{
+								Ret: &sysl.Return{
+									Payload: "test",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual := getReturnPayload(stmts)
+
+	assert.Equal(t, "test", actual)
+}
+
+func TestGetReturnPayloadWithForeach(t *testing.T) {
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_Foreach{
+				Foreach: &sysl.Foreach{
+					Collection: "collection 1",
+					Stmt: []*sysl.Statement{
+						{
+							Stmt: &sysl.Statement_Ret{
+								Ret: &sysl.Return{
+									Payload: "test",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual := getReturnPayload(stmts)
+
+	assert.Equal(t, "test", actual)
+}
+
+func TestGetReturnPayloadWithGroup(t *testing.T) {
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_Group{
+				Group: &sysl.Group{
+					Title: "group 1",
+					Stmt: []*sysl.Statement{
+						{
+							Stmt: &sysl.Statement_Ret{
+								Ret: &sysl.Return{
+									Payload: "test",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual := getReturnPayload(stmts)
+
+	assert.Equal(t, "test", actual)
+}
+
+func TestGetAndFmtParam(t *testing.T) {
+	m := &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"test": {
+				Types: map[string]*sysl.Type{
+					"User": {
+						Attrs: map[string]*sysl.Attribute{
+							"iso_conf": {
+								Attribute: &sysl.Attribute_S{
+									S: "Red",
+								},
+							},
+							"iso_integ": {
+								Attribute: &sysl.Attribute_S{
+									S: "I",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	p := []*sysl.Param{
+		{
+			Name: "profile",
+			Type: &sysl.Type{
+				Type: &sysl.Type_TypeRef{
+					TypeRef: &sysl.ScopedRef{
+						Ref: &sysl.Scope{
+							Appname: &sysl.AppName{
+								Part: []string{"test"},
+							},
+							Path: []string{"User"},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual := getAndFmtParam(m, p)
+
+	assert.Equal(t, []string{"<color blue>test.User</color> <<color red>R, I</color>>"}, actual)
+}
+
+func TestNormalizeEndpointName(t *testing.T) {
+	actual := normalizeEndpointName("a -> b")
+
+	assert.Equal(t, " ⬄ b", actual)
+}
