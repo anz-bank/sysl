@@ -1,4 +1,5 @@
 EXE = $(GOPATH)/bin/sysl
+SD_EXE = $(GOPATH)/bin/sd
 JS = sysl_js/SyslParser.js
 ANTLR = java -jar lib/antlr-4.7-complete.jar
 SYSL_PYTHON_BIN = /usr/local/bin/sysl
@@ -86,3 +87,8 @@ tests/school.sysl.golden.pb: root = tests
 
 tests/%.sysl.golden.textpb: tests/%.sysl $(SYSL_PYTHON_BIN)
 	$(SYSL_PYTHON_BIN) $(if $(root),--root $(root),) textpb -o $@ $<
+
+seqs:
+	go build -o $(SD_EXE)
+	$(SD_EXE) -app Project -output "golang-%(epname)".png -modules ./tests/sysl-sd.sysl
+	$(SYSL_PYTHON_BIN) sd -a Project -o "python-%(epname)".png ./tests/sysl-sd.sysl
