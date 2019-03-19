@@ -93,15 +93,10 @@ func encode(data []byte) string {
 
 // 3 bytes takes 24 bits. This splits 24 bits into 4 bytes of which lower 6-bit takes account.
 func encode3bytes(buf *bytes.Buffer, b1, b2, b3 byte) {
-	c1 := b1 >> 2
-	c2 := ((b1 & 0x3) << 4) | (b2 >> 4)
-	c3 := ((b2 & 0xF) << 2) | (b3 >> 6)
-	c4 := b3 & 0x3F
-
-	buf.WriteByte(encode6bit(0x3F & c1))
-	buf.WriteByte(encode6bit(0x3F & c2))
-	buf.WriteByte(encode6bit(0x3F & c3))
-	buf.WriteByte(encode6bit(0x3F & c4))
+	buf.WriteByte(encode6bit(0x3F & (b1 >> 2)))
+	buf.WriteByte(encode6bit(0x3F & (((b1 & 0x3) << 4) | (b2 >> 4))))
+	buf.WriteByte(encode6bit(0x3F & (((b2 & 0xF) << 2) | (b3 >> 6))))
+	buf.WriteByte(encode6bit(0x3F & b3))
 }
 
 func encode6bit(b byte) byte {

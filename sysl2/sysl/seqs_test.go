@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"os"
-	"reflect"
 	"testing"
 
 	"github.com/anz-bank/sysl/src/proto"
@@ -122,122 +121,6 @@ func TestLoadApp(t *testing.T) {
 		expectedParams = append(expectedParams, val.GetName())
 	}
 	assert.Equal(t, []string{"user_id"}, expectedParams)
-}
-
-func TestSimpleParserFmtSeq(t *testing.T) {
-	type fields struct {
-		self string
-	}
-	type args struct {
-		epname     string
-		eplongname string
-		attrs      map[string]*sysl.Attribute
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   string
-	}{
-		{
-			name:   "Case-Null",
-			fields: fields{"Hello"},
-			args:   args{eplongname: "World"},
-			want:   "Hello",
-		},
-		{
-			name:   "Case-Convert epname",
-			fields: fields{"Hello %(eplongname)"},
-			args:   args{eplongname: "World"},
-			want:   "Hello World",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			sp := &SimpleParser{
-				self: tt.fields.self,
-			}
-			if got := sp.fmtSeq(tt.args.epname, tt.args.eplongname, tt.args.attrs); got != tt.want {
-				t.Errorf("SimpleParser.fmtSeq() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestSimpleParserFmtOutput(t *testing.T) {
-	type fields struct {
-		self string
-	}
-	type args struct {
-		appname    string
-		epname     string
-		eplongname string
-		attrs      map[string]*sysl.Attribute
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   string
-	}{
-		{
-			name:   "Case-Null",
-			fields: fields{"Hello"},
-			args:   args{appname: "Project"},
-			want:   "Hello",
-		},
-		{
-			name:   "Case-Convert epname",
-			fields: fields{"Hello %(appname)"},
-			args:   args{appname: "Project"},
-			want:   "Hello Project",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			sp := &SimpleParser{
-				self: tt.fields.self,
-			}
-			if got := sp.fmtOutput(tt.args.appname, tt.args.epname, tt.args.eplongname, tt.args.attrs); got != tt.want {
-				t.Errorf("SimpleParser.fmtOutput() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_constructSimpleParser(t *testing.T) {
-	type args struct {
-		former string
-		latter string
-	}
-	tests := []struct {
-		name string
-		args args
-		want *SimpleParser
-	}{
-		{
-			"Case-Null",
-			args{"", ""},
-			&SimpleParser{""},
-		},
-		{
-			"Case-Use former string",
-			args{"%(appname)", "%(epname)"},
-			&SimpleParser{"%(appname)"},
-		},
-		{
-			"Case-Use latter string",
-			args{"", "%(epname)"},
-			&SimpleParser{"%(epname)"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := constructSimpleParser(tt.args.former, tt.args.latter); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("constructSimpleParser() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
 
 type sdArgs struct {

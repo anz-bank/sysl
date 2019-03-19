@@ -11,10 +11,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type SimpleParser struct {
-	self string
-}
-
 type sequenceDiagParam struct {
 	seqs.AppLabeler
 	seqs.EndpointLabeler
@@ -63,70 +59,13 @@ func loadApp(root string, models []string) *sysl.Module {
 	return nil
 }
 
-func mergeAttributesMap(val map[string]string, attrs map[string]*sysl.Attribute) map[string]string {
-	for k, v := range attrs {
-		val[k] = v.GetS()
-	}
-
-	return val
-}
-
-func (sp *SimpleParser) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
-	initialStr := sp.self
-	attrs := map[string]string{
-		"epname":       p.EndpointName,
-		"human":        p.Human,
-		"human_sender": p.HumanSender,
-		"args":         p.Args,
-		"patterns":     p.Patterns,
-		"controls":     p.Controls,
-	}
-	attrs = mergeAttributesMap(attrs, p.Attrs)
-
-	return seqs.ParseAttributesFormat(initialStr, attrs)
-}
-
-func (sp *SimpleParser) LabelApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
-	initialStr := sp.self
-	valMap := map[string]string{
-		"appname":  appname,
-		"controls": controls,
-	}
-	valMap = mergeAttributesMap(valMap, attrs)
-
-	return seqs.ParseAttributesFormat(initialStr, valMap)
-}
-
-func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl.Attribute) string {
-	initialStr := sp.self
-	valMap := map[string]string{
-		"epname":     epname,
-		"eplongname": eplongname,
-	}
-	valMap = mergeAttributesMap(valMap, attrs)
-
-	return seqs.ParseAttributesFormat(initialStr, valMap)
-}
-
-func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[string]*sysl.Attribute) string {
-	initialStr := sp.self
-	valMap := map[string]string{
-		"appname":    appname,
-		"epname":     epname,
-		"eplongname": eplongname,
-	}
-	valMap = mergeAttributesMap(valMap, attrs)
-
-	return seqs.ParseAttributesFormat(initialStr, valMap)
-}
-
-func constructSimpleParser(former, latter string) *SimpleParser {
+func constructFormatParser(former, latter string) *seqs.FormatParser {
 	fmtstr := former
 	if former == "" {
 		fmtstr = latter
 	}
 
-	return &SimpleParser{self: fmtstr}
+	return seqs.MakeFormatParser(fmtstr)
 }
 
 func DoConstructSequenceDiagrams(
@@ -137,13 +76,13 @@ func DoConstructSequenceDiagrams(
 	mod := loadApp(root_model, modules)
 
 	if strings.Contains(output, "%(epname)") {
-		spout := &SimpleParser{self: output}
+		spout := seqs.MakeFormatParser(output)
 		for _, appName := range apps {
 			app := mod.Apps[appName]
 			bbs := seqs.TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
-			spseqtitle := constructSimpleParser(app.GetAttrs()["seqtitle"].GetS(), title)
-			spep := constructSimpleParser(app.GetAttrs()["epfmt"].GetS(), endpoint_format)
-			spapp := constructSimpleParser(app.GetAttrs()["appfmt"].GetS(), app_format)
+			spseqtitle := constructFormatParser(app.GetAttrs()["seqtitle"].GetS(), title)
+			spep := constructFormatParser(app.GetAttrs()["epfmt"].GetS(), endpoint_format)
+			spapp := constructFormatParser(app.GetAttrs()["appfmt"].GetS(), app_format)
 			keys := []string{}
 			for k := range app.GetEndpoints() {
 				keys = append(keys, k)
@@ -152,8 +91,8 @@ func DoConstructSequenceDiagrams(
 			for _, k := range keys {
 				endpoint := app.GetEndpoints()[k]
 				epAttrs := endpoint.GetAttrs()
-				output_dir := spout.fmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
-				bbs2 := seqs.TransformBlackBoxes(app.GetEndpoints()[k].GetAttrs()["blackboxes"].GetA().GetElt())
+				output_dir := spout.FmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
+				bbs2 := seqs.TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
 				varrefs := seqs.MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
 				sdEndpoints := []string{}
 				statements := endpoint.GetStmt()
@@ -167,7 +106,7 @@ func DoConstructSequenceDiagrams(
 					endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
 					EndpointLabeler: spep,
-					title:           spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), endpoint.GetLongName(), varrefs),
+					title:           spseqtitle.FmtSeq(endpoint.GetName(), endpoint.GetLongName(), varrefs),
 					blackboxes:      append(bbs, bbs2...),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
@@ -178,8 +117,8 @@ func DoConstructSequenceDiagrams(
 		if endpoints == nil {
 			return
 		}
-		spep := constructSimpleParser("", endpoint_format)
-		spapp := constructSimpleParser("", app_format)
+		spep := constructFormatParser("", endpoint_format)
+		spapp := constructFormatParser("", app_format)
 		sd := &sequenceDiagParam{
 			endpoints:       endpoints,
 			AppLabeler:      spapp,
@@ -194,6 +133,11 @@ func DoConstructSequenceDiagrams(
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
 func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Errorln(err)
+		}
+	}()
 	var endpoints_flag, apps_flag, blackboxes_flag, modules_flag arrayFlags
 	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
 	endpoint_format := flags.String("endpoint_format", "%(epname)", "Specify the format string for sequence diagram endpoints. "+

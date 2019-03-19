@@ -59,83 +59,6 @@ func MergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Att
 	return result
 }
 
-func ParseAttributesFormat(init string, attrs map[string]string) string {
-	formatted := replaceAttributes(init, attrs)
-	formatted = replaceAttributesWithRules(formatted, attrs)
-
-	return formatted
-}
-
-func replaceAttributesWithRules(formatted string, attrs map[string]string) string {
-	re := regexp.MustCompile(`%\(@?\w+([!=]=\'.*\')?\?[^\)\?]*\)`)
-	result := re.FindString(formatted)
-	if result != "" {
-		var subFormatted, conditionExp, conditionVal, yesStat, noStat string
-		re = regexp.MustCompile(`%\(@?\w+`)
-		key := removeWrapper(re.FindString(result))
-		val := attrs[key]
-		re = regexp.MustCompile(`[!=]='\w+'`)
-		conditionStat := re.FindString(result)
-		if conditionStat != "" {
-			conditionExp = string([]rune(conditionStat)[0:2])
-			conditionVal = removeConditionWrapper(conditionStat)
-		}
-		re = regexp.MustCompile(`\?[^\)\?]*`)
-		stat := strings.Replace(re.FindString(result), "?", "", 1)
-		stats := strings.Split(stat, "|")
-		yesStat = stats[0]
-		if len(stats) > 1 {
-			noStat = stats[1]
-		}
-		isYesStat := false
-		if conditionExp == "!=" && val != "" && val != conditionVal {
-			isYesStat = true
-		}
-		if conditionExp == "==" && val != "" && val == conditionVal {
-			isYesStat = true
-		}
-		if conditionExp == "" && val != "" {
-			isYesStat = true
-		}
-		subFormatted = noStat
-		if isYesStat {
-			subFormatted = yesStat
-		}
-
-		formatted = strings.Replace(formatted, result, subFormatted, 1)
-		formatted = replaceAttributesWithRules(formatted, attrs)
-	}
-
-	return formatted
-}
-
-func replaceAttributes(formatted string, attrs map[string]string) string {
-	re := regexp.MustCompile(`%\(@?\w+\)`)
-	result := re.FindString(formatted)
-	if result != "" {
-		formatted = strings.Replace(formatted, result, string(attrs[removeWrapper(result)]), 1)
-		formatted = replaceAttributes(formatted, attrs)
-	}
-
-	return formatted
-}
-
-func removeWrapper(origin string) string {
-	replaced := strings.Replace(origin, "%(", "", 1)
-	replaced = strings.Replace(replaced, "@", "", 1)
-	replaced = strings.Replace(replaced, ")", "", 1)
-
-	return replaced
-}
-
-func removeConditionWrapper(origin string) string {
-	replaced := strings.Replace(origin, "!", "", 1)
-	replaced = strings.Replace(replaced, "=", "", 2)
-	replaced = strings.Replace(replaced, "'", "", 2)
-
-	return replaced
-}
-
 func getAppName(appName *sysl.AppName) string {
 	return strings.Join(appName.Part, " :: ")
 }
@@ -219,7 +142,7 @@ func formatReturnParam(s *sysl.Module, payload string) []string {
 		}
 		return slice
 	}
-	types := make([]string, 0)
+	types := []string{}
 	if len(payload) > 0 {
 		paramSlice := split(payload)
 		for _, param := range paramSlice {
