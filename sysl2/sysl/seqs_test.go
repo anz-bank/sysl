@@ -270,12 +270,7 @@ type sdArgs struct {
 	app_format      string
 	title           string
 	plantuml        string
-	filter          string
 	output          string
-	no_activations  bool
-	verbose         bool
-	expire_cache    bool
-	dry_run         bool
 	endpoints       []string
 	apps            []string
 	modules         []string

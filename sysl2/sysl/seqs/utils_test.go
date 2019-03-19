@@ -106,92 +106,200 @@ func TestParseBlackBoxesFromArgument(t *testing.T) {
 	}
 }
 
-//func TestFindMatchItems(t *testing.T) {
-//	type args struct {
-//		origin string
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want []string
-//	}{
-//		{
-//			name: "Case-Null",
-//			args: args{""},
-//			want: nil,
-//		},
-//		{
-//			name: "Case-Convert Success",
-//			args: args{"%(appname)"},
-//			want: []string{"%(appname)"},
-//		},
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := FindMatchItems(tt.args.origin); !reflect.DeepEqual(got, tt.want) {
-//				t.Errorf("FindMatchItems() = %v, want %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
+func TestParseAttributesFormat(t *testing.T) {
+	type args struct {
+		origin    string
+		attrs     map[string]string
+	}
+	valMap := map[string]string{}
+	valMap["status"] = "init"
+	valMap["DONOTWANT"] = "ValueA"
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "Case-Null",
+			args: args{"", valMap},
+			want: "",
+		},
+		{
+			name: "Case-Convert Success",
+			args: args{
+				"%(DONOTWANT?%(@status=='aa'?//abc//\n|bb))**Project**",
+				valMap,
+			},
+			want: "bb**Project**",
+		},
+		{
+			name: "Case-With not equal condition",
+			args: args{
+				"%(DONOTWANT?%(@status!='aa'?//abc//\n|bb))**Project**",
+				valMap,
+			},
+			want: "//abc//\n**Project**",
+		},
+		{
+			name: "Case-value equal condition",
+			args: args{
+				"%(DONOTWANT?%(@status=='init'?//abc//\n|bb))**Project**",
+				valMap,
+			},
+			want: "//abc//\n**Project**",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ParseAttributesFormat(tt.args.origin, tt.args.attrs); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("replaceAttributesWithRules() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
-//func TestRemoveWrapper(t *testing.T) {
-//	type args struct {
-//		origin string
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want string
-//	}{
-//		{
-//			name: "Case-Null",
-//			args: args{""},
-//			want: "",
-//		},
-//		{
-//			name: "Case-Convert Success",
-//			args: args{"%(appname)"},
-//			want: "appname",
-//		},
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := RemoveWrapper(tt.args.origin); got != tt.want {
-//				t.Errorf("RemoveWrapper() = %v, want %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
+func TestReplaceAttributesWithRules(t *testing.T) {
+	type args struct {
+		origin string
+		attrs  map[string]string
+	}
+	valMap := map[string]string{}
+	valMap["status"] = "init"
+	valMap["DONOTWANT"] = "ValueA"
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "Case-Null",
+			args: args{"", valMap},
+			want: "",
+		},
+		{
+			name: "Case-Convert Success",
+			args: args{"%(DONOTWANT?%(@status=='aa'?//abc//\n|bb))**Project**", valMap},
+			want: "bb**Project**",
+		},
+		{
+			name: "Case-With not equal condition",
+			args: args{"%(DONOTWANT?%(@status!='aa'?//abc//\n|bb))**Project**", valMap},
+			want: "//abc//\n**Project**",
+		},
+		{
+			name: "Case-value equal condition",
+			args: args{"%(DONOTWANT?%(@status=='init'?//abc//\n|bb))**Project**", valMap},
+			want: "//abc//\n**Project**",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := replaceAttributesWithRules(tt.args.origin, tt.args.attrs); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("replaceAttributesWithRules() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
-//func TestRemovePercentSymbol(t *testing.T) {
-//	type args struct {
-//		origin string
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want string
-//	}{
-//		{
-//			"Case-Null",
-//			args{""},
-//			"",
-//		},
-//		{
-//			"Case-Remove Percent",
-//			args{"%VariableA, %VariableB"},
-//			"VariableA, VariableB",
-//		},
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := RemovePercentSymbol(tt.args.origin); got != tt.want {
-//				t.Errorf("RemovePercentSymbol() = %v, want %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
+func TestReplaceAttributes(t *testing.T) {
+	type args struct {
+		origin string
+		attrs  map[string]string
+	}
+	valMap := map[string]string{}
+	valMap["status"] = "init"
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "Case-Null",
+			args: args{"", valMap},
+			want: "",
+		},
+		{
+			name: "Case-Convert Success",
+			args: args{"%(status)", valMap},
+			want: "init",
+		},
+		{
+			name: "Case-Special characters",
+			args: args{"%($#1@)", valMap},
+			want: "%($#1@)",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := replaceAttributes(tt.args.origin, tt.args.attrs); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("replaceAttributes() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRemoveWrapper(t *testing.T) {
+	type args struct {
+		origin string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "Case-Null",
+			args: args{""},
+			want: "",
+		},
+		{
+			name: "Case-Convert Success",
+			args: args{"%(appname)"},
+			want: "appname",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := removeWrapper(tt.args.origin); got != tt.want {
+				t.Errorf("removeWrapper() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRemoveConditionWrapper(t *testing.T) {
+	type args struct {
+		origin string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			"Case-Null",
+			args{""},
+			"",
+		},
+		{
+			"Case-Remove condition operators",
+			args{"=='some value'"},
+			"some value",
+		},
+		{
+			"Case-Remove condition operators while not equal",
+			args{"!='some value'"},
+			"some value",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := removeConditionWrapper(tt.args.origin); got != tt.want {
+				t.Errorf("removeConditionWrapper() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func TestMergeAttributes(t *testing.T) {
 	type args struct {

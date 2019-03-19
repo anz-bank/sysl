@@ -3,13 +3,11 @@ package main
 import (
 	"flag"
 	"io"
-	"os"
 	"sort"
 	"strings"
-	"sysl/sysl2/sysl/seqs"
 
-	//"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	"github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -84,7 +82,7 @@ func (sp *SimpleParser) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
 	attrs["controls"] = p.Controls
 	attrs = mergeAttributesMap(attrs, p.Attrs)
 
-	return seqs.ParseAttributesFormat(initialStr, initialStr, attrs)
+	return seqs.ParseAttributesFormat(initialStr, attrs)
 }
 
 func (sp *SimpleParser) LabelApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
@@ -94,7 +92,7 @@ func (sp *SimpleParser) LabelApp(appname, controls string, attrs map[string]*sys
 	valMap["controls"] = controls
 	valMap = mergeAttributesMap(valMap, attrs)
 
-	return seqs.ParseAttributesFormat(initialStr, initialStr, valMap)
+	return seqs.ParseAttributesFormat(initialStr, valMap)
 }
 
 func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl.Attribute) string {
@@ -104,7 +102,7 @@ func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl
 	valMap["eplongname"] = eplongname
 	valMap = mergeAttributesMap(valMap, attrs)
 
-	return seqs.ParseAttributesFormat(initialStr, initialStr, valMap)
+	return seqs.ParseAttributesFormat(initialStr, valMap)
 }
 
 func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[string]*sysl.Attribute) string {
@@ -115,7 +113,7 @@ func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[
 	valMap["eplongname"] = eplongname
 	valMap = mergeAttributesMap(valMap, attrs)
 
-	return seqs.ParseAttributesFormat(initialStr, initialStr, valMap)
+	return seqs.ParseAttributesFormat(initialStr, valMap)
 }
 
 func constructSimpleParser(former, latter string) *SimpleParser {
@@ -131,13 +129,6 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 	no_activations, verbose, expire_cache, dry_run bool,
 	endpoints, apps, modules []string, blackboxes [][]string) {
 	mod := loadApp(root_model, modules)
-	syslSdFilters, exists := os.LookupEnv("SYSL_SD_FILTERS")
-	epFilters := []string{}
-	if exists {
-		epFilters = append(epFilters, strings.Split(syslSdFilters, ",")...)
-	} else {
-		epFilters = append(epFilters, "*")
-	}
 
 	if strings.Contains(output, "%(epname)") {
 		spout := &SimpleParser{self: output}
@@ -234,21 +225,21 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	if err != nil {
 		log.Errorf("arguments parse error: %v", err)
 	}
-	log.Warnf("root_model: %s\n", *root_model)
-	log.Warnf("endpoints: %v\n", endpoints_flag)
-	log.Warnf("app: %v\n", apps_flag)
-	log.Warnf("no_activations: %t\n", *no_activations)
-	log.Warnf("endpoint_format: %s\n", *endpoint_format)
-	log.Warnf("app_format: %s\n", *app_format)
-	log.Warnf("blackbox: %s\n", blackboxes_flag)
-	log.Warnf("title: %s\n", *title)
-	log.Warnf("plantuml: %s\n", *plantuml)
-	log.Warnf("verbose: %t\n", *verbose)
-	log.Warnf("expire_cache: %t\n", *expire_cache)
-	log.Warnf("dry_run: %t\n", *dry_run)
-	log.Warnf("filter: %s\n", *filter)
-	log.Warnf("modules: %s\n", modules_flag)
-	log.Warnf("output: %s\n", *output)
+	log.Debugf("root_model: %s\n", *root_model)
+	log.Debugf("endpoints: %v\n", endpoints_flag)
+	log.Debugf("app: %v\n", apps_flag)
+	log.Debugf("no_activations: %t\n", *no_activations)
+	log.Debugf("endpoint_format: %s\n", *endpoint_format)
+	log.Debugf("app_format: %s\n", *app_format)
+	log.Debugf("blackbox: %s\n", blackboxes_flag)
+	log.Debugf("title: %s\n", *title)
+	log.Debugf("plantuml: %s\n", *plantuml)
+	log.Debugf("verbose: %t\n", *verbose)
+	log.Debugf("expire_cache: %t\n", *expire_cache)
+	log.Debugf("dry_run: %t\n", *dry_run)
+	log.Debugf("filter: %s\n", *filter)
+	log.Debugf("modules: %s\n", modules_flag)
+	log.Debugf("output: %s\n", *output)
 
 	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *filter, *output, *no_activations,
 		*verbose, *expire_cache, *dry_run, endpoints_flag, apps_flag, modules_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))

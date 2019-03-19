@@ -2,16 +2,12 @@ package seqs
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"regexp"
 	"sort"
 	"strings"
 
 	"github.com/anz-bank/sysl/src/proto"
 )
-
-var out io.Writer = os.Stdout
 
 var (
 	itemRE                   = regexp.MustCompile(`(%\(\w+\))`)
@@ -64,8 +60,8 @@ func MergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Att
 	return result
 }
 
-func ParseAttributesFormat(init, formatted string, attrs map[string]string) string {
-	formatted = replaceAttributes(init, attrs)
+func ParseAttributesFormat(init string, attrs map[string]string) string {
+	formatted := replaceAttributes(init, attrs)
 	formatted = replaceAttributesWithRules(formatted, attrs)
 
 	return formatted
@@ -79,12 +75,10 @@ func replaceAttributesWithRules(formatted string, attrs map[string]string) strin
 		re = regexp.MustCompile(`%\(@?\w+`)
 		key := removeWrapper(re.FindString(result))
 		val := attrs[key]
-		fmt.Fprintln(out, fmt.Sprintf("key: %s, val: %s", key, val))
 		re = regexp.MustCompile(`[!=]='\w+'`)
 		conditionStat := re.FindString(result)
 		if conditionStat != "" {
 			conditionExp = string([]rune(conditionStat)[0:2])
-			fmt.Fprintln(out, fmt.Sprintf("conditionExp: %s", conditionExp))
 			conditionVal = removeConditionWrapper(conditionStat)
 		}
 		re = regexp.MustCompile(`\?[^\)\?]*`)
@@ -108,7 +102,6 @@ func replaceAttributesWithRules(formatted string, attrs map[string]string) strin
 		if isYesStat {
 			subFormatted = yesStat
 		}
-		fmt.Fprintln(out, fmt.Sprintf("isYesStat: %v", isYesStat))
 
 		formatted = strings.Replace(formatted, result, subFormatted, 1)
 		formatted = replaceAttributesWithRules(formatted, attrs)
