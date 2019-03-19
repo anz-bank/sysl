@@ -1,0 +1,220 @@
+{
+ "apps": {
+  "Api": {
+   "name": {
+    "part": [
+     "Api"
+    ]
+   },
+   "endpoints": {
+    "GET /users/{user_id}/profile": {
+     "name": "GET /users/{user_id}/profile",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "Database"
+         ]
+        },
+        "endpoint": "QueryUser",
+        "arg": [
+         {
+          "name": "user_id"
+         }
+        ]
+       }
+      },
+      {
+       "ret": {
+        "payload": "UserProfile"
+       }
+      }
+     ],
+     "restParams": {
+      "method": "GET",
+      "path": "/users/{user_id}/profile",
+      "urlParam": [
+       {
+        "name": "user_id",
+        "type": {
+         "primitive": "INT",
+         "sourceContext": {
+          "start": {
+           "line": 7
+          }
+         }
+        }
+       }
+      ]
+     },
+     "sourceContext": {
+      "file": "./tests/sysl-sd.sysl",
+      "start": {
+       "line": 8,
+       "col": 8
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "./tests/sysl-sd.sysl",
+    "start": {
+     "line": 6,
+     "col": 1
+    }
+   }
+  },
+  "Database": {
+   "name": {
+    "part": [
+     "Database"
+    ]
+   },
+   "attrs": {
+    "patterns": {
+     "a": {
+      "elt": [
+       {
+        "s": "db"
+       }
+      ]
+     }
+    }
+   },
+   "endpoints": {
+    "QueryUser": {
+     "name": "QueryUser",
+     "param": [
+      {
+       "name": "user_id",
+       "type": {
+        "noType": {
+
+        }
+       }
+      }
+     ],
+     "stmt": [
+      {
+       "ret": {
+        "payload": "User"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "./tests/sysl-sd.sysl",
+      "start": {
+       "line": 3,
+       "col": 4
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "./tests/sysl-sd.sysl",
+    "start": {
+     "line": 2,
+     "col": 1
+    }
+   }
+  },
+  "Project": {
+   "name": {
+    "part": [
+     "Project"
+    ]
+   },
+   "attrs": {
+    "seqtitle": {
+     "s": "Profile"
+    }
+   },
+   "endpoints": {
+    "_": {
+     "name": "_",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "WebFrontend"
+         ]
+        },
+        "endpoint": "RequestProfile"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "./tests/sysl-sd.sysl",
+      "start": {
+       "line": 18,
+       "col": 4
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "./tests/sysl-sd.sysl",
+    "start": {
+     "line": 17,
+     "col": 1
+    }
+   }
+  },
+  "WebFrontend": {
+   "name": {
+    "part": [
+     "WebFrontend"
+    ]
+   },
+   "endpoints": {
+    "RequestProfile": {
+     "name": "RequestProfile",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "Api"
+         ]
+        },
+        "endpoint": "GET /users/{user_id}/profile"
+       }
+      },
+      {
+       "ret": {
+        "payload": "Profile Page"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "./tests/sysl-sd.sysl",
+      "start": {
+       "line": 13,
+       "col": 4
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "./tests/sysl-sd.sysl",
+    "start": {
+     "line": 12,
+     "col": 1
+    }
+   }
+  }
+ }
+}
