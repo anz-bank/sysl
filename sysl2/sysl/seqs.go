@@ -25,9 +25,7 @@ type sequenceDiagParam struct {
 
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
 	w := seqs.MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-
 	v := seqs.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
-
 	e := seqs.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 
 	e.Accept(v)
@@ -37,23 +35,25 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 
 type arrayFlags []string
 
-// implement the String method of Value interface in flag.go
+// String implements flag.Value.
 func (i *arrayFlags) String() string {
 	return strings.Join(*i, ",")
 }
 
-// implement the Set method of Value interface in flag.go
+// Set implements flag.Value.
 func (i *arrayFlags) Set(value string) error {
 	*i = append(*i, value)
 	return nil
 }
 
 func loadApp(root string, models []string) *sysl.Module {
-	// Model we want to generate seqs for
+	// Model we want to generate seqs for, the first non-empty model
 	var model string
 	for _, val := range models {
-		model = val
-		break
+		if len(val) > 0 {
+			model = val
+			break
+		}
 	}
 	mod, err := Parse(model, root)
 	if err == nil {
@@ -73,13 +73,14 @@ func mergeAttributesMap(val map[string]string, attrs map[string]*sysl.Attribute)
 
 func (sp *SimpleParser) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
 	initialStr := sp.self
-	attrs := map[string]string{}
-	attrs["epname"] = p.EndpointName
-	attrs["human"] = p.Human
-	attrs["human_sender"] = p.HumanSender
-	attrs["args"] = p.Args
-	attrs["patterns"] = p.Patterns
-	attrs["controls"] = p.Controls
+	attrs := map[string]string{
+		"epname":       p.EndpointName,
+		"human":        p.Human,
+		"human_sender": p.HumanSender,
+		"args":         p.Args,
+		"patterns":     p.Patterns,
+		"controls":     p.Controls,
+	}
 	attrs = mergeAttributesMap(attrs, p.Attrs)
 
 	return seqs.ParseAttributesFormat(initialStr, attrs)
@@ -87,9 +88,10 @@ func (sp *SimpleParser) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
 
 func (sp *SimpleParser) LabelApp(appname, controls string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	valMap := map[string]string{}
-	valMap["appname"] = appname
-	valMap["controls"] = controls
+	valMap := map[string]string{
+		"appname":  appname,
+		"controls": controls,
+	}
 	valMap = mergeAttributesMap(valMap, attrs)
 
 	return seqs.ParseAttributesFormat(initialStr, valMap)
@@ -97,9 +99,10 @@ func (sp *SimpleParser) LabelApp(appname, controls string, attrs map[string]*sys
 
 func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	valMap := map[string]string{}
-	valMap["epname"] = epname
-	valMap["eplongname"] = eplongname
+	valMap := map[string]string{
+		"epname":     epname,
+		"eplongname": eplongname,
+	}
 	valMap = mergeAttributesMap(valMap, attrs)
 
 	return seqs.ParseAttributesFormat(initialStr, valMap)
@@ -107,10 +110,11 @@ func (sp *SimpleParser) fmtSeq(epname, eplongname string, attrs map[string]*sysl
 
 func (sp *SimpleParser) fmtOutput(appname, epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	initialStr := sp.self
-	valMap := map[string]string{}
-	valMap["appname"] = appname
-	valMap["epname"] = epname
-	valMap["eplongname"] = eplongname
+	valMap := map[string]string{
+		"appname":    appname,
+		"epname":     epname,
+		"eplongname": eplongname,
+	}
 	valMap = mergeAttributesMap(valMap, attrs)
 
 	return seqs.ParseAttributesFormat(initialStr, valMap)
@@ -125,9 +129,11 @@ func constructSimpleParser(former, latter string) *SimpleParser {
 	return &SimpleParser{self: fmtstr}
 }
 
-func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title, plantuml, filter, output string,
-	no_activations, verbose, expire_cache, dry_run bool,
-	endpoints, apps, modules []string, blackboxes [][]string) {
+func DoConstructSequenceDiagrams(
+	root_model, endpoint_format, app_format, title, plantuml, output string,
+	endpoints, apps, modules []string,
+	blackboxes [][]string,
+) {
 	mod := loadApp(root_model, modules)
 
 	if strings.Contains(output, "%(epname)") {
@@ -144,21 +150,13 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 			}
 			sort.Strings(keys)
 			for _, k := range keys {
-				is_continue := false
-				for _, filt := range epFilters {
-					log.Warn(filt)
-				}
-
-				if is_continue {
-					continue
-				}
-
-				epAttrs := app.GetEndpoints()[k].GetAttrs()
-				output_dir := spout.fmtOutput(appName, k, app.GetEndpoints()[k].GetLongName(), epAttrs)
+				endpoint := app.GetEndpoints()[k]
+				epAttrs := endpoint.GetAttrs()
+				output_dir := spout.fmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
 				bbs2 := seqs.TransformBlackBoxes(app.GetEndpoints()[k].GetAttrs()["blackboxes"].GetA().GetElt())
-				varrefs := seqs.MergeAttributes(app.GetAttrs(), app.GetEndpoints()[k].GetAttrs())
+				varrefs := seqs.MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
 				sdEndpoints := []string{}
-				statements := app.GetEndpoints()[k].GetStmt()
+				statements := endpoint.GetStmt()
 				for _, stmt := range statements {
 					parts := stmt.GetCall().GetTarget().GetPart()
 					ep := stmt.GetCall().GetEndpoint()
@@ -169,7 +167,7 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 					endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
 					EndpointLabeler: spep,
-					title:           spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), app.GetEndpoints()[k].GetLongName(), varrefs),
+					title:           spseqtitle.fmtSeq(app.GetEndpoints()[k].GetName(), endpoint.GetLongName(), varrefs),
 					blackboxes:      append(bbs, bbs2...),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
@@ -195,31 +193,33 @@ func DoConstructSequenceDiagrams(root_model, endpoint_format, app_format, title,
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
-func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) int {
+func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) {
 	var endpoints_flag, apps_flag, blackboxes_flag, modules_flag arrayFlags
 	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
-	flags.Var(&endpoints_flag, "endpoint", "Include endpoint in sequence diagram")
-	flags.Var(&apps_flag, "app", "Include all endpoints for app in sequence diagram (currently "+
-		"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
-		"comma-list of shell globs) to limit the diagrams generated")
-	no_activations := flags.Bool("no-activations", true, "Suppress sequence diagram activation bars(default: true)")
 	endpoint_format := flags.String("endpoint_format", "%(epname)", "Specify the format string for sequence diagram endpoints. "+
 		"May include %%(epname), %%(eplongname) and %%(@foo) for attribute foo(default: %(epname))")
 	app_format := flags.String("app_format", "%(appname)", "Specify the format string for sequence diagram participants. "+
 		"May include %%(appname) and %%(@foo) for attribute foo(default: %(appname))")
-	flags.Var(&blackboxes_flag, "blackbox", "Apps to be treated as black boxes")
 	title := flags.String("title", "", "diagram title")
 	plantuml := flags.String("plantuml", "", strings.Join([]string{"base url of plantuml server",
 		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
 		"see http://plantuml.com/server.html#install for more info)"}, "\n"))
-	verbose := flags.Bool("verbose", false, "Report each output(default: false)")
-	expire_cache := flags.Bool("expire-cache", false, "Expire cache entries to force checking against real destination(default: false)")
-	dry_run := flags.Bool("dry-run", false, "Don't perform confluence uploads, but show what would have happened(default: false)")
-	filter := flags.String("filter", "", "Only generate diagrams whose output paths match a pattern")
+	output := flags.String("output", "%(epname).png", "output file(default: %(epname).png)")
+	flags.Var(&endpoints_flag, "endpoint", "Include endpoint in sequence diagram")
+	flags.Var(&apps_flag, "app", "Include all endpoints for app in sequence diagram (currently "+
+		"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
+		"comma-list of shell globs) to limit the diagrams generated")
+	flags.Var(&blackboxes_flag, "blackbox", "Apps to be treated as black boxes")
 	flags.Var(&modules_flag, "modules", strings.Join([]string{"input files without .sysl extension and with leading /",
 		"eg: /project_dir/my_models",
 		"combine with --root if needed"}, "\n"))
-	output := flags.String("output", "%(epname).png", "output file(default: %(epname).png)")
+
+	// Following variables currently are unused. Keep them to align with the python version.
+	filter := flags.String("filter", "", "Only generate diagrams whose output paths match a pattern")
+	no_activations := flags.Bool("no-activations", true, "Suppress sequence diagram activation bars(default: true)")
+	verbose := flags.Bool("verbose", false, "Report each output(default: false)")
+	expire_cache := flags.Bool("expire-cache", false, "Expire cache entries to force checking against real destination(default: false)")
+	dry_run := flags.Bool("dry-run", false, "Don't perform confluence uploads, but show what would have happened(default: false)")
 
 	err := flags.Parse(args[1:])
 	if err != nil {
@@ -241,8 +241,6 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	log.Debugf("modules: %s\n", modules_flag)
 	log.Debugf("output: %s\n", *output)
 
-	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *filter, *output, *no_activations,
-		*verbose, *expire_cache, *dry_run, endpoints_flag, apps_flag, modules_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
-
-	return 0
+	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *output,
+		endpoints_flag, apps_flag, modules_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
 }

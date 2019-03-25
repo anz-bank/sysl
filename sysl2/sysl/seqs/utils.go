@@ -23,7 +23,7 @@ var (
 func TransformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {
 	bbs := make([][]string, 0, len(blackboxes))
 	for _, vals := range blackboxes {
-		subBbs := make([]string, 0)
+		subBbs := []string{}
 		for _, val := range vals.GetA().Elt {
 			subBbs = append(subBbs, val.GetS())
 		}
@@ -38,8 +38,7 @@ func TransformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {
 func ParseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
 	bbs := make([][]string, 0, len(blackboxFlags))
 	for _, blackboxFlag := range blackboxFlags {
-		subBbs := make([]string, 0)
-		subBbs = append(subBbs, strings.Split(blackboxFlag, ",")...)
+		subBbs := strings.Split(blackboxFlag, ",")
 		if len(subBbs) > 0 {
 			bbs = append(bbs, subBbs)
 		}
@@ -49,7 +48,7 @@ func ParseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
 }
 
 func MergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Attribute {
-	result := make(map[string]*sysl.Attribute)
+	result := map[string]*sysl.Attribute{}
 	for k, v := range app {
 		result[k] = v
 	}
@@ -149,7 +148,7 @@ func getApplicationAttrs(m *sysl.Module, appName string) map[string]*sysl.Attrib
 }
 
 func getSortedISOCtrlSlice(attrs map[string]*sysl.Attribute) []string {
-	s := make([]string, 0)
+	s := make([]string, 0, len(attrs))
 
 	for k := range attrs {
 		match := isoCtrlRE.FindStringSubmatch(k)
@@ -199,7 +198,7 @@ func formatReturnParam(s *sysl.Module, payload string) []string {
 	// however golang regex does not support negative look ahead
 	// that is the reason why I write this split function
 	split := func(s string) []string {
-		slice := make([]string, 0)
+		slice := []string{}
 		inBrace := 0
 		startIndex := 0
 		for i, v := range s {

@@ -118,14 +118,19 @@ func (e *EndpointElement) endpoint(a *sysl.Application) *sysl.Endpoint {
 		e.endpointName, e.appName))
 }
 
-func (e *EndpointElement) label(l EndpointLabeler, m *sysl.Module, ep *sysl.Endpoint, epp *strSet,
-	isHuman, isHumanSender, needsInt bool) string {
+func (e *EndpointElement) label(
+	l EndpointLabeler,
+	m *sysl.Module,
+	ep *sysl.Endpoint,
+	epp *strSet,
+	isHuman, isHumanSender, needsInt bool,
+) string {
 	label := normalizeEndpointName(e.endpointName)
 
 	if e.stmt != nil && e.stmt.GetCall() != nil {
 		ptrns := func(a *strSet, b *strSet) string {
-			if a.Len() > 0 || b.Len() > 0 {
-				return fmt.Sprintf("%s -> %s", strings.Join(a.ToSlice(), ", "), strings.Join(b.ToSlice(), ", "))
+			if len(*a) > 0 || len(*b) > 0 {
+				return fmt.Sprintf("%s -> %s", strings.Join(a.ToSortedSlice(), ", "), strings.Join(b.ToSortedSlice(), ", "))
 			}
 			return ""
 		}(e.senderEndpointPatterns, epp)
@@ -180,8 +185,12 @@ type SequenceDiagramVisitor struct {
 	symbols map[string]*_var
 }
 
-func MakeSequenceDiagramVisitor(a AppLabeler, e EndpointLabeler,
-	w *SequenceDiagramWriter, m *sysl.Module) *SequenceDiagramVisitor {
+func MakeSequenceDiagramVisitor(
+	a AppLabeler,
+	e EndpointLabeler,
+	w *SequenceDiagramWriter,
+	m *sysl.Module,
+) *SequenceDiagramVisitor {
 	return &SequenceDiagramVisitor{
 		AppLabeler:      a,
 		EndpointLabeler: e,

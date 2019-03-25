@@ -84,3 +84,22 @@ func TestOutputPlantumlWithUml(t *testing.T) {
 	_, err := os.Stat("test.puml")
 	assert.False(t, os.IsNotExist(err))
 }
+
+func TestEncode6bit(t *testing.T) {
+	data := []struct {
+		input    byte
+		expected byte
+	}{
+		{0, 48},   // 0
+		{255, 63}, // ?
+		{63, 95},  // _
+		{24, 79},  // O
+	}
+
+	for _, v := range data {
+		t.Run(string(int(v.input)), func(tt *testing.T) {
+			actual := encode6bit(v.input)
+			assert.Equal(tt, v.expected, actual)
+		})
+	}
+}

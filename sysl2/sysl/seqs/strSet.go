@@ -6,16 +6,10 @@ import (
 	"github.com/anz-bank/sysl/src/proto"
 )
 
-type (
-	nothing struct{}
-
-	strSet struct {
-		m map[string]nothing
-	}
-)
+type strSet map[string]struct{}
 
 func makeStrSet(initial ...string) *strSet {
-	s := &strSet{make(map[string]nothing)}
+	s := &strSet{}
 
 	for _, v := range initial {
 		s.Insert(v)
@@ -25,12 +19,14 @@ func makeStrSet(initial ...string) *strSet {
 }
 
 func makeStrSetFromPatternsAttr(attrs map[string]*sysl.Attribute) *strSet {
-	s := &strSet{make(map[string]nothing)}
+	s := &strSet{}
 
 	if patterns, has := attrs["patterns"]; has {
 		if x := patterns.GetA(); x != nil {
 			for _, y := range x.Elt {
-				s.Insert(y.GetS())
+				if v := y.GetS(); len(v) > 0 {
+					s.Insert(y.GetS())
+				}
 			}
 		}
 	}
@@ -39,80 +35,82 @@ func makeStrSetFromPatternsAttr(attrs map[string]*sysl.Attribute) *strSet {
 }
 
 func (s *strSet) Contains(elem string) bool {
-	_, ok := s.m[elem]
+	_, ok := (*s)[elem]
 	return ok
 }
 
 func (s *strSet) Insert(elem string) {
-	if len(elem) > 0 {
-		s.m[elem] = nothing{}
-	}
+	(*s)[elem] = struct{}{}
 }
 
 func (s *strSet) Remove(elem string) {
-	delete(s.m, elem)
-}
-
-func (s *strSet) Len() int {
-	return len(s.m)
+	delete(*s, elem)
 }
 
 func (s *strSet) ToSlice() []string {
-	o := make([]string, 0, len(s.m))
+	o := make([]string, 0, len(*s))
 
-	for k := range s.m {
+	for k := range *s {
 		o = append(o, k)
 	}
-
-	sort.Strings(o)
 
 	return o
 }
 
-func (s *strSet) Clone() *strSet {
-	m := make(map[string]nothing)
+func (s *strSet) ToSortedSlice() []string {
+	slice := s.ToSlice()
+	sorted := make([]string, len(slice))
+	copy(sorted, slice)
 
-	for k := range s.m {
-		m[k] = nothing{}
+	sort.Strings(sorted)
+
+	return sorted
+}
+
+func (s *strSet) Clone() *strSet {
+	out := &strSet{}
+
+	for k := range *s {
+		out.Insert(k)
 	}
 
-	return &strSet{m}
+	return out
 }
 
 func (s *strSet) Union(other *strSet) *strSet {
-	m := make(map[string]nothing)
+	out := &strSet{}
 
-	for k := range s.m {
-		m[k] = nothing{}
+	for k := range *s {
+		out.Insert(k)
 	}
 
-	for k := range other.m {
-		m[k] = nothing{}
+	for k := range *other {
+		out.Insert(k)
 	}
 
-	return &strSet{m}
+	return out
 }
 
 func (s *strSet) Intersection(other *strSet) *strSet {
-	m := make(map[string]nothing)
+	out := &strSet{}
 
-	for k := range s.m {
-		if _, ok := other.m[k]; ok {
-			m[k] = nothing{}
+	for k := range *s {
+		if other.Contains(k) {
+			out.Insert(k)
 		}
 	}
 
-	return &strSet{m}
+	return out
 }
 
 func (s *strSet) Difference(other *strSet) *strSet {
-	m := make(map[string]nothing)
+	out := &strSet{}
 
-	for k := range s.m {
-		if _, ok := other.m[k]; !ok {
-			m[k] = nothing{}
+	for k := range *s {
+		if !other.Contains(k) {
+			out.Insert(k)
 		}
 	}
 
-	return &strSet{m}
+	return out
 }

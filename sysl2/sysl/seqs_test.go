@@ -68,50 +68,26 @@ deactivate _0
 }
 
 func TestArrayFlagsString(t *testing.T) {
-	tests := []struct {
-		name string
-		i    *arrayFlags
-		want string
-	}{
-		{
-			name: "Success",
-			i:    &arrayFlags{"FlagA"},
-			want: "FlagA",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.i.String(); got != tt.want {
-				t.Errorf("arrayFlags.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	// Given
+	f := &arrayFlags{"FlagA"}
+
+	// When
+	actual := f.String()
+
+	// Then
+	assert.Equal(t, "FlagA", actual)
 }
 
 func TestArrayFlagsSet(t *testing.T) {
-	type args struct {
-		value string
-	}
-	tests := []struct {
-		name    string
-		i       *arrayFlags
-		args    args
-		wantErr bool
-	}{
-		{
-			name:    "",
-			i:       &arrayFlags{"FlagA"},
-			args:    args{"FlagB"},
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := tt.i.Set(tt.args.value); (err != nil) != tt.wantErr {
-				t.Errorf("arrayFlags.Set() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
+	// Given
+	f := &arrayFlags{"FlagA"}
+
+	// When
+	err := f.Set("FlagB")
+
+	// Then
+	assert.Nil(t, err)
+	assert.Len(t, *f, 2)
 }
 
 type loadAppArgs struct {
@@ -337,7 +313,6 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		want       int
 		wantStdout string
 		wantStderr string
 	}{
@@ -347,7 +322,6 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 				flag.NewFlagSet(argsData[0], flag.PanicOnError),
 				argsData,
 			},
-			0,
 			"",
 			"",
 		},
@@ -356,9 +330,7 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			stdout := &bytes.Buffer{}
 			stderr := &bytes.Buffer{}
-			if got := DoGenerateSequenceDiagrams(stdout, stderr, tt.args.flags, tt.args.args); got != tt.want {
-				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", got, tt.want)
-			}
+			DoGenerateSequenceDiagrams(stdout, stderr, tt.args.flags, tt.args.args)
 			if gotStdout := stdout.String(); gotStdout != tt.wantStdout {
 				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", gotStdout, tt.wantStdout)
 			}

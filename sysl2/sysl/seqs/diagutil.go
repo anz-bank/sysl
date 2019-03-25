@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"compress/zlib"
 	"fmt"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
 	"os"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -78,14 +78,15 @@ func DeflateAndEncode(text []byte) string {
 
 func encode(data []byte) string {
 	var buf bytes.Buffer
-	for i := 0; i < len(data); i += 3 {
-		if i+2 == len(data) {
-			encode3bytes(&buf, data[i], data[i+1], 0)
-		} else if i+1 == len(data) {
-			encode3bytes(&buf, data[i], 0, 0)
-		} else {
-			encode3bytes(&buf, data[i], data[i+1], data[i+2])
-		}
+	i := 0
+	for wholeTripleBytes := len(data) / 3 * 3; i < wholeTripleBytes; i += 3 {
+		encode3bytes(&buf, data[i], data[i+1], data[i+2])
+	}
+	switch len(data) - i {
+	case 1:
+		encode3bytes(&buf, data[i], 0, 0)
+	case 2:
+		encode3bytes(&buf, data[i], data[i+1], 0)
 	}
 	return buf.String()
 }
@@ -97,39 +98,17 @@ func encode3bytes(buf *bytes.Buffer, b1, b2, b3 byte) {
 	c3 := ((b2 & 0xF) << 2) | (b3 >> 6)
 	c4 := b3 & 0x3F
 
-	buf.WriteByte(encode6bit(c1 & 0x3F))
-	buf.WriteByte(encode6bit(c2 & 0x3F))
-	buf.WriteByte(encode6bit(c3 & 0x3F))
-	buf.WriteByte(encode6bit(c4 & 0x3F))
+	buf.WriteByte(encode6bit(0x3F & c1))
+	buf.WriteByte(encode6bit(0x3F & c2))
+	buf.WriteByte(encode6bit(0x3F & c3))
+	buf.WriteByte(encode6bit(0x3F & c4))
 }
 
 func encode6bit(b byte) byte {
 	// 6 bit makes value 0 to 63. The func maps 0-63 to characters
 	// '0'-'9', 'A'-'Z', 'a'-'z', '-', '_'. '?' should never be reached.
-	if b < 10 {
-		// 48 -> '0'
-		return byte(48 + b)
+	if b > 63 {
+		return '?'
 	}
-	b -= 10
-
-	if b < 26 {
-		// 65 -> 'A'
-		return byte(65 + b)
-	}
-	b -= 26
-
-	if b < 26 {
-		// 97 -> 'a'
-		return byte(97 + b)
-	}
-	b -= 26
-
-	if b == 0 {
-		return '-'
-	}
-	if b == 1 {
-		return '_'
-	}
-	return '?'
-
+	return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"[b]
 }

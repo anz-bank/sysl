@@ -24,7 +24,7 @@ func MakeSequenceDiagramWriter(autogenWarning bool, properties ...string) *Seque
 		atBeginOfLine:  true,
 		autogenWarning: autogenWarning,
 		properties:     p,
-		active:         make(map[string]int),
+		active:         map[string]int{},
 	}
 }
 
@@ -42,7 +42,9 @@ func (s *SequenceDiagramWriter) Write(p []byte) (n int, err error) {
 			s.writeIndent()
 		}
 		n, err = s.body.Write(p)
-		s.atBeginOfLine = false
+		if err == nil {
+			s.atBeginOfLine = false
+		}
 		return n, err
 	}
 
@@ -53,11 +55,11 @@ func (s *SequenceDiagramWriter) Write(p []byte) (n int, err error) {
 			s.writeIndent()
 		}
 		nn, err := s.body.Write(frag)
-		s.atBeginOfLine = false
-		n += nn
 		if err != nil {
 			return n, err
 		}
+		s.atBeginOfLine = false
+		n += nn
 		if i+1 < len(frags) {
 			if err := s.WriteByte('\n'); err != nil {
 				return n, err
@@ -79,7 +81,9 @@ func (s *SequenceDiagramWriter) WriteByte(c byte) error {
 	}
 
 	err := s.body.WriteByte(c)
-	s.atBeginOfLine = c == '\n'
+	if err == nil {
+		s.atBeginOfLine = c == '\n'
+	}
 
 	return err
 }
@@ -94,7 +98,7 @@ func (s *SequenceDiagramWriter) Indent() {
 
 func (s *SequenceDiagramWriter) Unindent() {
 	if s.ind == 0 {
-		return
+		panic("SequenceDiagramWriter unindent too far")
 	}
 	s.ind--
 }
@@ -138,11 +142,7 @@ func (s *SequenceDiagramWriter) writeIndent() {
 		return
 	}
 
-	spaces := make([]byte, 0, s.ind)
-	for i := 0; i < s.ind; i++ {
-		spaces = append(spaces, ' ')
-	}
-	s.body.Write(spaces)
+	s.body.WriteString(strings.Repeat(" ", s.ind))
 	s.atBeginOfLine = false
 }
 
