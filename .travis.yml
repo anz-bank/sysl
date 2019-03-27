@@ -83,7 +83,7 @@ deploy:
   skip_cleanup: true
   prerelease: true
   on:
-    repo: github.com/anz-bank/sysl
+    repo: anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: pypi
@@ -93,25 +93,25 @@ deploy:
   password:
     secure: j9NRzqbk/hq9U25Ig5r2aA1+Y/asG2jqP4T35x4cwdosE3r4i9delxG0ZyLa4D44OYM7joIPdMyr9khlfK5HBXqNC9ZzhlDyYlg5/LJmsM4TeS5KaKyPL89bqDAX2NhNgVjb8J68XsKkizYjzVeKbPl5UYdoyv7t4yLytlsAjRBBYmIo5mJ9Obx1Hb+nUP7Ny4Pwl43Oxkr2qS91iD074V4B0czHjMvtizqttOGTr81TzPbuDsd4/DW8GVQF0gPazg1/UqhN37oAKpIH9k5u4ScrKQkUGDO1eOEkwogTqOAcOTu91AZST/1OHN2ZRcMtvcyY1QJWq88s9p9DIWqsSK42bb4L0SziNa23hvFUpkaxsnl6MCLPaHP2zpo3cyKOGmWT6JElv9hJBVFimCG1V1b/YNHVuoNfz6J3gbW8ILw9e6vebfQRHHqAwBQWtRilHnO5jRcLRIvBSZyApYw6rBUGtuDD2GbXwcFVbIde1xqfvt3dlB/ZC4PiyXqdwAKadjTxycP/Aexzg4YpoWnHUS+aeFJVy+Qb/3H3lZLNIz9zRqCnIvpIR0+hzTgNVuVRrr1WlupIPxY47+cy7s0dhi3gf+/j+YxNgKnTlZin+RvcU9+49CL9DYyMYYRA/RauJi/pa7hbEvxtY/AykcvRpQcv4Crl1mTOn+zqvrFdCDw=
   on:
-    repo: github.com/anz-bank/sysl
+    repo: anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
   script: gradle -b src/libs/java/build.gradle bintrayUpload
   skip_cleanup: true
   on:
-    repo: github.com/anz-bank/sysl
+    repo: anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
   script: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" && docker push "$DOCKER_IMAGE_VERSIONED" && docker push "$DOCKER_IMAGE_LATEST"
   on:
-    repo: github.com/anz-bank/sysl
+    repo: anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
   script: cd sysl2/sysl/sysl_js && npm publish
   on:
-    repo: github.com/anz-bank/sysl
+    repo: anz-bank/sysl
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
