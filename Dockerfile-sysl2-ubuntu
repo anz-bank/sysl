@@ -10,3 +10,4 @@ ADD dist/sysl-*.whl /sysl
 ADD gosysl/gosysl-linux /usr/bin/sysl2
 
 RUN pip install sysl-*.whl
+RUN ln -s /usr/bin/sysl2 /usr/bin/syslgen
