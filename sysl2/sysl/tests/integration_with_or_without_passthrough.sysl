@@ -1,0 +1,30 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        Systema <- endpoint
+
+Systema [foo_id="y"]:
+    endpoint [foo_id="y"]:
+        System_b <- endpoint2
+
+    endpoint_2:
+        System_c <- endpoint2
+
+Project [appfmt="%(appname)", epfmt="%(epname)"]:
+
+    with_passthrough [passthrough=["Systema"]]:
+        IntegratedSystem
+
+    without_passthrough:
+        IntegratedSystem
+
+    with_systema:
+        IntegratedSystem
+        Systema
+
+System_b:
+    endpoint: ...
+    endpoint2: ...
+
+System_c:
+    endpoint: ...
+    endpoint2: ...

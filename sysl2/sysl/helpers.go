@@ -14,12 +14,12 @@ func getApp(appName *sysl.AppName, mod *sysl.Module) *sysl.Application {
 	return mod.Apps[getAppName(appName)]
 }
 
-func hasAbstractPattern(attrs map[string]*sysl.Attribute) bool {
+func HasPattern(attrs map[string]*sysl.Attribute, pattern string) bool {
 	patterns, has := attrs["patterns"]
 	if has {
 		if x := patterns.GetA(); x != nil {
 			for _, y := range x.Elt {
-				if y.GetS() == "abstract" {
+				if y.GetS() == pattern {
 					return true
 				}
 			}

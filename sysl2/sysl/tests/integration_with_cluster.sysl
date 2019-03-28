@@ -1,0 +1,16 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        System :: a <- endpoint
+        System :: b <- endpoint
+
+System :: a:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    _:
+        IntegratedSystem
+        System :: a
+        System :: b
+
+System :: b:
+    endpoint: ...

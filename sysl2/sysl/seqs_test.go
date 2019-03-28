@@ -5,22 +5,9 @@ import (
 	"flag"
 	"testing"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-type labeler struct {
-}
-
-func (l *labeler) LabelApp(appName, controls string, attrs map[string]*sysl.Attribute) string {
-	return appName
-}
-
-func (l *labeler) LabelEndpoint(p *seqs.EndpointLabelerParam) string {
-	return p.EndpointName
-}
 
 func TestGenerateSequenceDiag(t *testing.T) {
 	m, _ := Parse("demo/simple/sysl-sd.sysl", "../../")
@@ -68,8 +55,8 @@ deactivate _0
 
 func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	m, _ := Parse("sequence_diagram_name_format.sysl", "./tests/")
-	al := seqs.MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
-	el := seqs.MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
+	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
+	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al
@@ -117,8 +104,8 @@ skinparam maxMessageSize 250
 
 func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	m, _ := Parse("sequence_diagram_name_format.sysl", "./tests/")
-	al := seqs.MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
-	el := seqs.MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
+	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
+	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al

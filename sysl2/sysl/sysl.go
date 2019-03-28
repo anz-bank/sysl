@@ -34,12 +34,17 @@ func main3(stdout, stderr io.Writer, args []string) error {
 		return DoGenerateCode(stdout, stderr, flags, args)
 	case "sd":
 		return DoGenerateSequenceDiagrams(stdout, stderr, args)
+	case "ints":
+		DoGenerateIntegrations(args)
+		return nil
 	}
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
 	output := flags.String("o", "", "output file name")
 	mode := flags.String("mode", "textpb", "output mode")
 	loglevel := flags.String("log", "warn", "log level[debug,info,warn,off]")
 
+	//nolint:errcheck
+	flags.Parse(args[1:])
 	if err := flags.Parse(args[1:]); err != nil {
 		return err
 	}

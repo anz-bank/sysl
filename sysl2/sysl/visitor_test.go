@@ -1,4 +1,4 @@
-package seqs
+package main
 
 import (
 	"os"
@@ -184,7 +184,7 @@ func TestEndpointElementEndpointLabel(t *testing.T) {
 	}
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, makeStrSet(), false, false, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet(), false, false, false)
 
 	// Then
 	assert.Equal(t, " ⬄ b", actual)
@@ -201,12 +201,12 @@ func TestEndpointElementEndpointLabelWithValidStmt(t *testing.T) {
 				Call: &sysl.Call{},
 			},
 		},
-		senderEndpointPatterns: makeStrSet(),
+		senderEndpointPatterns: MakeStrSet(),
 	}
 	l.On("LabelEndpoint", mock.Anything).Return("test")
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, makeStrSet("a"), false, true, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet("a"), false, true, false)
 
 	// Then
 	l.AssertNumberOfCalls(t, "LabelEndpoint", 1)
@@ -224,12 +224,12 @@ func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T)
 				Call: &sysl.Call{},
 			},
 		},
-		senderEndpointPatterns: makeStrSet(),
+		senderEndpointPatterns: MakeStrSet(),
 	}
 	l.On("LabelEndpoint", mock.Anything).Return("test")
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, makeStrSet(), false, true, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet(), false, true, false)
 
 	// Then
 	l.AssertNumberOfCalls(t, "LabelEndpoint", 1)
@@ -275,7 +275,7 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	// Given
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m, err := readModule("../tests/sequence_diagram_project.golden.json")
+	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(l, l, w, m)
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, [][]string{})
@@ -320,7 +320,7 @@ func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m, err := readModule("../tests/sequence_diagram_name_format.golden.json")
+	m, err := readModule("./tests/sequence_diagram_name_format.golden.json")
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(al, el, w, m)
 	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, [][]string{})
@@ -364,4 +364,25 @@ title Diagram
 `
 
 	assert.Equal(t, expected, w.String())
+}
+
+func TestVisitStatement(t *testing.T) {
+	l := &labeler{}
+	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
+	m, err := readModule("./tests/sequence_diagram_project.golden.json")
+	require.NoError(t, err)
+	v := MakeSequenceDiagramVisitor(l, l, w, m)
+	stmt := []*sysl.Statement{
+		{Stmt: &sysl.Statement_Loop{Loop: &sysl.Loop{Stmt: []*sysl.Statement{}}}},
+		{Stmt: &sysl.Statement_LoopN{LoopN: &sysl.LoopN{Stmt: []*sysl.Statement{}}}},
+		{Stmt: &sysl.Statement_Foreach{Foreach: &sysl.Foreach{Stmt: []*sysl.Statement{}}}},
+		{Stmt: &sysl.Statement_Alt{Alt: &sysl.Alt{Choice: []*sysl.Alt_Choice{{Stmt: []*sysl.Statement{}}}}}},
+		{Stmt: &sysl.Statement_Cond{Cond: &sysl.Cond{Stmt: []*sysl.Statement{}}}},
+		{Stmt: &sysl.Statement_Group{Group: &sysl.Group{Stmt: []*sysl.Statement{}}}},
+	}
+	e := &StatementElement{
+		stmts: stmt,
+	}
+	error := v.visitStatment(e)
+	assert.Nil(t, error)
 }

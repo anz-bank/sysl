@@ -15,3 +15,8 @@ rm _.png
 $GOPATH/bin/sd -s 'WebFrontend <- RequestProfile' -o sd.png $ROOT/sequence_diagram_project.sysl
 rm sd.png
 rm $GOPATH/bin/sd
+
+ln -s $GOPATH/bin/sysl $GOPATH/bin/ints
+$GOPATH/bin/ints -j 'Project' $ROOT/integration_test.sysl
+rm _.png
+rm $GOPATH/bin/ints

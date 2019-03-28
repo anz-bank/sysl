@@ -1,0 +1,25 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        Systema <- endpoint
+        Systemb <- endpoint
+
+Systema:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    _:
+        IntegratedSystem
+        Systema
+        Systemb
+    c:
+        Systemc
+        Systema
+        Systemb
+
+Systemb:
+    endpoint: ...
+
+Systemc:
+    endpoint:
+        Systema <- endpoint
+        Systemb <- endpoint

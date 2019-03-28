@@ -1,0 +1,13 @@
+IntegratedSystem:
+    Systemb -> endpoint: ...
+
+Systema:
+    endpoint: ...
+    Systemb -> endpoint: ...
+
+Project [appfmt="%(appname)", epfmt="<%(epname)>"]:
+    _:
+        Systemb
+
+Systemb:
+    <-> endpoint: ...

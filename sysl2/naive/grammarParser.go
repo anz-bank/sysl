@@ -126,7 +126,7 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 			}
 			minCount, maxCount := GetTermMinMaxCount(t)
 			matchCount := 0
-			res := false
+			var res bool
 			subTree := make([]interface{}, 0)
 			singleTerm := minCount == maxCount && minCount == 1
 

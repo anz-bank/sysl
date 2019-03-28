@@ -1,0 +1,16 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        Systema <- endpoint
+        Systemb <- endpoint
+
+Systema:
+    endpoint: ...
+
+Project [appfmt="%(appname)", epfmt="<%(epname)%(needs_int? needsInt)>"]:
+    _:
+        IntegratedSystem
+        Systema
+        Systemb
+
+Systemb:
+    endpoint: ...

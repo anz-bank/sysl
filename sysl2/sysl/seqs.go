@@ -8,23 +8,22 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type sequenceDiagParam struct {
-	seqs.AppLabeler
-	seqs.EndpointLabeler
+	AppLabeler
+	EndpointLabeler
 	endpoints  []string
 	title      string
 	blackboxes [][]string
 }
 
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
-	w := seqs.MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	v := seqs.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
-	e := seqs.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
+	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
+	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
+	e := MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 	if err := e.Accept(v); err != nil {
 		return "", err
 	}
@@ -42,13 +41,13 @@ func loadApp(root string, models string) *sysl.Module {
 	return nil
 }
 
-func constructFormatParser(former, latter string) *seqs.FormatParser {
+func constructFormatParser(former, latter string) *FormatParser {
 	fmtstr := former
 	if former == "" {
 		fmtstr = latter
 	}
 
-	return seqs.MakeFormatParser(escapeWordBoundary(fmtstr))
+	return MakeFormatParser(escapeWordBoundary(fmtstr))
 }
 
 func escapeWordBoundary(src string) string {
@@ -73,10 +72,10 @@ func DoConstructSequenceDiagrams(
 		return result
 	}
 	if strings.Contains(output, "%(epname)") {
-		spout := seqs.MakeFormatParser(output)
+		spout := MakeFormatParser(output)
 		for _, appName := range apps {
 			app := mod.Apps[appName]
-			bbs := seqs.TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
+			bbs := TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
 			spseqtitle := constructFormatParser(app.GetAttrs()["seqtitle"].GetS(), title)
 			spep := constructFormatParser(app.GetAttrs()["epfmt"].GetS(), endpointFormat)
 			spapp := constructFormatParser(app.GetAttrs()["appfmt"].GetS(), appFormat)
@@ -89,8 +88,8 @@ func DoConstructSequenceDiagrams(
 				endpoint := app.GetEndpoints()[k]
 				epAttrs := endpoint.GetAttrs()
 				outputDir := spout.FmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
-				bbs2 := seqs.TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
-				varrefs := seqs.MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
+				bbs2 := TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
+				varrefs := MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
 				sdEndpoints := []string{}
 				for _, stmt := range endpoint.GetStmt() {
 					_, ok := stmt.Stmt.(*sysl.Statement_Call)
@@ -216,9 +215,9 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, args []string) error {
 	log.Debugf("loglevel: %s\n", *loglevel)
 
 	result := DoConstructSequenceDiagrams(*root, *endpointFormat, *appFormat, *title, *output, *modulesFlag,
-		*endpointsFlag, *appsFlag, seqs.ParseBlackBoxesFromArgument(*blackboxesFlag))
+		*endpointsFlag, *appsFlag, ParseBlackBoxesFromArgument(*blackboxesFlag))
 	for k, v := range result {
-		if err := seqs.OutputPlantuml(k, *plantuml, v); err != nil {
+		if err := OutputPlantuml(k, *plantuml, v); err != nil {
 			return err
 		}
 	}

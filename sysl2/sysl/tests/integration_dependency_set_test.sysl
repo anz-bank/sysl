@@ -1,0 +1,17 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        check status
+        if 200 OK:
+            System1 <- endpoint
+            return good
+        else:
+            System1 <- endpoint
+            return bad
+
+System1:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    _:
+        IntegratedSystem
+        System1
