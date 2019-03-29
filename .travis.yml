@@ -108,9 +108,7 @@ deploy:
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
 - provider: script
-  script: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" && \
-          docker push "$DOCKER_IMAGE_VERSIONED" && docker push "$DOCKER_IMAGE_LATEST" && \
-          docker push "$DOCKER_IMAGE_SYSL2_VERSIONED" && docker push "$DOCKER_IMAGE_SYSL2_LATEST"
+  script: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" && docker push "$DOCKER_IMAGE_VERSIONED" && docker push "$DOCKER_IMAGE_LATEST" && docker push "$DOCKER_IMAGE_SYSL2_VERSIONED" && docker push "$DOCKER_IMAGE_SYSL2_LATEST"
   on:
     repo: anz-bank/sysl
     tags: true
