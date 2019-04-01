@@ -446,7 +446,7 @@ func (v *SequenceDiagramVisitor) visitAlt(e *StatementElement, i int, c *sysl.Al
 	lastStmt := e.isLastStmt(i)
 	for j, choice := range c.GetChoice() {
 		lastAltStmt := lastStmt && j == len(c.GetChoice())-1
-		v.visitBlockStmt(e, choice.GetStmt(), lastAltStmt, "%s %s", prefix, choice.GetCond())
+		v.visitBlockStmt(e, choice.GetStmt(), lastAltStmt, "%s %s\n", prefix, choice.GetCond())
 		prefix = "else"
 	}
 	fmt.Fprintln(v.w, "end")
