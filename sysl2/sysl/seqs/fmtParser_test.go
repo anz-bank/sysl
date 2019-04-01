@@ -3,8 +3,8 @@ package seqs
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/anz-bank/sysl/src/proto"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMakeFormatParser(t *testing.T) {
@@ -19,7 +19,7 @@ func TestLabelEndpoint(t *testing.T) {
 	p := &EndpointLabelerParam{
 		EndpointName: "Login",
 	}
-	fp := MakeFormatParser("%(epname)")
+	fp := MakeFormatParser("%(@aa?//«%(@aa)»//**%(pa=='ABC'? %(pa~/\btba|tbd\b/?<color red>%(pa)</color>|<color green>%(pa)</color>)| <color red>pat?</color>)**|%(ni?<color red>(missing INT%)</color>))%(epname)%(args?(%(args)%))")
 
 	// When
 	formatStr := fp.LabelEndpoint(p)
