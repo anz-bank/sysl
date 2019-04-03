@@ -49,6 +49,7 @@ func (fp *FormatParser) LabelEndpoint(p *EndpointLabelerParam) string {
 		"human_sender": p.HumanSender,
 		"args":         p.Args,
 		"patterns":     p.Patterns,
+		"needs_int":    p.NeedsInt,
 		"controls":     p.Controls,
 	}
 	mergeAttributesMap(attrs, p.Attrs)
@@ -100,7 +101,7 @@ func (f *FormatParser) Parse(attrs map[string]string) string {
 
 func mergeAttributesMap(val map[string]string, attrs map[string]*sysl.Attribute) {
 	for k, v := range attrs {
-		val[k] = v.GetS()
+		val["@"+k] = v.GetS()
 	}
 }
 
@@ -117,7 +118,7 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 			if !f.eat(itemReVar) {
 				panic("missing variable reference")
 			}
-			varName = removeAtSymbol(f.pop())
+			varName = f.pop()
 			value = attrs[varName]
 
 			// conditionals
@@ -239,8 +240,4 @@ func removePercentSymbol(src string) string {
 	src = strings.Replace(src, substitute, "%", -1)
 
 	return src
-}
-
-func removeAtSymbol(key string) string {
-	return strings.Replace(key, "@", "", 1)
 }

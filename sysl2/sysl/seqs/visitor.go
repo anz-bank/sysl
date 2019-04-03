@@ -130,7 +130,7 @@ func (e *EndpointElement) label(
 	if e.stmt != nil && e.stmt.GetCall() != nil {
 		ptrns := func(a *strSet, b *strSet) string {
 			if len(*a) > 0 || len(*b) > 0 {
-				return fmt.Sprintf("%s -> %s", strings.Join(a.ToSortedSlice(), ", "), strings.Join(b.ToSortedSlice(), ", "))
+				return fmt.Sprintf("%s → %s", strings.Join(a.ToSortedSlice(), ", "), strings.Join(b.ToSortedSlice(), ", "))
 			}
 			return ""
 		}(e.senderEndpointPatterns, epp)
