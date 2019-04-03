@@ -91,7 +91,7 @@ func (f *FormatParser) Parse(attrs map[string]string) string {
 	log.Debugf("self: %s", f.self)
 	log.Debugf("attrs: %v", attrs)
 	f.expansions(itemReDefault, attrs)
-	formatted := f.result
+	formatted := strings.Replace(f.result, "\n", "\\n", -1)
 	f.clear()
 	log.Debugf("format string: %s", formatted)
 
@@ -215,12 +215,12 @@ func (f *FormatParser) pop() string {
 		return ""
 	}
 
-	l := len(f.stk)
-	if l == 0 {
+	n := len(f.stk)
+	if n == 0 {
 		return ""
 	}
-	popped := f.stk[l-1]
-	f.stk = f.stk[:l-1]
+	popped := f.stk[n-1]
+	f.stk = f.stk[:n-1]
 
 	return popped
 }

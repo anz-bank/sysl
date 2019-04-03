@@ -88,10 +88,6 @@ func getSortedISOCtrlStr(attrs map[string]*sysl.Attribute) string {
 }
 
 func formatArgs(s *sysl.Module, appName, parameterTypeName string) string {
-	if len(appName) == 0 || len(parameterTypeName) == 0 {
-		return ""
-	}
-
 	val := func(a *sysl.Attribute) string {
 		if s := a.GetS(); len(s) > 0 {
 			return strings.ToUpper(s[:1])
@@ -99,8 +95,8 @@ func formatArgs(s *sysl.Module, appName, parameterTypeName string) string {
 		return "?"
 	}
 
-	conf := ""
-	integ := ""
+	conf := "?"
+	integ := "?"
 	if app, ok := s.Apps[appName]; ok {
 		if t, ok := app.Types[parameterTypeName]; ok {
 			conf = val(t.Attrs["iso_conf"])
@@ -219,15 +215,18 @@ func getReturnPayload(stmts []*sysl.Statement) string {
 func getAndFmtParam(s *sysl.Module, params []*sysl.Param) []string {
 	r := make([]string, 0, len(params))
 	for _, v := range params {
+		an := ""
+		pn := ""
 		if refType := v.GetType().GetTypeRef(); refType != nil {
 			if ref := refType.GetRef(); ref != nil {
-				an := getAppName(ref.GetAppname())
-				pn := strings.Join(ref.GetPath(), ".")
-				eparg := formatArgs(s, an, pn)
-				if len(eparg) > 0 {
-					r = append(r, eparg)
-				}
+				an = getAppName(ref.GetAppname())
+				pn = strings.Join(ref.GetPath(), ".")
 			}
+		}
+
+		eparg := formatArgs(s, an, pn)
+		if len(eparg) > 0 {
+			r = append(r, eparg)
 		}
 	}
 	return r

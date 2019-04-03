@@ -386,7 +386,7 @@ func TestFormatArgsWithoutParameterTypeName(t *testing.T) {
 	// when
 	actual := formatArgs(m, "test", "")
 
-	assert.Equal(t, "", actual)
+	assert.Equal(t, "<color blue>test.</color> <<color green>?, ?</color>>", actual)
 }
 
 func TestFormatArgsWithoutAppName(t *testing.T) {
@@ -406,7 +406,7 @@ func TestFormatArgsWithoutAppName(t *testing.T) {
 	// when
 	actual := formatArgs(m, "", "User")
 
-	assert.Equal(t, "", actual)
+	assert.Equal(t, "<color blue>.User</color> <<color green>?, ?</color>>", actual)
 }
 
 func TestFormatArgsWithoutAppNameAndParameterTypeName(t *testing.T) {
@@ -426,7 +426,7 @@ func TestFormatArgsWithoutAppNameAndParameterTypeName(t *testing.T) {
 	// when
 	actual := formatArgs(m, "", "")
 
-	assert.Equal(t, "", actual)
+	assert.Equal(t, "<color blue>.</color> <<color green>?, ?</color>>", actual)
 }
 
 func TestFormatReturnParam(t *testing.T) {
