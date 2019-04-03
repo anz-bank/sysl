@@ -9,9 +9,13 @@ from sysl.util import writer
 class FakeLogger:
     def __init__(self):
         self.warnings = []
+        self.errors = []
 
     def warn(self, msg):
         self.warnings.append(msg)
+
+    def error(self, msg):
+        self.errors.append(msg)
 
 
 SIMPLE_SWAGGER_EXAMPLE = r"""
@@ -671,6 +675,53 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPEC
     # definitions
 """
 
+EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_MULTI_RESPONSES = r"""
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+definitions:
+  Goat:
+    properties:
+      name:
+        type: string
+      birthday:
+        type: string
+        format: date
+    type: object
+
+paths:
+  /goat/status:
+    post:
+      description: Update goat status
+      produces:
+        - application/json
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/Goat'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            something: somethingelse
+"""
+
+EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_MULTI_RESPONSES_EXPECTED_SYSL = r"""
+        /goat/status:
+            POST:
+                | Update goat status
+                return Goat, string, 401
+"""
+
 
 def getOutputString(input):
     swag = yaml.load(input)
@@ -798,6 +849,13 @@ def test_import_of_swagger_path_with_description_only_201_response():
     assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL in output
     expected_warnings = []
     assert logger.warnings == expected_warnings
+
+
+def test_import_of_swagger_path_with_multi_responses():
+    output, logger = getOutputString(EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_MULTI_RESPONSES)
+    assert EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_MULTI_RESPONSES_EXPECTED_SYSL in output
+    expected_errors = ["Unsupported definition: {'something': 'somethingelse'}"]
+    assert logger.errors == expected_errors
 
 
 def test_parse_typespec_boolean():

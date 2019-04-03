@@ -235,12 +235,19 @@ class SwaggerTranslator:
                         for key in sorted(responses):
                             schema = responses.get(key, {}).get('schema')
                             if schema is not None:
-                                if schema.get('type') == 'array':
-                                    returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
-                                else:
+                                if '$ref' in schema:
                                     returnValues[schema['$ref'].rpartition('/')[2]] = True
+                                elif 'type' in schema:
+                                    if schema.get('type') == 'array':
+                                        returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
+                                    else:
+                                        returnValues[schema['type']] = True
+                                else:
+                                    self.error('Unsupported definition: %s' % (schema))
+                                    returnValues[key] = True
+
                             else:
-                                returnValues[', '.join(responses.keys())] = True
+                                returnValues[key] = True
                             if key == 'default' or key.startswith('x-'):
                                 self.warn('default responses and x-* responses are not implemented')
 
@@ -371,7 +378,7 @@ class SwaggerTranslator:
             self.error('Invalid format: %s at %s -> %s' % (fmt, typeRef, parentRef))
 
         if ref:
-            assert not set(tspec.keys()) - {'$ref'}, tspec
+            assert not set(tspec.keys()) - {'$ref', 'type'}, tspec
             return r(ref.lstrip('#/definitions/'))
         if (typ, fmt) == ('string', None):
             return r('string')
@@ -434,7 +441,15 @@ class SwaggerTranslator:
 
         paramList = []
         for param in bodyParams:
-            paramList.append('{} <: {} [~body]'.format(param['name'], param['schema']['$ref'].rpartition('/')[2]))
+            if '$ref' in param['schema']:
+                paramType = param['schema']['$ref'].rpartition('/')[2]
+            elif 'type' in param['schema']:
+                paramType = param['schema']['type']
+            else:
+                self.error('Unsupported definition: %s' % (param))
+                paramType = 'unknown'
+
+            paramList.append('{} <: {} [~body]'.format(param['name'], paramType))
 
         return ', '.join(paramList)
 
