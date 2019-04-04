@@ -3547,8 +3547,9 @@ func (s *TreeShapeListener) ExitView_params(ctx *parser.View_paramsContext) {}
 func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 	viewName := ctx.Name_str().GetText()
 	s.module.Apps[s.appname].Views[viewName] = &sysl.View{
-		Param:   []*sysl.Param{},
-		RetType: &sysl.Type{},
+		Param:         []*sysl.Param{},
+		RetType:       &sysl.Type{},
+		SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
 	}
 	if ctx.Attribs_or_modifiers() != nil {
 		v := s.module.Apps[s.appname].Views[viewName]
