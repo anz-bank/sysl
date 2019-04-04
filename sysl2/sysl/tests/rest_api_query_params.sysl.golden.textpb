@@ -107,7 +107,18 @@ apps: <
           url_param: <
             name: "id"
             type: <
-              primitive: INT
+              type_ref: <
+                context: <
+                  appname: <
+                    part: "My"
+                    part: "Server"
+                  >
+                >
+                ref: <
+                  path: "App"
+                  path: "Token"
+                >
+              >
               source_context: <
                 start: <
                   line: 5
@@ -161,7 +172,18 @@ apps: <
           url_param: <
             name: "id"
             type: <
-              primitive: INT
+              type_ref: <
+                context: <
+                  appname: <
+                    part: "My"
+                    part: "Server"
+                  >
+                >
+                ref: <
+                  path: "App"
+                  path: "Token"
+                >
+              >
               source_context: <
                 start: <
                   line: 5

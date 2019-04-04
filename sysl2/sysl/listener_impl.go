@@ -1185,6 +1185,10 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 				Primitive: primitive_type,
 			},
 		}
+	} else if ctx.Reference() != nil {
+		s.fieldname = append(s.fieldname, var_name)
+		type1 = &sysl.Type{}
+		s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
 	} else {
 		ref_path := []string{ctx.Name_str().GetText()}
 
@@ -1219,7 +1223,14 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 }
 
 // ExitHttp_path_var_with_type is called when production http_path_var_with_type is exited.
-func (s *TreeShapeListener) ExitHttp_path_var_with_type(ctx *parser.Http_path_var_with_typeContext) {}
+func (s *TreeShapeListener) ExitHttp_path_var_with_type(ctx *parser.Http_path_var_with_typeContext) {
+	if ctx.Reference() != nil {
+		type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
+		type1.GetTypeRef().Context.Path = nil
+		type1.GetTypeRef().Ref.Path = append(type1.GetTypeRef().Ref.Appname.Part, type1.GetTypeRef().Ref.Path...)
+		type1.GetTypeRef().Ref.Appname = nil
+	}
+}
 
 // EnterHttp_path_static is called when production http_path_static is entered.
 func (s *TreeShapeListener) EnterHttp_path_static(ctx *parser.Http_path_staticContext) {
@@ -3657,6 +3668,7 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	s.rest_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	s.rest_queryparams_len = []int{0}
 	s.rest_attrs = []map[string]*sysl.Attribute{nil}
+	s.typemap = map[string]*sysl.Type{}
 }
 
 // ExitApp_decl is called when production app_decl is exited.
