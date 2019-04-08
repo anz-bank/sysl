@@ -91,12 +91,12 @@ func TestArrayFlagsSet(t *testing.T) {
 
 type loadAppArgs struct {
 	root   string
-	models []string
+	models string
 }
 
 func TestLoadAppReturnError(t *testing.T) {
 	test := loadAppArgs{
-		"../../demo/simple/", []string{},
+		"../../demo/simple/", "",
 	}
 	mod := loadApp(test.root, test.models)
 	assert.Nil(t, mod)
@@ -104,7 +104,7 @@ func TestLoadAppReturnError(t *testing.T) {
 
 func TestLoadApp(t *testing.T) {
 	test := loadAppArgs{
-		"./tests/", []string{"test-sd.sysl"},
+		"./tests/", "test-sd.sysl",
 	}
 	mod := loadApp(test.root, test.models)
 	assert.NotNil(t, mod)
@@ -132,7 +132,7 @@ type sdArgs struct {
 	output          string
 	endpoints       []string
 	apps            []string
-	modules         []string
+	modules         string
 	blackboxes      [][]string
 }
 
@@ -143,13 +143,13 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 	}{
 		{
 			"Case-No endpoints",
-			sdArgs{root_model: "./tests/", modules: []string{"test-sd.sysl"}},
+			sdArgs{root_model: "./tests/", modules: "test-sd.sysl"},
 		},
 		{
 			"Case-Set endpoints",
 			sdArgs{
 				root_model: "./tests/",
-				modules:    []string{"test-sd.sysl"},
+				modules:    "test-sd.sysl",
 				endpoints:  []string{"QueryUser"},
 				output:     "_.png",
 				plantuml:   "http://localhost:8080",
@@ -158,7 +158,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			DoConstructSequenceDiagrams(tt.args.root_model, tt.args.endpoint_format, tt.args.app_format, tt.args.title, tt.args.plantuml, tt.args.output, tt.args.endpoints, tt.args.apps, tt.args.modules, tt.args.blackboxes)
+			DoConstructSequenceDiagrams(tt.args.root_model, tt.args.endpoint_format, tt.args.app_format, tt.args.title, tt.args.plantuml, tt.args.output, tt.args.modules, tt.args.endpoints, tt.args.apps, tt.args.blackboxes)
 		})
 	}
 }
@@ -172,7 +172,7 @@ func TestDoConstructSequenceDiagrams(t *testing.T) {
 			"Case-Construct sequence diagram",
 			sdArgs{
 				root_model: "./tests/",
-				modules:    []string{"sysl-sd.sysl"},
+				modules:    "sysl-sd.sysl",
 				output:     "%(epname).png",
 				plantuml:   "http://localhost:8080",
 				apps:       []string{"Project"},
@@ -182,7 +182,7 @@ func TestDoConstructSequenceDiagrams(t *testing.T) {
 	os.Setenv("SYSL_SD_FILTERS", "*")
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			DoConstructSequenceDiagrams(tt.args.root_model, tt.args.endpoint_format, tt.args.app_format, tt.args.title, tt.args.plantuml, tt.args.output, tt.args.endpoints, tt.args.apps, tt.args.modules, tt.args.blackboxes)
+			DoConstructSequenceDiagrams(tt.args.root_model, tt.args.endpoint_format, tt.args.app_format, tt.args.title, tt.args.plantuml, tt.args.output, tt.args.modules, tt.args.endpoints, tt.args.apps, tt.args.blackboxes)
 		})
 	}
 }

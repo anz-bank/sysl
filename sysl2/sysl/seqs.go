@@ -42,20 +42,13 @@ func (i *arrayFlags) Set(value string) error {
 	return nil
 }
 
-func loadApp(root string, models []string) *sysl.Module {
-	// Model we want to generate seqs for, the first non-empty model
-	var model string
-	for _, val := range models {
-		if len(val) > 0 {
-			model = val
-			break
-		}
-	}
-	mod, err := Parse(model, root)
+func loadApp(root string, models string) *sysl.Module {
+	// Model we want to generate seqs for, the non-empty model
+	mod, err := Parse(models, root)
 	if err == nil {
 		return mod
 	}
-	log.Errorf("unable to load module:\n\troot: " + root + "\n\tmodel:" + model)
+	log.Errorf("unable to load module:\n\troot: " + root + "\n\tmodel:" + models)
 	return nil
 }
 
@@ -69,12 +62,14 @@ func constructFormatParser(former, latter string) *seqs.FormatParser {
 }
 
 func DoConstructSequenceDiagrams(
-	root_model, endpoint_format, app_format, title, plantuml, output string,
-	endpoints, apps, modules []string,
+	root_model, endpoint_format, app_format, title, plantuml, output, modules string,
+	endpoints, apps []string,
 	blackboxes [][]string,
 ) {
 	mod := loadApp(root_model, modules)
-
+	if mod == nil {
+		return
+	}
 	if strings.Contains(output, "%(epname)") {
 		spout := seqs.MakeFormatParser(output)
 		for _, appName := range apps {
@@ -138,7 +133,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 			log.Errorln(err)
 		}
 	}()
-	var endpoints_flag, apps_flag, blackboxes_flag, modules_flag arrayFlags
+	var endpoints_flag, apps_flag, blackboxes_flag arrayFlags
 	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
 	endpoint_format := flags.String("endpoint_format", "%(epname)", "Specify the format string for sequence diagram endpoints. "+
 		"May include %%(epname), %%(eplongname) and %%(@foo) for attribute foo(default: %(epname))")
@@ -149,14 +144,14 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
 		"see http://plantuml.com/server.html#install for more info)"}, "\n"))
 	output := flags.String("output", "%(epname).png", "output file(default: %(epname).png)")
+	modules_flag := flags.String("modules", ".", strings.Join([]string{"input files without .sysl extension and with leading /",
+		"eg: /project_dir/my_models",
+		"combine with --root if needed"}, "\n"))
 	flags.Var(&endpoints_flag, "endpoint", "Include endpoint in sequence diagram")
 	flags.Var(&apps_flag, "app", "Include all endpoints for app in sequence diagram (currently "+
 		"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
 		"comma-list of shell globs) to limit the diagrams generated")
 	flags.Var(&blackboxes_flag, "blackbox", "Apps to be treated as black boxes")
-	flags.Var(&modules_flag, "modules", strings.Join([]string{"input files without .sysl extension and with leading /",
-		"eg: /project_dir/my_models",
-		"combine with --root if needed"}, "\n"))
 
 	// Following variables currently are unused. Keep them to align with the python version.
 	filter := flags.String("filter", "", "Only generate diagrams whose output paths match a pattern")
@@ -182,9 +177,9 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	log.Debugf("expire_cache: %t\n", *expire_cache)
 	log.Debugf("dry_run: %t\n", *dry_run)
 	log.Debugf("filter: %s\n", *filter)
-	log.Debugf("modules: %s\n", modules_flag)
+	log.Debugf("modules: %s\n", *modules_flag)
 	log.Debugf("output: %s\n", *output)
 
-	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *output,
-		endpoints_flag, apps_flag, modules_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
+	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *output, *modules_flag,
+		endpoints_flag, apps_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
 }
