@@ -219,6 +219,15 @@ func TestMain2BadMode(t *testing.T) {
 	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
 }
 
+func TestMain2BadLog(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	rc := main2(&stdout, &stderr, []string{"sysl", "-o", "-", "-log", "BAD", "tests/args.sysl"}, main3)
+	assert.NotZero(t, rc)
+
+	_, err := os.Stat("-")
+	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
+}
+
 func TestMain2Fatal(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 	assert.Equal(t, 1, main2(&stdout, &stderr, nil, func(_, _ io.Writer, _ []string) error {

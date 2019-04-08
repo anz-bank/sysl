@@ -11,6 +11,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var defaultLevel = map[string]logrus.Level{
+	"":      logrus.ErrorLevel,
+	"off":   logrus.ErrorLevel,
+	"debug": logrus.DebugLevel,
+	"info":  logrus.InfoLevel,
+	"warn":  logrus.WarnLevel,
+}
+
 func (e exit) Error() string {
 	return e.message
 }
@@ -38,16 +46,9 @@ func main3(stdout, stderr io.Writer, args []string) error {
 		return fmt.Errorf("Invalid -mode %#v", *mode)
 	}
 
-	switch *loglevel {
-	case "debug":
-		logrus.SetLevel(logrus.DebugLevel)
-	case "info":
-		logrus.SetLevel(logrus.InfoLevel)
-	case "warn":
-		logrus.SetLevel(logrus.WarnLevel)
-	case "", "off":
-		logrus.SetLevel(logrus.ErrorLevel)
-	default:
+	if level, has := defaultLevel[*loglevel]; has {
+		logrus.SetLevel(level)
+	} else {
 		return fmt.Errorf("Invalid -log %#v", *loglevel)
 	}
 
