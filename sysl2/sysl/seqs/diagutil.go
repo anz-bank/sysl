@@ -103,7 +103,7 @@ func encode6bit(b byte) byte {
 	// 6 bit makes value 0 to 63. The func maps 0-63 to characters
 	// '0'-'9', 'A'-'Z', 'a'-'z', '-', '_'. '?' should never be reached.
 	if b > 63 {
-		return '?'
+		panic("unexpected character!")
 	}
 	return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"[b]
 }

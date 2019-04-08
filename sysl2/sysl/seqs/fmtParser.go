@@ -114,7 +114,7 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 
 		if f.eat(itemReVarStart) {
 			var yesStmt, noStmt, varName, value string
-			isYesStmt, isUseVal := false, true
+			isYesStmt, isUseVal, isEqualOper, isSearched := false, true, false, false
 			if !f.eat(itemReVar) {
 				panic("missing variable reference")
 			}
@@ -123,6 +123,7 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 
 			// conditionals
 			if f.eat(itemReCondOper) {
+				isEqualOper = true
 				isUseVal = false
 				conOper := f.oper
 				f.oper = ""
@@ -139,6 +140,7 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 			}
 
 			if f.eat(itemReSearch) {
+				isSearched = true
 				isUseVal = false
 				searchStr := f.pop()
 				if strings.Contains(value, searchStr) {
@@ -166,7 +168,7 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 				f.result = result
 				continue
 			}
-			if !isYesStmt && value != "" {
+			if !isSearched && !isEqualOper && value != "" {
 				isYesStmt = true
 			}
 			if isYesStmt {

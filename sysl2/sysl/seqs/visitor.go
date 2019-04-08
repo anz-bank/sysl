@@ -37,7 +37,7 @@ func makeEntry(s string) *entry {
 type EndpointCollectionElement struct {
 	title      string
 	entries    []*entry
-	uptos      *strSet
+	uptos      strSet
 	blackboxes map[string]string
 }
 
@@ -81,8 +81,8 @@ type EndpointElement struct {
 	appName                string
 	endpointName           string
 	uptos                  map[string]string
-	senderPatterns         *strSet
-	senderEndpointPatterns *strSet
+	senderPatterns         strSet
+	senderEndpointPatterns strSet
 	stmt                   *sysl.Statement
 	deactivate             func()
 }
@@ -122,14 +122,14 @@ func (e *EndpointElement) label(
 	l EndpointLabeler,
 	m *sysl.Module,
 	ep *sysl.Endpoint,
-	epp *strSet,
+	epp strSet,
 	isHuman, isHumanSender, needsInt bool,
 ) string {
 	label := normalizeEndpointName(e.endpointName)
 
 	if e.stmt != nil && e.stmt.GetCall() != nil {
-		ptrns := func(a *strSet, b *strSet) string {
-			if len(*a) > 0 || len(*b) > 0 {
+		ptrns := func(a strSet, b strSet) string {
+			if len(a) > 0 || len(b) > 0 {
 				return fmt.Sprintf("%s → %s", strings.Join(a.ToSortedSlice(), ", "), strings.Join(b.ToSortedSlice(), ", "))
 			}
 			return ""
@@ -302,7 +302,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 
 	if !((isHuman && sender == "[") || isCron) {
 		label := e.label(v, v.m, endpoint, endPointPatterns, isHuman, isHumanSender, needsInt)
-		icon := func(a *strSet) string {
+		icon := func(a strSet) string {
 			if a.Contains("cron") {
 				return "<&timer>"
 			}

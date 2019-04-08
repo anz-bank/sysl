@@ -89,10 +89,9 @@ func TestEncode6bit(t *testing.T) {
 		input    byte
 		expected byte
 	}{
-		{0, 48},   // 0
-		{255, 63}, // ?
-		{63, 95},  // _
-		{24, 79},  // O
+		{0, 48},  // 0
+		{63, 95}, // _
+		{24, 79}, // O
 	}
 
 	for _, v := range data {
@@ -101,4 +100,14 @@ func TestEncode6bit(t *testing.T) {
 			assert.Equal(tt, v.expected, actual)
 		})
 	}
+}
+
+func TestEncode6bitPanic(t *testing.T) {
+	// Given
+	b := byte(255)
+
+	// Then
+	assert.Panics(t, func() {
+		encode6bit(b)
+	}, "unexpected character!")
 }

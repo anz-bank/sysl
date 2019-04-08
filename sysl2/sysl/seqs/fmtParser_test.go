@@ -28,6 +28,32 @@ func TestLabelEndpoint(t *testing.T) {
 	assert.Equal(t, p.EndpointName, formatStr)
 }
 
+func TestLabelEndpointMore(t *testing.T) {
+	// Given
+	expected := `//«TT»//** <color green>rt → hp, ap</color>**\nsearchP`
+	sbAttr := &sysl.Attribute{
+		Attribute: &sysl.Attribute_S{
+			S: "TT",
+		},
+	}
+	sbMap := map[string]*sysl.Attribute{
+		"s1": sbAttr,
+	}
+	p := &EndpointLabelerParam{
+		EndpointName: "searchP",
+		Patterns:     "rt → hp, ap",
+		NeedsInt:     "needs_int",
+		Attrs:        sbMap,
+	}
+	fp := MakeFormatParser(`%(@s1?//«%(@s1)»//**%(patterns? %(patterns~/\btba|tbd\b/?<color red>%(patterns)</color>|<color green>%(patterns)</color>)| <color red>pat?</color>)**\n|%(needs_int?<color red>(missing INT%)</color>\n))%(epname)%(args?\n(%(args)%))`)
+
+	// When
+	formatStr := fp.LabelEndpoint(p)
+
+	// Then
+	assert.Equal(t, expected, formatStr)
+}
+
 func TestLabelApp(t *testing.T) {
 	// Given
 	appName := "Project"
@@ -57,7 +83,7 @@ func TestFmtSeq(t *testing.T) {
 	formatStr := fp.FmtSeq("", "", seqtitleMap)
 
 	// Then
-	assert.Equal(t, "Diagram", formatStr)
+	assert.Equal(t, "", formatStr)
 }
 
 func TestFmtOutput(t *testing.T) {
