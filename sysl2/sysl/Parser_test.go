@@ -88,6 +88,9 @@ func parseComparable(
 			for _, t := range app.Types {
 				t.SourceContext = nil
 			}
+			for _, t := range app.Views {
+				t.SourceContext = nil
+			}
 		}
 	}
 
@@ -370,7 +373,7 @@ func TestCrash(t *testing.T) {
 }
 
 func TestStrings(t *testing.T) {
-	testParseAgainstGolden(t, "tests/strings_expr.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/strings_expr.sysl", "")
 }
 
 func TestTypeAlias(t *testing.T) {

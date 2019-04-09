@@ -241,7 +241,7 @@ INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
 DIGITS              : [0-9][0-9]*;
 
 fragment
-DOUBLE_QUOTE_STRING: ["] (~["\\] | [\\][\\brnt'"])* ["];
+DOUBLE_QUOTE_STRING: ["] (~["\\] | [\\][\\brntu'"])* ["];
 fragment
 SINGLE_QUOTE_STRING: ['] (~['])* ['];
 
@@ -316,7 +316,7 @@ NEWLINE_2           : '\r'? '\n'
                     ;
 
 mode NOT_NEWLINE;
-TEXT            : (~[\r\n])+        -> popMode ;
+TEXT            : (~[\r\n])*        -> popMode ;
 
 mode AT_VAR_DECL;
 POP_WS          : [ ]   -> skip, popMode;
@@ -394,7 +394,7 @@ E_RELOPS_FLATTEN       : 'flatten';
 E_RELOPS_FIRST         : 'first';
 E_FUNC          : 'autoinc' | 'str' | 'substr';
 
-E_STRING_DBL           : ["] (~["\\] | [\\][\\brnt'"])* ["];
+E_STRING_DBL           : ["] (~["\\] | [\\][\\brntu'"])* ["];
 E_STRING_SINGLE        : ['] ~[']* ['];
 
 fragment

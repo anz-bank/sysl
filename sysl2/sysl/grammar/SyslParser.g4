@@ -72,7 +72,7 @@ query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
 http_path_part :name_str | DIGITS;
-http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str) CURLY_CLOSE;
+http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str | reference) CURLY_CLOSE;
 http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
 http_path       : (FORWARD_SLASH | http_path_suffix+);

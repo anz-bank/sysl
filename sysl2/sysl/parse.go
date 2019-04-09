@@ -38,6 +38,7 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 	errorListener := SyslParserErrorListener{}
 
 	for {
+		logrus.Debugf("Parsing: " + filename)
 		input, err := newFSFileStream(filename, fs)
 		if err != nil {
 			return nil, exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))

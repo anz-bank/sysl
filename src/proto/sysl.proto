@@ -320,6 +320,7 @@ message View {
     Expr                    expr        = 3;
     map<string, View>       views       = 4;
     map<string, Attribute>  attrs       = 8;
+    SourceContext           source_context = 99;
 }
 
 message Expr {

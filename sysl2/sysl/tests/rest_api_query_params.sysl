@@ -2,7 +2,7 @@ My :: Server [~rest]:
     /first:
         GET ?depth=int&limit=int?&offset=int?:
             ...
-        /{id<:int}:
+        /{id<:App.Token}:
           GET:
               ...
           /second:
