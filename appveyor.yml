@@ -49,7 +49,7 @@ deploy:
     tag: $(APPVEYOR_REPO_TAG_NAME)
     draft: true
     prerelease: true
-    repository: github.com/anz-bank/sysl
+    repository: anz-bank/sysl
     auth_token:
       secure: McTebLt7DvyCd7qa9oHl5DwPZeNHf7NdtSCtNBZre59iWCmC0T0HT+/yiHLDQMtk
     on:
