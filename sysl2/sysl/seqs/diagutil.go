@@ -24,12 +24,12 @@ func OutputPlantuml(output, plantuml, umlInput string) {
 	case "png", "svg":
 		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, DeflateAndEncode([]byte(umlInput)))
 		out, _ := sendHttpRequest(plantuml)
-		createFile(output, out)
+		ioutil.WriteFile(output, out, os.ModePerm)
 
 	case "uml":
 		output := output[:l-3]
 		output += "puml"
-		createFile(output, []byte(umlInput))
+		ioutil.WriteFile(output, []byte(umlInput), os.ModePerm)
 
 	default:
 		log.Errorf("Extension %s not supported. Valid extensions: svg, png, uml.", mode)
@@ -45,23 +45,9 @@ func sendHttpRequest(url string) ([]byte, error) {
 
 	out, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, errors.Errorf("Unable to create http request to %s, Error:%s", url, err.Error())
+		return nil, errors.Errorf("Unable to read body.")
 	}
 	return out, nil
-}
-
-func createFile(output string, out []byte) error {
-	f, err := os.Create(output)
-	if err != nil {
-		return errors.Errorf("Unable to create file, Error:%s", err.Error())
-	}
-	_, err = f.Write(out)
-	defer f.Close()
-
-	if err != nil {
-		return errors.Errorf("Unable to write file, Error:%s", err.Error())
-	}
-	return nil
 }
 
 // The functions below ported from https://github.com/dougn/python-plantuml/blob/master/plantuml.py

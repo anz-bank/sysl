@@ -90,5 +90,3 @@ tests/%.sysl.golden.textpb: tests/%.sysl $(SYSL_PYTHON_BIN)
 
 seqs:
 	go build -o $(SD_EXE)
-	$(SD_EXE) -app Project -output "golang-%(epname)".png -modules ./tests/sysl-sd.sysl
-	$(SYSL_PYTHON_BIN) sd -a Project -o "python-%(epname)".png ./tests/sysl-sd.sysl

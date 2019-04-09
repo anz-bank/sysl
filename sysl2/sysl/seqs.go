@@ -23,7 +23,6 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 	w := seqs.MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	v := seqs.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
 	e := seqs.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
-
 	e.Accept(v)
 
 	return w.String(), nil
@@ -90,11 +89,13 @@ func DoConstructSequenceDiagrams(
 				bbs2 := seqs.TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
 				varrefs := seqs.MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
 				sdEndpoints := []string{}
-				statements := endpoint.GetStmt()
-				for _, stmt := range statements {
-					parts := stmt.GetCall().GetTarget().GetPart()
-					ep := stmt.GetCall().GetEndpoint()
-					sdEndpoints = append(sdEndpoints, strings.Join(parts, " :: ")+" <- "+ep)
+				for _, stmt := range endpoint.GetStmt() {
+					_, ok := stmt.Stmt.(*sysl.Statement_Call)
+					if ok {
+						parts := stmt.GetCall().GetTarget().GetPart()
+						ep := stmt.GetCall().GetEndpoint()
+						sdEndpoints = append(sdEndpoints, strings.Join(parts, " :: ")+" <- "+ep)
+					}
 				}
 
 				sd := &sequenceDiagParam{
