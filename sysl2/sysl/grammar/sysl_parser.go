@@ -484,13 +484,13 @@ var parserATN = []uint16{
 	904, 898, 3, 2, 2, 2, 904, 899, 3, 2, 2, 2, 904, 900, 3, 2, 2, 2, 904,
 	901, 3, 2, 2, 2, 904, 902, 3, 2, 2, 2, 904, 903, 3, 2, 2, 2, 905, 907,
 	3, 2, 2, 2, 906, 908, 5, 28, 15, 2, 907, 906, 3, 2, 2, 2, 907, 908, 3,
-	2, 2, 2, 908, 147, 3, 2, 2, 2, 909, 911, 7, 6, 2, 2, 910, 912, 5, 92, 47,
-	2, 911, 910, 3, 2, 2, 2, 911, 912, 3, 2, 2, 2, 912, 914, 3, 2, 2, 2, 913,
-	915, 5, 144, 73, 2, 914, 913, 3, 2, 2, 2, 914, 915, 3, 2, 2, 2, 915, 917,
-	3, 2, 2, 2, 916, 918, 5, 28, 15, 2, 917, 916, 3, 2, 2, 2, 917, 918, 3,
-	2, 2, 2, 918, 919, 3, 2, 2, 2, 919, 920, 7, 42, 2, 2, 920, 922, 7, 3, 2,
-	2, 921, 923, 5, 146, 74, 2, 922, 921, 3, 2, 2, 2, 923, 924, 3, 2, 2, 2,
-	924, 922, 3, 2, 2, 2, 924, 925, 3, 2, 2, 2, 925, 926, 3, 2, 2, 2, 926,
+	2, 2, 2, 908, 147, 3, 2, 2, 2, 909, 911, 7, 6, 2, 2, 910, 912, 5, 144,
+	73, 2, 911, 910, 3, 2, 2, 2, 911, 912, 3, 2, 2, 2, 912, 914, 3, 2, 2, 2,
+	913, 915, 5, 92, 47, 2, 914, 913, 3, 2, 2, 2, 914, 915, 3, 2, 2, 2, 915,
+	917, 3, 2, 2, 2, 916, 918, 5, 28, 15, 2, 917, 916, 3, 2, 2, 2, 917, 918,
+	3, 2, 2, 2, 918, 919, 3, 2, 2, 2, 919, 920, 7, 42, 2, 2, 920, 922, 7, 3,
+	2, 2, 921, 923, 5, 146, 74, 2, 922, 921, 3, 2, 2, 2, 923, 924, 3, 2, 2,
+	2, 924, 922, 3, 2, 2, 2, 924, 925, 3, 2, 2, 2, 925, 926, 3, 2, 2, 2, 926,
 	927, 7, 4, 2, 2, 927, 149, 3, 2, 2, 2, 928, 929, 7, 23, 2, 2, 929, 151,
 	3, 2, 2, 2, 930, 954, 7, 23, 2, 2, 931, 933, 5, 104, 53, 2, 932, 934, 7,
 	59, 2, 2, 933, 932, 3, 2, 2, 2, 933, 934, 3, 2, 2, 2, 934, 936, 3, 2, 2,
@@ -11531,16 +11531,6 @@ func (s *Method_defContext) DEDENT() antlr.TerminalNode {
 	return s.GetToken(SyslParserDEDENT, 0)
 }
 
-func (s *Method_defContext) Query_param() IQuery_paramContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IQuery_paramContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IQuery_paramContext)
-}
-
 func (s *Method_defContext) Params() IParamsContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IParamsContext)(nil)).Elem(), 0)
 
@@ -11549,6 +11539,16 @@ func (s *Method_defContext) Params() IParamsContext {
 	}
 
 	return t.(IParamsContext)
+}
+
+func (s *Method_defContext) Query_param() IQuery_paramContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IQuery_paramContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IQuery_paramContext)
 }
 
 func (s *Method_defContext) Attribs_or_modifiers() IAttribs_or_modifiersContext {
@@ -11634,10 +11634,10 @@ func (p *SyslParser) Method_def() (localctx IMethod_defContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == SyslParserQN {
+	if _la == SyslParserOPEN_PAREN {
 		{
 			p.SetState(908)
-			p.Query_param()
+			p.Params()
 		}
 
 	}
@@ -11645,10 +11645,10 @@ func (p *SyslParser) Method_def() (localctx IMethod_defContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == SyslParserOPEN_PAREN {
+	if _la == SyslParserQN {
 		{
 			p.SetState(911)
-			p.Params()
+			p.Query_param()
 		}
 
 	}
