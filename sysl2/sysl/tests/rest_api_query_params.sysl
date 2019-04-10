@@ -6,5 +6,5 @@ My :: Server [~rest]:
           GET:
               ...
           /second:
-              GET ?depth=int:
+              GET (foo <: int) ?depth=int [~bar]:
                   ...

@@ -147,7 +147,16 @@ apps: <
               elt: <
                 s: "rest"
               >
+              elt: <
+                s: "bar"
+              >
             >
+          >
+        >
+        param: <
+          name: "foo"
+          type: <
+            primitive: INT
           >
         >
         stmt: <

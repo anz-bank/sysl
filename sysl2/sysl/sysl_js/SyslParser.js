@@ -645,9 +645,9 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0002\u0389\u038b\u0003\u0002\u0002\u0002\u038a\u038c\u0005\u001c\u000f",
     "\u0002\u038b\u038a\u0003\u0002\u0002\u0002\u038b\u038c\u0003\u0002\u0002",
     "\u0002\u038c\u0093\u0003\u0002\u0002\u0002\u038d\u038f\u0007\u0006\u0002",
-    "\u0002\u038e\u0390\u0005\\/\u0002\u038f\u038e\u0003\u0002\u0002\u0002",
-    "\u038f\u0390\u0003\u0002\u0002\u0002\u0390\u0392\u0003\u0002\u0002\u0002",
-    "\u0391\u0393\u0005\u0090I\u0002\u0392\u0391\u0003\u0002\u0002\u0002",
+    "\u0002\u038e\u0390\u0005\u0090I\u0002\u038f\u038e\u0003\u0002\u0002",
+    "\u0002\u038f\u0390\u0003\u0002\u0002\u0002\u0390\u0392\u0003\u0002\u0002",
+    "\u0002\u0391\u0393\u0005\\/\u0002\u0392\u0391\u0003\u0002\u0002\u0002",
     "\u0392\u0393\u0003\u0002\u0002\u0002\u0393\u0395\u0003\u0002\u0002\u0002",
     "\u0394\u0396\u0005\u001c\u000f\u0002\u0395\u0394\u0003\u0002\u0002\u0002",
     "\u0395\u0396\u0003\u0002\u0002\u0002\u0396\u0397\u0003\u0002\u0002\u0002",
@@ -8334,12 +8334,12 @@ Method_defContext.prototype.DEDENT = function() {
     return this.getToken(SyslParser.DEDENT, 0);
 };
 
-Method_defContext.prototype.query_param = function() {
-    return this.getTypedRuleContext(Query_paramContext,0);
-};
-
 Method_defContext.prototype.params = function() {
     return this.getTypedRuleContext(ParamsContext,0);
+};
+
+Method_defContext.prototype.query_param = function() {
+    return this.getTypedRuleContext(Query_paramContext,0);
 };
 
 Method_defContext.prototype.attribs_or_modifiers = function() {
@@ -8386,17 +8386,17 @@ SyslParser.prototype.method_def = function() {
         this.state = 909;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        if(_la===SyslParser.QN) {
+        if(_la===SyslParser.OPEN_PAREN) {
             this.state = 908;
-            this.query_param();
+            this.params();
         }
 
         this.state = 912;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        if(_la===SyslParser.OPEN_PAREN) {
+        if(_la===SyslParser.QN) {
             this.state = 911;
-            this.params();
+            this.query_param();
         }
 
         this.state = 915;

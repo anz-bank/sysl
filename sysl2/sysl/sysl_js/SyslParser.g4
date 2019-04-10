@@ -129,7 +129,7 @@ statements: ( if_else
             attribs_or_modifiers?
             ;
 
-method_def: HTTP_VERBS query_param? params? attribs_or_modifiers? COLON
+method_def: HTTP_VERBS params? query_param? attribs_or_modifiers? COLON
                         INDENT statements+ DEDENT
                 ;
 
