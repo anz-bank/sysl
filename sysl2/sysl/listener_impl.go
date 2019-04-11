@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/grammar"
+	"github.com/sirupsen/logrus"
 )
 
 var _ = fmt.Println
@@ -699,8 +701,8 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	s.fieldname = append(s.fieldname, fieldName)
 	type1, has := s.typemap[fieldName]
 	if has {
-		fmt.Printf("WARNING: %d) %s.%s defined multiple times\n",
-			len(s.fieldname), s.typename, fieldName)
+		logrus.Warnf("%s) %s.%s defined multiple times",
+			s.filename, s.typename, fieldName)
 	} else {
 		type1 = &sysl.Type{}
 	}
@@ -3697,7 +3699,7 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	p := strings.Split(strings.TrimSpace(ctx.IMPORT().GetText()), " ")
 	path := p[len(p)-1]
 	if path[0] != '/' {
-		path = s.base + "/" + path
+		path = filepath.ToSlash(s.base) + "/" + path
 	}
 	path += ".sysl"
 	s.imports = append(s.imports, path)

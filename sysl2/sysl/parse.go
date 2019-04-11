@@ -151,13 +151,13 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	case *sysl.Statement_Call:
 		app := getApp(s.Call.Target, mod)
 		if app == nil {
-			logrus.Printf("%s::%s calls non-existant App: %s\n",
+			logrus.Warnf("%s::%s calls non-existant App: %s",
 				appname, epname, s.Call.Target.Part)
 			return false
 		}
 		_, valid := app.Endpoints[s.Call.Endpoint]
 		if !valid {
-			logrus.Printf("%s::%s calls non-existant App <- Endpoint (%s <- %s)\n",
+			logrus.Warnf("%s::%s calls non-existant App <- Endpoint (%s <- %s)",
 				appname, epname, s.Call.Target.Part, s.Call.Endpoint)
 		}
 		return valid
@@ -188,7 +188,7 @@ func collectorPubSubCalls(appName string, app *sysl.Application) {
 		case *sysl.Statement_Action:
 			modify_ep := app.Endpoints[x.Action.Action]
 			if modify_ep == nil {
-				logrus.Printf("App (%s) calls non-existant endpoint (%s)\n",
+				logrus.Errorf("App (%s) calls non-existant endpoint (%s)\n",
 					appName, x.Action.Action)
 				continue
 			}
@@ -208,7 +208,7 @@ func collectorPubSubCalls(appName string, app *sysl.Application) {
 				}
 			}
 			if !applied {
-				logrus.Printf("Unused template (%s <- %s) in app %s\n",
+				logrus.Errorf("Unused template (%s <- %s) in app %s\n",
 					x.Call.Target.Part, x.Call.Endpoint, appName)
 			}
 		default:
@@ -336,7 +336,7 @@ func infer_types(mod *sysl.Module, appName string) {
 			continue
 		}
 		if view.Expr.GetTransform() == nil {
-			logrus.Printf("view %s expression should be of type transform", viewName)
+			logrus.Warnf("view %s expression should be of type transform", viewName)
 			continue
 		}
 		infer_expr_type(mod, appName, view.Expr, true, 0)
@@ -357,7 +357,7 @@ func postProcess(mod *sysl.Module) {
 			for _, src := range app.Mixin2 {
 				src_app := getApp(src.Name, mod)
 				if hasAbstractPattern(src_app.Attrs) == false {
-					logrus.Printf("mixin App (%s) should be ~abstract\n", getAppName(src.Name))
+					logrus.Warnf("mixin App (%s) should be ~abstract", getAppName(src.Name))
 					continue
 				}
 				if src_app.Types != nil && app.Types == nil {
@@ -370,7 +370,7 @@ func postProcess(mod *sysl.Module) {
 					if _, has := app.Types[k]; !has {
 						app.Types[k] = v
 					} else {
-						logrus.Printf("Type %s defined in %s and in %s\n",
+						logrus.Warnf("Type %s defined in %s and in %s",
 							k, appName, getAppName(src.Name))
 					}
 				}
@@ -378,7 +378,7 @@ func postProcess(mod *sysl.Module) {
 					if _, has := app.Views[k]; !has {
 						app.Views[k] = v
 					} else {
-						logrus.Printf("View %s defined in %s and in %s\n",
+						logrus.Warnf("View %s defined in %s and in %s",
 							k, appName, getAppName(src.Name))
 					}
 				}
@@ -404,7 +404,7 @@ func postProcess(mod *sysl.Module) {
 					}
 					refType, has := refApp.Types[refName]
 					if has == false {
-						logrus.Printf("1:Field %s (type %s) refers to type (%s) in app (%s)\n",
+						logrus.Warnf("Field %s (type %s) refers to type (%s) in app (%s)",
 							fieldname, typeName, refName, appName)
 					} else {
 						var ref_attrs map[string]*sysl.Type
@@ -429,7 +429,7 @@ func postProcess(mod *sysl.Module) {
 							_, has = refApp.Types[field]
 						}
 						if has == false {
-							logrus.Printf("2:Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)\n",
+							logrus.Warnf("Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)",
 								fieldname, typeName, field, appName, refName)
 						}
 					}
