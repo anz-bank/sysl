@@ -61,13 +61,14 @@ func constructFormatParser(former, latter string) *seqs.FormatParser {
 }
 
 func DoConstructSequenceDiagrams(
-	root_model, endpoint_format, app_format, title, plantuml, output, modules string,
+	root_model, endpoint_format, app_format, title, output, modules string,
 	endpoints, apps []string,
 	blackboxes [][]string,
-) {
+) map[string]string {
+	result := make(map[string]string)
 	mod := loadApp(root_model, modules)
 	if mod == nil {
-		return
+		return result
 	}
 	if strings.Contains(output, "%(epname)") {
 		spout := seqs.MakeFormatParser(output)
@@ -106,12 +107,12 @@ func DoConstructSequenceDiagrams(
 					blackboxes:      append(bbs, bbs2...),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
-				seqs.OutputPlantuml(output_dir, plantuml, out)
+				result[output_dir] = out
 			}
 		}
 	} else {
 		if endpoints == nil {
-			return
+			return result
 		}
 		spep := constructFormatParser("", endpoint_format)
 		spapp := constructFormatParser("", app_format)
@@ -123,8 +124,10 @@ func DoConstructSequenceDiagrams(
 			blackboxes:      blackboxes,
 		}
 		out, _ := generateSequenceDiag(mod, sd)
-		seqs.OutputPlantuml(output, plantuml, out)
+		result[output] = out
 	}
+
+	return result
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
@@ -181,6 +184,9 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	log.Debugf("modules: %s\n", *modules_flag)
 	log.Debugf("output: %s\n", *output)
 
-	DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *plantuml, *output, *modules_flag,
+	result := DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *output, *modules_flag,
 		endpoints_flag, apps_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
+	for k, v := range result {
+		seqs.OutputPlantuml(k, *plantuml, v)
+	}
 }

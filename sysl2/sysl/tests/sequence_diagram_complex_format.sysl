@@ -1,0 +1,10 @@
+User [aa="added", SEARCH_id="te", SEARCH_use="Ex e"]:
+  Check Balance:
+    MobileApp <- Login [aa="hello"]
+
+MobileApp:
+  Login: ...
+
+Project [seqtitle="Diagram", appfmt="%(@SEARCH_id?//%(@SEARCH_id)//\n)%(@SEARCH_use=='Modified'?<color orange>%(@SEARCH_use)</color>\n)%(@SEARCH_use=='Reused'?<color green>%(@SEARCH_use)</color>\n)%(@SEARCH_use=='New'?<color red>%(@SEARCH_use)</color>\n)%(@SEARCH_use=='Ex e'?<color grey>%(@SEARCH_use)</color>\n)**%(appname)**", epfmt="%(@aa?//«%(@aa)»//**%(pa=='ABC'? %(pa~/\btba|tbd\b/?<color red>%(pa)</color>|<color green>%(pa)</color>)| <color red>pat?</color>)**|%(ni?<color red>(missing INT%)</color>))aa %(epname)%(args?(%(args)%))"]:
+  Seq:
+    User <- Check Balance

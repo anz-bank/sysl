@@ -271,7 +271,7 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	// Given
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m := readModule("../tests/sequence_diagram.golden.json")
+	m := readModule("../tests/sequence_diagram_project.golden.json")
 	v := MakeSequenceDiagramVisitor(l, l, w, m)
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, [][]string{})
 
@@ -310,12 +310,13 @@ deactivate _0
 	assert.Equal(t, expected, w.String())
 }
 
-func TestSequenceDiagramWithAttributesVisitorVisit(t *testing.T) {
+func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	// Given
-	l := &labeler{}
+	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
+	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m := readModule("../tests/sequence_diagram_attribs.golden.json")
-	v := MakeSequenceDiagramVisitor(l, l, w, m)
+	m := readModule("../tests/sequence_diagram_name_format.golden.json")
+	v := MakeSequenceDiagramVisitor(al, el, w, m)
 	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, [][]string{})
 
 	// When
@@ -331,7 +332,7 @@ func TestSequenceDiagramWithAttributesVisitorVisit(t *testing.T) {
 @startuml
 actor "User" as _0
 boundary "MobileApp" as _1
-control "Server" as _2
+control "<color red>Server</color>" as _2
 database "DB" as _3
 skinparam maxMessageSize 250
 title Diagram
@@ -341,7 +342,7 @@ title Diagram
   _1->_2 : Login
   activate _2
   _2 -> _2 : do input validation
-   _2->_3 : Save
+   _2->_3 :  <color green>Save</color>
   _1<--_2 : success or failure
   deactivate _2
  deactivate _1
@@ -349,7 +350,7 @@ title Diagram
  activate _1
   _1->_2 : Read User Balance
   activate _2
-   _2->_3 : Load
+   _2->_3 :  <color green>Load</color>
   _1<--_2 : balance
   deactivate _2
  deactivate _1
