@@ -23,12 +23,16 @@ install:
 
 build: off
 
+build_script:
+  - go build -o dist/gosysl.exe github.com/anz-bank/sysl/sysl2/sysl
+
 test_script:
   - flake8
   - pytest
   - pytest test/e2e --syslexe=sysl --reljamexe=reljam
   - gradle --no-daemon -b test\java\build.gradle test
   - go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/sysl2/sysl
+  - cmd: test-gosysl.bat
 
 after_test:
   - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"
@@ -36,7 +40,6 @@ after_test:
   - XCOPY src\libs\google-site-packages-override\__init__.py  C:\Python27\Lib\site-packages\google /Y
   - python setup.py py2exe
   - pytest test/e2e --syslexe=dist/sysl.exe --reljamexe=dist/reljam.exe
-  - go build -o dist/gosysl.exe github.com/anz-bank/sysl/sysl2/sysl
 
 artifacts:
   - path: 'dist'
