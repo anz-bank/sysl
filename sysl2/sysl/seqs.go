@@ -138,7 +138,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 		}
 	}()
 	var endpoints_flag, apps_flag, blackboxes_flag arrayFlags
-	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
+	root := flags.String("root", ".", "sysl root directory for input model file (default: .)")
 	endpoint_format := flags.String("endpoint_format", "%(epname)", "Specify the format string for sequence diagram endpoints. "+
 		"May include %%(epname), %%(eplongname) and %%(@foo) for attribute foo(default: %(epname))")
 	app_format := flags.String("app_format", "%(appname)", "Specify the format string for sequence diagram participants. "+
@@ -168,7 +168,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	if err != nil {
 		log.Errorf("arguments parse error: %v", err)
 	}
-	log.Debugf("root_model: %s\n", *root_model)
+	log.Debugf("root: %s\n", *root)
 	log.Debugf("endpoints: %v\n", endpoints_flag)
 	log.Debugf("app: %v\n", apps_flag)
 	log.Debugf("no_activations: %t\n", *no_activations)
@@ -184,7 +184,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	log.Debugf("modules: %s\n", *modules_flag)
 	log.Debugf("output: %s\n", *output)
 
-	result := DoConstructSequenceDiagrams(*root_model, *endpoint_format, *app_format, *title, *output, *modules_flag,
+	result := DoConstructSequenceDiagrams(*root, *endpoint_format, *app_format, *title, *output, *modules_flag,
 		endpoints_flag, apps_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
 	for k, v := range result {
 		seqs.OutputPlantuml(k, *plantuml, v)

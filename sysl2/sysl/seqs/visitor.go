@@ -321,7 +321,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 	}
 
 	if len(endpoint.Stmt) > 0 {
-		visiting := fmt.Sprintf(" %s <- %s", e.appName, e.endpointName)
+		visiting := fmt.Sprintf("%s <- %s", e.appName, e.endpointName)
 		comment, hitUpto := e.uptos[visiting]
 		_, hitVisited := v.visited[visiting]
 
@@ -339,7 +339,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 				fmt.Fprintf(v.w, "note %s: %s\n", direct, comment)
 			}
 			if len(payload) > 0 {
-				fmt.Fprintf(v.w, "%s<--%s : %s", sender, agent, payload)
+				fmt.Fprintf(v.w, "%s<--%s : %s\n", sender, agent, payload)
 				v.w.Deactivate(agent)
 			}
 		} else {
