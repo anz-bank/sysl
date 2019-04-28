@@ -245,16 +245,20 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 	}
 
 	for _, entry := range e.entries {
+		allUptos := makeStrSet()
+		for _, entry := range e.entries {
+			item := fmt.Sprintf("%s <- %s", entry.appName, entry.endpointName)
+			allUptos.Insert(item)
+		}
+		allUptos.Insert(entry.upto)
+
 		fmt.Fprintf(v.w, "== %s <- %s ==\n", entry.appName, entry.endpointName)
 
 		visiting := fmt.Sprintf("%s <- %s", entry.appName, entry.endpointName)
-		bbs := make(map[string]string)
-		for k, v := range e.blackboxes {
-			if k == entry.upto || (e.uptos.Contains(k) && k != visiting) {
-				bbs[k] = "see below"
-			} else {
-				bbs[k] = v
-			}
+		bbs := copyBlackboxes(e.blackboxes)
+		delete(allUptos, visiting)
+		for k := range allUptos {
+			bbs[k] = "see below"
 		}
 		for k := range v.visited {
 			delete(v.visited, k)

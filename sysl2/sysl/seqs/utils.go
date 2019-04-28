@@ -59,6 +59,18 @@ func MergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Att
 	return result
 }
 
+func copyBlackboxes(bbs map[string]string) map[string]string {
+	m := make(map[string]string)
+	if bbs == nil {
+		return m
+	}
+	for k, v := range bbs {
+		m[k] = v
+	}
+
+	return m
+}
+
 func getAppName(appName *sysl.AppName) string {
 	return strings.Join(appName.Part, " :: ")
 }

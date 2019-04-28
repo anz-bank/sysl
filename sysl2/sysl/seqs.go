@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"io"
 	"sort"
@@ -57,7 +58,16 @@ func constructFormatParser(former, latter string) *seqs.FormatParser {
 		fmtstr = latter
 	}
 
-	return seqs.MakeFormatParser(fmtstr)
+	return seqs.MakeFormatParser(escapeWordBoundary(fmtstr))
+}
+
+func escapeWordBoundary(src string) string {
+	result, _ := json.Marshal(src)
+	escapeStr := strings.Replace(string(result), `\u0008`, `\\b`, -1)
+	var val string
+	json.Unmarshal([]byte(escapeStr), &val)
+
+	return val
 }
 
 func DoConstructSequenceDiagrams(

@@ -142,8 +142,8 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 			if f.eat(itemReSearch) {
 				isSearched = true
 				isUseVal = false
-				searchStr := f.pop()
-				if strings.Contains(value, searchStr) {
+				reWordBoundary := regexp.MustCompile(f.pop())
+				if reWordBoundary.MatchString(value) {
 					isYesStmt = true
 				}
 			}

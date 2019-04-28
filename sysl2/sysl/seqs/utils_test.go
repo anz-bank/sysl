@@ -170,6 +170,30 @@ func TestMergeAttributes(t *testing.T) {
 	}
 }
 
+func TestCopyBlackboxes(t *testing.T) {
+	// given
+	m := map[string]string{
+		"keyA": "value A",
+	}
+
+	// when
+	r := copyBlackboxes(m)
+
+	// then
+	assert.Equal(t, m, r, "unexpected map")
+}
+
+func TestCopyBlackboxesByNil(t *testing.T) {
+	// given
+	var m map[string]string
+
+	// when
+	r := copyBlackboxes(m)
+
+	// then
+	assert.NotNil(t, r)
+}
+
 func TestGetAppName(t *testing.T) {
 	// given
 	a := &sysl.AppName{
