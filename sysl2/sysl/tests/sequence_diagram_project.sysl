@@ -1,0 +1,19 @@
+# ./sd -app Project -output "sysl-sd-%(epname)".png -modules ./test/sequence_diagram.sysl
+Database[~db]:
+    QueryUser (user_id):
+        Return User
+
+Api:
+    /users/{user_id<:int}/profile:
+        GET:
+                Database <- QueryUser(user_id)
+                Return UserProfile
+
+WebFrontend:
+    RequestProfile:
+        Api <- GET /users/{user_id}/profile
+        Return Profile Page
+
+Project [seqtitle="Profile"]:
+    _:
+        WebFrontend <- RequestProfile

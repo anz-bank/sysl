@@ -1,0 +1,362 @@
+{
+ "apps": {
+  "DB": {
+   "name": {
+    "part": [
+     "DB"
+    ]
+   },
+   "attrs": {
+    "patterns": {
+     "a": {
+      "elt": [
+       {
+        "s": "db"
+       }
+      ]
+     }
+    }
+   },
+   "endpoints": {
+    "Load": {
+     "name": "Load",
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 24,
+       "col": 2
+      }
+     }
+    },
+    "Save": {
+     "name": "Save",
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 23,
+       "col": 2
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "sequence_diagram_attribs.sysl",
+    "start": {
+     "line": 22,
+     "col": 1
+    }
+   }
+  },
+  "MobileApp": {
+   "name": {
+    "part": [
+     "MobileApp"
+    ]
+   },
+   "attrs": {
+    "patterns": {
+     "a": {
+      "elt": [
+       {
+        "s": "ui"
+       }
+      ]
+     }
+    }
+   },
+   "endpoints": {
+    "Check Balance": {
+     "name": "Check Balance",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "Server"
+         ]
+        },
+        "endpoint": "Read User Balance"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 9,
+       "col": 2
+      }
+     }
+    },
+    "Login": {
+     "name": "Login",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "Server"
+         ]
+        },
+        "endpoint": "Login"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 7,
+       "col": 2
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "sequence_diagram_attribs.sysl",
+    "start": {
+     "line": 6,
+     "col": 1
+    }
+   }
+  },
+  "Project": {
+   "name": {
+    "part": [
+     "Project"
+    ]
+   },
+   "attrs": {
+    "appfmt": {
+     "s": "%(@status?\u003ccolor red\u003e%(appname)\u003c/color\u003e|%(appname))"
+    },
+    "epfmt": {
+     "s": "%(@status? \u003ccolor green\u003e%(epname)\u003c/color\u003e|%(epname))"
+    },
+    "seqtitle": {
+     "s": "Diagram"
+    }
+   },
+   "endpoints": {
+    "Seq": {
+     "name": "Seq",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "User"
+         ]
+        },
+        "endpoint": "Check Balance"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 32,
+       "col": 2
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "sequence_diagram_attribs.sysl",
+    "start": {
+     "line": 31,
+     "col": 1
+    }
+   }
+  },
+  "Server": {
+   "name": {
+    "part": [
+     "Server"
+    ]
+   },
+   "attrs": {
+    "status": {
+     "s": "modified"
+    }
+   },
+   "endpoints": {
+    ".. * \u003c- *": {
+     "name": ".. * \u003c- *",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "DB"
+         ]
+        },
+        "endpoint": "Save"
+       },
+       "attrs": {
+        "status": {
+         "s": "modified"
+        }
+       }
+      },
+      {
+       "call": {
+        "target": {
+         "part": [
+          "DB"
+         ]
+        },
+        "endpoint": "Load"
+       },
+       "attrs": {
+        "status": {
+         "s": "modified"
+        }
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 27,
+       "col": 2
+      }
+     }
+    },
+    "Login": {
+     "name": "Login",
+     "stmt": [
+      {
+       "action": {
+        "action": "do input validation"
+       }
+      },
+      {
+       "call": {
+        "target": {
+         "part": [
+          "DB"
+         ]
+        },
+        "endpoint": "Save"
+       },
+       "attrs": {
+        "status": {
+         "s": "modified"
+        }
+       }
+      },
+      {
+       "ret": {
+        "payload": "success or failure"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 13,
+       "col": 2
+      }
+     }
+    },
+    "Read User Balance": {
+     "name": "Read User Balance",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "DB"
+         ]
+        },
+        "endpoint": "Load"
+       },
+       "attrs": {
+        "status": {
+         "s": "modified"
+        }
+       }
+      },
+      {
+       "ret": {
+        "payload": "balance"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 18,
+       "col": 2
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "sequence_diagram_attribs.sysl",
+    "start": {
+     "line": 26,
+     "col": 1
+    }
+   }
+  },
+  "User": {
+   "name": {
+    "part": [
+     "User"
+    ]
+   },
+   "attrs": {
+    "patterns": {
+     "a": {
+      "elt": [
+       {
+        "s": "human"
+       }
+      ]
+     }
+    }
+   },
+   "endpoints": {
+    "Check Balance": {
+     "name": "Check Balance",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "MobileApp"
+         ]
+        },
+        "endpoint": "Login"
+       }
+      },
+      {
+       "call": {
+        "target": {
+         "part": [
+          "MobileApp"
+         ]
+        },
+        "endpoint": "Check Balance"
+       }
+      }
+     ],
+     "sourceContext": {
+      "file": "sequence_diagram_attribs.sysl",
+      "start": {
+       "line": 2,
+       "col": 2
+      }
+     }
+    }
+   },
+   "sourceContext": {
+    "file": "sequence_diagram_attribs.sysl",
+    "start": {
+     "line": 1,
+     "col": 1
+    }
+   }
+  }
+ }
+}
