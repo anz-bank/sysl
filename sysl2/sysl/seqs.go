@@ -10,6 +10,7 @@ import (
 	"github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	log "github.com/sirupsen/logrus"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type sequenceDiagParam struct {
@@ -27,19 +28,6 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 	e.Accept(v)
 
 	return w.String(), nil
-}
-
-type arrayFlags []string
-
-// String implements flag.Value.
-func (i *arrayFlags) String() string {
-	return strings.Join(*i, ",")
-}
-
-// Set implements flag.Value.
-func (i *arrayFlags) Set(value string) error {
-	*i = append(*i, value)
-	return nil
 }
 
 func loadApp(root string, models string) *sysl.Module {
@@ -147,34 +135,36 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 			log.Errorln(err)
 		}
 	}()
-	var endpoints_flag, apps_flag, blackboxes_flag arrayFlags
-	root := flags.String("root", ".", "sysl root directory for input model file (default: .)")
-	endpoint_format := flags.String("endpoint_format", "%(epname)", "Specify the format string for sequence diagram endpoints. "+
-		"May include %%(epname), %%(eplongname) and %%(@foo) for attribute foo(default: %(epname))")
-	app_format := flags.String("app_format", "%(appname)", "Specify the format string for sequence diagram participants. "+
-		"May include %%(appname) and %%(@foo) for attribute foo(default: %(appname))")
-	title := flags.String("title", "", "diagram title")
-	plantuml := flags.String("plantuml", "", strings.Join([]string{"base url of plantuml server",
+	sd := kingpin.New("sd", "Generate sequence diagram")
+	root := sd.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
+	endpoint_format := sd.Flag("endpoint_format", "Specify the format string for sequence diagram endpoints. "+
+		"May include %%(epname), %%(eplongname) and %%(@foo) for attribute foo(default: %(epname))").Default("%(epname)").String()
+	app_format := sd.Flag("app_format", "Specify the format string for sequence diagram participants. "+
+		"May include %%(appname) and %%(@foo) for attribute foo(default: %(appname))").Default("%(appname)").String()
+	title := sd.Flag("title", "diagram title").Short('t').String()
+	plantuml := sd.Flag("plantuml", strings.Join([]string{"base url of plantuml server",
 		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
-		"see http://plantuml.com/server.html#install for more info)"}, "\n"))
-	output := flags.String("output", "%(epname).png", "output file(default: %(epname).png)")
-	modules_flag := flags.String("modules", ".", strings.Join([]string{"input files without .sysl extension and with leading /",
-		"eg: /project_dir/my_models",
-		"combine with --root if needed"}, "\n"))
-	flags.Var(&endpoints_flag, "endpoint", "Include endpoint in sequence diagram")
-	flags.Var(&apps_flag, "app", "Include all endpoints for app in sequence diagram (currently "+
+		"see http://plantuml.com/server.html#install for more info)"}, "\n")).Short('p').String()
+	output := sd.Flag("output", "output file(default: %(epname).png)").Default("%(epname).png").Short('o').String()
+	endpoints_flag := sd.Flag("endpoint", "Include endpoint in sequence diagram").Short('s').Strings()
+	apps_flag := sd.Flag("app", "Include all endpoints for app in sequence diagram (currently "+
 		"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
-		"comma-list of shell globs) to limit the diagrams generated")
-	flags.Var(&blackboxes_flag, "blackbox", "Apps to be treated as black boxes")
+		"comma-list of shell globs) to limit the diagrams generated").Short('a').Strings()
+	blackboxes_flag := sd.Flag("blackbox", "Apps to be treated as black boxes").Strings()
 
 	// Following variables currently are unused. Keep them to align with the python version.
-	filter := flags.String("filter", "", "Only generate diagrams whose output paths match a pattern")
-	no_activations := flags.Bool("no-activations", true, "Suppress sequence diagram activation bars(default: true)")
-	verbose := flags.Bool("verbose", false, "Report each output(default: false)")
-	expire_cache := flags.Bool("expire-cache", false, "Expire cache entries to force checking against real destination(default: false)")
-	dry_run := flags.Bool("dry-run", false, "Don't perform confluence uploads, but show what would have happened(default: false)")
+	filter := sd.Flag("filter", "Only generate diagrams whose output paths match a pattern").String()
+	no_activations := sd.Flag("no-activations", "Suppress sequence diagram activation bars(default: true)").Default("true").Bool()
+	verbose := sd.Flag("verbose", "Report each output(default: false)").Default("false").Short('v').Bool()
+	expire_cache := sd.Flag("expire-cache", "Expire cache entries to force checking against real destination(default: false)").Default("false").Bool()
+	dry_run := sd.Flag("dry-run", "Don't perform confluence uploads, but show what would have happened(default: false)").Default("false").Bool()
 
-	err := flags.Parse(args[1:])
+	modules_flag := sd.Arg("modules", strings.Join([]string{"input files without .sysl extension and with leading /",
+		"eg: /project_dir/my_models",
+		"combine with --root if needed"}, "\n")).String()
+
+	_, err := sd.Parse(args[1:])
+
 	if err != nil {
 		log.Errorf("arguments parse error: %v", err)
 	}
@@ -184,7 +174,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	log.Debugf("no_activations: %t\n", *no_activations)
 	log.Debugf("endpoint_format: %s\n", *endpoint_format)
 	log.Debugf("app_format: %s\n", *app_format)
-	log.Debugf("blackbox: %s\n", blackboxes_flag)
+	log.Debugf("blackbox: %s\n", *blackboxes_flag)
 	log.Debugf("title: %s\n", *title)
 	log.Debugf("plantuml: %s\n", *plantuml)
 	log.Debugf("verbose: %t\n", *verbose)
@@ -195,7 +185,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 	log.Debugf("output: %s\n", *output)
 
 	result := DoConstructSequenceDiagrams(*root, *endpoint_format, *app_format, *title, *output, *modules_flag,
-		endpoints_flag, apps_flag, seqs.ParseBlackBoxesFromArgument(blackboxes_flag))
+		*endpoints_flag, *apps_flag, seqs.ParseBlackBoxesFromArgument(*blackboxes_flag))
 	for k, v := range result {
 		seqs.OutputPlantuml(k, *plantuml, v)
 	}

@@ -163,29 +163,6 @@ skinparam maxMessageSize 250
 	assert.Equal(t, expected, r)
 }
 
-func TestArrayFlagsString(t *testing.T) {
-	// Given
-	f := &arrayFlags{"FlagA"}
-
-	// When
-	actual := f.String()
-
-	// Then
-	assert.Equal(t, "FlagA", actual)
-}
-
-func TestArrayFlagsSet(t *testing.T) {
-	// Given
-	f := &arrayFlags{"FlagA"}
-
-	// When
-	err := f.Set("FlagB")
-
-	// Then
-	assert.Nil(t, err)
-	assert.Len(t, *f, 2)
-}
-
 type loadAppArgs struct {
 	root   string
 	models string

@@ -20,6 +20,10 @@ func OutputPlantuml(output, plantuml, umlInput string) {
 		plantuml = os.Getenv("SYSL_PLANTUML")
 	}
 
+	if plantuml == "" {
+		plantuml = "http://localhost:8080/plantuml"
+	}
+
 	switch mode {
 	case "png", "svg":
 		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, DeflateAndEncode([]byte(umlInput)))
