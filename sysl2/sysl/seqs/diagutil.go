@@ -16,10 +16,6 @@ func OutputPlantuml(output, plantuml, umlInput string) {
 	l := len(output)
 	mode := output[l-3:]
 
-	if plantuml == "" {
-		plantuml = os.Getenv("SYSL_PLANTUML")
-	}
-
 	switch mode {
 	case "png", "svg":
 		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, DeflateAndEncode([]byte(umlInput)))
