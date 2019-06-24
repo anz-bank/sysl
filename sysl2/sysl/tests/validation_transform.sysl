@@ -1,0 +1,95 @@
+CodeGenTransform:
+  !view TfmTypeRefTest(app <: sysl.App) -> string:
+    app -> (:
+      List = ["List"]
+
+      SyslFuncCall = Join()
+
+      BinExpr = [""] | [""]
+
+      Conditional = if a == "a" then "A" else "B"
+
+      Str = "string"
+
+      NonSyslFuncCall = TestCall()
+
+      Transform = app -> <Transform>(:
+        Foo = ""
+      )
+
+      VarAssign = variable
+    )
+
+  !view TfmReadViewBasicTest(app <: sysl.App) -> string:
+    app -> (:
+      TransformVar = "val"
+    )
+
+  !view TfmReadViewChildrenTest(app <: sysl.App) -> string:
+    app -> (:
+      TransformVar = app -> <Transform>(:
+        Foo = ""
+      )
+    )
+
+  !view TfmReadViewEmptyTest(app <: sysl.App) -> string:
+    app -> (:
+      let a = "a"
+    )
+
+  !view TfmOutputTypePrimitiveTest(app <: sysl.App) -> string:
+    app -> (:
+      let a = "a"
+    )
+
+  !view TfmOutputTypeTransformTest(app <: sysl.App) -> Transform:
+    app -> (:
+      TransformVar = app -> <Transform>(:
+        Foo = ""
+      )
+    )
+
+  !view TfmOutputTypePrimitiveCollectionTest(app <: sysl.App) -> sequence of string:
+    app -> (:
+      TransformVar = app -> <Transform>(:
+        Foo = ""
+      )
+    )
+
+  !view TfmOutputTypeTfmCollectionTest(app <: sysl.App) -> sequence of Transform:
+    app -> (e:
+      TransformVar = app -> <Transform>(:
+        Foo = ""
+      )
+    )
+
+  !view TfmRetTypeMissingTest(identifier <: string, typeName <: string) -> ParameterDeclC:
+    identifier -> (:
+      ParameterDec = identifier -> <ParameterDecl>(:
+        Identifier = identifier
+        TypeName = typeName
+      )
+    )
+
+  !view TfmRetTypeValidTest(identifier <: string, typeName <: string) -> ParameterDeclC:
+    identifier -> (:
+      ParameterDecl = identifier -> <ParameterDecl>(:
+        Identifier = identifier
+        TypeName = typeName
+      )
+    )
+
+  !view TfmRetTypeSeqInvalidTest(eps <: set of sysl.Endpoints) -> sequence of MethodSpec:
+    eps -> (:
+      let allParams = ""
+    )
+
+  !view TfmRetTypeSeqValidTest(eps <: set of sysl.Endpoints) -> sequence of MethodSpec:
+    eps -> (ep:
+      let allParams = ""
+    )
+
+  !view TfmRetTypeMultiInvalidTest(eps <: set of sysl.Endpoints) -> sequence of IdentifierListC:
+    eps -> (:
+      identifire = ""
+    )

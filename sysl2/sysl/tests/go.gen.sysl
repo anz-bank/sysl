@@ -1,0 +1,251 @@
+Go:
+  !type goFile:
+    PackageClause <: PackageClause
+    Comment <: string?
+    ImportDecl <: ImportDecl?
+    TopLevelDecl(1..) <: TopLevelDecl
+
+  !type PackageClause:
+    PackageName <: string
+
+  !alias Import:
+    string
+
+  !type NamedImport:
+    Name <: string
+    Import <: Import
+
+  !union ImportSpecChoices:
+    Import
+    NamedImport
+
+  !type ImportDecl:
+    ImportSpec(0..) <: ImportSpec
+
+  !type ImportSpec:
+    ImportSpecChoices <: ImportSpecChoices
+    
+  !union TopLevelDeclChoices:
+    Declaration
+    FunctionDecl
+    MethodDecl
+
+  !type TopLevelDecl:
+    Comment <: string
+    TopLevelDeclChoices <: TopLevelDeclChoices
+    
+  !union DeclarationChoices:
+    VarDecl
+    VarDeclWithVal
+    ConstDecl
+    StructType
+    InterfaceType
+    AliasDecl
+
+  !type Declaration:
+    DeclarationChoices <: DeclarationChoices
+
+  !type StructType:
+    StructName <: string
+    FieldDecl(0..) <: FieldDecl
+
+  !type FieldDecl:
+    identifier <: string
+    Type <: string?
+    Tag <: string?
+
+  !type IdentifierList:
+    identifier <: string
+    IdentifierListC(0..) <: IdentifierListC
+
+  !type IdentifierListC:
+    identifier <: string
+
+  !type VarDeclWithVal:
+    identifier <: string
+    TypeName <: string
+
+  !type VarDecl:
+    identifier <: string
+    TypeName <: string
+
+  !type ConstDecl:
+    ConstSpec <: ConstSpec
+
+  !type ConstSpec:
+    VarName <: string
+    TypeName <: string
+    ConstValue <: string
+
+  !type FunctionDecl:
+    FunctionName <: string
+    Signature <: Signature?
+    Block <: Block
+
+  !type Signature:
+    Parameters <: Parameters
+    Result <: Result?
+
+  !type Parameters:
+    ParameterList <: ParameterList?
+
+  !alias TypeName:
+    string
+    
+  !union ResultChoices:
+    ReturnTypes
+    TypeName
+
+  !type Result:
+    ResultChoices <: ResultChoices
+
+  !type ReturnTypes:
+    TypeName <: TypeName
+    ResultTypeList(0..) <: ResultTypeList
+
+  !type ResultTypeList:
+    TypeName <: TypeName
+
+  !type TypeList:
+    TypeName <: TypeName
+
+  !type ParameterList:
+    ParameterDecl <: ParameterDecl
+    ParameterDeclC(0..) <: ParameterDeclC
+
+  !type ParameterDecl:
+    Identifier <: string
+    TypeName <: TypeName
+
+  !type ParameterDeclC:
+    ParameterDecl <: ParameterDecl
+
+  !type InterfaceType:
+    InterfaceName <: string
+    MethodSpec(0..) <: MethodSpec
+    MethodDecl(0..) <: MethodDecl
+    
+  !alias InterfaceTypeName:
+    string
+  
+  !alias MethodName:
+        string
+
+  !type MethodAndSignature:
+    MethodName <: MethodName
+    Signature <: Signature
+
+  !union MethodSpecChoices:
+    MethodAndSignature
+    InterfaceTypeName
+
+  !type MethodSpec:
+    MethodSpecChoices <: MethodSpecChoices
+
+  !type MethodDecl:
+    Receiver <: Receiver
+    FunctionName <: string
+    Signature <: Signature?
+    Block <: Block?
+
+  !type Receiver:
+    ReceiverType <: string
+
+  !type AliasDecl:
+    identifier <: string
+    Type <: string?
+
+  !type Block:
+    StatementList(0..) <: StatementList
+
+  !type StatementList:
+    Statement <: Statement
+
+  !union StatementChoice:
+    ReturnStmt
+    DeclareAndAssignStmt
+    AssignStmt
+    IfElseStmt
+    IncrementVarByStmt
+    FunctionCall
+    VarDecl
+    ForLoop
+
+  !type Statement:
+    StatementChoice <: StatementChoice
+
+  !type AssignStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !type IfElseStmt:
+    Expression <: Expression
+    Block <: Block
+
+  !type IncrementVarByStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !alias PayLoad:
+    string
+
+  !union ReturnStmtChoices:
+    PayLoad
+    Expression
+
+  !type ReturnStmt:
+    ReturnStmtChoices <: ReturnStmtChoices
+
+  !type DeclareAndAssignStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !union ExpressionChoices:
+    FunctionCall
+    NewStruct
+    GetArg
+    ValueExpr
+    NewSlice
+    Map
+
+  !type Expression:
+    ExpressionChoices <: ExpressionChoices
+
+  !type GetArg:
+    LHS <: string
+    RHS <: string
+
+  !type NewSlice:
+    TypeName <: TypeName
+    SliceValues <: string?
+
+  !type Map:
+    KeyType <: string
+    ValType <: string
+    KeyValuePairs <: KeyValuePairs?
+
+  !type KeyValuePairs:
+    KeyValuePair(0..) <: KeyValuePair
+
+  !type KeyValuePair:
+    Key <: string
+    Value <: string
+
+  !type FunctionCall:
+    FunctionName <: string
+    FunctionArgs <: FunctionArgs?
+
+  !type FunctionArgs:
+    Expression <: Expression
+    FuncArgsRest(0..) <: FuncArgsRest
+
+  !type FuncArgsRest:
+    Expression <: Expression
+
+  !type NewStruct:
+    StructName <: string
+
+  !type ForLoop:
+    LoopVar <: string
+    Variable <: string
+    Block <: Block

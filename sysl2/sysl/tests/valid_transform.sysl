@@ -1,0 +1,32 @@
+CodeGenTransform:
+  !view paramDecl(identifier <: string, typeName <: string) -> ParameterDeclC:
+    identifier -> (:
+      ParameterDecl = ""
+    )
+
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename =  "fileName.go"
+    )
+
+  !view epHandlerMethodSpecs(eps <: set of sysl.Endpoints) -> sequence of MethodSpec:
+    eps -> (ep:
+      MethodName = ""
+      Signature = ""
+    )
+
+  !view goFile(app <: sysl.App) -> goFile:
+    app -> (:
+
+      PackageClause = app -> <package> (:
+        let pname = ""
+      )
+
+      ImportDecl = app -> <ImportDecl>(:
+        let spec = ""
+      )
+
+      Comment = ""
+
+      TopLevelDecl = ""
+    )

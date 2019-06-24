@@ -2,16 +2,15 @@ package main
 
 import (
 	"flag"
+	"github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/naive"
+	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"os"
 	"sort"
-
-	"github.com/anz-bank/sysl/src/proto"
-	parser "github.com/anz-bank/sysl/sysl2/naive"
-	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
 // Node can be string or node
@@ -231,10 +230,15 @@ func GenerateCode(root_model, model, root_transform, transform, grammar, start s
 
 	mod, modelAppName := loadAndGetDefaultApp(root_model, model)
 	tx, transformAppName := loadAndGetDefaultApp(root_transform, transform)
+	grammarSysl := grammar[:len(grammar)-1] + "sysl"
+	grm, _ := loadAndGetDefaultApp("", grammarSysl)
 	g := readGrammar(grammar, "gen", start)
 	if g == nil {
 		panic(errors.Errorf("Unable to load grammar"))
 	}
+
+	validate(start, tx, grm)
+
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {
 		return nil
