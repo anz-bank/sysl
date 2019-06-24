@@ -1,0 +1,245 @@
+Go:
+  !type goFile:
+    PackageClause <: PackageClause
+    Comment <: string?
+    ImportDecl <: ImportDecl?
+    TopLevelDecl(1..) <: TopLevelDecl
+
+  !type PackageClause:
+    PackageName <: string
+
+  !type NamedImport:
+    Name <: string
+    Import <: string
+
+  !union __Choice_ImportSpec:
+    Import
+    NamedImport
+
+  !type ImportDecl:
+    ImportSpec <: sequence of ImportSpec?
+
+  !type ImportSpec:
+    __Choice_ImportSpec <: __Choice_ImportSpec
+
+  !union __Choice_TopLevelDecl:
+    Declaration
+    FunctionDecl
+    MethodDecl
+
+  !type TopLevelDecl:
+    Comment <: string
+    __Choice_TopLevelDecl <: __Choice_TopLevelDecl
+
+  !union __Choice_Declaration:
+    VarDecl
+    VarDeclWithVal
+    ConstDecl
+    StructType
+    InterfaceType
+    AliasDecl
+
+  !type Declaration:
+    __Choice_Declaration <: __Choice_Declaration
+
+  !type StructType:
+    StructName <: string
+    FieldDecl <: sequence of FieldDecl?
+
+  !type FieldDecl:
+    identifier <: string
+    Type <: string?
+    Tag <: string?
+
+  !type IdentifierList:
+    identifier <: string
+    IdentifierListC <: sequence of IdentifierListC?
+
+  !type IdentifierListC:
+    identifier <: string
+
+  !type VarDeclWithVal:
+    identifier <: string
+    TypeName <: string
+
+  !type VarDecl:
+    identifier <: string
+    TypeName <: string
+
+  !type ConstDecl:
+    ConstSpec <: ConstSpec
+
+  !type ConstSpec:
+    VarName <: string
+    TypeName <: string
+    ConstValue <: string
+
+  !type FunctionDecl:
+    FunctionName <: string
+    Signature <: Signature?
+    Block <: Block
+
+  !type Signature:
+    Parameters <: Parameters
+    Result <: Result?
+
+  !type Parameters:
+    ParameterList <: ParameterList?
+
+  !union __Choice_Result:
+    ReturnTypes
+    TypeName
+
+  !type Result:
+    __Choice_Result <: __Choice_Result
+
+  !type ReturnTypes:
+    TypeName <: string
+    ResultTypeList <: sequence of ResultTypeList?
+
+  !type ResultTypeList:
+    TypeName <: string
+
+  !type TypeList:
+    TypeName <: string
+
+  !type ParameterList:
+    ParameterDecl <: ParameterDecl
+    ParameterDeclC <: sequence of ParameterDeclC?
+
+  !type ParameterDecl:
+    Identifier <: string
+    TypeName <: string
+
+  !type ParameterDeclC:
+    ParameterDecl <: ParameterDecl
+
+  !type InterfaceType:
+    InterfaceName <: string
+    MethodSpec <: sequence of MethodSpec?
+    MethodDecl <: sequence of MethodDecl?
+
+  !alias InterfaceTypeName:
+    string
+
+  !type __Choice_Combination_MethodSpec_MethodName_Signature:
+    MethodName <: string
+    Signature <: Signature
+
+  !union __Choice_MethodSpec:
+    __Choice_Combination_MethodSpec_MethodName_Signature
+    InterfaceTypeName
+
+  !type MethodSpec:
+    __Choice_MethodSpec <: __Choice_MethodSpec
+
+  !type MethodDecl:
+    Receiver <: Receiver
+    FunctionName <: string
+    Signature <: Signature?
+    Block <: Block?
+
+  !type Receiver:
+    ReceiverType <: string
+
+  !type AliasDecl:
+    identifier <: string
+    Type <: string?
+
+  !type Block:
+    StatementList <: sequence of StatementList?
+
+  !type StatementList:
+    Statement <: Statement
+
+  !union __Choice_Statement:
+    ReturnStmt
+    DeclareAndAssignStmt
+    AssignStmt
+    IfElseStmt
+    IncrementVarByStmt
+    FunctionCall
+    VarDecl
+    ForLoop
+
+  !type Statement:
+    __Choice_Statement <: __Choice_Statement
+
+  !type AssignStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !type IfElseStmt:
+    Expression <: Expression
+    Block <: Block
+
+  !type IncrementVarByStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !alias PayLoad:
+    string
+
+  !union __Choice_ReturnStmt:
+    PayLoad
+    Expression
+
+  !type ReturnStmt:
+    __Choice_ReturnStmt <: __Choice_ReturnStmt
+
+  !type DeclareAndAssignStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !alias ValueExpr:
+    string
+
+  !union __Choice_Expression:
+    FunctionCall
+    NewStruct
+    GetArg
+    ValueExpr
+    NewSlice
+    Map
+
+  !type Expression:
+    __Choice_Expression <: __Choice_Expression
+
+  !type GetArg:
+    LHS <: string
+    RHS <: string
+
+  !type NewSlice:
+    TypeName <: string
+    SliceValues <: string?
+
+  !type Map:
+    KeyType <: string
+    ValType <: string
+    KeyValuePairs <: KeyValuePairs?
+
+  !type KeyValuePairs:
+    KeyValuePair <: sequence of KeyValuePair?
+
+  !type KeyValuePair:
+    Key <: string
+    Value <: string
+
+  !type FunctionCall:
+    FunctionName <: string
+    FunctionArgs <: FunctionArgs?
+
+  !type FunctionArgs:
+    Expression <: Expression
+    FuncArgsRest <: sequence of FuncArgsRest?
+
+  !type FuncArgsRest:
+    Expression <: Expression
+
+  !type NewStruct:
+    StructName <: string
+
+  !type ForLoop:
+    LoopVar <: string
+    Variable <: string
+    Block <: Block

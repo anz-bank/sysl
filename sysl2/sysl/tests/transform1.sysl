@@ -1,0 +1,155 @@
+CodeGenTransform:
+  !view EntryPoint(app <: sysl.App) -> EntryPoint:
+    app -> (:
+      let abc = ""
+    )
+
+  !view EntryPointInvalid(app <: sysl.App) -> string:
+    app -> (:
+      let abc = ""
+    )
+
+  !view TfmDefaultEmpty(app <: sysl.App) -> goFile:
+    app -> (:
+      let abc = ""
+    )
+
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename =  "servicehandler.go"
+    )
+
+  !view TfmFilenameInvalid1(app <: sysl.App) -> int:
+    app -> (:
+      filename =  "servicehandler.go"
+    )
+
+  !view TfmFilenameInvalid2(app <: sysl.App) -> string:
+    app -> (:
+      foo =  "servicehandler.go"
+    )
+
+  !view TfmFilenameInvalid3(app <: sysl.App) -> string:
+    app -> (:
+      filename =  "servicehandler.go"
+      foo =  ""
+    )
+
+  !view TfmValid(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      FunctionName =  ""
+      Signature =  ""
+      Block =  ""
+    )
+
+  !view TfmInvalid(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      Signature =  ""
+      Block =  ""
+    )
+
+  !view TfmNoOptional(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      FunctionName =  ""
+    )
+
+  !view TfmExcessAttrs1(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      FunctionName =  ""
+      ExcessAttr1 =  ""
+    )
+
+  !view TfmExcessAttrs2(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      FunctionName =  ""
+      Signature =  ""
+      Block =  ""
+      ExcessAttr1 =  ""
+    )
+
+  !view ValidChoice(input <: string) -> Statement:
+    input -> (:
+      VarDecl = name -> <VarDecl> (:
+        identifier = name
+        TypeName = typeName
+      )
+    )
+
+  !view InvalidChoice(input <: string) -> Statement:
+    input -> (:
+      Foo = name -> <Foo> (:
+        let f = "b"
+      )
+    )
+
+  !view ValidChoiceCombination(input <: string) -> MethodSpec:
+    input -> (:
+      MethodName = ""
+      Signature = ""
+    )
+
+
+  !view ValidChoiceNonCombination(input <: string) -> MethodSpec:
+    input -> (:
+      InterfaceTypeName = ""
+    )
+
+  !view InvalidChoiceCombinationExcess(input <: string) -> MethodSpec:
+    input -> (:
+      MethodName = ""
+      Signature = ""
+      Foo = ""
+    )
+
+  !view InvalidChoiceCombiMissing(input <: string) -> MethodSpec:
+    input -> (:
+      MethodName = ""
+      Foo = ""
+    )
+
+  !view InvalidChoiceNonCombination(input <: string) -> MethodSpec:
+    input -> (:
+      Interface = ""
+    )
+
+  !view varTypeResolve(input <: string) -> MethodDecl:
+    input -> (:
+      stringType =  ""
+      intType =  5
+      boolType =  true
+      decimalType =  5.5
+      transformTypePrimitive = input -> <string> (:
+        let upper = "bar"
+      )
+      transformTypeRef = input -> <Statement> (:
+        let upper = "bar"
+      )
+      unaryResultValid = !true
+      unaryResultInvalid = !"Foo"
+    )
+
+  !view ValidInnerAttrs(input <: string) -> goFile:
+    input -> (:
+      PackageClause = input -> <PackageClause> (:
+        PackageName = ""
+      )
+      ImportDecl = ""
+      Comment = ""
+      TopLevelDecl = ""
+    )
+
+  !view InvalidInnerAttrs(input <: string) -> goFile:
+    input -> (:
+      PackageClause = input -> <PackageClause> (:
+        Foo = ""
+      )
+      ImportDecl = ""
+      Comment = ""
+      TopLevelDecl = ""
+    )
+

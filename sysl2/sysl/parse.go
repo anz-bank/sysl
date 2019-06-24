@@ -10,6 +10,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -238,8 +239,9 @@ func inferExprType(mod *sysl.Module,
 	expr *sysl.Expr, top bool,
 	anonCount int) (*sysl.Type, int) {
 
-	if expr.GetTransform() != nil {
-		for _, stmt := range expr.GetTransform().Stmt {
+	switch t := expr.Expr.(type) {
+	case *sysl.Expr_Transform_:
+		for _, stmt := range t.Transform.Stmt {
 			if stmt.GetLet() != nil {
 				_, anonCount = inferExprType(mod, appName, stmt.GetLet().Expr, false, anonCount)
 			} else if stmt.GetAssign() != nil {
@@ -263,7 +265,7 @@ func inferExprType(mod *sysl.Module,
 			}
 			mod.Apps[appName].Types[typeName] = newType
 			attr := newType.GetTuple().AttrDefs
-			for _, stmt := range expr.GetTransform().Stmt {
+			for _, stmt := range t.Transform.Stmt {
 				if stmt.GetAssign() != nil {
 					assign := stmt.GetAssign()
 					aexpr := assign.Expr
@@ -317,8 +319,8 @@ func inferExprType(mod *sysl.Module,
 				},
 			}
 		}
-	} else if expr.GetRelexpr() != nil {
-		relexpr := expr.GetRelexpr()
+	case *sysl.Expr_Relexpr:
+		relexpr := t.Relexpr
 		if relexpr.Op == sysl.Expr_RelExpr_RANK {
 			if !top && expr.Type == nil {
 				type1, c := inferExprType(mod, appName, relexpr.Target, true, anonCount)
@@ -326,17 +328,43 @@ func inferExprType(mod *sysl.Module,
 				logrus.Printf(type1.String())
 			}
 		}
+	case *sysl.Expr_Literal:
+		expr.Type = valueTypeToSysl(t.Literal)
+	case *sysl.Expr_List_:
+		expr.Type, _ = inferExprType(mod, appName, t.List.Expr[0], true, anonCount)
+	case *sysl.Expr_Ifelse:
+		exprTypeIfTrue, _ := inferExprType(mod, appName, t.Ifelse.GetIfTrue(), true, anonCount)
+		expr.Type = exprTypeIfTrue
+		if t.Ifelse.GetIfFalse() != nil {
+			exprTypeIfFalse, _ := inferExprType(mod, appName, t.Ifelse.GetIfFalse(), true, anonCount)
+			// TODO if types are not equal, raise an error. Then remove following 3 lines
+			if exprTypeIfFalse != nil {
+				expr.Type = exprTypeIfFalse
+			}
+		}
+	case *sysl.Expr_Binexpr:
+		exprTypeLHS, _ := inferExprType(mod, appName, t.Binexpr.GetLhs(), true, anonCount)
+		expr.Type = exprTypeLHS
+		exprTypeRHS, _ := inferExprType(mod, appName, t.Binexpr.GetRhs(), true, anonCount)
+		// TODO if types are not equal, raise an error. Then remove following 3 lines
+		if exprTypeRHS != nil {
+			expr.Type = exprTypeRHS
+		}
+
+	case *sysl.Expr_Unexpr:
+		expr.Type, _ = inferExprType(mod, appName, expr.GetUnexpr().GetArg(), true, anonCount)
+
+	default:
+		// TODO Handle expression
+		logrus.Debug("[Parse.infer_expr_type] Unhandled type", t)
 	}
+
 	return expr.Type, anonCount
 }
 
 func inferTypes(mod *sysl.Module, appName string) {
-	for viewName, view := range mod.Apps[appName].Views {
+	for _, view := range mod.Apps[appName].Views {
 		if HasPattern(view.Attrs, "abstract") {
-			continue
-		}
-		if view.Expr.GetTransform() == nil {
-			logrus.Warnf("view %s expression should be of type transform", viewName)
 			continue
 		}
 		inferExprType(mod, appName, view.Expr, true, 0)
@@ -438,4 +466,49 @@ func postProcess(mod *sysl.Module) {
 		collectorPubSubCalls(appName, app)
 	}
 	checkEndpointCalls(mod)
+}
+
+func valueTypeToSysl(value *sysl.Value) *sysl.Type {
+	switch value.Value.(type) {
+	case *sysl.Value_B:
+		return &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: sysl.Type_BOOL,
+			},
+		}
+
+	case *sysl.Value_I:
+		return &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: sysl.Type_INT,
+			},
+		}
+	case *sysl.Value_D:
+		return &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: sysl.Type_FLOAT,
+			},
+		}
+	case *sysl.Value_S:
+		return &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: sysl.Type_STRING,
+			},
+		}
+	case *sysl.Value_Decimal:
+		return &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: sysl.Type_DECIMAL,
+			},
+		}
+	case *sysl.Value_Null_:
+		return &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: sysl.Type_EMPTY,
+			},
+		}
+	default:
+		panic(errors.Errorf("valueTypeToSysl: unhandled type: %v", value))
+
+	}
 }

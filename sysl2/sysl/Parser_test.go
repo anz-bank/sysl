@@ -58,6 +58,15 @@ func parseComparable(
 		return nil, err
 	}
 
+	for _, app := range module.Apps {
+		for _, t := range app.Views {
+			for _, stmt := range t.GetExpr().GetTransform().GetStmt() {
+				nullifyType(stmt.GetAssign().GetExpr())
+				nullifyType(stmt.GetLet().GetExpr())
+			}
+		}
+	}
+
 	if stripSourceContext {
 		// remove stuff that does not match legacy.
 		for _, app := range module.Apps {
@@ -75,6 +84,45 @@ func parseComparable(
 	}
 
 	return module, nil
+}
+
+func nullifyType(expr *sysl.Expr) {
+	if expr == nil {
+		return
+	}
+
+	switch t := expr.Expr.(type) {
+	case *sysl.Expr_Literal:
+		switch t.Literal.Value.(type) {
+		case *sysl.Value_Null_:
+			return
+		case *sysl.Value_B:
+			return
+		}
+		expr.Type = nil
+	case *sysl.Expr_List_:
+		nullifyType(t.List.Expr[0])
+		expr.Type = nil
+	case *sysl.Expr_Ifelse:
+		nullifyType(t.Ifelse.GetIfTrue())
+		nullifyType(t.Ifelse.GetIfFalse())
+		expr.Type = nil
+	case *sysl.Expr_Binexpr:
+		nullifyType(t.Binexpr.GetLhs())
+		if t.Binexpr.GetOp().String() != "WHERE" {
+			nullifyType(t.Binexpr.GetRhs())
+		}
+		expr.Type = nil
+	case *sysl.Expr_Unexpr:
+		nullifyType(expr.GetUnexpr().GetArg())
+		expr.Type = nil
+	case *sysl.Expr_Transform_:
+		for _, stmt := range t.Transform.GetStmt() {
+			nullifyType(stmt.GetAssign().GetExpr())
+			nullifyType(stmt.GetLet().GetExpr())
+		}
+	}
+
 }
 
 func parseAndCompare(
