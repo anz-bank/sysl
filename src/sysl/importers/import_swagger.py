@@ -17,7 +17,7 @@ from sysl.util import writer
 from sysl.proto import sysl_pb2
 
 
-SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time'}
+SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time', 'integer'}
 
 SYSL_TYPES = {
     'int32', 'int64', 'int', 'float', 'string',
@@ -213,7 +213,7 @@ class SwaggerTranslator:
                         method.upper(),
                         ' ?' if params['query'] else '',
                         '&'.join(
-                            '{}={}{}'.format(p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
+                            '{}={}{}'.format(p['name'], 'int' if p['type'] == 'number' else TYPE_MAP[p['type']], '' if p['required'] else '?')
                             for p in params['query']
                         ),
                         paramStr)
@@ -393,6 +393,8 @@ class SwaggerTranslator:
             return r('float')
         elif (typ, fmt) == ('number', None):
             return r('float')
+        elif (typ, fmt) == ('number', 'integer'):
+            return r('int')
         elif (typ, fmt) == ('object', None):
             typeSpecList.append(TypeSpec(tspec, parentRef, typeRef))
             retVal = typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'

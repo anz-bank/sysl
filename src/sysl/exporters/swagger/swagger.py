@@ -1,7 +1,10 @@
 # -*- encoding: utf-8 -*-
+import argparse
+import sys
 import yaml
 
 from sysl.core import syslx
+from sysl.core import syslloader
 
 from sysl.util import datamodel
 from sysl.util import java
@@ -107,7 +110,7 @@ def no_utf8(value):
     return value
 
 
-def swagger_file(app, module, root_class, write_file):
+def swagger_file(app, module):
     def assign(root, path, value):
         if value is not None:
             for part in path[:-1]:
@@ -145,10 +148,16 @@ def swagger_file(app, module, root_class, write_file):
         if t.WhichOneof('type') == 'type_ref':
             # TODO: What is the impact of removing this?
             #assert len(t.type_ref.ref.path) == 1
-            model = t.type_ref.ref.path[0]
-            if model in module.apps:
-                used_models.add(model)
-                return {'$ref': '#/definitions/' + model}
+            model = None
+            if t.type_ref.ref.path:
+                model = t.type_ref.ref.path[0]
+            else:
+                model = ''.join(t.type_ref.ref.appname.part)
+            for app in module.apps:
+                if model in module.apps[app].types:
+                    # used_models.add(model)
+                    used_definitions.add(model)
+                    return {'$ref': '#/definitions/' + model}
 
         type_ = datamodel.typeref(t, module)[2]
         if type_ is None:
@@ -224,21 +233,30 @@ def swagger_file(app, module, root_class, write_file):
                             assign(method, ['responses', s, 'description'],
                                    STATUS_MAP[int(s)])
                 else:
-                    print stmt.ret.payload
-                    raise Exception('Bad return statement')
+                    resp = assign(method, ['responses', '200'], {})
+                    if stmt.ret.payload:
+                        schema = assign(resp, ['schema'], {})
+                        items = schema
+                        items['$ref'] = '#/definitions/' + stmt.ret.payload
+                        used_definitions.add(stmt.ret.payload)
+                    continue
+                    # raise Exception('Bad return statement')
 
-        body = syslx.View(endpt.attrs)['body'].s
+        body = None
+        if len(endpt.param):
+            for p in endpt.param:
+                # hasBody = 'body' in syslx.patterns(p.type.attrs)
+                if p.type.WhichOneof('type') == 'type_ref':
+                    body = swagger_type(p.type)
+                    break
+
         if body:
             params.append({
                 'name': 'requestBody',
                 'in': 'body',
                 'required': True,
-                'schema': {'$ref': '#/definitions/' + body}
+                'schema': body
             })
-            if body == 'PoOrder':
-                used_models.add(body)
-            else:
-                used_definitions.add(body)
 
     used_defs2 = used_definitions.copy()
     used_definitions.clear()
@@ -302,4 +320,28 @@ def swagger_file(app, module, root_class, write_file):
                         #assert type_.WhichOneof('type') == 'primitive'
                         properties[jfname] = swagger_type(type_)
 
-    write_file(yaml.dump(no_utf8(header)), root_class + '.swagger.yaml')
+    return yaml.dump(no_utf8(header))
+
+
+def parse_args(argv):
+    p = argparse.ArgumentParser(description='Converts Sysl spec to Swagger (aka Open API Specification) spec')
+    p.add_argument('root', help='root for the sysl spec')
+    p.add_argument('module', help='relative path from root to the sysl module')
+    p.add_argument('appname', help='appname')
+    # p.add_argument('package', help='package')
+    p.add_argument('outfile', help='path of output file')
+    return p.parse_args(args=argv[1:])
+
+
+def main():
+    args = parse_args(sys.argv)
+
+    (module, _, _) = syslloader.load(
+        args.module, None, args.root)
+
+    with open(args.outfile, 'w') as f_out:
+        f_out.write(swagger_file(module.apps[args.appname], module))
+
+
+if __name__ == '__main__':
+    main()
