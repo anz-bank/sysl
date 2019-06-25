@@ -20,4 +20,4 @@ Now start your tomcat server
 
     catalina start
 
-In a web browser of `your choice, you can navigate to `localhost:8080/plantuml` for your plantuml server!
+In a web browser of your choice, you can navigate to `localhost:8080/plantuml` for your plantuml server!
