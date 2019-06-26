@@ -72,7 +72,7 @@ You can use one of the following options to set up your environment:
 
 - execute ``SYSL_PLANTUML=http://www.plantuml.com/plantuml``
 - add ``export SYSL_PLANTUML=http://www.plantuml.com/plantuml`` to you ``.bashrc`` or similar
-- `install PlantUML <http://plantuml.com/starting>`_ locally and run on port 8080
+- `install PlantUML <http://plantuml.com/starting>`_ locally and run on port 8080 or you can refer to the `plantuml server guide <docs/plantUML_server.md>`_
 
 
 Test and lint the source code and your changes with ::

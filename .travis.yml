@@ -27,6 +27,7 @@ matrix:
     - 1.x
     go_import_path: github.com/anz-bank/sysl
     before_install:
+    - brew install gradle
     - export SYSL_PYTHON_DIR=/usr/local/bin/
     - python --version
     - pip --version
