@@ -4,26 +4,4 @@ run:
     - sysl2/sysl/grammar/sysl_parser.go
     - sysl2/sysl/grammar/syslparser_base_listener.go
 linters:
-  enable:
-    - bodyclose
-    - depguard
-    - dupl
-    - gochecknoglobals
-    - gochecknoinits
-    - goconst
-    - gocritic
-    - gocyclo
-    - gofmt
-    - goimports
-    - golint
-    - gosec
-    - interfacer
-    - lll
-    - maligned
-    - misspell
-    - nakedret
-    - prealloc
-    - scopelint
-    - stylecheck
-    - unconvert
-    - unparam
+  enable-all: true
