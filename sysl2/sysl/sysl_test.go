@@ -27,12 +27,12 @@ func TestExit(t *testing.T) {
 
 var testModule = &sysl.Module{
 	Apps: map[string]*sysl.Application{
-		"Test": &sysl.Application{
+		"Test": {
 			Name: &sysl.AppName{
 				Part: []string{"Test"},
 			},
 			Endpoints: map[string]*sysl.Endpoint{
-				"GetInfo": &sysl.Endpoint{
+				"GetInfo": {
 					Name: "GetInfo",
 					Stmt: []*sysl.Statement{
 						{

@@ -12,3 +12,5 @@ linters:
     # - gochecknoinits
     # - goconst
     - gocritic
+    # - gocyclo
+    - gofmt

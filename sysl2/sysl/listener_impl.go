@@ -1832,17 +1832,18 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	restEndpoint := s.module.Apps[s.appname].Endpoints[s.typename]
 	s.pushScope(restEndpoint)
 
-	attrs := map[string]*sysl.Attribute{}
-	elt := []*sysl.Attribute{&sysl.Attribute{
-		Attribute: &sysl.Attribute_S{
-			S: "rest",
-		},
-	}}
-
-	attrs["patterns"] = &sysl.Attribute{
-		Attribute: &sysl.Attribute_A{
-			A: &sysl.Attribute_Array{
-				Elt: elt,
+	attrs := map[string]*sysl.Attribute{
+		"patterns": {
+			Attribute: &sysl.Attribute_A{
+				A: &sysl.Attribute_Array{
+					Elt: []*sysl.Attribute{
+						{
+							Attribute: &sysl.Attribute_S{
+								S: "rest",
+							},
+						},
+					},
+				},
 			},
 		},
 	}

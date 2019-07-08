@@ -50,7 +50,7 @@ func makeGrammar1() *sysl.Grammar {
 		Name:  "test",
 		Start: "S",
 		Rules: map[string]*sysl.Rule{
-			"S": &sysl.Rule{
+			"S": {
 				Name: ruleNameS,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -58,7 +58,7 @@ func makeGrammar1() *sysl.Grammar {
 						makeSequence(b, A)},
 				},
 			},
-			"A": &sysl.Rule{
+			"A": {
 				Name: ruleNameA,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -123,7 +123,7 @@ func makeEBNF() *sysl.Grammar {
 		Name:  "EBNF",
 		Start: "grammar",
 		Rules: map[string]*sysl.Rule{
-			"grammar": &sysl.Rule{
+			"grammar": {
 				Name: grammarName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -131,7 +131,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"rule": &sysl.Rule{
+			"rule": {
 				Name: ruleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -139,7 +139,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"lhs": &sysl.Rule{
+			"lhs": {
 				Name: lhsName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -147,7 +147,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"rhs": &sysl.Rule{
+			"rhs": {
 				Name: rhsName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -155,7 +155,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"choice": &sysl.Rule{
+			"choice": {
 				Name: choiceName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -163,7 +163,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"seq": &sysl.Rule{
+			"seq": {
 				Name: seqName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -171,7 +171,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"term": &sysl.Rule{
+			"term": {
 				Name: termName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -179,7 +179,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"atom": &sysl.Rule{
+			"atom": {
 				Name: atomName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -189,7 +189,7 @@ func makeEBNF() *sysl.Grammar {
 					},
 				},
 			},
-			"quantifier": &sysl.Rule{
+			"quantifier": {
 				Name: quantifierName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -227,7 +227,7 @@ func makeEXPR() *sysl.Grammar {
 		Name:  "EXPR",
 		Start: "E",
 		Rules: map[string]*sysl.Rule{
-			"E": &sysl.Rule{
+			"E": {
 				Name: ERuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -235,7 +235,7 @@ func makeEXPR() *sysl.Grammar {
 					},
 				},
 			},
-			"ETail": &sysl.Rule{
+			"ETail": {
 				Name: ETailRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -245,7 +245,7 @@ func makeEXPR() *sysl.Grammar {
 					},
 				},
 			},
-			"T": &sysl.Rule{
+			"T": {
 				Name: TRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -253,7 +253,7 @@ func makeEXPR() *sysl.Grammar {
 					},
 				},
 			},
-			"TTail": &sysl.Rule{
+			"TTail": {
 				Name: TTailRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -263,7 +263,7 @@ func makeEXPR() *sysl.Grammar {
 					},
 				},
 			},
-			"factor": &sysl.Rule{
+			"factor": {
 				Name: factorRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -295,7 +295,7 @@ func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
 		Name:  "array",
 		Start: "obj",
 		Rules: map[string]*sysl.Rule{
-			"obj": &sysl.Rule{
+			"obj": {
 				Name: objRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -304,7 +304,7 @@ func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
 					},
 				},
 			},
-			"obj2": &sysl.Rule{
+			"obj2": {
 				Name: obj2RuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -388,7 +388,7 @@ func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 		Name:  "json",
 		Start: "json",
 		Rules: map[string]*sysl.Rule{
-			"obj": &sysl.Rule{
+			"obj": {
 				Name: objRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -397,7 +397,7 @@ func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 					},
 				},
 			},
-			"value": &sysl.Rule{
+			"value": {
 				Name: valueRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -408,7 +408,7 @@ func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 					},
 				},
 			},
-			"json": &sysl.Rule{
+			"json": {
 				Name: jsonRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -416,7 +416,7 @@ func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 					},
 				},
 			},
-			"pair": &sysl.Rule{
+			"pair": {
 				Name: pairRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -424,7 +424,7 @@ func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 					},
 				},
 			},
-			"array": &sysl.Rule{
+			"array": {
 				Name: arrayRuleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -452,7 +452,7 @@ func makeG2() *sysl.Grammar {
 		Name:  "G2",
 		Start: "S",
 		Rules: map[string]*sysl.Rule{
-			"S": &sysl.Rule{
+			"S": {
 				Name: SruleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -460,7 +460,7 @@ func makeG2() *sysl.Grammar {
 					},
 				},
 			},
-			"A": &sysl.Rule{
+			"A": {
 				Name: AruleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -468,7 +468,7 @@ func makeG2() *sysl.Grammar {
 					},
 				},
 			},
-			"B": &sysl.Rule{
+			"B": {
 				Name: BruleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -476,7 +476,7 @@ func makeG2() *sysl.Grammar {
 					},
 				},
 			},
-			"D": &sysl.Rule{
+			"D": {
 				Name: DruleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
@@ -497,7 +497,7 @@ func makeNestedGrammar() *sysl.Grammar {
 		Name:  "G2",
 		Start: "S",
 		Rules: map[string]*sysl.Rule{
-			"S": &sysl.Rule{
+			"S": {
 				Name: SruleName,
 				Choices: &sysl.Choice{
 					Sequence: []*sysl.Sequence{
