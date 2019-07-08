@@ -151,13 +151,13 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	case *sysl.Statement_Call:
 		app := getApp(s.Call.Target, mod)
 		if app == nil {
-			logrus.Warnf("%s::%s calls non-existant App: %s",
+			logrus.Warnf("%s::%s calls non-existent App: %s",
 				appname, epname, s.Call.Target.Part)
 			return false
 		}
 		_, valid := app.Endpoints[s.Call.Endpoint]
 		if !valid {
-			logrus.Warnf("%s::%s calls non-existant App <- Endpoint (%s <- %s)",
+			logrus.Warnf("%s::%s calls non-existent App <- Endpoint (%s <- %s)",
 				appname, epname, s.Call.Target.Part, s.Call.Endpoint)
 		}
 		return valid
@@ -188,7 +188,7 @@ func collectorPubSubCalls(appName string, app *sysl.Application) {
 		case *sysl.Statement_Action:
 			modify_ep := app.Endpoints[x.Action.Action]
 			if modify_ep == nil {
-				logrus.Errorf("App (%s) calls non-existant endpoint (%s)\n",
+				logrus.Errorf("App (%s) calls non-existent endpoint (%s)\n",
 					appName, x.Action.Action)
 				continue
 			}
