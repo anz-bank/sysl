@@ -237,8 +237,7 @@ func unionIntSets(lhs, rhs map[int64]struct{}) map[int64]struct{} {
 
 func intSetToValueSet(lhs map[int64]struct{}) *sysl.Value {
 	m := MakeValueSet()
-	var keys []int
-
+	keys := make([]int, 0, len(lhs))
 	for key := range lhs {
 		keys = append(keys, int(key))
 	}
@@ -270,7 +269,7 @@ func stringSetToValueSet(lhs map[string]struct{}) *sysl.Value {
 	m := MakeValueSet()
 
 	// for stable output
-	var keys []string
+	keys := make([]string, 0, len(lhs))
 	for key := range lhs {
 		keys = append(keys, key)
 	}
@@ -303,7 +302,7 @@ func unionMapSets(lhs, rhs map[string]*sysl.Value) map[string]*sysl.Value {
 
 func mapSetToValueSet(lhs map[string]*sysl.Value) *sysl.Value {
 	m := MakeValueSet()
-	var keys []string
+	keys := make([]string, 0, len(lhs))
 	for key := range lhs {
 		keys = append(keys, key)
 	}

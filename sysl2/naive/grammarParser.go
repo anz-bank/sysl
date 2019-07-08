@@ -62,7 +62,7 @@ func (b *builder) handleChoice(choice *sysl.Choice) {
 
 // assigns new value to Atom.Id
 func (b *builder) buildTerminalsList(rules map[string]*sysl.Rule) []string {
-	var ks []string
+	ks := make([]string, 0, len(rules))
 	for key := range rules {
 		ks = append(ks, key)
 	}

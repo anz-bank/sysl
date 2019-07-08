@@ -21,3 +21,5 @@ linters:
     - lll
     - maligned
     - misspell
+    - nakedret
+    - prealloc

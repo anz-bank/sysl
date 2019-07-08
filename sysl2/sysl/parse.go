@@ -344,7 +344,7 @@ func infer_types(mod *sysl.Module, appName string) {
 }
 
 func postProcess(mod *sysl.Module) {
-	var appNames []string
+	appNames := make([]string, 0, len(mod.Apps))
 	for a := range mod.Apps {
 		appNames = append(appNames, a)
 	}

@@ -185,17 +185,22 @@ func TestLoadApp(t *testing.T) {
 	assert.NotNil(t, mod)
 	apps := mod.GetApps()
 	app := apps["Database"]
+
 	assert.Equal(t, []string{"Database"}, app.GetName().GetPart())
-	var expectedPatterns []string
-	for _, val := range app.GetAttrs()["patterns"].GetA().GetElt() {
-		expectedPatterns = append(expectedPatterns, val.GetS())
+
+	appPatternsAttr := app.GetAttrs()["patterns"].GetA().GetElt()
+	patterns := make([]string, 0, len(appPatternsAttr))
+	for _, val := range appPatternsAttr {
+		patterns = append(patterns, val.GetS())
 	}
-	assert.Equal(t, []string{"db"}, expectedPatterns)
-	var expectedParams []string
-	for _, val := range app.GetEndpoints()["QueryUser"].GetParam() {
-		expectedParams = append(expectedParams, val.GetName())
+	assert.Equal(t, []string{"db"}, patterns)
+
+	queryUserParams := app.GetEndpoints()["QueryUser"].GetParam()
+	params := make([]string, 0, len(queryUserParams))
+	for _, val := range queryUserParams {
+		params = append(params, val.GetName())
 	}
-	assert.Equal(t, []string{"user_id"}, expectedParams)
+	assert.Equal(t, []string{"user_id"}, params)
 }
 
 type sdArgs struct {
