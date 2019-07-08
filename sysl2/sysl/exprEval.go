@@ -15,14 +15,14 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 	for _, s := range tform.Stmt {
 		switch ss := s.Stmt.(type) {
 		case *sysl.Expr_Transform_Stmt_Let:
-			logrus.Infof("Evaluating var %s", ss.Let.Name)
+			logrus.Debugf("Evaluating var %s", ss.Let.Name)
 			res := Eval(txApp, assign, ss.Let.Expr)
 			assign[ss.Let.Name] = res
-			logrus.Debugf("Eval Result %s =: %v\n", ss.Let.Name, res)
+			logrus.Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
-			logrus.Infof("Evaluating %s", ss.Assign.Name)
+			logrus.Debugf("Evaluating %s", ss.Assign.Name)
 			res := Eval(txApp, assign, ss.Assign.Expr)
-			logrus.Debugf("Eval Result %s =:\n\t\t %v:\n", ss.Assign.Name, res)
+			logrus.Tracef("Eval Result %s =:\n\t\t %v:\n", ss.Assign.Name, res)
 			addItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
@@ -38,7 +38,7 @@ func evalTransformUsingValueList(
 ) []*sysl.Value {
 	listResult := []*sysl.Value{}
 	scopeVar := x.Scopevar
-	logrus.Infof("Scopevar: %s", scopeVar)
+	logrus.Debugf("Scopevar: %s", scopeVar)
 
 	for _, svar := range v {
 		assign[scopeVar] = svar
@@ -46,7 +46,7 @@ func evalTransformUsingValueList(
 		listResult = append(listResult, res)
 	}
 	delete(assign, scopeVar)
-	logrus.Debugf("Transform Result (As List/Set): %v", listResult)
+	logrus.Tracef("Transform Result (As List/Set): %v", listResult)
 	return listResult
 }
 
@@ -55,7 +55,7 @@ func evalTransformUsingValueList(
 func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
 	switch x := e.Expr.(type) {
 	case *sysl.Expr_Transform_:
-		logrus.Debugf("Evaluating Transform:\tRet Type: %v", e.Type)
+		logrus.Tracef("Evaluating Transform:\tRet Type: %v", e.Type)
 		arg := x.Transform.Arg
 		if arg.GetName() == "." {
 			logrus.Warn("Expr Arg is empty")
@@ -71,12 +71,12 @@ func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
 
 		switch argValue.Value.(type) {
 		case *sysl.Value_Set:
-			logrus.Infof("Evaluation Argvalue as a set: %d times\n", len(argValue.GetSet().Value))
+			logrus.Debugf("Evaluation Argvalue as a set: %d times\n", len(argValue.GetSet().Value))
 			setResult := MakeValueSet()
 			setResult.GetSet().Value = evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetSet().Value)
 			return setResult
 		case *sysl.Value_List_:
-			logrus.Infof("Evaluation Argvalue as a list: %d times\n", len(argValue.GetList().Value))
+			logrus.Debugf("Evaluation Argvalue as a list: %d times\n", len(argValue.GetList().Value))
 			listResult := MakeValueList()
 			listResult.GetList().Value = evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetList().Value)
 			return listResult
@@ -95,9 +95,9 @@ func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
 				items := argValue.GetMap().Items
 				for _, key := range keys {
 					item := items[key]
-					logrus.Infof("Evaluation Argvalue %s", key)
+					logrus.Debugf("Evaluation Argvalue %s", key)
 					a := MakeValueMap()
-					logrus.Debugf("Evaluation Argvalue as a map: key=(%s), value=(%v)\n", key, item)
+					logrus.Tracef("Evaluation Argvalue as a map: key=(%s), value=(%v)\n", key, item)
 					addItemToValueMap(a, "key", MakeValueString(key))
 					addItemToValueMap(a, "value", item)
 					assign[scopeVar] = a
@@ -118,18 +118,18 @@ func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
 					},
 				}
 			}
-			logrus.Debugf("Argvalue: %v", argValue)
+			logrus.Tracef("Argvalue: %v", argValue)
 			assign[scopeVar] = argValue
 			res := evalTransformStmts(txApp, assign, x.Transform)
 			delete(assign, scopeVar)
-			logrus.Debugf("Transform Result: %v", res)
+			logrus.Tracef("Transform Result: %v", res)
 			return res
 		}
 	case *sysl.Expr_Binexpr:
 		return evalBinExpr(txApp, assign, x.Binexpr)
 	case *sysl.Expr_Call_:
 		if callTransform, has := txApp.Views[x.Call.Func]; has {
-			logrus.Infof("Calling View %s\n", x.Call.Func)
+			logrus.Debugf("Calling View %s\n", x.Call.Func)
 			params := callTransform.Param
 			if len(params) != len(x.Call.Arg) {
 				logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n",
@@ -172,13 +172,13 @@ func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
 		}
 		return val
 	case *sysl.Expr_GetAttr_:
-		logrus.Debugf("Evaluating x: %v:", x)
+		logrus.Tracef("Evaluating x: %v:", x)
 		arg := Eval(txApp, assign, x.GetAttr.Arg)
 		if arg.GetMap() == nil {
 			panic(errors.Errorf("%v", arg))
 		}
 		val, has := arg.GetMap().Items[x.GetAttr.Attr]
-		logrus.Debugf("GetAttribute: %v result: %v: ", has, val)
+		logrus.Tracef("GetAttribute: %v result: %v: ", has, val)
 		if !has {
 			logrus.Warnf("Failed to get key: %s\nMap has following keys:", x.GetAttr.Attr)
 			for key := range arg.GetMap().Items {

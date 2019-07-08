@@ -178,7 +178,7 @@ func concatList(lhs, rhs *sysl.Value) *sysl.Value {
 		rhs := rhs.GetList()
 		result.Value = lhs.Value
 		result.Value = append(result.Value, rhs.Value...)
-		logrus.Printf("concatList: lhs %d | rhs %d = %d\n", len(lhs.Value), len(rhs.Value), len(result.Value))
+		logrus.Tracef("concatList: lhs %d | rhs %d = %d\n", len(lhs.Value), len(rhs.Value), len(result.Value))
 	}
 	return result
 }
@@ -196,15 +196,15 @@ func setUnion(lhs, rhs *sysl.Value) *sysl.Value {
 	switch itemType {
 	case VALUE_INT:
 		unionSet := unionIntSets(intSet(lhs.GetSet().Value), intSet(rhs.GetSet().Value))
-		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return intSetToValueSet(unionSet)
 	case VALUE_STRING:
 		unionSet := unionStringSets(stringSet(lhs.GetSet().Value), stringSet(rhs.GetSet().Value))
-		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return stringSetToValueSet(unionSet)
 	case VALUE_MAP:
 		unionSet := unionMapSets(mapSet(lhs.GetSet().Value), mapSet(rhs.GetSet().Value))
-		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return mapSetToValueSet(unionSet)
 	}
 	panic(errors.Errorf("union of itemType: %s not supported", itemType.String()))

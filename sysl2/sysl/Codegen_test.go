@@ -4,14 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-func init() {
-	logrus.SetLevel(logrus.WarnLevel)
-}
 
 func TestGenerateCode(t *testing.T) {
 	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")

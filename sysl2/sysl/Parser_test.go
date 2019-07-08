@@ -38,12 +38,12 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	return module, nil
 }
 
-var pySysl = func() string {
+func pySysl() string {
 	if pySysl, ok := os.LookupEnv("SYSL_PYTHON_BIN"); ok {
 		return pySysl
 	}
 	return "sysl"
-}()
+}
 
 func pyParse(filename, root, output string) (*sysl.Module, error) {
 	var args []string
@@ -52,11 +52,11 @@ func pyParse(filename, root, output string) (*sysl.Module, error) {
 	}
 	args = append(args, "textpb", "-o", output, filename)
 
-	cmd := exec.Command(pySysl, args...)
+	cmd := exec.Command(pySysl(), args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return nil, errors.Wrapf(err, "Running %#v %#v", pySysl, args)
+		return nil, errors.Wrapf(err, "Running %#v %#v", pySysl(), args)
 	}
 
 	return readSyslModule(output)

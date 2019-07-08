@@ -9,7 +9,7 @@ linters:
     - depguard
     - dupl
     # - gochecknoglobals
-    # - gochecknoinits
+    - gochecknoinits
     # - goconst
     - gocritic
     # - gocyclo

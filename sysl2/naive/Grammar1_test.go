@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/sysl2/proto"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,10 +11,6 @@ type cases struct {
 	text   string
 	tokens []int
 	result bool
-}
-
-func init() {
-	logrus.SetLevel(logrus.WarnLevel)
 }
 
 func testParser(

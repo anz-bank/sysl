@@ -424,11 +424,11 @@ func postProcess(mod *sysl.Module) {
 							_, has = refApp.Types[field]
 						}
 						if !has {
-							logrus.Warnf("Field %s (type %s) refers to Field (%s) in app (%s)/type (%s)",
-								fieldname, typeName, field, appName, refName)
+							logrus.Warnf("Field %#v (type %#v) refers to Field %#v (type %#v) in app %#v",
+								fieldname, typeName, field, refName, appName)
 						}
 					} else {
-						logrus.Warnf("Field %s (type %s) refers to type (%s) in app (%s)",
+						logrus.Warnf("Field %#v (type %#v) refers to type %s in app %#v",
 							fieldname, typeName, refName, appName)
 					}
 				}

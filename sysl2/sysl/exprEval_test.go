@@ -5,13 +5,8 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
-
-func init() {
-	logrus.SetLevel(logrus.WarnLevel)
-}
 
 func TestEvalStrategySetup(t *testing.T) {
 	for key := range valueFunctions {
