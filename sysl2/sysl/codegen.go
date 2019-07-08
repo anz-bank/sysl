@@ -279,7 +279,7 @@ func outputToFiles(outDir string, output []*codeGenOutput) error {
 
 // DoGenerateCode generate code for the given model, using transform
 // and the grammar of the target language
-func DoGenerateCode(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) error {
+func DoGenerateCode(flags *flag.FlagSet, args []string) error {
 	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
 	root_transform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
 	model := flags.String("model", ".", "model.sysl")

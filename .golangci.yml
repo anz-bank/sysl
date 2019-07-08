@@ -26,3 +26,4 @@ linters:
     - scopelint
     - stylecheck
     - unconvert
+    - unparam

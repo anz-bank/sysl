@@ -2,8 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
-	"io"
 	"os"
 	"sort"
 	"strings"
@@ -134,7 +132,7 @@ func DoConstructSequenceDiagrams(
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
-func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, args []string) error {
+func DoGenerateSequenceDiagrams(args []string) error {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)

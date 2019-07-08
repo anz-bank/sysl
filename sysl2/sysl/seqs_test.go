@@ -375,7 +375,7 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			stdout := &bytes.Buffer{}
 			stderr := &bytes.Buffer{}
-			require.NoError(t, DoGenerateSequenceDiagrams(stdout, stderr, tt.args.flags, tt.args.args))
+			require.NoError(t, DoGenerateSequenceDiagrams(tt.args.args))
 			assert.Equal(t, tt.wantStdout, stdout.String())
 			assert.Equal(t, tt.wantStderr, stderr.String())
 		})

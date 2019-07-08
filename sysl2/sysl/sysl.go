@@ -30,9 +30,9 @@ func main3(stdout, stderr io.Writer, args []string) error {
 
 	switch filepath.Base(args[0]) {
 	case "syslgen":
-		return DoGenerateCode(stdout, stderr, flags, args)
+		return DoGenerateCode(flags, args)
 	case "sd":
-		return DoGenerateSequenceDiagrams(stdout, stderr, flags, args)
+		return DoGenerateSequenceDiagrams(args)
 	}
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
 	output := flags.String("o", "", "output file name")
