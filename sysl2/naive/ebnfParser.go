@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/anz-bank/sysl/sysl2/proto"
+	sysl "github.com/anz-bank/sysl/sysl2/proto"
 	"github.com/sirupsen/logrus"
 )
 

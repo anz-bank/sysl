@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 )
 
 func getAppName(appname *sysl.AppName) string {
