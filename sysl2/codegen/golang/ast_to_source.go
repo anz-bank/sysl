@@ -250,6 +250,7 @@ func (n *CommentGroup) Format(s fmt.State, c rune) {
 		return
 	}
 	for _, comment := range n.List {
+		comment := comment
 		scPrintf(s, c, "%c", &comment)
 	}
 }
@@ -313,6 +314,7 @@ func (n *Field) Format(s fmt.State, c rune) {
 	}
 	n.Doc.Format(s, c)
 	for i, name := range n.Names {
+		name := name
 		sepFormat(s, c, i, &name, ", ")
 	}
 	scPrintf(s, c, " %c %c", n.Type, n.Tag)
@@ -325,6 +327,7 @@ func (n *FieldList) Format(s fmt.State, c rune) {
 	}
 	n.Opening.Format(s, c)
 	for i, field := range n.List {
+		field := field
 		sepFormat(s, c, i, &field, ", ")
 	}
 	n.Closing.Format(s, c)
@@ -340,6 +343,7 @@ func (n *NoCommaSepFieldList) Format(s fmt.State, c rune) {
 	}
 	n.Opening.Format(s, c)
 	for _, field := range n.List {
+		field := field
 		scPrintf(s, c, "%c\n", &field)
 	}
 	n.Closing.Format(s, c)
@@ -353,6 +357,7 @@ func (n *File) Format(s fmt.State, c rune) {
 	n.Doc.Format(s, c)
 	scPrintf(s, c, "package %s\n\nimport (\n", &n.Name)
 	for _, importSpec := range n.Imports {
+		importSpec := importSpec
 		scPrintf(s, c, "%c\n", &importSpec)
 	}
 	fmt.Fprint(s, ")\n\n")
@@ -664,6 +669,7 @@ func (n *ValueSpec) Format(s fmt.State, c rune) {
 	}
 	n.Doc.Format(s, c)
 	for i, name := range n.Names {
+		name := name
 		sepFormat(s, c, i, &name, ", ")
 	}
 	scPrintf(s, c, " %c = ", emptyNil(n.Type))
