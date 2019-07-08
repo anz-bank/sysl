@@ -16,7 +16,7 @@ linters:
     - gofmt
     - goimports
     - golint
-    # - gosec
+    - gosec
     - interfacer
     - lll
     - maligned

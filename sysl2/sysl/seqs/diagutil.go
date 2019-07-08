@@ -39,7 +39,7 @@ func OutputPlantuml(output, plantuml, umlInput string) error {
 }
 
 func sendHTTPRequest(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+	resp, err := http.Get(url) //nolint:gosec
 	if err != nil {
 		return nil, errors.Errorf("Unable to create http request to %s, Error:%s", url, err.Error())
 	}
