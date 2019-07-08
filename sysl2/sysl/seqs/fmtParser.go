@@ -185,7 +185,7 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 }
 
 func (f *FormatParser) eat(re *regexp.Regexp) bool {
-	matchStr := string(f.self[f.curPos:])
+	matchStr := f.self[f.curPos:]
 	if matchStr == "" {
 		return false
 	}
