@@ -115,9 +115,8 @@ func (s *TreeShapeListener) ExitModifiers(ctx *parser.ModifiersContext) {}
 func (s *TreeShapeListener) EnterReference(ctx *parser.ReferenceContext) {
 	context_app_part := s.module.Apps[s.appname].Name.Part
 	context_path := strings.Split(s.typename, ".")
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
-	type1.Type = &sysl.Type_TypeRef{
+	s.currentType().Type = &sysl.Type_TypeRef{
 		TypeRef: &sysl.ScopedRef{
 			Context: &sysl.Scope{
 				Appname: &sysl.AppName{
@@ -132,8 +131,7 @@ func (s *TreeShapeListener) EnterReference(ctx *parser.ReferenceContext) {
 
 // ExitReference is called when production reference is exited.
 func (s *TreeShapeListener) ExitReference(ctx *parser.ReferenceContext) {
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-	type1.GetTypeRef().Ref = makeScope(s.app_name, ctx)
+	s.currentType().GetTypeRef().Ref = makeScope(s.app_name, ctx)
 }
 
 func lastTwoChars(str string) string {
@@ -237,7 +235,6 @@ func (s *TreeShapeListener) ExitAttribs_or_modifiers(ctx *parser.Attribs_or_modi
 // EnterTypes is called when production types is entered.
 func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
 	native := ctx.NativeDataTypes()
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
 	if native != nil {
 		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[strings.ToUpper(native.GetText())])
@@ -277,6 +274,7 @@ func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
 				}
 			}
 		}
+		type1 := s.currentType()
 		type1.Type = &sysl.Type_Primitive_{
 			Primitive: primitive_type,
 		}
@@ -295,33 +293,37 @@ func (s *TreeShapeListener) ExitTypes(ctx *parser.TypesContext) {}
 // EnterSet_type is called when production set_type is entered.
 func (s *TreeShapeListener) EnterSet_type(ctx *parser.Set_typeContext) {}
 
-// ExitSet_type is called when production set_type is exited.
-func (s *TreeShapeListener) ExitSet_type(ctx *parser.Set_typeContext) {
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-
-	s.typemap[s.fieldname[len(s.fieldname)-1]] = &sysl.Type{
-		Type: &sysl.Type_Set{
-			Set: type1,
-		},
+// exitSetOrSequence_type is common between ExitSet_type and ExitSequence_type.
+func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specContext) (type1, newType1 *sysl.Type) {
+	type1 = s.currentType()
+	newType1 = &sysl.Type{
 		SourceContext: type1.SourceContext,
 		Opt:           type1.Opt,
 		Attrs:         type1.Attrs,
 	}
+	s.setCurrentType(newType1)
 
 	type1.Opt = false
 
 	if type1.Attrs != nil {
 		type1.Attrs = nil
 		s.popScope()
-		s.pushScope(s.typemap[s.fieldname[len(s.fieldname)-1]])
+		s.pushScope(newType1)
 	}
 
-	if ctx.Size_spec() != nil {
+	if sizeSpec != nil {
 		if type1.GetPrimitive() != sysl.Type_NO_Primitive {
-			spec := ctx.Size_spec().(*parser.Size_specContext)
+			spec := sizeSpec.(*parser.Size_specContext)
 			type1.Constraint = makeTypeConstraint(type1.GetPrimitive(), spec)
 		}
 	}
+	return
+}
+
+// ExitSet_type is called when production set_type is exited.
+func (s *TreeShapeListener) ExitSet_type(ctx *parser.Set_typeContext) {
+	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec())
+	newType1.Type = &sysl.Type_Set{Set: type1}
 }
 
 // EnterSequence_type is called when production set_type is entered.
@@ -329,30 +331,8 @@ func (s *TreeShapeListener) EnterSequence_type(ctx *parser.Sequence_typeContext)
 
 // ExitSequence_type is called when production set_type is exited.
 func (s *TreeShapeListener) ExitSequence_type(ctx *parser.Sequence_typeContext) {
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-
-	s.typemap[s.fieldname[len(s.fieldname)-1]] = &sysl.Type{
-		Type: &sysl.Type_Sequence{
-			Sequence: type1,
-		},
-		SourceContext: type1.SourceContext,
-		Opt:           type1.Opt,
-		Attrs:         type1.Attrs,
-	}
-	type1.Opt = false
-
-	if type1.Attrs != nil {
-		type1.Attrs = nil
-		s.popScope()
-		s.pushScope(s.typemap[s.fieldname[len(s.fieldname)-1]])
-	}
-
-	if ctx.Size_spec() != nil {
-		if type1.GetPrimitive() != sysl.Type_NO_Primitive {
-			spec := ctx.Size_spec().(*parser.Size_specContext)
-			type1.Constraint = makeTypeConstraint(type1.GetPrimitive(), spec)
-		}
-	}
+	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec())
+	newType1.Type = &sysl.Type_Sequence{Sequence: type1}
 }
 
 // EnterCollection_type is called when production collection_type is entered.
@@ -3712,4 +3692,12 @@ func (s *TreeShapeListener) EnterSysl_file(ctx *parser.Sysl_fileContext) {
 // ExitSysl_file is called when production sysl_file is exited.
 func (s *TreeShapeListener) ExitSysl_file(ctx *parser.Sysl_fileContext) {
 	s.appname = ""
+}
+
+func (s *TreeShapeListener) currentType() *sysl.Type {
+	return s.typemap[s.fieldname[len(s.fieldname)-1]]
+}
+
+func (s *TreeShapeListener) setCurrentType(type1 *sysl.Type) {
+	s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
 }
