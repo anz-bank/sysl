@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/zlib"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -83,11 +84,19 @@ func encode(data []byte) string {
 }
 
 // 3 bytes takes 24 bits. This splits 24 bits into 4 bytes of which lower 6-bit takes account.
-func encode3bytes(buf *bytes.Buffer, b1, b2, b3 byte) {
-	buf.WriteByte(encode6bit(0x3F & (b1 >> 2)))
-	buf.WriteByte(encode6bit(0x3F & (((b1 & 0x3) << 4) | (b2 >> 4))))
-	buf.WriteByte(encode6bit(0x3F & (((b2 & 0xF) << 2) | (b3 >> 6))))
-	buf.WriteByte(encode6bit(0x3F & b3))
+func encode3bytes(w io.ByteWriter, b1, b2, b3 byte) {
+	if err := w.WriteByte(encode6bit(0x3F & (b1 >> 2))); err != nil {
+		panic(err)
+	}
+	if err := w.WriteByte(encode6bit(0x3F & (((b1 & 0x3) << 4) | (b2 >> 4)))); err != nil {
+		panic(err)
+	}
+	if err := w.WriteByte(encode6bit(0x3F & (((b2 & 0xF) << 2) | (b3 >> 6)))); err != nil {
+		panic(err)
+	}
+	if err := w.WriteByte(encode6bit(0x3F & b3)); err != nil {
+		panic(err)
+	}
 }
 
 func encode6bit(b byte) byte {

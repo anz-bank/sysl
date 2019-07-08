@@ -103,7 +103,7 @@ func parseComparable(
 
 func parseAndCompare(
 	filename, root, golden string,
-	goldenModule *sysl.Module,
+	goldenProto proto.Message,
 	retainOnError bool,
 	stripSourceContext bool,
 ) (bool, error) {
@@ -112,11 +112,11 @@ func parseAndCompare(
 		return false, err
 	}
 
-	if proto.Equal(goldenModule, module) {
+	if proto.Equal(goldenProto, module) {
 		return true, nil
 	}
 
-	if err = TextPB(goldenModule, golden); err != nil {
+	if err = TextPB(goldenProto, golden); err != nil {
 		return false, err
 	}
 
