@@ -183,28 +183,28 @@ func collectorPubSubCalls(appName string, app *sysl.Application) {
 		return
 	}
 
-	for _, collector_stmt := range endpoint.Stmt {
-		switch x := collector_stmt.Stmt.(type) {
+	for _, collectorStmt := range endpoint.Stmt {
+		switch x := collectorStmt.Stmt.(type) {
 		case *sysl.Statement_Action:
-			modify_ep := app.Endpoints[x.Action.Action]
-			if modify_ep == nil {
+			modifyEP := app.Endpoints[x.Action.Action]
+			if modifyEP == nil {
 				logrus.Errorf("App (%s) calls non-existent endpoint (%s)\n",
 					appName, x.Action.Action)
 				continue
 			}
-			if modify_ep.Attrs == nil {
-				modify_ep.Attrs = map[string]*sysl.Attribute{}
+			if modifyEP.Attrs == nil {
+				modifyEP.Attrs = map[string]*sysl.Attribute{}
 			}
-			mergeAttrs(collector_stmt.Attrs, modify_ep.Attrs)
+			mergeAttrs(collectorStmt.Attrs, modifyEP.Attrs)
 		case *sysl.Statement_Call:
 			applied := false
 
-			for call_epname, call_endpoint := range app.Endpoints {
-				if call_epname == `.. * <- *` {
+			for callEPName, callEndpoint := range app.Endpoints {
+				if callEPName == `.. * <- *` {
 					continue
 				}
-				for _, call_stmt := range call_endpoint.Stmt {
-					applied = applyAttributes(collector_stmt, call_stmt) || applied
+				for _, callStmt := range callEndpoint.Stmt {
+					applied = applyAttributes(collectorStmt, callStmt) || applied
 				}
 			}
 			if !applied {
@@ -233,7 +233,7 @@ func checkEndpointCalls(mod *sysl.Module) bool {
 }
 
 // for nested transform's Type
-func infer_expr_type(mod *sysl.Module,
+func inferExprType(mod *sysl.Module,
 	appName string,
 	expr *sysl.Expr, top bool,
 	anonCount int) (*sysl.Type, int) {
@@ -241,9 +241,9 @@ func infer_expr_type(mod *sysl.Module,
 	if expr.GetTransform() != nil {
 		for _, stmt := range expr.GetTransform().Stmt {
 			if stmt.GetLet() != nil {
-				_, anonCount = infer_expr_type(mod, appName, stmt.GetLet().Expr, false, anonCount)
+				_, anonCount = inferExprType(mod, appName, stmt.GetLet().Expr, false, anonCount)
 			} else if stmt.GetAssign() != nil {
-				_, anonCount = infer_expr_type(mod, appName, stmt.GetAssign().Expr, false, anonCount)
+				_, anonCount = inferExprType(mod, appName, stmt.GetAssign().Expr, false, anonCount)
 			}
 		}
 
@@ -321,7 +321,7 @@ func infer_expr_type(mod *sysl.Module,
 		relexpr := expr.GetRelexpr()
 		if relexpr.Op == sysl.Expr_RelExpr_RANK {
 			if !top && expr.Type == nil {
-				type1, c := infer_expr_type(mod, appName, relexpr.Target, true, anonCount)
+				type1, c := inferExprType(mod, appName, relexpr.Target, true, anonCount)
 				anonCount = c
 				logrus.Printf(type1.String())
 			}
@@ -330,7 +330,7 @@ func infer_expr_type(mod *sysl.Module,
 	return expr.Type, anonCount
 }
 
-func infer_types(mod *sysl.Module, appName string) {
+func inferTypes(mod *sysl.Module, appName string) {
 	for viewName, view := range mod.Apps[appName].Views {
 		if hasAbstractPattern(view.Attrs) {
 			continue
@@ -339,7 +339,7 @@ func infer_types(mod *sysl.Module, appName string) {
 			logrus.Warnf("view %s expression should be of type transform", viewName)
 			continue
 		}
-		infer_expr_type(mod, appName, view.Expr, true, 0)
+		inferExprType(mod, appName, view.Expr, true, 0)
 	}
 }
 
@@ -355,18 +355,18 @@ func postProcess(mod *sysl.Module) {
 
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
-				src_app := getApp(src.Name, mod)
-				if !hasAbstractPattern(src_app.Attrs) {
+				srcApp := getApp(src.Name, mod)
+				if !hasAbstractPattern(srcApp.Attrs) {
 					logrus.Warnf("mixin App (%s) should be ~abstract", getAppName(src.Name))
 					continue
 				}
-				if src_app.Types != nil && app.Types == nil {
+				if srcApp.Types != nil && app.Types == nil {
 					app.Types = map[string]*sysl.Type{}
 				}
-				if src_app.Views != nil && app.Views == nil {
+				if srcApp.Views != nil && app.Views == nil {
 					app.Views = map[string]*sysl.View{}
 				}
-				for k, v := range src_app.Types {
+				for k, v := range srcApp.Types {
 					if _, has := app.Types[k]; !has {
 						app.Types[k] = v
 					} else {
@@ -374,7 +374,7 @@ func postProcess(mod *sysl.Module) {
 							k, appName, getAppName(src.Name))
 					}
 				}
-				for k, v := range src_app.Views {
+				for k, v := range srcApp.Views {
 					if _, has := app.Views[k]; !has {
 						app.Views[k] = v
 					} else {
@@ -402,22 +402,22 @@ func postProcess(mod *sysl.Module) {
 						continue
 					}
 					if refType, has := refApp.Types[refName]; has {
-						var ref_attrs map[string]*sysl.Type
+						var refAttrs map[string]*sysl.Type
 
 						switch refType.Type.(type) {
 						case *sysl.Type_Tuple_:
 							refType, _ := refApp.Types[refName].Type.(*sysl.Type_Tuple_)
-							ref_attrs = refType.Tuple.GetAttrDefs()
+							refAttrs = refType.Tuple.GetAttrDefs()
 						case *sysl.Type_Relation_:
 							refType, _ := refApp.Types[refName].Type.(*sysl.Type_Relation_)
-							ref_attrs = refType.Relation.GetAttrDefs()
+							refAttrs = refType.Relation.GetAttrDefs()
 						}
 						var field string
 						var has bool
 						if len(x.GetRef().GetPath()) > 1 {
 							last := len(x.GetRef().GetPath()) - 1
 							field = x.GetRef().GetPath()[last]
-							_, has = ref_attrs[field]
+							_, has = refAttrs[field]
 						} else if len(x.GetRef().GetPath()) == 1 {
 							last := len(x.GetRef().GetPath()) - 1
 							field = x.GetRef().GetPath()[last]
@@ -434,7 +434,7 @@ func postProcess(mod *sysl.Module) {
 				}
 			}
 		}
-		infer_types(mod, appName)
+		inferTypes(mod, appName)
 		collectorPubSubCalls(appName, app)
 	}
 	checkEndpointCalls(mod)

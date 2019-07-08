@@ -15,14 +15,14 @@ const (
 
 func TestEvalStrategySetup(t *testing.T) {
 	for key := range valueFunctions {
-		idx := strings.Index(key, "_VALUE_")
+		idx := strings.Index(key, "_Value")
 		op := key[:idx]
 		_, has := functionEvalStrategy[sysl.Expr_BinExpr_Op(sysl.Expr_BinExpr_Op_value[op])]
 		assert.Truef(t, has, "Op %s exists in functionEvalStrategy", op[1])
 	}
 
 	for key := range exprFunctions {
-		idx := strings.Index(key, "_VALUE_")
+		idx := strings.Index(key, "_Value")
 		op := key[:idx]
 		_, has := functionEvalStrategy[sysl.Expr_BinExpr_Op(sysl.Expr_BinExpr_Op_value[op])]
 		assert.Truef(t, has, "Op %s exists in functionEvalStrategy", op[1])
@@ -204,20 +204,20 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	requestClassBody := requestBody["classBody"].GetSet().Value
 	assert.Equal(t, 4, len(requestClassBody))
 
-	getRequestId := requestClassBody[0].GetMap().Items
-	assert.Equal(t, 3, len(getRequestId))
-	assert.Equal(t, "public", getRequestId["access"].GetS())
-	assert.Equal(t, "*int", getRequestId["returnType"].GetS())
-	assert.Equal(t, "getid", getRequestId["methodName"].GetS())
+	getRequestID := requestClassBody[0].GetMap().Items
+	assert.Equal(t, 3, len(getRequestID))
+	assert.Equal(t, "public", getRequestID["access"].GetS())
+	assert.Equal(t, "*int", getRequestID["returnType"].GetS())
+	assert.Equal(t, "getid", getRequestID["methodName"].GetS())
 
 	getRequestPayload := requestClassBody[1].GetMap().Items
 	assert.Equal(t, 3, len(getRequestPayload))
 	assert.Equal(t, "String", getRequestPayload["returnType"].GetS())
 	assert.Equal(t, "getpayload", getRequestPayload["methodName"].GetS())
 
-	setRequestId := requestClassBody[2].GetMap().Items
-	assert.Equal(t, 2, len(setRequestId))
-	assert.Equal(t, "setid", setRequestId["methodName"].GetS())
+	setRequestID := requestClassBody[2].GetMap().Items
+	assert.Equal(t, 2, len(setRequestID))
+	assert.Equal(t, "setid", setRequestID["methodName"].GetS())
 
 	setRequestPayload := requestClassBody[3].GetMap().Items
 	assert.Equal(t, 2, len(setRequestPayload))
@@ -272,25 +272,25 @@ func TestScopeAddRestApp(t *testing.T) {
 	assert.Equal(t, "accept", paramItem1["name"].GetS())
 	assert.Equal(t, "header", paramItem1["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
 
-	todosById := endpoints["GET /todos/{id}"].GetMap().Items
-	assert.Equal(t, "GET /todos/{id}", todosById["name"].GetS(), "unexpected endpoint name")
-	assert.Equal(t, "GET", todosById["method"].GetS())
-	assert.Equal(t, "todo", todosById["ret"].GetMap().Items["payload"].GetS())
-	assert.Equal(t, 1, len(todosById["pathvars"].GetList().Value))
-	assert.Equal(t, "/todos/{id}", todosById["path"].GetS())
-	assert.Equal(t, true, todosById["is_rest"].GetB())
-	assert.Equal(t, false, todosById["is_pubsub"].GetB())
-	assert.Equal(t, "rest", todosById["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
+	todosByID := endpoints["GET /todos/{id}"].GetMap().Items
+	assert.Equal(t, "GET /todos/{id}", todosByID["name"].GetS(), "unexpected endpoint name")
+	assert.Equal(t, "GET", todosByID["method"].GetS())
+	assert.Equal(t, "todo", todosByID["ret"].GetMap().Items["payload"].GetS())
+	assert.Equal(t, 1, len(todosByID["pathvars"].GetList().Value))
+	assert.Equal(t, "/todos/{id}", todosByID["path"].GetS())
+	assert.Equal(t, true, todosByID["is_rest"].GetB())
+	assert.Equal(t, false, todosByID["is_pubsub"].GetB())
+	assert.Equal(t, "rest", todosByID["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
 
-	todosByIdStatus := endpoints["GET /todos/{id}/{status}"].GetMap().Items
-	assert.Equal(t, "GET /todos/{id}/{status}", todosByIdStatus["name"].GetS(), "unexpected endpoint name")
-	assert.Equal(t, "GET", todosByIdStatus["method"].GetS())
-	assert.Equal(t, "todoWithStatus", todosByIdStatus["ret"].GetMap().Items["payload"].GetS())
-	assert.Equal(t, 2, len(todosByIdStatus["pathvars"].GetList().Value))
-	assert.Equal(t, "/todos/{id}/{status}", todosByIdStatus["path"].GetS())
-	assert.Equal(t, true, todosByIdStatus["is_rest"].GetB())
-	assert.Equal(t, false, todosByIdStatus["is_pubsub"].GetB())
-	assert.Equal(t, "rest", todosByIdStatus["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
+	todosByIDStatus := endpoints["GET /todos/{id}/{status}"].GetMap().Items
+	assert.Equal(t, "GET /todos/{id}/{status}", todosByIDStatus["name"].GetS(), "unexpected endpoint name")
+	assert.Equal(t, "GET", todosByIDStatus["method"].GetS())
+	assert.Equal(t, "todoWithStatus", todosByIDStatus["ret"].GetMap().Items["payload"].GetS())
+	assert.Equal(t, 2, len(todosByIDStatus["pathvars"].GetList().Value))
+	assert.Equal(t, "/todos/{id}/{status}", todosByIDStatus["path"].GetS())
+	assert.Equal(t, true, todosByIDStatus["is_rest"].GetB())
+	assert.Equal(t, false, todosByIDStatus["is_pubsub"].GetB())
+	assert.Equal(t, "rest", todosByIDStatus["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
 
 }
 
@@ -348,8 +348,8 @@ func TestIncorrectArgsToGoFunc(t *testing.T) {
 	contains, has := items["Contains"]
 	assert.True(t, has)
 	assert.Nil(t, contains)
-	wrongNumberOfArgs, has_Args := items["WrongNumberOfArgs"]
-	assert.True(t, has_Args)
+	wrongNumberOfArgs, hasArgs := items["WrongNumberOfArgs"]
+	assert.True(t, hasArgs)
 	assert.Nil(t, wrongNumberOfArgs)
 }
 

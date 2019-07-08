@@ -24,7 +24,7 @@ func OutputPlantuml(output, plantuml, umlInput string) error {
 			return err
 		}
 		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, encoded)
-		out, _ := sendHttpRequest(plantuml)
+		out, _ := sendHTTPRequest(plantuml)
 		return ioutil.WriteFile(output, out, os.ModePerm)
 
 	case "uml":
@@ -38,7 +38,7 @@ func OutputPlantuml(output, plantuml, umlInput string) error {
 	}
 }
 
-func sendHttpRequest(url string) ([]byte, error) {
+func sendHTTPRequest(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, errors.Errorf("Unable to create http request to %s, Error:%s", url, err.Error())

@@ -17,7 +17,7 @@ import (
 // Node can be string or node
 type Node []interface{}
 
-type codeGenOutput struct {
+type CodeGenOutput struct {
 	filename string
 	output   Node
 }
@@ -230,11 +230,11 @@ func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
 
 // GenerateCode transform input sysl model to code in the target language described by
 // grammar and a sysl transform
-func GenerateCode(root_model, model, root_transform, transform, grammar, start string) []*codeGenOutput {
-	var codeOutput []*codeGenOutput
+func GenerateCode(rootModel, model, rootTransform, transform, grammar, start string) []*CodeGenOutput {
+	var codeOutput []*CodeGenOutput
 
-	mod, modelAppName := loadAndGetDefaultApp(root_model, model)
-	tx, transformAppName := loadAndGetDefaultApp(root_transform, transform)
+	mod, modelAppName := loadAndGetDefaultApp(rootModel, model)
+	tx, transformAppName := loadAndGetDefaultApp(rootTransform, transform)
 	g := readGrammar(grammar, "gen", start)
 	if g == nil {
 		panic(errors.Errorf("Unable to load grammar"))
@@ -248,19 +248,19 @@ func GenerateCode(root_model, model, root_transform, transform, grammar, start s
 		filename := fileNames.GetMap().Items["filename"].GetS()
 		logrus.Println(filename)
 		r := processRule(g, result, g.Start)
-		codeOutput = append(codeOutput, &codeGenOutput{filename, r})
+		codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 	} else {
 		fileValues := fileNames.GetList().Value
 		for i, v := range result.GetList().Value {
 			filename := fileValues[i].GetMap().Items["filename"].GetS()
 			r := processRule(g, v, g.Start)
-			codeOutput = append(codeOutput, &codeGenOutput{filename, r})
+			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 		}
 	}
 	return codeOutput
 }
 
-func outputToFiles(outDir string, output []*codeGenOutput) error {
+func outputToFiles(outDir string, output []*CodeGenOutput) error {
 	for _, o := range output {
 		f, err := os.Create(outDir + "/" + o.filename)
 		if err != nil {
@@ -280,8 +280,8 @@ func outputToFiles(outDir string, output []*codeGenOutput) error {
 // DoGenerateCode generate code for the given model, using transform
 // and the grammar of the target language
 func DoGenerateCode(flags *flag.FlagSet, args []string) error {
-	root_model := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
-	root_transform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
+	rootModel := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
+	rootTransform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
 	model := flags.String("model", ".", "model.sysl")
 	transform := flags.String("transform", ".", "transform.sysl")
 	grammar := flags.String("grammar", ".", "grammar.g")
@@ -291,12 +291,12 @@ func DoGenerateCode(flags *flag.FlagSet, args []string) error {
 	if err := flags.Parse(args[1:]); err != nil {
 		return err
 	}
-	logrus.Warnf("root_model: %s\n", *root_model)
-	logrus.Warnf("root_transform: %s\n", *root_transform)
+	logrus.Warnf("root-model: %s\n", *rootModel)
+	logrus.Warnf("root-transform: %s\n", *rootTransform)
 	logrus.Warnf("model: %s\n", *model)
 	logrus.Warnf("transform: %s\n", *transform)
 	logrus.Warnf("grammar: %s\n", *grammar)
 	logrus.Warnf("start: %s\n", *start)
-	output := GenerateCode(*root_model, *model, *root_transform, *transform, *grammar, *start)
+	output := GenerateCode(*rootModel, *model, *rootTransform, *transform, *grammar, *start)
 	return outputToFiles(*outDir, output)
 }

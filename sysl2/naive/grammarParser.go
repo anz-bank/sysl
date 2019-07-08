@@ -28,8 +28,8 @@ type symbol struct {
 const FIRST = 0
 const EPSILON = -2
 const EOF = -1
-const PUSH_GRAMMAR = -3
-const POP_GRAMMAR = -4
+const PushGrammar = -3
+const PopGrammar = -4
 
 func (b *builder) handleChoice(choice *sysl.Choice) {
 	for _, s := range choice.Sequence {

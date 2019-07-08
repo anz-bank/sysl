@@ -243,20 +243,20 @@ func paramToValue(qp *sysl.Param) *sysl.Value {
 
 func stmtToValue(s *sysl.Statement) *sysl.Value {
 	m := MakeValueMap()
-	var stmt_type string
+	var stmtType string
 	switch x := s.Stmt.(type) {
 	case *sysl.Statement_Action:
-		stmt_type = "action"
+		stmtType = "action"
 		addItemToValueMap(m, "action", MakeValueString(x.Action.Action))
 	case *sysl.Statement_Call:
-		stmt_type = "call"
+		stmtType = "call"
 		addItemToValueMap(m, "endpoint", MakeValueString(x.Call.Endpoint))
 		addItemToValueMap(m, "target", MakeValueString(getAppName(x.Call.Target)))
 	case *sysl.Statement_Ret:
-		stmt_type = "return"
+		stmtType = "return"
 		addItemToValueMap(m, "payload", MakeValueString(x.Ret.Payload))
 	}
-	addItemToValueMap(m, "type", MakeValueString(stmt_type))
+	addItemToValueMap(m, "type", MakeValueString(stmtType))
 	return m
 }
 
@@ -274,14 +274,14 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 		addItemToValueMap(m, "path", MakeValueString(e.RestParams.Path))
 
 		queryvars := MakeValueList()
-		for _, query_param := range e.RestParams.QueryParam {
-			appendItemToValueList(queryvars.GetList(), queryParamsToValue(query_param))
+		for _, queryParam := range e.RestParams.QueryParam {
+			appendItemToValueList(queryvars.GetList(), queryParamsToValue(queryParam))
 		}
 		addItemToValueMap(m, "queryvars", queryvars)
 
 		pathvars := MakeValueList()
-		for _, query_param := range e.RestParams.UrlParam {
-			appendItemToValueList(pathvars.GetList(), queryParamsToValue(query_param))
+		for _, queryParam := range e.RestParams.UrlParam {
+			appendItemToValueList(pathvars.GetList(), queryParamsToValue(queryParam))
 		}
 		addItemToValueMap(m, "pathvars", pathvars)
 	}

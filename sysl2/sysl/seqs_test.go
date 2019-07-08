@@ -204,27 +204,27 @@ func TestLoadApp(t *testing.T) {
 }
 
 type sdArgs struct {
-	root_model      string
-	endpoint_format string
-	app_format      string
-	title           string
-	output          string
-	endpoints       []string
-	apps            []string
-	modules         string
-	blackboxes      [][]string
+	rootModel      string
+	endpointFormat string
+	appFormat      string
+	title          string
+	output         string
+	endpoints      []string
+	apps           []string
+	modules        string
+	blackboxes     [][]string
 }
 
 func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_test.sysl",
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_test.sysl",
 	}
 	expected := make(map[string]string)
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then
@@ -234,10 +234,10 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_test.sysl",
-		endpoints:  []string{"QueryUser"},
-		output:     "_.png",
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_test.sysl",
+		endpoints: []string{"QueryUser"},
+		output:    "_.png",
 	}
 	expectContent := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -256,7 +256,7 @@ skinparam maxMessageSize 250
 	}
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then
@@ -266,10 +266,10 @@ skinparam maxMessageSize 250
 func TestDoConstructSequenceDiagrams(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_project.sysl",
-		output:     "%(epname).png",
-		apps:       []string{"Project"},
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_project.sysl",
+		output:    "%(epname).png",
+		apps:      []string{"Project"},
 	}
 	expectContent := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -303,7 +303,7 @@ deactivate _0
 	}
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then
@@ -313,10 +313,10 @@ deactivate _0
 func TestDoConstructSequenceDiagramsToFormatComplexName(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_complex_format.sysl",
-		output:     "%(epname).png",
-		apps:       []string{"Project"},
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_complex_format.sysl",
+		output:    "%(epname).png",
+		apps:      []string{"Project"},
 	}
 	expectContent := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -341,7 +341,7 @@ activate _0
 	}
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then

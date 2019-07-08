@@ -26,10 +26,10 @@ var kindToPrimitiveType = map[reflect.Kind]sysl.Type_Primitive{
 }
 
 var valueTypeToPrimitiveType = map[valueType]sysl.Type_Primitive{
-	VALUE_BOOL:   sysl.Type_BOOL,
-	VALUE_INT:    sysl.Type_INT,
-	VALUE_FLOAT:  sysl.Type_FLOAT,
-	VALUE_STRING: sysl.Type_STRING,
+	ValueBool:   sysl.Type_BOOL,
+	ValueInt:    sysl.Type_INT,
+	ValueFloat:  sysl.Type_FLOAT,
+	ValueString: sysl.Type_STRING,
 }
 
 var stringType = &sysl.Type{
@@ -129,24 +129,24 @@ func isValueExpectedType(v *sysl.Value, t *sysl.Type) bool {
 		return inType == type1
 	}
 
-	if vType == VALUE_LIST && len(v.GetList().Value) == 0 {
+	if vType == ValueList && len(v.GetList().Value) == 0 {
 		return true
 	}
 
-	if vType == VALUE_SET && len(v.GetSet().Value) == 0 {
+	if vType == ValueSet && len(v.GetSet().Value) == 0 {
 		return true
 	}
 
-	if vType == VALUE_LIST && t.GetList() != nil {
+	if vType == ValueList && t.GetList() != nil {
 		return isValueExpectedType(v.GetList().Value[0], t.GetList().Type)
 	}
 
-	if vType == VALUE_SET && t.GetSet() != nil {
+	if vType == ValueSet && t.GetSet() != nil {
 		return isValueExpectedType(v.GetSet().Value[0], t.GetSet())
 	}
 
 	// Pass elements of sets as a slice to Go funcs.
-	if vType == VALUE_SET && t.GetList() != nil {
+	if vType == ValueSet && t.GetList() != nil {
 		return isValueExpectedType(v.GetSet().Value[0], t.GetList().Type)
 	}
 	return false

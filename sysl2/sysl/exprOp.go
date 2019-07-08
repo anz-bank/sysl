@@ -185,24 +185,24 @@ func concatList(lhs, rhs *sysl.Value) *sysl.Value {
 
 func setUnion(lhs, rhs *sysl.Value) *sysl.Value {
 	itemType := getContainedType(lhs)
-	if itemType == VALUE_NO_ARG {
+	if itemType == ValueNoArg {
 		itemType = getContainedType(rhs)
 	}
 
-	if itemType == VALUE_NO_ARG {
+	if itemType == ValueNoArg {
 		return MakeValueSet()
 	}
 
 	switch itemType {
-	case VALUE_INT:
+	case ValueInt:
 		unionSet := unionIntSets(intSet(lhs.GetSet().Value), intSet(rhs.GetSet().Value))
 		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return intSetToValueSet(unionSet)
-	case VALUE_STRING:
+	case ValueString:
 		unionSet := unionStringSets(stringSet(lhs.GetSet().Value), stringSet(rhs.GetSet().Value))
 		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return stringSetToValueSet(unionSet)
-	case VALUE_MAP:
+	case ValueMap:
 		unionSet := unionMapSets(mapSet(lhs.GetSet().Value), mapSet(rhs.GetSet().Value))
 		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return mapSetToValueSet(unionSet)
@@ -353,10 +353,10 @@ func whereList(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar
 	return listResult
 }
 
-func whereMap(txApp *sysl.Application, assign Scope, map_ *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func whereMap(txApp *sysl.Application, assign Scope, m *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
 	mapResult := MakeValueMap()
-	logrus.Printf("scope: %s, list len: %d", scopeVar, len(map_.GetMap().Items))
-	for key, val := range map_.GetMap().Items {
+	logrus.Printf("scope: %s, list len: %d", scopeVar, len(m.GetMap().Items))
+	for key, val := range m.GetMap().Items {
 		m := MakeValueMap()
 		addItemToValueMap(m, "key", MakeValueString(key))
 		addItemToValueMap(m, "value", val)

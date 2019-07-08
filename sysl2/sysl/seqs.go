@@ -62,12 +62,12 @@ func escapeWordBoundary(src string) string {
 }
 
 func DoConstructSequenceDiagrams(
-	root_model, endpoint_format, app_format, title, output, modules string,
+	rootModel, endpointFormat, appFormat, title, output, modules string,
 	endpoints, apps []string,
 	blackboxes [][]string,
 ) map[string]string {
 	result := make(map[string]string)
-	mod := loadApp(root_model, modules)
+	mod := loadApp(rootModel, modules)
 	if mod == nil {
 		return result
 	}
@@ -77,8 +77,8 @@ func DoConstructSequenceDiagrams(
 			app := mod.Apps[appName]
 			bbs := seqs.TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
 			spseqtitle := constructFormatParser(app.GetAttrs()["seqtitle"].GetS(), title)
-			spep := constructFormatParser(app.GetAttrs()["epfmt"].GetS(), endpoint_format)
-			spapp := constructFormatParser(app.GetAttrs()["appfmt"].GetS(), app_format)
+			spep := constructFormatParser(app.GetAttrs()["epfmt"].GetS(), endpointFormat)
+			spapp := constructFormatParser(app.GetAttrs()["appfmt"].GetS(), appFormat)
 			keys := []string{}
 			for k := range app.GetEndpoints() {
 				keys = append(keys, k)
@@ -87,7 +87,7 @@ func DoConstructSequenceDiagrams(
 			for _, k := range keys {
 				endpoint := app.GetEndpoints()[k]
 				epAttrs := endpoint.GetAttrs()
-				output_dir := spout.FmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
+				outputDir := spout.FmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
 				bbs2 := seqs.TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
 				varrefs := seqs.MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
 				sdEndpoints := []string{}
@@ -108,15 +108,15 @@ func DoConstructSequenceDiagrams(
 					blackboxes:      append(bbs, bbs2...),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
-				result[output_dir] = out
+				result[outputDir] = out
 			}
 		}
 	} else {
 		if endpoints == nil {
 			return result
 		}
-		spep := constructFormatParser("", endpoint_format)
-		spapp := constructFormatParser("", app_format)
+		spep := constructFormatParser("", endpointFormat)
+		spapp := constructFormatParser("", appFormat)
 		sd := &sequenceDiagParam{
 			endpoints:       endpoints,
 			AppLabeler:      spapp,
@@ -144,12 +144,12 @@ func DoGenerateSequenceDiagrams(args []string) error {
 		"sysl root directory for input model file (default: .)",
 	).Default(".").String()
 
-	endpoint_format := sd.Flag("endpoint_format",
+	endpointFormat := sd.Flag("endpoint_format",
 		"Specify the format string for sequence diagram endpoints. May include "+
 			"%(epname), %(eplongname) and %(@foo) for attribute foo (default: %(epname))",
 	).Default("%(epname)").String()
 
-	app_format := sd.Flag("app_format",
+	appFormat := sd.Flag("app_format",
 		"Specify the format string for sequence diagram participants. "+
 			"May include %%(appname) and %%(@foo) for attribute foo (default: %(appname))",
 	).Default("%(appname)").String()
@@ -166,21 +166,21 @@ func DoGenerateSequenceDiagrams(args []string) error {
 		"output file (default: %(epname).png)",
 	).Default("%(epname).png").Short('o').String()
 
-	endpoints_flag := sd.Flag("endpoint",
+	endpointsFlag := sd.Flag("endpoint",
 		"Include endpoint in sequence diagram",
 	).Short('s').Strings()
 
-	apps_flag := sd.Flag("app",
+	appsFlag := sd.Flag("app",
 		"Include all endpoints for app in sequence diagram (currently "+
 			"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
 			"comma-list of shell globs) to limit the diagrams generated",
 	).Short('a').Strings()
 
-	blackboxes_flag := sd.Flag("blackbox", "Apps to be treated as black boxes").Strings()
+	blackboxesFlag := sd.Flag("blackbox", "Apps to be treated as black boxes").Strings()
 
 	loglevel := sd.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
 
-	modules_flag := sd.Arg("modules",
+	modulesFlag := sd.Arg("modules",
 		"input files without .sysl extension and with leading /, eg: "+
 			"/project_dir/my_models combine with --root if needed",
 	).String()
@@ -201,19 +201,19 @@ func DoGenerateSequenceDiagrams(args []string) error {
 	}
 
 	log.Debugf("root: %s\n", *root)
-	log.Debugf("endpoints: %v\n", endpoints_flag)
-	log.Debugf("app: %v\n", apps_flag)
-	log.Debugf("endpoint_format: %s\n", *endpoint_format)
-	log.Debugf("app_format: %s\n", *app_format)
-	log.Debugf("blackbox: %s\n", *blackboxes_flag)
+	log.Debugf("endpoints: %v\n", endpointsFlag)
+	log.Debugf("app: %v\n", appsFlag)
+	log.Debugf("endpoint_format: %s\n", *endpointFormat)
+	log.Debugf("app_format: %s\n", *appFormat)
+	log.Debugf("blackbox: %s\n", *blackboxesFlag)
 	log.Debugf("title: %s\n", *title)
 	log.Debugf("plantuml: %s\n", *plantuml)
-	log.Debugf("modules: %s\n", *modules_flag)
+	log.Debugf("modules: %s\n", *modulesFlag)
 	log.Debugf("output: %s\n", *output)
 	log.Debugf("loglevel: %s\n", *loglevel)
 
-	result := DoConstructSequenceDiagrams(*root, *endpoint_format, *app_format, *title, *output, *modules_flag,
-		*endpoints_flag, *apps_flag, seqs.ParseBlackBoxesFromArgument(*blackboxes_flag))
+	result := DoConstructSequenceDiagrams(*root, *endpointFormat, *appFormat, *title, *output, *modulesFlag,
+		*endpointsFlag, *appsFlag, seqs.ParseBlackBoxesFromArgument(*blackboxesFlag))
 	for k, v := range result {
 		if err := seqs.OutputPlantuml(k, *plantuml, v); err != nil {
 			return err
