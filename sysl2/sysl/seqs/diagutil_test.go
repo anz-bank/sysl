@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testPlantumlInput = `
+const testPlantumlInput = `
 @startuml
 control "WebFrontend" as _0
 control "Api" as _1
@@ -31,6 +31,8 @@ deactivate _0
 @enduml
 `
 
+const plantumlDotCom = "http://www.plantuml.com/plantuml"
+
 func TestDeflateAndEncode(t *testing.T) {
 	//Given
 	const expected = "UDfSaKbhmp0GXU_pAnwvYqY6NaniKkXoAgGRFUGW9l4qY7gh99SkzByN9GvnUfBGzmrwZw5bYE" +
@@ -49,11 +51,10 @@ func TestDeflateAndEncode(t *testing.T) {
 func TestOutputPlantumlWithPng(t *testing.T) {
 	//Given
 	output := "test.png"
-	plantuml := "http://www.plantuml.com/plantuml"
 	umlInput := testPlantumlInput
 
 	//When
-	require.NoError(t, OutputPlantuml(output, plantuml, umlInput))
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
 
 	//Then
 	_, err := os.Stat(output)
@@ -63,11 +64,10 @@ func TestOutputPlantumlWithPng(t *testing.T) {
 func TestOutputPlantumlWithSvg(t *testing.T) {
 	//Given
 	output := "test.svg"
-	plantuml := "http://www.plantuml.com/plantuml"
 	umlInput := testPlantumlInput
 
 	//When
-	require.NoError(t, OutputPlantuml(output, plantuml, umlInput))
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
 
 	//Then
 	_, err := os.Stat(output)
@@ -77,11 +77,10 @@ func TestOutputPlantumlWithSvg(t *testing.T) {
 func TestOutputPlantumlWithUml(t *testing.T) {
 	//Given
 	output := "test.uml"
-	plantuml := "http://www.plantuml.com/plantuml"
 	umlInput := testPlantumlInput
 
 	//When
-	require.NoError(t, OutputPlantuml(output, plantuml, umlInput))
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
 
 	//Then
 	_, err := os.Stat("test.puml")

@@ -8,6 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	modelAppName = "Model"
+	todoAppName  = "TodoApp"
+)
+
 func TestEvalStrategySetup(t *testing.T) {
 	for key := range valueFunctions {
 		idx := strings.Index(key, "_VALUE_")
@@ -27,10 +32,9 @@ func TestEvalStrategySetup(t *testing.T) {
 func TestScopeAddApp(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	app := s["app"].GetMap().Items
-	assert.Equal(t, appName, app["name"].GetS(), "unexpected app name")
+	assert.Equal(t, modelAppName, app["name"].GetS(), "unexpected app name")
 	types := app["types"].GetMap().Items
 	assert.Equal(t, 2, len(types), "unexpected types count")
 	typeRequest := types["Request"].GetMap().Items
@@ -162,8 +166,7 @@ func TestEvalIfElseAlt(t *testing.T) {
 	assert.NotNil(t, txApp.Views[viewName], "View not loaded")
 	assert.Equal(t, 1, len(txApp.Views[viewName].Param), "Params not correct")
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	s["t"] = s["app"].GetMap().Items["types"].GetMap().Items["Request"].GetMap().Items["fields"].GetMap().Items["payload"]
 	out := Eval(txApp, s, txApp.Views[viewName].Expr)
 	assert.Equal(t, "String", out.GetMap().Items["out"].GetS(), "unexpected value")
@@ -177,8 +180,7 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvalView(mod, "TransformApp", "GetAppAttributes", s)
 	assert.Equal(t, "com.example.gen", out.GetMap().Items["out"].GetS())
 	assert.Nil(t, out.GetMap().Items["Nil"])
@@ -231,8 +233,7 @@ func TestEvalNullCheckAppAttrs(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvalView(mod, "TransformApp", "NullCheckAppAttrs", s)
 
 	assert.False(t, out.GetMap().Items["NotHasAttrName"].GetB())
@@ -244,10 +245,9 @@ func TestEvalNullCheckAppAttrs(t *testing.T) {
 func TestScopeAddRestApp(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 	s := Scope{}
-	appName := "TodoApp"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[todoAppName])
 	app := s["app"].GetMap().Items
-	assert.Equal(t, appName, app["name"].GetS(), "unexpected app name")
+	assert.Equal(t, todoAppName, app["name"].GetS(), "unexpected app name")
 	endpoints := app["endpoints"].GetMap().Items
 	assert.Equal(t, 4, len(endpoints), "unexpected endpoint count")
 	rootTodos := endpoints["GET /todos"].GetMap().Items
@@ -298,8 +298,7 @@ func TestEvalStringOps(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "TodoApp"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[todoAppName])
 	out := EvalView(mod, "TransformApp", "StringOps", s)
 	assert.NotNil(t, out.GetMap())
 	items := out.GetMap().Items
@@ -342,8 +341,7 @@ func TestIncorrectArgsToGoFunc(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "TodoApp"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[todoAppName])
 	out := EvalView(mod, "TransformApp", "IncorrectArgsToGoFunc", s)
 	assert.NotNil(t, out.GetMap())
 	items := out.GetMap().Items
@@ -359,8 +357,7 @@ func TestEvalFlatten(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "TodoApp"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[todoAppName])
 	out := EvalView(mod, "TransformApp", "Flatten", s)
 	assert.NotNil(t, out.GetMap().Items["names"].GetSet())
 	l := out.GetMap().Items["names"].GetSet().Value
@@ -387,8 +384,7 @@ func TestEvalWhere(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvalView(mod, "TransformApp", "Where", s)
 
 	numbers1 := out.GetMap().Items["greaterThanOne"].GetSet().Value
@@ -414,8 +410,7 @@ func TestEvalLinks(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvalView(mod, "TransformApp", "Links", s)
 	assert.NotNil(t, out.GetMap().Items["links"].GetSet())
 	l := out.GetMap().Items["links"].GetSet().Value
@@ -440,8 +435,7 @@ func TestDotScope(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvalView(mod, "TransformApp", "TestDotScope", s).GetMap().Items
 	assert.Equal(t, 3, len(out))
 }
@@ -450,8 +444,7 @@ func TestListOfTypeNames(t *testing.T) {
 	mod, _ := Parse("tests/eval_expr.sysl", "")
 
 	s := Scope{}
-	appName := "Model"
-	s.AddApp("app", mod.Apps[appName])
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvalView(mod, "TransformApp", "ListOfTypeNames", s)
 	l := out.GetList()
 	assert.NotNil(t, l)
