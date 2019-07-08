@@ -46,13 +46,13 @@ func main3(stdout, stderr io.Writer, args []string) error {
 	switch *mode {
 	case "", "textpb", "json":
 	default:
-		return fmt.Errorf("Invalid -mode %#v", *mode)
+		return fmt.Errorf("invalid -mode %#v", *mode)
 	}
 
 	if level, has := defaultLevel[*loglevel]; has {
 		logrus.SetLevel(level)
 	} else {
-		return fmt.Errorf("Invalid -log %#v", *loglevel)
+		return fmt.Errorf("invalid -log %#v", *loglevel)
 	}
 
 	filename := flags.Arg(0)
