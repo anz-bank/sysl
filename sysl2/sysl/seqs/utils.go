@@ -16,7 +16,8 @@ var (
 	typeOneOfRE              = regexp.MustCompile(`one\s+of\s*{(.+)}$`)
 	typeListSpliterRE        = regexp.MustCompile(`\s*,\s*`)
 	endpointLabelReplaceRE   = regexp.MustCompile(`^.*? -> `)
-	endpointParserRE         = regexp.MustCompile(`(?P<appname>.*?)\s*<-\s*(?P<epname>.*?)(?:\s*\[upto\s+(?P<upto>.*)\])*$`)
+	endpointParserRE         = regexp.MustCompile(
+		`(?P<appname>.*?)\s*<-\s*(?P<epname>.*?)(?:\s*\[upto\s+(?P<upto>.*)\])*$`)
 )
 
 func TransformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {

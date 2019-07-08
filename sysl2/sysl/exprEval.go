@@ -30,7 +30,12 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 	return result
 }
 
-func evalTransformUsingValueList(txApp *sysl.Application, x *sysl.Expr_Transform, assign Scope, v []*sysl.Value) []*sysl.Value {
+func evalTransformUsingValueList(
+	txApp *sysl.Application,
+	x *sysl.Expr_Transform,
+	assign Scope,
+	v []*sysl.Value,
+) []*sysl.Value {
 	listResult := []*sysl.Value{}
 	scopeVar := x.Scopevar
 	logrus.Infof("Scopevar: %s", scopeVar)
@@ -127,7 +132,8 @@ func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
 			logrus.Infof("Calling View %s\n", x.Call.Func)
 			params := callTransform.Param
 			if len(params) != len(x.Call.Arg) {
-				logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n", x.Call.Func, len(x.Call.Arg), len(params))
+				logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n",
+					x.Call.Func, len(x.Call.Arg), len(params))
 				return nil
 			}
 			callScope := make(Scope)

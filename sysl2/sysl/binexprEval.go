@@ -8,7 +8,13 @@ import (
 )
 
 type evalValueFunc func(*sysl.Value, *sysl.Value) *sysl.Value
-type evalExprFunc func(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value
+type evalExprFunc func(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value
 
 // EvalStrategy interface to evaluate binary expr
 type EvalStrategy interface {

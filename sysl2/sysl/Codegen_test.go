@@ -83,7 +83,8 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 }
 
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(
+		".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl", "tests/test.gen.g", "javaFile")
 	root := output[0].output
 	assert.Nil(t, root, "unexpected root")
 }

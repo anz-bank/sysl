@@ -141,26 +141,51 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, flags *flag.FlagSet, a
 		}
 	}()
 	sd := kingpin.New("sd", "Generate sequence diagram")
-	root := sd.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
-	endpoint_format := sd.Flag("endpoint_format", "Specify the format string for sequence diagram endpoints. "+
-		"May include %(epname), %(eplongname) and %(@foo) for attribute foo(default: %(epname))").Default("%(epname)").String()
-	app_format := sd.Flag("app_format", "Specify the format string for sequence diagram participants. "+
-		"May include %%(appname) and %%(@foo) for attribute foo(default: %(appname))").Default("%(appname)").String()
+
+	root := sd.Flag("root",
+		"sysl root directory for input model file (default: .)",
+	).Default(".").String()
+
+	endpoint_format := sd.Flag("endpoint_format",
+		"Specify the format string for sequence diagram endpoints. May include "+
+			"%(epname), %(eplongname) and %(@foo) for attribute foo (default: %(epname))",
+	).Default("%(epname)").String()
+
+	app_format := sd.Flag("app_format",
+		"Specify the format string for sequence diagram participants. "+
+			"May include %%(appname) and %%(@foo) for attribute foo (default: %(appname))",
+	).Default("%(appname)").String()
+
 	title := sd.Flag("title", "diagram title").Short('t').String()
-	plantuml := sd.Flag("plantuml", strings.Join([]string{"base url of plantuml server",
-		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
-		"see http://plantuml.com/server.html#install for more info)"}, "\n")).Short('p').String()
-	output := sd.Flag("output", "output file(default: %(epname).png)").Default("%(epname).png").Short('o').String()
-	endpoints_flag := sd.Flag("endpoint", "Include endpoint in sequence diagram").Short('s').Strings()
-	apps_flag := sd.Flag("app", "Include all endpoints for app in sequence diagram (currently "+
-		"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
-		"comma-list of shell globs) to limit the diagrams generated").Short('a').Strings()
+
+	plantuml := sd.Flag("plantuml",
+		"base url of plantuml server (default: $SYSL_PLANTUML or "+
+			"http://localhost:8080/plantuml see "+
+			"http://plantuml.com/server.html#install for more info)",
+	).Short('p').String()
+
+	output := sd.Flag("output",
+		"output file (default: %(epname).png)",
+	).Default("%(epname).png").Short('o').String()
+
+	endpoints_flag := sd.Flag("endpoint",
+		"Include endpoint in sequence diagram",
+	).Short('s').Strings()
+
+	apps_flag := sd.Flag("app",
+		"Include all endpoints for app in sequence diagram (currently "+
+			"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
+			"comma-list of shell globs) to limit the diagrams generated",
+	).Short('a').Strings()
+
 	blackboxes_flag := sd.Flag("blackbox", "Apps to be treated as black boxes").Strings()
+
 	loglevel := sd.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
 
-	modules_flag := sd.Arg("modules", strings.Join([]string{"input files without .sysl extension and with leading /",
-		"eg: /project_dir/my_models",
-		"combine with --root if needed"}, "\n")).String()
+	modules_flag := sd.Arg("modules",
+		"input files without .sysl extension and with leading /, eg: "+
+			"/project_dir/my_models combine with --root if needed",
+	).String()
 
 	if _, err := sd.Parse(args[1:]); err != nil {
 		return err

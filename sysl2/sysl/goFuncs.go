@@ -13,7 +13,7 @@ import (
 type goFunc struct {
 	val  reflect.Value
 	args []*sysl.Type
-	ret  []*sysl.Type
+	ret  *sysl.Type
 }
 
 var kindToPrimitiveType = map[reflect.Kind]sysl.Type_Primitive{
@@ -64,27 +64,27 @@ var boolType = &sysl.Type{
 
 // GoFuncMap is Map of Function Names to goFunc{}
 var GoFuncMap = map[string]goFunc{
-	"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
-	"Fields":        {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, []*sysl.Type{listStringType}},
-	"FindAllString": {reflect.ValueOf(FindAllString), []*sysl.Type{stringType, stringType, intType}, []*sysl.Type{listStringType}},
-	"HasPrefix":     {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"HasSuffix":     {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Join":          {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, []*sysl.Type{stringType}},
-	"LastIndex":     {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
-	"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, []*sysl.Type{stringType}},
-	"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, []*sysl.Type{listStringType}},
-	"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"Trim":          {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimLeft":      {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimPrefix":    {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
+	"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, boolType},
+	"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, intType},
+	"Fields":        {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, listStringType},
+	"FindAllString": {reflect.ValueOf(FindAllString), []*sysl.Type{stringType, stringType, intType}, listStringType},
+	"HasPrefix":     {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, boolType},
+	"HasSuffix":     {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, boolType},
+	"Join":          {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, stringType},
+	"LastIndex":     {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, intType},
+	"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, boolType},
+	"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, stringType}, // nolint:lll
+	"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, listStringType},
+	"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, stringType},
+	"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, stringType},
+	"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, stringType},
+	"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, stringType},
+	"Trim":          {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, stringType},
+	"TrimLeft":      {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, stringType},
+	"TrimPrefix":    {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, stringType},
+	"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, stringType},
+	"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, stringType},
+	"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, stringType},
 }
 
 func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
@@ -216,12 +216,10 @@ func evalGoFunc(name string, list *sysl.Value) *sysl.Value {
 			}
 		}
 		result := f.val.Call(in)
-		if len(f.ret) != len(result) {
-			logrus.Errorf("Incorrect number of return types for function %s\n", name)
-			logrus.Errorf("Expected number of return types: (%d)\n", len(f.ret))
-			logrus.Errorf("Got result: (%d)\n", len(result))
+		if len(result) != 1 {
+			logrus.Errorf("Function %s has %d return values, expecting 1\n", name, len(result))
 		}
-		return reflectToValue(result[0], f.ret[0])
+		return reflectToValue(result[0], f.ret)
 	}
 	return nil
 }

@@ -95,7 +95,7 @@ var testModuleTextPB = `apps: <
 `
 
 func TestJSONPB(t *testing.T) {
-	if filename := testTempFilename(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json"); filename != "" {
+	if filename := testTempFilename(t, "", "sysl-TestJSONPB-*.json"); filename != "" {
 		require.NoError(t, JSONPB(testModule, filename))
 		output, err := ioutil.ReadFile(filename)
 		require.NoError(t, err)
@@ -104,7 +104,7 @@ func TestJSONPB(t *testing.T) {
 }
 
 func TestJSONPBNilModule(t *testing.T) {
-	if tf := newTestTempFile(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json"); tf != nil {
+	if tf := newTestTempFile(t, "", "sysl-TestJSONPB-*.json"); tf != nil {
 		filename := tf.Name()
 		tf.CloseAndRemove()
 		require.Error(t, JSONPB(nil, filename))
@@ -126,7 +126,7 @@ func TestFJSONPBNilModule(t *testing.T) {
 }
 
 func TestTextPB(t *testing.T) {
-	if filename := testTempFilename(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestJSONPB-*.json"); filename != "" {
+	if filename := testTempFilename(t, "", "sysl-TestJSONPB-*.json"); filename != "" {
 		require.NoError(t, TextPB(testModule, filename))
 		output, err := ioutil.ReadFile(filename)
 		require.NoError(t, err)
@@ -135,7 +135,7 @@ func TestTextPB(t *testing.T) {
 }
 
 func TestTextPBNilModule(t *testing.T) {
-	if tf := newTestTempFile(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestTextPBNilModule-*.textpb"); tf != nil {
+	if tf := newTestTempFile(t, "", "sysl-TestTextPBNilModule-*.textpb"); tf != nil {
 		filename := tf.Name()
 		tf.CloseAndRemove()
 		require.Error(t, TextPB(nil, filename))
@@ -157,7 +157,7 @@ func TestFTextPBNilModule(t *testing.T) {
 }
 
 func testMain2(t *testing.T, args []string, golden string) {
-	if output := testTempFilename(t, "", "github.com-sysl-sysl2-sysl-sysl_test.go-TestTextPBNilModule-*.textpb"); output != "" {
+	if output := testTempFilename(t, "", "sysl-TestTextPBNilModule-*.textpb"); output != "" {
 		var stdout, stderr bytes.Buffer
 		rc := main2(&stdout, &stderr, append([]string{"sysl", "-o", output}, args...), main3)
 		if !assert.Zero(t, rc) {

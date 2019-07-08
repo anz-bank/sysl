@@ -171,7 +171,8 @@ func parseAndCompareWithPython(filename, root string, retainOnError bool) (bool,
 
 	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule, retainOnError, true)
 	if err := retainOrRemove(err, golden, retainOnError); err != nil {
-		return false, errors.Wrapf(err, "parseAndCompare(%#v, %#v, %#v, …, %#v)", filename, root, golden.Name(), retainOnError)
+		return false, errors.Wrapf(err, "parseAndCompare(%#v, %#v, %#v, …, %#v)",
+			filename, root, golden.Name(), retainOnError)
 	}
 	return equal, nil
 }

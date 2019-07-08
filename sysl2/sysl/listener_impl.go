@@ -1046,7 +1046,8 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 			mergeAttrs(attrs, s.module.Apps[s.appname].Attrs)
 		}
 	}
-	s.module.Apps[s.appname].SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()+1)
+	s.module.Apps[s.appname].SourceContext = buildSourceContext(
+		s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()+1)
 }
 
 // ExitName_with_attribs is called when production name_with_attribs is exited.
@@ -1658,10 +1659,11 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 		}
 		params = append(params, &p)
 	}
-	if s.module.Apps[s.appname].Endpoints[s.typename].Param == nil {
-		s.module.Apps[s.appname].Endpoints[s.typename].Param = params
+	ep := s.module.Apps[s.appname].Endpoints[s.typename]
+	if ep.Param == nil {
+		ep.Param = params
 	} else {
-		s.module.Apps[s.appname].Endpoints[s.typename].Param = append(s.module.Apps[s.appname].Endpoints[s.typename].Param, params...)
+		ep.Param = append(ep.Param, params...)
 	}
 	s.typemap = nil
 	s.fieldname = []string{}
@@ -2163,21 +2165,23 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 	if ctx.Name_str() != nil {
 		s.typename = ctx.Name_str().GetText()
 		// fmt.Printf("Event: %s\n", s.typename)
-		if s.module.Apps[s.appname].Endpoints[s.typename] == nil {
-			s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
+		ep := s.module.Apps[s.appname].Endpoints[s.typename]
+		if ep == nil {
+			ep = &sysl.Endpoint{
 				Name:          s.typename,
 				IsPubsub:      true,
 				SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
 			}
+			s.module.Apps[s.appname].Endpoints[s.typename] = ep
 		}
 		if ctx.Attribs_or_modifiers() != nil {
-			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+			ep.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
-		if ctx.Statements(0) != nil && s.module.Apps[s.appname].Endpoints[s.typename].Stmt == nil {
-			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = []*sysl.Statement{}
+		if ctx.Statements(0) != nil && ep.Stmt == nil {
+			ep.Stmt = []*sysl.Statement{}
 		}
 		if ctx.Statements(0) != nil {
-			s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
+			s.pushScope(ep)
 		}
 	}
 }
@@ -2203,18 +2207,19 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		app_src := &sysl.AppName{
 			Part: str,
 		}
-		s.module.Apps[s.appname].Endpoints[s.typename] = &sysl.Endpoint{
+		typeEndpoint := &sysl.Endpoint{
 			Name:          s.typename,
 			Source:        app_src,
 			SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
 		}
 		if ctx.Attribs_or_modifiers() != nil {
-			s.module.Apps[s.appname].Endpoints[s.typename].Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+			typeEndpoint.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 		if ctx.Statements(0) != nil {
-			s.module.Apps[s.appname].Endpoints[s.typename].Stmt = []*sysl.Statement{}
-			s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
+			typeEndpoint.Stmt = []*sysl.Statement{}
+			s.pushScope(typeEndpoint)
 		}
+		s.module.Apps[s.appname].Endpoints[s.typename] = typeEndpoint
 		srcAppName := getAppName(app_src)
 		srcApp := getApp(app_src, s.module)
 		if srcApp == nil {
@@ -3633,7 +3638,11 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	if s.module.Apps[s.appname].Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil) {
 		s.module.Apps[s.appname].Types = map[string]*sysl.Type{}
 	}
-	has_stmts := (ctx.Simple_endpoint(0) != nil || ctx.Rest_endpoint(0) != nil || ctx.Event(0) != nil || ctx.Subscribe(0) != nil || ctx.Collector(0) != nil)
+	has_stmts := (ctx.Simple_endpoint(0) != nil ||
+		ctx.Rest_endpoint(0) != nil ||
+		ctx.Event(0) != nil ||
+		ctx.Subscribe(0) != nil ||
+		ctx.Collector(0) != nil)
 	if s.module.Apps[s.appname].Endpoints == nil && has_stmts {
 		s.module.Apps[s.appname].Endpoints = map[string]*sysl.Endpoint{}
 	}

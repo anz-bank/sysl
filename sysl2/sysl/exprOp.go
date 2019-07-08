@@ -79,7 +79,13 @@ func cmpNullFalse(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
-func flattenListMap(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenListMap(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		assign[scopeVar] = l
@@ -88,7 +94,13 @@ func flattenListMap(txApp *sysl.Application, assign Scope, list *sysl.Value, sco
 	return listResult
 }
 
-func flattenListList(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenListList(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetList().Value {
@@ -99,7 +111,13 @@ func flattenListList(txApp *sysl.Application, assign Scope, list *sysl.Value, sc
 	return listResult
 }
 
-func flattenListSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenListSet(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetSet().Value {
@@ -110,7 +128,13 @@ func flattenListSet(txApp *sysl.Application, assign Scope, list *sysl.Value, sco
 	return listResult
 }
 
-func flattenSetMap(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenSetMap(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
 		if l.GetMap() == nil {
@@ -130,7 +154,12 @@ func flattenSetMap(txApp *sysl.Application, assign Scope, list *sysl.Value, scop
 	return setResult
 }
 
-func flattenSetSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenSetSet(txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
 		for _, ll := range l.GetSet().Value {

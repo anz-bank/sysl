@@ -18,3 +18,12 @@ linters:
     # - golint
     # - gosec
     - interfacer
+    - lll
+    # - maligned
+    # - misspell
+    # - nakedret
+    # - prealloc
+    # - scopelint
+    # - stylecheck
+    # - unconvert
+    # - unparam
