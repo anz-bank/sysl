@@ -21,6 +21,7 @@ const (
 	ValueNull
 )
 
+//nolint:gochecknoglobals
 var valueTypeNames = map[valueType]string{
 	ValueNoArg:         "ValueNoArg",
 	ValueBool:          "ValueBool",

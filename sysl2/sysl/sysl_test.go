@@ -25,20 +25,23 @@ func TestExit(t *testing.T) {
 	assert.Equal(t, 42, e.code)
 }
 
-var testModule = &sysl.Module{
-	Apps: map[string]*sysl.Application{
-		"Test": {
-			Name: &sysl.AppName{
-				Part: []string{"Test"},
-			},
-			Endpoints: map[string]*sysl.Endpoint{
-				"GetInfo": {
-					Name: "GetInfo",
-					Stmt: []*sysl.Statement{
-						{
-							Stmt: &sysl.Statement_Action{
-								Action: &sysl.Action{
-									Action: "Do something",
+//nolint:gochecknoglobals
+var (
+	testModule = &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"Test": {
+				Name: &sysl.AppName{
+					Part: []string{"Test"},
+				},
+				Endpoints: map[string]*sysl.Endpoint{
+					"GetInfo": {
+						Name: "GetInfo",
+						Stmt: []*sysl.Statement{
+							{
+								Stmt: &sysl.Statement_Action{
+									Action: &sysl.Action{
+										Action: "Do something",
+									},
 								},
 							},
 						},
@@ -46,10 +49,9 @@ var testModule = &sysl.Module{
 				},
 			},
 		},
-	},
-}
+	}
 
-var testModuleJSONPB = `{
+	testModuleJSONPB = `{
  "apps": {
   "Test": {
    "name": {
@@ -73,7 +75,7 @@ var testModuleJSONPB = `{
  }
 }`
 
-var testModuleTextPB = `apps: <
+	testModuleTextPB = `apps: <
   key: "Test"
   value: <
     name: <
@@ -93,6 +95,7 @@ var testModuleTextPB = `apps: <
   >
 >
 `
+)
 
 func TestJSONPB(t *testing.T) {
 	if filename := testTempFilename(t, "", "sysl-TestJSONPB-*.json"); filename != "" {

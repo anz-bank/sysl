@@ -8,7 +8,7 @@ linters:
     - bodyclose
     - depguard
     - dupl
-    # - gochecknoglobals
+    - gochecknoglobals
     - gochecknoinits
     - goconst
     - gocritic

@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+//nolint:gochecknoglobals
 var defaultLevel = map[string]logrus.Level{
 	"":      logrus.ErrorLevel,
 	"off":   logrus.ErrorLevel,

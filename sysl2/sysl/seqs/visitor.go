@@ -527,6 +527,7 @@ type agent struct {
 	name     string
 }
 
+//nolint:gochecknoglobals
 var agents = map[string]agent{
 	"human":    {0, "actor"},
 	"ui":       {1, "boundary"},

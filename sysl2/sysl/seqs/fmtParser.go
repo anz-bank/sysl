@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//nolint:gochecknoglobals
 var (
 	itemReDefault    = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|%\()`)
 	itemReStatement  = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|[|)]|%\()`)

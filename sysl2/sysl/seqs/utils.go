@@ -9,6 +9,7 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 )
 
+//nolint:gochecknoglobals
 var (
 	isoCtrlRE                = regexp.MustCompile("^iso_ctrl_(.*)_txt$")
 	returnTypeValueSpliterRE = regexp.MustCompile(`\s*<:\s*`)

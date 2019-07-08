@@ -16,76 +16,79 @@ type goFunc struct {
 	ret  *sysl.Type
 }
 
-var kindToPrimitiveType = map[reflect.Kind]sysl.Type_Primitive{
-	reflect.Bool:   sysl.Type_BOOL,
-	reflect.Int:    sysl.Type_INT,
-	reflect.Int16:  sysl.Type_INT,
-	reflect.Int32:  sysl.Type_INT,
-	reflect.Int64:  sysl.Type_INT,
-	reflect.String: sysl.Type_STRING,
-}
+//nolint:gochecknoglobals
+var (
+	kindToPrimitiveType = map[reflect.Kind]sysl.Type_Primitive{
+		reflect.Bool:   sysl.Type_BOOL,
+		reflect.Int:    sysl.Type_INT,
+		reflect.Int16:  sysl.Type_INT,
+		reflect.Int32:  sysl.Type_INT,
+		reflect.Int64:  sysl.Type_INT,
+		reflect.String: sysl.Type_STRING,
+	}
 
-var valueTypeToPrimitiveType = map[valueType]sysl.Type_Primitive{
-	ValueBool:   sysl.Type_BOOL,
-	ValueInt:    sysl.Type_INT,
-	ValueFloat:  sysl.Type_FLOAT,
-	ValueString: sysl.Type_STRING,
-}
+	valueTypeToPrimitiveType = map[valueType]sysl.Type_Primitive{
+		ValueBool:   sysl.Type_BOOL,
+		ValueInt:    sysl.Type_INT,
+		ValueFloat:  sysl.Type_FLOAT,
+		ValueString: sysl.Type_STRING,
+	}
 
-var stringType = &sysl.Type{
-	Type: &sysl.Type_Primitive_{
-		Primitive: sysl.Type_STRING,
-	},
-}
+	stringType = &sysl.Type{
+		Type: &sysl.Type_Primitive_{
+			Primitive: sysl.Type_STRING,
+		},
+	}
 
-var intType = &sysl.Type{
-	Type: &sysl.Type_Primitive_{
-		Primitive: sysl.Type_INT,
-	},
-}
+	intType = &sysl.Type{
+		Type: &sysl.Type_Primitive_{
+			Primitive: sysl.Type_INT,
+		},
+	}
 
-var listStringType = &sysl.Type{
-	Type: &sysl.Type_List_{
-		List: &sysl.Type_List{
-			Type: &sysl.Type{
-				Type: &sysl.Type_Primitive_{
-					Primitive: sysl.Type_STRING,
+	listStringType = &sysl.Type{
+		Type: &sysl.Type_List_{
+			List: &sysl.Type_List{
+				Type: &sysl.Type{
+					Type: &sysl.Type_Primitive_{
+						Primitive: sysl.Type_STRING,
+					},
 				},
 			},
 		},
-	},
-}
+	}
 
-var boolType = &sysl.Type{
-	Type: &sysl.Type_Primitive_{
-		Primitive: sysl.Type_BOOL,
-	},
-}
+	boolType = &sysl.Type{
+		Type: &sysl.Type_Primitive_{
+			Primitive: sysl.Type_BOOL,
+		},
+	}
 
-// GoFuncMap is Map of Function Names to goFunc{}
-var GoFuncMap = map[string]goFunc{
-	"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, boolType},
-	"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, intType},
-	"Fields":        {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, listStringType},
-	"FindAllString": {reflect.ValueOf(FindAllString), []*sysl.Type{stringType, stringType, intType}, listStringType},
-	"HasPrefix":     {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, boolType},
-	"HasSuffix":     {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, boolType},
-	"Join":          {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, stringType},
-	"LastIndex":     {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, intType},
-	"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, boolType},
-	"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, stringType}, // nolint:lll
-	"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, listStringType},
-	"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, stringType},
-	"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, stringType},
-	"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, stringType},
-	"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, stringType},
-	"Trim":          {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, stringType},
-	"TrimLeft":      {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, stringType},
-	"TrimPrefix":    {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, stringType},
-	"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, stringType},
-	"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, stringType},
-	"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, stringType},
-}
+	// GoFuncMap is Map of Function Names to goFunc{}
+	GoFuncMap = map[string]goFunc{
+		"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, boolType},
+		"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, intType},
+		"Fields":        {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, listStringType},
+		"FindAllString": {reflect.ValueOf(FindAllString), []*sysl.Type{stringType, stringType, intType}, listStringType},
+		"HasPrefix":     {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, boolType},
+		"HasSuffix":     {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, boolType},
+		"Join":          {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, stringType},
+		"LastIndex":     {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, intType},
+		"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, boolType},
+		"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, stringType}, // nolint:lll
+		"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, listStringType},
+		"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, stringType},
+		"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, stringType},
+		"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, stringType},
+		"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, stringType},
+		"Trim":          {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimLeft":      {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimPrefix":    {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, stringType},
+		"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, stringType},
+	}
+)
 
 func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
 	switch x := t.Type.(type) {

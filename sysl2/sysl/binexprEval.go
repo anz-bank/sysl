@@ -28,76 +28,79 @@ type DefaultBinExprStrategy struct{}
 // Assumes lhs is a collection
 type EvalLHSOverRHSStrategy struct{}
 
-var functionEvalStrategy = map[sysl.Expr_BinExpr_Op]EvalStrategy{
-	sysl.Expr_BinExpr_EQ:      DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_ADD:     DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_SUB:     DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_MUL:     DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_MOD:     DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_DIV:     DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_IN:      DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_BITOR:   DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_GT:      DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_LT:      DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_GE:      DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_LE:      DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_NE:      DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_AND:     DefaultBinExprStrategy{},
-	sysl.Expr_BinExpr_FLATTEN: EvalLHSOverRHSStrategy{},
-	sysl.Expr_BinExpr_WHERE:   EvalLHSOverRHSStrategy{},
-}
+//nolint:gochecknoglobals
+var (
+	functionEvalStrategy = map[sysl.Expr_BinExpr_Op]EvalStrategy{
+		sysl.Expr_BinExpr_EQ:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_ADD:     DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_SUB:     DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_MUL:     DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_MOD:     DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_DIV:     DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_IN:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_BITOR:   DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_GT:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_LT:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_GE:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_LE:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_NE:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_AND:     DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_FLATTEN: EvalLHSOverRHSStrategy{},
+		sysl.Expr_BinExpr_WHERE:   EvalLHSOverRHSStrategy{},
+	}
 
-// key = op, lhs & rhs types
-var valueFunctions = map[string]evalValueFunc{
-	makeKey(sysl.Expr_BinExpr_ADD, ValueInt, ValueInt):       addInt64,
-	makeKey(sysl.Expr_BinExpr_ADD, ValueString, ValueString): addString,
-	makeKey(sysl.Expr_BinExpr_AND, ValueBool, ValueBool):     andBool,
-	makeKey(sysl.Expr_BinExpr_BITOR, ValueList, ValueList):   concatList,
-	makeKey(sysl.Expr_BinExpr_BITOR, ValueSet, ValueSet):     setUnion,
-	makeKey(sysl.Expr_BinExpr_DIV, ValueInt, ValueInt):       divInt64,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueBool, ValueBool):      cmpBool,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueInt, ValueInt):        cmpInt,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueInt, ValueNull):       cmpNullFalse,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueNull, ValueNull):      cmpNullTrue,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueNull, ValueInt):       cmpNullFalse,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueNull, ValueString):    cmpNullFalse,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueString, ValueNull):    cmpNullFalse,
-	makeKey(sysl.Expr_BinExpr_EQ, ValueString, ValueString):  cmpString,
-	makeKey(sysl.Expr_BinExpr_GE, ValueInt, ValueInt):        geInt64,
-	makeKey(sysl.Expr_BinExpr_GT, ValueInt, ValueInt):        gtInt64,
-	makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueList):    stringInList,
-	makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueNull):    stringInNull,
-	makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueSet):     stringInSet,
-	makeKey(sysl.Expr_BinExpr_LE, ValueInt, ValueInt):        leInt64,
-	makeKey(sysl.Expr_BinExpr_LT, ValueInt, ValueInt):        ltInt64,
-	makeKey(sysl.Expr_BinExpr_MOD, ValueInt, ValueInt):       modInt64,
-	makeKey(sysl.Expr_BinExpr_MUL, ValueInt, ValueInt):       mulInt64,
-	makeKey(sysl.Expr_BinExpr_NE, ValueBool, ValueBool):      not(cmpBool),
-	makeKey(sysl.Expr_BinExpr_NE, ValueInt, ValueInt):        not(cmpInt),
-	makeKey(sysl.Expr_BinExpr_NE, ValueNull, ValueNull):      cmpNullFalse,
-	makeKey(sysl.Expr_BinExpr_NE, ValueNull, ValueString):    cmpNullTrue,
-	makeKey(sysl.Expr_BinExpr_NE, ValueString, ValueNull):    cmpNullTrue,
-	makeKey(sysl.Expr_BinExpr_NE, ValueString, ValueString):  not(cmpString),
-	makeKey(sysl.Expr_BinExpr_SUB, ValueInt, ValueInt):       subInt64,
-}
+	// key = op, lhs & rhs types
+	valueFunctions = map[string]evalValueFunc{
+		makeKey(sysl.Expr_BinExpr_ADD, ValueInt, ValueInt):       addInt64,
+		makeKey(sysl.Expr_BinExpr_ADD, ValueString, ValueString): addString,
+		makeKey(sysl.Expr_BinExpr_AND, ValueBool, ValueBool):     andBool,
+		makeKey(sysl.Expr_BinExpr_BITOR, ValueList, ValueList):   concatList,
+		makeKey(sysl.Expr_BinExpr_BITOR, ValueSet, ValueSet):     setUnion,
+		makeKey(sysl.Expr_BinExpr_DIV, ValueInt, ValueInt):       divInt64,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueBool, ValueBool):      cmpBool,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueInt, ValueInt):        cmpInt,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueInt, ValueNull):       cmpNullFalse,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueNull, ValueNull):      cmpNullTrue,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueNull, ValueInt):       cmpNullFalse,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueNull, ValueString):    cmpNullFalse,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueString, ValueNull):    cmpNullFalse,
+		makeKey(sysl.Expr_BinExpr_EQ, ValueString, ValueString):  cmpString,
+		makeKey(sysl.Expr_BinExpr_GE, ValueInt, ValueInt):        geInt64,
+		makeKey(sysl.Expr_BinExpr_GT, ValueInt, ValueInt):        gtInt64,
+		makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueList):    stringInList,
+		makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueNull):    stringInNull,
+		makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueSet):     stringInSet,
+		makeKey(sysl.Expr_BinExpr_LE, ValueInt, ValueInt):        leInt64,
+		makeKey(sysl.Expr_BinExpr_LT, ValueInt, ValueInt):        ltInt64,
+		makeKey(sysl.Expr_BinExpr_MOD, ValueInt, ValueInt):       modInt64,
+		makeKey(sysl.Expr_BinExpr_MUL, ValueInt, ValueInt):       mulInt64,
+		makeKey(sysl.Expr_BinExpr_NE, ValueBool, ValueBool):      not(cmpBool),
+		makeKey(sysl.Expr_BinExpr_NE, ValueInt, ValueInt):        not(cmpInt),
+		makeKey(sysl.Expr_BinExpr_NE, ValueNull, ValueNull):      cmpNullFalse,
+		makeKey(sysl.Expr_BinExpr_NE, ValueNull, ValueString):    cmpNullTrue,
+		makeKey(sysl.Expr_BinExpr_NE, ValueString, ValueNull):    cmpNullTrue,
+		makeKey(sysl.Expr_BinExpr_NE, ValueString, ValueString):  not(cmpString),
+		makeKey(sysl.Expr_BinExpr_SUB, ValueInt, ValueInt):       subInt64,
+	}
 
-// key = op, outer container_type, inner container type
-var exprFunctions = map[string]evalExprFunc{
-	makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueNoArg): flattenListList, // empty list
-	makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueList):  flattenListList,
-	makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueSet):   flattenListSet,
-	makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueMap):   flattenListMap,
-	makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueMap):    flattenSetMap,
-	makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueSet):    flattenSetSet,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueList, ValueNoArg):   whereList,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueList, ValueMap):     whereList,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueMap, ValueNoArg):    whereMap,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueNoArg):    whereSet,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueMap):      whereSet,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueInt):      whereSet,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueFloat):    whereSet,
-	makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueString):   whereSet,
-}
+	// key = op, outer container_type, inner container type
+	exprFunctions = map[string]evalExprFunc{
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueNoArg): flattenListList, // empty list
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueList):  flattenListList,
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueSet):   flattenListSet,
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueMap):   flattenListMap,
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueMap):    flattenSetMap,
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueSet):    flattenSetSet,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueList, ValueNoArg):   whereList,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueList, ValueMap):     whereList,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueMap, ValueNoArg):    whereMap,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueNoArg):    whereSet,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueMap):      whereSet,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueInt):      whereSet,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueFloat):    whereSet,
+		makeKey(sysl.Expr_BinExpr_WHERE, ValueSet, ValueString):   whereSet,
+	}
+)
 
 func makeKey(op sysl.Expr_BinExpr_Op, lhs, rhs valueType) string {
 	return fmt.Sprintf("%s_%s_%s", op, lhs.String(), rhs.String())

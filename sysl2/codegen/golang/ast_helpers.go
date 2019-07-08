@@ -5,6 +5,7 @@ import (
 	"regexp"
 )
 
+//nolint:gochecknoglobals
 var idRE = regexp.MustCompile(`^[\pL_][\pL_\pN]*$`)
 
 // ArrayN creates a `[n]elt` ArrayType.

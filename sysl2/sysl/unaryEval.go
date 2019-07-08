@@ -7,6 +7,7 @@ import (
 
 type unaryFunc func(*sysl.Value) *sysl.Value
 
+//nolint:gochecknoglobals
 var unaryFunctions = map[sysl.Expr_UnExpr_Op]unaryFunc{
 	sysl.Expr_UnExpr_NEG: unaryNeg,
 }
