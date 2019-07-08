@@ -116,9 +116,9 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 	result := false
 	tree := []interface{}{}
 
-	switch val.(type) {
+	switch val := val.(type) {
 	case *sysl.Sequence:
-		for index, t := range val.(*sysl.Sequence).Term {
+		for index, t := range val.Term {
 			if t == nil {
 				// nil => epsilon, see makeEXPR()
 				logrus.Debug("matched nil")
@@ -162,13 +162,12 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 				} else {
 					if matchCount < minCount {
 						return false, EOF, nil
-					} else if minCount == 0 && matchCount == 0 {
+					}
+					if matchCount == 0 {
 						//TODO: check maxCount?
 						subTree = append(subTree, matchedTerm)
-						break
-					} else if matchCount >= minCount {
-						break
 					}
+					break
 				}
 			}
 			if singleTerm {
@@ -180,23 +179,21 @@ func (p *parser) parse(g *sysl.Grammar, input int, val interface{}) (bool, int, 
 		logrus.Debug("out of loop")
 		return true, input, tree
 	case *sysl.Rule:
-		r := val.(*sysl.Rule)
-		logrus.Debug("Entering Rule " + r.GetName().Name)
-		res, remaining, subTree := p.parse(g, input, r.Choices)
+		logrus.Debug("Entering Rule " + val.GetName().Name)
+		res, remaining, subTree := p.parse(g, input, val.Choices)
 		if res {
-			logrus.Debugf("matched rulename (%s)", r.GetName().Name)
+			logrus.Debugf("matched rulename (%s)", val.GetName().Name)
 			logrus.Debugf("got choice (%T)", subTree[0])
 			rule := map[string]map[int][]interface{}{
-				r.GetName().Name: subTree[0].(map[int][]interface{}),
+				val.GetName().Name: subTree[0].(map[int][]interface{}),
 			}
 			return true, remaining, append(tree, rule)
 		}
-		logrus.Debug("did not match " + r.GetName().Name)
+		logrus.Debug("did not match " + val.GetName().Name)
 		tree = append(tree, nil)
 	case *sysl.Choice:
-		c := val.(*sysl.Choice)
-		logrus.Debugf("choices count : (%d)", len(c.Sequence))
-		for i, alt := range c.Sequence {
+		logrus.Debugf("choices count : (%d)", len(val.Sequence))
+		for i, alt := range val.Sequence {
 			logrus.Debugf("trying choice (%d)", i)
 			res, remaining, subTree := p.parse(g, input, alt)
 			if res {
@@ -235,8 +232,7 @@ func setFromTerm(first map[string]*intSet, t *sysl.Term) *intSet {
 }
 
 func hasEpsilon(t *sysl.Term, first map[string]*intSet) bool {
-	switch t.Atom.Union.(type) {
-	case *sysl.Atom_Rulename:
+	if _, ok := t.Atom.Union.(*sysl.Atom_Rulename); ok {
 		return setFromTerm(first, t).has(EPSILON)
 	}
 	return false

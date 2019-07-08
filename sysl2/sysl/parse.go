@@ -28,7 +28,7 @@ func Parse(filename string, root string) (*sysl.Module, error) {
 // FSParse ...
 func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 	if !strings.HasSuffix(filename, ".sysl") {
-		filename = filename + ".sysl"
+		filename += ".sysl"
 	}
 	if !fileExists(filename, fs) {
 		return nil, exitf(ImportError, "input file does not exist: %#v", filename)

@@ -201,8 +201,7 @@ func typesToValueMap(types map[string]*sysl.Type) *sysl.Value {
 func unionToValueMap(types map[string]*sysl.Type) *sysl.Value {
 	m := MakeValueMap()
 	for key, t := range types {
-		switch t.Type.(type) {
-		case *sysl.Type_OneOf_:
+		if _, ok := t.Type.(*sysl.Type_OneOf_); ok {
 			addItemToValueMap(m, key, typeToValue(t))
 		}
 	}

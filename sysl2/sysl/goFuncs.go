@@ -108,15 +108,7 @@ func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
 		}
 
 		if p := listOf.GetPrimitive(); p != sysl.Type_NO_Primitive {
-			switch p {
-			// Uncomment if required in future.
-			// case sysl.Type_INT:
-			// 	intSlice := []int{}
-			// 	for _, listItem := range valueList {
-			// 		intSlice = append(intSlice, int(listItem.GetI()))
-			// 	}
-			// 	return reflect.ValueOf(intSlice)
-			case sysl.Type_STRING:
+			if p == sysl.Type_STRING {
 				stringSlice := []string{}
 				for _, listItem := range valueList {
 					stringSlice = append(stringSlice, listItem.GetS())

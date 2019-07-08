@@ -527,13 +527,14 @@ func (n *RangeStmt) Format(s fmt.State, c rune) {
 	if n == nil {
 		return
 	}
-	if n.Key == nil {
+	switch {
+	case n.Key == nil:
 		scPrintf(s, c, "for range %c %c", emptyNil(n.X), &n.Body)
-	} else if n.Value == nil {
+	case n.Value == nil:
 		scPrintf(s, c, "for %c %c range %c %c",
 			emptyNil(n.Key), &n.Tok, emptyNil(n.X), &n.Body,
 		)
-	} else {
+	default:
 		scPrintf(s, c, "for %c, %c %c range %c %c",
 			emptyNil(n.Key), emptyNil(n.Value), &n.Tok, emptyNil(n.X), &n.Body,
 		)

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"sort"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -142,11 +142,16 @@ func flattenSetSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scop
 }
 
 func concatList(lhs, rhs *sysl.Value) *sysl.Value {
-	list := MakeValueList()
-
-	list.GetList().Value = append(lhs.GetList().Value, rhs.GetList().Value...)
-	logrus.Printf("concatList: lhs %d, rhs %d res %d\n", len(lhs.GetList().Value), len(rhs.GetList().Value), len(list.GetList().Value))
-	return list
+	result := MakeValueList()
+	{
+		result := result.GetList()
+		lhs := lhs.GetList()
+		rhs := rhs.GetList()
+		result.Value = lhs.Value
+		result.Value = append(result.Value, rhs.Value...)
+		logrus.Printf("concatList: lhs %d | rhs %d = %d\n", len(lhs.Value), len(rhs.Value), len(result.Value))
+	}
+	return result
 }
 
 func setUnion(lhs, rhs *sysl.Value) *sysl.Value {

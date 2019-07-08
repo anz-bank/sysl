@@ -394,13 +394,14 @@ func fromQString(str string) string {
 func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueContext) {
 	attrs := s.peekAttrs()
 
-	if ctx.QSTRING() != nil {
+	switch {
+	case ctx.QSTRING() != nil:
 		attrs[s.annotation].Attribute = &sysl.Attribute_S{
 			S: fromQString(ctx.QSTRING().GetText()),
 		}
-	} else if ctx.Multi_line_docstring() != nil {
+	case ctx.Multi_line_docstring() != nil:
 		attrs[s.annotation].Attribute = &sysl.Attribute_S{}
-	} else {
+	default:
 		arr := makeArrayOfStringsAttribute(ctx.Array_of_strings().(*parser.Array_of_stringsContext))
 
 		attrs[s.annotation].Attribute = &sysl.Attribute_A{
@@ -607,17 +608,18 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 	for _, e := range attribs.AllEntry() {
 		entry := e.(*parser.EntryContext)
 		if nvp, ok := entry.Nvp().(*parser.NvpContext); ok {
-			if nvp.Quoted_string() != nil {
+			switch {
+			case nvp.Quoted_string() != nil:
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
 				attributes[nvp.Name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_S{
 						S: fromQString(qs.QSTRING().GetText()),
 					},
 				}
-			} else if nvp.Array_of_strings() != nil {
+			case nvp.Array_of_strings() != nil:
 				array_strings := nvp.Array_of_strings().(*parser.Array_of_stringsContext)
 				attributes[nvp.Name().GetText()] = makeArrayOfStringsAttribute(array_strings)
-			} else if nvp.Array_of_arrays() != nil {
+			case nvp.Array_of_arrays() != nil:
 				arr := nvp.Array_of_arrays().(*parser.Array_of_arraysContext)
 				attrArray := sysl.Attribute_Array{
 					Elt: []*sysl.Attribute{},
@@ -1004,7 +1006,7 @@ func (s *TreeShapeListener) EnterSub_package(ctx *parser.Sub_packageContext) {
 	top := len(s.app_name) - 1
 	str := ctx.NAME_SEP().GetText()
 	sp := strings.Split(str, "::")
-	s.app_name[top] = s.app_name[top] + sp[0]
+	s.app_name[top] += sp[0]
 }
 
 // ExitSub_package is called when production sub_package is exited.
@@ -1101,7 +1103,8 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 	var type1 *sysl.Type
 	var ref_path []string
 
-	if ctx.Var_in_curly() != nil {
+	switch {
+	case ctx.Var_in_curly() != nil:
 		ref_path = append(ref_path, ctx.Var_in_curly().GetText())
 		type1 = &sysl.Type{
 			Type: &sysl.Type_TypeRef{
@@ -1117,7 +1120,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				},
 			},
 		}
-	} else if ctx.NativeDataTypes() != nil {
+	case ctx.NativeDataTypes() != nil:
 		type_str := strings.ToUpper(ctx.NativeDataTypes().GetText())
 		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[type_str])
 		type1 = &sysl.Type{
@@ -1125,7 +1128,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				Primitive: primitive_type,
 			},
 		}
-	} else if ctx.Name_str() != nil {
+	case ctx.Name_str() != nil:
 		type1 = &sysl.Type{}
 	}
 
@@ -1159,7 +1162,8 @@ func (s *TreeShapeListener) ExitQuery_param(ctx *parser.Query_paramContext) {}
 func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_var_with_typeContext) {
 	var_name := ctx.Http_path_part().GetText()
 	var type1 *sysl.Type
-	if ctx.NativeDataTypes() != nil {
+	switch {
+	case ctx.NativeDataTypes() != nil:
 		type_str := strings.ToUpper(ctx.NativeDataTypes().GetText())
 		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[type_str])
 		type1 = &sysl.Type{
@@ -1167,11 +1171,11 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 				Primitive: primitive_type,
 			},
 		}
-	} else if ctx.Reference() != nil {
+	case ctx.Reference() != nil:
 		s.fieldname = append(s.fieldname, var_name)
 		type1 = &sysl.Type{}
 		s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
-	} else {
+	default:
 		ref_path := []string{ctx.Name_str().GetText()}
 
 		type1 = &sysl.Type{
@@ -1380,15 +1384,15 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 	stmt := &sysl.Statement{}
 	s.addToCurrentScope(stmt)
 
-	if ctx.FOR() != nil || ctx.LOOP() != nil {
+	switch {
+	case ctx.FOR() != nil || ctx.LOOP() != nil:
 		var text string
 		if ctx.FOR() != nil {
 			text = ctx.FOR().GetText()
 		} else {
 			text = ctx.LOOP().GetText()
 		}
-		text = text + ctx.PREDICATE_VALUE().GetText()
-		text = strings.TrimSpace(text)
+		text = strings.TrimSpace(text + ctx.PREDICATE_VALUE().GetText())
 		stmt.Stmt = &sysl.Statement_Group{
 			Group: &sysl.Group{
 				Title: text,
@@ -1396,7 +1400,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 			},
 		}
 		s.pushScope(stmt.GetGroup())
-	} else if ctx.UNTIL() != nil || ctx.WHILE() != nil {
+	case ctx.UNTIL() != nil || ctx.WHILE() != nil:
 		mode := sysl.Loop_UNTIL
 		if ctx.WHILE() != nil {
 			mode = sysl.Loop_WHILE
@@ -1409,7 +1413,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 			},
 		}
 		s.pushScope(stmt.GetLoop())
-	} else if ctx.FOR_EACH() != nil {
+	case ctx.FOR_EACH() != nil:
 		stmt.Stmt = &sysl.Statement_Foreach{
 			Foreach: &sysl.Foreach{
 				Collection: ctx.PREDICATE_VALUE().GetText(),
@@ -1417,7 +1421,7 @@ func (s *TreeShapeListener) EnterFor_stmt(ctx *parser.For_stmtContext) {
 			},
 		}
 		s.pushScope(stmt.GetForeach())
-	} else if ctx.ALT() != nil {
+	case ctx.ALT() != nil:
 		text := ctx.ALT().GetText() + ctx.PREDICATE_VALUE().GetText()
 		text = strings.TrimSpace(text)
 		stmt.Stmt = &sysl.Statement_Group{
@@ -1618,19 +1622,20 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 
 	for _, fieldname := range s.fieldname {
 		type1 := s.typemap[fieldname]
-		if type1.GetSet() != nil {
-			type1.GetSet().GetTypeRef().Context = nil
-			type1.GetSet().SourceContext = nil
-			ref := type1.GetSet().GetTypeRef().GetRef()
+		switch t := type1.Type.(type) {
+		case *sysl.Type_Set:
+			t.Set.GetTypeRef().Context = nil
+			t.Set.SourceContext = nil
+			ref := t.Set.GetTypeRef().GetRef()
 			if ref.Appname == nil {
 				ref.Appname = &sysl.AppName{
 					Part: ref.Path,
 				}
 				ref.Path = nil
 			}
-		} else if type1.GetTypeRef() != nil {
-			type1.GetTypeRef().Context = nil
-			ref := type1.GetTypeRef().GetRef()
+		case *sysl.Type_TypeRef:
+			t.TypeRef.Context = nil
+			ref := t.TypeRef.GetRef()
 			if ref.Appname == nil {
 				ref.Appname = &sysl.AppName{
 					Part: ref.Path,
@@ -1640,7 +1645,7 @@ func (s *TreeShapeListener) ExitParams(ctx *parser.ParamsContext) {
 			for i := range ref.Appname.Part {
 				ref.Appname.Part[i] = strings.TrimSpace(ref.Appname.Part[i])
 			}
-		} else if type1.Type == nil {
+		case nil:
 			type1.Type = &sysl.Type_NoType_{
 				NoType: &sysl.Type_NoType{},
 			}
@@ -1797,8 +1802,10 @@ func mergeAttrs(src map[string]*sysl.Attribute, dst map[string]*sysl.Attribute) 
 		if _, has := dst[k]; !has {
 			dst[k] = v
 		} else {
-			if dst[k].GetA() != nil && v.GetA() != nil {
-				dst[k].GetA().Elt = append(dst[k].GetA().Elt, v.GetA().Elt...)
+			dstAttr, dstOK := dst[k].Attribute.(*sysl.Attribute_A)
+			vAttr, vOK := v.Attribute.(*sysl.Attribute_A)
+			if dstOK && vOK {
+				dstAttr.A.Elt = append(dstAttr.A.Elt, vAttr.A.Elt...)
 			} else {
 				dst[k] = v
 			}
@@ -2276,16 +2283,17 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 	val := &sysl.Value{}
 	txt := ctx.GetText()
 	var type1 *sysl.Type
-	if ctx.E_DECIMAL() != nil {
+	switch {
+	case ctx.E_DECIMAL() != nil:
 		val.Value = &sysl.Value_Decimal{
 			Decimal: txt,
 		}
-	} else if ctx.E_DIGITS() != nil {
+	case ctx.E_DIGITS() != nil:
 		iVal, _ := strconv.Atoi(txt)
 		val.Value = &sysl.Value_I{
 			I: int64(iVal),
 		}
-	} else if ctx.E_TRUE() != nil || ctx.E_FALSE() != nil {
+	case ctx.E_TRUE() != nil || ctx.E_FALSE() != nil:
 		val.Value = &sysl.Value_B{
 			B: txt == "true",
 		}
@@ -2295,7 +2303,7 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 			},
 		}
 
-	} else if ctx.E_NULL() != nil {
+	case ctx.E_NULL() != nil:
 		val.Value = &sysl.Value_Null_{
 			Null: &sysl.Value_Null{},
 		}
@@ -2304,7 +2312,7 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 				Primitive: sysl.Type_EMPTY,
 			},
 		}
-	} else {
+	default:
 		val.Value = &sysl.Value_S{
 			S: fromQString(txt),
 		}
@@ -2423,13 +2431,14 @@ func (s *TreeShapeListener) EnterFunc_arg(ctx *parser.Func_argContext) {}
 // ExitFunc_arg is called when production func_arg is exited.
 func (s *TreeShapeListener) ExitFunc_arg(ctx *parser.Func_argContext) {
 	arg := s.popExpr()
-	if s.topExpr().GetRelexpr() != nil {
+	switch {
+	case s.topExpr().GetRelexpr() != nil:
 		expr := s.topExpr().GetRelexpr()
 		expr.Arg = append(expr.Arg, arg)
-	} else if s.topExpr().GetCall() != nil {
+	case s.topExpr().GetCall() != nil:
 		expr := s.topExpr().GetCall()
 		expr.Arg = append(expr.Arg, arg)
-	} else {
+	default:
 		fmt.Printf("%v\n", arg)
 		fmt.Printf("%v\n", s.topExpr())
 		panic("ExitFunc_arg: should not be here")
@@ -2445,11 +2454,12 @@ func (s *TreeShapeListener) ExitFunc_args(ctx *parser.Func_argsContext) {}
 // EnterExpr_func is called when production expr_func is entered.
 func (s *TreeShapeListener) EnterExpr_func(ctx *parser.Expr_funcContext) {
 	var funcName string
-	if ctx.E_FUNC() != nil {
+	switch {
+	case ctx.E_FUNC() != nil:
 		funcName = ctx.E_FUNC().GetText()
-	} else if ctx.E_Name() != nil {
+	case ctx.E_Name() != nil:
 		funcName = ctx.E_Name().GetText()
-	} else {
+	default:
 		funcName = ctx.NativeDataTypes().GetText()
 	}
 
@@ -2890,14 +2900,15 @@ func (s *TreeShapeListener) EnterAtomT_name(ctx *parser.AtomT_nameContext) {}
 
 // ExitAtomT_name is called when production atomT_name is exited.
 func (s *TreeShapeListener) ExitAtomT_name(ctx *parser.AtomT_nameContext) {
-	if ctx.E_Name() != nil {
+	switch {
+	case ctx.E_Name() != nil:
 		txt := ctx.E_Name().GetText()
 		s.pushExpr(makeExprName(txt))
-	} else if ctx.E_WHATEVER() != nil {
+	case ctx.E_WHATEVER() != nil:
 		s.pushExpr(&sysl.Expr{})
-	} else if ctx.E_DOT() != nil {
+	case ctx.E_DOT() != nil:
 		s.pushExpr(makeExprName("."))
-	} else {
+	default:
 		panic("ExitAtomT_name: should not be here")
 	}
 }
@@ -2960,13 +2971,14 @@ func (s *TreeShapeListener) EnterUnaryTerm(ctx *parser.UnaryTermContext) {}
 func (s *TreeShapeListener) ExitUnaryTerm(ctx *parser.UnaryTermContext) {
 	op := sysl.Expr_UnExpr_NO_Op
 
-	if ctx.E_TILDE() != nil {
+	switch {
+	case ctx.E_TILDE() != nil:
 		op = sysl.Expr_UnExpr_INV
-	} else if ctx.E_NOT() != nil {
+	case ctx.E_NOT() != nil:
 		op = sysl.Expr_UnExpr_NOT
-	} else if ctx.E_MINUS() != nil {
+	case ctx.E_MINUS() != nil:
 		op = sysl.Expr_UnExpr_NEG
-	} else if ctx.E_PLUS() != nil {
+	case ctx.E_PLUS() != nil:
 		op = sysl.Expr_UnExpr_POS
 	}
 	if op != sysl.Expr_UnExpr_NO_Op {
@@ -2981,9 +2993,10 @@ func (s *TreeShapeListener) EnterTermT(ctx *parser.TermTContext) {}
 // ExitTermT is called when production termT is exited.
 func (s *TreeShapeListener) ExitTermT(ctx *parser.TermTContext) {
 	op := sysl.Expr_BinExpr_MOD
-	if ctx.E_STAR() != nil {
+	switch {
+	case ctx.E_STAR() != nil:
 		op = sysl.Expr_BinExpr_MUL
-	} else if ctx.E_DIVIDE() != nil {
+	case ctx.E_DIVIDE() != nil:
 		op = sysl.Expr_BinExpr_DIV
 	}
 	rhs := s.popExpr()
@@ -3507,7 +3520,7 @@ func (s *TreeShapeListener) ExitView_param(ctx *parser.View_paramContext) {
 		Name: paramName,
 		Type: type1,
 	}
-	s.module.Apps[s.appname].Views[s.typename].Param = append(view.Param, p)
+	view.Param = append(view.Param, p)
 }
 
 // EnterView_params is called when production view_params is entered.
