@@ -279,7 +279,9 @@ func outputToFiles(outDir string, output []*CodeGenOutput) error {
 
 // DoGenerateCode generate code for the given model, using transform
 // and the grammar of the target language
-func DoGenerateCode(flags *flag.FlagSet, args []string) error {
+// TODO: Remove nolint when code that uses stdout and stderr is added.
+//nolint:unparam
+func DoGenerateCode(stdout, sderr io.Writer, flags *flag.FlagSet, args []string) error {
 	rootModel := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
 	rootTransform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
 	model := flags.String("model", ".", "model.sysl")

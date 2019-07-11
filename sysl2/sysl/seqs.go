@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"os"
 	"sort"
 	"strings"
@@ -132,7 +133,9 @@ func DoConstructSequenceDiagrams(
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
-func DoGenerateSequenceDiagrams(args []string) error {
+// TODO: Remove nolint when code that uses stdout and stderr is added.
+//nolint:unparam
+func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, args []string) error {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
