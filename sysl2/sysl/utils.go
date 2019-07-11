@@ -36,11 +36,11 @@ func TransformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {
 	return bbs
 }
 
-func ParseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
+func ParseBlackBoxesFromArgument(blackboxFlags map[string]string) [][]string {
 	bbs := make([][]string, 0, len(blackboxFlags))
-	for _, blackboxFlag := range blackboxFlags {
-		subBbs := strings.Split(blackboxFlag, ",")
-		if len(subBbs) > 0 {
+	for bbKey, bbComment := range blackboxFlags {
+		if len(bbKey) > 0 {
+			subBbs := []string{bbKey, bbComment}
 			bbs = append(bbs, subBbs)
 		}
 	}
@@ -60,16 +60,34 @@ func MergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Att
 	return result
 }
 
-func copyBlackboxes(bbs map[string]string) map[string]string {
-	m := make(map[string]string)
+func TransformBlackboxesToUptos(bbs [][]string, uptoType UptoType) map[string]Upto {
+	m := make(map[string]Upto)
 	if bbs == nil {
 		return m
 	}
-	for k, v := range bbs {
-		m[k] = v
+	for _, val := range bbs {
+		m[val[0]] = Upto{
+			visitCount: 0,
+			lineNumber: -1,
+			valueType:  uptoType,
+			comment:    val[1],
+		}
 	}
 
 	return m
+}
+
+func incrementCountBB(upto Upto) Upto {
+	incrementUpto := Upto{}
+	incrementUpto.comment = upto.comment
+	incrementUpto.lineNumber = upto.lineNumber
+	incrementUpto.valueType = upto.valueType
+	incrementUpto.visitCount = upto.visitCount + 1
+	return incrementUpto
+}
+
+func getAppName(appName *sysl.AppName) string {
+	return strings.Join(appName.Part, " :: ")
 }
 
 func getApplicationAttrs(m *sysl.Module, appName string) map[string]*sysl.Attribute {

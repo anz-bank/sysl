@@ -17,12 +17,13 @@ type sequenceDiagParam struct {
 	EndpointLabeler
 	endpoints  []string
 	title      string
-	blackboxes [][]string
+	blackboxes map[string]Upto
+	appName    string
 }
 
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
+	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName)
 	e := MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 	if err := e.Accept(v); err != nil {
 		return "", err
@@ -62,7 +63,7 @@ func escapeWordBoundary(src string) string {
 }
 
 func DoConstructSequenceDiagrams(
-	rootModel, endpointFormat, appFormat, title, output, modules string,
+	stdout, stderr io.Writer, root_model, endpoint_format, app_format, title, output, modules string,
 	endpoints, apps []string,
 	blackboxes [][]string,
 ) map[string]string {
@@ -100,15 +101,21 @@ func DoConstructSequenceDiagrams(
 					}
 				}
 
+				bbsAll := seqs.TransformBlackboxesToUptos(bbs, seqs.BB_APPLICATION)
+				bbsEndpoint := seqs.TransformBlackboxesToUptos(bbs2, seqs.BB_ENDPOINT_COLLECTION)
+				for k, v := range bbsEndpoint {
+					bbsAll[k] = v
+				}
 				sd := &sequenceDiagParam{
 					endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
 					EndpointLabeler: spep,
 					title:           spseqtitle.FmtSeq(endpoint.GetName(), endpoint.GetLongName(), varrefs),
-					blackboxes:      append(bbs, bbs2...),
+					blackboxes:      bbsAll,
+					appName:         appName,
 				}
-				out, _ := generateSequenceDiag(mod, sd)
-				result[outputDir] = out
+				out, _ := generateSequenceDiag(stdout, stderr, mod, sd)
+				result[output_dir] = out
 			}
 		}
 	} else {
@@ -122,9 +129,10 @@ func DoConstructSequenceDiagrams(
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
 			title:           title,
-			blackboxes:      blackboxes,
+			blackboxes:      seqs.TransformBlackboxesToUptos(blackboxes, seqs.BB_APPLICATION),
+			appName:         "Global",
 		}
-		out, _ := generateSequenceDiag(mod, sd)
+		out, _ := generateSequenceDiag(stdout, stderr, mod, sd)
 		result[output] = out
 	}
 
@@ -178,7 +186,7 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, args []string) error {
 			"comma-list of shell globs) to limit the diagrams generated",
 	).Short('a').Strings()
 
-	blackboxesFlag := sd.Flag("blackbox", "Apps to be treated as black boxes").Strings()
+	blackboxesFlag := sd.Flag("blackbox", "Apps to be treated as black boxes").Short('b').StringMap()
 
 	loglevel := sd.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
 
