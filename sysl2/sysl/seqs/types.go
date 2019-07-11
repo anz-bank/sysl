@@ -1,15 +1,13 @@
 package seqs
 
-import (
-	"github.com/anz-bank/sysl/src/proto"
-)
+import sysl "github.com/anz-bank/sysl/src/proto"
 
 type Visitor interface {
-	Visit(Element)
+	Visit(Element) error
 }
 
 type Element interface {
-	Accept(Visitor)
+	Accept(Visitor) error
 }
 
 type EndpointLabelerParam struct {

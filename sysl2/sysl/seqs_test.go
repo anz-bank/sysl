@@ -5,9 +5,10 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/seqs"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type labeler struct {
@@ -184,41 +185,46 @@ func TestLoadApp(t *testing.T) {
 	assert.NotNil(t, mod)
 	apps := mod.GetApps()
 	app := apps["Database"]
+
 	assert.Equal(t, []string{"Database"}, app.GetName().GetPart())
-	var expectedPatterns []string
-	for _, val := range app.GetAttrs()["patterns"].GetA().GetElt() {
-		expectedPatterns = append(expectedPatterns, val.GetS())
+
+	appPatternsAttr := app.GetAttrs()["patterns"].GetA().GetElt()
+	patterns := make([]string, 0, len(appPatternsAttr))
+	for _, val := range appPatternsAttr {
+		patterns = append(patterns, val.GetS())
 	}
-	assert.Equal(t, []string{"db"}, expectedPatterns)
-	var expectedParams []string
-	for _, val := range app.GetEndpoints()["QueryUser"].GetParam() {
-		expectedParams = append(expectedParams, val.GetName())
+	assert.Equal(t, []string{"db"}, patterns)
+
+	queryUserParams := app.GetEndpoints()["QueryUser"].GetParam()
+	params := make([]string, 0, len(queryUserParams))
+	for _, val := range queryUserParams {
+		params = append(params, val.GetName())
 	}
-	assert.Equal(t, []string{"user_id"}, expectedParams)
+	assert.Equal(t, []string{"user_id"}, params)
 }
 
 type sdArgs struct {
-	root_model      string
-	endpoint_format string
-	app_format      string
-	title           string
-	output          string
-	endpoints       []string
-	apps            []string
-	modules         string
-	blackboxes      [][]string
+	rootModel      string
+	endpointFormat string
+	appFormat      string
+	title          string
+	output         string
+	endpoints      []string
+	apps           []string
+	modules        string
+	blackboxes     [][]string
 }
 
 func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_test.sysl",
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_test.sysl",
 	}
 	expected := make(map[string]string)
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then
@@ -228,10 +234,10 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_test.sysl",
-		endpoints:  []string{"QueryUser"},
-		output:     "_.png",
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_test.sysl",
+		endpoints: []string{"QueryUser"},
+		output:    "_.png",
 	}
 	expectContent := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -250,7 +256,7 @@ skinparam maxMessageSize 250
 	}
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then
@@ -260,10 +266,10 @@ skinparam maxMessageSize 250
 func TestDoConstructSequenceDiagrams(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_project.sysl",
-		output:     "%(epname).png",
-		apps:       []string{"Project"},
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_project.sysl",
+		output:    "%(epname).png",
+		apps:      []string{"Project"},
 	}
 	expectContent := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -280,9 +286,9 @@ title Profile
 == WebFrontend <- RequestProfile ==
 [->_0 : RequestProfile
 activate _0
- _0->_1 : 
+ _0->_1 :` + " " + `
  activate _1
-  _1->_2 : 
+  _1->_2 :` + " " + `
   activate _2
   _1<--_2 : User
   deactivate _2
@@ -297,7 +303,7 @@ deactivate _0
 	}
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then
@@ -307,10 +313,10 @@ deactivate _0
 func TestDoConstructSequenceDiagramsToFormatComplexName(t *testing.T) {
 	// Given
 	args := &sdArgs{
-		root_model: "./tests/",
-		modules:    "sequence_diagram_complex_format.sysl",
-		output:     "%(epname).png",
-		apps:       []string{"Project"},
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_complex_format.sysl",
+		output:    "%(epname).png",
+		apps:      []string{"Project"},
 	}
 	expectContent := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -335,7 +341,7 @@ activate _0
 	}
 
 	// When
-	result := DoConstructSequenceDiagrams(args.root_model, args.endpoint_format, args.app_format,
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 
 	// Then
@@ -365,16 +371,13 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			stdout := &bytes.Buffer{}
 			stderr := &bytes.Buffer{}
-			DoGenerateSequenceDiagrams(stdout, stderr, tt.args.flags, tt.args.args)
-			if gotStdout := stdout.String(); gotStdout != tt.wantStdout {
-				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", gotStdout, tt.wantStdout)
-			}
-			if gotStderr := stderr.String(); gotStderr != tt.wantStderr {
-				t.Errorf("DoGenerateSequenceDiagrams() = %v, want %v", gotStderr, tt.wantStderr)
-			}
+			require.NoError(t, DoGenerateSequenceDiagrams(stdout, stderr, tt.args.args))
+			assert.Equal(t, tt.wantStdout, stdout.String())
+			assert.Equal(t, tt.wantStderr, stderr.String())
 		})
 	}
 }

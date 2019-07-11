@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"sort"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -79,7 +79,13 @@ func cmpNullFalse(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
-func flattenListMap(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenListMap(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		assign[scopeVar] = l
@@ -88,7 +94,13 @@ func flattenListMap(txApp *sysl.Application, assign Scope, list *sysl.Value, sco
 	return listResult
 }
 
-func flattenListList(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenListList(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetList().Value {
@@ -99,7 +111,13 @@ func flattenListList(txApp *sysl.Application, assign Scope, list *sysl.Value, sc
 	return listResult
 }
 
-func flattenListSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenListSet(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetSet().Value {
@@ -110,7 +128,13 @@ func flattenListSet(txApp *sysl.Application, assign Scope, list *sysl.Value, sco
 	return listResult
 }
 
-func flattenSetMap(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenSetMap(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
 		if l.GetMap() == nil {
@@ -130,7 +154,12 @@ func flattenSetMap(txApp *sysl.Application, assign Scope, list *sysl.Value, scop
 	return setResult
 }
 
-func flattenSetSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func flattenSetSet(txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
 		for _, ll := range l.GetSet().Value {
@@ -142,35 +171,40 @@ func flattenSetSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scop
 }
 
 func concatList(lhs, rhs *sysl.Value) *sysl.Value {
-	list := MakeValueList()
-
-	list.GetList().Value = append(lhs.GetList().Value, rhs.GetList().Value...)
-	logrus.Printf("concatList: lhs %d, rhs %d res %d\n", len(lhs.GetList().Value), len(rhs.GetList().Value), len(list.GetList().Value))
-	return list
+	result := MakeValueList()
+	{
+		result := result.GetList()
+		lhs := lhs.GetList()
+		rhs := rhs.GetList()
+		result.Value = lhs.Value
+		result.Value = append(result.Value, rhs.Value...)
+		logrus.Tracef("concatList: lhs %d | rhs %d = %d\n", len(lhs.Value), len(rhs.Value), len(result.Value))
+	}
+	return result
 }
 
 func setUnion(lhs, rhs *sysl.Value) *sysl.Value {
 	itemType := getContainedType(lhs)
-	if itemType == VALUE_NO_ARG {
+	if itemType == ValueNoArg {
 		itemType = getContainedType(rhs)
 	}
 
-	if itemType == VALUE_NO_ARG {
+	if itemType == ValueNoArg {
 		return MakeValueSet()
 	}
 
 	switch itemType {
-	case VALUE_INT:
+	case ValueInt:
 		unionSet := unionIntSets(intSet(lhs.GetSet().Value), intSet(rhs.GetSet().Value))
-		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return intSetToValueSet(unionSet)
-	case VALUE_STRING:
+	case ValueString:
 		unionSet := unionStringSets(stringSet(lhs.GetSet().Value), stringSet(rhs.GetSet().Value))
-		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return stringSetToValueSet(unionSet)
-	case VALUE_MAP:
+	case ValueMap:
 		unionSet := unionMapSets(mapSet(lhs.GetSet().Value), mapSet(rhs.GetSet().Value))
-		logrus.Printf("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
+		logrus.Tracef("Union set: lhs %d, rhs %d res %d\n", len(lhs.GetSet().Value), len(rhs.GetSet().Value), len(unionSet))
 		return mapSetToValueSet(unionSet)
 	}
 	panic(errors.Errorf("union of itemType: %s not supported", itemType.String()))
@@ -203,8 +237,7 @@ func unionIntSets(lhs, rhs map[int64]struct{}) map[int64]struct{} {
 
 func intSetToValueSet(lhs map[int64]struct{}) *sysl.Value {
 	m := MakeValueSet()
-	var keys []int
-
+	keys := make([]int, 0, len(lhs))
 	for key := range lhs {
 		keys = append(keys, int(key))
 	}
@@ -236,7 +269,7 @@ func stringSetToValueSet(lhs map[string]struct{}) *sysl.Value {
 	m := MakeValueSet()
 
 	// for stable output
-	var keys []string
+	keys := make([]string, 0, len(lhs))
 	for key := range lhs {
 		keys = append(keys, key)
 	}
@@ -269,7 +302,7 @@ func unionMapSets(lhs, rhs map[string]*sysl.Value) map[string]*sysl.Value {
 
 func mapSetToValueSet(lhs map[string]*sysl.Value) *sysl.Value {
 	m := MakeValueSet()
-	var keys []string
+	keys := make([]string, 0, len(lhs))
 	for key := range lhs {
 		keys = append(keys, key)
 	}
@@ -320,10 +353,10 @@ func whereList(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar
 	return listResult
 }
 
-func whereMap(txApp *sysl.Application, assign Scope, map_ *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func whereMap(txApp *sysl.Application, assign Scope, m *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
 	mapResult := MakeValueMap()
-	logrus.Printf("scope: %s, list len: %d", scopeVar, len(map_.GetMap().Items))
-	for key, val := range map_.GetMap().Items {
+	logrus.Printf("scope: %s, list len: %d", scopeVar, len(m.GetMap().Items))
+	for key, val := range m.GetMap().Items {
 		m := MakeValueMap()
 		addItemToValueMap(m, "key", MakeValueString(key))
 		addItemToValueMap(m, "value", val)

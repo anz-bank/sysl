@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testPlantumlInput = `
+const testPlantumlInput = `
 @startuml
 control "WebFrontend" as _0
 control "Api" as _1
@@ -31,25 +31,30 @@ deactivate _0
 @enduml
 `
 
+const plantumlDotCom = "http://www.plantuml.com/plantuml"
+
 func TestDeflateAndEncode(t *testing.T) {
 	//Given
-	const expected = "UDfSaKbhmp0GXU_pAnwvYqY6NaniKkXoAgGRFUGW9l4qY7gh99SkzByN9GvnUfBGzmrwZw5bYEpZqDIqxThekngp5zdS-AwDqbOpS83L9tRPkyEReOeZRpW8PbVZxK0o2c-kxTbpWuO_xoG4ticZ-nPa5vgYYxLWvRjNLmiL1IRVOQ7m8E-3X3WAA0fQgz9gvFy8yJQw3uwIyi5gLLg37BVNJvWFGNoO_wJ3kkftteyZECqO0gnHfSsGutuG__KSn1CcIhPN5ahjdH5NSYPOdRWP-J7QcMLedPpKu5XgnJkXgQDfAMsLjl0N003__swwWGu0"
+	const expected = "UDfSaKbhmp0GXU_pAnwvYqY6NaniKkXoAgGRFUGW9l4qY7gh99SkzByN9GvnUfBGzmrwZw5bYE" +
+		"pZqDIqxThekngp5zdS-AwDqbOpS83L9tRPkyEReOeZRpW8PbVZxK0o2c-kxTbpWuO_xoG4ticZ-nPa5vgYYxLWv" +
+		"RjNLmiL1IRVOQ7m8E-3X3WAA0fQgz9gvFy8yJQw3uwIyi5gLLg37BVNJvWFGNoO_wJ3kkftteyZECqO0gnHfSsG" +
+		"utuG__KSn1CcIhPN5ahjdH5NSYPOdRWP-J7QcMLedPpKu5XgnJkXgQDfAMsLjl0N003__swwWGu0"
 
 	//When
-	actual := DeflateAndEncode([]byte(testPlantumlInput))
+	actual, err := DeflateAndEncode([]byte(testPlantumlInput))
+	require.NoError(t, err)
 
 	//Then
-	require.Equal(t, expected, actual, "Unexpected output")
+	assert.Equal(t, expected, actual, "Unexpected output")
 }
 
 func TestOutputPlantumlWithPng(t *testing.T) {
 	//Given
 	output := "test.png"
-	plantuml := "http://www.plantuml.com/plantuml"
 	umlInput := testPlantumlInput
 
 	//When
-	OutputPlantuml(output, plantuml, umlInput)
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
 
 	//Then
 	_, err := os.Stat(output)
@@ -59,11 +64,10 @@ func TestOutputPlantumlWithPng(t *testing.T) {
 func TestOutputPlantumlWithSvg(t *testing.T) {
 	//Given
 	output := "test.svg"
-	plantuml := "http://www.plantuml.com/plantuml"
 	umlInput := testPlantumlInput
 
 	//When
-	OutputPlantuml(output, plantuml, umlInput)
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
 
 	//Then
 	_, err := os.Stat(output)
@@ -73,11 +77,10 @@ func TestOutputPlantumlWithSvg(t *testing.T) {
 func TestOutputPlantumlWithUml(t *testing.T) {
 	//Given
 	output := "test.uml"
-	plantuml := "http://www.plantuml.com/plantuml"
 	umlInput := testPlantumlInput
 
 	//When
-	OutputPlantuml(output, plantuml, umlInput)
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
 
 	//Then
 	_, err := os.Stat("test.puml")
@@ -95,6 +98,7 @@ func TestEncode6bit(t *testing.T) {
 	}
 
 	for _, v := range data {
+		v := v
 		t.Run(string(int(v.input)), func(tt *testing.T) {
 			actual := encode6bit(v.input)
 			assert.Equal(tt, v.expected, actual)

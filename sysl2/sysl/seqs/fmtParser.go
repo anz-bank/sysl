@@ -4,10 +4,11 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	log "github.com/sirupsen/logrus"
 )
 
+//nolint:gochecknoglobals
 var (
 	itemReDefault    = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|%\()`)
 	itemReStatement  = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|[|)]|%\()`)
@@ -23,9 +24,9 @@ var (
 )
 
 const (
-	MATCH_SYMBOL = iota + 1
-	MATCH_WORD
-	MATCH_LOOK_AHEAD
+	MatchSymbol = iota + 1
+	MatchWord
+	MatchLookahead
 )
 
 type FormatParser struct {
@@ -88,12 +89,12 @@ func (fp *FormatParser) FmtOutput(appname, epname, eplongname string, attrs map[
 	return fp.Parse(valMap)
 }
 
-func (f *FormatParser) Parse(attrs map[string]string) string {
-	log.Debugf("self: %s", f.self)
+func (fp *FormatParser) Parse(attrs map[string]string) string {
+	log.Debugf("self: %s", fp.self)
 	log.Debugf("attrs: %v", attrs)
-	f.expansions(itemReDefault, attrs)
-	formatted := strings.Replace(f.result, "\n", "\\n", -1)
-	f.clear()
+	fp.expansions(itemReDefault, attrs)
+	formatted := strings.Replace(fp.result, "\n", "\\n", -1)
+	fp.clear()
 	log.Debugf("format string: %s", formatted)
 
 	return formatted
@@ -105,32 +106,32 @@ func mergeAttributesMap(val map[string]string, attrs map[string]*sysl.Attribute)
 	}
 }
 
-func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
+func (fp *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 	var result string
-	for f.eat(re) {
-		prefix := f.pop()
+	for fp.eat(re) {
+		prefix := fp.pop()
 		prefix = removePercentSymbol(prefix)
 		result += prefix
 
-		if f.eat(itemReVarStart) {
+		if fp.eat(itemReVarStart) {
 			var yesStmt, noStmt, varName, value string
 			isYesStmt, isUseVal, isEqualOper, isSearched := false, true, false, false
-			if !f.eat(itemReVar) {
+			if !fp.eat(itemReVar) {
 				panic("missing variable reference")
 			}
-			varName = f.pop()
+			varName = fp.pop()
 			value = attrs[varName]
 
 			// conditionals
-			if f.eat(itemReCondOper) {
+			if fp.eat(itemReCondOper) {
 				isEqualOper = true
 				isUseVal = false
-				conOper := f.oper
-				f.oper = ""
-				if !f.eat(itemReCondVal) {
+				conOper := fp.oper
+				fp.oper = ""
+				if !fp.eat(itemReCondVal) {
 					panic("missing conditional value")
 				}
-				conVal := f.pop()
+				conVal := fp.pop()
 				if conOper == "==" && value == conVal {
 					isYesStmt = true
 				}
@@ -139,33 +140,33 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 				}
 			}
 
-			if f.eat(itemReSearch) {
+			if fp.eat(itemReSearch) {
 				isSearched = true
 				isUseVal = false
-				reWordBoundary := regexp.MustCompile(f.pop())
+				reWordBoundary := regexp.MustCompile(fp.pop())
 				if reWordBoundary.MatchString(value) {
 					isYesStmt = true
 				}
 			}
 
-			have := f.eat(itemReStmtOper)
+			have := fp.eat(itemReStmtOper)
 			if have {
 				isUseVal = false
-				f.expansions(itemReStatement, attrs)
-				yesStmt = f.result
+				fp.expansions(itemReStatement, attrs)
+				yesStmt = fp.result
 			}
-			have_not := f.eat(itemReNoStmtOper)
-			if have_not {
-				f.expansions(itemReEnd, attrs)
-				noStmt = f.result
+			haveNot := fp.eat(itemReNoStmtOper)
+			if haveNot {
+				fp.expansions(itemReEnd, attrs)
+				noStmt = fp.result
 			}
-			if !f.eat(itemReStmtEnd) {
+			if !fp.eat(itemReStmtEnd) {
 				panic("unclosed expansion")
 			}
 
 			if isUseVal {
 				result += value
-				f.result = result
+				fp.result = result
 				continue
 			}
 			if !isSearched && !isEqualOper && value != "" {
@@ -176,16 +177,16 @@ func (f *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 			} else {
 				result += noStmt
 			}
-			f.result = result
+			fp.result = result
 		} else {
-			f.result = result
+			fp.result = result
 			return
 		}
 	}
 }
 
-func (f *FormatParser) eat(re *regexp.Regexp) bool {
-	matchStr := string(f.self[f.curPos:])
+func (fp *FormatParser) eat(re *regexp.Regexp) bool {
+	matchStr := fp.self[fp.curPos:]
 	if matchStr == "" {
 		return false
 	}
@@ -197,33 +198,33 @@ func (f *FormatParser) eat(re *regexp.Regexp) bool {
 	subSelfLen := len(subSelf)
 
 	switch subSelfLen {
-	case MATCH_SYMBOL:
-		f.curPos += len(subSelf[0])
-		f.oper = subSelf[0]
-	case MATCH_WORD:
+	case MatchSymbol:
+		fp.curPos += len(subSelf[0])
+		fp.oper = subSelf[0]
+	case MatchWord:
 		insertion := subSelf[0]
-		f.stk = append(f.stk, subSelf[1])
-		f.curPos += len(insertion)
-	case MATCH_LOOK_AHEAD:
+		fp.stk = append(fp.stk, subSelf[1])
+		fp.curPos += len(insertion)
+	case MatchLookahead:
 		insertion := subSelf[1]
-		f.stk = append(f.stk, insertion)
-		f.curPos += len(insertion)
+		fp.stk = append(fp.stk, insertion)
+		fp.curPos += len(insertion)
 	}
 
 	return subSelf != nil
 }
 
-func (f *FormatParser) pop() string {
-	if f.stk == nil {
+func (fp *FormatParser) pop() string {
+	if fp.stk == nil {
 		return ""
 	}
 
-	n := len(f.stk)
+	n := len(fp.stk)
 	if n == 0 {
 		return ""
 	}
-	popped := f.stk[n-1]
-	f.stk = f.stk[:n-1]
+	popped := fp.stk[n-1]
+	fp.stk = fp.stk[:n-1]
 
 	return popped
 }

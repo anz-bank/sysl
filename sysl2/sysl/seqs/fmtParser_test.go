@@ -3,7 +3,7 @@ package seqs
 import (
 	"testing"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +19,10 @@ func TestLabelEndpoint(t *testing.T) {
 	p := &EndpointLabelerParam{
 		EndpointName: "Login",
 	}
-	fp := MakeFormatParser("%(@aa?//«%(@aa)»//**%(pa=='ABC'? %(pa~/\btba|tbd\b/?<color red>%(pa)</color>|<color green>%(pa)</color>)| <color red>pat?</color>)**|%(ni?<color red>(missing INT%)</color>))%(epname)%(args?(%(args)%))")
+	fp := MakeFormatParser(
+		"%(@aa?//«%(@aa)»//**%(pa=='ABC'? %(pa~/\btba|tbd\b/?<color red>%(pa)</color>|" +
+			"<color green>%(pa)</color>)| <color red>pat?</color>)**|%(ni?<color red>(missing INT%)</color>" +
+			"))%(epname)%(args?(%(args)%))")
 
 	// When
 	formatStr := fp.LabelEndpoint(p)
@@ -45,7 +48,10 @@ func TestLabelEndpointMore(t *testing.T) {
 		NeedsInt:     "needs_int",
 		Attrs:        sbMap,
 	}
-	fp := MakeFormatParser(`%(@s1?//«%(@s1)»//**%(patterns? %(patterns~/\btba|tbd\b/?<color red>%(patterns)</color>|<color green>%(patterns)</color>)| <color red>pat?</color>)**\n|%(needs_int?<color red>(missing INT%)</color>\n))%(epname)%(args?\n(%(args)%))`)
+	fp := MakeFormatParser("%(@s1?//«%(@s1)»//**%(patterns? %(patterns~/\btba|" +
+		"tbd\b/?<color red>%(patterns)</color>|<color green>%(patterns)</color>)|" +
+		" <color red>pat?</color>)**\n|%(needs_int?<color red>(missing INT%)</color>\n" +
+		"))%(epname)%(args?\n(%(args)%))")
 
 	// When
 	formatStr := fp.LabelEndpoint(p)

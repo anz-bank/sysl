@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -13,81 +13,82 @@ import (
 type goFunc struct {
 	val  reflect.Value
 	args []*sysl.Type
-	ret  []*sysl.Type
+	ret  *sysl.Type
 }
 
-type goFuncMap map[string]goFunc
+//nolint:gochecknoglobals
+var (
+	kindToPrimitiveType = map[reflect.Kind]sysl.Type_Primitive{
+		reflect.Bool:   sysl.Type_BOOL,
+		reflect.Int:    sysl.Type_INT,
+		reflect.Int16:  sysl.Type_INT,
+		reflect.Int32:  sysl.Type_INT,
+		reflect.Int64:  sysl.Type_INT,
+		reflect.String: sysl.Type_STRING,
+	}
 
-var kindToPrimitiveType = map[reflect.Kind]sysl.Type_Primitive{
-	reflect.Bool:   sysl.Type_BOOL,
-	reflect.Int:    sysl.Type_INT,
-	reflect.Int16:  sysl.Type_INT,
-	reflect.Int32:  sysl.Type_INT,
-	reflect.Int64:  sysl.Type_INT,
-	reflect.String: sysl.Type_STRING,
-}
+	valueTypeToPrimitiveType = map[valueType]sysl.Type_Primitive{
+		ValueBool:   sysl.Type_BOOL,
+		ValueInt:    sysl.Type_INT,
+		ValueFloat:  sysl.Type_FLOAT,
+		ValueString: sysl.Type_STRING,
+	}
 
-var valueTypeToPrimitiveType = map[valueType]sysl.Type_Primitive{
-	VALUE_BOOL:   sysl.Type_BOOL,
-	VALUE_INT:    sysl.Type_INT,
-	VALUE_FLOAT:  sysl.Type_FLOAT,
-	VALUE_STRING: sysl.Type_STRING,
-}
+	stringType = &sysl.Type{
+		Type: &sysl.Type_Primitive_{
+			Primitive: sysl.Type_STRING,
+		},
+	}
 
-var stringType = &sysl.Type{
-	Type: &sysl.Type_Primitive_{
-		Primitive: sysl.Type_STRING,
-	},
-}
+	intType = &sysl.Type{
+		Type: &sysl.Type_Primitive_{
+			Primitive: sysl.Type_INT,
+		},
+	}
 
-var intType = &sysl.Type{
-	Type: &sysl.Type_Primitive_{
-		Primitive: sysl.Type_INT,
-	},
-}
-
-var listStringType = &sysl.Type{
-	Type: &sysl.Type_List_{
-		List: &sysl.Type_List{
-			Type: &sysl.Type{
-				Type: &sysl.Type_Primitive_{
-					Primitive: sysl.Type_STRING,
+	listStringType = &sysl.Type{
+		Type: &sysl.Type_List_{
+			List: &sysl.Type_List{
+				Type: &sysl.Type{
+					Type: &sysl.Type_Primitive_{
+						Primitive: sysl.Type_STRING,
+					},
 				},
 			},
 		},
-	},
-}
+	}
 
-var boolType = &sysl.Type{
-	Type: &sysl.Type_Primitive_{
-		Primitive: sysl.Type_BOOL,
-	},
-}
+	boolType = &sysl.Type{
+		Type: &sysl.Type_Primitive_{
+			Primitive: sysl.Type_BOOL,
+		},
+	}
 
-// GoFuncMap is Map of Function Names to goFunc{}
-var GoFuncMap = map[string]goFunc{
-	"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
-	"Fields":        {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, []*sysl.Type{listStringType}},
-	"FindAllString": {reflect.ValueOf(FindAllString), []*sysl.Type{stringType, stringType, intType}, []*sysl.Type{listStringType}},
-	"HasPrefix":     {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"HasSuffix":     {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Join":          {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, []*sysl.Type{stringType}},
-	"LastIndex":     {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, []*sysl.Type{intType}},
-	"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, []*sysl.Type{boolType}},
-	"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, []*sysl.Type{stringType}},
-	"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, []*sysl.Type{listStringType}},
-	"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"Trim":          {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimLeft":      {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimPrefix":    {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-	"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, []*sysl.Type{stringType}},
-	"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, []*sysl.Type{stringType}},
-}
+	// GoFuncMap is Map of Function Names to goFunc{}
+	GoFuncMap = map[string]goFunc{
+		"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, boolType},
+		"Count":         {reflect.ValueOf(strings.Count), []*sysl.Type{stringType, stringType}, intType},
+		"Fields":        {reflect.ValueOf(strings.Fields), []*sysl.Type{stringType}, listStringType},
+		"FindAllString": {reflect.ValueOf(FindAllString), []*sysl.Type{stringType, stringType, intType}, listStringType},
+		"HasPrefix":     {reflect.ValueOf(strings.HasPrefix), []*sysl.Type{stringType, stringType}, boolType},
+		"HasSuffix":     {reflect.ValueOf(strings.HasSuffix), []*sysl.Type{stringType, stringType}, boolType},
+		"Join":          {reflect.ValueOf(strings.Join), []*sysl.Type{listStringType, stringType}, stringType},
+		"LastIndex":     {reflect.ValueOf(strings.LastIndex), []*sysl.Type{stringType, stringType}, intType},
+		"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, boolType},
+		"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, stringType}, // nolint:lll
+		"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, listStringType},
+		"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, stringType},
+		"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, stringType},
+		"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, stringType},
+		"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, stringType},
+		"Trim":          {reflect.ValueOf(strings.Trim), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimLeft":      {reflect.ValueOf(strings.TrimLeft), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimPrefix":    {reflect.ValueOf(strings.TrimPrefix), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, stringType},
+		"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, stringType},
+		"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, stringType},
+	}
+)
 
 func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
 	switch x := t.Type.(type) {
@@ -110,15 +111,7 @@ func valueToReflectValue(v *sysl.Value, t *sysl.Type) reflect.Value {
 		}
 
 		if p := listOf.GetPrimitive(); p != sysl.Type_NO_Primitive {
-			switch p {
-			// Uncomment if required in future.
-			// case sysl.Type_INT:
-			// 	intSlice := []int{}
-			// 	for _, listItem := range valueList {
-			// 		intSlice = append(intSlice, int(listItem.GetI()))
-			// 	}
-			// 	return reflect.ValueOf(intSlice)
-			case sysl.Type_STRING:
+			if p == sysl.Type_STRING {
 				stringSlice := []string{}
 				for _, listItem := range valueList {
 					stringSlice = append(stringSlice, listItem.GetS())
@@ -139,24 +132,24 @@ func isValueExpectedType(v *sysl.Value, t *sysl.Type) bool {
 		return inType == type1
 	}
 
-	if vType == VALUE_LIST && len(v.GetList().Value) == 0 {
+	if vType == ValueList && len(v.GetList().Value) == 0 {
 		return true
 	}
 
-	if vType == VALUE_SET && len(v.GetSet().Value) == 0 {
+	if vType == ValueSet && len(v.GetSet().Value) == 0 {
 		return true
 	}
 
-	if vType == VALUE_LIST && t.GetList() != nil {
+	if vType == ValueList && t.GetList() != nil {
 		return isValueExpectedType(v.GetList().Value[0], t.GetList().Type)
 	}
 
-	if vType == VALUE_SET && t.GetSet() != nil {
+	if vType == ValueSet && t.GetSet() != nil {
 		return isValueExpectedType(v.GetSet().Value[0], t.GetSet())
 	}
 
 	// Pass elements of sets as a slice to Go funcs.
-	if vType == VALUE_SET && t.GetList() != nil {
+	if vType == ValueSet && t.GetList() != nil {
 		return isValueExpectedType(v.GetSet().Value[0], t.GetList().Type)
 	}
 	return false
@@ -179,7 +172,7 @@ func isReflectValueExpectedType(r reflect.Value, typ *sysl.Type) bool {
 }
 
 func reflectToValue(r reflect.Value, typ *sysl.Type) *sysl.Value {
-	if isReflectValueExpectedType(r, typ) == false {
+	if !isReflectValueExpectedType(r, typ) {
 		logrus.Warnf("Got %s, Expected Value type: %v \n", r.Kind(), typ.Type)
 	}
 
@@ -226,12 +219,10 @@ func evalGoFunc(name string, list *sysl.Value) *sysl.Value {
 			}
 		}
 		result := f.val.Call(in)
-		if len(f.ret) != len(result) {
-			logrus.Errorf("Incorrect number of return types for function %s\n", name)
-			logrus.Errorf("Expected number of return types: (%d)\n", len(f.ret))
-			logrus.Errorf("Got result: (%d)\n", len(result))
+		if len(result) != 1 {
+			logrus.Errorf("Function %s has %d return values, expecting 1\n", name, len(result))
 		}
-		return reflectToValue(result[0], f.ret[0])
+		return reflectToValue(result[0], f.ret)
 	}
 	return nil
 }

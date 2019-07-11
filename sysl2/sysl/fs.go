@@ -40,6 +40,5 @@ func newFSFileStream(filename string, fs http.FileSystem) (*fsFileStream, error)
 		return nil, err
 	}
 
-	s := string(buf.Bytes())
-	return &fsFileStream{antlr.NewInputStream(s), filename}, nil
+	return &fsFileStream{antlr.NewInputStream(buf.String()), filename}, nil
 }

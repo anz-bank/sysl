@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+//nolint:gochecknoglobals
 var defaultLevel = map[string]logrus.Level{
 	"":      logrus.ErrorLevel,
 	"off":   logrus.ErrorLevel,
@@ -30,29 +31,29 @@ func main3(stdout, stderr io.Writer, args []string) error {
 
 	switch filepath.Base(args[0]) {
 	case "syslgen":
-		DoGenerateCode(stdout, stderr, flags, args)
-		return nil
+		return DoGenerateCode(stdout, stderr, flags, args)
 	case "sd":
-		DoGenerateSequenceDiagrams(stdout, stderr, flags, args)
-		return nil
+		return DoGenerateSequenceDiagrams(stdout, stderr, args)
 	}
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
 	output := flags.String("o", "", "output file name")
 	mode := flags.String("mode", "textpb", "output mode")
 	loglevel := flags.String("log", "warn", "log level[debug,info,warn,off]")
 
-	flags.Parse(args[1:])
+	if err := flags.Parse(args[1:]); err != nil {
+		return err
+	}
 
 	switch *mode {
 	case "", "textpb", "json":
 	default:
-		return fmt.Errorf("Invalid -mode %#v", *mode)
+		return fmt.Errorf("invalid -mode %#v", *mode)
 	}
 
 	if level, has := defaultLevel[*loglevel]; has {
 		logrus.SetLevel(level)
 	} else {
-		return fmt.Errorf("Invalid -log %#v", *loglevel)
+		return fmt.Errorf("invalid -log %#v", *loglevel)
 	}
 
 	filename := flags.Arg(0)

@@ -6,18 +6,19 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 )
 
+//nolint:gochecknoglobals
 var (
-	itemRE                   = regexp.MustCompile(`(%\(\w+\))`)
 	isoCtrlRE                = regexp.MustCompile("^iso_ctrl_(.*)_txt$")
 	returnTypeValueSpliterRE = regexp.MustCompile(`\s*<:\s*`)
 	typeSetOfRE              = regexp.MustCompile(`set\s+of\s+(.+)$`)
 	typeOneOfRE              = regexp.MustCompile(`one\s+of\s*{(.+)}$`)
 	typeListSpliterRE        = regexp.MustCompile(`\s*,\s*`)
 	endpointLabelReplaceRE   = regexp.MustCompile(`^.*? -> `)
-	endpointParserRE         = regexp.MustCompile(`(?P<appname>.*?)\s*<-\s*(?P<epname>.*?)(?:\s*\[upto\s+(?P<upto>.*)\])*$`)
+	endpointParserRE         = regexp.MustCompile(
+		`(?P<appname>.*?)\s*<-\s*(?P<epname>.*?)(?:\s*\[upto\s+(?P<upto>.*)\])*$`)
 )
 
 func TransformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {

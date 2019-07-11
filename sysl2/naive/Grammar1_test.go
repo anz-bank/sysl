@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/sysl2/proto"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,11 +13,14 @@ type cases struct {
 	result bool
 }
 
-func init() {
-	logrus.SetLevel(logrus.WarnLevel)
-}
-
-func testParser(g *sysl.Grammar, numTerms int, tokens []int, text string, expectedResult bool, t *testing.T) (bool, []interface{}) {
+func testParser(
+	g *sysl.Grammar,
+	numTerms int,
+	tokens []int,
+	text string,
+	expectedResult bool,
+	t *testing.T,
+) (bool, []interface{}) {
 	p := makeParser(g, text)
 
 	assert.True(t, len(p.terminals) == numTerms, "got incorrect number of terms")

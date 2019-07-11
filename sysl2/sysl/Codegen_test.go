@@ -4,13 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-func init() {
-	logrus.SetLevel(logrus.WarnLevel)
-}
 
 func TestGenerateCode(t *testing.T) {
 	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
@@ -33,18 +29,18 @@ func TestGenerateCode(t *testing.T) {
 	assert.Equal(t, "com.example.gen", package2[1].(string), "unexpected length of package2")
 
 	for i, comment := range []string{"comment1", "comment2"} {
-		comment_0 := comment1[i].(Node)
-		assert.Equal(t, 1, len(comment_0), "unexpected length of comment2")
-		comment_0_0 := comment_0[0].(string)
-		assert.Equal(t, comment, comment_0_0, "unexpected length of comment_i")
+		comment0 := comment1[i].(Node)
+		assert.Equal(t, 1, len(comment0), "unexpected length of comment2")
+		comment0_0 := comment0[0].(string)
+		assert.Equal(t, comment, comment0_0, "unexpected length of comment_i")
 	}
 
 	for i, imports := range []string{"import1", "import2"} {
-		import_0 := import1[i].(Node)
-		assert.Equal(t, 1, len(import_0), "unexpected length of import2")
-		import_0_0 := import_0[0].(Node)
-		assert.Equal(t, 3, len(import_0_0), "unexpected length of import2")
-		assert.Equal(t, imports, import_0_0[1].(string), "unexpected length of import_i")
+		import0 := import1[i].(Node)
+		assert.Equal(t, 1, len(import0), "unexpected length of import2")
+		import0_0 := import0[0].(Node)
+		assert.Equal(t, 3, len(import0_0), "unexpected length of import2")
+		assert.Equal(t, imports, import0_0[1].(string), "unexpected length of import_i")
 	}
 }
 
@@ -67,11 +63,11 @@ func TestGenerateCodeNoComment(t *testing.T) {
 	assert.Equal(t, "com.example.gen", package2[1].(string), "unexpected length of package2")
 
 	for i, imports := range []string{"import1", "import2"} {
-		import_0 := import1[i].(Node)
-		assert.Equal(t, 1, len(import_0), "unexpected length of import2")
-		import_0_0 := import_0[0].(Node)
-		assert.Equal(t, 3, len(import_0_0), "unexpected length of import2")
-		assert.Equal(t, imports, import_0_0[1].(string), "unexpected length of import_i")
+		import0 := import1[i].(Node)
+		assert.Equal(t, 1, len(import0), "unexpected length of import2")
+		import0_0 := import0[0].(Node)
+		assert.Equal(t, 3, len(import0_0), "unexpected length of import2")
+		assert.Equal(t, imports, import0_0[1].(string), "unexpected length of import_i")
 	}
 }
 
@@ -82,7 +78,8 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 }
 
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCode(
+		".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl", "tests/test.gen.g", "javaFile")
 	root := output[0].output
 	assert.Nil(t, root, "unexpected root")
 }
@@ -111,7 +108,7 @@ func TestGenerateCodePerType(t *testing.T) {
 func TestSerialize(t *testing.T) {
 	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
 	out := new(bytes.Buffer)
-	Serialize(out, " ", output[0].output)
+	require.NoError(t, Serialize(out, " ", output[0].output))
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
 	assert.Equal(t, golden, out.String(), "unexpected value of out string")
 }

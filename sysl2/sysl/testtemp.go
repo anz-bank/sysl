@@ -24,10 +24,6 @@ func testTempFilename(t *testing.T, dir, pattern string) string {
 	return tf.Name()
 }
 
-// func (tf *testTempFile) File() *os.File {
-// 	return tf.f
-// }
-
 func (tf *testTempFile) Name() string {
 	return tf.f.Name()
 }

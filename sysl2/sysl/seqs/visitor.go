@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -72,8 +72,8 @@ func MakeEndpointCollectionElement(title string, endpoints []string, blackboxes 
 	}
 }
 
-func (e *EndpointCollectionElement) Accept(v Visitor) {
-	v.Visit(e)
+func (e *EndpointCollectionElement) Accept(v Visitor) error {
+	return v.Visit(e)
 }
 
 type EndpointElement struct {
@@ -87,8 +87,8 @@ type EndpointElement struct {
 	deactivate             func()
 }
 
-func (e *EndpointElement) Accept(v Visitor) {
-	v.Visit(e)
+func (e *EndpointElement) Accept(v Visitor) error {
+	return v.Visit(e)
 }
 
 func (e *EndpointElement) sender(v VarManager) string {
@@ -168,8 +168,8 @@ type StatementElement struct {
 	isLastParentStmt bool
 }
 
-func (e *StatementElement) Accept(v Visitor) {
-	v.Visit(e)
+func (e *StatementElement) Accept(v Visitor) error {
+	return v.Visit(e)
 }
 
 func (e *StatementElement) isLastStmt(i int) bool {
@@ -201,7 +201,7 @@ func MakeSequenceDiagramVisitor(
 	}
 }
 
-func (v *SequenceDiagramVisitor) Visit(e Element) {
+func (v *SequenceDiagramVisitor) Visit(e Element) error {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
@@ -210,12 +210,14 @@ func (v *SequenceDiagramVisitor) Visit(e Element) {
 
 	switch t := e.(type) {
 	case *EndpointCollectionElement:
-		v.visitEndpointCollection(t)
+		return v.visitEndpointCollection(t)
 	case *EndpointElement:
-		v.visitEndpoint(t)
+		return v.visitEndpoint(t)
 	case *StatementElement:
-		v.visitStatment(t)
+		return v.visitStatment(t)
 	}
+	// TODO: Error?
+	return nil
 }
 
 func (v *SequenceDiagramVisitor) UniqueVarForAppName(appName string) string {
@@ -239,7 +241,7 @@ func (v *SequenceDiagramVisitor) UniqueVarForAppName(appName string) string {
 	return s.alias
 }
 
-func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionElement) {
+func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionElement) error {
 	if len(e.title) > 0 {
 		fmt.Fprintln(v.w, "title", e.title)
 	}
@@ -271,7 +273,9 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 			senderEndpointPatterns: makeStrSet(),
 		}
 
-		e.Accept(v)
+		if err := e.Accept(v); err != nil {
+			return err
+		}
 	}
 
 	s := make([]*_var, 0, len(v.symbols))
@@ -285,11 +289,14 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 		return s[i].category < s[j].category
 	})
 	for _, item := range s {
-		v.w.WriteHead(item.String())
+		if _, err := v.w.WriteHead(item.String()); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
-func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
+func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	sender := e.sender(v)
 	agent := e.agent(v)
 	app := e.application(v.m)
@@ -356,7 +363,9 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 				deactivate:       deactivate,
 				isLastParentStmt: true,
 			}
-			p.Accept(v)
+			if err := p.Accept(v); err != nil {
+				return err
+			}
 
 			deactivate()
 			v.visited[visiting]--
@@ -365,36 +374,42 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) {
 			}
 		}
 	}
+	return nil
 }
 
-func (v *SequenceDiagramVisitor) visitStatment(e *StatementElement) {
+func (v *SequenceDiagramVisitor) visitStatment(e *StatementElement) error {
 	for i, s := range e.stmts {
+		var err error
 		switch c := s.Stmt.(type) {
 		case *sysl.Statement_Call:
-			v.visitCall(e, i, c.Call)
+			err = v.visitCall(e, i, c.Call)
 		case *sysl.Statement_Action:
-			v.visitAction(e, c.Action)
+			err = v.visitAction(e, c.Action)
 		case *sysl.Statement_Cond:
-			v.visitCond(e, i, c.Cond)
+			err = v.visitCond(e, i, c.Cond)
 		case *sysl.Statement_Loop:
-			v.visitLoop(e, i, c.Loop)
+			err = v.visitLoop(e, i, c.Loop)
 		case *sysl.Statement_LoopN:
-			v.visitLoopN(e, i, c.LoopN)
+			err = v.visitLoopN(e, i, c.LoopN)
 		case *sysl.Statement_Foreach:
-			v.visitForeach(e, i, c.Foreach)
+			err = v.visitForeach(e, i, c.Foreach)
 		case *sysl.Statement_Group:
-			v.visitGroup(e, i, c.Group)
+			err = v.visitGroup(e, i, c.Group)
 		case *sysl.Statement_Alt:
-			v.visitAlt(e, i, c.Alt)
+			err = v.visitAlt(e, i, c.Alt)
 		case *sysl.Statement_Ret:
-			v.visitRet(e, c.Ret)
+			err = v.visitRet(e, c.Ret)
 		default:
-			panic("No statement!")
+			panic("Unrecognised statement type")
+		}
+		if err != nil {
+			return err
 		}
 	}
+	return nil
 }
 
-func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.Call) {
+func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.Call) error {
 	isLastStmt := e.isLastStmt(i)
 	app := e.application(v.m)
 	stmtPatterns := makeStrSetFromPatternsAttr(e.stmts[i].Attrs)
@@ -416,53 +431,68 @@ func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.C
 		},
 	}
 	v.w.Indent()
-	p.Accept(v)
+	if err := p.Accept(v); err != nil {
+		return err
+	}
 	v.w.Unindent()
+	return nil
 }
 
-func (v *SequenceDiagramVisitor) visitAction(e *StatementElement, c *sysl.Action) {
-	fmt.Fprintf(v.w, "%s -> %s : %s\n", e.agent(v), e.agent(v), c.GetAction())
+func (v *SequenceDiagramVisitor) visitAction(e *StatementElement, c *sysl.Action) error {
+	_, err := fmt.Fprintf(v.w, "%s -> %s : %s\n", e.agent(v), e.agent(v), c.GetAction())
+	return err
 }
 
-func (v *SequenceDiagramVisitor) visitCond(e *StatementElement, i int, c *sysl.Cond) {
-	v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "opt %s\n", c.GetTest())
+func (v *SequenceDiagramVisitor) visitCond(e *StatementElement, i int, c *sysl.Cond) error {
+	return v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "opt %s\n", c.GetTest())
 }
 
-func (v *SequenceDiagramVisitor) visitLoop(e *StatementElement, i int, c *sysl.Loop) {
-	v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "loop %s %s\n",
-		sysl.Loop_Mode_name[int32(c.GetMode())], c.GetCriterion())
+func (v *SequenceDiagramVisitor) visitLoop(e *StatementElement, i int, c *sysl.Loop) error {
+	return v.visitGroupStmt(
+		e, c.GetStmt(), e.isLastStmt(i), "loop %s %s\n",
+		sysl.Loop_Mode_name[int32(c.GetMode())], c.GetCriterion(),
+	)
 }
 
-func (v *SequenceDiagramVisitor) visitLoopN(e *StatementElement, i int, c *sysl.LoopN) {
-	v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "loop %d times\n", c.GetCount())
+func (v *SequenceDiagramVisitor) visitLoopN(e *StatementElement, i int, c *sysl.LoopN) error {
+	return v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "loop %d times\n", c.GetCount())
 }
 
-func (v *SequenceDiagramVisitor) visitForeach(e *StatementElement, i int, c *sysl.Foreach) {
-	v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "loop for each %s\n", c.GetCollection())
+func (v *SequenceDiagramVisitor) visitForeach(e *StatementElement, i int, c *sysl.Foreach) error {
+	return v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "loop for each %s\n", c.GetCollection())
 }
 
-func (v *SequenceDiagramVisitor) visitGroup(e *StatementElement, i int, c *sysl.Group) {
-	v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "group %s\n", c.GetTitle())
+func (v *SequenceDiagramVisitor) visitGroup(e *StatementElement, i int, c *sysl.Group) error {
+	return v.visitGroupStmt(e, c.GetStmt(), e.isLastStmt(i), "group %s\n", c.GetTitle())
 }
 
-func (v *SequenceDiagramVisitor) visitAlt(e *StatementElement, i int, c *sysl.Alt) {
+func (v *SequenceDiagramVisitor) visitAlt(e *StatementElement, i int, c *sysl.Alt) error {
 	prefix := "alt"
 	lastStmt := e.isLastStmt(i)
 	for j, choice := range c.GetChoice() {
 		lastAltStmt := lastStmt && j == len(c.GetChoice())-1
-		v.visitBlockStmt(e, choice.GetStmt(), lastAltStmt, "%s %s\n", prefix, choice.GetCond())
+		if err := v.visitBlockStmt(e, choice.GetStmt(), lastAltStmt, "%s %s\n", prefix, choice.GetCond()); err != nil {
+			return err
+		}
 		prefix = "else"
 	}
-	fmt.Fprintln(v.w, "end")
+	_, err := fmt.Fprintln(v.w, "end")
+	return err
 }
 
-func (v *SequenceDiagramVisitor) visitRet(e *StatementElement, c *sysl.Return) {
+func (v *SequenceDiagramVisitor) visitRet(e *StatementElement, c *sysl.Return) error {
 	rargs := formatReturnParam(v.m, c.GetPayload())
-	fmt.Fprintf(v.w, "%s<--%s : %s\n", e.sender(v), e.agent(v), strings.Join(rargs, " | "))
+	_, err := fmt.Fprintf(v.w, "%s<--%s : %s\n", e.sender(v), e.agent(v), strings.Join(rargs, " | "))
+	return err
 }
 
-func (v *SequenceDiagramVisitor) visitBlockStmt(e *StatementElement,
-	stmts []*sysl.Statement, isLastStmt bool, fmtStr string, args ...interface{}) {
+func (v *SequenceDiagramVisitor) visitBlockStmt(
+	e *StatementElement,
+	stmts []*sysl.Statement,
+	isLastStmt bool,
+	fmtStr string,
+	args ...interface{},
+) error {
 	fmt.Fprintf(v.w, fmtStr, args...)
 	v.w.Indent()
 	p := &StatementElement{
@@ -471,14 +501,25 @@ func (v *SequenceDiagramVisitor) visitBlockStmt(e *StatementElement,
 		stmts:            stmts,
 		isLastParentStmt: isLastStmt,
 	}
-	v.visitStatment(p)
+	if err := v.visitStatment(p); err != nil {
+		return err
+	}
 	v.w.Unindent()
+	return nil
 }
 
-func (v *SequenceDiagramVisitor) visitGroupStmt(e *StatementElement,
-	stmts []*sysl.Statement, isLastStmt bool, fmtStr string, args ...interface{}) {
-	v.visitBlockStmt(e, stmts, isLastStmt, fmtStr, args...)
-	fmt.Fprintln(v.w, "end")
+func (v *SequenceDiagramVisitor) visitGroupStmt(
+	e *StatementElement,
+	stmts []*sysl.Statement,
+	isLastStmt bool,
+	fmtStr string,
+	args ...interface{},
+) error {
+	if err := v.visitBlockStmt(e, stmts, isLastStmt, fmtStr, args...); err != nil {
+		return err
+	}
+	_, err := fmt.Fprintln(v.w, "end")
+	return err
 }
 
 type agent struct {
@@ -486,6 +527,7 @@ type agent struct {
 	name     string
 }
 
+//nolint:gochecknoglobals
 var agents = map[string]agent{
 	"human":    {0, "actor"},
 	"ui":       {1, "boundary"},

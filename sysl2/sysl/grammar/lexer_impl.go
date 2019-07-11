@@ -8,7 +8,28 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var syslLexerLog = os.Getenv("SYSL_LEXER_LOG") != ""
+//nolint:gochecknoglobals
+var (
+	syslLexerLog = os.Getenv("SYSL_LEXER_LOG") != ""
+
+	keywords = [...]string{
+		"sequence of",
+		"set of",
+		"return",
+		"for",
+		"one of",
+		"else",
+		"if",
+		"loop",
+		"until",
+		"alt",
+		"while",
+	}
+)
+
+// TODO: Make lexer reentrant.
+//nolint:gochecknoglobals
+var prevToken []antlr.Token
 
 func calcSpaces(text string) int {
 	s := 0
@@ -42,21 +63,6 @@ func createDedentToken(source *antlr.TokenSourceCharStreamPair) *antlr.CommonTok
 func createIndentToken(source *antlr.TokenSourceCharStreamPair) *antlr.CommonToken {
 	return antlr.NewCommonToken(source, SyslLexerINDENT, 0, 0, 0)
 }
-
-var keywords = [...]string{
-	"sequence of",
-	"set of",
-	"return",
-	"for",
-	"one of",
-	"else",
-	"if",
-	"loop",
-	"until",
-	"alt",
-	"while",
-}
-var prevToken []antlr.Token
 
 type Stack struct {
 	stack []int
@@ -93,6 +99,8 @@ func (s *Stack) Peek() int {
 	return s.stack[s.index-1]
 }
 
+// TODO: Make lexer reentrant.
+//nolint:gochecknoglobals
 var level = NewStack()
 
 func getPreviousIndent(l *Stack) int {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/zlib"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -12,28 +13,33 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func OutputPlantuml(output, plantuml, umlInput string) {
+func OutputPlantuml(output, plantuml, umlInput string) error {
 	l := len(output)
 	mode := output[l-3:]
 
 	switch mode {
 	case "png", "svg":
-		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, DeflateAndEncode([]byte(umlInput)))
-		out, _ := sendHttpRequest(plantuml)
-		ioutil.WriteFile(output, out, os.ModePerm)
+		encoded, err := DeflateAndEncode([]byte(umlInput))
+		if err != nil {
+			return err
+		}
+		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, encoded)
+		out, _ := sendHTTPRequest(plantuml)
+		return ioutil.WriteFile(output, out, os.ModePerm)
 
 	case "uml":
 		output := output[:l-3]
 		output += "puml"
-		ioutil.WriteFile(output, []byte(umlInput), os.ModePerm)
+		return ioutil.WriteFile(output, []byte(umlInput), os.ModePerm)
 
 	default:
 		log.Errorf("Extension %s not supported. Valid extensions: svg, png, uml.", mode)
+		return nil
 	}
 }
 
-func sendHttpRequest(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+func sendHTTPRequest(url string) ([]byte, error) {
+	resp, err := http.Get(url) //nolint:gosec
 	if err != nil {
 		return nil, errors.Errorf("Unable to create http request to %s, Error:%s", url, err.Error())
 	}
@@ -47,15 +53,19 @@ func sendHttpRequest(url string) ([]byte, error) {
 }
 
 // The functions below ported from https://github.com/dougn/python-plantuml/blob/master/plantuml.py
-func DeflateAndEncode(text []byte) string {
+func DeflateAndEncode(text []byte) (string, error) {
 	var buf bytes.Buffer
 	zw, err := zlib.NewWriterLevel(&buf, zlib.BestCompression)
 	if err != nil {
-		errors.Errorf("Unable to encode []byte, Error:%s", err.Error())
+		return "", err
 	}
-	zw.Write(text)
-	zw.Close()
-	return encode(buf.Bytes())
+	if _, err := zw.Write(text); err != nil {
+		return "", err
+	}
+	if err := zw.Close(); err != nil {
+		return "", err
+	}
+	return encode(buf.Bytes()), nil
 }
 
 func encode(data []byte) string {
@@ -74,11 +84,19 @@ func encode(data []byte) string {
 }
 
 // 3 bytes takes 24 bits. This splits 24 bits into 4 bytes of which lower 6-bit takes account.
-func encode3bytes(buf *bytes.Buffer, b1, b2, b3 byte) {
-	buf.WriteByte(encode6bit(0x3F & (b1 >> 2)))
-	buf.WriteByte(encode6bit(0x3F & (((b1 & 0x3) << 4) | (b2 >> 4))))
-	buf.WriteByte(encode6bit(0x3F & (((b2 & 0xF) << 2) | (b3 >> 6))))
-	buf.WriteByte(encode6bit(0x3F & b3))
+func encode3bytes(w io.ByteWriter, b1, b2, b3 byte) {
+	if err := w.WriteByte(encode6bit(0x3F & (b1 >> 2))); err != nil {
+		panic(err)
+	}
+	if err := w.WriteByte(encode6bit(0x3F & (((b1 & 0x3) << 4) | (b2 >> 4)))); err != nil {
+		panic(err)
+	}
+	if err := w.WriteByte(encode6bit(0x3F & (((b2 & 0xF) << 2) | (b3 >> 6)))); err != nil {
+		panic(err)
+	}
+	if err := w.WriteByte(encode6bit(0x3F & b3)); err != nil {
+		panic(err)
+	}
 }
 
 func encode6bit(b byte) byte {

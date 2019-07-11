@@ -4,10 +4,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -15,8 +16,9 @@ type mockVisitor struct {
 	mock.Mock
 }
 
-func (m *mockVisitor) Visit(e Element) {
+func (m *mockVisitor) Visit(e Element) error {
 	m.Called(e)
+	return nil
 }
 
 type elementSuite struct {
@@ -32,7 +34,7 @@ func (suite *elementSuite) SetupTest() {
 
 func (suite *elementSuite) TestElementAccept() {
 	t := suite.T()
-	suite.e.Accept(suite.v)
+	require.NoError(t, suite.e.Accept(suite.v))
 
 	suite.v.AssertCalled(t, "Visit", suite.e)
 	suite.v.AssertNumberOfCalls(t, "Visit", 1)
@@ -248,13 +250,15 @@ func TestStatementElementIsLastStmt(t *testing.T) {
 	assert.True(t, actual)
 }
 
-func readModule(p string) *sysl.Module {
+func readModule(p string) (*sysl.Module, error) {
 	m := &sysl.Module{}
 	f, _ := os.Open(p)
 
-	jsonpb.Unmarshal(f, m)
+	if err := jsonpb.Unmarshal(f, m); err != nil {
+		return nil, err
+	}
 
-	return m
+	return m, nil
 }
 
 type labeler struct{}
@@ -271,12 +275,13 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	// Given
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m := readModule("../tests/sequence_diagram_project.golden.json")
+	m, err := readModule("../tests/sequence_diagram_project.golden.json")
+	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(l, l, w, m)
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, [][]string{})
 
 	// When
-	e.Accept(v)
+	require.NoError(t, e.Accept(v))
 
 	// Then
 	expected := `''''''''''''''''''''''''''''''''''''''''''
@@ -315,12 +320,13 @@ func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m := readModule("../tests/sequence_diagram_name_format.golden.json")
+	m, err := readModule("../tests/sequence_diagram_name_format.golden.json")
+	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(al, el, w, m)
 	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, [][]string{})
 
 	// When
-	e.Accept(v)
+	require.NoError(t, e.Accept(v))
 
 	// Then
 	expected := `''''''''''''''''''''''''''''''''''''''''''

@@ -88,8 +88,8 @@ func (s *SequenceDiagramWriter) WriteByte(c byte) error {
 	return err
 }
 
-func (s *SequenceDiagramWriter) WriteHead(v string) {
-	fmt.Fprintln(&s.head, v)
+func (s *SequenceDiagramWriter) WriteHead(v string) (int, error) {
+	return fmt.Fprintln(&s.head, v)
 }
 
 func (s *SequenceDiagramWriter) Indent() {

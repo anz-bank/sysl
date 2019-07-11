@@ -11,7 +11,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/anz-bank/sysl/src/proto"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -24,8 +24,12 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "Open file %#v", filename)
 	}
-	io.Copy(&buf, f)
-	f.Close()
+	if _, err := io.Copy(&buf, f); err != nil {
+		return nil, err
+	}
+	if err := f.Close(); err != nil {
+		return nil, err
+	}
 
 	module := &sysl.Module{}
 	if err := proto.UnmarshalText(buf.String(), module); err != nil {
@@ -34,12 +38,12 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	return module, nil
 }
 
-var pySysl = func() string {
+func pySysl() string {
 	if pySysl, ok := os.LookupEnv("SYSL_PYTHON_BIN"); ok {
 		return pySysl
 	}
 	return "sysl"
-}()
+}
 
 func pyParse(filename, root, output string) (*sysl.Module, error) {
 	var args []string
@@ -48,11 +52,11 @@ func pyParse(filename, root, output string) (*sysl.Module, error) {
 	}
 	args = append(args, "textpb", "-o", output, filename)
 
-	cmd := exec.Command(pySysl, args...)
+	cmd := exec.Command(pySysl(), args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return nil, errors.Wrapf(err, "Running %#v %#v", pySysl, args)
+		return nil, errors.Wrapf(err, "Running %#v %#v", pySysl(), args)
 	}
 
 	return readSyslModule(output)
@@ -99,7 +103,7 @@ func parseComparable(
 
 func parseAndCompare(
 	filename, root, golden string,
-	goldenModule *sysl.Module,
+	goldenProto proto.Message,
 	retainOnError bool,
 	stripSourceContext bool,
 ) (bool, error) {
@@ -108,11 +112,11 @@ func parseAndCompare(
 		return false, err
 	}
 
-	if proto.Equal(goldenModule, module) {
+	if proto.Equal(goldenProto, module) {
 		return true, nil
 	}
 
-	if err = TextPB(goldenModule, golden); err != nil {
+	if err = TextPB(goldenProto, golden); err != nil {
 		return false, err
 	}
 
@@ -161,13 +165,14 @@ func parseAndCompareWithPython(filename, root string, retainOnError bool) (bool,
 	defer golden.Close()
 
 	pyModule, err := pyParse(filename, root, golden.Name())
-	if retainOrRemove(err, golden, retainOnError); err != nil {
+	if err := retainOrRemove(err, golden, retainOnError); err != nil {
 		return false, errors.Wrapf(err, "pyParse(%#v, %#v, %#v)", filename, root, golden.Name())
 	}
 
 	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule, retainOnError, true)
-	if retainOrRemove(err, golden, retainOnError); err != nil {
-		return false, errors.Wrapf(err, "parseAndCompare(%#v, %#v, %#v, …, %#v)", filename, root, golden.Name(), retainOnError)
+	if err := retainOrRemove(err, golden, retainOnError); err != nil {
+		return false, errors.Wrapf(err, "parseAndCompare(%#v, %#v, %#v, …, %#v)",
+			filename, root, golden.Name(), retainOnError)
 	}
 	return equal, nil
 }
@@ -196,10 +201,10 @@ func testParseAgainstGolden(t *testing.T, filename, root string) {
 	}
 }
 
-func testParseAgainstGoldenWithSourceContext(t *testing.T, filename, root string) {
-	equal, err := parseAndCompareWithGolden(filename, root, false)
+func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
+	equal, err := parseAndCompareWithGolden(filename, "", false)
 	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", path.Join(root, filename))
+		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", filename)
 	}
 }
 
@@ -226,7 +231,7 @@ func TestIfElse(t *testing.T) {
 }
 
 func TestArgs(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/args.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/args.sysl")
 }
 
 func TestSimpleEPWithSpaces(t *testing.T) {
@@ -305,15 +310,15 @@ func TestRootArg(t *testing.T) {
 }
 
 func TestSequenceType(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/sequence_type.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/sequence_type.sysl")
 }
 
 func TestRestApi(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/test_rest_api.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/test_rest_api.sysl")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/rest_api_query_params.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/rest_api_query_params.sysl")
 }
 
 func TestSimpleProject(t *testing.T) {
@@ -321,11 +326,11 @@ func TestSimpleProject(t *testing.T) {
 }
 
 func TestUrlParamOrder(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/rest_url_params.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/rest_url_params.sysl")
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/bad_order.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/bad_order.sysl")
 }
 
 func TestTransform(t *testing.T) {
@@ -373,9 +378,9 @@ func TestCrash(t *testing.T) {
 }
 
 func TestStrings(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/strings_expr.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/strings_expr.sysl")
 }
 
 func TestTypeAlias(t *testing.T) {
-	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl", "")
+	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl")
 }

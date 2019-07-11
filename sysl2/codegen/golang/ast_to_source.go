@@ -63,12 +63,14 @@ func cSprintf(c rune, format string, args ...fmt.Formatter) string {
 
 func separator(w io.Writer, i int, sep string) {
 	if i > 0 {
-		w.Write([]byte(sep))
+		if _, err := w.Write([]byte(sep)); err != nil {
+			panic(err)
+		}
 	}
 }
 
-func sepFormat(s fmt.State, c rune, i int, f fmt.Formatter, sep string) {
-	separator(s, i, sep)
+func sepFormat(s fmt.State, c rune, i int, f fmt.Formatter) {
+	separator(s, i, ", ")
 	if f != nil {
 		f.Format(s, c)
 	}
@@ -103,11 +105,11 @@ func (n *AssignStmt) Format(s fmt.State, c rune) {
 		return
 	}
 	for i, expr := range n.LHS {
-		sepFormat(s, c, i, expr, ", ")
+		sepFormat(s, c, i, expr)
 	}
 	n.Tok.Format(s, c)
 	for i, expr := range n.RHS {
-		sepFormat(s, c, i, expr, ", ")
+		sepFormat(s, c, i, expr)
 	}
 }
 
@@ -178,7 +180,7 @@ func (n *CallExpr) Format(s fmt.State, c rune) {
 	}
 	scPrintf(s, c, "%c(", n.Fun)
 	for i, expr := range n.Args {
-		sepFormat(s, c, i, expr, ", ")
+		sepFormat(s, c, i, expr)
 	}
 	scPrintf(s, c, "%c)", &n.Ellipsis)
 }
@@ -193,7 +195,7 @@ func (n *CaseClause) Format(s fmt.State, c rune) {
 	} else {
 		fmt.Fprint(s, "case ")
 		for i, expr := range n.List {
-			sepFormat(s, c, i, expr, ", ")
+			sepFormat(s, c, i, expr)
 		}
 		fmt.Fprint(s, ":")
 	}
@@ -248,6 +250,7 @@ func (n *CommentGroup) Format(s fmt.State, c rune) {
 		return
 	}
 	for _, comment := range n.List {
+		comment := comment
 		scPrintf(s, c, "%c", &comment)
 	}
 }
@@ -259,7 +262,7 @@ func (n *CompositeLit) Format(s fmt.State, c rune) {
 	}
 	scPrintf(s, c, "%c{", emptyNil(n.Type))
 	for i, expr := range n.Elts {
-		sepFormat(s, c, i, expr, ", ")
+		sepFormat(s, c, i, expr)
 	}
 	fmt.Fprint(s, "}")
 }
@@ -311,7 +314,8 @@ func (n *Field) Format(s fmt.State, c rune) {
 	}
 	n.Doc.Format(s, c)
 	for i, name := range n.Names {
-		sepFormat(s, c, i, &name, ", ")
+		name := name
+		sepFormat(s, c, i, &name)
 	}
 	scPrintf(s, c, " %c %c", n.Type, n.Tag)
 }
@@ -323,7 +327,8 @@ func (n *FieldList) Format(s fmt.State, c rune) {
 	}
 	n.Opening.Format(s, c)
 	for i, field := range n.List {
-		sepFormat(s, c, i, &field, ", ")
+		field := field
+		sepFormat(s, c, i, &field)
 	}
 	n.Closing.Format(s, c)
 }
@@ -338,6 +343,7 @@ func (n *NoCommaSepFieldList) Format(s fmt.State, c rune) {
 	}
 	n.Opening.Format(s, c)
 	for _, field := range n.List {
+		field := field
 		scPrintf(s, c, "%c\n", &field)
 	}
 	n.Closing.Format(s, c)
@@ -351,11 +357,12 @@ func (n *File) Format(s fmt.State, c rune) {
 	n.Doc.Format(s, c)
 	scPrintf(s, c, "package %s\n\nimport (\n", &n.Name)
 	for _, importSpec := range n.Imports {
+		importSpec := importSpec
 		scPrintf(s, c, "%c\n", &importSpec)
 	}
 	fmt.Fprint(s, ")\n\n")
 	for i, decl := range n.Decls {
-		sepFormat(s, c, i, decl, ", ")
+		sepFormat(s, c, i, decl)
 	}
 }
 
@@ -525,13 +532,14 @@ func (n *RangeStmt) Format(s fmt.State, c rune) {
 	if n == nil {
 		return
 	}
-	if n.Key == nil {
+	switch {
+	case n.Key == nil:
 		scPrintf(s, c, "for range %c %c", emptyNil(n.X), &n.Body)
-	} else if n.Value == nil {
+	case n.Value == nil:
 		scPrintf(s, c, "for %c %c range %c %c",
 			emptyNil(n.Key), &n.Tok, emptyNil(n.X), &n.Body,
 		)
-	} else {
+	default:
 		scPrintf(s, c, "for %c, %c %c range %c %c",
 			emptyNil(n.Key), emptyNil(n.Value), &n.Tok, emptyNil(n.X), &n.Body,
 		)
@@ -545,7 +553,7 @@ func (n *ReturnStmt) Format(s fmt.State, c rune) {
 	}
 	scPrintf(s, c, "return ")
 	for i, expr := range n.Results {
-		sepFormat(s, c, i, expr, ", ")
+		sepFormat(s, c, i, expr)
 	}
 }
 
@@ -661,10 +669,11 @@ func (n *ValueSpec) Format(s fmt.State, c rune) {
 	}
 	n.Doc.Format(s, c)
 	for i, name := range n.Names {
-		sepFormat(s, c, i, &name, ", ")
+		name := name
+		sepFormat(s, c, i, &name)
 	}
 	scPrintf(s, c, " %c = ", emptyNil(n.Type))
 	for i, value := range n.Values {
-		sepFormat(s, c, i, value, ", ")
+		sepFormat(s, c, i, value)
 	}
 }

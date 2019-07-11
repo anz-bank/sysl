@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/anz-bank/sysl/sysl2/proto"
+	sysl "github.com/anz-bank/sysl/sysl2/proto"
 )
 
 type parserStack []*parser
