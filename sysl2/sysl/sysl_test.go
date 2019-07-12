@@ -234,7 +234,8 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 	stderr := &bytes.Buffer{}
 	wantStdout := "blackbox not hit: Server <- DB"
 
-	main2(stdout, stderr, []string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB=call to database", "-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
+	main2(stdout, stderr, []string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b",
+		"Server <- DB=call to database", "-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
 
 	if gotStdout := stdout.String(); strings.Compare(gotStdout, wantStdout) == 0 {
 		t.Errorf("main2() = %v, want %v", gotStdout, wantStdout)
@@ -245,7 +246,8 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	wantStdout := "blackbox 'SomeApp <- BarEndpoint' not hit in application 'Project :: Integrations :: PROJECT-E2E'"
-	main2(stdout, stderr, []string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Integrations"}, main3)
+	main2(stdout, stderr, []string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a",
+		"Project :: Integrations"}, main3)
 
 	if gotStdout := stdout.String(); strings.Compare(gotStdout, wantStdout) == 0 {
 		t.Errorf("main2() = %v, want %v", gotStdout, wantStdout)

@@ -80,7 +80,7 @@ func TestTransformBlackBoxes(t *testing.T) {
 
 func TestParseBlackBoxesFromArgument(t *testing.T) {
 	type args struct {
-		blackboxFlags []string
+		blackboxFlags map[string]string
 	}
 	tests := []struct {
 		name string
@@ -89,13 +89,17 @@ func TestParseBlackBoxesFromArgument(t *testing.T) {
 	}{
 		{
 			name: "Case-Null",
-			args: args{[]string{}},
+			args: args{map[string]string{}},
 			want: [][]string{},
 		},
 		{
 			name: "Case-ConvertSuccess",
-			args: args{[]string{"Value A,Value B", "Value C,Value D"}},
-			want: [][]string{{"Value A", "Value B"}, {"Value C", "Value D"}},
+			args: args{
+				map[string]string{"Value A": "Value B",
+					"Value C": "Value D"},
+			},
+			want: [][]string{{"Value A", "Value B"},
+				{"Value C", "Value D"}},
 		},
 	}
 	for _, tt := range tests {
@@ -173,25 +177,25 @@ func TestMergeAttributes(t *testing.T) {
 	}
 }
 
-func TestCopyBlackboxes(t *testing.T) {
+func TestTransformBlackboxesToUptos(t *testing.T) {
 	// given
-	m := map[string]string{
-		"keyA": "value A",
+	m := [][]string{
+		{"keyA", "value A"},
 	}
 
 	// when
-	r := copyBlackboxes(m)
+	r := TransformBlackboxesToUptos(m, BbApplication)
 
 	// then
-	assert.Equal(t, m, r, "unexpected map")
+	assert.Equal(t, m[0][1], r[m[0][0]].comment, "unexpected map")
 }
 
-func TestCopyBlackboxesByNil(t *testing.T) {
+func TestTransformBlackboxesToUptosByNil(t *testing.T) {
 	// given
-	var m map[string]string
+	var m [][]string
 
 	// when
-	r := copyBlackboxes(m)
+	r := TransformBlackboxesToUptos(m, BbApplication)
 
 	// then
 	assert.NotNil(t, r)

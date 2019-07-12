@@ -78,12 +78,9 @@ func TransformBlackboxesToUptos(bbs [][]string, uptoType UptoType) map[string]Up
 }
 
 func incrementCountBB(upto Upto) Upto {
-	incrementUpto := Upto{}
-	incrementUpto.comment = upto.comment
-	incrementUpto.lineNumber = upto.lineNumber
-	incrementUpto.valueType = upto.valueType
-	incrementUpto.visitCount = upto.visitCount + 1
-	return incrementUpto
+	incrementedUpto := upto
+	incrementedUpto.visitCount++
+	return incrementedUpto
 }
 
 func getAppName(appName *sysl.AppName) string {

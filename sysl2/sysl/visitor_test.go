@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"os"
 	"testing"
 
@@ -68,12 +69,7 @@ func TestMakeEntry(t *testing.T) {
 func TestMakeEndpointCollectionElement(t *testing.T) {
 	e := MakeEndpointCollectionElement("title",
 		[]string{"a <- b [upto b <- c]"},
-		[][]string{
-			{},
-			{"b <- c"},
-			{"c <- d", "test"},
-		})
-
+		map[string]Upto{"": {comment: ""}, "b <- c": {comment: ""}, "c <- d": {comment: "test"}})
 	assert.NotNil(t, e)
 	assert.Equal(t, "title", e.title)
 }
@@ -273,12 +269,15 @@ func (l *labeler) LabelEndpoint(p *EndpointLabelerParam) string {
 
 func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	// Given
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	appname := "appname"
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(l, l, w, m)
-	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, [][]string{})
+	v := MakeSequenceDiagramVisitor(l, l, w, m, stdout, stderr, appname)
+	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]Upto{})
 
 	// When
 	require.NoError(t, e.Accept(v))
@@ -317,13 +316,16 @@ deactivate _0
 
 func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	// Given
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	appname := "appname"
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_name_format.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(al, el, w, m)
-	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, [][]string{})
+	v := MakeSequenceDiagramVisitor(al, el, w, m, stdout, stderr, appname)
+	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, map[string]Upto{})
 
 	// When
 	require.NoError(t, e.Accept(v))

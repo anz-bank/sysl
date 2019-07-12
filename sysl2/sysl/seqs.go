@@ -63,7 +63,7 @@ func escapeWordBoundary(src string) string {
 }
 
 func DoConstructSequenceDiagrams(
-	stdout, stderr io.Writer, rootModel, endpointFormat, appFormat, title, output, modules string,
+	rootModel, endpointFormat, appFormat, title, output, modules string,
 	endpoints, apps []string,
 	blackboxes [][]string,
 ) map[string]string {
@@ -101,8 +101,8 @@ func DoConstructSequenceDiagrams(
 					}
 				}
 
-				bbsAll := TransformBlackboxesToUptos(bbs, BB_APPLICATION)
-				bbsEndpoint := TransformBlackboxesToUptos(bbs2, BB_ENDPOINT_COLLECTION)
+				bbsAll := TransformBlackboxesToUptos(bbs, seqs.BbApplication)
+				bbsEndpoint := TransformBlackboxesToUptos(bbs2, seqs.BbEndpointCollection)
 				for k, v := range bbsEndpoint {
 					bbsAll[k] = v
 				}
@@ -129,7 +129,7 @@ func DoConstructSequenceDiagrams(
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
 			title:           title,
-			blackboxes:      TransformBlackboxesToUptos(blackboxes, BB_APPLICATION),
+			blackboxes:      TransformBlackboxesToUptos(blackboxes, seqs.BbApplication),
 			appName:         "Global",
 		}
 		out, _ := generateSequenceDiag(mod, sd)

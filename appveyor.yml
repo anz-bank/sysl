@@ -31,7 +31,7 @@ test_script:
   - pytest
   - pytest test/e2e --syslexe=sysl --reljamexe=reljam
   - gradle --no-daemon -b test\java\build.gradle test
-  - go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/sysl2/sysl
+  - go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/...
   - test-gosysl.bat
 
 after_test:

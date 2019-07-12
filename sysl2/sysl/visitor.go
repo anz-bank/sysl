@@ -42,7 +42,8 @@ type EndpointCollectionElement struct {
 	blackboxes map[string]Upto
 }
 
-func MakeEndpointCollectionElement(title string, endpoints []string, blackboxes map[string]Upto) *EndpointCollectionElement {
+func MakeEndpointCollectionElement(title string, endpoints []string,
+	blackboxes map[string]Upto) *EndpointCollectionElement {
 	entries := make([]*entry, 0, len(endpoints))
 	uptos := make([]string, 0, len(endpoints))
 
@@ -81,10 +82,10 @@ func (e *EndpointCollectionElement) Accept(v Visitor) error {
 type UptoType int
 
 const (
-	UPTO                   = 0
-	BB_APPLICATION         = 2
-	UPTO_ENDPOINT          = 1
-	BB_ENDPOINT_COLLECTION = 3
+	UpTo                 = 0
+	BbApplication        = 2
+	UptoEndpoint         = 1
+	BbEndpointCollection = 3
 )
 
 type Upto struct {
@@ -237,19 +238,18 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 	case *EndpointCollectionElement:
 		v.visitEndpointCollection(t)
 		for bbKey, bbVal := range t.blackboxes {
-			if bbVal.valueType >= BB_APPLICATION && bbVal.visitCount == 0 {
+			if bbVal.valueType >= BbApplication && bbVal.visitCount == 0 {
 				var scope string
 				switch bbVal.valueType {
-				case BB_APPLICATION:
-					scope = "'" + v.currentApp + " :: " + "'"
-				case BB_ENDPOINT_COLLECTION:
-					scope = "'" + v.currentApp + " :: " + t.title + "'"
+				case BbApplication:
+					scope = fmt.Sprintf("' %s :: '", v.currentApp)
+				case BbEndpointCollection:
+					scope = fmt.Sprintf("' %s :: %s'", v.currentApp, t.title)
 				default:
 					scope = ""
-					log.Warnf("blackbox" + scope + "not hit: " + bbKey + "\n")
 				}
-				v.stdout.Write([]byte("blackbox '" + bbKey + "' not hit in app " + scope + "\n"))
-				log.Warnf("blackbox '" + bbKey + "' not hit in app " + scope + "\n")
+				fmt.Fprintf(v.stdout, fmt.Sprintf("blackbox '%s' not hit in app %s\n", v.currentApp, t.title))
+				log.Warnf("blackbox %s not hit: %s\n", scope, bbKey)
 			}
 		}
 	case *EndpointElement:
@@ -302,7 +302,7 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 		for k := range allUptos {
 			e.blackboxes[k] = Upto{
 				lineNumber: -1,
-				valueType:  UPTO,
+				valueType:  UpTo,
 				comment:    "see below",
 			}
 		}
@@ -378,7 +378,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	if len(endpoint.Stmt) > 0 {
 		visiting := fmt.Sprintf("%s <- %s", e.appName, e.endpointName)
 		upto, hitUpto := e.uptos[visiting]
-		if hitUpto && e.uptos[visiting].valueType >= BB_APPLICATION {
+		if hitUpto && e.uptos[visiting].valueType >= BbApplication {
 			e.uptos[visiting] = incrementCountBB(e.uptos[visiting])
 		}
 		_, hitVisited := v.visited[visiting]
