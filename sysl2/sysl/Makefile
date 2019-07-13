@@ -66,6 +66,7 @@ SYSL_TEST_FILES = \
 	mixin \
 	navigate \
 	oneof \
+	petshop \
 	project \
 	pubsub_collector \
 	rank \
