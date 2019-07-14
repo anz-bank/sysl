@@ -48,43 +48,23 @@ func TestDeflateAndEncode(t *testing.T) {
 	assert.Equal(t, expected, actual, "Unexpected output")
 }
 
+func testOutputPlantuml(t *testing.T, output, output2 string) {
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, testPlantumlInput))
+	_, err := os.Stat(output2)
+	require.False(t, os.IsNotExist(err))
+	os.Remove(output2)
+}
+
 func TestOutputPlantumlWithPng(t *testing.T) {
-	//Given
-	output := "test.png"
-	umlInput := testPlantumlInput
-
-	//When
-	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
-
-	//Then
-	_, err := os.Stat(output)
-	assert.False(t, os.IsNotExist(err))
+	testOutputPlantuml(t, "test.png", "test.png")
 }
 
 func TestOutputPlantumlWithSvg(t *testing.T) {
-	//Given
-	output := "test.svg"
-	umlInput := testPlantumlInput
-
-	//When
-	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
-
-	//Then
-	_, err := os.Stat(output)
-	assert.False(t, os.IsNotExist(err))
+	testOutputPlantuml(t, "test.svg", "test.svg")
 }
 
 func TestOutputPlantumlWithUml(t *testing.T) {
-	//Given
-	output := "test.uml"
-	umlInput := testPlantumlInput
-
-	//When
-	require.NoError(t, OutputPlantuml(output, plantumlDotCom, umlInput))
-
-	//Then
-	_, err := os.Stat("test.puml")
-	assert.False(t, os.IsNotExist(err))
+	testOutputPlantuml(t, "test.uml", "test.puml")
 }
 
 func TestEncode6bit(t *testing.T) {
