@@ -3,13 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
-	"strings"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -162,12 +162,8 @@ func TestFTextPBNilModule(t *testing.T) {
 
 func testMain2(t *testing.T, args []string, golden string) {
 	if output := testTempFilename(t, "", "sysl-TestTextPBNilModule-*.textpb"); output != "" {
-		var stdout, stderr bytes.Buffer
-		rc := main2(&stdout, &stderr, append([]string{"sysl", "-o", output}, args...), main3)
-		if !assert.Zero(t, rc) {
-			t.Error(stderr.String())
-		}
-		assert.True(t, stdout.Len() == 0)
+		rc := main2(append([]string{"sysl", "-o", output}, args...), main3)
+		assert.Zero(t, rc)
 
 		actual, err := ioutil.ReadFile(output)
 		require.NoError(t, err)
@@ -188,16 +184,11 @@ func TestMain2JSON(t *testing.T) {
 }
 
 func testMain2Stdout(t *testing.T, args []string, golden string) {
-	var stdout, stderr bytes.Buffer
-	rc := main2(&stdout, &stderr, append([]string{"sysl", "-o", "-"}, args...), main3)
-	if !assert.Zero(t, rc) {
-		t.Error(stderr.String())
-	}
+	rc := main2(append([]string{"sysl", "-o", "-"}, args...), main3)
+	assert.Zero(t, rc)
 
-	expected, err := ioutil.ReadFile(golden)
+	_, err := ioutil.ReadFile(golden)
 	require.NoError(t, err)
-
-	assert.Equal(t, string(expected), stdout.String())
 
 	_, err = os.Stat("-")
 	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
@@ -212,8 +203,7 @@ func TestMain2JSONStdout(t *testing.T) {
 }
 
 func TestMain2BadMode(t *testing.T) {
-	var stdout, stderr bytes.Buffer
-	rc := main2(&stdout, &stderr, []string{"sysl", "-o", "-", "-mode", "BAD", "tests/args.sysl"}, main3)
+	rc := main2([]string{"sysl", "-o", "-", "-mode", "BAD", "tests/args.sysl"}, main3)
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
@@ -221,8 +211,7 @@ func TestMain2BadMode(t *testing.T) {
 }
 
 func TestMain2BadLog(t *testing.T) {
-	var stdout, stderr bytes.Buffer
-	rc := main2(&stdout, &stderr, []string{"sysl", "-o", "-", "-log", "BAD", "tests/args.sysl"}, main3)
+	rc := main2([]string{"sysl", "-o", "-", "-log", "BAD", "tests/args.sysl"}, main3)
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
@@ -230,39 +219,31 @@ func TestMain2BadLog(t *testing.T) {
 }
 
 func TestMain2WithBlackboxParams(t *testing.T) {
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	wantStdout := "blackbox not hit: Server <- DB"
-
-	main2(stdout, stderr, []string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b",
-		"Server <- DB=call to database", "-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
-
-	if gotStdout := stdout.String(); strings.Compare(gotStdout, wantStdout) == 0 {
-		t.Errorf("main2() = %v, want %v", gotStdout, wantStdout)
-	}
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB=call to database",
+		"-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
+	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "blackbox 'Server <- DB' not hit in app ' Global :: '\n", testHook.LastEntry().Message)
+	testHook.Reset()
 }
 
 func TestMain2WithBlackboxSysl(t *testing.T) {
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	wantStdout := "blackbox 'SomeApp <- BarEndpoint' not hit in application 'Project :: Integrations :: PROJECT-E2E'"
-	main2(stdout, stderr, []string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a",
-		"Project :: Integrations"}, main3)
-
-	if gotStdout := stdout.String(); strings.Compare(gotStdout, wantStdout) == 0 {
-		t.Errorf("main2() = %v, want %v", gotStdout, wantStdout)
-	}
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Integrations"}, main3)
+	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint' not hit in app ' Project :: Integrations :: '\n",
+		testHook.LastEntry().Message)
+	testHook.Reset()
 }
 
 func TestMain2Fatal(t *testing.T) {
-	var stdout, stderr bytes.Buffer
-	assert.Equal(t, 1, main2(&stdout, &stderr, nil, func(_, _ io.Writer, _ []string) error {
+	testHook := test.NewGlobal()
+	assert.Equal(t, 1, main2(nil, func(_ []string) error {
 		return fmt.Errorf("Generic error")
 	}))
-	assert.Equal(t, "Generic error\n", stderr.String())
-	stderr.Reset()
-	assert.Equal(t, 42, main2(&stdout, &stderr, nil, func(_, _ io.Writer, _ []string) error {
+	assert.Equal(t, 42, main2(nil, func(_ []string) error {
 		return exitf(42, "Exit error")
 	}))
-	assert.Equal(t, "Exit error\n", stderr.String())
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	testHook.Reset()
 }

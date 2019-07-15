@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"os"
 	"testing"
 
@@ -269,14 +268,12 @@ func (l *labeler) LabelEndpoint(p *EndpointLabelerParam) string {
 
 func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	// Given
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
 	appname := "appname"
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(l, l, w, m, stdout, stderr, appname)
+	v := MakeSequenceDiagramVisitor(l, l, w, m, appname)
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]Upto{})
 
 	// When
@@ -316,15 +313,13 @@ deactivate _0
 
 func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	// Given
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
 	appname := "appname"
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_name_format.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(al, el, w, m, stdout, stderr, appname)
+	v := MakeSequenceDiagramVisitor(al, el, w, m, appname)
 	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, map[string]Upto{})
 
 	// When

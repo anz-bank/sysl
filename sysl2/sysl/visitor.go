@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"sort"
 	"strings"
 
@@ -20,14 +19,18 @@ func makeEntry(s string) *entry {
 	match := endpointParserRE.FindStringSubmatch(s)
 
 	out := &entry{}
+	const appname string = "appname"
+	const epname string = "epname"
+	const upto string = "upto"
+
 	for i, name := range endpointParserRE.SubexpNames() {
 		if i > 0 && i <= len(match) {
 			switch name {
-			case "appname":
+			case appname:
 				out.appName = match[i]
-			case "epname":
+			case epname:
 				out.endpointName = match[i]
-			case "upto":
+			case upto:
 				out.upto = match[i]
 			}
 		}
@@ -202,8 +205,6 @@ type SequenceDiagramVisitor struct {
 	m          *sysl.Module
 	visited    map[string]int
 	symbols    map[string]*_var
-	stdout     io.Writer
-	stderr     io.Writer
 	currentApp string
 }
 
@@ -221,8 +222,6 @@ func MakeSequenceDiagramVisitor(
 		m:               m,
 		visited:         make(map[string]int),
 		symbols:         make(map[string]*_var),
-		stdout:          out,
-		stderr:          err,
 		currentApp:      appName,
 	}
 }
@@ -236,7 +235,7 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 
 	switch t := e.(type) {
 	case *EndpointCollectionElement:
-		v.visitEndpointCollection(t)
+		err := v.visitEndpointCollection(t)
 		for bbKey, bbVal := range t.blackboxes {
 			if bbVal.valueType >= BbApplication && bbVal.visitCount == 0 {
 				var scope string
@@ -248,10 +247,10 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 				default:
 					scope = ""
 				}
-				fmt.Fprintf(v.stdout, fmt.Sprintf("blackbox '%s' not hit in app %s\n", v.currentApp, t.title))
-				log.Warnf("blackbox %s not hit: %s\n", scope, bbKey)
+				log.Warnf("blackbox '%s' not hit in app %s\n", bbKey, scope)
 			}
 		}
+		return err
 	case *EndpointElement:
 		return v.visitEndpoint(t)
 	case *StatementElement:
