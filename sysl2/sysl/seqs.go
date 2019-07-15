@@ -16,7 +16,7 @@ type sequenceDiagParam struct {
 	EndpointLabeler
 	endpoints  []string
 	title      string
-	blackboxes map[string]Upto
+	blackboxes map[string]*seqs.Upto
 	appName    string
 }
 
@@ -100,8 +100,8 @@ func DoConstructSequenceDiagrams(
 					}
 				}
 
-				bbsAll := TransformBlackboxesToUptos(bbs, seqs.BbApplication)
-				bbsEndpoint := TransformBlackboxesToUptos(bbs2, seqs.BbEndpointCollection)
+				bbsAll := TransformBlackboxesToUptos(bbs, BbApplication)
+				bbsEndpoint := TransformBlackboxesToUptos(bbs2, BbEndpointCollection)
 				for k, v := range bbsEndpoint {
 					bbsAll[k] = v
 				}
@@ -128,7 +128,7 @@ func DoConstructSequenceDiagrams(
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
 			title:           title,
-			blackboxes:      TransformBlackboxesToUptos(blackboxes, seqs.BbApplication),
+			blackboxes:      TransformBlackboxesToUptos(blackboxes, BbApplication),
 			appName:         "Global",
 		}
 		out, _ := generateSequenceDiag(mod, sd)

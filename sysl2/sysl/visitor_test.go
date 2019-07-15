@@ -68,7 +68,7 @@ func TestMakeEntry(t *testing.T) {
 func TestMakeEndpointCollectionElement(t *testing.T) {
 	e := MakeEndpointCollectionElement("title",
 		[]string{"a <- b [upto b <- c]"},
-		map[string]Upto{"": {comment: ""}, "b <- c": {comment: ""}, "c <- d": {comment: "test"}})
+		map[string]*Upto{"": {comment: ""}, "b <- c": {comment: ""}, "c <- d": {comment: "test"}})
 	assert.NotNil(t, e)
 	assert.Equal(t, "title", e.title)
 }
@@ -274,7 +274,7 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(l, l, w, m, appname)
-	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]Upto{})
+	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{})
 
 	// When
 	require.NoError(t, e.Accept(v))
@@ -320,7 +320,7 @@ func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	m, err := readModule("./tests/sequence_diagram_name_format.golden.json")
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(al, el, w, m, appname)
-	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, map[string]Upto{})
+	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, map[string]*Upto{})
 
 	// When
 	require.NoError(t, e.Accept(v))

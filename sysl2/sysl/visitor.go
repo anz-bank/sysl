@@ -42,11 +42,11 @@ type EndpointCollectionElement struct {
 	title      string
 	entries    []*entry
 	uptos      StrSet
-	blackboxes map[string]Upto
+	blackboxes map[string]*Upto
 }
 
 func MakeEndpointCollectionElement(title string, endpoints []string,
-	blackboxes map[string]Upto) *EndpointCollectionElement {
+	blackboxes map[string]*Upto) *EndpointCollectionElement {
 	entries := make([]*entry, 0, len(endpoints))
 	uptos := make([]string, 0, len(endpoints))
 
@@ -57,7 +57,7 @@ func MakeEndpointCollectionElement(title string, endpoints []string,
 		uptos = append(uptos, fmt.Sprintf("%s <- %s", entry.appName, entry.endpointName))
 	}
 
-	bb := make(map[string]Upto)
+	bb := make(map[string]*Upto)
 	for k, b := range blackboxes {
 		switch len(b.comment) {
 		case 0:
@@ -102,7 +102,7 @@ type EndpointElement struct {
 	fromApp                *sysl.AppName
 	appName                string
 	endpointName           string
-	uptos                  map[string]Upto
+	uptos                  map[string]*Upto
 	senderPatterns         StrSet
 	senderEndpointPatterns StrSet
 	stmt                   *sysl.Statement
@@ -299,7 +299,7 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 		visiting := fmt.Sprintf("%s <- %s", entry.appName, entry.endpointName)
 		delete(allUptos, visiting)
 		for k := range allUptos {
-			e.blackboxes[k] = Upto{
+			e.blackboxes[k] = &Upto{
 				lineNumber: -1,
 				valueType:  UpTo,
 				comment:    "see below",
@@ -378,7 +378,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 		visiting := fmt.Sprintf("%s <- %s", e.appName, e.endpointName)
 		upto, hitUpto := e.uptos[visiting]
 		if hitUpto && e.uptos[visiting].valueType >= BbApplication {
-			e.uptos[visiting] = incrementCountBB(e.uptos[visiting])
+			e.uptos[visiting].visitCount++
 		}
 		_, hitVisited := v.visited[visiting]
 

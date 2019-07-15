@@ -63,14 +63,14 @@ func main3(args []string) error {
 
 	filename := flags.Arg(0)
 
-	log.Printf("Args: %v\n", flags.Args())
-	log.Printf("Root: %s\n", *root)
-	log.Printf("Module: %s\n", filename)
-	log.Printf("Mode: %s\n", *mode)
-	log.Printf("Log Level: %s\n", *loglevel)
+	log.Infof("Args: %v\n", flags.Args())
+	log.Infof("Root: %s\n", *root)
+	log.Infof("Module: %s\n", filename)
+	log.Infof("Mode: %s\n", *mode)
+	log.Infof("Log Level: %s\n", *loglevel)
 	format := strings.ToLower(*output)
 	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
-	log.Printf("%s\n", filename)
+	log.Infof("%s\n", filename)
 	mod, err := Parse(filename, *root)
 	if err != nil {
 		return err

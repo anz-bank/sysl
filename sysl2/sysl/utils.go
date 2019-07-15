@@ -60,13 +60,13 @@ func MergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Att
 	return result
 }
 
-func TransformBlackboxesToUptos(bbs [][]string, uptoType UptoType) map[string]Upto {
-	m := make(map[string]Upto)
+func TransformBlackboxesToUptos(bbs [][]string, uptoType UptoType) map[string]*Upto {
+	m := make(map[string]*Upto)
 	if bbs == nil {
 		return m
 	}
 	for _, val := range bbs {
-		m[val[0]] = Upto{
+		m[val[0]] = &Upto{
 			visitCount: 0,
 			lineNumber: -1,
 			valueType:  uptoType,
@@ -75,12 +75,6 @@ func TransformBlackboxesToUptos(bbs [][]string, uptoType UptoType) map[string]Up
 	}
 
 	return m
-}
-
-func incrementCountBB(upto Upto) Upto {
-	incrementedUpto := upto
-	incrementedUpto.visitCount++
-	return incrementedUpto
 }
 
 func getAppName(appName *sysl.AppName) string {
