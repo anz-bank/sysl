@@ -274,7 +274,26 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(l, l, w, m, appname)
-	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{})
+	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{
+		"Frontend <- Profile": {
+			lineNumber: -1,
+			valueType:  BbEndpointCollection,
+			comment:    "see below",
+			visitCount: 0,
+		},
+		"ApplicationFrontend <- AppProfile": {
+			lineNumber: -1,
+			valueType:  BbApplication,
+			comment:    "see below",
+			visitCount: 0,
+		},
+		"UptoFrontend <- UptoApp": {
+			lineNumber: -1,
+			valueType:  UptoEndpoint,
+			comment:    "see below",
+			visitCount: 0,
+		},
+	})
 
 	// When
 	require.NoError(t, e.Accept(v))

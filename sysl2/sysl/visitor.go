@@ -232,10 +232,10 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 			log.Errorln(err)
 		}
 	}()
-
+	var err error
 	switch t := e.(type) {
 	case *EndpointCollectionElement:
-		err := v.visitEndpointCollection(t)
+		err = v.visitEndpointCollection(t)
 		for bbKey, bbVal := range t.blackboxes {
 			if bbVal.valueType >= BbApplication && bbVal.visitCount == 0 {
 				var scope string
@@ -244,20 +244,16 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 					scope = fmt.Sprintf("' %s :: '", v.currentApp)
 				case BbEndpointCollection:
 					scope = fmt.Sprintf("' %s :: %s'", v.currentApp, t.title)
-				default:
-					scope = ""
 				}
 				log.Warnf("blackbox '%s' not hit in app %s\n", bbKey, scope)
 			}
 		}
-		return err
 	case *EndpointElement:
-		return v.visitEndpoint(t)
+		err = v.visitEndpoint(t)
 	case *StatementElement:
-		return v.visitStatment(t)
+		err = v.visitStatment(t)
 	}
-	// TODO: Error?
-	return nil
+	return err
 }
 
 func (v *SequenceDiagramVisitor) UniqueVarForAppName(appName string) string {
