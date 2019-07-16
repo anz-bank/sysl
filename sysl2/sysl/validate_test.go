@@ -27,56 +27,92 @@ func TestValidatorLogMsg(t *testing.T) {
 	}
 }
 
-func TestValidatorViewOutput(t *testing.T) {
+func TestValidatorGetTypeName(t *testing.T) {
 	cases := map[string]struct {
-		input     *sysl.Type
-		expected1 string
-		expected2 bool
+		input    *sysl.Type
+		expected string
 	}{
 		"Primitive string": {
-			input:     &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING}},
-			expected1: "STRING", expected2: false},
+			input:    &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING}},
+			expected: "STRING"},
 		"Primitive bool": {
-			input:     &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_BOOL}},
-			expected1: "BOOL", expected2: false},
+			input:    &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_BOOL}},
+			expected: "BOOL"},
 		"Primitive int": {
-			input:     &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_INT}},
-			expected1: "INT", expected2: false},
+			input:    &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_INT}},
+			expected: "INT"},
 		"Primitive float": {
-			input:     &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_FLOAT}},
-			expected1: "FLOAT", expected2: false},
+			input:    &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_FLOAT}},
+			expected: "FLOAT"},
 		"Primitive decimal": {
-			input:     &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_DECIMAL}},
-			expected1: "DECIMAL", expected2: false},
+			input:    &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_DECIMAL}},
+			expected: "DECIMAL"},
 		"Primitive no type": {
-			input:     &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_EMPTY}},
-			expected1: "EMPTY", expected2: false},
+			input:    &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_EMPTY}},
+			expected: "EMPTY"},
 		"Sequence of primitives": {
 			input: &sysl.Type{Type: &sysl.Type_Sequence{
 				Sequence: &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_INT}}}},
-			expected1: "INT", expected2: true},
+			expected: "INT"},
 		"Sequence of ref": {
 			input: &sysl.Type{Type: &sysl.Type_Sequence{
 				Sequence: &sysl.Type{Type: &sysl.Type_TypeRef{TypeRef: &sysl.ScopedRef{
 					Ref: &sysl.Scope{Path: []string{"RefType"}}}}}}},
-			expected1: "RefType", expected2: true},
+			expected: "RefType"},
 		"Ref": {
 			input: &sysl.Type{Type: &sysl.Type_TypeRef{
 				TypeRef: &sysl.ScopedRef{Ref: &sysl.Scope{Path: []string{"RefType"}}}}},
-			expected1: "RefType", expected2: false},
+			expected: "RefType"},
 		"Unknown": {
-			input:     &sysl.Type{Type: &sysl.Type_Map_{}},
-			expected1: "Unknown", expected2: false},
+			input:    &sysl.Type{Type: &sysl.Type_Map_{}},
+			expected: "Unknown"},
 	}
 
 	for name, test := range cases {
 		input := test.input
-		expected1 := test.expected1
-		expected2 := test.expected2
+		expected := test.expected
 		t.Run(name, func(t *testing.T) {
-			out, isColl := viewOutput(input)
-			assert.Equal(t, expected1, out, "Unexpected result")
-			assert.Equal(t, expected2, isColl, "Unexpected result")
+			typeName := getTypeName(input)
+			assert.Equal(t, expected, typeName, "Unexpected result")
+		})
+	}
+}
+
+func TestValidatorIsCollectionType(t *testing.T) {
+	cases := map[string]struct {
+		input    *sysl.Type
+		expected bool
+	}{
+		"Sequence": {
+			input:    &sysl.Type{Type: &sysl.Type_Sequence{}},
+			expected: true},
+		"Map": {
+			input:    &sysl.Type{Type: &sysl.Type_Map_{}},
+			expected: true},
+		"Set": {
+			input:    &sysl.Type{Type: &sysl.Type_Set{}},
+			expected: true},
+		"List": {
+			input:    &sysl.Type{Type: &sysl.Type_List_{}},
+			expected: true},
+		"Primitive string": {
+			input:    &sysl.Type{Type: &sysl.Type_Primitive_{}},
+			expected: false},
+		"Ref": {
+			input: &sysl.Type{Type: &sysl.Type_TypeRef{
+				TypeRef: &sysl.ScopedRef{Ref: &sysl.Scope{Path: []string{"RefType"}}}}},
+			expected: false},
+		"Unknown": {
+			input:    &sysl.Type{Type: &sysl.Type_NoType_{}},
+			expected: false},
+	}
+
+	for name, test := range cases {
+		input := test.input
+		expected := test.expected
+		t.Run(name, func(t *testing.T) {
+			typeName := isCollectionType(input)
+			assert.Equal(t, expected, typeName, "Unexpected result")
 		})
 	}
 }
@@ -171,23 +207,19 @@ func TestValidatorHasSameType(t *testing.T) {
 		type1 *sysl.Type
 		type2 *sysl.Type
 	}
-	type expectedData struct {
-		isSame       bool
-		expectedType string
-	}
 	cases := map[string]struct {
 		input    inputData
-		expected expectedData
+		expected bool
 	}{
 		"Same primitive types": {
 			input:    inputData{type1: stringType, type2: stringType},
-			expected: expectedData{isSame: true, expectedType: "STRING"}},
+			expected: true},
 		"Different primitive types1": {
 			input:    inputData{type1: stringType, type2: intType},
-			expected: expectedData{isSame: false, expectedType: "STRING"}},
+			expected: false},
 		"Different primitive types2": {
 			input:    inputData{type1: intType, type2: stringType},
-			expected: expectedData{isSame: false, expectedType: "INT"}},
+			expected: false},
 		"Same transform typerefs1": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -202,7 +234,7 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}},
-			expected: expectedData{isSame: true, expectedType: "Statement"}},
+			expected: true},
 		"Different transform typerefs1-1": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -217,7 +249,7 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}},
-			expected: expectedData{isSame: false, expectedType: "Statement"}},
+			expected: false},
 		"Different transform typerefs1-2": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -232,7 +264,7 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}},
-			expected: expectedData{isSame: false, expectedType: "StatementList"}},
+			expected: false},
 		"Same transform typerefs2": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -247,7 +279,7 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}},
-			expected: expectedData{isSame: true, expectedType: "Statement"}},
+			expected: true},
 		"Different transform typerefs2-1": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -262,7 +294,7 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}},
-			expected: expectedData{isSame: false, expectedType: "Statement"}},
+			expected: false},
 		"Different transform typerefs2-2": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -277,13 +309,13 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}},
-			expected: expectedData{isSame: false, expectedType: "StatementList"}},
+			expected: false},
 		"Different types1": {
 			input:    inputData{type1: noType(), type2: stringType},
-			expected: expectedData{isSame: false, expectedType: "Unresolved"}},
+			expected: false},
 		"Different types2": {
 			input:    inputData{type1: stringType, type2: noType()},
-			expected: expectedData{isSame: false, expectedType: "STRING"}},
+			expected: false},
 		"Different types3": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -292,7 +324,16 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}, type2: stringType},
-			expected: expectedData{isSame: false, expectedType: "Statement"}},
+			expected: false},
+		"Different types3.5": {
+			input: inputData{type2: &sysl.Type{
+				Type: &sysl.Type_TypeRef{
+					TypeRef: &sysl.ScopedRef{
+						Ref: &sysl.Scope{Appname: &sysl.AppName{Part: []string{"Statement"}}},
+					},
+				},
+			}, type1: stringType},
+			expected: false},
 		"Different types4": {
 			input: inputData{type1: &sysl.Type{
 				Type: &sysl.Type_TypeRef{
@@ -301,24 +342,23 @@ func TestValidatorHasSameType(t *testing.T) {
 					},
 				},
 			}, type2: stringType},
-			expected: expectedData{isSame: false, expectedType: "StatementList"}},
+			expected: false},
 		"Nil types": {
 			input:    inputData{type1: nil, type2: nil},
-			expected: expectedData{isSame: false, expectedType: "nil"}},
+			expected: false},
 	}
 
 	for name, test := range cases {
 		input := test.input
 		expected := test.expected
 		t.Run(name, func(t *testing.T) {
-			isSame, actual := hasSameType(input.type1, input.type2)
-			assert.Equal(t, expected.expectedType, actual, "Unexpected result")
-			assert.True(t, expected.isSame == isSame, "Unexpected result")
+			isSame := hasSameType(input.type1, input.type2)
+			assert.True(t, expected == isSame, "Unexpected result")
 		})
 	}
 }
 
-func TestValidatorResolveVariableType(t *testing.T) {
+func TestValidatorResolveExprType(t *testing.T) {
 	type inputData struct {
 		viewName string
 		expr     *sysl.Expr
@@ -351,9 +391,6 @@ func TestValidatorResolveVariableType(t *testing.T) {
 		"Bool": {
 			input:    inputData{viewName: "varTypeResolve", expr: expressions["boolType"]},
 			expected: expectedData{syslType: boolType, validationMsgs: []ValidationMsg{}}},
-		"Decimal": {
-			input:    inputData{viewName: "varTypeResolve", expr: expressions["decimalType"]},
-			expected: expectedData{syslType: decimalType, validationMsgs: []ValidationMsg{}}},
 		"Transform type primitive": {
 			input:    inputData{viewName: "varTypeResolve", expr: expressions["transformTypePrimitive"]},
 			expected: expectedData{syslType: stringType, validationMsgs: []ValidationMsg{}}},
@@ -383,30 +420,26 @@ func TestValidatorResolveVariableType(t *testing.T) {
 		input := test.input
 		expected := test.expected
 		t.Run(name, func(t *testing.T) {
-			syslType, validationMsgs := resolveVariableType(input.expr, input.viewName)
-			hasSameType, _ := hasSameType(expected.syslType, syslType)
-			assert.True(t, hasSameType, "Unexpected result")
+			syslType, validationMsgs := resolveExprType(input.expr, input.viewName)
+			assert.True(t, hasSameType(expected.syslType, syslType), "Unexpected result")
 			assert.Equal(t, expected.validationMsgs, validationMsgs, "Unexpected result")
 		})
 	}
 }
 
-func TestValidatorValidateTypes(t *testing.T) {
+func TestValidatorValidateTransform(t *testing.T) {
 	type inputData struct {
-		expression *sysl.Expr
-		viewName   string
-		implViews  map[string]*sysl.View
-		out        string
+		transform *sysl.Expr_Transform
+		viewName  string
+		implViews map[string]*sysl.View
+		out       string
 	}
 
-	var tfmViews map[string]*sysl.View
+	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform1.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
 
-	transform, _ := loadAndGetDefaultApp("tests", "transform1.sysl")
-	grammar, _ := loadAndGetDefaultApp("tests", "go.gen.sysl")
-
-	for _, tfm := range transform.GetApps() {
-		tfmViews = tfm.Views
-	}
+	grammar := grammarModule.GetApps()[grammarAppName]
+	tfmViews := transformModule.GetApps()[tfmAppName].GetViews()
 
 	cases := map[string]struct {
 		input    inputData
@@ -414,48 +447,48 @@ func TestValidatorValidateTypes(t *testing.T) {
 	}{
 		"Equal": {
 			input: inputData{
-				viewName:   "TfmValid",
-				expression: tfmViews["TfmValid"].GetExpr(),
-				implViews:  tfmViews,
-				out:        "MethodDecl"},
+				viewName:  "TfmValid",
+				transform: tfmViews["TfmValid"].GetExpr().GetTransform(),
+				implViews: tfmViews,
+				out:       "MethodDecl"},
 			expected: []ValidationMsg{}},
 		"Not Equal": {
 			input: inputData{
-				viewName:   "TfmInvalid",
-				expression: tfmViews["TfmInvalid"].GetExpr(),
-				implViews:  tfmViews,
-				out:        "MethodDecl"},
+				viewName:  "TfmInvalid",
+				transform: tfmViews["TfmInvalid"].GetExpr().GetTransform(),
+				implViews: tfmViews,
+				out:       "MethodDecl"},
 			expected: []ValidationMsg{
 				{Message: "In view 'TfmInvalid', type 'FunctionName' is missing", MsgType: ERROR}}},
 		"Absent optional": {
 			input: inputData{
-				viewName:   "TfmNoOptional",
-				expression: tfmViews["TfmNoOptional"].GetExpr(),
-				implViews:  tfmViews,
-				out:        "MethodDecl"},
+				viewName:  "TfmNoOptional",
+				transform: tfmViews["TfmNoOptional"].GetExpr().GetTransform(),
+				implViews: tfmViews,
+				out:       "MethodDecl"},
 			expected: []ValidationMsg{}},
 		"Excess attributes without optionals": {
 			input: inputData{
-				viewName:   "TfmExcessAttrs1",
-				expression: tfmViews["TfmExcessAttrs1"].GetExpr(),
-				implViews:  tfmViews,
-				out:        "MethodDecl"},
+				viewName:  "TfmExcessAttrs1",
+				transform: tfmViews["TfmExcessAttrs1"].GetExpr().GetTransform(),
+				implViews: tfmViews,
+				out:       "MethodDecl"},
 			expected: []ValidationMsg{
 				{Message: "In view 'TfmExcessAttrs1', excess attribute is defined: 'ExcessAttr1'", MsgType: ERROR}}},
 		"Excess attributes with optionals": {
 			input: inputData{
-				viewName:   "TfmExcessAttrs2",
-				expression: tfmViews["TfmExcessAttrs2"].GetExpr(),
-				implViews:  tfmViews,
-				out:        "MethodDecl"},
+				viewName:  "TfmExcessAttrs2",
+				transform: tfmViews["TfmExcessAttrs2"].GetExpr().GetTransform(),
+				implViews: tfmViews,
+				out:       "MethodDecl"},
 			expected: []ValidationMsg{
 				{Message: "In view 'TfmExcessAttrs2', excess attribute is defined: 'ExcessAttr1'", MsgType: ERROR}}},
 		"Valid choice": {
 			input: inputData{
-				viewName:   "ValidChoice",
-				expression: tfmViews["ValidChoice"].GetExpr(),
-				implViews:  tfmViews,
-				out:        "Statement"},
+				viewName:  "ValidChoice",
+				transform: tfmViews["ValidChoice"].GetExpr().GetTransform(),
+				implViews: tfmViews,
+				out:       "Statement"},
 			expected: []ValidationMsg{}},
 	}
 
@@ -463,27 +496,25 @@ func TestValidatorValidateTypes(t *testing.T) {
 		input := test.input
 		expected := test.expected
 		t.Run(name, func(t *testing.T) {
-			actual := validateTypes(grammar, input.expression, input.viewName, input.implViews, input.out)
+			actual := validateTransform(grammar, input.transform, input.viewName, input.implViews, input.out)
 			assert.Equal(t, expected, actual, "Unexpected result")
 		})
 	}
 }
 
-func TestValidatorValidateInnerTypes(t *testing.T) {
+func TestValidatorValidateTransformInnerTypes(t *testing.T) {
 	type inputData struct {
-		expression *sysl.Expr
-		viewName   string
-		implViews  map[string]*sysl.View
-		out        string
+		transform *sysl.Expr_Transform
+		viewName  string
+		implViews map[string]*sysl.View
+		out       string
 	}
 
-	transform, _ := loadAndGetDefaultApp("tests", "transform1.sysl")
-	grammar, _ := loadAndGetDefaultApp("tests", "go.gen.sysl")
+	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform1.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
 
-	var tfmViews map[string]*sysl.View
-	for _, tfm := range transform.GetApps() {
-		tfmViews = tfm.Views
-	}
+	grammar := grammarModule.GetApps()[grammarAppName]
+	tfmViews := transformModule.GetApps()[tfmAppName].GetViews()
 
 	cases := map[string]struct {
 		input    inputData
@@ -491,18 +522,18 @@ func TestValidatorValidateInnerTypes(t *testing.T) {
 	}{
 		"Valid inner type": {
 			input: inputData{
-				expression: tfmViews["ValidInnerAttrs"].GetExpr(),
-				viewName:   "ValidInnerAttrs",
-				implViews:  tfmViews,
-				out:        "goFile",
+				transform: tfmViews["ValidInnerAttrs"].GetExpr().GetTransform(),
+				viewName:  "ValidInnerAttrs",
+				implViews: tfmViews,
+				out:       "goFile",
 			},
 			expected: []ValidationMsg{}},
 		"Invalid inner type": {
 			input: inputData{
-				expression: tfmViews["InvalidInnerAttrs"].GetExpr(),
-				viewName:   "InvalidInnerAttrs",
-				implViews:  tfmViews,
-				out:        "goFile",
+				transform: tfmViews["InvalidInnerAttrs"].GetExpr().GetTransform(),
+				viewName:  "InvalidInnerAttrs",
+				implViews: tfmViews,
+				out:       "goFile",
 			},
 			expected: []ValidationMsg{
 				{Message: "In view 'InvalidInnerAttrs', type 'PackageName' is missing", MsgType: ERROR},
@@ -512,27 +543,25 @@ func TestValidatorValidateInnerTypes(t *testing.T) {
 		input := test.input
 		expected := test.expected
 		t.Run(name, func(t *testing.T) {
-			actual := validateTypes(grammar, input.expression, input.viewName, input.implViews, input.out)
+			actual := validateTransform(grammar, input.transform, input.viewName, input.implViews, input.out)
 			assert.Equal(t, expected, actual, "Unexpected result")
 		})
 	}
 }
 
-func TestValidatorValidateChoiceTypes(t *testing.T) {
+func TestValidatorValidateTransformChoiceTypes(t *testing.T) {
 	type inputData struct {
-		expression *sysl.Expr
-		viewName   string
-		implViews  map[string]*sysl.View
-		out        string
+		transform *sysl.Expr_Transform
+		viewName  string
+		implViews map[string]*sysl.View
+		out       string
 	}
 
-	transform, _ := loadAndGetDefaultApp("tests", "transform1.sysl")
-	grammar, _ := loadAndGetDefaultApp("tests", "go.gen.sysl")
+	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform1.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
 
-	var tfmViews map[string]*sysl.View
-	for _, tfm := range transform.GetApps() {
-		tfmViews = tfm.Views
-	}
+	grammar := grammarModule.GetApps()[grammarAppName]
+	tfmViews := transformModule.GetApps()[tfmAppName].GetViews()
 
 	cases := map[string]struct {
 		input    inputData
@@ -540,58 +569,58 @@ func TestValidatorValidateChoiceTypes(t *testing.T) {
 	}{
 		"Valid choice": {
 			input: inputData{
-				expression: tfmViews["ValidChoice"].GetExpr(),
-				viewName:   "ValidChoice",
-				implViews:  tfmViews,
-				out:        "Statement"},
+				transform: tfmViews["ValidChoice"].GetExpr().GetTransform(),
+				viewName:  "ValidChoice",
+				implViews: tfmViews,
+				out:       "Statement"},
 			expected: []ValidationMsg{}},
 		"Invalid choice": {
 			input: inputData{
-				expression: tfmViews["InvalidChoice"].GetExpr(),
-				viewName:   "InvalidChoice",
-				implViews:  tfmViews,
-				out:        "Statement"},
+				transform: tfmViews["InvalidChoice"].GetExpr().GetTransform(),
+				viewName:  "InvalidChoice",
+				implViews: tfmViews,
+				out:       "Statement"},
 			expected: []ValidationMsg{
 				{Message: "In view 'InvalidChoice', invalid choice has been made as : 'Foo'", MsgType: ERROR},
 				{Message: "In view 'InvalidChoice', excess attribute is defined: 'Foo'", MsgType: ERROR}}},
 		"Valid choice combination": {
 			input: inputData{
-				expression: tfmViews["ValidChoiceCombination"].GetExpr(),
-				viewName:   "ValidChoiceCombination",
-				implViews:  tfmViews,
-				out:        "MethodSpec"},
+				transform: tfmViews["ValidChoiceCombination"].GetExpr().GetTransform(),
+				viewName:  "ValidChoiceCombination",
+				implViews: tfmViews,
+				out:       "MethodSpec"},
 			expected: []ValidationMsg{}},
 		"Valid choice non-combination": {
 			input: inputData{
-				expression: tfmViews["ValidChoiceNonCombination"].GetExpr(),
-				viewName:   "ValidChoiceNonCombination",
-				implViews:  tfmViews,
-				out:        "MethodSpec"},
+				transform: tfmViews["ValidChoiceNonCombination"].GetExpr().GetTransform(),
+				viewName:  "ValidChoiceNonCombination",
+				implViews: tfmViews,
+				out:       "MethodSpec"},
 			expected: []ValidationMsg{}},
 		"Invalid choice combination excess": {
 			input: inputData{
-				expression: tfmViews["InvalidChoiceCombinationExcess"].GetExpr(),
-				viewName:   "InvalidChoiceCombinationExcess",
-				implViews:  tfmViews,
-				out:        "MethodSpec"},
+				transform: tfmViews["InvalidChoiceCombinationExcess"].GetExpr().GetTransform(),
+				viewName:  "InvalidChoiceCombinationExcess",
+				implViews: tfmViews,
+				out:       "MethodSpec"},
 			expected: []ValidationMsg{{
 				Message: "In view 'InvalidChoiceCombinationExcess', excess attribute is defined: 'Foo'",
 				MsgType: ERROR}}},
 		"Invalid choice combination missing": {
 			input: inputData{
-				expression: tfmViews["InvalidChoiceCombiMissing"].GetExpr(),
-				viewName:   "InvalidChoiceCombiMissing",
-				implViews:  tfmViews,
-				out:        "MethodSpec"},
+				transform: tfmViews["InvalidChoiceCombiMissing"].GetExpr().GetTransform(),
+				viewName:  "InvalidChoiceCombiMissing",
+				implViews: tfmViews,
+				out:       "MethodSpec"},
 			expected: []ValidationMsg{
 				{Message: "In view 'InvalidChoiceCombiMissing', type 'Signature' is missing", MsgType: ERROR},
 				{Message: "In view 'InvalidChoiceCombiMissing', excess attribute is defined: 'Foo'", MsgType: ERROR}}},
 		"Invalid choice non-combination missing": {
 			input: inputData{
-				expression: tfmViews["InvalidChoiceNonCombination"].GetExpr(),
-				viewName:   "InvalidChoiceNonCombination",
-				implViews:  tfmViews,
-				out:        "MethodSpec"},
+				transform: tfmViews["InvalidChoiceNonCombination"].GetExpr().GetTransform(),
+				viewName:  "InvalidChoiceNonCombination",
+				implViews: tfmViews,
+				out:       "MethodSpec"},
 			expected: []ValidationMsg{
 				{
 					Message: "In view 'InvalidChoiceNonCombination', invalid choice has been made as : 'Interface'",
@@ -604,13 +633,43 @@ func TestValidatorValidateChoiceTypes(t *testing.T) {
 		input := test.input
 		expected := test.expected
 		t.Run(name, func(t *testing.T) {
-			actual := validateTypes(grammar, input.expression, input.viewName, input.implViews, input.out)
+			actual := validateTransform(grammar, input.transform, input.viewName, input.implViews, input.out)
 			assert.Equal(t, expected, actual, "Unexpected result")
 		})
 	}
 }
 
-func TestValidatorValidateTransform(t *testing.T) {
-	actual := validateTransform("tests", "transform2.sysl", "tests/go.gen.g", "goFile")
+func TestValidatorValidate(t *testing.T) {
+	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform2.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
+
+	grammar := grammarModule.GetApps()[grammarAppName]
+	transform := transformModule.GetApps()[tfmAppName]
+
+	actual := validate(grammar, transform, "goFile")
 	assert.Equal(t, []ValidationMsg{}, actual, "Unexpected result")
+}
+
+func TestValidatorLoadTransformSuccess(t *testing.T) {
+	tfm, err := loadTransform("tests", "transform2.sysl")
+	assert.NotNil(t, tfm, "Unexpected result")
+	assert.Nil(t, err, "Unexpected result")
+}
+
+func TestValidatorLoadTransformError(t *testing.T) {
+	tfm, err := loadTransform("foo", "bar.sysl")
+	assert.Nil(t, tfm, "Unexpected result")
+	assert.NotNil(t, err, "Unexpected result")
+}
+
+func TestValidatorLoadGrammarSuccess(t *testing.T) {
+	grammar, err := loadGrammar("tests/go.gen.g")
+	assert.NotNil(t, grammar, "Unexpected result")
+	assert.Nil(t, err, "Unexpected result")
+}
+
+func TestValidatorLoadGrammarError(t *testing.T) {
+	grammar, err := loadGrammar("foo/bar.g")
+	assert.Nil(t, grammar, "Unexpected result")
+	assert.NotNil(t, err, "Unexpected result")
 }

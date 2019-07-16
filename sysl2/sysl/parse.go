@@ -320,10 +320,9 @@ func inferExprType(mod *sysl.Module,
 			}
 		}
 	case *sysl.Expr_Relexpr:
-		relexpr := t.Relexpr
-		if relexpr.Op == sysl.Expr_RelExpr_RANK {
+		if t.Relexpr.Op == sysl.Expr_RelExpr_RANK {
 			if !top && expr.Type == nil {
-				type1, c := inferExprType(mod, appName, relexpr.Target, true, anonCount)
+				type1, c := inferExprType(mod, appName, t.Relexpr.Target, true, anonCount)
 				anonCount = c
 				logrus.Printf(type1.String())
 			}
@@ -337,7 +336,7 @@ func inferExprType(mod *sysl.Module,
 		expr.Type = exprTypeIfTrue
 		if t.Ifelse.GetIfFalse() != nil {
 			exprTypeIfFalse, _ := inferExprType(mod, appName, t.Ifelse.GetIfFalse(), true, anonCount)
-			// TODO if types are not equal, raise an error. Then remove following 3 lines
+			// TODO if exprTypeIfTrue != exprTypeIfFalse, raise an error. Then remove following 3 lines
 			if exprTypeIfFalse != nil {
 				expr.Type = exprTypeIfFalse
 			}
@@ -346,7 +345,7 @@ func inferExprType(mod *sysl.Module,
 		exprTypeLHS, _ := inferExprType(mod, appName, t.Binexpr.GetLhs(), true, anonCount)
 		expr.Type = exprTypeLHS
 		exprTypeRHS, _ := inferExprType(mod, appName, t.Binexpr.GetRhs(), true, anonCount)
-		// TODO if types are not equal, raise an error. Then remove following 3 lines
+		// TODO if exprTypeRHS != exprTypeLHS, raise an error. Then remove following 3 lines
 		if exprTypeRHS != nil {
 			expr.Type = exprTypeRHS
 		}

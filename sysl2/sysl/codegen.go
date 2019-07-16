@@ -240,7 +240,11 @@ func GenerateCode(rootModel, model, rootTransform, transform, grammar, start str
 		panic(errors.Errorf("Unable to load grammar"))
 	}
 
-	logMsg(validateTransform(rootTransform, transform, grammar, start)...)
+	grammarSysl, err := loadGrammar(grammar)
+	if err != nil {
+		panic(err)
+	}
+	logMsg(validate(grammarSysl, tx.GetApps()[transformAppName], start)...)
 
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {

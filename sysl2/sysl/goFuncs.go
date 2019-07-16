@@ -64,12 +64,6 @@ var (
 		},
 	}
 
-	decimalType = &sysl.Type{
-		Type: &sysl.Type_Primitive_{
-			Primitive: sysl.Type_DECIMAL,
-		},
-	}
-
 	// GoFuncMap is Map of Function Names to goFunc{}
 	GoFuncMap = map[string]goFunc{
 		"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, boolType},

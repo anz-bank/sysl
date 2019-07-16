@@ -44,21 +44,32 @@ func noType() *sysl.Type {
 	}
 }
 
-func viewOutput(syslType *sysl.Type) (string, bool) {
-	if typeName := syslType.GetPrimitive().String(); typeName != "NO_Primitive" {
-		return typeName, false
-	} else if typeSeq := syslType.GetSequence(); typeSeq != nil {
-		if typeName := typeSeq.GetPrimitive().String(); typeName != "NO_Primitive" {
-			return typeName, true
+func getTypeName(syslType *sysl.Type) string {
+	switch t := syslType.Type.(type) {
+	case *sysl.Type_Primitive_:
+		return t.Primitive.String()
+	case *sysl.Type_Sequence:
+		if typeName := t.Sequence.GetPrimitive().String(); typeName != "NO_Primitive" {
+			return typeName
 		}
-		return typeSeq.GetTypeRef().GetRef().GetPath()[0], true
-	} else if typeRef := syslType.GetTypeRef(); typeRef != nil {
-		if typeRef.GetRef().GetAppname() != nil {
-			return typeRef.GetRef().GetAppname().GetPart()[0], false
+		return t.Sequence.GetTypeRef().GetRef().GetPath()[0]
+	case *sysl.Type_TypeRef:
+		if t.TypeRef.GetRef().GetAppname() != nil {
+			return t.TypeRef.GetRef().GetAppname().GetPart()[0]
 		}
-		return typeRef.GetRef().GetPath()[0], false
+		return t.TypeRef.GetRef().GetPath()[0]
+	default:
+		return "Unknown"
 	}
-	return "Unknown", false
+}
+
+func isCollectionType(syslType *sysl.Type) bool {
+	switch syslType.Type.(type) {
+	case *sysl.Type_Set, *sysl.Type_Sequence, *sysl.Type_List_, *sysl.Type_Map_:
+		return true
+	default:
+		return false
+	}
 }
 
 func validateEntryPoint(views map[string]*sysl.View, start string) []ValidationMsg {
@@ -70,7 +81,8 @@ func validateEntryPoint(views map[string]*sysl.View, start string) []ValidationM
 			MsgType: ERROR,
 		}}
 	}
-	if t, seq := viewOutput(view.GetRetType()); t != start || seq {
+
+	if getTypeName(view.GetRetType()) != start || isCollectionType(view.GetRetType()) {
 		return []ValidationMsg{{
 			Message: fmt.Sprintf("Output type of entry point view: '%s' should be '%s'", start, start),
 			MsgType: ERROR,
@@ -91,7 +103,8 @@ func validateFileName(views map[string]*sysl.View) []ValidationMsg {
 			MsgType: ERROR,
 		}}
 	}
-	if t, seq := viewOutput(view.GetRetType()); t != "STRING" || seq {
+
+	if getTypeName(view.GetRetType()) != "STRING" || isCollectionType(view.GetRetType()) {
 		validationMsgs = append(validationMsgs, ValidationMsg{
 			Message: "In view 'filename', output type should be 'string'",
 			MsgType: ERROR,
@@ -130,12 +143,10 @@ func getImplAttrNames(attrs map[string]*sysl.Type) map[string]struct{} {
 
 func compareSpecVsImpl(grammarSpec, specAttrs, implAttrs map[string]*sysl.Type,
 	implAttrNames map[string]struct{}, viewName string) []ValidationMsg {
-	validationMsgs := make([]ValidationMsg, 0, 20)
+	validationMsgs := make([]ValidationMsg, 0, len(implAttrs))
 
 	for gk, gv := range specAttrs {
-		isOneOf := strings.Index(gk, "__Choice_") == 0 && grammarSpec[gk].GetOneOf() != nil
-
-		if isOneOf {
+		if grammarSpec[gk].GetOneOf() != nil {
 			validationMsgs = append(validationMsgs, compareOneOf(grammarSpec, implAttrs, implAttrNames, viewName, gk)...)
 		} else if _, exists := implAttrs[gk]; !exists {
 			if !gv.GetOpt() {
@@ -162,7 +173,7 @@ func compareSpecVsImpl(grammarSpec, specAttrs, implAttrs map[string]*sysl.Type,
 
 func compareOneOf(grammarSpec, implAttrs map[string]*sysl.Type,
 	implAttrNames map[string]struct{}, viewName, typeName string) []ValidationMsg {
-	validationMsgs := make([]ValidationMsg, 0, 10)
+	validationMsgs := make([]ValidationMsg, 0, len(implAttrs))
 	matching := true
 
 	for _, one := range grammarSpec[typeName].GetOneOf().GetType() {
@@ -200,46 +211,35 @@ func compareOneOf(grammarSpec, implAttrs map[string]*sysl.Type,
 	return validationMsgs
 }
 
-func hasSameType(type1 *sysl.Type, type2 *sysl.Type) (bool, string) {
+func hasSameType(type1 *sysl.Type, type2 *sysl.Type) bool {
 	if type1 == nil || type2 == nil {
-		return false, "nil"
+		return false
 	}
-	expectedType := "Unresolved"
 
 	switch type1.GetType().(type) {
 	case *sysl.Type_Primitive_:
-		expectedType = type1.GetPrimitive().String()
-		if _, ok := type2.GetType().(*sysl.Type_Primitive_); ok {
-			return type1.GetPrimitive().String() == type2.GetPrimitive().String(), expectedType
-		}
-
+		return type1.GetPrimitive() == type2.GetPrimitive()
 	case *sysl.Type_TypeRef:
-		switch {
-		case type2.GetTypeRef() != nil:
+		if type2.GetTypeRef() != nil {
 			ref1 := type1.GetTypeRef().GetRef()
 			ref2 := type2.GetTypeRef().GetRef()
 
 			if ref1.GetAppname() != nil && ref2.GetAppname() != nil {
-				expectedType = ref1.GetAppname().GetPart()[0]
-				return ref1.GetAppname().GetPart()[0] == ref2.GetAppname().GetPart()[0], expectedType
+				return ref1.GetAppname().GetPart()[0] == ref2.GetAppname().GetPart()[0]
 			} else if ref1.GetPath() != nil && ref2.GetPath() != nil {
-				expectedType = ref1.GetPath()[0]
-				return ref1.GetPath()[0] == ref2.GetPath()[0], expectedType
+				return ref1.GetPath()[0] == ref2.GetPath()[0]
 			}
-		case type1.GetTypeRef().GetRef().GetAppname() != nil:
-			expectedType = type1.GetTypeRef().GetRef().GetAppname().GetPart()[0]
-		case type1.GetTypeRef().GetRef().GetPath() != nil:
-			expectedType = type1.GetTypeRef().GetRef().GetPath()[0]
 		}
 	}
 
-	return false, expectedType
+	return false
 }
 
-func resolveVariableType(expr *sysl.Expr, viewName string) (*sysl.Type, []ValidationMsg) {
-	validationMsgs := make([]ValidationMsg, 0, 10)
+func resolveExprType(expr *sysl.Expr, viewName string) (*sysl.Type, []ValidationMsg) {
+	validationMsgs := make([]ValidationMsg, 0, 1)
 
 	switch expr.Expr.(type) {
+
 	case *sysl.Expr_Transform_:
 		if typeRef := expr.GetType().GetTypeRef(); typeRef != nil {
 			return &sysl.Type{
@@ -254,11 +254,12 @@ func resolveVariableType(expr *sysl.Expr, viewName string) (*sysl.Type, []Valida
 	case *sysl.Expr_Literal:
 		return expr.GetType(), validationMsgs
 	case *sysl.Expr_Unexpr:
-		varType, messages := resolveVariableType(expr.GetUnexpr().GetArg(), viewName)
+		varType, messages := resolveExprType(expr.GetUnexpr().GetArg(), viewName)
 		validationMsgs = append(validationMsgs, messages...)
-		if isSame, expected := hasSameType(varType, boolType); !isSame {
+		if !hasSameType(varType, boolType) {
+			_, typeDetail := getTypeDetail(varType)
 			validationMsgs = append(validationMsgs, ValidationMsg{
-				Message: fmt.Sprintf("In view '%s', unary operator used with non boolean type: '%s'", viewName, expected),
+				Message: fmt.Sprintf("In view '%s', unary operator used with non boolean type: '%s'", viewName, typeDetail),
 				MsgType: ERROR})
 		}
 		return boolType, validationMsgs
@@ -267,82 +268,103 @@ func resolveVariableType(expr *sysl.Expr, viewName string) (*sysl.Type, []Valida
 	return noType(), validationMsgs
 }
 
-func validateTypes(specModule *sysl.Module, expression *sysl.Expr,
-	viewName string, implViews map[string]*sysl.View, out string) []ValidationMsg {
+func validateTransform(specApp *sysl.Application, transform *sysl.Expr_Transform,
+	viewName string, implViews map[string]*sysl.View, typeName string) []ValidationMsg {
 	validationMsgs := make([]ValidationMsg, 0, 50)
 
 	attrDefs := map[string]*sysl.Type{}
 
-	for _, stmt := range expression.GetTransform().GetStmt() {
+	for _, stmt := range transform.GetStmt() {
 		if stmt.GetAssign() != nil {
-			typeName := stmt.GetAssign().GetName()
+			varName := stmt.GetAssign().GetName()
 
 			expr := stmt.GetAssign().GetExpr()
-			attrType, messages := resolveVariableType(expr, viewName)
-			attrDefs[typeName] = attrType
+			exprType, messages := resolveExprType(expr, viewName)
+			attrDefs[varName] = exprType
 			validationMsgs = append(validationMsgs, messages...)
 
-			if expr.GetTransform() != nil {
-				attrTypeName, _ := viewOutput(attrType)
-				validationMsgs = append(validationMsgs, validateTypes(specModule, expr, viewName, implViews, attrTypeName)...)
+			if innerTfm := expr.GetTransform(); innerTfm != nil {
+				attrTypeName := getTypeName(exprType)
+				validationMsgs = append(validationMsgs, validateTransform(specApp, innerTfm, viewName, implViews, attrTypeName)...)
 			}
 		}
 	}
 
-	for _, grammarSysl := range specModule.GetApps() {
-		if grammarType, exists := grammarSysl.Types[out]; exists {
-			validationMsgs = append(
-				validationMsgs,
-				compareSpecVsImpl(grammarSysl.Types, grammarType.GetTuple().GetAttrDefs(),
-					attrDefs, getImplAttrNames(attrDefs), viewName)...)
-		}
+	if grammarType, exists := specApp.Types[typeName]; exists {
+		validationMsgs = append(
+			validationMsgs,
+			compareSpecVsImpl(specApp.Types, grammarType.GetTuple().GetAttrDefs(),
+				attrDefs, getImplAttrNames(attrDefs), viewName)...)
 	}
 
 	return validationMsgs
 }
 
-func validateTransform(rootTransform, transform, grammar, start string) []ValidationMsg {
+func validate(grammar, transform *sysl.Application, start string) []ValidationMsg {
 	validationMsgs := make([]ValidationMsg, 0, 100)
 
-	tx, _ := loadAndGetDefaultApp(rootTransform, transform)
+	validationMsgs = append(validationMsgs, validateEntryPoint(transform.Views, start)...)
+	validationMsgs = append(validationMsgs, validateFileName(transform.Views)...)
 
-	grammarSyslFile := grammar[:len(grammar)-1] + "sysl"
-	grammarSysl, _ := loadAndGetDefaultApp("", grammarSyslFile)
-
-	if grammarSysl == nil {
-		panic(errors.Errorf("Unable to load grammar-sysl"))
-	}
-
-	for _, tfm := range tx.GetApps() {
-
-		validationMsgs = append(validationMsgs, validateEntryPoint(tfm.Views, start)...)
-		validationMsgs = append(validationMsgs, validateFileName(tfm.Views)...)
-
-		for viewName, tfmView := range tfm.Views {
-			out, _ := viewOutput(tfmView.GetRetType())
-			validationMsgs = append(validationMsgs, validateTypes(grammarSysl, tfmView.GetExpr(), viewName, tfm.Views, out)...)
-		}
+	for viewName, tfmView := range transform.Views {
+		typeName := getTypeName(tfmView.GetRetType())
+		validationMsgs = append(validationMsgs,
+			validateTransform(grammar, tfmView.GetExpr().GetTransform(), viewName, transform.Views, typeName)...)
 	}
 
 	return validationMsgs
 }
 
-func DoValidateTransform(flags *flag.FlagSet, args []string) error {
-	rootTransform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
-	transform := flags.String("transform", ".", "transform.sysl")
-	grammar := flags.String("grammar", ".", "grammar.g")
-	start := flags.String("start", ".", "start rule for the grammar")
+func loadTransform(rootTransform, transformFile string) (*sysl.Application, error) {
+	transform, name := loadAndGetDefaultApp(rootTransform, transformFile)
 
-	if err := flags.Parse(args[1:]); err != nil {
+	if transform == nil {
+		err := errors.New("Unable to load transform")
+		return nil, err
+	}
+
+	return transform.GetApps()[name], nil
+}
+
+func loadGrammar(grammarFile string) (*sysl.Application, error) {
+	tokens := strings.Split(grammarFile, ".")
+	tokens[len(tokens)-1] = "sysl"
+	grammarSyslFile := strings.Join(tokens, ".")
+
+	grammar, name := loadAndGetDefaultApp("", grammarSyslFile)
+	if grammar == nil {
+		err := errors.New("Unable to load grammar-sysl")
+		return nil, err
+	}
+	return grammar.GetApps()[name], nil
+}
+
+func DoValidate(flags *flag.FlagSet, args []string) error {
+	rootTransform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
+	transformFile := flags.String("transform", ".", "transform.sysl")
+	grammarFile := flags.String("grammar", "", "grammar.g")
+	start := flags.String("start", "", "start rule for the grammar")
+
+	if err := flags.Parse(args[2:]); err != nil {
 		return err
 	}
 
 	logrus.Infof("root-transform: %s\n", *rootTransform)
-	logrus.Infof("transform: %s\n", *transform)
-	logrus.Infof("grammar: %s\n", *grammar)
+	logrus.Infof("transform: %s\n", *transformFile)
+	logrus.Infof("grammar: %s\n", *grammarFile)
 	logrus.Infof("start: %s\n", *start)
 
-	validationMsgs := validateTransform(*rootTransform, *transform, *grammar, *start)
+	grammar, err := loadGrammar(*grammarFile)
+	if err != nil {
+		return err
+	}
+
+	transform, err := loadTransform(*rootTransform, *transformFile)
+	if err != nil {
+		return err
+	}
+
+	validationMsgs := validate(grammar, transform, *start)
 
 	logMsg(validationMsgs...)
 

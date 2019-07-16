@@ -29,6 +29,10 @@ func (e exit) Error() string {
 func main3(args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
 
+	if len(args) > 1 && args[1] == "validate" {
+		return DoValidate(flags, args)
+	}
+
 	switch filepath.Base(args[0]) {
 	case "syslgen":
 		return DoGenerateCode(flags, args)
