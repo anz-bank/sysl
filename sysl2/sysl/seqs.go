@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"sort"
 	"strings"
@@ -16,7 +17,7 @@ type sequenceDiagParam struct {
 	EndpointLabeler
 	endpoints  []string
 	title      string
-	blackboxes map[string]*seqs.Upto
+	blackboxes map[string]*Upto
 	appName    string
 }
 
@@ -84,6 +85,9 @@ func DoConstructSequenceDiagrams(
 				keys = append(keys, k)
 			}
 			sort.Strings(keys)
+			bbsAll := map[string]*Upto{}
+			TransformBlackboxesToUptos(bbsAll, bbs, BbApplication)
+			var sd *sequenceDiagParam
 			for _, k := range keys {
 				endpoint := app.GetEndpoints()[k]
 				epAttrs := endpoint.GetAttrs()
@@ -99,22 +103,29 @@ func DoConstructSequenceDiagrams(
 						sdEndpoints = append(sdEndpoints, strings.Join(parts, " :: ")+" <- "+ep)
 					}
 				}
-
-				bbsAll := TransformBlackboxesToUptos(bbs, BbApplication)
-				bbsEndpoint := TransformBlackboxesToUptos(bbs2, BbEndpointCollection)
-				for k, v := range bbsEndpoint {
-					bbsAll[k] = v
+				if len(sdEndpoints) == 0 {
+					log.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
+					return result
 				}
-				sd := &sequenceDiagParam{
+				TransformBlackboxesToUptos(bbsAll, bbs2, BbEndpointCollection)
+				sd = &sequenceDiagParam{
 					endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
 					EndpointLabeler: spep,
 					title:           spseqtitle.FmtSeq(endpoint.GetName(), endpoint.GetLongName(), varrefs),
 					blackboxes:      bbsAll,
-					appName:         appName,
+					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
+				for indx := range bbs2 {
+					delete(bbsAll, bbs2[indx][0])
+				}
 				result[outputDir] = out
+			}
+			for bbKey, bbVal := range bbsAll {
+				if bbVal.VisitCount == 0 && bbVal.ValueType == BbApplication {
+					log.Warnf("blackbox '%s' not hit in app '%s'\n", bbKey, appName)
+				}
 			}
 		}
 	} else {
@@ -123,15 +134,21 @@ func DoConstructSequenceDiagrams(
 		}
 		spep := constructFormatParser("", endpointFormat)
 		spapp := constructFormatParser("", appFormat)
+		bbsAll := map[string]*Upto{}
+		TransformBlackboxesToUptos(bbsAll, blackboxes, BbCommandLine)
 		sd := &sequenceDiagParam{
 			endpoints:       endpoints,
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
 			title:           title,
-			blackboxes:      TransformBlackboxesToUptos(blackboxes, BbApplication),
-			appName:         "Global",
+			blackboxes:      bbsAll,
 		}
 		out, _ := generateSequenceDiag(mod, sd)
+		for bbKey, bbVal := range bbsAll {
+			if bbVal.VisitCount == 0 && bbVal.ValueType == BbCommandLine {
+				log.Warnf("blackbox '%s' passed on commandline not hit\n", bbKey)
+			}
+		}
 		result[output] = out
 	}
 
@@ -185,7 +202,10 @@ func DoGenerateSequenceDiagrams(args []string) error {
 			"comma-list of shell globs) to limit the diagrams generated",
 	).Short('a').Strings()
 
-	blackboxesFlag := sd.Flag("blackbox", "Apps to be treated as black boxes").Short('b').StringMap()
+	blackboxesFlag := sd.Flag("blackbox",
+		"Input blackboxes in the format App <- Endpoint=Some description, "+
+			"repeat '-b App <- Endpoint=Some description' to set multiple blackboxes",
+	).Short('b').StringMap()
 
 	loglevel := sd.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
 

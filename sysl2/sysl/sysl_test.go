@@ -223,16 +223,37 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB=call to database",
 		"-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
 	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
-	assert.Equal(t, "blackbox 'Server <- DB' not hit in app ' Global :: '\n", testHook.LastEntry().Message)
+	assert.Equal(t, "blackbox 'Server <- DB' passed on commandline not hit\n", testHook.LastEntry().Message)
+	testHook.Reset()
+}
+
+func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB",
+		"-b", "Server <- Login", "tests/call.sysl"}, main3)
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "expected KEY=VALUE got 'Server <- DB'", testHook.LastEntry().Message)
 	testHook.Reset()
 }
 
 func TestMain2WithBlackboxSysl(t *testing.T) {
 	testHook := test.NewGlobal()
-	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Integrations"}, main3)
+	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Sequences"}, main3)
 	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
-	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint' not hit in app ' Project :: Integrations :: '\n",
-		testHook.LastEntry().Message)
+	assert.Equal(t, "blackbox 'SomeApp <- AppEndpoint' not hit in app 'Project :: Sequences'\n",
+		testHook.Entries[len(testHook.Entries)-1].Message)
+	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint1' not hit in app 'Project :: Sequences :: SEQ-Two'\n",
+		testHook.Entries[len(testHook.Entries)-2].Message)
+	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint' not hit in app 'Project :: Sequences :: SEQ-One'\n",
+		testHook.Entries[len(testHook.Entries)-3].Message)
+	testHook.Reset()
+}
+
+func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Integrations"}, main3)
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "No call statements to build sequence diagram for endpoint PROJECT-E2E", testHook.LastEntry().Message)
 	testHook.Reset()
 }
 

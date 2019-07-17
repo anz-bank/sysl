@@ -6,11 +6,13 @@ Project :: Integrations [title="%(epname): %(eplongname)"]:
         SomeApp
         Test - App
 
-Project :: Sequences:
+Project :: Sequences [title="%(epname): %(eplongname)", blackboxes=[['SomeApp <- AppEndpoint', 'Stop at AppEndpoint']]]:
 
-    SEQ-One:
+    SEQ-One [page="Sequence One", blackboxes=[['SomeApp <- BarEndpoint', 'Stop at BarEndpoint']]]:
         SomeApp <- FooEndpoint
 
+    SEQ-Two [page="Sequence Two", blackboxes=[['SomeApp <- BarEndpoint1', 'Stop at BarEndpoint1']]]:
+        Rest Service <- GET /foo
 
 SomeApp:
     .. * <- *:

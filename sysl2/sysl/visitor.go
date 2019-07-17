@@ -59,11 +59,11 @@ func MakeEndpointCollectionElement(title string, endpoints []string,
 
 	bb := make(map[string]*Upto)
 	for k, b := range blackboxes {
-		switch len(b.comment) {
+		switch len(b.Comment) {
 		case 0:
 			continue
 		case 1:
-			b.comment = ""
+			b.Comment = ""
 			bb[k] = b
 		default:
 			bb[k] = b
@@ -86,16 +86,17 @@ type UptoType int
 
 const (
 	UpTo                 = 0
-	BbApplication        = 2
 	UptoEndpoint         = 1
+	BbApplication        = 2
 	BbEndpointCollection = 3
+	BbCommandLine        = 4
 )
 
 type Upto struct {
-	visitCount int
-	lineNumber int
-	comment    string
-	valueType  UptoType
+	VisitCount int
+	LineNumber int
+	Comment    string
+	ValueType  UptoType
 }
 
 type EndpointElement struct {
@@ -237,15 +238,8 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 	case *EndpointCollectionElement:
 		err = v.visitEndpointCollection(t)
 		for bbKey, bbVal := range t.blackboxes {
-			if bbVal.valueType >= BbApplication && bbVal.visitCount == 0 {
-				var scope string
-				switch bbVal.valueType {
-				case BbApplication:
-					scope = fmt.Sprintf("' %s :: '", v.currentApp)
-				case BbEndpointCollection:
-					scope = fmt.Sprintf("' %s :: %s'", v.currentApp, t.title)
-				}
-				log.Warnf("blackbox '%s' not hit in app %s\n", bbKey, scope)
+			if bbVal.ValueType == BbEndpointCollection && bbVal.VisitCount == 0 {
+				log.Warnf("blackbox '%s' not hit in app %s\n", bbKey, v.currentApp)
 			}
 		}
 	case *EndpointElement:
@@ -296,9 +290,9 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 		delete(allUptos, visiting)
 		for k := range allUptos {
 			e.blackboxes[k] = &Upto{
-				lineNumber: -1,
-				valueType:  UpTo,
-				comment:    "see below",
+				LineNumber: -1,
+				ValueType:  UpTo,
+				Comment:    "see below",
 			}
 		}
 		for k := range v.visited {
@@ -373,23 +367,23 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	if len(endpoint.Stmt) > 0 {
 		visiting := fmt.Sprintf("%s <- %s", e.appName, e.endpointName)
 		upto, hitUpto := e.uptos[visiting]
-		if hitUpto && e.uptos[visiting].valueType >= BbApplication {
-			e.uptos[visiting].visitCount++
+		if hitUpto {
+			e.uptos[visiting].VisitCount++
 		}
 		_, hitVisited := v.visited[visiting]
 
 		if hitUpto || hitVisited {
 			if len(payload) > 0 {
 				v.w.Activate(agent)
-				if len(upto.comment) > 0 {
-					fmt.Fprintf(v.w, "note over %s: %s\n", agent, upto.comment)
+				if len(upto.Comment) > 0 {
+					fmt.Fprintf(v.w, "note over %s: %s\n", agent, upto.Comment)
 				}
 			} else {
 				direct := "right"
 				if sender > agent {
 					direct = "left"
 				}
-				fmt.Fprintf(v.w, "note %s: %s\n", direct, upto.comment)
+				fmt.Fprintf(v.w, "note %s: %s\n", direct, upto.Comment)
 			}
 			if len(payload) > 0 {
 				fmt.Fprintf(v.w, "%s<--%s : %s\n", sender, agent, payload)

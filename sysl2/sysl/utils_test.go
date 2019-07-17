@@ -179,26 +179,28 @@ func TestMergeAttributes(t *testing.T) {
 
 func TestTransformBlackboxesToUptos(t *testing.T) {
 	// given
+	bbs := map[string]*Upto{}
 	m := [][]string{
 		{"keyA", "value A"},
 	}
 
 	// when
-	r := TransformBlackboxesToUptos(m, BbApplication)
+	TransformBlackboxesToUptos(bbs, m, BbApplication)
 
 	// then
-	assert.Equal(t, m[0][1], r[m[0][0]].comment, "unexpected map")
+	assert.Equal(t, m[0][1], bbs[m[0][0]].Comment, "unexpected map")
 }
 
 func TestTransformBlackboxesToUptosByNil(t *testing.T) {
 	// given
+	bbs := map[string]*Upto{}
 	var m [][]string
 
 	// when
-	r := TransformBlackboxesToUptos(m, BbApplication)
+	TransformBlackboxesToUptos(bbs, m, BbApplication)
 
 	// then
-	assert.NotNil(t, r)
+	assert.Empty(t, bbs)
 }
 
 func TestGetAppAttr(t *testing.T) {

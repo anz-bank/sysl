@@ -68,7 +68,7 @@ func TestMakeEntry(t *testing.T) {
 func TestMakeEndpointCollectionElement(t *testing.T) {
 	e := MakeEndpointCollectionElement("title",
 		[]string{"a <- b [upto b <- c]"},
-		map[string]*Upto{"": {comment: ""}, "b <- c": {comment: ""}, "c <- d": {comment: "test"}})
+		map[string]*Upto{"": {Comment: ""}, "b <- c": {Comment: ""}, "c <- d": {Comment: "test"}})
 	assert.NotNil(t, e)
 	assert.Equal(t, "title", e.title)
 }
@@ -276,22 +276,22 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	v := MakeSequenceDiagramVisitor(l, l, w, m, appname)
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{
 		"Frontend <- Profile": {
-			lineNumber: -1,
-			valueType:  BbEndpointCollection,
-			comment:    "see below",
-			visitCount: 0,
+			LineNumber: -1,
+			ValueType:  BbEndpointCollection,
+			Comment:    "see below",
+			VisitCount: 0,
 		},
 		"ApplicationFrontend <- AppProfile": {
-			lineNumber: -1,
-			valueType:  BbApplication,
-			comment:    "see below",
-			visitCount: 0,
+			LineNumber: -1,
+			ValueType:  BbApplication,
+			Comment:    "see below",
+			VisitCount: 0,
 		},
-		"UptoFrontend <- UptoApp": {
-			lineNumber: -1,
-			valueType:  UptoEndpoint,
-			comment:    "see below",
-			visitCount: 0,
+		"Commandline <- CommandlineApp": {
+			LineNumber: -1,
+			ValueType:  BbCommandLine,
+			Comment:    "see below",
+			VisitCount: 0,
 		},
 	})
 
