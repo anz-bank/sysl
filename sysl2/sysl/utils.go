@@ -64,7 +64,6 @@ func TransformBlackboxesToUptos(m map[string]*Upto, bbs [][]string, uptoType Upt
 	for _, val := range bbs {
 		m[val[0]] = &Upto{
 			VisitCount: 0,
-			LineNumber: -1,
 			ValueType:  uptoType,
 			Comment:    val[1],
 		}

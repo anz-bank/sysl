@@ -73,7 +73,10 @@ func DoConstructSequenceDiagrams(
 		return result
 	}
 	if strings.Contains(output, "%(epname)") {
-		spout := MakeFormatParser(output)
+		if len(blackboxes) == 0 {
+			log.Warnf("Ignoring blackboxes passed from command line")
+		}
+		spout := seqs.MakeFormatParser(output)
 		for _, appName := range apps {
 			app := mod.Apps[appName]
 			bbs := TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())

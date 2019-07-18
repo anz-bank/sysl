@@ -94,7 +94,6 @@ const (
 
 type Upto struct {
 	VisitCount int
-	LineNumber int
 	Comment    string
 	ValueType  UptoType
 }
@@ -290,9 +289,8 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 		delete(allUptos, visiting)
 		for k := range allUptos {
 			e.blackboxes[k] = &Upto{
-				LineNumber: -1,
-				ValueType:  UpTo,
-				Comment:    "see below",
+				ValueType: UpTo,
+				Comment:   "see below",
 			}
 		}
 		for k := range v.visited {
