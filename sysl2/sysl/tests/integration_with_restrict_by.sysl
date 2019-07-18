@@ -1,0 +1,23 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        Systema <- endpoint
+    integrated_endpoint_2:
+        Systemb <- endpoint
+
+Systema [foo_id="y"]:
+    endpoint [foo_id="y"]:
+        Systemb <- endpoint2
+
+    endpoint_2:
+        Systemb <- endpoint2
+
+Project [appfmt="%(appname)", epfmt="%(epname)"]:
+    with_restrict_by [restrict_by="foo_id"]:
+        IntegratedSystem
+
+    without_restrict_by:
+        IntegratedSystem
+
+Systemb:
+    endpoint: ...
+    endpoint2: ...

@@ -1,4 +1,4 @@
-package seqs
+package main
 
 import (
 	"os"
@@ -114,4 +114,40 @@ func TestEncode6bitPanic(t *testing.T) {
 	assert.Panics(t, func() {
 		encode6bit(b)
 	}, "unexpected character!")
+}
+
+func TestOutPutWithWrongFormat(t *testing.T) {
+	//Given
+	output := "test.wrong"
+	umlInput := testPlantumlInput
+
+	//When
+	require.Nil(t, OutputPlantuml(output, plantumlDotCom, umlInput))
+
+	//Then
+	_, err := os.Stat("test.wrong")
+	assert.True(t, os.IsNotExist(err))
+}
+
+func TestWrongHttpRequest(t *testing.T) {
+	//Given
+	url := "ww.plantuml.co"
+
+	//When
+	out, err := sendHTTPRequest(url)
+
+	//Then
+	assert.Nil(t, out)
+	assert.NotNil(t, err)
+}
+
+func TestEncode(t *testing.T) {
+	//Given
+	data := []byte{'a'}
+
+	//When
+	r := encode(data)
+
+	//Then
+	assert.NotNil(t, r)
 }

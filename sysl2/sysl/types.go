@@ -1,4 +1,4 @@
-package seqs
+package main
 
 import sysl "github.com/anz-bank/sysl/src/proto"
 
@@ -27,11 +27,6 @@ type EndpointLabeler interface {
 
 type AppLabeler interface {
 	LabelApp(appName, controls string, attrs map[string]*sysl.Attribute) string
-}
-
-type Labeler interface {
-	AppLabeler
-	EndpointLabeler
 }
 
 type VarManager interface {

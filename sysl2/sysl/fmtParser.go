@@ -1,4 +1,4 @@
-package seqs
+package main
 
 import (
 	"regexp"

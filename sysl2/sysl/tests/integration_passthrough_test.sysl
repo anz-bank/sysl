@@ -1,0 +1,14 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        System1 <- endpoint
+
+System1:
+    endpoint:
+        System2 <- endpoint
+
+System2:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    _ [passthrough=["System1"]]:
+        IntegratedSystem

@@ -1,4 +1,4 @@
-package seqs
+package main
 
 import (
 	"reflect"
@@ -195,19 +195,6 @@ func TestCopyBlackboxesByNil(t *testing.T) {
 
 	// then
 	assert.NotNil(t, r)
-}
-
-func TestGetAppName(t *testing.T) {
-	// given
-	a := &sysl.AppName{
-		Part: []string{"test", "name"},
-	}
-
-	// when
-	actual := getAppName(a)
-
-	// then
-	assert.Equal(t, "test :: name", actual, "unexpected result")
 }
 
 func TestGetAppAttr(t *testing.T) {
