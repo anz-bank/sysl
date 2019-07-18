@@ -73,7 +73,7 @@ func DoConstructSequenceDiagrams(
 		return result
 	}
 	if strings.Contains(output, "%(epname)") {
-		if len(blackboxes) == 0 {
+		if len(blackboxes) > 0 {
 			log.Warnf("Ignoring blackboxes passed from command line")
 		}
 		spout := seqs.MakeFormatParser(output)
@@ -159,8 +159,6 @@ func DoConstructSequenceDiagrams(
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
-// TODO: Remove nolint when code that uses stdout and stderr is added.
-//nolint:unparam
 func DoGenerateSequenceDiagrams(args []string) error {
 	defer func() {
 		if err := recover(); err != nil {
