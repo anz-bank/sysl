@@ -13,12 +13,3 @@ Project :: Sequences [title="%(epname): %(eplongname)", blackboxes=[['SomeApp <-
 
     SEQ-Two [page="Sequence Two", blackboxes=[['SomeApp <- BarEndpoint1', 'Stop at BarEndpoint1']]]:
         Rest Service <- GET /foo
-
-SomeApp:
-    .. * <- *:
-        FooEndpoint [some_id="project_id"]
-        Test - App <- Test - Endpoint [some_id="project_id"]
-
-Rest Service:
-    .. * <- *:
-        GET /foo [some_id="project_id"]

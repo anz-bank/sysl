@@ -277,19 +277,19 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{
 		"Frontend <- Profile": {
 			LineNumber: -1,
-			ValueType:  BbEndpointCollection,
+			ValueType:  BBEndpointCollection,
 			Comment:    "see below",
 			VisitCount: 0,
 		},
 		"ApplicationFrontend <- AppProfile": {
 			LineNumber: -1,
-			ValueType:  BbApplication,
+			ValueType:  BBApplication,
 			Comment:    "see below",
 			VisitCount: 0,
 		},
 		"Commandline <- CommandlineApp": {
 			LineNumber: -1,
-			ValueType:  BbCommandLine,
+			ValueType:  BBCommandLine,
 			Comment:    "see below",
 			VisitCount: 0,
 		},

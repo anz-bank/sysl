@@ -87,9 +87,9 @@ type UptoType int
 const (
 	UpTo                 = 0
 	UptoEndpoint         = 1
-	BbApplication        = 2
-	BbEndpointCollection = 3
-	BbCommandLine        = 4
+	BBApplication        = 2
+	BBEndpointCollection = 3
+	BBCommandLine        = 4
 )
 
 type Upto struct {
@@ -238,7 +238,7 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 	case *EndpointCollectionElement:
 		err = v.visitEndpointCollection(t)
 		for bbKey, bbVal := range t.blackboxes {
-			if bbVal.ValueType == BbEndpointCollection && bbVal.VisitCount == 0 {
+			if bbVal.ValueType == BBEndpointCollection && bbVal.VisitCount == 0 {
 				log.Warnf("blackbox '%s' not hit in app %s\n", bbKey, v.currentApp)
 			}
 		}

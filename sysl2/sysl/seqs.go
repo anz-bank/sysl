@@ -86,7 +86,7 @@ func DoConstructSequenceDiagrams(
 			}
 			sort.Strings(keys)
 			bbsAll := map[string]*Upto{}
-			TransformBlackboxesToUptos(bbsAll, bbs, BbApplication)
+			TransformBlackboxesToUptos(bbsAll, bbs, BBApplication)
 			var sd *sequenceDiagParam
 			for _, k := range keys {
 				endpoint := app.GetEndpoints()[k]
@@ -107,7 +107,7 @@ func DoConstructSequenceDiagrams(
 					log.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
 					return result
 				}
-				TransformBlackboxesToUptos(bbsAll, bbs2, BbEndpointCollection)
+				TransformBlackboxesToUptos(bbsAll, bbs2, BBEndpointCollection)
 				sd = &sequenceDiagParam{
 					endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
@@ -123,7 +123,7 @@ func DoConstructSequenceDiagrams(
 				result[outputDir] = out
 			}
 			for bbKey, bbVal := range bbsAll {
-				if bbVal.VisitCount == 0 && bbVal.ValueType == BbApplication {
+				if bbVal.VisitCount == 0 && bbVal.ValueType == BBApplication {
 					log.Warnf("blackbox '%s' not hit in app '%s'\n", bbKey, appName)
 				}
 			}
@@ -135,7 +135,7 @@ func DoConstructSequenceDiagrams(
 		spep := constructFormatParser("", endpointFormat)
 		spapp := constructFormatParser("", appFormat)
 		bbsAll := map[string]*Upto{}
-		TransformBlackboxesToUptos(bbsAll, blackboxes, BbCommandLine)
+		TransformBlackboxesToUptos(bbsAll, blackboxes, BBCommandLine)
 		sd := &sequenceDiagParam{
 			endpoints:       endpoints,
 			AppLabeler:      spapp,
@@ -145,7 +145,7 @@ func DoConstructSequenceDiagrams(
 		}
 		out, _ := generateSequenceDiag(mod, sd)
 		for bbKey, bbVal := range bbsAll {
-			if bbVal.VisitCount == 0 && bbVal.ValueType == BbCommandLine {
+			if bbVal.VisitCount == 0 && bbVal.ValueType == BBCommandLine {
 				log.Warnf("blackbox '%s' passed on commandline not hit\n", bbKey)
 			}
 		}

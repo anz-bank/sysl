@@ -185,7 +185,7 @@ func TestTransformBlackboxesToUptos(t *testing.T) {
 	}
 
 	// when
-	TransformBlackboxesToUptos(bbs, m, BbApplication)
+	TransformBlackboxesToUptos(bbs, m, BBApplication)
 
 	// then
 	assert.Equal(t, m[0][1], bbs[m[0][0]].Comment, "unexpected map")
@@ -197,7 +197,7 @@ func TestTransformBlackboxesToUptosByNil(t *testing.T) {
 	var m [][]string
 
 	// when
-	TransformBlackboxesToUptos(bbs, m, BbApplication)
+	TransformBlackboxesToUptos(bbs, m, BBApplication)
 
 	// then
 	assert.Empty(t, bbs)
