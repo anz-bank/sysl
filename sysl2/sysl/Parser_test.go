@@ -38,30 +38,6 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	return module, nil
 }
 
-func pySysl() string {
-	if pySysl, ok := os.LookupEnv("SYSL_PYTHON_BIN"); ok {
-		return pySysl
-	}
-	return "sysl"
-}
-
-func pyParse(filename, root, output string) (*sysl.Module, error) {
-	var args []string
-	if len(root) > 0 {
-		args = append(args, "--root", root)
-	}
-	args = append(args, "textpb", "-o", output, filename)
-
-	cmd := exec.Command(pySysl(), args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return nil, errors.Wrapf(err, "Running %#v %#v", pySysl(), args)
-	}
-
-	return readSyslModule(output)
-}
-
 func retainOrRemove(err error, file *os.File, retainOnError bool) error {
 	if err != nil {
 		if retainOnError {
@@ -156,27 +132,6 @@ func parseAndCompare(
 	return false, nil
 }
 
-func parseAndCompareWithPython(filename, root string, retainOnError bool) (bool, error) {
-	pattern := "sysl-test-golden-*.textpb"
-	golden, err := ioutil.TempFile("", pattern)
-	if err != nil {
-		return false, errors.Wrapf(err, "Create tempfile %#v", pattern)
-	}
-	defer golden.Close()
-
-	pyModule, err := pyParse(filename, root, golden.Name())
-	if err := retainOrRemove(err, golden, retainOnError); err != nil {
-		return false, errors.Wrapf(err, "pyParse(%#v, %#v, %#v)", filename, root, golden.Name())
-	}
-
-	equal, err := parseAndCompare(filename, root, golden.Name(), pyModule, retainOnError, true)
-	if err := retainOrRemove(err, golden, retainOnError); err != nil {
-		return false, errors.Wrapf(err, "parseAndCompare(%#v, %#v, %#v, …, %#v)",
-			filename, root, golden.Name(), retainOnError)
-	}
-	return equal, nil
-}
-
 func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
 	golden := path.Join(root, filename+".golden.textpb")
 
@@ -185,13 +140,6 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 		return false, err
 	}
 	return parseAndCompare(filename, root, golden, goldenModule, true, stripSourceContext)
-}
-
-func testParseAgainstPython(t *testing.T, filename, root string) {
-	equal, err := parseAndCompareWithPython(filename, root, true)
-	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and py-sysl: %s", path.Join(root, filename))
-	}
 }
 
 func testParseAgainstGolden(t *testing.T, filename, root string) {
@@ -370,7 +318,7 @@ func TestFuncs(t *testing.T) {
 }
 
 func TestPetshop(t *testing.T) {
-	testParseAgainstPython(t, "petshop.sysl", "../../demo/petshop")
+	testParseAgainstGolden(t, "tests/petshop.sysl", "")
 }
 
 func TestCrash(t *testing.T) {
