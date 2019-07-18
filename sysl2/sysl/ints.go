@@ -134,7 +134,7 @@ func GenerateIntegrations(
 		if filter != "" {
 			re := regexp.MustCompile(filter)
 			if !re.MatchString(outputDir) {
-				return r
+				continue
 			}
 		}
 		drawableApps := findDrawableApps(mod, integrations)
