@@ -1,31 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestValidatorLogMsg(t *testing.T) {
-
-	cases := map[string]struct {
-		input []ValidationMsg
-	}{
-		"Error":     {input: []ValidationMsg{{Message: "Error msg", MsgType: ERROR}}},
-		"Warn":      {input: []ValidationMsg{{Message: "Warning msg", MsgType: WARN}}},
-		"Info":      {input: []ValidationMsg{{Message: "Info msg", MsgType: INFO}}},
-		"Undefined": {input: []ValidationMsg{{Message: "Undefined msg", MsgType: UNDEF}}},
-	}
-
-	for name, test := range cases {
-		input := test.input
-		t.Run(name, func(t *testing.T) {
-			logMsg(input...)
-		})
-	}
-}
 
 func TestValidatorGetTypeName(t *testing.T) {
 	cases := map[string]struct {
@@ -133,18 +114,18 @@ func TestValidatorValidateEntryPoint(t *testing.T) {
 
 	cases := map[string]struct {
 		input    map[string]*sysl.View
-		expected []ValidationMsg
+		expected []Msg
 	}{
 		"Exists": {input: map[string]*sysl.View{start: entryPointView, "nonEntryPoint": nonEntryPointView},
 			expected: nil},
 		"Not exists": {input: map[string]*sysl.View{"nonEntryPoint": nonEntryPointView},
-			expected: []ValidationMsg{
-				{Message: fmt.Sprintf("Entry point view: '%s' is undefined", start), MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrEntryPointUndefined, MessageData: []string{start}}}},
 		"Incorrect output": {
 			input: map[string]*sysl.View{start: invalidEntryPointView, "nonEntryPoint": nonEntryPointView},
-			expected: []ValidationMsg{
-				{Message: fmt.Sprintf("Output type of entry point view: '%s' should be '%s'", start, start),
-					MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrInvalidEntryPointReturn,
+					MessageData: []string{start, start}}}},
 	}
 
 	for name, test := range cases {
@@ -177,19 +158,19 @@ func TestValidatorValidateFileName(t *testing.T) {
 
 	cases := map[string]struct {
 		input    map[string]*sysl.View
-		expected []ValidationMsg
+		expected []Msg
 	}{
 		"Exists": {input: map[string]*sysl.View{viewName: fileNameView, "nonEntryPoint": nonFileNameView},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
 		"Not exists": {input: map[string]*sysl.View{"tfmDefaultEmpty": nonFileNameView},
-			expected: []ValidationMsg{{Message: "View 'filename' is undefined", MsgType: ERROR}}},
+			expected: []Msg{{MessageID: ErrUndefinedView, MessageData: []string{viewName}}}},
 		"Incorrect output": {input: map[string]*sysl.View{viewName: invalidFileNameView1},
-			expected: []ValidationMsg{{Message: "In view 'filename', output type should be 'string'", MsgType: ERROR}}},
+			expected: []Msg{{MessageID: ErrInvalidReturn, MessageData: []string{viewName, "string"}}}},
 		"Incorrect assignment": {input: map[string]*sysl.View{viewName: invalidFileNameView2},
-			expected: []ValidationMsg{{Message: "In view 'filename' : missing type: 'filename'", MsgType: ERROR}}},
+			expected: []Msg{{MessageID: ErrMissingReqField, MessageData: []string{viewName, viewName, "string"}}}},
 		"Excess assignment": {input: map[string]*sysl.View{viewName: invalidFileNameView3},
-			expected: []ValidationMsg{
-				{Message: fmt.Sprintf("In view 'filename' : Excess assignments: 'foo'"), MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrExcessAttr, MessageData: []string{"foo", viewName, "string"}}}},
 	}
 
 	for name, test := range cases {
@@ -364,8 +345,8 @@ func TestValidatorResolveExprType(t *testing.T) {
 		expr     *sysl.Expr
 	}
 	type expectedData struct {
-		syslType       *sysl.Type
-		validationMsgs []ValidationMsg
+		syslType *sysl.Type
+		messages []Msg
 	}
 
 	expressions := map[string]*sysl.Expr{}
@@ -384,16 +365,16 @@ func TestValidatorResolveExprType(t *testing.T) {
 	}{
 		"String": {
 			input:    inputData{viewName: "varTypeResolve", expr: expressions["stringType"]},
-			expected: expectedData{syslType: stringType, validationMsgs: []ValidationMsg{}}},
+			expected: expectedData{syslType: stringType, messages: []Msg{}}},
 		"Int": {
 			input:    inputData{viewName: "varTypeResolve", expr: expressions["intType"]},
-			expected: expectedData{syslType: intType, validationMsgs: []ValidationMsg{}}},
+			expected: expectedData{syslType: intType, messages: []Msg{}}},
 		"Bool": {
 			input:    inputData{viewName: "varTypeResolve", expr: expressions["boolType"]},
-			expected: expectedData{syslType: boolType, validationMsgs: []ValidationMsg{}}},
+			expected: expectedData{syslType: boolType, messages: []Msg{}}},
 		"Transform type primitive": {
 			input:    inputData{viewName: "varTypeResolve", expr: expressions["transformTypePrimitive"]},
-			expected: expectedData{syslType: stringType, validationMsgs: []ValidationMsg{}}},
+			expected: expectedData{syslType: stringType, messages: []Msg{}}},
 		"Transform type ref": {
 			input: inputData{viewName: "varTypeResolve", expr: expressions["transformTypeRef"]},
 			expected: expectedData{syslType: &sysl.Type{
@@ -402,27 +383,36 @@ func TestValidatorResolveExprType(t *testing.T) {
 						Ref: &sysl.Scope{Path: []string{"Statement"}},
 					},
 				},
-			}, validationMsgs: []ValidationMsg{}}},
-		"Valid unary result": {
-			input:    inputData{viewName: "varTypeResolve", expr: expressions["unaryResultValid"]},
-			expected: expectedData{syslType: boolType, validationMsgs: []ValidationMsg{}}},
-		"Invalid unary result": {
-			input: inputData{viewName: "varTypeResolve", expr: expressions["unaryResultInvalid"]},
+			}, messages: []Msg{}}},
+		"Valid bool unary result": {
+			input:    inputData{viewName: "varTypeResolve", expr: expressions["unaryResultValidBool"]},
+			expected: expectedData{syslType: boolType, messages: []Msg{}}},
+		"Valid int unary result": {
+			input:    inputData{viewName: "varTypeResolve", expr: expressions["unaryResultValidInt"]},
+			expected: expectedData{syslType: intType, messages: []Msg{}}},
+		"Invalid unary result bool": {
+			input: inputData{viewName: "varTypeResolve", expr: expressions["unaryResultInvalidBool"]},
 			expected: expectedData{
 				syslType: boolType,
-				validationMsgs: []ValidationMsg{{
-					Message: "In view 'varTypeResolve', unary operator used with non boolean type: 'STRING'",
-					MsgType: 100},
-				}}},
+				messages: []Msg{{
+					MessageID:   ErrInvalidUnary,
+					MessageData: []string{"varTypeResolve", "STRING"}}}}},
+		"Invalid unary result int": {
+			input: inputData{viewName: "varTypeResolve", expr: expressions["unaryResultInvalidInt"]},
+			expected: expectedData{
+				syslType: intType,
+				messages: []Msg{{
+					MessageID:   ErrInvalidUnary,
+					MessageData: []string{"varTypeResolve", "STRING"}}}}},
 	}
 
 	for name, test := range cases {
 		input := test.input
 		expected := test.expected
 		t.Run(name, func(t *testing.T) {
-			syslType, validationMsgs := resolveExprType(input.expr, input.viewName)
+			syslType, messages := resolveExprType(input.expr, input.viewName)
 			assert.True(t, hasSameType(expected.syslType, syslType), "Unexpected result")
-			assert.Equal(t, expected.validationMsgs, validationMsgs, "Unexpected result")
+			assert.Equal(t, expected.messages, messages, "Unexpected result")
 		})
 	}
 }
@@ -436,14 +426,14 @@ func TestValidatorValidateTransform(t *testing.T) {
 	}
 
 	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform1.sysl")
-	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "grammar.sysl")
 
 	grammar := grammarModule.GetApps()[grammarAppName]
 	tfmViews := transformModule.GetApps()[tfmAppName].GetViews()
 
 	cases := map[string]struct {
 		input    inputData
-		expected []ValidationMsg
+		expected []Msg
 	}{
 		"Equal": {
 			input: inputData{
@@ -451,45 +441,52 @@ func TestValidatorValidateTransform(t *testing.T) {
 				transform: tfmViews["TfmValid"].GetExpr().GetTransform(),
 				implViews: tfmViews,
 				out:       "MethodDecl"},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
 		"Not Equal": {
 			input: inputData{
 				viewName:  "TfmInvalid",
 				transform: tfmViews["TfmInvalid"].GetExpr().GetTransform(),
 				implViews: tfmViews,
 				out:       "MethodDecl"},
-			expected: []ValidationMsg{
-				{Message: "In view 'TfmInvalid', type 'FunctionName' is missing", MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrMissingReqField, MessageData: []string{"FunctionName", "TfmInvalid", "MethodDecl"}}}},
 		"Absent optional": {
 			input: inputData{
 				viewName:  "TfmNoOptional",
 				transform: tfmViews["TfmNoOptional"].GetExpr().GetTransform(),
 				implViews: tfmViews,
 				out:       "MethodDecl"},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
 		"Excess attributes without optionals": {
 			input: inputData{
 				viewName:  "TfmExcessAttrs1",
 				transform: tfmViews["TfmExcessAttrs1"].GetExpr().GetTransform(),
 				implViews: tfmViews,
 				out:       "MethodDecl"},
-			expected: []ValidationMsg{
-				{Message: "In view 'TfmExcessAttrs1', excess attribute is defined: 'ExcessAttr1'", MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrExcessAttr, MessageData: []string{"ExcessAttr1", "TfmExcessAttrs1", "MethodDecl"}}}},
 		"Excess attributes with optionals": {
 			input: inputData{
 				viewName:  "TfmExcessAttrs2",
 				transform: tfmViews["TfmExcessAttrs2"].GetExpr().GetTransform(),
 				implViews: tfmViews,
 				out:       "MethodDecl"},
-			expected: []ValidationMsg{
-				{Message: "In view 'TfmExcessAttrs2', excess attribute is defined: 'ExcessAttr1'", MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrExcessAttr, MessageData: []string{"ExcessAttr1", "TfmExcessAttrs2", "MethodDecl"}}}},
 		"Valid choice": {
 			input: inputData{
 				viewName:  "ValidChoice",
 				transform: tfmViews["ValidChoice"].GetExpr().GetTransform(),
 				implViews: tfmViews,
 				out:       "Statement"},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
+		"Relational Type": {
+			input: inputData{
+				viewName:  "ValidChoice",
+				transform: tfmViews["ValidChoice"].GetExpr().GetTransform(),
+				implViews: tfmViews,
+				out:       "RelationalType"},
+			expected: []Msg{}},
 	}
 
 	for name, test := range cases {
@@ -511,14 +508,14 @@ func TestValidatorValidateTransformInnerTypes(t *testing.T) {
 	}
 
 	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform1.sysl")
-	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "grammar.sysl")
 
 	grammar := grammarModule.GetApps()[grammarAppName]
 	tfmViews := transformModule.GetApps()[tfmAppName].GetViews()
 
 	cases := map[string]struct {
 		input    inputData
-		expected []ValidationMsg
+		expected []Msg
 	}{
 		"Valid inner type": {
 			input: inputData{
@@ -527,7 +524,7 @@ func TestValidatorValidateTransformInnerTypes(t *testing.T) {
 				implViews: tfmViews,
 				out:       "goFile",
 			},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
 		"Invalid inner type": {
 			input: inputData{
 				transform: tfmViews["InvalidInnerAttrs"].GetExpr().GetTransform(),
@@ -535,9 +532,9 @@ func TestValidatorValidateTransformInnerTypes(t *testing.T) {
 				implViews: tfmViews,
 				out:       "goFile",
 			},
-			expected: []ValidationMsg{
-				{Message: "In view 'InvalidInnerAttrs', type 'PackageName' is missing", MsgType: ERROR},
-				{Message: "In view 'InvalidInnerAttrs', excess attribute is defined: 'Foo'", MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrMissingReqField, MessageData: []string{"PackageName", "InvalidInnerAttrs", "PackageClause"}},
+				{MessageID: ErrExcessAttr, MessageData: []string{"Foo", "InvalidInnerAttrs", "PackageClause"}}}},
 	}
 	for name, test := range cases {
 		input := test.input
@@ -558,14 +555,14 @@ func TestValidatorValidateTransformChoiceTypes(t *testing.T) {
 	}
 
 	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform1.sysl")
-	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "grammar.sysl")
 
 	grammar := grammarModule.GetApps()[grammarAppName]
 	tfmViews := transformModule.GetApps()[tfmAppName].GetViews()
 
 	cases := map[string]struct {
 		input    inputData
-		expected []ValidationMsg
+		expected []Msg
 	}{
 		"Valid choice": {
 			input: inputData{
@@ -573,61 +570,61 @@ func TestValidatorValidateTransformChoiceTypes(t *testing.T) {
 				viewName:  "ValidChoice",
 				implViews: tfmViews,
 				out:       "Statement"},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
 		"Invalid choice": {
 			input: inputData{
 				transform: tfmViews["InvalidChoice"].GetExpr().GetTransform(),
 				viewName:  "InvalidChoice",
 				implViews: tfmViews,
 				out:       "Statement"},
-			expected: []ValidationMsg{
-				{Message: "In view 'InvalidChoice', invalid choice has been made as : 'Foo'", MsgType: ERROR},
-				{Message: "In view 'InvalidChoice', excess attribute is defined: 'Foo'", MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrInvalidOption, MessageData: []string{"InvalidChoice", "Foo", "Statement"}},
+				{MessageID: ErrExcessAttr, MessageData: []string{"Foo", "InvalidChoice", "Statement"}}}},
 		"Valid choice combination": {
 			input: inputData{
 				transform: tfmViews["ValidChoiceCombination"].GetExpr().GetTransform(),
 				viewName:  "ValidChoiceCombination",
 				implViews: tfmViews,
 				out:       "MethodSpec"},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
 		"Valid choice non-combination": {
 			input: inputData{
 				transform: tfmViews["ValidChoiceNonCombination"].GetExpr().GetTransform(),
 				viewName:  "ValidChoiceNonCombination",
 				implViews: tfmViews,
 				out:       "MethodSpec"},
-			expected: []ValidationMsg{}},
+			expected: []Msg{}},
 		"Invalid choice combination excess": {
 			input: inputData{
 				transform: tfmViews["InvalidChoiceCombinationExcess"].GetExpr().GetTransform(),
 				viewName:  "InvalidChoiceCombinationExcess",
 				implViews: tfmViews,
 				out:       "MethodSpec"},
-			expected: []ValidationMsg{{
-				Message: "In view 'InvalidChoiceCombinationExcess', excess attribute is defined: 'Foo'",
-				MsgType: ERROR}}},
+			expected: []Msg{{
+				MessageID:   ErrExcessAttr,
+				MessageData: []string{"Foo", "InvalidChoiceCombinationExcess", "MethodSpec"}}}},
 		"Invalid choice combination missing": {
 			input: inputData{
 				transform: tfmViews["InvalidChoiceCombiMissing"].GetExpr().GetTransform(),
 				viewName:  "InvalidChoiceCombiMissing",
 				implViews: tfmViews,
 				out:       "MethodSpec"},
-			expected: []ValidationMsg{
-				{Message: "In view 'InvalidChoiceCombiMissing', type 'Signature' is missing", MsgType: ERROR},
-				{Message: "In view 'InvalidChoiceCombiMissing', excess attribute is defined: 'Foo'", MsgType: ERROR}}},
+			expected: []Msg{
+				{MessageID: ErrMissingReqField, MessageData: []string{"Signature", "InvalidChoiceCombiMissing", "MethodSpec"}},
+				{MessageID: ErrExcessAttr, MessageData: []string{"Foo", "InvalidChoiceCombiMissing", "MethodSpec"}}}},
 		"Invalid choice non-combination missing": {
 			input: inputData{
 				transform: tfmViews["InvalidChoiceNonCombination"].GetExpr().GetTransform(),
 				viewName:  "InvalidChoiceNonCombination",
 				implViews: tfmViews,
 				out:       "MethodSpec"},
-			expected: []ValidationMsg{
+			expected: []Msg{
 				{
-					Message: "In view 'InvalidChoiceNonCombination', invalid choice has been made as : 'Interface'",
-					MsgType: ERROR},
+					MessageID:   ErrInvalidOption,
+					MessageData: []string{"InvalidChoiceNonCombination", "Interface", "MethodSpec"}},
 				{
-					Message: "In view 'InvalidChoiceNonCombination', excess attribute is defined: 'Interface'",
-					MsgType: 100}}},
+					MessageID:   ErrExcessAttr,
+					MessageData: []string{"Interface", "InvalidChoiceNonCombination", "MethodSpec"}}}},
 	}
 	for name, test := range cases {
 		input := test.input
@@ -641,13 +638,13 @@ func TestValidatorValidateTransformChoiceTypes(t *testing.T) {
 
 func TestValidatorValidate(t *testing.T) {
 	transformModule, tfmAppName := loadAndGetDefaultApp("tests", "transform2.sysl")
-	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "go.gen.sysl")
+	grammarModule, grammarAppName := loadAndGetDefaultApp("tests", "grammar.sysl")
 
 	grammar := grammarModule.GetApps()[grammarAppName]
 	transform := transformModule.GetApps()[tfmAppName]
 
 	actual := validate(grammar, transform, "goFile")
-	assert.Equal(t, []ValidationMsg{}, actual, "Unexpected result")
+	assert.Equal(t, []Msg{}, actual, "Unexpected result")
 }
 
 func TestValidatorLoadTransformSuccess(t *testing.T) {
@@ -663,7 +660,7 @@ func TestValidatorLoadTransformError(t *testing.T) {
 }
 
 func TestValidatorLoadGrammarSuccess(t *testing.T) {
-	grammar, err := loadGrammar("tests/go.gen.g")
+	grammar, err := loadGrammar("tests/grammar.sysl")
 	assert.NotNil(t, grammar, "Unexpected result")
 	assert.Nil(t, err, "Unexpected result")
 }
@@ -672,4 +669,52 @@ func TestValidatorLoadGrammarError(t *testing.T) {
 	grammar, err := loadGrammar("foo/bar.g")
 	assert.Nil(t, grammar, "Unexpected result")
 	assert.NotNil(t, err, "Unexpected result")
+}
+
+func TestValidatorDoValidate(t *testing.T) {
+	cases := map[string]struct {
+		args     []string
+		flags    *flag.FlagSet
+		isErrNil bool
+	}{
+		"Success": {
+			args: []string{
+				"sysl2", "validate", "-root-transform", "tests", "-transform", "transform2.sysl", "-grammar",
+				"tests/grammar.sysl", "-start", "goFile"},
+			flags: flag.NewFlagSet("validate", flag.PanicOnError), isErrNil: true},
+		"Flag parse fail": {
+			args: []string{
+				"sysl2", "validate", "-root-transforms", "tests", "-transform", "transform2.sysl", "-grammar",
+				"tests/grammar.sysl", "-start", "goFile"},
+			flags: flag.NewFlagSet("validate", flag.ContinueOnError), isErrNil: false},
+		"Grammar loading fail": {
+			args: []string{
+				"sysl2", "validate", "-root-transform", "tests", "-transform", "transform2.sysl", "-grammar",
+				"tests/go.sysl", "-start", "goFile"},
+			flags: flag.NewFlagSet("validate", flag.PanicOnError), isErrNil: false},
+		"Transform loading fail": {
+			args: []string{
+				"sysl2", "validate", "-root-transform", "tests", "-transform", "tfm.sysl", "-grammar",
+				"tests/grammar.sysl", "-start", "goFile"},
+			flags: flag.NewFlagSet("validate", flag.PanicOnError), isErrNil: false},
+		"Has validation messages": {
+			args: []string{
+				"sysl2", "validate", "-root-transform", "tests", "-transform", "transform1.sysl", "-grammar",
+				"tests/grammar.sysl", "-start", "goFile"},
+			flags: flag.NewFlagSet("validate", flag.PanicOnError), isErrNil: false},
+	}
+
+	for name, test := range cases {
+		args := test.args
+		flags := test.flags
+		isErrNil := test.isErrNil
+		t.Run(name, func(t *testing.T) {
+			err := DoValidate(flags, args)
+			if isErrNil {
+				assert.Nil(t, err, "Unexpected result")
+			} else {
+				assert.NotNil(t, err, "Unexpected result")
+			}
+		})
+	}
 }

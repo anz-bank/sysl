@@ -244,7 +244,10 @@ func GenerateCode(rootModel, model, rootTransform, transform, grammar, start str
 	if err != nil {
 		panic(err)
 	}
-	logMsg(validate(grammarSysl, tx.GetApps()[transformAppName], start)...)
+
+	for _, message := range validate(grammarSysl, tx.GetApps()[transformAppName], start) {
+		message.logMsg()
+	}
 
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {

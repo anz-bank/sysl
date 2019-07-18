@@ -129,8 +129,10 @@ CodeGenTransform:
       transformTypeRef = input -> <Statement> (:
         let upper = "bar"
       )
-      unaryResultValid = !true
-      unaryResultInvalid = !"Foo"
+      unaryResultValidBool = !true
+      unaryResultValidInt = -5
+      unaryResultInvalidBool = !"Foo"
+      unaryResultInvalidInt = +"Foo"
     )
 
   !view ValidInnerAttrs(input <: string) -> goFile:

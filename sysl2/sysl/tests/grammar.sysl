@@ -40,3 +40,6 @@ Go:
 
   !type Statement:
     __Choice_Statement <: __Choice_Statement
+
+  !table RelationalType:
+    Foo <: string

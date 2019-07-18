@@ -10,32 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	ERROR = 100
-	WARN  = 200
-	INFO  = 300
-	UNDEF = 400
-)
-
-type ValidationMsg struct {
-	Message string `json:"message"`
-	MsgType int    `json:"msg_type"`
-}
-
-func logMsg(messages ...ValidationMsg) {
-	for _, msg := range messages {
-		formattedMsg := "[Validator]: " + msg.Message
-		switch msg.MsgType {
-		case ERROR:
-			logrus.Error(formattedMsg)
-		case WARN:
-			logrus.Warn(formattedMsg)
-		case INFO:
-			logrus.Info(formattedMsg)
-		}
-	}
-}
-
 func noType() *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_NoType_{
@@ -72,63 +46,46 @@ func isCollectionType(syslType *sysl.Type) bool {
 	}
 }
 
-func validateEntryPoint(views map[string]*sysl.View, start string) []ValidationMsg {
+func validateEntryPoint(views map[string]*sysl.View, start string) []Msg {
 	view, exists := views[start]
 
 	if !exists {
-		return []ValidationMsg{{
-			Message: fmt.Sprintf("Entry point view: '%s' is undefined", start),
-			MsgType: ERROR,
-		}}
+		return []Msg{*NewMsg(ErrEntryPointUndefined, []string{start})}
 	}
 
 	if getTypeName(view.GetRetType()) != start || isCollectionType(view.GetRetType()) {
-		return []ValidationMsg{{
-			Message: fmt.Sprintf("Output type of entry point view: '%s' should be '%s'", start, start),
-			MsgType: ERROR,
-		}}
+		return []Msg{*NewMsg(ErrInvalidEntryPointReturn, []string{start, start})}
 	}
 
 	return nil
 }
 
-func validateFileName(views map[string]*sysl.View) []ValidationMsg {
+func validateFileName(views map[string]*sysl.View) []Msg {
 	viewName := "filename"
 	view, exists := views[viewName]
-	validationMsgs := make([]ValidationMsg, 0, 2)
+	messages := make([]Msg, 0, 2)
 
 	if !exists {
-		return []ValidationMsg{{
-			Message: "View 'filename' is undefined",
-			MsgType: ERROR,
-		}}
+		return []Msg{*NewMsg(ErrUndefinedView, []string{viewName})}
 	}
 
 	if getTypeName(view.GetRetType()) != "STRING" || isCollectionType(view.GetRetType()) {
-		validationMsgs = append(validationMsgs, ValidationMsg{
-			Message: "In view 'filename', output type should be 'string'",
-			MsgType: ERROR,
-		})
+		messages = append(messages, *NewMsg(ErrInvalidReturn, []string{viewName, "string"}))
 	}
 
 	assignCount := 0
 	for _, stmt := range view.GetExpr().GetTransform().GetStmt() {
 		if stmt.GetAssign() != nil {
 			if assignCount == 0 && stmt.GetAssign().GetName() != viewName {
-				validationMsgs = append(validationMsgs, ValidationMsg{
-					Message: "In view 'filename' : missing type: 'filename'",
-					MsgType: ERROR,
-				})
+				messages = append(messages, *NewMsg(ErrMissingReqField, []string{viewName, viewName, "string"}))
 			} else if assignCount > 0 {
-				validationMsgs = append(validationMsgs, ValidationMsg{
-					Message: fmt.Sprintf("In view 'filename' : Excess assignments: '%s'", stmt.GetAssign().GetName()),
-					MsgType: ERROR,
-				})
+				messages = append(messages, *NewMsg(ErrExcessAttr, []string{stmt.GetAssign().GetName(), viewName, "string"}))
 			}
-			assignCount++
 		}
+		assignCount++
 	}
-	return validationMsgs
+
+	return messages
 }
 
 func getImplAttrNames(attrs map[string]*sysl.Type) map[string]struct{} {
@@ -141,19 +98,22 @@ func getImplAttrNames(attrs map[string]*sysl.Type) map[string]struct{} {
 	return implAttrNames
 }
 
-func compareSpecVsImpl(grammarSpec, specAttrs, implAttrs map[string]*sysl.Type,
-	implAttrNames map[string]struct{}, viewName string) []ValidationMsg {
-	validationMsgs := make([]ValidationMsg, 0, len(implAttrs))
+func compareTuple(grammarSpec map[string]*sysl.Type,
+	specTuple, implTuple *sysl.Type_Tuple,
+	implAttrNames map[string]struct{},
+	viewName, specTupleName string) []Msg {
+
+	specAttrs := specTuple.GetAttrDefs()
+	implAttrs := implTuple.GetAttrDefs()
+	messages := make([]Msg, 0, len(implAttrs))
 
 	for gk, gv := range specAttrs {
-		if grammarSpec[gk].GetOneOf() != nil {
-			validationMsgs = append(validationMsgs, compareOneOf(grammarSpec, implAttrs, implAttrNames, viewName, gk)...)
+		if specOneOf := grammarSpec[gk].GetOneOf(); specOneOf != nil {
+			messages = append(messages,
+				compareOneOf(grammarSpec, specOneOf, implTuple, implAttrNames, viewName, specTupleName)...)
 		} else if _, exists := implAttrs[gk]; !exists {
 			if !gv.GetOpt() {
-				validationMsgs = append(validationMsgs, ValidationMsg{
-					Message: fmt.Sprintf("In view '%s', type '%s' is missing", viewName, gk),
-					MsgType: ERROR,
-				})
+				messages = append(messages, *NewMsg(ErrMissingReqField, []string{gk, viewName, specTupleName}))
 			}
 		} else {
 			delete(implAttrNames, gk)
@@ -161,22 +121,24 @@ func compareSpecVsImpl(grammarSpec, specAttrs, implAttrs map[string]*sysl.Type,
 	}
 
 	for attrName := range implAttrNames {
-		validationMsgs = append(validationMsgs, ValidationMsg{
-			Message: fmt.Sprintf("In view '%s', excess attribute is defined: '%s'", viewName, attrName),
-			MsgType: ERROR,
-		})
+		messages = append(messages, *NewMsg(ErrExcessAttr, []string{attrName, viewName, specTupleName}))
 		delete(implAttrNames, attrName)
 	}
 
-	return validationMsgs
+	return messages
 }
 
-func compareOneOf(grammarSpec, implAttrs map[string]*sysl.Type,
-	implAttrNames map[string]struct{}, viewName, typeName string) []ValidationMsg {
-	validationMsgs := make([]ValidationMsg, 0, len(implAttrs))
+func compareOneOf(grammarSpec map[string]*sysl.Type,
+	specOneOf *sysl.Type_OneOf,
+	implTuple *sysl.Type_Tuple,
+	implAttrNames map[string]struct{},
+	viewName, specTupleName string) []Msg {
+
+	implAttrs := implTuple.GetAttrDefs()
+	messages := make([]Msg, 0, len(implAttrs))
 	matching := true
 
-	for _, one := range grammarSpec[typeName].GetOneOf().GetType() {
+	for _, one := range specOneOf.GetType() {
 		name := one.GetTypeRef().GetRef().GetPath()[0]
 
 		if strings.Index(name, "__Choice_Combination_") == 0 {
@@ -184,8 +146,8 @@ func compareOneOf(grammarSpec, implAttrs map[string]*sysl.Type,
 				continue
 			}
 
-			validationMsgs = append(validationMsgs, compareSpecVsImpl(grammarSpec,
-				grammarSpec[name].GetTuple().GetAttrDefs(), implAttrs, implAttrNames, viewName)...)
+			messages = append(messages, compareTuple(grammarSpec,
+				grammarSpec[name].GetTuple(), implTuple, implAttrNames, viewName, specTupleName)...)
 			break
 		} else {
 			if _, exists := implAttrs[name]; !exists {
@@ -199,16 +161,15 @@ func compareOneOf(grammarSpec, implAttrs map[string]*sysl.Type,
 	}
 
 	if !matching {
-		implAttrName := ""
+		var implAttrNames []string
 		for k := range implAttrs {
-			implAttrName = k
+			implAttrNames = append(implAttrNames, k)
 		}
-		validationMsgs = append(validationMsgs, ValidationMsg{
-			Message: fmt.Sprintf("In view '%s', invalid choice has been made as : '%s'", viewName, implAttrName),
-			MsgType: ERROR})
+		messages = append(messages,
+			*NewMsg(ErrInvalidOption, []string{viewName, strings.Join(implAttrNames, ","), specTupleName}))
 	}
 
-	return validationMsgs
+	return messages
 }
 
 func hasSameType(type1 *sysl.Type, type2 *sysl.Type) bool {
@@ -235,84 +196,101 @@ func hasSameType(type1 *sysl.Type, type2 *sysl.Type) bool {
 	return false
 }
 
-func resolveExprType(expr *sysl.Expr, viewName string) (*sysl.Type, []ValidationMsg) {
-	validationMsgs := make([]ValidationMsg, 0, 1)
+func resolveExprType(expr *sysl.Expr, viewName string) (*sysl.Type, []Msg) {
+	messages := make([]Msg, 0, 1)
 
-	switch expr.Expr.(type) {
+	switch e := expr.Expr.(type) {
 
 	case *sysl.Expr_Transform_:
-		if typeRef := expr.GetType().GetTypeRef(); typeRef != nil {
-			return &sysl.Type{
-				Type: &sysl.Type_TypeRef{
-					TypeRef: &sysl.ScopedRef{
-						Ref: &sysl.Scope{Path: typeRef.GetRef().GetAppname().GetPart()},
-					},
-				},
-			}, validationMsgs
+		tfmType := expr.GetType()
+		if typeRef := tfmType.GetTypeRef(); typeRef != nil {
+			if tfmType.GetTypeRef().GetRef().GetPath() == nil && len(tfmType.GetTypeRef().GetRef().GetAppname().GetPart()) == 1 {
+				tfmType.GetTypeRef().GetRef().Path = tfmType.GetTypeRef().GetRef().GetAppname().GetPart()
+			}
+
+			return tfmType, messages
 		}
-		return expr.GetType(), validationMsgs
+		return expr.GetType(), messages
 	case *sysl.Expr_Literal:
-		return expr.GetType(), validationMsgs
+		return expr.GetType(), messages
 	case *sysl.Expr_Unexpr:
 		varType, messages := resolveExprType(expr.GetUnexpr().GetArg(), viewName)
-		validationMsgs = append(validationMsgs, messages...)
-		if !hasSameType(varType, boolType) {
-			_, typeDetail := getTypeDetail(varType)
-			validationMsgs = append(validationMsgs, ValidationMsg{
-				Message: fmt.Sprintf("In view '%s', unary operator used with non boolean type: '%s'", viewName, typeDetail),
-				MsgType: ERROR})
+		messages = append(messages, messages...)
+		switch e.Unexpr.GetOp() {
+		case sysl.Expr_UnExpr_NOT, sysl.Expr_UnExpr_INV:
+			if !hasSameType(varType, boolType) {
+				_, typeDetail := getTypeDetail(varType)
+				messages = append(messages, *NewMsg(ErrInvalidUnary, []string{viewName, typeDetail}))
+			}
+			return boolType, messages
+		case sysl.Expr_UnExpr_NEG, sysl.Expr_UnExpr_POS:
+			if !hasSameType(varType, intType) {
+				_, typeDetail := getTypeDetail(varType)
+				messages = append(messages, *NewMsg(ErrInvalidUnary, []string{viewName, typeDetail}))
+			}
+			return intType, messages
 		}
-		return boolType, validationMsgs
 	}
 
-	return noType(), validationMsgs
+	return noType(), messages
 }
 
-func validateTransform(specApp *sysl.Application, transform *sysl.Expr_Transform,
-	viewName string, implViews map[string]*sysl.View, typeName string) []ValidationMsg {
-	validationMsgs := make([]ValidationMsg, 0, 50)
+func validateTransform(specApp *sysl.Application,
+	transform *sysl.Expr_Transform,
+	viewName string,
+	implViews map[string]*sysl.View,
+	typeName string) []Msg {
 
-	attrDefs := map[string]*sysl.Type{}
+	messages := make([]Msg, 0, len(transform.GetStmt()))
+	newTuple := &sysl.Type_Tuple{
+		AttrDefs: map[string]*sysl.Type{},
+	}
+	attrDefs := newTuple.AttrDefs
 
 	for _, stmt := range transform.GetStmt() {
 		if stmt.GetAssign() != nil {
 			varName := stmt.GetAssign().GetName()
 
 			expr := stmt.GetAssign().GetExpr()
-			exprType, messages := resolveExprType(expr, viewName)
+			exprType, messages1 := resolveExprType(expr, viewName)
 			attrDefs[varName] = exprType
-			validationMsgs = append(validationMsgs, messages...)
+			messages = append(messages, messages1...)
 
 			if innerTfm := expr.GetTransform(); innerTfm != nil {
 				attrTypeName := getTypeName(exprType)
-				validationMsgs = append(validationMsgs, validateTransform(specApp, innerTfm, viewName, implViews, attrTypeName)...)
+				messages = append(messages, validateTransform(specApp, innerTfm, viewName, implViews, attrTypeName)...)
 			}
 		}
 	}
 
 	if grammarType, exists := specApp.Types[typeName]; exists {
-		validationMsgs = append(
-			validationMsgs,
-			compareSpecVsImpl(specApp.Types, grammarType.GetTuple().GetAttrDefs(),
-				attrDefs, getImplAttrNames(attrDefs), viewName)...)
+		switch t := grammarType.Type.(type) {
+		case *sysl.Type_Tuple_:
+			messages = append(
+				messages,
+				compareTuple(specApp.Types, t.Tuple, newTuple, getImplAttrNames(attrDefs), viewName, typeName)...)
+		default:
+			fmt.Println("[validate.validateTransform] Unhandled grammar type")
+		}
+
 	}
 
-	return validationMsgs
+	return messages
 }
 
-func validate(grammar, transform *sysl.Application, start string) []ValidationMsg {
-	validationMsgs := make([]ValidationMsg, 0, 100)
+func validate(grammar, transform *sysl.Application, start string) []Msg {
+	messages := make([]Msg, 0, 10)
 
-	validationMsgs = append(validationMsgs, validateEntryPoint(transform.Views, start)...)
-	validationMsgs = append(validationMsgs, validateFileName(transform.Views)...)
+	messages = append(messages, validateEntryPoint(transform.Views, start)...)
+	messages = append(messages, validateFileName(transform.Views)...)
 
 	for viewName, tfmView := range transform.Views {
 		typeName := getTypeName(tfmView.GetRetType())
-		validationMsgs = append(validationMsgs,
+		messages = append(messages,
 			validateTransform(grammar, tfmView.GetExpr().GetTransform(), viewName, transform.Views, typeName)...)
 	}
 
-	return validationMsgs
+	return messages
 }
 
 func loadTransform(rootTransform, transformFile string) (*sysl.Application, error) {
@@ -364,14 +342,18 @@ func DoValidate(flags *flag.FlagSet, args []string) error {
 		return err
 	}
 
-	validationMsgs := validate(grammar, transform, *start)
+	messages := validate(grammar, transform, *start)
 
-	logMsg(validationMsgs...)
+	for _, message := range messages {
+		message.logMsg()
+	}
 
-	if len(validationMsgs) > 0 {
+	if len(messages) > 0 {
+		NewMsg(ErrValidationFailed, nil).logMsg()
 		return errors.New("validation failed")
 	}
 
-	logMsg(ValidationMsg{Message: "Validation success", MsgType: INFO})
+	NewMsg(InfoValidatedSuccessfully, nil).logMsg()
+
 	return nil
 }
