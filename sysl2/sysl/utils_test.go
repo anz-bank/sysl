@@ -2,6 +2,7 @@ package main
 
 import (
 	"reflect"
+	"sort"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -105,7 +106,11 @@ func TestParseBlackBoxesFromArgument(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ParseBlackBoxesFromArgument(tt.args.blackboxFlags); !reflect.DeepEqual(got, tt.want) {
+			// sorting to bring them in the same order, iteration order is random in go maps
+			sort.Slice(tt.want, func(i, j int) bool { return tt.want[i][0] > tt.want[j][0] })
+			got := ParseBlackBoxesFromArgument(tt.args.blackboxFlags)
+			sort.Slice(got, func(i, j int) bool { return got[i][0] > got[j][0] })
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ParseBlackBoxesFromArgument() = %v, want %v", got, tt.want)
 			}
 		})
