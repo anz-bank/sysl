@@ -17,20 +17,16 @@ type entry struct {
 
 func makeEntry(s string) *entry {
 	match := endpointParserRE.FindStringSubmatch(s)
-
 	out := &entry{}
-	const appname string = "appname"
-	const epname string = "epname"
-	const upto string = "upto"
 
 	for i, name := range endpointParserRE.SubexpNames() {
 		if i > 0 && i <= len(match) {
 			switch name {
-			case appname:
+			case "appname":
 				out.appName = match[i]
-			case epname:
+			case "epname":
 				out.endpointName = match[i]
-			case upto:
+			case "upto":
 				out.upto = match[i]
 			}
 		}
@@ -61,7 +57,6 @@ func MakeEndpointCollectionElement(title string, endpoints []string,
 	for k, b := range blackboxes {
 		switch len(b.Comment) {
 		case 0:
-			continue
 		case 1:
 			b.Comment = ""
 			bb[k] = b
@@ -86,10 +81,9 @@ type UptoType int
 
 const (
 	UpTo                 = 0
-	UptoEndpoint         = 1
-	BBApplication        = 2
-	BBEndpointCollection = 3
-	BBCommandLine        = 4
+	BBApplication        = 1
+	BBEndpointCollection = 2
+	BBCommandLine        = 3
 )
 
 type Upto struct {

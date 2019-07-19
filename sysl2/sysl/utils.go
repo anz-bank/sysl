@@ -70,10 +70,6 @@ func TransformBlackboxesToUptos(m map[string]*Upto, bbs [][]string, uptoType Upt
 	}
 }
 
-func getAppName(appName *sysl.AppName) string {
-	return strings.Join(appName.Part, " :: ")
-}
-
 func getApplicationAttrs(m *sysl.Module, appName string) map[string]*sysl.Attribute {
 	if app, ok := m.Apps[appName]; ok {
 		return app.Attrs

@@ -2,7 +2,6 @@ package main
 
 import (
 	"reflect"
-	"sort"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -96,23 +95,16 @@ func TestParseBlackBoxesFromArgument(t *testing.T) {
 		{
 			name: "Case-ConvertSuccess",
 			args: args{
-				map[string]string{"Value A": "Value B",
-					"Value C": "Value D"},
+				map[string]string{"Value A": "Value B", "Value C": "Value D"},
 			},
-			want: [][]string{{"Value A", "Value B"},
-				{"Value C", "Value D"}},
+			want: [][]string{{"Value A", "Value B"}, {"Value C", "Value D"}},
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			// sorting to bring them in the same order, iteration order is random in go maps
-			sort.Slice(tt.want, func(i, j int) bool { return tt.want[i][0] > tt.want[j][0] })
 			got := ParseBlackBoxesFromArgument(tt.args.blackboxFlags)
-			sort.Slice(got, func(i, j int) bool { return got[i][0] > got[j][0] })
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ParseBlackBoxesFromArgument() = %v, want %v", got, tt.want)
-			}
+			assert.ElementsMatch(t, got, tt.want)
 		})
 	}
 }
@@ -193,7 +185,7 @@ func TestTransformBlackboxesToUptos(t *testing.T) {
 	TransformBlackboxesToUptos(bbs, m, BBApplication)
 
 	// then
-	assert.Equal(t, m[0][1], bbs[m[0][0]].Comment, "unexpected map")
+	assert.Equal(t, m[0][1], bbs[m[0][0]].Comment)
 }
 
 func TestTransformBlackboxesToUptosByNil(t *testing.T) {
