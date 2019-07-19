@@ -32,10 +32,11 @@ func collectApplicationDependencies(
 		apps:         highlights.Clone(),
 		deps:         map[string]AppDependency{},
 	}
-	applications := v.m.GetApps()
-	for app := range integrations {
-		for epname, endpt := range applications[app].GetEndpoints() {
-			v.handleStatement(app, epname, endpt.GetStmt())
+	for appname, app := range v.m.GetApps() {
+		for epname, endpt := range app.GetEndpoints() {
+			if epname != ".. * <- *" {
+				v.handleStatement(appname, epname, endpt.GetStmt())
+			}
 		}
 	}
 	return v.drawableApps, v.apps, v.deps
@@ -46,11 +47,7 @@ func (v *collectApplicationDependenciesState) handleStatement(appname, epname st
 		switch t := stmt.GetStmt().(type) {
 		case *sysl.Statement_Call:
 			targetName := getAppName(t.Call.GetTarget())
-			if added := v.addAppDependency(appname, epname, targetName, t.Call.Endpoint, stmt); added {
-				if v.passthroughs.Contains(targetName) && t.Call.Endpoint != ".. * <- *" {
-					v.handleStatement(targetName, t.Call.Endpoint, v.m.GetApps()[targetName].GetEndpoints()[t.Call.Endpoint].Stmt)
-				}
-			}
+			v.addAppDependency(appname, epname, targetName, t.Call.Endpoint, stmt)
 		case *sysl.Statement_Action, *sysl.Statement_Ret:
 			continue
 		case *sysl.Statement_Cond:
@@ -196,17 +193,17 @@ func DoGenerateIntegrations(args []string) {
 			*plantuml = "http://localhost:8080/plantuml"
 		}
 	}
-	log.Debugf("root: %s\n", *root)
-	log.Debugf("project: %v\n", project)
-	log.Debugf("clustered: %t\n", *clustered)
-	log.Debugf("exclude: %s\n", *exclude)
-	log.Debugf("epa: %t\n", *epa)
-	log.Debugf("title: %s\n", *title)
-	log.Debugf("plantuml: %s\n", *plantuml)
-	log.Debugf("filter: %s\n", *filter)
-	log.Debugf("modules: %s\n", *modules)
-	log.Debugf("output: %s\n", *output)
-	log.Debugf("loglevel: %s\n", *loglevel)
+	log.Infof("root: %s\n", *root)
+	log.Infof("project: %v\n", *project)
+	log.Infof("clustered: %t\n", *clustered)
+	log.Infof("exclude: %s\n", *exclude)
+	log.Infof("epa: %t\n", *epa)
+	log.Infof("title: %s\n", *title)
+	log.Infof("plantuml: %s\n", *plantuml)
+	log.Infof("filter: %s\n", *filter)
+	log.Infof("modules: %s\n", *modules)
+	log.Infof("output: %s\n", *output)
+	log.Infof("loglevel: %s\n", *loglevel)
 
 	r := GenerateIntegrations(*root, *title, *output, *project, *filter, *modules, *exclude, *clustered, *epa)
 	for k, v := range r {
