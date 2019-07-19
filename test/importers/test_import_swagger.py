@@ -787,6 +787,7 @@ SWAGGER_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS_EXPECTED_SYSL = r"""
     # definitions
 """
 
+
 def getOutputString(input):
     swag = yaml.load(input)
     w = writer.Writer('sysl')
@@ -1019,6 +1020,7 @@ def test_default_vocabulary_containing_common_business_nouns_is_defined_for_non_
 def test_make_default_logger_returns_something_thats_probably_a_logger():
     logger = make_default_logger()
     assert hasattr(logger, 'warn')
+
 
 def test_import_of_swagger_path_with_path_var_type_in_api():
     output, logger = getOutputString(SWAGGER_WITH_PATH_VAR_TYPE_IN_API)
