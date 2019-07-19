@@ -138,10 +138,23 @@ class SwaggerTranslator:
 
         return ident
 
-    def translate_path_template_params(self, path):
-        # OAS 2.0 supports path templating.
-        # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#pathTemplating
-        # For some reason, we rename these params via javaParam
+    def translate_path_template_params(self, path, params):
+        if params:
+            parts = re.split(r'({[^/]*?})', path)
+            if len(parts) > 1:
+                pathParams = {}
+                for param in params:
+                    if '$ref' in param:
+                        param = swag['parameters'][param['$ref'].rpartition('/')[2]]
+
+                    if param['in'] == 'path':
+                        pathParams['{' + param['name'] + '}'] = param
+                if len(pathParams) > 0:
+                    for (i, p) in enumerate(parts):
+                        if parts[i] in pathParams:
+                            param = pathParams[parts[i]]
+                            parts[i] = "{" + param["name"] + "<:" + TYPE_MAP[param['type']] + "}"
+                    return "".join(parts)
         return re.sub(r'({[^/]*?})', self.javaParam, path)
 
     def translate(self, swag, appname, package, w):
@@ -183,9 +196,15 @@ class SwaggerTranslator:
 
     def writeEndpoints(self, swag, w):
         for (path, api) in sorted(swag['paths'].iteritems()):
-            print path
-            w(u'\n{}:', self.translate_path_template_params(path))
-            parts = re.split(r'({[^/]*?})', path)
+            swagParams = []
+            if 'parameters' in swag:
+                for key in swag['parameters']:
+                    param = swag['parameters'][key]
+                    if param['in'] == 'path':
+                        swagParams.append(param)
+
+            apiParams = api['parameters'] if 'parameters' in api else []
+            w(u'\n{}:', self.translate_path_template_params(path, swagParams + apiParams))
             with w.indent():
                 base = []
                 if 'parameters' in api:
@@ -202,12 +221,6 @@ class SwaggerTranslator:
                                 paramIn = param.get('in')
                             if paramIn and paramIn != 'path':
                                 params[paramIn].append(param)
-                            else:
-                                print(param)
-                                typeName = TYPE_MAP[param['type']]
-                                print(param['name'], typeName)
-
-
 
                     header = self.getHeaders(params['header'])
                     methodBody = self.getBody(params['body'])
@@ -255,9 +268,6 @@ class SwaggerTranslator:
                                 self.warn('default responses and x-* responses are not implemented')
 
                         w(u'return {}'.format(', '.join(returnValues)))
-
-                    # if i < len(api) - 1:
-                    #     w()
 
     def writeDefs(self, swag, w):
         w()

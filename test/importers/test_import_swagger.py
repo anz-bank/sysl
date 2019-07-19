@@ -672,6 +672,121 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPEC
 """
 
 
+SWAGGER_WITH_PATH_VAR_TYPE_IN_API = r"""
+swagger: "2.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: The user ID.
+      - in: header
+        name: request-id
+        type: string
+        required: true
+        description: the request ID.
+    # GET/users/{id}?metadata=true
+    get:
+      summary: Gets a user by ID
+      # Note we only define the query parameter, because the {id} is defined at the path level.
+      parameters:
+        - in: query
+          name: metadata
+          type: boolean
+          required: false
+          description: If true, the endpoint returns only the user metadata.
+      responses:
+        '200':
+          description: OK
+"""
+
+SWAGGER_WITH_PATH_VAR_TYPE_IN_API_EXPECTED_SYSL = r"""
+ "Sample API" [package=""]:
+    @version = "1.0.0"
+    @host = "api.example.com"
+    @description =:
+        | API description in Markdown.
+
+    /v1:
+
+        /users/{id<:int}:
+            GET ?metadata=bool? (request_id <: string [~header, ~required, name="request-id"]):
+                | No description.
+                return 200
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+
+SWAGGER_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS = r"""
+swagger: "2.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    get:
+      summary: Gets a user by ID.
+      parameters:
+        - in: query
+          name: metadata
+          type: boolean
+          required: false
+          description: If true, the endpoint returns only the user metadata.
+        - $ref: '#parameters/id'
+        - $ref: '#parameters/request-id'
+      responses:
+        '200':
+          description: OK
+parameters:
+  id:
+    in: path
+    name: id
+    type: integer
+    required: true
+    description: The user ID.
+  request-id:
+    in: header
+    name: request-id
+    type: string
+    required: true
+    description: the request ID.
+"""
+
+SWAGGER_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS_EXPECTED_SYSL = r"""
+ "Sample API" [package=""]:
+    @version = "1.0.0"
+    @host = "api.example.com"
+    @description =:
+        | API description in Markdown.
+
+    /v1:
+
+        /users/{id<:int}:
+            GET ?metadata=bool? (request_id <: string [~header, ~required, name="request-id"]):
+                | No description.
+                return 200
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
 def getOutputString(input):
     swag = yaml.load(input)
     w = writer.Writer('sysl')
@@ -869,30 +984,30 @@ def test_parse_typespec_warns_and_ignores_type_if_array_items_type_has_both_type
 
 def test_translate_path_template_params_leaves_paths_without_templates_unchanged():
     t = SwaggerTranslator(logger=None, vocabulary_factory=(lambda: ['x']))
-    assert t.translate_path_template_params('/foo/barr/') == '/foo/barr/'
+    assert t.translate_path_template_params('/foo/barr/', None) == '/foo/barr/'
 
 
 def test_translate_path_template_params_rewrites_dashed_template_names_as_camelcase_string_typed_parameters():
     t = SwaggerTranslator(logger=None, vocabulary_factory=(lambda: ['x']))
-    assert t.translate_path_template_params('/foo/{fizz-buzz}/') == '/foo/{fizzBuzz<:string}/'
+    assert t.translate_path_template_params('/foo/{fizz-buzz}/', None) == '/foo/{fizzBuzz<:string}/'
 
 
 def test_translate_path_template_params_rewrites_names_of_things_that_look_like_a_dictionary_word_ending_with_id_suffix_as_camelcase():
     t = SwaggerTranslator(logger=None, vocabulary_factory=(lambda: ['bread']))
-    assert t.translate_path_template_params('/foo/{breadid}/') == '/foo/{breadId<:string}/'
+    assert t.translate_path_template_params('/foo/{breadid}/', None) == '/foo/{breadId<:string}/'
 
 
 def test_translate_path_template_params_wont_rewrite_names_of_things_ending_with_id_suffix_as_camelcase_if_no_vocabulary_present():
     l = FakeLogger()
     t = SwaggerTranslator(logger=l, vocabulary_factory=(lambda: []))
     # perhaps breadid is a valid word. we dont know, we have no vocab.
-    assert t.translate_path_template_params('/foo/{breadid}/') == '/foo/{breadid<:string}/'
+    assert t.translate_path_template_params('/foo/{breadid}/', None) == '/foo/{breadid<:string}/'
     assert l.warnings == ['could not load any vocabulary, janky environment-specific heuristics for renaming path template names may fail']
 
 
 def test_translate_path_template_params_doesnt_rewrite_nonwords_ending_in_id_typed_parameters():
     t = SwaggerTranslator(logger=None, vocabulary_factory=(lambda: ['bread']))
-    assert t.translate_path_template_params('/foo/{braedid}/') == '/foo/{braedid<:string}/'
+    assert t.translate_path_template_params('/foo/{braedid}/', None) == '/foo/{braedid<:string}/'
 
 
 @pytest.mark.skipif(platform.system() not in ('Linux', 'Darwin'), reason='no defined source of vocabulary for this platform')
@@ -904,3 +1019,16 @@ def test_default_vocabulary_containing_common_business_nouns_is_defined_for_non_
 def test_make_default_logger_returns_something_thats_probably_a_logger():
     logger = make_default_logger()
     assert hasattr(logger, 'warn')
+
+def test_import_of_swagger_path_with_path_var_type_in_api():
+    output, logger = getOutputString(SWAGGER_WITH_PATH_VAR_TYPE_IN_API)
+    assert SWAGGER_WITH_PATH_VAR_TYPE_IN_API_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_swagger_path_with_path_var_type_in_global_parameters():
+    output, logger = getOutputString(SWAGGER_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS)
+    assert SWAGGER_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
