@@ -183,21 +183,31 @@ class SwaggerTranslator:
 
     def writeEndpoints(self, swag, w):
         for (path, api) in sorted(swag['paths'].iteritems()):
+            print path
             w(u'\n{}:', self.translate_path_template_params(path))
+            parts = re.split(r'({[^/]*?})', path)
             with w.indent():
+                base = []
                 if 'parameters' in api:
+                    base = api['parameters']
                     del api['parameters']
                 for (i, (method, body)) in enumerate(sorted(api.iteritems(),
                                                             key=lambda t: METHOD_ORDER[t[0]])):
                     params = {where: [] for where in ['query', 'body', 'header']}
-
                     if 'parameters' in body:
-                        for param in body['parameters']:
+                        for param in base + body['parameters']:
                             paramIn = param.get('in')
+                            if '$ref' in param:
+                                param = swag['parameters'][param['$ref'].rpartition('/')[2]]
+                                paramIn = param.get('in')
                             if paramIn and paramIn != 'path':
                                 params[paramIn].append(param)
-                            if '$ref' in param:
-                                params['header'].append(swag['parameters'][param['$ref'].rpartition('/')[2]])
+                            else:
+                                print(param)
+                                typeName = TYPE_MAP[param['type']]
+                                print(param['name'], typeName)
+
+
 
                     header = self.getHeaders(params['header'])
                     methodBody = self.getBody(params['body'])
@@ -246,8 +256,8 @@ class SwaggerTranslator:
 
                         w(u'return {}'.format(', '.join(returnValues)))
 
-                    if i < len(api) - 1:
-                        w()
+                    # if i < len(api) - 1:
+                    #     w()
 
     def writeDefs(self, swag, w):
         w()
