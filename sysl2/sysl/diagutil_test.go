@@ -51,7 +51,7 @@ func TestDeflateAndEncode(t *testing.T) {
 func testOutputPlantuml(t *testing.T, output, output2 string) {
 	require.NoError(t, OutputPlantuml(output, plantumlDotCom, testPlantumlInput))
 	_, err := os.Stat(output2)
-	require.False(t, os.IsNotExist(err))
+	require.NoError(t, err)
 	os.Remove(output2)
 }
 
