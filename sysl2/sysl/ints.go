@@ -10,14 +10,19 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+const endpointWildcard = ".. * <- *"
+
 func GenerateIntegrations(
 	rootModel, title, output, project, filter, modules string,
 	exclude []string,
 	clustered, epa bool,
-) map[string]string {
+) (map[string]string, error) {
 	r := make(map[string]string)
 
-	mod := loadApp(rootModel, modules)
+	mod, err := loadApp(rootModel, modules)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(exclude) == 0 && project != "" {
 		exclude = []string{project}
@@ -44,10 +49,10 @@ func GenerateIntegrations(
 		r[outputDir] = GenerateView(args, intsParam, mod)
 	}
 
-	return r
+	return r, nil
 }
 
-func DoGenerateIntegrations(args []string) {
+func DoGenerateIntegrations(args []string) error {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
@@ -96,14 +101,18 @@ func DoGenerateIntegrations(args []string) {
 	log.Infof("output: %s\n", *output)
 	log.Infof("loglevel: %s\n", *loglevel)
 
-	r := GenerateIntegrations(*root, *title, *output, *project, *filter, *modules, *exclude, *clustered, *epa)
+	r, err := GenerateIntegrations(*root, *title, *output, *project, *filter, *modules, *exclude, *clustered, *epa)
+	if err != nil {
+		return err
+	}
 	for k, v := range r {
 		if *verbose {
 			fmt.Println(k)
 		}
 		err := OutputPlantuml(k, *plantuml, v)
 		if err != nil {
-			log.Errorf("plantuml drawing error: %v", err)
+			return fmt.Errorf("plantuml drawing error for %#v: %v", k, err)
 		}
 	}
+	return nil
 }

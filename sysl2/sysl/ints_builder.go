@@ -4,6 +4,7 @@ import (
 	"sort"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
 
 type intsBuilder struct {
@@ -39,7 +40,7 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 		depsOut:      []AppDependency{},
 	}
 
-	collector := ".. * <- *"
+	collector := endpointWildcard
 	apps := b.m.GetApps()
 
 	// build list to start from
@@ -47,7 +48,7 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 	for _, stmt := range stmts {
 		if a, ok := stmt.Stmt.(*sysl.Statement_Action); ok {
 			app := apps[a.Action.Action]
-			if app != nil && !HasPattern(app.GetAttrs(), "human") {
+			if app != nil && !syslutil.HasPattern(app.GetAttrs(), "human") {
 				b.seedApps = append(b.seedApps, a.Action.Action)
 				b.finalApps = append(b.finalApps, a.Action.Action)
 			}
@@ -103,11 +104,11 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 
 func (b *intsBuilder) indirectCalls(sourceApp, epname string, t *sysl.Statement) {
 	call := t.GetCall()
-	targetApp := getAppName(call.GetTarget())
+	targetApp := syslutil.GetAppName(call.GetTarget())
 	if !b.finalAppsMap.Contains(targetApp) {
 		return
 	}
-	if HasPattern(b.m.GetApps()[targetApp].GetAttrs(), "human") {
+	if syslutil.HasPattern(b.m.GetApps()[targetApp].GetAttrs(), "human") {
 		return
 	}
 	b.addCall(sourceApp, epname, t)
@@ -118,11 +119,11 @@ func (b *intsBuilder) myCallers(sourceApp, epname string, t *sysl.Statement) {
 		return
 	}
 	call := t.GetCall()
-	targetApp := getAppName(call.GetTarget())
+	targetApp := syslutil.GetAppName(call.GetTarget())
 	if !b.seedAppsMap.Contains(targetApp) {
 		return
 	}
-	if HasPattern(b.m.GetApps()[targetApp].GetAttrs(), "human") {
+	if syslutil.HasPattern(b.m.GetApps()[targetApp].GetAttrs(), "human") {
 		return
 	}
 	b.addCall(sourceApp, epname, t)
@@ -140,11 +141,11 @@ func (b *intsBuilder) walkPassthrough(appname, epname string) {
 // i.e. expect all calls to be added, except if the targetApp is in excluded list
 func (b *intsBuilder) processExcludeAndPassthrough(sourceApp, epname string, t *sysl.Statement) {
 	call := t.GetCall()
-	targetApp := getAppName(call.GetTarget())
+	targetApp := syslutil.GetAppName(call.GetTarget())
 	if /* b.excludes.Contains(sourceApp) || */ b.excludes.Contains(targetApp) {
 		return
 	}
-	if HasPattern(b.m.GetApps()[targetApp].GetAttrs(), "human") {
+	if syslutil.HasPattern(b.m.GetApps()[targetApp].GetAttrs(), "human") {
 		return
 	}
 
@@ -155,7 +156,7 @@ func (b *intsBuilder) processExcludeAndPassthrough(sourceApp, epname string, t *
 
 func (b *intsBuilder) addCall(appname, epname string, t *sysl.Statement) {
 	call := t.GetCall()
-	targetApp := getAppName(call.GetTarget())
+	targetApp := syslutil.GetAppName(call.GetTarget())
 	dep := AppDependency{
 		Self:      AppElement{Name: appname, Endpoint: epname},
 		Target:    AppElement{Name: targetApp, Endpoint: call.Endpoint},

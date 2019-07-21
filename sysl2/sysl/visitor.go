@@ -5,8 +5,10 @@ import (
 	"sort"
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
 	log "github.com/sirupsen/logrus"
+
+	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
 
 type entry struct {
@@ -110,7 +112,7 @@ func (e *EndpointElement) Accept(v Visitor) error {
 
 func (e *EndpointElement) sender(v VarManager) string {
 	if e.fromApp != nil {
-		return v.UniqueVarForAppName(getAppName(e.fromApp))
+		return v.UniqueVarForAppName(syslutil.GetAppName(e.fromApp))
 	}
 
 	return "["
@@ -365,7 +367,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 
 	payload := strings.Join(formatReturnParam(v.m, getReturnPayload(endpoint.Stmt)), " | ")
 
-	isCallingSelf := e.fromApp != nil && getAppName(e.fromApp) == e.appName
+	isCallingSelf := e.fromApp != nil && syslutil.GetAppName(e.fromApp) == e.appName
 
 	if !isCallingSelf && len(payload) == 0 && e.deactivate != nil {
 		e.deactivate()
@@ -461,7 +463,7 @@ func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.C
 
 	p := &EndpointElement{
 		fromApp:                app.GetName(),
-		appName:                getAppName(c.GetTarget()),
+		appName:                syslutil.GetAppName(c.GetTarget()),
 		endpointName:           c.GetEndpoint(),
 		uptos:                  e.uptos,
 		senderPatterns:         senderPatterns,

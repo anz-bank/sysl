@@ -1,4 +1,4 @@
-package main
+package parse
 
 import (
 	"fmt"
@@ -26,7 +26,7 @@ func TestFileExistsBadFile(t *testing.T) {
 func TestNewFSFileStream(t *testing.T) {
 	fs, err := newFSFileStream("fs_test.go", http.Dir("."))
 	if assert.NoError(t, err) {
-		assert.Equal(t, "package main\n", fs.GetText(0, 12))
+		assert.Equal(t, "package parse\n", fs.GetText(0, 13))
 	}
 }
 

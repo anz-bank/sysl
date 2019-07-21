@@ -1,0 +1,203 @@
+apps: <
+  key: "Client"
+  value: <
+    name: <
+      part: "Client"
+    >
+    endpoints: <
+      key: "OnClick"
+      value: <
+        name: "OnClick"
+        param: <
+          name: "arg1"
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
+                  part: "type1"
+                >
+              >
+            >
+          >
+        >
+        param: <
+          name: "arg2"
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
+                  part: "type2"
+                >
+              >
+            >
+          >
+        >
+        stmt: <
+          call: <
+            target: <
+              part: "Server"
+            >
+            endpoint: "Endpoint"
+            arg: <
+              name: "id"
+            >
+          >
+          attrs: <
+            key: "patterns"
+            value: <
+              a: <
+                elt: <
+                  s: "https"
+                >
+                elt: <
+                  s: "soap"
+                >
+              >
+            >
+          >
+        >
+        stmt: <
+          call: <
+            target: <
+              part: "Server"
+            >
+            endpoint: "PUT /foo/"
+          >
+        >
+        stmt: <
+          call: <
+            target: <
+              part: "Server"
+            >
+            endpoint: "PUT /foo"
+            arg: <
+              name: "bar"
+            >
+          >
+        >
+        stmt: <
+          call: <
+            target: <
+              part: "Server"
+            >
+            endpoint: "PUT /foo"
+            arg: <
+              name: "bar <: String"
+            >
+          >
+        >
+        source_context: <
+          file: "tests/args.sysl"
+          start: <
+            line: 12
+            col: 4
+          >
+        >
+      >
+    >
+    source_context: <
+      file: "tests/args.sysl"
+      start: <
+        line: 11
+        col: 1
+      >
+    >
+  >
+>
+apps: <
+  key: "Server"
+  value: <
+    name: <
+      part: "Server"
+    >
+    endpoints: <
+      key: "Endpoint"
+      value: <
+        name: "Endpoint"
+        stmt: <
+          action: <
+            action: "..."
+          >
+        >
+        source_context: <
+          file: "tests/args.sysl"
+          start: <
+            line: 2
+            col: 4
+          >
+        >
+      >
+    >
+    endpoints: <
+      key: "PUT /foo"
+      value: <
+        name: "PUT /foo"
+        attrs: <
+          key: "patterns"
+          value: <
+            a: <
+              elt: <
+                s: "rest"
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
+            action: "..."
+          >
+        >
+        rest_params: <
+          method: PUT
+          path: "/foo"
+        >
+        source_context: <
+          file: "tests/args.sysl"
+          start: <
+            line: 6
+            col: 8
+          >
+        >
+      >
+    >
+    endpoints: <
+      key: "PUT /foo/"
+      value: <
+        name: "PUT /foo/"
+        attrs: <
+          key: "patterns"
+          value: <
+            a: <
+              elt: <
+                s: "rest"
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
+            action: "..."
+          >
+        >
+        rest_params: <
+          method: PUT
+          path: "/foo/"
+        >
+        source_context: <
+          file: "tests/args.sysl"
+          start: <
+            line: 9
+            col: 12
+          >
+        >
+      >
+    >
+    source_context: <
+      file: "tests/args.sysl"
+      start: <
+        line: 1
+        col: 1
+      >
+    >
+  >
+>

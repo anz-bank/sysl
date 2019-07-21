@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -43,14 +44,16 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 	return w.String(), nil
 }
 
-func loadApp(root string, models string) *sysl.Module {
+func loadApp(root string, models string) (*sysl.Module, error) {
 	// Model we want to generate seqs for, the non-empty model
-	mod, err := Parse(models, root)
-	if err == nil {
-		return mod
+	mod, err := parse.Parse(models, root)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"loadApp: unable to load module:\n\troot: %s\n\tmodel: %s\nerror: %s",
+			root, models, err.Error(),
+		)
 	}
-	log.Errorf("unable to load module:\n\troot: " + root + "\n\tmodel:" + models)
-	return nil
+	return mod, nil
 }
 
 func constructFormatParser(former, latter string) *FormatParser {
@@ -78,11 +81,11 @@ func DoConstructSequenceDiagrams(
 	endpoints, apps []string,
 	blackboxes [][]string,
 	group string,
-) map[string]string {
+) (map[string]string, error) {
 	result := make(map[string]string)
-	mod := loadApp(rootModel, modules)
-	if mod == nil {
-		return result
+	mod, err := loadApp(rootModel, modules)
+	if err != nil {
+		return nil, err
 	}
 	if strings.Contains(output, "%(epname)") {
 		if len(blackboxes) > 0 {
@@ -120,7 +123,7 @@ func DoConstructSequenceDiagrams(
 				}
 				if len(sdEndpoints) == 0 {
 					log.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
-					return result
+					return result, nil
 				}
 				groupAttr := epAttrs["groupby"].GetS()
 				if len(groupAttr) == 0 {
@@ -152,7 +155,7 @@ func DoConstructSequenceDiagrams(
 		}
 	} else {
 		if endpoints == nil {
-			return result
+			return result, nil
 		}
 		spep := constructFormatParser("", endpointFormat)
 		spapp := constructFormatParser("", appFormat)
@@ -174,7 +177,8 @@ func DoConstructSequenceDiagrams(
 		}
 		result[output] = out
 	}
-	return result
+
+	return result, nil
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
@@ -265,8 +269,11 @@ func DoGenerateSequenceDiagrams(args []string) error {
 	log.Debugf("output: %s\n", *output)
 	log.Debugf("loglevel: %s\n", *loglevel)
 
-	result := DoConstructSequenceDiagrams(*root, *endpointFormat, *appFormat, *title, *output, *modulesFlag,
+	result, err := DoConstructSequenceDiagrams(*root, *endpointFormat, *appFormat, *title, *output, *modulesFlag,
 		*endpointsFlag, *appsFlag, ParseBlackBoxesFromArgument(*blackboxesFlag), *groupbyFlag)
+	if err != nil {
+		return err
+	}
 	for k, v := range result {
 		if err := OutputPlantuml(k, *plantuml, v); err != nil {
 			return err

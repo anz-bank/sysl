@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
 
 //nolint:gochecknoglobals
@@ -226,7 +227,7 @@ func getAndFmtParam(s *sysl.Module, params []*sysl.Param) []string {
 		pn := ""
 		if refType := v.GetType().GetTypeRef(); refType != nil {
 			if ref := refType.GetRef(); ref != nil {
-				an = getAppName(ref.GetAppname())
+				an = syslutil.GetAppName(ref.GetAppname())
 				pn = strings.Join(ref.GetPath(), ".")
 			}
 		}
