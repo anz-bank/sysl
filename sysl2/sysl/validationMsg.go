@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -21,7 +22,8 @@ const (
 	ERROR = 100
 	WARN  = 200
 	INFO  = 300
-	UNDEF = 400
+	TITLE = 900
+	UNDEF = 500
 
 	ErrValidationFailed        = 400
 	ErrEntryPointUndefined     = 401
@@ -32,13 +34,15 @@ const (
 	ErrExcessAttr              = 406
 	ErrInvalidOption           = 407
 	ErrInvalidUnary            = 408
+	ErrRedefined               = 409
 
 	WarnValidatedWithWarn = 300
 
 	InfoValidatedSuccessfully = 200
+	TitleViewName             = 999
 )
 
-//nolint:gochecknoglobals
+// nolint:gochecknoglobals
 var (
 	Messages = map[int]string{
 		ErrValidationFailed:        "Validation failed",
@@ -50,10 +54,13 @@ var (
 		ErrExcessAttr:              "Excess Attribute (%s), defined in View (%s), having return Type (%s)",
 		ErrInvalidOption:           "In View %s, (%s) does not match any of the options for return Type (%s)",
 		ErrInvalidUnary:            "In view (%s), unary operator used with invalid type: (%s)",
+		ErrRedefined:               "In view (%s), (%s) is already defined",
 
 		WarnValidatedWithWarn: "Validated with warnings",
 
 		InfoValidatedSuccessfully: "Validation success",
+
+		TitleViewName: "Error in %s",
 	}
 
 	MessageType = map[int]int{
@@ -66,10 +73,12 @@ var (
 		ErrExcessAttr:              ERROR,
 		ErrInvalidOption:           ERROR,
 		ErrInvalidUnary:            ERROR,
+		ErrRedefined:               ERROR,
 
 		WarnValidatedWithWarn: WARN,
 
 		InfoValidatedSuccessfully: INFO,
+		TitleViewName:             TITLE,
 	}
 )
 
@@ -124,7 +133,28 @@ func (m Msg) logMsg() {
 		logrus.Warn(formattedMsg)
 	case INFO:
 		logrus.Info(formattedMsg)
+	case TITLE:
+		logrus.Println(formatTitle(strings.Split(m.String(), ":")[0]))
 	default:
 		fmt.Println("[validationError.logMsg] Unhandled message", formattedMsg)
 	}
+}
+
+func formatTitle(s string) string {
+	str := s
+	length := len(s)
+
+	if dash := (100 - (length)) / 2; dash > 0 {
+		dashStr := ""
+		for i := 0; i < dash-1; i++ {
+			dashStr += "-"
+		}
+		str = fmt.Sprintf("%s %s %s", dashStr, s, dashStr)
+	}
+
+	if length < 100 && length%2 == 1 {
+		str += "-"
+	}
+
+	return str
 }

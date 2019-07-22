@@ -38,8 +38,26 @@ Go:
     VarDecl
     ForLoop
 
+  !type VarDecl:
+    identifier <: string
+    TypeName <: string
+
   !type Statement:
     __Choice_Statement <: __Choice_Statement
 
+  !type StatementList:
+    Statement <: Statement
+
   !table RelationalType:
     Foo <: string
+
+  !type DeclareAndAssignStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !union __Choice_Expression:
+    FunctionCall
+    ValueExpr
+
+  !type Expression:
+    __Choice_Expression <: __Choice_Expression

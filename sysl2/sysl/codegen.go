@@ -86,7 +86,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 						ruleInstances = append(ruleInstances, node)
 					}
 					ruleResult = ruleInstances
-				} else { //maxc == 1
+				} else { // maxc == 1
 					// Drill down the rule
 					if v.GetList() != nil || v.GetSet() != nil {
 						logrus.Warnf("Got List or Set instead of map")
@@ -217,9 +217,9 @@ func getDefaultAppName(mod *sysl.Module) string {
 	return ""
 }
 
-func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
+func loadAndGetDefaultApp(root, model string, p *Parser) (*sysl.Module, string) {
 	// Model we want to generate code for
-	mod, err := Parse(model, root)
+	mod, err := p.Parse(model, root)
 	if err == nil {
 		modelAppName := getDefaultAppName(mod)
 		return mod, modelAppName
@@ -233,8 +233,10 @@ func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
 func GenerateCode(rootModel, model, rootTransform, transform, grammar, start string) []*CodeGenOutput {
 	var codeOutput []*CodeGenOutput
 
-	mod, modelAppName := loadAndGetDefaultApp(rootModel, model)
-	tx, transformAppName := loadAndGetDefaultApp(rootTransform, transform)
+	modelParser := NewParser()
+	mod, modelAppName := loadAndGetDefaultApp(rootModel, model, modelParser)
+	tfmParser := NewParser()
+	tx, transformAppName := loadAndGetDefaultApp(rootTransform, transform, tfmParser)
 	g := readGrammar(grammar, "gen", start)
 	if g == nil {
 		panic(errors.Errorf("Unable to load grammar"))
@@ -245,8 +247,14 @@ func GenerateCode(rootModel, model, rootTransform, transform, grammar, start str
 		panic(err)
 	}
 
-	for _, message := range validate(grammarSysl, tx.GetApps()[transformAppName], start) {
-		message.logMsg()
+	validator := NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
+	validator.Validate(start)
+
+	for viewName, messages := range validator.GetMessages() {
+		NewMsg(TitleViewName, []string{viewName}).logMsg()
+		for _, message := range messages {
+			message.logMsg()
+		}
 	}
 
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
@@ -290,7 +298,7 @@ func outputToFiles(outDir string, output []*CodeGenOutput) error {
 // DoGenerateCode generate code for the given model, using transform
 // and the grammar of the target language
 // TODO: Remove nolint when code that uses stdout and stderr is added.
-//nolint:unparam
+// nolint:unparam
 func DoGenerateCode(flags *flag.FlagSet, args []string) error {
 	rootModel := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
 	rootTransform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")

@@ -75,7 +75,7 @@ func main3(args []string) error {
 	format := strings.ToLower(*output)
 	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
 	log.Infof("%s\n", filename)
-	mod, err := Parse(filename, *root)
+	mod, err := NewParser().Parse(filename, *root)
 	if err != nil {
 		return err
 	}

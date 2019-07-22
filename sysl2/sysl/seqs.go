@@ -34,7 +34,7 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 
 func loadApp(root string, models string) *sysl.Module {
 	// Model we want to generate seqs for, the non-empty model
-	mod, err := Parse(models, root)
+	mod, err := NewParser().Parse(models, root)
 	if err == nil {
 		return mod
 	}
