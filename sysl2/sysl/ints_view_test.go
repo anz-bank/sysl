@@ -421,6 +421,117 @@ _1 -[#black]> _2
 @enduml`, v.stringBuilder.String())
 }
 
+func TestGenerateStateViewWhenLabelIsNotNil(t *testing.T) {
+	//Given
+	var stringBuilder strings.Builder
+	stmts := []*sysl.Statement{
+		{
+			Stmt: &sysl.Statement_Call{
+				Call: &sysl.Call{
+					Target: &sysl.AppName{
+						Part: []string{"b"},
+					},
+					Endpoint: "epb",
+				},
+			},
+		},
+	}
+	viewParams := &viewParams{
+		diagramTitle: "test",
+	}
+	deps := map[string]AppDependency{
+		"a:epa:b:epb": {
+			Self: AppElement{
+				Name:     "a",
+				Endpoint: "epa",
+			},
+			Target: AppElement{
+				Name:     "b",
+				Endpoint: "epb",
+			},
+			Statement: &sysl.Statement{
+				Stmt: &sysl.Statement_Call{},
+			},
+		},
+	}
+	params := &IntsParam{
+		integrations: deps,
+		app: &sysl.Application{
+			Attrs: map[string]*sysl.Attribute{
+				"epfmt": {
+					Attribute: &sysl.Attribute_S{
+						S: "label",
+					},
+				},
+			},
+		},
+	}
+	v := &IntsDiagramVisitor{
+		stringBuilder: &stringBuilder,
+		mod: &sysl.Module{
+			Apps: map[string]*sysl.Application{
+				"a": {
+					Endpoints: map[string]*sysl.Endpoint{
+						"epa": {
+							Attrs: map[string]*sysl.Attribute{
+								"test": nil,
+							},
+							Stmt: stmts,
+						},
+					},
+				},
+				"b": {
+					Endpoints: map[string]*sysl.Endpoint{
+						"epb": {
+							Attrs: map[string]*sysl.Attribute{
+								"test": nil,
+							},
+						},
+					},
+				},
+				"test": {
+					Attrs: map[string]*sysl.Attribute{
+						"appfmt": {
+							Attribute: &sysl.Attribute_S{
+								S: "test",
+							},
+						},
+					},
+				},
+			},
+		},
+		project:      "test",
+		drawableApps: map[string]struct{}{},
+		topSymbols:   map[string]*_topVar{},
+		symbols:      map[string]*_var{},
+	}
+
+	//When
+	v.generateStateView(*viewParams, params)
+
+	//Then
+	assert.Equal(t, `@startuml
+title test
+left to right direction
+scale max 16384 height
+hide empty description
+skinparam state {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+state "test" as X_0 {
+  state "test" as _0
+  state "test" as _1
+}
+state "test" as X_1 {
+  state "test" as _2
+}
+_0 -[#silver]-> _1
+_1 -[#black]> _2 : label
+@enduml`, v.stringBuilder.String())
+}
+
 func TestGenerateView(t *testing.T) {
 	//Given
 	deps := []AppDependency{
