@@ -68,7 +68,9 @@ func TestMakeEntry(t *testing.T) {
 func TestMakeEndpointCollectionElement(t *testing.T) {
 	e := MakeEndpointCollectionElement("title",
 		[]string{"a <- b [upto b <- c]"},
-		map[string]*Upto{"": {Comment: ""}, "b <- c": {Comment: ""}, "c <- d": {Comment: "test"}})
+		map[string]*Upto{"": {Comment: ""},
+			"b <- c": {Comment: ""},
+			"c <- d": {Comment: "test"}})
 	assert.NotNil(t, e)
 	assert.Equal(t, "title", e.title)
 }

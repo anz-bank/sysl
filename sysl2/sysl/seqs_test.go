@@ -332,7 +332,7 @@ deactivate _0
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
 	expected := map[string]string{"tests/call.png": expectContent}
 	// Then
-	assert.Equal(t, expected, result, "unexpected content!")
+	assert.Equal(t, expected, result)
 }
 
 func TestDoConstructSequenceDiagramsToFormatComplexName(t *testing.T) {

@@ -41,8 +41,11 @@ type EndpointCollectionElement struct {
 	blackboxes map[string]*Upto
 }
 
-func MakeEndpointCollectionElement(title string, endpoints []string,
-	blackboxes map[string]*Upto) *EndpointCollectionElement {
+func MakeEndpointCollectionElement(
+	title string,
+	endpoints []string,
+	blackboxes map[string]*Upto,
+) *EndpointCollectionElement {
 	entries := make([]*entry, 0, len(endpoints))
 	uptos := make([]string, 0, len(endpoints))
 
@@ -55,13 +58,11 @@ func MakeEndpointCollectionElement(title string, endpoints []string,
 
 	bb := make(map[string]*Upto)
 	for k, b := range blackboxes {
-		switch len(b.Comment) {
-		case 0:
-		case 1:
-			b.Comment = ""
+		if len(b.Comment) > 0 {
 			bb[k] = b
-		default:
-			bb[k] = b
+			if len(b.Comment) == 1 {
+				b.Comment = ""
+			}
 		}
 	}
 
