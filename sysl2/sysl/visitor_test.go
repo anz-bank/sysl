@@ -68,12 +68,9 @@ func TestMakeEntry(t *testing.T) {
 func TestMakeEndpointCollectionElement(t *testing.T) {
 	e := MakeEndpointCollectionElement("title",
 		[]string{"a <- b [upto b <- c]"},
-		[][]string{
-			{},
-			{"b <- c"},
-			{"c <- d", "test"},
-		})
-
+		map[string]*Upto{"": {Comment: ""},
+			"b <- c": {Comment: ""},
+			"c <- d": {Comment: "test"}})
 	assert.NotNil(t, e)
 	assert.Equal(t, "title", e.title)
 }
@@ -277,8 +274,24 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(l, l, w, m)
-	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, [][]string{})
+	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname")
+	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{
+		"Frontend <- Profile": {
+			ValueType:  BBEndpointCollection,
+			Comment:    "see below",
+			VisitCount: 0,
+		},
+		"ApplicationFrontend <- AppProfile": {
+			ValueType:  BBApplication,
+			Comment:    "see below",
+			VisitCount: 0,
+		},
+		"Commandline <- CommandlineApp": {
+			ValueType:  BBCommandLine,
+			Comment:    "see below",
+			VisitCount: 0,
+		},
+	})
 
 	// When
 	require.NoError(t, e.Accept(v))
@@ -322,8 +335,8 @@ func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_name_format.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(al, el, w, m)
-	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, [][]string{})
+	v := MakeSequenceDiagramVisitor(al, el, w, m, "appname")
+	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, map[string]*Upto{})
 
 	// When
 	require.NoError(t, e.Accept(v))
@@ -371,7 +384,7 @@ func TestVisitStatement(t *testing.T) {
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(l, l, w, m)
+	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname")
 	stmt := []*sysl.Statement{
 		{Stmt: &sysl.Statement_Loop{Loop: &sysl.Loop{Stmt: []*sysl.Statement{}}}},
 		{Stmt: &sysl.Statement_LoopN{LoopN: &sysl.LoopN{Stmt: []*sysl.Statement{}}}},

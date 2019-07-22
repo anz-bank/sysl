@@ -1,0 +1,15 @@
+import test1
+
+Project :: Integrations [title="%(epname): %(eplongname)"]:
+
+    PROJECT-E2E "End to End Integrations" [page="Solution Design Doc", blackboxes=[['SomeApp <- BarEndpoint', 'Stop at BarEndpoint']], passthrough=["anz_com", "My Todo App", "A_B"]]:
+        SomeApp
+        Test - App
+
+Project :: Sequences [title="%(epname): %(eplongname)", blackboxes=[['SomeApp <- AppEndpoint', 'Stop at AppEndpoint']]]:
+
+    SEQ-One [page="Sequence One", blackboxes=[['SomeApp <- BarEndpoint', 'Stop at BarEndpoint']]]:
+        SomeApp <- FooEndpoint
+
+    SEQ-Two [page="Sequence Two", blackboxes=[['SomeApp <- BarEndpoint1', 'Stop at BarEndpoint1']]]:
+        Rest Service <- GET /foo

@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io"
+	"fmt"
 	"os"
 	"sort"
 	"strings"
@@ -17,12 +17,13 @@ type sequenceDiagParam struct {
 	EndpointLabeler
 	endpoints  []string
 	title      string
-	blackboxes [][]string
+	blackboxes map[string]*Upto
+	appName    string
 }
 
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m)
+	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName)
 	e := MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 	if err := e.Accept(v); err != nil {
 		return "", err
@@ -72,6 +73,9 @@ func DoConstructSequenceDiagrams(
 		return result
 	}
 	if strings.Contains(output, "%(epname)") {
+		if len(blackboxes) > 0 {
+			log.Warnf("Ignoring blackboxes passed from command line")
+		}
 		spout := MakeFormatParser(output)
 		for _, appName := range apps {
 			app := mod.Apps[appName]
@@ -84,6 +88,9 @@ func DoConstructSequenceDiagrams(
 				keys = append(keys, k)
 			}
 			sort.Strings(keys)
+			bbsAll := map[string]*Upto{}
+			TransformBlackboxesToUptos(bbsAll, bbs, BBApplication)
+			var sd *sequenceDiagParam
 			for _, k := range keys {
 				endpoint := app.GetEndpoints()[k]
 				epAttrs := endpoint.GetAttrs()
@@ -99,16 +106,29 @@ func DoConstructSequenceDiagrams(
 						sdEndpoints = append(sdEndpoints, strings.Join(parts, " :: ")+" <- "+ep)
 					}
 				}
-
-				sd := &sequenceDiagParam{
+				if len(sdEndpoints) == 0 {
+					log.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
+					return result
+				}
+				TransformBlackboxesToUptos(bbsAll, bbs2, BBEndpointCollection)
+				sd = &sequenceDiagParam{
 					endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
 					EndpointLabeler: spep,
 					title:           spseqtitle.FmtSeq(endpoint.GetName(), endpoint.GetLongName(), varrefs),
-					blackboxes:      append(bbs, bbs2...),
+					blackboxes:      bbsAll,
+					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
 				}
 				out, _ := generateSequenceDiag(mod, sd)
+				for indx := range bbs2 {
+					delete(bbsAll, bbs2[indx][0])
+				}
 				result[outputDir] = out
+			}
+			for bbKey, bbVal := range bbsAll {
+				if bbVal.VisitCount == 0 && bbVal.ValueType == BBApplication {
+					log.Warnf("blackbox '%s' not hit in app '%s'\n", bbKey, appName)
+				}
 			}
 		}
 	} else {
@@ -117,14 +137,21 @@ func DoConstructSequenceDiagrams(
 		}
 		spep := constructFormatParser("", endpointFormat)
 		spapp := constructFormatParser("", appFormat)
+		bbsAll := map[string]*Upto{}
+		TransformBlackboxesToUptos(bbsAll, blackboxes, BBCommandLine)
 		sd := &sequenceDiagParam{
 			endpoints:       endpoints,
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
 			title:           title,
-			blackboxes:      blackboxes,
+			blackboxes:      bbsAll,
 		}
 		out, _ := generateSequenceDiag(mod, sd)
+		for bbKey, bbVal := range bbsAll {
+			if bbVal.VisitCount == 0 && bbVal.ValueType == BBCommandLine {
+				log.Warnf("blackbox '%s' passed on commandline not hit\n", bbKey)
+			}
+		}
 		result[output] = out
 	}
 
@@ -132,9 +159,7 @@ func DoConstructSequenceDiagrams(
 }
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
-// TODO: Remove nolint when code that uses stdout and stderr is added.
-//nolint:unparam
-func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, args []string) error {
+func DoGenerateSequenceDiagrams(args []string) error {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
@@ -178,7 +203,10 @@ func DoGenerateSequenceDiagrams(stdout, stderr io.Writer, args []string) error {
 			"comma-list of shell globs) to limit the diagrams generated",
 	).Short('a').Strings()
 
-	blackboxesFlag := sd.Flag("blackbox", "Apps to be treated as black boxes").Strings()
+	blackboxesFlag := sd.Flag("blackbox",
+		"Input blackboxes in the format App <- Endpoint=Some description, "+
+			"repeat '-b App <- Endpoint=Some description' to set multiple blackboxes",
+	).Short('b').StringMap()
 
 	loglevel := sd.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
 

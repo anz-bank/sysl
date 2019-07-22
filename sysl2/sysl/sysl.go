@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 //nolint:gochecknoglobals
@@ -26,14 +26,14 @@ func (e exit) Error() string {
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
-func main3(stdout, stderr io.Writer, args []string) error {
+func main3(args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
 
 	switch filepath.Base(args[0]) {
 	case "syslgen":
-		return DoGenerateCode(stdout, stderr, flags, args)
+		return DoGenerateCode(flags, args)
 	case "sd":
-		return DoGenerateSequenceDiagrams(stdout, stderr, args)
+		return DoGenerateSequenceDiagrams(args)
 	case "ints":
 		DoGenerateIntegrations(args)
 		return nil
@@ -63,14 +63,14 @@ func main3(stdout, stderr io.Writer, args []string) error {
 
 	filename := flags.Arg(0)
 
-	fmt.Fprintf(stderr, "Args: %v\n", flags.Args())
-	fmt.Fprintf(stderr, "Root: %s\n", *root)
-	fmt.Fprintf(stderr, "Module: %s\n", filename)
-	fmt.Fprintf(stderr, "Mode: %s\n", *mode)
-	fmt.Fprintf(stderr, "Log Level: %s\n", *loglevel)
+	log.Infof("Args: %v\n", flags.Args())
+	log.Infof("Root: %s\n", *root)
+	log.Infof("Module: %s\n", filename)
+	log.Infof("Mode: %s\n", *mode)
+	log.Infof("Log Level: %s\n", *loglevel)
 	format := strings.ToLower(*output)
 	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
-	fmt.Fprintf(stderr, "%s\n", filename)
+	log.Infof("%s\n", filename)
 	mod, err := Parse(filename, *root)
 	if err != nil {
 		return err
@@ -78,12 +78,12 @@ func main3(stdout, stderr io.Writer, args []string) error {
 	if mod != nil {
 		if toJSON {
 			if *output == "-" {
-				return FJSONPB(stdout, mod)
+				return FJSONPB(log.StandardLogger().Out, mod)
 			}
 			return JSONPB(mod, *output)
 		}
 		if *output == "-" {
-			return FTextPB(stdout, mod)
+			return FTextPB(log.StandardLogger().Out, mod)
 		}
 		return TextPB(mod, *output)
 	}
@@ -93,12 +93,10 @@ func main3(stdout, stderr io.Writer, args []string) error {
 // main2 calls main3 and handles any errors it returns. It takes its output
 // streams and command-line arguments and even main3 as parameters to support
 // testability.
-func main2(
-	stdout, stderr io.Writer, args []string,
-	main3 func(stdout, stderr io.Writer, args []string) error,
+func main2(args []string, main3 func(args []string) error,
 ) int {
-	if err := main3(stdout, stderr, args); err != nil {
-		fmt.Fprintln(stderr, err.Error())
+	if err := main3(args); err != nil {
+		log.Errorln(err.Error())
 		if err, ok := err.(exit); ok {
 			return err.code
 		}
@@ -109,7 +107,7 @@ func main2(
 
 // main is as small as possible to minimise its no-coverage footprint.
 func main() {
-	if rc := main2(os.Stdout, os.Stderr, os.Args, main3); rc != 0 {
+	if rc := main2(os.Args, main3); rc != 0 {
 		os.Exit(rc)
 	}
 }

@@ -36,11 +36,11 @@ func TransformBlackBoxes(blackboxes []*sysl.Attribute) [][]string {
 	return bbs
 }
 
-func ParseBlackBoxesFromArgument(blackboxFlags []string) [][]string {
+func ParseBlackBoxesFromArgument(blackboxFlags map[string]string) [][]string {
 	bbs := make([][]string, 0, len(blackboxFlags))
-	for _, blackboxFlag := range blackboxFlags {
-		subBbs := strings.Split(blackboxFlag, ",")
-		if len(subBbs) > 0 {
+	for bbKey, bbComment := range blackboxFlags {
+		if len(bbKey) > 0 {
+			subBbs := []string{bbKey, bbComment}
 			bbs = append(bbs, subBbs)
 		}
 	}
@@ -60,16 +60,14 @@ func MergeAttributes(app, edpnt map[string]*sysl.Attribute) map[string]*sysl.Att
 	return result
 }
 
-func copyBlackboxes(bbs map[string]string) map[string]string {
-	m := make(map[string]string)
-	if bbs == nil {
-		return m
+func TransformBlackboxesToUptos(m map[string]*Upto, bbs [][]string, uptoType UptoType) {
+	for _, val := range bbs {
+		m[val[0]] = &Upto{
+			VisitCount: 0,
+			ValueType:  uptoType,
+			Comment:    val[1],
+		}
 	}
-	for k, v := range bbs {
-		m[k] = v
-	}
-
-	return m
 }
 
 func getApplicationAttrs(m *sysl.Module, appName string) map[string]*sysl.Attribute {

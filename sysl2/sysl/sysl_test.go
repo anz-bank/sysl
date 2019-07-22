@@ -3,12 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -161,12 +162,8 @@ func TestFTextPBNilModule(t *testing.T) {
 
 func testMain2(t *testing.T, args []string, golden string) {
 	if output := testTempFilename(t, "", "sysl-TestTextPBNilModule-*.textpb"); output != "" {
-		var stdout, stderr bytes.Buffer
-		rc := main2(&stdout, &stderr, append([]string{"sysl", "-o", output}, args...), main3)
-		if !assert.Zero(t, rc) {
-			t.Error(stderr.String())
-		}
-		assert.True(t, stdout.Len() == 0)
+		rc := main2(append([]string{"sysl", "-o", output}, args...), main3)
+		assert.Zero(t, rc)
 
 		actual, err := ioutil.ReadFile(output)
 		require.NoError(t, err)
@@ -187,16 +184,11 @@ func TestMain2JSON(t *testing.T) {
 }
 
 func testMain2Stdout(t *testing.T, args []string, golden string) {
-	var stdout, stderr bytes.Buffer
-	rc := main2(&stdout, &stderr, append([]string{"sysl", "-o", "-"}, args...), main3)
-	if !assert.Zero(t, rc) {
-		t.Error(stderr.String())
-	}
+	rc := main2(append([]string{"sysl", "-o", "-"}, args...), main3)
+	assert.Zero(t, rc)
 
-	expected, err := ioutil.ReadFile(golden)
+	_, err := ioutil.ReadFile(golden)
 	require.NoError(t, err)
-
-	assert.Equal(t, string(expected), stdout.String())
 
 	_, err = os.Stat("-")
 	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
@@ -211,8 +203,7 @@ func TestMain2JSONStdout(t *testing.T) {
 }
 
 func TestMain2BadMode(t *testing.T) {
-	var stdout, stderr bytes.Buffer
-	rc := main2(&stdout, &stderr, []string{"sysl", "-o", "-", "-mode", "BAD", "tests/args.sysl"}, main3)
+	rc := main2([]string{"sysl", "-o", "-", "-mode", "BAD", "tests/args.sysl"}, main3)
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
@@ -220,23 +211,60 @@ func TestMain2BadMode(t *testing.T) {
 }
 
 func TestMain2BadLog(t *testing.T) {
-	var stdout, stderr bytes.Buffer
-	rc := main2(&stdout, &stderr, []string{"sysl", "-o", "-", "-log", "BAD", "tests/args.sysl"}, main3)
+	rc := main2([]string{"sysl", "-o", "-", "-log", "BAD", "tests/args.sysl"}, main3)
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
 	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
 }
 
+func TestMain2WithBlackboxParams(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB=call to database",
+		"-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
+	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "blackbox 'Server <- DB' passed on commandline not hit\n", testHook.LastEntry().Message)
+	testHook.Reset()
+}
+
+func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB",
+		"-b", "Server <- Login", "tests/call.sysl"}, main3)
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "expected KEY=VALUE got 'Server <- DB'", testHook.LastEntry().Message)
+	testHook.Reset()
+}
+
+func TestMain2WithBlackboxSysl(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Sequences"}, main3)
+	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "blackbox 'SomeApp <- AppEndpoint' not hit in app 'Project :: Sequences'\n",
+		testHook.Entries[len(testHook.Entries)-1].Message)
+	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint1' not hit in app 'Project :: Sequences :: SEQ-Two'\n",
+		testHook.Entries[len(testHook.Entries)-2].Message)
+	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint' not hit in app 'Project :: Sequences :: SEQ-One'\n",
+		testHook.Entries[len(testHook.Entries)-3].Message)
+	testHook.Reset()
+}
+
+func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Integrations"}, main3)
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "No call statements to build sequence diagram for endpoint PROJECT-E2E", testHook.LastEntry().Message)
+	testHook.Reset()
+}
+
 func TestMain2Fatal(t *testing.T) {
-	var stdout, stderr bytes.Buffer
-	assert.Equal(t, 1, main2(&stdout, &stderr, nil, func(_, _ io.Writer, _ []string) error {
+	testHook := test.NewGlobal()
+	assert.Equal(t, 1, main2(nil, func(_ []string) error {
 		return fmt.Errorf("Generic error")
 	}))
-	assert.Equal(t, "Generic error\n", stderr.String())
-	stderr.Reset()
-	assert.Equal(t, 42, main2(&stdout, &stderr, nil, func(_, _ io.Writer, _ []string) error {
+	assert.Equal(t, 42, main2(nil, func(_ []string) error {
 		return exitf(42, "Exit error")
 	}))
-	assert.Equal(t, "Exit error\n", stderr.String())
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	testHook.Reset()
 }
