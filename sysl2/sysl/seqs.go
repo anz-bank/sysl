@@ -183,11 +183,6 @@ func DoConstructSequenceDiagrams(
 
 // DoGenerateSequenceDiagrams generate sequence diagrams for the given model
 func DoGenerateSequenceDiagrams(args []string) error {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorln(err)
-		}
-	}()
 	sd := kingpin.New("sd", "Generate sequence diagram")
 
 	root := sd.Flag("root",

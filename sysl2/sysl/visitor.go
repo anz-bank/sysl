@@ -126,15 +126,14 @@ func (e *EndpointElement) application(m *sysl.Module) *sysl.Application {
 	if app, ok := m.Apps[e.appName]; ok {
 		return app
 	}
-	panic(fmt.Sprintf("The application with name %s does not exists", e.appName))
+	panic(fmt.Sprintf("app %#v not found", e.appName))
 }
 
 func (e *EndpointElement) endpoint(a *sysl.Application) *sysl.Endpoint {
 	if ep, ok := a.Endpoints[e.endpointName]; ok {
 		return ep
 	}
-	panic(fmt.Sprintf("The endpoint with name %s does not exists in the Application with name %s",
-		e.endpointName, e.appName))
+	panic(fmt.Sprintf("endpoint %#v not found in app %#v", e.endpointName, e.appName))
 }
 
 func (e *EndpointElement) label(
@@ -229,11 +228,6 @@ func MakeSequenceDiagramVisitor(
 }
 
 func (v *SequenceDiagramVisitor) Visit(e Element) error {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorln(err)
-		}
-	}()
 	var err error
 	switch t := e.(type) {
 	case *EndpointCollectionElement:

@@ -53,11 +53,6 @@ func GenerateIntegrations(
 }
 
 func DoGenerateIntegrations(args []string) error {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorln(err)
-		}
-	}()
 	ints := kingpin.New("ints", "Generate integrations")
 	root := ints.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
 	title := ints.Flag("title", "diagram title").Short('t').String()
