@@ -12,45 +12,36 @@ import (
 )
 
 type collectApplicationDependenciesState struct {
-	m            *sysl.Module
-	excludes     StrSet
-	passthroughs StrSet
-	drawableApps StrSet
-	apps         StrSet
-	deps         map[string]AppDependency
+	deps     map[string]AppDependency
+	AppCalls map[string][]*sysl.Statement
 }
 
-func collectApplicationDependencies(
-	mod *sysl.Module,
-	excludes, passthroughs, highlights, integrations StrSet,
-) (drawableApps, apps StrSet, dependencies map[string]AppDependency) {
-	v := &collectApplicationDependenciesState{
-		m:            mod,
-		excludes:     excludes,
-		passthroughs: passthroughs,
-		drawableApps: highlights,
-		apps:         highlights.Clone(),
-		deps:         map[string]AppDependency{},
+func collectApplicationDependencies(mod *sysl.Module) collectApplicationDependenciesState {
+	v := collectApplicationDependenciesState{
+		deps:     map[string]AppDependency{},
+		AppCalls: map[string][]*sysl.Statement{},
 	}
-	applications := v.m.GetApps()
-	for app := range integrations {
-		for epname, endpt := range applications[app].GetEndpoints() {
-			v.handleStatement(app, epname, endpt.GetStmt())
+	for appname, app := range mod.GetApps() {
+		for epname, endpt := range app.GetEndpoints() {
+			if epname != ".. * <- *" {
+				v.handleStatement(appname, epname, endpt.GetStmt())
+			}
 		}
 	}
-	return v.drawableApps, v.apps, v.deps
+	return v
 }
 
 func (v *collectApplicationDependenciesState) handleStatement(appname, epname string, stmts []*sysl.Statement) {
+	appEndpt := strings.Join([]string{appname, epname}, ":")
 	for _, stmt := range stmts {
 		switch t := stmt.GetStmt().(type) {
 		case *sysl.Statement_Call:
 			targetName := getAppName(t.Call.GetTarget())
-			if added := v.addAppDependency(appname, epname, targetName, t.Call.Endpoint, stmt); added {
-				if v.passthroughs.Contains(targetName) && t.Call.Endpoint != ".. * <- *" {
-					v.handleStatement(targetName, t.Call.Endpoint, v.m.GetApps()[targetName].GetEndpoints()[t.Call.Endpoint].Stmt)
-				}
+			v.addAppDependency(appname, epname, targetName, t.Call.Endpoint, stmt)
+			if len(v.AppCalls[appEndpt]) == 0 {
+				v.AppCalls[appEndpt] = []*sysl.Statement{}
 			}
+			v.AppCalls[appEndpt] = append(v.AppCalls[appEndpt], stmt)
 		case *sysl.Statement_Action, *sysl.Statement_Ret:
 			continue
 		case *sysl.Statement_Cond:
@@ -84,22 +75,6 @@ func (v *collectApplicationDependenciesState) addAppDependency(
 	if _, has := v.deps[k]; has {
 		return false
 	}
-	if v.excludes.Contains(sourceApp) || v.excludes.Contains(targetApp) {
-		return false
-	}
-	if v.drawableApps.Contains(sourceApp) || v.drawableApps.Contains(targetApp) {
-		if !HasPattern(v.m.GetApps()[sourceApp].GetAttrs(), "human") {
-			v.apps.Insert(sourceApp)
-		}
-		if !HasPattern(v.m.GetApps()[targetApp].GetAttrs(), "human") {
-			v.apps.Insert(targetApp)
-		}
-	}
-	if !((v.apps.Contains(sourceApp) && v.apps.Contains(targetApp)) ||
-		(v.apps.Contains(sourceApp) && v.passthroughs.Contains(targetApp)) ||
-		v.passthroughs.Contains(sourceApp)) {
-		return false
-	}
 	v.deps[k] = AppDependency{
 		Self:      AppElement{Name: sourceApp, Endpoint: sourceEndpt},
 		Target:    AppElement{Name: targetApp, Endpoint: targetEndpt},
@@ -121,7 +96,7 @@ func GenerateIntegrations(
 		exclude = []string{project}
 	}
 	excludeStrSet := MakeStrSet(exclude...)
-
+	deps := collectApplicationDependencies(mod)
 	// The "project" app that specifies the required view of the integration
 	app := mod.GetApps()[project]
 	of := MakeFormatParser(output)
@@ -137,27 +112,19 @@ func GenerateIntegrations(
 				continue
 			}
 		}
-		drawableApps := findDrawableApps(mod, integrations)
-		drawableApps, apps, deps := collectApplicationDependencies(
-			mod, excludeStrSet.Union(excludes), passthroughs, drawableApps, integrations)
-		intsParam := &IntsParam{apps.ToSlice(), drawableApps, deps, app, endpt}
+		drawableApps := FindApps(mod, excludeStrSet, integrations, deps.deps, true)
+		apps := FindApps(mod, excludeStrSet, drawableApps, deps.deps, false)
+		apps = apps.Difference(excludes)
+		apps = apps.Difference(passthroughs)
+
+		dependencySet := deps.FindIntegrations(apps, excludes, passthroughs)
+
+		intsParam := &IntsParam{apps.ToSlice(), drawableApps, dependencySet, app, endpt}
 		args := &Args{title, project, clustered, epa}
 		r[outputDir] = GenerateView(args, intsParam, mod)
 	}
 
 	return r
-}
-
-func findDrawableApps(mod *sysl.Module, apps StrSet) StrSet {
-	drawable := StrSet{}
-	for appName := range apps {
-		app := mod.GetApps()[appName]
-		if !HasPattern(app.GetAttrs(), "human") {
-			drawable.Insert(appName)
-		}
-	}
-
-	return drawable
 }
 
 func DoGenerateIntegrations(args []string) {

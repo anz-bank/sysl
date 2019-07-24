@@ -163,21 +163,15 @@ func TestGenerateIntegrationsWithImmediatePredecessors(t *testing.T) {
 		output:    "%(epname).png",
 		project:   "Project",
 	}
-	expectContent := plantumlHeader + `
-[IntegratedSystem] as _0 <<highlight>>
-[System1] as _1 <<highlight>>
-_0 --> _1
-@enduml`
-	expected := map[string]string{
-		"_.png": expectContent,
-	}
 
 	// When
 	result := GenerateIntegrations(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered, args.epa)
 
 	// Then
-	assert.Equal(t, expected, result)
+	assert.Len(t, reAs.FindAllString(result["_.png"], -1), 3)
+	assert.Len(t, reAsWithHighlight.FindAllString(result["_.png"], -1), 2)
+	assert.Len(t, rePoint.FindAllString(result["_.png"], -1), 2)
 }
 
 func TestGenerateIntegrationsWithExclude(t *testing.T) {
@@ -359,12 +353,12 @@ func TestGenerateIntegrationsWithRestrictBy(t *testing.T) {
 	// Then
 	assert.Len(t, reAsXWithHighlight.FindAllString(result["with_restrict_by.png"], -1), 1)
 	assert.Len(t, reAsWithHighlight.FindAllString(result["with_restrict_by.png"], -1), 1)
-	assert.Len(t, reSilver.FindAllString(result["with_restrict_by.png"], -1), 1)
-	assert.Len(t, reBlack.FindAllString(result["with_restrict_by.png"], -1), 1)
+	assert.Len(t, reSilver.FindAllString(result["with_restrict_by.png"], -1), 2)
+	assert.Len(t, reBlack.FindAllString(result["with_restrict_by.png"], -1), 2)
 	assert.Len(t, reAsXWithHighlight.FindAllString(result["without_restrict_by.png"], -1), 1)
 	assert.Len(t, reAsWithHighlight.FindAllString(result["without_restrict_by.png"], -1), 2)
-	assert.Len(t, reSilver.FindAllString(result["without_restrict_by.png"], -1), 2)
-	assert.Len(t, reBlack.FindAllString(result["without_restrict_by.png"], -1), 2)
+	assert.Len(t, reSilver.FindAllString(result["without_restrict_by.png"], -1), 4)
+	assert.Len(t, reBlack.FindAllString(result["without_restrict_by.png"], -1), 3)
 }
 
 func TestGenerateIntegrationsWithFilter(t *testing.T) {
@@ -384,7 +378,7 @@ func TestGenerateIntegrationsWithFilter(t *testing.T) {
 	// Then
 	assert.Len(t, result, 1)
 	assert.Len(t, reAsWithHighlight.FindAllString(result["_.png"], -1), 3)
-	assert.Len(t, rePoint.FindAllString(result["_.png"], -1), 2)
+	assert.Len(t, rePoint.FindAllString(result["_.png"], -1), 4)
 }
 
 func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
