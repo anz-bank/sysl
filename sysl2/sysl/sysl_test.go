@@ -269,14 +269,6 @@ func TestMain2Fatal(t *testing.T) {
 	testHook.Reset()
 }
 
-func TestMain2WithGroupingParamsGroupParamBlank(t *testing.T) {
-	testHook := test.NewGlobal()
-	main2([]string{"sd", "-s", "MobileApp <- Login", "-g", " ", "-o", "tests/call.png", "tests/call.sysl"}, main3)
-	assert.Equal(t, log.WarnLevel, testHook.LastEntry().Level)
-	assert.Equal(t, "Grouping criteria ' ' ignored\n", testHook.LastEntry().Message)
-	testHook.Reset()
-}
-
 func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 	testHook := test.NewGlobal()
 	main2([]string{"sd", "-s", "MobileApp <- Login", "-g", "-o", "tests/call.png", "tests/call.sysl"}, main3)
@@ -293,7 +285,8 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 
 func TestMain2WithGroupingParamsSysl(t *testing.T) {
 	testHook := test.NewGlobal()
-	main2([]string{"sd", "-g", "owner", "-o", "%(epname).png", "tests/groupby.sysl", "-a", "Project :: Sequences"}, main3)
+	main2([]string{"sd", "-g", "location", "-o", "%(epname).png", "tests/groupby.sysl", "-a", "Project :: Sequences"},
+		main3)
 	_, err1 := os.Stat("SEQ-One.png")
 	assert.True(t, err1 == nil)
 	assert.Equal(t, log.WarnLevel, testHook.LastEntry().Level)

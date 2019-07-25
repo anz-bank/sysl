@@ -60,7 +60,7 @@ Project :: Sequences:
     SEQ-One[groupby="location"]:
         SystemApp_1 <- FooEndpoint
 
-    SEQ-Two[groupby="location"]:
+    SEQ-Two:
         SystemApp_2 <- BarEndpoint
 
 SystemApp_1[location="cloud"]:

@@ -19,25 +19,25 @@ type sequenceDiagParam struct {
 	title      string
 	blackboxes map[string]*Upto
 	appName    string
-	groupboxes map[string]StrSet
+	group      string
 }
 
 func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName)
+	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName, p.group)
 	e := MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 
+	if err := e.Accept(v); err != nil {
+		return "", err
+	}
+
 	const color = "#LightBlue"
-	for boxname, appset := range p.groupboxes {
+	for boxname, appset := range v.groupboxes {
 		fmt.Fprintf(w, "box \"%s\" %s\n", boxname, color)
 		for key := range appset {
 			fmt.Fprintf(w, "\tparticipant %s\n", v.UniqueVarForAppName(key))
 		}
 		fmt.Fprintf(w, "end box\n")
-	}
-
-	if err := e.Accept(v); err != nil {
-		return "", err
 	}
 
 	return w.String(), nil
@@ -73,24 +73,6 @@ func escapeWordBoundary(src string) string {
 	return val
 }
 
-func parseGroupboxParams(group string, mod *sysl.Module) map[string]StrSet {
-	grpBoxes := map[string]StrSet{}
-	if len(group) == 1 {
-		log.Warnf("Grouping criteria '%s' ignored\n", group)
-		return grpBoxes
-	}
-	for participantName, participantApp := range mod.Apps {
-		if attrMap, exists := participantApp.GetAttrs()[group]; exists {
-			grpValue := attrMap.GetS()
-			if _, has := grpBoxes[grpValue]; !has {
-				grpBoxes[grpValue] = MakeStrSet()
-			}
-			grpBoxes[grpValue].Insert(participantName)
-		}
-	}
-	return grpBoxes
-}
-
 func DoConstructSequenceDiagrams(
 	rootModel, endpointFormat, appFormat, title, output, modules string,
 	endpoints, apps []string,
@@ -105,9 +87,6 @@ func DoConstructSequenceDiagrams(
 	if strings.Contains(output, "%(epname)") {
 		if len(blackboxes) > 0 {
 			log.Warnf("Ignoring blackboxes passed from command line")
-		}
-		if len(group) > 0 {
-			log.Warnf("Ignoring groupby passed from command line")
 		}
 		spout := MakeFormatParser(output)
 		for _, appName := range apps {
@@ -143,6 +122,12 @@ func DoConstructSequenceDiagrams(
 					log.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
 					return result
 				}
+				groupAttr := epAttrs["groupby"].GetS()
+				if len(groupAttr) == 0 {
+					groupAttr = group
+				} else if len(group) > 0 {
+					log.Warnf("Ignoring groupby passed from command line")
+				}
 				TransformBlackboxesToUptos(bbsAll, bbs2, BBEndpointCollection)
 				sd = &sequenceDiagParam{
 					endpoints:       sdEndpoints,
@@ -151,7 +136,7 @@ func DoConstructSequenceDiagrams(
 					title:           spseqtitle.FmtSeq(endpoint.GetName(), endpoint.GetLongName(), varrefs),
 					blackboxes:      bbsAll,
 					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
-					groupboxes:      parseGroupboxParams(epAttrs["groupby"].GetS(), mod),
+					group:           groupAttr,
 				}
 				out, _ := generateSequenceDiag(mod, sd)
 				for indx := range bbs2 {
@@ -179,7 +164,7 @@ func DoConstructSequenceDiagrams(
 			EndpointLabeler: spep,
 			title:           title,
 			blackboxes:      bbsAll,
-			groupboxes:      parseGroupboxParams(group, mod),
+			group:           group,
 		}
 		out, _ := generateSequenceDiag(mod, sd)
 		for bbKey, bbVal := range bbsAll {
@@ -242,8 +227,8 @@ func DoGenerateSequenceDiagrams(args []string) error {
 			"repeat '-b App <- Endpoint=Some description' to set multiple blackboxes",
 	).Short('b').StringMap()
 
-	groupbyFlag := sd.Flag("groupby", "Enter the groupby owner criteria (apps having "+
-		"the same owner are grouped together in one box").Short('g').String()
+	groupbyFlag := sd.Flag("groupby", "Enter the groupby attribute (apps having "+
+		"the same attribute value are grouped together in one box").Short('g').String()
 
 	loglevel := sd.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
 

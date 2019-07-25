@@ -201,6 +201,8 @@ type SequenceDiagramVisitor struct {
 	visited    map[string]int
 	symbols    map[string]*_var
 	currentApp string
+	groupby    string
+	groupboxes map[string]StrSet
 }
 
 func MakeSequenceDiagramVisitor(
@@ -209,6 +211,7 @@ func MakeSequenceDiagramVisitor(
 	w *SequenceDiagramWriter,
 	m *sysl.Module,
 	appName string,
+	group string,
 ) *SequenceDiagramVisitor {
 	return &SequenceDiagramVisitor{
 		AppLabeler:      a,
@@ -218,6 +221,8 @@ func MakeSequenceDiagramVisitor(
 		visited:         make(map[string]int),
 		symbols:         make(map[string]*_var),
 		currentApp:      appName,
+		groupby:         group,
+		groupboxes:      map[string]StrSet{},
 	}
 }
 
@@ -336,6 +341,13 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	isCron := appPatterns.Contains("cron")
 	isCronSender := e.senderPatterns.Contains("cron")
 	needsInt := !(isHuman || isHumanSender || isCronSender) && sender != agent
+
+	if attr, exists := app.GetAttrs()[v.groupby]; exists {
+		if _, has := v.groupboxes[attr.GetS()]; !has {
+			v.groupboxes[attr.GetS()] = MakeStrSet()
+		}
+		v.groupboxes[attr.GetS()].Insert(e.appName)
+	}
 
 	if !((isHuman && sender == "[") || isCron) {
 		label := e.label(v, v.m, endpoint, endPointPatterns, isHuman, isHumanSender, needsInt)

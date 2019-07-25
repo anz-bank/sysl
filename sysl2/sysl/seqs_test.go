@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -441,6 +442,8 @@ end box`
 		t.Errorf("Error compiling regular expression")
 	}
 	assert.True(t, boxPresent)
+	cnt := strings.Count(result["tests/call.png"], "participant")
+	assert.True(t, cnt == 4)
 }
 
 func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
