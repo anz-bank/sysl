@@ -1,0 +1,73 @@
+SystemApp_1 [package='', version="1.1.1"]:
+    <-> Event (App.member, request <: SystemApp_1.SomeType):
+    	return "customer details"
+
+    Endpoint:
+        ...
+
+    FooEndpoint:
+        SystemApp_2 <- BarEndpoint
+
+    # subscribe to an event
+    SystemApp_2 -> eventName [~mq]:
+        ""
+        ''
+        'asdf'
+        "quoted statement: use special chars here like ?? :: etc"
+        "test: single quotes 'above'"
+        do something
+        | Some multiline comments that
+        | you can use for documentation.
+        | This is last line.
+        handle event eventName
+
+SystemApp_2[location="cloud"]:
+    BarEndpoint (request <: SystemApp_1.SomeType):
+        ExternalApi <- Endpoint
+        ExternalApi_1 <- GET /foo
+        if value == one:
+            do something
+        else if value == two:
+            do something else
+        else:
+            return ok
+
+    Endpoint2 (request <: set of SystemApp_1.SomeType):
+        @ep_desc = "this comment belongs to the Endpoint2 defined above"
+        | Single line statement
+        . <- eventName
+
+    <-> eventName (in <: string): ...
+    <-> another event: ...
+
+ExternalApi[location="onpremise"]:
+    Endpoint:
+        ...
+
+    !type Request:
+        id <: int
+        val <: string
+    !type Response:
+        val <: string
+
+ExternalApi_1[location="onpremise"]:
+    /foo:
+        GET:
+            ...
+
+Project :: Sequences:
+
+    SEQ-One[groupby="location"]:
+        SystemApp_1 <- FooEndpoint
+
+    SEQ-Two[groupby="location"]:
+        SystemApp_2 <- BarEndpoint
+
+SystemApp_1[location="cloud"]:
+    .. * <- *:
+        FooEndpoint [some_id="project_id"]
+        SystemApp_2 <- BarEndpoint [some_id="project_id"]
+
+ExternalApi_1:
+    .. * <- *:
+        GET /foo [some_id="project_id"]

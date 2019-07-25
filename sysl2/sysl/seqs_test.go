@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -199,6 +200,7 @@ type sdArgs struct {
 	apps           []string
 	modules        string
 	blackboxes     [][]string
+	groupbox       string
 }
 
 func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T) {
@@ -211,7 +213,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 
 	// When
 	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
 
 	// Then
 	assert.Equal(t, expected, result, "unexpected outSet!")
@@ -243,7 +245,7 @@ skinparam maxMessageSize 250
 
 	// When
 	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
 
 	// Then
 	assert.Equal(t, expected, result, "unexpected outSet!")
@@ -290,7 +292,7 @@ deactivate _0
 
 	// When
 	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
 
 	// Then
 	assert.Equal(t, expected, result, "unexpected content!")
@@ -316,20 +318,25 @@ func TestDoConstructSequenceDiagramWithBlackbox(t *testing.T) {
 @startuml
 control "" as _0
 control "" as _1
+control "" as _2
 skinparam maxMessageSize 250
 == MobileApp <- Login ==
 [->_0 : Login
 activate _0
  _0->_1 : 
  activate _1
- note over _1: call to database
- _0<--_1 : <color blue>Server.LoginResponse</color> <<color green>?, ?</color>>
+  _1->_2 : 
+  activate _2
+  note over _2: call to database
+  _1<--_2 : <color blue>Server.LoginResponse</color> <<color green>?, ?</color>>
+  deactivate _2
+ _0<--_1 : <color blue>APIGateway.LoginResponse</color> <<color green>?, ?</color>>
  deactivate _1
 deactivate _0
 @enduml
 `
 	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
 	expected := map[string]string{"tests/call.png": expectContent}
 	// Then
 	assert.Equal(t, expected, result)
@@ -367,7 +374,7 @@ activate _0
 
 	// When
 	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
 
 	// Then
 	assert.Equal(t, expected, result, "unexpected content!")
@@ -397,4 +404,78 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 			require.NoError(t, DoGenerateSequenceDiagrams(tt.args.args))
 		})
 	}
+}
+
+func TestDoConstructSequenceDiagramWithGroupingCommandline(t *testing.T) {
+	// Given
+	args := &sdArgs{
+		rootModel: "./tests/",
+		modules:   "call.sysl",
+		output:    "tests/call.png",
+		endpoints: []string{"MobileApp <- Login"},
+		groupbox:  "owner",
+	}
+	var boxPresent bool
+	var err error
+
+	// When
+	boxServer := `box "server" #LightBlue
+	participant _\d
+	participant _\d
+end box`
+	boxClient := `box "client" #LightBlue
+	participant _\d
+	participant _\d
+end box`
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+
+	// Then
+	boxPresent, err = regexp.MatchString(boxServer, result["tests/call.png"])
+	if err != nil {
+		t.Errorf("Error compiling regular expression")
+	}
+	assert.True(t, boxPresent)
+	boxPresent, err = regexp.MatchString(boxClient, result["tests/call.png"])
+	if err != nil {
+		t.Errorf("Error compiling regular expression")
+	}
+	assert.True(t, boxPresent)
+}
+
+func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
+	// Given
+	args := &sdArgs{
+		rootModel: "./tests/",
+		modules:   "groupby.sysl",
+		output:    "%(epname).png",
+		endpoints: []string{"SEQ-One"},
+		apps:      []string{"Project :: Sequences"},
+	}
+	var boxPresent bool
+	var err error
+
+	// When
+	boxOnpremise := `box "onpremise" #LightBlue
+	participant _\d
+	participant _\d
+end box`
+	boxCloud := `box "cloud" #LightBlue
+	participant _\d
+	participant _\d
+end box`
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+
+	// Then
+	boxPresent, err = regexp.MatchString(boxOnpremise, result["SEQ-One.png"])
+	if err != nil {
+		t.Errorf("Error compiling regular expression")
+	}
+	assert.True(t, boxPresent)
+	boxPresent, err = regexp.MatchString(boxCloud, result["SEQ-One.png"])
+	if err != nil {
+		t.Errorf("Error compiling regular expression")
+	}
+	assert.True(t, boxPresent)
 }

@@ -1,8 +1,16 @@
-MobileApp:
+MobileApp[owner="client"]:
+  Login:
+    APIGateway <- Login
+
+APIGateway[owner="client"]:
   Login:
     Server <- Login
+    return APIGateway.LoginResponse
 
-Server:
+  !type LoginResponse:
+    message <: string
+
+Server[owner="server"]:
   Login(data <: LoginData):
     build query
     DB <- Query
@@ -16,7 +24,7 @@ Server:
   !type LoginResponse:
     message <: string
 
-DB:
+DB[owner="server"]:
   Query:
     lookup data
     return data
