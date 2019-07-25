@@ -10,7 +10,6 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 )
 
 func OutputPlantuml(output, plantuml, umlInput string) error {
@@ -33,8 +32,7 @@ func OutputPlantuml(output, plantuml, umlInput string) error {
 		return ioutil.WriteFile(output, []byte(umlInput), os.ModePerm)
 
 	default:
-		log.Errorf("Extension %s not supported. Valid extensions: svg, png, uml.", mode)
-		return nil
+		return fmt.Errorf("extension must be svg, png or uml, not %#v", mode)
 	}
 }
 

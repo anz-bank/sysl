@@ -223,6 +223,19 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 	assert.Equal(t, expected, result)
 }
 
+func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
+	// Given
+	args := &sdArgs{
+		rootModel: "./tests/",
+		modules:   "MISSING_FILE.sysl",
+	}
+
+	// When
+	_, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
+	assert.Error(t, err)
+}
+
 func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 	// Given
 	args := &sdArgs{

@@ -71,6 +71,21 @@ func TestMain2BadLog(t *testing.T) {
 	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
 }
 
+func TestMain2SeqdiagWithMissingFile(t *testing.T) {
+	testHook := test.NewGlobal()
+	defer testHook.Reset()
+	rc := main2([]string{"sd", "-o", "%(epname).png", "tests/MISSING.sysl", "-a", "Project :: Sequences"}, main3)
+	assert.NotEqual(t, 0, rc)
+}
+
+func TestMain2SeqdiagWithImpossibleOutput(t *testing.T) {
+	testHook := test.NewGlobal()
+	defer testHook.Reset()
+	rc := main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.zzz", "-b", "Server <- DB=call to database",
+		"-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
+	assert.NotEqual(t, 0, rc)
+}
+
 func TestMain2WithBlackboxParams(t *testing.T) {
 	testHook := test.NewGlobal()
 	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB=call to database",
