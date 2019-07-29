@@ -342,11 +342,13 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	isCronSender := e.senderPatterns.Contains("cron")
 	needsInt := !(isHuman || isHumanSender || isCronSender) && sender != agent
 
-	if attr, exists := app.GetAttrs()[v.groupby]; exists && len(v.groupby) > 0 {
-		if _, has := v.groupboxes[attr.GetS()]; !has {
-			v.groupboxes[attr.GetS()] = MakeStrSet()
+	if len(v.groupby) > 0 {
+		if attr, exists := app.GetAttrs()[v.groupby]; exists {
+			if _, has := v.groupboxes[attr.GetS()]; !has {
+				v.groupboxes[attr.GetS()] = MakeStrSet()
+			}
+			v.groupboxes[attr.GetS()].Insert(e.appName)
 		}
-		v.groupboxes[attr.GetS()].Insert(e.appName)
 	}
 
 	if !((isHuman && sender == "[") || isCron) {

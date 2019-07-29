@@ -1,25 +1,6 @@
 SystemApp_1 [package='', version="1.1.1"]:
-    <-> Event (App.member, request <: SystemApp_1.SomeType):
-    	return "customer details"
-
-    Endpoint:
-        ...
-
     FooEndpoint:
         SystemApp_2 <- BarEndpoint
-
-    # subscribe to an event
-    SystemApp_2 -> eventName [~mq]:
-        ""
-        ''
-        'asdf'
-        "quoted statement: use special chars here like ?? :: etc"
-        "test: single quotes 'above'"
-        do something
-        | Some multiline comments that
-        | you can use for documentation.
-        | This is last line.
-        handle event eventName
 
 SystemApp_2[location="cloud"]:
     BarEndpoint (request <: SystemApp_1.SomeType):
@@ -31,14 +12,6 @@ SystemApp_2[location="cloud"]:
             do something else
         else:
             return ok
-
-    Endpoint2 (request <: set of SystemApp_1.SomeType):
-        @ep_desc = "this comment belongs to the Endpoint2 defined above"
-        | Single line statement
-        . <- eventName
-
-    <-> eventName (in <: string): ...
-    <-> another event: ...
 
 ExternalApi[location="onpremise"]:
     Endpoint:

@@ -433,17 +433,12 @@ end box`
 
 	// Then
 	boxPresent, err = regexp.MatchString(boxServer, result["tests/call.png"])
-	if err != nil {
-		t.Errorf("Error compiling regular expression")
-	}
+	assert.Nil(t, err, "Error compiling regular expression")
 	assert.True(t, boxPresent)
 	boxPresent, err = regexp.MatchString(boxClient, result["tests/call.png"])
-	if err != nil {
-		t.Errorf("Error compiling regular expression")
-	}
+	assert.Nil(t, err, "Error compiling regular expression")
 	assert.True(t, boxPresent)
-	cnt := strings.Count(result["tests/call.png"], "participant")
-	assert.True(t, cnt == 4)
+	assert.Equal(t, 4, strings.Count(result["tests/call.png"], "participant"))
 }
 
 func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
@@ -472,13 +467,36 @@ end box`
 
 	// Then
 	boxPresent, err = regexp.MatchString(boxOnpremise, result["SEQ-One.png"])
-	if err != nil {
-		t.Errorf("Error compiling regular expression")
-	}
+	assert.Nil(t, err, "Error compiling regular expression")
 	assert.True(t, boxPresent)
 	boxPresent, err = regexp.MatchString(boxCloud, result["SEQ-One.png"])
-	if err != nil {
-		t.Errorf("Error compiling regular expression")
+	assert.Nil(t, err, "Error compiling regular expression")
+	assert.True(t, boxPresent)
+}
+
+func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
+	// Given
+	args := &sdArgs{
+		rootModel: "./tests/",
+		modules:   "groupby.sysl",
+		output:    "%(epname).png",
+		endpoints: []string{"SEQ-Two"},
+		apps:      []string{"Project :: Sequences"},
+		groupbox:  "location",
 	}
+
+	var boxPresent bool
+	var err error
+
+	// When
+	boxCloud := `box "cloud" #LightBlue
+	participant _\d
+end box`
+	result := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+
+	// Then
+	boxPresent, err = regexp.MatchString(boxCloud, result["SEQ-Two.png"])
+	assert.Nil(t, err, "Error compiling regular expression")
 	assert.True(t, boxPresent)
 }
