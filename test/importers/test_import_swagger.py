@@ -720,7 +720,7 @@ SWAGGER_WITH_PATH_VAR_TYPE_IN_API_EXPECTED_SYSL = r"""
     /v1:
 
         /users/{id<:int}:
-            GET ?metadata=bool? (request_id <: string [~header, ~required, name="request-id"]):
+            GET (request_id <: string [~header, ~required, name="request-id"]) ?metadata=bool?:
                 | No description.
                 return 200
 
@@ -779,7 +779,7 @@ SWAGGER_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS_EXPECTED_SYSL = r"""
     /v1:
 
         /users/{id<:int}:
-            GET ?metadata=bool? (request_id <: string [~header, ~required, name="request-id"]):
+            GET (request_id <: string [~header, ~required, name="request-id"]) ?metadata=bool?:
                 | No description.
                 return 200
 

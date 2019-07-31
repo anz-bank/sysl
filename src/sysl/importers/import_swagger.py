@@ -237,12 +237,12 @@ class SwaggerTranslator:
 
                     w(u'{}{}{}{}:',
                         method.upper(),
+                        paramStr,
                         ' ?' if queryParams else '',
                         '&'.join(
                             '{}={}{}'.format(p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
                             for p in queryParams
-                        ),
-                        paramStr)
+                        ))
                     with w.indent():
                         for line in textwrap.wrap(
                                 body.get('description', 'No description.').strip(), 64):
