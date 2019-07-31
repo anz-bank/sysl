@@ -17,7 +17,7 @@ from sysl.util import writer
 from sysl.proto import sysl_pb2
 
 
-SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time'}
+SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time', 'byte'}
 
 SYSL_TYPES = {
     'int32', 'int64', 'int', 'float', 'string',
@@ -404,6 +404,8 @@ class SwaggerTranslator:
             return r('date')
         elif (typ, fmt) == ('string', 'date-time'):
             return r('datetime')
+        elif (typ, fmt) == ('string', 'byte'):
+            return r('string')
         elif (typ, fmt) == ('integer', None):
             return r('int')
         elif (typ, fmt) == ('integer', 'int32'):
