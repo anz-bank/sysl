@@ -118,7 +118,7 @@ class SwaggerTranslator:
 
     def javaParam(self, param):
         # TODO(anz-rfc) this seems janky and fragile.
-        param = param[1:len(param) - 1]
+        param = param[1:-1]
         ident = self._param_cache.get(param)
 
         if ident is None:
@@ -237,7 +237,7 @@ class SwaggerTranslator:
 
                     w(u'{}{}{}{}:',
                         method.upper(),
-                        ' ?' if len(queryParams) > 0 else '',
+                        ' ?' if queryParams else '',
                         '&'.join(
                             '{}={}{}'.format(p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
                             for p in queryParams
