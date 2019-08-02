@@ -39,6 +39,7 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 		depsOut:      []AppDependency{},
 	}
 
+	collector := ".. * <- *"
 	apps := b.m.GetApps()
 
 	// build list to start from
@@ -59,10 +60,9 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 	// if targetApp in passthrough, only add apps that are called by this endpoint
 	// and do this recursively till the app is in passthrough
 	for _, appname := range b.seedApps {
-		// fmt.Println(appname)
 		app := apps[appname]
 		for _, epname := range sortedSlice(app.GetEndpoints()) {
-			if epname != ".. * <- *" {
+			if epname != collector {
 				endpt := app.GetEndpoints()[epname]
 				processCalls(appname, epname, endpt.GetStmt(), b.processExcludeAndPassthrough)
 			}
@@ -77,10 +77,9 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 	}
 	sort.Strings(appsNames)
 	for _, appname := range appsNames {
-		// fmt.Println(appname)
 		app := apps[appname]
 		for _, epname := range sortedSlice(app.GetEndpoints()) {
-			if epname != ".. * <- *" {
+			if epname != collector {
 				endpt := app.GetEndpoints()[epname]
 				processCalls(appname, epname, endpt.GetStmt(), b.myCallers)
 			}
@@ -90,10 +89,9 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 	b.finalAppsMap = MakeStrSet(b.finalApps...)
 	// connect all the apps that we have so far
 	for _, appname := range b.finalApps {
-		// fmt.Println(appname)
 		app := apps[appname]
 		for _, epname := range sortedSlice(app.GetEndpoints()) {
-			if epname != ".. * <- *" {
+			if epname != collector {
 				endpt := app.GetEndpoints()[epname]
 				processCalls(appname, epname, endpt.GetStmt(), b.indirectCalls)
 			}

@@ -26,7 +26,8 @@ func comparePUML(t *testing.T, expected, actual map[string]string) {
 		golden, err := ioutil.ReadFile(goldenFile)
 		assert.Nil(t, err)
 		if string(golden) != actual[name] {
-			ioutil.WriteFile("tests/"+name+".puml", []byte(actual[name]), 0777)
+			err := ioutil.WriteFile("tests/"+name+".puml", []byte(actual[name]), 0777)
+			assert.Nil(t, err)
 		}
 		assert.Equal(t, string(golden), actual[name])
 	}
