@@ -354,3 +354,24 @@ func TestGenerateIntegrationsWithPubSub(t *testing.T) {
 	// Then
 	comparePUML(t, expected, result)
 }
+
+func TestAllStmts(t *testing.T) {
+	// Given
+	args := &intsArg{
+		rootModel: "./tests/",
+		modules:   "ints_stmts.sysl",
+		output:    "%(epname).png",
+		project:   "Project",
+	}
+
+	// When
+	result := GenerateIntegrations(args.rootModel, args.title, args.output,
+		args.project, args.filter, args.modules, args.exclude, args.clustered, args.epa)
+
+	expected := map[string]string{
+		"all_stmts.png": "tests/all_stmts-golden.puml",
+	}
+
+	// Then
+	comparePUML(t, expected, result)
+}

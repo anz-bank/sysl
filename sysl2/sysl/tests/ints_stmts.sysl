@@ -1,0 +1,49 @@
+system_A:
+  endpoint:
+    if not logged in:
+      system_B <- not_logged_in
+    else:
+      system_C <- logged_in
+
+    while waiting for response:
+      system_g <- send heartbeat
+
+system_B:
+  not_logged_in:
+    Loop "n times":
+      system_D <- clear_cache
+
+system_C:
+  logged_in:
+    for all session:
+      system_E <- update_timestamp
+
+system_D:
+  clear_cache:
+    for each session:
+      system_h <- delete_info
+
+system_E:
+  update_timestamp:
+    one of:
+      version 1:
+        system_F <- update_one
+
+system_F:
+  update_one:
+    Until done:
+      system_g <- send heartbeat
+
+system_g:
+  send heartbeat: ...
+
+system_h:
+  delete_info: ...
+
+Project [appfmt="%(appname)", epfmt="%(epname)", indirect_arrow_color="silver"]:
+  all_stmts:
+    system_A
+    system_B
+    system_C
+    system_D
+    system_E
