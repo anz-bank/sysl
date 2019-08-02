@@ -17,7 +17,7 @@ from sysl.util import writer
 from sysl.proto import sysl_pb2
 
 
-SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time'}
+SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time', 'byte'}
 
 SYSL_TYPES = {
     'int32', 'int64', 'int', 'float', 'string',
@@ -116,46 +116,40 @@ class SwaggerTranslator:
                 self.warn("could not load any vocabulary, janky environment-specific heuristics for renaming path template names may fail")
         return self._words
 
-    def javaParam(self, match):
+    def javaParam(self, param):
         # TODO(anz-rfc) this seems janky and fragile.
-        param = match.group(1)
+        param = param[1:-1]
         ident = self._param_cache.get(param)
 
         if ident is None:
             # foo-bar to fooBar
             ident = re.sub(r'-(\w?)', lambda m: m.group(1).upper(), param)
-
             # {fooid} -> fooId (only if foo is in WORDS but fooid isn't)
-            m = re.match(r'{([a-z]+)id}$', ident)
+            m = re.match(r'([a-z]+)id$', ident)
             if m:
                 word = m.group(1)
                 if word in self.words() and word + 'id' not in self.words():
-                    ident = '{' + word + 'Id}'
-
-            ident = ident.replace('}', '<:string}')
-
+                    ident = word + 'Id'
             self._param_cache[param] = ident
 
         return ident
 
     def translate_path_template_params(self, path, params):
-        if params:
-            parts = re.split(r'({[^/]*?})', path)
-            if len(parts) > 1:
-                pathParams = {}
-                for param in params:
-                    if '$ref' in param:
-                        param = swag['parameters'][param['$ref'].rpartition('/')[2]]
-
-                    if param['in'] == 'path':
-                        pathParams['{' + param['name'] + '}'] = param
-                if len(pathParams) > 0:
-                    for (i, p) in enumerate(parts):
-                        if parts[i] in pathParams:
-                            param = pathParams[parts[i]]
-                            parts[i] = "{" + param["name"] + "<:" + TYPE_MAP[param['type']] + "}"
-                    return "".join(parts)
-        return re.sub(r'({[^/]*?})', self.javaParam, path)
+        parts = re.split(r'({[^/]*?})', path)
+        if len(parts) > 1 and len(params) == 0:
+            self.warn("not enough path params path: %s" % (path))
+        pathParams = {}
+        for param in params:
+            assert param['in'] == 'path'
+            pathParams['{' + param['name'] + '}'] = param
+        for (i, p) in enumerate(parts):
+            if parts[i] in pathParams:
+                param = pathParams[parts[i]]
+                parts[i] = "{" + self.javaParam(parts[i]) + "<:" + TYPE_MAP[param['type']] + "}"
+            elif parts[i] != "" and parts[i][0] == "{":
+                self.warn("could not find type for path param: %s in params%s" % (parts[i], params))
+                parts[i] = "{" + self.javaParam(parts[i]) + "<:string}"
+        return "".join(parts)
 
     def translate(self, swag, appname, package, w):
         hasInfo = False
@@ -194,36 +188,45 @@ class SwaggerTranslator:
 
             self.writeDefs(swag, w)
 
+    def mergeParams(self, swag, srcParams, overrideParams):
+        pathParams = OrderedDict()
+        headerParams = OrderedDict()
+        bodyParams = OrderedDict()
+        queryParams = OrderedDict()
+
+        for param in srcParams + overrideParams:
+            if '$ref' in param:
+                param = swag['parameters'][param['$ref'].rpartition('/')[2]]
+            paramIn = param['in']
+            if paramIn == 'path':
+                pathParams[param["name"]] = param
+            elif paramIn == 'header':
+                headerParams[param["name"]] = param
+            elif paramIn == 'body':
+                bodyParams[param["name"]] = param
+            elif paramIn == 'query':
+                queryParams[param["name"]] = param
+            else:
+                raise "Unknown param type"
+
+        return pathParams.values(), headerParams.values(), queryParams.values(), bodyParams.values()
+
     def writeEndpoints(self, swag, w):
         for (path, api) in sorted(swag['paths'].iteritems()):
-            swagParams = []
-            if 'parameters' in swag:
-                for key in swag['parameters']:
-                    param = swag['parameters'][key]
-                    if param['in'] == 'path':
-                        swagParams.append(param)
+            apiParams = []
+            if 'parameters' in api:
+                apiParams = api['parameters']
+                del api['parameters']
 
-            apiParams = api['parameters'] if 'parameters' in api else []
-            w(u'\n{}:', self.translate_path_template_params(path, swagParams + apiParams))
-            with w.indent():
-                base = []
-                if 'parameters' in api:
-                    base = api['parameters']
-                    del api['parameters']
-                for (i, (method, body)) in enumerate(sorted(api.iteritems(),
-                                                            key=lambda t: METHOD_ORDER[t[0]])):
-                    params = {where: [] for where in ['query', 'body', 'header']}
-                    if 'parameters' in body:
-                        for param in base + body['parameters']:
-                            paramIn = param.get('in')
-                            if '$ref' in param:
-                                param = swag['parameters'][param['$ref'].rpartition('/')[2]]
-                                paramIn = param.get('in')
-                            if paramIn and paramIn != 'path':
-                                params[paramIn].append(param)
-
-                    header = self.getHeaders(params['header'])
-                    methodBody = self.getBody(params['body'])
+            for (i, (method, body)) in enumerate(sorted(api.iteritems(),
+                                                        key=lambda t: METHOD_ORDER[t[0]])):
+                bodyParams = body['parameters'] if 'parameters' in body else []
+                pathParams, headerParams, queryParams, bodyParams = self.mergeParams(swag, apiParams, bodyParams)
+                print(pathParams)
+                w(u'\n{}:', self.translate_path_template_params(path, pathParams))
+                with w.indent():
+                    header = self.getHeaders(headerParams)
+                    methodBody = self.getBody(bodyParams)
 
                     if len(header) > 0 and len(methodBody) > 0:
                         paramStr = ' ({})'.format(methodBody + ', ' + header)
@@ -234,12 +237,12 @@ class SwaggerTranslator:
 
                     w(u'{}{}{}{}:',
                         method.upper(),
-                        ' ?' if params['query'] else '',
+                        paramStr,
+                        ' ?' if queryParams else '',
                         '&'.join(
                             '{}={}{}'.format(p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
-                            for p in params['query']
-                        ),
-                        paramStr)
+                            for p in queryParams
+                        ))
                     with w.indent():
                         for line in textwrap.wrap(
                                 body.get('description', 'No description.').strip(), 64):
@@ -401,6 +404,8 @@ class SwaggerTranslator:
             return r('date')
         elif (typ, fmt) == ('string', 'date-time'):
             return r('datetime')
+        elif (typ, fmt) == ('string', 'byte'):
+            return r('string')
         elif (typ, fmt) == ('integer', None):
             return r('int')
         elif (typ, fmt) == ('integer', 'int32'):
