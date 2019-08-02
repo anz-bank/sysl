@@ -24,7 +24,17 @@ System_e:
 
 Project [appfmt="%(appname)", epfmt="%(epname)", indirect_arrow_color="silver"]:
 
+    all_indirect_2:
+        System_a
+        System_b
+        System_c
+        System_d
+        System_e
+
     no_passthrough:
+        System_a
+
+    passthrough_b [passthrough=["System_b"]]:
         System_a
 
     passthrough_c [passthrough=["System_c"]]:

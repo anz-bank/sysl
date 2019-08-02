@@ -1,0 +1,68 @@
+System_A:
+  endpoint_a:
+    System_B <- endpoint_a
+
+  endpoint_d:
+    System_D <- endpoint_d
+
+System_B:
+  endpoint_a:
+    System_C <- endpoint_c
+
+  endpoint_f:
+    System_f <- endpoint_f
+
+System_C:
+  endpoint_c:
+    System_h <- endpoint_h
+
+  endpoint_g:
+    System_g <- endpoint_g
+
+System_D:
+  endpoint_d:
+    System_e <- endpoint_e
+
+  endpoint_f: ...
+
+System_f:
+  endpoint_f: ...
+
+  endpoint_d:
+    System_D <- endpoint_f
+
+System_e:
+  endpoint_e: ...
+
+System_g:
+  endpoint_g: ...
+
+System_h:
+  endpoint_h: ...
+
+
+Project [appfmt="%(appname)", epfmt="%(epname)", indirect_arrow_color="silver"]:
+
+  pass_1_all:
+    System_A
+    System_B
+    System_C
+    System_D
+
+  pass_1_sys_a:
+    System_A
+
+  pass_b [passthrough=["System_B"]]:
+    System_A
+
+  pass_b_c [passthrough=["System_B", "System_C"]]:
+    System_A
+
+  pass_f [passthrough=["System_f"]]:
+    System_A
+
+  pass_D [passthrough=["System_D"]]:
+    System_A
+
+  pass_e [passthrough=["System_e"]]:
+    System_A

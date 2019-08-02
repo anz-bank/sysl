@@ -14,14 +14,6 @@ System_a:
     endpoint_2:
         IntegratedSystem <- integrated_endpoint_3
 
-Project [appfmt="%(appname)", epfmt="%(epname)", indirect_arrow_color="silver"]:
-
-    indirect_arrow:
-        IntegratedSystem
-
-    my_callers:
-        System_a
-
 System_b:
     endpoint: ...
     endpoint2:
@@ -30,3 +22,17 @@ System_b:
 System_c:
     endpoint: ...
     endpoint2: ...
+
+Project [appfmt="%(appname)", epfmt="%(epname)", indirect_arrow_color="silver"]:
+
+    all:
+      IntegratedSystem
+      System_a
+      System_b
+      System_c
+
+    indirect_arrow:
+        IntegratedSystem
+
+    my_callers:
+        System_a

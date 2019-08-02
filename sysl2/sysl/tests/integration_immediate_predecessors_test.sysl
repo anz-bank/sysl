@@ -6,7 +6,7 @@ System1:
     endpoint: ...
 
 Project [appfmt="%(appname)"]:
-    _:
+    immediate_predecessors:
         IntegratedSystem
         System1
 

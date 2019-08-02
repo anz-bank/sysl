@@ -36,7 +36,7 @@ skinparam state {
 type IntsParam struct {
 	apps         []string
 	drawableApps map[string]struct{}
-	integrations map[string]AppDependency
+	integrations []AppDependency
 	app          *sysl.Application
 	endpt        *sysl.Endpoint
 }
@@ -143,7 +143,7 @@ func (v *IntsDiagramVisitor) VarManagerForTopState(appName string) string {
 	return ts.topAlias
 }
 
-func (v *IntsDiagramVisitor) VarManagerForState(name string) string {
+func (v *IntsDiagramVisitor) VarManagerForEPA(name string) string {
 	var appName, alias, label string
 	attrs := map[string]string{}
 
@@ -179,7 +179,7 @@ func (v *IntsDiagramVisitor) VarManagerForState(name string) string {
 	return s.alias
 }
 
-func (v *IntsDiagramVisitor) buildClusterForStateView(deps map[string]AppDependency, restrictBy string) {
+func (v *IntsDiagramVisitor) buildClusterForEPAView(deps []AppDependency, restrictBy string) {
 	clusters := map[string][]string{}
 	for _, dep := range deps {
 		appA := dep.Self.Name
@@ -214,13 +214,13 @@ func (v *IntsDiagramVisitor) buildClusterForStateView(deps map[string]AppDepende
 		v.VarManagerForTopState(k)
 		strSet := MakeStrSet(clusters[k]...)
 		for _, m := range strSet.ToSortedSlice() {
-			v.VarManagerForState(k + " : " + m)
+			v.VarManagerForEPA(k + " : " + m)
 		}
 		v.stringBuilder.WriteString("}\n")
 	}
 }
 
-func (v *IntsDiagramVisitor) buildClusterForComponentView(apps []string) map[string]string {
+func (v *IntsDiagramVisitor) buildClusterForIntsView(apps []string) map[string]string {
 	nameMap := map[string]string{}
 	clusters := map[string][]string{}
 	for _, v := range apps {
@@ -250,7 +250,7 @@ func (v *IntsDiagramVisitor) buildClusterForComponentView(apps []string) map[str
 	return nameMap
 }
 
-func (v *IntsDiagramVisitor) generateStateView(viewParams viewParams, params *IntsParam) string {
+func (v *IntsDiagramVisitor) generateEPAView(viewParams viewParams, params *IntsParam) string {
 	v.stringBuilder.WriteString("@startuml\n")
 	if viewParams.diagramTitle != "" {
 		fmt.Fprintf(v.stringBuilder, "title %s\n", viewParams.diagramTitle)
@@ -267,7 +267,7 @@ func (v *IntsDiagramVisitor) generateStateView(viewParams viewParams, params *In
 		fmt.Fprintf(v.stringBuilder, "  ArrowColor<<indirect>> %s\n", viewParams.indirectArrowColor)
 	}
 	v.stringBuilder.WriteString("}\n")
-	v.buildClusterForStateView(params.integrations, viewParams.restrictBy)
+	v.buildClusterForEPAView(params.integrations, viewParams.restrictBy)
 	var processed []string
 	for _, dep := range params.integrations {
 		appA := dep.Self.Name
@@ -326,15 +326,15 @@ func (v *IntsDiagramVisitor) generateStateView(viewParams viewParams, params *In
 		epBClient := epB + " client"
 
 		if appA != appB {
+			if label != "" {
+				label = " : " + label
+			}
 			if isPubSub {
-				if label != "" {
-					label = " : " + label
-				}
 				fmt.Fprintf(
 					v.stringBuilder,
-					"%s -%s> %s%s\n", v.VarManagerForState(appA+" : "+epA),
+					"%s -%s> %s%s\n", v.VarManagerForEPA(appA+" : "+epA),
 					"[#blue]",
-					v.VarManagerForState(appB+" : "+epB),
+					v.VarManagerForEPA(appB+" : "+epB),
 					label,
 				)
 			} else {
@@ -347,17 +347,17 @@ func (v *IntsDiagramVisitor) generateStateView(viewParams viewParams, params *In
 				fmt.Fprintf(
 					v.stringBuilder,
 					"%s -%s> %s\n",
-					v.VarManagerForState(appA+" : "+epA),
+					v.VarManagerForEPA(appA+" : "+epA),
 					color,
-					v.VarManagerForState(appA+" : "+epBClient),
+					v.VarManagerForEPA(appA+" : "+epBClient),
 				)
 				if !stringInSlice(flow, processed) {
 					fmt.Fprintf(
 						v.stringBuilder,
-						"%s -%s> %s : %s\n",
-						v.VarManagerForState(appA+" : "+epBClient),
+						"%s -%s> %s%s\n",
+						v.VarManagerForEPA(appA+" : "+epBClient),
 						"[#black]",
-						v.VarManagerForState(appB+" : "+epB),
+						v.VarManagerForEPA(appB+" : "+epB),
 						label,
 					)
 					processed = append(processed, flow)
@@ -373,9 +373,9 @@ func (v *IntsDiagramVisitor) generateStateView(viewParams viewParams, params *In
 			fmt.Fprintf(
 				v.stringBuilder,
 				"%s -%s> %s%s\n",
-				v.VarManagerForState(appA+" : "+epA),
+				v.VarManagerForEPA(appA+" : "+epA),
 				color,
-				v.VarManagerForState(appB+" : "+epB),
+				v.VarManagerForEPA(appB+" : "+epB),
 				label,
 			)
 		}
@@ -385,7 +385,7 @@ func (v *IntsDiagramVisitor) generateStateView(viewParams viewParams, params *In
 
 }
 
-func (v *IntsDiagramVisitor) drawComponentView(viewParams viewParams, params *IntsParam, nameMap map[string]string) {
+func (v *IntsDiagramVisitor) drawIntsView(viewParams viewParams, params *IntsParam, nameMap map[string]string) {
 	callsDrawn := map[AppPair]struct{}{}
 	if viewParams.endptAttrs["view"].GetS() == "system" {
 		v.drawSystemView(viewParams, params, nameMap)
@@ -478,7 +478,7 @@ func (v *IntsDiagramVisitor) drawSystemView(viewParams viewParams, params *IntsP
 	}
 }
 
-func (v *IntsDiagramVisitor) generateComponentView(args *Args, viewParams viewParams, params *IntsParam) string {
+func (v *IntsDiagramVisitor) generateIntsView(args *Args, viewParams viewParams, params *IntsParam) string {
 
 	v.stringBuilder.WriteString("@startuml\n")
 	if viewParams.diagramTitle != "" {
@@ -498,9 +498,9 @@ func (v *IntsDiagramVisitor) generateComponentView(args *Args, viewParams viewPa
 	v.stringBuilder.WriteString("}\n")
 	nameMap := map[string]string{}
 	if args.clustered || viewParams.endptAttrs["view"].GetS() == "clustered" {
-		nameMap = v.buildClusterForComponentView(params.apps)
+		nameMap = v.buildClusterForIntsView(params.apps)
 	}
-	v.drawComponentView(viewParams, params, nameMap)
+	v.drawIntsView(viewParams, params, nameMap)
 	v.stringBuilder.WriteString("@enduml")
 	return v.stringBuilder.String()
 }
@@ -542,9 +542,9 @@ func GenerateView(args *Args, params *IntsParam, mod *sysl.Module) string {
 	v.stringBuilder.WriteString(PumlHeader)
 
 	if args.epa || endptAttrs["view"].GetS() == "epa" {
-		return v.generateStateView(*viewParams, params)
+		return v.generateEPAView(*viewParams, params)
 	}
-	return v.generateComponentView(args, *viewParams, params)
+	return v.generateIntsView(args, *viewParams, params)
 }
 
 func stringInSlice(a string, list []string) bool {

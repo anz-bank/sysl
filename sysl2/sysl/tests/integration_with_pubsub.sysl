@@ -6,7 +6,7 @@ Systema:
     Systemb -> endpoint: ...
 
 Project [appfmt="%(appname)", epfmt="<%(epname)>"]:
-    _:
+    pubsub:
         Systemb
 
 Systemb:

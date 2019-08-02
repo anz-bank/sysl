@@ -69,7 +69,7 @@ func TestVarManagerForComponentWithExistingName(t *testing.T) {
 	assert.Equal(t, "_1", result)
 }
 
-func TestVarManagerForState(t *testing.T) {
+func TestVarManagerForEPA(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -88,13 +88,13 @@ func TestVarManagerForState(t *testing.T) {
 	}
 
 	//When
-	result := v.VarManagerForState("a : b")
+	result := v.VarManagerForEPA("a : b")
 
 	//Then
 	assert.Equal(t, "_0", result)
 }
 
-func TestVarManagerForStateWithExistingName(t *testing.T) {
+func TestVarManagerForEPAWithExistingName(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -121,7 +121,7 @@ func TestVarManagerForStateWithExistingName(t *testing.T) {
 	}
 
 	//When
-	result := v.VarManagerForState("a : b")
+	result := v.VarManagerForEPA("a : b")
 
 	//Then
 	assert.Equal(t, "_1", result)
@@ -165,7 +165,7 @@ func TestVarManagerForTopStateWithExistingName(t *testing.T) {
 	assert.Equal(t, "_1", result)
 }
 
-func TestBuildClusterForStateView(t *testing.T) {
+func TestBuildClusterForIntsView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -196,8 +196,8 @@ func TestBuildClusterForStateView(t *testing.T) {
 		topSymbols:   map[string]*_topVar{},
 		symbols:      map[string]*_var{},
 	}
-	deps := map[string]AppDependency{
-		"a:epa:b:epb": {
+	deps := []AppDependency{
+		{
 			Self: AppElement{
 				Name:     "a",
 				Endpoint: "epa",
@@ -210,7 +210,7 @@ func TestBuildClusterForStateView(t *testing.T) {
 	}
 
 	//When
-	v.buildClusterForStateView(deps, "")
+	v.buildClusterForEPAView(deps, "")
 
 	//Then
 	assert.Equal(t, `state "" as X_0 {
@@ -236,7 +236,7 @@ func TestBuildClusterForComponentView(t *testing.T) {
 	apps := []string{"a :: A", "a :: A", "b :: B", "c :: C"}
 
 	//When
-	v.buildClusterForComponentView(apps)
+	v.buildClusterForIntsView(apps)
 
 	//Then
 	assert.Equal(t, `package "a" {
@@ -245,12 +245,12 @@ func TestBuildClusterForComponentView(t *testing.T) {
 `, v.stringBuilder.String())
 }
 
-func TestGenerateComponentView(t *testing.T) {
+func TestGenerateIntsView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	viewParams := &viewParams{}
-	deps := map[string]AppDependency{
-		"a:epa:b:epb": {
+	deps := []AppDependency{
+		{
 			Self: AppElement{
 				Name:     "a",
 				Endpoint: "epa",
@@ -295,7 +295,7 @@ func TestGenerateComponentView(t *testing.T) {
 	}
 
 	//When
-	v.generateComponentView(args, *viewParams, params)
+	v.generateIntsView(args, *viewParams, params)
 
 	//Then
 	assert.Equal(t, `@startuml
@@ -312,7 +312,7 @@ _0 --> _1 <<indirect>>
 @enduml`, v.stringBuilder.String())
 }
 
-func TestGenerateStateView(t *testing.T) {
+func TestGenerateEPAView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	stmts := []*sysl.Statement{
@@ -333,8 +333,8 @@ func TestGenerateStateView(t *testing.T) {
 		arrowColor:         "red",
 		indirectArrowColor: "grey",
 	}
-	deps := map[string]AppDependency{
-		"a:epa:b:epb": {
+	deps := []AppDependency{
+		{
 			Self: AppElement{
 				Name:     "a",
 				Endpoint: "epa",
@@ -393,7 +393,7 @@ func TestGenerateStateView(t *testing.T) {
 	}
 
 	//When
-	v.generateStateView(*viewParams, params)
+	v.generateEPAView(*viewParams, params)
 
 	//Then
 	assert.Equal(t, `@startuml
@@ -417,14 +417,14 @@ state "test" as X_1 {
   state "test" as _2
 }
 _0 -[#grey]-> _1
-_1 -[#black]> _2 : 
+_1 -[#black]> _2
 @enduml`, v.stringBuilder.String())
 }
 
 func TestGenerateView(t *testing.T) {
 	//Given
-	deps := map[string]AppDependency{
-		"a:epa:b:epb": {
+	deps := []AppDependency{
+		{
 			Self: AppElement{
 				Name:     "a",
 				Endpoint: "epa",
@@ -505,8 +505,8 @@ func TestDrawSystemView(t *testing.T) {
 			},
 		},
 	}
-	deps := map[string]AppDependency{
-		"a:epa:b:epb": {
+	deps := []AppDependency{
+		{
 			Self: AppElement{
 				Name:     "a",
 				Endpoint: "epa",
@@ -543,7 +543,7 @@ _1 --> _2 <<indirect>>
 func TestMakeIntsParam(t *testing.T) {
 	p := &IntsParam{[]string{"a"},
 		map[string]struct{}{},
-		map[string]AppDependency{},
+		[]AppDependency{},
 		&sysl.Application{}, &sysl.Endpoint{}}
 
 	assert.NotNil(t, p)
