@@ -7,7 +7,7 @@ System :: a:
     endpoint: ...
 
 Project [appfmt="%(appname)"]:
-    _:
+    cluster:
         IntegratedSystem
         System :: a
         System :: b

@@ -7,7 +7,7 @@ Systema:
     endpoint: ...
 
 Project [appfmt="%(appname)"]:
-    _:
+    matched:
         IntegratedSystem
         Systema
         Systemb

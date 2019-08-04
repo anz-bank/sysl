@@ -1,0 +1,38 @@
+IntegratedSystem:
+    integrated_endpoint_1:
+        System_a <- endpoint
+
+    integrated_endpoint_3: ...
+
+    integrated_endpoint_2:
+        System_b <- endpoint
+
+System_a:
+    endpoint:
+        System_b <- endpoint
+
+    endpoint_2:
+        IntegratedSystem <- integrated_endpoint_3
+
+System_b:
+    endpoint: ...
+    endpoint2:
+      System_c <- endpoint2
+
+System_c:
+    endpoint: ...
+    endpoint2: ...
+
+Project [appfmt="%(appname)", epfmt="%(epname)", indirect_arrow_color="silver"]:
+
+    all:
+      IntegratedSystem
+      System_a
+      System_b
+      System_c
+
+    indirect_arrow:
+        IntegratedSystem
+
+    my_callers:
+        System_a

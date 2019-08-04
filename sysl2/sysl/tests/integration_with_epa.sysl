@@ -7,7 +7,7 @@ Systema:
     endpoint: ...
 
 Project [appfmt="%(appname)", epfmt="<%(epname)%(needs_int? needsInt)>"]:
-    _:
+    epa:
         IntegratedSystem
         Systema
         Systemb
