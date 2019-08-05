@@ -439,8 +439,8 @@ func TestGenerateStateViewWhenLabelIsNotNil(t *testing.T) {
 	viewParams := &viewParams{
 		diagramTitle: "test",
 	}
-	deps := map[string]AppDependency{
-		"a:epa:b:epb": {
+	deps := []AppDependency{
+		{
 			Self: AppElement{
 				Name:     "a",
 				Endpoint: "epa",
@@ -507,7 +507,7 @@ func TestGenerateStateViewWhenLabelIsNotNil(t *testing.T) {
 	}
 
 	//When
-	v.generateStateView(*viewParams, params)
+	v.generateEPAView(*viewParams, params)
 
 	//Then
 	assert.Equal(t, `@startuml

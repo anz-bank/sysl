@@ -35,7 +35,7 @@ skinparam state {
 
 type IntsParam struct {
 	apps         []string
-	drawableApps map[string]struct{}
+	drawableApps StrSet
 	integrations []AppDependency
 	app          *sysl.Application
 	endpt        *sysl.Endpoint
@@ -51,7 +51,7 @@ type Args struct {
 type IntsDiagramVisitor struct {
 	mod           *sysl.Module
 	stringBuilder *strings.Builder
-	drawableApps  map[string]struct{}
+	drawableApps  StrSet
 	symbols       map[string]*_var
 	topSymbols    map[string]*_topVar
 	project       string
@@ -78,7 +78,7 @@ type viewParams struct {
 
 func MakeIntsDiagramVisitor(
 	mod *sysl.Module, stringBuilder *strings.Builder,
-	drawableApps map[string]struct{}, project string,
+	drawableApps StrSet, project string,
 ) *IntsDiagramVisitor {
 	return &IntsDiagramVisitor{
 		mod:           mod,
@@ -400,13 +400,9 @@ func (v *IntsDiagramVisitor) drawIntsView(viewParams viewParams, params *IntsPar
 				Self:   appA,
 				Target: appB,
 			}
-			var direct []string
-			if _, ok := params.drawableApps[appA]; ok {
-				direct = append(direct, appA)
-			}
-			if _, ok := params.drawableApps[appB]; ok {
-				direct = append(direct, appB)
-			}
+			var direct StrSet
+			apps := MakeStrSet(appA, appB)
+			direct = apps.Intersection(params.drawableApps)
 			if _, ok := callsDrawn[appPair]; !ok {
 				if len(direct) > 0 || direct != nil || viewParams.indirectArrowColor != ArrowColorNone {
 					indirect := ""
