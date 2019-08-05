@@ -1,16 +1,14 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
 	"github.com/sirupsen/logrus"
-	log "github.com/sirupsen/logrus"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 //nolint:gochecknoglobals
@@ -22,67 +20,56 @@ var defaultLevel = map[string]logrus.Level{
 	"warn":  logrus.WarnLevel,
 }
 
+const debug string = "debug"
+
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string) error {
-	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
-
-	switch filepath.Base(args[0]) {
-	case "syslgen":
-		return DoGenerateCode(flags, args)
+	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
+	textpbParams, err1 := configureCmdlineForPb(sysl)
+	if err1 != nil {
+		return err1
+	}
+	codegenParams := configureCmdlineForCodegen(sysl)
+	sequenceParams := configureCmdlineForSeqdiaggen(sysl)
+	intgenParams := configureCmdlineForIntgen(sysl)
+	var selectedCommand string
+	var err error
+	if selectedCommand, err = sysl.Parse(args[1:]); err != nil {
+		return err
+	}
+	switch selectedCommand {
+	case "pb":
+		return doGeneratePb(textpbParams)
+	case "gen":
+		output := GenerateCode(codegenParams)
+		return outputToFiles(*codegenParams.outDir, output)
 	case "sd":
-		return DoGenerateSequenceDiagrams(args)
-	case "ints":
-		return DoGenerateIntegrations(args)
-	}
-	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
-	output := flags.String("o", "", "output file name")
-	mode := flags.String("mode", "textpb", "output mode")
-	loglevel := flags.String("log", "warn", "log level[debug,info,warn,off]")
-
-	//nolint:errcheck
-	flags.Parse(args[1:])
-	if err := flags.Parse(args[1:]); err != nil {
-		return err
-	}
-
-	switch *mode {
-	case "", "textpb", "json":
-	default:
-		return fmt.Errorf("invalid -mode %#v", *mode)
-	}
-
-	if level, has := defaultLevel[*loglevel]; has {
-		logrus.SetLevel(level)
-	} else {
-		return fmt.Errorf("invalid -log %#v", *loglevel)
-	}
-
-	filename := flags.Arg(0)
-
-	log.Infof("Args: %v\n", flags.Args())
-	log.Infof("Root: %s\n", *root)
-	log.Infof("Module: %s\n", filename)
-	log.Infof("Mode: %s\n", *mode)
-	log.Infof("Log Level: %s\n", *loglevel)
-	format := strings.ToLower(*output)
-	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
-	log.Infof("%s\n", filename)
-	mod, err := parse.Parse(filename, *root)
-	if err != nil {
-		return err
-	}
-	if mod != nil {
-		if toJSON {
-			if *output == "-" {
-				return pbutil.FJSONPB(log.StandardLogger().Out, mod)
+		result, err := DoConstructSequenceDiagrams(sequenceParams)
+		if err != nil {
+			return err
+		}
+		for k, v := range result {
+			if err := OutputPlantuml(k, *sequenceParams.plantuml, v); err != nil {
+				return err
 			}
-			return pbutil.JSONPB(mod, *output)
 		}
-		if *output == "-" {
-			return pbutil.FTextPB(log.StandardLogger().Out, mod)
+		return nil
+	case "ints":
+		r, err := GenerateIntegrations(intgenParams)
+		if err != nil {
+			return err
 		}
-		return pbutil.TextPB(mod, *output)
+		for k, v := range r {
+			if *intgenParams.verbose {
+				fmt.Println(k)
+			}
+			err := OutputPlantuml(k, *intgenParams.plantuml, v)
+			if err != nil {
+				return fmt.Errorf("plantuml drawing error: %v", err)
+			}
+		}
+		return nil
 	}
 	return nil
 }
@@ -93,7 +80,7 @@ func main3(args []string) error {
 func main2(args []string, main3 func(args []string) error,
 ) int {
 	if err := main3(args); err != nil {
-		log.Errorln(err.Error())
+		logrus.Errorln(err.Error())
 		if err, ok := err.(parse.Exit); ok {
 			return err.Code
 		}
@@ -107,4 +94,71 @@ func main() {
 	if rc := main2(os.Args, main3); rc != 0 {
 		os.Exit(rc)
 	}
+}
+
+func configureCmdlineForPb(sysl *kingpin.Application) (*CmdContextParamPbgen, error) {
+	textpb := sysl.Command("pb", "Generate textpb/json")
+	returnValues := &CmdContextParamPbgen{}
+
+	returnValues.root = textpb.Flag("root",
+		"sysl root directory for input model file (default: .)",
+	).Default(".").String()
+
+	returnValues.output = textpb.Flag("output", "output file name").Short('o').String()
+	returnValues.mode = textpb.Flag("mode", "output mode").Default("textpb").String()
+
+	returnValues.loglevel = textpb.Flag("log",
+		"log level[debug,info,warn,off]").Default("warn").String()
+
+	returnValues.verbose = textpb.Flag("verbose", "show output").Short('v').Default("false").Bool()
+
+	returnValues.modules = textpb.Arg("modules", "input files without .sysl extension and with leading /, eg: "+
+		"/project_dir/my_models combine with --root if needed",
+	).String()
+
+	switch *returnValues.mode {
+	case "", "textpb", "json":
+	default:
+		return nil, fmt.Errorf("invalid -mode %#v", *returnValues.mode)
+	}
+
+	return returnValues, nil
+}
+
+func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
+	logrus.Infof("Root: %s\n", *textpbParams.root)
+	logrus.Infof("Module: %s\n", *textpbParams.modules)
+	logrus.Infof("Mode: %s\n", *textpbParams.mode)
+	logrus.Infof("Log Level: %s\n", *textpbParams.loglevel)
+
+	format := strings.ToLower(*textpbParams.output)
+	toJSON := *textpbParams.mode == "json" || *textpbParams.mode == "" && strings.HasSuffix(format, ".json")
+	logrus.Infof("%s\n", *textpbParams.modules)
+	mod, err := parse.Parse(*textpbParams.modules, *textpbParams.root)
+
+	if *textpbParams.verbose {
+		*textpbParams.loglevel = debug
+	}
+	if level, has := defaultLevel[*textpbParams.loglevel]; has {
+		logrus.SetLevel(level)
+	} else {
+		return fmt.Errorf("invalid -log %#v", *textpbParams.loglevel)
+	}
+
+	if err != nil {
+		return err
+	}
+	if mod != nil {
+		if toJSON {
+			if *textpbParams.output == "-" {
+				return pbutil.FJSONPB(logrus.StandardLogger().Out, mod)
+			}
+			return pbutil.JSONPB(mod, *textpbParams.output)
+		}
+		if *textpbParams.output == "-" {
+			return pbutil.FTextPB(logrus.StandardLogger().Out, mod)
+		}
+		return pbutil.TextPB(mod, *textpbParams.output)
+	}
+	return nil
 }

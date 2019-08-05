@@ -32,3 +32,56 @@ type AppLabeler interface {
 type VarManager interface {
 	UniqueVarForAppName(appName string) string
 }
+
+type CmdContextParamCodegen struct {
+	rootModel     *string
+	model         *string
+	rootTransform *string
+	transform     *string
+	grammar       *string
+	start         *string
+	outDir        *string
+	verbose       *bool
+	loglevel      *string
+}
+
+type CmdContextParamPbgen struct {
+	root     *string
+	output   *string
+	mode     *string
+	modules  *string
+	verbose  *bool
+	loglevel *string
+}
+
+type CmdContextParamSeqgen struct {
+	root           *string
+	endpointFormat *string
+	appFormat      *string
+	title          *string
+	output         *string
+	modulesFlag    *string
+	endpointsFlag  *[]string
+	appsFlag       *[]string
+	blackboxesFlag *map[string]string
+	blackboxes     *[][]string
+	plantuml       *string
+	loglevel       *string
+	verbose        *bool
+	group          *string
+}
+
+type CmdContextParamIntgen struct {
+	root      *string
+	title     *string
+	output    *string
+	project   *string
+	filter    *string
+	modules   *string
+	exclude   *[]string
+	clustered *bool
+	epa       *bool
+	plantuml  *string
+	verbose   *bool
+	loglevel  *string
+}
