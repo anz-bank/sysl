@@ -1,0 +1,46 @@
+SystemApp_1 [package='', version="1.1.1"]:
+    FooEndpoint:
+        SystemApp_2 <- BarEndpoint
+
+SystemApp_2[location="cloud"]:
+    BarEndpoint (request <: SystemApp_1.SomeType):
+        ExternalApi <- Endpoint
+        ExternalApi_1 <- GET /foo
+        if value == one:
+            do something
+        else if value == two:
+            do something else
+        else:
+            return ok
+
+ExternalApi[location="onpremise"]:
+    Endpoint:
+        ...
+
+    !type Request:
+        id <: int
+        val <: string
+    !type Response:
+        val <: string
+
+ExternalApi_1[location="onpremise"]:
+    /foo:
+        GET:
+            ...
+
+Project :: Sequences:
+
+    SEQ-One[groupby="location"]:
+        SystemApp_1 <- FooEndpoint
+
+    SEQ-Two:
+        SystemApp_2 <- BarEndpoint
+
+SystemApp_1[location="cloud"]:
+    .. * <- *:
+        FooEndpoint [some_id="project_id"]
+        SystemApp_2 <- BarEndpoint [some_id="project_id"]
+
+ExternalApi_1:
+    .. * <- *:
+        GET /foo [some_id="project_id"]

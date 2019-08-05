@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -222,7 +222,7 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 	testHook := test.NewGlobal()
 	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB=call to database",
 		"-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
-	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
+	assert.Equal(t, log.WarnLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "blackbox 'Server <- DB' passed on commandline not hit\n", testHook.LastEntry().Message)
 	testHook.Reset()
 }
@@ -231,7 +231,7 @@ func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
 	testHook := test.NewGlobal()
 	main2([]string{"sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB",
 		"-b", "Server <- Login", "tests/call.sysl"}, main3)
-	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, log.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "expected KEY=VALUE got 'Server <- DB'", testHook.LastEntry().Message)
 	testHook.Reset()
 }
@@ -239,7 +239,7 @@ func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
 func TestMain2WithBlackboxSysl(t *testing.T) {
 	testHook := test.NewGlobal()
 	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Sequences"}, main3)
-	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
+	assert.Equal(t, log.WarnLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "blackbox 'SomeApp <- AppEndpoint' not hit in app 'Project :: Sequences'\n",
 		testHook.Entries[len(testHook.Entries)-1].Message)
 	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint1' not hit in app 'Project :: Sequences :: SEQ-Two'\n",
@@ -252,7 +252,7 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
 	testHook := test.NewGlobal()
 	main2([]string{"sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Integrations"}, main3)
-	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, log.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "No call statements to build sequence diagram for endpoint PROJECT-E2E", testHook.LastEntry().Message)
 	testHook.Reset()
 }
@@ -265,6 +265,32 @@ func TestMain2Fatal(t *testing.T) {
 	assert.Equal(t, 42, main2(nil, func(_ []string) error {
 		return exitf(42, "Exit error")
 	}))
-	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, log.ErrorLevel, testHook.LastEntry().Level)
 	testHook.Reset()
+}
+
+func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-s", "MobileApp <- Login", "-g", "-o", "tests/call.png", "tests/call.sysl"}, main3)
+	assert.Equal(t, log.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "expected argument for flag '-g'", testHook.LastEntry().Message)
+	testHook.Reset()
+}
+
+func TestMain2WithGroupingParamsCommandline(t *testing.T) {
+	main2([]string{"sd", "-s", "MobileApp <- Login", "-g", "owner", "-o", "tests/call.png", "tests/call.sysl"}, main3)
+	_, err := os.Stat("tests/call.png")
+	assert.True(t, err == nil)
+}
+
+func TestMain2WithGroupingParamsSysl(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sd", "-g", "location", "-o", "%(epname).png", "tests/groupby.sysl", "-a", "Project :: Sequences"},
+		main3)
+	_, err1 := os.Stat("SEQ-One.png")
+	assert.True(t, err1 == nil)
+	assert.Equal(t, log.WarnLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "Ignoring groupby passed from command line", testHook.LastEntry().Message)
+	_, err2 := os.Stat("SEQ-Two.png")
+	assert.True(t, err2 == nil)
 }
