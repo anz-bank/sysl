@@ -1,0 +1,47 @@
+System_a:
+    endpoint:
+        System_b <- endpoint
+
+System_b:
+    endpoint:
+      System_c <- endpoint
+
+    endpoint_2:
+      System_e <- endpoint
+
+System_c:
+    endpoint:
+      System_d <- endpoint
+
+    endpoint_2: ...
+
+System_d:
+    endpoint: ...
+
+System_e:
+    endpoint:
+      System_c <- endpoint_2
+
+Project [appfmt="%(appname)", epfmt="%(epname)", indirect_arrow_color="silver"]:
+
+    all_indirect_2:
+        System_a
+        System_b
+        System_c
+        System_d
+        System_e
+
+    no_passthrough:
+        System_a
+
+    passthrough_b [passthrough=["System_b"]]:
+        System_a
+
+    passthrough_c [passthrough=["System_c"]]:
+        System_a
+
+    passthrough_d [passthrough=["System_d"]]:
+        System_a
+
+    passthrough_c_e [passthrough=["System_c", "System_e"]]:
+        System_a

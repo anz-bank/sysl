@@ -10,5 +10,5 @@ System2:
     endpoint: ...
 
 Project [appfmt="%(appname)"]:
-    _ [passthrough=["System1"]]:
+    passthrough [passthrough=["System1"]]:
         IntegratedSystem
