@@ -243,19 +243,20 @@ func GenerateCode(rootModel, model, rootTransform, transform, grammar, start str
 	}
 
 	grammarSysl, err := loadGrammar(grammar)
-	if err != nil {
-		panic(err)
-	}
+	if err == nil {
+		validator := NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
+		validator.Validate(start)
 
-	validator := NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-	validator.Validate(start)
-
-	for viewName, messages := range validator.GetMessages() {
-		NewMsg(TitleViewName, []string{viewName}).logMsg()
-		for _, message := range messages {
-			message.logMsg()
+		for viewName, messages := range validator.GetMessages() {
+			NewMsg(TitleViewName, []string{viewName}).logMsg()
+			for _, message := range messages {
+				message.logMsg()
+			}
 		}
+	}else {
+		NewMsg(WarnValidationSkipped, []string{err.Error()}).logMsg()
 	}
+
 
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {

@@ -37,6 +37,7 @@ const (
 	ErrRedefined               = 409
 
 	WarnValidatedWithWarn = 300
+	WarnValidationSkipped = 301
 
 	InfoValidatedSuccessfully = 200
 	TitleViewName             = 999
@@ -57,6 +58,7 @@ var (
 		ErrRedefined:               "In view (%s), (%s) is already defined",
 
 		WarnValidatedWithWarn: "Validated with warnings",
+		WarnValidationSkipped: "Validation skipped. Reason: %s",
 
 		InfoValidatedSuccessfully: "Validation success",
 
@@ -76,6 +78,7 @@ var (
 		ErrRedefined:               ERROR,
 
 		WarnValidatedWithWarn: WARN,
+		WarnValidationSkipped: WARN,
 
 		InfoValidatedSuccessfully: INFO,
 		TitleViewName:             TITLE,
