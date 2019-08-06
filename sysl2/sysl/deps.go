@@ -19,7 +19,3 @@ type AppDependency struct {
 func (dep *AppDependency) String() string {
 	return fmt.Sprintf("%s:%s:%s:%s", dep.Self.Name, dep.Self.Endpoint, dep.Target.Name, dep.Target.Endpoint)
 }
-
-func MakeAppElement(name, endpoint string) AppElement {
-	return AppElement{name, endpoint}
-}
