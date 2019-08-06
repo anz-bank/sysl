@@ -241,7 +241,7 @@ class RamlTranslator:
 
         def _addReturn(methodRaml):
             def _buildReturn(responsesRaml):
-                for rcName, rcSpec in methodRaml['responses'].iteritems():
+                for rcName, rcSpec in sorted(methodRaml['responses'].iteritems()):
                         if rcSpec:
                             if rcSpec.get('body', None) and \
                             rcSpec.get('body').get('application/json', None) and \
@@ -379,14 +379,23 @@ class RamlTranslator:
         _visitAndDecodeAllEndpoints(raml)
 
     def schemaFileNameToType(self, fname):
-        if fname[0].isupper():
+        if not fname:
+            return None
+        if fname.endswith('.json'):
+            fname = os.path.basename(fname)
+            fname = fname.replace(".json", "")
+            fname = fname.replace("-", " ")
+            fname = fname.title()
+            fname = fname.replace(" ", "")
             return fname
-        fname = os.path.basename(fname)
-        fname = fname.replace(".json", "")
-        fname = fname.replace("-", " ")
-        fname = fname.title()
-        fname = fname.replace(" ", "")
-        return fname
+
+        if '/' in fname:
+            if '#' in fname:
+                return fname[(fname.rfind('/')+1):]
+            else:
+                assert False
+        else:
+            return fname
 
     def writeDefs(self, raml, raml_path, w):
         #TODO(kirkpatg) budgeting-presentation: ErrorItem was not dragged in
@@ -426,55 +435,56 @@ class RamlTranslator:
                     self.warn('%s type has multiple definitions:\nold\t%s\nnew\t%s' % (typeName, includedSchemas[typeName], pathToSchema))
                 return
 
+            assert pathToSchema.count('#') <= 1, "Malformed schema path: {}".format(pathToSchema)
+                
             includedSchemas[typeName] = pathToSchema
 
-            def _callInclude(fspec):
-                # An internal reference
+            def _nextInclude(fspec):
+                tn = fspec[fspec.rfind('/')+1:]
+                pts = os.path.join(os.path.dirname(pathToSchema.split('#')[0]), fspec)
+                
                 if fspec.startswith('#'):
-                    _includeAllSchemas(fspec[fspec.rfind('/')+1:], pathToSchema + fspec, \
-                        includedSchemas, pathToSchema)
-                # An externally referenced name
-                elif '#' in fspec:
-                    _includeAllSchemas(fspec[fspec.rfind('/')+1:], 
-                        os.path.join(os.path.dirname(pathToSchema), fspec), 
-                        includedSchemas, pathToSchema)
-                # An externally referenced file
+                    pts = pathToSchema.split('#')[0] + fspec
                 else:
-                    _includeAllSchemas(self.schemaFileNameToType(os.path.basename(fspec)), \
-                        os.path.join(os.path.dirname(pathToSchema), fspec), 
-                        includedSchemas, pathToSchema)
+                    tn = self.schemaFileNameToType(os.path.basename(fspec))
+                    
+                _includeAllSchemas(tn, pts, includedSchemas, pathToSchema)
 
             def _includeArraySchema(tspec):
                 assert 'items' in tspec, "This is not an array: {}".format(tspec)
 
                 if '$ref' in tspec['items']:
-                    _callInclude(tspec['items']['$ref'])
+                    _nextInclude(tspec['items']['$ref'])
                     
             with open(fileName, 'r') as f:
                 tspec = json.load(f)
                 
+                baseSpec = tspec
+                if len(anchor) == 1:
+                    baseSpec = tspec[anchor[0]]
+                elif len(anchor) == 2:
+                    baseSpec = tspec[anchor[0]][anchor[1]]
+                elif len(anchor) != 0:
+                    assert False
+
+                if '$ref' in baseSpec:
+                    assert False
+                    _nextInclude(baseSpec['$ref'])
+
                 # Schemas embedded in properties
-                if tspec.get('type', None) == 'object':
-                    properties = dict()
-                    if len(anchor) == 0:
-                        properties = tspec.get('properties', None)
-                    elif len(anchor) == 1:
-                        properties = tspec[anchor[0]].get('properties', None)
-                    elif len(anchor) == 2:
-                        properties = tspec[anchor[0]][anchor[1]].get('properties', None)
+                elif baseSpec.get('type', None) == 'object':
+                    if baseSpec.get('extends', None):
+                        _nextInclude(baseSpec['extends']['$ref'])
                     else:
-                        assert False
-                    if properties:
-                        for (fname, fspec) in properties.iteritems():
+                        for (fname, fspec) in baseSpec['properties'].iteritems():
                             if '$ref' in fspec:
-                                _callInclude(fspec['$ref'])
-                            
+                                _nextInclude(fspec['$ref'])
                             # Schemas embedded in arrays in properties
                             if fspec.get('type', None) == 'array':
                                 _includeArraySchema(fspec)
                             
                 # Schemas embedded in top-level arrays
-                if tspec.get('type', None) == 'array':
+                elif tspec.get('type', None) == 'array':
                     _includeArraySchema(tspec)
                 
         def _processSchema(pathToSchema, tname, w):
@@ -510,13 +520,13 @@ class RamlTranslator:
                     assert False
 
             def _extractSingleProperty(fspec, fname, tname, requiredFields):
+
                 niceNameFspec = fspec
                 if '$ref' in fspec:
                     niceNameFspec = dict(fspec)
                     niceNameFspec['$ref'] = self.schemaFileNameToType(fspec['$ref'])
                 
                 (ftype, fdescr) = self.parse_typespec(niceNameFspec, fname, tname)
-                
                 w(getfields(fname, ftype, (fname in requiredFields)))
                 with w.indent():
                     w(self.getTag(fname, 'json_tag'))
@@ -525,7 +535,7 @@ class RamlTranslator:
 
                     # Add everything else
                     for k, v in fspec.iteritems():
-                        if k in {'$ref', 'description', 'type'}:
+                        if k in {'$ref', 'description', 'type', 'items', 'properties'}:
                             continue
                         else:
                             w('@{} = "{}"', k, v)
@@ -540,11 +550,9 @@ class RamlTranslator:
 
                 with w.indent():
                     if 'extends' in propSchema:
-                        w(getfields('extends', \
-                            self.schemaFileNameToType(propSchema['extends']['$ref']), True))
-                        with w.indent():
-                            if 'description' in propSchema:
-                                w('@description = "{}"', propSchema['description'])
+                        w('@extends = "{}"', self.schemaFileNameToType(propSchema['extends']['$ref']))
+                        if 'description' in propSchema:
+                            w('@description = "{}"', propSchema['description'])
 
                     if 'properties' not in propSchema:
                         return
@@ -575,7 +583,9 @@ class RamlTranslator:
                         with w.indent():
                             _extractSingleProperty(loadedSchema, 'value', tname, ['value'])
                     else:
-                        _extractSingleProperty(loadedSchema, 'value', tname, [])
+                        w('!alias {}:', tname)
+                        with w.indent():
+                            _extractSingleProperty(loadedSchema, 'value', tname, ['value'])
 
                 # Types 1 or 4:
                 if 'type' in loadedSchema:
@@ -630,6 +640,7 @@ class RamlTranslator:
                                 ftypeSyntax)
                             w(fields)
                             with w.indent():
+                                
                                 w(self.getTag(k, 'json_tag'))
                 else:
                     w('!alias EXTERNAL_{}:', typeName)
@@ -696,7 +707,7 @@ class RamlTranslator:
             return (t, descr)
 
         fmt = tspec.get('format')
-        ref = tspec.get('$ref')
+        ref = self.schemaFileNameToType(tspec.get('$ref'))
 
         if fmt is not None and fmt not in SWAGGER_FORMATS:
             self.error('Invalid format: %s at %s -> %s' % (fmt, typeRef, parentRef))
