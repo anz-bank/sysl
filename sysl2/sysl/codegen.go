@@ -253,7 +253,7 @@ func GenerateCode(rootModel, model, rootTransform, transform, grammar, start str
 				message.logMsg()
 			}
 		}
-	}else {
+	} else {
 		NewMsg(WarnValidationSkipped, []string{err.Error()}).logMsg()
 	}
 
