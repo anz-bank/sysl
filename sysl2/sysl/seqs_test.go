@@ -232,7 +232,7 @@ func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
 
 	// When
 	_, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes)
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
 	assert.Error(t, err)
 }
 
