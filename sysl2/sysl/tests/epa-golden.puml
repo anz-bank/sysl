@@ -24,7 +24,7 @@ state "Systemb" as X_2 <<highlight>> {
   state "endpoint" as _3 <<highlight>>
 }
 _1 -[#silver]-> _0
-_0 -[#black]> _2 : <epa needsInt>
+_0 -[#black]> _2 : < needsInt>
 _1 -[#silver]-> _0
-_0 -[#black]> _3 : <epa needsInt>
+_0 -[#black]> _3 : < needsInt>
 @enduml

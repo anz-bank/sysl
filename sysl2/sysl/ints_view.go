@@ -316,15 +316,11 @@ func (v *IntsDiagramVisitor) generateEPAView(viewParams viewParams, params *Ints
 		if needsInt {
 			attrs["needs_int"] = strconv.FormatBool(needsInt)
 		}
-		attrs["epname"] = params.endpt.GetName()
-		attrs["eplongname"] = params.endpt.GetLongName()
 		fp := MakeFormatParser(params.app.Attrs["epfmt"].GetS())
 		label = fp.Parse(attrs)
-
 		flow := strings.Join([]string{appA, epB, appB, epB}, ".")
 		isPubSub := v.mod.Apps[appA].Endpoints[epA].GetIsPubsub()
 		epBClient := epB + " client"
-
 		if appA != appB {
 			if label != "" {
 				label = " : " + label
