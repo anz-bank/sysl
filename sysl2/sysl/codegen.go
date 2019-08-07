@@ -257,7 +257,6 @@ func GenerateCode(rootModel, model, rootTransform, transform, grammar, start str
 		NewMsg(WarnValidationSkipped, []string{err.Error()}).logMsg()
 	}
 
-
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {
 		return nil
