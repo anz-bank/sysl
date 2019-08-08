@@ -384,7 +384,9 @@ class RamlTranslator:
                 if not methodRaml['body']['application/json'].get('type', None):
                     self.error("Expecting type but got: {}".format(methodRaml['body']['application/json'].keys()))
                     return None
-                return '(request <: {})'.format(methodRaml['body']['application/json']['type'])
+                typeName = self.schemaFileNameToType(str(methodRaml['body']['application/json']['type']), self._raml_path)
+                typeName = typeLookup[typeName]
+                return '(request <: {}.{})'.format(appname, typeName)
             else:
                 return None
         
@@ -485,12 +487,6 @@ class RamlTranslator:
 
                 _includeAllSchemas(tn, pts)
 
-            def _includeArraySchema(tspec):
-                assert 'items' in tspec, "This is not an array: {}".format(tspec)
-
-                if '$ref' in tspec['items']:
-                    _nextInclude(tspec['items']['$ref'])
-                    
             with open(fileName, 'r') as f:
                 tspec = json.load(f)
                 
@@ -502,26 +498,13 @@ class RamlTranslator:
                 elif len(anchor) != 0:
                     assert False
 
-                if '$ref' in baseSpec:
-                    assert False
-                    _nextInclude(baseSpec['$ref'])
-
-                # Schemas embedded in properties
-                elif baseSpec.get('type', None) == 'object':
-                    if baseSpec.get('extends', None):
-                        _nextInclude(baseSpec['extends']['$ref'])
-                    else:
-                        for (fname, fspec) in baseSpec['properties'].iteritems():
-                            if '$ref' in fspec:
-                                _nextInclude(fspec['$ref'])
-                            # Schemas embedded in arrays in properties
-                            if fspec.get('type', None) == 'array':
-                                _includeArraySchema(fspec)
-                            
-                # Schemas embedded in top-level arrays
-                elif tspec.get('type', None) == 'array':
-                    _includeArraySchema(tspec)
-        
+                def _descendTheSpec(spec):
+                    for k, v in spec.iteritems():
+                        if k == '$ref':
+                            _nextInclude(v)
+                        elif isinstance(v, dict):
+                            _descendTheSpec(v)
+                _descendTheSpec(baseSpec)
         
         # recurse through included raml files and add types to the includedSchemas dict
         def _getIncludesFromRamlFiles(ramlSnippet, path, pk):
@@ -545,7 +528,7 @@ class RamlTranslator:
                                 elif pk[-1] != 'examples':
                                     typeLookup[pk[-1]] = tname
                                         
-                                    typeLookup[tname[tname.rfind('.')+1:]] = tname
+                                    #typeLookup[tname[tname.rfind('.')+1:]] = tname
                             
                             typeLookup[tname] = tname
                             _includeAllSchemas(tname, pathToSchema)
