@@ -1,4 +1,4 @@
-package main
+package parse
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"

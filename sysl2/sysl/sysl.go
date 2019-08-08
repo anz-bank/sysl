@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
@@ -20,10 +22,6 @@ var defaultLevel = map[string]logrus.Level{
 	"warn":  logrus.WarnLevel,
 }
 
-func (e exit) Error() string {
-	return e.message
-}
-
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string) error {
@@ -35,8 +33,7 @@ func main3(args []string) error {
 	case "sd":
 		return DoGenerateSequenceDiagrams(args)
 	case "ints":
-		DoGenerateIntegrations(args)
-		return nil
+		return DoGenerateIntegrations(args)
 	}
 	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
 	output := flags.String("o", "", "output file name")
@@ -71,21 +68,21 @@ func main3(args []string) error {
 	format := strings.ToLower(*output)
 	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
 	log.Infof("%s\n", filename)
-	mod, err := Parse(filename, *root)
+	mod, err := parse.Parse(filename, *root)
 	if err != nil {
 		return err
 	}
 	if mod != nil {
 		if toJSON {
 			if *output == "-" {
-				return FJSONPB(log.StandardLogger().Out, mod)
+				return pbutil.FJSONPB(log.StandardLogger().Out, mod)
 			}
-			return JSONPB(mod, *output)
+			return pbutil.JSONPB(mod, *output)
 		}
 		if *output == "-" {
-			return FTextPB(log.StandardLogger().Out, mod)
+			return pbutil.FTextPB(log.StandardLogger().Out, mod)
 		}
-		return TextPB(mod, *output)
+		return pbutil.TextPB(mod, *output)
 	}
 	return nil
 }
@@ -97,8 +94,8 @@ func main2(args []string, main3 func(args []string) error,
 ) int {
 	if err := main3(args); err != nil {
 		log.Errorln(err.Error())
-		if err, ok := err.(exit); ok {
-			return err.code
+		if err, ok := err.(parse.Exit); ok {
+			return err.Code
 		}
 		return 1
 	}

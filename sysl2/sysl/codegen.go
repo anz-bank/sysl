@@ -10,6 +10,7 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -219,12 +220,12 @@ func getDefaultAppName(mod *sysl.Module) string {
 
 func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
 	// Model we want to generate code for
-	mod, err := Parse(model, root)
+	mod, err := parse.Parse(model, root)
 	if err == nil {
 		modelAppName := getDefaultAppName(mod)
 		return mod, modelAppName
 	}
-	logrus.Errorf("unable to load module:\n\troot: " + root + "\n\tmodel:" + model)
+	logrus.Errorf("loadAndGetDefaultApp: unable to load module:\n\troot: %s\n\tmodel:%s\n", root, model)
 	return nil, ""
 }
 

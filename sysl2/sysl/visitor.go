@@ -5,8 +5,10 @@ import (
 	"sort"
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
 	log "github.com/sirupsen/logrus"
+
+	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
 
 type entry struct {
@@ -110,7 +112,7 @@ func (e *EndpointElement) Accept(v Visitor) error {
 
 func (e *EndpointElement) sender(v VarManager) string {
 	if e.fromApp != nil {
-		return v.UniqueVarForAppName(getAppName(e.fromApp))
+		return v.UniqueVarForAppName(syslutil.GetAppName(e.fromApp))
 	}
 
 	return "["
@@ -124,15 +126,14 @@ func (e *EndpointElement) application(m *sysl.Module) *sysl.Application {
 	if app, ok := m.Apps[e.appName]; ok {
 		return app
 	}
-	panic(fmt.Sprintf("The application with name %s does not exists", e.appName))
+	panic(fmt.Sprintf("app %#v not found", e.appName))
 }
 
 func (e *EndpointElement) endpoint(a *sysl.Application) *sysl.Endpoint {
 	if ep, ok := a.Endpoints[e.endpointName]; ok {
 		return ep
 	}
-	panic(fmt.Sprintf("The endpoint with name %s does not exists in the Application with name %s",
-		e.endpointName, e.appName))
+	panic(fmt.Sprintf("endpoint %#v not found in app %#v", e.endpointName, e.appName))
 }
 
 func (e *EndpointElement) label(
@@ -227,11 +228,6 @@ func MakeSequenceDiagramVisitor(
 }
 
 func (v *SequenceDiagramVisitor) Visit(e Element) error {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorln(err)
-		}
-	}()
 	var err error
 	switch t := e.(type) {
 	case *EndpointCollectionElement:
@@ -365,7 +361,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 
 	payload := strings.Join(formatReturnParam(v.m, getReturnPayload(endpoint.Stmt)), " | ")
 
-	isCallingSelf := e.fromApp != nil && getAppName(e.fromApp) == e.appName
+	isCallingSelf := e.fromApp != nil && syslutil.GetAppName(e.fromApp) == e.appName
 
 	if !isCallingSelf && len(payload) == 0 && e.deactivate != nil {
 		e.deactivate()
@@ -461,7 +457,7 @@ func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.C
 
 	p := &EndpointElement{
 		fromApp:                app.GetName(),
-		appName:                getAppName(c.GetTarget()),
+		appName:                syslutil.GetAppName(c.GetTarget()),
 		endpointName:           c.GetEndpoint(),
 		uptos:                  e.uptos,
 		senderPatterns:         senderPatterns,

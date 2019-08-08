@@ -1,4 +1,4 @@
-package main
+package parse
 
 import (
 	"fmt"
@@ -10,6 +10,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
 )
 
@@ -19,7 +20,7 @@ func Parse(filename string, root string) (*sysl.Module, error) {
 		root = "."
 	}
 	if !dirExists(root) {
-		return nil, exitf(ImportError, "root directory does not exist")
+		return nil, Exitf(ImportError, "root directory does not exist")
 	}
 	root, _ = filepath.Abs(root)
 	return FSParse(filename, http.Dir(root))
@@ -31,7 +32,7 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 		filename += ".sysl"
 	}
 	if !fileExists(filename, fs) {
-		return nil, exitf(ImportError, "input file does not exist: %#v", filename)
+		return nil, Exitf(ImportError, "input file does not exist: %#v", filename)
 	}
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener(fs)
@@ -41,7 +42,7 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 		logrus.Debugf("Parsing: " + filename)
 		input, err := newFSFileStream(filename, fs)
 		if err != nil {
-			return nil, exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 		listener.filename = filename
 		listener.base = filepath.Dir(filename)
@@ -55,7 +56,7 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 		p.BuildParseTrees = true
 		tree := p.Sysl_file()
 		if errorListener.hasErrors {
-			return nil, exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
+			return nil, Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
 		}
 
 		antlr.ParseTreeWalkerDefault.Walk(listener, tree)
@@ -104,7 +105,7 @@ func applyAttributes(src *sysl.Statement, dst *sysl.Statement) bool {
 	case *sysl.Statement_Foreach:
 		stmts = s.Foreach.Stmt
 	case *sysl.Statement_Call:
-		if isSameCall(src.GetCall(), s.Call) {
+		if syslutil.IsSameCall(src.GetCall(), s.Call) {
 			if dst.Attrs == nil {
 				dst.Attrs = map[string]*sysl.Attribute{}
 			}
@@ -149,7 +150,7 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	case *sysl.Statement_Foreach:
 		stmts = s.Foreach.Stmt
 	case *sysl.Statement_Call:
-		app := getApp(s.Call.Target, mod)
+		app := syslutil.GetApp(s.Call.Target, mod)
 		if app == nil {
 			logrus.Warnf("%s::%s calls non-existent App: %s",
 				appname, epname, s.Call.Target.Part)
@@ -332,7 +333,7 @@ func inferExprType(mod *sysl.Module,
 
 func inferTypes(mod *sysl.Module, appName string) {
 	for viewName, view := range mod.Apps[appName].Views {
-		if HasPattern(view.Attrs, "abstract") {
+		if syslutil.HasPattern(view.Attrs, "abstract") {
 			continue
 		}
 		if view.Expr.GetTransform() == nil {
@@ -355,9 +356,9 @@ func postProcess(mod *sysl.Module) {
 
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
-				srcApp := getApp(src.Name, mod)
-				if !HasPattern(srcApp.Attrs, "abstract") {
-					logrus.Warnf("mixin App (%s) should be ~abstract", getAppName(src.Name))
+				srcApp := syslutil.GetApp(src.Name, mod)
+				if !syslutil.HasPattern(srcApp.Attrs, "abstract") {
+					logrus.Warnf("mixin App (%s) should be ~abstract", syslutil.GetAppName(src.Name))
 					continue
 				}
 				if srcApp.Types != nil && app.Types == nil {
@@ -371,7 +372,7 @@ func postProcess(mod *sysl.Module) {
 						app.Types[k] = v
 					} else {
 						logrus.Warnf("Type %s defined in %s and in %s",
-							k, appName, getAppName(src.Name))
+							k, appName, syslutil.GetAppName(src.Name))
 					}
 				}
 				for k, v := range srcApp.Views {
@@ -379,7 +380,7 @@ func postProcess(mod *sysl.Module) {
 						app.Views[k] = v
 					} else {
 						logrus.Warnf("View %s defined in %s and in %s",
-							k, appName, getAppName(src.Name))
+							k, appName, syslutil.GetAppName(src.Name))
 					}
 				}
 			}

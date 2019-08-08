@@ -1,5 +1,5 @@
 //nolint:golint
-package main // SyslParser
+package parse // SyslParser
 
 import (
 	"encoding/json"
@@ -13,6 +13,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
 )
 
@@ -2221,8 +2222,8 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 			s.pushScope(typeEndpoint)
 		}
 		s.module.Apps[s.appname].Endpoints[s.typename] = typeEndpoint
-		srcAppName := getAppName(app_src)
-		srcApp := getApp(app_src, s.module)
+		srcAppName := syslutil.GetAppName(app_src)
+		srcApp := syslutil.GetApp(app_src, s.module)
 		if srcApp == nil {
 			s.module.Apps[srcAppName] = &sysl.Application{
 				Name:      app_src,

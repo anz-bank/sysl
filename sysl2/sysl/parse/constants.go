@@ -1,4 +1,4 @@
-package main
+package parse
 
 const (
 	// ImportError is returned by parser when its unable to load input modules
