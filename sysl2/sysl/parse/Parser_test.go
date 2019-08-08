@@ -1,4 +1,4 @@
-package main
+package parse
 
 import (
 	"bytes"
@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -92,7 +93,7 @@ func parseAndCompare(
 		return true, nil
 	}
 
-	if err = TextPB(goldenProto, golden); err != nil {
+	if err = pbutil.TextPB(goldenProto, golden); err != nil {
 		return false, err
 	}
 
@@ -108,7 +109,7 @@ func parseAndCompare(
 		}
 	}()
 
-	if err = retainOrRemove(FTextPB(generated, module), generated, retainOnError); err != nil {
+	if err = retainOrRemove(pbutil.FTextPB(generated, module), generated, retainOnError); err != nil {
 		return false, errors.Wrapf(err, "Generate %#v", generated)
 	}
 	if err := generated.Close(); err != nil {

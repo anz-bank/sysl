@@ -1,0 +1,95 @@
+SomeApp [package='', version="1.1.1", array=["one", "two"], array_of_arrays=[["one", "two"]]]:
+    @app_desc = "this comment belongs to the app defined 'above'"
+    @comment = ''
+    @comment.second = ""
+
+    <-> Event (App.member, request <: SomeApp.SomeType):
+    	return "customer details"
+
+    Endpoint:
+        ...
+
+    FooEndpoint:
+        Test - App <- Test - Endpoint
+
+    # subscribe to an event
+    Test - App -> eventName [~mq]:
+        ""
+        ''
+        'asdf'
+        "quoted statement: use special chars here like ?? :: etc"
+        "test: single quotes 'above'"
+        do something
+        | Some multiline comments that
+        | you can use for documentation.
+        | This is last line.
+        handle event eventName
+
+Test - App:
+    Test - Endpoint (request <: SomeApp.SomeType):
+        External :: App <- Endpoint
+        Rest Service <- GET /foo
+        if value == one:
+            do something
+        else if value == two:
+            do something else
+        else:
+            return ok
+
+    Endpoint2 (request <: set of SomeApp.SomeType):
+        @ep_desc = "this comment belongs to the Endpoint2 defined above"
+        | Single line statement
+        . <- eventName
+
+    <-> eventName (in <: string): ...
+    <-> another event: ...
+
+External :: App:
+    Endpoint:
+        ...
+
+    !type Request:
+        id <: int
+        val <: string
+    !type Response:
+        val <: string
+
+My Todo App [~webapp]:
+    Add Note [~somepattern]: ...
+
+anz_com:
+    homepage: ...
+
+    !type Response:
+        val <: string
+
+A_B:
+    C_D:
+        anz_com <- homepage
+        Test - App <- Test - Endpoint
+    DDD:
+        if some condition is true:
+            Test - App -> eventName
+            Test - App <- Endpoint2
+            If result not ok:
+                reTurn not ok1
+            else:
+                return ok
+        else some other condition:
+            top level else_statment
+            IF "some constraint":
+                return ok
+            Else:
+                return not ok
+
+        do some more stuff
+
+    EEE:
+        ...
+
+    Send document to customer: ...
+
+Rest Service:
+    /foo:
+        GET:
+            ...

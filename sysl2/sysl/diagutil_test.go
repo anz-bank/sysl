@@ -102,11 +102,13 @@ func TestOutPutWithWrongFormat(t *testing.T) {
 	umlInput := testPlantumlInput
 
 	//When
-	require.Nil(t, OutputPlantuml(output, plantumlDotCom, umlInput))
+	require.Error(t, OutputPlantuml(output, plantumlDotCom, umlInput))
 
 	//Then
-	_, err := os.Stat("test.wrong")
-	assert.True(t, os.IsNotExist(err))
+	_, err := os.Stat(output)
+	if !assert.True(t, os.IsNotExist(err)) {
+		assert.NoError(t, os.Remove(output))
+	}
 }
 
 func TestWrongHttpRequest(t *testing.T) {

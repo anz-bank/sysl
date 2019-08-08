@@ -2,6 +2,7 @@ package main
 
 import (
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
 
 // Scope holds the value of the variables during the execution of a transform
@@ -46,11 +47,14 @@ func MakeValueMap() *sysl.Value {
 }
 
 // MakeValueList returns sysl.Value of type Value_List_ ([]*sysl.Value)
-func MakeValueList() *sysl.Value {
+func MakeValueList(values ...*sysl.Value) *sysl.Value {
+	if values == nil {
+		values = []*sysl.Value{}
+	}
 	return &sysl.Value{
 		Value: &sysl.Value_List_{
 			List: &sysl.Value_List{
-				Value: []*sysl.Value{},
+				Value: values,
 			},
 		},
 	}
@@ -251,7 +255,7 @@ func stmtToValue(s *sysl.Statement) *sysl.Value {
 	case *sysl.Statement_Call:
 		stmtType = "call"
 		addItemToValueMap(m, "endpoint", MakeValueString(x.Call.Endpoint))
-		addItemToValueMap(m, "target", MakeValueString(getAppName(x.Call.Target)))
+		addItemToValueMap(m, "target", MakeValueString(syslutil.GetAppName(x.Call.Target)))
 	case *sysl.Statement_Ret:
 		stmtType = "return"
 		addItemToValueMap(m, "payload", MakeValueString(x.Ret.Payload))
@@ -327,7 +331,7 @@ func (s Scope) AddString(name string, val string) {
 func (s Scope) AddApp(name string, app *sysl.Application) {
 	m := MakeValueMap()
 	s[name] = m
-	addItemToValueMap(m, "name", MakeValueString(getAppName(app.Name)))
+	addItemToValueMap(m, "name", MakeValueString(syslutil.GetAppName(app.Name)))
 	addItemToValueMap(m, "attrs", attrsToValueMap(app.Attrs))
 	addItemToValueMap(m, "types", typesToValueMap(app.Types))
 	addItemToValueMap(m, "union", unionToValueMap(app.Types))

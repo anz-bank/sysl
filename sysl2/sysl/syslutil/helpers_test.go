@@ -1,4 +1,4 @@
-package main
+package syslutil
 
 import (
 	"testing"
@@ -10,7 +10,7 @@ import (
 func TestGetAppName(t *testing.T) {
 	assert.Equal(t,
 		"test :: name",
-		getAppName(&sysl.AppName{Part: []string{"test", "name"}}),
+		GetAppName(&sysl.AppName{Part: []string{"test", "name"}}),
 	)
 }
 
@@ -18,7 +18,7 @@ func TestGetApp(t *testing.T) {
 	app := &sysl.Application{Attrs: map[string]*sysl.Attribute{}}
 	assert.Equal(t,
 		app,
-		getApp(
+		GetApp(
 			&sysl.AppName{Part: []string{"test", "name"}},
 			&sysl.Module{Apps: map[string]*sysl.Application{"test :: name": app}},
 		),
@@ -38,28 +38,28 @@ func TestPattern(t *testing.T) {
 }
 
 func TestIsNotSameAppWithPartLength(t *testing.T) {
-	assert.False(t, isSameApp(
+	assert.False(t, IsSameApp(
 		&sysl.AppName{Part: []string{"test", "name"}},
 		&sysl.AppName{Part: []string{"name1"}},
 	))
 }
 
 func TestIsNotSameAppWithPartContent(t *testing.T) {
-	assert.False(t, isSameApp(
+	assert.False(t, IsSameApp(
 		&sysl.AppName{Part: []string{"test", "name"}},
 		&sysl.AppName{Part: []string{"test", "name1"}},
 	))
 }
 
 func TestIsSameApp(t *testing.T) {
-	assert.True(t, isSameApp(
+	assert.True(t, IsSameApp(
 		&sysl.AppName{Part: []string{"test", "name"}},
 		&sysl.AppName{Part: []string{"test", "name"}},
 	))
 }
 
 func TestIsSameCall(t *testing.T) {
-	assert.True(t, isSameCall(
+	assert.True(t, IsSameCall(
 		&sysl.Call{Target: &sysl.AppName{Part: []string{"test", "name"}}, Endpoint: "endpt"},
 		&sysl.Call{Target: &sysl.AppName{Part: []string{"test", "name"}}, Endpoint: "endpt"},
 	))
