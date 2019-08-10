@@ -145,17 +145,19 @@ func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 	main2([]string{"sd", "-s", "MobileApp <- Login", "-g", "owner", "-o", "tests/call.png", "tests/call.sysl"}, main3)
 	_, err := os.Stat("tests/call.png")
-	assert.True(t, err == nil)
+	assert.NoError(t, err)
+	os.Remove("tests/call.png")
 }
 
 func TestMain2WithGroupingParamsSysl(t *testing.T) {
 	testHook := test.NewGlobal()
 	main2([]string{"sd", "-g", "location", "-o", "%(epname).png", "tests/groupby.sysl", "-a", "Project :: Sequences"},
 		main3)
-	_, err1 := os.Stat("SEQ-One.png")
-	assert.True(t, err1 == nil)
+	for _, filename := range []string{"SEQ-One.png", "SEQ-Two.png"} {
+		_, err := os.Stat(filename)
+		assert.NoError(t, err)
+		os.Remove(filename)
+	}
 	assert.Equal(t, log.WarnLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "Ignoring groupby passed from command line", testHook.LastEntry().Message)
-	_, err2 := os.Stat("SEQ-Two.png")
-	assert.True(t, err2 == nil)
 }
