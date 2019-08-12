@@ -22,6 +22,6 @@ state "Systema" as X_1 {
 state "Systemb" as X_2 <<highlight>> {
   state "endpoint" as _2 <<highlight>>
 }
-_2 -[#blue]> _0 : <pubsub>
-_2 -[#blue]> _1 : <pubsub>
+_2 -[#blue]> _0
+_2 -[#blue]> _1
 @enduml

@@ -25,7 +25,7 @@ state "Systemb" as X_2 {
   state "endpoint2" as _4
 }
 _1 -[#silver]-> _0
-_0 -[#black]> _2 : with_restrict_by
+_0 -[#black]> _2
 _2 -[#silver]-> _3
-_3 -[#black]> _4 : with_restrict_by
+_3 -[#black]> _4
 @enduml
