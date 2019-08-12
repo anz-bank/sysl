@@ -145,3 +145,19 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	assert.Equal(t, 1, len(tail))
 	assert.Equal(t, "tail", tail[0].(Node)[0].(string))
 }
+
+func GenerateCodeWithParams(rootModel, model, rootTransform, transform, grammar, start string, loglevel string,
+	isVerbose bool,
+) []*CodeGenOutput {
+	cmdContextParamCodegen := &CmdContextParamCodegen{
+		rootModel:     &rootModel,
+		model:         &model,
+		rootTransform: &rootTransform,
+		transform:     &transform,
+		grammar:       &grammar,
+		start:         &start,
+		loglevel:      &loglevel,
+		isVerbose:     &isVerbose,
+	}
+	return GenerateCode(cmdContextParamCodegen)
+}

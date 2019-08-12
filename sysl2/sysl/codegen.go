@@ -234,18 +234,19 @@ func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
 func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
 	var codeOutput []*CodeGenOutput
 
-	logrus.Warnf("root-model: %s\n", *codegenParams.rootModel)
-	logrus.Warnf("root-transform: %s\n", *codegenParams.rootTransform)
-	logrus.Warnf("model: %s\n", *codegenParams.model)
-	logrus.Warnf("transform: %s\n", *codegenParams.transform)
-	logrus.Warnf("grammar: %s\n", *codegenParams.grammar)
-	logrus.Warnf("start: %s\n", *codegenParams.start)
-	logrus.Warnf("loglevel: %s\n", *codegenParams.loglevel)
+	logrus.Debugf("root-model: %s\n", *codegenParams.rootModel)
+	logrus.Debugf("root-transform: %s\n", *codegenParams.rootTransform)
+	logrus.Debugf("model: %s\n", *codegenParams.model)
+	logrus.Debugf("transform: %s\n", *codegenParams.transform)
+	logrus.Debugf("grammar: %s\n", *codegenParams.grammar)
+	logrus.Debugf("start: %s\n", *codegenParams.start)
+	logrus.Debugf("loglevel: %s\n", *codegenParams.loglevel)
 
-	if *codegenParams.verbose {
+	if *codegenParams.isVerbose {
 		*codegenParams.loglevel = debug
 	}
-	if level, has := defaultLevel[*codegenParams.loglevel]; has {
+	// Default info
+	if level, has := logLevels[*codegenParams.loglevel]; has {
 		logrus.SetLevel(level)
 	}
 
@@ -274,22 +275,6 @@ func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
 		}
 	}
 	return codeOutput
-}
-
-func GenerateCodeWithParams(rootModel, model, rootTransform, transform, grammar, start string, loglevel string,
-	verbose bool,
-) []*CodeGenOutput {
-	cmdContextParamCodegen := &CmdContextParamCodegen{
-		rootModel:     &rootModel,
-		model:         &model,
-		rootTransform: &rootTransform,
-		transform:     &transform,
-		grammar:       &grammar,
-		start:         &start,
-		loglevel:      &loglevel,
-		verbose:       &verbose,
-	}
-	return GenerateCode(cmdContextParamCodegen)
 }
 
 func outputToFiles(outDir string, output []*CodeGenOutput) error {
@@ -322,8 +307,8 @@ func configureCmdlineForCodegen(sysl *kingpin.Application) *CmdContextParamCodeg
 	returnValues.grammar = gen.Flag("grammar", "grammar.g").Default(".").String()
 	returnValues.start = gen.Flag("start", "start rule for the grammar").Default(".").String()
 	returnValues.outDir = gen.Flag("outdir", "output directory").Default(".").String()
-	returnValues.loglevel = gen.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
-	returnValues.verbose = gen.Flag("verbose", "show output").Short('v').Default("false").Bool()
+	returnValues.loglevel = gen.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
+	returnValues.isVerbose = gen.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	return returnValues
 }

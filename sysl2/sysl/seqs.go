@@ -76,31 +76,6 @@ func escapeWordBoundary(src string) string {
 	return val
 }
 
-func DoConstructSequenceDiagramsWithParams(
-	rootModel, endpointFormat, appFormat, title, output, modules string,
-	endpoints, apps []string,
-	blackboxes [][]string,
-	group string,
-	loglevel string,
-	verbose bool,
-) (map[string]string, error) {
-	cmdContextParamSeqgen := &CmdContextParamSeqgen{
-		root:           &rootModel,
-		endpointFormat: &endpointFormat,
-		appFormat:      &appFormat,
-		title:          &title,
-		output:         &output,
-		modulesFlag:    &modules,
-		endpointsFlag:  &endpoints,
-		appsFlag:       &apps,
-		blackboxes:     &blackboxes,
-		loglevel:       &loglevel,
-		group:          &group,
-		verbose:        &verbose,
-	}
-	return DoConstructSequenceDiagrams(cmdContextParamSeqgen)
-}
-
 func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[string]string, error) {
 	var blackboxes [][]string
 
@@ -121,7 +96,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 			*cmdContextParam.plantuml = "http://localhost:8080/plantuml"
 		}
 	}
-	log.Infof("plantuml: %s\n", *cmdContextParam.plantuml)
+	log.Debugf("plantuml: %s\n", *cmdContextParam.plantuml)
 
 	if cmdContextParam.blackboxes == nil {
 		blackboxes = ParseBlackBoxesFromArgument(*cmdContextParam.blackboxesFlag)
@@ -130,10 +105,11 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 		blackboxes = *cmdContextParam.blackboxes
 	}
 
-	if *cmdContextParam.verbose {
+	if *cmdContextParam.isVerbose {
 		*cmdContextParam.loglevel = debug
 	}
-	if level, has := defaultLevel[*cmdContextParam.loglevel]; has {
+	// Default info
+	if level, has := logLevels[*cmdContextParam.loglevel]; has {
 		log.SetLevel(level)
 	}
 
@@ -236,7 +212,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 	return result, nil
 }
 
-func configureCmdlineForSeqdiaggen(sysl *kingpin.Application) *CmdContextParamSeqgen {
+func configureCmdlineForSeqgen(sysl *kingpin.Application) *CmdContextParamSeqgen {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
@@ -289,8 +265,8 @@ func configureCmdlineForSeqdiaggen(sysl *kingpin.Application) *CmdContextParamSe
 	returnValues.group = sd.Flag("groupby", "Enter the groupby attribute (apps having "+
 		"the same attribute value are grouped together in one box").Short('g').String()
 
-	returnValues.loglevel = sd.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
-	returnValues.verbose = sd.Flag("verbose", "show output").Short('v').Default("false").Bool()
+	returnValues.loglevel = sd.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
+	returnValues.isVerbose = sd.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	returnValues.modulesFlag = sd.Arg("modules",
 		"input files without .sysl extension and with leading /, eg: "+

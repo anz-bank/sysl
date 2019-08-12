@@ -152,8 +152,8 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 
 func TestMain2WithGroupingParamsSysl(t *testing.T) {
 	testHook := test.NewGlobal()
-	main2([]string{"sysl", "sd", "-g", "location", "-o", "%(epname).png", "tests/groupby.sysl", "-a", "Project :: Sequences"},
-		main3)
+	main2([]string{"sysl", "sd", "-g", "location", "-o", "%(epname).png", "tests/groupby.sysl", "-a",
+		"Project :: Sequences"}, main3)
 	for _, filename := range []string{"SEQ-One.png", "SEQ-Two.png"} {
 		_, err := os.Stat(filename)
 		assert.NoError(t, err)

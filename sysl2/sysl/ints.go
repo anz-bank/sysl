@@ -14,16 +14,16 @@ const endpointWildcard = ".. * <- *"
 func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]string, error) {
 	r := make(map[string]string)
 
-	log.Infof("root: %s\n", *intgenParams.root)
-	log.Infof("project: %v\n", *intgenParams.project)
-	log.Infof("clustered: %t\n", *intgenParams.clustered)
-	log.Infof("exclude: %s\n", *intgenParams.exclude)
-	log.Infof("epa: %t\n", *intgenParams.epa)
-	log.Infof("title: %s\n", *intgenParams.title)
-	log.Infof("filter: %s\n", *intgenParams.filter)
-	log.Infof("modules: %s\n", *intgenParams.modules)
-	log.Infof("output: %s\n", *intgenParams.output)
-	log.Infof("loglevel: %s\n", *intgenParams.loglevel)
+	log.Debugf("root: %s\n", *intgenParams.root)
+	log.Debugf("project: %v\n", *intgenParams.project)
+	log.Debugf("clustered: %t\n", *intgenParams.clustered)
+	log.Debugf("exclude: %s\n", *intgenParams.exclude)
+	log.Debugf("epa: %t\n", *intgenParams.epa)
+	log.Debugf("title: %s\n", *intgenParams.title)
+	log.Debugf("filter: %s\n", *intgenParams.filter)
+	log.Debugf("modules: %s\n", *intgenParams.modules)
+	log.Debugf("output: %s\n", *intgenParams.output)
+	log.Debugf("loglevel: %s\n", *intgenParams.loglevel)
 
 	if intgenParams.plantuml == nil {
 		plantuml := os.Getenv("SYSL_PLANTUML")
@@ -32,12 +32,13 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 			*intgenParams.plantuml = "http://localhost:8080/plantuml"
 		}
 	}
-	log.Infof("plantuml: %s\n", *intgenParams.plantuml)
+	log.Debugf("plantuml: %s\n", *intgenParams.plantuml)
 
-	if *intgenParams.verbose {
+	if *intgenParams.isVerbose {
 		*intgenParams.loglevel = debug
 	}
-	if level, has := defaultLevel[*intgenParams.loglevel]; has {
+	// Default info
+	if level, has := logLevels[*intgenParams.loglevel]; has {
 		log.SetLevel(level)
 	}
 
@@ -74,28 +75,6 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	return r, nil
 }
 
-func GenerateIntegrationsWithParams(rootModel, title, output, project, filter, modules string,
-	exclude []string,
-	clustered, epa bool,
-	loglevel string,
-	verbose bool,
-) (map[string]string, error) {
-	cmdContextParamIntgen := &CmdContextParamIntgen{
-		root:      &rootModel,
-		title:     &title,
-		output:    &output,
-		project:   &project,
-		filter:    &filter,
-		modules:   &modules,
-		exclude:   &exclude,
-		clustered: &clustered,
-		epa:       &epa,
-		loglevel:  &loglevel,
-		verbose:   &verbose,
-	}
-	return GenerateIntegrations(cmdContextParamIntgen)
-}
-
 func configureCmdlineForIntgen(sysl *kingpin.Application) *CmdContextParamIntgen {
 	defer func() {
 		if err := recover(); err != nil {
@@ -122,8 +101,8 @@ func configureCmdlineForIntgen(sysl *kingpin.Application) *CmdContextParamIntgen
 	returnValues.clustered = ints.Flag("clustered",
 		"group integration components into clusters").Short('c').Default("false").Bool()
 	returnValues.epa = ints.Flag("epa", "produce and EPA integration view").Default("false").Bool()
-	returnValues.loglevel = ints.Flag("log", "log level[debug,info,warn,off]").Default("warn").String()
-	returnValues.verbose = ints.Flag("verbose", "show output").Short('v').Default("false").Bool()
+	returnValues.loglevel = ints.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
+	returnValues.isVerbose = ints.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	return returnValues
 }

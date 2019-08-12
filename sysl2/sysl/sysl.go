@@ -12,7 +12,7 @@ import (
 )
 
 //nolint:gochecknoglobals
-var defaultLevel = map[string]logrus.Level{
+var logLevels = map[string]logrus.Level{
 	"":      logrus.ErrorLevel,
 	"off":   logrus.ErrorLevel,
 	"debug": logrus.DebugLevel,
@@ -31,7 +31,7 @@ func main3(args []string) error {
 		return err1
 	}
 	codegenParams := configureCmdlineForCodegen(sysl)
-	sequenceParams := configureCmdlineForSeqdiaggen(sysl)
+	sequenceParams := configureCmdlineForSeqgen(sysl)
 	intgenParams := configureCmdlineForIntgen(sysl)
 	var selectedCommand string
 	var err error
@@ -61,8 +61,8 @@ func main3(args []string) error {
 			return err
 		}
 		for k, v := range r {
-			if *intgenParams.verbose {
-				fmt.Println(k)
+			if *intgenParams.isVerbose {
+				logrus.Debugf(k)
 			}
 			err := OutputPlantuml(k, *intgenParams.plantuml, v)
 			if err != nil {
@@ -108,9 +108,9 @@ func configureCmdlineForPb(sysl *kingpin.Application) (*CmdContextParamPbgen, er
 	returnValues.mode = textpb.Flag("mode", "output mode").Default("textpb").String()
 
 	returnValues.loglevel = textpb.Flag("log",
-		"log level[debug,info,warn,off]").Default("warn").String()
+		"log level[debug,info,warn,off]").Default("info").String()
 
-	returnValues.verbose = textpb.Flag("verbose", "show output").Short('v').Default("false").Bool()
+	returnValues.isVerbose = textpb.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	returnValues.modules = textpb.Arg("modules", "input files without .sysl extension and with leading /, eg: "+
 		"/project_dir/my_models combine with --root if needed",
@@ -126,23 +126,22 @@ func configureCmdlineForPb(sysl *kingpin.Application) (*CmdContextParamPbgen, er
 }
 
 func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
-	logrus.Infof("Root: %s\n", *textpbParams.root)
-	logrus.Infof("Module: %s\n", *textpbParams.modules)
-	logrus.Infof("Mode: %s\n", *textpbParams.mode)
-	logrus.Infof("Log Level: %s\n", *textpbParams.loglevel)
+	logrus.Debugf("Root: %s\n", *textpbParams.root)
+	logrus.Debugf("Module: %s\n", *textpbParams.modules)
+	logrus.Debugf("Mode: %s\n", *textpbParams.mode)
+	logrus.Debugf("Log Level: %s\n", *textpbParams.loglevel)
 
 	format := strings.ToLower(*textpbParams.output)
 	toJSON := *textpbParams.mode == "json" || *textpbParams.mode == "" && strings.HasSuffix(format, ".json")
-	logrus.Infof("%s\n", *textpbParams.modules)
+	logrus.Debugf("%s\n", *textpbParams.modules)
 	mod, err := parse.Parse(*textpbParams.modules, *textpbParams.root)
 
-	if *textpbParams.verbose {
+	if *textpbParams.isVerbose {
 		*textpbParams.loglevel = debug
 	}
-	if level, has := defaultLevel[*textpbParams.loglevel]; has {
+	// Default info
+	if level, has := logLevels[*textpbParams.loglevel]; has {
 		logrus.SetLevel(level)
-	} else {
-		return fmt.Errorf("invalid -log %#v", *textpbParams.loglevel)
 	}
 
 	if err != nil {

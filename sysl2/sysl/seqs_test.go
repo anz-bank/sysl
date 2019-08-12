@@ -400,7 +400,7 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 	}
 	argsData := []string{"sysl", "sd", "--root", args.rootModel, "-o", args.output, "-a", args.apps[0], args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForSeqdiaggen(sysl)
+	configureCmdlineForSeqgen(sysl)
 	selectedCommand, err := sysl.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl sd")
 	assert.Equal(t, selectedCommand, "sd")
@@ -508,4 +508,29 @@ end box`
 	boxPresent, err = regexp.MatchString(boxCloud, result["SEQ-Two.png"])
 	assert.Nil(t, err, "Error compiling regular expression")
 	assert.True(t, boxPresent)
+}
+
+func DoConstructSequenceDiagramsWithParams(
+	rootModel, endpointFormat, appFormat, title, output, modules string,
+	endpoints, apps []string,
+	blackboxes [][]string,
+	group string,
+	loglevel string,
+	isVerbose bool,
+) (map[string]string, error) {
+	cmdContextParamSeqgen := &CmdContextParamSeqgen{
+		root:           &rootModel,
+		endpointFormat: &endpointFormat,
+		appFormat:      &appFormat,
+		title:          &title,
+		output:         &output,
+		modulesFlag:    &modules,
+		endpointsFlag:  &endpoints,
+		appsFlag:       &apps,
+		blackboxes:     &blackboxes,
+		loglevel:       &loglevel,
+		group:          &group,
+		isVerbose:      &isVerbose,
+	}
+	return DoConstructSequenceDiagrams(cmdContextParamSeqgen)
 }
