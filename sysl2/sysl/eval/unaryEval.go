@@ -1,4 +1,4 @@
-package main
+package eval
 
 import (
 	sysl "github.com/anz-bank/sysl/src/proto"

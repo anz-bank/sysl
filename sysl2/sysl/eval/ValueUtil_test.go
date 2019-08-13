@@ -1,4 +1,4 @@
-package main
+package eval
 
 import (
 	"testing"
@@ -73,7 +73,7 @@ func TestIsCollectionType(t *testing.T) {
 
 func TestAddItemToValueMap(t *testing.T) {
 	m := MakeValueMap()
-	addItemToValueMap(m, "key", MakeValueString("value"))
+	AddItemToValueMap(m, "key", MakeValueString("value"))
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{
@@ -82,7 +82,7 @@ func TestAddItemToValueMap(t *testing.T) {
 		}}},
 		m,
 	)
-	addItemToValueMap(m, "key2", MakeValueString("value2"))
+	AddItemToValueMap(m, "key2", MakeValueString("value2"))
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{
@@ -96,7 +96,7 @@ func TestAddItemToValueMap(t *testing.T) {
 
 func TestAppendItemToValueList(t *testing.T) {
 	m := MakeValueList()
-	appendItemToValueList(m.GetList(), MakeValueI64(42))
+	AppendItemToValueList(m.GetList(), MakeValueI64(42))
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_List_{List: &sysl.Value_List{
 			Value: []*sysl.Value{
@@ -105,7 +105,7 @@ func TestAppendItemToValueList(t *testing.T) {
 		}}},
 		m,
 	)
-	appendItemToValueList(m.GetList(), MakeValueString("value"))
+	AppendItemToValueList(m.GetList(), MakeValueString("value"))
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_List_{List: &sysl.Value_List{
 			Value: []*sysl.Value{

@@ -1,4 +1,4 @@
-package main
+package eval
 
 import (
 	"reflect"
@@ -194,7 +194,7 @@ func reflectToValue(r reflect.Value, typ *sysl.Type) *sysl.Value {
 		primitiveType := typ.GetList().GetType()
 
 		for i := 0; i < r.Len(); i++ {
-			appendItemToValueList(list.GetList(), reflectToValue(r.Index(i), primitiveType))
+			AppendItemToValueList(list.GetList(), reflectToValue(r.Index(i), primitiveType))
 		}
 		return list
 	}

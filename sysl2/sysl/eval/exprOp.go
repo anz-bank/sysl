@@ -1,4 +1,4 @@
-package main
+package eval
 
 import (
 	"encoding/json"
@@ -89,7 +89,7 @@ func flattenListMap(
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		assign[scopeVar] = l
-		appendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
+		AppendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
 	}
 	return listResult
 }
@@ -105,7 +105,7 @@ func flattenListList(
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetList().Value {
 			assign[scopeVar] = ll
-			appendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
+			AppendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
 		}
 	}
 	return listResult
@@ -122,7 +122,7 @@ func flattenListSet(
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetSet().Value {
 			assign[scopeVar] = ll
-			appendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
+			AppendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
 		}
 	}
 	return listResult
@@ -145,10 +145,10 @@ func flattenSetMap(
 		switch x := res.Value.(type) {
 		case *sysl.Value_Set:
 			for _, ll := range x.Set.Value {
-				appendItemToValueList(setResult.GetSet(), ll)
+				AppendItemToValueList(setResult.GetSet(), ll)
 			}
 		default:
-			appendItemToValueList(setResult.GetSet(), res)
+			AppendItemToValueList(setResult.GetSet(), res)
 		}
 	}
 	return setResult
@@ -164,7 +164,7 @@ func flattenSetSet(txApp *sysl.Application,
 	for _, l := range list.GetSet().Value {
 		for _, ll := range l.GetSet().Value {
 			assign[scopeVar] = ll
-			appendItemToValueList(setResult.GetSet(), Eval(txApp, assign, rhs))
+			AppendItemToValueList(setResult.GetSet(), Eval(txApp, assign, rhs))
 		}
 	}
 	return setResult
@@ -244,7 +244,7 @@ func intSetToValueSet(lhs map[int64]struct{}) *sysl.Value {
 	sort.Ints(keys)
 
 	for _, key := range keys {
-		appendItemToValueList(m.GetSet(), MakeValueI64(int64(key)))
+		AppendItemToValueList(m.GetSet(), MakeValueI64(int64(key)))
 	}
 	return m
 }
@@ -276,7 +276,7 @@ func stringSetToValueSet(lhs map[string]struct{}) *sysl.Value {
 	sort.Strings(keys)
 
 	for _, key := range keys {
-		appendItemToValueList(m.GetSet(), MakeValueString(key))
+		AppendItemToValueList(m.GetSet(), MakeValueString(key))
 	}
 	return m
 }
@@ -309,7 +309,7 @@ func mapSetToValueSet(lhs map[string]*sysl.Value) *sysl.Value {
 	sort.Strings(keys)
 
 	for _, key := range keys {
-		appendItemToValueList(m.GetSet(), lhs[key])
+		AppendItemToValueList(m.GetSet(), lhs[key])
 	}
 	return m
 }
@@ -334,7 +334,7 @@ func whereSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar 
 		assign[scopeVar] = l
 		predicate := Eval(txApp, assign, rhs)
 		if predicate.GetB() {
-			appendItemToValueList(setResult.GetSet(), l)
+			AppendItemToValueList(setResult.GetSet(), l)
 		}
 	}
 	return setResult
@@ -347,7 +347,7 @@ func whereList(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar
 		assign[scopeVar] = l
 		predicate := Eval(txApp, assign, rhs)
 		if predicate.GetB() {
-			appendItemToValueList(listResult.GetList(), l)
+			AppendItemToValueList(listResult.GetList(), l)
 		}
 	}
 	return listResult
@@ -358,12 +358,12 @@ func whereMap(txApp *sysl.Application, assign Scope, m *sysl.Value, scopeVar str
 	logrus.Printf("scope: %s, list len: %d", scopeVar, len(m.GetMap().Items))
 	for key, val := range m.GetMap().Items {
 		m := MakeValueMap()
-		addItemToValueMap(m, "key", MakeValueString(key))
-		addItemToValueMap(m, "value", val)
+		AddItemToValueMap(m, "key", MakeValueString(key))
+		AddItemToValueMap(m, "value", val)
 		assign[scopeVar] = m
 		predicate := Eval(txApp, assign, rhs)
 		if predicate.GetB() {
-			addItemToValueMap(mapResult, key, val)
+			AddItemToValueMap(mapResult, key, val)
 		}
 	}
 	return mapResult
