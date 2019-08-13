@@ -37,14 +37,14 @@ func TestMain2JSON(t *testing.T) {
 }
 
 func testMain2Stdout(t *testing.T, args []string, golden string) {
-	rc := main2(append([]string{"sysl", "pb", "-o", "test"}, args...), main3)
+	rc := main2(append([]string{"sysl", "pb", "-o", " - "}, args...), main3)
 	assert.Zero(t, rc)
 
 	_, err := ioutil.ReadFile(golden)
 	require.NoError(t, err)
 
 	_, err = os.Stat("-")
-	assert.True(t, os.IsNotExist(err), "Should not have created file 'test'")
+	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
 }
 
 func TestMain2TextPBStdout(t *testing.T) {
@@ -56,7 +56,7 @@ func TestMain2JSONStdout(t *testing.T) {
 }
 
 func TestMain2BadMode(t *testing.T) {
-	rc := main2([]string{"sysl", "pb", "-o", "-", "-mode", "BAD", "tests/args.sysl"}, main3)
+	rc := main2([]string{"sysl", "pb", "-o", " - ", "--mode", "BAD", "tests/args.sysl"}, main3)
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
@@ -64,7 +64,7 @@ func TestMain2BadMode(t *testing.T) {
 }
 
 func TestMain2BadLog(t *testing.T) {
-	rc := main2([]string{"sysl", "pb", "-o", "-", "-log", "BAD", "tests/args.sysl"}, main3)
+	rc := main2([]string{"sysl", "pb", "-o", "-", "--log", "BAD", "tests/args.sysl"}, main3)
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
@@ -184,5 +184,15 @@ func TestMain2WithTestPbJsonMode(t *testing.T) {
 
 func TestMain2WithTestPbMode(t *testing.T) {
 	ret := main2([]string{"sysl", "pb", "--mode", "json", "-o", "tests/callout", "tests/call.sysl"}, main3)
+	assert.True(t, ret == 0)
+}
+
+func TestMain2WithTestPbJsonConsole(t *testing.T) {
+	ret := main2([]string{"sysl", "pb", "--mode", "textpb", "-o", " - ", "tests/call.sysl", "-v"}, main3)
+	assert.True(t, ret == 0)
+}
+
+func TestMain2WithTestPbConsole(t *testing.T) {
+	ret := main2([]string{"sysl", "pb", "--mode", "json", "-o", " - ", "tests/call.sysl", "-v"}, main3)
 	assert.True(t, ret == 0)
 }

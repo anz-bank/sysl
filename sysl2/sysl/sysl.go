@@ -26,10 +26,7 @@ const debug string = "debug"
 // arguments as parameters to support testability.
 func main3(args []string) error {
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	textpbParams, err1 := configureCmdlineForPb(sysl)
-	if err1 != nil {
-		return err1
-	}
+	textpbParams := configureCmdlineForPb(sysl)
 	codegenParams := configureCmdlineForCodegen(sysl)
 	sequenceParams := configureCmdlineForSeqgen(sysl)
 	intgenParams := configureCmdlineForIntgen(sysl)
@@ -96,7 +93,7 @@ func main() {
 	}
 }
 
-func configureCmdlineForPb(sysl *kingpin.Application) (*CmdContextParamPbgen, error) {
+func configureCmdlineForPb(sysl *kingpin.Application) *CmdContextParamPbgen {
 	textpb := sysl.Command("pb", "Generate textpb/json")
 	returnValues := &CmdContextParamPbgen{}
 
@@ -116,13 +113,7 @@ func configureCmdlineForPb(sysl *kingpin.Application) (*CmdContextParamPbgen, er
 		"/project_dir/my_models combine with --root if needed",
 	).String()
 
-	switch *returnValues.mode {
-	case "", "textpb", "json":
-	default:
-		return nil, fmt.Errorf("invalid -mode %#v", *returnValues.mode)
-	}
-
-	return returnValues, nil
+	return returnValues
 }
 
 func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
@@ -135,6 +126,10 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
 	toJSON := *textpbParams.mode == "json" || *textpbParams.mode == "" && strings.HasSuffix(format, ".json")
 	logrus.Debugf("%s\n", *textpbParams.modules)
 	mod, err := parse.Parse(*textpbParams.modules, *textpbParams.root)
+	*textpbParams.output = strings.Trim(*textpbParams.output, " ")
+	if err != nil {
+		return err
+	}
 
 	if *textpbParams.isVerbose {
 		*textpbParams.loglevel = debug
@@ -144,9 +139,12 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
 		logrus.SetLevel(level)
 	}
 
-	if err != nil {
-		return err
+	switch *textpbParams.mode {
+	case "", "textpb", "json":
+	default:
+		return fmt.Errorf("invalid -mode %#v", *textpbParams.mode)
 	}
+
 	if mod != nil {
 		if toJSON {
 			if *textpbParams.output == "-" {
