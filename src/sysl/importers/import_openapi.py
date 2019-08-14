@@ -185,7 +185,6 @@ class SwaggerTranslator:
                     self.writeEndpoints(swag, w)
             else:
                 self.writeEndpoints(swag, w)
-            import pdb; pdb.set_trace()
             self.writeDefs(swag, w)
 
     def mergeParams(self, swag, srcParams, overrideParams):
@@ -212,6 +211,28 @@ class SwaggerTranslator:
         return pathParams.values(), headerParams.values(), queryParams.values(), bodyParams.values()
 
     def writeEndpoints(self, swag, w):
+
+        def includeResponses(responses):
+            returnValue = ''
+
+            for rc, rspec in sorted(responses.iteritems()):  
+                schema = None
+                if rspec.get('content', None):
+                    schema = rspec['content']
+                    if schema.get('application/json', None):
+                        schema = schema['application/json']
+                        if schema.get('schema', None):
+                            schema = schema['schema']
+
+                if schema is not None:
+                    if schema.get('type') == 'array':
+                        returnValue = 'sequence of ' + schema['items']['$ref'].rpartition('/')[2]
+                    else:
+                        returnValue = schema['$ref'].rpartition('/')[2]
+                    w(u'return {} <: {}'.format(rc, returnValue))
+                else:
+                    w(u'return {}'.format(rc))
+
         for (path, api) in sorted(swag['paths'].iteritems()):
             apiParams = []
             if 'parameters' in api:
@@ -257,20 +278,13 @@ class SwaggerTranslator:
                         # - any string matching the pattern "^x-(.*)$""
                         # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
 
-                        returnValues = OrderedDict()
-                        for key in sorted(responses):
-                            schema = responses.get(key, {}).get('schema')
-                            if schema is not None:
-                                if schema.get('type') == 'array':
-                                    returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
-                                else:
-                                    returnValues[schema['$ref'].rpartition('/')[2]] = True
-                            else:
-                                returnValues[', '.join(responses.keys())] = True
-                            if key == 'default' or key.startswith('x-'):
-                                self.warn('default responses and x-* responses are not implemented')
-
-                        w(u'return {}'.format(', '.join(returnValues)))
+                        if len(responses) > 1:
+                            w(u'one of:')
+                            with w.indent():
+                                includeResponses(responses)
+                        else:
+                            includeResponses(responses)
+                                
 
     def writeDefs(self, swag, w):
         w()
