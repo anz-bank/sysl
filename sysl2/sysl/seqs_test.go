@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"regexp"
 	"strings"
 	"testing"
@@ -9,6 +8,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func TestGenerateSequenceDiag(t *testing.T) {
@@ -215,8 +215,9 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 	expected := make(map[string]string)
 
 	// When
-	result, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	require.NoError(t, err)
 
 	// Then
@@ -231,8 +232,9 @@ func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
 	}
 
 	// When
-	_, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	_, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	assert.Error(t, err)
 }
 
@@ -247,8 +249,9 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 
 	// When
 	assert.Panics(t, func() {
-		_, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-			args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+		_, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+			args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+			args.groupbox, "warn", false)
 		assert.NoError(t, err)
 	})
 }
@@ -293,8 +296,9 @@ deactivate _0
 	}
 
 	// When
-	result, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	require.NoError(t, err)
 
 	// Then
@@ -338,8 +342,9 @@ activate _0
 deactivate _0
 @enduml
 `
-	result, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	require.NoError(t, err)
 	expected := map[string]string{"tests/call.png": expectContent}
 	// Then
@@ -377,8 +382,9 @@ activate _0
 	}
 
 	// When
-	result, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	require.NoError(t, err)
 
 	// Then
@@ -386,30 +392,22 @@ activate _0
 }
 
 func TestDoGenerateSequenceDiagrams(t *testing.T) {
-	type args struct {
-		flags *flag.FlagSet
-		args  []string
+	args := &sdArgs{
+		rootModel: "./tests/",
+		modules:   "sequence_diagram_complex_format.sysl",
+		output:    "%(epname).png",
+		apps:      []string{"Project"},
 	}
-	argsData := []string{"sd"}
-	tests := []struct {
-		name string
-		args args
-	}{
-		{
-			"Case-Do generate sequence diagrams",
-			args{
-				flag.NewFlagSet(argsData[0], flag.PanicOnError),
-				argsData,
-			},
-		},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			// TODO: Figure out why this is broken.
-			// require.NoError(t, DoGenerateSequenceDiagrams(tt.args.args))
-		})
-	}
+	argsData := []string{"sysl", "sd", "--root", args.rootModel, "-o", args.output, "-a", args.apps[0], args.modules}
+	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
+	configureCmdlineForSeqgen(sysl)
+	selectedCommand, err := sysl.Parse(argsData[1:])
+	assert.Nil(t, err, "Cmd line parse failed for sysl sd")
+	assert.Equal(t, selectedCommand, "sd")
+}
+
+func TestDoConstructSequenceDiagramsWithParams(t *testing.T) {
+
 }
 
 func TestDoConstructSequenceDiagramWithGroupingCommandline(t *testing.T) {
@@ -433,8 +431,9 @@ end box`
 	participant _\d
 	participant _\d
 end box`
-	result, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	require.NoError(t, err)
 
 	// Then
@@ -468,8 +467,9 @@ end box`
 	participant _\d
 	participant _\d
 end box`
-	result, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	require.NoError(t, err)
 
 	// Then
@@ -499,12 +499,38 @@ func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
 	boxCloud := `box "cloud" #LightBlue
 	participant _\d
 end box`
-	result, err := DoConstructSequenceDiagrams(args.rootModel, args.endpointFormat, args.appFormat,
-		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes, args.groupbox)
+	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
+		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
+		args.groupbox, "warn", false)
 	require.NoError(t, err)
 
 	// Then
 	boxPresent, err = regexp.MatchString(boxCloud, result["SEQ-Two.png"])
 	assert.Nil(t, err, "Error compiling regular expression")
 	assert.True(t, boxPresent)
+}
+
+func DoConstructSequenceDiagramsWithParams(
+	rootModel, endpointFormat, appFormat, title, output, modules string,
+	endpoints, apps []string,
+	blackboxes [][]string,
+	group string,
+	loglevel string,
+	isVerbose bool,
+) (map[string]string, error) {
+	cmdContextParamSeqgen := &CmdContextParamSeqgen{
+		root:           &rootModel,
+		endpointFormat: &endpointFormat,
+		appFormat:      &appFormat,
+		title:          &title,
+		output:         &output,
+		modulesFlag:    &modules,
+		endpointsFlag:  &endpoints,
+		appsFlag:       &apps,
+		blackboxes:     &blackboxes,
+		loglevel:       &loglevel,
+		group:          &group,
+		isVerbose:      &isVerbose,
+	}
+	return DoConstructSequenceDiagrams(cmdContextParamSeqgen)
 }
