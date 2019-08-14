@@ -105,42 +105,6 @@ func attributeToValue(attr *sysl.Attribute) *sysl.Value {
 	return nil
 }
 
-func getTypeDetail(t *sysl.Type) (string, string) {
-	var typeName, typeDetail string
-	switch x := t.Type.(type) {
-	case *sysl.Type_Primitive_:
-		typeName = "primitive"
-		typeDetail = sysl.Type_Primitive_name[int32(x.Primitive)]
-	case *sysl.Type_TypeRef:
-		typeName = "type_ref"
-		if x.TypeRef.Ref != nil && len(x.TypeRef.Ref.Path) == 1 {
-			typeDetail = x.TypeRef.Ref.Path[0]
-		} else {
-			typeDetail = x.TypeRef.Ref.Appname.Part[0]
-		}
-
-	case *sysl.Type_Sequence:
-		typeName = "sequence"
-		_, d := getTypeDetail(x.Sequence)
-		typeDetail = d
-	case *sysl.Type_Set:
-		typeName = "set"
-		_, d := getTypeDetail(x.Set)
-		typeDetail = d
-	case *sysl.Type_List_:
-		typeName = "list"
-		_, d := getTypeDetail(x.List.Type)
-		typeDetail = d
-	case *sysl.Type_Tuple_:
-		typeName = "tuple"
-	case *sysl.Type_Relation_:
-		typeName = "relation"
-	case *sysl.Type_OneOf_:
-		typeName = "union"
-	}
-	return typeName, typeDetail
-}
-
 func fieldsToValueMap(fields map[string]*sysl.Type) *sysl.Value {
 	fieldMap := MakeValueMap()
 
@@ -156,7 +120,7 @@ func TypeToValue(t *sysl.Type) *sysl.Value {
 	m := MakeValueMap()
 	AddItemToValueMap(m, "docstring", MakeValueString(t.Docstring))
 	AddItemToValueMap(m, "attrs", attrsToValueMap(t.Attrs))
-	typeName, typeDetail := getTypeDetail(t)
+	typeName, typeDetail := syslutil.GetTypeDetail(t)
 	AddItemToValueMap(m, "type", MakeValueString(typeName))
 	AddItemToValueMap(m, typeName, MakeValueString(typeDetail))
 	AddItemToValueMap(m, "optional", MakeValueBool(t.Opt))
@@ -175,7 +139,7 @@ func TypeToValue(t *sysl.Type) *sysl.Value {
 	case *sysl.Type_Sequence:
 		seqMap := MakeValueMap()
 		AddItemToValueMap(m, typeName, seqMap)
-		typeName, typeDetail = getTypeDetail(t.GetSequence())
+		typeName, typeDetail = syslutil.GetTypeDetail(t.GetSequence())
 		AddItemToValueMap(seqMap, "type", MakeValueString(typeName))
 		AddItemToValueMap(seqMap, typeName, MakeValueString(typeDetail))
 		AddItemToValueMap(seqMap, "optional", MakeValueBool(false))
@@ -227,7 +191,7 @@ func aliasToValueMap(types map[string]*sysl.Type) *sysl.Value {
 func queryParamsToValue(qp *sysl.Endpoint_RestParams_QueryParam) *sysl.Value {
 	m := MakeValueMap()
 	AddItemToValueMap(m, "name", MakeValueString(qp.Name))
-	typeName, typeDetail := getTypeDetail(qp.Type)
+	typeName, typeDetail := syslutil.GetTypeDetail(qp.Type)
 	AddItemToValueMap(m, "type", MakeValueString(typeName))
 	AddItemToValueMap(m, "optional", MakeValueBool(qp.Type.GetOpt()))
 	AddItemToValueMap(m, typeName, MakeValueString(typeDetail))
@@ -237,7 +201,7 @@ func queryParamsToValue(qp *sysl.Endpoint_RestParams_QueryParam) *sysl.Value {
 func paramToValue(qp *sysl.Param) *sysl.Value {
 	m := MakeValueMap()
 	AddItemToValueMap(m, "name", MakeValueString(qp.Name))
-	typeName, typeDetail := getTypeDetail(qp.Type)
+	typeName, typeDetail := syslutil.GetTypeDetail(qp.Type)
 	AddItemToValueMap(m, "type", MakeValueString(typeName))
 	AddItemToValueMap(m, typeName, MakeValueString(typeDetail))
 	AddItemToValueMap(m, "attrs", attrsToValueMap(qp.Type.Attrs))

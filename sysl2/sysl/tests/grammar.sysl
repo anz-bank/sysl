@@ -1,0 +1,63 @@
+Go:
+  !type goFile:
+    PackageClause <: PackageClause
+    Comment <: string?
+    ImportDecl <: string?
+    TopLevelDecl(1..) <: string
+
+  !type PackageClause:
+    PackageName <: string
+
+  !alias InterfaceTypeName:
+    string
+
+  !type __Choice_Combination_MethodSpec_MethodName_Signature:
+    MethodName <: string
+    Signature <: Signature
+
+  !union __Choice_MethodSpec:
+    __Choice_Combination_MethodSpec_MethodName_Signature
+    InterfaceTypeName
+
+  !type MethodSpec:
+    __Choice_MethodSpec <: __Choice_MethodSpec
+
+  !type MethodDecl:
+    Receiver <: string
+    FunctionName <: string
+    Signature <: string?
+    Block <: string?
+
+  !union __Choice_Statement:
+    ReturnStmt
+    DeclareAndAssignStmt
+    AssignStmt
+    IfElseStmt
+    IncrementVarByStmt
+    FunctionCall
+    VarDecl
+    ForLoop
+
+  !type VarDecl:
+    identifier <: string
+    TypeName <: string
+
+  !type Statement:
+    __Choice_Statement <: __Choice_Statement
+
+  !type StatementList:
+    Statement <: Statement
+
+  !table RelationalType:
+    Foo <: string
+
+  !type DeclareAndAssignStmt:
+    Variables <: string
+    Expression <: Expression
+
+  !union __Choice_Expression:
+    FunctionCall
+    ValueExpr
+
+  !type Expression:
+    __Choice_Expression <: __Choice_Expression
