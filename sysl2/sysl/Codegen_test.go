@@ -10,7 +10,8 @@ import (
 )
 
 func TestGenerateCode(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
 	assert.Equal(t, 1, len(output), "unexpected length of output")
 	assert.Equal(t, 1, len(root), "unexpected length of root")
@@ -46,7 +47,8 @@ func TestGenerateCode(t *testing.T) {
 }
 
 func TestGenerateCodeNoComment(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
+		"tests/test.gen.g", "javaFile", "warn", false)
 	assert.Equal(t, 1, len(output), "unexpected length of output")
 	root := output[0].output
 	assert.Equal(t, 1, len(root), "unexpected length of root")
@@ -73,20 +75,22 @@ func TestGenerateCodeNoComment(t *testing.T) {
 }
 
 func TestGenerateCodeNoPackage(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
+		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
 	assert.Nil(t, root, "unexpected root")
 }
 
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
-	output := GenerateCode(
-		".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
+		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
 	assert.Nil(t, root, "unexpected root")
 }
 
 func TestGenerateCodePerType(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
+		"tests/test.gen.g", "javaFile", "warn", false)
 	assert.Equal(t, 1, len(output), "unexpected length of output")
 	assert.Equal(t, "Request.java", output[0].filename, "unexpected length of output")
 
@@ -107,7 +111,8 @@ func TestGenerateCodePerType(t *testing.T) {
 }
 
 func TestSerialize(t *testing.T) {
-	output := GenerateCode(".", "tests/model.sysl", ".", "tests/test.gen.sysl", "tests/test.gen.g", "javaFile")
+	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+		"tests/test.gen.g", "javaFile", "warn", false)
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
@@ -140,4 +145,20 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	tail := root[2].(Node)
 	assert.Equal(t, 1, len(tail))
 	assert.Equal(t, "tail", tail[0].(Node)[0].(string))
+}
+
+func GenerateCodeWithParams(rootModel, model, rootTransform, transform, grammar, start string, loglevel string,
+	isVerbose bool,
+) []*CodeGenOutput {
+	cmdContextParamCodegen := &CmdContextParamCodegen{
+		rootModel:     &rootModel,
+		model:         &model,
+		rootTransform: &rootTransform,
+		transform:     &transform,
+		grammar:       &grammar,
+		start:         &start,
+		loglevel:      &loglevel,
+		isVerbose:     &isVerbose,
+	}
+	return GenerateCode(cmdContextParamCodegen)
 }

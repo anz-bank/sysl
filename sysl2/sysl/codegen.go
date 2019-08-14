@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"io"
 	"io/ioutil"
 	"os"
@@ -14,6 +13,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Node can be string or node
@@ -232,12 +232,28 @@ func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
 
 // GenerateCode transform input sysl model to code in the target language described by
 // grammar and a sysl transform
-func GenerateCode(rootModel, model, rootTransform, transform, grammar, start string) []*CodeGenOutput {
+func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
 	var codeOutput []*CodeGenOutput
 
-	mod, modelAppName := loadAndGetDefaultApp(rootModel, model)
-	tx, transformAppName := loadAndGetDefaultApp(rootTransform, transform)
-	g := readGrammar(grammar, "gen", start)
+	logrus.Debugf("root-model: %s\n", *codegenParams.rootModel)
+	logrus.Debugf("root-transform: %s\n", *codegenParams.rootTransform)
+	logrus.Debugf("model: %s\n", *codegenParams.model)
+	logrus.Debugf("transform: %s\n", *codegenParams.transform)
+	logrus.Debugf("grammar: %s\n", *codegenParams.grammar)
+	logrus.Debugf("start: %s\n", *codegenParams.start)
+	logrus.Debugf("loglevel: %s\n", *codegenParams.loglevel)
+
+	if *codegenParams.isVerbose {
+		*codegenParams.loglevel = debug
+	}
+	// Default info
+	if level, has := logLevels[*codegenParams.loglevel]; has {
+		logrus.SetLevel(level)
+	}
+
+	mod, modelAppName := loadAndGetDefaultApp(*codegenParams.rootModel, *codegenParams.model)
+	tx, transformAppName := loadAndGetDefaultApp(*codegenParams.rootTransform, *codegenParams.transform)
+	g := readGrammar(*codegenParams.grammar, "gen", *codegenParams.start)
 	if g == nil {
 		panic(errors.Errorf("Unable to load grammar"))
 	}
@@ -279,28 +295,21 @@ func outputToFiles(outDir string, output []*CodeGenOutput) error {
 	return nil
 }
 
-// DoGenerateCode generate code for the given model, using transform
-// and the grammar of the target language
-// TODO: Remove nolint when code that uses stdout and stderr is added.
-//nolint:unparam
-func DoGenerateCode(flags *flag.FlagSet, args []string) error {
-	rootModel := flags.String("root-model", ".", "sysl root directory for input model file (default: .)")
-	rootTransform := flags.String("root-transform", ".", "sysl root directory for input transform file (default: .)")
-	model := flags.String("model", ".", "model.sysl")
-	transform := flags.String("transform", ".", "transform.sysl")
-	grammar := flags.String("grammar", ".", "grammar.g")
-	start := flags.String("start", ".", "start rule for the grammar")
-	outDir := flags.String("outdir", ".", "output directory")
+func configureCmdlineForCodegen(sysl *kingpin.Application) *CmdContextParamCodegen {
+	gen := sysl.Command("gen", "Generate code")
+	returnValues := &CmdContextParamCodegen{}
 
-	if err := flags.Parse(args[1:]); err != nil {
-		return err
-	}
-	logrus.Warnf("root-model: %s\n", *rootModel)
-	logrus.Warnf("root-transform: %s\n", *rootTransform)
-	logrus.Warnf("model: %s\n", *model)
-	logrus.Warnf("transform: %s\n", *transform)
-	logrus.Warnf("grammar: %s\n", *grammar)
-	logrus.Warnf("start: %s\n", *start)
-	output := GenerateCode(*rootModel, *model, *rootTransform, *transform, *grammar, *start)
-	return outputToFiles(*outDir, output)
+	returnValues.rootModel = gen.Flag("root-model",
+		"sysl root directory for input model file (default: .)").Default(".").String()
+	returnValues.rootTransform = gen.Flag("root-transform",
+		"sysl root directory for input transform file (default: .)").Default(".").String()
+	returnValues.model = gen.Flag("model", "model.sysl").Default(".").String()
+	returnValues.transform = gen.Flag("transform", "grammar.g").Default(".").String()
+	returnValues.grammar = gen.Flag("grammar", "grammar.g").Default(".").String()
+	returnValues.start = gen.Flag("start", "start rule for the grammar").Default(".").String()
+	returnValues.outDir = gen.Flag("outdir", "output directory").Default(".").String()
+	returnValues.loglevel = gen.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
+	returnValues.isVerbose = gen.Flag("verbose", "show output").Short('v').Default("false").Bool()
+
+	return returnValues
 }
