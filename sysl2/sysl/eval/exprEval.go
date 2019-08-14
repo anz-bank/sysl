@@ -1,4 +1,4 @@
-package main
+package eval
 
 import (
 	"sort"
@@ -23,7 +23,7 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 			logrus.Debugf("Evaluating %s", ss.Assign.Name)
 			res := Eval(txApp, assign, ss.Assign.Expr)
 			logrus.Tracef("Eval Result %s =:\n\t\t %v:\n", ss.Assign.Name, res)
-			addItemToValueMap(result, ss.Assign.Name, res)
+			AddItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
 	}
@@ -124,11 +124,11 @@ func evalTransform(txApp *sysl.Application, assign Scope, x *sysl.Expr_Transform
 				logrus.Debugf("Evaluation Argvalue %s", key)
 				a := MakeValueMap()
 				logrus.Tracef("Evaluation Argvalue as a map: key=(%s), value=(%v)\n", key, item)
-				addItemToValueMap(a, "key", MakeValueString(key))
-				addItemToValueMap(a, "value", item)
+				AddItemToValueMap(a, "key", MakeValueString(key))
+				AddItemToValueMap(a, "value", item)
 				assign[scopeVar] = a
 				res := evalTransformStmts(txApp, assign, x.Transform)
-				appendItemToValueList(resultList, res)
+				AppendItemToValueList(resultList, res)
 			}
 			delete(assign, scopeVar)
 			if e.Type.GetSet() != nil {
@@ -188,7 +188,7 @@ func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.V
 	}
 	list := MakeValueList()
 	for _, argExpr := range x.Call.Arg {
-		appendItemToValueList(list.GetList(), Eval(txApp, assign, argExpr))
+		AppendItemToValueList(list.GetList(), Eval(txApp, assign, argExpr))
 	}
 	return evalGoFunc(x.Call.Func, list)
 }
@@ -235,7 +235,7 @@ func evalSet(txApp *sysl.Application, assign Scope, x *sysl.Expr_Set) *sysl.Valu
 	{
 		setResult := MakeValueSet()
 		for _, s := range x.Set.Expr {
-			appendItemToValueList(setResult.GetSet(), Eval(txApp, assign, s))
+			AppendItemToValueList(setResult.GetSet(), Eval(txApp, assign, s))
 		}
 		return setResult
 	}
@@ -245,14 +245,14 @@ func evalList(txApp *sysl.Application, assign Scope, x *sysl.Expr_List_) *sysl.V
 	{
 		listResult := MakeValueList()
 		for _, s := range x.List.Expr {
-			appendItemToValueList(listResult.GetList(), Eval(txApp, assign, s))
+			AppendItemToValueList(listResult.GetList(), Eval(txApp, assign, s))
 		}
 		return listResult
 	}
 }
 
-// EvalView evaluate the view using the Scope
-func EvalView(mod *sysl.Module, appName, viewName string, s Scope) *sysl.Value {
+// EvaluateView evaluate the view using the Scope
+func EvaluateView(mod *sysl.Module, appName, viewName string, s Scope) *sysl.Value {
 	txApp := mod.Apps[appName]
 	view := txApp.Views[viewName]
 	if view.Expr.Type == nil {

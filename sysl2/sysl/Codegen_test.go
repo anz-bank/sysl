@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/eval"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -120,12 +121,12 @@ func TestSerialize(t *testing.T) {
 
 func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	g := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
-	obj := MakeValueMap()
-	m := MakeValueMap()
-	addItemToValueMap(m, "text", MakeValueString("hello"))
-	addItemToValueMap(obj, "header", MakeValueBool(true))
-	addItemToValueMap(obj, "tail", MakeValueBool(true))
-	addItemToValueMap(obj, "body", m)
+	obj := eval.MakeValueMap()
+	m := eval.MakeValueMap()
+	eval.AddItemToValueMap(m, "text", eval.MakeValueString("hello"))
+	eval.AddItemToValueMap(obj, "header", eval.MakeValueBool(true))
+	eval.AddItemToValueMap(obj, "tail", eval.MakeValueBool(true))
+	eval.AddItemToValueMap(obj, "body", m)
 	output := processRule(g, obj, "pureToken")
 	assert.NotNil(t, output)
 

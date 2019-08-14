@@ -1,4 +1,4 @@
-package main
+package eval
 
 import (
 	"fmt"
@@ -16,21 +16,21 @@ type evalExprFunc func(
 	rhs *sysl.Expr,
 ) *sysl.Value
 
-// EvalStrategy interface to evaluate binary expr
-type EvalStrategy interface {
+// Strategy interface to evaluate binary expr
+type Strategy interface {
 	eval(*sysl.Application, Scope, *sysl.Expr_BinExpr) *sysl.Value
 }
 
 // DefaultBinExprStrategy is to evaluate lhs and rhs expr's first and then pass it to fn
 type DefaultBinExprStrategy struct{}
 
-// EvalLHSOverRHSStrategy binds rhs expression over each element of the LHS.
+// LHSOverRHSStrategy binds rhs expression over each element of the LHS.
 // Assumes lhs is a collection
-type EvalLHSOverRHSStrategy struct{}
+type LHSOverRHSStrategy struct{}
 
 //nolint:gochecknoglobals
 var (
-	functionEvalStrategy = map[sysl.Expr_BinExpr_Op]EvalStrategy{
+	functionEvalStrategy = map[sysl.Expr_BinExpr_Op]Strategy{
 		sysl.Expr_BinExpr_EQ:      DefaultBinExprStrategy{},
 		sysl.Expr_BinExpr_ADD:     DefaultBinExprStrategy{},
 		sysl.Expr_BinExpr_SUB:     DefaultBinExprStrategy{},
@@ -45,8 +45,8 @@ var (
 		sysl.Expr_BinExpr_LE:      DefaultBinExprStrategy{},
 		sysl.Expr_BinExpr_NE:      DefaultBinExprStrategy{},
 		sysl.Expr_BinExpr_AND:     DefaultBinExprStrategy{},
-		sysl.Expr_BinExpr_FLATTEN: EvalLHSOverRHSStrategy{},
-		sysl.Expr_BinExpr_WHERE:   EvalLHSOverRHSStrategy{},
+		sysl.Expr_BinExpr_FLATTEN: LHSOverRHSStrategy{},
+		sysl.Expr_BinExpr_WHERE:   LHSOverRHSStrategy{},
 	}
 
 	// key = op, lhs & rhs types
@@ -117,7 +117,7 @@ func (op DefaultBinExprStrategy) eval(txApp *sysl.Application, assign Scope, bin
 	panic(errors.Errorf("Unsupported operation:DefaultBinExprStrategy: %s", key))
 }
 
-func (op EvalLHSOverRHSStrategy) eval(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
+func (op LHSOverRHSStrategy) eval(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
 	lhsValue := Eval(txApp, assign, binexpr.Lhs)
 	vType := getValueType(lhsValue)
 	itemType := getContainedType(lhsValue)

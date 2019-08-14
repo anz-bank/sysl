@@ -9,6 +9,7 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/eval"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -141,7 +142,7 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 	rule := g.Rules[ruleName]
 	if rule == nil {
 		root := Node{}
-		if IsCollectionType(obj) {
+		if eval.IsCollectionType(obj) {
 			return nil
 		}
 		// Should we convert int and bools to string and return?
@@ -167,14 +168,14 @@ func applyTranformToModel(modelName, transformAppName, viewName string, model, t
 	if view == nil {
 		panic(errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName))
 	}
-	s := Scope{}
+	s := eval.Scope{}
 	s.AddApp("app", modelApp)
 	var result *sysl.Value
 	// assume args are
 	//  app <: sysl.App and
 	//  type <: sysl.Type
 	if len(view.Param) >= 2 {
-		result = MakeValueList()
+		result = eval.MakeValueList()
 		var tNames []string
 		for tName := range modelApp.Types {
 			tNames = append(tNames, tName)
@@ -182,12 +183,12 @@ func applyTranformToModel(modelName, transformAppName, viewName string, model, t
 		sort.Strings(tNames)
 		for _, tName := range tNames {
 			t := modelApp.Types[tName]
-			s["typeName"] = MakeValueString(tName)
-			s["type"] = typeToValue(t)
-			appendItemToValueList(result.GetList(), EvalView(transform, transformAppName, viewName, s))
+			s["typeName"] = eval.MakeValueString(tName)
+			s["type"] = eval.TypeToValue(t)
+			eval.AppendItemToValueList(result.GetList(), eval.EvaluateView(transform, transformAppName, viewName, s))
 		}
 	} else {
-		result = EvalView(transform, transformAppName, viewName, s)
+		result = eval.EvaluateView(transform, transformAppName, viewName, s)
 	}
 
 	return result
