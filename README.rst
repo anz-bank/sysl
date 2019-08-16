@@ -41,7 +41,7 @@ Now you can execute Sysl on the command line with ::
 See ``sysl --help`` and ``reljam --help`` for more options.
 
 Docker
-~~~~~
+~~~~~~
 Install `Docker <https://docs.docker.com/install/>`_ and pull the Docker Image with ::
 
   > docker pull anzbank/sysl
