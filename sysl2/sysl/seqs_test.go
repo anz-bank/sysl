@@ -400,7 +400,7 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 	}
 	argsData := []string{"sysl", "sd", "--root", args.rootModel, "-o", args.output, "-a", args.apps[0], args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForSeqgen(sysl)
+	configureCmdlineForSeqgen(sysl, map[string][]string{})
 	selectedCommand, err := sysl.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl sd")
 	assert.Equal(t, selectedCommand, "sd")

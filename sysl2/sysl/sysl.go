@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -25,14 +26,17 @@ const debug string = "debug"
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string) error {
-	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	textpbParams := configureCmdlineForPb(sysl)
-	codegenParams := configureCmdlineForCodegen(sysl)
-	sequenceParams := configureCmdlineForSeqgen(sysl)
-	intgenParams := configureCmdlineForIntgen(sysl)
+	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
+	flagmap := map[string][]string{}
+	textpbParams := configureCmdlineForPb(syslCmd, flagmap)
+	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
+	sequenceParams := configureCmdlineForSeqgen(syslCmd, flagmap)
+	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
+
 	var selectedCommand string
 	var err error
-	if selectedCommand, err = sysl.Parse(args[1:]); err != nil {
+	syslCmd.Validate(generateAppargValidator(args[1], flagmap))
+	if selectedCommand, err = syslCmd.Parse(args[1:]); err != nil {
 		return err
 	}
 	switch selectedCommand {
@@ -93,7 +97,8 @@ func main() {
 	}
 }
 
-func configureCmdlineForPb(sysl *kingpin.Application) *CmdContextParamPbgen {
+func configureCmdlineForPb(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamPbgen {
+	flagmap["pb"] = []string{"root", "output", "mode"}
 	textpb := sysl.Command("pb", "Generate textpb/json")
 	returnValues := &CmdContextParamPbgen{}
 
@@ -158,4 +163,27 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
 		return pbutil.TextPB(mod, *textpbParams.output)
 	}
 	return nil
+}
+
+func generateAppargValidator(selectedCommand string, flags map[string][]string) func(*kingpin.Application) error {
+	return func(app *kingpin.Application) error {
+		var errorMsg strings.Builder
+		for _, longFlagName := range flags[selectedCommand] {
+			if flag := app.GetCommand(selectedCommand).GetFlag(longFlagName); flag != nil {
+				val := flag.Model().Value.String()
+				if val != "" {
+					val = strings.Trim(val, " ")
+					if val == "" {
+						errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
+					}
+				} else if len(flag.Model().Default) > 0 {
+					errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
+				}
+			}
+		}
+		if errorMsg.Len() > 0 {
+			return errors.New(errorMsg.String())
+		}
+		return nil
+	}
 }

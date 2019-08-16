@@ -295,7 +295,8 @@ func outputToFiles(outDir string, output []*CodeGenOutput) error {
 	return nil
 }
 
-func configureCmdlineForCodegen(sysl *kingpin.Application) *CmdContextParamCodegen {
+func configureCmdlineForCodegen(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamCodegen {
+	flagmap["gen"] = []string{"root-model", "root-transform", "model", "transform", "grammar", "start", "outdir"}
 	gen := sysl.Command("gen", "Generate code")
 	returnValues := &CmdContextParamCodegen{}
 
