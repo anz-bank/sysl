@@ -89,7 +89,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 	log.Debugf("output: %s\n", *cmdContextParam.output)
 	log.Debugf("loglevel: %s\n", *cmdContextParam.loglevel)
 
-	if cmdContextParam.plantuml == nil {
+	if *cmdContextParam.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
 		cmdContextParam.plantuml = &plantuml
 		if *cmdContextParam.plantuml == "" {

@@ -18,7 +18,7 @@ func TestWrite(t *testing.T) {
 	// then
 	assert.Nil(t, err)
 	assert.Equal(t, 5, n)
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 	assert.True(t, w.atBeginOfLine)
 }
 
@@ -32,7 +32,7 @@ func TestWriteWithoutln(t *testing.T) {
 	// then
 	assert.Nil(t, err)
 	assert.Equal(t, 4, n)
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 	assert.False(t, w.atBeginOfLine)
 }
 
@@ -80,7 +80,7 @@ func TestWriteString(t *testing.T) {
 	// then
 	assert.Nil(t, err)
 	assert.Equal(t, 5, n)
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 	assert.True(t, w.atBeginOfLine)
 }
 
@@ -144,7 +144,7 @@ func TestUnindent(t *testing.T) {
 	assert.Equal(t, 1, w.ind)
 
 	w.Unindent()
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 
 	assert.Panics(t, func() {
 		w.Unindent()
@@ -188,17 +188,17 @@ func TestActivatedWithSuppressed(t *testing.T) {
 	w := MakeSequenceDiagramWriter(true)
 
 	d := w.Activated("a", true)
-	assert.Equal(t, 0, w.body.Len())
+	assert.Zero(t, w.body.Len())
 	assert.True(t, w.atBeginOfLine)
 	assert.Equal(t, map[string]int{}, w.active)
 
 	d()
-	assert.Equal(t, 0, w.body.Len())
+	assert.Zero(t, w.body.Len())
 	assert.True(t, w.atBeginOfLine)
 	assert.Equal(t, map[string]int{}, w.active)
 
 	d()
-	assert.Equal(t, 0, w.body.Len())
+	assert.Zero(t, w.body.Len())
 	assert.True(t, w.atBeginOfLine)
 	assert.Equal(t, map[string]int{}, w.active)
 }

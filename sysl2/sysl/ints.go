@@ -25,7 +25,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	log.Debugf("output: %s\n", *intgenParams.output)
 	log.Debugf("loglevel: %s\n", *intgenParams.loglevel)
 
-	if intgenParams.plantuml == nil {
+	if *intgenParams.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
 		intgenParams.plantuml = &plantuml
 		if *intgenParams.plantuml == "" {

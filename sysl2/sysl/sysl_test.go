@@ -44,7 +44,7 @@ func testMain2Stdout(t *testing.T, args []string, golden string) {
 	require.NoError(t, err)
 
 	_, err = os.Stat("-")
-	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
+	assert.True(t, os.IsNotExist(err))
 }
 
 func TestMain2TextPBStdout(t *testing.T) {
@@ -60,7 +60,7 @@ func TestMain2BadMode(t *testing.T) {
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
-	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
+	assert.True(t, os.IsNotExist(err))
 }
 
 func TestMain2BadLog(t *testing.T) {
@@ -68,7 +68,7 @@ func TestMain2BadLog(t *testing.T) {
 	assert.NotZero(t, rc)
 
 	_, err := os.Stat("-")
-	assert.True(t, os.IsNotExist(err), "Should not have created file '-'")
+	assert.True(t, os.IsNotExist(err))
 }
 
 func TestMain2SeqdiagWithMissingFile(t *testing.T) {
@@ -164,10 +164,11 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 }
 
 func TestMain2WithGenerateIntegrations(t *testing.T) {
-	main2([]string{"sysl", "ints", "--root", "./tests/", "-o", "indirect_1.png", "-j", "Project",
-		"indirect_1.sysl"}, main3)
-	_, err2 := os.Stat("indirect_1.png")
+	out := "indirect_1.png"
+	main2([]string{"sysl", "ints", "--root", "./tests/", "-o", out, "-j", "Project", "indirect_1.sysl"}, main3)
+	_, err2 := os.Stat(out)
 	assert.True(t, err2 == nil)
+	os.Remove(out)
 }
 
 func TestMain2WithGenerateCode(t *testing.T) {
@@ -175,16 +176,21 @@ func TestMain2WithGenerateCode(t *testing.T) {
 		"--root-transform", ".", "--transform", "tests/test.gen_multiple_annotations.sysl",
 		"--grammar", "tests/test.gen.g", "--start", "javaFile"}, main3)
 	assert.True(t, ret == 0)
+	os.Remove("Model.java")
 }
 
 func TestMain2WithTestPbJsonMode(t *testing.T) {
-	ret := main2([]string{"sysl", "pb", "--mode", "textpb", "-o", "tests/callout", "tests/call.sysl"}, main3)
+	out := "tests/callout"
+	ret := main2([]string{"sysl", "pb", "--mode", "textpb", "-o", out, "tests/call.sysl"}, main3)
 	assert.True(t, ret == 0)
+	os.Remove(out)
 }
 
 func TestMain2WithTestPbMode(t *testing.T) {
-	ret := main2([]string{"sysl", "pb", "--mode", "json", "-o", "tests/callout", "tests/call.sysl"}, main3)
+	out := "tests/callout"
+	ret := main2([]string{"sysl", "pb", "--mode", "json", "-o", out, "tests/call.sysl"}, main3)
 	assert.True(t, ret == 0)
+	os.Remove(out)
 }
 
 func TestMain2WithTestPbJsonConsole(t *testing.T) {

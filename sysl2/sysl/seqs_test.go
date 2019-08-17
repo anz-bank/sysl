@@ -377,10 +377,6 @@ activate _0
  deactivate _0
 @enduml
 `
-	expected := map[string]string{
-		"Seq.png": expectContent,
-	}
-
 	// When
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
@@ -388,7 +384,7 @@ activate _0
 	require.NoError(t, err)
 
 	// Then
-	assert.Equal(t, expected, result)
+	assert.Equal(t, map[string]string{"Seq.png": expectContent}, result)
 }
 
 func TestDoGenerateSequenceDiagrams(t *testing.T) {
@@ -518,6 +514,7 @@ func DoConstructSequenceDiagramsWithParams(
 	loglevel string,
 	isVerbose bool,
 ) (map[string]string, error) {
+	plantuml := ""
 	cmdContextParamSeqgen := &CmdContextParamSeqgen{
 		root:           &rootModel,
 		endpointFormat: &endpointFormat,
@@ -531,6 +528,7 @@ func DoConstructSequenceDiagramsWithParams(
 		loglevel:       &loglevel,
 		group:          &group,
 		isVerbose:      &isVerbose,
+		plantuml:       &plantuml,
 	}
 	return DoConstructSequenceDiagrams(cmdContextParamSeqgen)
 }

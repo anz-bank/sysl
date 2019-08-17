@@ -146,14 +146,14 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 func testParseAgainstGolden(t *testing.T, filename, root string) {
 	equal, err := parseAndCompareWithGolden(filename, root, true)
 	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", path.Join(root, filename))
+		assert.True(t, equal, "%#v %#v", root, filename)
 	}
 }
 
 func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
 	equal, err := parseAndCompareWithGolden(filename, "", false)
 	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", filename)
+		assert.True(t, equal, "%#v", filename)
 	}
 }
 

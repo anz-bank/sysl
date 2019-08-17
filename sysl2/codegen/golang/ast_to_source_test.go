@@ -26,7 +26,7 @@ func testFormatEmpty(t *testing.T, n interface{}) {
 
 func testFormatPanics(t *testing.T, n interface{}) {
 	actual := fmt.Sprintf("%s", n)
-	assert.True(t, strings.Contains(actual, "%!s(PANIC="), "%s", actual)
+	assert.Contains(t, actual, "%!s(PANIC=")
 }
 
 func testFormatInfix(t *testing.T, n interface{}, prefix, expected, suffix string) bool {
@@ -38,14 +38,11 @@ func testFormatInfix(t *testing.T, n interface{}, prefix, expected, suffix strin
 		return false
 	}
 	actual := strings.TrimSpace(string(formatted))
-	if !assert.True(t, strings.HasPrefix(actual, prefix)) ||
-		!assert.True(t, strings.HasSuffix(actual, suffix)) {
-		t.Errorf("unformatted: %#v\nformatted: %#v", output, actual)
-		return false
-	}
+	assert.True(t, strings.HasPrefix(actual, prefix), "%#v %#v", output, actual)
+	assert.True(t, strings.HasSuffix(actual, suffix), "%#v %#v", output, actual)
 	return assert.Equal(t,
 		expected, strings.TrimSpace(actual[len(prefix):len(actual)-len(suffix)]),
-		"unformatted: %s", output)
+		"%s", output)
 }
 
 func testFormatType(t *testing.T, typ Expr, expected string) {

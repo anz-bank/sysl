@@ -448,12 +448,14 @@ func TestAllStmts(t *testing.T) {
 	comparePUML(t, expected, result)
 }
 
-func GenerateIntegrationsWithParams(rootModel, title, output, project, filter, modules string,
+func GenerateIntegrationsWithParams(
+	rootModel, title, output, project, filter, modules string,
 	exclude []string,
 	clustered, epa bool,
 	loglevel string,
 	isVerbose bool,
 ) (map[string]string, error) {
+	plantuml := ""
 	cmdContextParamIntgen := &CmdContextParamIntgen{
 		root:      &rootModel,
 		title:     &title,
@@ -466,6 +468,7 @@ func GenerateIntegrationsWithParams(rootModel, title, output, project, filter, m
 		epa:       &epa,
 		loglevel:  &loglevel,
 		isVerbose: &isVerbose,
+		plantuml:  &plantuml,
 	}
 	return GenerateIntegrations(cmdContextParamIntgen)
 }
