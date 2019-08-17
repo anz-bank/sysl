@@ -7,3 +7,6 @@ run:
     - sysl2/sysl/grammar/syslparser_base_listener.go
 linters:
   enable-all: true
+linters-settings:
+  errcheck:
+    check-blank: true

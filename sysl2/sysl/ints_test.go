@@ -27,7 +27,8 @@ skinparam component {
 }`
 
 func TestGenerateIntegrations(t *testing.T) {
-	m, _ := parse.Parse("demo/simple/sysl-ints.sysl", "../../")
+	m, err := parse.Parse("demo/simple/sysl-ints.sysl", "../../")
+	require.NoError(t, err)
 	require.NotNil(t, m)
 
 	stmt := &sysl.Statement{}

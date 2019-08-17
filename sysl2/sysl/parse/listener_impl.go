@@ -2297,7 +2297,10 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 			Decimal: txt,
 		}
 	case ctx.E_DIGITS() != nil:
-		iVal, _ := strconv.Atoi(txt)
+		iVal, err := strconv.Atoi(txt)
+		if err != nil {
+			panic(err)
+		}
 		val.Value = &sysl.Value_I{
 			I: int64(iVal),
 		}

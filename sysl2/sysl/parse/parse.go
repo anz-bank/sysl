@@ -16,14 +16,25 @@ import (
 
 // Parse parses a Sysl file under a specified root.
 func Parse(filename string, root string) (*sysl.Module, error) {
+	fs, err := RootFS(root)
+	if err != nil {
+		return nil, err
+	}
+	return FSParse(filename, fs)
+}
+
+func RootFS(root string) (http.FileSystem, error) {
 	if root == "" {
 		root = "."
 	}
 	if !dirExists(root) {
 		return nil, Exitf(ImportError, "root directory does not exist")
 	}
-	root, _ = filepath.Abs(root)
-	return FSParse(filename, http.Dir(root))
+	root, err := filepath.Abs(root)
+	if err != nil {
+		return nil, err
+	}
+	return http.Dir(root), nil
 }
 
 // FSParse ...

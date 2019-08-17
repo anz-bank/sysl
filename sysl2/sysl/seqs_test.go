@@ -12,7 +12,8 @@ import (
 )
 
 func TestGenerateSequenceDiag(t *testing.T) {
-	m, _ := parse.Parse("demo/simple/sysl-sd.sysl", "../../")
+	m, err := parse.Parse("demo/simple/sysl-sd.sysl", "../../")
+	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
 	p.endpoints = []string{"WebFrontend <- RequestProfile"}
@@ -56,7 +57,8 @@ deactivate _0
 }
 
 func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
-	m, _ := parse.Parse("sequence_diagram_name_format.sysl", "./tests/")
+	m, err := parse.Parse("sequence_diagram_name_format.sysl", "./tests/")
+	require.NoError(t, err)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
@@ -105,7 +107,8 @@ skinparam maxMessageSize 250
 }
 
 func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
-	m, _ := parse.Parse("sequence_diagram_name_format.sysl", "./tests/")
+	m, err := parse.Parse("sequence_diagram_name_format.sysl", "./tests/")
+	require.NoError(t, err)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}

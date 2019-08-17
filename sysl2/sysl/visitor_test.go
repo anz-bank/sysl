@@ -234,27 +234,22 @@ func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T)
 }
 
 func TestStatementElementIsLastStmt(t *testing.T) {
-	// Given
 	e := &StatementElement{
 		isLastParentStmt: true,
 		stmts:            []*sysl.Statement{{}},
 	}
-
-	// When
-	actual := e.isLastStmt(0)
-
-	// Then
-	assert.True(t, actual)
+	assert.True(t, e.isLastStmt(0))
 }
 
 func readModule(p string) (*sysl.Module, error) {
 	m := &sysl.Module{}
-	f, _ := os.Open(p)
-
+	f, err := os.Open(p)
+	if err != nil {
+		return nil, err
+	}
 	if err := jsonpb.Unmarshal(f, m); err != nil {
 		return nil, err
 	}
-
 	return m, nil
 }
 
