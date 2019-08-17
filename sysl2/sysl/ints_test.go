@@ -6,6 +6,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -34,7 +35,7 @@ func TestGenerateIntegrations(t *testing.T) {
 	stmt := &sysl.Statement{}
 	args := &Args{"", "Project", false, false}
 	apps := []string{"System1", "IntegratedSystem", "System2"}
-	highlights := MakeStrSet("IntegratedSystem", "System1", "System2")
+	highlights := syslutil.MakeStrSet("IntegratedSystem", "System1", "System2")
 	s1 := AppElement{"IntegratedSystem", "integrated_endpoint_1"}
 	t1 := AppElement{"System1", "endpoint"}
 	dep1 := AppDependency{
