@@ -279,17 +279,13 @@ func inferExprType(mod *sysl.Module,
 				if stmt.GetAssign() != nil {
 					assign := stmt.GetAssign()
 					aexpr := assign.Expr
-					if aexpr.GetTransform() == nil {
-						panic("expression should be of type transform")
-					}
+					syslutil.Assert(aexpr.GetTransform() != nil, "expression should be of type transform")
 					ftype := aexpr.Type
 					setof := ftype.GetSet() != nil
 					if setof {
 						ftype = ftype.GetSet()
 					}
-					if ftype.GetTypeRef() == nil {
-						panic("transform type should be type_ref")
-					}
+					syslutil.Assert(ftype.GetTypeRef() != nil, "transform type should be type_ref")
 					t1 := &sysl.Type{
 						Type: &sysl.Type_TypeRef{
 							TypeRef: &sysl.ScopedRef{
