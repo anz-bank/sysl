@@ -3685,7 +3685,7 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	if path[0] != '/' {
 		path = filepath.ToSlash(s.base) + "/" + path
 	}
-	path += ".sysl"
+	path += syslExt
 	s.imports = append(s.imports, path)
 }
 

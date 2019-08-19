@@ -16,6 +16,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func readSyslModule(filename string) (*sysl.Module, error) {
@@ -135,8 +136,8 @@ func parseAndCompare(
 
 func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
 	goldenFilename := filename
-	if !strings.HasSuffix(goldenFilename, ".sysl") {
-		goldenFilename += ".sysl"
+	if !strings.HasSuffix(goldenFilename, syslExt) {
+		goldenFilename += syslExt
 	}
 	goldenFilename += ".golden.textpb"
 	golden := path.Join(root, goldenFilename)
@@ -176,7 +177,7 @@ func TestParseDirectoryAsFile(t *testing.T) {
 	dirname := "not-a-file.sysl"
 	tmproot := os.TempDir()
 	tmpdir := path.Join(tmproot, dirname)
-	os.Mkdir(tmpdir, 0755)
+	require.NoError(t, os.Mkdir(tmpdir, 0755))
 	defer os.Remove(tmpdir)
 	_, err := parseComparable(dirname, tmproot, false)
 	assert.Error(t, err)
