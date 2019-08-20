@@ -9,6 +9,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -67,14 +68,11 @@ func constructFormatParser(former, latter string) *FormatParser {
 
 func escapeWordBoundary(src string) string {
 	result, err := json.Marshal(src)
-	if err != nil {
-		panic(err)
-	}
+	syslutil.PanicOnError(err)
 	escapeStr := strings.Replace(string(result), `\u0008`, `\\b`, -1)
 	var val string
-	if err := json.Unmarshal([]byte(escapeStr), &val); err != nil {
-		panic(err)
-	}
+	err = json.Unmarshal([]byte(escapeStr), &val)
+	syslutil.PanicOnError(err)
 
 	return val
 }

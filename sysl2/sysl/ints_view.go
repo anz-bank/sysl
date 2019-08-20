@@ -308,11 +308,7 @@ func (v *IntsDiagramVisitor) generateEPAView(viewParams viewParams, params *Ints
 		} else {
 			srcPtrns = pubSubSrcPtrns
 		}
-		if srcPtrns != nil || targetPatterns != nil {
-			ptrns = strings.Join(srcPtrns.ToSlice(), ", ") + " → " + strings.Join(targetPatterns.ToSlice(), ", ")
-		} else {
-			ptrns = ""
-		}
+		ptrns = strings.Join(srcPtrns.ToSlice(), ", ") + " → " + strings.Join(targetPatterns.ToSlice(), ", ")
 		attrs["patterns"] = ptrns
 		if needsInt {
 			attrs["needs_int"] = strconv.FormatBool(needsInt)

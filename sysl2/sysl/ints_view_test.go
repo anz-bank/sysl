@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -246,30 +247,13 @@ func TestBuildClusterForComponentView(t *testing.T) {
 }
 
 func TestGenerateIntsView(t *testing.T) {
-	//Given
 	var stringBuilder strings.Builder
-	viewParams := &viewParams{}
-	deps := []AppDependency{
-		{
-			Self: AppElement{
-				Name:     "a",
-				Endpoint: "epa",
-			},
-			Target: AppElement{
-				Name:     "b",
-				Endpoint: "epb",
-			},
-		},
-	}
-	params := &IntsParam{
-		integrations: deps,
-	}
-	args := &Args{}
 	v := &IntsDiagramVisitor{
 		stringBuilder: &stringBuilder,
 		mod: &sysl.Module{
 			Apps: map[string]*sysl.Application{
 				"a": {
+					Name: &sysl.AppName{Part: []string{"a"}},
 					Endpoints: map[string]*sysl.Endpoint{
 						"epa": {
 							Attrs: map[string]*sysl.Attribute{
@@ -279,6 +263,7 @@ func TestGenerateIntsView(t *testing.T) {
 					},
 				},
 				"b": {
+					Name: &sysl.AppName{Part: []string{"b"}},
 					Endpoints: map[string]*sysl.Endpoint{
 						"epb": {
 							Attrs: map[string]*sysl.Attribute{
@@ -286,16 +271,39 @@ func TestGenerateIntsView(t *testing.T) {
 							},
 						},
 					},
+					Mixin2: []*sysl.Application{
+						{Name: &sysl.AppName{Part: []string{"c"}}},
+					},
+				},
+				"c": {
+					Name: &sysl.AppName{Part: []string{"c"}},
+				},
+				"project": {
+					Attrs: map[string]*sysl.Attribute{
+						"appfmt": {Attribute: &sysl.Attribute_S{S: "%(appname)"}},
+					},
 				},
 			},
 		},
+		project:      "project",
 		drawableApps: map[string]struct{}{},
 		topSymbols:   map[string]*_topVar{},
 		symbols:      map[string]*_var{},
 	}
 
-	//When
-	v.generateIntsView(args, *viewParams, params)
+	v.generateIntsView(
+		&Args{},
+		viewParams{},
+		&IntsParam{
+			integrations: []AppDependency{
+				{
+					Self:   AppElement{Name: "a", Endpoint: "epa"},
+					Target: AppElement{Name: "b", Endpoint: "epb"},
+				},
+			},
+			apps: []string{"a", "b"},
+		},
+	)
 
 	//Then
 	assert.Equal(t, `@startuml
@@ -306,94 +314,77 @@ skinparam component {
   BorderColor Black
   ArrowColor Crimson
 }
-[] as _0
-[] as _1
+[a] as _0
+[b] as _1
 _0 --> _1 <<indirect>>
+[c] as _2
+_2 <|.. _1
 @enduml`, v.stringBuilder.String())
+}
+
+func testEPAModule() *sysl.Module {
+	return &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"a": {Endpoints: map[string]*sysl.Endpoint{
+				"epa": {
+					Attrs: map[string]*sysl.Attribute{"test": nil},
+					Stmt: []*sysl.Statement{
+						{
+							Stmt: &sysl.Statement_Call{Call: &sysl.Call{
+								Target:   &sysl.AppName{Part: []string{"b"}},
+								Endpoint: "epb",
+							}},
+						},
+					},
+				}},
+			},
+			"b": {
+				Endpoints: map[string]*sysl.Endpoint{
+					"epb": {Attrs: map[string]*sysl.Attribute{"test": nil}},
+				},
+			},
+			"test": {
+				Attrs: map[string]*sysl.Attribute{
+					"appfmt": {Attribute: &sysl.Attribute_S{S: "test"}},
+				},
+			},
+		},
+	}
 }
 
 func TestGenerateEPAView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
-	stmts := []*sysl.Statement{
-		{
-			Stmt: &sysl.Statement_Call{
-				Call: &sysl.Call{
-					Target: &sysl.AppName{
-						Part: []string{"b"},
-					},
-					Endpoint: "epb",
-				},
-			},
-		},
-	}
-	viewParams := &viewParams{
-		diagramTitle:       "test",
-		highLightColor:     "blue",
-		arrowColor:         "red",
-		indirectArrowColor: "grey",
-	}
-	deps := []AppDependency{
-		{
-			Self: AppElement{
-				Name:     "a",
-				Endpoint: "epa",
-			},
-			Target: AppElement{
-				Name:     "b",
-				Endpoint: "epb",
-			},
-			Statement: &sysl.Statement{
-				Stmt: &sysl.Statement_Call{},
-			},
-		},
-	}
-	params := &IntsParam{
-		integrations: deps,
-		app:          &sysl.Application{},
-	}
 	v := &IntsDiagramVisitor{
 		stringBuilder: &stringBuilder,
-		mod: &sysl.Module{
-			Apps: map[string]*sysl.Application{
-				"a": {
-					Endpoints: map[string]*sysl.Endpoint{
-						"epa": {
-							Attrs: map[string]*sysl.Attribute{
-								"test": nil,
-							},
-							Stmt: stmts,
-						},
-					},
-				},
-				"b": {
-					Endpoints: map[string]*sysl.Endpoint{
-						"epb": {
-							Attrs: map[string]*sysl.Attribute{
-								"test": nil,
-							},
-						},
-					},
-				},
-				"test": {
-					Attrs: map[string]*sysl.Attribute{
-						"appfmt": {
-							Attribute: &sysl.Attribute_S{
-								S: "test",
-							},
-						},
-					},
-				},
-			},
-		},
-		project:      "test",
-		drawableApps: map[string]struct{}{},
-		topSymbols:   map[string]*_topVar{},
-		symbols:      map[string]*_var{},
+		mod:           testEPAModule(),
+		project:       "test",
+		drawableApps:  map[string]struct{}{},
+		topSymbols:    map[string]*_topVar{},
+		symbols:       map[string]*_var{},
 	}
 
 	//When
-	v.generateEPAView(*viewParams, params)
+	v.generateEPAView(
+		viewParams{
+			diagramTitle:       "test",
+			highLightColor:     "blue",
+			arrowColor:         "red",
+			indirectArrowColor: "grey",
+		},
+		&IntsParam{
+			integrations: []AppDependency{
+				{
+					Self:   AppElement{Name: "a", Endpoint: "epa"},
+					Target: AppElement{Name: "b", Endpoint: "epb"},
+					Statement: &sysl.Statement{
+						Stmt: &sysl.Statement_Call{},
+					},
+				},
+			},
+			app: &sysl.Application{},
+		},
+	)
 
 	//Then
 	assert.Equal(t, `@startuml
@@ -418,6 +409,141 @@ state "test" as X_1 {
 }
 _0 -[#grey]-> _1
 _1 -[#black]> _2
+@enduml`, v.stringBuilder.String())
+}
+
+func TestGenerateEPAViewEndpointPattern(t *testing.T) {
+	mod := testEPAModule()
+	mod.Apps["b"].Endpoints["epb"].Attrs["patterns"] = &sysl.Attribute{
+		Attribute: &sysl.Attribute_A{A: &sysl.Attribute_Array{Elt: []*sysl.Attribute{
+			{Attribute: &sysl.Attribute_S{S: "tls"}},
+		}}},
+	}
+
+	var stringBuilder strings.Builder
+	v := &IntsDiagramVisitor{
+		stringBuilder: &stringBuilder,
+		mod:           mod,
+		project:       "test",
+		drawableApps:  map[string]struct{}{},
+		topSymbols:    map[string]*_topVar{},
+		symbols:       map[string]*_var{},
+	}
+
+	//When
+	v.generateEPAView(
+		viewParams{
+			diagramTitle:       "test",
+			highLightColor:     "blue",
+			arrowColor:         "red",
+			indirectArrowColor: "grey",
+		},
+		&IntsParam{
+			integrations: []AppDependency{
+				{
+					Self:   AppElement{Name: "a", Endpoint: "epa"},
+					Target: AppElement{Name: "b", Endpoint: "epb"},
+					Statement: &sysl.Statement{
+						Stmt: &sysl.Statement_Call{},
+						Attrs: map[string]*sysl.Attribute{
+							"x": {Attribute: &sysl.Attribute_I{I: 42}},
+						},
+					},
+				},
+			},
+			app: &sysl.Application{},
+		},
+	)
+
+	//Then
+	assert.Equal(t, `@startuml
+title test
+left to right direction
+scale max 16384 height
+hide empty description
+skinparam state {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+  BackgroundColor<<highlight>> blue
+  ArrowColor red
+  ArrowColor<<indirect>> grey
+}
+state "test" as X_0 {
+  state "test" as _0
+  state "test" as _1
+}
+state "test" as X_1 {
+  state "test" as _2
+}
+_0 -[#grey]-> _1
+_1 -[#black]> _2
+@enduml`, v.stringBuilder.String())
+}
+
+func TestGenerateEPAViewSameApp(t *testing.T) {
+	mod := testEPAModule()
+	mod.Apps["b"].Endpoints["epa"] = proto.Clone(mod.Apps["a"].Endpoints["epa"]).(*sysl.Endpoint)
+
+	var stringBuilder strings.Builder
+	v := &IntsDiagramVisitor{
+		stringBuilder: &stringBuilder,
+		mod:           mod,
+		project:       "test",
+		drawableApps:  map[string]struct{}{},
+		topSymbols:    map[string]*_topVar{},
+		symbols:       map[string]*_var{},
+	}
+
+	//When
+	v.generateEPAView(
+		viewParams{
+			diagramTitle:       "test",
+			highLightColor:     "blue",
+			arrowColor:         "red",
+			indirectArrowColor: "grey",
+		},
+		&IntsParam{
+			integrations: []AppDependency{
+				{
+					Self:   AppElement{Name: "b", Endpoint: "epa"},
+					Target: AppElement{Name: "b", Endpoint: "epb"},
+					Statement: &sysl.Statement{
+						Stmt: &sysl.Statement_Call{},
+						Attrs: map[string]*sysl.Attribute{
+							"x": {Attribute: &sysl.Attribute_I{I: 42}},
+							"patterns": {
+								Attribute: &sysl.Attribute_A{A: &sysl.Attribute_Array{Elt: []*sysl.Attribute{
+									{Attribute: &sysl.Attribute_S{S: "tls"}},
+								}}},
+							},
+						},
+					},
+				},
+			},
+			app: &sysl.Application{},
+		},
+	)
+
+	//Then
+	assert.Equal(t, `@startuml
+title test
+left to right direction
+scale max 16384 height
+hide empty description
+skinparam state {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+  BackgroundColor<<highlight>> blue
+  ArrowColor red
+  ArrowColor<<indirect>> grey
+}
+state "test" as X_0 {
+  state "test" as _0
+  state "test" as _1
+}
+_0 -[#grey]-> _1
 @enduml`, v.stringBuilder.String())
 }
 
