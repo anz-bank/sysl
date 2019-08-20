@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -25,7 +26,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	log.Debugf("output: %s\n", *intgenParams.output)
 	log.Debugf("loglevel: %s\n", *intgenParams.loglevel)
 
-	if intgenParams.plantuml == nil {
+	if *intgenParams.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
 		intgenParams.plantuml = &plantuml
 		if *intgenParams.plantuml == "" {
@@ -50,7 +51,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	if len(*intgenParams.exclude) == 0 && *intgenParams.project != "" {
 		*intgenParams.exclude = []string{*intgenParams.project}
 	}
-	excludeStrSet := MakeStrSet(*intgenParams.exclude...)
+	excludeStrSet := syslutil.MakeStrSet(*intgenParams.exclude...)
 
 	// The "project" app that specifies the required view of the integration
 	app := mod.GetApps()[*intgenParams.project]
@@ -64,8 +65,8 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 				continue
 			}
 		}
-		excludes := MakeStrSetFromAttr("exclude", endpt.GetAttrs())
-		passthroughs := MakeStrSetFromAttr("passthrough", endpt.GetAttrs())
+		excludes := syslutil.MakeStrSetFromAttr("exclude", endpt.GetAttrs())
+		passthroughs := syslutil.MakeStrSetFromAttr("passthrough", endpt.GetAttrs())
 		b := makeBuilderfromStmt(mod, endpt.GetStmt(), excludeStrSet.Union(excludes), passthroughs)
 		intsParam := &IntsParam{b.finalApps, b.seedAppsMap, b.depsOut, app, endpt}
 		args := &Args{*intgenParams.title, *intgenParams.project, *intgenParams.clustered, *intgenParams.epa}

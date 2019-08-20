@@ -6,6 +6,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -27,13 +28,14 @@ skinparam component {
 }`
 
 func TestGenerateIntegrations(t *testing.T) {
-	m, _ := parse.Parse("demo/simple/sysl-ints.sysl", "../../")
+	m, err := parse.Parse("demo/simple/sysl-ints.sysl", "../../")
+	require.NoError(t, err)
 	require.NotNil(t, m)
 
 	stmt := &sysl.Statement{}
 	args := &Args{"", "Project", false, false}
 	apps := []string{"System1", "IntegratedSystem", "System2"}
-	highlights := MakeStrSet("IntegratedSystem", "System1", "System2")
+	highlights := syslutil.MakeStrSet("IntegratedSystem", "System1", "System2")
 	s1 := AppElement{"IntegratedSystem", "integrated_endpoint_1"}
 	t1 := AppElement{"System1", "endpoint"}
 	dep1 := AppDependency{
@@ -448,12 +450,14 @@ func TestAllStmts(t *testing.T) {
 	comparePUML(t, expected, result)
 }
 
-func GenerateIntegrationsWithParams(rootModel, title, output, project, filter, modules string,
+func GenerateIntegrationsWithParams(
+	rootModel, title, output, project, filter, modules string,
 	exclude []string,
 	clustered, epa bool,
 	loglevel string,
 	isVerbose bool,
 ) (map[string]string, error) {
+	plantuml := ""
 	cmdContextParamIntgen := &CmdContextParamIntgen{
 		root:      &rootModel,
 		title:     &title,
@@ -466,6 +470,7 @@ func GenerateIntegrationsWithParams(rootModel, title, output, project, filter, m
 		epa:       &epa,
 		loglevel:  &loglevel,
 		isVerbose: &isVerbose,
+		plantuml:  &plantuml,
 	}
 	return GenerateIntegrations(cmdContextParamIntgen)
 }

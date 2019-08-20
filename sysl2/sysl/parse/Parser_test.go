@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -16,6 +16,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func readSyslModule(filename string) (*sysl.Module, error) {
@@ -54,7 +55,7 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := FSParse(filename, http.Dir(root))
+	module, err := Parse(filename, root)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +135,12 @@ func parseAndCompare(
 }
 
 func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
-	golden := path.Join(root, filename+".golden.textpb")
+	goldenFilename := filename
+	if !strings.HasSuffix(goldenFilename, syslExt) {
+		goldenFilename += syslExt
+	}
+	goldenFilename += ".golden.textpb"
+	golden := path.Join(root, goldenFilename)
 
 	goldenModule, err := readSyslModule(golden)
 	if err != nil {
@@ -146,19 +152,34 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 func testParseAgainstGolden(t *testing.T, filename, root string) {
 	equal, err := parseAndCompareWithGolden(filename, root, true)
 	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", path.Join(root, filename))
+		assert.True(t, equal, "%#v %#v", root, filename)
 	}
 }
 
 func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
 	equal, err := parseAndCompareWithGolden(filename, "", false)
 	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", filename)
+		assert.True(t, equal, "%#v", filename)
 	}
 }
 
+func TestParseBadRoot(t *testing.T) {
+	_, err := parseComparable("dontcare.sysl", "NON-EXISTENT-ROOT", false)
+	assert.Error(t, err)
+}
+
 func TestParseMissingFile(t *testing.T) {
-	_, err := parseAndCompareWithGolden("tests/doesn't.exist", "", false)
+	_, err := parseComparable("doesn't.exist.sysl", "tests", false)
+	assert.Error(t, err)
+}
+
+func TestParseDirectoryAsFile(t *testing.T) {
+	dirname := "not-a-file.sysl"
+	tmproot := os.TempDir()
+	tmpdir := path.Join(tmproot, dirname)
+	require.NoError(t, os.Mkdir(tmpdir, 0755))
+	defer os.Remove(tmpdir)
+	_, err := parseComparable(dirname, tmproot, false)
 	assert.Error(t, err)
 }
 
@@ -169,6 +190,10 @@ func TestParseBadFile(t *testing.T) {
 
 func TestSimpleEP(t *testing.T) {
 	testParseAgainstGolden(t, "tests/test1.sysl", "")
+}
+
+func TestSimpleEPNoSuffix(t *testing.T) {
+	testParseAgainstGolden(t, "tests/test1", "")
 }
 
 func TestAttribs(t *testing.T) {

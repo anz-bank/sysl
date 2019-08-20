@@ -23,7 +23,10 @@ func OutputPlantuml(output, plantuml, umlInput string) error {
 			return err
 		}
 		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, encoded)
-		out, _ := sendHTTPRequest(plantuml)
+		out, err := sendHTTPRequest(plantuml)
+		if err != nil {
+			return err
+		}
 		return ioutil.WriteFile(output, out, os.ModePerm)
 
 	case "uml":
