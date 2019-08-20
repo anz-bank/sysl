@@ -101,7 +101,7 @@ func TestFlappyFileSystem(t *testing.T) {
 	var p [7]byte
 	n, err := f.Read(p[:])
 	if assert.NoError(t, err) {
-		assert.Equal(t, len(p), n)
+		assert.Len(t, p, n)
 		assert.Equal(t, "package", string(p[:]))
 	}
 
@@ -115,8 +115,9 @@ func TestFlappyFileSystem(t *testing.T) {
 	var q [20]byte
 	n, err = f.Read(q[:])
 	if assert.Equal(t, io.EOF, err) {
-		assert.Equal(t, len(content), n)
-		assert.Equal(t, content, string(q[:len(content)]))
+		if assert.Len(t, content, n) {
+			assert.Equal(t, content, string(q[:n]))
+		}
 	}
 }
 

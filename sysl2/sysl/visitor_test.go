@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -181,7 +182,7 @@ func TestEndpointElementEndpointLabel(t *testing.T) {
 	}
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet(), false, false, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, syslutil.MakeStrSet(), false, false, false)
 
 	// Then
 	assert.Equal(t, " ⬄ b", actual)
@@ -198,12 +199,12 @@ func TestEndpointElementEndpointLabelWithValidStmt(t *testing.T) {
 				Call: &sysl.Call{},
 			},
 		},
-		senderEndpointPatterns: MakeStrSet(),
+		senderEndpointPatterns: syslutil.MakeStrSet(),
 	}
 	l.On("LabelEndpoint", mock.Anything).Return("test")
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet("a"), false, true, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, syslutil.MakeStrSet("a"), false, true, false)
 
 	// Then
 	l.AssertNumberOfCalls(t, "LabelEndpoint", 1)
@@ -221,12 +222,12 @@ func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T)
 				Call: &sysl.Call{},
 			},
 		},
-		senderEndpointPatterns: MakeStrSet(),
+		senderEndpointPatterns: syslutil.MakeStrSet(),
 	}
 	l.On("LabelEndpoint", mock.Anything).Return("test")
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet(), false, true, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, syslutil.MakeStrSet(), false, true, false)
 
 	// Then
 	l.AssertNumberOfCalls(t, "LabelEndpoint", 1)
@@ -234,27 +235,22 @@ func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T)
 }
 
 func TestStatementElementIsLastStmt(t *testing.T) {
-	// Given
 	e := &StatementElement{
 		isLastParentStmt: true,
 		stmts:            []*sysl.Statement{{}},
 	}
-
-	// When
-	actual := e.isLastStmt(0)
-
-	// Then
-	assert.True(t, actual)
+	assert.True(t, e.isLastStmt(0))
 }
 
 func readModule(p string) (*sysl.Module, error) {
 	m := &sysl.Module{}
-	f, _ := os.Open(p)
-
+	f, err := os.Open(p)
+	if err != nil {
+		return nil, err
+	}
 	if err := jsonpb.Unmarshal(f, m); err != nil {
 		return nil, err
 	}
-
 	return m, nil
 }
 

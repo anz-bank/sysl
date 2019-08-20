@@ -13,64 +13,64 @@ func TestGenerateCode(t *testing.T) {
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
-	assert.Equal(t, 1, len(output), "unexpected length of output")
-	assert.Equal(t, 1, len(root), "unexpected length of root")
+	assert.Len(t, output, 1)
+	assert.Len(t, root, 1)
 	n1 := root[0].(Node)
-	assert.Equal(t, 4, len(n1), "unexpected length of javaFile")
+	assert.Len(t, n1, 4)
 	package1 := n1[0].(Node)
 	comment1 := n1[1].(Node)
 	import1 := n1[2].(Node)
 	definition1 := n1[3].(string)
-	assert.Equal(t, 1, len(package1), "unexpected length of package")
-	assert.Equal(t, 2, len(comment1), "unexpected length of comment")
-	assert.Equal(t, 2, len(import1), "unexpected length of import")
-	assert.Equal(t, "some_value", definition1, "unexpected value of definition")
+	assert.Len(t, package1, 1)
+	assert.Len(t, comment1, 2)
+	assert.Len(t, import1, 2)
+	assert.Equal(t, "some_value", definition1)
 
 	package2 := package1[0].(Node)
-	assert.Equal(t, 3, len(package2), "unexpected length of package2")
-	assert.Equal(t, "com.example.gen", package2[1].(string), "unexpected length of package2")
+	assert.Len(t, package2, 3)
+	assert.Equal(t, "com.example.gen", package2[1].(string))
 
 	for i, comment := range []string{"comment1", "comment2"} {
 		comment0 := comment1[i].(Node)
-		assert.Equal(t, 1, len(comment0), "unexpected length of comment2")
+		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)
-		assert.Equal(t, comment, comment0_0, "unexpected length of comment_i")
+		assert.Equal(t, comment, comment0_0)
 	}
 
 	for i, imports := range []string{"import1", "import2"} {
 		import0 := import1[i].(Node)
-		assert.Equal(t, 1, len(import0), "unexpected length of import2")
+		assert.Len(t, import0, 1)
 		import0_0 := import0[0].(Node)
-		assert.Equal(t, 3, len(import0_0), "unexpected length of import2")
-		assert.Equal(t, imports, import0_0[1].(string), "unexpected length of import_i")
+		assert.Len(t, import0_0, 3)
+		assert.Equal(t, imports, import0_0[1].(string))
 	}
 }
 
 func TestGenerateCodeNoComment(t *testing.T) {
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
-	assert.Equal(t, 1, len(output), "unexpected length of output")
+	assert.Len(t, output, 1)
 	root := output[0].output
-	assert.Equal(t, 1, len(root), "unexpected length of root")
+	assert.Len(t, root, 1)
 	n1 := root[0].(Node)
-	assert.Equal(t, 3, len(n1), "unexpected length of javaFile")
+	assert.Len(t, n1, 3)
 	package1 := n1[0].(Node)
 	import1 := n1[1].(Node)
 	definition1 := n1[2].(string)
-	assert.Equal(t, 1, len(package1), "unexpected length of package")
-	assert.Equal(t, 2, len(import1), "unexpected length of comment")
-	assert.Equal(t, "some_value", definition1, "unexpected value of definition")
+	assert.Len(t, package1, 1)
+	assert.Len(t, import1, 2)
+	assert.Equal(t, "some_value", definition1)
 
 	package2 := package1[0].(Node)
-	assert.Equal(t, 3, len(package2), "unexpected length of package2")
-	assert.Equal(t, "com.example.gen", package2[1].(string), "unexpected length of package2")
+	assert.Len(t, package2, 3)
+	assert.Equal(t, "com.example.gen", package2[1].(string))
 
 	for i, imports := range []string{"import1", "import2"} {
 		import0 := import1[i].(Node)
-		assert.Equal(t, 1, len(import0), "unexpected length of import2")
+		assert.Len(t, import0, 1)
 		import0_0 := import0[0].(Node)
-		assert.Equal(t, 3, len(import0_0), "unexpected length of import2")
-		assert.Equal(t, imports, import0_0[1].(string), "unexpected length of import_i")
+		assert.Len(t, import0_0, 3)
+		assert.Equal(t, imports, import0_0[1].(string))
 	}
 }
 
@@ -78,36 +78,36 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
-	assert.Nil(t, root, "unexpected root")
+	assert.Nil(t, root)
 }
 
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
-	assert.Nil(t, root, "unexpected root")
+	assert.Nil(t, root)
 }
 
 func TestGenerateCodePerType(t *testing.T) {
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
-	assert.Equal(t, 1, len(output), "unexpected length of output")
-	assert.Equal(t, "Request.java", output[0].filename, "unexpected length of output")
+	assert.Len(t, output, 1)
+	assert.Equal(t, "Request.java", output[0].filename)
 
 	root := output[0].output
-	assert.Equal(t, 1, len(root), "unexpected length of javaFile")
+	assert.Len(t, root, 1)
 
 	requestRoot := root[0].(Node)
-	assert.Equal(t, 4, len(requestRoot), "unexpected length of requestRoot")
+	assert.Len(t, requestRoot, 4)
 
 	package1 := requestRoot[0].(Node)
 	comment1 := requestRoot[1].(Node)
 	import1 := requestRoot[2].(Node)
 	definition1 := requestRoot[3].(string)
-	assert.Equal(t, 1, len(package1), "unexpected length of package")
-	assert.Equal(t, 2, len(comment1), "unexpected length of comment")
-	assert.Equal(t, 2, len(import1), "unexpected length of import")
-	assert.Equal(t, "Request", definition1, "unexpected value of definition")
+	assert.Len(t, package1, 1)
+	assert.Len(t, comment1, 2)
+	assert.Len(t, import1, 2)
+	assert.Equal(t, "Request", definition1)
 }
 
 func TestSerialize(t *testing.T) {
@@ -116,7 +116,7 @@ func TestSerialize(t *testing.T) {
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
-	assert.Equal(t, golden, out.String(), "unexpected value of out string")
+	assert.Equal(t, golden, out.String())
 }
 
 func TestOutputForPureTokenOnlyRule(t *testing.T) {
@@ -132,18 +132,18 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 
 	root := output[0].(Node)
 	assert.NotNil(t, root)
-	assert.Equal(t, 3, len(root))
+	assert.Len(t, root, 3)
 
 	header := root[0].(Node)
-	assert.Equal(t, 1, len(header))
+	assert.Len(t, header, 1)
 	assert.Equal(t, "head", header[0].(Node)[0].(string))
 
 	body := root[1].(Node)
-	assert.Equal(t, 1, len(body))
+	assert.Len(t, body, 1)
 	assert.Equal(t, "hello", body[0].(Node)[1].(string))
 
 	tail := root[2].(Node)
-	assert.Equal(t, 1, len(tail))
+	assert.Len(t, tail, 1)
 	assert.Equal(t, "tail", tail[0].(Node)[0].(string))
 }
 

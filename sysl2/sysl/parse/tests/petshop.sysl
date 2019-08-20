@@ -72,6 +72,9 @@ PetShopModelToApi [package="io.sysl.demo.petshop.views"]:
             breeds = breedToApi(.table of Breed, rankedPets)
             numLegs = .table of Pet sum(.numLegs ?? 0)
 
+            let m = .table of Pet min(.numLegs ?? 0)
+            let a = .table of Pet average(.numLegs ?? 0)
+
             # some ~> scenarios
             let pp = .table of Pet
             let bb = pp ~> .table of Breed

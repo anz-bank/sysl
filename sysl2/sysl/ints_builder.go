@@ -10,12 +10,12 @@ import (
 type intsBuilder struct {
 	m            *sysl.Module
 	seedApps     []string
-	seedAppsMap  StrSet
-	passthroughs StrSet
-	excludes     StrSet
+	seedAppsMap  syslutil.StrSet
+	passthroughs syslutil.StrSet
+	excludes     syslutil.StrSet
 	finalApps    []string
-	finalAppsMap StrSet
-	deps         StrSet
+	finalAppsMap syslutil.StrSet
+	deps         syslutil.StrSet
 	depsOut      []AppDependency
 }
 
@@ -28,15 +28,15 @@ func sortedSlice(endpts map[string]*sysl.Endpoint) []string {
 	return s
 }
 
-func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, passthroughs StrSet) *intsBuilder {
+func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, passthroughs syslutil.StrSet) *intsBuilder {
 	b := &intsBuilder{
 		m:            m,
 		seedApps:     []string{},
 		excludes:     excludes,
 		passthroughs: passthroughs,
 		finalApps:    []string{},
-		finalAppsMap: StrSet{},
-		deps:         StrSet{},
+		finalAppsMap: syslutil.StrSet{},
+		deps:         syslutil.StrSet{},
 		depsOut:      []AppDependency{},
 	}
 
@@ -55,7 +55,7 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 		}
 	}
 
-	b.seedAppsMap = MakeStrSet(b.seedApps...)
+	b.seedAppsMap = syslutil.MakeStrSet(b.seedApps...)
 	// add direct dependencies of seedApps
 	// dont include targetApp if its in exclude
 	// if targetApp in passthrough, only add apps that are called by this endpoint
@@ -87,7 +87,7 @@ func makeBuilderfromStmt(m *sysl.Module, stmts []*sysl.Statement, excludes, pass
 		}
 	}
 
-	b.finalAppsMap = MakeStrSet(b.finalApps...)
+	b.finalAppsMap = syslutil.MakeStrSet(b.finalApps...)
 	// connect all the apps that we have so far
 	for _, appname := range b.finalApps {
 		app := apps[appname]

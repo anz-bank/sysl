@@ -1,4 +1,4 @@
-package main
+package syslutil
 
 import (
 	"sort"

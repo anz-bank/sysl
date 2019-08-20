@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
 
 const ArrowColorNone = "none"
@@ -212,7 +213,7 @@ func (v *IntsDiagramVisitor) buildClusterForEPAView(deps []AppDependency, restri
 
 	for _, k := range keys {
 		v.VarManagerForTopState(k)
-		strSet := MakeStrSet(clusters[k]...)
+		strSet := syslutil.MakeStrSet(clusters[k]...)
 		for _, m := range strSet.ToSortedSlice() {
 			v.VarManagerForEPA(k + " : " + m)
 		}
@@ -289,29 +290,25 @@ func (v *IntsDiagramVisitor) generateEPAView(viewParams viewParams, params *Ints
 		label := ""
 		needsInt := appA != matchApp
 
-		pubSubSrcPtrns := MakeStrSetFromAttr("patterns", v.mod.Apps[appA].Endpoints[epA].Attrs)
+		pubSubSrcPtrns := syslutil.MakeStrSetFromAttr("patterns", v.mod.Apps[appA].Endpoints[epA].Attrs)
 		attrs := map[string]string{}
 		for k, v := range dep.Statement.GetAttrs() {
 			attrs["@"+k] = v.GetS()
 		}
 		var ptrns string
-		var targetPatterns StrSet
-		var srcPtrns StrSet
+		var targetPatterns syslutil.StrSet
+		var srcPtrns syslutil.StrSet
 		if v.mod.Apps[matchApp].Endpoints[matchEp].Attrs["patterns"] != nil {
-			targetPatterns = MakeStrSetFromAttr("patterns", v.mod.Apps[matchApp].Endpoints[matchEp].Attrs)
+			targetPatterns = syslutil.MakeStrSetFromAttr("patterns", v.mod.Apps[matchApp].Endpoints[matchEp].Attrs)
 		} else {
-			targetPatterns = MakeStrSetFromAttr("patterns", v.mod.Apps[matchApp].Attrs)
+			targetPatterns = syslutil.MakeStrSetFromAttr("patterns", v.mod.Apps[matchApp].Attrs)
 		}
 		if dep.Statement.GetAttrs()["patterns"] != nil {
-			srcPtrns = MakeStrSetFromAttr("patterns", dep.Statement.GetAttrs())
+			srcPtrns = syslutil.MakeStrSetFromAttr("patterns", dep.Statement.GetAttrs())
 		} else {
 			srcPtrns = pubSubSrcPtrns
 		}
-		if srcPtrns != nil || targetPatterns != nil {
-			ptrns = strings.Join(srcPtrns.ToSlice(), ", ") + " → " + strings.Join(targetPatterns.ToSlice(), ", ")
-		} else {
-			ptrns = ""
-		}
+		ptrns = strings.Join(srcPtrns.ToSlice(), ", ") + " → " + strings.Join(targetPatterns.ToSlice(), ", ")
 		attrs["patterns"] = ptrns
 		if needsInt {
 			attrs["needs_int"] = strconv.FormatBool(needsInt)
