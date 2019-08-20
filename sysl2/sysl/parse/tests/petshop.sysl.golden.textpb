@@ -1,2197 +1,2273 @@
-apps {
+apps: <
   key: "PetShopApi"
-  value {
-    name {
+  value: <
+    name: <
       part: "PetShopApi"
-    }
-    attrs {
+    >
+    attrs: <
       key: "package"
-      value {
+      value: <
         s: "io.sysl.demo.petshop.api"
-      }
-    }
-    endpoints {
+      >
+    >
+    endpoints: <
       key: "GET /petshop"
-      value {
+      value: <
         name: "GET /petshop"
-        attrs {
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "rest"
-              }
-            }
-          }
-        }
-        stmt {
-          ret {
+              >
+            >
+          >
+        >
+        stmt: <
+          ret: <
             payload: "PetShop"
-          }
-        }
-        rest_params {
+          >
+        >
+        rest_params: <
           method: GET
           path: "/petshop"
-        }
-      }
-    }
-    types {
+        >
+      >
+    >
+    types: <
       key: "Breed"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "avgLifespan"
-            value {
+            value: <
               primitive: DECIMAL
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 56
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "index"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "xml_attribute"
-                    }
-                  }
-                }
-              }
-              source_context {
-                start {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 57
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "name"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 53
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "pets"
-            value {
-              set {
-                type_ref {
-                  context {
-                    appname {
+            value: <
+              set: <
+                type_ref: <
+                  context: <
+                    appname: <
                       part: "PetShopApi"
-                    }
+                    >
                     path: "Breed"
-                  }
-                  ref {
+                  >
+                  ref: <
                     path: "Pet"
-                  }
-                }
-                source_context {
-                  start {
+                  >
+                >
+                source_context: <
+                  start: <
                     line: 55
-                  }
-                }
-              }
-              source_context {
-                start {
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 55
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "species"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 54
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    types {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    types: <
       key: "Employee"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "dob"
-            value {
+            value: <
               primitive: DATE
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 49
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "index"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "xml_attribute"
-                    }
-                  }
-                }
-              }
-              source_context {
-                start {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 50
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "name"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 48
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    types {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    types: <
       key: "Pet"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "dob"
-            value {
+            value: <
               primitive: DATE
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 61
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "legRank"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 63
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "name"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 60
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "numLegs"
-            value {
+            value: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 62
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    types {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    types: <
       key: "PetShop"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "breeds"
-            value {
-              set {
-                type_ref {
-                  context {
-                    appname {
+            value: <
+              set: <
+                type_ref: <
+                  context: <
+                    appname: <
                       part: "PetShopApi"
-                    }
+                    >
                     path: "PetShop"
-                  }
-                  ref {
+                  >
+                  ref: <
                     path: "Breed"
-                  }
-                }
-                source_context {
-                  start {
+                  >
+                >
+                source_context: <
+                  start: <
                     line: 44
-                  }
-                }
-              }
-              source_context {
-                start {
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 44
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "employees"
-            value {
-              set {
-                type_ref {
-                  context {
-                    appname {
+            value: <
+              set: <
+                type_ref: <
+                  context: <
+                    appname: <
                       part: "PetShopApi"
-                    }
+                    >
                     path: "PetShop"
-                  }
-                  ref {
+                  >
+                  ref: <
                     path: "Employee"
-                  }
-                }
-                source_context {
-                  start {
+                  >
+                >
+                source_context: <
+                  start: <
                     line: 43
-                  }
-                }
-              }
-              source_context {
-                start {
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 43
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "numLegs"
-            value {
+            value: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 45
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "PetShopApiToModel"
-  value {
-    name {
+  value: <
+    name: <
       part: "PetShopApiToModel"
-    }
-    attrs {
+    >
+    attrs: <
       key: "package"
-      value {
+      value: <
         s: "io.sysl.demo.petshop.views"
-      }
-    }
-    types {
+      >
+    >
+    types: <
       key: "AnonType_0__"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "breed"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "PetShopApiToModel"
-                  }
+                  >
                   path: "AnonType_0__"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "PetShopModel"
-                  }
+                  >
                   path: "Breed"
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "pets"
-            value {
-              set {
-                type_ref {
-                  context {
-                    appname {
+            value: <
+              set: <
+                type_ref: <
+                  context: <
+                    appname: <
                       part: "PetShopApiToModel"
-                    }
+                    >
                     path: "AnonType_0__"
-                  }
-                  ref {
-                    appname {
+                  >
+                  ref: <
+                    appname: <
                       part: "PetShopModel"
-                    }
+                    >
                     path: "Pet"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                  >
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "apiToModel"
-      value {
-        param {
+      value: <
+        param: <
           name: "petshop"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "PetShopApi"
-                }
+                >
                 path: "PetShop"
-              }
-            }
-          }
-        }
-        ret_type {
-          type_ref {
-            context {
-              appname {
+              >
+            >
+          >
+        >
+        ret_type: <
+          type_ref: <
+            context: <
+              appname: <
                 part: "PetShopApiToModel"
-              }
-            }
-            ref {
-              appname {
+              >
+            >
+            ref: <
+              appname: <
                 part: "PetShopModel"
-              }
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+              >
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "petshop"
-            }
+            >
             scopevar: "."
-            stmt {
-              let {
+            stmt: <
+              let: <
                 name: "_breedsAndPets"
-                expr {
-                  transform {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: <
+                  transform: <
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "breeds"
-                      }
-                    }
+                      >
+                    >
                     scopevar: "."
-                    stmt {
-                      let {
+                    stmt: <
+                      let: <
                         name: "breedId"
-                        expr {
-                          call {
+                        expr: <
+                          call: <
                             func: "autoinc"
-                          }
-                        }
-                      }
-                    }
-                    stmt {
-                      assign {
+                          >
+                        >
+                      >
+                    >
+                    stmt: <
+                      assign: <
                         name: "breed"
-                        expr {
-                          transform {
-                            arg {
+                        expr: <
+                          transform: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             scopevar: "."
-                            stmt {
-                              assign {
+                            stmt: <
+                              assign: <
                                 name: "breedId"
-                                expr {
+                                expr: <
                                   name: "breedId"
-                                }
-                              }
-                            }
-                            stmt {
-                              assign {
+                                >
+                              >
+                            >
+                            stmt: <
+                              assign: <
                                 name: "species"
-                                expr {
-                                  get_attr {
-                                    arg {
+                                expr: <
+                                  get_attr: <
+                                    arg: <
                                       name: "."
-                                    }
+                                    >
                                     attr: "species"
-                                  }
-                                }
-                              }
-                            }
-                            stmt {
-                              assign {
+                                  >
+                                >
+                              >
+                            >
+                            stmt: <
+                              assign: <
                                 name: "breedName"
-                                expr {
-                                  get_attr {
-                                    arg {
+                                expr: <
+                                  get_attr: <
+                                    arg: <
                                       name: "."
-                                    }
+                                    >
                                     attr: "name"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                          type {
-                            type_ref {
-                              context {
-                                appname {
+                                  >
+                                >
+                              >
+                            >
+                          >
+                          type: <
+                            type_ref: <
+                              context: <
+                                appname: <
                                   part: "PetShopApiToModel"
-                                }
-                              }
-                              ref {
-                                appname {
+                                >
+                              >
+                              ref: <
+                                appname: <
                                   part: "PetShopModel"
-                                }
+                                >
                                 path: "Breed"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                    stmt {
-                      assign {
+                              >
+                            >
+                          >
+                        >
+                      >
+                    >
+                    stmt: <
+                      assign: <
                         name: "pets"
-                        expr {
-                          transform {
-                            arg {
-                              get_attr {
-                                arg {
+                        expr: <
+                          transform: <
+                            arg: <
+                              get_attr: <
+                                arg: <
                                   name: "."
-                                }
+                                >
                                 attr: "pets"
-                              }
-                            }
+                              >
+                            >
                             scopevar: "."
-                            stmt {
-                              assign {
+                            stmt: <
+                              assign: <
                                 name: "petId"
-                                expr {
-                                  call {
+                                expr: <
+                                  call: <
                                     func: "autoinc"
-                                  }
-                                }
-                              }
-                            }
-                            stmt {
-                              assign {
+                                  >
+                                >
+                              >
+                            >
+                            stmt: <
+                              assign: <
                                 name: "breedId"
-                                expr {
+                                expr: <
                                   name: "breedId"
-                                }
-                              }
-                            }
-                            stmt {
-                              assign {
+                                >
+                              >
+                            >
+                            stmt: <
+                              assign: <
                                 name: "name"
-                                expr {
-                                  get_attr {
-                                    arg {
+                                expr: <
+                                  get_attr: <
+                                    arg: <
                                       name: "."
-                                    }
+                                    >
                                     attr: "name"
-                                  }
-                                }
-                              }
-                            }
-                            stmt {
-                              assign {
+                                  >
+                                >
+                              >
+                            >
+                            stmt: <
+                              assign: <
                                 name: "dob"
-                                expr {
-                                  get_attr {
-                                    arg {
+                                expr: <
+                                  get_attr: <
+                                    arg: <
                                       name: "."
-                                    }
+                                    >
                                     attr: "dob"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                          type {
-                            set {
-                              type_ref {
-                                context {
-                                  appname {
+                                  >
+                                >
+                              >
+                            >
+                          >
+                          type: <
+                            set: <
+                              type_ref: <
+                                context: <
+                                  appname: <
                                     part: "PetShopApiToModel"
-                                  }
-                                }
-                                ref {
-                                  appname {
+                                  >
+                                >
+                                ref: <
+                                  appname: <
                                     part: "PetShopModel"
-                                  }
+                                  >
                                   path: "Pet"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                  type {
-                    set {
-                      type_ref {
-                        context {
-                          appname {
+                                >
+                              >
+                            >
+                          >
+                        >
+                      >
+                    >
+                  >
+                  type: <
+                    set: <
+                      type_ref: <
+                        context: <
+                          appname: <
                             part: "PetShopApiToModel"
-                          }
-                        }
-                        ref {
-                          appname {
+                          >
+                        >
+                        ref: <
+                          appname: <
                             part: "PetShopApiToModel"
-                          }
+                          >
                           path: "AnonType_0__"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                        >
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "breedsAndPets"
-                expr {
-                  relexpr {
+                expr: <
+                  relexpr: <
                     op: SNAPSHOT
-                    target {
+                    target: <
                       name: "_breedsAndPets"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "minId1"
-                expr {
-                  relexpr {
+                expr: <
+                  relexpr: <
                     op: MAX
-                    target {
+                    target: <
                       name: "breedsAndPets"
-                    }
-                    arg {
-                      get_attr {
-                        arg {
-                          get_attr {
-                            arg {
+                    >
+                    arg: <
+                      get_attr: <
+                        arg: <
+                          get_attr: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             attr: "breed"
-                          }
-                        }
+                          >
+                        >
                         attr: "breedId"
-                      }
-                    }
+                      >
+                    >
                     scopevar: "."
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "minId2"
-                expr {
-                  relexpr {
+                expr: <
+                  relexpr: <
                     op: MAX
-                    target {
+                    target: <
                       name: "breedsAndPets"
-                    }
-                    arg {
-                      get_attr {
-                        arg {
-                          get_attr {
-                            arg {
+                    >
+                    arg: <
+                      get_attr: <
+                        arg: <
+                          get_attr: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             attr: "breed"
-                          }
-                        }
+                          >
+                        >
                         attr: "breedId"
-                      }
-                    }
+                      >
+                    >
                     scopevar: "."
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "lee"
-                expr {
-                  transform {
-                    arg {
-                      set {
-                        expr {
-                          type {
-                            tuple {
-                            }
-                          }
-                          tuple {
-                          }
-                        }
-                      }
-                      type {
-                        set {
-                          tuple {
-                          }
-                        }
-                      }
-                    }
+                expr: <
+                  transform: <
+                    arg: <
+                      set: <
+                        expr: <
+                          tuple: <
+                          >
+                          type: <
+                            tuple: <
+                            >
+                          >
+                        >
+                      >
+                      type: <
+                        set: <
+                          tuple: <
+                          >
+                        >
+                      >
+                    >
                     scopevar: "."
-                    stmt {
-                      assign {
+                    stmt: <
+                      assign: <
                         name: "name"
-                        expr {
-                          literal {
+                        expr: <
+                          literal: <
                             s: "Bruce"
-                          }
-                        }
-                      }
-                    }
-                  }
-                  type {
-                    set {
-                      type_ref {
-                        context {
-                          appname {
+                          >
+                        >
+                      >
+                    >
+                  >
+                  type: <
+                    set: <
+                      type_ref: <
+                        context: <
+                          appname: <
                             part: "PetShopApiToModel"
-                          }
-                        }
-                        ref {
-                          appname {
+                          >
+                        >
+                        ref: <
+                          appname: <
                             part: "PetShopModel"
-                          }
+                          >
                           path: "Employee"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                        >
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "leeless"
-                expr {
-                  unexpr {
+                expr: <
+                  unexpr: <
                     op: NOT
-                    arg {
+                    arg: <
                       name: "lee"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "decimal1"
-                expr {
-                  literal {
+                expr: <
+                  literal: <
                     decimal: "1.2"
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "decimal2"
-                expr {
-                  literal {
+                expr: <
+                  literal: <
                     decimal: "2.3"
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "decimal3"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
-                      unexpr {
+                    lhs: <
+                      unexpr: <
                         op: POS
-                        arg {
+                        arg: <
                           name: "decimal1"
-                        }
-                      }
-                    }
-                    rhs {
+                        >
+                      >
+                    >
+                    rhs: <
                       name: "decimal2"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "one_third"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: DIV
-                    lhs {
-                      literal {
+                    lhs: <
+                      literal: <
                         decimal: "1.0"
-                      }
-                    }
-                    rhs {
-                      literal {
+                      >
+                    >
+                    rhs: <
+                      literal: <
                         decimal: "3.0"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "one_ninth"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: POW
-                    lhs {
+                    lhs: <
                       name: "one_third"
-                    }
-                    rhs {
-                      literal {
+                    >
+                    rhs: <
+                      literal: <
                         i: 2
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "bruce_lee"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
-                      get_attr {
-                        arg {
-                          unexpr {
+                    lhs: <
+                      get_attr: <
+                        arg: <
+                          unexpr: <
                             op: SINGLE_OR_NULL
-                            arg {
+                            arg: <
                               name: "lee"
-                            }
-                          }
-                        }
+                            >
+                          >
+                        >
                         attr: "name"
                         nullsafe: true
-                      }
-                    }
-                    rhs {
-                      call {
+                      >
+                    >
+                    rhs: <
+                      call: <
                         func: "substr"
-                        arg {
-                          literal {
+                        arg: <
+                          literal: <
                             s: " Leek"
-                          }
-                        }
-                        arg {
-                          literal {
+                          >
+                        >
+                        arg: <
+                          literal: <
                             i: 0
-                          }
-                        }
-                        arg {
-                          literal {
+                          >
+                        >
+                        arg: <
+                          literal: <
                             i: 4
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                          >
+                        >
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "Employee"
-                expr {
-                  transform {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: <
+                  transform: <
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "employees"
-                      }
-                    }
+                      >
+                    >
                     scopevar: "."
-                    stmt {
-                      assign {
+                    stmt: <
+                      assign: <
                         name: "employeeId"
-                        expr {
-                          call {
+                        expr: <
+                          call: <
                             func: "autoinc"
-                          }
-                        }
-                      }
-                    }
-                    stmt {
-                      assign {
+                          >
+                        >
+                      >
+                    >
+                    stmt: <
+                      assign: <
                         name: "name"
-                        expr {
-                          get_attr {
-                            arg {
+                        expr: <
+                          get_attr: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             attr: "name"
-                          }
-                        }
-                      }
-                    }
-                    stmt {
-                      assign {
+                          >
+                        >
+                      >
+                    >
+                    stmt: <
+                      assign: <
                         name: "dob"
-                        expr {
-                          get_attr {
-                            arg {
+                        expr: <
+                          get_attr: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             attr: "dob"
-                          }
-                        }
-                      }
-                    }
-                    stmt {
-                      assign {
+                          >
+                        >
+                      >
+                    >
+                    stmt: <
+                      assign: <
                         name: "error"
-                        expr {
-                          binexpr {
+                        expr: <
+                          binexpr: <
                             op: SUB
-                            lhs {
+                            lhs: <
                               name: "minId2"
-                            }
-                            rhs {
+                            >
+                            rhs: <
                               name: "minId1"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                  type {
-                    set {
-                      type_ref {
-                        context {
-                          appname {
+                            >
+                          >
+                        >
+                      >
+                    >
+                  >
+                  type: <
+                    set: <
+                      type_ref: <
+                        context: <
+                          appname: <
                             part: "PetShopApiToModel"
-                          }
-                        }
-                        ref {
-                          appname {
+                          >
+                        >
+                        ref: <
+                          appname: <
                             part: "PetShopModel"
-                          }
+                          >
                           path: "Employee"
-                        }
-                      }
-                    }
-                  }
-                }
+                        >
+                      >
+                    >
+                  >
+                >
                 table: true
-              }
-            }
-            stmt {
-              assign {
+              >
+            >
+            stmt: <
+              assign: <
                 name: "Breed"
-                expr {
-                  navigate {
-                    arg {
+                expr: <
+                  navigate: <
+                    arg: <
                       name: "breedsAndPets"
-                    }
+                    >
                     attr: ".breed"
                     setof: true
-                  }
-                }
+                  >
+                >
                 table: true
-              }
-            }
-            stmt {
-              assign {
+              >
+            >
+            stmt: <
+              assign: <
                 name: "Pet"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: FLATTEN
-                    lhs {
+                    lhs: <
                       name: "breedsAndPets"
-                    }
-                    rhs {
-                      get_attr {
-                        arg {
+                    >
+                    rhs: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "pets"
-                      }
-                    }
+                      >
+                    >
                     scopevar: "."
-                  }
-                }
+                  >
+                >
                 table: true
-              }
-            }
-          }
-          type {
-            type_ref {
-              context {
-                appname {
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "PetShopApiToModel"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "PetShopModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "PetShopFacade"
-  value {
-    name {
+  value: <
+    name: <
       part: "PetShopFacade"
-    }
-    attrs {
+    >
+    attrs: <
       key: "package"
-      value {
+      value: <
         s: "io.sysl.demo.petshop.facade"
-      }
-    }
-    wrapped {
-      name {
+      >
+    >
+    wrapped: <
+      name: <
         part: "PetShopModel"
-      }
-      types {
+      >
+      types: <
         key: "Breed"
-        value {
-        }
-      }
-      types {
+        value: <
+        >
+      >
+      types: <
         key: "Employee"
-        value {
-        }
-      }
-      types {
+        value: <
+        >
+      >
+      types: <
         key: "EmployeeTendsPet"
-        value {
-        }
-      }
-      types {
+        value: <
+        >
+      >
+      types: <
         key: "Pet"
-        value {
-        }
-      }
-    }
-  }
-}
-apps {
+        value: <
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "PetShopModel"
-  value {
-    name {
+  value: <
+    name: <
       part: "PetShopModel"
-    }
-    attrs {
+    >
+    attrs: <
       key: "package"
-      value {
+      value: <
         s: "io.sysl.demo.petshop.model"
-      }
-    }
-    types {
+      >
+    >
+    types: <
       key: "Breed"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "avgLifespan"
-            value {
+            value: <
               primitive: DECIMAL
-              constraint {
-                length {
+              constraint: <
+                length: <
                   max: 14
-                }
+                >
                 precision: 14
                 scale: 2
-              }
+              >
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 13
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "avgWeight"
-            value {
+            value: <
               primitive: DECIMAL
-              constraint {
-                length {
+              constraint: <
+                length: <
                   max: 14
-                }
-              }
+                >
+              >
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 14
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "breedId"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "pk"
-                    }
-                    elt {
+                    >
+                    elt: <
                       s: "autoinc"
-                    }
-                  }
-                }
-              }
-              source_context {
-                start {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 9
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "breedName"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 10
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "legRank"
-            value {
+            value: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 15
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "numLegs"
-            value {
+            value: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 12
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "species"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 11
-                }
-              }
-            }
-          }
-          primary_key {
+                >
+              >
+            >
+          >
+          primary_key: <
             attr_name: "breedId"
-          }
-        }
-      }
-    }
-    types {
+          >
+        >
+      >
+    >
+    types: <
       key: "Employee"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "dob"
-            value {
+            value: <
               primitive: DATE
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 5
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "employeeId"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "pk"
-                    }
-                    elt {
+                    >
+                    elt: <
                       s: "autoinc"
-                    }
-                  }
-                }
-              }
-              source_context {
-                start {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 3
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "error"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 6
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "name"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 4
-                }
-              }
-            }
-          }
-          primary_key {
+                >
+              >
+            >
+          >
+          primary_key: <
             attr_name: "employeeId"
-          }
-        }
-      }
-    }
-    types {
+          >
+        >
+      >
+    >
+    types: <
       key: "EmployeeTendsPet"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "employeeId"
-            value {
-              attrs {
-                key: "patterns"
-                value {
-                  a {
-                    elt {
-                      s: "pk"
-                    }
-                  }
-                }
-              }
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "PetShopModel"
-                  }
+                  >
                   path: "EmployeeTendsPet"
-                }
-                ref {
+                >
+                ref: <
                   path: "Employee"
                   path: "employeeId"
-                }
-              }
-              source_context {
-                start {
-                  line: 25
-                }
-              }
-            }
-          }
-          attr_defs {
-            key: "petId"
-            value {
-              attrs {
+                >
+              >
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "pk"
-                    }
-                  }
-                }
-              }
-              type_ref {
-                context {
-                  appname {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                start: <
+                  line: 25
+                >
+              >
+            >
+          >
+          attr_defs: <
+            key: "petId"
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "PetShopModel"
-                  }
+                  >
                   path: "EmployeeTendsPet"
-                }
-                ref {
+                >
+                ref: <
                   path: "Pet"
                   path: "petId"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              attrs: <
+                key: "patterns"
+                value: <
+                  a: <
+                    elt: <
+                      s: "pk"
+                    >
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 26
-                }
-              }
-            }
-          }
-          primary_key {
+                >
+              >
+            >
+          >
+          primary_key: <
             attr_name: "employeeId"
             attr_name: "petId"
-          }
-        }
-      }
-    }
-    types {
+          >
+        >
+      >
+    >
+    types: <
       key: "Pet"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "breedId"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "PetShopModel"
-                  }
+                  >
                   path: "Pet"
-                }
-                ref {
+                >
+                ref: <
                   path: "Breed"
                   path: "breedId"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                start: <
                   line: 19
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "dob"
-            value {
+            value: <
               primitive: DATE
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 21
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "name"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 20
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "numLegs"
-            value {
+            value: <
               primitive: INT
               opt: true
-              source_context {
-                start {
+              source_context: <
+                start: <
                   line: 22
-                }
-              }
-            }
-          }
-          attr_defs {
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "petId"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "pk"
-                    }
-                    elt {
+                    >
+                    elt: <
                       s: "autoinc"
-                    }
-                  }
-                }
-              }
-              source_context {
-                start {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                start: <
                   line: 18
-                }
-              }
-            }
-          }
-          primary_key {
+                >
+              >
+            >
+          >
+          primary_key: <
             attr_name: "petId"
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "PetShopModelToApi"
-  value {
-    name {
+  value: <
+    name: <
       part: "PetShopModelToApi"
-    }
-    attrs {
+    >
+    attrs: <
       key: "package"
-      value {
+      value: <
         s: "io.sysl.demo.petshop.views"
-      }
-    }
-    types {
+      >
+    >
+    types: <
       key: "PetRankedByLeg"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "breedId"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
-                  line: 114
-                }
-              }
-            }
-          }
-          attr_defs {
+              source_context: <
+                start: <
+                  line: 117
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "dob"
-            value {
+            value: <
               primitive: DATE
               opt: true
-              source_context {
-                start {
-                  line: 116
-                }
-              }
-            }
-          }
-          attr_defs {
+              source_context: <
+                start: <
+                  line: 119
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "legRank"
-            value {
+            value: <
               primitive: INT
               opt: true
-              source_context {
-                start {
-                  line: 118
-                }
-              }
-            }
-          }
-          attr_defs {
+              source_context: <
+                start: <
+                  line: 121
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "name"
-            value {
+            value: <
               primitive: STRING
               opt: true
-              source_context {
-                start {
-                  line: 115
-                }
-              }
-            }
-          }
-          attr_defs {
+              source_context: <
+                start: <
+                  line: 118
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "numLegs"
-            value {
+            value: <
               primitive: INT
               opt: true
-              source_context {
-                start {
-                  line: 117
-                }
-              }
-            }
-          }
-          attr_defs {
+              source_context: <
+                start: <
+                  line: 120
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "petId"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
-                  line: 113
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+              source_context: <
+                start: <
+                  line: 116
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "breedToApi"
-      value {
-        param {
+      value: <
+        param: <
           name: "breed"
-          type {
-            set {
-              type_ref {
-                ref {
-                  appname {
+          type: <
+            set: <
+              type_ref: <
+                ref: <
+                  appname: <
                     part: "PetShopModel"
-                  }
+                  >
                   path: "Breed"
-                }
-              }
-            }
-          }
-        }
-        param {
+                >
+              >
+            >
+          >
+        >
+        param: <
           name: "pet"
-          type {
-            set {
-              type_ref {
-                ref {
-                  appname {
+          type: <
+            set: <
+              type_ref: <
+                ref: <
+                  appname: <
                     part: "PetShopModelToApi"
-                  }
+                  >
                   path: "PetRankedByLeg"
-                }
-              }
-            }
-          }
-        }
-        ret_type {
-          set {
-            type_ref {
-              context {
-                appname {
+                >
+              >
+            >
+          >
+        >
+        ret_type: <
+          set: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "PetShopModelToApi"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "PetShopApi"
-                }
+                >
                 path: "Breed"
-              }
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+              >
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "breed"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "name"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "breedName"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "species"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "species"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "pets"
-                expr {
-                  call {
+                expr: <
+                  call: <
                     func: "petToApi"
-                    arg {
-                      binexpr {
+                    arg: <
+                      binexpr: <
                         op: TO_MATCHING
-                        lhs {
-                          navigate {
-                            arg {
+                        lhs: <
+                          navigate: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             attr: "Pet"
                             setof: true
-                          }
-                        }
-                        rhs {
+                          >
+                        >
+                        rhs: <
                           name: "pet"
-                        }
+                        >
                         attr_name: "petId"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "avgLifespan"
-                expr {
-                  unexpr {
+                expr: <
+                  unexpr: <
                     op: NEG
-                    arg {
-                      literal {
+                    arg: <
+                      literal: <
                         decimal: "1.0"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "index"
-                expr {
-                  call {
+                expr: <
+                  call: <
                     func: "autoinc"
-                    arg {
-                      literal {
+                    arg: <
+                      literal: <
                         s: "Breed"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            set {
-              type_ref {
-                context {
-                  appname {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            set: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "PetShopModelToApi"
-                  }
-                }
-                ref {
-                  appname {
+                  >
+                >
+                ref: <
+                  appname: <
                     part: "PetShopApi"
-                  }
+                  >
                   path: "Breed"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "employeeToApi"
-      value {
-        param {
+      value: <
+        param: <
           name: "employee"
-          type {
-            set {
-              type_ref {
-                ref {
-                  appname {
+          type: <
+            set: <
+              type_ref: <
+                ref: <
+                  appname: <
                     part: "PetShopModel"
-                  }
+                  >
                   path: "Employee"
-                }
-              }
-            }
-          }
-        }
-        ret_type {
-          set {
-            type_ref {
-              context {
-                appname {
+                >
+              >
+            >
+          >
+        >
+        ret_type: <
+          set: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "PetShopModelToApi"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "PetShopApi"
-                }
+                >
                 path: "Employee"
-              }
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+              >
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "employee"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "name"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "name"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "dob"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "dob"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "index"
-                expr {
-                  call {
+                expr: <
+                  call: <
                     func: "autoinc"
-                    arg {
-                      literal {
+                    arg: <
+                      literal: <
                         s: "Employee"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            set {
-              type_ref {
-                context {
-                  appname {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            set: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "PetShopModelToApi"
-                  }
-                }
-                ref {
-                  appname {
+                  >
+                >
+                ref: <
+                  appname: <
                     part: "PetShopApi"
-                  }
+                  >
                   path: "Employee"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "fibonacci"
-      value {
-        param {
+      value: <
+        param: <
           name: "n"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
+          >
+        >
+        ret_type: <
           primitive: INT
-        }
-        attrs {
+        >
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "abstract"
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "modelToApi"
-      value {
-        param {
+      value: <
+        param: <
           name: "petshop"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "PetShopModel"
-                }
-              }
-            }
-          }
-        }
-        ret_type {
-          type_ref {
-            context {
-              appname {
+                >
+              >
+            >
+          >
+        >
+        ret_type: <
+          type_ref: <
+            context: <
+              appname: <
                 part: "PetShopModelToApi"
-              }
-            }
-            ref {
-              appname {
+              >
+            >
+            ref: <
+              appname: <
                 part: "PetShopApi"
-              }
+              >
               path: "PetShop"
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "petshop"
-            }
+            >
             scopevar: "."
-            stmt {
-              let {
+            stmt: <
+              let: <
                 name: "rankedPets"
-                expr {
-                  relexpr {
+                expr: <
+                  relexpr: <
                     op: RANK
-                    target {
-                      get_attr {
-                        arg {
+                    target: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "Pet"
                         setof: true
-                      }
-                    }
-                    arg {
-                      get_attr {
-                        arg {
+                      >
+                    >
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "numLegs"
-                      }
-                    }
-                    arg {
-                      get_attr {
-                        arg {
+                      >
+                    >
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "numLegs"
-                      }
-                    }
+                      >
+                    >
                     scopevar: "."
                     descending: false
                     attr_name: "legRank"
-                  }
-                  type {
-                    set {
-                      type_ref {
-                        ref {
-                          appname {
+                  >
+                  type: <
+                    set: <
+                      type_ref: <
+                        ref: <
+                          appname: <
                             part: "PetShopModelToApi"
-                          }
+                          >
                           path: "PetRankedByLeg"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                        >
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "employees"
-                expr {
-                  call {
+                expr: <
+                  call: <
                     func: "employeeToApi"
-                    arg {
-                      get_attr {
-                        arg {
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "Employee"
                         setof: true
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "breeds"
-                expr {
-                  call {
+                expr: <
+                  call: <
                     func: "breedToApi"
-                    arg {
-                      get_attr {
-                        arg {
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "Breed"
                         setof: true
-                      }
-                    }
-                    arg {
+                      >
+                    >
+                    arg: <
                       name: "rankedPets"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "numLegs"
-                expr {
-                  relexpr {
+                expr: <
+                  relexpr: <
                     op: SUM
-                    target {
-                      get_attr {
-                        arg {
+                    target: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "Pet"
                         setof: true
-                      }
-                    }
-                    arg {
-                      binexpr {
+                      >
+                    >
+                    arg: <
+                      binexpr: <
                         op: COALESCE
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: <
+                          get_attr: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             attr: "numLegs"
-                          }
-                        }
-                        rhs {
-                          literal {
+                          >
+                        >
+                        rhs: <
+                          literal: <
                             i: 0
-                          }
-                        }
-                      }
-                    }
+                          >
+                        >
+                      >
+                    >
                     scopevar: "."
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
+                name: "m"
+                expr: <
+                  relexpr: <
+                    op: MIN
+                    target: <
+                      get_attr: <
+                        arg: <
+                          name: "."
+                        >
+                        attr: "Pet"
+                        setof: true
+                      >
+                    >
+                    arg: <
+                      binexpr: <
+                        op: COALESCE
+                        lhs: <
+                          get_attr: <
+                            arg: <
+                              name: "."
+                            >
+                            attr: "numLegs"
+                          >
+                        >
+                        rhs: <
+                          literal: <
+                            i: 0
+                          >
+                        >
+                      >
+                    >
+                    scopevar: "."
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
+                name: "a"
+                expr: <
+                  relexpr: <
+                    op: AVERAGE
+                    target: <
+                      get_attr: <
+                        arg: <
+                          name: "."
+                        >
+                        attr: "Pet"
+                        setof: true
+                      >
+                    >
+                    arg: <
+                      binexpr: <
+                        op: COALESCE
+                        lhs: <
+                          get_attr: <
+                            arg: <
+                              name: "."
+                            >
+                            attr: "numLegs"
+                          >
+                        >
+                        rhs: <
+                          literal: <
+                            i: 0
+                          >
+                        >
+                      >
+                    >
+                    scopevar: "."
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "pp"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "Pet"
                     setof: true
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "bb"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: TO_MATCHING
-                    lhs {
+                    lhs: <
                       name: "pp"
-                    }
-                    rhs {
-                      get_attr {
-                        arg {
+                    >
+                    rhs: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "Breed"
                         setof: true
-                      }
-                    }
+                      >
+                    >
                     attr_name: "*"
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "yy"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: TO_NOT_MATCHING
-                    lhs {
+                    lhs: <
                       name: "pp"
-                    }
-                    rhs {
-                      get_attr {
-                        arg {
+                    >
+                    rhs: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "Breed"
                         setof: true
-                      }
-                    }
+                      >
+                    >
                     attr_name: "*"
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "p"
-                expr {
-                  unexpr {
+                expr: <
+                  unexpr: <
                     op: SINGLE_OR_NULL
-                    arg {
-                      call {
+                    arg: <
+                      call: <
                         func: ".any"
-                        arg {
+                        arg: <
                           name: "pp"
-                        }
-                        arg {
-                          literal {
+                        >
+                        arg: <
+                          literal: <
                             i: 1
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                          >
+                        >
+                      >
+                    >
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "b"
-                expr {
-                  navigate {
-                    arg {
+                expr: <
+                  navigate: <
+                    arg: <
                       name: "p"
-                    }
+                    >
                     attr: "Breed"
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
+                  >
+                >
+              >
+            >
+            stmt: <
+              let: <
                 name: "pp2"
-                expr {
-                  navigate {
-                    arg {
+                expr: <
+                  navigate: <
+                    arg: <
                       name: "b"
-                    }
+                    >
                     attr: "Pet"
                     nullsafe: true
                     setof: true
-                  }
-                }
-              }
-            }
-          }
-          type {
-            type_ref {
-              context {
-                appname {
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "PetShopModelToApi"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "PetShopApi"
-                }
+                >
                 path: "PetShop"
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "petToApi"
-      value {
-        param {
+      value: <
+        param: <
           name: "pet"
-          type {
-            set {
-              type_ref {
-                ref {
-                  appname {
+          type: <
+            set: <
+              type_ref: <
+                ref: <
+                  appname: <
                     part: "PetShopModelToApi"
-                  }
+                  >
                   path: "PetRankedByLeg"
-                }
-              }
-            }
-          }
-        }
-        ret_type {
-          set {
-            type_ref {
-              context {
-                appname {
+                >
+              >
+            >
+          >
+        >
+        ret_type: <
+          set: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "PetShopModelToApi"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "PetShopApi"
-                }
+                >
                 path: "Pet"
-              }
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+              >
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "pet"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "name"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "name"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "dob"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "dob"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "numLegs"
-                expr {
-                  get_attr {
-                    arg {
+                expr: <
+                  get_attr: <
+                    arg: <
                       name: "."
-                    }
+                    >
                     attr: "numLegs"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
+                  >
+                >
+              >
+            >
+            stmt: <
+              assign: <
                 name: "legRank"
-                expr {
-                  call {
+                expr: <
+                  call: <
                     func: "fibonacci"
-                    arg {
-                      get_attr {
-                        arg {
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "legRank"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            set {
-              type_ref {
-                context {
-                  appname {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            set: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "PetShopModelToApi"
-                  }
-                }
-                ref {
-                  appname {
+                  >
+                >
+                ref: <
+                  appname: <
                     part: "PetShopApi"
-                  }
+                  >
                   path: "Pet"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

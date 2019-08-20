@@ -78,8 +78,7 @@ func main3(args []string) error {
 // main2 calls main3 and handles any errors it returns. It takes its output
 // streams and command-line arguments and even main3 as parameters to support
 // testability.
-func main2(args []string, main3 func(args []string) error,
-) int {
+func main2(args []string, main3 func(args []string) error) int {
 	if err := main3(args); err != nil {
 		logrus.Errorln(err.Error())
 		if err, ok := err.(parse.Exit); ok {

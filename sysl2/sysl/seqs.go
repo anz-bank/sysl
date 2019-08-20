@@ -9,6 +9,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -66,12 +67,12 @@ func constructFormatParser(former, latter string) *FormatParser {
 }
 
 func escapeWordBoundary(src string) string {
-	result, _ := json.Marshal(src)
+	result, err := json.Marshal(src)
+	syslutil.PanicOnError(err)
 	escapeStr := strings.Replace(string(result), `\u0008`, `\\b`, -1)
 	var val string
-	if err := json.Unmarshal([]byte(escapeStr), &val); err != nil {
-		panic(err)
-	}
+	err = json.Unmarshal([]byte(escapeStr), &val)
+	syslutil.PanicOnError(err)
 
 	return val
 }
@@ -89,7 +90,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 	log.Debugf("output: %s\n", *cmdContextParam.output)
 	log.Debugf("loglevel: %s\n", *cmdContextParam.loglevel)
 
-	if cmdContextParam.plantuml == nil {
+	if *cmdContextParam.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
 		cmdContextParam.plantuml = &plantuml
 		if *cmdContextParam.plantuml == "" {
@@ -172,7 +173,10 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
 					group:           groupAttr,
 				}
-				out, _ := generateSequenceDiag(mod, sd)
+				out, err := generateSequenceDiag(mod, sd)
+				if err != nil {
+					return nil, err
+				}
 				for indx := range bbs2 {
 					delete(bbsAll, bbs2[indx][0])
 				}
@@ -200,7 +204,10 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 			blackboxes:      bbsAll,
 			group:           *cmdContextParam.group,
 		}
-		out, _ := generateSequenceDiag(mod, sd)
+		out, err := generateSequenceDiag(mod, sd)
+		if err != nil {
+			return nil, err
+		}
 		for bbKey, bbVal := range bbsAll {
 			if bbVal.VisitCount == 0 && bbVal.ValueType == BBCommandLine {
 				log.Warnf("blackbox '%s' passed on commandline not hit\n", bbKey)

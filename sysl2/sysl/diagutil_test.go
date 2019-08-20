@@ -45,7 +45,7 @@ func TestDeflateAndEncode(t *testing.T) {
 	require.NoError(t, err)
 
 	//Then
-	assert.Equal(t, expected, actual, "Unexpected output")
+	assert.Equal(t, expected, actual)
 }
 
 func testOutputPlantuml(t *testing.T, output, output2 string) {

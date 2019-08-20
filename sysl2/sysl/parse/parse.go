@@ -16,14 +16,25 @@ import (
 
 // Parse parses a Sysl file under a specified root.
 func Parse(filename string, root string) (*sysl.Module, error) {
+	fs, err := RootFS(root)
+	if err != nil {
+		return nil, err
+	}
+	return FSParse(filename, fs)
+}
+
+func RootFS(root string) (http.FileSystem, error) {
 	if root == "" {
 		root = "."
 	}
 	if !dirExists(root) {
 		return nil, Exitf(ImportError, "root directory does not exist")
 	}
-	root, _ = filepath.Abs(root)
-	return FSParse(filename, http.Dir(root))
+	root, err := filepath.Abs(root)
+	if err != nil {
+		return nil, err
+	}
+	return http.Dir(root), nil
 }
 
 // FSParse ...
@@ -268,17 +279,13 @@ func inferExprType(mod *sysl.Module,
 				if stmt.GetAssign() != nil {
 					assign := stmt.GetAssign()
 					aexpr := assign.Expr
-					if aexpr.GetTransform() == nil {
-						panic("expression should be of type transform")
-					}
+					syslutil.Assert(aexpr.GetTransform() != nil, "expression should be of type transform")
 					ftype := aexpr.Type
 					setof := ftype.GetSet() != nil
 					if setof {
 						ftype = ftype.GetSet()
 					}
-					if ftype.GetTypeRef() == nil {
-						panic("transform type should be type_ref")
-					}
+					syslutil.Assert(ftype.GetTypeRef() != nil, "transform type should be type_ref")
 					t1 := &sysl.Type{
 						Type: &sysl.Type_TypeRef{
 							TypeRef: &sysl.ScopedRef{

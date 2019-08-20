@@ -6,3 +6,5 @@ const (
 	// ParseError is returned by parser when one of the input files has syntax errors
 	ParseError = 2
 )
+
+const syslExt = ".sysl"
