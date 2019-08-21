@@ -27,7 +27,6 @@ matrix:
     - 1.x
     go_import_path: github.com/anz-bank/sysl
     before_install:
-    - brew install gradle
     - export SYSL_PYTHON_DIR=/usr/local/bin/
     - python --version
     - pip --version
@@ -55,7 +54,7 @@ script:
 - flake8
 - pytest
 - pytest test/e2e --syslexe=${SYSL_PYTHON_DIR}sysl --reljamexe=${SYSL_PYTHON_DIR}reljam
-- gradle test -b test/java/build.gradle
+- if [[ ( "$TRAVIS_OS_NAME" == "linux" ) ]]; then gradle test -b test/java/build.gradle; fi
 - go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/...
 - npm test --prefix sysl2/sysl/sysl_js
 - GOOS=darwin GOARCH=amd64 go build -o gosysl/gosysl-darwin github.com/anz-bank/sysl/sysl2/sysl
@@ -66,7 +65,6 @@ script:
 addons:
   homebrew:
     packages:
-    - gradle
     - python@2
 
 before_deploy:
