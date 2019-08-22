@@ -17,3 +17,10 @@ rm sd.png
 
 $GOPATH/bin/sysl ints -j 'Project' $ROOT/integration_test.sysl -v
 rm _.png
+
+version=`$GOPATH/bin/sysl --version 2>&1 >/dev/null`
+if [[ ${version} = "unspecified" ]]; then
+    echo "version is unspecified"
+    exit 1
+fi
+echo "gosysl version is ${version}"

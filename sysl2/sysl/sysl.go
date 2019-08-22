@@ -15,12 +15,17 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+// Version contains the sysl binary version
+//nolint:gochecknoglobals
+var Version = "unspecified"
+
 const debug string = "debug"
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
+	sysl.Version(Version)
 	flagmap := map[string][]string{}
 	textpbParams := configureCmdlineForPb(sysl, flagmap)
 	codegenParams := configureCmdlineForCodegen(sysl, flagmap)
