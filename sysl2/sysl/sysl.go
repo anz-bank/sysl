@@ -7,18 +7,11 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
-
-//nolint:gochecknoglobals
-var logLevels = map[string]logrus.Level{
-	"":      logrus.ErrorLevel,
-	"off":   logrus.ErrorLevel,
-	"debug": logrus.DebugLevel,
-	"info":  logrus.InfoLevel,
-	"warn":  logrus.WarnLevel,
-}
 
 const debug string = "debug"
 
@@ -30,6 +23,7 @@ func main3(args []string) error {
 	codegenParams := configureCmdlineForCodegen(sysl)
 	sequenceParams := configureCmdlineForSeqgen(sysl)
 	intgenParams := configureCmdlineForIntgen(sysl)
+	validateParams := validate.ConfigureCmdlineForValidate(sysl)
 	var selectedCommand string
 	var err error
 	if selectedCommand, err = sysl.Parse(args[1:]); err != nil {
@@ -67,6 +61,8 @@ func main3(args []string) error {
 			}
 		}
 		return nil
+	case "validate":
+		return validate.DoValidate(validateParams)
 	}
 	return nil
 }
@@ -124,7 +120,7 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
 	format := strings.ToLower(*textpbParams.output)
 	toJSON := *textpbParams.mode == "json" || *textpbParams.mode == "" && strings.HasSuffix(format, ".json")
 	logrus.Debugf("%s\n", *textpbParams.modules)
-	mod, err := parse.Parse(*textpbParams.modules, *textpbParams.root)
+	mod, err := parse.NewParser().Parse(*textpbParams.modules, *textpbParams.root)
 	*textpbParams.output = strings.Trim(*textpbParams.output, " ")
 	if err != nil {
 		return err
@@ -134,7 +130,7 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
 		*textpbParams.loglevel = debug
 	}
 	// Default info
-	if level, has := logLevels[*textpbParams.loglevel]; has {
+	if level, has := syslutil.LogLevels[*textpbParams.loglevel]; has {
 		logrus.SetLevel(level)
 	}
 

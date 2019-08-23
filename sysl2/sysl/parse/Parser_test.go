@@ -12,7 +12,9 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -55,9 +57,18 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := Parse(filename, root)
+	module, err := NewParser().Parse(filename, root)
 	if err != nil {
 		return nil, err
+	}
+
+	for _, app := range module.Apps {
+		for _, t := range app.Views {
+			for _, stmt := range t.GetExpr().GetTransform().GetStmt() {
+				nullifyType(stmt.GetAssign().GetExpr())
+				nullifyType(stmt.GetLet().GetExpr())
+			}
+		}
 	}
 
 	if stripSourceContext {
@@ -77,6 +88,43 @@ func parseComparable(
 	}
 
 	return module, nil
+}
+
+func nullifyType(expr *sysl.Expr) {
+	if expr == nil {
+		return
+	}
+
+	switch t := expr.Expr.(type) {
+	case *sysl.Expr_Literal:
+		switch t.Literal.Value.(type) {
+		case *sysl.Value_Null_, *sysl.Value_B:
+			return
+		}
+		expr.Type = nil
+	case *sysl.Expr_List_:
+		nullifyType(t.List.Expr[0])
+		expr.Type = nil
+	case *sysl.Expr_Ifelse:
+		nullifyType(t.Ifelse.GetIfTrue())
+		nullifyType(t.Ifelse.GetIfFalse())
+		expr.Type = nil
+	case *sysl.Expr_Binexpr:
+		nullifyType(t.Binexpr.GetLhs())
+		if t.Binexpr.GetOp().String() != "WHERE" {
+			nullifyType(t.Binexpr.GetRhs())
+		}
+		expr.Type = nil
+	case *sysl.Expr_Unexpr:
+		nullifyType(expr.GetUnexpr().GetArg())
+		expr.Type = nil
+	case *sysl.Expr_Transform_:
+		for _, stmt := range t.Transform.GetStmt() {
+			nullifyType(stmt.GetAssign().GetExpr())
+			nullifyType(stmt.GetLet().GetExpr())
+		}
+	}
+
 }
 
 func parseAndCompare(
@@ -357,4 +405,153 @@ func TestStrings(t *testing.T) {
 
 func TestTypeAlias(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl")
+}
+
+func TestInferExprTypeNonTransform(t *testing.T) {
+	type expectedData struct {
+		exprType     *sysl.Type
+		inferredType *sysl.Type
+		messages     map[string][]msg.Msg
+	}
+
+	parser := NewParser()
+	expressions := map[string]*sysl.Expr{}
+	transform, appName := LoadAndGetDefaultApp("../tests", "transform1.sysl", parser)
+	viewName := "inferExprTypeNonTransform"
+	viewRetType := transform.GetApps()[appName].Views[viewName].GetRetType()
+
+	for _, stmt := range transform.GetApps()[appName].Views[viewName].GetExpr().GetTransform().GetStmt() {
+		expressions[stmt.GetAssign().GetName()] = stmt.GetAssign().GetExpr()
+	}
+
+	cases := map[string]struct {
+		input    *sysl.Expr
+		expected expectedData
+	}{
+		"String": {
+			input: expressions["stringType"],
+			expected: expectedData{
+				exprType: syslutil.TypeString(), inferredType: syslutil.TypeString(), messages: map[string][]msg.Msg{}}},
+		"Int": {
+			input: expressions["intType"],
+			expected: expectedData{
+				exprType: syslutil.TypeInt(), inferredType: syslutil.TypeInt(), messages: map[string][]msg.Msg{}}},
+		"Bool": {
+			input: expressions["boolType"],
+			expected: expectedData{
+				exprType: syslutil.TypeBool(), inferredType: syslutil.TypeBool(), messages: map[string][]msg.Msg{}}},
+		"Valid bool unary result": {
+			input: expressions["unaryResultValidBool"],
+			expected: expectedData{
+				exprType: syslutil.TypeBool(), inferredType: syslutil.TypeBool(), messages: map[string][]msg.Msg{}}},
+		"Valid int unary result": {
+			input: expressions["unaryResultValidInt"],
+			expected: expectedData{
+				exprType: syslutil.TypeInt(), inferredType: syslutil.TypeInt(), messages: map[string][]msg.Msg{}}},
+		"Invalid unary result bool": {
+			input: expressions["unaryResultInvalidBool"],
+			expected: expectedData{
+				exprType: syslutil.TypeBool(), inferredType: syslutil.TypeBool(),
+				messages: map[string][]msg.Msg{viewName: {
+					{MessageID: msg.ErrInvalidUnary, MessageData: []string{viewName, "STRING"}}}}}},
+		"Invalid unary result int": {
+			input: expressions["unaryResultInvalidInt"],
+			expected: expectedData{
+				exprType: syslutil.TypeInt(), inferredType: syslutil.TypeInt(),
+				messages: map[string][]msg.Msg{viewName: {
+					{MessageID: msg.ErrInvalidUnary, MessageData: []string{viewName, "STRING"}}}}}},
+	}
+
+	for name, test := range cases {
+		input := test.input
+		expected := test.expected
+		t.Run(name, func(t *testing.T) {
+			newParser := NewParser()
+			exprType, _, inferredType := newParser.inferExprType(nil, "", input, false, 0,
+				viewName, viewName, viewRetType)
+			assert.Equal(t, expected.exprType, exprType)
+			assert.Equal(t, expected.inferredType, inferredType)
+			assert.Equal(t, expected.messages, newParser.GetMessages())
+		})
+	}
+}
+
+func TestInferExprTypeTransform(t *testing.T) {
+	type expectedData struct {
+		exprType     *sysl.Type
+		inferredType *sysl.Type
+
+		letTypeRef   *sysl.Type
+		letTypeTuple *sysl.Type
+		letTypeScope string
+		messages     map[string][]msg.Msg
+	}
+
+	parser := NewParser()
+	transform, appName := LoadAndGetDefaultApp("../tests", "transform1.sysl", parser)
+	views := transform.GetApps()[appName].Views
+
+	cases := map[string]struct {
+		viewName string
+		expected expectedData
+	}{
+		"Transform type assign": {
+			viewName: "inferExprTypeTransformAssign",
+			expected: expectedData{
+				exprType: syslutil.TypeString(),
+				inferredType: &sysl.Type{
+					Type: &sysl.Type_Tuple_{
+						Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"transformTypeAssign": {
+							Type: &sysl.Type_Tuple_{
+								Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"bar": syslutil.TypeString()}}}}}}}},
+				letTypeScope: "inferExprTypeTransformAssign:transformTypeAssign:foo",
+				letTypeRef:   syslutil.TypeString(),
+				letTypeTuple: syslutil.TypeString(),
+				messages:     map[string][]msg.Msg{}}},
+		"Nested transform type assign": {
+			viewName: "inferExprTypeTransformNestedAssign",
+			expected: expectedData{
+				exprType: syslutil.TypeString(),
+				inferredType: &sysl.Type{
+					Type: &sysl.Type_Tuple_{
+						Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"nestedTransformTypeAssignTfm": {
+							Type: &sysl.Type_Tuple_{
+								Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"bar": {
+									Type: &sysl.Type_Tuple_{
+										Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"assign": syslutil.TypeString()}},
+									}}}}}}}}}},
+				letTypeScope: "inferExprTypeTransformNestedAssign:nestedTransformTypeAssignTfm:bar:variable",
+				letTypeRef:   syslutil.TypeInt(),
+				letTypeTuple: syslutil.TypeInt(),
+				messages:     map[string][]msg.Msg{}}},
+		"Nested transform type let": {
+			viewName: "inferExprTypeTransformNestedLet",
+			expected: expectedData{
+				exprType: syslutil.TypeString(),
+				inferredType: &sysl.Type{
+					Type: &sysl.Type_Tuple_{
+						Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"nestedTransformTypeLetTfm": {
+							Type: &sysl.Type_Tuple_{
+								Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"foo": syslutil.TypeNone()}}}}}}}},
+				letTypeScope: "inferExprTypeTransformNestedLet:nestedTransformTypeLetTfm:bar:variable",
+				letTypeRef:   syslutil.TypeInt(),
+				letTypeTuple: syslutil.TypeInt(),
+				messages:     map[string][]msg.Msg{}}},
+	}
+
+	for name, test := range cases {
+		viewName := test.viewName
+		expected := test.expected
+		t.Run(name, func(t *testing.T) {
+			newParser := NewParser()
+			_, _, inferredType := newParser.inferExprType(nil, "", views[viewName].GetExpr(), true, 0,
+				viewName, viewName, views[viewName].GetRetType())
+
+			assert.Equal(t, expected.inferredType, inferredType)
+			assert.Equal(t, newParser.GetAssigns()[viewName].Tuple, inferredType)
+			assert.Equal(t, newParser.GetLets()[expected.letTypeScope].Tuple, expected.letTypeTuple)
+			assert.Equal(t, newParser.GetLets()[expected.letTypeScope].RefType, expected.letTypeRef)
+			assert.Equal(t, expected.messages, newParser.GetMessages())
+		})
+	}
 }

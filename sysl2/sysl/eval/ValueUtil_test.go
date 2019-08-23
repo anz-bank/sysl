@@ -3,6 +3,8 @@ package eval
 import (
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
 )
@@ -174,7 +176,7 @@ func TestAttributeToValueComnposite(t *testing.T) {
 }
 
 func assertTypeDetail(t *testing.T, expectedTypeName, expectedTypeDetail string, typ *sysl.Type) {
-	typeName, typeDetail := getTypeDetail(typ)
+	typeName, typeDetail := syslutil.GetTypeDetail(typ)
 	assert.Equal(t, expectedTypeName, typeName)
 	assert.Equal(t, expectedTypeDetail, typeDetail)
 }
