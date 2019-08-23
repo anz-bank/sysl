@@ -39,7 +39,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 		*intgenParams.loglevel = debug
 	}
 	// Default info
-	if level, has := logLevels[*intgenParams.loglevel]; has {
+	if level, has := syslutil.LogLevels[*intgenParams.loglevel]; has {
 		log.SetLevel(level)
 	}
 

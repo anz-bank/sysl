@@ -4,7 +4,18 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/sirupsen/logrus"
 )
+
+// LogLevels ...
+// nolint:gochecknoglobals
+var LogLevels = map[string]logrus.Level{
+	"":      logrus.ErrorLevel,
+	"off":   logrus.ErrorLevel,
+	"debug": logrus.DebugLevel,
+	"info":  logrus.InfoLevel,
+	"warn":  logrus.WarnLevel,
+}
 
 func GetAppName(appname *sysl.AppName) string {
 	return strings.Join(appname.Part, " :: ")

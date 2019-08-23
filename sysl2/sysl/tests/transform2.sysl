@@ -1,0 +1,53 @@
+CodeGenTransform:
+
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename =  "servicehandler.go"
+    )
+
+  !view varDecl(name <: string, typeName <: string) -> VarDecl:
+    name -> (:
+      identifier = name
+      TypeName = typeName
+    )
+
+  !view epHandlerMethodSpecs(eps <: set of sysl.Endpoints) -> sequence of MethodSpec:
+    eps -> (ep:
+      MethodName = ""
+      Signature = ""
+    )
+
+  !view getParamStatements(paramList <: ParamList, methodName <: string) -> sequence of StatementList:
+    paramList -> (param:
+      Statement = param -> <Statement> (:
+        DeclareAndAssignStmt = param -> <DeclareAndAssignStmt> (:
+          Variables = param.varName
+          Expression = param -> <Expression> (:
+            FunctionCall = param -> <FunctionCall> (:
+              FunctionName = methodName
+              FunctionArgs = param -> <FunctionArgs> (:
+                Expression = makeValueExpr("r")
+                FuncArgsRest = [param] -> <FuncArgsRest> (:
+                  Expression = makeValueExpr('"' + param.paramName + '"')
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+
+  !view goFile(app <: sysl.App) -> goFile:
+    app -> (:
+      let foo = app -> <PackageName> (:
+        PackageName = ""
+      )
+
+      PackageClause = foo
+
+      ImportDecl = "ImportDecl"
+
+      Comment = "Comment"
+
+      TopLevelDecl = ""
+    )

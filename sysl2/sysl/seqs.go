@@ -47,7 +47,7 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 
 func loadApp(root string, models string) (*sysl.Module, error) {
 	// Model we want to generate seqs for, the non-empty model
-	mod, err := parse.Parse(models, root)
+	mod, err := parse.NewParser().Parse(models, root)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"loadApp: unable to load module:\n\troot: %s\n\tmodel: %s\nerror: %s",
@@ -110,7 +110,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 		*cmdContextParam.loglevel = debug
 	}
 	// Default info
-	if level, has := logLevels[*cmdContextParam.loglevel]; has {
+	if level, has := syslutil.LogLevels[*cmdContextParam.loglevel]; has {
 		log.SetLevel(level)
 	}
 

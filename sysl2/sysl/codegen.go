@@ -10,7 +10,10 @@ import (
 	parser "github.com/anz-bank/sysl/sysl2/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -88,7 +91,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 						ruleInstances = append(ruleInstances, node)
 					}
 					ruleResult = ruleInstances
-				} else { //maxc == 1
+				} else { // maxc == 1
 					// Drill down the rule
 					if v.GetList() != nil || v.GetSet() != nil {
 						logrus.Warnf("Got List or Set instead of map")
@@ -211,25 +214,6 @@ func Serialize(w io.Writer, delim string, node Node) error {
 	return nil
 }
 
-// return the one and only app defined in the module
-func getDefaultAppName(mod *sysl.Module) string {
-	for app := range mod.Apps {
-		return app
-	}
-	return ""
-}
-
-func loadAndGetDefaultApp(root, model string) (*sysl.Module, string) {
-	// Model we want to generate code for
-	mod, err := parse.Parse(model, root)
-	if err == nil {
-		modelAppName := getDefaultAppName(mod)
-		return mod, modelAppName
-	}
-	logrus.Errorf("loadAndGetDefaultApp: unable to load module:\n\troot: %s\n\tmodel:%s\n", root, model)
-	return nil, ""
-}
-
 // GenerateCode transform input sysl model to code in the target language described by
 // grammar and a sysl transform
 func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
@@ -247,16 +231,31 @@ func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
 		*codegenParams.loglevel = debug
 	}
 	// Default info
-	if level, has := logLevels[*codegenParams.loglevel]; has {
+	if level, has := syslutil.LogLevels[*codegenParams.loglevel]; has {
 		logrus.SetLevel(level)
 	}
 
-	mod, modelAppName := loadAndGetDefaultApp(*codegenParams.rootModel, *codegenParams.model)
-	tx, transformAppName := loadAndGetDefaultApp(*codegenParams.rootTransform, *codegenParams.transform)
+	modelParser := parse.NewParser()
+	mod, modelAppName := parse.LoadAndGetDefaultApp(*codegenParams.rootModel, *codegenParams.model, modelParser)
+
+	tfmParser := parse.NewParser()
+	tx, transformAppName := parse.LoadAndGetDefaultApp(*codegenParams.rootTransform, *codegenParams.transform, tfmParser)
+
 	g := readGrammar(*codegenParams.grammar, "gen", *codegenParams.start)
 	if g == nil {
-		panic(errors.Errorf("Unable to load grammar"))
+		logrus.Errorf("Unable to load grammar: %s", *codegenParams.grammar)
+		return nil
 	}
+
+	grammarSysl, err := validate.LoadGrammar(*codegenParams.grammar)
+	if err == nil {
+		validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
+		validator.Validate(*codegenParams.start)
+		validator.LogMessages()
+	} else {
+		msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
+	}
+
 	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
 	if fileNames == nil {
 		return nil
