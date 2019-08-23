@@ -68,6 +68,13 @@ func (fp *FormatParser) LabelApp(appname, controls string, attrs map[string]*sys
 	return fp.Parse(valMap)
 }
 
+func (fp *FormatParser) LabelClass(classname string) string {
+	valMap := map[string]string{
+		"classname": classname,
+	}
+	return fp.Parse(valMap)
+}
+
 func (fp *FormatParser) FmtSeq(epname, eplongname string, attrs map[string]*sysl.Attribute) string {
 	valMap := map[string]string{
 		"epname":     epname,

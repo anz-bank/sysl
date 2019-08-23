@@ -29,6 +29,10 @@ type AppLabeler interface {
 	LabelApp(appName, controls string, attrs map[string]*sysl.Attribute) string
 }
 
+type ClassLabeler interface {
+	LabelClass(className string) string
+}
+
 type VarManager interface {
 	UniqueVarForAppName(appName string) string
 }
@@ -84,4 +88,17 @@ type CmdContextParamIntgen struct {
 	plantuml  *string
 	isVerbose *bool
 	loglevel  *string
+}
+
+type CmdContextParamDatagen struct {
+	root        *string
+	title       *string
+	output      *string
+	project     *string
+	filter      *string
+	modules     *string
+	plantuml    *string
+	isVerbose   *bool
+	loglevel    *string
+	classFormat *string
 }

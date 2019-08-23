@@ -22,15 +22,19 @@ const debug string = "debug"
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	flagmap := map[string][]string{}
-	textpbParams := configureCmdlineForPb(sysl, flagmap)
-	codegenParams := configureCmdlineForCodegen(sysl, flagmap)
-	sequenceParams := configureCmdlineForSeqgen(sysl, flagmap)
-	intgenParams := configureCmdlineForIntgen(sysl, flagmap)
-	validateParams := validate.ConfigureCmdlineForValidate(sysl)
+	textpbParams := configureCmdlineForPb(syslCmd, flagmap)
+	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
+	sequenceParams := configureCmdlineForSeqgen(syslCmd, flagmap)
+	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
+	validateParams := validate.ConfigureCmdlineForValidate(syslCmd)
+	datagenParams := configureCmdlineForDatagen(syslCmd)
+
 	var selectedCommand string
 	var err error
-	sysl.Validate(generateAppargValidator(args[1], flagmap))
-	if selectedCommand, err = sysl.Parse(args[1:]); err != nil {
+	if len(args) > 1 {
+		syslCmd.Validate(generateAppargValidator(args[1], flagmap))
+	}
+	if selectedCommand, err = syslCmd.Parse(args[1:]); err != nil {
 		return err
 	}
 	switch selectedCommand {
@@ -70,6 +74,21 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 		return nil
 	case "validate":
 		return validate.DoValidate(validateParams)
+	case "data":
+		outmap, err := GenerateDataModels(datagenParams)
+		if err != nil {
+			return err
+		}
+		for k, v := range outmap {
+			if *datagenParams.isVerbose {
+				logrus.Debugf(k)
+			}
+			err := OutputPlantuml(k, *datagenParams.plantuml, v)
+			if err != nil {
+				return fmt.Errorf("plantuml drawing error: %v", err)
+			}
+		}
+		return nil
 	}
 	return nil
 }

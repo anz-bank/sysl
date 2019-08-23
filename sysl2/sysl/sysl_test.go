@@ -559,3 +559,34 @@ func TestMain2WithEmptyIntsParams(t *testing.T) {
 		"'project' value passed is empty\n", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
 }
+
+func TestMain2WithDataMultipleFiles(t *testing.T) {
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl", "-j", "Project"}, main3)
+	for _, filename := range []string{"Relational-Model.png", "Object-Model.png"} {
+		_, err := os.Stat(filename)
+		assert.NoError(t, err)
+		os.Remove(filename)
+	}
+}
+
+func TestMain2WithDataSingleFile(t *testing.T) {
+	main2([]string{"sysl", "data", "-o", "data.png", "tests/data.sysl", "-j", "Project"}, main3)
+	_, err := os.Stat("data.png")
+	assert.NoError(t, err)
+	os.Remove("data.png")
+}
+
+func TestMain2WithDataNoProject(t *testing.T) {
+	testHook := test.NewGlobal()
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl"}, main3)
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "project not found in sysl", testHook.LastEntry().Message)
+	testHook.Reset()
+}
+
+func TestMain2WithDataFilter(t *testing.T) {
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f", "Object-Model.png", "tests/data.sysl", "-j",
+		"Project"}, main3)
+	_, err := os.Stat("Relational-Model.png")
+	assert.Error(t, err)
+}
