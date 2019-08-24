@@ -7,6 +7,8 @@ import (
 )
 
 func TestNestedGrammar(t *testing.T) {
+	t.Parallel()
+
 	text := `{ 123, {EXPR: 1 + 2 * 3 :} }`
 
 	nested := makeNestedGrammarParser(text, makeRepeatSeq(makeQuantifierOptional()), makeEXPR())

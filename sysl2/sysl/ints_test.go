@@ -28,6 +28,8 @@ skinparam component {
 }`
 
 func TestGenerateIntegrations(t *testing.T) {
+	t.Parallel()
+
 	m, err := parse.NewParser().Parse("demo/simple/sysl-ints.sysl", "../../")
 	require.NoError(t, err)
 	require.NotNil(t, m)
@@ -95,6 +97,8 @@ func comparePUML(t *testing.T, expected, actual map[string]string) {
 }
 
 func TestGenerateIntegrationsWithTestFile(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -120,6 +124,8 @@ func TestGenerateIntegrationsWithTestFile(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithTestFileAndFilters(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -141,6 +147,8 @@ func TestGenerateIntegrationsWithTestFileAndFilters(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithImmediatePredecessors(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -163,6 +171,8 @@ func TestGenerateIntegrationsWithImmediatePredecessors(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithExclude(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -186,6 +196,8 @@ func TestGenerateIntegrationsWithExclude(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithPassthrough(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -209,6 +221,8 @@ func TestGenerateIntegrationsWithPassthrough(t *testing.T) {
 }
 
 func TestDoGenerateIntegrations(t *testing.T) {
+	t.Parallel()
+
 	args := &intsArg{
 		rootModel: "./tests/",
 		modules:   "indirect_1.sysl",
@@ -224,6 +238,8 @@ func TestDoGenerateIntegrations(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithCluster(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -248,6 +264,8 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithEpa(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -272,6 +290,8 @@ func TestGenerateIntegrationsWithEpa(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithIndirectArrow(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -300,6 +320,8 @@ func TestGenerateIntegrationsWithIndirectArrow(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithRestrictBy(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -325,6 +347,8 @@ func TestGenerateIntegrationsWithRestrictBy(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithFilter(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -349,6 +373,8 @@ func TestGenerateIntegrationsWithFilter(t *testing.T) {
 }
 
 func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -375,6 +401,8 @@ func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
 }
 
 func TestPassthrough2(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -404,6 +432,8 @@ func TestPassthrough2(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithPubSub(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",
@@ -428,6 +458,8 @@ func TestGenerateIntegrationsWithPubSub(t *testing.T) {
 }
 
 func TestAllStmts(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &intsArg{
 		rootModel: "./tests/",

@@ -12,11 +12,15 @@ import (
 )
 
 func TestGenerateSequenceDiagFail(t *testing.T) {
+	t.Parallel()
+
 	_, err := parse.NewParser().Parse("doesn't-exist.sysl", "")
 	require.Error(t, err)
 }
 
 func TestGenerateSequenceDiag(t *testing.T) {
+	t.Parallel()
+
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", "../../")
 	require.NoError(t, err)
 	l := &labeler{}
@@ -62,6 +66,8 @@ deactivate _0
 }
 
 func TestGenerateSequenceDiag2(t *testing.T) {
+	t.Parallel()
+
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", "../../")
 	require.NoError(t, err)
 	l := &labeler{}
@@ -108,6 +114,8 @@ deactivate _0
 }
 
 func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
+	t.Parallel()
+
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", "./tests/")
 	require.NoError(t, err)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
@@ -158,6 +166,8 @@ skinparam maxMessageSize 250
 }
 
 func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
+	t.Parallel()
+
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", "./tests/")
 	require.NoError(t, err)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
@@ -213,6 +223,8 @@ type loadAppArgs struct {
 }
 
 func TestLoadAppReturnError(t *testing.T) {
+	t.Parallel()
+
 	test := loadAppArgs{
 		"../../demo/simple/", "",
 	}
@@ -221,6 +233,8 @@ func TestLoadAppReturnError(t *testing.T) {
 }
 
 func TestLoadApp(t *testing.T) {
+	t.Parallel()
+
 	test := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
@@ -261,6 +275,8 @@ type sdArgs struct {
 }
 
 func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -279,6 +295,8 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 }
 
 func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -293,6 +311,8 @@ func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
 }
 
 func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -311,6 +331,8 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 }
 
 func TestDoConstructSequenceDiagrams(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -360,6 +382,8 @@ deactivate _0
 }
 
 func TestDoConstructSequenceDiagramWithBlackbox(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel:  "./tests/",
@@ -406,6 +430,8 @@ deactivate _0
 }
 
 func TestDoConstructSequenceDiagramsToFormatComplexName(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -442,6 +468,8 @@ activate _0
 }
 
 func TestDoGenerateSequenceDiagrams(t *testing.T) {
+	t.Parallel()
+
 	args := &sdArgs{
 		rootModel: "./tests/",
 		modules:   "sequence_diagram_complex_format.sysl",
@@ -461,6 +489,8 @@ func TestDoConstructSequenceDiagramsWithParams(t *testing.T) {
 }
 
 func TestDoConstructSequenceDiagramWithGroupingCommandline(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -497,6 +527,8 @@ end box`
 }
 
 func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -532,6 +564,8 @@ end box`
 }
 
 func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",

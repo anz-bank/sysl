@@ -34,6 +34,8 @@ deactivate _0
 const plantumlDotCom = "http://www.plantuml.com/plantuml"
 
 func TestDeflateAndEncode(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	const expected = "UDfSaKbhmp0GXU_pAnwvYqY6NaniKkXoAgGRFUGW9l4qY7gh99SkzByN9GvnUfBGzmrwZw5bYE" +
 		"pZqDIqxThekngp5zdS-AwDqbOpS83L9tRPkyEReOeZRpW8PbVZxK0o2c-kxTbpWuO_xoG4ticZ-nPa5vgYYxLWv" +
@@ -56,18 +58,26 @@ func testOutputPlantuml(t *testing.T, output, output2 string) {
 }
 
 func TestOutputPlantumlWithPng(t *testing.T) {
+	t.Parallel()
+
 	testOutputPlantuml(t, "test.png", "test.png")
 }
 
 func TestOutputPlantumlWithSvg(t *testing.T) {
+	t.Parallel()
+
 	testOutputPlantuml(t, "test.svg", "test.svg")
 }
 
 func TestOutputPlantumlWithUml(t *testing.T) {
+	t.Parallel()
+
 	testOutputPlantuml(t, "test.uml", "test.puml")
 }
 
 func TestEncode6bit(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		input    byte
 		expected byte
@@ -87,6 +97,8 @@ func TestEncode6bit(t *testing.T) {
 }
 
 func TestEncode6bitPanic(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	b := byte(255)
 
@@ -97,6 +109,8 @@ func TestEncode6bitPanic(t *testing.T) {
 }
 
 func TestOutPutWithWrongFormat(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	output := "test.wrong"
 	umlInput := testPlantumlInput
@@ -112,6 +126,8 @@ func TestOutPutWithWrongFormat(t *testing.T) {
 }
 
 func TestWrongHttpRequest(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	url := "ww.plantuml.co"
 
@@ -124,6 +140,8 @@ func TestWrongHttpRequest(t *testing.T) {
 }
 
 func TestEncode(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	data := []byte{'a'}
 

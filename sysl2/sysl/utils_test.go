@@ -9,47 +9,25 @@ import (
 )
 
 func TestTransformBlackBoxes(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		blackboxes []*sysl.Attribute
 	}
 
 	eltFirst := []*sysl.Attribute{
-		{
-			Attribute: &sysl.Attribute_S{
-				S: "Value A",
-			},
-		},
-		{
-			Attribute: &sysl.Attribute_S{
-				S: "Value B",
-			},
-		},
+		{Attribute: &sysl.Attribute_S{S: "Value A"}},
+		{Attribute: &sysl.Attribute_S{S: "Value B"}},
 	}
 	attrFirst := &sysl.Attribute{
-		Attribute: &sysl.Attribute_A{
-			A: &sysl.Attribute_Array{
-				Elt: eltFirst,
-			},
-		},
+		Attribute: &sysl.Attribute_A{A: &sysl.Attribute_Array{Elt: eltFirst}},
 	}
 	eltSecond := []*sysl.Attribute{
-		{
-			Attribute: &sysl.Attribute_S{
-				S: "Value C",
-			},
-		},
-		{
-			Attribute: &sysl.Attribute_S{
-				S: "Value D",
-			},
-		},
+		{Attribute: &sysl.Attribute_S{S: "Value C"}},
+		{Attribute: &sysl.Attribute_S{S: "Value D"}},
 	}
 	attrSecond := &sysl.Attribute{
-		Attribute: &sysl.Attribute_A{
-			A: &sysl.Attribute_Array{
-				Elt: eltSecond,
-			},
-		},
+		Attribute: &sysl.Attribute_A{A: &sysl.Attribute_Array{Elt: eltSecond}},
 	}
 
 	tests := []struct {
@@ -79,6 +57,8 @@ func TestTransformBlackBoxes(t *testing.T) {
 }
 
 func TestParseBlackBoxesFromArgument(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		blackboxFlags map[string]string
 	}
@@ -110,6 +90,8 @@ func TestParseBlackBoxesFromArgument(t *testing.T) {
 }
 
 func TestMergeAttributes(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		app   map[string]*sysl.Attribute
 		edpnt map[string]*sysl.Attribute
@@ -175,6 +157,8 @@ func TestMergeAttributes(t *testing.T) {
 }
 
 func TestTransformBlackboxesToUptos(t *testing.T) {
+	t.Parallel()
+
 	// given
 	bbs := map[string]*Upto{}
 	m := [][]string{
@@ -189,6 +173,8 @@ func TestTransformBlackboxesToUptos(t *testing.T) {
 }
 
 func TestTransformBlackboxesToUptosByNil(t *testing.T) {
+	t.Parallel()
+
 	// given
 	bbs := map[string]*Upto{}
 	var m [][]string
@@ -201,6 +187,8 @@ func TestTransformBlackboxesToUptosByNil(t *testing.T) {
 }
 
 func TestGetAppAttr(t *testing.T) {
+	t.Parallel()
+
 	// given
 	attr := map[string]*sysl.Attribute{
 		"attr1": {},
@@ -219,6 +207,8 @@ func TestGetAppAttr(t *testing.T) {
 }
 
 func TestGetAppAttrWhenAppNotExist(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: make(map[string]*sysl.Application),
@@ -232,6 +222,8 @@ func TestGetAppAttrWhenAppNotExist(t *testing.T) {
 }
 
 func TestSortedISOCtrlSlice(t *testing.T) {
+	t.Parallel()
+
 	// given
 	attrs := map[string]*sysl.Attribute{
 		"iso_ctrl_11_txt": {},
@@ -247,6 +239,8 @@ func TestSortedISOCtrlSlice(t *testing.T) {
 }
 
 func TestSortedISOCtrlSliceEmpty(t *testing.T) {
+	t.Parallel()
+
 	// given
 	attrs := make(map[string]*sysl.Attribute)
 
@@ -258,6 +252,8 @@ func TestSortedISOCtrlSliceEmpty(t *testing.T) {
 }
 
 func TestSortedISOCtrlStr(t *testing.T) {
+	t.Parallel()
+
 	// given
 	attrs := map[string]*sysl.Attribute{
 		"iso_ctrl_11_txt": {},
@@ -273,6 +269,8 @@ func TestSortedISOCtrlStr(t *testing.T) {
 }
 
 func TestSortedISOCtrlStrEmpty(t *testing.T) {
+	t.Parallel()
+
 	// given
 	attrs := make(map[string]*sysl.Attribute)
 
@@ -284,6 +282,8 @@ func TestSortedISOCtrlStrEmpty(t *testing.T) {
 }
 
 func TestFormatArgs(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -315,6 +315,8 @@ func TestFormatArgs(t *testing.T) {
 }
 
 func TestFormatArgsWithoutIsoInteg(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -341,6 +343,8 @@ func TestFormatArgsWithoutIsoInteg(t *testing.T) {
 }
 
 func TestFormatArgsWithoutIsoConf(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -367,6 +371,8 @@ func TestFormatArgsWithoutIsoConf(t *testing.T) {
 }
 
 func TestFormatArgsWithoutAttrs(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -387,6 +393,8 @@ func TestFormatArgsWithoutAttrs(t *testing.T) {
 }
 
 func TestFormatArgsWithoutParameterTypeName(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -407,6 +415,8 @@ func TestFormatArgsWithoutParameterTypeName(t *testing.T) {
 }
 
 func TestFormatArgsWithoutAppName(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -427,6 +437,8 @@ func TestFormatArgsWithoutAppName(t *testing.T) {
 }
 
 func TestFormatArgsWithoutAppNameAndParameterTypeName(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -447,6 +459,8 @@ func TestFormatArgsWithoutAppNameAndParameterTypeName(t *testing.T) {
 }
 
 func TestFormatReturnParam(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -467,6 +481,8 @@ func TestFormatReturnParam(t *testing.T) {
 }
 
 func TestFormatReturnParamSplit(t *testing.T) {
+	t.Parallel()
+
 	// given
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
@@ -495,6 +511,8 @@ func TestFormatReturnParamSplit(t *testing.T) {
 }
 
 func TestGetReturnPayload(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{
 			Stmt: &sysl.Statement_Call{},
@@ -517,6 +535,8 @@ func TestGetReturnPayload(t *testing.T) {
 }
 
 func TestGetReturnPayloadWithAlt(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{
 			Stmt: &sysl.Statement_Alt{
@@ -550,6 +570,8 @@ func TestGetReturnPayloadWithAlt(t *testing.T) {
 }
 
 func TestGetReturnPayloadWithCond(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{
 			Stmt: &sysl.Statement_Cond{
@@ -575,6 +597,8 @@ func TestGetReturnPayloadWithCond(t *testing.T) {
 }
 
 func TestGetReturnPayloadWithLoop(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{
 			Stmt: &sysl.Statement_Loop{
@@ -601,6 +625,8 @@ func TestGetReturnPayloadWithLoop(t *testing.T) {
 }
 
 func TestGetReturnPayloadWithLoopN(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{
 			Stmt: &sysl.Statement_LoopN{
@@ -626,6 +652,8 @@ func TestGetReturnPayloadWithLoopN(t *testing.T) {
 }
 
 func TestGetReturnPayloadWithForeach(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{
 			Stmt: &sysl.Statement_Foreach{
@@ -651,6 +679,8 @@ func TestGetReturnPayloadWithForeach(t *testing.T) {
 }
 
 func TestGetReturnPayloadWithGroup(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{
 			Stmt: &sysl.Statement_Group{
@@ -676,6 +706,8 @@ func TestGetReturnPayloadWithGroup(t *testing.T) {
 }
 
 func TestGetAndFmtParam(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"test": {
@@ -723,6 +755,8 @@ func TestGetAndFmtParam(t *testing.T) {
 }
 
 func TestNormalizeEndpointName(t *testing.T) {
+	t.Parallel()
+
 	actual := normalizeEndpointName("a -> b")
 
 	assert.Equal(t, " ⬄ b", actual)

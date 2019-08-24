@@ -13,17 +13,23 @@ import (
 )
 
 func TestFileExists(t *testing.T) {
+	t.Parallel()
+
 	// I think, therefore I am.
 	assert.True(t, fileExists("fs_test.go", http.Dir(".")))
 }
 
 func TestFileExistsBadFile(t *testing.T) {
+	t.Parallel()
+
 	assert.False(t, fileExists("x", http.Dir("/non-existent.dir")))
 	assert.False(t, fileExists("non-existent.file", http.Dir(".")))
 	assert.False(t, fileExists("non-existent.file", http.Dir(".")))
 }
 
 func TestNewFSFileStream(t *testing.T) {
+	t.Parallel()
+
 	fs, err := newFSFileStream("fs_test.go", http.Dir("."))
 	if assert.NoError(t, err) {
 		assert.Equal(t, "package parse\n", fs.GetText(0, 13))
@@ -31,6 +37,8 @@ func TestNewFSFileStream(t *testing.T) {
 }
 
 func TestNewFSFileStreamNotFound(t *testing.T) {
+	t.Parallel()
+
 	_, err := newFSFileStream("x", http.Dir("/non-existent.dir"))
 	assert.Error(t, err)
 	_, err = newFSFileStream("non-existent.file", http.Dir("."))
@@ -86,6 +94,8 @@ func (ffs flappyFileSystem) Open(name string) (http.File, error) {
 }
 
 func TestFlappyFileSystem(t *testing.T) {
+	t.Parallel()
+
 	f, err := flappyFileSystem{[]byte("package ma"), false}.Open("won't.go")
 	assert.NoError(t, err)
 
@@ -122,6 +132,8 @@ func TestFlappyFileSystem(t *testing.T) {
 }
 
 func TestNewFSFileStreamReadFailure(t *testing.T) {
+	t.Parallel()
+
 	fs, err := newFSFileStream("will.go", flappyFileSystem{[]byte("package main\n"), true})
 	require.NoError(t, err)
 	assert.Equal(t, "package main\n", fs.GetText(0, 12))

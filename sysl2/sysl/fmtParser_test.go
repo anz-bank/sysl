@@ -8,6 +8,8 @@ import (
 )
 
 func TestMakeFormatParser(t *testing.T) {
+	t.Parallel()
+
 	fp := MakeFormatParser("%(appname)")
 
 	assert.NotNil(t, fp)
@@ -15,6 +17,8 @@ func TestMakeFormatParser(t *testing.T) {
 }
 
 func TestLabelEndpoint(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	p := &EndpointLabelerParam{
 		EndpointName: "Login",
@@ -32,6 +36,8 @@ func TestLabelEndpoint(t *testing.T) {
 }
 
 func TestLabelEndpointMore(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	expected := `//«TT»//** <color green>rt → hp, ap</color>**\nsearchP`
 	sbAttr := &sysl.Attribute{
@@ -61,6 +67,8 @@ func TestLabelEndpointMore(t *testing.T) {
 }
 
 func TestLabelApp(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	appName := "Project"
 	attrs := map[string]*sysl.Attribute{}
@@ -74,6 +82,8 @@ func TestLabelApp(t *testing.T) {
 }
 
 func TestFmtSeq(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	fp := MakeFormatParser("%(seqtitle)")
 	seqtitleAttr := &sysl.Attribute{
@@ -93,6 +103,8 @@ func TestFmtSeq(t *testing.T) {
 }
 
 func TestFmtOutput(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	fp := MakeFormatParser("%(epname).png")
 	endpointName := "Login"
@@ -105,6 +117,8 @@ func TestFmtOutput(t *testing.T) {
 }
 
 func TestParse(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	attrs := map[string]string{}
 	fp := MakeFormatParser("1ba%%%%(DT?%(@c2?//%(@c4?--%(cc?dd|edd)--|bc)//\n|cc)|bb)**%(appname)**")
@@ -117,6 +131,8 @@ func TestParse(t *testing.T) {
 }
 
 func TestParseUnclosedExpansion(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	attrs := map[string]string{}
 	fp := MakeFormatParser("1ba%%%%(DT?%(@c2?//%(@c4?--%(cc?dd|edd)--|bc)//\n|cc)|bb)**%(appname**")
@@ -128,6 +144,8 @@ func TestParseUnclosedExpansion(t *testing.T) {
 }
 
 func TestParseMissingVariable(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	attrs := map[string]string{}
 	fp := MakeFormatParser("1ba%%%%(DT?%(@c2?//%(@c4?--%(cc?dd|edd)--|bc)//\n|cc)|bb)**%()**")
@@ -139,6 +157,8 @@ func TestParseMissingVariable(t *testing.T) {
 }
 
 func TestParseMissingConditionValue(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	attrs := map[string]string{}
 	fp := MakeFormatParser("1ba%%%%(DT?%(@c2==?//%(@c4?--%(cc?dd|edd)--|bc)//\n|cc)|bb)**%(appname)**")
@@ -150,6 +170,8 @@ func TestParseMissingConditionValue(t *testing.T) {
 }
 
 func TestParseWithEqualConditionValue(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	attrs := map[string]string{
 		"c2": "aa",
@@ -164,6 +186,8 @@ func TestParseWithEqualConditionValue(t *testing.T) {
 }
 
 func TestParseWithNotEqualConditionValue(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	attrs := map[string]string{
 		"c2": "ab",
@@ -178,6 +202,8 @@ func TestParseWithNotEqualConditionValue(t *testing.T) {
 }
 
 func TestParseSearchValue(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	attrs := map[string]string{
 		"c2": "ab",
@@ -192,6 +218,8 @@ func TestParseSearchValue(t *testing.T) {
 }
 
 func TestMergeAttributesMap(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	seqtitleAttr := &sysl.Attribute{
 		Attribute: &sysl.Attribute_S{

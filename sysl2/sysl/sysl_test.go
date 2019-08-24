@@ -88,24 +88,28 @@ func TestMain2SeqdiagWithImpossibleOutput(t *testing.T) {
 
 func TestMain2WithBlackboxParams(t *testing.T) {
 	testHook := test.NewGlobal()
-	main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB=call to database",
+	defer testHook.Reset()
+	out := "tests/call1.png"
+	defer os.Remove(out)
+	main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-o", out, "-b", "Server <- DB=call to database",
 		"-b", "Server <- Login=call to database", "tests/call.sysl"}, main3)
 	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "blackbox 'Server <- DB' passed on commandline not hit\n", testHook.LastEntry().Message)
-	testHook.Reset()
 }
 
 func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
 	testHook := test.NewGlobal()
-	main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-o", "tests/call.png", "-b", "Server <- DB",
+	defer testHook.Reset()
+	ret := main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-o", "tests/call2.png", "-b", "Server <- DB",
 		"-b", "Server <- Login", "tests/call.sysl"}, main3)
+	assert.NotEqual(t, 0, ret)
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "expected KEY=VALUE got 'Server <- DB'", testHook.LastEntry().Message)
-	testHook.Reset()
 }
 
 func TestMain2WithBlackboxSysl(t *testing.T) {
 	testHook := test.NewGlobal()
+	defer testHook.Reset()
 	main2([]string{"sysl", "sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Sequences"}, main3)
 	assert.Equal(t, logrus.WarnLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "blackbox 'SomeApp <- AppEndpoint' not hit in app 'Project :: Sequences'\n",
@@ -114,44 +118,45 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 		testHook.Entries[len(testHook.Entries)-2].Message)
 	assert.Equal(t, "blackbox 'SomeApp <- BarEndpoint' not hit in app 'Project :: Sequences :: SEQ-One'\n",
 		testHook.Entries[len(testHook.Entries)-3].Message)
-	testHook.Reset()
 }
 
 func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
 	testHook := test.NewGlobal()
+	defer testHook.Reset()
 	main2([]string{"sysl", "sd", "-o", "%(epname).png", "tests/blackbox.sysl", "-a", "Project :: Integrations"}, main3)
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "No call statements to build sequence diagram for endpoint PROJECT-E2E", testHook.LastEntry().Message)
-	testHook.Reset()
 }
 
 func TestMain2Fatal(t *testing.T) {
 	testHook := test.NewGlobal()
+	defer testHook.Reset()
 	assert.Equal(t, 42, main2(nil, func(_ []string) error {
 		return parse.Exitf(42, "Exit error")
 	}))
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
-	testHook.Reset()
 }
 
 func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 	testHook := test.NewGlobal()
-	main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-g", "-o", "tests/call.png", "tests/call.sysl"}, main3)
+	defer testHook.Reset()
+	main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-g", "-o", "tests/call3.png", "tests/call.sysl"}, main3)
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "expected argument for flag '-g'", testHook.LastEntry().Message)
-	testHook.Reset()
 }
 
 func TestMain2WithGroupingParamsCommandline(t *testing.T) {
-	main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-g", "owner", "-o", "tests/call.png",
+	out := "tests/call4.png"
+	defer os.Remove(out)
+	main2([]string{"sysl", "sd", "-s", "MobileApp <- Login", "-g", "owner", "-o", out,
 		"tests/call.sysl"}, main3)
-	_, err := os.Stat("tests/call.png")
+	_, err := os.Stat(out)
 	assert.NoError(t, err)
-	os.Remove("tests/call.png")
 }
 
 func TestMain2WithGroupingParamsSysl(t *testing.T) {
 	testHook := test.NewGlobal()
+	defer testHook.Reset()
 	main2([]string{"sysl", "sd", "-g", "location", "-o", "%(epname).png", "tests/groupby.sysl", "-a",
 		"Project :: Sequences"}, main3)
 	for _, filename := range []string{"SEQ-One.png", "SEQ-Two.png"} {
@@ -165,42 +170,42 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 
 func TestMain2WithGenerateIntegrations(t *testing.T) {
 	out := "indirect_1.png"
+	defer os.Remove(out)
 	main2([]string{"sysl", "ints", "--root", "./tests/", "-o", out, "-j", "Project", "indirect_1.sysl"}, main3)
 	_, err2 := os.Stat(out)
-	assert.True(t, err2 == nil)
-	os.Remove(out)
+	assert.NoError(t, err2)
 }
 
 func TestMain2WithGenerateCode(t *testing.T) {
+	defer os.Remove("Model.java")
 	ret := main2([]string{"sysl", "gen", "--root-model", ".", "--model", "tests/model.sysl",
 		"--root-transform", ".", "--transform", "tests/test.gen_multiple_annotations.sysl",
 		"--grammar", "tests/test.gen.g", "--start", "javaFile"}, main3)
-	assert.True(t, ret == 0)
-	os.Remove("Model.java")
+	assert.Equal(t, 0, ret)
 }
 
 func TestMain2WithTestPbJsonMode(t *testing.T) {
-	out := "tests/callout"
+	out := "tests/callout1"
+	defer os.Remove(out)
 	ret := main2([]string{"sysl", "pb", "--mode", "textpb", "-o", out, "tests/call.sysl"}, main3)
-	assert.True(t, ret == 0)
-	os.Remove(out)
+	assert.Equal(t, 0, ret)
 }
 
 func TestMain2WithTestPbMode(t *testing.T) {
-	out := "tests/callout"
+	out := "tests/callout2"
+	defer os.Remove(out)
 	ret := main2([]string{"sysl", "pb", "--mode", "json", "-o", out, "tests/call.sysl"}, main3)
-	assert.True(t, ret == 0)
-	os.Remove(out)
+	assert.Equal(t, 0, ret)
 }
 
 func TestMain2WithTestPbJsonConsole(t *testing.T) {
 	ret := main2([]string{"sysl", "pb", "--mode", "textpb", "-o", " - ", "tests/call.sysl", "-v"}, main3)
-	assert.True(t, ret == 0)
+	assert.Equal(t, 0, ret)
 }
 
 func TestMain2WithTestPbConsole(t *testing.T) {
 	ret := main2([]string{"sysl", "pb", "--mode", "json", "-o", " - ", "tests/call.sysl", "-v"}, main3)
-	assert.True(t, ret == 0)
+	assert.Equal(t, 0, ret)
 }
 
 func TestMain2WithEmptySdParams(t *testing.T) {

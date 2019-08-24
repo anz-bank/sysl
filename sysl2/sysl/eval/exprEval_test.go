@@ -16,6 +16,8 @@ const (
 )
 
 func TestEvalStrategySetup(t *testing.T) {
+	t.Parallel()
+
 	for key := range valueFunctions {
 		idx := strings.Index(key, "_Value")
 		op := key[:idx]
@@ -32,6 +34,8 @@ func TestEvalStrategySetup(t *testing.T) {
 }
 
 func TestScopeAddApp(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -79,6 +83,8 @@ func TestScopeAddApp(t *testing.T) {
 }
 
 func TestEvalIntegerMath(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -101,6 +107,8 @@ func TestEvalIntegerMath(t *testing.T) {
 }
 
 func TestEvalCompare(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -121,6 +129,8 @@ func TestEvalCompare(t *testing.T) {
 }
 
 func TestEvalListSetOps(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -151,6 +161,8 @@ func TestEvalListSetOps(t *testing.T) {
 }
 
 func TestEvalIsKeyword(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -166,6 +178,8 @@ func TestEvalIsKeyword(t *testing.T) {
 }
 
 func TestEvalIfElseAlt(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -186,6 +200,8 @@ func TestEvalIfElseAlt(t *testing.T) {
 }
 
 func TestEvalGetAppAttributes(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -241,6 +257,8 @@ func TestEvalGetAppAttributes(t *testing.T) {
 }
 
 func TestEvalNullCheckAppAttrs(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -256,6 +274,8 @@ func TestEvalNullCheckAppAttrs(t *testing.T) {
 }
 
 func TestScopeAddRestApp(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -310,6 +330,8 @@ func TestScopeAddRestApp(t *testing.T) {
 }
 
 func TestEvalStringOps(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -355,6 +377,8 @@ func TestEvalStringOps(t *testing.T) {
 }
 
 func TestIncorrectArgsToGoFunc(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -373,6 +397,8 @@ func TestIncorrectArgsToGoFunc(t *testing.T) {
 }
 
 func TestEvalFlatten(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -402,6 +428,8 @@ func TestEvalFlatten(t *testing.T) {
 }
 
 func TestEvalWhere(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -430,6 +458,8 @@ func TestEvalWhere(t *testing.T) {
 }
 
 func TestEvalLinks(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -457,6 +487,8 @@ func TestEvalLinks(t *testing.T) {
 }
 
 func TestDotScope(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)
@@ -468,6 +500,8 @@ func TestDotScope(t *testing.T) {
 }
 
 func TestListOfTypeNames(t *testing.T) {
+	t.Parallel()
+
 	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
 	require.NoError(t, err)
 	require.NotNil(t, mod)

@@ -10,6 +10,8 @@ import (
 )
 
 func TestGenerateCode(t *testing.T) {
+	t.Parallel()
+
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
@@ -47,6 +49,8 @@ func TestGenerateCode(t *testing.T) {
 }
 
 func TestGenerateCodeNoComment(t *testing.T) {
+	t.Parallel()
+
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	assert.Len(t, output, 1)
@@ -75,6 +79,8 @@ func TestGenerateCodeNoComment(t *testing.T) {
 }
 
 func TestGenerateCodeNoPackage(t *testing.T) {
+	t.Parallel()
+
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
@@ -82,6 +88,8 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 }
 
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
+	t.Parallel()
+
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	root := output[0].output
@@ -89,6 +97,8 @@ func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 }
 
 func TestGenerateCodePerType(t *testing.T) {
+	t.Parallel()
+
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	assert.Len(t, output, 1)
@@ -111,6 +121,8 @@ func TestGenerateCodePerType(t *testing.T) {
 }
 
 func TestSerialize(t *testing.T) {
+	t.Parallel()
+
 	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	out := new(bytes.Buffer)
@@ -120,6 +132,8 @@ func TestSerialize(t *testing.T) {
 }
 
 func TestOutputForPureTokenOnlyRule(t *testing.T) {
+	t.Parallel()
+
 	g := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
 	obj := eval.MakeValueMap()
 	m := eval.MakeValueMap()
@@ -147,7 +161,8 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	assert.Equal(t, "tail", tail[0].(Node)[0].(string))
 }
 
-func GenerateCodeWithParams(rootModel, model, rootTransform, transform, grammar, start string, loglevel string,
+func GenerateCodeWithParams(
+	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
 	isVerbose bool,
 ) []*CodeGenOutput {
 	cmdContextParamCodegen := &CmdContextParamCodegen{

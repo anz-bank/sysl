@@ -42,6 +42,8 @@ func (suite *elementSuite) TestElementAccept() {
 }
 
 func TestElementSuite(t *testing.T) {
+	t.Parallel()
+
 	suite.Run(t, &elementSuite{e: &EndpointCollectionElement{}})
 	suite.Run(t, &elementSuite{e: &EndpointElement{}})
 	suite.Run(t, &elementSuite{e: &StatementElement{}})
@@ -58,6 +60,8 @@ func (m *mockVarManager) UniqueVarForAppName(appName string) string {
 }
 
 func TestMakeEntry(t *testing.T) {
+	t.Parallel()
+
 	entry := makeEntry("a <- b [upto b <- c]")
 
 	assert.NotNil(t, entry)
@@ -67,6 +71,8 @@ func TestMakeEntry(t *testing.T) {
 }
 
 func TestMakeEndpointCollectionElement(t *testing.T) {
+	t.Parallel()
+
 	e := MakeEndpointCollectionElement("title",
 		[]string{"a <- b [upto b <- c]"},
 		map[string]*Upto{"": {Comment: ""},
@@ -77,6 +83,8 @@ func TestMakeEndpointCollectionElement(t *testing.T) {
 }
 
 func TestEndpointElementSender(t *testing.T) {
+	t.Parallel()
+
 	m := new(mockVarManager)
 	e := &EndpointElement{}
 	m.On("UniqueVarForAppName", mock.Anything).Return("a")
@@ -88,6 +96,8 @@ func TestEndpointElementSender(t *testing.T) {
 }
 
 func TestEndpointElementSenderWith(t *testing.T) {
+	t.Parallel()
+
 	m := new(mockVarManager)
 	e := &EndpointElement{
 		fromApp: &sysl.AppName{
@@ -103,6 +113,8 @@ func TestEndpointElementSenderWith(t *testing.T) {
 }
 
 func TestEndpointElementAgent(t *testing.T) {
+	t.Parallel()
+
 	m := new(mockVarManager)
 	e := &EndpointElement{
 		appName: "test",
@@ -116,6 +128,8 @@ func TestEndpointElementAgent(t *testing.T) {
 }
 
 func TestEndpointElementApplication(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"test": {},
@@ -131,6 +145,8 @@ func TestEndpointElementApplication(t *testing.T) {
 }
 
 func TestEndpointElementApplicationPanic(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Module{}
 	e := &EndpointElement{
 		appName: "test",
@@ -140,6 +156,8 @@ func TestEndpointElementApplicationPanic(t *testing.T) {
 }
 
 func TestEndpointElementEndpoint(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Application{
 		Endpoints: map[string]*sysl.Endpoint{
 			"test": {},
@@ -155,6 +173,8 @@ func TestEndpointElementEndpoint(t *testing.T) {
 }
 
 func TestEndpointElementEndpointPanic(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Application{}
 	e := &EndpointElement{
 		endpointName: "test",
@@ -174,6 +194,8 @@ func (m *mockEndpointLabeler) LabelEndpoint(p *EndpointLabelerParam) string {
 }
 
 func TestEndpointElementEndpointLabel(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	l := new(mockEndpointLabeler)
 	m := &sysl.Module{}
@@ -189,6 +211,8 @@ func TestEndpointElementEndpointLabel(t *testing.T) {
 }
 
 func TestEndpointElementEndpointLabelWithValidStmt(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	l := new(mockEndpointLabeler)
 	m := &sysl.Module{}
@@ -212,6 +236,8 @@ func TestEndpointElementEndpointLabelWithValidStmt(t *testing.T) {
 }
 
 func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	l := new(mockEndpointLabeler)
 	m := &sysl.Module{}
@@ -235,6 +261,8 @@ func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T)
 }
 
 func TestStatementElementIsLastStmt(t *testing.T) {
+	t.Parallel()
+
 	e := &StatementElement{
 		isLastParentStmt: true,
 		stmts:            []*sysl.Statement{{}},
@@ -265,6 +293,8 @@ func (l *labeler) LabelEndpoint(p *EndpointLabelerParam) string {
 }
 
 func TestSequenceDiagramVisitorVisit(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
@@ -325,6 +355,8 @@ deactivate _0
 }
 
 func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
@@ -376,6 +408,8 @@ title Diagram
 }
 
 func TestVisitStatement(t *testing.T) {
+	t.Parallel()
+
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")

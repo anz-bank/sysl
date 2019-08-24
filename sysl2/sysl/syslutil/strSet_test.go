@@ -8,26 +8,36 @@ import (
 )
 
 func TestMakeStrSet(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("a", "b", "c", "e")
 	assert.Equal(t, 4, len(a))
 }
 
 func TestMakeStrSetWithDuplicateInitialValues(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("a", "b", "c", "e", "a", "a", "c")
 	assert.Equal(t, 4, len(a))
 }
 
 func TestMakeStrSetWithEmptyStringInitialValues(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("a", "b", "c", "e", "a", "a", "c", "", "")
 	assert.Equal(t, 5, len(a))
 }
 
 func TestMakeStrSetWithoutInitialValues(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet()
 	assert.Equal(t, 0, len(a))
 }
 
 func TestMakeStrSetFromSpecificAttrWithEmptyAttrs(t *testing.T) {
+	t.Parallel()
+
 	attrs := map[string]*sysl.Attribute{}
 
 	a := MakeStrSetFromAttr("patterns", attrs)
@@ -35,6 +45,8 @@ func TestMakeStrSetFromSpecificAttrWithEmptyAttrs(t *testing.T) {
 }
 
 func TestMakeStrSetFromSpecificAttrWithoutPatternAttr(t *testing.T) {
+	t.Parallel()
+
 	attrs := map[string]*sysl.Attribute{
 		"test": {Attribute: &sysl.Attribute_S{S: "test"}},
 	}
@@ -44,6 +56,8 @@ func TestMakeStrSetFromSpecificAttrWithoutPatternAttr(t *testing.T) {
 }
 
 func TestMakeStrSetFromPatternsAttr(t *testing.T) {
+	t.Parallel()
+
 	attrs := map[string]*sysl.Attribute{
 		"patterns": {Attribute: &sysl.Attribute_A{A: &sysl.Attribute_Array{
 			Elt: []*sysl.Attribute{{Attribute: &sysl.Attribute_S{S: "test"}}},
@@ -55,6 +69,8 @@ func TestMakeStrSetFromPatternsAttr(t *testing.T) {
 }
 
 func TestMakeStrSetFromActionStatement(t *testing.T) {
+	t.Parallel()
+
 	stmts := []*sysl.Statement{
 		{Stmt: &sysl.Statement_Action{Action: &sysl.Action{Action: "AppA"}}},
 	}
@@ -64,6 +80,8 @@ func TestMakeStrSetFromActionStatement(t *testing.T) {
 }
 
 func TestContains(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("a", "b", "c", "e")
 	assert.Equal(t, 4, len(a))
 	assert.True(t, a.Contains("b"))
@@ -71,6 +89,8 @@ func TestContains(t *testing.T) {
 }
 
 func TestInsert(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("a", "b", "c", "e")
 	assert.Equal(t, 4, len(a))
 	assert.True(t, a.Contains("b"))
@@ -83,6 +103,8 @@ func TestInsert(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("a", "b", "c", "e")
 	assert.Equal(t, 4, len(a))
 	assert.True(t, a.Contains("b"))
@@ -100,6 +122,8 @@ func TestRemove(t *testing.T) {
 }
 
 func TestToSlice(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	a := MakeStrSet("c", "b", "a", "e")
 
@@ -129,6 +153,8 @@ func TestToSlice(t *testing.T) {
 }
 
 func TestClone(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("c", "b", "a", "e")
 	b := a.Clone()
 	assert.Equal(t, a, b)
@@ -138,6 +164,8 @@ func TestClone(t *testing.T) {
 }
 
 func TestStrSetUnion(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("d", "b", "e", "f")
 	b := a.Union(MakeStrSet("d", "f", "g", "z"))
 	c := MakeStrSet("d", "b", "e", "f", "g", "z")
@@ -146,6 +174,8 @@ func TestStrSetUnion(t *testing.T) {
 }
 
 func TestIntersection(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("c", "b", "a", "e")
 	b := MakeStrSet("d", "b", "a", "e")
 
@@ -155,6 +185,8 @@ func TestIntersection(t *testing.T) {
 }
 
 func TestDifference(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet("c", "b", "a", "e")
 	b := MakeStrSet("d", "b", "a", "e")
 
@@ -164,6 +196,8 @@ func TestDifference(t *testing.T) {
 }
 
 func TestDifferenceWhenEmptySet(t *testing.T) {
+	t.Parallel()
+
 	a := MakeStrSet()
 	b := MakeStrSet("a", "z", "y")
 	c := a.Difference(b)
@@ -172,6 +206,8 @@ func TestDifferenceWhenEmptySet(t *testing.T) {
 }
 
 func TestSubWhenParentAndChildEmpty(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	c := MakeStrSet()
 	p := MakeStrSet()
@@ -185,6 +221,8 @@ func TestSubWhenParentAndChildEmpty(t *testing.T) {
 }
 
 func TestSubWhenParentEmpty(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	c := MakeStrSet("A")
 	p := MakeStrSet()
@@ -198,6 +236,8 @@ func TestSubWhenParentEmpty(t *testing.T) {
 }
 
 func TestSubWhenChildEmpty(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	c := MakeStrSet()
 	p := MakeStrSet("A")
@@ -211,6 +251,8 @@ func TestSubWhenChildEmpty(t *testing.T) {
 }
 
 func TestSubSetWhenParentLessThanChild(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	c := MakeStrSet("a", "z", "y")
 	p := MakeStrSet("a", "y")
@@ -224,5 +266,7 @@ func TestSubSetWhenParentLessThanChild(t *testing.T) {
 }
 
 func TestSubSetWhenDifferent(t *testing.T) {
+	t.Parallel()
+
 	assert.False(t, MakeStrSet("a", "z", "f").IsSubset(MakeStrSet("a", "z", "y", "d")))
 }

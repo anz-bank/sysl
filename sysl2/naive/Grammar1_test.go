@@ -41,6 +41,8 @@ func testParser(
 // S –> bab | bA
 // A –> d | cA
 func TestGrammar1(t *testing.T) {
+	t.Parallel()
+
 	cases := []cases{
 		{"bab", []int{2, 3, 2, -1}, true},
 		{"bcccd", []int{2, 1, 1, 1, 0, -1}, true},
@@ -53,6 +55,8 @@ func TestGrammar1(t *testing.T) {
 }
 
 func TestEXPR1(t *testing.T) {
+	t.Parallel()
+
 	text := "1 + 3 * 7"
 	tokens := []int{6, 0, 6, 2, 6, -1}
 
@@ -60,6 +64,8 @@ func TestEXPR1(t *testing.T) {
 }
 
 func TestOBJ(t *testing.T) {
+	t.Parallel()
+
 	g := makeRepeatSeq(makeQuantifierZeroPlus())
 	cases := []cases{
 		{"{}", []int{0, 2, -1}, true},
@@ -72,6 +78,8 @@ func TestOBJ(t *testing.T) {
 }
 
 func TestOBJPlus(t *testing.T) {
+	t.Parallel()
+
 	// NOTE THE +
 	// obj
 	//    : '{' pair (',' pair)+ '}'
@@ -88,6 +96,8 @@ func TestOBJPlus(t *testing.T) {
 }
 
 func TestOBJOptional(t *testing.T) {
+	t.Parallel()
+
 	// NOTE THE ?
 	// obj
 	//    : '{' number (',' number)? '}'
@@ -106,6 +116,8 @@ func TestOBJOptional(t *testing.T) {
 }
 
 func TestJSON(t *testing.T) {
+	t.Parallel()
+
 	g := makeJSON(makeQuantifierZeroPlus())
 	cases := []cases{
 		{"{}", []int{3, 4, -1}, true},
@@ -137,6 +149,8 @@ func TestJSON(t *testing.T) {
 }
 
 func TestFirstSet1(t *testing.T) {
+	t.Parallel()
+
 	g := makeEXPR()
 	terms := makeBuilder().buildTerminalsList(g.Rules)
 
@@ -150,6 +164,8 @@ func TestFirstSet1(t *testing.T) {
 }
 
 func TestFirstSet2(t *testing.T) {
+	t.Parallel()
+
 	g := makeG2()
 	terms := makeBuilder().buildTerminalsList(g.Rules)
 
@@ -165,6 +181,8 @@ func TestFirstSet2(t *testing.T) {
 }
 
 func TestEBNF1(t *testing.T) {
+	t.Parallel()
+
 	g := makeEBNF()
 	cases := []cases{
 		{`expr : INT | ID | expr;`, []int{1, 8, 1, 4, 1, 4, 1, 9, -1}, true},
@@ -177,6 +195,8 @@ func TestEBNF1(t *testing.T) {
 }
 
 func TestBuildEBNFGrammar(t *testing.T) {
+	t.Parallel()
+
 	// Both grammars are equivalent
 	grammars := []string{
 		`s : 'd' | 'c' s ; `,
@@ -201,6 +221,8 @@ func TestBuildEBNFGrammar(t *testing.T) {
 }
 
 func TestBuildEBNFGrammar2(t *testing.T) {
+	t.Parallel()
+
 	text := `
         s : 'b' 'a' 'b' | 'b' a;
         a : 'd' | 'c' a;
@@ -221,6 +243,8 @@ func TestBuildEBNFGrammar2(t *testing.T) {
 }
 
 func TestBuildEBNFGrammar3(t *testing.T) {
+	t.Parallel()
+
 	text := `
         s : a (',' a)*;
         a : 'd';
@@ -241,6 +265,8 @@ func TestBuildEBNFGrammar3(t *testing.T) {
 }
 
 func TestBuildEBNFGrammar4(t *testing.T) {
+	t.Parallel()
+
 	text := `
           s: a a a;
           a: 'a' | 'b' | 'c' | 'd';
