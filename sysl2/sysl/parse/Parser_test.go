@@ -212,16 +212,22 @@ func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
 }
 
 func TestParseBadRoot(t *testing.T) {
+	t.Parallel()
+
 	_, err := parseComparable("dontcare.sysl", "NON-EXISTENT-ROOT", false)
 	assert.Error(t, err)
 }
 
 func TestParseMissingFile(t *testing.T) {
+	t.Parallel()
+
 	_, err := parseComparable("doesn't.exist.sysl", "tests", false)
 	assert.Error(t, err)
 }
 
 func TestParseDirectoryAsFile(t *testing.T) {
+	t.Parallel()
+
 	dirname := "not-a-file.sysl"
 	tmproot := os.TempDir()
 	tmpdir := path.Join(tmproot, dirname)
@@ -232,178 +238,266 @@ func TestParseDirectoryAsFile(t *testing.T) {
 }
 
 func TestParseBadFile(t *testing.T) {
+	t.Parallel()
+
 	_, err := parseAndCompareWithGolden("sysl.go", "", false)
 	assert.Error(t, err)
 }
 
 func TestSimpleEP(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/test1.sysl", "")
 }
 
 func TestSimpleEPNoSuffix(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/test1", "")
 }
 
 func TestAttribs(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/attribs.sysl", "")
 }
 
 func TestIfElse(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/if_else.sysl", "")
 }
 
 func TestArgs(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/args.sysl")
 }
 
 func TestSimpleEPWithSpaces(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/with_spaces.sysl", "")
 }
 
 func TestSimpleEP2(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/test4.sysl", "")
 }
 
 func TestUnion(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/union.sysl", "")
 }
 
 func TestSimpleEndpointParams(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/ep_params.sysl", "")
 }
 
 func TestOneOfStatements(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/oneof.sysl", "")
 }
 
 func TestDuplicateEndpoints(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/duplicate.sysl", "")
 }
 
 func TestEventing(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/eventing.sysl", "")
 }
 
 func TestCollector(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/collector.sysl", "")
 }
 
 func TestPubSubCollector(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/pubsub_collector.sysl", "")
 }
 
 func TestDocstrings(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/docstrings.sysl", "")
 }
 
 func TestMixins(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/mixin.sysl", "")
 }
 func TestForLoops(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/for_loop.sysl", "")
 }
 
 func TestGroupStmt(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/group_stmt.sysl", "")
 }
 
 func TestUntilLoop(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/until_loop.sysl", "")
 }
 
 func TestTuple(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/test2.sysl", "")
 }
 
 func TestInplaceTuple(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/inplace_tuple.sysl", "")
 }
 
 func TestRelational(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/school.sysl", "")
 }
 
 func TestImports(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/library.sysl", "")
 }
 
 func TestRootArg(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "school.sysl", "tests")
 }
 
 func TestSequenceType(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/sequence_type.sysl")
 }
 
 func TestRestApi(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/test_rest_api.sysl")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/rest_api_query_params.sysl")
 }
 
 func TestSimpleProject(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/project.sysl", "")
 }
 
 func TestUrlParamOrder(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/rest_url_params.sysl")
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/bad_order.sysl")
 }
 
 func TestTransform(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/transform.sysl", "")
 }
 
 func TestImpliedDot(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/implied.sysl", "")
 }
 
 func TestStmts(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/stmts.sysl", "")
 }
 
 func TestMath(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/math.sysl", "")
 }
 
 func TestTableof(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/tableof.sysl", "")
 }
 
 func TestRank(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/rank.sysl", "")
 }
 
 func TestMatching(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/matching.sysl", "")
 }
 
 func TestNavigate(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/navigate.sysl", "")
 }
 
 func TestFuncs(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/funcs.sysl", "")
 }
 
 func TestPetshop(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/petshop.sysl", "")
 }
 
 func TestCrash(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/crash.sysl", "")
 }
 
 func TestStrings(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/strings_expr.sysl")
 }
 
 func TestTypeAlias(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl")
 }
 

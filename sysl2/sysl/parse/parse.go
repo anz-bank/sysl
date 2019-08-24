@@ -73,6 +73,7 @@ func (p *Parser) FSParse(filename string, fs http.FileSystem) (*sysl.Module, err
 		listener.filename = filename
 		listener.base = filepath.Dir(filename)
 		lexer := parser.NewSyslLexer(input)
+		defer parser.DeleteLexerState(lexer)
 		stream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewSyslParser(stream)
 		p.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)

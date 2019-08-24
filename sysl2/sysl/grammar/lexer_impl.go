@@ -3,8 +3,10 @@ package parser
 import (
 	"os"
 	s "strings"
+	"unsafe"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/cornelk/hashmap"
 	"github.com/sirupsen/logrus"
 )
 
@@ -25,11 +27,39 @@ var (
 		"alt",
 		"while",
 	}
+
+	// Antlr doesn't support reentrant Go lexer state, so we work around it with
+	// a fast lock-free hash map.
+	lexerStates = &hashmap.HashMap{}
 )
 
-// TODO: Make lexer reentrant.
-//nolint:gochecknoglobals
-var prevToken []antlr.Token
+type lexerState struct {
+	prevToken []antlr.Token
+	level     stack
+
+	spaces       int
+	linenum      int
+	inSqBrackets int
+	parens       int
+	gotNewLine   bool
+	gotHTTPVerb  bool
+	gotView      bool
+}
+
+func ls(l *SyslLexer) *lexerState {
+	key := uintptr(unsafe.Pointer(l))
+	if state, has := lexerStates.Get(key); has {
+		return state.(*lexerState)
+	}
+	state := &lexerState{}
+	lexerStates.Set(key, state)
+	return state
+}
+
+func DeleteLexerState(l *SyslLexer) {
+	key := uintptr(unsafe.Pointer(l))
+	lexerStates.Del(key)
+}
 
 func calcSpaces(text string) int {
 	s := 0
@@ -64,64 +94,46 @@ func createIndentToken(source *antlr.TokenSourceCharStreamPair) *antlr.CommonTok
 	return antlr.NewCommonToken(source, SyslLexerINDENT, 0, 0, 0)
 }
 
-type Stack struct {
-	stack []int
-	index int
+type stack []int
+
+func (s *stack) Push(o int) {
+	*s = append(*s, o)
 }
 
-func NewStack() *Stack {
-	s := new(Stack)
-	s.index = 0
-	return s
-}
-
-func (s *Stack) Push(o int) {
-	s.stack = append(s.stack, o)
-	s.index++
-}
-
-func (s *Stack) Pop() int {
-	if s.index < 0 {
-		panic("empty stack")
-	}
-	l := len(s.stack)
-	ret := s.stack[l-1]
-	s.stack = s.stack[:l-1]
-	s.index--
+func (s *stack) Pop() int {
+	l := len(*s)
+	ret := (*s)[l-1]
+	*s = (*s)[:l-1]
 	return ret
 }
 
-func (s *Stack) Size() int {
-	return s.index
+func (s *stack) Size() int {
+	return len(*s)
 }
 
-func (s *Stack) Peek() int {
-	return s.stack[s.index-1]
+func (s *stack) Peek() int {
+	return (*s)[len(*s)-1]
 }
 
-// TODO: Make lexer reentrant.
-//nolint:gochecknoglobals
-var level = NewStack()
-
-func getPreviousIndent(l *Stack) int {
-	if level.Size() == 0 {
+func getPreviousIndent(s stack) int {
+	if s.Size() == 0 {
 		return 0
 	}
 	// peek, read but not remove HEAD
-	return l.Peek()
+	return s.Peek()
 }
 
-// TrimText Token Text
-func TrimText(l *SyslLexer) string {
+// trimText Token Text
+func trimText(l *SyslLexer) string {
 	return s.TrimSpace(l.GetText())
 }
 
-// GetNextToken ...
-func GetNextToken(l *SyslLexer) antlr.Token {
-	if len(prevToken) > 0 {
+func getNextToken(l *SyslLexer) antlr.Token {
+	ls := ls(l)
+	if len(ls.prevToken) > 0 {
 		// poll, retrieve head
-		nextTok := prevToken[0]
-		prevToken = prevToken[1:]
+		nextTok := ls.prevToken[0]
+		ls.prevToken = ls.prevToken[1:]
 		return nextTok
 	}
 
@@ -130,7 +142,7 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 		logrus.Info(next)
 	}
 	// return NEWLINE
-	if gotNewLine {
+	if ls.gotNewLine {
 		switch next.GetTokenType() {
 		case SyslLexerNEWLINE, SyslLexerNEWLINE_2, SyslLexerEMPTY_LINE, SyslLexerE_NL, SyslLexerE_EMPTY_LINE:
 			fallthrough
@@ -143,34 +155,34 @@ func GetNextToken(l *SyslLexer) antlr.Token {
 	// regular whitespace, return as is.
 	// return from here only when we encounter HIDDEN after INDENT has been generated
 	// after processing NL.
-	if !gotNewLine && next.GetChannel() == antlr.TokenHiddenChannel {
-		spaces = 0
+	if !ls.gotNewLine && next.GetChannel() == antlr.TokenHiddenChannel {
+		ls.spaces = 0
 		return next
 	} else if next.GetTokenType() == SyslLexerSYSL_COMMENT {
-		spaces = 0
+		ls.spaces = 0
 		return next
 	}
 
 	if next.GetTokenType() == antlr.TokenEOF {
-		spaces = 0 // done with the file
-	} else if !gotNewLine {
+		ls.spaces = 0 // done with the file
+	} else if !ls.gotNewLine {
 		return next
 	}
 
-	for spaces != getPreviousIndent(level) {
-		if spaces > getPreviousIndent(level) {
-			level.Push(spaces)
-			prevToken = append(prevToken, createIndentToken(next.GetSource()))
+	for ls.spaces != getPreviousIndent(ls.level) {
+		if ls.spaces > getPreviousIndent(ls.level) {
+			ls.level.Push(ls.spaces)
+			ls.prevToken = append(ls.prevToken, createIndentToken(next.GetSource()))
 		} else {
-			level.Pop()
-			prevToken = append(prevToken, createDedentToken(next.GetSource()))
+			ls.level.Pop()
+			ls.prevToken = append(ls.prevToken, createDedentToken(next.GetSource()))
 		}
 	}
 
-	gotNewLine = false
-	prevToken = append(prevToken, next)
+	ls.gotNewLine = false
+	ls.prevToken = append(ls.prevToken, next)
 	// poll, retrieve head
-	temp := prevToken[0]
-	prevToken = prevToken[1:]
+	temp := ls.prevToken[0]
+	ls.prevToken = ls.prevToken[1:]
 	return temp
 }
