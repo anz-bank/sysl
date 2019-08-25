@@ -15,8 +15,10 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -57,7 +59,7 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := NewParser().Parse(filename, root)
+	module, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +144,8 @@ func parseAndCompare(
 		return true, nil
 	}
 
-	if err = pbutil.TextPB(goldenProto, golden); err != nil {
+	fs := afero.NewMemMapFs()
+	if err = pbutil.TextPB(goldenProto, golden, fs); err != nil {
 		return false, err
 	}
 
@@ -502,15 +505,20 @@ func TestTypeAlias(t *testing.T) {
 }
 
 func TestInferExprTypeNonTransform(t *testing.T) {
+	t.Parallel()
+
 	type expectedData struct {
 		exprType     *sysl.Type
 		inferredType *sysl.Type
 		messages     map[string][]msg.Msg
 	}
 
+	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
 	parser := NewParser()
 	expressions := map[string]*sysl.Expr{}
-	transform, appName := LoadAndGetDefaultApp("../tests", "transform1.sysl", parser)
+	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
+	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
 	viewName := "inferExprTypeNonTransform"
 	viewRetType := transform.GetApps()[appName].Views[viewName].GetRetType()
 
@@ -571,6 +579,8 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 }
 
 func TestInferExprTypeTransform(t *testing.T) {
+	t.Parallel()
+
 	type expectedData struct {
 		exprType     *sysl.Type
 		inferredType *sysl.Type
@@ -581,8 +591,11 @@ func TestInferExprTypeTransform(t *testing.T) {
 		messages     map[string][]msg.Msg
 	}
 
+	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
 	parser := NewParser()
-	transform, appName := LoadAndGetDefaultApp("../tests", "transform1.sysl", parser)
+	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
+	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
 	views := transform.GetApps()[appName].Views
 
 	cases := map[string]struct {

@@ -10,9 +10,10 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
+	"github.com/spf13/afero"
 )
 
-func OutputPlantuml(output, plantuml, umlInput string) error {
+func OutputPlantuml(output, plantuml, umlInput string, fs afero.Fs) error {
 	l := len(output)
 	mode := output[l-3:]
 
@@ -27,12 +28,12 @@ func OutputPlantuml(output, plantuml, umlInput string) error {
 		if err != nil {
 			return err
 		}
-		return ioutil.WriteFile(output, out, os.ModePerm)
+		return afero.WriteFile(fs, output, out, os.ModePerm)
 
 	case "uml":
 		output := output[:l-3]
 		output += "puml"
-		return ioutil.WriteFile(output, []byte(umlInput), os.ModePerm)
+		return afero.WriteFile(fs, output, []byte(umlInput), os.ModePerm)
 
 	default:
 		return fmt.Errorf("extension must be svg, png or uml, not %#v", mode)

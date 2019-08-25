@@ -3,7 +3,6 @@ package main
 import (
 	"io"
 	"io/ioutil"
-	"os"
 	"sort"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -16,6 +15,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -155,21 +155,23 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 	return root
 }
 
-func readGrammar(filename, grammarName, startRule string) *ebnfGrammar.Grammar {
+func readGrammar(filename, grammarName, startRule string) (*ebnfGrammar.Grammar, error) {
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
-		logrus.Errorf("Unable to open grammar file: %s\nGot Error: %s", filename, err.Error())
-		return nil
+		return nil, err
 	}
-	return parser.ParseEBNF(string(dat), grammarName, startRule)
+	return parser.ParseEBNF(string(dat), grammarName, startRule), nil
 }
 
 // applyTranformToModel loads applies the transform to input model
-func applyTranformToModel(modelName, transformAppName, viewName string, model, transform *sysl.Module) *sysl.Value {
+func applyTranformToModel(
+	modelName, transformAppName, viewName string,
+	model, transform *sysl.Module,
+) (*sysl.Value, error) {
 	modelApp := model.Apps[modelName]
 	view := transform.Apps[transformAppName].Views[viewName]
 	if view == nil {
-		panic(errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName))
+		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
 	}
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
@@ -194,7 +196,7 @@ func applyTranformToModel(modelName, transformAppName, viewName string, model, t
 		result = eval.EvaluateView(transform, transformAppName, viewName, s)
 	}
 
-	return result
+	return result, nil
 }
 
 // Serialize serializes node to string
@@ -216,7 +218,7 @@ func Serialize(w io.Writer, delim string, node Node) error {
 
 // GenerateCode transform input sysl model to code in the target language described by
 // grammar and a sysl transform
-func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
+func GenerateCode(codegenParams *CmdContextParamCodegen, fs afero.Fs) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
 
 	logrus.Debugf("root-model: %s\n", *codegenParams.rootModel)
@@ -235,32 +237,42 @@ func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
 		logrus.SetLevel(level)
 	}
 
+	modelFs := syslutil.NewChrootFs(fs, *codegenParams.rootModel)
 	modelParser := parse.NewParser()
-	mod, modelAppName := parse.LoadAndGetDefaultApp(*codegenParams.rootModel, *codegenParams.model, modelParser)
-
-	tfmParser := parse.NewParser()
-	tx, transformAppName := parse.LoadAndGetDefaultApp(*codegenParams.rootTransform, *codegenParams.transform, tfmParser)
-
-	g := readGrammar(*codegenParams.grammar, "gen", *codegenParams.start)
-	if g == nil {
-		logrus.Errorf("Unable to load grammar: %s", *codegenParams.grammar)
-		return nil
+	mod, modelAppName, err := parse.LoadAndGetDefaultApp(*codegenParams.model, modelFs, modelParser)
+	if err != nil {
+		return nil, err
 	}
 
-	grammarSysl, err := validate.LoadGrammar(*codegenParams.grammar)
-	if err == nil {
+	transformFs := syslutil.NewChrootFs(fs, *codegenParams.rootTransform)
+	tfmParser := parse.NewParser()
+	tx, transformAppName, err := parse.LoadAndGetDefaultApp(*codegenParams.transform, transformFs, tfmParser)
+	if err != nil {
+		return nil, err
+	}
+
+	g, err := readGrammar(*codegenParams.grammar, "gen", *codegenParams.start)
+	if err != nil {
+		return nil, err
+	}
+
+	grammarSysl, err := validate.LoadGrammar(*codegenParams.grammar, fs)
+	if err != nil {
+		msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
+	} else {
 		validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
 		validator.Validate(*codegenParams.start)
 		validator.LogMessages()
-	} else {
-		msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 	}
 
-	fileNames := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
-	if fileNames == nil {
-		return nil
+	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", mod, tx)
+	if err != nil {
+		return nil, err
 	}
-	result := applyTranformToModel(modelAppName, transformAppName, g.Start, mod, tx)
+	result, err := applyTranformToModel(modelAppName, transformAppName, g.Start, mod, tx)
+	if err != nil {
+		return nil, err
+	}
 	if result.GetMap() != nil {
 		filename := fileNames.GetMap().Items["filename"].GetS()
 		logrus.Println(filename)
@@ -274,12 +286,12 @@ func GenerateCode(codegenParams *CmdContextParamCodegen) []*CodeGenOutput {
 			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 		}
 	}
-	return codeOutput
+	return codeOutput, nil
 }
 
-func outputToFiles(outDir string, output []*CodeGenOutput) error {
+func outputToFiles(output []*CodeGenOutput, fs afero.Fs) error {
 	for _, o := range output {
-		f, err := os.Create(outDir + "/" + o.filename)
+		f, err := fs.Create(o.filename)
 		if err != nil {
 			return err
 		}

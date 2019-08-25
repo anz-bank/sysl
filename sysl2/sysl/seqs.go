@@ -10,7 +10,9 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -45,13 +47,13 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) 
 	return w.String(), nil
 }
 
-func loadApp(root string, models string) (*sysl.Module, error) {
+func loadApp(models string, fs afero.Fs) (*sysl.Module, error) {
 	// Model we want to generate seqs for, the non-empty model
-	mod, err := parse.NewParser().Parse(models, root)
+	mod, err := parse.NewParser().Parse(models, fs)
 	if err != nil {
-		return nil, fmt.Errorf(
-			"loadApp: unable to load module:\n\troot: %s\n\tmodel: %s\nerror: %s",
-			root, models, err.Error(),
+		return nil, errors.Wrapf(err,
+			"loadApp: unable to load module:\n\tmodel: %s\nerror: %s",
+			models, err.Error(),
 		)
 	}
 	return mod, nil
@@ -115,7 +117,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 	}
 
 	result := make(map[string]string)
-	mod, err := loadApp(*cmdContextParam.root, *cmdContextParam.modulesFlag)
+	mod, err := loadApp(*cmdContextParam.modulesFlag, syslutil.NewChrootFs(afero.NewOsFs(), *cmdContextParam.root))
 	if err != nil {
 		return nil, err
 	}

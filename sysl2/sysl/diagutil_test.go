@@ -1,9 +1,10 @@
 package main
 
 import (
-	"os"
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -51,28 +52,27 @@ func TestDeflateAndEncode(t *testing.T) {
 }
 
 func testOutputPlantuml(t *testing.T, output, output2 string) {
-	require.NoError(t, OutputPlantuml(output, plantumlDotCom, testPlantumlInput))
-	_, err := os.Stat(output2)
-	require.NoError(t, err)
-	os.Remove(output2)
+	fs := afero.NewMemMapFs()
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, testPlantumlInput, fs))
+	testutil.AssertFsHasExactly(t, fs, output2)
 }
 
 func TestOutputPlantumlWithPng(t *testing.T) {
 	t.Parallel()
 
-	testOutputPlantuml(t, "test.png", "test.png")
+	testOutputPlantuml(t, "/test.png", "/test.png")
 }
 
 func TestOutputPlantumlWithSvg(t *testing.T) {
 	t.Parallel()
 
-	testOutputPlantuml(t, "test.svg", "test.svg")
+	testOutputPlantuml(t, "/test.svg", "/test.svg")
 }
 
 func TestOutputPlantumlWithUml(t *testing.T) {
 	t.Parallel()
 
-	testOutputPlantuml(t, "test.uml", "test.puml")
+	testOutputPlantuml(t, "/test.uml", "/test.puml")
 }
 
 func TestEncode6bit(t *testing.T) {
@@ -111,18 +111,9 @@ func TestEncode6bitPanic(t *testing.T) {
 func TestOutPutWithWrongFormat(t *testing.T) {
 	t.Parallel()
 
-	//Given
-	output := "test.wrong"
-	umlInput := testPlantumlInput
-
-	//When
-	require.Error(t, OutputPlantuml(output, plantumlDotCom, umlInput))
-
-	//Then
-	_, err := os.Stat(output)
-	if !assert.True(t, os.IsNotExist(err)) {
-		assert.NoError(t, os.Remove(output))
-	}
+	fs := afero.NewMemMapFs()
+	require.Error(t, OutputPlantuml("test.wrong", plantumlDotCom, testPlantumlInput, fs))
+	testutil.AssertFsHasExactly(t, fs)
 }
 
 func TestWrongHttpRequest(t *testing.T) {

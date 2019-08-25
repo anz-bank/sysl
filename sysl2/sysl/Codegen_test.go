@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -12,8 +14,9 @@ import (
 func TestGenerateCode(t *testing.T) {
 	t.Parallel()
 
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
 	assert.Len(t, root, 1)
@@ -51,8 +54,9 @@ func TestGenerateCode(t *testing.T) {
 func TestGenerateCodeNoComment(t *testing.T) {
 	t.Parallel()
 
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	root := output[0].output
 	assert.Len(t, root, 1)
@@ -81,8 +85,9 @@ func TestGenerateCodeNoComment(t *testing.T) {
 func TestGenerateCodeNoPackage(t *testing.T) {
 	t.Parallel()
 
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
 }
@@ -90,8 +95,9 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 	t.Parallel()
 
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
 }
@@ -99,8 +105,9 @@ func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 func TestGenerateCodePerType(t *testing.T) {
 	t.Parallel()
 
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	assert.Equal(t, "Request.java", output[0].filename)
 
@@ -123,8 +130,10 @@ func TestGenerateCodePerType(t *testing.T) {
 func TestSerialize(t *testing.T) {
 	t.Parallel()
 
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
+	require.NoError(t, err)
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
@@ -134,7 +143,8 @@ func TestSerialize(t *testing.T) {
 func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	t.Parallel()
 
-	g := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
+	g, err := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
+	require.NoError(t, err)
 	obj := eval.MakeValueMap()
 	m := eval.MakeValueMap()
 	eval.AddItemToValueMap(m, "text", eval.MakeValueString("hello"))
@@ -164,7 +174,7 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 func GenerateCodeWithParams(
 	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
 	isVerbose bool,
-) []*CodeGenOutput {
+) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
 		rootModel:     &rootModel,
 		model:         &model,
@@ -175,5 +185,5 @@ func GenerateCodeWithParams(
 		loglevel:      &loglevel,
 		isVerbose:     &isVerbose,
 	}
-	return GenerateCode(cmdContextParamCodegen)
+	return GenerateCode(cmdContextParamCodegen, syslutil.NewChrootFs(afero.NewOsFs(), rootModel))
 }

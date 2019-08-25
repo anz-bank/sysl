@@ -6,6 +6,9 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -14,14 +17,14 @@ import (
 func TestGenerateSequenceDiagFail(t *testing.T) {
 	t.Parallel()
 
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", "")
+	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 
 func TestGenerateSequenceDiag(t *testing.T) {
 	t.Parallel()
 
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", "../../")
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -68,7 +71,7 @@ deactivate _0
 func TestGenerateSequenceDiag2(t *testing.T) {
 	t.Parallel()
 
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", "../../")
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -116,8 +119,10 @@ deactivate _0
 func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", "./tests/")
+	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
@@ -168,8 +173,10 @@ skinparam maxMessageSize 250
 func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", "./tests/")
+	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
@@ -228,7 +235,7 @@ func TestLoadAppReturnError(t *testing.T) {
 	test := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	_, err := loadApp(test.root, test.models)
+	_, err := loadApp(test.models, syslutil.NewChrootFs(afero.NewMemMapFs(), test.root))
 	assert.Error(t, err)
 }
 
@@ -238,9 +245,11 @@ func TestLoadApp(t *testing.T) {
 	test := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	mod, err := loadApp(test.root, test.models)
+	memFs, fs := testutil.WriteToMemOverlayFs(test.root)
+	mod, err := loadApp(test.models, fs)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
+	testutil.AssertFsHasExactly(t, memFs)
 	apps := mod.GetApps()
 	app := apps["Database"]
 

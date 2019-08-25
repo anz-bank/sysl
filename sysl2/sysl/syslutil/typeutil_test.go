@@ -8,6 +8,8 @@ import (
 )
 
 func TestHasSameType(t *testing.T) {
+	t.Parallel()
+
 	type inputData struct {
 		type1 *sysl.Type
 		type2 *sysl.Type
@@ -144,6 +146,8 @@ func TestHasSameType(t *testing.T) {
 }
 
 func TestGetTypeDetail(t *testing.T) {
+	t.Parallel()
+
 	cases := map[string]struct {
 		input              *sysl.Type
 		expectedTypeName   string
@@ -207,29 +211,43 @@ func TestGetTypeDetail(t *testing.T) {
 }
 
 func TestTypeNone(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t, &sysl.Type{Type: &sysl.Type_NoType_{NoType: &sysl.Type_NoType{}}}, TypeNone())
 }
 
 func TestTypeEmpty(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t, &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_EMPTY}}, TypeEmpty())
 }
 
 func TestTypeString(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t, &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING}}, TypeString())
 }
 
 func TestTypeInt(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t, &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_INT}}, TypeInt())
 }
 
 func TestTypeFloat(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t, &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_FLOAT}}, TypeFloat())
 }
 
 func TestTypeDecimal(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t, &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_DECIMAL}}, TypeDecimal())
 }
 
 func TestTypeBool(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t, &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_BOOL}}, TypeBool())
 }
