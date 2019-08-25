@@ -8,6 +8,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,6 +25,7 @@ func TestGenerateSequenceDiagFail(t *testing.T) {
 func TestGenerateSequenceDiag(t *testing.T) {
 	t.Parallel()
 
+	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
@@ -32,7 +34,7 @@ func TestGenerateSequenceDiag(t *testing.T) {
 	p.AppLabeler = l
 	p.EndpointLabeler = l
 	p.title = "Profile"
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -71,6 +73,7 @@ deactivate _0
 func TestGenerateSequenceDiag2(t *testing.T) {
 	t.Parallel()
 
+	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
@@ -79,7 +82,7 @@ func TestGenerateSequenceDiag2(t *testing.T) {
 	p.AppLabeler = l
 	p.EndpointLabeler = l
 	p.title = "Profile"
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -119,6 +122,7 @@ deactivate _0
 func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
+	logger, _ := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs("tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
@@ -129,7 +133,7 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al
 	p.EndpointLabeler = el
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 	p.title = "Diagram"
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -173,6 +177,7 @@ skinparam maxMessageSize 250
 func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
+	logger, _ := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs("tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
@@ -183,7 +188,7 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al
 	p.EndpointLabeler = el
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 	p.title = "Diagram"
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -627,5 +632,6 @@ func DoConstructSequenceDiagramsWithParams(
 		isVerbose:      &isVerbose,
 		plantuml:       &plantuml,
 	}
-	return DoConstructSequenceDiagrams(cmdContextParamSeqgen)
+	logger, _ := test.NewNullLogger()
+	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, logger)
 }

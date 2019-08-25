@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/spf13/afero"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -151,7 +151,8 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	eval.AddItemToValueMap(obj, "header", eval.MakeValueBool(true))
 	eval.AddItemToValueMap(obj, "tail", eval.MakeValueBool(true))
 	eval.AddItemToValueMap(obj, "body", m)
-	output := processRule(g, obj, "pureToken")
+	logger, _ := test.NewNullLogger()
+	output := processRule(g, obj, "pureToken", logger)
 	assert.NotNil(t, output)
 
 	root := output[0].(Node)
@@ -185,5 +186,7 @@ func GenerateCodeWithParams(
 		loglevel:      &loglevel,
 		isVerbose:     &isVerbose,
 	}
-	return GenerateCode(cmdContextParamCodegen, syslutil.NewChrootFs(afero.NewOsFs(), rootModel))
+	_, fs := testutil.WriteToMemOverlayFs(rootModel)
+	logger, _ := test.NewNullLogger()
+	return GenerateCode(cmdContextParamCodegen, fs, logger)
 }

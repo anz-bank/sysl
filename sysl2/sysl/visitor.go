@@ -5,10 +5,9 @@ import (
 	"sort"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
-
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/sirupsen/logrus"
 )
 
 type entry struct {
@@ -204,6 +203,7 @@ type SequenceDiagramVisitor struct {
 	currentApp string
 	groupby    string
 	groupboxes map[string]syslutil.StrSet
+	logger     *logrus.Logger
 }
 
 func MakeSequenceDiagramVisitor(
@@ -213,6 +213,7 @@ func MakeSequenceDiagramVisitor(
 	m *sysl.Module,
 	appName string,
 	group string,
+	logger *logrus.Logger,
 ) *SequenceDiagramVisitor {
 	return &SequenceDiagramVisitor{
 		AppLabeler:      a,
@@ -224,6 +225,7 @@ func MakeSequenceDiagramVisitor(
 		currentApp:      appName,
 		groupby:         group,
 		groupboxes:      map[string]syslutil.StrSet{},
+		logger:          logger,
 	}
 }
 
@@ -234,7 +236,7 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 		err = v.visitEndpointCollection(t)
 		for bbKey, bbVal := range t.blackboxes {
 			if bbVal.ValueType == BBEndpointCollection && bbVal.VisitCount == 0 {
-				log.Warnf("blackbox '%s' not hit in app %s\n", bbKey, v.currentApp)
+				v.logger.Warnf("blackbox '%s' not hit in app %s\n", bbKey, v.currentApp)
 			}
 		}
 	case *EndpointElement:

@@ -19,7 +19,7 @@ const debug string = "debug"
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
-func main3(args []string, fs afero.Fs) error {
+func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	flagmap := map[string][]string{}
 	textpbParams := configureCmdlineForPb(sysl, flagmap)
@@ -37,13 +37,13 @@ func main3(args []string, fs afero.Fs) error {
 	case "pb":
 		return doGeneratePb(textpbParams, fs)
 	case "gen":
-		output, err := GenerateCode(codegenParams, fs)
+		output, err := GenerateCode(codegenParams, fs, logger)
 		if err != nil {
 			return err
 		}
 		return outputToFiles(output, syslutil.NewChrootFs(fs, *codegenParams.outDir))
 	case "sd":
-		result, err := DoConstructSequenceDiagrams(sequenceParams)
+		result, err := DoConstructSequenceDiagrams(sequenceParams, logger)
 		if err != nil {
 			return err
 		}
@@ -77,9 +77,14 @@ func main3(args []string, fs afero.Fs) error {
 // main2 calls main3 and handles any errors it returns. It takes its output
 // streams and command-line arguments and even main3 as parameters to support
 // testability.
-func main2(args []string, fs afero.Fs, main3 func(args []string, fs afero.Fs) error) int {
-	if err := main3(args, fs); err != nil {
-		logrus.Errorln(err.Error())
+func main2(
+	args []string,
+	fs afero.Fs,
+	logger *logrus.Logger,
+	main3 func(args []string, fs afero.Fs, logger *logrus.Logger) error,
+) int {
+	if err := main3(args, fs, logger); err != nil {
+		logger.Errorln(err.Error())
 		if err, ok := err.(parse.Exit); ok {
 			return err.Code
 		}
@@ -90,7 +95,7 @@ func main2(args []string, fs afero.Fs, main3 func(args []string, fs afero.Fs) er
 
 // main is as small as possible to minimise its no-coverage footprint.
 func main() {
-	if rc := main2(os.Args, afero.NewOsFs(), main3); rc != 0 {
+	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), main3); rc != 0 {
 		os.Exit(rc)
 	}
 }

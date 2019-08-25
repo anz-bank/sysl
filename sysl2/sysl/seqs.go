@@ -11,7 +11,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -26,9 +26,9 @@ type sequenceDiagParam struct {
 	group      string
 }
 
-func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam) (string, error) {
+func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam, logger *logrus.Logger) (string, error) {
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName, p.group)
+	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName, p.group, logger)
 	e := MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 
 	if err := e.Accept(v); err != nil {
@@ -79,18 +79,21 @@ func escapeWordBoundary(src string) string {
 	return val
 }
 
-func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[string]string, error) {
+func DoConstructSequenceDiagrams(
+	cmdContextParam *CmdContextParamSeqgen,
+	logger *logrus.Logger,
+) (map[string]string, error) {
 	var blackboxes [][]string
 
-	log.Debugf("root: %s\n", *cmdContextParam.root)
-	log.Debugf("endpoints: %v\n", cmdContextParam.endpointsFlag)
-	log.Debugf("app: %v\n", cmdContextParam.appsFlag)
-	log.Debugf("endpoint_format: %s\n", *cmdContextParam.endpointFormat)
-	log.Debugf("app_format: %s\n", *cmdContextParam.appFormat)
-	log.Debugf("title: %s\n", *cmdContextParam.title)
-	log.Debugf("modules: %s\n", *cmdContextParam.modulesFlag)
-	log.Debugf("output: %s\n", *cmdContextParam.output)
-	log.Debugf("loglevel: %s\n", *cmdContextParam.loglevel)
+	logger.Debugf("root: %s\n", *cmdContextParam.root)
+	logger.Debugf("endpoints: %v\n", cmdContextParam.endpointsFlag)
+	logger.Debugf("app: %v\n", cmdContextParam.appsFlag)
+	logger.Debugf("endpoint_format: %s\n", *cmdContextParam.endpointFormat)
+	logger.Debugf("app_format: %s\n", *cmdContextParam.appFormat)
+	logger.Debugf("title: %s\n", *cmdContextParam.title)
+	logger.Debugf("modules: %s\n", *cmdContextParam.modulesFlag)
+	logger.Debugf("output: %s\n", *cmdContextParam.output)
+	logger.Debugf("loglevel: %s\n", *cmdContextParam.loglevel)
 
 	if *cmdContextParam.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
@@ -99,11 +102,11 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 			*cmdContextParam.plantuml = "http://localhost:8080/plantuml"
 		}
 	}
-	log.Debugf("plantuml: %s\n", *cmdContextParam.plantuml)
+	logger.Debugf("plantuml: %s\n", *cmdContextParam.plantuml)
 
 	if cmdContextParam.blackboxes == nil {
 		blackboxes = ParseBlackBoxesFromArgument(*cmdContextParam.blackboxesFlag)
-		log.Debugf("blackbox: %s\n", *cmdContextParam.blackboxesFlag)
+		logger.Debugf("blackbox: %s\n", *cmdContextParam.blackboxesFlag)
 	} else {
 		blackboxes = *cmdContextParam.blackboxes
 	}
@@ -113,7 +116,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 	}
 	// Default info
 	if level, has := syslutil.LogLevels[*cmdContextParam.loglevel]; has {
-		log.SetLevel(level)
+		logger.SetLevel(level)
 	}
 
 	result := make(map[string]string)
@@ -123,7 +126,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 	}
 	if strings.Contains(*cmdContextParam.output, "%(epname)") {
 		if len(blackboxes) > 0 {
-			log.Warnf("Ignoring blackboxes passed from command line")
+			logger.Warnf("Ignoring blackboxes passed from command line")
 		}
 		spout := MakeFormatParser(*cmdContextParam.output)
 		for _, appName := range *cmdContextParam.appsFlag {
@@ -156,14 +159,14 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 					}
 				}
 				if len(sdEndpoints) == 0 {
-					log.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
+					logger.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
 					return result, nil
 				}
 				groupAttr := epAttrs["groupby"].GetS()
 				if len(groupAttr) == 0 {
 					groupAttr = *cmdContextParam.group
 				} else if len(*cmdContextParam.group) > 0 {
-					log.Warnf("Ignoring groupby passed from command line")
+					logger.Warnf("Ignoring groupby passed from command line")
 				}
 				TransformBlackboxesToUptos(bbsAll, bbs2, BBEndpointCollection)
 				sd = &sequenceDiagParam{
@@ -175,7 +178,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
 					group:           groupAttr,
 				}
-				out, err := generateSequenceDiag(mod, sd)
+				out, err := generateSequenceDiag(mod, sd, logger)
 				if err != nil {
 					return nil, err
 				}
@@ -186,7 +189,7 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 			}
 			for bbKey, bbVal := range bbsAll {
 				if bbVal.VisitCount == 0 && bbVal.ValueType == BBApplication {
-					log.Warnf("blackbox '%s' not hit in app '%s'\n", bbKey, appName)
+					logger.Warnf("blackbox '%s' not hit in app '%s'\n", bbKey, appName)
 				}
 			}
 		}
@@ -206,13 +209,13 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 			blackboxes:      bbsAll,
 			group:           *cmdContextParam.group,
 		}
-		out, err := generateSequenceDiag(mod, sd)
+		out, err := generateSequenceDiag(mod, sd, logger)
 		if err != nil {
 			return nil, err
 		}
 		for bbKey, bbVal := range bbsAll {
 			if bbVal.VisitCount == 0 && bbVal.ValueType == BBCommandLine {
-				log.Warnf("blackbox '%s' passed on commandline not hit\n", bbKey)
+				logger.Warnf("blackbox '%s' passed on commandline not hit\n", bbKey)
 			}
 		}
 		result[*cmdContextParam.output] = out
@@ -222,11 +225,6 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 }
 
 func configureCmdlineForSeqgen(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamSeqgen {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorln(err)
-		}
-	}()
 	flagmap["sd"] = []string{"root", "endpoint_format", "app_format", "title", "plantuml", "output",
 		"groupby", "endpoint", "app"}
 	sd := sysl.Command("sd", "Generate sequence diagram")

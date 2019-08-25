@@ -34,7 +34,12 @@ func getKeyFromValueMap(v *sysl.Value, key string) *sysl.Value {
 	return nil
 }
 
-func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.Choice) Node {
+func processChoice(
+	g *ebnfGrammar.Grammar,
+	obj *sysl.Value,
+	choice *ebnfGrammar.Choice,
+	logger *logrus.Logger,
+) Node {
 	var result Node
 
 	for i, seq := range choice.Sequence {
@@ -75,14 +80,14 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 					case *sysl.Value_Set:
 						valueList = vv.Set.Value
 					default:
-						logrus.Warnf("Expecting a collection type, got %T for rule %s", vv, x.Rulename.Name)
+						logger.Warnf("Expecting a collection type, got %T for rule %s", vv, x.Rulename.Name)
 						fullScan = false
 					}
 					ruleInstances := Node{}
 
 					for _, valueItem := range valueList {
 						// Drill down the rule
-						node := processRule(g, valueItem, x.Rulename.Name)
+						node := processRule(g, valueItem, x.Rulename.Name, logger)
 						// Check post-conditions
 						if len(node) == 0 {
 							fullScan = false
@@ -94,12 +99,12 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 				} else { // maxc == 1
 					// Drill down the rule
 					if v.GetList() != nil || v.GetSet() != nil {
-						logrus.Warnf("Got List or Set instead of map")
+						logger.Warnf("Got List or Set instead of map")
 					}
-					node := processRule(g, v, x.Rulename.Name)
+					node := processRule(g, v, x.Rulename.Name, logger)
 					// Check post-conditions
 					if len(node) == 0 {
-						logrus.Warnf("could not process rule: ( %s )", x.Rulename.Name)
+						logger.Warnf("could not process rule: ( %s )", x.Rulename.Name)
 						fullScan = false
 						break
 					}
@@ -112,15 +117,15 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 				seqResult = append(seqResult, ruleResult)
 			case *ebnfGrammar.Atom_Choices:
 				// minc, maxc := parser.GetMinMaxCount(term)
-				node := processChoice(g, obj, x.Choices)
+				node := processChoice(g, obj, x.Choices, logger)
 				if len(node) == 0 {
-					logrus.Warnf("could not process Choice\n")
+					logger.Warnf("could not process Choice\n")
 					fullScan = false
 					break
 				}
 				seqResult = append(seqResult, node)
 			default:
-				logrus.Warningf("processChoice: choice %d : %T", i, x)
+				logger.Warningf("processChoice: choice %d : %T", i, x)
 				panic("Unexpected atom type")
 			}
 			if !fullScan {
@@ -134,7 +139,7 @@ func processChoice(g *ebnfGrammar.Grammar, obj *sysl.Value, choice *ebnfGrammar.
 	return result
 }
 
-func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node {
+func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string, logger *logrus.Logger) Node {
 	var str string
 	if x := obj.GetMap(); x != nil {
 		for key := range x.Items {
@@ -151,7 +156,7 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string) Node 
 		// Should we convert int and bools to string and return?
 		return append(root, obj.GetS())
 	}
-	root := processChoice(g, obj, rule.Choices)
+	root := processChoice(g, obj, rule.Choices, logger)
 	return root
 }
 
@@ -218,23 +223,23 @@ func Serialize(w io.Writer, delim string, node Node) error {
 
 // GenerateCode transform input sysl model to code in the target language described by
 // grammar and a sysl transform
-func GenerateCode(codegenParams *CmdContextParamCodegen, fs afero.Fs) ([]*CodeGenOutput, error) {
+func GenerateCode(codegenParams *CmdContextParamCodegen, fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
 
-	logrus.Debugf("root-model: %s\n", *codegenParams.rootModel)
-	logrus.Debugf("root-transform: %s\n", *codegenParams.rootTransform)
-	logrus.Debugf("model: %s\n", *codegenParams.model)
-	logrus.Debugf("transform: %s\n", *codegenParams.transform)
-	logrus.Debugf("grammar: %s\n", *codegenParams.grammar)
-	logrus.Debugf("start: %s\n", *codegenParams.start)
-	logrus.Debugf("loglevel: %s\n", *codegenParams.loglevel)
+	logger.Debugf("root-model: %s\n", *codegenParams.rootModel)
+	logger.Debugf("root-transform: %s\n", *codegenParams.rootTransform)
+	logger.Debugf("model: %s\n", *codegenParams.model)
+	logger.Debugf("transform: %s\n", *codegenParams.transform)
+	logger.Debugf("grammar: %s\n", *codegenParams.grammar)
+	logger.Debugf("start: %s\n", *codegenParams.start)
+	logger.Debugf("loglevel: %s\n", *codegenParams.loglevel)
 
 	if *codegenParams.isVerbose {
 		*codegenParams.loglevel = debug
 	}
 	// Default info
 	if level, has := syslutil.LogLevels[*codegenParams.loglevel]; has {
-		logrus.SetLevel(level)
+		logger.SetLevel(level)
 	}
 
 	modelFs := syslutil.NewChrootFs(fs, *codegenParams.rootModel)
@@ -275,14 +280,14 @@ func GenerateCode(codegenParams *CmdContextParamCodegen, fs afero.Fs) ([]*CodeGe
 	}
 	if result.GetMap() != nil {
 		filename := fileNames.GetMap().Items["filename"].GetS()
-		logrus.Println(filename)
-		r := processRule(g, result, g.Start)
+		logger.Println(filename)
+		r := processRule(g, result, g.Start, logger)
 		codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 	} else {
 		fileValues := fileNames.GetList().Value
 		for i, v := range result.GetList().Value {
 			filename := fileValues[i].GetMap().Items["filename"].GetS()
-			r := processRule(g, v, g.Start)
+			r := processRule(g, v, g.Start, logger)
 			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 		}
 	}
