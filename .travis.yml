@@ -48,7 +48,7 @@ env:
 install:
 - pip install flake8==3.5.0
 - pip install . pytest
-- go get -t -v github.com/anz-bank/sysl/sysl2/sysl
+- go get -t -v github.com/anz-bank/sysl/...
 - npm install --prefix sysl2/sysl/sysl_js
 script:
 - flake8
