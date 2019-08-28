@@ -76,12 +76,13 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	return r, nil
 }
 
-func configureCmdlineForIntgen(sysl *kingpin.Application) *CmdContextParamIntgen {
+func configureCmdlineForIntgen(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamIntgen {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
 		}
 	}()
+	flagmap["ints"] = []string{"root", "title", "plantuml", "output", "project", "filter", "exclude", "epa"}
 	ints := sysl.Command("ints", "Generate integrations")
 	returnValues := &CmdContextParamIntgen{}
 

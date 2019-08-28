@@ -219,12 +219,14 @@ func DoConstructSequenceDiagrams(cmdContextParam *CmdContextParamSeqgen) (map[st
 	return result, nil
 }
 
-func configureCmdlineForSeqgen(sysl *kingpin.Application) *CmdContextParamSeqgen {
+func configureCmdlineForSeqgen(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamSeqgen {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorln(err)
 		}
 	}()
+	flagmap["sd"] = []string{"root", "endpoint_format", "app_format", "title", "plantuml", "output",
+		"groupby", "endpoint", "app"}
 	sd := sysl.Command("sd", "Generate sequence diagram")
 	returnValues := &CmdContextParamSeqgen{}
 

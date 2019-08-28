@@ -217,7 +217,7 @@ func TestDoGenerateIntegrations(t *testing.T) {
 	}
 	argsData := []string{"sysl", "ints", "--root", args.rootModel, "-o", args.output, "-j", args.project, args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForIntgen(sysl)
+	configureCmdlineForIntgen(sysl, map[string][]string{})
 	selectedCommand, err := sysl.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl ints")
 	assert.Equal(t, selectedCommand, "ints")
