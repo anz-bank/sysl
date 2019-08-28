@@ -92,7 +92,9 @@ def test_sysl_seq_diagramm(syslexe):
     assert 'BankDatabase</text>' in svg
     assert 'GetBalance</text>' in svg
     assert 'GET /accounts/{account_number}</text>' in svg
-    assert "/accounts/{account_number}/deposit</text>" in svg
+    if "/accounts/{account_number}/deposit</text>" not in svg:
+        assert "POST /accounts/{account_number}/</text>" in svg
+        assert "deposit</text>" in svg
 
 
 @pytest.mark.unit
