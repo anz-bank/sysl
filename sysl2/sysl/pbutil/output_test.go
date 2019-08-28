@@ -12,9 +12,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//nolint:gochecknoglobals
-var (
-	testModule = &sysl.Module{
+func testModule() *sysl.Module {
+	return &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"Test": {
 				Name: &sysl.AppName{
@@ -37,8 +36,10 @@ var (
 			},
 		},
 	}
+}
 
-	testModuleJSONPB = `{
+func testModuleJSONPB() string {
+	return `{
  "apps": {
   "Test": {
    "name": {
@@ -61,8 +62,10 @@ var (
   }
  }
 }`
+}
 
-	testModuleTextPB = `apps: <
+func testModuleTextPB() string {
+	return `apps: <
   key: "Test"
   value: <
     name: <
@@ -82,14 +85,14 @@ var (
   >
 >
 `
-)
+}
 
 func TestJSONPB(t *testing.T) {
 	if filename := testutil.TempFilename(t, "", "sysl-TestJSONPB-*.json"); filename != "" {
-		require.NoError(t, JSONPB(testModule, filename))
+		require.NoError(t, JSONPB(testModule(), filename))
 		output, err := ioutil.ReadFile(filename)
 		require.NoError(t, err)
-		assert.Equal(t, testModuleJSONPB, string(output))
+		assert.Equal(t, testModuleJSONPB(), string(output))
 	}
 }
 
@@ -105,8 +108,8 @@ func TestJSONPBNilModule(t *testing.T) {
 
 func TestFJSONPB(t *testing.T) {
 	var output bytes.Buffer
-	require.NoError(t, FJSONPB(&output, testModule))
-	assert.Equal(t, testModuleJSONPB, output.String())
+	require.NoError(t, FJSONPB(&output, testModule()))
+	assert.Equal(t, testModuleJSONPB(), output.String())
 }
 
 func TestFJSONPBNilModule(t *testing.T) {
@@ -117,10 +120,10 @@ func TestFJSONPBNilModule(t *testing.T) {
 
 func TestTextPB(t *testing.T) {
 	if filename := testutil.TempFilename(t, "", "sysl-TestJSONPB-*.json"); filename != "" {
-		require.NoError(t, TextPB(testModule, filename))
+		require.NoError(t, TextPB(testModule(), filename))
 		output, err := ioutil.ReadFile(filename)
 		require.NoError(t, err)
-		assert.Equal(t, testModuleTextPB, string(output))
+		assert.Equal(t, testModuleTextPB(), string(output))
 	}
 }
 
@@ -136,8 +139,8 @@ func TestTextPBNilModule(t *testing.T) {
 
 func TestFTextPB(t *testing.T) {
 	var output bytes.Buffer
-	require.NoError(t, FTextPB(&output, testModule))
-	assert.Equal(t, testModuleTextPB, output.String())
+	require.NoError(t, FTextPB(&output, testModule()))
+	assert.Equal(t, testModuleTextPB(), output.String())
 }
 
 func TestFTextPBNilModule(t *testing.T) {
