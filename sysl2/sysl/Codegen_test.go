@@ -7,6 +7,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -176,6 +177,17 @@ func GenerateCodeWithParams(
 	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
 	isVerbose bool,
 ) ([]*CodeGenOutput, error) {
+	_, fs := testutil.WriteToMemOverlayFs(rootModel)
+	return GenerateCodeWithParamsFs(
+		rootModel, model, rootTransform, transform, grammar, start, loglevel,
+		isVerbose, fs,
+	)
+}
+
+func GenerateCodeWithParamsFs(
+	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
+	isVerbose bool, fs afero.Fs,
+) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
 		rootModel:     &rootModel,
 		model:         &model,
@@ -186,7 +198,6 @@ func GenerateCodeWithParams(
 		loglevel:      &loglevel,
 		isVerbose:     &isVerbose,
 	}
-	_, fs := testutil.WriteToMemOverlayFs(rootModel)
 	logger, _ := test.NewNullLogger()
 	return GenerateCode(cmdContextParamCodegen, fs, logger)
 }

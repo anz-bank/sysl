@@ -28,12 +28,12 @@ func OutputPlantuml(output, plantuml, umlInput string, fs afero.Fs) error {
 		if err != nil {
 			return err
 		}
-		return afero.WriteFile(fs, output, out, os.ModePerm)
+		return errors.Wrapf(afero.WriteFile(fs, output, out, os.ModePerm), "writing %q", output)
 
 	case "uml":
 		output := output[:l-3]
 		output += "puml"
-		return afero.WriteFile(fs, output, []byte(umlInput), os.ModePerm)
+		return errors.Wrapf(afero.WriteFile(fs, output, []byte(umlInput), os.ModePerm), "writing %q", output)
 
 	default:
 		return fmt.Errorf("extension must be svg, png or uml, not %#v", mode)

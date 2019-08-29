@@ -159,8 +159,8 @@ func DoConstructSequenceDiagrams(
 					}
 				}
 				if len(sdEndpoints) == 0 {
-					logger.Errorf("No call statements to build sequence diagram for endpoint %s", endpoint.Name)
-					return result, nil
+					return nil, fmt.Errorf("no call statements to build sequence diagram for endpoint %s",
+						endpoint.Name)
 				}
 				groupAttr := epAttrs["groupby"].GetS()
 				if len(groupAttr) == 0 {

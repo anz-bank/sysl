@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
@@ -13,6 +15,18 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func assertLogEntry(
+	t *testing.T,
+	entry *logrus.Entry,
+	level logrus.Level,
+	format string,
+	args ...interface{},
+) bool {
+	okLevel := assert.Equal(t, level, entry.Level)
+	okMessage := assert.Equal(t, fmt.Sprintf(format, args...), entry.Message)
+	return okLevel && okMessage
+}
 
 func testMain2(t *testing.T, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
@@ -128,34 +142,13 @@ func TestMain2SeqdiagWithMissingFile(t *testing.T) {
 	testutil.AssertFsHasExactly(t, memFs)
 }
 
-func TestMain2SeqdiagWithImpossibleOutput(t *testing.T) {
-	t.Parallel()
-
-	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	out := "tests/call.zzz"
-	rc := main2(
-		[]string{
-			"sd",
-			"-s", "MobileApp <- Login",
-			"-o", out,
-			"-b", "Server <- DB=call to database",
-			"-b", "Server <- Login=call to database",
-			"tests/call.sysl",
-		},
-		fs, logger, main3,
-	)
-	assert.NotEqual(t, 0, rc)
-	testutil.AssertFsHasExactly(t, memFs)
-}
-
-func TestMain2WithBlackboxParams(t *testing.T) {
+func TestMain2SeqdiagWithNonsensicalOutput(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	out := "/out.png"
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2(
+	out := "/out.zzz"
+	_, fs := testutil.WriteToMemOverlayFs(".")
+	rc := main2(
 		[]string{
 			"sysl",
 			"sd",
@@ -167,9 +160,57 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 		},
 		fs, logger, main3,
 	)
+	assert.NotEqual(t, 0, rc)
+	assertLogEntry(t, hook.LastEntry(), logrus.ErrorLevel,
+		`extension must be svg, png or uml, not "zzz"`)
+}
+
+func TestMain2WithBlackboxParams(t *testing.T) {
+	t.Parallel()
+
+	logger, hook := test.NewNullLogger()
+	out := filepath.Clean("/out1.png")
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	rc := main2(
+		[]string{
+			"sysl",
+			"sd",
+			"-s", "MobileApp <- Login",
+			"-o", out,
+			"-b", "Server <- DB=call to database",
+			"-b", "Server <- Login=call to database",
+			"tests/call.sysl",
+		},
+		fs, logger, main3,
+	)
+	assert.Equal(t, 0, rc)
 	assert.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
 	assert.Equal(t, "blackbox 'Server <- DB' passed on commandline not hit\n", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs, out)
+}
+
+func TestMain2WithReadOnlyFs(t *testing.T) {
+	t.Parallel()
+
+	logger, hook := test.NewNullLogger()
+	out := "/out2.png"
+	_, fs := testutil.WriteToMemOverlayFs(".")
+	fs = afero.NewReadOnlyFs(fs)
+	rc := main2(
+		[]string{
+			"sysl",
+			"sd",
+			"-s", "MobileApp <- Login",
+			"-o", out,
+			"-b", "Server <- DB=call to database",
+			"-b", "Server <- Login=call to database",
+			"tests/call.sysl",
+		},
+		fs, logger, main3,
+	)
+	assert.NotEqual(t, 0, rc)
+	assertLogEntry(t, hook.LastEntry(), logrus.ErrorLevel,
+		"writing %q: operation not permitted", out)
 }
 
 func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
@@ -200,7 +241,7 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2(
+	rc := main2(
 		[]string{
 			"sysl",
 			"sd",
@@ -210,6 +251,7 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 		},
 		fs, logger, main3,
 	)
+	assert.Equal(t, 0, rc)
 	assert.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
 	assert.Equal(t, "blackbox 'SomeApp <- AppEndpoint' not hit in app 'Project :: Sequences'\n",
 		hook.Entries[len(hook.Entries)-1].Message)
@@ -225,7 +267,7 @@ func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2(
+	rc := main2(
 		[]string{
 			"sysl",
 			"sd",
@@ -235,8 +277,9 @@ func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
 		},
 		fs, logger, main3,
 	)
+	assert.NotEqual(t, 0, rc)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "No call statements to build sequence diagram for endpoint PROJECT-E2E", hook.LastEntry().Message)
+	assert.Equal(t, "no call statements to build sequence diagram for endpoint PROJECT-E2E", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
 }
 
@@ -255,7 +298,7 @@ func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2(
+	rc := main2(
 		[]string{
 			"sysl",
 			"sd",
@@ -266,6 +309,7 @@ func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 		},
 		fs, logger, main3,
 	)
+	assert.NotEqual(t, 0, rc)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t, "expected argument for flag '-g'", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
@@ -276,8 +320,8 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	out := "/out.png"
-	main2(
+	out := filepath.Clean("/out3.png")
+	rc := main2(
 		[]string{
 			"sysl",
 			"sd",
@@ -288,6 +332,7 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 		},
 		fs, logger, main3,
 	)
+	assert.Equal(t, 0, rc)
 	testutil.AssertFsHasExactly(t, memFs, out)
 }
 
@@ -296,7 +341,7 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2(
+	rc := main2(
 		[]string{
 			"sysl",
 			"sd",
@@ -307,6 +352,7 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 		},
 		fs, logger, main3,
 	)
+	assert.Equal(t, 0, rc)
 	assert.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
 	assert.Equal(t, "Ignoring groupby passed from command line", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs, "/SEQ-One.png", "/SEQ-Two.png")
@@ -354,6 +400,30 @@ func TestMain2WithGenerateCode(t *testing.T) {
 	testutil.AssertFsHasExactly(t, memFs, "/Model.java")
 }
 
+func TestMain2WithGenerateCodeReadOnlyFs(t *testing.T) {
+	t.Parallel()
+
+	logger, hook := test.NewNullLogger()
+	_, fs := testutil.WriteToMemOverlayFs(".")
+	fs = afero.NewReadOnlyFs(fs)
+	ret := main2(
+		[]string{
+			"sysl",
+			"gen",
+			"--root-model", ".",
+			"--model", "tests/model.sysl",
+			"--root-transform", ".",
+			"--transform", "tests/test.gen_multiple_annotations.sysl",
+			"--grammar", "tests/test.gen.g",
+			"--start", "javaFile",
+		},
+		fs, logger, main3,
+	)
+	assert.NotEqual(t, 0, ret)
+	assertLogEntry(t, hook.LastEntry(), logrus.ErrorLevel,
+		`unable to create "Model.java": operation not permitted`)
+}
+
 func TestMain2WithTextPbMode(t *testing.T) {
 	t.Parallel()
 
@@ -379,7 +449,7 @@ func TestMain2WithJSONMode(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	out := "/out.json"
+	out := filepath.Clean("/out.json")
 	ret := main2(
 		[]string{
 			"sysl",

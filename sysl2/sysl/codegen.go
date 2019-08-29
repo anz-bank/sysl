@@ -298,14 +298,14 @@ func outputToFiles(output []*CodeGenOutput, fs afero.Fs) error {
 	for _, o := range output {
 		f, err := fs.Create(o.filename)
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "unable to create %q", o.filename)
 		}
 		logrus.Warningln("Writing file: " + f.Name())
 		if err := Serialize(f, " ", o.output); err != nil {
-			return err
+			return errors.Wrapf(err, "error writing to %q", o.filename)
 		}
 		if err := f.Close(); err != nil {
-			return err
+			return errors.Wrapf(err, "error closing %q", o.filename)
 		}
 	}
 	return nil
