@@ -144,8 +144,7 @@ func parseAndCompare(
 		return true, nil
 	}
 
-	fs := afero.NewMemMapFs()
-	if err = pbutil.TextPB(goldenProto, golden, fs); err != nil {
+	if err = pbutil.TextPB(goldenProto, golden, afero.NewMemMapFs()); err != nil {
 		return false, err
 	}
 
