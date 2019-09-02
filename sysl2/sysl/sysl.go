@@ -20,7 +20,7 @@ const debug string = "debug"
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
-	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
+	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 	flagmap := map[string][]string{}
 	textpbParams := configureCmdlineForPb(syslCmd, flagmap)
 	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
@@ -83,7 +83,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 			if *datagenParams.isVerbose {
 				logrus.Debugf(k)
 			}
-			err := OutputPlantuml(k, *datagenParams.plantuml, v)
+			err := OutputPlantuml(k, *datagenParams.plantuml, v, fs)
 			if err != nil {
 				return fmt.Errorf("plantuml drawing error: %v", err)
 			}

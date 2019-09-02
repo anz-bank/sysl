@@ -9,6 +9,7 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -42,7 +43,8 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]strin
 		log.SetLevel(level)
 	}
 	spclass := constructFormatParser("", *datagenParams.classFormat)
-	mod, err := loadApp(*datagenParams.root, *datagenParams.modules)
+	mod, err := loadApp(*datagenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *datagenParams.root))
+
 	if err != nil {
 		return nil, err
 	}

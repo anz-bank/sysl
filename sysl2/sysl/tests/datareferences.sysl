@@ -1,0 +1,48 @@
+Project [seqtitle="DataModel"]:
+  Relational-Model:
+    RelModel
+  Object-Model:
+    ObjectModel
+
+RelModel:
+    !table Employee:
+        employeeId <: int [~pk, ~autoinc]
+        name <: string?
+        dob <: date?
+        error <: int
+        petId <: EmployeeTendsPet.petId
+
+    !table Breed:
+        breedId <: int [~pk, ~autoinc]
+        breedName <: string?
+        species <: string?
+        numLegs <: int?
+        legRank <: int?
+
+    !table Pet:
+        petId <: int [~pk, ~autoinc]
+        breedId <: Breed.breedId
+        name <: string?
+        dob <: date?
+        numLegs <: int?
+
+    !table EmployeeTendsPet:
+        employeeId <: Employee.employeeId [~pk]
+        petId <: Pet.petId [~pk]
+        oldPetId <: Pet.petId [~pk]
+
+ObjectModel:
+  !type Address:
+    line_1 <: string
+    city <: string
+    customers <: list of Customer 
+
+  !type Customer:
+    customer_id <: int
+    addresses <: set of Address
+    references <: set of string
+
+  !type Order:
+    order_id <: int
+    customer <: Customer
+    Referer <: Customer

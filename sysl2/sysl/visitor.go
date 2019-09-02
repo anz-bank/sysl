@@ -378,17 +378,19 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 		_, hitVisited := v.visited[visiting]
 
 		if hitUpto || hitVisited {
-			if len(payload) > 0 {
-				v.w.Activate(agent)
-				if len(upto.Comment) > 0 {
-					fmt.Fprintf(v.w, "note over %s: %s\n", agent, upto.Comment)
+			if upto != nil {
+				if len(payload) > 0 {
+					v.w.Activate(agent)
+					if len(upto.Comment) > 0 {
+						fmt.Fprintf(v.w, "note over %s: %s\n", agent, upto.Comment)
+					}
+				} else {
+					direct := "right"
+					if sender > agent {
+						direct = "left"
+					}
+					fmt.Fprintf(v.w, "note %s: %s\n", direct, upto.Comment)
 				}
-			} else {
-				direct := "right"
-				if sender > agent {
-					direct = "left"
-				}
-				fmt.Fprintf(v.w, "note %s: %s\n", direct, upto.Comment)
 			}
 			if len(payload) > 0 {
 				fmt.Fprintf(v.w, "%s<--%s : %s\n", sender, agent, payload)

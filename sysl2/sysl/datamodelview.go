@@ -34,6 +34,7 @@ type DataModelView struct {
 type RelationshipParam struct {
 	Entity       string
 	Relationship string
+	Count        uint32
 }
 
 type EntityViewParam struct {
@@ -88,8 +89,10 @@ func (v *DataModelView) drawRelationship(relationshipMap map[string]map[string]R
 		}
 		sort.Strings(childNames)
 		for _, childName := range childNames {
-			v.stringBuilder.WriteString(fmt.Sprintf("%s %s \"%s\" %s\n", relName, viewType,
-				relationshipMap[relName][childName].Relationship, relationshipMap[relName][childName].Entity))
+			for cnt := relationshipMap[relName][childName].Count; cnt > 0; cnt-- {
+				v.stringBuilder.WriteString(fmt.Sprintf("%s %s \"%s\" %s\n", relName, viewType,
+					relationshipMap[relName][childName].Relationship, relationshipMap[relName][childName].Entity))
+			}
 		}
 	}
 }
@@ -99,10 +102,10 @@ func (v *DataModelView) drawRelation(
 	entity *proto.Type_Relation,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
-	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n",
-		classString, viewParam.entityName, v.UniqueVarForAppName(viewParam.entityName), entityLessThanArrow,
-		viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
-	encEntity := v.UniqueVarForAppName(viewParam.entityName)
+	entityTokens := strings.Split(viewParam.entityName, ".")
+	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
+	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.entityName,
+		encEntity, entityLessThanArrow, viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
 
 	// sort and iterate over attributes
 	attrNames := []string{}
@@ -114,6 +117,7 @@ func (v *DataModelView) drawRelation(
 		attrType := entity.AttrDefs[attrName]
 		var s string
 		if typeRef := attrType.GetTypeRef(); typeRef != nil {
+			targetEntity := v.UniqueVarForAppName(typeRef.GetRef().Path[0])
 			s = fmt.Sprintf("+ %s : **%s.%s** <<FK>>\n",
 				attrName,
 				typeRef.GetRef().Path[0],
@@ -121,9 +125,18 @@ func (v *DataModelView) drawRelation(
 			if _, exists := relationshipMap[encEntity]; !exists {
 				relationshipMap[encEntity] = map[string]RelationshipParam{}
 			}
-			relationshipMap[encEntity][v.UniqueVarForAppName(typeRef.GetRef().Path[0])] = RelationshipParam{
-				Entity:       v.UniqueVarForAppName(typeRef.GetRef().Path[0]),
-				Relationship: " ",
+			if _, mulRelation := relationshipMap[encEntity][targetEntity]; mulRelation {
+				relationshipMap[encEntity][targetEntity] = RelationshipParam{
+					Entity:       relationshipMap[encEntity][targetEntity].Entity,
+					Relationship: relationshipMap[encEntity][targetEntity].Relationship,
+					Count:        relationshipMap[encEntity][targetEntity].Count + 1,
+				}
+			} else {
+				relationshipMap[encEntity][targetEntity] = RelationshipParam{
+					Entity:       targetEntity,
+					Relationship: " ",
+					Count:        1,
+				}
 			}
 		} else {
 			s = fmt.Sprintf("+ %s : %s\n", attrName, strings.ToLower(attrType.GetPrimitive().String()))
@@ -138,13 +151,14 @@ func (v *DataModelView) drawTuple(
 	entity *proto.Type_Tuple,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
-	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n",
-		classString, viewParam.entityName, v.UniqueVarForAppName(viewParam.entityName), entityLessThanArrow,
-		viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
+	entityTokens := strings.Split(viewParam.entityName, ".")
+	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
+	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.entityName,
+		encEntity, entityLessThanArrow, viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
 	var relation string
 	var collectionString string
 	var path []string
-	encEntity := v.UniqueVarForAppName(viewParam.entityName)
+	var isPrimitiveList bool
 
 	// sort and iterate over attributes
 	attrNames := []string{}
@@ -160,11 +174,21 @@ func (v *DataModelView) drawTuple(
 		if attrType.GetPrimitive() == proto.Type_NO_Primitive {
 			switch {
 			case attrType.GetList() != nil:
-				path = attrType.GetSet().GetTypeRef().GetRef().Path
+				if attrType.GetList().GetType().GetPrimitive() == proto.Type_NO_Primitive {
+					path = attrType.GetList().GetType().GetTypeRef().GetRef().Path
+				} else {
+					isPrimitiveList = true
+					path = append(path, strings.ToLower(attrType.GetList().GetType().GetPrimitive().String()))
+				}
 				collectionString = fmt.Sprintf("+ %s : **List <%s>**\n", attrName, path[0])
 				relation = `0..*`
 			case attrType.GetSet() != nil:
-				path = attrType.GetSet().GetTypeRef().GetRef().Path
+				if attrType.GetSet().GetPrimitive() == proto.Type_NO_Primitive {
+					path = attrType.GetSet().GetTypeRef().GetRef().Path
+				} else {
+					isPrimitiveList = true
+					path = append(path, strings.ToLower(attrType.GetSet().GetPrimitive().String()))
+				}
 				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
 				relation = `0..*`
 			default:
@@ -173,9 +197,20 @@ func (v *DataModelView) drawTuple(
 				relation = `1..1 `
 			}
 			v.stringBuilder.WriteString(collectionString)
-			relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
-				Entity:       v.UniqueVarForAppName(path[0]),
-				Relationship: relation,
+			if !isPrimitiveList {
+				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
+					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
+						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Entity,
+						Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Relationship,
+						Count:        relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Count + 1,
+					}
+				} else {
+					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
+						Entity:       v.UniqueVarForAppName(path[0]),
+						Relationship: relation,
+						Count:        1,
+					}
+				}
 			}
 		} else {
 			v.stringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", attrName, strings.ToLower(attrType.GetPrimitive().String())))
