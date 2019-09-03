@@ -6,18 +6,27 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func TestGenerateSequenceDiagFail(t *testing.T) {
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", "")
+	t.Parallel()
+
+	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 
 func TestGenerateSequenceDiag(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", "../../")
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -25,7 +34,7 @@ func TestGenerateSequenceDiag(t *testing.T) {
 	p.AppLabeler = l
 	p.EndpointLabeler = l
 	p.title = "Profile"
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -62,7 +71,10 @@ deactivate _0
 }
 
 func TestGenerateSequenceDiag2(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", "../../")
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -70,7 +82,7 @@ func TestGenerateSequenceDiag2(t *testing.T) {
 	p.AppLabeler = l
 	p.EndpointLabeler = l
 	p.title = "Profile"
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -108,15 +120,20 @@ deactivate _0
 }
 
 func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", "./tests/")
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al
 	p.EndpointLabeler = el
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 	p.title = "Diagram"
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -158,15 +175,20 @@ skinparam maxMessageSize 250
 }
 
 func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", "./tests/")
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al
 	p.EndpointLabeler = el
-	r, err := generateSequenceDiag(m, p)
+	r, err := generateSequenceDiag(m, p, logger)
 	p.title = "Diagram"
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -213,20 +235,26 @@ type loadAppArgs struct {
 }
 
 func TestLoadAppReturnError(t *testing.T) {
+	t.Parallel()
+
 	test := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	_, err := loadApp(test.root, test.models)
+	_, err := loadApp(test.models, syslutil.NewChrootFs(afero.NewMemMapFs(), test.root))
 	assert.Error(t, err)
 }
 
 func TestLoadApp(t *testing.T) {
+	t.Parallel()
+
 	test := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	mod, err := loadApp(test.root, test.models)
+	memFs, fs := testutil.WriteToMemOverlayFs(test.root)
+	mod, err := loadApp(test.models, fs)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
+	testutil.AssertFsHasExactly(t, memFs)
 	apps := mod.GetApps()
 	app := apps["Database"]
 
@@ -261,6 +289,8 @@ type sdArgs struct {
 }
 
 func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -279,6 +309,8 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 }
 
 func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -293,6 +325,8 @@ func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
 }
 
 func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -311,6 +345,8 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 }
 
 func TestDoConstructSequenceDiagrams(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -360,6 +396,8 @@ deactivate _0
 }
 
 func TestDoConstructSequenceDiagramWithBlackbox(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel:  "./tests/",
@@ -406,6 +444,8 @@ deactivate _0
 }
 
 func TestDoConstructSequenceDiagramsToFormatComplexName(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -442,6 +482,8 @@ activate _0
 }
 
 func TestDoGenerateSequenceDiagrams(t *testing.T) {
+	t.Parallel()
+
 	args := &sdArgs{
 		rootModel: "./tests/",
 		modules:   "sequence_diagram_complex_format.sysl",
@@ -461,6 +503,8 @@ func TestDoConstructSequenceDiagramsWithParams(t *testing.T) {
 }
 
 func TestDoConstructSequenceDiagramWithGroupingCommandline(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -497,6 +541,8 @@ end box`
 }
 
 func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -532,6 +578,8 @@ end box`
 }
 
 func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	args := &sdArgs{
 		rootModel: "./tests/",
@@ -584,5 +632,6 @@ func DoConstructSequenceDiagramsWithParams(
 		isVerbose:      &isVerbose,
 		plantuml:       &plantuml,
 	}
-	return DoConstructSequenceDiagrams(cmdContextParamSeqgen)
+	logger, _ := test.NewNullLogger()
+	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, logger)
 }

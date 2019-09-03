@@ -19,7 +19,7 @@ install:
   - pip install . pytest
   - pip freeze
   - choco install gradle
-  - go get -t -v github.com/anz-bank/sysl/sysl2/sysl
+  - go get -t -v github.com/anz-bank/sysl/...
 
 build: off
 

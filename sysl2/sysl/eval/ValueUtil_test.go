@@ -10,6 +10,8 @@ import (
 )
 
 func TestMakeValueBool(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_B{B: true}},
 		MakeValueBool(true),
@@ -21,6 +23,8 @@ func TestMakeValueBool(t *testing.T) {
 }
 
 func TestMakeValueI64(t *testing.T) {
+	t.Parallel()
+
 	for i, value := range []int64{0, 1, 2, -1, 1<<63 - 1, -(1 << 63)} {
 		assert.Equal(t,
 			&sysl.Value{Value: &sysl.Value_I{I: value}},
@@ -31,6 +35,8 @@ func TestMakeValueI64(t *testing.T) {
 }
 
 func TestMakeValueString(t *testing.T) {
+	t.Parallel()
+
 	for i, value := range []string{"", "x", "😀", "foo-bar"} {
 		assert.Equal(t,
 			&sysl.Value{Value: &sysl.Value_S{S: value}},
@@ -41,6 +47,8 @@ func TestMakeValueString(t *testing.T) {
 }
 
 func TestMakeValueMap(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{},
@@ -50,6 +58,8 @@ func TestMakeValueMap(t *testing.T) {
 }
 
 func TestMakeValueList(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_List_{List: &sysl.Value_List{
 			Value: []*sysl.Value{},
@@ -59,6 +69,8 @@ func TestMakeValueList(t *testing.T) {
 }
 
 func TestMakeValueSet(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Set{Set: &sysl.Value_List{
 			Value: []*sysl.Value{},
@@ -68,12 +80,16 @@ func TestMakeValueSet(t *testing.T) {
 }
 
 func TestIsCollectionType(t *testing.T) {
+	t.Parallel()
+
 	assert.True(t, IsCollectionType(MakeValueList()))
 	assert.True(t, IsCollectionType(MakeValueSet()))
 	assert.False(t, IsCollectionType(MakeValueString("1, 2, 3")))
 }
 
 func TestAddItemToValueMap(t *testing.T) {
+	t.Parallel()
+
 	m := MakeValueMap()
 	AddItemToValueMap(m, "key", MakeValueString("value"))
 	assert.Equal(t,
@@ -97,6 +113,8 @@ func TestAddItemToValueMap(t *testing.T) {
 }
 
 func TestAppendItemToValueList(t *testing.T) {
+	t.Parallel()
+
 	m := MakeValueList()
 	AppendItemToValueList(m.GetList(), MakeValueI64(42))
 	assert.Equal(t,
@@ -120,6 +138,8 @@ func TestAppendItemToValueList(t *testing.T) {
 }
 
 func TestAttributeToValueString(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		MakeValueString("hello"),
 		attributeToValue(&sysl.Attribute{Attribute: &sysl.Attribute_S{S: "hello"}}),
@@ -127,6 +147,8 @@ func TestAttributeToValueString(t *testing.T) {
 }
 
 func TestAttributeToValueList(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		MakeValueList(),
 		attributeToValue(&sysl.Attribute{Attribute: &sysl.Attribute_A{
@@ -146,6 +168,8 @@ func TestAttributeToValueList(t *testing.T) {
 }
 
 func TestAttributeToValueOther(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		(*sysl.Value)(nil),
 		attributeToValue(&sysl.Attribute{Attribute: &sysl.Attribute_I{I: 42}}),
@@ -153,6 +177,8 @@ func TestAttributeToValueOther(t *testing.T) {
 }
 
 func TestAttributeToValueComnposite(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		MakeValueList(
 			MakeValueList(),
@@ -182,6 +208,8 @@ func assertTypeDetail(t *testing.T, expectedTypeName, expectedTypeDetail string,
 }
 
 func TestGetTypeDetailPrimitive(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"primitive", "STRING",
 		&sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING}},
@@ -193,6 +221,8 @@ func TestGetTypeDetailPrimitive(t *testing.T) {
 }
 
 func TestGetTypeDetailTypeRef(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"type_ref", "foo",
 		&sysl.Type{Type: &sysl.Type_TypeRef{TypeRef: &sysl.ScopedRef{Ref: &sysl.Scope{
@@ -208,6 +238,8 @@ func TestGetTypeDetailTypeRef(t *testing.T) {
 }
 
 func TestGetTypeDetailSequence(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"sequence", "STRING",
 		&sysl.Type{Type: &sysl.Type_Sequence{
@@ -217,6 +249,8 @@ func TestGetTypeDetailSequence(t *testing.T) {
 }
 
 func TestGetTypeDetailSet(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"set", "STRING",
 		&sysl.Type{Type: &sysl.Type_Set{
@@ -226,6 +260,8 @@ func TestGetTypeDetailSet(t *testing.T) {
 }
 
 func TestGetTypeDetailList(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"list", "STRING",
 		&sysl.Type{Type: &sysl.Type_List_{List: &sysl.Type_List{
@@ -235,6 +271,8 @@ func TestGetTypeDetailList(t *testing.T) {
 }
 
 func TestGetTypeDetailTuple(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"tuple", "",
 		&sysl.Type{Type: &sysl.Type_Tuple_{Tuple: &sysl.Type_Tuple{}}},
@@ -242,6 +280,8 @@ func TestGetTypeDetailTuple(t *testing.T) {
 }
 
 func TestGetTypeDetailRelation(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"relation", "",
 		&sysl.Type{Type: &sysl.Type_Relation_{Relation: &sysl.Type_Relation{}}},
@@ -249,6 +289,8 @@ func TestGetTypeDetailRelation(t *testing.T) {
 }
 
 func TestGetTypeDetailUnion(t *testing.T) {
+	t.Parallel()
+
 	assertTypeDetail(t,
 		"union", "",
 		&sysl.Type{Type: &sysl.Type_OneOf_{OneOf: &sysl.Type_OneOf{}}},
@@ -256,6 +298,8 @@ func TestGetTypeDetailUnion(t *testing.T) {
 }
 
 func TestFieldsToValueMapEmpty(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{},
@@ -265,6 +309,8 @@ func TestFieldsToValueMapEmpty(t *testing.T) {
 }
 
 func TestFieldsToValueMapPrimitive(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{
@@ -292,6 +338,8 @@ func TestFieldsToValueMapPrimitive(t *testing.T) {
 }
 
 func TestFieldsToValueMapTuple(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{
@@ -318,6 +366,8 @@ func TestFieldsToValueMapTuple(t *testing.T) {
 }
 
 func TestFieldsToValueMapRelation(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{
@@ -344,6 +394,8 @@ func TestFieldsToValueMapRelation(t *testing.T) {
 }
 
 func TestStmtToValueAction(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{
@@ -358,6 +410,8 @@ func TestStmtToValueAction(t *testing.T) {
 }
 
 func TestStmtToValueCall(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		&sysl.Value{Value: &sysl.Value_Map_{Map: &sysl.Value_Map{
 			Items: map[string]*sysl.Value{

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"net/http"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -15,6 +14,7 @@ import (
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 var _ = fmt.Println
@@ -23,7 +23,7 @@ var _ = fmt.Println
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base                  string
-	fs                    http.FileSystem
+	fs                    afero.Fs
 	filename              string
 	imports               []string
 	module                *sysl.Module
@@ -49,7 +49,7 @@ type TreeShapeListener struct {
 }
 
 // NewTreeShapeListener ...
-func NewTreeShapeListener(fs http.FileSystem) *TreeShapeListener {
+func NewTreeShapeListener(fs afero.Fs) *TreeShapeListener {
 	opmap := map[string]sysl.Expr_BinExpr_Op{
 		"==":        sysl.Expr_BinExpr_EQ,
 		"!=":        sysl.Expr_BinExpr_NE,

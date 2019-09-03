@@ -11,6 +11,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -18,33 +19,36 @@ const debug string = "debug"
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
-func main3(args []string) error {
-	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
+func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
+	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	flagmap := map[string][]string{}
-	textpbParams := configureCmdlineForPb(syslCmd, flagmap)
-	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
-	sequenceParams := configureCmdlineForSeqgen(syslCmd, flagmap)
-	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
-	validateParams := validate.ConfigureCmdlineForValidate(syslCmd)
+	textpbParams := configureCmdlineForPb(sysl, flagmap)
+	codegenParams := configureCmdlineForCodegen(sysl, flagmap)
+	sequenceParams := configureCmdlineForSeqgen(sysl, flagmap)
+	intgenParams := configureCmdlineForIntgen(sysl, flagmap)
+	validateParams := validate.ConfigureCmdlineForValidate(sysl)
 	var selectedCommand string
 	var err error
-	syslCmd.Validate(generateAppargValidator(args[1], flagmap))
-	if selectedCommand, err = syslCmd.Parse(args[1:]); err != nil {
+	sysl.Validate(generateAppargValidator(args[1], flagmap))
+	if selectedCommand, err = sysl.Parse(args[1:]); err != nil {
 		return err
 	}
 	switch selectedCommand {
 	case "pb":
-		return doGeneratePb(textpbParams)
+		return doGeneratePb(textpbParams, fs)
 	case "gen":
-		output := GenerateCode(codegenParams)
-		return outputToFiles(*codegenParams.outDir, output)
+		output, err := GenerateCode(codegenParams, fs, logger)
+		if err != nil {
+			return err
+		}
+		return outputToFiles(output, syslutil.NewChrootFs(fs, *codegenParams.outDir))
 	case "sd":
-		result, err := DoConstructSequenceDiagrams(sequenceParams)
+		result, err := DoConstructSequenceDiagrams(sequenceParams, logger)
 		if err != nil {
 			return err
 		}
 		for k, v := range result {
-			if err := OutputPlantuml(k, *sequenceParams.plantuml, v); err != nil {
+			if err := OutputPlantuml(k, *sequenceParams.plantuml, v, fs); err != nil {
 				return err
 			}
 		}
@@ -58,7 +62,7 @@ func main3(args []string) error {
 			if *intgenParams.isVerbose {
 				logrus.Debugf(k)
 			}
-			err := OutputPlantuml(k, *intgenParams.plantuml, v)
+			err := OutputPlantuml(k, *intgenParams.plantuml, v, fs)
 			if err != nil {
 				return fmt.Errorf("plantuml drawing error: %v", err)
 			}
@@ -73,9 +77,14 @@ func main3(args []string) error {
 // main2 calls main3 and handles any errors it returns. It takes its output
 // streams and command-line arguments and even main3 as parameters to support
 // testability.
-func main2(args []string, main3 func(args []string) error) int {
-	if err := main3(args); err != nil {
-		logrus.Errorln(err.Error())
+func main2(
+	args []string,
+	fs afero.Fs,
+	logger *logrus.Logger,
+	main3 func(args []string, fs afero.Fs, logger *logrus.Logger) error,
+) int {
+	if err := main3(args, fs, logger); err != nil {
+		logger.Errorln(err.Error())
 		if err, ok := err.(parse.Exit); ok {
 			return err.Code
 		}
@@ -86,7 +95,7 @@ func main2(args []string, main3 func(args []string) error) int {
 
 // main is as small as possible to minimise its no-coverage footprint.
 func main() {
-	if rc := main2(os.Args, main3); rc != 0 {
+	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), main3); rc != 0 {
 		os.Exit(rc)
 	}
 }
@@ -115,7 +124,7 @@ func configureCmdlineForPb(sysl *kingpin.Application, flagmap map[string][]strin
 	return returnValues
 }
 
-func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
+func doGeneratePb(textpbParams *CmdContextParamPbgen, fs afero.Fs) error {
 	logrus.Debugf("Root: %s\n", *textpbParams.root)
 	logrus.Debugf("Module: %s\n", *textpbParams.modules)
 	logrus.Debugf("Mode: %s\n", *textpbParams.mode)
@@ -124,11 +133,11 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
 	format := strings.ToLower(*textpbParams.output)
 	toJSON := *textpbParams.mode == "json" || *textpbParams.mode == "" && strings.HasSuffix(format, ".json")
 	logrus.Debugf("%s\n", *textpbParams.modules)
-	mod, err := parse.NewParser().Parse(*textpbParams.modules, *textpbParams.root)
-	*textpbParams.output = strings.Trim(*textpbParams.output, " ")
+	mod, err := parse.NewParser().Parse(*textpbParams.modules, syslutil.NewChrootFs(fs, *textpbParams.root))
 	if err != nil {
 		return err
 	}
+	*textpbParams.output = strings.Trim(*textpbParams.output, " ")
 
 	if *textpbParams.isVerbose {
 		*textpbParams.loglevel = debug
@@ -149,12 +158,12 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen) error {
 			if *textpbParams.output == "-" {
 				return pbutil.FJSONPB(logrus.StandardLogger().Out, mod)
 			}
-			return pbutil.JSONPB(mod, *textpbParams.output)
+			return pbutil.JSONPB(mod, *textpbParams.output, fs)
 		}
 		if *textpbParams.output == "-" {
 			return pbutil.FTextPB(logrus.StandardLogger().Out, mod)
 		}
-		return pbutil.TextPB(mod, *textpbParams.output)
+		return pbutil.TextPB(mod, *textpbParams.output, fs)
 	}
 	return nil
 }

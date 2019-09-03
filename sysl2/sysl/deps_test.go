@@ -8,18 +8,11 @@ import (
 )
 
 func TestAppDependency_String(t *testing.T) {
-	// Given
-	stmt := &sysl.Statement{}
-	dep := &AppDependency{
+	t.Parallel()
+
+	assert.Equal(t, "AppA:EndptA:AppB:EndptB", (&AppDependency{
 		Self:      AppElement{Name: "AppA", Endpoint: "EndptA"},
 		Target:    AppElement{Name: "AppB", Endpoint: "EndptB"},
-		Statement: stmt,
-	}
-	expected := "AppA:EndptA:AppB:EndptB"
-
-	// When
-	actual := dep.String()
-
-	// Then
-	assert.Equal(t, expected, actual)
+		Statement: &sysl.Statement{},
+	}).String())
 }

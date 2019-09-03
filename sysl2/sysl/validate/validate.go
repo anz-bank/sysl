@@ -9,6 +9,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -45,13 +46,19 @@ func DoValidate(validateParams *CmdContextParamValidate) error {
 		*validateParams.loglevel = "debug"
 	}
 
-	grammar, err := LoadGrammar(*validateParams.grammar)
+	fs := afero.NewOsFs()
+
+	grammar, err := LoadGrammar(*validateParams.grammar, fs)
 	if err != nil {
 		return err
 	}
 
 	parser := parse.NewParser()
-	transform, err := loadTransform(*validateParams.rootTransform, *validateParams.transform, parser)
+	transform, err := loadTransform(
+		*validateParams.transform,
+		syslutil.NewChrootFs(fs, *validateParams.rootTransform),
+		parser,
+	)
 	if err != nil {
 		return err
 	}
@@ -293,16 +300,17 @@ func getAttrNames(attrs map[string]*sysl.Type) map[string]struct{} {
 	return implAttrNames
 }
 
-func loadTransform(rootTransform, transformFile string, p *parse.Parser) (*sysl.Application, error) {
-	if transform, name := parse.LoadAndGetDefaultApp(rootTransform, transformFile, p); transform != nil {
-		return transform.GetApps()[name], nil
+func loadTransform(transformFile string, fs afero.Fs, p *parse.Parser) (*sysl.Application, error) {
+	transform, name, err := parse.LoadAndGetDefaultApp(transformFile, fs, p)
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("Unable to load transform")
+	return transform.GetApps()[name], nil
 }
 
 // LoadGrammar loads sysl conversion of given grammar.
 // eg: if grammarFile is ./foo/bar.g, this tries to load ./foo/bar.sysl
-func LoadGrammar(grammarFile string) (*sysl.Application, error) {
+func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 	tokens := strings.Split(grammarFile, "/")
 	rootGrammar := strings.Join(tokens[:len(tokens)-1], "/")
 	grammarFileName := tokens[len(tokens)-1]
@@ -312,10 +320,11 @@ func LoadGrammar(grammarFile string) (*sysl.Application, error) {
 	grammarSyslFile := strings.Join(tokens, ".")
 	p := parse.NewParser()
 
-	if grammar, name := parse.LoadAndGetDefaultApp(rootGrammar, grammarSyslFile, p); grammar != nil {
-		return grammar.GetApps()[name], nil
+	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile, syslutil.NewChrootFs(fs, rootGrammar), p)
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("Unable to load grammar-sysl")
+	return grammar.GetApps()[name], nil
 }
 
 // ConfigureCmdlineForValidate configures commandline params related to validate

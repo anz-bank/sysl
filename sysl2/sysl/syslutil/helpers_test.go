@@ -8,6 +8,8 @@ import (
 )
 
 func TestGetAppName(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(t,
 		"test :: name",
 		GetAppName(&sysl.AppName{Part: []string{"test", "name"}}),
@@ -15,6 +17,8 @@ func TestGetAppName(t *testing.T) {
 }
 
 func TestGetApp(t *testing.T) {
+	t.Parallel()
+
 	app := &sysl.Application{Attrs: map[string]*sysl.Attribute{}}
 	assert.Equal(t,
 		app,
@@ -26,6 +30,8 @@ func TestGetApp(t *testing.T) {
 }
 
 func TestPattern(t *testing.T) {
+	t.Parallel()
+
 	attrs := map[string]*sysl.Attribute{
 		"patterns": {Attribute: &sysl.Attribute_A{A: &sysl.Attribute_Array{Elt: []*sysl.Attribute{
 			{Attribute: &sysl.Attribute_S{S: "abstract"}},
@@ -38,6 +44,8 @@ func TestPattern(t *testing.T) {
 }
 
 func TestIsNotSameAppWithPartLength(t *testing.T) {
+	t.Parallel()
+
 	assert.False(t, IsSameApp(
 		&sysl.AppName{Part: []string{"test", "name"}},
 		&sysl.AppName{Part: []string{"name1"}},
@@ -45,6 +53,8 @@ func TestIsNotSameAppWithPartLength(t *testing.T) {
 }
 
 func TestIsNotSameAppWithPartContent(t *testing.T) {
+	t.Parallel()
+
 	assert.False(t, IsSameApp(
 		&sysl.AppName{Part: []string{"test", "name"}},
 		&sysl.AppName{Part: []string{"test", "name1"}},
@@ -52,6 +62,8 @@ func TestIsNotSameAppWithPartContent(t *testing.T) {
 }
 
 func TestIsSameApp(t *testing.T) {
+	t.Parallel()
+
 	assert.True(t, IsSameApp(
 		&sysl.AppName{Part: []string{"test", "name"}},
 		&sysl.AppName{Part: []string{"test", "name"}},
@@ -59,6 +71,8 @@ func TestIsSameApp(t *testing.T) {
 }
 
 func TestIsSameCall(t *testing.T) {
+	t.Parallel()
+
 	assert.True(t, IsSameCall(
 		&sysl.Call{Target: &sysl.AppName{Part: []string{"test", "name"}}, Endpoint: "endpt"},
 		&sysl.Call{Target: &sysl.AppName{Part: []string{"test", "name"}}, Endpoint: "endpt"},

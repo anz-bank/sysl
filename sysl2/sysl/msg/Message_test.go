@@ -10,6 +10,8 @@ import (
 )
 
 func TestValidationMsgStringer(t *testing.T) {
+	t.Parallel()
+
 	cases := map[string]struct {
 		input    Msg
 		expected string
@@ -33,6 +35,8 @@ func TestValidationMsgStringer(t *testing.T) {
 }
 
 func TestValidationMsgGenLogMessage(t *testing.T) {
+	t.Parallel()
+
 	cases := map[string]struct {
 		input    Msg
 		expected LogMessage
@@ -64,6 +68,8 @@ func TestValidationMsgGenLogMessage(t *testing.T) {
 }
 
 func TestValidationMsgLogMsg(t *testing.T) {
+	t.Parallel()
+
 	defer logrus.SetOutput(logrus.StandardLogger().Out)
 
 	cases := map[string]struct {
@@ -101,12 +107,16 @@ func TestValidationMsgLogMsg(t *testing.T) {
 }
 
 func TestNewMsg(t *testing.T) {
+	t.Parallel()
+
 	msg := NewMsg(InfoValidatedSuccessfully, []string{})
 	assert.Equal(t, InfoValidatedSuccessfully, msg.MessageID)
 	assert.Equal(t, []string{}, msg.MessageData)
 }
 
 func TestGenerateTitle(t *testing.T) {
+	t.Parallel()
+
 	cases := map[string]struct {
 		input    string
 		expected string

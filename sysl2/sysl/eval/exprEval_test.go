@@ -6,6 +6,8 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -16,6 +18,8 @@ const (
 )
 
 func TestEvalStrategySetup(t *testing.T) {
+	t.Parallel()
+
 	for key := range valueFunctions {
 		idx := strings.Index(key, "_Value")
 		op := key[:idx]
@@ -32,7 +36,9 @@ func TestEvalStrategySetup(t *testing.T) {
 }
 
 func TestScopeAddApp(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	s := Scope{}
@@ -79,7 +85,9 @@ func TestScopeAddApp(t *testing.T) {
 }
 
 func TestEvalIntegerMath(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	txApp := mod.Apps["TransformApp"]
@@ -101,7 +109,9 @@ func TestEvalIntegerMath(t *testing.T) {
 }
 
 func TestEvalCompare(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	txApp := mod.Apps["TransformApp"]
@@ -121,7 +131,9 @@ func TestEvalCompare(t *testing.T) {
 }
 
 func TestEvalListSetOps(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	txApp := mod.Apps["TransformApp"]
@@ -151,7 +163,9 @@ func TestEvalListSetOps(t *testing.T) {
 }
 
 func TestEvalIsKeyword(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	txApp := mod.Apps["TransformApp"]
@@ -166,7 +180,9 @@ func TestEvalIsKeyword(t *testing.T) {
 }
 
 func TestEvalIfElseAlt(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	txApp := mod.Apps["TransformApp"]
@@ -186,7 +202,9 @@ func TestEvalIfElseAlt(t *testing.T) {
 }
 
 func TestEvalGetAppAttributes(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -241,7 +259,9 @@ func TestEvalGetAppAttributes(t *testing.T) {
 }
 
 func TestEvalNullCheckAppAttrs(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -256,7 +276,9 @@ func TestEvalNullCheckAppAttrs(t *testing.T) {
 }
 
 func TestScopeAddRestApp(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	s := Scope{}
@@ -310,7 +332,9 @@ func TestScopeAddRestApp(t *testing.T) {
 }
 
 func TestEvalStringOps(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -355,7 +379,9 @@ func TestEvalStringOps(t *testing.T) {
 }
 
 func TestIncorrectArgsToGoFunc(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -373,7 +399,9 @@ func TestIncorrectArgsToGoFunc(t *testing.T) {
 }
 
 func TestEvalFlatten(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -402,7 +430,9 @@ func TestEvalFlatten(t *testing.T) {
 }
 
 func TestEvalWhere(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -430,7 +460,9 @@ func TestEvalWhere(t *testing.T) {
 }
 
 func TestEvalLinks(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -457,7 +489,9 @@ func TestEvalLinks(t *testing.T) {
 }
 
 func TestDotScope(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
@@ -468,7 +502,9 @@ func TestDotScope(t *testing.T) {
 }
 
 func TestListOfTypeNames(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", "../")
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 

@@ -2,7 +2,6 @@ package parse
 
 import (
 	"fmt"
-	"net/http"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -14,6 +13,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 // TypeData contains referenced type and actual tuple of referenced type
@@ -29,31 +29,7 @@ type Parser struct {
 	Messages    map[string][]msg.Msg
 }
 
-// Parse parses a Sysl file under a specified root.
-func (p *Parser) Parse(filename string, root string) (*sysl.Module, error) {
-	fs, err := RootFS(root)
-	if err != nil {
-		return nil, err
-	}
-	return p.FSParse(filename, fs)
-}
-
-func RootFS(root string) (http.FileSystem, error) {
-	if root == "" {
-		root = "."
-	}
-	if !dirExists(root) {
-		return nil, Exitf(ImportError, "root directory does not exist")
-	}
-	root, err := filepath.Abs(root)
-	if err != nil {
-		return nil, err
-	}
-	return http.Dir(root), nil
-}
-
-// FSParse ...
-func (p *Parser) FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
+func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	if !strings.HasSuffix(filename, ".sysl") {
 		filename += ".sysl"
 	}
@@ -583,15 +559,14 @@ func getDefaultAppName(mod *sysl.Module) string {
 	return ""
 }
 
-func LoadAndGetDefaultApp(root, model string, p *Parser) (*sysl.Module, string) {
+func LoadAndGetDefaultApp(model string, fs afero.Fs, p *Parser) (*sysl.Module, string, error) {
 	// Model we want to generate code for
-	mod, err := p.Parse(model, root)
-	if err == nil {
-		modelAppName := getDefaultAppName(mod)
-		return mod, modelAppName
+	mod, err := p.Parse(model, fs)
+	if err != nil {
+		return nil, "", err
 	}
-	logrus.Errorf("loadAndGetDefaultApp: unable to load module:\n\troot: %s\n\tmodel:%s\n", root, model)
-	return nil, ""
+	modelAppName := getDefaultAppName(mod)
+	return mod, modelAppName, nil
 }
 
 func (p *Parser) GetAssigns() map[string]TypeData {

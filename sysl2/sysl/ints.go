@@ -7,6 +7,7 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -43,7 +44,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 		log.SetLevel(level)
 	}
 
-	mod, err := loadApp(*intgenParams.root, *intgenParams.modules)
+	mod, err := loadApp(*intgenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *intgenParams.root))
 	if err != nil {
 		return nil, err
 	}

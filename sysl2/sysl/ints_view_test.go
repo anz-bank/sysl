@@ -10,6 +10,8 @@ import (
 )
 
 func TestVarManagerForComponent(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -27,6 +29,8 @@ func TestVarManagerForComponent(t *testing.T) {
 }
 
 func TestVarManagerForComponentWithNameMap(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -50,6 +54,8 @@ func TestVarManagerForComponentWithNameMap(t *testing.T) {
 }
 
 func TestVarManagerForComponentWithExistingName(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -71,6 +77,8 @@ func TestVarManagerForComponentWithExistingName(t *testing.T) {
 }
 
 func TestVarManagerForEPA(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -96,6 +104,8 @@ func TestVarManagerForEPA(t *testing.T) {
 }
 
 func TestVarManagerForEPAWithExistingName(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -129,6 +139,8 @@ func TestVarManagerForEPAWithExistingName(t *testing.T) {
 }
 
 func TestVarManagerForTopState(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -146,6 +158,8 @@ func TestVarManagerForTopState(t *testing.T) {
 }
 
 func TestVarManagerForTopStateWithExistingName(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -167,6 +181,8 @@ func TestVarManagerForTopStateWithExistingName(t *testing.T) {
 }
 
 func TestBuildClusterForIntsView(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -225,6 +241,8 @@ state "" as X_1 {
 }
 
 func TestBuildClusterForComponentView(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -247,6 +265,8 @@ func TestBuildClusterForComponentView(t *testing.T) {
 }
 
 func TestGenerateIntsView(t *testing.T) {
+	t.Parallel()
+
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		stringBuilder: &stringBuilder,
@@ -353,6 +373,8 @@ func testEPAModule() *sysl.Module {
 }
 
 func TestGenerateEPAView(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -413,6 +435,8 @@ _1 -[#black]> _2
 }
 
 func TestGenerateEPAViewEndpointPattern(t *testing.T) {
+	t.Parallel()
+
 	mod := testEPAModule()
 	mod.Apps["b"].Endpoints["epb"].Attrs["patterns"] = &sysl.Attribute{
 		Attribute: &sysl.Attribute_A{A: &sysl.Attribute_Array{Elt: []*sysl.Attribute{
@@ -482,6 +506,8 @@ _1 -[#black]> _2
 }
 
 func TestGenerateEPAViewSameApp(t *testing.T) {
+	t.Parallel()
+
 	mod := testEPAModule()
 	mod.Apps["b"].Endpoints["epa"] = proto.Clone(mod.Apps["a"].Endpoints["epa"]).(*sysl.Endpoint)
 
@@ -548,6 +574,8 @@ _0 -[#grey]-> _1
 }
 
 func TestGenerateView(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	deps := []AppDependency{
 		{
@@ -619,6 +647,8 @@ _0 --> _1 <<indirect>>
 }
 
 func TestDrawSystemView(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
@@ -667,6 +697,8 @@ _1 --> _2 <<indirect>>
 }
 
 func TestMakeIntsParam(t *testing.T) {
+	t.Parallel()
+
 	p := &IntsParam{[]string{"a"},
 		map[string]struct{}{},
 		[]AppDependency{},
@@ -677,6 +709,8 @@ func TestMakeIntsParam(t *testing.T) {
 }
 
 func TestMakeArgs(t *testing.T) {
+	t.Parallel()
+
 	a := &Args{"a", "p", true, true}
 
 	assert.NotNil(t, a)
@@ -684,6 +718,8 @@ func TestMakeArgs(t *testing.T) {
 }
 
 func TestStringInSlice(t *testing.T) {
+	t.Parallel()
+
 	s := []string{"a", "b"}
 
 	assert.True(t, stringInSlice("a", s))

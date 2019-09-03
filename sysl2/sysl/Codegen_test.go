@@ -5,13 +5,19 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGenerateCode(t *testing.T) {
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+	t.Parallel()
+
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
 	assert.Len(t, root, 1)
@@ -47,8 +53,11 @@ func TestGenerateCode(t *testing.T) {
 }
 
 func TestGenerateCodeNoComment(t *testing.T) {
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
+	t.Parallel()
+
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	root := output[0].output
 	assert.Len(t, root, 1)
@@ -75,22 +84,31 @@ func TestGenerateCodeNoComment(t *testing.T) {
 }
 
 func TestGenerateCodeNoPackage(t *testing.T) {
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
+	t.Parallel()
+
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
 }
 
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
+	t.Parallel()
+
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
 }
 
 func TestGenerateCodePerType(t *testing.T) {
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
+	t.Parallel()
+
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	assert.Equal(t, "Request.java", output[0].filename)
 
@@ -111,8 +129,11 @@ func TestGenerateCodePerType(t *testing.T) {
 }
 
 func TestSerialize(t *testing.T) {
-	output := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+	t.Parallel()
+
+	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
+	require.NoError(t, err)
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
@@ -120,14 +141,18 @@ func TestSerialize(t *testing.T) {
 }
 
 func TestOutputForPureTokenOnlyRule(t *testing.T) {
-	g := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
+	t.Parallel()
+
+	g, err := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
+	require.NoError(t, err)
 	obj := eval.MakeValueMap()
 	m := eval.MakeValueMap()
 	eval.AddItemToValueMap(m, "text", eval.MakeValueString("hello"))
 	eval.AddItemToValueMap(obj, "header", eval.MakeValueBool(true))
 	eval.AddItemToValueMap(obj, "tail", eval.MakeValueBool(true))
 	eval.AddItemToValueMap(obj, "body", m)
-	output := processRule(g, obj, "pureToken")
+	logger, _ := test.NewNullLogger()
+	output := processRule(g, obj, "pureToken", logger)
 	assert.NotNil(t, output)
 
 	root := output[0].(Node)
@@ -147,9 +172,21 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	assert.Equal(t, "tail", tail[0].(Node)[0].(string))
 }
 
-func GenerateCodeWithParams(rootModel, model, rootTransform, transform, grammar, start string, loglevel string,
+func GenerateCodeWithParams(
+	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
 	isVerbose bool,
-) []*CodeGenOutput {
+) ([]*CodeGenOutput, error) {
+	_, fs := testutil.WriteToMemOverlayFs(rootModel)
+	return GenerateCodeWithParamsFs(
+		rootModel, model, rootTransform, transform, grammar, start, loglevel,
+		isVerbose, fs,
+	)
+}
+
+func GenerateCodeWithParamsFs(
+	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
+	isVerbose bool, fs afero.Fs,
+) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
 		rootModel:     &rootModel,
 		model:         &model,
@@ -160,5 +197,6 @@ func GenerateCodeWithParams(rootModel, model, rootTransform, transform, grammar,
 		loglevel:      &loglevel,
 		isVerbose:     &isVerbose,
 	}
-	return GenerateCode(cmdContextParamCodegen)
+	logger, _ := test.NewNullLogger()
+	return GenerateCode(cmdContextParamCodegen, fs, logger)
 }
