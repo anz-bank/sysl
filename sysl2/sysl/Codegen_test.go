@@ -134,7 +134,6 @@ func TestSerialize(t *testing.T) {
 	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile", "warn", false)
 	require.NoError(t, err)
-	require.NoError(t, err)
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
 	golden := "package com.example.gen \n comment1 comment2 import import1 \n import import2 \n some_value "
