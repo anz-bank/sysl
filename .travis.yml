@@ -55,7 +55,7 @@ script:
 - pytest
 - pytest test/e2e --syslexe=${SYSL_PYTHON_DIR}sysl --reljamexe=${SYSL_PYTHON_DIR}reljam
 - if [[ ( "$TRAVIS_OS_NAME" == "linux" ) ]]; then gradle test -b test/java/build.gradle; fi
-- go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/...
+- ./check-coverage.sh 80
 - npm test --prefix sysl2/sysl/sysl_js
 - GOOS=darwin GOARCH=amd64 go build -o gosysl/gosysl-darwin -ldflags "-X main.Version=${TRAVIS_TAG:1}" github.com/anz-bank/sysl/sysl2/sysl
 - GOOS=linux GOARCH=amd64 go build -o gosysl/gosysl-linux -ldflags "-X main.Version=${TRAVIS_TAG:1}" github.com/anz-bank/sysl/sysl2/sysl
