@@ -559,3 +559,48 @@ func TestMain2WithEmptyIntsParams(t *testing.T) {
 		"'project' value passed is empty\n", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
 }
+
+func TestMain2WithDataMultipleFiles(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl", "-j", "Project"}, fs, logger, main3)
+	testutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
+}
+
+func TestMain2WithDataSingleFile(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "data", "-o", "data.png", "tests/data.sysl", "-j", "Project"}, fs, logger, main3)
+	testutil.AssertFsHasExactly(t, memFs, "/data.png")
+}
+
+func TestMain2WithDataNoProject(t *testing.T) {
+	t.Parallel()
+	logger, testHook := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl"}, fs, logger, main3)
+	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
+	assert.Equal(t, "project not found in sysl", testHook.LastEntry().Message)
+	testHook.Reset()
+	testutil.AssertFsHasExactly(t, memFs)
+}
+
+func TestMain2WithDataFilter(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f", "Object-Model.png", "tests/data.sysl", "-j",
+		"Project"}, fs, logger, main3)
+	testutil.AssertFsHasExactly(t, memFs, "/Object-Model.png")
+}
+
+func TestMain2WithDataMultipleRelationships(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/datareferences.sysl", "-j", "Project"},
+		fs, logger, main3)
+	testutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
+}

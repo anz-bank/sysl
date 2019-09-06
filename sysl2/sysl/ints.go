@@ -31,7 +31,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 		plantuml := os.Getenv("SYSL_PLANTUML")
 		intgenParams.plantuml = &plantuml
 		if *intgenParams.plantuml == "" {
-			*intgenParams.plantuml = "http://localhost:8080/plantuml"
+			*intgenParams.plantuml = localPlantuml
 		}
 	}
 	log.Debugf("plantuml: %s\n", *intgenParams.plantuml)
