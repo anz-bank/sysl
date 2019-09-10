@@ -1202,12 +1202,6 @@ def test_translate_path_template_params_doesnt_rewrite_nonwords_ending_in_id_typ
     assert t.translate_path_template_params('/foo/{braedid}/', []) == '/foo/{braedid<:string}/'
 
 
-@pytest.mark.skipif(platform.system() not in ('Linux', 'Darwin'), reason='no defined source of vocabulary for this platform')
-def test_default_vocabulary_containing_common_business_nouns_is_defined_for_non_windows_platforms():
-    t = SwaggerTranslator(None)
-    assert 'customer' in t.words()
-
-
 def test_make_default_logger_returns_something_thats_probably_a_logger():
     logger = make_default_logger()
     assert hasattr(logger, 'warn')
