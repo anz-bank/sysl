@@ -210,10 +210,9 @@ class OpenApiTranslator:
     def writeEndpoints(self, oaSpec, w):
 
         def includeResponses(responses):
-            
             returnValues = OrderedDict()
 
-            for rc, rspec in sorted(responses.iteritems()):  
+            for rc, rspec in sorted(responses.iteritems()):
                 schema = None
                 if rspec.get('content', None):
                     schema = rspec['content']
@@ -221,13 +220,13 @@ class OpenApiTranslator:
                         schema = schema['application/json']
                         if schema.get('schema', None):
                             schema = schema['schema']
-                
+
                 if schema is not None:
                     if schema.get('type') == 'array':
                         returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
                     else:
                         returnValues[schema['$ref'].rpartition('/')[2]] = True
-                
+
                 if rc == 'default' or rc.startswith('x-'):
                     self.warn('default responses and x-* responses are not implemented')
 
@@ -265,7 +264,7 @@ class OpenApiTranslator:
                         paramStr,
                         ' ?' if queryParams else '',
                         '&'.join(
-                            '{}={}{}'.format(p['name'], TYPE_MAP[p['schema']['type']], '' if p.get('required',None) else '?')
+                            '{}={}{}'.format(p['name'], TYPE_MAP[p['schema']['type']], '' if p.get('required', None) else '?')
                             for p in queryParams
                         ))
                     with w.indent():
@@ -283,7 +282,6 @@ class OpenApiTranslator:
                         # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
 
                         includeResponses(responses)
-                                
 
     def writeDefs(self, oaSpec, w):
         w()
@@ -291,7 +289,7 @@ class OpenApiTranslator:
         w('# definitions')
 
         if not oaSpec.get('components', None):
-                return
+            return
         if not oaSpec['components'].get('schemas', None):
             return
 
@@ -422,10 +420,10 @@ class OpenApiTranslator:
 
         if ref:
             assert not set(tspec.keys()) - {'$ref'}, tspec
-            t = ref.replace('#/components/schemas/','')
-            if externAlias.get('EXTERNAL_' + t,None):
+            t = ref.replace('#/components/schemas/', '')
+            if externAlias.get('EXTERNAL_' + t, None):
                 return r('EXTERNAL_' + t)
-            if externAlias.get('EXTERNAL_' + t + '_obj',None):
+            if externAlias.get('EXTERNAL_' + t + '_obj', None):
                 return r('EXTERNAL_' + t + '_obj')
             return r(t)
         if (typ, fmt) == ('string', None):
