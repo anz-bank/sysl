@@ -169,7 +169,7 @@ OPENAPI_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL = r"""
     /test:
         POST (SimpleObjRequest <: SimpleObj [~body], key <: int [~header, ~optional, name="key"], min_date <: string [~header, ~required, name="min_date"]):
             | No description.
-            return 
+            return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -451,7 +451,7 @@ EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECT
         /goat/create-goat:
             POST ?name=string&birthday=string:
                 | Creates a goat.
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -519,7 +519,7 @@ EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL = r"""
         /goat/create-goat:
             POST (GoatRequest <: Goat [~body]):
                 | Creates a goat.
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -569,7 +569,7 @@ EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE_EXPECTED_SYSL = r"""
         /goat/status:
             GET:
                 | Check goat status
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -652,7 +652,7 @@ EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY_EXPEC
         /goat/status:
             GET:
                 | Get goat status
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -691,7 +691,7 @@ EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPEC
         /goat/status:
             POST:
                 | Update goat status
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -751,7 +751,7 @@ OPENAPI_WITH_PATH_VAR_TYPE_IN_API_EXPECTED_SYSL = r"""
         /users/{id<:int}:
             GET (request_id <: string [~header, ~required, name="request-id"]) ?metadata=bool?:
                 | No description.
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -813,7 +813,7 @@ OPENAPI_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS_EXPECTED_SYSL = r"""
         /users/{id<:int}:
             GET (request_id <: string [~header, ~required, name="request-id"]) ?metadata=bool?:
                 | No description.
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -872,7 +872,7 @@ OPENAPI_WITH_HEADER_VAR_OVERRIDDEN_IN_METHOD_EXPECTED_SYSL = r"""
         /users/{id<:int}:
             GET (metadata <: string [~header, ~required, name="metadata"]):
                 | No description.
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -924,7 +924,7 @@ OPENAPI_WITH_PATHS_VAR_REFERRING_GLOBAL_PARAMS_OBJECT_EXPECTED_SYSL = r"""
         /users/{id<:int}:
             GET (metadata <: bool [~header, ~optional, name="metadata"]):
                 | No description.
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions
@@ -997,12 +997,12 @@ OPENAPI_WITH_PATH_VAR_TYPE_OVERRIDDEN_IN_SECOND_METHOD_EXPECTED_SYSL = r"""
         /users/{id<:int}:
             GET (metadata <: string [~header, ~required, name="metadata"]):
                 | No description.
-                return 
+                return
 
         /users/{id<:string}:
             DELETE (metadata <: bool [~header, ~optional, name="metadata"]):
                 | No description.
-                return 
+                return
 
     #---------------------------------------------------------------------------
     # definitions

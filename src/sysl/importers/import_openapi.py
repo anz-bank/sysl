@@ -230,7 +230,10 @@ class OpenApiTranslator:
                 if rc == 'default' or rc.startswith('x-'):
                     self.warn('default responses and x-* responses are not implemented')
 
-            w(u'return {}'.format(', '.join(returnValues)))
+            if len(returnValues) > 0:
+                w(u'return {}'.format(', '.join(returnValues)))
+            else:
+                w(u'return')
 
         for (path, api) in sorted(oaSpec['paths'].iteritems()):
             apiParams = []
