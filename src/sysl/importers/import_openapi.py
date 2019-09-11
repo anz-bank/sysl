@@ -213,7 +213,8 @@ class SwaggerTranslator:
     def writeEndpoints(self, swag, w):
 
         def includeResponses(responses):
-            returnValue = ''
+            
+            returnValues = OrderedDict()
 
             for rc, rspec in sorted(responses.iteritems()):  
                 schema = None
@@ -223,15 +224,17 @@ class SwaggerTranslator:
                         schema = schema['application/json']
                         if schema.get('schema', None):
                             schema = schema['schema']
-
+                
                 if schema is not None:
                     if schema.get('type') == 'array':
-                        returnValue = 'sequence of ' + schema['items']['$ref'].rpartition('/')[2]
+                        returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
                     else:
-                        returnValue = schema['$ref'].rpartition('/')[2]
-                    w(u'return {} <: {}'.format(rc, returnValue))
-                else:
-                    w(u'return {}'.format(rc))
+                        returnValues[schema['$ref'].rpartition('/')[2]] = True
+                
+                if rc == 'default' or rc.startswith('x-'):
+                    self.warn('default responses and x-* responses are not implemented')
+
+            w(u'return {}'.format(', '.join(returnValues)))
 
         for (path, api) in sorted(swag['paths'].iteritems()):
             apiParams = []
@@ -239,16 +242,20 @@ class SwaggerTranslator:
                 apiParams = api['parameters']
                 del api['parameters']
 
-            for (i, (method, body)) in enumerate(sorted(api.iteritems(),
-                                                        key=lambda t: METHOD_ORDER[t[0]])):
+            for (i, (method, body)) in enumerate(sorted(api.iteritems(), key=lambda t: METHOD_ORDER[t[0]])):
                 bodyParams = body['parameters'] if 'parameters' in body else []
                 pathParams, headerParams, queryParams, bodyParams = self.mergeParams(swag, apiParams, bodyParams)
                 print(pathParams)
                 w(u'\n{}:', self.translate_path_template_params(path, pathParams))
                 with w.indent():
                     header = self.getHeaders(headerParams)
-                    methodBody = self.getBody(bodyParams)
-
+                    jsonBody = []
+                    if body.get('requestBody', None):
+                        if body['requestBody'].get('content', None):
+                            if body['requestBody']['content'].get('application/json', None):
+                                jsonBody.append(body['requestBody']['content']['application/json'])
+                            
+                    methodBody = self.getBody(jsonBody)
                     if len(header) > 0 and len(methodBody) > 0:
                         paramStr = ' ({})'.format(methodBody + ', ' + header)
                     elif len(header) == 0 and len(methodBody) == 0:
@@ -278,18 +285,23 @@ class SwaggerTranslator:
                         # - any string matching the pattern "^x-(.*)$""
                         # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
 
-                        if len(responses) > 1:
-                            w(u'one of:')
-                            with w.indent():
-                                includeResponses(responses)
-                        else:
-                            includeResponses(responses)
+                        includeResponses(responses)
                                 
 
     def writeDefs(self, swag, w):
         w()
         w('#' + '-' * 75)
         w('# definitions')
+
+        def _collectExternalsSoReferencesAreCorrect():
+            for (tname, tspec) in sorted(swag['components']['schemas'].iteritems()):
+                properties = extract_properties(tspec)
+
+                if properties or (tspec.get('type') == 'array') or ('enum' in tspec):
+                    continue
+                externAlias['EXTERNAL_' + tname] = 'string'
+
+        _collectExternalsSoReferencesAreCorrect()
 
         for (tname, tspec) in sorted(swag['components']['schemas'].iteritems()):
             properties = extract_properties(tspec)
@@ -334,9 +346,7 @@ class SwaggerTranslator:
                         if fdescr is not None and len(fdescr) > 0:
                             w(self.getTag(fdescr, 'description'))
                 elif 'enum' in tspec:
-                    w(tspec.get('type'))
-                else:
-                    externAlias['EXTERNAL_' + tname] = 'string'
+                    w(TYPE_MAP[tspec.get('type')])
 
         index = 0
         while len(typeSpecList) > index:
@@ -402,6 +412,7 @@ class SwaggerTranslator:
             return (t, descr)
 
         fmt = tspec.get('format')
+
         ref = tspec.get('$ref')
 
         if fmt is not None and fmt not in SWAGGER_FORMATS:
@@ -409,7 +420,12 @@ class SwaggerTranslator:
 
         if ref:
             assert not set(tspec.keys()) - {'$ref'}, tspec
-            return r(ref.lstrip('#/components/schemas/'))
+            t = ref.replace('#/components/schemas/','')
+            if externAlias.get('EXTERNAL_' + t,None):
+                return r('EXTERNAL_' + t)
+            if externAlias.get('EXTERNAL_' + t + '_obj',None):
+                return r('EXTERNAL_' + t + '_obj')
+            return r(t)
         if (typ, fmt) == ('string', None):
             return r('string')
         if (typ, fmt) == ('boolean', None):
@@ -473,7 +489,10 @@ class SwaggerTranslator:
 
         paramList = []
         for param in bodyParams:
-            paramList.append('{} <: {} [~body]'.format(param['name'], param['schema']['$ref'].rpartition('/')[2]))
+            name = param.get('name', None)
+            if not name:
+                name = param['schema']['$ref'].rpartition('/')[2] + 'Request'
+            paramList.append('{} <: {} [~body]'.format(name, param['schema']['$ref'].rpartition('/')[2]))
 
         return ', '.join(paramList)
 
