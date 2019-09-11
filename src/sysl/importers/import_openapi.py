@@ -17,7 +17,7 @@ from sysl.util import writer
 from sysl.proto import sysl_pb2
 
 
-SWAGGER_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time', 'byte', 'binary'}
+OPENAPI_FORMATS = {'int32', 'int64', 'float', 'double', 'date', 'date-time', 'byte', 'binary'}
 
 SYSL_TYPES = {
     'int32', 'int64', 'int', 'float', 'string',
@@ -72,8 +72,8 @@ METHOD_ORDER = {
 
 
 def parse_args(argv):
-    p = argparse.ArgumentParser(description='Converts Swagger (aka Open API Specification) documents to a Sysl spec')
-    p.add_argument('swagger_path', help='path of input swagger document')
+    p = argparse.ArgumentParser(description='Converts Open API Specification documents to a Sysl spec')
+    p.add_argument('openapi_path', help='path of input openapi document')
     p.add_argument('appname', help='appname')
     p.add_argument('package', help='package')
     p.add_argument('outfile', help='path of output file')
@@ -81,7 +81,7 @@ def parse_args(argv):
 
 
 def make_default_logger():
-    logger = logging.getLogger('import_swagger')
+    logger = logging.getLogger('import_openapi')
     logger.setLevel(logging.WARN)
     return logger
 
@@ -93,7 +93,7 @@ def load_vocabulary(words_fn='/usr/share/dict/words'):
         return (w.strip() for w in open(words_fn))
 
 
-class SwaggerTranslator:
+class OpenApiTranslator:
     def __init__(self, logger, vocabulary_factory=None):
         if vocabulary_factory is None:
             vocabulary_factory = load_vocabulary
@@ -151,11 +151,11 @@ class SwaggerTranslator:
                 parts[i] = "{" + self.javaParam(parts[i]) + "<:string}"
         return "".join(parts)
 
-    def translate(self, swag, appname, package, w):
+    def translate(self, oaSpec, appname, package, w):
         hasInfo = False
 
-        hasInfo = 'info' in swag
-        title = swag['info'].pop('title', '') if hasInfo else ''
+        hasInfo = 'info' in oaSpec
+        title = oaSpec['info'].pop('title', '') if hasInfo else ''
 
         w(u'{}{} [package={}]:',
             appname, title and ' ' + json.dumps(title), json.dumps(package))
@@ -169,48 +169,45 @@ class SwaggerTranslator:
                         elif name != 'description':
                             w('@{}{} = {}', prefix, name, json.dumps(value))
 
-                info_attrs(swag['info'])
+                info_attrs(oaSpec['info'])
 
-            if 'host' in swag:
-                w('@host = {}', json.dumps(swag['host']))
+            if 'host' in oaSpec:
+                w('@host = {}', json.dumps(oaSpec['host']))
 
             w(u'@description =:')
             with w.indent():
-                w(u'| {}', swag['info'].get('description', 'No description.').replace("\n", "\n|"))
+                w(u'| {}', oaSpec['info'].get('description', 'No description.').replace("\n", "\n|"))
 
-            if 'basePath' in swag:
+            if 'basePath' in oaSpec:
                 w()
-                w('{}:'.format(swag['basePath']))
+                w('{}:'.format(oaSpec['basePath']))
                 with w.indent():
-                    self.writeEndpoints(swag, w)
+                    self.writeEndpoints(oaSpec, w)
             else:
-                self.writeEndpoints(swag, w)
-            self.writeDefs(swag, w)
+                self.writeEndpoints(oaSpec, w)
+            self.writeDefs(oaSpec, w)
 
-    def mergeParams(self, swag, srcParams, overrideParams):
+    def mergeParams(self, oaSpec, srcParams, overrideParams):
         pathParams = OrderedDict()
         headerParams = OrderedDict()
-        bodyParams = OrderedDict()
         queryParams = OrderedDict()
 
         for param in srcParams + overrideParams:
             if '$ref' in param:
-                param = swag['parameters'][param['$ref'].rpartition('/')[2]]
+                param = oaSpec['parameters'][param['$ref'].rpartition('/')[2]]
             paramIn = param['in']
             if paramIn == 'path':
                 pathParams[param["name"]] = param
             elif paramIn == 'header':
                 headerParams[param["name"]] = param
-            elif paramIn == 'body':
-                bodyParams[param["name"]] = param
             elif paramIn == 'query':
                 queryParams[param["name"]] = param
             else:
                 raise "Unknown param type"
 
-        return pathParams.values(), headerParams.values(), queryParams.values(), bodyParams.values()
+        return pathParams.values(), headerParams.values(), queryParams.values()
 
-    def writeEndpoints(self, swag, w):
+    def writeEndpoints(self, oaSpec, w):
 
         def includeResponses(responses):
             
@@ -236,15 +233,16 @@ class SwaggerTranslator:
 
             w(u'return {}'.format(', '.join(returnValues)))
 
-        for (path, api) in sorted(swag['paths'].iteritems()):
+        for (path, api) in sorted(oaSpec['paths'].iteritems()):
             apiParams = []
             if 'parameters' in api:
                 apiParams = api['parameters']
                 del api['parameters']
 
             for (i, (method, body)) in enumerate(sorted(api.iteritems(), key=lambda t: METHOD_ORDER[t[0]])):
+                bodyContent = OrderedDict()
                 bodyParams = body['parameters'] if 'parameters' in body else []
-                pathParams, headerParams, queryParams, bodyParams = self.mergeParams(swag, apiParams, bodyParams)
+                pathParams, headerParams, queryParams = self.mergeParams(oaSpec, apiParams, bodyParams)
                 print(pathParams)
                 w(u'\n{}:', self.translate_path_template_params(path, pathParams))
                 with w.indent():
@@ -254,7 +252,6 @@ class SwaggerTranslator:
                         if body['requestBody'].get('content', None):
                             if body['requestBody']['content'].get('application/json', None):
                                 jsonBody.append(body['requestBody']['content']['application/json'])
-                            
                     methodBody = self.getBody(jsonBody)
                     if len(header) > 0 and len(methodBody) > 0:
                         paramStr = ' ({})'.format(methodBody + ', ' + header)
@@ -288,13 +285,18 @@ class SwaggerTranslator:
                         includeResponses(responses)
                                 
 
-    def writeDefs(self, swag, w):
+    def writeDefs(self, oaSpec, w):
         w()
         w('#' + '-' * 75)
         w('# definitions')
 
+        if not oaSpec.get('components', None):
+                return
+        if not oaSpec['components'].get('schemas', None):
+            return
+
         def _collectExternalsSoReferencesAreCorrect():
-            for (tname, tspec) in sorted(swag['components']['schemas'].iteritems()):
+            for (tname, tspec) in sorted(oaSpec['components']['schemas'].iteritems()):
                 properties = extract_properties(tspec)
 
                 if properties or (tspec.get('type') == 'array') or ('enum' in tspec):
@@ -303,7 +305,7 @@ class SwaggerTranslator:
 
         _collectExternalsSoReferencesAreCorrect()
 
-        for (tname, tspec) in sorted(swag['components']['schemas'].iteritems()):
+        for (tname, tspec) in sorted(oaSpec['components']['schemas'].iteritems()):
             properties = extract_properties(tspec)
             w()
 
@@ -415,7 +417,7 @@ class SwaggerTranslator:
 
         ref = tspec.get('$ref')
 
-        if fmt is not None and fmt not in SWAGGER_FORMATS:
+        if fmt is not None and fmt not in OPENAPI_FORMATS:
             self.error('Invalid format: %s at %s -> %s' % (fmt, typeRef, parentRef))
 
         if ref:
@@ -476,8 +478,8 @@ class SwaggerTranslator:
             if headerParam.get('required'):
                 necessity = '~required'
 
-            if 'type' in headerParam:
-                typeName = TYPE_MAP[headerParam['type']]
+            if 'schema' in headerParam:
+                typeName = TYPE_MAP[headerParam['schema']['type']]
 
             headerList.append('{} <: {} [~header, {}, name="{}"]'.format(paramName.replace('-', '_').lower(), typeName, necessity, paramName))
 
@@ -500,13 +502,13 @@ class SwaggerTranslator:
 def main():
     args = parse_args(sys.argv)
 
-    with open(args.swagger_path, 'r') as f:
-        swag = yaml.load(f)
+    with open(args.openapi_path, 'r') as f:
+        oaSpec = yaml.load(f)
 
     w = writer.Writer('sysl')
 
-    translator = SwaggerTranslator(logger=make_default_logger())
-    translator.translate(swag, args.appname, args.package, w=w)
+    translator = OpenApiTranslator(logger=make_default_logger())
+    translator.translate(oaSpec, args.appname, args.package, w=w)
 
     with open(args.outfile, 'w') as f_out:
         f_out.write(str(w))

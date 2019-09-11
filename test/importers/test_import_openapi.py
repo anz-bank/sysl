@@ -1,0 +1,1289 @@
+import platform
+import pytest
+import yaml
+
+from sysl.importers.import_openapi import OpenApiTranslator, make_default_logger
+from sysl.util import writer
+
+
+class FakeLogger:
+    def __init__(self):
+        self.warnings = []
+
+    def warn(self, msg):
+        self.warnings.append(msg)
+
+
+SIMPLE_OPENAPI_EXAMPLE = r"""
+"openapi": "3.0"
+info:
+  title: Simple
+paths:
+  /test:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/SimpleObj"
+components:
+  schemas:
+    SimpleObj:
+
+      type: object
+      properties:
+        name:
+          type: string
+"""
+
+OPENAPI_TOP_LEVEL_ARRAY_EXAMPLE = r"""
+openapi: "3.0"
+info:
+  title: Simple
+paths: {}
+
+components:
+  schemas:
+    TopLevelArray:
+      type: array
+      items:
+        properties:
+          name:
+            type: string
+"""
+
+OPENAPI_TOP_LEVEL_ARRAY_EXAMPLE_EXPECTED_SYSL = r"""
+ "Simple" [package=""]:
+    @description =:
+        | No description.
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !alias TopLevelArray:
+        sequence of EXTERNAL_TopLevelArray_obj
+
+    !alias EXTERNAL_TopLevelArray_obj:
+        string
+"""
+
+OPENAPI_REQUIRED_AND_OPTIONAL_FIELDS_EXAMPLE = r"""
+openapi: "3.0"
+info:
+  title: Simple
+paths: {}
+
+components:
+  schemas:
+    Goat:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        weight:
+          type: number
+"""
+
+OPENAPI_REQUIRED_AND_OPTIONAL_FIELDS_EXAMPLE_EXPECTED_SYSL = r"""
+    !type Goat:
+        id <: string:
+            @json_tag = "id"
+        name <: string:
+            @json_tag = "name"
+        weight <: float?:
+            @json_tag = "weight"
+"""
+
+OPENAPI_QUERY_PARAM_EXAMPLE = r"""
+openapi: "3.0"
+info:
+  title: Simple
+paths:
+  /test:
+    get:
+      responses:
+        200:
+          description: 200 OK
+      parameters:
+        - name: key
+          schema:
+            type: string
+          required: false
+          in: query
+        - name: min_date
+          schema:
+            type: string
+          required: true
+          in: query
+          format: date
+"""
+
+OPENAPI_HEADER_AND_BODY_PARAM_EXAMPLE = r"""
+openapi: "3.0"
+info:
+  title: Simple
+paths:
+  /test:
+    post:
+      responses:
+        200:
+          description: 200 OK
+      parameters:
+        - name: key
+          schema:
+            type: integer
+          required: false
+          in: header
+        - name: min_date
+          schema:
+            type: string
+          required: true
+          in: header
+          format: date
+      requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleObj'
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        name:
+          type: string
+"""
+
+OPENAPI_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL = r"""
+ "Simple" [package=""]:
+    @description =:
+        | No description.
+
+    /test:
+        POST (SimpleObjRequest <: SimpleObj [~body], key <: int [~header, ~optional, name="key"], min_date <: string [~header, ~required, name="min_date"]):
+            | No description.
+            return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type SimpleObj:
+        name <: string?:
+            @json_tag = "name"
+"""
+
+OPENAPI_WITH_SYSL_KEYWORDS_EXAMPLE = r"""openapi: "3.0"
+basePath: /fruit-basket
+info:
+  title: Fruit API
+  version: 1.0.0
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        date:
+          type: string
+        string:
+          type: string
+paths: {}
+"""
+
+OPENAPI_WITH_ARRAY_TYPE_WITH_EXAMPLE = r"""openapi: "3.0"
+basePath: /fruit-basket
+info:
+    title: Fruit API
+    version: 1.0.0
+components:
+  schemas:
+    FruitBasket:
+        additionalProperties: false
+        properties:
+            fruit:
+                example: '[{"id":"banana"}, {"id":"mango"}]'
+                items:
+                    type: object
+                type: array
+paths: {}
+"""
+
+OPENAPI_WITH_TYPELESS_ITEMS = r"""openapi: "3.0"
+basePath: /fruit-basket
+info:
+    title: Fruit API
+    version: 1.0.0
+components:
+  schemas:
+    FruitBasket:
+        additionalProperties: false
+        properties:
+            fruit:
+                items:
+                    type: object
+paths: {}
+"""
+
+OPENAPI_OBJECT_WITH_NO_PROPERTIES = r"""
+openapi: "3.0"
+basePath: /fruit-basket
+info:
+    title: Fruit API
+    version: 1.0.0
+components:
+  schemas:
+    MysteriousObject:
+        type: object
+paths: {}
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH = r"""openapi: "3.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+components:
+  schemas:
+    Acknowledgement:
+      additionalProperties: false
+      description: Indicates if a request has succeeded or not.
+      properties:
+        message:
+          type: string
+      type: object
+
+paths:
+  /goat/delete-goat:
+    post:
+      consumes:
+        - application/json
+      description: Delete a goat.
+      parameters:
+        - name: goat_id
+          in: query
+          schema:
+            type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Acknowledgement'
+      summary: Delete a goat
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL = r"""
+ "Goat CRUD API" [package=""]:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
+
+    /api/v1:
+
+        /goat/delete-goat:
+            POST ?goat_id=string:
+                | Delete a goat.
+                return Acknowledgement
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type Acknowledgement:
+        message <: string?:
+            @json_tag = "message"
+"""
+
+OPENAPI_OBJECT_WITH_A_REQUIRED_PROPERTY = r"""openapi: "3.0"
+basePath: /fruit-basket
+info:
+  title: Fruit API
+  version: 1.0.0
+components:
+  schemas:
+    Apple:
+      properties:
+        colour:
+          type: string
+      required:
+        - colour
+      type: object
+paths: {}
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE = r"""openapi: "3.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+components:
+  schemas:
+    Goat:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        birthday:
+          type: string
+          format: date
+      type: object
+
+paths:
+  /goat/get-goats:
+    get:
+      consumes:
+        - application/json
+      description: Gotta get goats.
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Goat'
+      summary: Gotta get goats
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECTED_SYSL = r"""
+ "Goat CRUD API" [package=""]:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
+
+    /api/v1:
+
+        /goat/get-goats:
+            GET:
+                | Gotta get goats.
+                return sequence of Goat
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type Goat:
+        birthday <: date?:
+            @json_tag = "birthday"
+        name <: string?:
+            @json_tag = "name"
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE = r"""openapi: "3.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+components:
+  schemas:
+    Goat:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        birthday:
+          type: string
+          format: date
+      type: object
+
+paths:
+  /goat/create-goat:
+    post:
+      consumes:
+        - application/json
+      description: Creates a goat.
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: birthday
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '201':
+          description: ''
+          headers:
+            Location:
+              description: Location of the newly allocated goat.
+      summary: Creates a goat.
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECTED_SYSL = r"""
+ "Goat CRUD API" [package=""]:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
+
+    /api/v1:
+
+        /goat/create-goat:
+            POST ?name=string&birthday=string:
+                | Creates a goat.
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type Goat:
+        birthday <: date?:
+            @json_tag = "birthday"
+        name <: string?:
+            @json_tag = "name"
+"""
+
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER = r"""openapi: "3.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+components:
+  schemas:
+    Goat:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        birthday:
+          type: string
+          format: date
+      type: object
+
+paths:
+  /goat/create-goat:
+    post:
+      consumes:
+        - application/json
+      description: Creates a goat.
+      produces:
+        - application/json
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goat'
+      responses:
+        '201':
+          description: ''
+          headers:
+            Location:
+              description: Location of the newly allocated goat.
+      summary: Creates a goat.
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL = r"""
+ "Goat CRUD API" [package=""]:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
+
+    /api/v1:
+
+        /goat/create-goat:
+            POST (GoatRequest <: Goat [~body]):
+                | Creates a goat.
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type Goat:
+        birthday <: date?:
+            @json_tag = "birthday"
+        name <: string?:
+            @json_tag = "name"
+"""
+
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE = r"""
+openapi: "3.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+paths:
+  /goat/status:
+    get:
+      description: Check goat status
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: 'here be status'
+        '500':
+          description: 'alas, the server is broken'
+      summary: Check goat status
+"""
+
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE_EXPECTED_SYSL = r"""
+ "Goat CRUD API" [package=""]:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
+
+    /api/v1:
+
+        /goat/status:
+            GET:
+                | Check goat status
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_DEFAULT_RESPONSE = r"""openapi: "3.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+paths:
+  /goat/status:
+    get:
+      description: Check goat status
+      produces:
+        - application/json
+      responses:
+        'default':
+          description: 'here be default response'
+      summary: Check goat status
+"""
+
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_X_DASH_WHATEVER_RESPONSE = r"""openapi: "3.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+paths:
+  /goat/status:
+    get:
+      description: Check goat status
+      produces:
+        - application/json
+      responses:
+        'x-banana':
+          description: 'here be an x-banana response'
+      summary: Check goat status
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY = r"""
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+paths:
+  /goat/status:
+    get:
+      description: Get goat status
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: 'okay'
+      summary: Get goat status
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL = r"""
+ "Goat CRUD API" [package=""]:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
+
+    /api/v1:
+
+        /goat/status:
+            GET:
+                | Get goat status
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY = r"""
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+paths:
+  /goat/status:
+    post:
+      description: Update goat status
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: 'created'
+      summary: Update goat status
+"""
+
+EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL = r"""
+ "Goat CRUD API" [package=""]:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @description =:
+        | No description.
+
+    /api/v1:
+
+        /goat/status:
+            POST:
+                | Update goat status
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+
+OPENAPI_WITH_PATH_VAR_TYPE_IN_API = r"""
+openapi: "3.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: The user ID.
+      - in: header
+        name: request-id
+        schema:
+          type: string
+        required: true
+        description: the request ID.
+    # GET/users/{id}?metadata=true
+    get:
+      summary: Gets a user by ID
+      # Note we only define the query parameter, because the {id} is defined at the path level.
+      parameters:
+        - in: query
+          name: metadata
+          schema:
+            type: boolean
+          required: false
+          description: If true, the endpoint returns only the user metadata.
+      responses:
+        '200':
+          description: OK
+"""
+
+OPENAPI_WITH_PATH_VAR_TYPE_IN_API_EXPECTED_SYSL = r"""
+ "Sample API" [package=""]:
+    @version = "1.0.0"
+    @host = "api.example.com"
+    @description =:
+        | API description in Markdown.
+
+    /v1:
+
+        /users/{id<:int}:
+            GET (request_id <: string [~header, ~required, name="request-id"]) ?metadata=bool?:
+                | No description.
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+
+OPENAPI_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS = r"""
+openapi: "3.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    get:
+      summary: Gets a user by ID.
+      parameters:
+        - in: query
+          name: metadata
+          schema:
+            type: boolean
+          required: false
+          description: If true, the endpoint returns only the user metadata.
+        - $ref: '#parameters/id'
+        - $ref: '#parameters/request-id'
+      responses:
+        '200':
+          description: OK
+parameters:
+  id:
+    in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+    description: The user ID.
+  request-id:
+    in: header
+    name: request-id
+    schema:
+      type: string
+    required: true
+    description: the request ID.
+"""
+
+OPENAPI_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS_EXPECTED_SYSL = r"""
+ "Sample API" [package=""]:
+    @version = "1.0.0"
+    @host = "api.example.com"
+    @description =:
+        | API description in Markdown.
+
+    /v1:
+
+        /users/{id<:int}:
+            GET (request_id <: string [~header, ~required, name="request-id"]) ?metadata=bool?:
+                | No description.
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+OPENAPI_WITH_HEADER_VAR_OVERRIDDEN_IN_METHOD = r"""
+openapi: "3.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: The user ID.
+      - in: header
+        name: metadata
+        schema:
+          type: boolean
+        required: false
+    get:
+      summary: Gets a user by ID
+      parameters:
+       -  in: header
+          name: metadata
+          schema:
+            type: string
+          enum:
+           - public
+           - personal
+           - all
+          required: true
+      responses:
+        '200':
+          description: OK
+"""
+
+OPENAPI_WITH_HEADER_VAR_OVERRIDDEN_IN_METHOD_EXPECTED_SYSL = r"""
+ "Sample API" [package=""]:
+    @version = "1.0.0"
+    @host = "api.example.com"
+    @description =:
+        | API description in Markdown.
+
+    /v1:
+
+        /users/{id<:int}:
+            GET (metadata <: string [~header, ~required, name="metadata"]):
+                | No description.
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+OPENAPI_WITH_PATHS_VAR_REFERRING_GLOBAL_PARAMS_OBJECT = r"""
+openapi: "3.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    parameters:
+      - $ref: '#/parameters/id'
+      - in: header
+        name: metadata
+        schema:
+          type: boolean
+        required: false
+    get:
+      summary: Gets a user by ID
+      responses:
+        '200':
+          description: OK
+parameters:
+  id:
+    in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+    description: The user ID.
+"""
+
+OPENAPI_WITH_PATHS_VAR_REFERRING_GLOBAL_PARAMS_OBJECT_EXPECTED_SYSL = r"""
+ "Sample API" [package=""]:
+    @version = "1.0.0"
+    @host = "api.example.com"
+    @description =:
+        | API description in Markdown.
+
+    /v1:
+
+        /users/{id<:int}:
+            GET (metadata <: bool [~header, ~optional, name="metadata"]):
+                | No description.
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+OPENAPI_WITH_PATH_VAR_TYPE_OVERRIDDEN_IN_SECOND_METHOD = r"""
+openapi: "3.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    parameters:
+      - $ref: '#/parameters/id'
+      - in: header
+        name: metadata
+        schema:
+          type: boolean
+        required: false
+    get:
+      summary: Gets a user by ID
+      parameters:
+       -  in: header
+          name: metadata
+          schema:
+            type: string
+          enum:
+           - public
+           - personal
+           - all
+          required: true
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Gets a user by ID
+      parameters:
+       -  in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+parameters:
+  id:
+    in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+    description: The user ID.
+"""
+
+OPENAPI_WITH_PATH_VAR_TYPE_OVERRIDDEN_IN_SECOND_METHOD_EXPECTED_SYSL = r"""
+ "Sample API" [package=""]:
+    @version = "1.0.0"
+    @host = "api.example.com"
+    @description =:
+        | API description in Markdown.
+
+    /v1:
+
+        /users/{id<:int}:
+            GET (metadata <: string [~header, ~required, name="metadata"]):
+                | No description.
+                return 
+
+        /users/{id<:string}:
+            DELETE (metadata <: bool [~header, ~optional, name="metadata"]):
+                | No description.
+                return 
+
+    #---------------------------------------------------------------------------
+    # definitions
+"""
+
+
+def getOutputString(input):
+    swag = yaml.load(input)
+    w = writer.Writer('sysl')
+    logger = FakeLogger()
+    t = OpenApiTranslator(logger)
+    t.translate(swag, appname='', package='', w=w)
+    return str(w), logger
+
+
+def test_importing_simple_openapi_with_json_tags():
+    output, _ = getOutputString(SIMPLE_OPENAPI_EXAMPLE)
+    assert 'name <: string?:\n            @json_tag = "name"' in output
+
+
+def test_importing_openapi_with_top_level_array():
+    output, _ = getOutputString(OPENAPI_TOP_LEVEL_ARRAY_EXAMPLE)
+    assert OPENAPI_TOP_LEVEL_ARRAY_EXAMPLE_EXPECTED_SYSL in output
+
+
+def test_importing_openapi_object_with_required_and_optional_fields():
+    output, _ = getOutputString(OPENAPI_REQUIRED_AND_OPTIONAL_FIELDS_EXAMPLE)
+    assert OPENAPI_REQUIRED_AND_OPTIONAL_FIELDS_EXAMPLE_EXPECTED_SYSL in output
+
+
+def test_importing_openapi_with_query_params():
+    output, _ = getOutputString(OPENAPI_QUERY_PARAM_EXAMPLE)
+    assert 'GET ?key=string?&min_date=string:' in output
+
+
+def test_importing_openapi_with_header_body_params():
+    output, _ = getOutputString(OPENAPI_HEADER_AND_BODY_PARAM_EXAMPLE)
+    assert OPENAPI_HEADER_AND_BODY_PARAM_EXAMPLE_EXPECTED_SYSL in output
+
+
+def test_importing_openapi_with_sysl_keywords():
+    output, _ = getOutputString(OPENAPI_WITH_SYSL_KEYWORDS_EXAMPLE)
+    assert 'date_ <: string?' in output
+    assert 'string_ <: string?' in output
+
+
+def test_importing_openapi_array_type_with_example_produces_sysl_type():
+    output, _ = getOutputString(OPENAPI_WITH_ARRAY_TYPE_WITH_EXAMPLE)
+    expected_fragment = '    !type FruitBasket:\n        fruit <: sequence of EXTERNAL_FruitBasket_fruit_obj'
+    assert expected_fragment in output
+
+
+def test_importing_openapi_typeless_thing_with_items_produces_warning():
+    _, logger = getOutputString(OPENAPI_WITH_TYPELESS_ITEMS)
+    expected_warnings = ['Ignoring unexpected "items". Schema has "items" but did not have defined "type". Note: {\'items\': {\'type\': \'object\'}}']
+    assert logger.warnings == expected_warnings
+
+
+def test_importing_openapi_propertyless_object_works_without_warnings():
+    output, logger = getOutputString(OPENAPI_OBJECT_WITH_NO_PROPERTIES)
+    expected_fragment = '    !alias EXTERNAL_MysteriousObject:\n'
+    assert expected_fragment in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_importing_openapi_spec_with_a_path_works_without_warnings():
+    output, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH)
+    assert EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_importing_openapi_object_with_required_field_produces_sysl_type_with_required_field():
+    output, _ = getOutputString(OPENAPI_OBJECT_WITH_A_REQUIRED_PROPERTY)
+    expected_fragment = '!type Apple:\n        colour <: string:\n'
+    assert expected_fragment in output
+
+
+def test_import_of_openapi_path_that_returns_array_of_defined_object_type():
+    output, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE)
+    assert EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_that_has_a_defined_201_response():
+    output, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE)
+    assert EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_that_has_a_body_parameter():
+    output, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER)
+    assert EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_BODY_PARAMETER_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_error_response():
+    # Characterisation test. Who knows if this is what we actually want it to do.
+    output, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE)
+    assert EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_ERROR_RESPONSE_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_default_response_is_not_implemented():
+    _, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_DEFAULT_RESPONSE)
+    expected_warnings = ['default responses and x-* responses are not implemented']
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_x_dash_whatever_response_is_not_implemented():
+    _, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_X_DASH_WHATEVER_RESPONSE)
+    expected_warnings = ['default responses and x-* responses are not implemented']
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_description_only_200_response():
+    output, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY)
+    assert EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_description_only_201_response():
+    output, logger = getOutputString(EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY)
+    assert EXAMPLE_OPENAPI_SPEC_WITH_ENDPOINT_PATH_WITH_201_RESPONSE_DESCRIPTION_ONLY_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_parse_typespec_boolean():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'boolean', 'description': 'foo'}) == ('bool', 'foo')
+
+
+def test_parse_typespec_datetime():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'string', 'format': 'date-time', 'description': 'foo'}) == ('datetime', 'foo')
+
+
+def test_parse_typespec_integer():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'integer', 'description': 'foo'}) == ('int', 'foo')
+
+
+def test_parse_typespec_int32():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'integer', 'format': 'int32', 'description': 'foo'}) == ('int32', 'foo')
+
+
+def test_parse_typespec_int64():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'integer', 'format': 'int64', 'description': 'foo'}) == ('int64', 'foo')
+
+
+def test_parse_typespec_number_is_translated_to_float():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'number', 'description': 'foo'}) == ('float', 'foo')
+
+
+def test_parse_typespec_float_is_translated_to_float():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'number', 'format': 'float', 'description': 'foo'}) == ('float', 'foo')
+
+
+def test_parse_typespec_double_is_translated_to_float():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'number', 'format': 'double', 'description': 'foo'}) == ('float', 'foo')
+
+
+def test_parse_typespec_object():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'type': 'object', 'description': 'foo'}, '', 'Object') == ('EXTERNAL_Object_obj', 'foo')
+
+
+def test_parse_typespec_ref():
+    t = OpenApiTranslator(None)
+    assert t.parse_typespec({'$ref': '#/components/schemas/Barr', 'description': 'foo'}) == ('Barr', 'foo')
+
+
+def test_parse_typespec_warns_and_ignores_type_if_array_items_type_has_both_type_and_ref():
+    l = FakeLogger()
+    t = OpenApiTranslator(logger=l)
+
+    array_type = {
+        'type': 'array',
+        'items': {
+            '$ref': '#/components/schemas/Barr',
+            'type': 'Foo',
+        },
+        'description': 'this is where we keep our ill-specified things'
+    }
+    assert t.parse_typespec(array_type) == ('sequence of Barr', 'this is where we keep our ill-specified things')
+    expected_warnings = ['Ignoring unexpected "type". Schema has "$ref" but also has unexpected "type". Note: {\'items\': {\'type\': \'Foo\', \'$ref\': \'#/components/schemas/Barr\'}, \'type\': \'array\'}']
+    assert l.warnings == expected_warnings
+
+
+def test_translate_path_template_params_leaves_paths_without_templates_unchanged():
+    l = FakeLogger()
+    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['x']))
+    expected_warnings = []
+    assert t.translate_path_template_params('/foo/barr/', []) == '/foo/barr/'
+    assert l.warnings == expected_warnings
+
+
+def test_translate_path_template_params_rewrites_dashed_template_names_as_camelcase_string_typed_parameters():
+    l = FakeLogger()
+    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['x']))
+    assert t.translate_path_template_params('/foo/{fizz-buzz}/', []) == '/foo/{fizzBuzz<:string}/'
+    expected_warnings = ['not enough path params path: /foo/{fizz-buzz}/', 'could not find type for path param: {fizz-buzz} in params[]']
+    assert l.warnings == expected_warnings
+
+
+def test_translate_path_template_params_rewrites_names_of_things_that_look_like_a_dictionary_word_ending_with_id_suffix_as_camelcase():
+    l = FakeLogger()
+    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['bread']))
+    assert t.translate_path_template_params('/foo/{breadid}/', []) == '/foo/{breadId<:string}/'
+    expected_warnings = ['not enough path params path: /foo/{breadid}/', 'could not find type for path param: {breadid} in params[]']
+    assert l.warnings == expected_warnings
+
+
+def test_translate_path_template_params_wont_rewrite_names_of_things_ending_with_id_suffix_as_camelcase_if_no_vocabulary_present():
+    l = FakeLogger()
+    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: []))
+    # perhaps breadid is a valid word. we dont know, we have no vocab.
+    assert t.translate_path_template_params('/foo/{breadid}/', []) == '/foo/{breadid<:string}/'
+    expected_warnings = ['not enough path params path: /foo/{breadid}/', 'could not find type for path param: {breadid} in params[]']
+    assert l.warnings == expected_warnings + ['could not load any vocabulary, janky environment-specific heuristics for renaming path template names may fail']
+
+
+def test_translate_path_template_params_doesnt_rewrite_nonwords_ending_in_id_typed_parameters():
+    l = FakeLogger()
+    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['bread']))
+    assert t.translate_path_template_params('/foo/{braedid}/', []) == '/foo/{braedid<:string}/'
+
+
+@pytest.mark.skipif(platform.system() not in ('Linux', 'Darwin'), reason='no defined source of vocabulary for this platform')
+def test_default_vocabulary_containing_common_business_nouns_is_defined_for_non_windows_platforms():
+    t = OpenApiTranslator(None)
+    assert 'customer' in t.words()
+
+
+def test_make_default_logger_returns_something_thats_probably_a_logger():
+    logger = make_default_logger()
+    assert hasattr(logger, 'warn')
+
+
+def test_import_of_openapi_path_with_path_var_type_in_api():
+    output, logger = getOutputString(OPENAPI_WITH_PATH_VAR_TYPE_IN_API)
+    assert OPENAPI_WITH_PATH_VAR_TYPE_IN_API_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_path_var_type_in_global_parameters():
+    output, logger = getOutputString(OPENAPI_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS)
+    assert OPENAPI_WITH_PATH_VAR_TYPE_IN_GLOBAL_PARAMETERS_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_header_var_overridden_in_method():
+    output, logger = getOutputString(OPENAPI_WITH_HEADER_VAR_OVERRIDDEN_IN_METHOD)
+    assert OPENAPI_WITH_HEADER_VAR_OVERRIDDEN_IN_METHOD_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_paths_var_referring_global_params_object():
+    output, logger = getOutputString(OPENAPI_WITH_PATHS_VAR_REFERRING_GLOBAL_PARAMS_OBJECT)
+    assert OPENAPI_WITH_PATHS_VAR_REFERRING_GLOBAL_PARAMS_OBJECT_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
+
+
+def test_import_of_openapi_path_with_paths_var_type_overridden_in_second_method():
+    output, logger = getOutputString(OPENAPI_WITH_PATH_VAR_TYPE_OVERRIDDEN_IN_SECOND_METHOD)
+    assert OPENAPI_WITH_PATH_VAR_TYPE_OVERRIDDEN_IN_SECOND_METHOD_EXPECTED_SYSL in output
+    expected_warnings = []
+    assert logger.warnings == expected_warnings
