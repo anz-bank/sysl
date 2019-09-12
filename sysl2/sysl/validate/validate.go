@@ -26,8 +26,6 @@ type CmdContextParamValidate struct {
 	transform     *string
 	grammar       *string
 	start         *string
-	isVerbose     *bool
-	loglevel      *string
 }
 
 func DoValidate(validateParams *CmdContextParamValidate) error {
@@ -35,16 +33,6 @@ func DoValidate(validateParams *CmdContextParamValidate) error {
 	logrus.Debugf("transform: %s\n", *validateParams.transform)
 	logrus.Debugf("grammar: %s\n", *validateParams.grammar)
 	logrus.Debugf("start: %s\n", *validateParams.start)
-	logrus.Debugf("loglevel: %s\n", *validateParams.loglevel)
-	logrus.Debugf("isVerbose: %v\n", *validateParams.isVerbose)
-
-	// Default info
-	if level, has := syslutil.LogLevels[*validateParams.loglevel]; has {
-		logrus.SetLevel(level)
-	}
-	if *validateParams.isVerbose {
-		*validateParams.loglevel = "debug"
-	}
 
 	fs := afero.NewOsFs()
 
@@ -336,7 +324,5 @@ func ConfigureCmdlineForValidate(sysl *kingpin.Application) *CmdContextParamVali
 		transform: validate.Flag("transform", "grammar.g").Default(".").String(),
 		grammar:   validate.Flag("grammar", "grammar.sysl").Default(".").String(),
 		start:     validate.Flag("start", "start rule for the grammar").Default(".").String(),
-		loglevel:  validate.Flag("log", "log level[debug,info,warn,off]").Default("info").String(),
-		isVerbose: validate.Flag("verbose", "show output").Short('v').Default("false").Bool(),
 	}
 }

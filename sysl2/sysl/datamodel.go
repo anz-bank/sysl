@@ -10,7 +10,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
+	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
 
 const localPlantuml = "http://localhost:8080/plantuml"
@@ -24,7 +24,6 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]strin
 	log.Debugf("filter: %s\n", *datagenParams.filter)
 	log.Debugf("modules: %s\n", *datagenParams.modules)
 	log.Debugf("output: %s\n", *datagenParams.output)
-	log.Debugf("loglevel: %s\n", *datagenParams.loglevel)
 
 	if *datagenParams.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
@@ -35,13 +34,6 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]strin
 	}
 	log.Debugf("plantuml: %s\n", *datagenParams.plantuml)
 
-	if *datagenParams.isVerbose {
-		*datagenParams.loglevel = debug
-	}
-	// Default info
-	if level, has := syslutil.LogLevels[*datagenParams.loglevel]; has {
-		log.SetLevel(level)
-	}
 	spclass := constructFormatParser("", *datagenParams.classFormat)
 	mod, err := loadApp(*datagenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *datagenParams.root))
 
@@ -95,8 +87,6 @@ func configureCmdlineForDatagen(sysl *kingpin.Application) *CmdContextParamDatag
 		strings.Join([]string{"input files without .sysl extension and with leading /",
 			"eg: /project_dir/my_models",
 			"combine with --root if needed"}, "\n")).String()
-	returnValues.loglevel = data.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
-	returnValues.isVerbose = data.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	return returnValues
 }

@@ -53,15 +53,14 @@ func TestDoConstructDataDiagrams(t *testing.T) {
 			"Object-Model.png":     "tests/object-model-golden.puml",
 		},
 	}
-	result, err := DoConstructDataDiagramsWithParams(args.root, "", args.title, args.output, "warn", args.project,
-		args.modules, false)
+	result, err := DoConstructDataDiagramsWithParams(args.root, "", args.title, args.output, args.project,
+		args.modules)
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	comparePUML(t, args.expected, result)
 }
 
 func DoConstructDataDiagramsWithParams(
-	rootModel, filter, title, output, loglevel, project, modules string,
-	isVerbose bool,
+	rootModel, filter, title, output, project, modules string,
 ) (map[string]string, error) {
 	plantuml := ""
 	classFormat := "%(classname)"
@@ -70,9 +69,7 @@ func DoConstructDataDiagramsWithParams(
 		filter:      &filter,
 		title:       &title,
 		output:      &output,
-		loglevel:    &loglevel,
 		project:     &project,
-		isVerbose:   &isVerbose,
 		plantuml:    &plantuml,
 		modules:     &modules,
 		classFormat: &classFormat,

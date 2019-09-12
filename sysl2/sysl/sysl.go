@@ -12,7 +12,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
+	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Version contains the sysl binary version
@@ -26,6 +26,8 @@ const debug string = "debug"
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 	syslCmd.Version(Version)
+
+	(&debugTypeData{}).add(syslCmd)
 	flagmap := map[string][]string{}
 	textpbParams := configureCmdlineForPb(syslCmd, flagmap)
 	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
@@ -68,9 +70,6 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 			return err
 		}
 		for k, v := range r {
-			if *intgenParams.isVerbose {
-				logrus.Debugf(k)
-			}
 			err := OutputPlantuml(k, *intgenParams.plantuml, v, fs)
 			if err != nil {
 				return fmt.Errorf("plantuml drawing error: %v", err)
@@ -85,9 +84,6 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 			return err
 		}
 		for k, v := range outmap {
-			if *datagenParams.isVerbose {
-				logrus.Debugf(k)
-			}
 			err := OutputPlantuml(k, *datagenParams.plantuml, v, fs)
 			if err != nil {
 				return fmt.Errorf("plantuml drawing error: %v", err)
@@ -96,6 +92,40 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 		return nil
 	}
 	return nil
+}
+
+type debugTypeData struct {
+	loglevel string
+	verbose  bool
+}
+
+//nolint:unparam
+func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
+	if d.verbose {
+		d.loglevel = debug
+	}
+	// Default info
+	if level, has := syslutil.LogLevels[d.loglevel]; has {
+		logrus.SetLevel(level)
+	}
+
+	logrus.Infof("Logging: %+v", *d)
+	return nil
+}
+func (d *debugTypeData) add(app *kingpin.Application) {
+
+	var levels []string
+	for l := range syslutil.LogLevels {
+		if l != "" {
+			levels = append(levels, l)
+		}
+	}
+	app.Flag("log", fmt.Sprintf("log level: [%s]", strings.Join(levels, ","))).
+		HintOptions(levels...).
+		Default(levels[0]).
+		StringVar(&d.loglevel)
+	app.Flag("verbose", "enable verbose logging").Short('v').BoolVar(&d.verbose)
+	app.PreAction(d.do)
 }
 
 // main2 calls main3 and handles any errors it returns. It takes its output
@@ -136,11 +166,6 @@ func configureCmdlineForPb(sysl *kingpin.Application, flagmap map[string][]strin
 	returnValues.output = textpb.Flag("output", "output file name").Short('o').String()
 	returnValues.mode = textpb.Flag("mode", "output mode").Default("textpb").String()
 
-	returnValues.loglevel = textpb.Flag("log",
-		"log level[debug,info,warn,off]").Default("info").String()
-
-	returnValues.isVerbose = textpb.Flag("verbose", "show output").Short('v').Default("false").Bool()
-
 	returnValues.modules = textpb.Arg("modules", "input files without .sysl extension and with leading /, eg: "+
 		"/project_dir/my_models combine with --root if needed",
 	).String()
@@ -152,7 +177,6 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen, fs afero.Fs) error {
 	logrus.Debugf("Root: %s\n", *textpbParams.root)
 	logrus.Debugf("Module: %s\n", *textpbParams.modules)
 	logrus.Debugf("Mode: %s\n", *textpbParams.mode)
-	logrus.Debugf("Log Level: %s\n", *textpbParams.loglevel)
 
 	format := strings.ToLower(*textpbParams.output)
 	toJSON := *textpbParams.mode == "json" || *textpbParams.mode == "" && strings.HasSuffix(format, ".json")
@@ -162,14 +186,6 @@ func doGeneratePb(textpbParams *CmdContextParamPbgen, fs afero.Fs) error {
 		return err
 	}
 	*textpbParams.output = strings.Trim(*textpbParams.output, " ")
-
-	if *textpbParams.isVerbose {
-		*textpbParams.loglevel = debug
-	}
-	// Default info
-	if level, has := syslutil.LogLevels[*textpbParams.loglevel]; has {
-		logrus.SetLevel(level)
-	}
 
 	switch *textpbParams.mode {
 	case "", "textpb", "json":
