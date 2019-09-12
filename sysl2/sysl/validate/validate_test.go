@@ -492,7 +492,7 @@ func TestValidatorDoValidate(t *testing.T) {
 		"Success": {
 			args: []string{
 				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform2.sysl", "--grammar",
-				"../tests/grammar.sysl", "--start", "goFile", "--verbose"}, isErrNil: true},
+				"../tests/grammar.sysl", "--start", "goFile"}, isErrNil: true},
 		"Grammar loading fail": {
 			args: []string{
 				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform2.sysl", "--grammar",

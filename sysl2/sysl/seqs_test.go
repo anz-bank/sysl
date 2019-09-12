@@ -301,7 +301,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 	// When
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	require.NoError(t, err)
 
 	// Then
@@ -320,7 +320,7 @@ func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
 	// When
 	_, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	assert.Error(t, err)
 }
 
@@ -339,7 +339,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 	assert.Panics(t, func() {
 		_, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 			args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-			args.groupbox, "warn", false)
+			args.groupbox)
 		assert.NoError(t, err)
 	})
 }
@@ -388,7 +388,7 @@ deactivate _0
 	// When
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	require.NoError(t, err)
 
 	// Then
@@ -436,7 +436,7 @@ deactivate _0
 `
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	require.NoError(t, err)
 	expected := map[string]string{"tests/call.png": expectContent}
 	// Then
@@ -474,7 +474,7 @@ activate _0
 	// When
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	require.NoError(t, err)
 
 	// Then
@@ -527,7 +527,7 @@ end box`
 end box`
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	require.NoError(t, err)
 
 	// Then
@@ -565,7 +565,7 @@ end box`
 end box`
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	require.NoError(t, err)
 
 	// Then
@@ -599,7 +599,7 @@ func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
 end box`
 	result, err := DoConstructSequenceDiagramsWithParams(args.rootModel, args.endpointFormat, args.appFormat,
 		args.title, args.output, args.modules, args.endpoints, args.apps, args.blackboxes,
-		args.groupbox, "warn", false)
+		args.groupbox)
 	require.NoError(t, err)
 
 	// Then
@@ -613,8 +613,6 @@ func DoConstructSequenceDiagramsWithParams(
 	endpoints, apps []string,
 	blackboxes [][]string,
 	group string,
-	loglevel string,
-	isVerbose bool,
 ) (map[string]string, error) {
 	plantuml := ""
 	cmdContextParamSeqgen := &CmdContextParamSeqgen{
@@ -627,9 +625,7 @@ func DoConstructSequenceDiagramsWithParams(
 		endpointsFlag:  &endpoints,
 		appsFlag:       &apps,
 		blackboxes:     &blackboxes,
-		loglevel:       &loglevel,
 		group:          &group,
-		isVerbose:      &isVerbose,
 		plantuml:       &plantuml,
 	}
 	logger, _ := test.NewNullLogger()
