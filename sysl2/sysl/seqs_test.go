@@ -627,9 +627,7 @@ func DoConstructSequenceDiagramsWithParams(
 		endpointsFlag:  &endpoints,
 		appsFlag:       &apps,
 		blackboxes:     &blackboxes,
-		loglevel:       &loglevel,
 		group:          &group,
-		isVerbose:      &isVerbose,
 		plantuml:       &plantuml,
 	}
 	logger, _ := test.NewNullLogger()

@@ -194,8 +194,6 @@ func GenerateCodeWithParamsFs(
 		transform:     &transform,
 		grammar:       &grammar,
 		start:         &start,
-		loglevel:      &loglevel,
-		isVerbose:     &isVerbose,
 	}
 	logger, _ := test.NewNullLogger()
 	return GenerateCode(cmdContextParamCodegen, fs, logger)

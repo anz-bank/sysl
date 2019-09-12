@@ -232,15 +232,6 @@ func GenerateCode(codegenParams *CmdContextParamCodegen, fs afero.Fs, logger *lo
 	logger.Debugf("transform: %s\n", *codegenParams.transform)
 	logger.Debugf("grammar: %s\n", *codegenParams.grammar)
 	logger.Debugf("start: %s\n", *codegenParams.start)
-	logger.Debugf("loglevel: %s\n", *codegenParams.loglevel)
-
-	if *codegenParams.isVerbose {
-		*codegenParams.loglevel = debug
-	}
-	// Default info
-	if level, has := syslutil.LogLevels[*codegenParams.loglevel]; has {
-		logger.SetLevel(level)
-	}
 
 	modelFs := syslutil.NewChrootFs(fs, *codegenParams.rootModel)
 	modelParser := parse.NewParser()
@@ -325,8 +316,6 @@ func configureCmdlineForCodegen(sysl *kingpin.Application, flagmap map[string][]
 	returnValues.grammar = gen.Flag("grammar", "grammar.g").Default(".").String()
 	returnValues.start = gen.Flag("start", "start rule for the grammar").Default(".").String()
 	returnValues.outDir = gen.Flag("outdir", "output directory").Default(".").String()
-	returnValues.loglevel = gen.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
-	returnValues.isVerbose = gen.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	return returnValues
 }

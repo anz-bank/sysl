@@ -501,8 +501,6 @@ func GenerateIntegrationsWithParams(
 		exclude:   &exclude,
 		clustered: &clustered,
 		epa:       &epa,
-		loglevel:  &loglevel,
-		isVerbose: &isVerbose,
 		plantuml:  &plantuml,
 	}
 	return GenerateIntegrations(cmdContextParamIntgen)

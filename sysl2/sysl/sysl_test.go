@@ -476,7 +476,6 @@ func TestMain2WithTextPbModeStdout(t *testing.T) {
 			"--mode", "textpb",
 			"-o", " - ",
 			"tests/call.sysl",
-			"-v",
 		},
 		fs, logger, main3,
 	)
@@ -496,7 +495,6 @@ func TestMain2WithJSONModeStdout(t *testing.T) {
 			"--mode", "json",
 			"-o", " - ",
 			"tests/call.sysl",
-			"-v",
 		},
 		fs, logger, main3,
 	)

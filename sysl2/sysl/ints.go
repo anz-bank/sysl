@@ -25,7 +25,6 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	log.Debugf("filter: %s\n", *intgenParams.filter)
 	log.Debugf("modules: %s\n", *intgenParams.modules)
 	log.Debugf("output: %s\n", *intgenParams.output)
-	log.Debugf("loglevel: %s\n", *intgenParams.loglevel)
 
 	if *intgenParams.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
@@ -36,13 +35,6 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	}
 	log.Debugf("plantuml: %s\n", *intgenParams.plantuml)
 
-	if *intgenParams.isVerbose {
-		*intgenParams.loglevel = debug
-	}
-	// Default info
-	if level, has := syslutil.LogLevels[*intgenParams.loglevel]; has {
-		log.SetLevel(level)
-	}
 
 	mod, err := loadApp(*intgenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *intgenParams.root))
 	if err != nil {
@@ -104,8 +96,6 @@ func configureCmdlineForIntgen(sysl *kingpin.Application, flagmap map[string][]s
 	returnValues.clustered = ints.Flag("clustered",
 		"group integration components into clusters").Short('c').Default("false").Bool()
 	returnValues.epa = ints.Flag("epa", "produce and EPA integration view").Default("false").Bool()
-	returnValues.loglevel = ints.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
-	returnValues.isVerbose = ints.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	return returnValues
 }

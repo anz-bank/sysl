@@ -45,8 +45,6 @@ type CmdContextParamCodegen struct {
 	grammar       *string
 	start         *string
 	outDir        *string
-	isVerbose     *bool
-	loglevel      *string
 }
 
 type CmdContextParamPbgen struct {
@@ -54,8 +52,6 @@ type CmdContextParamPbgen struct {
 	output    *string
 	mode      *string
 	modules   *string
-	isVerbose *bool
-	loglevel  *string
 }
 
 type CmdContextParamSeqgen struct {
@@ -70,8 +66,6 @@ type CmdContextParamSeqgen struct {
 	blackboxesFlag *map[string]string
 	blackboxes     *[][]string
 	plantuml       *string
-	loglevel       *string
-	isVerbose      *bool
 	group          *string
 }
 
@@ -86,8 +80,6 @@ type CmdContextParamIntgen struct {
 	clustered *bool
 	epa       *bool
 	plantuml  *string
-	isVerbose *bool
-	loglevel  *string
 }
 
 type CmdContextParamDatagen struct {
@@ -98,7 +90,5 @@ type CmdContextParamDatagen struct {
 	filter      *string
 	modules     *string
 	plantuml    *string
-	isVerbose   *bool
-	loglevel    *string
 	classFormat *string
 }
