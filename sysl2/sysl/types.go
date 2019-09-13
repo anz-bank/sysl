@@ -1,6 +1,11 @@
 package main
 
-import sysl "github.com/anz-bank/sysl/src/proto"
+import (
+	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
+	"gopkg.in/alecthomas/kingpin.v2"
+)
 
 type Visitor interface {
 	Visit(Element) error
@@ -37,9 +42,23 @@ type VarManager interface {
 	UniqueVarForAppName(appName string) string
 }
 
+type Command interface {
+	Init(*kingpin.Application) *kingpin.CmdClause
+	Execute(ExecuteArgs) error
+	Name() string
+	RequireSyslModule() bool
+}
+
+type ExecuteArgs struct {
+	module *sysl.Module
+	modAppName string
+	fs afero.Fs
+	logger *logrus.Logger
+}
+
 type CmdContextParamCodegen struct {
-	rootModel     *string
-	model         *string
+	model         *sysl.Module
+	modelAppName string
 	rootTransform *string
 	transform     *string
 	grammar       *string
@@ -55,12 +74,12 @@ type CmdContextParamPbgen struct {
 }
 
 type CmdContextParamSeqgen struct {
-	root           *string
+	model         *sysl.Module
+	modelAppName string
 	endpointFormat *string
 	appFormat      *string
 	title          *string
 	output         *string
-	modulesFlag    *string
 	endpointsFlag  *[]string
 	appsFlag       *[]string
 	blackboxesFlag *map[string]string
@@ -70,12 +89,12 @@ type CmdContextParamSeqgen struct {
 }
 
 type CmdContextParamIntgen struct {
-	root      *string
+	model         *sysl.Module
+	modelAppName string
 	title     *string
 	output    *string
 	project   *string
 	filter    *string
-	modules   *string
 	exclude   *[]string
 	clustered *bool
 	epa       *bool
@@ -83,12 +102,12 @@ type CmdContextParamIntgen struct {
 }
 
 type CmdContextParamDatagen struct {
-	root        *string
+	model         *sysl.Module
+	modelAppName string
 	title       *string
 	output      *string
 	project     *string
 	filter      *string
-	modules     *string
 	plantuml    *string
 	classFormat *string
 }

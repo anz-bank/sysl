@@ -16,7 +16,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Node can be string or node
@@ -226,19 +225,13 @@ func Serialize(w io.Writer, delim string, node Node) error {
 func GenerateCode(codegenParams *CmdContextParamCodegen, fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
 
-	logger.Debugf("root-model: %s\n", *codegenParams.rootModel)
 	logger.Debugf("root-transform: %s\n", *codegenParams.rootTransform)
 	logger.Debugf("model: %s\n", *codegenParams.model)
 	logger.Debugf("transform: %s\n", *codegenParams.transform)
 	logger.Debugf("grammar: %s\n", *codegenParams.grammar)
 	logger.Debugf("start: %s\n", *codegenParams.start)
-
-	modelFs := syslutil.NewChrootFs(fs, *codegenParams.rootModel)
-	modelParser := parse.NewParser()
-	mod, modelAppName, err := parse.LoadAndGetDefaultApp(*codegenParams.model, modelFs, modelParser)
-	if err != nil {
-		return nil, err
-	}
+	mod := codegenParams.model
+	modelAppName := codegenParams.modelAppName
 
 	transformFs := syslutil.NewChrootFs(fs, *codegenParams.rootTransform)
 	tfmParser := parse.NewParser()
@@ -300,22 +293,4 @@ func outputToFiles(output []*CodeGenOutput, fs afero.Fs) error {
 		}
 	}
 	return nil
-}
-
-func configureCmdlineForCodegen(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamCodegen {
-	flagmap["gen"] = []string{"root-model", "root-transform", "model", "transform", "grammar", "start", "outdir"}
-	gen := sysl.Command("gen", "Generate code")
-	returnValues := &CmdContextParamCodegen{}
-
-	returnValues.rootModel = gen.Flag("root-model",
-		"sysl root directory for input model file (default: .)").Default(".").String()
-	returnValues.rootTransform = gen.Flag("root-transform",
-		"sysl root directory for input transform file (default: .)").Default(".").String()
-	returnValues.model = gen.Flag("model", "model.sysl").Default(".").String()
-	returnValues.transform = gen.Flag("transform", "grammar.g").Default(".").String()
-	returnValues.grammar = gen.Flag("grammar", "grammar.g").Default(".").String()
-	returnValues.start = gen.Flag("start", "start rule for the grammar").Default(".").String()
-	returnValues.outDir = gen.Flag("outdir", "output directory").Default(".").String()
-
-	return returnValues
 }

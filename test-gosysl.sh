@@ -16,7 +16,7 @@ $GOPATH/bin/sysl -v sd -s 'WebFrontend <- RequestProfile' -o sd.png $ROOT/sequen
 rm sd.png
 
 $GOPATH/bin/sysl -v ints -j 'Project' $ROOT/integration_test.sysl
-rm _.png
+rm _.png..
 
 version=`$GOPATH/bin/sysl --version 2>&1 >/dev/null`
 if [[ ${version} = "unspecified" ]]; then

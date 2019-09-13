@@ -1,15 +1,13 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"os"
 	"strings"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -24,70 +22,33 @@ const debug string = "debug"
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
-	syslCmd := initCommandLineArgs()
-	flagmap := map[string][]string{}
-	textpbParams := configureCmdlineForPb(syslCmd, flagmap)
-	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
-	sequenceParams := configureCmdlineForSeqgen(syslCmd, flagmap)
-	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
-	validateParams := validate.ConfigureCmdlineForValidate(syslCmd)
-	datagenParams := configureCmdlineForDatagen(syslCmd)
+	syslCmd, cmdctx := initCommandLineArgs()
 
 	var selectedCommand string
 	var err error
-	if len(args) > 1 {
-		syslCmd.Validate(generateAppargValidator(args[1], flagmap))
-	}
+
 	if selectedCommand, err = syslCmd.Parse(args[1:]); err != nil {
 		return err
 	}
-	switch selectedCommand {
-	case "pb":
-		return doGeneratePb(textpbParams, fs)
-	case "gen":
-		output, err := GenerateCode(codegenParams, fs, logger)
-		if err != nil {
-			return err
-		}
-		return outputToFiles(output, syslutil.NewChrootFs(fs, *codegenParams.outDir))
-	case "sd":
-		result, err := DoConstructSequenceDiagrams(sequenceParams, logger)
-		if err != nil {
-			return err
-		}
-		for k, v := range result {
-			if err := OutputPlantuml(k, *sequenceParams.plantuml, v, fs); err != nil {
-				return err
+
+	for _, cmd := range cmdctx.commands {
+		if cmd.Name() == selectedCommand {
+			var mod *sysl.Module
+			var modelAppName string
+			if cmd.RequireSyslModule() {
+				logger.Infof("Attempting to load module:%s (root:%s)", cmdctx.module, cmdctx.root)
+				modelParser := parse.NewParser()
+				mod, modelAppName, err = parse.LoadAndGetDefaultApp(cmdctx.module, syslutil.NewChrootFs(fs, cmdctx.root), modelParser)
+				if err != nil {
+					return err
+				}
 			}
+
+			return cmd.Execute(ExecuteArgs{mod, modelAppName, fs, logger})
 		}
-		return nil
-	case "ints":
-		r, err := GenerateIntegrations(intgenParams)
-		if err != nil {
-			return err
-		}
-		for k, v := range r {
-			err := OutputPlantuml(k, *intgenParams.plantuml, v, fs)
-			if err != nil {
-				return fmt.Errorf("plantuml drawing error: %v", err)
-			}
-		}
-		return nil
-	case "validate":
-		return validate.DoValidate(validateParams)
-	case "data":
-		outmap, err := GenerateDataModels(datagenParams)
-		if err != nil {
-			return err
-		}
-		for k, v := range outmap {
-			err := OutputPlantuml(k, *datagenParams.plantuml, v, fs)
-			if err != nil {
-				return fmt.Errorf("plantuml drawing error: %v", err)
-			}
-		}
-		return nil
 	}
+
+
 	return nil
 }
 
@@ -117,20 +78,51 @@ func (d *debugTypeData) add(app *kingpin.Application) {
 		}
 	}
 	app.Flag("log", fmt.Sprintf("log level: [%s]", strings.Join(levels, ","))).
-		HintOptions(levels...).
 		Default(levels[0]).
-		StringVar(&d.loglevel)
+		EnumVar(&d.loglevel, levels...)
 	app.Flag("verbose", "enable verbose logging").Short('v').BoolVar(&d.verbose)
 	app.PreAction(d.do)
 }
 
-func initCommandLineArgs() *kingpin.Application {
+type cmdContext struct {
+	root string
+	module string
+	commands []Command
+}
+
+func initCommandLineArgs() (*kingpin.Application, *cmdContext) {
 	app := kingpin.New("sysl", "System Modelling Language Toolkit")
 	app.Version(Version)
 
+
+	var ctx cmdContext
+
 	(&debugTypeData{}).add(app)
 
-	return app
+	ctx.commands = []Command{
+		&pbCommand{},
+		&genCmd{},
+		&sdCmd{},
+		&intsCmd{},
+		&dmCmd{},
+		&validateCmd{},
+	}
+
+
+	app.Flag("root",
+		"sysl root directory for input model file (default: .)").
+		Default(".").StringVar(&ctx.root)
+
+	for _, cmd := range ctx.commands {
+		c := cmd.Init(app)
+		if cmd.RequireSyslModule() {
+			c.Arg("module", "input files without .sysl extension and with leading /, eg: "+
+				"/project_dir/my_models combine with --root if needed").
+				Required().StringVar(&ctx.module)
+		}
+	}
+
+	return app, &ctx
 }
 
 // main2 calls main3 and handles any errors it returns. It takes its output
@@ -156,82 +148,5 @@ func main2(
 func main() {
 	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), main3); rc != 0 {
 		os.Exit(rc)
-	}
-}
-
-func configureCmdlineForPb(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamPbgen {
-	flagmap["pb"] = []string{"root", "output", "mode"}
-	textpb := sysl.Command("pb", "Generate textpb/json")
-	returnValues := &CmdContextParamPbgen{}
-
-	returnValues.root = textpb.Flag("root",
-		"sysl root directory for input model file (default: .)",
-	).Default(".").String()
-
-	returnValues.output = textpb.Flag("output", "output file name").Short('o').String()
-	returnValues.mode = textpb.Flag("mode", "output mode").Default("textpb").String()
-
-	returnValues.modules = textpb.Arg("modules", "input files without .sysl extension and with leading /, eg: "+
-		"/project_dir/my_models combine with --root if needed",
-	).String()
-
-	return returnValues
-}
-
-func doGeneratePb(textpbParams *CmdContextParamPbgen, fs afero.Fs) error {
-	logrus.Debugf("Root: %s\n", *textpbParams.root)
-	logrus.Debugf("Module: %s\n", *textpbParams.modules)
-	logrus.Debugf("Mode: %s\n", *textpbParams.mode)
-
-	format := strings.ToLower(*textpbParams.output)
-	toJSON := *textpbParams.mode == "json" || *textpbParams.mode == "" && strings.HasSuffix(format, ".json")
-	logrus.Debugf("%s\n", *textpbParams.modules)
-	mod, err := parse.NewParser().Parse(*textpbParams.modules, syslutil.NewChrootFs(fs, *textpbParams.root))
-	if err != nil {
-		return err
-	}
-	*textpbParams.output = strings.Trim(*textpbParams.output, " ")
-
-	switch *textpbParams.mode {
-	case "", "textpb", "json":
-	default:
-		return fmt.Errorf("invalid -mode %#v", *textpbParams.mode)
-	}
-
-	if mod != nil {
-		if toJSON {
-			if *textpbParams.output == "-" {
-				return pbutil.FJSONPB(logrus.StandardLogger().Out, mod)
-			}
-			return pbutil.JSONPB(mod, *textpbParams.output, fs)
-		}
-		if *textpbParams.output == "-" {
-			return pbutil.FTextPB(logrus.StandardLogger().Out, mod)
-		}
-		return pbutil.TextPB(mod, *textpbParams.output, fs)
-	}
-	return nil
-}
-
-func generateAppargValidator(selectedCommand string, flags map[string][]string) func(*kingpin.Application) error {
-	return func(app *kingpin.Application) error {
-		var errorMsg strings.Builder
-		for _, longFlagName := range flags[selectedCommand] {
-			if flag := app.GetCommand(selectedCommand).GetFlag(longFlagName); flag != nil {
-				val := flag.Model().Value.String()
-				if val != "" {
-					val = strings.Trim(val, " ")
-					if val == "" {
-						errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
-					}
-				} else if len(flag.Model().Default) > 0 {
-					errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
-				}
-			}
-		}
-		if errorMsg.Len() > 0 {
-			return errors.New(errorMsg.String())
-		}
-		return nil
 	}
 }

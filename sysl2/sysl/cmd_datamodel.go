@@ -2,15 +2,13 @@ package main
 
 import (
 	"fmt"
+	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 	"regexp"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 const localPlantuml = "http://localhost:8080/plantuml"
@@ -18,11 +16,9 @@ const localPlantuml = "http://localhost:8080/plantuml"
 func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]string, error) {
 	outmap := make(map[string]string)
 
-	log.Debugf("root: %s\n", *datagenParams.root)
 	log.Debugf("project: %v\n", *datagenParams.project)
 	log.Debugf("title: %s\n", *datagenParams.title)
 	log.Debugf("filter: %s\n", *datagenParams.filter)
-	log.Debugf("modules: %s\n", *datagenParams.modules)
 	log.Debugf("output: %s\n", *datagenParams.output)
 
 	if *datagenParams.plantuml == "" {
@@ -35,11 +31,7 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]strin
 	log.Debugf("plantuml: %s\n", *datagenParams.plantuml)
 
 	spclass := constructFormatParser("", *datagenParams.classFormat)
-	mod, err := loadApp(*datagenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *datagenParams.root))
-
-	if err != nil {
-		return nil, err
-	}
+	mod := datagenParams.model
 
 	// The "project" app that specifies the data models to be built
 	var app *sysl.Application
@@ -66,31 +58,6 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]strin
 	return outmap, nil
 }
 
-func configureCmdlineForDatagen(sysl *kingpin.Application) *CmdContextParamDatagen {
-	data := sysl.Command("data", "Generate data models")
-	returnValues := &CmdContextParamDatagen{}
-
-	returnValues.root = data.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
-	returnValues.classFormat = data.Flag("class_format",
-		"Specify the format string for data diagram participants. "+
-			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",
-	).Default("%(classname)").String()
-	returnValues.title = data.Flag("title", "diagram title").Short('t').String()
-	returnValues.plantuml = data.Flag("plantuml", strings.Join([]string{"base url of plantuml server",
-		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
-		"see http://plantuml.com/server.html#install for more info)"}, "\n")).Short('p').String()
-	returnValues.output = data.Flag("output",
-		"output file(default: %(epname).png)").Default("%(epname).png").Short('o').String()
-	returnValues.project = data.Flag("project", "project pseudo-app to render").Short('j').String()
-	returnValues.filter = data.Flag("filter", "Only generate diagrams whose names match a pattern").Short('f').String()
-	returnValues.modules = data.Arg("modules",
-		strings.Join([]string{"input files without .sysl extension and with leading /",
-			"eg: /project_dir/my_models",
-			"combine with --root if needed"}, "\n")).String()
-
-	return returnValues
-}
-
 func generateDataModel(pclass ClassLabeler, outmap map[string]string, mod *sysl.Module,
 	stmts []*sysl.Statement, title, project, outDir string) {
 	apps := mod.GetApps()
@@ -112,4 +79,67 @@ func generateDataModel(pclass ClassLabeler, outmap map[string]string, mod *sysl.
 			}
 		}
 	}
+}
+
+
+type dmCmd struct {
+	title       string
+	output      string
+	project     string
+	filter      string
+	plantuml    string
+	classFormat string
+}
+
+func (p *dmCmd) Name() string { return "data" }
+func (p *dmCmd) RequireSyslModule() bool { return true }
+
+func (p *dmCmd) Init(app *kingpin.Application) *kingpin.CmdClause {
+
+	cmd := app.Command(p.Name(), "Generate data models")
+	cmd.Flag("class_format",
+		"Specify the format string for data diagram participants. "+
+			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",
+	).Default("%(classname)").StringVar(&p.classFormat)
+
+	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
+
+	cmd.Flag("plantuml",
+		"base url of plantuml server (default: $SYSL_PLANTUML or "+
+			"http://localhost:8080/plantuml see "+
+			"http://plantuml.com/server.html#install for more info)",
+	).Short('p').StringVar(&p.plantuml)
+
+	cmd.Flag("output",
+		"output file (default: %(epname).png)",
+	).Default("%(epname).png").Short('o').StringVar(&p.output)
+	cmd.Flag("project", "project pseudo-app to render").Short('j').StringVar(&p.project)
+	cmd.Flag("filter", "Only generate diagrams whose names match a pattern").Short('f').StringVar(&p.filter)
+
+	return cmd
+}
+
+func (p *dmCmd) Execute(args ExecuteArgs) error {
+
+	datagenParams := &CmdContextParamDatagen{
+		model:        args.module,
+		modelAppName: args.modAppName,
+		title:        &p.title,
+		output:       &p.output,
+		project:      &p.project,
+		filter:       &p.filter,
+		plantuml:     &p.plantuml,
+		classFormat:  &p.classFormat,
+	}
+	outmap, err := GenerateDataModels(datagenParams)
+	if err != nil {
+		return err
+	}
+	for k, v := range outmap {
+		err := OutputPlantuml(k, *datagenParams.plantuml, v, args.fs)
+		if err != nil {
+			return fmt.Errorf("plantuml drawing error: %v", err)
+		}
+	}
+	return nil
 }

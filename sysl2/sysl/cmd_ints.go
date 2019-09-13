@@ -1,13 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 	"strings"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -16,14 +16,12 @@ const endpointWildcard = ".. * <- *"
 func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]string, error) {
 	r := make(map[string]string)
 
-	log.Debugf("root: %s\n", *intgenParams.root)
 	log.Debugf("project: %v\n", *intgenParams.project)
 	log.Debugf("clustered: %t\n", *intgenParams.clustered)
 	log.Debugf("exclude: %s\n", *intgenParams.exclude)
 	log.Debugf("epa: %t\n", *intgenParams.epa)
 	log.Debugf("title: %s\n", *intgenParams.title)
 	log.Debugf("filter: %s\n", *intgenParams.filter)
-	log.Debugf("modules: %s\n", *intgenParams.modules)
 	log.Debugf("output: %s\n", *intgenParams.output)
 
 	if *intgenParams.plantuml == "" {
@@ -36,10 +34,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	log.Debugf("plantuml: %s\n", *intgenParams.plantuml)
 
 
-	mod, err := loadApp(*intgenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *intgenParams.root))
-	if err != nil {
-		return nil, err
-	}
+	mod := intgenParams.model
 
 	if len(*intgenParams.exclude) == 0 && *intgenParams.project != "" {
 		*intgenParams.exclude = []string{*intgenParams.project}
@@ -69,33 +64,63 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	return r, nil
 }
 
-func configureCmdlineForIntgen(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamIntgen {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorln(err)
-		}
-	}()
-	flagmap["ints"] = []string{"root", "title", "plantuml", "output", "project", "filter", "exclude", "epa"}
-	ints := sysl.Command("ints", "Generate integrations")
-	returnValues := &CmdContextParamIntgen{}
+type intsCmd struct {
+	title     string
+	output    string
+	project   string
+	filter    string
+	exclude   []string
+	clustered bool
+	epa       bool
+	plantuml  string
+}
 
-	returnValues.root = ints.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
-	returnValues.title = ints.Flag("title", "diagram title").Short('t').String()
-	returnValues.plantuml = ints.Flag("plantuml", strings.Join([]string{"base url of plantuml server",
+func (p *intsCmd) Name() string { return "ints" }
+func (p *intsCmd) RequireSyslModule() bool { return true }
+
+func (p *intsCmd) Init(app *kingpin.Application) *kingpin.CmdClause {
+
+	cmd := app.Command(p.Name(), "Generate integrations")
+
+	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
+	cmd.Flag("plantuml", strings.Join([]string{"base url of plantuml server",
 		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
-		"see http://plantuml.com/server.html#install for more info)"}, "\n")).Short('p').String()
-	returnValues.output = ints.Flag("output",
-		"output file(default: %(epname).png)").Default("%(epname).png").Short('o').String()
-	returnValues.project = ints.Flag("project", "project pseudo-app to render").Short('j').String()
-	returnValues.filter = ints.Flag("filter", "Only generate diagrams whose output paths match a pattern").String()
-	returnValues.modules = ints.Arg("modules",
-		strings.Join([]string{"input files without .sysl extension and with leading /",
-			"eg: /project_dir/my_models",
-			"combine with --root if needed"}, "\n")).String()
-	returnValues.exclude = ints.Flag("exclude", "apps to exclude").Short('e').Strings()
-	returnValues.clustered = ints.Flag("clustered",
-		"group integration components into clusters").Short('c').Default("false").Bool()
-	returnValues.epa = ints.Flag("epa", "produce and EPA integration view").Default("false").Bool()
+		"see http://plantuml.com/server.html#install for more info)"}, "\n")).Short('p').StringVar(&p.plantuml)
+	cmd.Flag("output",
+		"output file(default: %(epname).png)").Default("%(epname).png").Short('o').StringVar(&p.output)
+	cmd.Flag("project", "project pseudo-app to render").Short('j').StringVar(&p.project)
+	cmd.Flag("filter", "Only generate diagrams whose output paths match a pattern").StringVar(&p.filter)
+	cmd.Flag("exclude", "apps to exclude").Short('e').StringsVar(&p.exclude)
+	cmd.Flag("clustered",
+		"group integration components into clusters").Short('c').Default("false").BoolVar(&p.clustered)
+	cmd.Flag("epa", "produce and EPA integration view").Default("false").BoolVar(&p.epa)
 
-	return returnValues
+	return cmd
+}
+
+func (p *intsCmd) Execute(args ExecuteArgs) error {
+
+	intgenParams := &CmdContextParamIntgen{
+		model:          args.module,
+		modelAppName:   args.modAppName,
+		title:     &p.title,
+		output:    &p.output,
+		project:   &p.project,
+		filter:    &p.filter,
+		exclude:   &p.exclude,
+		clustered: &p.clustered,
+		epa:       &p.epa,
+		plantuml:  &p.plantuml,
+	}
+	r, err := GenerateIntegrations(intgenParams)
+	if err != nil {
+		return err
+	}
+	for k, v := range r {
+		err := OutputPlantuml(k, *intgenParams.plantuml, v, args.fs)
+		if err != nil {
+			return fmt.Errorf("plantuml drawing error: %v", err)
+		}
+	}
+	return nil
 }
