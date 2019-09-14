@@ -1,0 +1,59 @@
+name: Go-Darwin
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+jobs:
+
+  build-and-test-darwin:
+    name: Build Darwin and test
+    runs-on: macOS-latest
+    steps:
+
+    - name: Set up Go 1.12
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.12
+      id: go
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get dependencies
+      run: go get -v -t -d ./...
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test
+      run: ./check-coverage.sh 80
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
+    - name: Build
+      run: go build -v ./...
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install
+      run: |
+        export GOBIN=$PWD/bin
+        mkdir $GOBIN
+        GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
+        go install -ldflags "-X main.Version=${GIT_TAG:1}" ./sysl2/sysl
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test installed
+      run: bash test-gosysl.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOPATH: .
+        SYSL_PLANTUML: http://www.plantuml.com/plantuml
