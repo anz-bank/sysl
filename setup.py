@@ -32,7 +32,7 @@ REQUIRED = [
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
+with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
 about = {}
@@ -44,6 +44,7 @@ setup(
     version=about['__version__'],
     description=DESCRIPTION,
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
