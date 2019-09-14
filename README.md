@@ -1,5 +1,11 @@
 # Sysl
-[![travis build](https://img.shields.io/travis/anz-bank/sysl/master.svg?branch=master)](https://travis-ci.org/anz-bank/sysl)
+
+[![GitHub Actions Go-Darwin status](https://github.com/anz-bank/sysl/workflows/Go-Darwin/badge.svg)](.)
+[![GitHub Actions Go-Linux status](https://github.com/anz-bank/sysl/workflows/Go-Linux/badge.svg)](.)
+[![GitHub Actions node-linux status](https://github.com/anz-bank/sysl/workflows/node-linux/badge.svg)](.)
+[![GitHub Actions python-darwin status](https://github.com/anz-bank/sysl/workflows/python-darwin/badge.svg)](.)
+[![GitHub Actions python-linux status](https://github.com/anz-bank/sysl/workflows/python-linux/badge.svg)](.)
+
 [![AppVeyor build](https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor)](https://ci.appveyor.com/project/anz-bank/sysl/branch/master)
 [![Codecov](https://img.shields.io/codecov/c/github/anz-bank/sysl/master.svg)](https://codecov.io/gh/anz-bank/sysl/branch/master)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/anz-bank/sysl)
