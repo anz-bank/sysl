@@ -15,7 +15,7 @@ type ExecuteArgs struct {
 }
 
 type Command interface {
-	Init(*kingpin.Application) *kingpin.CmdClause
+	Configure(*kingpin.Application) *kingpin.CmdClause
 	Execute(ExecuteArgs) error
 	Name() string
 	RequireSyslModule() bool
