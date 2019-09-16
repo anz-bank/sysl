@@ -40,7 +40,9 @@ func (r *Runner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
 }
 
 func (r *Runner) Init(app *kingpin.Application) error {
-	r.commands = []Command{}
+	r.commands = []Command{
+		&protobuf{},
+	}
 
 	app.Flag("root",
 		"sysl root directory for input model file (default: .)").
