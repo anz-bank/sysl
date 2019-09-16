@@ -226,7 +226,6 @@ func GenerateCode(codegenParams *CmdContextParamCodegen, fs afero.Fs, logger *lo
 	var codeOutput []*CodeGenOutput
 
 	logger.Debugf("root-transform: %s\n", *codegenParams.rootTransform)
-	logger.Debugf("model: %s\n", *codegenParams.model)
 	logger.Debugf("transform: %s\n", *codegenParams.transform)
 	logger.Debugf("grammar: %s\n", *codegenParams.grammar)
 	logger.Debugf("start: %s\n", *codegenParams.start)

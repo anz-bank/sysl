@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
@@ -187,13 +189,20 @@ func GenerateCodeWithParamsFs(
 	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
 	isVerbose bool, fs afero.Fs,
 ) ([]*CodeGenOutput, error) {
+
+	modelParser := parse.NewParser()
+	mod, modelAppName, err := parse.LoadAndGetDefaultApp(model, syslutil.NewChrootFs(fs, rootModel), modelParser)
+	if err != nil {
+		return nil, err
+	}
 	cmdContextParamCodegen := &CmdContextParamCodegen{
-		rootModel:     &rootModel,
-		model:         &model,
+		model:         mod,
+		modelAppName:  modelAppName,
 		rootTransform: &rootTransform,
 		transform:     &transform,
 		grammar:       &grammar,
 		start:         &start,
+		outDir:        nil,
 	}
 	logger, _ := test.NewNullLogger()
 	return GenerateCode(cmdContextParamCodegen, fs, logger)

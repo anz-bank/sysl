@@ -522,9 +522,7 @@ func TestMain2WithEmptyPbParams(t *testing.T) {
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	main2([]string{"sysl", "pb", "--root", "", "-o", " ", "--mode", "", "tests/call.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "'root' value passed is empty\n"+
-		"'output' value passed is empty\n"+
-		"'mode' value passed is empty\n", hook.LastEntry().Message)
+	assert.Equal(t, "enum value must be one of textpb,json, got ''", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
 }
 

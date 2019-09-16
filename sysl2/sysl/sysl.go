@@ -22,7 +22,7 @@ const debug string = "debug"
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
-	syslCmd, cmdctx := initCommandLineArgs()
+	syslCmd, cmdctx := initCommandLineArgs(logger)
 
 	var selectedCommand string
 	var err error
@@ -55,6 +55,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 type debugTypeData struct {
 	loglevel string
 	verbose  bool
+	logger *logrus.Logger
 }
 
 func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
@@ -63,13 +64,15 @@ func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
 	}
 	// Default info
 	if level, has := syslutil.LogLevels[d.loglevel]; has {
-		logrus.SetLevel(level)
+		d.logger.SetLevel(level)
 	}
 
-	logrus.Infof("Logging: %+v", *d)
+	d.logger.Infof("Logging: %+v", *d)
 	return nil
 }
-func (d *debugTypeData) add(app *kingpin.Application) {
+func (d *debugTypeData) add(app *kingpin.Application, logger *logrus.Logger) {
+
+	d.logger = logger
 
 	var levels []string
 	for l := range syslutil.LogLevels {
@@ -90,14 +93,14 @@ type cmdContext struct {
 	commands []Command
 }
 
-func initCommandLineArgs() (*kingpin.Application, *cmdContext) {
+func initCommandLineArgs(logger *logrus.Logger) (*kingpin.Application, *cmdContext) {
 	app := kingpin.New("sysl", "System Modelling Language Toolkit")
 	app.Version(Version)
 
 
 	var ctx cmdContext
 
-	(&debugTypeData{}).add(app)
+	(&debugTypeData{}).add(app, logger)
 
 	ctx.commands = []Command{
 		&pbCommand{},
@@ -116,7 +119,7 @@ func initCommandLineArgs() (*kingpin.Application, *cmdContext) {
 	for _, cmd := range ctx.commands {
 		c := cmd.Init(app)
 		if cmd.RequireSyslModule() {
-			c.Arg("module", "input files without .sysl extension and with leading /, eg: "+
+			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
 				Required().StringVar(&ctx.module)
 		}

@@ -492,7 +492,7 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 	}
 	argsData := []string{"sysl", "sd", "--root", args.rootModel, "-o", args.output, "-a", args.apps[0], args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForSeqgen(sysl, map[string][]string{})
+	_ = (&sdCmd{}).Init(sysl)
 	selectedCommand, err := sysl.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl sd")
 	assert.Equal(t, selectedCommand, "sd")
@@ -617,18 +617,25 @@ func DoConstructSequenceDiagramsWithParams(
 	isVerbose bool,
 ) (map[string]string, error) {
 	plantuml := ""
+
+	modelParser := parse.NewParser()
+	mod, modelAppName, err := parse.LoadAndGetDefaultApp(rootModel, syslutil.NewChrootFs(afero.NewMemMapFs(), rootModel), modelParser)
+	if err != nil {
+		return nil, err
+	}
 	cmdContextParamSeqgen := &CmdContextParamSeqgen{
-		root:           &rootModel,
+		model:          mod,
+		modelAppName:   modelAppName,
 		endpointFormat: &endpointFormat,
 		appFormat:      &appFormat,
 		title:          &title,
 		output:         &output,
-		modulesFlag:    &modules,
 		endpointsFlag:  &endpoints,
 		appsFlag:       &apps,
+		blackboxesFlag: nil,
 		blackboxes:     &blackboxes,
-		group:          &group,
 		plantuml:       &plantuml,
+		group:          &group,
 	}
 	logger, _ := test.NewNullLogger()
 	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, logger)
