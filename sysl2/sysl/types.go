@@ -47,13 +47,6 @@ type CmdContextParamCodegen struct {
 	outDir        *string
 }
 
-type CmdContextParamPbgen struct {
-	root    *string
-	output  *string
-	mode    *string
-	modules *string
-}
-
 type CmdContextParamSeqgen struct {
 	root           *string
 	endpointFormat *string
