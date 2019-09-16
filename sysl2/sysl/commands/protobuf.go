@@ -17,7 +17,7 @@ type protobuf struct {
 func (p *protobuf) Name() string            { return "protobuf" }
 func (p *protobuf) RequireSyslModule() bool { return true }
 
-func (p *protobuf) Init(app *kingpin.Application) *kingpin.CmdClause {
+func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 	cmd := app.Command(p.Name(), "Generate textpb/json").Alias("pb")
 	cmd.Flag("output", "output file name").Short('o').Default("-").StringVar(&p.output)

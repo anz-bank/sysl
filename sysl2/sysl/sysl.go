@@ -10,7 +10,6 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -31,7 +30,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	(&debugTypeData{}).add(syslCmd)
 
 	runner := commands.Runner{}
-	if err := runner.Init(syslCmd); err != nil {
+	if err := runner.Configure(syslCmd); err != nil {
 		return err
 	}
 
@@ -39,7 +38,6 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
 	sequenceParams := configureCmdlineForSeqgen(syslCmd, flagmap)
 	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
-	validateParams := validate.ConfigureCmdlineForValidate(syslCmd)
 	datagenParams := configureCmdlineForDatagen(syslCmd)
 
 	var selectedCommand string
@@ -88,8 +86,6 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 			}
 		}
 		return nil
-	case "validate":
-		return validate.DoValidate(validateParams)
 	case "data":
 		datagenParams.root = &runner.Root
 		outmap, err := GenerateDataModels(datagenParams)

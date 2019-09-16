@@ -10,7 +10,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type Validator struct {
@@ -21,30 +20,31 @@ type Validator struct {
 	messages    map[string][]msg.Msg
 }
 
-type CmdContextParamValidate struct {
-	rootTransform *string
-	transform     *string
-	grammar       *string
-	start         *string
+type Params struct {
+	RootTransform string
+	Transform     string
+	Grammar       string
+	Start         string
+
+	Filesystem afero.Fs
+	Logger     *logrus.Logger
 }
 
-func DoValidate(validateParams *CmdContextParamValidate) error {
-	logrus.Debugf("root-transform: %s\n", *validateParams.rootTransform)
-	logrus.Debugf("transform: %s\n", *validateParams.transform)
-	logrus.Debugf("grammar: %s\n", *validateParams.grammar)
-	logrus.Debugf("start: %s\n", *validateParams.start)
+func DoValidate(validateParams Params) error {
+	logrus.Debugf("root-transform: %s\n", validateParams.RootTransform)
+	logrus.Debugf("transform: %s\n", validateParams.Transform)
+	logrus.Debugf("grammar: %s\n", validateParams.Grammar)
+	logrus.Debugf("start: %s\n", validateParams.Start)
 
-	fs := afero.NewOsFs()
-
-	grammar, err := LoadGrammar(*validateParams.grammar, fs)
+	grammar, err := LoadGrammar(validateParams.Grammar, validateParams.Filesystem)
 	if err != nil {
 		return err
 	}
 
 	parser := parse.NewParser()
 	transform, err := loadTransform(
-		*validateParams.transform,
-		syslutil.NewChrootFs(fs, *validateParams.rootTransform),
+		validateParams.Transform,
+		syslutil.NewChrootFs(validateParams.Filesystem, validateParams.RootTransform),
 		parser,
 	)
 	if err != nil {
@@ -52,7 +52,7 @@ func DoValidate(validateParams *CmdContextParamValidate) error {
 	}
 
 	validator := NewValidator(grammar, transform, parser)
-	validator.Validate(*validateParams.start)
+	validator.Validate(validateParams.Start)
 	validator.LogMessages()
 
 	if len(validator.GetMessages()) > 0 {
@@ -313,16 +313,4 @@ func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 		return nil, err
 	}
 	return grammar.GetApps()[name], nil
-}
-
-// ConfigureCmdlineForValidate configures commandline params related to validate
-func ConfigureCmdlineForValidate(sysl *kingpin.Application) *CmdContextParamValidate {
-	validate := sysl.Command("validate", "Validate transform")
-	return &CmdContextParamValidate{
-		rootTransform: validate.Flag("root-transform",
-			"sysl root directory for input transform file (default: .)").Default(".").String(),
-		transform: validate.Flag("transform", "grammar.g").Default(".").String(),
-		grammar:   validate.Flag("grammar", "grammar.sysl").Default(".").String(),
-		start:     validate.Flag("start", "start rule for the grammar").Default(".").String(),
-	}
 }
