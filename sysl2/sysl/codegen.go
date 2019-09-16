@@ -16,7 +16,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Node can be string or node
@@ -307,8 +307,6 @@ func configureCmdlineForCodegen(sysl *kingpin.Application, flagmap map[string][]
 	gen := sysl.Command("gen", "Generate code")
 	returnValues := &CmdContextParamCodegen{}
 
-	returnValues.rootModel = gen.Flag("root-model",
-		"sysl root directory for input model file (default: .)").Default(".").String()
 	returnValues.rootTransform = gen.Flag("root-transform",
 		"sysl root directory for input transform file (default: .)").Default(".").String()
 	returnValues.model = gen.Flag("model", "model.sysl").Default(".").String()

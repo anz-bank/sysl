@@ -10,7 +10,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 const localPlantuml = "http://localhost:8080/plantuml"
@@ -70,7 +70,6 @@ func configureCmdlineForDatagen(sysl *kingpin.Application) *CmdContextParamDatag
 	data := sysl.Command("data", "Generate data models")
 	returnValues := &CmdContextParamDatagen{}
 
-	returnValues.root = data.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
 	returnValues.classFormat = data.Flag("class_format",
 		"Specify the format string for data diagram participants. "+
 			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",

@@ -485,12 +485,11 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 	t.Parallel()
 
 	args := &sdArgs{
-		rootModel: "./tests/",
-		modules:   "sequence_diagram_complex_format.sysl",
-		output:    "%(epname).png",
-		apps:      []string{"Project"},
+		modules: "sequence_diagram_complex_format.sysl",
+		output:  "%(epname).png",
+		apps:    []string{"Project"},
 	}
-	argsData := []string{"sysl", "sd", "--root", args.rootModel, "-o", args.output, "-a", args.apps[0], args.modules}
+	argsData := []string{"sysl", "sd", "-o", args.output, "-a", args.apps[0], args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	configureCmdlineForSeqgen(sysl, map[string][]string{})
 	selectedCommand, err := sysl.Parse(argsData[1:])

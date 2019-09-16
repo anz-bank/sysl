@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 const plantumlHeader = `''''''''''''''''''''''''''''''''''''''''''
@@ -225,12 +225,11 @@ func TestDoGenerateIntegrations(t *testing.T) {
 	t.Parallel()
 
 	args := &intsArg{
-		rootModel: "./tests/",
-		modules:   "indirect_1.sysl",
-		output:    "%(epname).png",
-		project:   "Project",
+		modules: "indirect_1.sysl",
+		output:  "%(epname).png",
+		project: "Project",
 	}
-	argsData := []string{"sysl", "ints", "--root", args.rootModel, "-o", args.output, "-j", args.project, args.modules}
+	argsData := []string{"sysl", "ints", "-o", args.output, "-j", args.project, args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	configureCmdlineForIntgen(sysl, map[string][]string{})
 	selectedCommand, err := sysl.Parse(argsData[1:])
