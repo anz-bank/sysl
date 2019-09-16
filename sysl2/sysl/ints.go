@@ -78,7 +78,6 @@ func configureCmdlineForIntgen(sysl *kingpin.Application, flagmap map[string][]s
 	ints := sysl.Command("ints", "Generate integrations")
 	returnValues := &CmdContextParamIntgen{}
 
-	returnValues.root = ints.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
 	returnValues.title = ints.Flag("title", "diagram title").Short('t').String()
 	returnValues.plantuml = ints.Flag("plantuml", strings.Join([]string{"base url of plantuml server",
 		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",

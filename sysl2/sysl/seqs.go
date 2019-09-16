@@ -13,7 +13,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type sequenceDiagParam struct {
@@ -220,10 +220,6 @@ func configureCmdlineForSeqgen(sysl *kingpin.Application, flagmap map[string][]s
 		"groupby", "endpoint", "app"}
 	sd := sysl.Command("sd", "Generate sequence diagram")
 	returnValues := &CmdContextParamSeqgen{}
-
-	returnValues.root = sd.Flag("root",
-		"sysl root directory for input model file (default: .)",
-	).Default(".").String()
 
 	returnValues.endpointFormat = sd.Flag("endpoint_format",
 		"Specify the format string for sequence diagram endpoints. May include "+

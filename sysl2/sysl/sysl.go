@@ -6,13 +6,15 @@ import (
 	"os"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/commands"
+
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Version contains the sysl binary version
@@ -28,6 +30,12 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	syslCmd.Version(Version)
 
 	(&debugTypeData{}).add(syslCmd)
+
+	runner := commands.Runner{}
+	if err := runner.Init(syslCmd); err != nil {
+		return err
+	}
+
 	flagmap := map[string][]string{}
 	textpbParams := configureCmdlineForPb(syslCmd, flagmap)
 	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
@@ -44,16 +52,24 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	if selectedCommand, err = syslCmd.Parse(args[1:]); err != nil {
 		return err
 	}
+
+	if runner.HasCommand(selectedCommand) {
+		return runner.Run(selectedCommand, fs, logger)
+	}
+
 	switch selectedCommand {
 	case "pb":
+		textpbParams.root = &runner.Root
 		return doGeneratePb(textpbParams, fs)
 	case "gen":
+		codegenParams.rootModel = &runner.Root
 		output, err := GenerateCode(codegenParams, fs, logger)
 		if err != nil {
 			return err
 		}
 		return outputToFiles(output, syslutil.NewChrootFs(fs, *codegenParams.outDir))
 	case "sd":
+		sequenceParams.root = &runner.Root
 		result, err := DoConstructSequenceDiagrams(sequenceParams, logger)
 		if err != nil {
 			return err
@@ -65,6 +81,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 		}
 		return nil
 	case "ints":
+		intgenParams.root = &runner.Root
 		r, err := GenerateIntegrations(intgenParams)
 		if err != nil {
 			return err
@@ -79,6 +96,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	case "validate":
 		return validate.DoValidate(validateParams)
 	case "data":
+		datagenParams.root = &runner.Root
 		outmap, err := GenerateDataModels(datagenParams)
 		if err != nil {
 			return err
@@ -158,10 +176,6 @@ func configureCmdlineForPb(sysl *kingpin.Application, flagmap map[string][]strin
 	flagmap["pb"] = []string{"root", "output", "mode"}
 	textpb := sysl.Command("pb", "Generate textpb/json")
 	returnValues := &CmdContextParamPbgen{}
-
-	returnValues.root = textpb.Flag("root",
-		"sysl root directory for input model file (default: .)",
-	).Default(".").String()
 
 	returnValues.output = textpb.Flag("output", "output file name").Short('o').String()
 	returnValues.mode = textpb.Flag("mode", "output mode").Default("textpb").String()

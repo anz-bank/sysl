@@ -28,12 +28,11 @@ func TestGenerateDataDiagFail(t *testing.T) {
 
 func TestDoGenerateDataDiagrams(t *testing.T) {
 	args := &dataArgs{
-		root:    "./tests/",
 		modules: "data.sysl",
 		output:  "%(epname).png",
 		project: "Project",
 	}
-	argsData := []string{"sysl", "data", "--root", args.root, "-o", args.output, "-j", args.project, args.modules}
+	argsData := []string{"sysl", "data", "-o", args.output, "-j", args.project, args.modules}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 	configureCmdlineForDatagen(syslCmd)
 	selectedCommand, err := syslCmd.Parse(argsData[1:])
