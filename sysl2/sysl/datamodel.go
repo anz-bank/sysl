@@ -24,7 +24,6 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]strin
 	log.Debugf("filter: %s\n", *datagenParams.filter)
 	log.Debugf("modules: %s\n", *datagenParams.modules)
 	log.Debugf("output: %s\n", *datagenParams.output)
-	log.Debugf("loglevel: %s\n", *datagenParams.loglevel)
 
 	if *datagenParams.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
@@ -35,13 +34,6 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen) (map[string]strin
 	}
 	log.Debugf("plantuml: %s\n", *datagenParams.plantuml)
 
-	if *datagenParams.isVerbose {
-		*datagenParams.loglevel = debug
-	}
-	// Default info
-	if level, has := syslutil.LogLevels[*datagenParams.loglevel]; has {
-		log.SetLevel(level)
-	}
 	spclass := constructFormatParser("", *datagenParams.classFormat)
 	mod, err := loadApp(*datagenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *datagenParams.root))
 
@@ -78,7 +70,6 @@ func configureCmdlineForDatagen(sysl *kingpin.Application) *CmdContextParamDatag
 	data := sysl.Command("data", "Generate data models")
 	returnValues := &CmdContextParamDatagen{}
 
-	returnValues.root = data.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
 	returnValues.classFormat = data.Flag("class_format",
 		"Specify the format string for data diagram participants. "+
 			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",
@@ -95,8 +86,6 @@ func configureCmdlineForDatagen(sysl *kingpin.Application) *CmdContextParamDatag
 		strings.Join([]string{"input files without .sysl extension and with leading /",
 			"eg: /project_dir/my_models",
 			"combine with --root if needed"}, "\n")).String()
-	returnValues.loglevel = data.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
-	returnValues.isVerbose = data.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	return returnValues
 }

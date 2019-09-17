@@ -387,7 +387,7 @@ func TestMain2WithGenerateCode(t *testing.T) {
 		[]string{
 			"sysl",
 			"gen",
-			"--root-model", ".",
+			"--root", ".",
 			"--model", "tests/model.sysl",
 			"--root-transform", ".",
 			"--transform", "tests/test.gen_multiple_annotations.sysl",
@@ -410,7 +410,7 @@ func TestMain2WithGenerateCodeReadOnlyFs(t *testing.T) {
 		[]string{
 			"sysl",
 			"gen",
-			"--root-model", ".",
+			"--root", ".",
 			"--model", "tests/model.sysl",
 			"--root-transform", ".",
 			"--transform", "tests/test.gen_multiple_annotations.sysl",
@@ -476,7 +476,6 @@ func TestMain2WithTextPbModeStdout(t *testing.T) {
 			"--mode", "textpb",
 			"-o", " - ",
 			"tests/call.sysl",
-			"-v",
 		},
 		fs, logger, main3,
 	)
@@ -496,7 +495,6 @@ func TestMain2WithJSONModeStdout(t *testing.T) {
 			"--mode", "json",
 			"-o", " - ",
 			"tests/call.sysl",
-			"-v",
 		},
 		fs, logger, main3,
 	)
@@ -522,11 +520,10 @@ func TestMain2WithEmptyPbParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "pb", "--root", "", "-o", " ", "--mode", "", "tests/call.sysl"}, fs, logger, main3)
+	main2([]string{"sysl", "pb", "-o", " ", "--mode", "", "tests/call.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "'root' value passed is empty\n"+
-		"'output' value passed is empty\n"+
-		"'mode' value passed is empty\n", hook.LastEntry().Message)
+	assert.Equal(t,
+		"enum value must be one of textpb,json, got ''", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
 }
 
@@ -535,15 +532,15 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "gen", "--root-model", " ", "--root-transform", "", "--model", " ", "--transform",
+	main2([]string{"sysl", "gen", "--root-transform", "", "--model", " ", "--transform",
 		"tests/test.gen_multiple_annotations.sysl", "--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "'root-model' value passed is empty\n"+
+	assert.Equal(t,
 		"'root-transform' value passed is empty\n"+
-		"'model' value passed is empty\n"+
-		"'grammar' value passed is empty\n"+
-		"'start' value passed is empty\n"+
-		"'outdir' value passed is empty\n", hook.LastEntry().Message)
+			"'model' value passed is empty\n"+
+			"'grammar' value passed is empty\n"+
+			"'start' value passed is empty\n"+
+			"'outdir' value passed is empty\n", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
 }
 
@@ -552,11 +549,11 @@ func TestMain2WithEmptyIntsParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "ints", "--root", " ", "-o", "", "-j", " ", "indirect_1.sysl"}, fs, logger, main3)
+	main2([]string{"sysl", "ints", "-o", "", "-j", " ", "indirect_1.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "'root' value passed is empty\n"+
+	assert.Equal(t,
 		"'output' value passed is empty\n"+
-		"'project' value passed is empty\n", hook.LastEntry().Message)
+			"'project' value passed is empty\n", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
 }
 

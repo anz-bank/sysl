@@ -28,12 +28,11 @@ func TestGenerateDataDiagFail(t *testing.T) {
 
 func TestDoGenerateDataDiagrams(t *testing.T) {
 	args := &dataArgs{
-		root:    "./tests/",
 		modules: "data.sysl",
 		output:  "%(epname).png",
 		project: "Project",
 	}
-	argsData := []string{"sysl", "data", "--root", args.root, "-o", args.output, "-j", args.project, args.modules}
+	argsData := []string{"sysl", "data", "-o", args.output, "-j", args.project, args.modules}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 	configureCmdlineForDatagen(syslCmd)
 	selectedCommand, err := syslCmd.Parse(argsData[1:])
@@ -53,15 +52,14 @@ func TestDoConstructDataDiagrams(t *testing.T) {
 			"Object-Model.png":     "tests/object-model-golden.puml",
 		},
 	}
-	result, err := DoConstructDataDiagramsWithParams(args.root, "", args.title, args.output, "warn", args.project,
-		args.modules, false)
+	result, err := DoConstructDataDiagramsWithParams(args.root, "", args.title, args.output, args.project,
+		args.modules)
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	comparePUML(t, args.expected, result)
 }
 
 func DoConstructDataDiagramsWithParams(
-	rootModel, filter, title, output, loglevel, project, modules string,
-	isVerbose bool,
+	rootModel, filter, title, output, project, modules string,
 ) (map[string]string, error) {
 	plantuml := ""
 	classFormat := "%(classname)"
@@ -70,9 +68,7 @@ func DoConstructDataDiagramsWithParams(
 		filter:      &filter,
 		title:       &title,
 		output:      &output,
-		loglevel:    &loglevel,
 		project:     &project,
-		isVerbose:   &isVerbose,
 		plantuml:    &plantuml,
 		modules:     &modules,
 		classFormat: &classFormat,

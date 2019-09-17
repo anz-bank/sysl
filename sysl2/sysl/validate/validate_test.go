@@ -6,8 +6,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 
-	"gopkg.in/alecthomas/kingpin.v2"
-
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
@@ -480,48 +478,4 @@ func TestValidatorLoadGrammarError(t *testing.T) {
 	grammar, err := LoadGrammar("foo/bar.g", afero.NewOsFs())
 	assert.Nil(t, grammar, "Unexpected result")
 	assert.NotNil(t, err, "Unexpected result")
-}
-
-func TestValidatorDoValidate(t *testing.T) {
-	t.Parallel()
-
-	cases := map[string]struct {
-		args     []string
-		isErrNil bool
-	}{
-		"Success": {
-			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform2.sysl", "--grammar",
-				"../tests/grammar.sysl", "--start", "goFile", "--verbose"}, isErrNil: true},
-		"Grammar loading fail": {
-			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform2.sysl", "--grammar",
-				"../tests/go.sysl", "--start", "goFile"}, isErrNil: false},
-		"Transform loading fail": {
-			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "tfm.sysl", "--grammar",
-				"../tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
-		"Has validation messages": {
-			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform1.sysl", "--grammar",
-				"../tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
-	}
-
-	for name, test := range cases {
-		args := test.args
-		isErrNil := test.isErrNil
-		t.Run(name, func(t *testing.T) {
-			sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-			validateParams := ConfigureCmdlineForValidate(sysl)
-			if _, err := sysl.Parse(args[1:]); err != nil {
-				assert.FailNow(t, "Failed to parse args")
-			}
-			err := DoValidate(validateParams)
-			if isErrNil {
-				assert.Nil(t, err, "Unexpected result")
-			} else {
-				assert.NotNil(t, err, "Unexpected result")
-			}
-		})
-	}
 }

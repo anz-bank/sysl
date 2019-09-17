@@ -8,7 +8,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
+	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
 
 const endpointWildcard = ".. * <- *"
@@ -25,7 +25,6 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 	log.Debugf("filter: %s\n", *intgenParams.filter)
 	log.Debugf("modules: %s\n", *intgenParams.modules)
 	log.Debugf("output: %s\n", *intgenParams.output)
-	log.Debugf("loglevel: %s\n", *intgenParams.loglevel)
 
 	if *intgenParams.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
@@ -35,14 +34,6 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen) (map[string]strin
 		}
 	}
 	log.Debugf("plantuml: %s\n", *intgenParams.plantuml)
-
-	if *intgenParams.isVerbose {
-		*intgenParams.loglevel = debug
-	}
-	// Default info
-	if level, has := syslutil.LogLevels[*intgenParams.loglevel]; has {
-		log.SetLevel(level)
-	}
 
 	mod, err := loadApp(*intgenParams.modules, syslutil.NewChrootFs(afero.NewOsFs(), *intgenParams.root))
 	if err != nil {
@@ -87,7 +78,6 @@ func configureCmdlineForIntgen(sysl *kingpin.Application, flagmap map[string][]s
 	ints := sysl.Command("ints", "Generate integrations")
 	returnValues := &CmdContextParamIntgen{}
 
-	returnValues.root = ints.Flag("root", "sysl root directory for input model file (default: .)").Default(".").String()
 	returnValues.title = ints.Flag("title", "diagram title").Short('t').String()
 	returnValues.plantuml = ints.Flag("plantuml", strings.Join([]string{"base url of plantuml server",
 		"(default: $SYSL_PLANTUML or http://localhost:8080/plantuml",
@@ -104,8 +94,6 @@ func configureCmdlineForIntgen(sysl *kingpin.Application, flagmap map[string][]s
 	returnValues.clustered = ints.Flag("clustered",
 		"group integration components into clusters").Short('c').Default("false").Bool()
 	returnValues.epa = ints.Flag("epa", "produce and EPA integration view").Default("false").Bool()
-	returnValues.loglevel = ints.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
-	returnValues.isVerbose = ints.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	return returnValues
 }

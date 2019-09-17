@@ -16,7 +16,7 @@ func TestGenerateCode(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
-		"tests/test.gen.g", "javaFile", "warn", false)
+		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -56,7 +56,7 @@ func TestGenerateCodeNoComment(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
-		"tests/test.gen.g", "javaFile", "warn", false)
+		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	root := output[0].output
@@ -87,7 +87,7 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
-		"tests/test.gen.g", "javaFile", "warn", false)
+		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
@@ -97,7 +97,7 @@ func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
-		"tests/test.gen.g", "javaFile", "warn", false)
+		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
@@ -107,7 +107,7 @@ func TestGenerateCodePerType(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
-		"tests/test.gen.g", "javaFile", "warn", false)
+		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	assert.Equal(t, "Request.java", output[0].filename)
@@ -132,7 +132,7 @@ func TestSerialize(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
-		"tests/test.gen.g", "javaFile", "warn", false)
+		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
@@ -173,19 +173,15 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 }
 
 func GenerateCodeWithParams(
-	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
-	isVerbose bool,
-) ([]*CodeGenOutput, error) {
+	rootModel, model, rootTransform, transform, grammar, start string) ([]*CodeGenOutput, error) {
 	_, fs := testutil.WriteToMemOverlayFs(rootModel)
 	return GenerateCodeWithParamsFs(
-		rootModel, model, rootTransform, transform, grammar, start, loglevel,
-		isVerbose, fs,
+		rootModel, model, rootTransform, transform, grammar, start, fs,
 	)
 }
 
 func GenerateCodeWithParamsFs(
-	rootModel, model, rootTransform, transform, grammar, start, loglevel string,
-	isVerbose bool, fs afero.Fs,
+	rootModel, model, rootTransform, transform, grammar, start string, fs afero.Fs,
 ) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
 		rootModel:     &rootModel,
@@ -194,8 +190,6 @@ func GenerateCodeWithParamsFs(
 		transform:     &transform,
 		grammar:       &grammar,
 		start:         &start,
-		loglevel:      &loglevel,
-		isVerbose:     &isVerbose,
 	}
 	logger, _ := test.NewNullLogger()
 	return GenerateCode(cmdContextParamCodegen, fs, logger)

@@ -93,7 +93,6 @@ func DoConstructSequenceDiagrams(
 	logger.Debugf("title: %s\n", *cmdContextParam.title)
 	logger.Debugf("modules: %s\n", *cmdContextParam.modulesFlag)
 	logger.Debugf("output: %s\n", *cmdContextParam.output)
-	logger.Debugf("loglevel: %s\n", *cmdContextParam.loglevel)
 
 	if *cmdContextParam.plantuml == "" {
 		plantuml := os.Getenv("SYSL_PLANTUML")
@@ -109,14 +108,6 @@ func DoConstructSequenceDiagrams(
 		logger.Debugf("blackbox: %s\n", *cmdContextParam.blackboxesFlag)
 	} else {
 		blackboxes = *cmdContextParam.blackboxes
-	}
-
-	if *cmdContextParam.isVerbose {
-		*cmdContextParam.loglevel = debug
-	}
-	// Default info
-	if level, has := syslutil.LogLevels[*cmdContextParam.loglevel]; has {
-		logger.SetLevel(level)
 	}
 
 	result := make(map[string]string)
@@ -230,10 +221,6 @@ func configureCmdlineForSeqgen(sysl *kingpin.Application, flagmap map[string][]s
 	sd := sysl.Command("sd", "Generate sequence diagram")
 	returnValues := &CmdContextParamSeqgen{}
 
-	returnValues.root = sd.Flag("root",
-		"sysl root directory for input model file (default: .)",
-	).Default(".").String()
-
 	returnValues.endpointFormat = sd.Flag("endpoint_format",
 		"Specify the format string for sequence diagram endpoints. May include "+
 			"%(epname), %(eplongname) and %(@foo) for attribute foo (default: %(epname))",
@@ -273,9 +260,6 @@ func configureCmdlineForSeqgen(sysl *kingpin.Application, flagmap map[string][]s
 
 	returnValues.group = sd.Flag("groupby", "Enter the groupby attribute (apps having "+
 		"the same attribute value are grouped together in one box").Short('g').String()
-
-	returnValues.loglevel = sd.Flag("log", "log level[debug,info,warn,off]").Default("info").String()
-	returnValues.isVerbose = sd.Flag("verbose", "show output").Short('v').Default("false").Bool()
 
 	returnValues.modulesFlag = sd.Arg("modules",
 		"input files without .sysl extension and with leading /, eg: "+
