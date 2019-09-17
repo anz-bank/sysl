@@ -1,9 +1,10 @@
 package main
 
 import (
+	"errors"
+	"strings"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -23,9 +24,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 			var modelAppName string
 			var err error
 			if cmd.RequireSyslModule() {
-				logger.Infof("Attempting to load module:%s (root:%s)", r.module, r.Root)
-				modelParser := parse.NewParser()
-				mod, modelAppName, err = parse.LoadAndGetDefaultApp(r.module, syslutil.NewChrootFs(fs, r.Root), modelParser)
+				mod, modelAppName, err = LoadSyslModule(r.Root, r.module, fs, logger)
 				if err != nil {
 					return err
 				}
@@ -40,7 +39,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	commands := []Command{
 		&protobuf{},
-
+		&sequenceDiagramCmd{},
 		&validateCmd{},
 	}
 	r.commands = map[string]Command{}
@@ -67,4 +66,31 @@ func (r *cmdRunner) HasCommand(which string) bool {
 
 	_, ok := r.commands[which]
 	return ok
+}
+
+// Helper function to validate that a set of command flags are not empty values
+func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, _ ...string) {
+	fn := func(c *kingpin.ParseContext) error {
+
+		var errorMsg strings.Builder
+		for _, f := range cmd.Model().Flags {
+			val := f.Value.String()
+
+			if val != "" {
+				val = strings.Trim(val, " ")
+				if val == "" {
+					errorMsg.WriteString("'" + f.Name + "'" + " value passed is empty\n")
+				}
+			} else if len(f.Default) > 0 {
+				errorMsg.WriteString("'" + f.Name + "'" + " value passed is empty\n")
+			}
+		}
+		if errorMsg.Len() > 0 {
+			return errors.New(errorMsg.String())
+		}
+		return nil
+
+	}
+
+	cmd.PreAction(fn)
 }

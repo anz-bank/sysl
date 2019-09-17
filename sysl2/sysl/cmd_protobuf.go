@@ -25,6 +25,7 @@ func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("mode", fmt.Sprintf("output mode: [%s]", strings.Join(opts, ","))).
 		Default(opts[0]).
 		EnumVar(&p.mode, opts...)
+	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
 

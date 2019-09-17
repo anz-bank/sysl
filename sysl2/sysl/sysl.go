@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	sysl "github.com/anz-bank/sysl/src/proto"
+
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
@@ -18,6 +20,12 @@ import (
 var Version = "unspecified"
 
 const debug string = "debug"
+
+func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
+	logger.Infof("Attempting to load module:%s (root:%s)", filename, root)
+	modelParser := parse.NewParser()
+	return parse.LoadAndGetDefaultApp(filename, syslutil.NewChrootFs(fs, root), modelParser)
+}
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
@@ -34,7 +42,6 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 
 	flagmap := map[string][]string{}
 	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
-	sequenceParams := configureCmdlineForSeqgen(syslCmd, flagmap)
 	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
 	datagenParams := configureCmdlineForDatagen(syslCmd)
 
@@ -59,18 +66,6 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 			return err
 		}
 		return outputToFiles(output, syslutil.NewChrootFs(fs, *codegenParams.outDir))
-	case "sd":
-		sequenceParams.root = &runner.Root
-		result, err := DoConstructSequenceDiagrams(sequenceParams, logger)
-		if err != nil {
-			return err
-		}
-		for k, v := range result {
-			if err := OutputPlantuml(k, *sequenceParams.plantuml, v, fs); err != nil {
-				return err
-			}
-		}
-		return nil
 	case "ints":
 		intgenParams.root = &runner.Root
 		r, err := GenerateIntegrations(intgenParams)

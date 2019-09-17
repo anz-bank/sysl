@@ -13,7 +13,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type sequenceDiagParam struct {
@@ -81,17 +80,16 @@ func escapeWordBoundary(src string) string {
 
 func DoConstructSequenceDiagrams(
 	cmdContextParam *CmdContextParamSeqgen,
+	model *sysl.Module,
 	logger *logrus.Logger,
 ) (map[string]string, error) {
 	var blackboxes [][]string
 
-	logger.Debugf("root: %s\n", *cmdContextParam.root)
 	logger.Debugf("endpoints: %v\n", cmdContextParam.endpointsFlag)
 	logger.Debugf("app: %v\n", cmdContextParam.appsFlag)
 	logger.Debugf("endpoint_format: %s\n", *cmdContextParam.endpointFormat)
 	logger.Debugf("app_format: %s\n", *cmdContextParam.appFormat)
 	logger.Debugf("title: %s\n", *cmdContextParam.title)
-	logger.Debugf("modules: %s\n", *cmdContextParam.modulesFlag)
 	logger.Debugf("output: %s\n", *cmdContextParam.output)
 
 	if *cmdContextParam.plantuml == "" {
@@ -104,24 +102,21 @@ func DoConstructSequenceDiagrams(
 	logger.Debugf("plantuml: %s\n", *cmdContextParam.plantuml)
 
 	if cmdContextParam.blackboxes == nil {
-		blackboxes = ParseBlackBoxesFromArgument(*cmdContextParam.blackboxesFlag)
-		logger.Debugf("blackbox: %s\n", *cmdContextParam.blackboxesFlag)
+		blackboxes = ParseBlackBoxesFromArgument(cmdContextParam.blackboxesFlag)
+		logger.Debugf("blackbox: %s\n", cmdContextParam.blackboxesFlag)
 	} else {
 		blackboxes = *cmdContextParam.blackboxes
 	}
 
 	result := make(map[string]string)
-	mod, err := loadApp(*cmdContextParam.modulesFlag, syslutil.NewChrootFs(afero.NewOsFs(), *cmdContextParam.root))
-	if err != nil {
-		return nil, err
-	}
+
 	if strings.Contains(*cmdContextParam.output, "%(epname)") {
 		if len(blackboxes) > 0 {
 			logger.Warnf("Ignoring blackboxes passed from command line")
 		}
 		spout := MakeFormatParser(*cmdContextParam.output)
-		for _, appName := range *cmdContextParam.appsFlag {
-			app := mod.Apps[appName]
+		for _, appName := range cmdContextParam.appsFlag {
+			app := model.Apps[appName]
 			bbs := TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
 			spseqtitle := constructFormatParser(app.GetAttrs()["seqtitle"].GetS(), *cmdContextParam.title)
 			spep := constructFormatParser(app.GetAttrs()["epfmt"].GetS(), *cmdContextParam.endpointFormat)
@@ -169,7 +164,7 @@ func DoConstructSequenceDiagrams(
 					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
 					group:           groupAttr,
 				}
-				out, err := generateSequenceDiag(mod, sd, logger)
+				out, err := generateSequenceDiag(model, sd, logger)
 				if err != nil {
 					return nil, err
 				}
@@ -185,7 +180,7 @@ func DoConstructSequenceDiagrams(
 			}
 		}
 	} else {
-		if *cmdContextParam.endpointsFlag == nil {
+		if len(cmdContextParam.endpointsFlag) == 0 {
 			return result, nil
 		}
 		spep := constructFormatParser("", *cmdContextParam.endpointFormat)
@@ -193,14 +188,14 @@ func DoConstructSequenceDiagrams(
 		bbsAll := map[string]*Upto{}
 		TransformBlackboxesToUptos(bbsAll, blackboxes, BBCommandLine)
 		sd := &sequenceDiagParam{
-			endpoints:       *cmdContextParam.endpointsFlag,
+			endpoints:       cmdContextParam.endpointsFlag,
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
 			title:           *cmdContextParam.title,
 			blackboxes:      bbsAll,
 			group:           *cmdContextParam.group,
 		}
-		out, err := generateSequenceDiag(mod, sd, logger)
+		out, err := generateSequenceDiag(model, sd, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -213,58 +208,4 @@ func DoConstructSequenceDiagrams(
 	}
 
 	return result, nil
-}
-
-func configureCmdlineForSeqgen(sysl *kingpin.Application, flagmap map[string][]string) *CmdContextParamSeqgen {
-	flagmap["sd"] = []string{"root", "endpoint_format", "app_format", "title", "plantuml", "output",
-		"groupby", "endpoint", "app"}
-	sd := sysl.Command("sd", "Generate sequence diagram")
-	returnValues := &CmdContextParamSeqgen{}
-
-	returnValues.endpointFormat = sd.Flag("endpoint_format",
-		"Specify the format string for sequence diagram endpoints. May include "+
-			"%(epname), %(eplongname) and %(@foo) for attribute foo (default: %(epname))",
-	).Default("%(epname)").String()
-
-	returnValues.appFormat = sd.Flag("app_format",
-		"Specify the format string for sequence diagram participants. "+
-			"May include %%(appname) and %%(@foo) for attribute foo (default: %(appname))",
-	).Default("%(appname)").String()
-
-	returnValues.title = sd.Flag("title", "diagram title").Short('t').String()
-
-	returnValues.plantuml = sd.Flag("plantuml",
-		"base url of plantuml server (default: $SYSL_PLANTUML or "+
-			"http://localhost:8080/plantuml see "+
-			"http://plantuml.com/server.html#install for more info)",
-	).Short('p').String()
-
-	returnValues.output = sd.Flag("output",
-		"output file (default: %(epname).png)",
-	).Default("%(epname).png").Short('o').String()
-
-	returnValues.endpointsFlag = sd.Flag("endpoint",
-		"Include endpoint in sequence diagram",
-	).Short('s').Strings()
-
-	returnValues.appsFlag = sd.Flag("app",
-		"Include all endpoints for app in sequence diagram (currently "+
-			"only works with templated --output). Use SYSL_SD_FILTERS env (a "+
-			"comma-list of shell globs) to limit the diagrams generated",
-	).Short('a').Strings()
-
-	returnValues.blackboxesFlag = sd.Flag("blackbox",
-		"Input blackboxes in the format App <- Endpoint=Some description, "+
-			"repeat '-b App <- Endpoint=Some description' to set multiple blackboxes",
-	).Short('b').StringMap()
-
-	returnValues.group = sd.Flag("groupby", "Enter the groupby attribute (apps having "+
-		"the same attribute value are grouped together in one box").Short('g').String()
-
-	returnValues.modulesFlag = sd.Arg("modules",
-		"input files without .sysl extension and with leading /, eg: "+
-			"/project_dir/my_models combine with --root if needed",
-	).String()
-
-	return returnValues
 }
