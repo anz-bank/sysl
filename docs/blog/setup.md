@@ -15,9 +15,9 @@ We, some of the ANZ open source developers, have recently set up what we conside
 * Automated quality assurance (Pull requests are blocked until all checks pass)
 * Issue tracking ([Github Issue](https://github.com/anz-bank/sysl/issues) tracking with [template](https://github.com/anz-bank/sysl/blob/master/ISSUE_TEMPLATE.md))
 * Project Management ([Github projects](https://github.com/anz-bank/sysl/projects))
-* Documentation in same repository as source code ([README](https://github.com/anz-bank/sysl/blob/master/README.rst) and [docs/](https://github.com/anz-bank/sysl/blob/master/docs) as starting point)
+* Documentation in same repository as source code ([README](https://github.com/anz-bank/sysl/blob/master/README.md) and [docs/](https://github.com/anz-bank/sysl/blob/master/docs) as starting point)
 * Chat ([Gitter](https://gitter.im/anz-bank/sysl))
-* Status dashboard ([Badges](https://github.com/anz-bank/sysl/blob/master/README.rst))
+* Status dashboard ([Badges](https://github.com/anz-bank/sysl/blob/master/README.md))
 
 The most involved pieces have been automated quality assurance and release automation. These parts of the Sysl project also keep evolving as we add new quality checks and artefact types. They deserve a closer look.
 
