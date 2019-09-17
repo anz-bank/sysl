@@ -1,4 +1,4 @@
-package commands
+package main
 
 import (
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"

@@ -1,4 +1,4 @@
-package commands
+package main
 
 import (
 	"testing"
@@ -19,20 +19,20 @@ func TestValidatorDoValidate(t *testing.T) {
 	}{
 		"Success": {
 			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform2.sysl", "--grammar",
-				"../tests/grammar.sysl", "--start", "goFile"}, isErrNil: true},
+				"sysl2", "validate", "--root-transform", "./tests", "--transform", "transform2.sysl", "--grammar",
+				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: true},
 		"Grammar loading fail": {
 			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform2.sysl", "--grammar",
-				"../tests/go.sysl", "--start", "goFile"}, isErrNil: false},
+				"sysl2", "validate", "--root-transform", "./tests", "--transform", "transform2.sysl", "--grammar",
+				"./tests/go.sysl", "--start", "goFile"}, isErrNil: false},
 		"Transform loading fail": {
 			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "tfm.sysl", "--grammar",
-				"../tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
+				"sysl2", "validate", "--root-transform", "./tests", "--transform", "tfm.sysl", "--grammar",
+				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
 		"Has validation messages": {
 			args: []string{
-				"sysl2", "validate", "--root-transform", "../tests", "--transform", "transform1.sysl", "--grammar",
-				"../tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
+				"sysl2", "validate", "--root-transform", "./tests", "--transform", "transform1.sysl", "--grammar",
+				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
 	}
 
 	for name, tt := range cases {
