@@ -615,7 +615,6 @@ func DoConstructSequenceDiagramsWithParams(
 	group string,
 ) (map[string]string, error) {
 
-	plantuml := ""
 	logger, _ := test.NewNullLogger()
 	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {
@@ -630,7 +629,6 @@ func DoConstructSequenceDiagramsWithParams(
 		appsFlag:       apps,
 		blackboxes:     &blackboxes,
 		group:          &group,
-		plantuml:       &plantuml,
 	}
 	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, mod, logger)
 }

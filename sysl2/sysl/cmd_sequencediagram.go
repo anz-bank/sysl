@@ -5,6 +5,7 @@ import (
 )
 
 type sequenceDiagramCmd struct {
+	plantumlmixin
 	endpointFormat string
 	appFormat      string
 	title          string
@@ -12,7 +13,6 @@ type sequenceDiagramCmd struct {
 	endpointsFlag  []string
 	appsFlag       []string
 	blackboxesFlag map[string]string
-	plantuml       string
 	group          string
 }
 
@@ -39,11 +39,7 @@ func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdCla
 
 	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
 
-	cmd.Flag("plantuml",
-		"base url of plantuml server (default: $SYSL_PLANTUML or "+
-			"http://localhost:8080/plantuml see "+
-			"http://plantuml.com/server.html#install for more info)",
-	).Short('p').StringVar(&p.plantuml)
+	p.plantumlmixin.AddFlag(cmd)
 
 	cmd.Flag("output",
 		"output file (default: %(epname).png)",
@@ -81,7 +77,6 @@ func (p *sequenceDiagramCmd) Execute(args ExecuteArgs) error {
 		endpointsFlag:  p.endpointsFlag,
 		appsFlag:       p.appsFlag,
 		blackboxesFlag: p.blackboxesFlag,
-		plantuml:       &p.plantuml,
 		group:          &p.group,
 	}
 
@@ -89,8 +84,10 @@ func (p *sequenceDiagramCmd) Execute(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
+	plantuml := p.plantumlmixin.Value()
+	args.Logger.Debugf("plantuml: %s\n", plantuml)
 	for k, v := range result {
-		if err := OutputPlantuml(k, *sequenceParams.plantuml, v, args.Filesystem); err != nil {
+		if err := OutputPlantuml(k, plantuml, v, args.Filesystem); err != nil {
 			return err
 		}
 	}

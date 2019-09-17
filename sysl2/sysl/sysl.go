@@ -22,7 +22,7 @@ var Version = "unspecified"
 const debug string = "debug"
 
 func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
-	logger.Infof("Attempting to load module:%s (root:%s)", filename, root)
+	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
 	modelParser := parse.NewParser()
 	return parse.LoadAndGetDefaultApp(filename, syslutil.NewChrootFs(fs, root), modelParser)
 }
@@ -111,7 +111,7 @@ func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
 		logrus.SetLevel(level)
 	}
 
-	logrus.Infof("Logging: %+v", *d)
+	logrus.Debugf("Logging: %+v", *d)
 	return nil
 }
 func (d *debugTypeData) add(app *kingpin.Application) {

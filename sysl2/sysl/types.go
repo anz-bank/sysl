@@ -61,7 +61,6 @@ type CmdContextParamSeqgen struct {
 	appsFlag       []string
 	blackboxesFlag map[string]string
 	blackboxes     *[][]string
-	plantuml       *string
 	group          *string
 }
 
