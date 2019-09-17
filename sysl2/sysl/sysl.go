@@ -6,8 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/commands"
-
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
@@ -29,7 +27,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 
 	(&debugTypeData{}).add(syslCmd)
 
-	runner := commands.Runner{}
+	runner := cmdRunner{}
 	if err := runner.Configure(syslCmd); err != nil {
 		return err
 	}

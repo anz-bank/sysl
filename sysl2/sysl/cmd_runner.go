@@ -1,4 +1,4 @@
-package commands
+package main
 
 import (
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -9,14 +9,14 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-type Runner struct {
+type cmdRunner struct {
 	commands map[string]Command
 
 	Root   string
 	module string
 }
 
-func (r *Runner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
+func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
 	if cmd, ok := r.commands[which]; ok {
 		if cmd.Name() == which {
 			var mod *sysl.Module
@@ -37,7 +37,7 @@ func (r *Runner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
 	return nil
 }
 
-func (r *Runner) Configure(app *kingpin.Application) error {
+func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	commands := []Command{
 		&protobuf{},
 
@@ -63,7 +63,7 @@ func (r *Runner) Configure(app *kingpin.Application) error {
 }
 
 // Temp until all the commands move in here
-func (r *Runner) HasCommand(which string) bool {
+func (r *cmdRunner) HasCommand(which string) bool {
 
 	_, ok := r.commands[which]
 	return ok
