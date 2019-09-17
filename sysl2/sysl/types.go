@@ -43,13 +43,10 @@ type VarManager interface {
 }
 
 type CmdContextParamCodegen struct {
-	rootModel     *string
-	model         *string
-	rootTransform *string
-	transform     *string
-	grammar       *string
-	start         *string
-	outDir        *string
+	rootTransform string
+	transform     string
+	grammar       string
+	start         string
 }
 
 type CmdContextParamSeqgen struct {

@@ -184,13 +184,15 @@ func GenerateCodeWithParamsFs(
 	rootModel, model, rootTransform, transform, grammar, start string, fs afero.Fs,
 ) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
-		rootModel:     &rootModel,
-		model:         &model,
-		rootTransform: &rootTransform,
-		transform:     &transform,
-		grammar:       &grammar,
-		start:         &start,
+		rootTransform: rootTransform,
+		transform:     transform,
+		grammar:       grammar,
+		start:         start,
 	}
 	logger, _ := test.NewNullLogger()
-	return GenerateCode(cmdContextParamCodegen, fs, logger)
+	mod, modAppName, err := LoadSyslModule(rootModel, model, fs, logger)
+	if err != nil {
+		return nil, err
+	}
+	return GenerateCode(cmdContextParamCodegen, mod, modAppName, fs, logger)
 }
