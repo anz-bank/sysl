@@ -621,14 +621,14 @@ func DoConstructSequenceDiagramsWithParams(
 		return nil, err
 	}
 	cmdContextParamSeqgen := &CmdContextParamSeqgen{
-		endpointFormat: &endpointFormat,
-		appFormat:      &appFormat,
-		title:          &title,
-		output:         &output,
+		endpointFormat: endpointFormat,
+		appFormat:      appFormat,
+		title:          title,
+		output:         output,
 		endpointsFlag:  endpoints,
 		appsFlag:       apps,
-		blackboxes:     &blackboxes,
-		group:          &group,
+		blackboxes:     blackboxes,
+		group:          group,
 	}
 	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, mod, logger)
 }

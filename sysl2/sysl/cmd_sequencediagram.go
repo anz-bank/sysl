@@ -70,14 +70,14 @@ func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdCla
 func (p *sequenceDiagramCmd) Execute(args ExecuteArgs) error {
 
 	sequenceParams := &CmdContextParamSeqgen{
-		endpointFormat: &p.endpointFormat,
-		appFormat:      &p.appFormat,
-		title:          &p.title,
-		output:         &p.output,
+		endpointFormat: p.endpointFormat,
+		appFormat:      p.appFormat,
+		title:          p.title,
+		output:         p.output,
 		endpointsFlag:  p.endpointsFlag,
 		appsFlag:       p.appsFlag,
 		blackboxesFlag: p.blackboxesFlag,
-		group:          &p.group,
+		group:          p.group,
 	}
 
 	result, err := DoConstructSequenceDiagrams(sequenceParams, args.Module, args.Logger)

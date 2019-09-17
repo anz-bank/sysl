@@ -53,15 +53,15 @@ type CmdContextParamCodegen struct {
 }
 
 type CmdContextParamSeqgen struct {
-	endpointFormat *string
-	appFormat      *string
-	title          *string
-	output         *string
+	endpointFormat string
+	appFormat      string
+	title          string
+	output         string
 	endpointsFlag  []string
 	appsFlag       []string
 	blackboxesFlag map[string]string
-	blackboxes     *[][]string
-	group          *string
+	blackboxes     [][]string
+	group          string
 }
 
 type CmdContextParamIntgen struct {
