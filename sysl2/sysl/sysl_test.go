@@ -388,11 +388,11 @@ func TestMain2WithGenerateCode(t *testing.T) {
 			"sysl",
 			"gen",
 			"--root", ".",
-			"--model", "tests/model.sysl",
 			"--root-transform", ".",
 			"--transform", "tests/test.gen_multiple_annotations.sysl",
 			"--grammar", "tests/test.gen.g",
 			"--start", "javaFile",
+			"tests/model.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -411,11 +411,11 @@ func TestMain2WithGenerateCodeReadOnlyFs(t *testing.T) {
 			"sysl",
 			"gen",
 			"--root", ".",
-			"--model", "tests/model.sysl",
 			"--root-transform", ".",
 			"--transform", "tests/test.gen_multiple_annotations.sysl",
 			"--grammar", "tests/test.gen.g",
 			"--start", "javaFile",
+			"tests/model.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -532,13 +532,11 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "gen", "--root-transform", "", "--model", " ", "--transform",
+	main2([]string{"sysl", "gen", "--transform",
 		"tests/test.gen_multiple_annotations.sysl", "--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
-		"'root-transform' value passed is empty\n"+
-			"'model' value passed is empty\n"+
-			"'grammar' value passed is empty\n"+
+		"'grammar' value passed is empty\n"+
 			"'start' value passed is empty\n"+
 			"'outdir' value passed is empty\n", hook.LastEntry().Message)
 	testutil.AssertFsHasExactly(t, memFs)
