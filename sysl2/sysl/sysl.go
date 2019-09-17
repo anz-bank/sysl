@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
-
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
@@ -14,9 +13,17 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-// Version contains the sysl binary version
+// Version   - Binary version
+// GitCommit - Commit SHA of the source code
+// BuildDate - Binary build date
+// BuildOS   - Operating System used to build binary
 //nolint:gochecknoglobals
-var Version = "unspecified"
+var (
+	Version   = "unspecified"
+	GitCommit = "unspecified"
+	BuildDate = "unspecified"
+	BuildOS   = "unspecified"
+)
 
 const debug string = "debug"
 

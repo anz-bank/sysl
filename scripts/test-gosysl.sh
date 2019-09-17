@@ -24,3 +24,5 @@ if [[ ${version} = "unspecified" ]]; then
     exit 1
 fi
 echo "gosysl version is ${version}"
+
+$GOPATH/bin/sysl info
