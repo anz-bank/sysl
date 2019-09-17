@@ -31,7 +31,7 @@ func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 func (p *protobuf) Execute(args ExecuteArgs) error {
 
-	args.Logger.Infof("Protobuf: %+v", *p)
+	args.Logger.Debugf("Protobuf: %+v", *p)
 
 	p.output = strings.TrimSpace(p.output)
 	p.mode = strings.TrimSpace(p.mode)

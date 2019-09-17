@@ -169,7 +169,6 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	logger.Level = logrus.WarnLevel
 	out := filepath.Clean("/out1.png")
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	rc := main2(
@@ -241,7 +240,6 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	logger.Level = logrus.WarnLevel
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	rc := main2(
 		[]string{
@@ -508,7 +506,6 @@ func TestMain2WithEmptySdParams(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	logger.Level = logrus.WarnLevel
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	main2([]string{"sysl", "sd", "-g", " ", "-o", "", "tests/groupby.sysl", "-a", " "}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)

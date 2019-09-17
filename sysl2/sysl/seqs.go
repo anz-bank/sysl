@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"sort"
 	"strings"
 
@@ -91,15 +90,6 @@ func DoConstructSequenceDiagrams(
 	logger.Debugf("app_format: %s\n", *cmdContextParam.appFormat)
 	logger.Debugf("title: %s\n", *cmdContextParam.title)
 	logger.Debugf("output: %s\n", *cmdContextParam.output)
-
-	if *cmdContextParam.plantuml == "" {
-		plantuml := os.Getenv("SYSL_PLANTUML")
-		cmdContextParam.plantuml = &plantuml
-		if *cmdContextParam.plantuml == "" {
-			*cmdContextParam.plantuml = "http://localhost:8080/plantuml"
-		}
-	}
-	logger.Debugf("plantuml: %s\n", *cmdContextParam.plantuml)
 
 	if cmdContextParam.blackboxes == nil {
 		blackboxes = ParseBlackBoxesFromArgument(cmdContextParam.blackboxesFlag)
