@@ -64,19 +64,23 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	return nil
 }
 
-// Temp until all the commands move in here
-func (r *cmdRunner) HasCommand(which string) bool {
-
-	_, ok := r.commands[which]
-	return ok
-}
-
 // Helper function to validate that a set of command flags are not empty values
-func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, _ ...string) {
+func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
+	inExcludes := func(s string) bool {
+		for _, e := range excludes {
+			if s == e {
+				return true
+			}
+		}
+		return false
+	}
 	fn := func(c *kingpin.ParseContext) error {
 
 		var errorMsg strings.Builder
 		for _, f := range cmd.Model().Flags {
+			if inExcludes(f.Name) {
+				continue
+			}
 			val := f.Value.String()
 
 			if val != "" {
