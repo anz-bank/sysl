@@ -237,27 +237,31 @@ type loadAppArgs struct {
 func TestLoadAppReturnError(t *testing.T) {
 	t.Parallel()
 
-	test := loadAppArgs{
+	args := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	_, err := loadApp(test.models, syslutil.NewChrootFs(afero.NewMemMapFs(), test.root))
+	_, fs := testutil.WriteToMemOverlayFs(args.root)
+	logger, _ := test.NewNullLogger()
+	_, _, err := LoadSyslModule(args.root, args.models, fs, logger)
 	assert.Error(t, err)
 }
 
 func TestLoadApp(t *testing.T) {
 	t.Parallel()
 
-	test := loadAppArgs{
+	args := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	memFs, fs := testutil.WriteToMemOverlayFs(test.root)
-	mod, err := loadApp(test.models, fs)
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	logger, _ := test.NewNullLogger()
+	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
 	testutil.AssertFsHasExactly(t, memFs)
 	apps := mod.GetApps()
 	app := apps["Database"]
 
+	assert.Equal(t, "Database", name)
 	assert.Equal(t, []string{"Database"}, app.GetName().GetPart())
 
 	appPatternsAttr := app.GetAttrs()["patterns"].GetA().GetElt()

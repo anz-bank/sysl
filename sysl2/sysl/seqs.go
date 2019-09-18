@@ -7,11 +7,8 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
 )
 
 type sequenceDiagParam struct {
@@ -43,18 +40,6 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam, logger *logrus.L
 	}
 
 	return w.String(), nil
-}
-
-func loadApp(models string, fs afero.Fs) (*sysl.Module, error) {
-	// Model we want to generate seqs for, the non-empty model
-	mod, err := parse.NewParser().Parse(models, fs)
-	if err != nil {
-		return nil, errors.Wrapf(err,
-			"loadApp: unable to load module:\n\tmodel: %s\nerror: %s",
-			models, err.Error(),
-		)
-	}
-	return mod, nil
 }
 
 func constructFormatParser(former, latter string) *FormatParser {
