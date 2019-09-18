@@ -72,14 +72,11 @@ type CmdContextParamIntgen struct {
 }
 
 type CmdContextParamDatagen struct {
-	root        *string
-	title       *string
-	output      *string
-	project     *string
-	filter      *string
-	modules     *string
-	plantuml    *string
-	classFormat *string
+	title       string
+	output      string
+	project     string
+	filter      string
+	classFormat string
 }
 
 type ExecuteArgs struct {

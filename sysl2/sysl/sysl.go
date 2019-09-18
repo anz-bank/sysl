@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -40,38 +39,12 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 		return err
 	}
 
-	flagmap := map[string][]string{}
-	datagenParams := configureCmdlineForDatagen(syslCmd)
-
-	var selectedCommand string
-	var err error
-	if len(args) > 1 {
-		syslCmd.Validate(generateAppargValidator(args[1], flagmap))
-	}
-	if selectedCommand, err = syslCmd.Parse(args[1:]); err != nil {
+	selectedCommand, err := syslCmd.Parse(args[1:])
+	if err != nil {
 		return err
 	}
 
-	if runner.HasCommand(selectedCommand) {
-		return runner.Run(selectedCommand, fs, logger)
-	}
-
-	switch selectedCommand { //nolint:gocritic
-	case "data":
-		datagenParams.root = &runner.Root
-		outmap, err := GenerateDataModels(datagenParams)
-		if err != nil {
-			return err
-		}
-		for k, v := range outmap {
-			err := OutputPlantuml(k, *datagenParams.plantuml, v, fs)
-			if err != nil {
-				return fmt.Errorf("plantuml drawing error: %v", err)
-			}
-		}
-		return nil
-	}
-	return nil
+	return runner.Run(selectedCommand, fs, logger)
 }
 
 type debugTypeData struct {
@@ -131,28 +104,5 @@ func main2(
 func main() {
 	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), main3); rc != 0 {
 		os.Exit(rc)
-	}
-}
-
-func generateAppargValidator(selectedCommand string, flags map[string][]string) func(*kingpin.Application) error {
-	return func(app *kingpin.Application) error {
-		var errorMsg strings.Builder
-		for _, longFlagName := range flags[selectedCommand] {
-			if flag := app.GetCommand(selectedCommand).GetFlag(longFlagName); flag != nil {
-				val := flag.Model().Value.String()
-				if val != "" {
-					val = strings.Trim(val, " ")
-					if val == "" {
-						errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
-					}
-				} else if len(flag.Model().Default) > 0 {
-					errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
-				}
-			}
-		}
-		if errorMsg.Len() > 0 {
-			return errors.New(errorMsg.String())
-		}
-		return nil
 	}
 }
