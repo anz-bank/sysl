@@ -40,6 +40,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	commands := []Command{
 		&protobuf{},
 		&intsCmd{},
+		&datamodelCmd{},
 		&codegenCmd{},
 		&sequenceDiagramCmd{},
 		&validateCmd{},

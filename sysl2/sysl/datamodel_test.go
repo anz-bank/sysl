@@ -3,6 +3,8 @@ package main
 import (
 	"testing"
 
+	"github.com/sirupsen/logrus/hooks/test"
+
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/spf13/afero"
@@ -34,10 +36,12 @@ func TestDoGenerateDataDiagrams(t *testing.T) {
 	}
 	argsData := []string{"sysl", "data", "-o", args.output, "-j", args.project, args.modules}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForDatagen(syslCmd)
+
+	r := cmdRunner{}
+	assert.NoError(t, r.Configure(syslCmd))
 	selectedCommand, err := syslCmd.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl data")
-	assert.Equal(t, selectedCommand, "data")
+	assert.Equal(t, selectedCommand, "datamodel")
 }
 
 func TestDoConstructDataDiagrams(t *testing.T) {
@@ -61,17 +65,19 @@ func TestDoConstructDataDiagrams(t *testing.T) {
 func DoConstructDataDiagramsWithParams(
 	rootModel, filter, title, output, project, modules string,
 ) (map[string]string, error) {
-	plantuml := ""
 	classFormat := "%(classname)"
 	cmdContextParamDatagen := &CmdContextParamDatagen{
-		root:        &rootModel,
-		filter:      &filter,
-		title:       &title,
-		output:      &output,
-		project:     &project,
-		plantuml:    &plantuml,
-		modules:     &modules,
-		classFormat: &classFormat,
+		filter:      filter,
+		title:       title,
+		output:      output,
+		project:     project,
+		classFormat: classFormat,
 	}
-	return GenerateDataModels(cmdContextParamDatagen)
+
+	logger, _ := test.NewNullLogger()
+	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	if err != nil {
+		return nil, err
+	}
+	return GenerateDataModels(cmdContextParamDatagen, mod, logger)
 }
