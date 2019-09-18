@@ -84,12 +84,5 @@ func (p *sequenceDiagramCmd) Execute(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	plantuml := p.plantumlmixin.Value()
-	args.Logger.Debugf("plantuml: %s\n", plantuml)
-	for k, v := range result {
-		if err := OutputPlantuml(k, plantuml, v, args.Filesystem); err != nil {
-			return err
-		}
-	}
-	return nil
+	return p.GenerateFromMap(result, args.Filesystem)
 }

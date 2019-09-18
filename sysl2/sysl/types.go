@@ -62,16 +62,13 @@ type CmdContextParamSeqgen struct {
 }
 
 type CmdContextParamIntgen struct {
-	root      *string
-	title     *string
-	output    *string
-	project   *string
-	filter    *string
-	modules   *string
-	exclude   *[]string
-	clustered *bool
-	epa       *bool
-	plantuml  *string
+	title     string
+	output    string
+	project   string
+	filter    string
+	exclude   []string
+	clustered bool
+	epa       bool
 }
 
 type CmdContextParamDatagen struct {

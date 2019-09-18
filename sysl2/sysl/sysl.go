@@ -41,7 +41,6 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	}
 
 	flagmap := map[string][]string{}
-	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
 	datagenParams := configureCmdlineForDatagen(syslCmd)
 
 	var selectedCommand string
@@ -57,20 +56,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 		return runner.Run(selectedCommand, fs, logger)
 	}
 
-	switch selectedCommand {
-	case "ints":
-		intgenParams.root = &runner.Root
-		r, err := GenerateIntegrations(intgenParams)
-		if err != nil {
-			return err
-		}
-		for k, v := range r {
-			err := OutputPlantuml(k, *intgenParams.plantuml, v, fs)
-			if err != nil {
-				return fmt.Errorf("plantuml drawing error: %v", err)
-			}
-		}
-		return nil
+	switch selectedCommand { //nolint:gocritic
 	case "data":
 		datagenParams.root = &runner.Root
 		outmap, err := GenerateDataModels(datagenParams)
