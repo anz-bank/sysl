@@ -39,6 +39,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	commands := []Command{
 		&protobuf{},
+		&intsCmd{},
 		&codegenCmd{},
 		&sequenceDiagramCmd{},
 		&validateCmd{},

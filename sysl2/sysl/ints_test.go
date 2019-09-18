@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/sirupsen/logrus/hooks/test"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
@@ -231,10 +233,12 @@ func TestDoGenerateIntegrations(t *testing.T) {
 	}
 	argsData := []string{"sysl", "ints", "-o", args.output, "-j", args.project, args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForIntgen(sysl, map[string][]string{})
+
+	r := cmdRunner{}
+	assert.NoError(t, r.Configure(sysl))
 	selectedCommand, err := sysl.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl ints")
-	assert.Equal(t, selectedCommand, "ints")
+	assert.Equal(t, selectedCommand, "integrations")
 }
 
 func TestGenerateIntegrationsWithCluster(t *testing.T) {
@@ -487,18 +491,20 @@ func GenerateIntegrationsWithParams(
 	exclude []string,
 	clustered, epa bool,
 ) (map[string]string, error) {
-	plantuml := ""
 	cmdContextParamIntgen := &CmdContextParamIntgen{
-		root:      &rootModel,
-		title:     &title,
-		output:    &output,
-		project:   &project,
-		filter:    &filter,
-		modules:   &modules,
-		exclude:   &exclude,
-		clustered: &clustered,
-		epa:       &epa,
-		plantuml:  &plantuml,
+		title:     title,
+		output:    output,
+		project:   project,
+		filter:    filter,
+		exclude:   exclude,
+		clustered: clustered,
+		epa:       epa,
 	}
-	return GenerateIntegrations(cmdContextParamIntgen)
+
+	logger, _ := test.NewNullLogger()
+	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	if err != nil {
+		return nil, err
+	}
+	return GenerateIntegrations(cmdContextParamIntgen, mod, logger)
 }
