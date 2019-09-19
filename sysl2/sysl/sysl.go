@@ -1,12 +1,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/commands"
+	sysl "github.com/anz-bank/sysl/src/proto"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
@@ -21,6 +20,12 @@ var Version = "unspecified"
 
 const debug string = "debug"
 
+func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
+	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
+	modelParser := parse.NewParser()
+	return parse.LoadAndGetDefaultApp(filename, syslutil.NewChrootFs(fs, root), modelParser)
+}
+
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
@@ -29,78 +34,17 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 
 	(&debugTypeData{}).add(syslCmd)
 
-	runner := commands.Runner{}
+	runner := cmdRunner{}
 	if err := runner.Configure(syslCmd); err != nil {
 		return err
 	}
 
-	flagmap := map[string][]string{}
-	codegenParams := configureCmdlineForCodegen(syslCmd, flagmap)
-	sequenceParams := configureCmdlineForSeqgen(syslCmd, flagmap)
-	intgenParams := configureCmdlineForIntgen(syslCmd, flagmap)
-	datagenParams := configureCmdlineForDatagen(syslCmd)
-
-	var selectedCommand string
-	var err error
-	if len(args) > 1 {
-		syslCmd.Validate(generateAppargValidator(args[1], flagmap))
-	}
-	if selectedCommand, err = syslCmd.Parse(args[1:]); err != nil {
+	selectedCommand, err := syslCmd.Parse(args[1:])
+	if err != nil {
 		return err
 	}
 
-	if runner.HasCommand(selectedCommand) {
-		return runner.Run(selectedCommand, fs, logger)
-	}
-
-	switch selectedCommand {
-	case "gen":
-		codegenParams.rootModel = &runner.Root
-		output, err := GenerateCode(codegenParams, fs, logger)
-		if err != nil {
-			return err
-		}
-		return outputToFiles(output, syslutil.NewChrootFs(fs, *codegenParams.outDir))
-	case "sd":
-		sequenceParams.root = &runner.Root
-		result, err := DoConstructSequenceDiagrams(sequenceParams, logger)
-		if err != nil {
-			return err
-		}
-		for k, v := range result {
-			if err := OutputPlantuml(k, *sequenceParams.plantuml, v, fs); err != nil {
-				return err
-			}
-		}
-		return nil
-	case "ints":
-		intgenParams.root = &runner.Root
-		r, err := GenerateIntegrations(intgenParams)
-		if err != nil {
-			return err
-		}
-		for k, v := range r {
-			err := OutputPlantuml(k, *intgenParams.plantuml, v, fs)
-			if err != nil {
-				return fmt.Errorf("plantuml drawing error: %v", err)
-			}
-		}
-		return nil
-	case "data":
-		datagenParams.root = &runner.Root
-		outmap, err := GenerateDataModels(datagenParams)
-		if err != nil {
-			return err
-		}
-		for k, v := range outmap {
-			err := OutputPlantuml(k, *datagenParams.plantuml, v, fs)
-			if err != nil {
-				return fmt.Errorf("plantuml drawing error: %v", err)
-			}
-		}
-		return nil
-	}
-	return nil
+	return runner.Run(selectedCommand, fs, logger)
 }
 
 type debugTypeData struct {
@@ -118,7 +62,7 @@ func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
 		logrus.SetLevel(level)
 	}
 
-	logrus.Infof("Logging: %+v", *d)
+	logrus.Debugf("Logging: %+v", *d)
 	return nil
 }
 func (d *debugTypeData) add(app *kingpin.Application) {
@@ -160,28 +104,5 @@ func main2(
 func main() {
 	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), main3); rc != 0 {
 		os.Exit(rc)
-	}
-}
-
-func generateAppargValidator(selectedCommand string, flags map[string][]string) func(*kingpin.Application) error {
-	return func(app *kingpin.Application) error {
-		var errorMsg strings.Builder
-		for _, longFlagName := range flags[selectedCommand] {
-			if flag := app.GetCommand(selectedCommand).GetFlag(longFlagName); flag != nil {
-				val := flag.Model().Value.String()
-				if val != "" {
-					val = strings.Trim(val, " ")
-					if val == "" {
-						errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
-					}
-				} else if len(flag.Model().Default) > 0 {
-					errorMsg.WriteString("'" + longFlagName + "'" + " value passed is empty\n")
-				}
-			}
-		}
-		if errorMsg.Len() > 0 {
-			return errors.New(errorMsg.String())
-		}
-		return nil
 	}
 }

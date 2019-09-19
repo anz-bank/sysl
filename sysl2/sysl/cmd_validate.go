@@ -1,4 +1,4 @@
-package commands
+package main
 
 import (
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
@@ -24,6 +24,7 @@ func (p *validateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("grammar", "grammar.sysl").Required().StringVar(&p.grammar)
 	cmd.Flag("start", "start rule for the grammar").Default(".").StringVar(&p.start)
 
+	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
 

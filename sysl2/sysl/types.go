@@ -1,6 +1,11 @@
 package main
 
-import sysl "github.com/anz-bank/sysl/src/proto"
+import (
+	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
+	"gopkg.in/alecthomas/kingpin.v2"
+)
 
 type Visitor interface {
 	Visit(Element) error
@@ -38,50 +43,52 @@ type VarManager interface {
 }
 
 type CmdContextParamCodegen struct {
-	rootModel     *string
-	model         *string
-	rootTransform *string
-	transform     *string
-	grammar       *string
-	start         *string
-	outDir        *string
+	rootTransform string
+	transform     string
+	grammar       string
+	start         string
 }
 
 type CmdContextParamSeqgen struct {
-	root           *string
-	endpointFormat *string
-	appFormat      *string
-	title          *string
-	output         *string
-	modulesFlag    *string
-	endpointsFlag  *[]string
-	appsFlag       *[]string
-	blackboxesFlag *map[string]string
-	blackboxes     *[][]string
-	plantuml       *string
-	group          *string
+	endpointFormat string
+	appFormat      string
+	title          string
+	output         string
+	endpointsFlag  []string
+	appsFlag       []string
+	blackboxesFlag map[string]string
+	blackboxes     [][]string
+	group          string
 }
 
 type CmdContextParamIntgen struct {
-	root      *string
-	title     *string
-	output    *string
-	project   *string
-	filter    *string
-	modules   *string
-	exclude   *[]string
-	clustered *bool
-	epa       *bool
-	plantuml  *string
+	title     string
+	output    string
+	project   string
+	filter    string
+	exclude   []string
+	clustered bool
+	epa       bool
 }
 
 type CmdContextParamDatagen struct {
-	root        *string
-	title       *string
-	output      *string
-	project     *string
-	filter      *string
-	modules     *string
-	plantuml    *string
-	classFormat *string
+	title       string
+	output      string
+	project     string
+	filter      string
+	classFormat string
+}
+
+type ExecuteArgs struct {
+	Module        *sysl.Module
+	ModuleAppName string
+	Filesystem    afero.Fs
+	Logger        *logrus.Logger
+}
+
+type Command interface {
+	Configure(*kingpin.Application) *kingpin.CmdClause
+	Execute(ExecuteArgs) error
+	Name() string
+	RequireSyslModule() bool
 }

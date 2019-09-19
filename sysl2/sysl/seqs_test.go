@@ -237,27 +237,31 @@ type loadAppArgs struct {
 func TestLoadAppReturnError(t *testing.T) {
 	t.Parallel()
 
-	test := loadAppArgs{
+	args := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	_, err := loadApp(test.models, syslutil.NewChrootFs(afero.NewMemMapFs(), test.root))
+	_, fs := testutil.WriteToMemOverlayFs(args.root)
+	logger, _ := test.NewNullLogger()
+	_, _, err := LoadSyslModule(args.root, args.models, fs, logger)
 	assert.Error(t, err)
 }
 
 func TestLoadApp(t *testing.T) {
 	t.Parallel()
 
-	test := loadAppArgs{
+	args := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	memFs, fs := testutil.WriteToMemOverlayFs(test.root)
-	mod, err := loadApp(test.models, fs)
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	logger, _ := test.NewNullLogger()
+	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
 	testutil.AssertFsHasExactly(t, memFs)
 	apps := mod.GetApps()
 	app := apps["Database"]
 
+	assert.Equal(t, "Database", name)
 	assert.Equal(t, []string{"Database"}, app.GetName().GetPart())
 
 	appPatternsAttr := app.GetAttrs()["patterns"].GetA().GetElt()
@@ -491,10 +495,11 @@ func TestDoGenerateSequenceDiagrams(t *testing.T) {
 	}
 	argsData := []string{"sysl", "sd", "-o", args.output, "-a", args.apps[0], args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForSeqgen(sysl, map[string][]string{})
+	r := cmdRunner{}
+	assert.NoError(t, r.Configure(sysl))
 	selectedCommand, err := sysl.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl sd")
-	assert.Equal(t, selectedCommand, "sd")
+	assert.Equal(t, "sd", selectedCommand)
 }
 
 func TestDoConstructSequenceDiagramsWithParams(t *testing.T) {
@@ -613,20 +618,21 @@ func DoConstructSequenceDiagramsWithParams(
 	blackboxes [][]string,
 	group string,
 ) (map[string]string, error) {
-	plantuml := ""
-	cmdContextParamSeqgen := &CmdContextParamSeqgen{
-		root:           &rootModel,
-		endpointFormat: &endpointFormat,
-		appFormat:      &appFormat,
-		title:          &title,
-		output:         &output,
-		modulesFlag:    &modules,
-		endpointsFlag:  &endpoints,
-		appsFlag:       &apps,
-		blackboxes:     &blackboxes,
-		group:          &group,
-		plantuml:       &plantuml,
-	}
+
 	logger, _ := test.NewNullLogger()
-	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, logger)
+	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	if err != nil {
+		return nil, err
+	}
+	cmdContextParamSeqgen := &CmdContextParamSeqgen{
+		endpointFormat: endpointFormat,
+		appFormat:      appFormat,
+		title:          title,
+		output:         output,
+		endpointsFlag:  endpoints,
+		appsFlag:       apps,
+		blackboxes:     blackboxes,
+		group:          group,
+	}
+	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, mod, logger)
 }
