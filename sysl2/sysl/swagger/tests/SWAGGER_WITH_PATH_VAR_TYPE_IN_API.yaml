@@ -1,0 +1,36 @@
+
+swagger: "2.0"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: The user ID.
+      - in: header
+        name: request-id
+        type: string
+        required: true
+        description: the request ID.
+    # GET/users/{id}?metadata=true
+    get:
+      summary: Gets a user by ID
+      # Note we only define the query parameter, because the {id} is defined at the path level.
+      parameters:
+        - in: query
+          name: metadata
+          type: boolean
+          required: false
+          description: If true, the endpoint returns only the user metadata.
+      responses:
+        '200':
+          description: OK

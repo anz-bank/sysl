@@ -1,0 +1,44 @@
+swagger: "2.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+definitions:
+  Goat:
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      birthday:
+        type: string
+        format: date
+    type: object
+
+paths:
+  /goat/create-goat:
+    post:
+      consumes:
+        - application/json
+      description: Creates a goat.
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: true
+        - name: birthday
+          in: query
+          type: string
+          required: true
+      responses:
+        '201':
+          description: ''
+          headers:
+            Location:
+              description: Location of the newly allocated goat.
+      summary: Creates a goat.

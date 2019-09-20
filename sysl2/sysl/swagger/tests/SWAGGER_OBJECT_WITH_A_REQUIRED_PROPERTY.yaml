@@ -1,0 +1,14 @@
+swagger: "2.0"
+basePath: /fruit-basket
+info:
+  title: Fruit API
+  version: 1.0.0
+definitions:
+  Apple:
+    properties:
+      colour:
+        type: string
+    required:
+      - colour
+    type: object
+paths: {}
