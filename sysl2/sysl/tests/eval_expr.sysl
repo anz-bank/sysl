@@ -63,10 +63,18 @@ TransformApp:
       ne = lhs != rhs
     )
 
+  !view getMap(key <: string) -> string:
+    key -> (:
+      out1 = key+"1"
+      out2 = key+"2"
+      out3 = key+"3"
+    )
+
   !view ListSetOps(lhs <: string) -> set of string:
     lhs -> (:
       count1 = [1,2] count
       count2 = {1,2} count
+      count3 = getMap("key") count
       strs = {"rhs", "lhs"} | {"lhs"}
       numbers = {1} | {1,2}
       numbers2 =  {1,2} where(. > 2) | {1} where(. > 2)
