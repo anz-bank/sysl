@@ -80,10 +80,9 @@ type CmdContextParamDatagen struct {
 }
 
 type ExecuteArgs struct {
-	Module        *sysl.Module
-	ModuleAppName string
-	Filesystem    afero.Fs
-	Logger        *logrus.Logger
+	Module     *sysl.Module
+	Filesystem afero.Fs
+	Logger     *logrus.Logger
 }
 
 type Command interface {
