@@ -117,8 +117,16 @@ func (si *swaggerImporter) Write() error {
 	si.writeLines("#" + strings.Repeat("-", 75))
 	si.writeLines("# definitions")
 	for _, t := range si.types {
-		si.writeLines(BlankLine)
-		si.writeDefinition(t)
+		if !isExternalAlias(t) {
+			si.writeLines(BlankLine)
+			si.writeDefinition(t)
+		}
+	}
+	for _, t := range si.types {
+		if isExternalAlias(t) {
+			si.writeLines(BlankLine)
+			si.writeExternalAlias(t)
+		}
 	}
 
 	return nil
@@ -211,9 +219,6 @@ func buildRequestBodyString(params []Param) string {
 func buildRequestHeadersString(params []Param) string {
 	headers := ""
 	if len(params) > 0 {
-		sort.SliceStable(params, func(i, j int) bool {
-			return strings.Compare(params[i].Name, params[j].Name) < 0
-		})
 		var parts []string
 		for _, p := range params {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
@@ -288,15 +293,14 @@ func (si *swaggerImporter) writeDefinition(t Type) {
 	bangName := "type"
 	if t.isAlias {
 		bangName = "alias"
-		if len(t.Properties) == 0 {
-			si.writeLines(fmt.Sprintf("!%s EXTERNAL_%s:", bangName, t.Name),
-				PushIndent, "string", PopIndent)
-			return
-		}
 
 		if t.isArray {
 			si.writeLines(fmt.Sprintf("!%s %s:", bangName, t.Name),
-				PushIndent, "sequence of EXTERNAL_"+t.Properties[0].Type.Name, PopIndent)
+				PushIndent, getSyslTypeName(t), PopIndent)
+			return
+		} else if t.isEnum {
+			si.writeLines(fmt.Sprintf("!%s %s:", bangName, t.Name),
+				PushIndent, "string", PopIndent)
 			return
 		}
 	}
@@ -312,13 +316,30 @@ func (si *swaggerImporter) writeDefinition(t Type) {
 			name += "_"
 		}
 
-		propTypeName := prop.Type.Name
-		if prop.Type.isAlias {
-			propTypeName = "EXTERNAL_" + propTypeName
-		}
-
-		si.writeLines(PushIndent, fmt.Sprintf("%s <: %s%s:", name, propTypeName, suffix))
+		si.writeLines(PushIndent, fmt.Sprintf("%s <: %s%s:", name, getSyslTypeName(prop.Type), suffix))
 		si.writeLines(PushIndent, fmt.Sprintf("@json_tag = %s", quote(prop.Name)))
 		si.writeLines(PopIndent, PopIndent)
 	}
+}
+
+func isExternalAlias(t Type) bool {
+	return t.isAlias && !t.isArray && !t.isEnum
+}
+
+func (si *swaggerImporter) writeExternalAlias(t Type) {
+	aliasType := "string"
+	if len(t.Properties) > 0 {
+		aliasType = getSyslTypeName(t.Properties[0].Type)
+	}
+	si.writeLines(fmt.Sprintf("!alias %s:", getSyslTypeName(t)),
+		PushIndent, aliasType, PopIndent)
+}
+
+func getSyslTypeName(t Type) string {
+	if isExternalAlias(t) {
+		return "EXTERNAL_" + t.Name
+	} else if t.isArray {
+		return "sequence of " + getSyslTypeName(t.Properties[0].Type)
+	}
+	return t.Name
 }

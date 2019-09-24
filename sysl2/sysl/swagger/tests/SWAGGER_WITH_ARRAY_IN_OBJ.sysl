@@ -14,8 +14,6 @@ testapp "Fruit API" [package="package_foo"]:
     #---------------------------------------------------------------------------
     # definitions
 
-    !alias EXTERNAL_MysteriousObject:
-        string
-
-    !alias EXTERNAL_OtherMysteriousObject:
-        float
+    !type ObjectWithArrayProps:
+        payload <: sequence of string?:
+            @json_tag = "payload"
