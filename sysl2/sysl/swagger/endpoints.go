@@ -2,6 +2,7 @@ package swagger
 
 import (
 	"github.com/go-openapi/spec"
+	"github.com/sirupsen/logrus"
 )
 
 type Endpoint struct {
@@ -18,20 +19,20 @@ var methodDisplayOrder = []string{"GET", "PUT", "POST", "DELETE", "PATCH"}
 
 func initEndpoint(path string,
 	op *spec.Operation, params []spec.Parameter,
-	types TypeList, globals Parameters) Endpoint {
+	types TypeList, globals Parameters, logger *logrus.Logger) Endpoint {
 
-	apiParams := buildParameters(params, types, globals, Parameters{})
+	apiParams := buildParameters(params, types, globals, Parameters{}, logger)
 
 	res := Endpoint{
 		Path:        path,
 		Description: op.Description,
 		Responses:   op.Responses,
-		Params:      buildParameters(op.Parameters, types, globals, apiParams),
+		Params:      buildParameters(op.Parameters, types, globals, apiParams, logger),
 	}
 	return res
 }
 
-func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters) map[string][]Endpoint {
+func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger *logrus.Logger) map[string][]Endpoint {
 	res := map[string][]Endpoint{}
 
 	for path, item := range doc.Paths.Paths {
@@ -46,7 +47,7 @@ func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters) map[st
 
 		for method, op := range ops {
 			if op != nil {
-				res[method] = append(res[method], initEndpoint(path, op, item.Parameters, types, globals))
+				res[method] = append(res[method], initEndpoint(path, op, item.Parameters, types, globals, logger))
 			}
 		}
 

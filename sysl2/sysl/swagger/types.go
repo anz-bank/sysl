@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/go-openapi/spec"
 )
 
@@ -46,11 +48,13 @@ func IsKeyword(name string) bool {
 	return false
 }
 
-func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []string, knownTypes *TypeList) {
+func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []string,
+	knownTypes *TypeList, logger *logrus.Logger) {
+
 	keys := []string{}
 	fields := map[string]Field{}
 	for pname, prop := range props {
-		refType := findReferencedType(prop)
+		refType := findReferencedType(prop, logger)
 		propType, _ := knownTypes.Find(refType)
 		if refType == "object" {
 			propType = Type{
@@ -76,9 +80,10 @@ func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []strin
 	}
 }
 
-func mapSwaggerTypeAndFormatToType(typeName, format string) string {
+func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logger) string {
 	if format != "" && !contains(format, swaggerFormats) {
-		panic("unknown format")
+		logger.Errorf("unknown format '%s' being used, ignoring...\n", format)
+		format = ""
 	}
 
 	conversions := map[string]map[string]string{
@@ -104,12 +109,14 @@ func mapSwaggerTypeAndFormatToType(typeName, format string) string {
 		if result, ok := formatMap[format]; ok {
 			return result
 		}
+		logger.Warnf("Unhandled (type, format) -> (%s, %s)\n", typeName, format)
+		return mapSwaggerTypeAndFormatToType(typeName, "", logger)
 	}
 
 	return typeName
 }
 
-func InitTypes(doc *spec.Swagger) TypeList {
+func InitTypes(doc *spec.Swagger, logger *logrus.Logger) TypeList {
 	defs := TypeList{}
 	for name, definition := range doc.Definitions {
 		if _, found := defs.Find(name); !found {
@@ -118,7 +125,7 @@ func InitTypes(doc *spec.Swagger) TypeList {
 			}
 			if len(definition.Properties) == 0 {
 				item.isAlias = true
-				if isArray, _ := checkArrayType(definition); isArray {
+				if isArray, _ := checkArrayType(definition, logger); isArray {
 					item.isArray = true
 					nested := Type{
 						Name:    name + "_obj",
@@ -133,7 +140,7 @@ func InitTypes(doc *spec.Swagger) TypeList {
 
 				}
 			} else {
-				item.AddProperties(definition.Properties, definition.Required, &defs)
+				item.AddProperties(definition.Properties, definition.Required, &defs, logger)
 			}
 
 			defs = append(defs, item)
@@ -149,13 +156,10 @@ func InitTypes(doc *spec.Swagger) TypeList {
 
 func (t TypeList) Find(name string) (Type, bool) {
 
-	if syslType, ok := swaggerToSyslMappings[name]; ok {
-		return Type{Name: syslType}, true
+	if builtin, ok := checkBuiltInTypes(name); ok {
+		return builtin, ok
 	}
 
-	if contains(name, builtIns) {
-		return Type{Name: name}, true
-	}
 	for _, n := range t {
 		if n.Name == name {
 			return n, true
@@ -164,25 +168,37 @@ func (t TypeList) Find(name string) (Type, bool) {
 	return Type{}, false
 }
 
-func checkArrayType(schema spec.Schema) (bool, string) {
+func checkBuiltInTypes(name string) (Type, bool) {
+
+	if syslType, ok := swaggerToSyslMappings[name]; ok {
+		return Type{Name: syslType}, true
+	}
+
+	if contains(name, builtIns) {
+		return Type{Name: name}, true
+	}
+	return Type{}, false
+}
+
+func checkArrayType(schema spec.Schema, logger *logrus.Logger) (bool, string) {
 	if len(schema.Type) == 1 {
 		typeName := schema.Type[0]
 		if typeName == "array" && schema.Items != nil {
-			return true, findReferencedType(*schema.Items.Schema)
+			return true, findReferencedType(*schema.Items.Schema, logger)
 		}
 	}
 
 	return false, ""
 }
 
-func findReferencedType(schema spec.Schema) string {
+func findReferencedType(schema spec.Schema, logger *logrus.Logger) string {
 	if len(schema.Type) == 1 {
-		if isArray, items := checkArrayType(schema); isArray {
+		if isArray, items := checkArrayType(schema, logger); isArray {
 			return "sequence of " + items
 		}
-		return mapSwaggerTypeAndFormatToType(schema.Type[0], schema.Format)
+		return mapSwaggerTypeAndFormatToType(schema.Type[0], schema.Format, logger)
 	} else if len(schema.Type) == 0 && schema.Items != nil {
-		return findReferencedType(*schema.Items.Schema)
+		return findReferencedType(*schema.Items.Schema, logger)
 	}
 
 	if refURL := schema.Ref.GetURL(); refURL != nil {

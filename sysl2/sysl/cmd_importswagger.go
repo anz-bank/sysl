@@ -36,7 +36,7 @@ func (p *importSwaggerCmd) Execute(args ExecuteArgs) error {
 		return err
 	}
 
-	output, err := swagger.LoadSwaggerText(p.OutputData, string(data))
+	output, err := swagger.LoadSwaggerText(p.OutputData, string(data), args.Logger)
 	if err != nil {
 		return err
 	}

@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/sirupsen/logrus/hooks/test"
+
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,6 +23,8 @@ func TestLoadSwaggerFromTestFiles(t *testing.T) {
 			continue
 		}
 
+		logger, _ := test.NewNullLogger()
+
 		parts := strings.Split(f.Name(), ".")
 		if strings.EqualFold(parts[1], "yaml") {
 			filename := strings.Join(parts[:len(parts)-1], ".")
@@ -34,7 +38,7 @@ func TestLoadSwaggerFromTestFiles(t *testing.T) {
 				result, err := LoadSwaggerText(OutputData{
 					AppName: "testapp",
 					Package: "package_foo",
-				}, string(input))
+				}, string(input), logger)
 				require.NoError(t, err)
 				require.Equal(t, string(expected), result)
 

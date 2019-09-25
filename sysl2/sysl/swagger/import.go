@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/go-openapi/spec"
 
 	"github.com/go-openapi/loads"
@@ -18,26 +20,28 @@ type OutputData struct {
 	Package string
 }
 
-func LoadSwaggerText(args OutputData, text string) (out string, err error) {
+func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
 
 	doc, err := loads.Analyzed(json.RawMessage(text), "2.0")
 	if err != nil {
+		logger.Errorf("Failed to load swagger spec: %s\n", err.Error())
 		return "", err
 	}
 
 	result := &bytes.Buffer{}
 
 	swagger := doc.Spec()
-	types := InitTypes(swagger)
-	globalParams := buildGlobalParams(swagger.Parameters, types)
+	types := InitTypes(swagger, logger)
+	globalParams := buildGlobalParams(swagger.Parameters, types, logger)
 
 	si := swaggerImporter{
 		Writer:       result,
 		ind:          NewIndentWriter("    ", result),
 		swagger:      doc.Spec(),
+		logger:       logger,
 		args:         args,
 		types:        types,
-		endpoints:    InitEndpoints(swagger, types, globalParams),
+		endpoints:    InitEndpoints(swagger, types, globalParams, logger),
 		globalParams: globalParams,
 	}
 	if err := si.Write(); err != nil {
@@ -51,6 +55,7 @@ type swaggerImporter struct {
 	io.Writer
 	ind     *IndentWriter
 	swagger *spec.Swagger
+	logger  *logrus.Logger
 	args    OutputData
 
 	types        TypeList
@@ -60,7 +65,7 @@ type swaggerImporter struct {
 
 func (si *swaggerImporter) mustWrite(s string) {
 	if _, err := si.Writer.Write([]byte(s)); err != nil {
-		panic(err)
+		si.logger.Fatalf("failed to complete write: %s", err.Error())
 	}
 }
 
@@ -175,7 +180,7 @@ func (si *swaggerImporter) writeHeader() error {
 func buildQueryString(params []Param) string {
 	query := ""
 	if len(params) > 0 {
-		parts := []string{}
+		var parts []string
 		for _, p := range params {
 			optional := ""
 			if p.Optional {
@@ -194,7 +199,7 @@ func buildRequestBodyString(params []Param) string {
 		sort.SliceStable(params, func(i, j int) bool {
 			return strings.Compare(params[i].Name, params[j].Name) < 0
 		})
-		parts := []string{}
+		var parts []string
 		for _, p := range params {
 			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, p.Type.Name))
 		}
@@ -209,7 +214,7 @@ func buildRequestHeadersString(params []Param) string {
 		sort.SliceStable(params, func(i, j int) bool {
 			return strings.Compare(params[i].Name, params[j].Name) < 0
 		})
-		parts := []string{}
+		var parts []string
 		for _, p := range params {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
 
@@ -255,20 +260,20 @@ func (si *swaggerImporter) writeEndpoint(method string, endpoint Endpoint) {
 		var outs []string
 		for statusCode, response := range endpoint.Responses.StatusCodeResponses {
 			if schema := response.Schema; schema != nil {
-				outs = append(outs, findReferencedType(*schema))
+				outs = append(outs, findReferencedType(*schema, si.logger))
 			} else {
 				outs = append(outs, fmt.Sprintf("%d", statusCode))
 			}
 
 		}
 		if endpoint.Responses.Extensions != nil {
-			println("x-* responses not implemented")
+			si.logger.Warnf("x-* responses not implemented, endpoint: %s", endpoint.Path)
 			for key := range endpoint.Responses.Extensions {
 				outs = append(outs, key)
 			}
 		}
 		if endpoint.Responses.Default != nil {
-			println("default responses not implemented")
+			si.logger.Warnf("default responses not implemented, endpoint: %s", endpoint.Path)
 			outs = append(outs, "default")
 		}
 		sort.Strings(outs)
