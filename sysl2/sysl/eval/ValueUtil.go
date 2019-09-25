@@ -1,6 +1,8 @@
 package eval
 
 import (
+	"strings"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
@@ -236,6 +238,8 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 	AddItemToValueMap(m, "attrs", attrsToValueMap(e.Attrs))
 	AddItemToValueMap(m, "is_rest", MakeValueBool(e.RestParams != nil))
 	AddItemToValueMap(m, "is_pubsub", MakeValueBool(e.IsPubsub))
+	retTypes := MakeValueMap()
+	retValues := []string{}
 
 	if e.RestParams != nil {
 		AddItemToValueMap(m, "method", MakeValueString(sysl.Endpoint_RestParams_Method_name[int32(e.RestParams.Method)]))
@@ -262,12 +266,23 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 
 	stmtsList := MakeValueList()
 	for _, stmt := range e.Stmt {
-		if stmt.GetRet() != nil {
-			AddItemToValueMap(m, "ret", stmtToValue(stmt))
-		} else {
+		switch {
+		case stmt.GetRet() != nil:
+			retValues = strings.Split(stmt.GetRet().GetPayload(), " <: ")
+		case stmt.GetCond() != nil:
+			retValues = strings.Split(stmt.GetCond().GetStmt()[0].GetRet().GetPayload(), " <: ")
+		case stmt.GetGroup() != nil && stmt.GetGroup().GetTitle() == "else":
+			retValues = strings.Split(stmt.GetGroup().GetStmt()[0].GetRet().GetPayload(), " <: ")
+		default:
 			AppendItemToValueList(stmtsList.GetList(), stmtToValue(stmt))
 		}
+		if len(retValues) > 1 {
+			retTypes.GetMap().Items[retValues[0]] = MakeValueString(retValues[1])
+		} else {
+			retTypes.GetMap().Items["payload"] = MakeValueString(retValues[0])
+		}
 	}
+	AddItemToValueMap(m, "ret", retTypes)
 	AddItemToValueMap(m, "stmts", stmtsList)
 
 	return m
