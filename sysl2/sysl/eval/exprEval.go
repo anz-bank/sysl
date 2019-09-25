@@ -176,12 +176,16 @@ func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.V
 		switch x.Call.Func[1:] {
 		case "count":
 			argExpr := Eval(txApp, assign, x.Call.Arg[0])
-			if argExpr.GetList() != nil {
-				return MakeValueI64(int64(len(argExpr.GetList().Value)))
-			} else if argExpr.GetSet() != nil {
-				return MakeValueI64(int64(len(argExpr.GetSet().Value)))
+			switch t := argExpr.Value.(type) {
+			case *sysl.Value_List_:
+				return MakeValueI64(int64(len(t.List.Value)))
+			case *sysl.Value_Set:
+				return MakeValueI64(int64(len(t.Set.Value)))
+			case *sysl.Value_Map_:
+				return MakeValueI64(int64(len(t.Map.Items)))
+			default:
+				panic(errors.Errorf("Unexpected arg type: %v", x.Call.Arg))
 			}
-			panic(errors.Errorf("Unexpected arg type: %v", x.Call.Arg))
 		default:
 			panic(errors.Errorf("Unimplemented function: %s", x.Call.Func))
 		}
