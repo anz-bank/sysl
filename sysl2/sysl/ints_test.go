@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/sirupsen/logrus/hooks/test"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
@@ -117,7 +119,7 @@ func TestGenerateIntegrationsWithTestFile(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	// Then
@@ -140,7 +142,7 @@ func TestGenerateIntegrationsWithTestFileAndFilters(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	// Then
@@ -164,7 +166,7 @@ func TestGenerateIntegrationsWithImmediatePredecessors(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	// Then
@@ -189,7 +191,7 @@ func TestGenerateIntegrationsWithExclude(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	// Then
@@ -214,7 +216,7 @@ func TestGenerateIntegrationsWithPassthrough(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	// Then
@@ -225,17 +227,18 @@ func TestDoGenerateIntegrations(t *testing.T) {
 	t.Parallel()
 
 	args := &intsArg{
-		rootModel: "./tests/",
-		modules:   "indirect_1.sysl",
-		output:    "%(epname).png",
-		project:   "Project",
+		modules: "indirect_1.sysl",
+		output:  "%(epname).png",
+		project: "Project",
 	}
-	argsData := []string{"sysl", "ints", "--root", args.rootModel, "-o", args.output, "-j", args.project, args.modules}
+	argsData := []string{"sysl", "ints", "-o", args.output, "-j", args.project, args.modules}
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	configureCmdlineForIntgen(sysl, map[string][]string{})
+
+	r := cmdRunner{}
+	assert.NoError(t, r.Configure(sysl))
 	selectedCommand, err := sysl.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl ints")
-	assert.Equal(t, selectedCommand, "ints")
+	assert.Equal(t, selectedCommand, "integrations")
 }
 
 func TestGenerateIntegrationsWithCluster(t *testing.T) {
@@ -253,7 +256,7 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -279,7 +282,7 @@ func TestGenerateIntegrationsWithEpa(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -304,7 +307,7 @@ func TestGenerateIntegrationsWithIndirectArrow(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -335,7 +338,7 @@ func TestGenerateIntegrationsWithRestrictBy(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -366,7 +369,7 @@ func TestGenerateIntegrationsWithFilter(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	// Then
@@ -387,7 +390,7 @@ func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -415,7 +418,7 @@ func TestPassthrough2(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -447,7 +450,7 @@ func TestGenerateIntegrationsWithPubSub(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -472,7 +475,7 @@ func TestAllStmts(t *testing.T) {
 	// When
 	result, err := GenerateIntegrationsWithParams(args.rootModel, args.title, args.output,
 		args.project, args.filter, args.modules, args.exclude, args.clustered,
-		args.epa, "warn", false)
+		args.epa)
 	require.NoError(t, err)
 
 	expected := map[string]string{
@@ -487,23 +490,21 @@ func GenerateIntegrationsWithParams(
 	rootModel, title, output, project, filter, modules string,
 	exclude []string,
 	clustered, epa bool,
-	loglevel string,
-	isVerbose bool,
 ) (map[string]string, error) {
-	plantuml := ""
 	cmdContextParamIntgen := &CmdContextParamIntgen{
-		root:      &rootModel,
-		title:     &title,
-		output:    &output,
-		project:   &project,
-		filter:    &filter,
-		modules:   &modules,
-		exclude:   &exclude,
-		clustered: &clustered,
-		epa:       &epa,
-		loglevel:  &loglevel,
-		isVerbose: &isVerbose,
-		plantuml:  &plantuml,
+		title:     title,
+		output:    output,
+		project:   project,
+		filter:    filter,
+		exclude:   exclude,
+		clustered: clustered,
+		epa:       epa,
 	}
-	return GenerateIntegrations(cmdContextParamIntgen)
+
+	logger, _ := test.NewNullLogger()
+	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	if err != nil {
+		return nil, err
+	}
+	return GenerateIntegrations(cmdContextParamIntgen, mod, logger)
 }
