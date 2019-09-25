@@ -1,6 +1,9 @@
 package swagger
 
 import (
+	"sort"
+	"strings"
+
 	"github.com/go-openapi/spec"
 	"github.com/sirupsen/logrus"
 )
@@ -51,6 +54,13 @@ func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger
 			}
 		}
 
+	}
+
+	for key := range res {
+		key := key
+		sort.SliceStable(res[key], func(i, j int) bool {
+			return strings.Compare(res[key][i].Path, res[key][j].Path) < 0
+		})
 	}
 
 	return res

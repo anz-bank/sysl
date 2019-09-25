@@ -1,0 +1,56 @@
+swagger: '2.0'
+info:
+  description: foo
+  title: foo
+  version: 0.0.0
+schemes:
+  - https
+
+paths:
+  /random/createfoo:
+    post:
+      consumes:
+        - application/json
+      description: Create a foo.
+      parameters:
+        - description: |
+            Unique id
+          format: uuid
+          in: header
+          name: UUID
+          required: false
+          type: string
+        - name: FooID
+          in: header
+          required: true
+          description: |
+            Client Foo ID.
+          type: string
+        - name: RequestID
+          in: header
+          required: true
+          description: |
+            An id that identifies this request.
+          type: string
+        - name: sessionId
+          in: header
+          required: true
+          description: |
+            An id that identifies this session.
+          type: string
+        - name: deviceId
+          in: header
+          required: false
+          description: |
+            The terminal id of the operator
+          type: string
+        - name: ipAddress
+          in: header
+          required: false
+          description: |
+            IP address of the device making the request
+          type: string
+      responses:
+        '200':
+          description: ''
+      summary: Create a foo

@@ -6,4 +6,7 @@ info:
 definitions:
   MysteriousObject:
     type: object
+
+  OtherMysteriousObject:
+    type: number
 paths: {}

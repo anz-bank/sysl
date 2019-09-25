@@ -1,0 +1,71 @@
+swagger: '2.0'
+info:
+  description: foo
+  title: foo
+  version: 0.0.0
+schemes:
+  - https
+
+paths: {}
+
+definitions:
+
+  Attachment:
+    additionalProperties: false
+    properties:
+      data:
+        maxLength: 10000
+        type: string
+      type:
+        enum:
+          - reference
+          - inline
+        type: string
+    required:
+      - type
+      - data
+    title: Attachment
+    type: object
+
+  GenericCustomField:
+    additionalProperties: false
+    properties:
+      name:
+        maxLength: 32
+        type: string
+      value:
+        type: object
+    required:
+      - name
+      - value
+    title: GenericCustomField
+    type: object
+
+
+  FieldUsingAnEnum:
+    title: FieldUsingAnEnum
+    type: object
+    properties:
+      account_bank:
+        maxLength: 256
+        type: string
+      account_key:
+        maxLength: 2000
+        type: string
+      frequency:
+        $ref: '#/definitions/Frequency'
+      start_date:
+        type: string
+        format: date
+
+  Frequency:
+    enum:
+      - daily
+      - weekly
+      - fortnightly
+      - monthly
+      - bimestrial
+      - quarterly
+      - biannual
+      - yearly
+    type: string

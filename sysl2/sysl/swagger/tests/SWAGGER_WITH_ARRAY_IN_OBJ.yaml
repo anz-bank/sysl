@@ -1,0 +1,18 @@
+swagger: "2.0"
+basePath: /fruit-basket
+info:
+  title: Fruit API
+  version: 1.0.0
+definitions:
+
+  ObjectWithArrayProps:
+    properties:
+      payload:
+        items:
+          type: string
+        type: array
+    title: GetGoalsResponse
+    type: object
+
+
+paths: {}

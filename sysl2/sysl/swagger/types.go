@@ -2,6 +2,7 @@ package swagger
 
 import (
 	"fmt"
+	"log"
 	"net/url"
 	"sort"
 	"strings"
@@ -16,6 +17,7 @@ type Type struct {
 	Properties []Field
 	isAlias    bool
 	isArray    bool
+	isEnum     bool
 }
 
 type Field struct {
@@ -48,20 +50,32 @@ func IsKeyword(name string) bool {
 	return false
 }
 
-func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []string,
-	knownTypes *TypeList, logger *logrus.Logger) {
-
+func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []string, data *typeData) {
 	keys := []string{}
 	fields := map[string]Field{}
 	for pname, prop := range props {
-		refType := findReferencedType(prop, logger)
-		propType, _ := knownTypes.Find(refType)
+		isArray, refType := checkArrayType(prop, data.logger)
+		if !isArray {
+			refType = findReferencedType(prop, data.logger)
+		}
+		propType, found := data.knownTypes.Find(refType)
+		if !found {
+			if ref, ok := data.doc.Definitions[refType]; ok {
+				propType = createTypeFromSchema(refType, &ref, data)
+			}
+		}
 		if refType == "object" {
 			propType = Type{
 				Name:    fmt.Sprintf("%s_%s_obj", t.Name, pname),
 				isAlias: true,
 			}
-			*knownTypes = append(*knownTypes, propType)
+			data.knownTypes = append(data.knownTypes, propType)
+		}
+		if isArray {
+			propType = Type{
+				isArray:    true,
+				Properties: FieldList{Field{Type: propType}},
+			}
 		}
 		f := Field{
 			Name:     pname,
@@ -81,6 +95,8 @@ func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []strin
 }
 
 func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logger) string {
+	typeName = strings.ToLower(typeName)
+	format = strings.ToLower(format)
 	if format != "" && !contains(format, swaggerFormats) {
 		logger.Errorf("unknown format '%s' being used, ignoring...\n", format)
 		format = ""
@@ -117,41 +133,23 @@ func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logge
 }
 
 func InitTypes(doc *spec.Swagger, logger *logrus.Logger) TypeList {
-	defs := TypeList{}
+	data := &typeData{
+		doc:        doc,
+		knownTypes: TypeList{},
+		logger:     logger,
+	}
 	for name, definition := range doc.Definitions {
-		if _, found := defs.Find(name); !found {
-			item := Type{
-				Name: name,
-			}
-			if len(definition.Properties) == 0 {
-				item.isAlias = true
-				if isArray, _ := checkArrayType(definition, logger); isArray {
-					item.isArray = true
-					nested := Type{
-						Name:    name + "_obj",
-						isAlias: true,
-					}
-					defs = append(defs, nested)
-					item.Properties = []Field{
-						{
-							Type: nested,
-						},
-					}
-
-				}
-			} else {
-				item.AddProperties(definition.Properties, definition.Required, &defs, logger)
-			}
-
-			defs = append(defs, item)
+		def := definition
+		if _, found := data.knownTypes.Find(name); !found {
+			_ = createTypeFromSchema(name, &def, data)
 		}
 
 	}
 
-	sort.SliceStable(defs, func(i, j int) bool {
-		return strings.Compare(defs[i].Name, defs[j].Name) < 0
+	sort.SliceStable(data.knownTypes, func(i, j int) bool {
+		return strings.Compare(data.knownTypes[i].Name, data.knownTypes[j].Name) < 0
 	})
-	return defs
+	return data.knownTypes
 }
 
 func (t TypeList) Find(name string) (Type, bool) {
@@ -220,4 +218,55 @@ func contains(needle string, haystack []string) bool {
 		}
 	}
 	return false
+}
+
+type typeData struct {
+	doc        *spec.Swagger
+	knownTypes TypeList
+	logger     *logrus.Logger
+}
+
+func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type {
+	item := Type{
+		Name: name,
+	}
+	if len(schema.Properties) == 0 {
+		item.isAlias = true
+		if isArray, _ := checkArrayType(*schema, data.logger); isArray {
+			item.isArray = true
+			nested := Type{
+				Name:    name + "_obj",
+				isAlias: true,
+			}
+			data.knownTypes = append(data.knownTypes, nested)
+			item.Properties = []Field{
+				{
+					Type: nested,
+				},
+			}
+		} else if len(schema.Enum) > 0 {
+			item.isEnum = true
+		} else if refType := findReferencedType(*schema, data.logger); refType != "" {
+			log.Printf("WARNING: swagger type '%s' is malformed\n", name)
+			t, found := data.knownTypes.Find(refType)
+			if !found {
+				if ref, ok := data.doc.Definitions[refType]; ok {
+					t = createTypeFromSchema(refType, &ref, data)
+				} else {
+					t, _ = data.knownTypes.Find("string")
+				}
+			}
+			item.Properties = []Field{
+				{
+					Type: t,
+				},
+			}
+		}
+	} else {
+		item.AddProperties(schema.Properties, schema.Required, data)
+	}
+
+	data.knownTypes = append(data.knownTypes, item)
+
+	return item
 }
