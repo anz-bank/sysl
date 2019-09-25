@@ -28,10 +28,18 @@ Model [package="com.example.gen", name="Model"]:
 TodoApp:
   /todos:
     GET:
-      return todos
+      if failed:
+        return 404 <: NotFoundError
+      else if error:
+        return 500 <: ServerError
+      else:                   
+        return 200 <: todos
 
     POST (newTodo <: Todo [~body], accept <: string [~header]):
-      return todo
+      if failed:
+        return 500 <: ErrorResponse
+      else:                        
+        return 200 <: todo
 
     /{id<:int}:
       GET:

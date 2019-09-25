@@ -291,7 +291,9 @@ func TestScopeAddRestApp(t *testing.T) {
 	rootTodos := endpoints["GET /todos"].GetMap().Items
 	assert.Equal(t, "GET /todos", rootTodos["name"].GetS())
 	assert.Equal(t, "GET", rootTodos["method"].GetS())
-	assert.Equal(t, "todos", rootTodos["ret"].GetMap().Items["payload"].GetS())
+	assert.Equal(t, "NotFoundError", rootTodos["ret"].GetMap().Items["404"].GetS())
+	assert.Equal(t, "ServerError", rootTodos["ret"].GetMap().Items["500"].GetS())
+	assert.Equal(t, "todos", rootTodos["ret"].GetMap().Items["200"].GetS())
 	assert.Len(t, rootTodos["pathvars"].GetList().Value, 0)
 	assert.Equal(t, "/todos", rootTodos["path"].GetS())
 	assert.True(t, rootTodos["is_rest"].GetB())
