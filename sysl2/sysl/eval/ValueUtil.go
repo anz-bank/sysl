@@ -5,6 +5,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	log "github.com/sirupsen/logrus"
 )
 
 // Scope holds the value of the variables during the execution of a transform
@@ -239,7 +240,7 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 	AddItemToValueMap(m, "is_rest", MakeValueBool(e.RestParams != nil))
 	AddItemToValueMap(m, "is_pubsub", MakeValueBool(e.IsPubsub))
 	retTypes := MakeValueMap()
-	retValues := []string{}
+	var retValues []string
 
 	if e.RestParams != nil {
 		AddItemToValueMap(m, "method", MakeValueString(sysl.Endpoint_RestParams_Method_name[int32(e.RestParams.Method)]))
@@ -266,13 +267,17 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 
 	stmtsList := MakeValueList()
 	for _, stmt := range e.Stmt {
-		switch {
-		case stmt.GetRet() != nil:
-			retValues = strings.Split(stmt.GetRet().GetPayload(), " <: ")
-		case stmt.GetCond() != nil:
-			retValues = strings.Split(stmt.GetCond().GetStmt()[0].GetRet().GetPayload(), " <: ")
-		case stmt.GetGroup() != nil && stmt.GetGroup().GetTitle() == "else":
-			retValues = strings.Split(stmt.GetGroup().GetStmt()[0].GetRet().GetPayload(), " <: ")
+		switch s := stmt.Stmt.(type) {
+		case *sysl.Statement_Ret:
+			retValues = strings.Split(s.Ret.GetPayload(), " <: ")
+		case *sysl.Statement_Cond:
+			retValues = strings.Split(s.Cond.GetStmt()[0].GetRet().GetPayload(), " <: ")
+		case *sysl.Statement_Group:
+			if s.Group.GetTitle() == "else" || strings.Contains(s.Group.GetTitle(), "else if") {
+				retValues = strings.Split(s.Group.GetStmt()[0].GetRet().GetPayload(), " <: ")
+			} else {
+				log.Warnf("Unexpected statement %s found", s.Group.GetTitle())
+			}
 		default:
 			AppendItemToValueList(stmtsList.GetList(), stmtToValue(stmt))
 		}

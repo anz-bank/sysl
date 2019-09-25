@@ -29,8 +29,10 @@ TodoApp:
   /todos:
     GET:
       if failed:
-        return 404 <: ErrorResponse
-      else:                        
+        return 404 <: NotFoundError
+      else if error:
+        return 500 <: ServerError
+      else:                   
         return 200 <: todos
 
     POST (newTodo <: Todo [~body], accept <: string [~header]):
