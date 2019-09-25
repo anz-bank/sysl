@@ -1,0 +1,22 @@
+
+swagger: "2.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+paths:
+  /goat/status:
+    get:
+      description: Check goat status
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: 'here be status'
+        '500':
+          description: 'alas, the server is broken'
+      summary: Check goat status

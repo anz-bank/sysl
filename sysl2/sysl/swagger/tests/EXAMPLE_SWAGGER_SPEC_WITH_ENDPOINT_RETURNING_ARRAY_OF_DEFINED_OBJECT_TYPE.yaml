@@ -1,0 +1,36 @@
+swagger: "2.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+definitions:
+  Goat:
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      birthday:
+        type: string
+        format: date
+    type: object
+
+paths:
+  /goat/get-goats:
+    get:
+      consumes:
+        - application/json
+      description: Gotta get goats.
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Goat'
+      summary: Gotta get goats
