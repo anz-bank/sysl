@@ -95,6 +95,8 @@ func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []strin
 }
 
 func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logger) string {
+	typeName = strings.ToLower(typeName)
+	format = strings.ToLower(format)
 	if format != "" && !contains(format, swaggerFormats) {
 		logger.Errorf("unknown format '%s' being used, ignoring...\n", format)
 		format = ""

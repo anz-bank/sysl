@@ -100,9 +100,10 @@ func buildGlobalParams(params map[string]spec.Parameter, types TypeList,
 	logger *logrus.Logger) Parameters {
 
 	res := Parameters{}
-	for _, param := range params {
+	for key, param := range params {
 
 		p := buildParam(param, types, res, logger)
+		p.Name = key
 		res.Add(p)
 	}
 	return res
