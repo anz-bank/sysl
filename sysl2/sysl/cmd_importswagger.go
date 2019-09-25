@@ -19,12 +19,12 @@ func (p *importSwaggerCmd) RequireSyslModule() bool { return false }
 func (p *importSwaggerCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 	cmd := app.Command(p.Name(), "Convert swagger yaml/json -> sysl")
-	cmd.Flag("input", "swagger input filename").Required().StringVar(&p.filename)
+	cmd.Flag("input", "swagger input filename").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
-		"name of the sysl app to define in sysl model.").Required().StringVar(&p.AppName)
+		"name of the sysl app to define in sysl model.").Short('a').Required().StringVar(&p.AppName)
 	cmd.Flag("package",
-		"name of the sysl package to define in sysl model.").Required().StringVar(&p.Package)
-	cmd.Flag("output", "output filename").Default("output.sysl").StringVar(&p.outfile)
+		"name of the sysl package to define in sysl model.").Short('p').Required().StringVar(&p.Package)
+	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
