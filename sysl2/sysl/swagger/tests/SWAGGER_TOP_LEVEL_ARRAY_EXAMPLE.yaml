@@ -1,0 +1,12 @@
+swagger: "2.0"
+info:
+  title: Simple
+paths: {}
+
+definitions:
+  TopLevelArray:
+    type: array
+    items:
+      properties:
+        name:
+          type: string

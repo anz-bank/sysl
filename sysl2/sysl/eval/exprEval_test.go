@@ -152,6 +152,7 @@ func TestEvalListSetOps(t *testing.T) {
 
 	assert.Equal(t, int64(2), out.GetMap().Items["count1"].GetI())
 	assert.Equal(t, int64(2), out.GetMap().Items["count2"].GetI())
+	assert.Equal(t, int64(3), out.GetMap().Items["count3"].GetI())
 	assert.Len(t, out.GetMap().Items["list"].GetList().Value, 3)
 
 	numbers := out.GetMap().Items["numbers"].GetSet()

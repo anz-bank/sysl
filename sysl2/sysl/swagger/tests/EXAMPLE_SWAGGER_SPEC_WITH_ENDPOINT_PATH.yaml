@@ -1,0 +1,37 @@
+swagger: "2.0"
+basePath: /api/v1
+
+host: goat.example.com
+
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+
+definitions:
+  Acknowledgement:
+    additionalProperties: false
+    description: Indicates if a request has succeeded or not.
+    properties:
+      message:
+        type: string
+    type: object
+
+paths:
+  /goat/delete-goat:
+    post:
+      consumes:
+        - application/json
+      description: Delete a goat.
+      parameters:
+        - name: goat_id
+          in: query
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Acknowledgement'
+      summary: Delete a goat
