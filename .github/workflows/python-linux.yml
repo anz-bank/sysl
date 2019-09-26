@@ -35,7 +35,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test installed
-      run: bash test-pysysl.sh
+      run: |
+        ./scripts/test-pysysl.sh
+        gradle test -b test/java/build.gradle
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SYSL_PLANTUML: http://www.plantuml.com/plantuml

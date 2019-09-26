@@ -32,7 +32,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test
-      run: ./check-coverage.sh 80
+      run: ./scripts/check-coverage.sh 80
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
@@ -47,12 +47,12 @@ jobs:
         export GOBIN=$PWD/bin
         mkdir $GOBIN
         GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
-        go install -ldflags "-X main.Version=${GIT_TAG:1}" ./sysl2/sysl
+        ./scripts/build.sh install ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test installed
-      run: bash test-gosysl.sh
+      run: ./scripts/test-gosysl.sh
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GOPATH: .

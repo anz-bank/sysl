@@ -32,7 +32,7 @@ test_script:
   - pytest test/e2e --syslexe=sysl --reljamexe=reljam
   - gradle --no-daemon -b test\java\build.gradle test
   - go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/...
-  - test-gosysl.bat
+  - scripts/test-gosysl.bat
 
 after_test:
   - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"

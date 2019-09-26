@@ -601,3 +601,10 @@ func TestMain2WithDataMultipleRelationships(t *testing.T) {
 		fs, logger, main3)
 	testutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
+
+func TestMain2WithBinaryInfoCmd(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	exitCode := main2([]string{"sysl", "info"}, nil, logger, main3)
+	assert.Equal(t, 0, exitCode)
+}
