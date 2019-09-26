@@ -114,20 +114,7 @@ func (si *swaggerImporter) Write() error {
 		si.writeLines(PopIndent)
 	}
 
-	si.writeLines("#" + strings.Repeat("-", 75))
-	si.writeLines("# definitions")
-	for _, t := range si.types {
-		if !isExternalAlias(t) {
-			si.writeLines(BlankLine)
-			si.writeDefinition(t)
-		}
-	}
-	for _, t := range si.types {
-		if isExternalAlias(t) {
-			si.writeLines(BlankLine)
-			si.writeExternalAlias(t)
-		}
-	}
+	si.writeDefinitions()
 
 	return nil
 }
@@ -194,7 +181,7 @@ func buildQueryString(params []Param) string {
 			if p.Optional {
 				optional = "?"
 			}
-			parts = append(parts, fmt.Sprintf("%s=%s%s", p.Name, p.Type.Name, optional))
+			parts = append(parts, fmt.Sprintf("%s=%s%s", p.Name, p.Type.Name(), optional))
 		}
 		query = " ?" + strings.Join(parts, "&")
 	}
@@ -209,7 +196,7 @@ func buildRequestBodyString(params []Param) string {
 		})
 		var parts []string
 		for _, p := range params {
-			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, p.Type.Name))
+			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, p.Type.Name()))
 		}
 		body = strings.Join(parts, ", ")
 	}
@@ -224,8 +211,8 @@ func buildRequestHeadersString(params []Param) string {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
 
 			safeName := strings.ToLower(strings.ReplaceAll(p.Name, "-", "_"))
-
-			parts = append(parts, fmt.Sprintf("%s <: %s [~header, %s, name=%s]", safeName, p.Type.Name, optional, quote(p.Name)))
+			text := fmt.Sprintf("%s <: %s [~header, %s, name=%s]", safeName, p.Type.Name(), optional, quote(p.Name))
+			parts = append(parts, text)
 		}
 		headers = strings.Join(parts, ", ")
 	}
@@ -237,7 +224,7 @@ func buildPathString(path string, params []Param) string {
 	result := path
 
 	for _, p := range params {
-		replacement := fmt.Sprintf("{%s<:%s}", p.Name, p.Type.Name)
+		replacement := fmt.Sprintf("{%s<:%s}", p.Name, p.Type.Name())
 		result = strings.ReplaceAll(result, fmt.Sprintf("{%s}", p.Name), replacement)
 	}
 
@@ -261,25 +248,14 @@ func (si *swaggerImporter) writeEndpoint(method string, endpoint Endpoint) {
 		fmt.Sprintf("%s%s%s:", method, reqStr, buildQueryString(endpoint.Params.QueryParams())), PushIndent,
 		fmt.Sprintf("| %s", getDescription(endpoint.Description)))
 
-	if endpoint.Responses != nil {
+	if len(endpoint.Responses) > 0 {
 		var outs []string
-		for statusCode, response := range endpoint.Responses.StatusCodeResponses {
-			if schema := response.Schema; schema != nil {
-				outs = append(outs, findReferencedType(*schema, si.logger))
+		for _, resp := range endpoint.Responses {
+			if resp.Type != nil {
+				outs = append(outs, getSyslTypeName(resp.Type))
 			} else {
-				outs = append(outs, fmt.Sprintf("%d", statusCode))
+				outs = append(outs, resp.Text)
 			}
-
-		}
-		if endpoint.Responses.Extensions != nil {
-			si.logger.Warnf("x-* responses not implemented, endpoint: %s", endpoint.Path)
-			for key := range endpoint.Responses.Extensions {
-				outs = append(outs, key)
-			}
-		}
-		if endpoint.Responses.Default != nil {
-			si.logger.Warnf("default responses not implemented, endpoint: %s", endpoint.Path)
-			outs = append(outs, "default")
 		}
 		sort.Strings(outs)
 		si.writeLines(fmt.Sprintf("return %s", strings.Join(outs, ", ")))
@@ -288,23 +264,34 @@ func (si *swaggerImporter) writeEndpoint(method string, endpoint Endpoint) {
 	si.writeLines(PopIndent, PopIndent)
 }
 
-func (si *swaggerImporter) writeDefinition(t Type) {
+func (si *swaggerImporter) writeDefinitions() {
 
-	bangName := "type"
-	if t.isAlias {
-		bangName = "alias"
-
-		if t.isArray {
-			si.writeLines(fmt.Sprintf("!%s %s:", bangName, t.Name),
-				PushIndent, getSyslTypeName(t), PopIndent)
-			return
-		} else if t.isEnum {
-			si.writeLines(fmt.Sprintf("!%s %s:", bangName, t.Name),
-				PushIndent, "string", PopIndent)
-			return
+	si.writeLines("#" + strings.Repeat("-", 75))
+	si.writeLines("# definitions")
+	var others []Type
+	for _, t := range si.types {
+		_, isEnum := t.(*Enum)
+		switch {
+		case isEnum:
+			// We want the enum aliases listed with the real types
+			si.writeLines(BlankLine)
+			si.writeExternalAlias(t)
+		case !isExternalAlias(t):
+			si.writeLines(BlankLine)
+			si.writeDefinition(t.(*StandardType))
+		default:
+			others = append(others, t)
 		}
 	}
-	si.writeLines(fmt.Sprintf("!%s %s:", bangName, t.Name))
+	for _, t := range others {
+		si.writeLines(BlankLine)
+		si.writeExternalAlias(t)
+	}
+}
+
+func (si *swaggerImporter) writeDefinition(t *StandardType) {
+	bangName := "type"
+	si.writeLines(fmt.Sprintf("!%s %s:", bangName, getSyslTypeName(t)))
 	for _, prop := range t.Properties {
 		suffix := ""
 		if prop.Optional {
@@ -322,24 +309,45 @@ func (si *swaggerImporter) writeDefinition(t Type) {
 	}
 }
 
-func isExternalAlias(t Type) bool {
-	return t.isAlias && !t.isArray && !t.isEnum
+func isExternalAlias(item Type) bool {
+	switch item.(type) {
+	case *Alias:
+		return true
+	case *Array:
+		return true
+	case *Enum:
+		return true
+	}
+	return false
 }
 
-func (si *swaggerImporter) writeExternalAlias(t Type) {
+func (si *swaggerImporter) writeExternalAlias(item Type) {
 	aliasType := "string"
-	if len(t.Properties) > 0 {
-		aliasType = getSyslTypeName(t.Properties[0].Type)
+	aliasName := getSyslTypeName(item)
+	switch t := item.(type) {
+	case *StandardType:
+		if len(t.Properties) > 0 {
+			aliasType = getSyslTypeName(t.Properties[0].Type)
+		}
+	case *Alias:
+		aliasType = getSyslTypeName(t.Alias)
+	case *Array:
+		aliasType = getSyslTypeName(item)
+		aliasName = t.name
 	}
-	si.writeLines(fmt.Sprintf("!alias %s:", getSyslTypeName(t)),
+	si.writeLines(fmt.Sprintf("!alias %s:", aliasName),
 		PushIndent, aliasType, PopIndent)
 }
 
-func getSyslTypeName(t Type) string {
-	if isExternalAlias(t) {
-		return "EXTERNAL_" + t.Name
-	} else if t.isArray {
-		return "sequence of " + getSyslTypeName(t.Properties[0].Type)
+func getSyslTypeName(item Type) string {
+	switch t := item.(type) {
+	case *Array:
+		return "sequence of " + getSyslTypeName(t.Items)
+	case *Enum:
+		return item.Name()
 	}
-	return t.Name
+	if isExternalAlias(item) {
+		return "EXTERNAL_" + item.Name()
+	}
+	return item.Name()
 }

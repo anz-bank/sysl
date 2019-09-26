@@ -12,13 +12,50 @@ import (
 	"github.com/go-openapi/spec"
 )
 
-type Type struct {
-	Name       string
-	Properties []Field
-	isAlias    bool
-	isArray    bool
-	isEnum     bool
+type Type interface {
+	Name() string
 }
+
+type StandardType struct {
+	name       string
+	Properties []Field
+}
+
+func (s *StandardType) Name() string { return s.name }
+
+type SyslBuiltIn struct {
+	name string
+}
+
+func (s *SyslBuiltIn) Name() string { return s.name }
+
+type Alias struct {
+	name  string
+	Alias Type
+}
+
+func (s *Alias) Name() string { return s.name }
+func NewStringAlias(name string) Type {
+	return &Alias{
+		name:  name,
+		Alias: &SyslBuiltIn{name: "string"},
+	}
+}
+
+type Array struct {
+	name  string
+	Items Type
+}
+
+func (s *Array) Name() string { return s.name }
+
+// sysl doesnt really support enums yet but leave for future use
+type Enum struct {
+	name  string
+	Items []string
+}
+
+func (s *Enum) Name() string { return s.name }
 
 type Field struct {
 	Name     string
@@ -50,31 +87,19 @@ func IsKeyword(name string) bool {
 	return false
 }
 
-func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []string, data *typeData) {
+func (s *StandardType) AddProperties(props map[string]spec.Schema, requiredProps []string, data *typeData) {
 	keys := []string{}
 	fields := map[string]Field{}
 	for pname, prop := range props {
-		isArray, refType := checkArrayType(prop, data.logger)
-		if !isArray {
-			refType = findReferencedType(prop, data.logger)
-		}
-		propType, found := data.knownTypes.Find(refType)
+		propType, found := data.knownTypes.FindFromSchema(prop, data)
 		if !found {
+			refType := findReferencedType(prop, data)
 			if ref, ok := data.doc.Definitions[refType]; ok {
 				propType = createTypeFromSchema(refType, &ref, data)
 			}
-		}
-		if refType == "object" {
-			propType = Type{
-				Name:    fmt.Sprintf("%s_%s_obj", t.Name, pname),
-				isAlias: true,
-			}
-			data.knownTypes = append(data.knownTypes, propType)
-		}
-		if isArray {
-			propType = Type{
-				isArray:    true,
-				Properties: FieldList{Field{Type: propType}},
+			if refType == "object" {
+				propType = NewStringAlias(fmt.Sprintf("%s_%s_obj", s.Name(), pname))
+				data.knownTypes = append(data.knownTypes, propType)
 			}
 		}
 		f := Field{
@@ -90,7 +115,7 @@ func (t *Type) AddProperties(props map[string]spec.Schema, requiredProps []strin
 		return strings.Compare(keys[i], keys[j]) < 0
 	})
 	for _, k := range keys {
-		t.Properties = append(t.Properties, fields[k])
+		s.Properties = append(s.Properties, fields[k])
 	}
 }
 
@@ -147,7 +172,7 @@ func InitTypes(doc *spec.Swagger, logger *logrus.Logger) TypeList {
 	}
 
 	sort.SliceStable(data.knownTypes, func(i, j int) bool {
-		return strings.Compare(data.knownTypes[i].Name, data.knownTypes[j].Name) < 0
+		return strings.Compare(data.knownTypes[i].Name(), data.knownTypes[j].Name()) < 0
 	})
 	return data.knownTypes
 }
@@ -159,44 +184,53 @@ func (t TypeList) Find(name string) (Type, bool) {
 	}
 
 	for _, n := range t {
-		if n.Name == name {
+		if n.Name() == name {
 			return n, true
 		}
 	}
-	return Type{}, false
+	return &StandardType{}, false
+}
+
+func (t TypeList) FindFromSchema(schema spec.Schema, data *typeData) (Type, bool) {
+	if isArrayType(schema) {
+		items, found := t.FindFromSchema(*schema.Items.Schema, data)
+		if found {
+			return &Array{
+				Items: items,
+			}, true
+		}
+	}
+	return t.Find(findReferencedType(schema, data))
 }
 
 func checkBuiltInTypes(name string) (Type, bool) {
 
 	if syslType, ok := swaggerToSyslMappings[name]; ok {
-		return Type{Name: syslType}, true
+		return &SyslBuiltIn{name: syslType}, true
 	}
 
 	if contains(name, builtIns) {
-		return Type{Name: name}, true
+		return &SyslBuiltIn{name: name}, true
 	}
-	return Type{}, false
+	return &StandardType{}, false
 }
 
-func checkArrayType(schema spec.Schema, logger *logrus.Logger) (bool, string) {
+func isArrayType(schema spec.Schema) bool {
 	if len(schema.Type) == 1 {
 		typeName := schema.Type[0]
 		if typeName == "array" && schema.Items != nil {
-			return true, findReferencedType(*schema.Items.Schema, logger)
+			return true
 		}
 	}
 
-	return false, ""
+	return false
 }
 
-func findReferencedType(schema spec.Schema, logger *logrus.Logger) string {
+func findReferencedType(schema spec.Schema, data *typeData) string {
 	if len(schema.Type) == 1 {
-		if isArray, items := checkArrayType(schema, logger); isArray {
-			return "sequence of " + items
-		}
-		return mapSwaggerTypeAndFormatToType(schema.Type[0], schema.Format, logger)
+		return mapSwaggerTypeAndFormatToType(schema.Type[0], schema.Format, data.logger)
 	} else if len(schema.Type) == 0 && schema.Items != nil {
-		return findReferencedType(*schema.Items.Schema, logger)
+		return findReferencedType(*schema.Items.Schema, data)
 	}
 
 	if refURL := schema.Ref.GetURL(); refURL != nil {
@@ -227,26 +261,19 @@ type typeData struct {
 }
 
 func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type {
-	item := Type{
-		Name: name,
-	}
+	var item Type
 	if len(schema.Properties) == 0 {
-		item.isAlias = true
-		if isArray, _ := checkArrayType(*schema, data.logger); isArray {
-			item.isArray = true
-			nested := Type{
-				Name:    name + "_obj",
-				isAlias: true,
-			}
+		if isArrayType(*schema) {
+			nested := NewStringAlias(fmt.Sprintf("%s_obj", name))
 			data.knownTypes = append(data.knownTypes, nested)
-			item.Properties = []Field{
-				{
-					Type: nested,
-				},
-			}
+			item = &Array{name: name, Items: nested}
 		} else if len(schema.Enum) > 0 {
-			item.isEnum = true
-		} else if refType := findReferencedType(*schema, data.logger); refType != "" {
+			enum := &Enum{name: name, Items: []string{}}
+			for _, val := range schema.Enum {
+				enum.Items = append(enum.Items, fmt.Sprintf("%s", val))
+			}
+			item = enum
+		} else if refType := findReferencedType(*schema, data); refType != "" {
 			log.Printf("WARNING: swagger type '%s' is malformed\n", name)
 			t, found := data.knownTypes.Find(refType)
 			if !found {
@@ -256,14 +283,17 @@ func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type
 					t, _ = data.knownTypes.Find("string")
 				}
 			}
-			item.Properties = []Field{
-				{
-					Type: t,
-				},
+			item = &Alias{
+				name:  name,
+				Alias: t,
 			}
 		}
 	} else {
-		item.AddProperties(schema.Properties, schema.Required, data)
+		st := &StandardType{
+			name: name,
+		}
+		st.AddProperties(schema.Properties, schema.Required, data)
+		item = st
 	}
 
 	data.knownTypes = append(data.knownTypes, item)

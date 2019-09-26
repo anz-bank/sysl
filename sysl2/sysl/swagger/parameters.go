@@ -54,10 +54,33 @@ func (p Parameters) CookieParams() []Param {
 }
 
 func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger *logrus.Logger) Param {
+
+	fromType := func(t Type) Param {
+		return Param{Field: Field{
+			Name:     param.Name,
+			Optional: !param.Required,
+			Type:     t,
+		},
+			In: param.In,
+		}
+	}
+	fromString := func(typeName string) Param {
+
+		t, found := types.Find(typeName)
+		if !found {
+			logger.Panicf("referenced parameter type %s not found\n", typeName)
+		}
+		return fromType(t)
+	}
+
 	paramTypeName := param.Type
 	if paramTypeName == "" {
 		if param.Schema != nil {
-			paramTypeName = findReferencedType(*param.Schema, logger)
+			ptype, found := types.FindFromSchema(*param.Schema, &typeData{logger: logger})
+			if !found {
+				logger.Panicf("referenced parameter type not found")
+			}
+			return fromType(ptype)
 		} else if refURL := param.Ref.GetURL(); refURL != nil {
 			refParamName := getReferenceFragment(refURL)
 			if p, ok := globals.items[refParamName]; ok {
@@ -65,22 +88,10 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 			}
 			logger.Panicf("referenced parameter %s unknown", refParamName)
 		}
-	} else if paramTypeName != "string" {
-		paramTypeName = mapSwaggerTypeAndFormatToType(param.Type, param.Format, logger)
+	} else if paramTypeName == "string" {
+		return fromString(paramTypeName)
 	}
-	ptype, found := types.Find(paramTypeName)
-	if !found {
-		logger.Warnf("Type '%s' unknown in param %s\n", paramTypeName, param.Name)
-	}
-	p := Param{Field: Field{
-		Name:     param.Name,
-		Optional: !param.Required,
-		Type:     ptype,
-	},
-		In: param.In,
-	}
-
-	return p
+	return fromString(mapSwaggerTypeAndFormatToType(paramTypeName, param.Format, logger))
 }
 
 func buildParameters(params []spec.Parameter, types TypeList,

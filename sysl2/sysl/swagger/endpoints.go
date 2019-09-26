@@ -1,6 +1,7 @@
 package swagger
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -8,13 +9,19 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Response is either going to be freetext or a type
+type Response struct {
+	Text string
+	Type Type
+}
+
 type Endpoint struct {
 	Path        string
 	Description string
 
 	Params Parameters
 
-	Responses *spec.Responses
+	Responses []Response
 }
 
 // nolint:gochecknoglobals
@@ -29,10 +36,43 @@ func initEndpoint(path string,
 	res := Endpoint{
 		Path:        path,
 		Description: op.Description,
-		Responses:   op.Responses,
+		Responses:   buildResponses(path, op.Responses, types, logger),
 		Params:      buildParameters(op.Parameters, types, globals, apiParams, logger),
 	}
 	return res
+}
+
+func buildResponses(path string, responses *spec.Responses, types TypeList, logger *logrus.Logger) []Response {
+	var outs []Response
+
+	fn := func(n string) Response {
+		return Response{Text: n}
+	}
+
+	for statusCode, response := range responses.StatusCodeResponses {
+		if schema := response.Schema; schema != nil {
+
+			t, found := types.FindFromSchema(*schema, &typeData{logger: logger})
+			if !found {
+				logger.Panicf("Responses type for code %d not found, endpoint: %s", statusCode, path)
+			}
+			outs = append(outs, Response{Type: t})
+		} else {
+			outs = append(outs, fn(fmt.Sprintf("%d", statusCode)))
+		}
+	}
+	if responses.Extensions != nil {
+		logger.Warnf("x-* responses not implemented, endpoint: %s", path)
+		for key := range responses.Extensions {
+			outs = append(outs, fn(key))
+		}
+	}
+	if responses.Default != nil {
+		logger.Warnf("default responses not implemented, endpoint: %s", path)
+		outs = append(outs, fn("default"))
+	}
+
+	return outs
 }
 
 func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger *logrus.Logger) map[string][]Endpoint {
