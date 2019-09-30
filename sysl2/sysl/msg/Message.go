@@ -52,7 +52,7 @@ var (
 		ErrEntryPointUndefined:     "Entry point view: (%s) is undefined",
 		ErrInvalidEntryPointReturn: "Return type of entry point view: (%s) should be (%s)",
 		ErrUndefinedView:           "View (%s) is undefined",
-		ErrInvalidReturn:           "In view (%s), return type should be (%s)",
+		ErrInvalidReturn:           "In view (%s), return type is invalid. (%s)",
 		ErrMissingReqField:         "Missing required field (%s) in View (%s) with return Type (%s)",
 		ErrExcessAttr:              "Excess Attribute (%s), defined in View (%s), having return Type (%s)",
 		ErrInvalidOption:           "In View %s, (%s) does not match any of the options for return Type (%s)",
