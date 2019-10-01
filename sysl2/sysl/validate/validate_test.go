@@ -196,7 +196,7 @@ func TestValidatorValidateFileName(t *testing.T) {
 		"Incorrect output": {
 			input: &sysl.Application{Views: map[string]*sysl.View{viewName: invalidFileNameView1}},
 			expected: map[string][]msg.Msg{"filename": {
-				{MessageID: msg.ErrInvalidReturn, MessageData: []string{viewName, "string"}}}}},
+				{MessageID: msg.ErrInvalidReturn, MessageData: []string{viewName, "Expected type is string"}}}}},
 		"Incorrect assignment": {
 			input: &sysl.Application{Views: map[string]*sysl.View{viewName: invalidFileNameView2}},
 			expected: map[string][]msg.Msg{"filename": {
@@ -478,4 +478,73 @@ func TestValidatorLoadGrammarError(t *testing.T) {
 	grammar, err := LoadGrammar("foo/bar.g", afero.NewOsFs())
 	assert.Nil(t, grammar, "Unexpected result")
 	assert.NotNil(t, err, "Unexpected result")
+}
+
+func TestValidatorValidateTfmReturn(t *testing.T) {
+	t.Parallel()
+
+	p := parse.NewParser()
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	require.NoError(t, err)
+	require.NotNil(t, transform)
+
+	grammar, err := LoadGrammar("../tests/grammar.sysl", afero.NewOsFs())
+	require.NoError(t, err)
+	require.NotNil(t, grammar)
+
+	cases := map[string]struct {
+		input    string
+		expected map[string][]msg.Msg
+	}{
+		"Valid view single obj": {
+			input:    "validViewReturnSingleObj",
+			expected: map[string][]msg.Msg{"validViewReturnSingleObj": nil}},
+		"Valid view seq": {
+			input:    "validViewReturnSequence",
+			expected: map[string][]msg.Msg{"validViewReturnSequence": nil}},
+		"Valid view set": {
+			input:    "validViewReturnSet",
+			expected: map[string][]msg.Msg{"validViewReturnSet": nil}},
+		"Invalid view single obj": {
+			input: "invalidViewReturnSingleObj",
+			expected: map[string][]msg.Msg{"invalidViewReturnSingleObj": {
+				{MessageID: 404, MessageData: []string{"invalidViewReturnSingleObj", "Expected a single VarDecl"}}}}},
+		"Invalid view seq": {
+			input: "invalidViewReturnSequence",
+			expected: map[string][]msg.Msg{"invalidViewReturnSequence": {
+				{MessageID: 404, MessageData: []string{"invalidViewReturnSequence", "Expected a sequence of VarDecl"}}}}},
+		"Invalid view set": {
+			input: "invalidViewReturnSet",
+			expected: map[string][]msg.Msg{"invalidViewReturnSet": {
+				{MessageID: 404, MessageData: []string{"invalidViewReturnSet", "Expected a set of VarDecl"}}}}},
+		"Valid inner tfm single obj": {
+			input:    "validInnerTfmReturnSingleObj",
+			expected: map[string][]msg.Msg{"validInnerTfmReturnSingleObj": nil}},
+		"Valid inner tfm collection": {
+			input:    "validInnerTfmReturnCollection",
+			expected: map[string][]msg.Msg{"validInnerTfmReturnCollection": nil}},
+		"Invalid inner tfm single obj": {
+			input: "InvalidInnerTfmReturnSingleObj",
+			expected: map[string][]msg.Msg{"InvalidInnerTfmReturnSingleObj": {
+				{MessageID: 404, MessageData: []string{"InvalidInnerTfmReturnSingleObj", "Expected a single Statement"}}}}},
+		"Invalid inner tfm collection": {
+			input: "InvalidInnerTfmReturnCollection",
+			expected: map[string][]msg.Msg{"InvalidInnerTfmReturnCollection": {
+				{MessageID: 404, MessageData: []string{"InvalidInnerTfmReturnCollection", "Expected a sequence of Statement"}}}}},
+	}
+
+	for name, test := range cases {
+		input := test.input
+		expected := test.expected
+		t.Run(name, func(t *testing.T) {
+			validator := NewValidator(
+				grammar, transform,
+				&parse.Parser{Messages: map[string][]msg.Msg{input: p.Messages[input]}})
+
+			view := transform.GetViews()[input]
+			validator.validateTfmReturn(input, view.GetExpr(), view.GetRetType())
+			actual := validator.GetMessages()
+			assert.Equal(t, expected, actual, "Unexpected result")
+		})
+	}
 }

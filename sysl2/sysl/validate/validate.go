@@ -69,6 +69,7 @@ func (v *Validator) Validate(start string) {
 	v.validateEntryPoint(start)
 	v.validateFileName()
 	v.validateViews()
+	v.validateReturn()
 }
 
 func (v *Validator) LogMessages() {
@@ -104,7 +105,8 @@ func (v *Validator) validateFileName() {
 	}
 
 	if getTypeName(view.GetRetType()) != "STRING" || isCollectionType(view.GetRetType()) {
-		v.messages[viewName] = append(v.messages[viewName], *msg.NewMsg(msg.ErrInvalidReturn, []string{viewName, "string"}))
+		v.messages[viewName] = append(v.messages[viewName],
+			*msg.NewMsg(msg.ErrInvalidReturn, []string{viewName, "Expected type is string"}))
 	}
 
 	hasFileNameAssign := false
@@ -230,6 +232,40 @@ func (v *Validator) compareOneOf(
 		}
 		v.messages[viewName] = append(v.messages[viewName],
 			*msg.NewMsg(msg.ErrInvalidOption, []string{viewName, strings.Join(implAttrNames, ","), specTupleName}))
+	}
+}
+
+func (v *Validator) validateReturn() {
+	for viewName, view := range v.transform.GetViews() {
+		v.validateTfmReturn(viewName, view.GetExpr(), view.GetRetType())
+	}
+}
+
+func (v *Validator) validateTfmReturn(viewName string, expr *sysl.Expr, retType *sysl.Type) {
+	if tfm, ok := expr.Expr.(*sysl.Expr_Transform_); ok {
+		for _, stmt := range tfm.Transform.GetStmt() {
+			switch s := stmt.Stmt.(type) {
+			case *sysl.Expr_Transform_Stmt_Assign_:
+				v.validateTfmReturn(viewName, s.Assign.GetExpr(), s.Assign.GetExpr().Type)
+			case *sysl.Expr_Transform_Stmt_Let:
+				v.validateTfmReturn(viewName, s.Let.GetExpr(), s.Let.GetExpr().Type)
+			}
+		}
+
+		switch retType.Type.(type) {
+		case *sysl.Type_Sequence, *sysl.Type_Set:
+			if tfm.Transform.Scopevar == "." {
+				typeName, typeDetail := syslutil.GetTypeDetail(retType)
+				v.messages[viewName] = append(v.messages[viewName],
+					*msg.NewMsg(msg.ErrInvalidReturn, []string{viewName, "Expected a " + typeName + " of " + typeDetail}))
+			}
+		default:
+			if tfm.Transform.Scopevar != "." {
+				_, typeDetail := syslutil.GetTypeDetail(retType)
+				v.messages[viewName] = append(v.messages[viewName],
+					*msg.NewMsg(msg.ErrInvalidReturn, []string{viewName, "Expected a single " + typeDetail}))
+			}
+		}
 	}
 }
 

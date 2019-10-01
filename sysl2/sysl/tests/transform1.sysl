@@ -262,3 +262,66 @@ CodeGenTransform:
       TopLevelDecl = ""
     )
 
+  !view validViewReturnSingleObj(input <: string) -> VarDecl:
+    input -> (:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view validViewReturnSequence(inputs <: sequence of string) -> sequence of VarDecl:
+    inputs -> (input:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view validViewReturnSet(inputs <: set of string) -> set of VarDecl:
+    inputs -> (input:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view invalidViewReturnSingleObj(inputs <: sequence of string) -> VarDecl:
+    inputs -> (input:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view invalidViewReturnSequence(inputs <: sequence of string) -> sequence of VarDecl:
+    inputs -> (:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view invalidViewReturnSet(inputs <: set of string) -> set of VarDecl:
+    inputs -> (:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view validInnerTfmReturnSingleObj(input <: string) -> StatementList:
+    input -> (:
+      Statement = input -> <Statement>(:
+        identifier = input
+      )
+    )
+
+  !view validInnerTfmReturnCollection(inputs <: sequence of string) -> StatementList:
+    inputs -> (:
+      Statement = inputs -> <sequence of Statement>(input:
+        identifier = input
+      )
+    )
+
+  !view InvalidInnerTfmReturnSingleObj(inputs <: sequence of string) -> StatementList:
+    inputs -> (:
+      Statement = inputs -> <Statement>(input:
+        identifier = input
+      )
+    )
+
+  !view InvalidInnerTfmReturnCollection(input <: string) -> StatementList:
+    input -> (:
+      Statement = input -> <sequence of Statement>(:
+        identifier = input
+      )
+    )
