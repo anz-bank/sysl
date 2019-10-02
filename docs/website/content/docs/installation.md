@@ -49,3 +49,18 @@ Try the following commands
 	> docker run sysl reljam -h
 
 See [Sysl Image on Docker Hub](https://hub.docker.com/r/anzbank/sysl/) for more details.
+
+
+Alternatively, create the following bash function aliases
+
+	function reljam(){
+	  docker run -it --rm -v "$(pwd):/sysl" --entrypoint reljam anzbank/sysl "$@"
+	}
+	function sysl(){
+	  docker run -it --rm -v "$(pwd):/sysl" --entrypoint sysl anzbank/sysl "$@"
+	}
+
+This way the `sysl` and `reljam` commands work as if they are installed binaries
+
+	> sysl --version
+	> reljam --version
