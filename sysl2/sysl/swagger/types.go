@@ -30,17 +30,18 @@ type SyslBuiltIn struct {
 func (s *SyslBuiltIn) Name() string { return s.name }
 
 type Alias struct {
-	name  string
-	Alias Type
+	name   string
+	Target Type
+}
+
+func NewStringAlias(name string) Type {
+	return &Alias{
+		name:   name,
+		Target: &SyslBuiltIn{name: "string"},
+	}
 }
 
 func (s *Alias) Name() string { return s.name }
-func NewStringAlias(name string) Type {
-	return &Alias{
-		name:  name,
-		Alias: &SyslBuiltIn{name: "string"},
-	}
-}
 
 type Array struct {
 	name  string
@@ -49,10 +50,8 @@ type Array struct {
 
 func (s *Array) Name() string { return s.name }
 
-// sysl doesnt really support enums yet but leave for future use
 type Enum struct {
-	name  string
-	Items []string
+	name string
 }
 
 func (s *Enum) Name() string { return s.name }
@@ -195,9 +194,7 @@ func (t TypeList) FindFromSchema(schema spec.Schema, data *typeData) (Type, bool
 	if isArrayType(schema) {
 		items, found := t.FindFromSchema(*schema.Items.Schema, data)
 		if found {
-			return &Array{
-				Items: items,
-			}, true
+			return &Array{Items: items}, true
 		}
 	}
 	return t.Find(findReferencedType(schema, data))
@@ -268,11 +265,7 @@ func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type
 			data.knownTypes = append(data.knownTypes, nested)
 			item = &Array{name: name, Items: nested}
 		} else if len(schema.Enum) > 0 {
-			enum := &Enum{name: name, Items: []string{}}
-			for _, val := range schema.Enum {
-				enum.Items = append(enum.Items, fmt.Sprintf("%s", val))
-			}
-			item = enum
+			item = &Enum{name: name}
 		} else if refType := findReferencedType(*schema, data); refType != "" {
 			log.Printf("WARNING: swagger type '%s' is malformed\n", name)
 			t, found := data.knownTypes.Find(refType)
@@ -284,8 +277,8 @@ func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type
 				}
 			}
 			item = &Alias{
-				name:  name,
-				Alias: t,
+				name:   name,
+				Target: t,
 			}
 		}
 	} else {

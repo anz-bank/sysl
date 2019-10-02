@@ -28,7 +28,7 @@ func (p *Parameters) Add(param Param) {
 }
 
 func (p Parameters) findParams(where string) []Param {
-	res := []Param{}
+	var res []Param
 	for _, name := range p.insertOrder {
 		item := p.items[name]
 		if item.In == where {
@@ -49,18 +49,16 @@ func (p Parameters) BodyParams() []Param {
 func (p Parameters) PathParams() []Param {
 	return p.findParams("path")
 }
-func (p Parameters) CookieParams() []Param {
-	return p.findParams("cookie")
-}
 
 func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger *logrus.Logger) Param {
 
 	fromType := func(t Type) Param {
-		return Param{Field: Field{
-			Name:     param.Name,
-			Optional: !param.Required,
-			Type:     t,
-		},
+		return Param{
+			Field: Field{
+				Name:     param.Name,
+				Optional: !param.Required,
+				Type:     t,
+			},
 			In: param.In,
 		}
 	}
@@ -76,11 +74,10 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 	paramTypeName := param.Type
 	if paramTypeName == "" {
 		if param.Schema != nil {
-			ptype, found := types.FindFromSchema(*param.Schema, &typeData{logger: logger})
-			if !found {
-				logger.Panicf("referenced parameter type not found")
+			if ptype, ok := types.FindFromSchema(*param.Schema, &typeData{logger: logger}); ok {
+				return fromType(ptype)
 			}
-			return fromType(ptype)
+			logger.Panicf("referenced parameter type not found")
 		} else if refURL := param.Ref.GetURL(); refURL != nil {
 			refParamName := getReferenceFragment(refURL)
 			if p, ok := globals.items[refParamName]; ok {

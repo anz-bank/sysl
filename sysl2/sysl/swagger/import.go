@@ -311,11 +311,7 @@ func (si *swaggerImporter) writeDefinition(t *StandardType) {
 
 func isExternalAlias(item Type) bool {
 	switch item.(type) {
-	case *Alias:
-		return true
-	case *Array:
-		return true
-	case *Enum:
+	case *Alias, *Array, *Enum:
 		return true
 	}
 	return false
@@ -330,7 +326,7 @@ func (si *swaggerImporter) writeExternalAlias(item Type) {
 			aliasType = getSyslTypeName(t.Properties[0].Type)
 		}
 	case *Alias:
-		aliasType = getSyslTypeName(t.Alias)
+		aliasType = getSyslTypeName(t.Target)
 	case *Array:
 		aliasType = getSyslTypeName(item)
 		aliasName = t.name

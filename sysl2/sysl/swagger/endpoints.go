@@ -45,31 +45,26 @@ func initEndpoint(path string,
 func buildResponses(path string, responses *spec.Responses, types TypeList, logger *logrus.Logger) []Response {
 	var outs []Response
 
-	fn := func(n string) Response {
-		return Response{Text: n}
-	}
-
 	for statusCode, response := range responses.StatusCodeResponses {
 		if schema := response.Schema; schema != nil {
-
 			t, found := types.FindFromSchema(*schema, &typeData{logger: logger})
 			if !found {
 				logger.Panicf("Responses type for code %d not found, endpoint: %s", statusCode, path)
 			}
 			outs = append(outs, Response{Type: t})
 		} else {
-			outs = append(outs, fn(fmt.Sprintf("%d", statusCode)))
+			outs = append(outs, Response{Text: fmt.Sprintf("%d", statusCode)})
 		}
 	}
 	if responses.Extensions != nil {
 		logger.Warnf("x-* responses not implemented, endpoint: %s", path)
 		for key := range responses.Extensions {
-			outs = append(outs, fn(key))
+			outs = append(outs, Response{Text: key})
 		}
 	}
 	if responses.Default != nil {
 		logger.Warnf("default responses not implemented, endpoint: %s", path)
-		outs = append(outs, fn("default"))
+		outs = append(outs, Response{Text: "default"})
 	}
 
 	return outs
