@@ -49,7 +49,8 @@ func buildResponses(path string, responses *spec.Responses, types TypeList, logg
 		if schema := response.Schema; schema != nil {
 			t, found := types.FindFromSchema(*schema, &typeData{logger: logger})
 			if !found {
-				logger.Panicf("Responses type for code %d not found, endpoint: %s", statusCode, path)
+				logger.Errorf("Responses type for code %d not found, endpoint: %s, skipping", statusCode, path)
+				continue
 			}
 			outs = append(outs, Response{Type: t})
 		} else {

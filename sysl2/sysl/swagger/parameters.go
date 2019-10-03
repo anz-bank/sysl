@@ -1,6 +1,8 @@
 package swagger
 
 import (
+	"fmt"
+
 	"github.com/sirupsen/logrus"
 
 	"github.com/go-openapi/spec"
@@ -50,7 +52,7 @@ func (p Parameters) PathParams() []Param {
 	return p.findParams("path")
 }
 
-func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger *logrus.Logger) Param {
+func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger *logrus.Logger) (Param, error) {
 
 	fromType := func(t Type) Param {
 		return Param{
@@ -66,7 +68,8 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 
 		t, found := types.Find(typeName)
 		if !found {
-			logger.Panicf("referenced parameter type %s not found\n", typeName)
+			logger.Errorf("referenced parameter type %s not found\n", typeName)
+			t = NewStringAlias(typeName)
 		}
 		return fromType(t)
 	}
@@ -75,20 +78,20 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 	if paramTypeName == "" {
 		if param.Schema != nil {
 			if ptype, ok := types.FindFromSchema(*param.Schema, &typeData{logger: logger}); ok {
-				return fromType(ptype)
+				return fromType(ptype), nil
 			}
-			logger.Panicf("referenced parameter type not found")
+			return Param{}, fmt.Errorf("referenced parameter type not found: %+v", param.Schema)
 		} else if refURL := param.Ref.GetURL(); refURL != nil {
 			refParamName := getReferenceFragment(refURL)
 			if p, ok := globals.items[refParamName]; ok {
-				return p
+				return p, nil
 			}
-			logger.Panicf("referenced parameter %s unknown", refParamName)
+			return Param{}, fmt.Errorf("referenced parameter %s unknown", refParamName)
 		}
 	} else if paramTypeName == "string" {
-		return fromString(paramTypeName)
+		return fromString(paramTypeName), nil
 	}
-	return fromString(mapSwaggerTypeAndFormatToType(paramTypeName, param.Format, logger))
+	return fromString(mapSwaggerTypeAndFormatToType(paramTypeName, param.Format, logger)), nil
 }
 
 func buildParameters(params []spec.Parameter, types TypeList,
@@ -97,8 +100,12 @@ func buildParameters(params []spec.Parameter, types TypeList,
 	res := baseParams
 	for _, param := range params {
 
-		p := buildParam(param, types, globals, logger)
-		res.Add(p)
+		p, err := buildParam(param, types, globals, logger)
+		if err != nil {
+			logger.Errorf("%s", err.Error())
+		} else {
+			res.Add(p)
+		}
 	}
 
 	return res
@@ -110,9 +117,13 @@ func buildGlobalParams(params map[string]spec.Parameter, types TypeList,
 	res := Parameters{}
 	for key, param := range params {
 
-		p := buildParam(param, types, res, logger)
-		p.Name = key
-		res.Add(p)
+		p, err := buildParam(param, types, res, logger)
+		if err != nil {
+			logger.Errorf("%s\n", err.Error())
+		} else {
+			p.Name = key
+			res.Add(p)
+		}
 	}
 	return res
 }
