@@ -3,12 +3,12 @@ package main
 import (
 	"io/ioutil"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/swagger"
+	"github.com/anz-bank/sysl/sysl2/sysl/importer"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type importSwaggerCmd struct {
-	swagger.OutputData
+	importer.OutputData
 	filename string
 	outfile  string
 }
@@ -36,7 +36,7 @@ func (p *importSwaggerCmd) Execute(args ExecuteArgs) error {
 		return err
 	}
 
-	output, err := swagger.LoadSwaggerText(p.OutputData, string(data), args.Logger)
+	output, err := importer.LoadSwaggerText(p.OutputData, string(data), args.Logger)
 	if err != nil {
 		return err
 	}

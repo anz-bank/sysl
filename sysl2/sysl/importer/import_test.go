@@ -1,4 +1,4 @@
-package swagger
+package importer
 
 import (
 	"fmt"
@@ -12,9 +12,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const fileTestDir = "tests"
-
 func TestLoadSwaggerFromTestFiles(t *testing.T) {
+	const fileTestDir = "tests-swagger"
 	files, err := ioutil.ReadDir(fileTestDir)
 	require.NoError(t, err)
 
