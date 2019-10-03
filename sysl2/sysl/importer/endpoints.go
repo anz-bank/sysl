@@ -71,8 +71,8 @@ func buildResponses(path string, responses *spec.Responses, types TypeList, logg
 	return outs
 }
 
-func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger *logrus.Logger) map[string][]Endpoint {
-	res := map[string][]Endpoint{}
+func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger *logrus.Logger) []MethodEndpoints {
+	epMap := map[string][]Endpoint{}
 
 	for path, item := range doc.Paths.Paths {
 
@@ -86,18 +86,28 @@ func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger
 
 		for method, op := range ops {
 			if op != nil {
-				res[method] = append(res[method], initEndpoint(path, op, item.Parameters, types, globals, logger))
+				epMap[method] = append(epMap[method], initEndpoint(path, op, item.Parameters, types, globals, logger))
 			}
 		}
 
 	}
 
-	for key := range res {
+	for key := range epMap {
 		key := key
-		sort.SliceStable(res[key], func(i, j int) bool {
-			return strings.Compare(res[key][i].Path, res[key][j].Path) < 0
+		sort.SliceStable(epMap[key], func(i, j int) bool {
+			return strings.Compare(epMap[key][i].Path, epMap[key][j].Path) < 0
 		})
 	}
 
-	return res
+	var result []MethodEndpoints
+	for _, method := range methodDisplayOrder {
+		if eps, ok := epMap[method]; ok {
+			result = append(result, MethodEndpoints{
+				Method:    method,
+				Endpoints: eps,
+			})
+		}
+	}
+
+	return result
 }
