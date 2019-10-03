@@ -1,5 +1,5 @@
 service:
-  golangci-lint-version: 1.17.1
+  golangci-lint-version: 1.19.1
 run:
   skip-files:
     - sysl2/sysl/grammar/sysl_lexer.go
