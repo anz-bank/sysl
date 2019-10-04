@@ -209,6 +209,7 @@ class Writer(object):
                 if self._table is not None and out == self._body:
                     self._table.append(line)
                 else:
+                    line = line.rstrip()
                     out.write(line)
                     written = line
                     if newline:

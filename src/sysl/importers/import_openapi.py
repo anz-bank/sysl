@@ -48,17 +48,6 @@ def sysl_array_type_of(itemtype):
     return 'sequence of ' + itemtype
 
 
-def is_sysl_array_type(ftype):
-    return ftype.startswith('sequence of ')
-
-
-def type_as_key(swagt):
-    if isinstance(swagt, dict):
-        return frozenset(sorted(swagt.iteritems()))
-    assert isinstance(swagt, basestring)
-    return swagt
-
-
 def extract_properties(tspec):
     # Some schemas for object types might lack a properties attribute.
     # As per Open API Spec 2.0, partially defined via JSON Schema draft 4,
@@ -94,9 +83,7 @@ def load_vocabulary(words_fn='/usr/share/dict/words'):
 
 
 class OpenApiTranslator:
-    def __init__(self, logger, vocabulary_factory=None):
-        if vocabulary_factory is None:
-            vocabulary_factory = load_vocabulary
+    def __init__(self, logger, vocabulary_factory=load_vocabulary):
         self._logger = logger
         self._param_cache = {}
         self._words = set()
@@ -136,7 +123,7 @@ class OpenApiTranslator:
 
     def translate_path_template_params(self, path, params):
         parts = re.split(r'({[^/]*?})', path)
-        if len(parts) > 1 and len(params) == 0:
+        if len(parts) > 1 and not params:
             self.warn("not enough path params path: %s" % (path))
         pathParams = {}
         for param in params:
@@ -152,15 +139,10 @@ class OpenApiTranslator:
         return "".join(parts)
 
     def translate(self, oaSpec, appname, package, w):
-        hasInfo = False
-
         hasInfo = 'info' in oaSpec
         title = oaSpec['info'].pop('title', '') if hasInfo else ''
 
-        w(u'{}{} [package={}]:',
-            appname, title and ' ' + json.dumps(title), json.dumps(package))
-
-        with w.indent():
+        with w.indent(u'{}{} [package={}]:', appname, title and ' ' + json.dumps(title), json.dumps(package)):
             if hasInfo:
                 def info_attrs(info, prefix=''):
                     for (name, value) in sorted(info.iteritems()):
@@ -174,38 +156,30 @@ class OpenApiTranslator:
             if 'host' in oaSpec:
                 w('@host = {}', json.dumps(oaSpec['host']))
 
-            w(u'@description =:')
-            with w.indent():
+            with w.indent(u'@description =:'):
                 w(u'| {}', oaSpec['info'].get('description', 'No description.').replace("\n", "\n|"))
 
             if 'basePath' in oaSpec:
                 w()
-                w('{}:'.format(oaSpec['basePath']))
-                with w.indent():
+                with w.indent('{}:', oaSpec['basePath']):
                     self.writeEndpoints(oaSpec, w)
             else:
                 self.writeEndpoints(oaSpec, w)
             self.writeDefs(oaSpec, w)
 
     def mergeParams(self, oaSpec, srcParams, overrideParams):
-        pathParams = OrderedDict()
-        headerParams = OrderedDict()
-        queryParams = OrderedDict()
+        params = {
+            'path': OrderedDict(),
+            'header': OrderedDict(),
+            'query': OrderedDict(),
+        }
 
         for param in srcParams + overrideParams:
             if '$ref' in param:
                 param = oaSpec['parameters'][param['$ref'].rpartition('/')[2]]
-            paramIn = param['in']
-            if paramIn == 'path':
-                pathParams[param["name"]] = param
-            elif paramIn == 'header':
-                headerParams[param["name"]] = param
-            elif paramIn == 'query':
-                queryParams[param["name"]] = param
-            else:
-                raise "Unknown param type"
+            params[param['in']][param["name"]] = param
 
-        return pathParams.values(), headerParams.values(), queryParams.values()
+        return [params[i].values() for i in ('path', 'header', 'query')]
 
     def writeEndpoints(self, oaSpec, w):
 
@@ -230,47 +204,28 @@ class OpenApiTranslator:
                 if rc == 'default' or rc.startswith('x-'):
                     self.warn('default responses and x-* responses are not implemented')
 
-            if len(returnValues) > 0:
-                w(u'return {}'.format(', '.join(returnValues)))
-            else:
-                w(u'return')
+            w(u'return {}', ', '.join(returnValues))
 
         for (path, api) in sorted(oaSpec['paths'].iteritems()):
-            apiParams = []
-            if 'parameters' in api:
-                apiParams = api['parameters']
-                del api['parameters']
+            apiParams = api.pop('parameters') if 'parameters' in api else []
 
             for (i, (method, body)) in enumerate(sorted(api.iteritems(), key=lambda t: METHOD_ORDER[t[0]])):
                 bodyContent = OrderedDict()
                 bodyParams = body['parameters'] if 'parameters' in body else []
                 pathParams, headerParams, queryParams = self.mergeParams(oaSpec, apiParams, bodyParams)
-                print(pathParams)
-                w(u'\n{}:', self.translate_path_template_params(path, pathParams))
-                with w.indent():
-                    header = self.getHeaders(headerParams)
-                    jsonBody = []
-                    if body.get('requestBody', None):
-                        if body['requestBody'].get('content', None):
-                            if body['requestBody']['content'].get('application/json', None):
-                                jsonBody.append(body['requestBody']['content']['application/json'])
-                    methodBody = self.getBody(jsonBody)
-                    if len(header) > 0 and len(methodBody) > 0:
-                        paramStr = ' ({})'.format(methodBody + ', ' + header)
-                    elif len(header) == 0 and len(methodBody) == 0:
-                        paramStr = ''
-                    else:
-                        paramStr = ' ({})'.format(methodBody + header)
 
-                    w(u'{}{}{}{}:',
-                        method.upper(),
-                        paramStr,
-                        ' ?' if queryParams else '',
-                        '&'.join(
-                            '{}={}{}'.format(p['name'], TYPE_MAP[p['schema']['type']], '' if p.get('required', None) else '?')
-                            for p in queryParams
-                        ))
-                    with w.indent():
+                with w.indent(u'\n{}:', self.translate_path_template_params(path, pathParams)):
+                    header = self.getHeaders(headerParams)
+                    appJson = body.get('requestBody', {}).get('content', {}).get('application/json', None)
+                    jsonBody = [appJson] if appJson else []
+                    methodBody = self.getBody(jsonBody)
+                    params = [p for p in [methodBody, header] if p]
+                    paramStr = ' ({})'.format(', '.join(params)) if params else ''
+
+                    with w.indent(u'{}{}{}{}:',
+                                  method.upper(), paramStr, ' ?' if queryParams else '',
+                                  '&'.join('{}={}{}'.format(p['name'], TYPE_MAP[p['schema']['type']], '' if p.get('required', None) else '?')
+                                           for p in queryParams)):
                         for line in textwrap.wrap(
                                 body.get('description', 'No description.').strip(), 64):
                             w(u'| {}', line)
@@ -291,22 +246,21 @@ class OpenApiTranslator:
         w('#' + '-' * 75)
         w('# definitions')
 
-        if not oaSpec.get('components', None):
-            return
-        if not oaSpec['components'].get('schemas', None):
+        schemas = oaSpec.get('components', {}).get('schemas', None)
+        if not schemas:
             return
 
         def _collectExternalsSoReferencesAreCorrect():
-            for (tname, tspec) in sorted(oaSpec['components']['schemas'].iteritems()):
+            for (tname, tspec) in sorted(schemas.iteritems()):
                 properties = extract_properties(tspec)
 
-                if properties or (tspec.get('type') == 'array') or ('enum' in tspec):
+                if properties or tspec.get('type') == 'array' or 'enum' in tspec:
                     continue
                 externAlias['EXTERNAL_' + tname] = 'string'
 
         _collectExternalsSoReferencesAreCorrect()
 
-        for (tname, tspec) in sorted(oaSpec['components']['schemas'].iteritems()):
+        for (tname, tspec) in sorted(schemas.iteritems()):
             properties = extract_properties(tspec)
             w()
 
@@ -336,57 +290,46 @@ class OpenApiTranslator:
                 if properties:
                     for (fname, fspec) in sorted(properties.iteritems()):
                         (ftype, fdescr) = self.parse_typespec(fspec, fname, tname)
-                        w(getfields(fname, ftype))
-                        with w.indent():
+                        with w.indent(getfields(fname, ftype)):
                             w(self.getTag(fname, 'json_tag'))
-                            if fdescr is not None and len(fdescr) > 0:
+                            if fdescr and len(fdescr) > 0:
                                 w(self.getTag(fdescr, 'description'))
                 # handle top-level arrays
                 elif tspec.get('type') == 'array':
                     (ftype, fdescr) = self.parse_typespec(tspec, '', tname)
-                    w(getfields('', ftype, True))
-                    with w.indent():
-                        if fdescr is not None and len(fdescr) > 0:
+                    with w.indent(getfields('', ftype, True)):
+                        if fdescr and len(fdescr) > 0:
                             w(self.getTag(fdescr, 'description'))
                 elif 'enum' in tspec:
                     w(TYPE_MAP[tspec.get('type')])
 
-        index = 0
-        while len(typeSpecList) > index:
+        for typeSpec in typeSpecList:
             w()
             typeName = '{}_obj'.format(
-                typeSpecList[index].typeRef + ('_' + typeSpecList[index].parentRef if len(
-                    typeSpecList[index].parentRef) > 0 else '')
+                typeSpec.typeRef + ('_' + typeSpec.parentRef if len(
+                    typeSpec.parentRef) > 0 else '')
             )
 
-            if 'properties' in typeSpecList[index].element:
-                w('!type {}:', typeName)
-                with w.indent():
-                    for (k, v) in extract_properties(typeSpecList[index].element).iteritems():
-                        typeRef = typeSpecList[index].typeRef + '_' + typeSpecList[index].parentRef
+            if 'properties' in typeSpec.element:
+                with w.indent('!type {}:', typeName):
+                    for (k, v) in extract_properties(typeSpec.element).iteritems():
+                        typeRef = typeSpec.typeRef + '_' + typeSpec.parentRef
                         ftypeSyntax = self.parse_typespec(v, k, typeRef)[0]
-                        if 'required' not in typeSpecList[index].element or k not in typeSpecList[index].element['required']:
+                        if 'required' not in typeSpec.element or k not in typeSpec.element['required']:
                             ftypeSyntax = ftypeSyntax + '?'
-                        fields = '{} <: {}:'.format(
-                            k if k not in SYSL_TYPES else k + '_',
-                            ftypeSyntax)
-                        w(fields)
-                        with w.indent():
+                        fields = '{} <: {}:'.format(k if k not in SYSL_TYPES else k + '_', ftypeSyntax)
+                        with w.indent(fields):
                             w(self.getTag(k, 'json_tag'))
             else:
-                w('!alias EXTERNAL_{}:', typeName)
-                with w.indent():
+                with w.indent('!alias EXTERNAL_{}:', typeName):
                     w('string')
-
-            index += 1
 
         self.writeAlias(externAlias, w)
 
     def writeAlias(self, alias, w):
         for key in alias:
             w()
-            w('!alias {}:', key)
-            with w.indent():
+            with w.indent('!alias {}:', key):
                 w(alias[key])
 
     def parse_typespec(self, tspec, parentRef='', typeRef=''):
@@ -401,7 +344,7 @@ class OpenApiTranslator:
         descr = tspec.pop('description', None)
 
         if typ == 'array':
-            assert not (set(tspec.keys()) - {'type', 'items', 'example'}), tspec
+            assert not set(tspec.keys()) - {'type', 'items', 'example'}, tspec
 
             # skip invalid type
             if '$ref' in tspec['items'] and 'type' in tspec['items']:
@@ -421,6 +364,20 @@ class OpenApiTranslator:
         if fmt is not None and fmt not in OPENAPI_FORMATS:
             self.error('Invalid format: %s at %s -> %s' % (fmt, typeRef, parentRef))
 
+        typMap = {
+            ('string', None): r('string'),
+            ('boolean', None): r('bool'),
+            ('string', 'date'): r('date'),
+            ('string', 'date-time'): r('datetime'),
+            ('string', 'byte'): r('string'),
+            ('integer', None): r('int'),
+            ('integer', 'int32'): r('int32'),
+            ('integer', 'int64'): r('int64'),
+            ('number', 'double'): r('float'),
+            ('number', 'float'): r('float'),
+            ('number', None): r('float'),
+        }
+
         if ref:
             assert not set(tspec.keys()) - {'$ref'}, tspec
             t = ref.replace('#/components/schemas/', '')
@@ -429,39 +386,20 @@ class OpenApiTranslator:
             if externAlias.get('EXTERNAL_' + t + '_obj', None):
                 return r('EXTERNAL_' + t + '_obj')
             return r(t)
-        if (typ, fmt) == ('string', None):
-            return r('string')
-        if (typ, fmt) == ('boolean', None):
-            return r('bool')
-        elif (typ, fmt) == ('string', 'date'):
-            return r('date')
-        elif (typ, fmt) == ('string', 'date-time'):
-            return r('datetime')
-        elif (typ, fmt) == ('string', 'byte'):
-            return r('string')
-        elif (typ, fmt) == ('integer', None):
-            return r('int')
-        elif (typ, fmt) == ('integer', 'int32'):
-            return r('int32')
-        elif (typ, fmt) == ('integer', 'int64'):
-            return r('int64')
-        elif (typ, fmt) == ('number', 'double'):
-            return r('float')
-        elif (typ, fmt) == ('number', 'float'):
-            return r('float')
-        elif (typ, fmt) == ('number', None):
-            return r('float')
-        elif (typ, fmt) == ('object', None):
+
+        if (typ, fmt) in typMap:
+            return typMap[(typ, fmt)]
+
+        if (typ, fmt) == ('object', None):
             typeSpecList.append(TypeSpec(tspec, parentRef, typeRef))
             retVal = typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'
             if 'properties' not in tspec:
                 return r('EXTERNAL_' + retVal)
             return r(retVal)
 
-        else:
-            aliasName = 'EXTERNAL_' + typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'
-            externAlias[aliasName] = 'string'
-            return r(aliasName)
+        aliasName = 'EXTERNAL_' + typeRef + ('_' + parentRef if len(parentRef) > 0 else '') + '_obj'
+        externAlias[aliasName] = 'string'
+        return r(aliasName)
 
     def getTag(self, tagName, tagType):
         if tagType is None or tagName is None:
@@ -509,7 +447,7 @@ def main():
     w = writer.Writer('sysl')
 
     translator = OpenApiTranslator(logger=make_default_logger())
-    translator.translate(oaSpec, args.appname, args.package, w=w)
+    translator.translate(oaSpec, args.appname, args.package, w)
 
     with open(args.outfile, 'w') as f_out:
         f_out.write(str(w))
