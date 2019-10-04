@@ -73,7 +73,6 @@ func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
 	return nil
 }
 func (d *debugTypeData) add(app *kingpin.Application) {
-
 	var levels []string
 	for l := range syslutil.LogLevels {
 		if l != "" {

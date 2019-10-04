@@ -8,7 +8,6 @@ import (
 )
 
 func TestNewIndentWriter(t *testing.T) {
-
 	buf := bytes.Buffer{}
 	i := NewIndentWriter(" ", &buf)
 

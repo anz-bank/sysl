@@ -10,7 +10,6 @@ import (
 )
 
 func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
-
 	doc, err := loads.Analyzed(json.RawMessage(text), "2.0")
 	if err != nil {
 		logger.Errorf("Failed to load swagger spec: %s\n", err.Error())

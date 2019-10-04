@@ -139,7 +139,6 @@ func (v *Validator) validateViews() {
 			default:
 				logrus.Warnf("[validate.validateViews] Unhandled grammar type: %T", t)
 			}
-
 		}
 	}
 
@@ -154,7 +153,6 @@ func (v *Validator) validateViews() {
 			default:
 				logrus.Warnf("[validate.validateViews] Unhandled grammar type: %T", t)
 			}
-
 		}
 	}
 }

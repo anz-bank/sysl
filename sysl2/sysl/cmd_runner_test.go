@@ -9,7 +9,6 @@ import (
 )
 
 func TestEnsureFlagsNonEmpty_AllowsExcludes(t *testing.T) {
-
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	cmd := sysl.Command("foo", "")
 	_ = cmd.Flag("bar", "").Default("foo").String()
@@ -24,7 +23,6 @@ func TestEnsureFlagsNonEmpty_AllowsExcludes(t *testing.T) {
 }
 
 func TestEnsureFlagsNonEmpty(t *testing.T) {
-
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	cmd := sysl.Command("foo", "")
 	cmd.Flag("bar", "").Default("foo")

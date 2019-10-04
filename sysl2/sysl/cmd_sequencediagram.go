@@ -20,7 +20,6 @@ func (p *sequenceDiagramCmd) Name() string            { return "sd" }
 func (p *sequenceDiagramCmd) RequireSyslModule() bool { return true }
 
 func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-
 	p.blackboxesFlag = map[string]string{}
 	p.endpointsFlag = []string{}
 	p.appsFlag = []string{}
@@ -68,7 +67,6 @@ func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdCla
 }
 
 func (p *sequenceDiagramCmd) Execute(args ExecuteArgs) error {
-
 	sequenceParams := &CmdContextParamSeqgen{
 		endpointFormat: p.endpointFormat,
 		appFormat:      p.appFormat,

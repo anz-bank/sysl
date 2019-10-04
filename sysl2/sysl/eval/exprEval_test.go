@@ -256,7 +256,6 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	// check members of Response
 	responseBody := defSet[1].GetMap().Items
 	assert.Equal(t, "ResponseImpl", responseBody["className"].GetS())
-
 }
 
 func TestEvalNullCheckAppAttrs(t *testing.T) {
@@ -331,7 +330,6 @@ func TestScopeAddRestApp(t *testing.T) {
 	assert.True(t, todosByIDStatus["is_rest"].GetB())
 	assert.False(t, todosByIDStatus["is_pubsub"].GetB())
 	assert.Equal(t, "rest", todosByIDStatus["attrs"].GetMap().Items["patterns"].GetList().Value[0].GetS())
-
 }
 
 func TestEvalStringOps(t *testing.T) {
@@ -378,7 +376,6 @@ func TestEvalStringOps(t *testing.T) {
 	assert.True(t, items["MatchString"].GetB())
 	assert.Len(t, items["FindAllString"].GetList().Value, 2)
 	assert.Len(t, items["tabs"].GetList().Value, 2)
-
 }
 
 func TestIncorrectArgsToGoFunc(t *testing.T) {

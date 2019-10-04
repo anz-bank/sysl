@@ -79,7 +79,6 @@ func (p *datamodelCmd) Name() string            { return "datamodel" }
 func (p *datamodelCmd) RequireSyslModule() bool { return true }
 
 func (p *datamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-
 	cmd := app.Command(p.Name(), "Generate data models").Alias("data")
 	cmd.Flag("class_format",
 		"Specify the format string for data diagram participants. "+
@@ -101,7 +100,6 @@ func (p *datamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *datamodelCmd) Execute(args ExecuteArgs) error {
-
 	outmap, err := GenerateDataModels(&p.CmdContextParamDatagen, args.Module, args.Logger)
 	if err != nil {
 		return err

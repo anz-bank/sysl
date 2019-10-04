@@ -7,6 +7,21 @@ run:
     - sysl2/sysl/grammar/syslparser_base_listener.go
 linters:
   enable-all: true
+  disable:
+    - funlen
 linters-settings:
   errcheck:
     check-blank: true
+issues:
+  exclude-rules:
+    - path: sysl2/sysl/parse/listener_impl.go
+      text: "ST1003:" # should not use underscores in Go names
+    # Allow some existing TODO's
+    - path: sysl2/naive/grammarParser.go
+      text: 'Line contains TODO/BUG/FIXME: "TODO'
+    - path: sysl2/naive/Grammar1_test.go
+      text: 'Line contains TODO/BUG/FIXME: "TODO'
+    - path: sysl2/sysl/parse/parse.go
+      text: 'Line contains TODO/BUG/FIXME: "TODO'
+    - path: sysl2/sysl/eval/exprEval.go
+      text: 'Line contains TODO/BUG/FIXME: "TODO'

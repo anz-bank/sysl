@@ -28,7 +28,6 @@ func TestLoadSwaggerFromTestFiles(t *testing.T) {
 		if strings.EqualFold(parts[1], "yaml") {
 			filename := strings.Join(parts[:len(parts)-1], ".")
 			t.Run(fmt.Sprintf("TestLoadSwaggerFromTestFiles - %s", filename), func(t *testing.T) {
-
 				input, err := ioutil.ReadFile(path.Join(fileTestDir, filename+".yaml"))
 				require.NoError(t, err)
 				expected, err := ioutil.ReadFile(path.Join(fileTestDir, filename+".sysl"))
@@ -40,9 +39,7 @@ func TestLoadSwaggerFromTestFiles(t *testing.T) {
 				}, string(input), logger)
 				require.NoError(t, err)
 				require.Equal(t, string(expected), result)
-
 			})
 		}
 	}
-
 }

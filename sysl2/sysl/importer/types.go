@@ -167,7 +167,6 @@ func InitTypes(doc *spec.Swagger, logger *logrus.Logger) TypeList {
 		if _, found := data.knownTypes.Find(name); !found {
 			_ = createTypeFromSchema(name, &def, data)
 		}
-
 	}
 
 	sort.SliceStable(data.knownTypes, func(i, j int) bool {
@@ -177,7 +176,6 @@ func InitTypes(doc *spec.Swagger, logger *logrus.Logger) TypeList {
 }
 
 func (t TypeList) Find(name string) (Type, bool) {
-
 	if builtin, ok := checkBuiltInTypes(name); ok {
 		return builtin, ok
 	}
@@ -201,7 +199,6 @@ func (t TypeList) FindFromSchema(schema spec.Schema, data *typeData) (Type, bool
 }
 
 func checkBuiltInTypes(name string) (Type, bool) {
-
 	if syslType, ok := swaggerToSyslMappings[name]; ok {
 		return &SyslBuiltIn{name: syslType}, true
 	}

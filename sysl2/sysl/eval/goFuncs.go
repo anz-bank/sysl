@@ -230,7 +230,6 @@ func evalGoFunc(name string, list *sysl.Value) *sysl.Value {
 // MatchString exposes regexp.MatchString to sysl transforms
 func MatchString(pattern, word string) bool {
 	return regexp.MustCompile(pattern).MatchString(word)
-
 }
 
 // FindAllString exposes regexp.FindAllString to sysl transforms

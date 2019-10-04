@@ -61,7 +61,6 @@ func (p *intsCmd) Name() string            { return "integrations" }
 func (p *intsCmd) RequireSyslModule() bool { return true }
 
 func (p *intsCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-
 	cmd := app.Command(p.Name(), "Generate integrations").Alias("ints")
 
 	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
@@ -80,7 +79,6 @@ func (p *intsCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *intsCmd) Execute(args ExecuteArgs) error {
-
 	result, err := GenerateIntegrations(&p.CmdContextParamIntgen, args.Module, args.Logger)
 	if err != nil {
 		return err

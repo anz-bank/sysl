@@ -375,7 +375,6 @@ func (v *IntsDiagramVisitor) generateEPAView(viewParams viewParams, params *Ints
 	}
 	v.stringBuilder.WriteString("@enduml")
 	return v.stringBuilder.String()
-
 }
 
 func (v *IntsDiagramVisitor) drawIntsView(viewParams viewParams, params *IntsParam, nameMap map[string]string) {
@@ -472,7 +471,6 @@ func (v *IntsDiagramVisitor) drawSystemView(viewParams viewParams, params *IntsP
 }
 
 func (v *IntsDiagramVisitor) generateIntsView(args *Args, viewParams viewParams, params *IntsParam) string {
-
 	v.stringBuilder.WriteString("@startuml\n")
 	if viewParams.diagramTitle != "" {
 		fmt.Fprintf(v.stringBuilder, "title %s\n", viewParams.diagramTitle)

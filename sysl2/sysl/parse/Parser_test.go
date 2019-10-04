@@ -126,7 +126,6 @@ func nullifyType(expr *sysl.Expr) {
 			nullifyType(stmt.GetLet().GetExpr())
 		}
 	}
-
 }
 
 func parseAndCompare(
