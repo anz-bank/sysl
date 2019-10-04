@@ -30,7 +30,6 @@ var methodDisplayOrder = []string{"GET", "PUT", "POST", "DELETE", "PATCH"}
 func initEndpoint(path string,
 	op *spec.Operation, params []spec.Parameter,
 	types TypeList, globals Parameters, logger *logrus.Logger) Endpoint {
-
 	apiParams := buildParameters(params, types, globals, Parameters{}, logger)
 
 	res := Endpoint{
@@ -75,7 +74,6 @@ func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger
 	epMap := map[string][]Endpoint{}
 
 	for path, item := range doc.Paths.Paths {
-
 		ops := map[string]*spec.Operation{
 			"GET":    item.Get,
 			"PUT":    item.Put,
@@ -89,7 +87,6 @@ func InitEndpoints(doc *spec.Swagger, types TypeList, globals Parameters, logger
 				epMap[method] = append(epMap[method], initEndpoint(path, op, item.Parameters, types, globals, logger))
 			}
 		}
-
 	}
 
 	for key := range epMap {

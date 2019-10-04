@@ -693,7 +693,6 @@ func TestDrawSystemView(t *testing.T) {
 [] as _2
 _1 --> _2 <<indirect>>
 `, v.stringBuilder.String())
-
 }
 
 func TestMakeIntsParam(t *testing.T) {

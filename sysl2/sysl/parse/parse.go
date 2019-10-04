@@ -313,7 +313,6 @@ func (p *Parser) inferExprType(mod *sysl.Module,
 	viewName string,
 	scope string,
 	refType *sysl.Type) (exprType *sysl.Type, anonymousCount int, inferredType *sysl.Type) {
-
 	switch t := expr.Expr.(type) {
 	case *sysl.Expr_Transform_:
 		newTuple := &sysl.Type{

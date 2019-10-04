@@ -24,7 +24,6 @@ func (p *Parameters) Add(param Param) {
 	}
 	if _, found := p.items[param.Name]; !found {
 		p.insertOrder = append(p.insertOrder, param.Name)
-
 	}
 	p.items[param.Name] = param
 }
@@ -53,7 +52,6 @@ func (p Parameters) PathParams() []Param {
 }
 
 func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger *logrus.Logger) (Param, error) {
-
 	fromType := func(t Type) Param {
 		return Param{
 			Field: Field{
@@ -65,7 +63,6 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 		}
 	}
 	fromString := func(typeName string) Param {
-
 		t, found := types.Find(typeName)
 		if !found {
 			logger.Errorf("referenced parameter type %s not found\n", typeName)
@@ -96,10 +93,8 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 
 func buildParameters(params []spec.Parameter, types TypeList,
 	globals Parameters, baseParams Parameters, logger *logrus.Logger) Parameters {
-
 	res := baseParams
 	for _, param := range params {
-
 		p, err := buildParam(param, types, globals, logger)
 		if err != nil {
 			logger.Errorf("%s", err.Error())
@@ -111,12 +106,9 @@ func buildParameters(params []spec.Parameter, types TypeList,
 	return res
 }
 
-func buildGlobalParams(params map[string]spec.Parameter, types TypeList,
-	logger *logrus.Logger) Parameters {
-
+func buildGlobalParams(params map[string]spec.Parameter, types TypeList, logger *logrus.Logger) Parameters {
 	res := Parameters{}
 	for key, param := range params {
-
 		p, err := buildParam(param, types, res, logger)
 		if err != nil {
 			logger.Errorf("%s\n", err.Error())

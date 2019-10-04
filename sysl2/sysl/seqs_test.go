@@ -618,7 +618,6 @@ func DoConstructSequenceDiagramsWithParams(
 	blackboxes [][]string,
 	group string,
 ) (map[string]string, error) {
-
 	logger, _ := test.NewNullLogger()
 	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {

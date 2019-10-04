@@ -15,7 +15,6 @@ func (p *codegenCmd) Name() string            { return "codegen" }
 func (p *codegenCmd) RequireSyslModule() bool { return true }
 
 func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-
 	cmd := app.Command(p.Name(), "Generate code").Alias("gen")
 	cmd.Flag("root-transform",
 		"sysl root directory for input transform file (default: .)").
@@ -33,7 +32,6 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *codegenCmd) Execute(args ExecuteArgs) error {
-
 	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Module, p.appName, args.Filesystem, args.Logger)
 	if err != nil {
 		return err

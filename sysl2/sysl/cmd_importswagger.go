@@ -17,7 +17,6 @@ func (p *importSwaggerCmd) Name() string            { return "import-swagger" }
 func (p *importSwaggerCmd) RequireSyslModule() bool { return false }
 
 func (p *importSwaggerCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-
 	cmd := app.Command(p.Name(), "Convert swagger yaml/json -> sysl")
 	cmd.Flag("input", "swagger input filename").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
@@ -30,7 +29,6 @@ func (p *importSwaggerCmd) Configure(app *kingpin.Application) *kingpin.CmdClaus
 }
 
 func (p *importSwaggerCmd) Execute(args ExecuteArgs) error {
-
 	data, err := ioutil.ReadFile(p.filename)
 	if err != nil {
 		return err

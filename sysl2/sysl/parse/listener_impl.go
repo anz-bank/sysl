@@ -1556,7 +1556,6 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 				},
 			})
 		}
-
 	}
 }
 

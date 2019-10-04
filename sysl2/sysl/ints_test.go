@@ -401,7 +401,6 @@ func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
 
 	// Then
 	comparePUML(t, expected, result)
-
 }
 
 func TestPassthrough2(t *testing.T) {

@@ -46,7 +46,6 @@ func processChoice(
 		fullScan := true
 		for _, term := range seq.Term {
 			switch x := term.Atom.Union.(type) {
-
 			// String tokens dont have quantifiers
 			case *ebnfGrammar.Atom_String_:
 				seqResult = append(seqResult, x.String_)
@@ -226,7 +225,6 @@ func GenerateCode(
 	codegenParams *CmdContextParamCodegen,
 	model *sysl.Module, modelAppName string,
 	fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
-
 	var codeOutput []*CodeGenOutput
 
 	logger.Debugf("root-transform: %s\n", codegenParams.rootTransform)

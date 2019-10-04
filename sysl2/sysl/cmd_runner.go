@@ -76,7 +76,6 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 		return false
 	}
 	fn := func(c *kingpin.ParseContext) error {
-
 		var errorMsg strings.Builder
 		for _, f := range cmd.Model().Flags {
 			if inExcludes(f.Name) {
@@ -97,7 +96,6 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 			return errors.New(errorMsg.String())
 		}
 		return nil
-
 	}
 
 	cmd.PreAction(fn)
