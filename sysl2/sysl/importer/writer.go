@@ -142,7 +142,7 @@ func buildQueryString(params []Param) string {
 			if p.Optional {
 				optional = "?"
 			}
-			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), p.Type.Name(), optional))
+			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), getSyslTypeName(p.Type), optional))
 		}
 		query = " ?" + strings.Join(parts, "&")
 	}
@@ -157,7 +157,7 @@ func buildRequestBodyString(params []Param) string {
 		})
 		var parts []string
 		for _, p := range params {
-			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, p.Type.Name()))
+			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, getSyslTypeName(p.Type)))
 		}
 		body = strings.Join(parts, ", ")
 	}
@@ -172,7 +172,7 @@ func buildRequestHeadersString(params []Param) string {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
 
 			safeName := strings.ToLower(strings.ReplaceAll(p.Name, "-", "_"))
-			text := fmt.Sprintf("%s <: %s %s", safeName, p.Type.Name(),
+			text := fmt.Sprintf("%s <: %s %s", safeName, getSyslTypeName(p.Type),
 				buildAttributesString("~header", optional, "name="+quote(p.Name)))
 			parts = append(parts, text)
 		}
@@ -185,7 +185,7 @@ func buildPathString(path string, params []Param) string {
 	result := path
 
 	for _, p := range params {
-		replacement := fmt.Sprintf("{%s<:%s}", p.Name, p.Type.Name())
+		replacement := fmt.Sprintf("{%s<:%s}", p.Name, getSyslTypeName(p.Type))
 		result = strings.ReplaceAll(result, fmt.Sprintf("{%s}", p.Name), replacement)
 	}
 
@@ -229,9 +229,11 @@ func (w *writer) writeDefinitions(types TypeList) {
 	w.writeLines("#" + strings.Repeat("-", 75))
 	w.writeLines("# definitions")
 	var others []Type
-	for _, t := range types {
+	for _, t := range types.Items() {
 		_, isEnum := t.(*Enum)
 		switch {
+		case isBuiltInType(t):
+			// do nothing
 		case isEnum:
 			// We want the enum aliases listed with the real types
 			w.writeLines(BlankLine)

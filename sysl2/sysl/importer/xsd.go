@@ -19,7 +19,7 @@ func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.L
 	var types TypeList
 	for _, schema := range specs {
 		if schema.TargetNS == targetNS {
-			types = append(types, loadSchemaTypes(schema, logger)...)
+			types.Add(loadSchemaTypes(schema, logger).Items()...)
 
 			self, ok := types.Find("_self")
 
@@ -43,15 +43,27 @@ func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.L
 }
 
 func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
-	defs := TypeList{}
+	types := TypeList{}
+
+	var xsdToSyslMappings = map[string]string{
+		"http://www.w3.org/2001/XMLSchema:integer": "int",
+		"http://www.w3.org/2001/XMLSchema:time":    "string",
+		"http://www.w3.org/2001/XMLSchema:boolean": "bool",
+	}
+	for swaggerName, syslName := range xsdToSyslMappings {
+		types.Add(&ImportedBuiltInAlias{
+			name:   swaggerName,
+			Target: &SyslBuiltIn{syslName},
+		})
+	}
 
 	for name, data := range schema.Types {
-		if t := FindType(data, &defs); t == nil {
-			defs = append(defs, makeType(name, data, &defs, logger))
+		if t := FindType(data, &types); t == nil {
+			types.Add(makeType(name, data, &types, logger))
 		}
 	}
 
-	return defs
+	return types
 }
 
 func FindType(t xsd.Type, knownTypes *TypeList) Type {
@@ -86,7 +98,7 @@ func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, lo
 		childType := FindType(child.Type, knownTypes)
 		if childType == nil {
 			childType = makeType(child.Name, child.Type, knownTypes, logger)
-			*knownTypes = append(*knownTypes, childType)
+			knownTypes.Add(childType)
 		}
 		f := Field{
 			Name: child.Name.Local,

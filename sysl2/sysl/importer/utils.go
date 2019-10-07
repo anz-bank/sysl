@@ -16,6 +16,14 @@ func quote(s string) string {
 	return `"` + s + `"`
 }
 
+func isBuiltInType(item Type) bool {
+	switch item.(type) {
+	case *SyslBuiltIn, *ImportedBuiltInAlias:
+		return true
+	}
+	return false
+}
+
 func isExternalAlias(item Type) bool {
 	switch item.(type) {
 	case *Alias, *Array, *Enum:
@@ -30,6 +38,8 @@ func getSyslTypeName(item Type) string {
 		return "sequence of " + getSyslTypeName(t.Items)
 	case *Enum:
 		return item.Name()
+	case *ImportedBuiltInAlias:
+		return getSyslTypeName(t.Target)
 	}
 	if isExternalAlias(item) {
 		return "EXTERNAL_" + item.Name()
