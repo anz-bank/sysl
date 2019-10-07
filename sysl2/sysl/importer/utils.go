@@ -1,5 +1,7 @@
 package importer
 
+import "strings"
+
 func getDescription(d string) string {
 	if d == "" {
 		return "No description."
@@ -8,6 +10,9 @@ func getDescription(d string) string {
 }
 
 func quote(s string) string {
+	if s == "" {
+		return ""
+	}
 	return `"` + s + `"`
 }
 
@@ -30,4 +35,14 @@ func getSyslTypeName(item Type) string {
 		return "EXTERNAL_" + item.Name()
 	}
 	return item.Name()
+}
+
+func spaceSeperate(items ...string) string {
+	var t []string
+	for _, i := range items {
+		if i != "" {
+			t = append(t, i)
+		}
+	}
+	return strings.Join(t, " ")
 }

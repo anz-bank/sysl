@@ -81,7 +81,7 @@ func (w *writer) writeHeader(info SyslInfo) error {
 `)
 	title := info.Title
 
-	w.writeLines(fmt.Sprintf("%s %s [package=%s]:", info.AppName, quote(title), quote(info.Package)))
+	w.writeLines(fmt.Sprintf("%s [package=%s]:", spaceSeperate(info.AppName, quote(title)), quote(info.Package)))
 	w.ind.Push()
 
 	for i := 0; i < len(info.OtherFields); i += 2 {
@@ -126,6 +126,13 @@ func buildDescriptionLines(prefix, description string, wrapAt int) []string {
 	return result
 }
 
+func buildAttributesString(attrs ...string) string {
+	if len(attrs) == 0 {
+		return ""
+	}
+	return "[" + strings.Join(attrs, ", ") + "]"
+}
+
 func buildQueryString(params []Param) string {
 	query := ""
 	if len(params) > 0 {
@@ -165,7 +172,8 @@ func buildRequestHeadersString(params []Param) string {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
 
 			safeName := strings.ToLower(strings.ReplaceAll(p.Name, "-", "_"))
-			text := fmt.Sprintf("%s <: %s [~header, %s, name=%s]", safeName, p.Type.Name(), optional, quote(p.Name))
+			text := fmt.Sprintf("%s <: %s %s", safeName, p.Type.Name(),
+				buildAttributesString("~header", optional, "name="+quote(p.Name)))
 			parts = append(parts, text)
 		}
 		headers = strings.Join(parts, ", ")

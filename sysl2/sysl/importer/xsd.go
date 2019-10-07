@@ -5,12 +5,11 @@ import (
 	"encoding/xml"
 	"fmt"
 
+	"aqwari.net/xml/xsd"
 	"github.com/sirupsen/logrus"
 )
-import "aqwari.net/xml/xsd"
 
 func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.Logger) (out string, err error) {
-
 	xsd.StandardSchema = [][]byte{} // Ignore all the standard schemas,
 	specs, err := xsd.Parse([]byte(text))
 	if err != nil {
@@ -44,11 +43,9 @@ func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.L
 }
 
 func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
-
 	defs := TypeList{}
 
 	for name, data := range schema.Types {
-
 		if t := FindType(data, &defs); t == nil {
 			defs = append(defs, makeType(name, data, &defs, logger))
 		}
@@ -58,7 +55,6 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 }
 
 func FindType(t xsd.Type, knownTypes *TypeList) Type {
-
 	res, found := knownTypes.Find(xsd.XMLName(t).Local)
 	if found {
 		return res
@@ -74,13 +70,11 @@ func makeType(name xml.Name, from xsd.Type, knownTypes *TypeList, logger *logrus
 		return makeSimpleType(name, t, logger)
 	case xsd.Builtin:
 		return makeXsdBuiltinType(t, knownTypes)
-
 	}
 	return nil
 }
 
 func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, logger *logrus.Logger) Type {
-
 	if isArray(from) {
 		return nil
 	}
@@ -89,7 +83,6 @@ func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, lo
 		name: from.Name.Local,
 	}
 	for _, child := range from.Elements {
-
 		childType := FindType(child.Type, knownTypes)
 		if childType == nil {
 			childType = makeType(child.Name, child.Type, knownTypes, logger)
@@ -106,7 +99,6 @@ func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, lo
 }
 
 func makeSimpleType(name xml.Name, from *xsd.SimpleType, logger *logrus.Logger) Type {
-
 	return nil
 }
 

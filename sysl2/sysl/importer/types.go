@@ -19,6 +19,7 @@ type Type interface {
 type StandardType struct {
 	name       string
 	Properties []Field
+	Attributes []string
 }
 
 func (s *StandardType) Name() string { return s.name }

@@ -4,17 +4,18 @@
 ##                                      ##
 ##########################################
 
-testapp "" [package="package_foo"]:
+testapp [package="package_foo"]:
     @description =:
         | No description.
 
     #---------------------------------------------------------------------------
     # definitions
+    !type TestTypeXsdModel:
+        TopLevelType <: TopLevelType?
 
-    !type TestTableXsdModel:
-        someValue <: string:
-            @json_tag = "someValue"
+    !type SecondLevelType:
+        field1 <: xs:string?
 
-    !type _self:
-        TestTableXsdModel <: TestTableXsdModel:
-            @json_tag = "TestTableXsdModel"
+    !type TopLevelType:
+        field1 <: SecondLevelType?
+
