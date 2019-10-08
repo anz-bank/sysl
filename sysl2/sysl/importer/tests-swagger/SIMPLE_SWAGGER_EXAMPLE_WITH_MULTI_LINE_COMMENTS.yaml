@@ -1,0 +1,32 @@
+swagger: "2.0"
+info:
+  title: Simple
+  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit velit sed ultrices ornare.
+Sed viverra sagittis laoreet. Aliquam sodales sapien in nisl euismod, nec interdum lacus pharetra.
+Phasellus euismod consequat magna, ut malesuada justo rutrum sit amet.
+Praesent non justo iaculis, mattis neque tristique, aliquet enim. Maecenas a commodo felis, sit amet suscipit elit.
+Vestibulum nec dapibus quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget turpis dui. Maecenas sit amet tempor mi.
+Ut pharetra leo est, sed ornare tortor interdum tempor. Maecenas vitae mollis purus. Phasellus ac euismod odio, sed pretium neque. Donec dapibus, ante a tincidunt porta, metus lacus lacinia arcu, eu rutrum ex libero at augue. Sed maximus, est sit amet pretium commodo, tellus arcu facilisis massa, vitae feugiat felis dui ac ipsum."
+
+paths:
+  /test:
+    get:
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit velit sed ultrices ornare.
+      Sed viverra sagittis laoreet. Aliquam sodales sapien in nisl euismod, nec interdum lacus pharetra.
+      Phasellus euismod consequat magna, ut malesuada justo rutrum sit amet.
+      Praesent non justo iaculis, mattis neque tristique, aliquet enim. Maecenas a commodo felis, sit amet suscipit elit.
+      Vestibulum nec dapibus quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget turpis dui. Maecenas sit amet tempor mi.
+      Ut pharetra leo est, sed ornare tortor interdum tempor. Maecenas vitae mollis purus. Phasellus ac euismod odio, sed pretium neque. Donec dapibus, ante a tincidunt porta, metus lacus lacinia arcu, eu rutrum ex libero at augue. Sed maximus, est sit amet pretium commodo, tellus arcu facilisis massa, vitae feugiat felis dui ac ipsum."
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/SimpleObj'
+definitions:
+  SimpleObj:
+
+    type: object
+    properties:
+      name:
+        type: string
+
