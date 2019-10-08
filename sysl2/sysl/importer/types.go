@@ -92,11 +92,15 @@ func (s *StandardType) AddProperties(props map[string]spec.Schema, requiredProps
 	for pname, prop := range props {
 		propType, found := data.knownTypes.FindFromSchema(prop, data)
 		if !found {
-			refType := findReferencedType(prop, data)
+			var refType string
+			refType = findReferencedType(prop, data)
 			if ref, ok := data.doc.Definitions[refType]; ok {
 				propType = createTypeFromSchema(refType, &ref, data)
 			}
-			if refType == "object" {
+			if isArrayType(prop) && findReferencedType(*prop.Items.Schema, data) == "object" {
+				propType = createTypeFromSchema(fmt.Sprintf("%s_%s_obj", s.Name(), pname), prop.Items.Schema, data)
+				propType = &Array{Items: propType}
+			} else if refType == "object" {
 				propType = NewStringAlias(fmt.Sprintf("%s_%s_obj", s.Name(), pname))
 				data.knownTypes = append(data.knownTypes, propType)
 			}
@@ -194,6 +198,7 @@ func (t TypeList) FindFromSchema(schema spec.Schema, data *typeData) (Type, bool
 		if found {
 			return &Array{Items: items}, true
 		}
+
 	}
 	return t.Find(findReferencedType(schema, data))
 }
