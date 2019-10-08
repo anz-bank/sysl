@@ -81,7 +81,7 @@ func (d *debugTypeData) add(app *kingpin.Application) {
 	}
 	app.Flag("log", fmt.Sprintf("log level: [%s]", strings.Join(levels, ","))).
 		HintOptions(levels...).
-		Default(levels[0]).
+		Default("warn").
 		StringVar(&d.loglevel)
 	app.Flag("verbose", "enable verbose logging").Short('v').BoolVar(&d.verbose)
 	app.PreAction(d.do)
