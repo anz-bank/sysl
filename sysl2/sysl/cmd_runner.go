@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	rootUndefined  = "\000"
 	syslRootMarker = ".SYSL_ROOT"
 )
 
@@ -48,76 +49,83 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 	return nil
 }
 
-func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
-	moduleAbsolutePath, err := filepath.Abs(r.module)
+func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) (err error) {
+
+	if ok, err := afero.Exists(fs, r.module); !ok {
+		return errors.New("Sysl module not found")
+	} else if err != nil {
+		return err
+	}
+
+	syslRootPath, syslRootExists, err := r.findRootFromASyslModule(fs, logger)
 	if err != nil {
 		return err
 	}
 
-	syslRootPath, err := r.findRootFromASyslModule(moduleAbsolutePath, fs)
-	if err != nil {
-		return err
+	if syslRootExists && r.Root == syslRootPath {
+		return
 	}
 
-	rootIsDefined := r.Root != ""
-	syslRootExists := syslRootPath != ""
-
-	switch {
-	case rootIsDefined && syslRootExists:
+	if r.rootIsDefined() && syslRootExists {
 		logger.WithFields(logrus.Fields{
 			"root":      r.Root,
 			"SYSL_ROOT": syslRootPath,
-		}).Warningf("root is defined even though %s exists\n", syslRootMarker)
-	case rootIsDefined && !syslRootExists:
-		logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root)
-	case !rootIsDefined && !syslRootExists:
-		logger.Errorf("root and %s are undefined", syslRootMarker)
-		return errors.New("root is not defined")
+		}).Warningln(fmt.Sprint("root is defined even though .SYSL_ROOT exists"))
+	} else if !r.rootIsDefined() && !syslRootExists {
+		logger.Errorln("root is not defined and .SYSL_ROOT can not be found")
+	} else if !r.rootIsDefined() && syslRootExists {
+		// TODO: log this?
+		r.Root = syslRootPath
 	}
 
-	// r.Root must be relative to the current directory
-	absoluteRoot, err := filepath.Abs(".")
+	return
+}
+
+func (r *cmdRunner) findRootFromASyslModule(fs afero.Fs, logger *logrus.Logger) (syslRootPath string, syslRootExists bool, err error) {
+	absolutePath, err := filepath.Abs(r.module)
 	if err != nil {
-		return err
+		return
+	}
+	// paths := make(chan string)
+
+	// go func(){
+	// 	path,
+	// }
+	syslRootPath, err = r.walkUpParentDirectory(fs, absolutePath)
+	if (err != nil){
+		return
+	}
+	if (syslRootPath == ""){
+		return 
 	}
 
-	if !rootIsDefined && syslRootExists {
-		relativeSyslRootPath, err := filepath.Rel(absoluteRoot, syslRootPath)
-		if err != nil {
-			return err
-		}
-		r.Root = relativeSyslRootPath
-	}
-
-	return nil
+	return
 }
 
-func (r *cmdRunner) findRootFromASyslModule(absolutePath string, fs afero.Fs) (string, error) {
-	// Takes the closest root marker
-	currentPath := absolutePath
+func (r *cmdRunner) walkUpParentDirectory(fs afero.Fs, syslModuleAbsolutePath string) (syslRootPath string, err error) {
 
-	for {
-		// Keep walking up the directories
-		currentPath = filepath.Dir(currentPath)
-
-		rootPath := filepath.Join(currentPath, syslRootMarker)
-
-		if exists, err := afero.Exists(fs, rootPath); err != nil {
+	for syslModuleAbsolutePath != "."{
+		if ok, err := afero.DirExists(fs, filepath.Join(filepath.Dir(syslModuleAbsolutePath), syslRootMarker)); ok{
+			return syslModuleAbsolutePath, nil
+		} else if err != nil {
 			return "", err
-		} else if exists {
-			break
 		}
-		if currentPath == "." || currentPath == "/" {
-			return "", nil
-		}
+
+		syslModuleAbsolutePath = filepath.Dir(syslModuleAbsolutePath)
 	}
 
-	// returned path is always an absolute path
-	return currentPath, nil
+	return "", nil
 }
+
+func (r *cmdRunner) walkDownDirectory(syslModuleAbsolutePath string) (syslRootPath string, err error){
+
+	return "", nil
+}
+
+func (r *cmdRunner) rootIsDefined() bool { return r.Root != rootUndefined }
 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
-	app.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
+	// app.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 
 	commands := []Command{
 		&protobuf{},
@@ -141,6 +149,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	})
 	for _, cmd := range commands {
 		c := cmd.Configure(app)
+		// TODO: find root based on the sysl module
 		if cmd.RequireSyslModule() {
 			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
