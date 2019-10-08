@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"sort"
+	"fmt"
 	"path/filepath"
 	"sort"
 	"fmt"
@@ -18,6 +20,7 @@ import (
 
 const (
 	syslRootMarker = ".SYSL_ROOT"
+	rootUndefined  = "\000"
 )
 
 type cmdRunner struct {
@@ -58,7 +61,7 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 }
 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
-	app.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
+	// app.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 
 	commands := []Command{
 		&protobuf{},
@@ -82,6 +85,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	})
 	for _, cmd := range commands {
 		c := cmd.Configure(app)
+		// TODO: find root based on the sysl module
 		if cmd.RequireSyslModule() {
 			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
