@@ -27,6 +27,10 @@ func (i *IndentWriter) Write() error {
 	return err
 }
 
+func (i *IndentWriter) CurrentIndentLen() int {
+	return len(strings.Repeat(i.text, i.current))
+}
+
 func NewIndentWriter(text string, out io.Writer) *IndentWriter {
 	return &IndentWriter{
 		current: 0,

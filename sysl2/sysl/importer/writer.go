@@ -1,6 +1,7 @@
 package importer
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"sort"
@@ -32,6 +33,8 @@ type writer struct {
 	ind    *IndentWriter
 	logger *logrus.Logger
 }
+
+const CommentLineLength = 80
 
 func newWriter(out io.Writer, logger *logrus.Logger) *writer {
 	return &writer{
@@ -84,9 +87,39 @@ func (w *writer) writeHeader(info SyslInfo) error {
 			w.writeLines(fmt.Sprintf("@%s = %s", key, quote(val)))
 		}
 	}
-	w.writeLines("@description =:", PushIndent, "| "+getDescription(info.Description), PopIndent, BlankLine)
+	w.writeLines("@description =:", PushIndent)
+	desc := getDescription(info.Description)
+	w.writeLines(buildDescriptionLines("| ", desc, CommentLineLength-w.ind.CurrentIndentLen())...)
+	w.writeLines(PopIndent, BlankLine)
 
 	return nil
+}
+
+func buildDescriptionLines(prefix, description string, wrapAt int) []string {
+	var result []string
+	scanner := bufio.NewScanner(strings.NewReader(description))
+	for scanner.Scan() {
+		line := scanner.Text()
+		if len(prefix)+len(line) <= wrapAt {
+			result = append(result, prefix+line)
+		} else {
+			words := bufio.NewScanner(strings.NewReader(line))
+			words.Split(bufio.ScanWords)
+			temp := strings.Builder{}
+			temp.WriteString(prefix)
+			for words.Scan() {
+				w := words.Text()
+				if temp.Len()+len(w) > wrapAt {
+					result = append(result, strings.TrimSpace(temp.String()))
+					temp.Reset()
+					temp.WriteString(prefix)
+				}
+				temp.WriteString(w + " ")
+			}
+			result = append(result, strings.TrimSpace(temp.String()))
+		}
+	}
+	return result
 }
 
 func buildQueryString(params []Param) string {
@@ -158,10 +191,11 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 	}
 
 	pathStr := buildPathString(endpoint.Path, endpoint.Params.PathParams())
+	desc := getDescription(endpoint.Description)
 
 	w.writeLines(fmt.Sprintf("%s:", pathStr), PushIndent,
-		fmt.Sprintf("%s%s%s:", method, reqStr, buildQueryString(endpoint.Params.QueryParams())), PushIndent,
-		fmt.Sprintf("| %s", getDescription(endpoint.Description)))
+		fmt.Sprintf("%s%s%s:", method, reqStr, buildQueryString(endpoint.Params.QueryParams())), PushIndent)
+	w.writeLines(buildDescriptionLines("| ", desc, CommentLineLength-w.ind.CurrentIndentLen())...)
 
 	if len(endpoint.Responses) > 0 {
 		var outs []string
