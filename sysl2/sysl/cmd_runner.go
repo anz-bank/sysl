@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"path/filepath"
 	"sort"
 	"fmt"
 	"log"
@@ -81,6 +83,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	})
 	for _, cmd := range commands {
 		c := cmd.Configure(app)
+		// TODO: find root based on the sysl module
 		if cmd.RequireSyslModule() {
 			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
