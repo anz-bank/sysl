@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"testing"
 
+	"gopkg.in/alecthomas/kingpin.v2"
+
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -195,4 +197,60 @@ func GenerateCodeWithParamsFs(
 		return nil, err
 	}
 	return GenerateCode(cmdContextParamCodegen, mod, modAppName, fs, logger)
+}
+
+func TestValidatorDoValidate(t *testing.T) {
+	t.Parallel()
+
+	cases := map[string]struct {
+		args     []string
+		isErrNil bool
+	}{
+		"Success": {
+			args: []string{
+				"sysl2", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "transform2.sysl", "--grammar",
+				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: true},
+		"Grammar loading fail": {
+			args: []string{
+				"sysl2", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "transform2.sysl", "--grammar",
+				"./tests/go.sysl", "--start", "goFile"}, isErrNil: false},
+		"Transform loading fail": {
+			args: []string{
+				"sysl2", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "tfm.sysl", "--grammar",
+				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
+		"Has validation messages": {
+			args: []string{
+				"sysl2", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "transform1.sysl", "--grammar",
+				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
+	}
+
+	for name, tt := range cases {
+		args := tt.args
+		isErrNil := tt.isErrNil
+		t.Run(name, func(t *testing.T) {
+			sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
+
+			cmd := &codegenCmd{}
+			require.NotNil(t, cmd.Configure(sysl))
+
+			var selectedCmd string
+			var err error
+			if selectedCmd, err = sysl.Parse(args[1:]); err != nil {
+				assert.FailNow(t, "Failed to parse args")
+			}
+			require.Equal(t, cmd.Name(), selectedCmd)
+			l, _ := test.NewNullLogger()
+			execArgs := ExecuteArgs{
+				Module:     nil,
+				Filesystem: afero.NewOsFs(),
+				Logger:     l,
+			}
+			err = cmd.Execute(execArgs)
+			if isErrNil {
+				assert.Nil(t, err, "Unexpected result")
+			} else {
+				assert.NotNil(t, err, "Unexpected result")
+			}
+		})
+	}
 }
