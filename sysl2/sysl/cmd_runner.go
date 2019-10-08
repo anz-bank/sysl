@@ -44,6 +44,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&sequenceDiagramCmd{},
 		&importSwaggerCmd{},
 		&infoCmd{},
+		&validateCmd{},
 	}
 	r.commands = map[string]Command{}
 
