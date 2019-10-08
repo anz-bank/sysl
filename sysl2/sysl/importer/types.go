@@ -58,9 +58,10 @@ type Enum struct {
 func (s *Enum) Name() string { return s.name }
 
 type Field struct {
-	Name     string
-	Type     Type
-	Optional bool
+	Name       string
+	Type       Type
+	Optional   bool
+	Attributes []string
 }
 
 type TypeList struct {

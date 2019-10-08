@@ -16,15 +16,10 @@ func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.L
 		return "", err
 	}
 
-	var types TypeList
+	types := TypeList{}
 	for _, schema := range specs {
-		if schema.TargetNS == targetNS {
-			types.Add(loadSchemaTypes(schema, logger).Items()...)
-
-			self, ok := types.Find("_self")
-
-			fmt.Printf("%v %v", self, ok)
-		}
+		schemaTypes := loadSchemaTypes(schema, logger)
+		types.Add(schemaTypes.Items()...)
 	}
 
 	info := SyslInfo{
@@ -42,24 +37,52 @@ func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.L
 	return result.String(), nil
 }
 
+func makeNamespacedType(name xml.Name, target Type) Type {
+	return &ImportedBuiltInAlias{
+		name:   fmt.Sprintf("%s:%s", name.Space, name.Local),
+		Target: target,
+	}
+}
+
 func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 	types := TypeList{}
 
 	var xsdToSyslMappings = map[string]string{
-		"http://www.w3.org/2001/XMLSchema:integer": "int",
-		"http://www.w3.org/2001/XMLSchema:time":    "string",
-		"http://www.w3.org/2001/XMLSchema:boolean": "bool",
+		"NMTOKEN": "string",
+		"integer": "int",
+		"time":    "string",
+		"boolean": "bool",
+		"string":  "string",
+		"date":    "date",
 	}
 	for swaggerName, syslName := range xsdToSyslMappings {
-		types.Add(&ImportedBuiltInAlias{
-			name:   swaggerName,
-			Target: &SyslBuiltIn{syslName},
-		})
+		from := xml.Name{Space: "http://www.w3.org/2001/XMLSchema", Local: swaggerName}
+		to := &SyslBuiltIn{syslName}
+		types.Add(makeNamespacedType(from, to))
 	}
 
 	for name, data := range schema.Types {
-		if t := FindType(data, &types); t == nil {
-			types.Add(makeType(name, data, &types, logger))
+		if name.Local == "_self" {
+			rootType := data.(*xsd.ComplexType)
+			data = rootType.Elements[0].Type
+			t := FindType(data, &types)
+			if t == nil {
+				t = makeType(name, data, &types, logger)
+				types.Add(t)
+				if name.Space != "" {
+					types.Add(makeNamespacedType(name, t))
+				}
+			}
+			x := t.(*StandardType)
+			if !contains("~xml_root", x.Attributes) {
+				x.Attributes = append(x.Attributes, "~xml_root")
+			}
+		} else if t := FindType(data, &types); t == nil {
+			item := makeType(name, data, &types, logger)
+			if name.Space != "" {
+				item = makeNamespacedType(name, item)
+			}
+			types.Add(item)
 		}
 	}
 
@@ -67,8 +90,10 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 }
 
 func FindType(t xsd.Type, knownTypes *TypeList) Type {
-	res, found := knownTypes.Find(xsd.XMLName(t).Local)
-	if found {
+	if res, found := knownTypes.Find(fmt.Sprintf("%s:%s", xsd.XMLName(t).Space, xsd.XMLName(t).Local)); found {
+		return res
+	}
+	if res, found := knownTypes.Find(xsd.XMLName(t).Local); found {
 		return res
 	}
 	return nil
@@ -88,23 +113,46 @@ func makeType(name xml.Name, from xsd.Type, knownTypes *TypeList, logger *logrus
 
 func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, logger *logrus.Logger) Type {
 	if isArray(from) {
-		return nil
+		panic("Cant make a complex array yet")
+	}
+
+	createChildItem := func(name xml.Name, data xsd.Type) Field {
+		childType := FindType(data, knownTypes)
+		if childType == nil {
+			childType = makeType(name, data, knownTypes, logger)
+			knownTypes.Add(childType)
+		}
+		f := Field{
+			Name: name.Local,
+			Type: childType,
+		}
+		return f
+	}
+
+	configureChildItem := func(field *Field, isAttr, optional, plural bool) {
+		if isAttr {
+			field.Attributes = []string{"~xml_attribute"}
+		}
+		field.Optional = optional
+
+		if plural {
+			field.Type = &Array{Items: field.Type}
+		}
 	}
 
 	item := &StandardType{
 		name: from.Name.Local,
 	}
+
 	for _, child := range from.Elements {
-		childType := FindType(child.Type, knownTypes)
-		if childType == nil {
-			childType = makeType(child.Name, child.Type, knownTypes, logger)
-			knownTypes.Add(childType)
-		}
-		f := Field{
-			Name: child.Name.Local,
-			Type: childType,
-		}
-		item.Properties = append(item.Properties, f)
+		c := createChildItem(child.Name, child.Type)
+		configureChildItem(&c, false, child.Optional, child.Plural)
+		item.Properties = append(item.Properties, c)
+	}
+	for _, child := range from.Attributes {
+		c := createChildItem(child.Name, child.Type)
+		configureChildItem(&c, true, child.Optional, child.Plural)
+		item.Properties = append(item.Properties, c)
 	}
 
 	return item

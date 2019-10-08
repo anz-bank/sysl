@@ -81,7 +81,7 @@ func (w *writer) writeHeader(info SyslInfo) error {
 `)
 	title := info.Title
 
-	w.writeLines(fmt.Sprintf("%s [package=%s]:", spaceSeperate(info.AppName, quote(title)), quote(info.Package)))
+	w.writeLines(fmt.Sprintf("%s [package=%s]:", spaceSeparate(info.AppName, quote(title)), quote(info.Package)))
 	w.ind.Push()
 
 	for i := 0; i < len(info.OtherFields); i += 2 {
@@ -126,11 +126,11 @@ func buildDescriptionLines(prefix, description string, wrapAt int) []string {
 	return result
 }
 
-func buildAttributesString(attrs ...string) string {
+func appendAttributesString(prefix string, attrs []string) string {
 	if len(attrs) == 0 {
-		return ""
+		return prefix
 	}
-	return "[" + strings.Join(attrs, ", ") + "]"
+	return prefix + " [" + strings.Join(attrs, ", ") + "]"
 }
 
 func buildQueryString(params []Param) string {
@@ -172,8 +172,8 @@ func buildRequestHeadersString(params []Param) string {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
 
 			safeName := strings.ToLower(strings.ReplaceAll(p.Name, "-", "_"))
-			text := fmt.Sprintf("%s <: %s %s", safeName, getSyslTypeName(p.Type),
-				buildAttributesString("~header", optional, "name="+quote(p.Name)))
+			text := fmt.Sprintf("%s <: %s", safeName,
+				appendAttributesString(getSyslTypeName(p.Type), []string{"~header", optional, "name=" + quote(p.Name)}))
 			parts = append(parts, text)
 		}
 		headers = strings.Join(parts, ", ")
@@ -230,6 +230,11 @@ func (w *writer) writeDefinitions(types TypeList) {
 	w.writeLines("# definitions")
 	var others []Type
 	for _, t := range types.Items() {
+		if alias, ok := t.(*ImportedBuiltInAlias); ok {
+			if alias.Target != nil {
+				t = alias.Target
+			}
+		}
 		_, isEnum := t.(*Enum)
 		switch {
 		case isBuiltInType(t):
@@ -253,12 +258,13 @@ func (w *writer) writeDefinitions(types TypeList) {
 
 func (w *writer) writeDefinition(t *StandardType) {
 	bangName := "type"
-	w.writeLines(fmt.Sprintf("!%s %s:", bangName, getSyslTypeName(t)))
+	w.writeLines(fmt.Sprintf("!%s %s:", bangName, appendAttributesString(getSyslTypeName(t), t.Attributes)))
 	for _, prop := range t.Properties {
 		suffix := ""
 		if prop.Optional {
 			suffix = "?"
 		}
+		suffix = appendAttributesString(suffix, prop.Attributes)
 
 		name := prop.Name
 		if IsKeyword(name) {

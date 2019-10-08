@@ -10,12 +10,15 @@ testapp [package="package_foo"]:
 
     #---------------------------------------------------------------------------
     # definitions
-    !type TestTypeXsdModel:
-        TopLevelType <: TopLevelType?
 
     !type SecondLevelType:
-        field1 <: xs:string?
+        field1 <: string?:
+            @json_tag = "field1"
 
     !type TopLevelType:
-        field1 <: SecondLevelType?
+        field1 <: SecondLevelType?:
+            @json_tag = "field1"
 
+    !type TestTypeXsdModel [~xml_root]:
+        TopLevelType <: TopLevelType:
+            @json_tag = "TopLevelType"

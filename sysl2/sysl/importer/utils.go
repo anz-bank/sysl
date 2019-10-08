@@ -47,7 +47,7 @@ func getSyslTypeName(item Type) string {
 	return item.Name()
 }
 
-func spaceSeperate(items ...string) string {
+func spaceSeparate(items ...string) string {
 	var t []string
 	for _, i := range items {
 		if i != "" {
