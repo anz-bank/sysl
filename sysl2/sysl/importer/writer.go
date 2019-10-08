@@ -49,6 +49,9 @@ func (w *writer) Write(info SyslInfo, types TypeList, endpointBasePath string, e
 		return err
 	}
 
+	if len(endpoints) == 0 {
+		endpointBasePath = ""
+	}
 	if endpointBasePath != "" {
 		w.writeLines(fmt.Sprintf("%s:", endpointBasePath), PushIndent, BlankLine)
 	}

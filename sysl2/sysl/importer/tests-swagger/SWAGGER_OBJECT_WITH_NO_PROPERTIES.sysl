@@ -9,8 +9,6 @@ testapp "Fruit API" [package="package_foo"]:
     @description =:
         | No description.
 
-    /fruit-basket:
-
     #---------------------------------------------------------------------------
     # definitions
 
