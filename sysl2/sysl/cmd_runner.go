@@ -42,7 +42,6 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&datamodelCmd{},
 		&codegenCmd{},
 		&sequenceDiagramCmd{},
-		&validateCmd{},
 		&importSwaggerCmd{},
 		&infoCmd{},
 	}
