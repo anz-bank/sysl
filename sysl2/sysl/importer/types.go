@@ -149,7 +149,7 @@ func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logge
 		if result, ok := formatMap[format]; ok {
 			return result
 		}
-		logger.Warnf("Unhandled (type, format) -> (%s, %s)\n", typeName, format)
+		logger.Warnf("Unhandled (type, format) -> (%s, %s), ignoring format\n", typeName, format)
 		return mapSwaggerTypeAndFormatToType(typeName, "", logger)
 	}
 
