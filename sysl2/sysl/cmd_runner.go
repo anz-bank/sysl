@@ -53,33 +53,25 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 		return err
 	}
 
-	if exists, err := afero.Exists(fs, absolutePath); err != nil {
-		return err
-	} else if !exists {
-		return errors.New("Sysl module not found")
-	}
-
 	syslRootPath, err := r.findRootFromASyslModule(absolutePath, fs, logger)
 	if err != nil {
 		return err
 	}
 
 	syslRootExists := syslRootPath != ""
-
-	if syslRootExists && r.Root == syslRootPath {
-		return nil
+	absoluteRoot, err := filepath.Abs(r.Root)
+	if err != nil {
+		return err
 	}
+	rootIsDefined := r.Root != "." && absoluteRoot != syslRootPath
 
-	if r.rootIsDefined() && syslRootExists {
+	if rootIsDefined && syslRootExists {
 		logger.WithFields(logrus.Fields{
 			"root":      r.Root,
 			"SYSL_ROOT": syslRootPath,
 		}).Warningln(fmt.Sprintf("root is defined even though %s exists\n", syslRootMarker))
-	} else if !r.rootIsDefined() && !syslRootExists {
-		logger.Errorln(fmt.Sprintf("root is not defined and %s can not be found", syslRootMarker))
-		return errors.New("Project root is undefined")
-	} else if r.rootIsDefined() && !syslRootExists {
-		logger.Warningln(fmt.Sprintf("%s is not defined but root is defined in %s and will be used", syslRootMarker, r.Root))
+	} else if rootIsDefined && !syslRootExists {
+		logger.Warningln(fmt.Sprintf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root))
 	} else {
 		r.Root = syslRootPath
 	}
@@ -89,7 +81,6 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 
 func (r *cmdRunner) findRootFromASyslModule(absolutePath string, fs afero.Fs, logger *logrus.Logger) (string, error) {
 	// Takes the closest root marker
-
 	currentPath := absolutePath
 
 	for {
@@ -112,9 +103,6 @@ func (r *cmdRunner) findRootFromASyslModule(absolutePath string, fs afero.Fs, lo
 	return currentPath, nil
 }
 
-
-func (r *cmdRunner) rootIsDefined() bool { return r.Root != "" }
-
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	app.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 
@@ -133,7 +121,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 
 	app.Flag("root",
 		"sysl root directory for input model file (default: .)").
-		Default("").StringVar(&r.Root)
+		Default(".").StringVar(&r.Root)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
