@@ -29,5 +29,12 @@ definitions:
               type: string
             applicationNum:
               type: number
-
+      otherObjArray:
+        type: array
+        items:
+          $ref: '#/definitions/OtherObject'
+  OtherObject:
+    properties:
+      Foo:
+        type: string
 paths: {}

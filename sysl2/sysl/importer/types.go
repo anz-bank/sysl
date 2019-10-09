@@ -94,15 +94,26 @@ func (s *StandardType) AddProperties(props map[string]spec.Schema, requiredProps
 		if !found {
 			var refType string
 			refType = findReferencedType(prop, data)
+			if refType == "" || refType == "object" {
+				p := prop
+				propType = createTypeFromSchema(fmt.Sprintf("%s_%s_obj", s.Name(), pname), &p, data)
+			}
 			if ref, ok := data.doc.Definitions[refType]; ok {
 				propType = createTypeFromSchema(refType, &ref, data)
 			}
-			if isArrayType(prop) && findReferencedType(*prop.Items.Schema, data) == "object" {
-				propType = createTypeFromSchema(fmt.Sprintf("%s_%s_obj", s.Name(), pname), prop.Items.Schema, data)
+			if isArrayType(prop) {
+				refType = findReferencedType(*prop.Items.Schema, data)
+				if refType == "object" {
+					propType = createTypeFromSchema(fmt.Sprintf("%s_%s_obj", s.Name(), pname), prop.Items.Schema, data)
+				} else {
+					if ref, ok := data.doc.Definitions[refType]; ok {
+						propType = createTypeFromSchema(refType, &ref, data)
+					} else {
+						data.logger.Errorf("Referenced type %s not found\n", refType)
+					}
+				}
+
 				propType = &Array{Items: propType}
-			} else if refType == "object" {
-				propType = NewStringAlias(fmt.Sprintf("%s_%s_obj", s.Name(), pname))
-				data.knownTypes = append(data.knownTypes, propType)
 			}
 		}
 		f := Field{

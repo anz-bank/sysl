@@ -21,6 +21,8 @@ testapp "Fruit API" [package="package_foo"]:
             @json_tag = "applications"
         baselineReferenceNumber <: string?:
             @json_tag = "baselineReferenceNumber"
+        otherObjArray <: sequence of OtherObject?:
+            @json_tag = "otherObjArray"
         resultantId <: string?:
             @json_tag = "resultantId"
 
@@ -29,3 +31,7 @@ testapp "Fruit API" [package="package_foo"]:
             @json_tag = "applicationId"
         applicationNum <: float?:
             @json_tag = "applicationNum"
+
+    !type OtherObject:
+        Foo <: string?:
+            @json_tag = "Foo"
