@@ -29,7 +29,7 @@ func makeNonNullValueList() *sysl.Value {
 	nonNullValueList := sysl.Value{
 		Value: &sysl.Value_List_{
 			List: &sysl.Value_List{
-				Value: []*sysl.Value{&sysl.Value{
+				Value: []*sysl.Value{{
 					Value: &sysl.Value_S{
 						S: "",
 					}},
