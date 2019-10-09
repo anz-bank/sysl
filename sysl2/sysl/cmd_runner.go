@@ -4,6 +4,7 @@ import (
 	"errors"
 	"sort"
 	"fmt"
+	"log"
 	"path/filepath"
 	"strings"
 
@@ -63,19 +64,34 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 	if err != nil {
 		return err
 	}
-	rootIsDefined := r.Root != "." && absoluteRoot != syslRootPath
+	rootIsDifferent := r.Root != "." && absoluteRoot != syslRootPath
 
-	if rootIsDefined && syslRootExists {
+	if rootIsDifferent && syslRootExists {
 		logger.WithFields(logrus.Fields{
 			"root":      r.Root,
 			"SYSL_ROOT": syslRootPath,
 		}).Warningln(fmt.Sprintf("root is defined even though %s exists\n", syslRootMarker))
-	} else if rootIsDefined && !syslRootExists {
+	} else if rootIsDifferent && !syslRootExists {
 		logger.Warningln(fmt.Sprintf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root))
-	} else {
-		r.Root = syslRootPath
 	}
 
+	if !rootIsDifferent && syslRootExists {
+		relativeRootPath, err := filepath.Rel(absolutePath, syslRootPath)
+		if err != nil {
+			return err
+		}
+		// when root flag is undefined, root is changed to a path relative to the current user's directory
+		r.Root = relativeRootPath
+	} 
+
+	log.Printf("ROOT: %s\n", r.Root)
+	relativePathModule, err := filepath.Rel(absoluteRoot, absolutePath)
+	if err != nil {
+		return err
+	}
+
+	// r.module = filepath.Join(filepath.Base(r.Root), relativePathModule)
+	r.module = relativePathModule
 	return nil
 }
 
