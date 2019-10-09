@@ -80,7 +80,7 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 		logger.Errorln(fmt.Sprintf("root is not defined and %s can not be found", syslRootMarker))
 		return errors.New("Project root is undefined")
 	} else if r.rootIsDefined() && !syslRootExists {
-		logger.Warningln(fmt.Sprintf("%s is not defined but root is defined in %s and will be used", syslRootMarker, syslRootPath))
+		logger.Warningln(fmt.Sprintf("%s is not defined but root is defined in %s and will be used", syslRootMarker, r.Root))
 	} else {
 		r.Root = syslRootPath
 	}
