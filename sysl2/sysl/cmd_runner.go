@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"path/filepath"
 	"sort"
 	"fmt"
