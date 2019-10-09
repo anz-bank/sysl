@@ -10,4 +10,10 @@ definitions:
             fruit:
                 items:
                     type: object
+            basket:
+                properties:
+                    foo:
+                        type: string
+                    bar:
+                        type: string
 paths: {}
