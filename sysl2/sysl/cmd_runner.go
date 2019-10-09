@@ -4,6 +4,7 @@ import (
 	"errors"
 	"sort"
 	"fmt"
+	"log"
 	"path/filepath"
 	"sort"
 	"fmt"
