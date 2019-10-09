@@ -79,6 +79,10 @@ func cmpNullFalse(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
+func cmpListNull(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(lhs.GetList() == nil && rhs.GetList() == nil)
+}
+
 func flattenListMap(
 	txApp *sysl.Application,
 	assign Scope,
