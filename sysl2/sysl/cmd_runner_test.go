@@ -46,6 +46,7 @@ func TestRootHandler(t *testing.T) {
 	assert.NoError(t, err)
 
 	tests := []map[string]interface{}{
+		// Default of root flag is "."
 		{
 			"root":           "",
 			"module":         "tests/root_finder_tests/SuccessfulTest/path/to/module/test.sysl",
