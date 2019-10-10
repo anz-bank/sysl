@@ -5,13 +5,14 @@ import (
 	"encoding/xml"
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"aqwari.net/xml/xsd"
 	"github.com/sirupsen/logrus"
 )
 
-func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.Logger) (out string, err error) {
+func LoadXSDText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
 	xsd.StandardSchema = [][]byte{} // Ignore all the standard schemas,
 	specs, err := xsd.Parse([]byte(text))
 	if err != nil {
@@ -64,7 +65,7 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 		types.Add(makeNamespacedType(from, to))
 	}
 
-	var keys []xml.Name
+	keys := make([]xml.Name, 0, len(schema.Types))
 	for key := range schema.Types {
 		keys = append(keys, key)
 	}
@@ -92,12 +93,7 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 				x.Attributes = append(x.Attributes, "~xml_root")
 			}
 		} else if t := FindType(data, &types); t == nil {
-			item := makeType(name, data, &types, logger)
-			types.Add(item)
-			if name.Space != "" {
-				item = makeNamespacedType(name, item)
-			}
-			//types.Add(item)
+			types.Add(makeType(name, data, &types, logger))
 		}
 	}
 
@@ -165,14 +161,47 @@ func makeComplexType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus
 
 	for _, child := range from.Elements {
 		c := createChildItem(child.Name, child.Type, false, child.Optional, child.Plural)
+		if c.SizeSpec == nil {
+			c.SizeSpec = makeSizeSpecFromAttrs(child.Attr)
+		}
 		item.Properties = append(item.Properties, c)
 	}
 	for _, child := range from.Attributes {
 		c := createChildItem(child.Name, child.Type, true, child.Optional, child.Plural)
+		if c.SizeSpec == nil {
+			c.SizeSpec = makeSizeSpecFromAttrs(child.Attr)
+		}
 		item.Properties = append(item.Properties, c)
 	}
 
 	return item
+}
+
+func makeSizeSpecFromAttrs(attrs []xml.Attr) *sizeSpec {
+	ss := sizeSpec{}
+	changed := false
+	for _, attr := range attrs {
+		switch attr.Name.Local {
+		case "maxOccurs":
+			if attr.Value == "unbounded" {
+				ss.MaxType = OpenEnded
+				changed = true
+			} else if val, err := strconv.ParseInt(attr.Value, 0, 32); err == nil {
+				ss.MaxType = MaxSpecified
+				ss.Max = int(val)
+				changed = true
+			}
+		case "minOccurs":
+			if val, err := strconv.ParseInt(attr.Value, 0, 32); err == nil {
+				ss.Min = int(val)
+				changed = changed || val > 0
+			}
+		}
+	}
+	if changed {
+		return &ss
+	}
+	return nil
 }
 
 func makeSimpleType(from *xsd.SimpleType, knownTypes *TypeList, logger *logrus.Logger) Type {

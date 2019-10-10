@@ -3,7 +3,11 @@ package importer
 import (
 	"sort"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
+
+type Func func(args OutputData, text string, logger *logrus.Logger) (out string, err error)
 
 type Type interface {
 	Name() string
