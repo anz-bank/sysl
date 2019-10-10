@@ -38,10 +38,6 @@ func TestLoadXsdFromTestFiles(t *testing.T) {
 					Package: "package_foo",
 				}, string(input), "", logger)
 				require.NoError(t, err)
-
-				err = ioutil.WriteFile(path.Join(fileTestDir, filename+".sysl.actual"), []byte(result), 0644)
-				require.NoError(t, err)
-
 				require.Equal(t, string(expected), result)
 			})
 		}

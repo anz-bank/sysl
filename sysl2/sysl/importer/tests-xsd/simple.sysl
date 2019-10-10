@@ -15,15 +15,15 @@ testapp [package="package_foo"]:
         field1 <: string?:
             @json_tag = "field1"
 
-    !type TopLevelType:
-        field1 <: SecondLevelType?:
-            @json_tag = "field1"
-
     !type TestTypeXsdModel [~xml_root]:
         TopLevelType <: TopLevelType:
             @json_tag = "TopLevelType"
         simple <: SimpleType(2..18):
             @json_tag = "simple"
+
+    !type TopLevelType:
+        field1 <: SecondLevelType?:
+            @json_tag = "field1"
 
     !alias SimpleType:
         int

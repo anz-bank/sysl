@@ -48,9 +48,8 @@ func NewStringAlias(name string) Type {
 func (s *ExternalAlias) Name() string { return s.name }
 
 type ImportedBuiltInAlias struct {
-	name     string // input language type name
-	Target   Type
-	SizeSpec *sizeSpec
+	name   string // input language type name
+	Target Type
 }
 
 func (s *ImportedBuiltInAlias) Name() string { return s.name }

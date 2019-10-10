@@ -11,6 +11,14 @@ testapp [package="package_foo"]:
     #---------------------------------------------------------------------------
     # definitions
 
+    !type PurchaseOrderType [~xml_root]:
+        ShipTo <: sequence of USAddress:
+            @json_tag = "ShipTo"
+        BillTo <: USAddress:
+            @json_tag = "BillTo"
+        OrderDate <: date? [~xml_attribute]:
+            @json_tag = "OrderDate"
+
     !type USAddress:
         name <: string:
             @json_tag = "name"
@@ -24,11 +32,3 @@ testapp [package="package_foo"]:
             @json_tag = "zip"
         country <: string? [~xml_attribute]:
             @json_tag = "country"
-
-    !type PurchaseOrderType [~xml_root]:
-        ShipTo <: sequence of USAddress:
-            @json_tag = "ShipTo"
-        BillTo <: USAddress:
-            @json_tag = "BillTo"
-        OrderDate <: date? [~xml_attribute]:
-            @json_tag = "OrderDate"

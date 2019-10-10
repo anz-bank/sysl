@@ -245,11 +245,6 @@ func (w *writer) writeDefinitions(types TypeList) {
 	w.writeLines("# definitions")
 	var others []Type
 	for _, t := range types.Items() {
-		if alias, ok := t.(*ImportedBuiltInAlias); ok {
-			if alias.Target != nil {
-				t = alias.Target
-			}
-		}
 		_, isEnum := t.(*Enum)
 		switch {
 		case isBuiltInType(t):

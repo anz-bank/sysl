@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"sort"
+	"strings"
 
 	"aqwari.net/xml/xsd"
 	"github.com/sirupsen/logrus"
@@ -21,6 +23,7 @@ func LoadXSDText(args OutputData, text string, targetNS string, logger *logrus.L
 		schemaTypes := loadSchemaTypes(schema, logger)
 		types.Add(schemaTypes.Items()...)
 	}
+	types.Sort()
 
 	info := SyslInfo{
 		OutputData:  args,
@@ -61,14 +64,25 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 		types.Add(makeNamespacedType(from, to))
 	}
 
-	for name, data := range schema.Types {
+	var keys []xml.Name
+	for key := range schema.Types {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return strings.Compare(
+			fmt.Sprintf("%s:%s", keys[i].Space, keys[i].Local),
+			fmt.Sprintf("%s:%s", keys[j].Space, keys[j].Local)) < 0
+	})
+
+	for _, name := range keys {
+		data := schema.Types[name]
+		logger.Infof("name: %+v\n", name)
 		if name.Local == "_self" {
 			rootType := data.(*xsd.ComplexType)
 			data = rootType.Elements[0].Type
 			t := FindType(data, &types)
 			if t == nil {
 				t = makeType(name, data, &types, logger)
-				types.Add(t)
 				if name.Space != "" {
 					types.Add(makeNamespacedType(name, t))
 				}
@@ -79,10 +93,11 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 			}
 		} else if t := FindType(data, &types); t == nil {
 			item := makeType(name, data, &types, logger)
+			types.Add(item)
 			if name.Space != "" {
 				item = makeNamespacedType(name, item)
 			}
-			types.Add(item)
+			//types.Add(item)
 		}
 	}
 
@@ -122,13 +137,21 @@ func makeComplexType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus
 			Name: name.Local,
 			Type: childType,
 		}
-		if x, ok := childType.(*ImportedBuiltInAlias); ok {
-			f.SizeSpec = x.SizeSpec
-		}
 		if isAttr {
 			f.Attributes = []string{"~xml_attribute"}
 		}
 		f.Optional = optional
+
+		if from, ok := data.(*xsd.SimpleType); ok && from.Restriction.Min > 0 {
+			spec := sizeSpec{
+				Min: int(from.Restriction.Min),
+				Max: int(from.Restriction.Max),
+			}
+			if spec.Max > 0 {
+				spec.MaxType = MaxSpecified
+			}
+			f.SizeSpec = &spec
+		}
 
 		if plural {
 			f.Type = &Array{Items: f.Type}
@@ -156,17 +179,6 @@ func makeSimpleType(from *xsd.SimpleType, knownTypes *TypeList, logger *logrus.L
 	item := &Alias{
 		name:   from.Name.Local,
 		Target: makeType(from.Name, from.Base, knownTypes, logger),
-	}
-
-	if from.Restriction.Min > 0 {
-		spec := sizeSpec{
-			Min: int(from.Restriction.Min),
-			Max: int(from.Restriction.Max),
-		}
-		if spec.Max > 0 {
-			spec.MaxType = MaxSpecified
-		}
-		return &ImportedBuiltInAlias{name: from.Name.Local, Target: item, SizeSpec: &spec}
 	}
 
 	return item
