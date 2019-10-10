@@ -26,7 +26,7 @@ func isBuiltInType(item Type) bool {
 
 func isExternalAlias(item Type) bool {
 	switch item.(type) {
-	case *Alias, *Array, *Enum:
+	case *ExternalAlias, *Array, *Enum, *Alias:
 		return true
 	}
 	return false
@@ -40,6 +40,8 @@ func getSyslTypeName(item Type) string {
 		return item.Name()
 	case *ImportedBuiltInAlias:
 		return getSyslTypeName(t.Target)
+	case *Alias:
+		return t.Name()
 	}
 	if isExternalAlias(item) {
 		return "EXTERNAL_" + item.Name()

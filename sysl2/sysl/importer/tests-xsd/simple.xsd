@@ -8,6 +8,7 @@
         <xs:complexType>
             <xs:sequence maxOccurs="1" minOccurs="1">
                 <xs:element type="TopLevelType" name="TopLevelType"/>
+                <xs:element type="SimpleType" name="simple"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -22,4 +23,11 @@
             <xs:element type="SecondLevelType" name="field1" minOccurs="0"/>
         </xs:all>
     </xs:complexType>
+    <xs:simpleType name="SimpleType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="2"/>
+            <xs:maxInclusive value="18"/>
+          <!--  <xs:pattern value="\d{1,2}"/> -->
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

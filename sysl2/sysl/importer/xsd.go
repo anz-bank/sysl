@@ -48,12 +48,12 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 	types := TypeList{}
 
 	var xsdToSyslMappings = map[string]string{
-		"NMTOKEN": "string",
-		"integer": "int",
-		"time":    "string",
-		"boolean": "bool",
-		"string":  "string",
-		"date":    "date",
+		"NMTOKEN":      StringTypeName,
+		"integer":      "int",
+		"time":         StringTypeName,
+		"boolean":      "bool",
+		StringTypeName: StringTypeName,
+		"date":         "date",
 	}
 	for swaggerName, syslName := range xsdToSyslMappings {
 		from := xml.Name{Space: "http://www.w3.org/2001/XMLSchema", Local: swaggerName}
@@ -99,24 +99,20 @@ func FindType(t xsd.Type, knownTypes *TypeList) Type {
 	return nil
 }
 
-func makeType(name xml.Name, from xsd.Type, knownTypes *TypeList, logger *logrus.Logger) Type {
+func makeType(_ xml.Name, from xsd.Type, knownTypes *TypeList, logger *logrus.Logger) Type {
 	switch t := from.(type) {
 	case *xsd.ComplexType:
-		return makeComplexType(name, t, knownTypes, logger)
+		return makeComplexType(t, knownTypes, logger)
 	case *xsd.SimpleType:
-		return makeSimpleType(name, t, logger)
+		return makeSimpleType(t, knownTypes, logger)
 	case xsd.Builtin:
 		return makeXsdBuiltinType(t, knownTypes)
 	}
 	return nil
 }
 
-func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, logger *logrus.Logger) Type {
-	if isArray(from) {
-		panic("Cant make a complex array yet")
-	}
-
-	createChildItem := func(name xml.Name, data xsd.Type) Field {
+func makeComplexType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus.Logger) Type {
+	createChildItem := func(name xml.Name, data xsd.Type, isAttr, optional, plural bool) Field {
 		childType := FindType(data, knownTypes)
 		if childType == nil {
 			childType = makeType(name, data, knownTypes, logger)
@@ -126,18 +122,18 @@ func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, lo
 			Name: name.Local,
 			Type: childType,
 		}
-		return f
-	}
-
-	configureChildItem := func(field *Field, isAttr, optional, plural bool) {
-		if isAttr {
-			field.Attributes = []string{"~xml_attribute"}
+		if x, ok := childType.(*ImportedBuiltInAlias); ok {
+			f.SizeSpec = x.SizeSpec
 		}
-		field.Optional = optional
+		if isAttr {
+			f.Attributes = []string{"~xml_attribute"}
+		}
+		f.Optional = optional
 
 		if plural {
-			field.Type = &Array{Items: field.Type}
+			f.Type = &Array{Items: f.Type}
 		}
+		return f
 	}
 
 	item := &StandardType{
@@ -145,43 +141,43 @@ func makeComplexType(_ xml.Name, from *xsd.ComplexType, knownTypes *TypeList, lo
 	}
 
 	for _, child := range from.Elements {
-		c := createChildItem(child.Name, child.Type)
-		configureChildItem(&c, false, child.Optional, child.Plural)
+		c := createChildItem(child.Name, child.Type, false, child.Optional, child.Plural)
 		item.Properties = append(item.Properties, c)
 	}
 	for _, child := range from.Attributes {
-		c := createChildItem(child.Name, child.Type)
-		configureChildItem(&c, true, child.Optional, child.Plural)
+		c := createChildItem(child.Name, child.Type, true, child.Optional, child.Plural)
 		item.Properties = append(item.Properties, c)
 	}
 
 	return item
 }
 
-func makeSimpleType(name xml.Name, from *xsd.SimpleType, logger *logrus.Logger) Type {
-	return nil
+func makeSimpleType(from *xsd.SimpleType, knownTypes *TypeList, logger *logrus.Logger) Type {
+	item := &Alias{
+		name:   from.Name.Local,
+		Target: makeType(from.Name, from.Base, knownTypes, logger),
+	}
+
+	if from.Restriction.Min > 0 {
+		spec := sizeSpec{
+			Min: int(from.Restriction.Min),
+			Max: int(from.Restriction.Max),
+		}
+		if spec.Max > 0 {
+			spec.MaxType = MaxSpecified
+		}
+		return &ImportedBuiltInAlias{name: from.Name.Local, Target: item, SizeSpec: &spec}
+	}
+
+	return item
 }
 
 func makeXsdBuiltinType(from xsd.Builtin, knownTypes *TypeList) Type {
-	if from == xsd.String {
-		t, _ := knownTypes.Find("string")
-		return t
+	typeStr := StringTypeName
+	switch from {
+	case xsd.Integer, xsd.Int:
+		typeStr = "int"
 	}
-	return nil
-}
-
-func isArray(from *xsd.ComplexType) bool {
-	if max := getAttrValue(from.Attributes, "maxOccurs"); max != nil {
-		return true
-	}
-	return false
-}
-
-func getAttrValue(attrs []xsd.Attribute, which string) *string {
-	for _, a := range attrs {
-		if a.Name.Local == which || fmt.Sprintf("%s:%s", a.Name.Space, a.Name.Local) == which {
-			return &a.Attr[0].Value
-		}
-	}
-	return nil
+	t, _ := knownTypes.Find(typeStr)
+	return t
 }

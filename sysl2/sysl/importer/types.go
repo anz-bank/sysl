@@ -23,23 +23,34 @@ type SyslBuiltIn struct {
 
 func (s *SyslBuiltIn) Name() string { return s.name }
 
+// !alias type without the EXTERNAL_ prefix
 type Alias struct {
 	name   string
 	Target Type
 }
 
+func (s *Alias) Name() string { return s.name }
+
+type ExternalAlias struct {
+	name   string
+	Target Type
+}
+
+const StringTypeName = "string"
+
 func NewStringAlias(name string) Type {
-	return &Alias{
+	return &ExternalAlias{
 		name:   name,
-		Target: &SyslBuiltIn{name: "string"},
+		Target: &SyslBuiltIn{name: StringTypeName},
 	}
 }
 
-func (s *Alias) Name() string { return s.name }
+func (s *ExternalAlias) Name() string { return s.name }
 
 type ImportedBuiltInAlias struct {
-	name   string // input language type name
-	Target Type
+	name     string // input language type name
+	Target   Type
+	SizeSpec *sizeSpec
 }
 
 func (s *ImportedBuiltInAlias) Name() string { return s.name }
@@ -57,11 +68,25 @@ type Enum struct {
 
 func (s *Enum) Name() string { return s.name }
 
+type maxType int
+
+const (
+	MinOnly maxType = iota
+	MaxSpecified
+	OpenEnded
+)
+
+type sizeSpec struct {
+	Min     int
+	Max     int
+	MaxType maxType
+}
 type Field struct {
 	Name       string
 	Type       Type
 	Optional   bool
 	Attributes []string
+	SizeSpec   *sizeSpec
 }
 
 type TypeList struct {

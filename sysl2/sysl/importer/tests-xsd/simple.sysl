@@ -22,3 +22,8 @@ testapp [package="package_foo"]:
     !type TestTypeXsdModel [~xml_root]:
         TopLevelType <: TopLevelType:
             @json_tag = "TopLevelType"
+        simple <: SimpleType(2..18):
+            @json_tag = "simple"
+
+    !alias SimpleType:
+        int

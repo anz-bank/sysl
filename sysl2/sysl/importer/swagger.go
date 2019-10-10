@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/url"
 	"sort"
 	"strings"
@@ -102,11 +101,11 @@ func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logge
 	}
 
 	conversions := map[string]map[string]string{
-		"string": {
-			"":          "string",
+		StringTypeName: {
+			"":          StringTypeName,
 			"date":      "date",
 			"date-time": "datetime",
-			"byte":      "string",
+			"byte":      StringTypeName,
 		},
 		"integer": {
 			"":      "int",
@@ -166,16 +165,16 @@ func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type
 		} else if len(schema.Enum) > 0 {
 			item = &Enum{name: name}
 		} else if refType := findReferencedType(*schema, data); refType != "" {
-			log.Printf("WARNING: swagger type '%s' is malformed\n", name)
+			data.logger.Warnf("WARNING: swagger type '%s' is malformed\n", name)
 			t, found := data.knownTypes.Find(refType)
 			if !found {
 				if ref, ok := data.doc.Definitions[refType]; ok {
 					t = createTypeFromSchema(refType, &ref, data)
 				} else {
-					t, _ = data.knownTypes.Find("string")
+					t, _ = data.knownTypes.Find(StringTypeName)
 				}
 			}
-			item = &Alias{
+			item = &ExternalAlias{
 				name:   name,
 				Target: t,
 			}

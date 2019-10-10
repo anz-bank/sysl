@@ -85,7 +85,7 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 			}
 			return Param{}, fmt.Errorf("referenced parameter %s unknown", refParamName)
 		}
-	} else if paramTypeName == "string" {
+	} else if paramTypeName == StringTypeName {
 		return fromString(paramTypeName), nil
 	}
 	return fromString(mapSwaggerTypeAndFormatToType(paramTypeName, param.Format, logger)), nil

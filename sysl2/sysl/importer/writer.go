@@ -133,6 +133,21 @@ func appendAttributesString(prefix string, attrs []string) string {
 	return prefix + " [" + strings.Join(attrs, ", ") + "]"
 }
 
+func appendSizeSpec(prefix string, spec *sizeSpec) string {
+	if spec == nil {
+		return prefix
+	}
+	switch spec.MaxType {
+	case MaxSpecified:
+		return fmt.Sprintf("%s(%d..%d)", prefix, spec.Min, spec.Max)
+	case OpenEnded:
+		return fmt.Sprintf("%s(%d..)", prefix, spec.Min)
+	case MinOnly:
+		return fmt.Sprintf("%s(%d)", prefix, spec.Min)
+	}
+	return prefix
+}
+
 func buildQueryString(params []Param) string {
 	query := ""
 	if len(params) > 0 {
@@ -264,6 +279,7 @@ func (w *writer) writeDefinition(t *StandardType) {
 		if prop.Optional {
 			suffix = "?"
 		}
+		suffix = appendSizeSpec(suffix, prop.SizeSpec)
 		suffix = appendAttributesString(suffix, prop.Attributes)
 
 		name := prop.Name
@@ -285,6 +301,8 @@ func (w *writer) writeExternalAlias(item Type) {
 		if len(t.Properties) > 0 {
 			aliasType = getSyslTypeName(t.Properties[0].Type)
 		}
+	case *ExternalAlias:
+		aliasType = getSyslTypeName(t.Target)
 	case *Alias:
 		aliasType = getSyslTypeName(t.Target)
 	case *Array:
