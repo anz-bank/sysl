@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"net/url"
 	"sort"
 	"strings"
 
@@ -134,7 +135,7 @@ func buildQueryString(params []Param) string {
 			if p.Optional {
 				optional = "?"
 			}
-			parts = append(parts, fmt.Sprintf("%s=%s%s", p.Name, p.Type.Name(), optional))
+			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), p.Type.Name(), optional))
 		}
 		query = " ?" + strings.Join(parts, "&")
 	}

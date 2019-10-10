@@ -209,7 +209,6 @@ func (t TypeList) FindFromSchema(schema spec.Schema, data *typeData) (Type, bool
 		if found {
 			return &Array{Items: items}, true
 		}
-
 	}
 	return t.Find(findReferencedType(schema, data))
 }
