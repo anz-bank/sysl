@@ -13,7 +13,7 @@ testapp "Goat CRUD API" [package="package_foo"]:
     /api/v1:
 
         /goat/delete-goat:
-            POST ?goat_id=string:
+            POST ?goat_id=string&@another-goat=string:
                 | Delete a goat.
                 return Acknowledgement
 

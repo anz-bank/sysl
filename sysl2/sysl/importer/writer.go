@@ -134,7 +134,11 @@ func buildQueryString(params []Param) string {
 			if p.Optional {
 				optional = "?"
 			}
-			parts = append(parts, fmt.Sprintf("%s=%s%s", p.Name, p.Type.Name(), optional))
+			name := p.Name
+			if strings.ContainsRune(name, '-') {
+				name = "@" + name
+			}
+			parts = append(parts, fmt.Sprintf("%s=%s%s", name, p.Type.Name(), optional))
 		}
 		query = " ?" + strings.Join(parts, "&")
 	}

@@ -1100,7 +1100,13 @@ func (s *TreeShapeListener) ExitDocumentation_stmts(*parser.Documentation_stmtsC
 
 // EnterQuery_var is called when production query_var is entered.
 func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
-	var_name := ctx.Name().GetText()
+
+	var var_name string
+	if ctx.AT() != nil {
+		var_name = ctx.VAR_NAME().GetText()
+	} else {
+		var_name = ctx.Name().GetText()
+	}
 	var type1 *sysl.Type
 	var ref_path []string
 
