@@ -44,46 +44,55 @@ func TestRootHandler(t *testing.T) {
 	runner := cmdRunner{}
 	runner.Configure(sysl)
 
-	getAbsolute := func (path string) string{
-		abs, _ := filepath.Abs(path)
-		return abs
-	}
-
 	tests := []map[string]interface{}{
-		// Default of root flag is "."
 		{
-			"root":   ".",
-			"module": "tests/root_finder_tests/SuccessfulTest/path/to/module/test.sysl",
-			"relativeOutput": "../../../..",
-			"absoluteOutput": getAbsolute("tests/root_finder_tests/SuccessfulTest"),
+			"root":           "",
+			"module":         "tests/root_finder_tests/SuccessfulTest/path/to/module/test.sysl",
+            "relativeOutput": "tests/root_finder_tests/SuccessfulTest",
+            "error": func(t *testing.T, err error) {assert.NoError(t, err)},
 		},
 		{
-			"root":   ".",
-			"module": "tests/root_finder_tests/SuccessfulTest/test2.sysl",
-			"relativeOutput": "../",
-			"absoluteOutput": getAbsolute("tests/root_finder_tests/SuccessfulTest"),
+			"root":           "",
+			"module":         "tests/root_finder_tests/SuccessfulTest/test2.sysl",
+            "relativeOutput": "tests/root_finder_tests/SuccessfulTest",
+            "error": func(t *testing.T, err error) {assert.NoError(t, err)},
 		},
 		{
-			"root":   ".",
-			"module": "tests/root_finder_tests/SuccessfulTest/path/to/another/module/test3.sysl",
-			"relativeOutput": "..",
-			"absoluteOutput": getAbsolute("tests/root_finder_tests/SuccessfulTest/path/to/another/module"),
+			"root":           "",
+			"module":         "tests/root_finder_tests/SuccessfulTest/path/to/another/module/test3.sysl",
+            "relativeOutput": "tests/root_finder_tests/SuccessfulTest/path/to/another",
+            "error": func(t *testing.T, err error) {assert.NoError(t, err)},
 		},
 		{
-			"root":   getAbsolute("./tests/root_finder_tests/DefinedRootAndSyslRootUndefinedTest/"),
-			"module": "path/to/module/test.sysl",
-			"relativeOutput": "tests/root_finder_tests/DefinedRootAndSyslRootUndefinedTest/",
-			"absoluteOutput": getAbsolute("./tests/root_finder_tests/DefinedRootAndSyslRootUndefinedTest/"),
-		},
+			"root":           "./tests/root_finder_tests/DefinedRootAndSyslRootUndefinedTest/",
+			"module":         "path/to/module/test.sysl",
+            "relativeOutput": "./tests/root_finder_tests/DefinedRootAndSyslRootUndefinedTest/",
+            "error": func(t *testing.T, err error) {assert.NoError(t, err)},
+        },
+        {
+			"root":           ".",
+			"module":         "path/to/module/test.sysl",
+            "relativeOutput": ".",
+            "error": func(t *testing.T, err error) {assert.NoError(t, err)},
+        },
+        {
+            "root": "",
+            "module": "tests/root_finder_tests/UndefinedRootAndUndefinedSyslRoot/test.sysl",
+            "relativeOutput": "",
+            "error": func(t *testing.T, err error) {assert.EqualError(t, err, "Root is not defined")},
+        },
 	}
 
 	for i, test := range tests {
 		runner.Root = test["root"].(string)
 		runner.module = test["module"].(string)
 		err := runner.rootHandler(fs, logger)
-		// realAbsOutput, err :=
+        realAbsOutput, _ := filepath.Abs(test["root"].(string))
 
-		// assert.Equal(t, test["relativeOutput"], runner.Root)
-		assert.NoError(t, err)
+		t.Logf("Test #%d, root %s", i, realAbsOutput)
+        assert.Equal(t, test["relativeOutput"], runner.Root)
+
+        // testing the appropriate error assertion
+		test["error"].(func(t *testing.T, err error))(t, err)
 	}
 }
