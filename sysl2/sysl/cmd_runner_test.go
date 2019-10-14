@@ -86,12 +86,11 @@ func TestRootHandler(t *testing.T) {
 
 	for i, test := range tests {
 		runner.Root = test["root"].(string)
-        runner.module = test["module"].(string)
-        realAbsOutput, err := filepath.Abs(test["root"].(string))
-        assert.NoError(t, err)
+		runner.module = test["module"].(string)
+		realAbsOutput, err := filepath.Abs(test["root"].(string))
+		assert.NoError(t, err)
 
 		err = runner.rootHandler(fs, logger)
-
 
 		t.Logf("Test #%d, root %s", i, realAbsOutput)
 		assert.Equal(t, test["relativeOutput"], runner.Root)
