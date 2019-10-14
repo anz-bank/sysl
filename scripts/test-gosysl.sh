@@ -9,13 +9,13 @@ done;
 
 rm $ROOT/*.out.txt
 
-$GOPATH/bin/sysl -v sd -a 'Project' $ROOT/sequence_diagram_project.sysl
+$GOPATH/bin/sysl --root="." -v sd -a 'Project' $ROOT/sequence_diagram_project.sysl
 rm _.png
 
-$GOPATH/bin/sysl -v sd -s 'WebFrontend <- RequestProfile' -o sd.png $ROOT/sequence_diagram_project.sysl
+$GOPATH/bin/sysl --root="." -v sd -s 'WebFrontend <- RequestProfile' -o sd.png $ROOT/sequence_diagram_project.sysl
 rm sd.png
 
-$GOPATH/bin/sysl -v ints -j 'Project' $ROOT/integration_test.sysl
+$GOPATH/bin/sysl --root="." -v ints -j 'Project' $ROOT/integration_test.sysl
 rm _.png
 
 version=`$GOPATH/bin/sysl --version 2>&1 >/dev/null`
