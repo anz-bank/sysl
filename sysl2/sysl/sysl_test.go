@@ -576,7 +576,14 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "--root", ".", "data", "-o", "%(epname).png", "tests/data.sysl", "-j", "Project"}, fs, logger, main3)
+	main2([]string{
+		"sysl",
+		"--root", ".",
+		"data",
+		"-o", "%(epname).png",
+		"tests/data.sysl",
+		"-j",
+		"Project"}, fs, logger, main3)
 	testutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
 
