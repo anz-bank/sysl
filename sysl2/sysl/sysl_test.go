@@ -378,7 +378,6 @@ func TestMain2WithGenerateIntegrations(t *testing.T) {
 	main2(
 		[]string{
 			"sysl",
-
 			"ints",
 			"--root", "./tests/",
 			"-o", out,
