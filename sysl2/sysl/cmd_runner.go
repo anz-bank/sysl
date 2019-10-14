@@ -52,7 +52,7 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 		return err
 	}
 
-	syslRootPath, err := r.findRootFromASyslModule(moduleAbsolutePath, fs, logger)
+	syslRootPath, err := r.findRootFromASyslModule(moduleAbsolutePath, fs)
 	if err != nil {
 		return err
 	}
@@ -68,8 +68,8 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 	} else if rootIsDefined && !syslRootExists {
 		logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root)
 	} else if !rootIsDefined && !syslRootExists {
-		logger.Errorf("Root and %s are undefined", syslRootMarker)
-		return errors.New("Root is not defined")
+		logger.Errorf("root and %s are undefined", syslRootMarker)
+		return errors.New("root is not defined")
 	}
 
 	// r.Root must be relative to the current directory
@@ -102,7 +102,7 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 	return nil
 }
 
-func (r *cmdRunner) findRootFromASyslModule(absolutePath string, fs afero.Fs, logger *logrus.Logger) (string, error) {
+func (r *cmdRunner) findRootFromASyslModule(absolutePath string, fs afero.Fs) (string, error) {
 	// Takes the closest root marker
 	currentPath := absolutePath
 
