@@ -382,7 +382,7 @@ func TestMain2WithGenerateIntegrations(t *testing.T) {
 			"--root", "./tests/",
 			"-o", out,
 			"-j", "Project",
-			"indirect_1.sysl",
+			"./indirect_1.sysl",
 		},
 		fs, logger, main3,
 	)
