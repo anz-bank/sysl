@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e -x
 ROOT="sysl2/sysl/tests"
 for f in $ROOT/*.sysl; do
  f=`basename $f`
