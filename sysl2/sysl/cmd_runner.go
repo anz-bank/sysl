@@ -60,14 +60,15 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 	rootIsDefined := r.Root != ""
 	syslRootExists := syslRootPath != ""
 
-	if rootIsDefined && syslRootExists {
+	switch {
+	case rootIsDefined && syslRootExists:
 		logger.WithFields(logrus.Fields{
 			"root":      r.Root,
 			"SYSL_ROOT": syslRootPath,
 		}).Warningf("root is defined even though %s exists\n", syslRootMarker)
-	} else if rootIsDefined && !syslRootExists {
+	case rootIsDefined && !syslRootExists:
 		logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root)
-	} else if !rootIsDefined && !syslRootExists {
+	case !rootIsDefined && !syslRootExists:
 		logger.Errorf("root and %s are undefined", syslRootMarker)
 		return errors.New("root is not defined")
 	}
