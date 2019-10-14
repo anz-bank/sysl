@@ -85,21 +85,6 @@ func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
 		r.Root = relativeSyslRootPath
 	}
 
-	// the absolute path of the currently used root directory
-	// realAbsolutePath, err := filepath.Abs(r.Root)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// module path is relative to the currently used root path
-	// relativePathModule, err := filepath.Rel(realAbsolutePath, moduleAbsolutePath)
-	// if err != nil {
-	// 	return err
-	// }
-	// r.module = relativePathModule
-
-	// r.module = moduleAbsolutePath
-
 	return nil
 }
 
