@@ -42,8 +42,8 @@ func TestRootHandler(t *testing.T) {
 	logger := logrus.StandardLogger()
 	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
 	runner := cmdRunner{}
-    err := runner.Configure(sysl)
-    assert.NoError(t, err)
+	err := runner.Configure(sysl)
+	assert.NoError(t, err)
 
 	tests := []map[string]interface{}{
 		{
@@ -86,9 +86,12 @@ func TestRootHandler(t *testing.T) {
 
 	for i, test := range tests {
 		runner.Root = test["root"].(string)
-		runner.module = test["module"].(string)
-		err := runner.rootHandler(fs, logger)
-		realAbsOutput, _ := filepath.Abs(test["root"].(string))
+        runner.module = test["module"].(string)
+        realAbsOutput, err := filepath.Abs(test["root"].(string))
+        assert.NoError(t, err)
+
+		err = runner.rootHandler(fs, logger)
+
 
 		t.Logf("Test #%d, root %s", i, realAbsOutput)
 		assert.Equal(t, test["relativeOutput"], runner.Root)
