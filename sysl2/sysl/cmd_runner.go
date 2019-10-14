@@ -49,49 +49,58 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 }
 
 func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
-	absolutePath, err := filepath.Abs(r.module)
+	moduleAbsolutePath, err := filepath.Abs(r.module)
 	if err != nil {
 		return err
 	}
 
-	syslRootPath, err := r.findRootFromASyslModule(absolutePath, fs, logger)
+	syslRootPath, err := r.findRootFromASyslModule(moduleAbsolutePath, fs, logger)
 	if err != nil {
 		return err
 	}
 
+	rootIsDefined := r.Root != ""
 	syslRootExists := syslRootPath != ""
-	absoluteRoot, err := filepath.Abs(r.Root)
-	if err != nil {
-		return err
-	}
-	rootIsDifferent := r.Root != "." && absoluteRoot != syslRootPath
 
-	if rootIsDifferent && syslRootExists {
+	if rootIsDefined && syslRootExists {
 		logger.WithFields(logrus.Fields{
 			"root":      r.Root,
 			"SYSL_ROOT": syslRootPath,
-		}).Warningln(fmt.Sprintf("root is defined even though %s exists\n", syslRootMarker))
-	} else if rootIsDifferent && !syslRootExists {
-		logger.Warningln(fmt.Sprintf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root))
+		}).Warningf("root is defined even though %s exists\n", syslRootMarker)
+	} else if rootIsDefined && !syslRootExists {
+		logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root)
+	} else if !rootIsDefined && !syslRootExists {
+		logger.Errorf("Root and %s are undefined", syslRootMarker)
+		return errors.New("Root is not defined")
 	}
 
-	if !rootIsDifferent && syslRootExists {
-		relativeRootPath, err := filepath.Rel(absolutePath, syslRootPath)
-		if err != nil {
-			return err
-		}
-		// when root flag is undefined, root is changed to a path relative to the current user's directory
-		r.Root = relativeRootPath
-	} 
-
-	log.Printf("ROOT: %s\n", r.Root)
-	relativePathModule, err := filepath.Rel(absoluteRoot, absolutePath)
+	// r.Root must be relative to the current directory
+	absoluteRoot, err := filepath.Abs(".")
 	if err != nil {
 		return err
 	}
 
-	// r.module = filepath.Join(filepath.Base(r.Root), relativePathModule)
+	if !rootIsDefined && syslRootExists {
+		relativeSyslRootPath, err := filepath.Rel(absoluteRoot, syslRootPath)
+		if err != nil {
+			return err
+		}
+		r.Root = relativeSyslRootPath
+	}
+
+	// the absolute path of the currently used root directory
+	realAbsolutePath, err := filepath.Abs(r.Root)
+	if err != nil {
+		return err
+	}
+
+	// module path is relative to the currently used root path
+	relativePathModule, err := filepath.Rel(realAbsolutePath, moduleAbsolutePath)
+	if err != nil {
+		return err
+	}
 	r.module = relativePathModule
+
 	return nil
 }
 
@@ -137,7 +146,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 
 	app.Flag("root",
 		"sysl root directory for input model file (default: .)").
-		Default(".").StringVar(&r.Root)
+		Default("").StringVar(&r.Root)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
