@@ -611,14 +611,14 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 			switch {
 			case nvp.Quoted_string() != nil:
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
-				attributes[nvp.Name().GetText()] = &sysl.Attribute{
+				attributes[nvp.Identifier_name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_S{
 						S: fromQString(qs.QSTRING().GetText()),
 					},
 				}
 			case nvp.Array_of_strings() != nil:
 				array_strings := nvp.Array_of_strings().(*parser.Array_of_stringsContext)
-				attributes[nvp.Name().GetText()] = makeArrayOfStringsAttribute(array_strings)
+				attributes[nvp.Identifier_name().GetText()] = makeArrayOfStringsAttribute(array_strings)
 			case nvp.Array_of_arrays() != nil:
 				arr := nvp.Array_of_arrays().(*parser.Array_of_arraysContext)
 				attrArray := sysl.Attribute_Array{
@@ -630,7 +630,7 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 					attrArray.Elt = append(attrArray.Elt, elt)
 				}
 
-				attributes[nvp.Name().GetText()] = &sysl.Attribute{
+				attributes[nvp.Identifier_name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_A{
 						A: &attrArray,
 					},
@@ -1065,7 +1065,7 @@ func (s *TreeShapeListener) EnterModel_name(ctx *parser.Model_nameContext) {
 	}
 
 	s.module.Apps[s.appname].Wrapped.Name = &sysl.AppName{
-		Part: []string{ctx.Name().GetText()},
+		Part: []string{ctx.Identifier_name().GetText()},
 	}
 }
 
@@ -1080,7 +1080,7 @@ func (s *TreeShapeListener) ExitInplace_table_def(*parser.Inplace_table_defConte
 
 // EnterTable_refs is called when production table_refs is entered.
 func (s *TreeShapeListener) EnterTable_refs(ctx *parser.Table_refsContext) {
-	s.module.Apps[s.appname].Wrapped.Types[ctx.Name().GetText()] = &sysl.Type{}
+	s.module.Apps[s.appname].Wrapped.Types[ctx.Identifier_name().GetText()] = &sysl.Type{}
 }
 
 // ExitTable_refs is called when production table_refs is exited.
@@ -1100,7 +1100,7 @@ func (s *TreeShapeListener) ExitDocumentation_stmts(*parser.Documentation_stmtsC
 
 // EnterQuery_var is called when production query_var is entered.
 func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
-	var_name := ctx.Name().GetText()
+	var_name := ctx.Identifier_name(0).GetText()
 	var type1 *sysl.Type
 	var ref_path []string
 
@@ -1129,7 +1129,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				Primitive: primitive_type,
 			},
 		}
-	case ctx.Name_str() != nil:
+	case ctx.Identifier_name(1) != nil:
 		type1 = &sysl.Type{}
 	}
 

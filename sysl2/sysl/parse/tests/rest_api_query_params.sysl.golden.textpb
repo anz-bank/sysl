@@ -61,7 +61,7 @@ apps: <
             >
           >
           query_param: <
-            name: "offset"
+            name: "off-set"
             type: <
               primitive: INT
               opt: true

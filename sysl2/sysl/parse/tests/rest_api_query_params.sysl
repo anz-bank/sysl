@@ -1,6 +1,6 @@
 My :: Server [~rest]:
     /first:
-        GET ?depth=int&limit=int?&offset=int?:
+        GET ?depth=int&limit=int?&off-set=int?:
             ...
         /{id<:App.Token}:
           GET:

@@ -189,13 +189,17 @@ PRINTABLE       :   ~[ \t.\-<>,()\n\r!"#'/:?@[\]{}|]+;
 fragment
 IN_ANGLE        : '<' PRINTABLE '>';
 
+fragment
+NAME            : [a-zA-Z_][a-zA-Z0-9_-]*;
+
+Name            : NAME;
 TEXT_LINE       :
                 PRINTABLE ([ \-]+ (PRINTABLE | IN_ANGLE))+
                 { ls(p).inSqBrackets == 0 }?
                 { !startsWithKeyword(p.GetText()) }?
+                { !ls(p).gotHTTPVerb }?
                 ;
 
-Name            : [a-zA-Z_][-a-zA-Z0-9_]*;
 /// end--textline & name
 
 // cim.sysl has spaces and tab in the same line.
@@ -333,8 +337,6 @@ F_DIGITS   : [0-9];
 E_DECIMAL       : F_DIGITS F_DIGITS* '.' F_DIGITS F_DIGITS*;
 E_DIGITS        : F_DIGITS F_DIGITS* ;
 
-fragment
-NAME            : [a-zA-Z_][a-zA-Z0-9_-]*;
 
 E_DOT_NAME_NL    :
                 { ls(p).spaces > 1 }?

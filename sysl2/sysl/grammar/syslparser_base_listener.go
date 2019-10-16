@@ -51,6 +51,12 @@ func (s *BaseSyslParserListener) EnterName_str(ctx *Name_strContext) {}
 // ExitName_str is called when production name_str is exited.
 func (s *BaseSyslParserListener) ExitName_str(ctx *Name_strContext) {}
 
+// EnterIdentifier_name is called when production identifier_name is entered.
+func (s *BaseSyslParserListener) EnterIdentifier_name(ctx *Identifier_nameContext) {}
+
+// ExitIdentifier_name is called when production identifier_name is exited.
+func (s *BaseSyslParserListener) ExitIdentifier_name(ctx *Identifier_nameContext) {}
+
 // EnterReference is called when production reference is entered.
 func (s *BaseSyslParserListener) EnterReference(ctx *ReferenceContext) {}
 

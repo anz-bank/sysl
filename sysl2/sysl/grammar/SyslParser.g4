@@ -2,19 +2,21 @@ parser grammar SyslParser;
 
 options { tokenVocab=SyslLexer; }
 
-modifier        : TILDE Name (PLUS Name)*;
+modifier        : TILDE identifier_name (PLUS identifier_name)*;
 size_spec       : OPEN_PAREN DIGITS ( DOT DIGITS)? CLOSE_PAREN;
 modifier_list   : modifier (COMMA modifier)*;
 
 modifiers       : SQ_OPEN modifier_list SQ_CLOSE;
-name_str        : Name|TEXT_LINE|E_Name;
+name_str        : Name|TEXT_LINE|E_Name; // Allows basically any printable character and will likely match on
+                                         // TEXT_LINE before Name, use identifier_name for more restrictive requiremnt
+identifier_name : Name|E_Name;
 
 reference       : app_name ((E_DOT | DOT) name_str)+;
 doc_string      : PIPE TEXT;
 quoted_string       : QSTRING;
 array_of_strings    : SQ_OPEN quoted_string (COMMA quoted_string)* SQ_CLOSE;
 array_of_arrays     : SQ_OPEN array_of_strings (COMMA array_of_strings)* SQ_CLOSE;
-nvp                 : Name EQ (quoted_string | array_of_strings| array_of_arrays);
+nvp                 : identifier_name EQ (quoted_string | array_of_strings| array_of_arrays);
 attributes          : SQ_OPEN nvp (COMMA nvp)* SQ_CLOSE;
 entry               : nvp | modifier ;
 attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
@@ -60,15 +62,15 @@ app_name       : package_name sub_package*;
 
 name_with_attribs       :   app_name  QSTRING? attribs_or_modifiers?;
 
-model_name          :  Name COLON ;
-inplace_table_def   :  COLON INDENT (Name attribs_or_modifiers?)+ DEDENT;
-table_refs          :  (TABLE | TYPE | UNION) Name inplace_table_def?;
+model_name          :  identifier_name COLON ;
+inplace_table_def   :  COLON INDENT (identifier_name attribs_or_modifiers?)+ DEDENT;
+table_refs          :  (TABLE | TYPE | UNION) identifier_name inplace_table_def?;
 facade              :  SYSL_COMMENT* WRAP model_name INDENT table_refs+ DEDENT;
 
-documentation_stmts     : AT Name EQ QSTRING NEWLINE;
+documentation_stmts     : AT identifier_name EQ QSTRING NEWLINE;
 
-var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
-query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;
+var_in_curly    : CURLY_OPEN identifier_name CURLY_CLOSE;
+query_var       : identifier_name EQ (NativeDataTypes | identifier_name | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
 http_path_part :name_str | DIGITS;
@@ -98,7 +100,7 @@ http_method_comment     : SYSL_COMMENT;
 group_stmt              : name_str COLON
                                INDENT statements+ DEDENT;
 
-one_of_case_label: (Name | TEXT_LINE | QSTRING)+;
+one_of_case_label: (name_str | QSTRING)+;
 
 one_of_cases: one_of_case_label? COLON
                     INDENT statements+ DEDENT;
@@ -412,7 +414,7 @@ application:  SYSL_COMMENT*
                 app_decl
                 ;
 
-path            : FORWARD_SLASH? Name (FORWARD_SLASH Name)* ;
+path            : FORWARD_SLASH? identifier_name (FORWARD_SLASH identifier_name)* ;
 import_stmt     : IMPORT SYSL_COMMENT*;
 imports_decl    : import_stmt+;
 sysl_file       : imports_decl? application+ EOF;

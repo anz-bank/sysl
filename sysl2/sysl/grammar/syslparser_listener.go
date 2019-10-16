@@ -23,6 +23,9 @@ type SyslParserListener interface {
 	// EnterName_str is called when entering the name_str production.
 	EnterName_str(c *Name_strContext)
 
+	// EnterIdentifier_name is called when entering the identifier_name production.
+	EnterIdentifier_name(c *Identifier_nameContext)
+
 	// EnterReference is called when entering the reference production.
 	EnterReference(c *ReferenceContext)
 
@@ -559,6 +562,9 @@ type SyslParserListener interface {
 
 	// ExitName_str is called when exiting the name_str production.
 	ExitName_str(c *Name_strContext)
+
+	// ExitIdentifier_name is called when exiting the identifier_name production.
+	ExitIdentifier_name(c *Identifier_nameContext)
 
 	// ExitReference is called when exiting the reference production.
 	ExitReference(c *ReferenceContext)
