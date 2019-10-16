@@ -417,4 +417,6 @@ application:  SYSL_COMMENT*
 path            : FORWARD_SLASH? identifier_name (FORWARD_SLASH identifier_name)* ;
 import_stmt     : IMPORT SYSL_COMMENT*;
 imports_decl    : import_stmt+;
-sysl_file       : imports_decl? application+ EOF;
+pragma_stmt     : PRAGMA SYSL_COMMENT*;
+pragma_decl    : pragma_stmt+;
+sysl_file       : (imports_decl|pragma_decl)? application+ EOF;

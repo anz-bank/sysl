@@ -28,6 +28,10 @@ var (
 		"while",
 	}
 
+	pragmas = []string{
+		"strict-url-handling",
+	}
+
 	// Antlr doesn't support reentrant Go lexer state, so we work around it with
 	// a fast lock-free hash map.
 	lexerStates = &hashmap.HashMap{}
@@ -44,6 +48,8 @@ type lexerState struct {
 	gotNewLine   bool
 	gotHTTPVerb  bool
 	gotView      bool
+
+	pragmas []string
 }
 
 func ls(l *SyslLexer) *lexerState {
@@ -52,6 +58,7 @@ func ls(l *SyslLexer) *lexerState {
 		return state.(*lexerState)
 	}
 	state := &lexerState{}
+	state.pragmas = make([]string, 0, 8)
 	lexerStates.Set(key, state)
 	return state
 }
@@ -73,6 +80,27 @@ func calcSpaces(text string) int {
 		}
 	}
 	return s
+}
+
+func hasPragma(pragma string, all []string) bool {
+	for _, k := range all {
+		if k == pragma {
+			return true
+		}
+	}
+	return false
+}
+
+func (l *lexerState) hasPragma(pragma string) bool {
+	return hasPragma(pragma, l.pragmas)
+}
+
+func isValidPragma(pragma string) bool {
+	return hasPragma(pragma, pragmas)
+}
+
+func cleanPragmaName(pragma string) string {
+	return s.TrimPrefix(pragma, "pragma ")
 }
 
 func startsWithKeyword(text string) bool {

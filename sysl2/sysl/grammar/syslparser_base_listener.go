@@ -1097,6 +1097,18 @@ func (s *BaseSyslParserListener) EnterImports_decl(ctx *Imports_declContext) {}
 // ExitImports_decl is called when production imports_decl is exited.
 func (s *BaseSyslParserListener) ExitImports_decl(ctx *Imports_declContext) {}
 
+// EnterPragma_stmt is called when production pragma_stmt is entered.
+func (s *BaseSyslParserListener) EnterPragma_stmt(ctx *Pragma_stmtContext) {}
+
+// ExitPragma_stmt is called when production pragma_stmt is exited.
+func (s *BaseSyslParserListener) ExitPragma_stmt(ctx *Pragma_stmtContext) {}
+
+// EnterPragma_decl is called when production pragma_decl is entered.
+func (s *BaseSyslParserListener) EnterPragma_decl(ctx *Pragma_declContext) {}
+
+// ExitPragma_decl is called when production pragma_decl is exited.
+func (s *BaseSyslParserListener) ExitPragma_decl(ctx *Pragma_declContext) {}
+
 // EnterSysl_file is called when production sysl_file is entered.
 func (s *BaseSyslParserListener) EnterSysl_file(ctx *Sysl_fileContext) {}
 

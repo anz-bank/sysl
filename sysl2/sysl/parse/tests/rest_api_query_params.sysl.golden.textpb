@@ -43,7 +43,7 @@ apps: <
               primitive: INT
               source_context: <
                 start: <
-                  line: 3
+                  line: 5
                 >
               >
             >
@@ -55,7 +55,7 @@ apps: <
               opt: true
               source_context: <
                 start: <
-                  line: 3
+                  line: 5
                 >
               >
             >
@@ -67,7 +67,7 @@ apps: <
               opt: true
               source_context: <
                 start: <
-                  line: 3
+                  line: 5
                 >
               >
             >
@@ -76,7 +76,7 @@ apps: <
         source_context: <
           file: "tests/rest_api_query_params.sysl"
           start: <
-            line: 3
+            line: 5
             col: 8
           >
         >
@@ -121,7 +121,7 @@ apps: <
               >
               source_context: <
                 start: <
-                  line: 5
+                  line: 7
                 >
               >
             >
@@ -130,7 +130,7 @@ apps: <
         source_context: <
           file: "tests/rest_api_query_params.sysl"
           start: <
-            line: 6
+            line: 8
             col: 10
           >
         >
@@ -173,7 +173,7 @@ apps: <
               primitive: INT
               source_context: <
                 start: <
-                  line: 9
+                  line: 11
                 >
               >
             >
@@ -195,7 +195,7 @@ apps: <
               >
               source_context: <
                 start: <
-                  line: 5
+                  line: 7
                 >
               >
             >
@@ -204,7 +204,7 @@ apps: <
         source_context: <
           file: "tests/rest_api_query_params.sysl"
           start: <
-            line: 9
+            line: 11
             col: 14
           >
         >
@@ -213,7 +213,7 @@ apps: <
     source_context: <
       file: "tests/rest_api_query_params.sysl"
       start: <
-        line: 1
+        line: 3
         col: 1
       >
     >

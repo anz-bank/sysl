@@ -57,6 +57,9 @@ fragment
 IMPORT_KEY: 'import';
 
 fragment
+PRAGMA_KEY: 'pragma';
+
+fragment
 SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
 IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE
@@ -65,6 +68,18 @@ IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [
                         ls.gotNewLine = true
                         ls.spaces = 0
                         ls.gotHTTPVerb=false
+                        ls.pragmas = []string{}
+                        ls.linenum++
+                    }
+                    ;
+PRAGMA              : PRAGMA_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE
+                    { isValidPragma(cleanPragmaName(trimText(p))) }?
+                    {
+                        ls := ls(l)
+                        ls.gotNewLine = true
+                        ls.spaces = 0
+                        ls.gotHTTPVerb=false
+                        ls.pragmas = append(ls.pragmas, cleanPragmaName(trimText(l)))
                         ls.linenum++
                     }
                     ;
@@ -197,7 +212,7 @@ TEXT_LINE       :
                 PRINTABLE ([ \-]+ (PRINTABLE | IN_ANGLE))+
                 { ls(p).inSqBrackets == 0 }?
                 { !startsWithKeyword(p.GetText()) }?
-                { !ls(p).gotHTTPVerb }?
+                { !(ls(p).gotHTTPVerb && ls(p).hasPragma("strict-url-handling")) }?
                 ;
 
 /// end--textline & name

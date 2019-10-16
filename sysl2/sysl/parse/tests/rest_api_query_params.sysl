@@ -1,3 +1,5 @@
+pragma strict-url-handling
+
 My :: Server [~rest]:
     /first:
         GET ?depth=int&limit=int?&off-set=int?:

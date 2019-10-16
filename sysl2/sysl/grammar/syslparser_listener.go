@@ -545,6 +545,12 @@ type SyslParserListener interface {
 	// EnterImports_decl is called when entering the imports_decl production.
 	EnterImports_decl(c *Imports_declContext)
 
+	// EnterPragma_stmt is called when entering the pragma_stmt production.
+	EnterPragma_stmt(c *Pragma_stmtContext)
+
+	// EnterPragma_decl is called when entering the pragma_decl production.
+	EnterPragma_decl(c *Pragma_declContext)
+
 	// EnterSysl_file is called when entering the sysl_file production.
 	EnterSysl_file(c *Sysl_fileContext)
 
@@ -1084,6 +1090,12 @@ type SyslParserListener interface {
 
 	// ExitImports_decl is called when exiting the imports_decl production.
 	ExitImports_decl(c *Imports_declContext)
+
+	// ExitPragma_stmt is called when exiting the pragma_stmt production.
+	ExitPragma_stmt(c *Pragma_stmtContext)
+
+	// ExitPragma_decl is called when exiting the pragma_decl production.
+	ExitPragma_decl(c *Pragma_declContext)
 
 	// ExitSysl_file is called when exiting the sysl_file production.
 	ExitSysl_file(c *Sysl_fileContext)
