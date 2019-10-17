@@ -5,10 +5,9 @@ import (
 	"sort"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
-
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/sirupsen/logrus"
 )
 
 type entry struct {
@@ -39,7 +38,7 @@ func makeEntry(s string) *entry {
 type EndpointCollectionElement struct {
 	title      string
 	entries    []*entry
-	uptos      StrSet
+	uptos      syslutil.StrSet
 	blackboxes map[string]*Upto
 }
 
@@ -71,7 +70,7 @@ func MakeEndpointCollectionElement(
 	return &EndpointCollectionElement{
 		title:      title,
 		entries:    entries,
-		uptos:      MakeStrSet(uptos...),
+		uptos:      syslutil.MakeStrSet(uptos...),
 		blackboxes: bb,
 	}
 }
@@ -100,8 +99,8 @@ type EndpointElement struct {
 	appName                string
 	endpointName           string
 	uptos                  map[string]*Upto
-	senderPatterns         StrSet
-	senderEndpointPatterns StrSet
+	senderPatterns         syslutil.StrSet
+	senderEndpointPatterns syslutil.StrSet
 	stmt                   *sysl.Statement
 	deactivate             func()
 }
@@ -140,13 +139,13 @@ func (e *EndpointElement) label(
 	l EndpointLabeler,
 	m *sysl.Module,
 	ep *sysl.Endpoint,
-	epp StrSet,
+	epp syslutil.StrSet,
 	isHuman, isHumanSender, needsInt bool,
 ) string {
 	label := normalizeEndpointName(e.endpointName)
 
 	if e.stmt != nil && e.stmt.GetCall() != nil {
-		ptrns := func(a StrSet, b StrSet) string {
+		ptrns := func(a syslutil.StrSet, b syslutil.StrSet) string {
 			if len(a) > 0 || len(b) > 0 {
 				return fmt.Sprintf("%s → %s", strings.Join(a.ToSortedSlice(), ", "), strings.Join(b.ToSortedSlice(), ", "))
 			}
@@ -203,7 +202,8 @@ type SequenceDiagramVisitor struct {
 	symbols    map[string]*_var
 	currentApp string
 	groupby    string
-	groupboxes map[string]StrSet
+	groupboxes map[string]syslutil.StrSet
+	logger     *logrus.Logger
 }
 
 func MakeSequenceDiagramVisitor(
@@ -213,6 +213,7 @@ func MakeSequenceDiagramVisitor(
 	m *sysl.Module,
 	appName string,
 	group string,
+	logger *logrus.Logger,
 ) *SequenceDiagramVisitor {
 	return &SequenceDiagramVisitor{
 		AppLabeler:      a,
@@ -223,7 +224,8 @@ func MakeSequenceDiagramVisitor(
 		symbols:         make(map[string]*_var),
 		currentApp:      appName,
 		groupby:         group,
-		groupboxes:      map[string]StrSet{},
+		groupboxes:      map[string]syslutil.StrSet{},
+		logger:          logger,
 	}
 }
 
@@ -234,7 +236,7 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 		err = v.visitEndpointCollection(t)
 		for bbKey, bbVal := range t.blackboxes {
 			if bbVal.ValueType == BBEndpointCollection && bbVal.VisitCount == 0 {
-				log.Warnf("blackbox '%s' not hit in app %s\n", bbKey, v.currentApp)
+				v.logger.Warnf("blackbox '%s' not hit in app %s\n", bbKey, v.currentApp)
 			}
 		}
 	case *EndpointElement:
@@ -272,7 +274,7 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 	}
 
 	for _, entry := range e.entries {
-		allUptos := MakeStrSet()
+		allUptos := syslutil.MakeStrSet()
 		for _, entry := range e.entries {
 			item := fmt.Sprintf("%s <- %s", entry.appName, entry.endpointName)
 			allUptos.Insert(item)
@@ -296,8 +298,8 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 			appName:                entry.appName,
 			endpointName:           entry.endpointName,
 			uptos:                  e.blackboxes,
-			senderPatterns:         MakeStrSet(),
-			senderEndpointPatterns: MakeStrSet(),
+			senderPatterns:         syslutil.MakeStrSet(),
+			senderEndpointPatterns: syslutil.MakeStrSet(),
 		}
 
 		if err := e.Accept(v); err != nil {
@@ -329,8 +331,8 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	app := e.application(v.m)
 	endpoint := e.endpoint(app)
 
-	appPatterns := MakeStrSetFromAttr("patterns", app.Attrs)
-	endPointPatterns := MakeStrSetFromAttr("patterns", endpoint.Attrs)
+	appPatterns := syslutil.MakeStrSetFromAttr("patterns", app.Attrs)
+	endPointPatterns := syslutil.MakeStrSetFromAttr("patterns", endpoint.Attrs)
 
 	isHuman := appPatterns.Contains("human")
 	isHumanSender := e.senderPatterns.Contains("human")
@@ -341,7 +343,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	if len(v.groupby) > 0 {
 		if attr, exists := app.GetAttrs()[v.groupby]; exists {
 			if _, has := v.groupboxes[attr.GetS()]; !has {
-				v.groupboxes[attr.GetS()] = MakeStrSet()
+				v.groupboxes[attr.GetS()] = syslutil.MakeStrSet()
 			}
 			v.groupboxes[attr.GetS()].Insert(e.appName)
 		}
@@ -349,7 +351,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 
 	if !((isHuman && sender == "[") || isCron) {
 		label := e.label(v, v.m, endpoint, endPointPatterns, isHuman, isHumanSender, needsInt)
-		icon := func(a StrSet) string {
+		icon := func(a syslutil.StrSet) string {
 			if a.Contains("cron") {
 				return "<&timer>"
 			}
@@ -376,17 +378,19 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 		_, hitVisited := v.visited[visiting]
 
 		if hitUpto || hitVisited {
-			if len(payload) > 0 {
-				v.w.Activate(agent)
-				if len(upto.Comment) > 0 {
-					fmt.Fprintf(v.w, "note over %s: %s\n", agent, upto.Comment)
+			if upto != nil {
+				if len(payload) > 0 {
+					v.w.Activate(agent)
+					if len(upto.Comment) > 0 {
+						fmt.Fprintf(v.w, "note over %s: %s\n", agent, upto.Comment)
+					}
+				} else {
+					direct := "right"
+					if sender > agent {
+						direct = "left"
+					}
+					fmt.Fprintf(v.w, "note %s: %s\n", direct, upto.Comment)
 				}
-			} else {
-				direct := "right"
-				if sender > agent {
-					direct = "left"
-				}
-				fmt.Fprintf(v.w, "note %s: %s\n", direct, upto.Comment)
 			}
 			if len(payload) > 0 {
 				fmt.Fprintf(v.w, "%s<--%s : %s\n", sender, agent, payload)
@@ -451,9 +455,9 @@ func (v *SequenceDiagramVisitor) visitStatment(e *StatementElement) error {
 func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.Call) error {
 	isLastStmt := e.isLastStmt(i)
 	app := e.application(v.m)
-	stmtPatterns := MakeStrSetFromAttr("patterns", e.stmts[i].Attrs)
-	senderPatterns := MakeStrSetFromAttr("patterns", app.Attrs)
-	endpointPatterns := MakeStrSetFromAttr("patterns", e.endpoint(app).Attrs)
+	stmtPatterns := syslutil.MakeStrSetFromAttr("patterns", e.stmts[i].Attrs)
+	senderPatterns := syslutil.MakeStrSetFromAttr("patterns", app.Attrs)
+	endpointPatterns := syslutil.MakeStrSetFromAttr("patterns", e.endpoint(app).Attrs)
 
 	p := &EndpointElement{
 		fromApp:                app.GetName(),

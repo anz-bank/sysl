@@ -3,13 +3,12 @@ package parse
 import (
 	"bytes"
 	"io"
-	"net/http"
-	"os"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/spf13/afero"
 )
 
-func fileExists(filename string, fs http.FileSystem) bool {
+func fileExists(filename string, fs afero.Fs) bool {
 	f, err := fs.Open(filename)
 	if err != nil {
 		return false
@@ -18,17 +17,12 @@ func fileExists(filename string, fs http.FileSystem) bool {
 	return err == nil
 }
 
-func dirExists(dirName string) bool {
-	info, err := os.Stat(dirName)
-	return err == nil && info.IsDir()
-}
-
 type fsFileStream struct {
 	*antlr.InputStream
 	filename string
 }
 
-func newFSFileStream(filename string, fs http.FileSystem) (*fsFileStream, error) {
+func newFSFileStream(filename string, fs afero.Fs) (*fsFileStream, error) {
 	f, err := fs.Open(filename)
 	if err != nil {
 		return nil, err

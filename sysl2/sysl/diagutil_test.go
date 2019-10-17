@@ -1,9 +1,10 @@
 package main
 
 import (
-	"os"
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -34,6 +35,8 @@ deactivate _0
 const plantumlDotCom = "http://www.plantuml.com/plantuml"
 
 func TestDeflateAndEncode(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	const expected = "UDfSaKbhmp0GXU_pAnwvYqY6NaniKkXoAgGRFUGW9l4qY7gh99SkzByN9GvnUfBGzmrwZw5bYE" +
 		"pZqDIqxThekngp5zdS-AwDqbOpS83L9tRPkyEReOeZRpW8PbVZxK0o2c-kxTbpWuO_xoG4ticZ-nPa5vgYYxLWv" +
@@ -45,29 +48,36 @@ func TestDeflateAndEncode(t *testing.T) {
 	require.NoError(t, err)
 
 	//Then
-	assert.Equal(t, expected, actual, "Unexpected output")
+	assert.Equal(t, expected, actual)
 }
 
 func testOutputPlantuml(t *testing.T, output, output2 string) {
-	require.NoError(t, OutputPlantuml(output, plantumlDotCom, testPlantumlInput))
-	_, err := os.Stat(output2)
-	require.NoError(t, err)
-	os.Remove(output2)
+	fs := afero.NewMemMapFs()
+	require.NoError(t, OutputPlantuml(output, plantumlDotCom, testPlantumlInput, fs))
+	testutil.AssertFsHasExactly(t, fs, output2)
 }
 
 func TestOutputPlantumlWithPng(t *testing.T) {
-	testOutputPlantuml(t, "test.png", "test.png")
+	t.Parallel()
+
+	testOutputPlantuml(t, "/test.png", "/test.png")
 }
 
 func TestOutputPlantumlWithSvg(t *testing.T) {
-	testOutputPlantuml(t, "test.svg", "test.svg")
+	t.Parallel()
+
+	testOutputPlantuml(t, "/test.svg", "/test.svg")
 }
 
 func TestOutputPlantumlWithUml(t *testing.T) {
-	testOutputPlantuml(t, "test.uml", "test.puml")
+	t.Parallel()
+
+	testOutputPlantuml(t, "/test.uml", "/test.puml")
 }
 
 func TestEncode6bit(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		input    byte
 		expected byte
@@ -87,6 +97,8 @@ func TestEncode6bit(t *testing.T) {
 }
 
 func TestEncode6bitPanic(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	b := byte(255)
 
@@ -97,21 +109,16 @@ func TestEncode6bitPanic(t *testing.T) {
 }
 
 func TestOutPutWithWrongFormat(t *testing.T) {
-	//Given
-	output := "test.wrong"
-	umlInput := testPlantumlInput
+	t.Parallel()
 
-	//When
-	require.Error(t, OutputPlantuml(output, plantumlDotCom, umlInput))
-
-	//Then
-	_, err := os.Stat(output)
-	if !assert.True(t, os.IsNotExist(err)) {
-		assert.NoError(t, os.Remove(output))
-	}
+	fs := afero.NewMemMapFs()
+	require.Error(t, OutputPlantuml("test.wrong", plantumlDotCom, testPlantumlInput, fs))
+	testutil.AssertFsHasExactly(t, fs)
 }
 
 func TestWrongHttpRequest(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	url := "ww.plantuml.co"
 
@@ -124,6 +131,8 @@ func TestWrongHttpRequest(t *testing.T) {
 }
 
 func TestEncode(t *testing.T) {
+	t.Parallel()
+
 	//Given
 	data := []byte{'a'}
 

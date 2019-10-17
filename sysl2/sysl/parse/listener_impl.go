@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"net/http"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -15,6 +14,7 @@ import (
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 var _ = fmt.Println
@@ -23,7 +23,7 @@ var _ = fmt.Println
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base                  string
-	fs                    http.FileSystem
+	fs                    afero.Fs
 	filename              string
 	imports               []string
 	module                *sysl.Module
@@ -49,7 +49,7 @@ type TreeShapeListener struct {
 }
 
 // NewTreeShapeListener ...
-func NewTreeShapeListener(fs http.FileSystem) *TreeShapeListener {
+func NewTreeShapeListener(fs afero.Fs) *TreeShapeListener {
 	opmap := map[string]sysl.Expr_BinExpr_Op{
 		"==":        sysl.Expr_BinExpr_EQ,
 		"!=":        sysl.Expr_BinExpr_NE,
@@ -543,9 +543,7 @@ func makeTypeConstraint(t sysl.Type_Primitive, size_spec *parser.Size_specContex
 		panic("should not be here")
 	}
 
-	if err != nil {
-		panic("should not happen: unable to parse size_spec")
-	}
+	syslutil.PanicOnErrorf(err, "should not happen: unable to parse size_spec")
 	return c
 }
 
@@ -1512,15 +1510,10 @@ func (s *TreeShapeListener) ExitOne_of_stmt(*parser.One_of_stmtContext) {
 }
 
 func withQuotesQString(str string) string {
-	l := len(str)
-	if l > 0 && str[:1] == "'" && str[l-1:] == "'" {
-		return str
-	}
-	l = len(str)
-	if l > 0 && str[:1] == `"` && str[l-1:] == `"` {
-		return str
-	}
-	return `"` + str + `"`
+	s := str[0]
+	e := str[len(str)-1]
+	syslutil.Assert(s == '\'' && e == '\'' || s == '"' && e == '"', "%q", str)
+	return str
 }
 
 // EnterText_stmt is called when production text_stmt is entered.
@@ -1563,7 +1556,6 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 				},
 			})
 		}
-
 	}
 }
 
@@ -2297,7 +2289,8 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 			Decimal: txt,
 		}
 	case ctx.E_DIGITS() != nil:
-		iVal, _ := strconv.Atoi(txt)
+		iVal, err := strconv.Atoi(txt)
+		syslutil.PanicOnError(err)
 		val.Value = &sysl.Value_I{
 			I: int64(iVal),
 		}
@@ -2439,18 +2432,16 @@ func (s *TreeShapeListener) EnterFunc_arg(*parser.Func_argContext) {}
 // ExitFunc_arg is called when production func_arg is exited.
 func (s *TreeShapeListener) ExitFunc_arg(*parser.Func_argContext) {
 	arg := s.popExpr()
+	top := s.topExpr()
+	var args *[]*sysl.Expr = nil
 	switch {
-	case s.topExpr().GetRelexpr() != nil:
-		expr := s.topExpr().GetRelexpr()
-		expr.Arg = append(expr.Arg, arg)
-	case s.topExpr().GetCall() != nil:
-		expr := s.topExpr().GetCall()
-		expr.Arg = append(expr.Arg, arg)
-	default:
-		fmt.Printf("%v\n", arg)
-		fmt.Printf("%v\n", s.topExpr())
-		panic("ExitFunc_arg: should not be here")
+	case top.GetRelexpr() != nil:
+		args = &top.GetRelexpr().Arg
+	case top.GetCall() != nil:
+		args = &top.GetCall().Arg
 	}
+	syslutil.Assert(args != nil, "ExitFunc_arg: should not be here")
+	*args = append(*args, arg)
 }
 
 // EnterFunc_args is called when production func_args is entered.
@@ -2493,11 +2484,7 @@ func (s *TreeShapeListener) ExitRank_expr(ctx *parser.Rank_exprContext) {
 	expr := s.popExpr()
 	relexpr := s.topExpr().GetRelexpr()
 	relexpr.Arg = append(relexpr.Arg, expr)
-	desc := false
-	if ctx.E_DESC() != nil {
-		desc = true
-	}
-	relexpr.Descending = append(relexpr.Descending, desc)
+	relexpr.Descending = append(relexpr.Descending, ctx.E_DESC() != nil)
 }
 
 // EnterRank_expr_list is called when production rank_expr_list is entered.
@@ -3697,7 +3684,7 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	if path[0] != '/' {
 		path = filepath.ToSlash(s.base) + "/" + path
 	}
-	path += ".sysl"
+	path += syslExt
 	s.imports = append(s.imports, path)
 }
 

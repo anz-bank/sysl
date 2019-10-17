@@ -1049,18 +1049,8 @@ const (
 	SyslLexerVIEW_TRANSFORM
 )
 
-var spaces int
-var linenum int
-var in_sq_brackets int
-var parens int
-
-var gotNewLine bool
-var gotHttpVerb bool
-var gotView bool
-var prevTokenIndex = -1
-
 func (l *SyslLexer) NextToken() antlr.Token {
-	return GetNextToken(l)
+	return getNextToken(l)
 }
 
 func (l *SyslLexer) Action(localctx antlr.RuleContext, ruleIndex, actionIndex int) {
@@ -1139,7 +1129,7 @@ func (l *SyslLexer) Action(localctx antlr.RuleContext, ruleIndex, actionIndex in
 func (l *SyslLexer) HTTP_VERBS_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 0:
-		gotHttpVerb = true
+		ls(l).gotHTTPVerb = true
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1148,7 +1138,7 @@ func (l *SyslLexer) HTTP_VERBS_Action(localctx antlr.RuleContext, actionIndex in
 func (l *SyslLexer) VIEW_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 1:
-		gotView = true
+		ls(l).gotView = true
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1157,10 +1147,12 @@ func (l *SyslLexer) VIEW_Action(localctx antlr.RuleContext, actionIndex int) {
 func (l *SyslLexer) IMPORT_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 2:
-		gotNewLine = true
-		spaces = 0
-		gotHttpVerb = false
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.spaces = 0
+		ls.gotHTTPVerb = false
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1169,7 +1161,7 @@ func (l *SyslLexer) IMPORT_Action(localctx antlr.RuleContext, actionIndex int) {
 func (l *SyslLexer) ABSTRACT_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 3:
-		gotView = false
+		ls(l).gotView = false
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1178,7 +1170,7 @@ func (l *SyslLexer) ABSTRACT_Action(localctx antlr.RuleContext, actionIndex int)
 func (l *SyslLexer) FORWARD_SLASH_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 4:
-		gotHttpVerb = true
+		ls(l).gotHTTPVerb = true
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1187,7 +1179,7 @@ func (l *SyslLexer) FORWARD_SLASH_Action(localctx antlr.RuleContext, actionIndex
 func (l *SyslLexer) SQ_OPEN_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 5:
-		in_sq_brackets++
+		ls(l).inSqBrackets++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1196,7 +1188,7 @@ func (l *SyslLexer) SQ_OPEN_Action(localctx antlr.RuleContext, actionIndex int) 
 func (l *SyslLexer) SQ_CLOSE_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 6:
-		in_sq_brackets--
+		ls(l).inSqBrackets--
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1205,10 +1197,12 @@ func (l *SyslLexer) SQ_CLOSE_Action(localctx antlr.RuleContext, actionIndex int)
 func (l *SyslLexer) EMPTY_COMMENT_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 7:
-		gotNewLine = true
-		spaces = 0
-		gotHttpVerb = false
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.spaces = 0
+		ls.gotHTTPVerb = false
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1217,10 +1211,12 @@ func (l *SyslLexer) EMPTY_COMMENT_Action(localctx antlr.RuleContext, actionIndex
 func (l *SyslLexer) EMPTY_LINE_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 8:
-		gotNewLine = true
-		spaces = 0
-		gotHttpVerb = false
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.spaces = 0
+		ls.gotHTTPVerb = false
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1229,10 +1225,12 @@ func (l *SyslLexer) EMPTY_LINE_Action(localctx antlr.RuleContext, actionIndex in
 func (l *SyslLexer) INDENTED_COMMENT_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 9:
-		gotNewLine = true
-		spaces = 0
-		gotHttpVerb = false
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.spaces = 0
+		ls.gotHTTPVerb = false
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1241,13 +1239,15 @@ func (l *SyslLexer) INDENTED_COMMENT_Action(localctx antlr.RuleContext, actionIn
 func (l *SyslLexer) NEWLINE_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 10:
-		gotNewLine = true
-		gotHttpVerb = false
-		spaces = 0
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.gotHTTPVerb = false
+		ls.spaces = 0
+		ls.linenum++
 
 	case 11:
-		if gotView {
+		if ls(l).gotView {
 			l.PushMode(SyslLexerVIEW_TRANSFORM)
 		}
 
@@ -1258,7 +1258,7 @@ func (l *SyslLexer) NEWLINE_Action(localctx antlr.RuleContext, actionIndex int) 
 func (l *SyslLexer) WS_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 12:
-		spaces = calcSpaces(l.GetText())
+		ls(l).spaces = calcSpaces(l.GetText())
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1270,7 +1270,7 @@ func (l *SyslLexer) TEXT_VALUE_Action(localctx antlr.RuleContext, actionIndex in
 		l.SetType(SyslLexerName)
 
 	case 14:
-		l.SetText(TrimText(l))
+		l.SetText(trimText(l))
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1279,10 +1279,12 @@ func (l *SyslLexer) TEXT_VALUE_Action(localctx antlr.RuleContext, actionIndex in
 func (l *SyslLexer) NEWLINE_2_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 15:
-		gotNewLine = true
-		gotHttpVerb = false
-		spaces = 0
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.gotHTTPVerb = false
+		ls.spaces = 0
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1300,10 +1302,12 @@ func (l *SyslLexer) E_NativeDataTypes_Action(localctx antlr.RuleContext, actionI
 func (l *SyslLexer) E_INDENTED_COMMENT_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 17:
-		gotNewLine = true
-		spaces = 0
-		gotHttpVerb = false
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.spaces = 0
+		ls.gotHTTPVerb = false
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1312,7 +1316,7 @@ func (l *SyslLexer) E_INDENTED_COMMENT_Action(localctx antlr.RuleContext, action
 func (l *SyslLexer) E_OPEN_PAREN_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 18:
-		parens++
+		ls(l).parens++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1321,7 +1325,7 @@ func (l *SyslLexer) E_OPEN_PAREN_Action(localctx antlr.RuleContext, actionIndex 
 func (l *SyslLexer) E_CLOSE_PAREN_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 19:
-		parens--
+		ls(l).parens--
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1330,9 +1334,11 @@ func (l *SyslLexer) E_CLOSE_PAREN_Action(localctx antlr.RuleContext, actionIndex
 func (l *SyslLexer) E_DOT_NAME_NL_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 20:
-		gotNewLine = true
-		gotHttpVerb = false
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.gotHTTPVerb = false
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1341,7 +1347,7 @@ func (l *SyslLexer) E_DOT_NAME_NL_Action(localctx antlr.RuleContext, actionIndex
 func (l *SyslLexer) E_WS_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 21:
-		spaces = calcSpaces(l.GetText())
+		ls(l).spaces = calcSpaces(l.GetText())
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1350,10 +1356,12 @@ func (l *SyslLexer) E_WS_Action(localctx antlr.RuleContext, actionIndex int) {
 func (l *SyslLexer) E_EMPTY_LINE_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 22:
-		gotNewLine = true
-		spaces = 0
-		gotHttpVerb = false
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.spaces = 0
+		ls.gotHTTPVerb = false
+		ls.linenum++
 
 	default:
 		panic("No registered action for: " + fmt.Sprint(actionIndex))
@@ -1362,14 +1370,18 @@ func (l *SyslLexer) E_EMPTY_LINE_Action(localctx antlr.RuleContext, actionIndex 
 func (l *SyslLexer) E_NL_Action(localctx antlr.RuleContext, actionIndex int) {
 	switch actionIndex {
 	case 23:
-		gotNewLine = true
-		gotHttpVerb = false
-		spaces = 0
-		linenum++
+
+		ls := ls(l)
+		ls.gotNewLine = true
+		ls.gotHTTPVerb = false
+		ls.spaces = 0
+		ls.linenum++
 
 	case 24:
-		if parens == 0 {
-			gotView = false
+
+		ls := ls(l)
+		if ls.parens == 0 {
+			ls.gotView = false
 			l.PopMode()
 		}
 
@@ -1406,7 +1418,7 @@ func (l *SyslLexer) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int
 func (p *SyslLexer) NativeDataTypes_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 0:
-		return in_sq_brackets == 0
+		return ls(p).inSqBrackets == 0
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))
@@ -1416,7 +1428,7 @@ func (p *SyslLexer) NativeDataTypes_Sempred(localctx antlr.RuleContext, predInde
 func (p *SyslLexer) ABSTRACT_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 1:
-		return gotView
+		return ls(p).gotView
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))
@@ -1426,7 +1438,7 @@ func (p *SyslLexer) ABSTRACT_Sempred(localctx antlr.RuleContext, predIndex int) 
 func (p *SyslLexer) AMP_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 2:
-		return gotHttpVerb
+		return ls(p).gotHTTPVerb
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))
@@ -1436,10 +1448,10 @@ func (p *SyslLexer) AMP_Sempred(localctx antlr.RuleContext, predIndex int) bool 
 func (p *SyslLexer) TEXT_LINE_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 3:
-		return in_sq_brackets == 0
+		return ls(p).inSqBrackets == 0
 
 	case 4:
-		return startsWithKeyword(p.GetText()) == false
+		return !startsWithKeyword(p.GetText())
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))
@@ -1449,7 +1461,7 @@ func (p *SyslLexer) TEXT_LINE_Sempred(localctx antlr.RuleContext, predIndex int)
 func (p *SyslLexer) E_DOT_NAME_NL_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 5:
-		return spaces > 1
+		return ls(p).spaces > 1
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))
@@ -1459,7 +1471,7 @@ func (p *SyslLexer) E_DOT_NAME_NL_Sempred(localctx antlr.RuleContext, predIndex 
 func (p *SyslLexer) E_EMPTY_LINE_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 6:
-		return gotNewLine
+		return ls(p).gotNewLine
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))

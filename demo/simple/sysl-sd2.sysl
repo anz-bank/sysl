@@ -1,0 +1,22 @@
+# sysl sd -a Project -o "sysl-sd-%(epname)".png /sysl-sd
+Database[~db]:
+    QueryUser (user_id):
+        Return User [~y, x="1"]
+
+Api:
+    /users/{user_id<:int}/profile [w="3"]:
+        GET:
+                Database <- QueryUser(user_id)
+                Return UserProfile
+
+WebFrontend:
+    RequestProfile [z="2"]:
+        Api <- GET /users/{user_id}/profile
+        . <- FooBar
+        Return Profile Page
+
+    FooBar: ...
+
+Project [seqtitle="Profile"]:
+    _:
+        WebFrontend <- RequestProfile

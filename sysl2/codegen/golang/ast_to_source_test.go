@@ -26,7 +26,7 @@ func testFormatEmpty(t *testing.T, n interface{}) {
 
 func testFormatPanics(t *testing.T, n interface{}) {
 	actual := fmt.Sprintf("%s", n)
-	assert.True(t, strings.Contains(actual, "%!s(PANIC="), "%s", actual)
+	assert.Contains(t, actual, "%!s(PANIC=")
 }
 
 func testFormatInfix(t *testing.T, n interface{}, prefix, expected, suffix string) bool {
@@ -38,14 +38,11 @@ func testFormatInfix(t *testing.T, n interface{}, prefix, expected, suffix strin
 		return false
 	}
 	actual := strings.TrimSpace(string(formatted))
-	if !assert.True(t, strings.HasPrefix(actual, prefix)) ||
-		!assert.True(t, strings.HasSuffix(actual, suffix)) {
-		t.Errorf("unformatted: %#v\nformatted: %#v", output, actual)
-		return false
-	}
+	assert.True(t, strings.HasPrefix(actual, prefix), "%#v %#v", output, actual)
+	assert.True(t, strings.HasSuffix(actual, suffix), "%#v %#v", output, actual)
 	return assert.Equal(t,
 		expected, strings.TrimSpace(actual[len(prefix):len(actual)-len(suffix)]),
-		"unformatted: %s", output)
+		"%s", output)
 }
 
 func testFormatType(t *testing.T, typ Expr, expected string) {
@@ -59,17 +56,23 @@ func testFormatType(t *testing.T, typ Expr, expected string) {
 }
 
 func TestToken(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*Token)(nil))
 	testFormat(t, T("foo"), `foo`)
 }
 
 func TestArrayType(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ArrayType)(nil))
 	testFormatType(t, SliceType(I("int")), `[]int`)
 	testFormatType(t, ArrayN(10, I("string")), `[10]string`)
 }
 
 func TestAssignStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*AssignStmt)(nil))
 	testFormat(t, Assign([]Expr{I("x")}, Int(42)), `x = 42`)
 	testFormat(t, Init([]string{"x"}, Int(42)), `x := 42`)
@@ -80,27 +83,37 @@ func TestAssignStmt(t *testing.T) {
 }
 
 func TestBadDecl(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*BadDecl)(nil))
 	testFormatPanics(t, &BadDecl{})
 }
 
 func TestBadExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*BadExpr)(nil))
 	testFormatPanics(t, &BadExpr{})
 }
 
 func TestBadStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*BadStmt)(nil))
 	testFormatPanics(t, &BadStmt{})
 }
 
 func TestBasicLit(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*BasicLit)(nil))
 	testFormat(t, &BasicLit{*T("123.45")}, `123.45`)
 	testFormat(t, &BasicLit{*T(`"123.45"`)}, `"123.45"`)
 }
 
 func TestBinaryExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*BinaryExpr)(nil))
 	// https://golang.org/ref/spec#Operator_precedence
 	for _, op := range []string{
@@ -115,6 +128,8 @@ func TestBinaryExpr(t *testing.T) {
 }
 
 func TestBlockStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*BlockStmt)(nil))
 	testFormat(t,
 		&BlockStmt{},
@@ -139,6 +154,8 @@ func TestBlockStmt(t *testing.T) {
 }
 
 func TestBranchStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*BranchStmt)(nil))
 	testFormat(t, Break(), `break`)
 	testFormat(t, BreakTo("fast"), `break fast`)
@@ -149,6 +166,8 @@ func TestBranchStmt(t *testing.T) {
 }
 
 func TestCallExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*CallExpr)(nil))
 	testFormat(t, &CallExpr{Fun: I("f")}, `f()`)
 	testFormat(t, Call(I("sin"), I("π")), `sin(π)`)
@@ -160,6 +179,8 @@ func TestCallExpr(t *testing.T) {
 }
 
 func TestCaseClause(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*CaseClause)(nil))
 
 	testFormatCaseClause := func(n *CaseClause, expected string) {
@@ -195,6 +216,8 @@ func TestCaseClause(t *testing.T) {
 }
 
 func TestChanType(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ChanType)(nil))
 	value := Struct()
 	testFormatType(t, &ChanType{Value: value, Dir: ""}, `chan struct{}`)
@@ -204,6 +227,8 @@ func TestChanType(t *testing.T) {
 }
 
 func TestCommClause(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*CommClause)(nil))
 
 	testFormatCommClause := func(n *CommClause, expected string) {
@@ -248,6 +273,8 @@ func TestCommClause(t *testing.T) {
 }
 
 func TestComment(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*Comment)(nil))
 
 	testFormat(t, &Comment{*T("//")}, `//`)
@@ -256,6 +283,8 @@ func TestComment(t *testing.T) {
 }
 
 func TestCommentGroup(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*CommentGroup)(nil))
 
 	testFormat(t, &CommentGroup{}, ``)
@@ -276,6 +305,8 @@ func TestCommentGroup(t *testing.T) {
 }
 
 func TestCompositeLit(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*CompositeLit)(nil))
 	testFormat(t, Composite(I("Foo"), KV(I("X"), Int(42))), `Foo{X: 42}`)
 	testFormat(t,
@@ -289,6 +320,8 @@ func TestCompositeLit(t *testing.T) {
 }
 
 func TestDeclStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*DeclStmt)(nil))
 	testFormat(t,
 		&DeclStmt{
@@ -302,6 +335,8 @@ func TestDeclStmt(t *testing.T) {
 }
 
 func TestDeferStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*DeferStmt)(nil))
 	testFormat(t, Defer(I("f"), I("x")), `defer f(x)`)
 	testFormat(t,
@@ -321,16 +356,22 @@ func TestDeferStmt(t *testing.T) {
 }
 
 func TestEllipsis(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*Ellipsis)(nil))
 	// Tested via ArrayType
 }
 
 func TestEmptyStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*EmptyStmt)(nil))
 	testFormat(t, &EmptyStmt{}, `;`)
 }
 
 func TestExprStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ExprStmt)(nil))
 	testFormat(t, &ExprStmt{X: Int(0)}, `0`)
 	testFormat(t,
@@ -340,14 +381,20 @@ func TestExprStmt(t *testing.T) {
 }
 
 func TestField(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*Field)(nil))
 }
 
 func TestFieldList(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*FieldList)(nil))
 }
 
 func TestFile(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*File)(nil))
 	testFormat(t,
 		&File{
@@ -388,6 +435,8 @@ func TestFile(t *testing.T) {
 }
 
 func TestForStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ForStmt)(nil))
 
 	testFormat(t,
@@ -404,6 +453,8 @@ func TestForStmt(t *testing.T) {
 }
 
 func TestFuncDecl(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*FuncDecl)(nil))
 
 	testFormat(t,
@@ -442,6 +493,8 @@ func TestFuncDecl(t *testing.T) {
 }
 
 func TestFuncLit(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*FuncLit)(nil))
 	testFormat(t,
 		Composite(
@@ -463,11 +516,15 @@ func TestFuncLit(t *testing.T) {
 }
 
 func TestFuncType(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*FuncType)(nil))
 	// Tested via FuncDecl and FuncLit.
 }
 
 func TestGenDeclImport(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*GenDecl)(nil))
 
 	testFormat(t, Import(ImportSpec{Path: *String("fmt")}), `import "fmt"`)
@@ -488,6 +545,8 @@ func TestGenDeclImport(t *testing.T) {
 }
 
 func TestGenDeclVar(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*GenDecl)(nil))
 
 	testFormat(t,
@@ -511,6 +570,8 @@ func TestGenDeclVar(t *testing.T) {
 }
 
 func TestGenDeclConst(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*GenDecl)(nil))
 
 	testFormat(t,
@@ -534,6 +595,8 @@ func TestGenDeclConst(t *testing.T) {
 }
 
 func TestGenDeclType(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*GenDecl)(nil))
 
 	testFormat(t,
@@ -573,11 +636,15 @@ func TestGenDeclType(t *testing.T) {
 }
 
 func TestGoStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*GoStmt)(nil))
 	testFormat(t, &GoStmt{Call: CallExpr{Fun: I("f")}}, `go f()`)
 }
 
 func TestIdent(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*Ident)(nil))
 	testFormat(t, I("x"), `x`)
 	testFormat(t, I("fooBarBaz"), `fooBarBaz`)
@@ -585,6 +652,8 @@ func TestIdent(t *testing.T) {
 }
 
 func TestIfStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*IfStmt)(nil))
 
 	testFormat(t,
@@ -614,6 +683,8 @@ func TestIfStmt(t *testing.T) {
 }
 
 func TestIfElse(t *testing.T) {
+	t.Parallel()
+
 	testFormat(t,
 		If(
 			Init([]string{"x", "ok"}, Call(I("f"))),
@@ -655,6 +726,8 @@ func TestIfElse(t *testing.T) {
 }
 
 func TestIfElseIf(t *testing.T) {
+	t.Parallel()
+
 	testFormat(t,
 		If(
 			Init([]string{"x", "ok"}, Call(I("f"))),
@@ -676,6 +749,8 @@ func TestIfElseIf(t *testing.T) {
 }
 
 func TestIfElseIfElse(t *testing.T) {
+	t.Parallel()
+
 	testFormat(t,
 		If(
 			Init([]string{"x", "ok"}, Call(I("f"))),
@@ -709,6 +784,8 @@ func TestIfElseIfElse(t *testing.T) {
 }
 
 func TestIfElseIfElseIf(t *testing.T) {
+	t.Parallel()
+
 	testFormat(t,
 		If(
 			Init([]string{"x", "ok"}, Call(I("f"))),
@@ -740,6 +817,8 @@ func TestIfElseIfElseIf(t *testing.T) {
 }
 
 func TestIfElseIfElseIfElse(t *testing.T) {
+	t.Parallel()
+
 	testFormat(t,
 		If(
 			Init([]string{"x", "ok"}, Call(I("f"))),
@@ -775,22 +854,30 @@ func TestIfElseIfElseIfElse(t *testing.T) {
 }
 
 func TestImportSpec(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ImportSpec)(nil))
 	testFormat(t, &ImportSpec{}, ``)
 }
 
 func TestIncDecStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*IncDecStmt)(nil))
 	testFormat(t, Inc(I("x")), `x++`)
 	testFormat(t, Dec(I("x")), `x--`)
 }
 
 func TestIndexExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*IndexExpr)(nil))
 	testFormat(t, Index(I("x"), I("y")), `x[y]`)
 }
 
 func TestInterfaceType(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*InterfaceType)(nil))
 	testFormatType(t, &InterfaceType{}, `interface{}`)
 	testFormatType(t,
@@ -819,10 +906,14 @@ func TestInterfaceType(t *testing.T) {
 }
 
 func TestKeyValueExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*KeyValueExpr)(nil))
 }
 
 func TestLabeledStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*LabeledStmt)(nil))
 
 	testFormat(t,
@@ -840,6 +931,8 @@ func TestLabeledStmt(t *testing.T) {
 }
 
 func TestMapType(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*MapType)(nil))
 
 	testFormatType(t, Map(I("int"), I("string")), `map[int]string`)
@@ -850,12 +943,16 @@ func TestMapType(t *testing.T) {
 }
 
 func TestParenExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ParenExpr)(nil))
 	testFormat(t, &ParenExpr{X: I("x")}, `x`)
 	testFormat(t, &ParenExpr{X: Binary(I("x"), "^", I("y"))}, `(x ^ y)`)
 }
 
 func TestRangeStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*RangeStmt)(nil))
 
 	testFormat(t,
@@ -892,12 +989,16 @@ func TestRangeStmt(t *testing.T) {
 }
 
 func TestReturnStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ReturnStmt)(nil))
 	testFormat(t, Return(), `return`)
 	testFormat(t, Return(I("x")), `return x`)
 }
 
 func TestSelectStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*SelectStmt)(nil))
 
 	testFormat(t, Select(), `select {}`)
@@ -939,16 +1040,22 @@ func TestSelectStmt(t *testing.T) {
 }
 
 func TestSelectorExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*SelectorExpr)(nil))
 	testFormat(t, Dot(I("x"), "y"), `x.y`)
 }
 
 func TestSendStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*SendStmt)(nil))
 	testFormat(t, Send(I("ch"), I("x")), `ch <- x`)
 }
 
 func TestSliceExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*SliceExpr)(nil))
 
 	x := I("x")
@@ -967,12 +1074,16 @@ func TestSliceExpr(t *testing.T) {
 }
 
 func TestStarExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*StarExpr)(nil))
 	testFormat(t, Star(I("x")), `*x`)
 	testFormat(t, Star(Binary(I("x"), "+", I("y"))), `*(x + y)`)
 }
 
 func TestStructType(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*StructType)(nil))
 
 	testFormatType(t, Struct(), `struct{}`)
@@ -992,6 +1103,8 @@ func TestStructType(t *testing.T) {
 }
 
 func TestSwitchStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*SwitchStmt)(nil))
 	testFormat(t,
 		&SwitchStmt{},
@@ -1017,16 +1130,22 @@ func TestSwitchStmt(t *testing.T) {
 }
 
 func TestTypeAssertExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*TypeAssertExpr)(nil))
 	testFormat(t, Assert(I("x"), I("y")), `x.(y)`)
 	testFormat(t, AssertType(I("x")), `x.(type)`)
 }
 
 func TestTypeSpec(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*TypeSpec)(nil))
 }
 
 func TestTypeSwitchStmt(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*TypeSwitchStmt)(nil))
 
 	testFormat(t,
@@ -1052,6 +1171,8 @@ func TestTypeSwitchStmt(t *testing.T) {
 }
 
 func TestUnaryExpr(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*UnaryExpr)(nil))
 	// https://golang.org/ref/spec#Operators
 	for _, op := range []string{"+", "-", "!", "^", "*", "&", "<-"} {
@@ -1060,5 +1181,7 @@ func TestUnaryExpr(t *testing.T) {
 }
 
 func TestValueSpec(t *testing.T) {
+	t.Parallel()
+
 	testFormatEmpty(t, (*ValueSpec)(nil))
 }

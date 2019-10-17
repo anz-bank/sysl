@@ -3,21 +3,22 @@ package pbutil
 import (
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
+	"github.com/spf13/afero"
 )
 
 // JSONPB ...
-func JSONPB(m proto.Message, filename string) error {
+func JSONPB(m proto.Message, filename string, fs afero.Fs) error {
 	if m == nil {
-		return fmt.Errorf("module is nil: %#v", filename)
+		return fmt.Errorf("module is nil")
 	}
-	f, err := os.Create(filename)
+	f, err := fs.Create(filename)
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 	return FJSONPB(f, m)
 }
 
@@ -31,12 +32,12 @@ func FJSONPB(w io.Writer, m proto.Message) error {
 }
 
 // TextPB ...
-func TextPB(m proto.Message, filename string) error {
+func TextPB(m proto.Message, filename string, fs afero.Fs) error {
 	if m == nil {
 		return fmt.Errorf("module is nil: %#v", filename)
 	}
 
-	f, err := os.Create(filename)
+	f, err := fs.Create(filename)
 	if err != nil {
 		return err
 	}

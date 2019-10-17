@@ -23,24 +23,26 @@ func testParser(
 ) (bool, []interface{}) {
 	p := makeParser(g, text)
 
-	assert.True(t, len(p.terminals) == numTerms, "got incorrect number of terms")
+	assert.Len(t, p.terminals, numTerms)
 
 	actual := make([]token, 0)
 
 	for i, expected := range tokens {
 		tok := p.l.nextToken()
 		actual = append(actual, tok)
-		assert.Truef(t, tok.id == expected, "got the wrong token at %d expected: %+v, got %+v", i, expected, tok)
+		assert.Equal(t, expected, tok.id, "%d: %#v", i, expected)
 	}
 	actual = actual[:len(actual)-1]
 	result, tree := p.parseGrammar(&actual)
-	assert.Truef(t, result == expectedResult, "failed to parse %s", text)
+	assert.Equal(t, expectedResult, result)
 	return result, tree
 }
 
 // S –> bab | bA
 // A –> d | cA
 func TestGrammar1(t *testing.T) {
+	t.Parallel()
+
 	cases := []cases{
 		{"bab", []int{2, 3, 2, -1}, true},
 		{"bcccd", []int{2, 1, 1, 1, 0, -1}, true},
@@ -53,6 +55,8 @@ func TestGrammar1(t *testing.T) {
 }
 
 func TestEXPR1(t *testing.T) {
+	t.Parallel()
+
 	text := "1 + 3 * 7"
 	tokens := []int{6, 0, 6, 2, 6, -1}
 
@@ -60,6 +64,8 @@ func TestEXPR1(t *testing.T) {
 }
 
 func TestOBJ(t *testing.T) {
+	t.Parallel()
+
 	g := makeRepeatSeq(makeQuantifierZeroPlus())
 	cases := []cases{
 		{"{}", []int{0, 2, -1}, true},
@@ -72,6 +78,8 @@ func TestOBJ(t *testing.T) {
 }
 
 func TestOBJPlus(t *testing.T) {
+	t.Parallel()
+
 	// NOTE THE +
 	// obj
 	//    : '{' pair (',' pair)+ '}'
@@ -88,6 +96,8 @@ func TestOBJPlus(t *testing.T) {
 }
 
 func TestOBJOptional(t *testing.T) {
+	t.Parallel()
+
 	// NOTE THE ?
 	// obj
 	//    : '{' number (',' number)? '}'
@@ -106,6 +116,8 @@ func TestOBJOptional(t *testing.T) {
 }
 
 func TestJSON(t *testing.T) {
+	t.Parallel()
+
 	g := makeJSON(makeQuantifierZeroPlus())
 	cases := []cases{
 		{"{}", []int{3, 4, -1}, true},
@@ -137,22 +149,23 @@ func TestJSON(t *testing.T) {
 }
 
 func TestFirstSet1(t *testing.T) {
+	t.Parallel()
+
 	g := makeEXPR()
 	terms := makeBuilder().buildTerminalsList(g.Rules)
 
-	if len(terms) != 7 {
-		t.Error("got incorrect number of terms", terms)
-	}
+	assert.Len(t, terms, 7)
 
 	first, follow := buildFirstFollowSet(g)
 
 	//TODO: revisit this test
-	if len(first) < 1 || len(follow) < 1 {
-		t.Error("failed to calculate first set of E\n")
-	}
+	assert.NotEmpty(t, first, 0)
+	assert.NotEmpty(t, follow, 0)
 }
 
 func TestFirstSet2(t *testing.T) {
+	t.Parallel()
+
 	g := makeG2()
 	terms := makeBuilder().buildTerminalsList(g.Rules)
 
@@ -163,12 +176,13 @@ func TestFirstSet2(t *testing.T) {
 	first, follow := buildFirstFollowSet(g)
 
 	//TODO: revisit this test
-	if len(first) < 1 || len(follow) < 1 {
-		t.Error("failed to calculate first set of E\n")
-	}
+	assert.NotEmpty(t, first, 0)
+	assert.NotEmpty(t, follow, 0)
 }
 
 func TestEBNF1(t *testing.T) {
+	t.Parallel()
+
 	g := makeEBNF()
 	cases := []cases{
 		{`expr : INT | ID | expr;`, []int{1, 8, 1, 4, 1, 4, 1, 9, -1}, true},
@@ -181,6 +195,8 @@ func TestEBNF1(t *testing.T) {
 }
 
 func TestBuildEBNFGrammar(t *testing.T) {
+	t.Parallel()
+
 	// Both grammars are equivalent
 	grammars := []string{
 		`s : 'd' | 'c' s ; `,
@@ -197,13 +213,16 @@ func TestBuildEBNFGrammar(t *testing.T) {
 		g := ParseEBNF(grammars[i], "obj", "s")
 
 		result, ast := testParser(g, 2, tokens[i], text, true, t)
-		assert.Truef(t, result, "unable to parse text=(%s)", text)
+		assert.True(t, result, "grammars[%d]", i)
 		choiceActual, s := ruleSeq(ast[0], "s")
-		assert.Truef(t, choiceBranch[i] == choiceActual && len(s) == 2, "parse returned incorrect ast for text=(%s)", text)
+		assert.Equal(t, choiceBranch[i], choiceActual)
+		assert.Len(t, s, 2)
 	}
 }
 
 func TestBuildEBNFGrammar2(t *testing.T) {
+	t.Parallel()
+
 	text := `
         s : 'b' 'a' 'b' | 'b' a;
         a : 'd' | 'c' a;
@@ -216,13 +235,16 @@ func TestBuildEBNFGrammar2(t *testing.T) {
 	tokens := []int{2, 3, 2, -1}
 
 	result, ast := testParser(g, 4, tokens, text, true, t)
-	assert.Truef(t, result, "unable to parse text=(%s)", text)
+	assert.True(t, result)
 
 	choiceActual, s := ruleSeq(ast[0], "s")
-	assert.Truef(t, 0 == choiceActual && len(s) == 3, "parse returned incorrect ast for text=(%s)", text)
+	assert.Zero(t, choiceActual)
+	assert.Len(t, s, 3)
 }
 
 func TestBuildEBNFGrammar3(t *testing.T) {
+	t.Parallel()
+
 	text := `
         s : a (',' a)*;
         a : 'd';
@@ -235,13 +257,16 @@ func TestBuildEBNFGrammar3(t *testing.T) {
 	tokens := []int{0, 1, 0, -1}
 
 	result, ast := testParser(g, 2, tokens, text, true, t)
-	assert.Truef(t, result, "unable to parse text=(%s)", text)
+	assert.True(t, result)
 
 	choiceActual, s := ruleSeq(ast[0], "s")
-	assert.Truef(t, 0 == choiceActual && len(s) == 2, "parse returned incorrect ast for text=(%s)", text)
+	assert.Zero(t, choiceActual)
+	assert.Len(t, s, 2)
 }
 
 func TestBuildEBNFGrammar4(t *testing.T) {
+	t.Parallel()
+
 	text := `
           s: a a a;
           a: 'a' | 'b' | 'c' | 'd';
@@ -254,7 +279,8 @@ func TestBuildEBNFGrammar4(t *testing.T) {
 	tokens := []int{1, 0, 3, -1}
 
 	result, ast := testParser(g, 4, tokens, text, true, t)
-	assert.Truef(t, result, "unable to parse text=(%s)", text)
+	assert.True(t, result)
 	choiceActual, s := ruleSeq(ast[0], "s")
-	assert.Truef(t, 0 == choiceActual && len(s) == 3, "parse returned incorrect ast for text=(%s)", text)
+	assert.Zero(t, choiceActual)
+	assert.Len(t, s, 3)
 }

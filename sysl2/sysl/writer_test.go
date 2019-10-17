@@ -9,6 +9,8 @@ import (
 )
 
 func TestWrite(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 
@@ -18,11 +20,13 @@ func TestWrite(t *testing.T) {
 	// then
 	assert.Nil(t, err)
 	assert.Equal(t, 5, n)
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 	assert.True(t, w.atBeginOfLine)
 }
 
 func TestWriteWithoutln(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 
@@ -32,11 +36,13 @@ func TestWriteWithoutln(t *testing.T) {
 	// then
 	assert.Nil(t, err)
 	assert.Equal(t, 4, n)
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 	assert.False(t, w.atBeginOfLine)
 }
 
 func TestWriteWithoutlnInNewLine(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 	w.atBeginOfLine = true
@@ -54,6 +60,8 @@ func TestWriteWithoutlnInNewLine(t *testing.T) {
 }
 
 func TestWriteMultiLines(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 	w.atBeginOfLine = true
@@ -71,6 +79,8 @@ func TestWriteMultiLines(t *testing.T) {
 }
 
 func TestWriteString(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 
@@ -80,11 +90,13 @@ func TestWriteString(t *testing.T) {
 	// then
 	assert.Nil(t, err)
 	assert.Equal(t, 5, n)
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 	assert.True(t, w.atBeginOfLine)
 }
 
 func TestWriteByte(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 
@@ -98,6 +110,8 @@ func TestWriteByte(t *testing.T) {
 }
 
 func TestWriteByteln(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 
@@ -111,6 +125,8 @@ func TestWriteByteln(t *testing.T) {
 }
 
 func TestWriteHead(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 
@@ -123,6 +139,8 @@ func TestWriteHead(t *testing.T) {
 }
 
 func TestIndent(t *testing.T) {
+	t.Parallel()
+
 	// given
 	w := MakeSequenceDiagramWriter(true)
 
@@ -134,6 +152,8 @@ func TestIndent(t *testing.T) {
 }
 
 func TestUnindent(t *testing.T) {
+	t.Parallel()
+
 	w := MakeSequenceDiagramWriter(true)
 
 	assert.Panics(t, func() {
@@ -144,7 +164,7 @@ func TestUnindent(t *testing.T) {
 	assert.Equal(t, 1, w.ind)
 
 	w.Unindent()
-	assert.Equal(t, 0, w.ind)
+	assert.Zero(t, w.ind)
 
 	assert.Panics(t, func() {
 		w.Unindent()
@@ -152,6 +172,8 @@ func TestUnindent(t *testing.T) {
 }
 
 func TestActivate(t *testing.T) {
+	t.Parallel()
+
 	w := MakeSequenceDiagramWriter(true)
 
 	w.Activate("a")
@@ -166,6 +188,8 @@ func TestActivate(t *testing.T) {
 }
 
 func TestActivated(t *testing.T) {
+	t.Parallel()
+
 	w := MakeSequenceDiagramWriter(true)
 
 	d := w.Activated("a", false)
@@ -185,25 +209,29 @@ func TestActivated(t *testing.T) {
 }
 
 func TestActivatedWithSuppressed(t *testing.T) {
+	t.Parallel()
+
 	w := MakeSequenceDiagramWriter(true)
 
 	d := w.Activated("a", true)
-	assert.Equal(t, 0, w.body.Len())
+	assert.Zero(t, w.body.Len())
 	assert.True(t, w.atBeginOfLine)
 	assert.Equal(t, map[string]int{}, w.active)
 
 	d()
-	assert.Equal(t, 0, w.body.Len())
+	assert.Zero(t, w.body.Len())
 	assert.True(t, w.atBeginOfLine)
 	assert.Equal(t, map[string]int{}, w.active)
 
 	d()
-	assert.Equal(t, 0, w.body.Len())
+	assert.Zero(t, w.body.Len())
 	assert.True(t, w.atBeginOfLine)
 	assert.Equal(t, map[string]int{}, w.active)
 }
 
 func TestDeactivate(t *testing.T) {
+	t.Parallel()
+
 	w := MakeSequenceDiagramWriter(true)
 
 	w.Activate("a")
@@ -228,6 +256,8 @@ func TestDeactivate(t *testing.T) {
 }
 
 func TestWriteIndent(t *testing.T) {
+	t.Parallel()
+
 	w := MakeSequenceDiagramWriter(true)
 	w.atBeginOfLine = true
 	w.ind = 1
@@ -242,6 +272,8 @@ func TestWriteIndent(t *testing.T) {
 }
 
 func TestStringer(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	w := MakeSequenceDiagramWriter(false)
 	_, err := w.WriteHead("head")
@@ -258,6 +290,8 @@ func TestStringer(t *testing.T) {
 }
 
 func TestStringerEmpty(t *testing.T) {
+	t.Parallel()
+
 	w := MakeSequenceDiagramWriter(false)
 	_, err := w.WriteString("body\n")
 
@@ -269,6 +303,8 @@ func TestStringerEmpty(t *testing.T) {
 }
 
 func TestStringerWithAutogen(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	w := MakeSequenceDiagramWriter(true)
 	_, err := w.WriteHead("head")
@@ -296,6 +332,8 @@ body
 }
 
 func TestWriteTo(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	w := MakeSequenceDiagramWriter(false, "properties 1")
 	_, err := w.WriteHead("head")

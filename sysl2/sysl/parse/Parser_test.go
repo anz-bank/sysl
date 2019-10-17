@@ -5,17 +5,22 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func readSyslModule(filename string) (*sysl.Module, error) {
@@ -54,9 +59,18 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := FSParse(filename, http.Dir(root))
+	module, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	if err != nil {
 		return nil, err
+	}
+
+	for _, app := range module.Apps {
+		for _, t := range app.Views {
+			for _, stmt := range t.GetExpr().GetTransform().GetStmt() {
+				nullifyType(stmt.GetAssign().GetExpr())
+				nullifyType(stmt.GetLet().GetExpr())
+			}
+		}
 	}
 
 	if stripSourceContext {
@@ -78,6 +92,42 @@ func parseComparable(
 	return module, nil
 }
 
+func nullifyType(expr *sysl.Expr) {
+	if expr == nil {
+		return
+	}
+
+	switch t := expr.Expr.(type) {
+	case *sysl.Expr_Literal:
+		switch t.Literal.Value.(type) {
+		case *sysl.Value_Null_, *sysl.Value_B:
+			return
+		}
+		expr.Type = nil
+	case *sysl.Expr_List_:
+		nullifyType(t.List.Expr[0])
+		expr.Type = nil
+	case *sysl.Expr_Ifelse:
+		nullifyType(t.Ifelse.GetIfTrue())
+		nullifyType(t.Ifelse.GetIfFalse())
+		expr.Type = nil
+	case *sysl.Expr_Binexpr:
+		nullifyType(t.Binexpr.GetLhs())
+		if t.Binexpr.GetOp().String() != "WHERE" {
+			nullifyType(t.Binexpr.GetRhs())
+		}
+		expr.Type = nil
+	case *sysl.Expr_Unexpr:
+		nullifyType(expr.GetUnexpr().GetArg())
+		expr.Type = nil
+	case *sysl.Expr_Transform_:
+		for _, stmt := range t.Transform.GetStmt() {
+			nullifyType(stmt.GetAssign().GetExpr())
+			nullifyType(stmt.GetLet().GetExpr())
+		}
+	}
+}
+
 func parseAndCompare(
 	filename, root, golden string,
 	goldenProto proto.Message,
@@ -93,7 +143,7 @@ func parseAndCompare(
 		return true, nil
 	}
 
-	if err = pbutil.TextPB(goldenProto, golden); err != nil {
+	if err = pbutil.TextPB(goldenProto, golden, afero.NewMemMapFs()); err != nil {
 		return false, err
 	}
 
@@ -134,7 +184,12 @@ func parseAndCompare(
 }
 
 func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
-	golden := path.Join(root, filename+".golden.textpb")
+	goldenFilename := filename
+	if !strings.HasSuffix(goldenFilename, syslExt) {
+		goldenFilename += syslExt
+	}
+	goldenFilename += ".golden.textpb"
+	golden := path.Join(root, goldenFilename)
 
 	goldenModule, err := readSyslModule(golden)
 	if err != nil {
@@ -146,190 +201,462 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 func testParseAgainstGolden(t *testing.T, filename, root string) {
 	equal, err := parseAndCompareWithGolden(filename, root, true)
 	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", path.Join(root, filename))
+		assert.True(t, equal, "%#v %#v", root, filename)
 	}
 }
 
 func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
 	equal, err := parseAndCompareWithGolden(filename, "", false)
 	if assert.NoError(t, err) {
-		assert.True(t, equal, "Mismatch between go-sysl and golden: %s", filename)
+		assert.True(t, equal, "%#v", filename)
 	}
 }
 
+func TestParseBadRoot(t *testing.T) {
+	t.Parallel()
+
+	_, err := parseComparable("dontcare.sysl", "NON-EXISTENT-ROOT", false)
+	assert.Error(t, err)
+}
+
 func TestParseMissingFile(t *testing.T) {
-	_, err := parseAndCompareWithGolden("tests/doesn't.exist", "", false)
+	t.Parallel()
+
+	_, err := parseComparable("doesn't.exist.sysl", "tests", false)
+	assert.Error(t, err)
+}
+
+func TestParseDirectoryAsFile(t *testing.T) {
+	t.Parallel()
+
+	dirname := "not-a-file.sysl"
+	tmproot := os.TempDir()
+	tmpdir := path.Join(tmproot, dirname)
+	require.NoError(t, os.Mkdir(tmpdir, 0755))
+	defer os.Remove(tmpdir)
+	_, err := parseComparable(dirname, tmproot, false)
 	assert.Error(t, err)
 }
 
 func TestParseBadFile(t *testing.T) {
+	t.Parallel()
+
 	_, err := parseAndCompareWithGolden("sysl.go", "", false)
 	assert.Error(t, err)
 }
 
 func TestSimpleEP(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/test1.sysl", "")
 }
 
+func TestSimpleEPNoSuffix(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/test1", "")
+}
+
 func TestAttribs(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/attribs.sysl", "")
 }
 
 func TestIfElse(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/if_else.sysl", "")
 }
 
 func TestArgs(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/args.sysl")
 }
 
 func TestSimpleEPWithSpaces(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/with_spaces.sysl", "")
 }
 
 func TestSimpleEP2(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/test4.sysl", "")
 }
 
 func TestUnion(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/union.sysl", "")
 }
 
 func TestSimpleEndpointParams(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/ep_params.sysl", "")
 }
 
 func TestOneOfStatements(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/oneof.sysl", "")
 }
 
 func TestDuplicateEndpoints(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/duplicate.sysl", "")
 }
 
 func TestEventing(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/eventing.sysl", "")
 }
 
 func TestCollector(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/collector.sysl", "")
 }
 
 func TestPubSubCollector(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/pubsub_collector.sysl", "")
 }
 
 func TestDocstrings(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/docstrings.sysl", "")
 }
 
 func TestMixins(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/mixin.sysl", "")
 }
 func TestForLoops(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/for_loop.sysl", "")
 }
 
 func TestGroupStmt(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/group_stmt.sysl", "")
 }
 
 func TestUntilLoop(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/until_loop.sysl", "")
 }
 
 func TestTuple(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/test2.sysl", "")
 }
 
 func TestInplaceTuple(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/inplace_tuple.sysl", "")
 }
 
 func TestRelational(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/school.sysl", "")
 }
 
 func TestImports(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/library.sysl", "")
 }
 
 func TestRootArg(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "school.sysl", "tests")
 }
 
 func TestSequenceType(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/sequence_type.sysl")
 }
 
 func TestRestApi(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/test_rest_api.sysl")
 }
 
 func TestRestApiQueryParams(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/rest_api_query_params.sysl")
 }
 
 func TestSimpleProject(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/project.sysl", "")
 }
 
 func TestUrlParamOrder(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/rest_url_params.sysl")
 }
 
 func TestRestApi_WrongOrder(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/bad_order.sysl")
 }
 
 func TestTransform(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/transform.sysl", "")
 }
 
 func TestImpliedDot(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/implied.sysl", "")
 }
 
 func TestStmts(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/stmts.sysl", "")
 }
 
 func TestMath(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/math.sysl", "")
 }
 
 func TestTableof(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/tableof.sysl", "")
 }
 
 func TestRank(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/rank.sysl", "")
 }
 
 func TestMatching(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/matching.sysl", "")
 }
 
 func TestNavigate(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/navigate.sysl", "")
 }
 
 func TestFuncs(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/funcs.sysl", "")
 }
 
 func TestPetshop(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/petshop.sysl", "")
 }
 
 func TestCrash(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGolden(t, "tests/crash.sysl", "")
 }
 
 func TestStrings(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/strings_expr.sysl")
 }
 
 func TestTypeAlias(t *testing.T) {
+	t.Parallel()
+
 	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl")
+}
+
+func TestInferExprTypeNonTransform(t *testing.T) {
+	t.Parallel()
+
+	type expectedData struct {
+		exprType     *sysl.Type
+		inferredType *sysl.Type
+		messages     map[string][]msg.Msg
+	}
+
+	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
+	parser := NewParser()
+	expressions := map[string]*sysl.Expr{}
+	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
+	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
+	viewName := "inferExprTypeNonTransform"
+	viewRetType := transform.GetApps()[appName].Views[viewName].GetRetType()
+
+	for _, stmt := range transform.GetApps()[appName].Views[viewName].GetExpr().GetTransform().GetStmt() {
+		expressions[stmt.GetAssign().GetName()] = stmt.GetAssign().GetExpr()
+	}
+
+	cases := map[string]struct {
+		input    *sysl.Expr
+		expected expectedData
+	}{
+		"String": {
+			input: expressions["stringType"],
+			expected: expectedData{
+				exprType: syslutil.TypeString(), inferredType: syslutil.TypeString(), messages: map[string][]msg.Msg{}}},
+		"Int": {
+			input: expressions["intType"],
+			expected: expectedData{
+				exprType: syslutil.TypeInt(), inferredType: syslutil.TypeInt(), messages: map[string][]msg.Msg{}}},
+		"Bool": {
+			input: expressions["boolType"],
+			expected: expectedData{
+				exprType: syslutil.TypeBool(), inferredType: syslutil.TypeBool(), messages: map[string][]msg.Msg{}}},
+		"Valid bool unary result": {
+			input: expressions["unaryResultValidBool"],
+			expected: expectedData{
+				exprType: syslutil.TypeBool(), inferredType: syslutil.TypeBool(), messages: map[string][]msg.Msg{}}},
+		"Valid int unary result": {
+			input: expressions["unaryResultValidInt"],
+			expected: expectedData{
+				exprType: syslutil.TypeInt(), inferredType: syslutil.TypeInt(), messages: map[string][]msg.Msg{}}},
+		"Invalid unary result bool": {
+			input: expressions["unaryResultInvalidBool"],
+			expected: expectedData{
+				exprType: syslutil.TypeBool(), inferredType: syslutil.TypeBool(),
+				messages: map[string][]msg.Msg{viewName: {
+					{MessageID: msg.ErrInvalidUnary, MessageData: []string{viewName, "STRING"}}}}}},
+		"Invalid unary result int": {
+			input: expressions["unaryResultInvalidInt"],
+			expected: expectedData{
+				exprType: syslutil.TypeInt(), inferredType: syslutil.TypeInt(),
+				messages: map[string][]msg.Msg{viewName: {
+					{MessageID: msg.ErrInvalidUnary, MessageData: []string{viewName, "STRING"}}}}}},
+	}
+
+	for name, test := range cases {
+		input := test.input
+		expected := test.expected
+		t.Run(name, func(t *testing.T) {
+			newParser := NewParser()
+			exprType, _, inferredType := newParser.inferExprType(nil, "", input, false, 0,
+				viewName, viewName, viewRetType)
+			assert.Equal(t, expected.exprType, exprType)
+			assert.Equal(t, expected.inferredType, inferredType)
+			assert.Equal(t, expected.messages, newParser.GetMessages())
+		})
+	}
+}
+
+func TestInferExprTypeTransform(t *testing.T) {
+	t.Parallel()
+
+	type expectedData struct {
+		exprType     *sysl.Type
+		inferredType *sysl.Type
+
+		letTypeRef   *sysl.Type
+		letTypeTuple *sysl.Type
+		letTypeScope string
+		messages     map[string][]msg.Msg
+	}
+
+	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
+	parser := NewParser()
+	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
+	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs)
+	views := transform.GetApps()[appName].Views
+
+	cases := map[string]struct {
+		viewName string
+		expected expectedData
+	}{
+		"Transform type assign": {
+			viewName: "inferExprTypeTransformAssign",
+			expected: expectedData{
+				exprType: syslutil.TypeString(),
+				inferredType: &sysl.Type{
+					Type: &sysl.Type_Tuple_{
+						Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"transformTypeAssign": {
+							Type: &sysl.Type_Tuple_{
+								Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"bar": syslutil.TypeString()}}}}}}}},
+				letTypeScope: "inferExprTypeTransformAssign:transformTypeAssign:foo",
+				letTypeRef:   syslutil.TypeString(),
+				letTypeTuple: syslutil.TypeString(),
+				messages:     map[string][]msg.Msg{}}},
+		"Nested transform type assign": {
+			viewName: "inferExprTypeTransformNestedAssign",
+			expected: expectedData{
+				exprType: syslutil.TypeString(),
+				inferredType: &sysl.Type{
+					Type: &sysl.Type_Tuple_{
+						Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"nestedTransformTypeAssignTfm": {
+							Type: &sysl.Type_Tuple_{
+								Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"bar": {
+									Type: &sysl.Type_Tuple_{
+										Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"assign": syslutil.TypeString()}},
+									}}}}}}}}}},
+				letTypeScope: "inferExprTypeTransformNestedAssign:nestedTransformTypeAssignTfm:bar:variable",
+				letTypeRef:   syslutil.TypeInt(),
+				letTypeTuple: syslutil.TypeInt(),
+				messages:     map[string][]msg.Msg{}}},
+		"Nested transform type let": {
+			viewName: "inferExprTypeTransformNestedLet",
+			expected: expectedData{
+				exprType: syslutil.TypeString(),
+				inferredType: &sysl.Type{
+					Type: &sysl.Type_Tuple_{
+						Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"nestedTransformTypeLetTfm": {
+							Type: &sysl.Type_Tuple_{
+								Tuple: &sysl.Type_Tuple{AttrDefs: map[string]*sysl.Type{"foo": syslutil.TypeNone()}}}}}}}},
+				letTypeScope: "inferExprTypeTransformNestedLet:nestedTransformTypeLetTfm:bar:variable",
+				letTypeRef:   syslutil.TypeInt(),
+				letTypeTuple: syslutil.TypeInt(),
+				messages:     map[string][]msg.Msg{}}},
+	}
+
+	for name, test := range cases {
+		viewName := test.viewName
+		expected := test.expected
+		t.Run(name, func(t *testing.T) {
+			newParser := NewParser()
+			_, _, inferredType := newParser.inferExprType(nil, "", views[viewName].GetExpr(), true, 0,
+				viewName, viewName, views[viewName].GetRetType())
+
+			assert.Equal(t, expected.inferredType, inferredType)
+			assert.Equal(t, newParser.GetAssigns()[viewName].Tuple, inferredType)
+			assert.Equal(t, newParser.GetLets()[expected.letTypeScope].Tuple, expected.letTypeTuple)
+			assert.Equal(t, newParser.GetLets()[expected.letTypeScope].RefType, expected.letTypeRef)
+			assert.Equal(t, expected.messages, newParser.GetMessages())
+		})
+	}
 }

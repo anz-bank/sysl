@@ -8,6 +8,8 @@ import (
 )
 
 func TestExit(t *testing.T) {
+	t.Parallel()
+
 	format := "Exiting: %s"
 	param := "Oopsies!"
 	message := fmt.Sprintf(format, param)

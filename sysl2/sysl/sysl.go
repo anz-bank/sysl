@@ -1,99 +1,103 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
+	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
-	log "github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+// Version   - Binary version
+// GitCommit - Commit SHA of the source code
+// BuildDate - Binary build date
+// BuildOS   - Operating System used to build binary
 //nolint:gochecknoglobals
-var defaultLevel = map[string]logrus.Level{
-	"":      logrus.ErrorLevel,
-	"off":   logrus.ErrorLevel,
-	"debug": logrus.DebugLevel,
-	"info":  logrus.InfoLevel,
-	"warn":  logrus.WarnLevel,
+var (
+	Version   = "unspecified"
+	GitCommit = "unspecified"
+	BuildDate = "unspecified"
+	BuildOS   = "unspecified"
+)
+
+const debug string = "debug"
+
+func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
+	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
+	modelParser := parse.NewParser()
+	return parse.LoadAndGetDefaultApp(filename, syslutil.NewChrootFs(fs, root), modelParser)
 }
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
-func main3(args []string) error {
-	flags := flag.NewFlagSet(args[0], flag.PanicOnError)
+func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
+	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
+	syslCmd.Version(Version)
 
-	switch filepath.Base(args[0]) {
-	case "syslgen":
-		return DoGenerateCode(flags, args)
-	case "sd":
-		return DoGenerateSequenceDiagrams(args)
-	case "ints":
-		return DoGenerateIntegrations(args)
-	}
-	root := flags.String("root", ".", "sysl root directory for input files (default: .)")
-	output := flags.String("o", "", "output file name")
-	mode := flags.String("mode", "textpb", "output mode")
-	loglevel := flags.String("log", "warn", "log level[debug,info,warn,off]")
+	(&debugTypeData{}).add(syslCmd)
 
-	//nolint:errcheck
-	flags.Parse(args[1:])
-	if err := flags.Parse(args[1:]); err != nil {
+	runner := cmdRunner{}
+	if err := runner.Configure(syslCmd); err != nil {
 		return err
 	}
 
-	switch *mode {
-	case "", "textpb", "json":
-	default:
-		return fmt.Errorf("invalid -mode %#v", *mode)
-	}
-
-	if level, has := defaultLevel[*loglevel]; has {
-		logrus.SetLevel(level)
-	} else {
-		return fmt.Errorf("invalid -log %#v", *loglevel)
-	}
-
-	filename := flags.Arg(0)
-
-	log.Infof("Args: %v\n", flags.Args())
-	log.Infof("Root: %s\n", *root)
-	log.Infof("Module: %s\n", filename)
-	log.Infof("Mode: %s\n", *mode)
-	log.Infof("Log Level: %s\n", *loglevel)
-	format := strings.ToLower(*output)
-	toJSON := *mode == "json" || *mode == "" && strings.HasSuffix(format, ".json")
-	log.Infof("%s\n", filename)
-	mod, err := parse.Parse(filename, *root)
+	selectedCommand, err := syslCmd.Parse(args[1:])
 	if err != nil {
 		return err
 	}
-	if mod != nil {
-		if toJSON {
-			if *output == "-" {
-				return pbutil.FJSONPB(log.StandardLogger().Out, mod)
-			}
-			return pbutil.JSONPB(mod, *output)
-		}
-		if *output == "-" {
-			return pbutil.FTextPB(log.StandardLogger().Out, mod)
-		}
-		return pbutil.TextPB(mod, *output)
+
+	return runner.Run(selectedCommand, fs, logger)
+}
+
+type debugTypeData struct {
+	loglevel string
+	verbose  bool
+}
+
+//nolint:unparam
+func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
+	if d.verbose {
+		d.loglevel = debug
 	}
+	// Default info
+	if level, has := syslutil.LogLevels[d.loglevel]; has {
+		logrus.SetLevel(level)
+	}
+
+	logrus.Debugf("Logging: %+v", *d)
 	return nil
+}
+func (d *debugTypeData) add(app *kingpin.Application) {
+	var levels []string
+	for l := range syslutil.LogLevels {
+		if l != "" {
+			levels = append(levels, l)
+		}
+	}
+	app.Flag("log", fmt.Sprintf("log level: [%s]", strings.Join(levels, ","))).
+		HintOptions(levels...).
+		Default("warn").
+		StringVar(&d.loglevel)
+	app.Flag("verbose", "enable verbose logging").Short('v').BoolVar(&d.verbose)
+	app.PreAction(d.do)
 }
 
 // main2 calls main3 and handles any errors it returns. It takes its output
 // streams and command-line arguments and even main3 as parameters to support
 // testability.
-func main2(args []string, main3 func(args []string) error,
+func main2(
+	args []string,
+	fs afero.Fs,
+	logger *logrus.Logger,
+	main3 func(args []string, fs afero.Fs, logger *logrus.Logger) error,
 ) int {
-	if err := main3(args); err != nil {
-		log.Errorln(err.Error())
+	if err := main3(args, fs, logger); err != nil {
+		logger.Errorln(err.Error())
 		if err, ok := err.(parse.Exit); ok {
 			return err.Code
 		}
@@ -104,7 +108,7 @@ func main2(args []string, main3 func(args []string) error,
 
 // main is as small as possible to minimise its no-coverage footprint.
 func main() {
-	if rc := main2(os.Args, main3); rc != 0 {
+	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), main3); rc != 0 {
 		os.Exit(rc)
 	}
 }

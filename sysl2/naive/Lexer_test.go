@@ -7,6 +7,8 @@ import (
 )
 
 func TestLexer(t *testing.T) {
+	t.Parallel()
+
 	content := `keywords:
         while | return |
         if | else | import`

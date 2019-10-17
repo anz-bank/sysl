@@ -5,7 +5,9 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/golang/protobuf/jsonpb"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -41,6 +43,8 @@ func (suite *elementSuite) TestElementAccept() {
 }
 
 func TestElementSuite(t *testing.T) {
+	t.Parallel()
+
 	suite.Run(t, &elementSuite{e: &EndpointCollectionElement{}})
 	suite.Run(t, &elementSuite{e: &EndpointElement{}})
 	suite.Run(t, &elementSuite{e: &StatementElement{}})
@@ -57,6 +61,8 @@ func (m *mockVarManager) UniqueVarForAppName(appName string) string {
 }
 
 func TestMakeEntry(t *testing.T) {
+	t.Parallel()
+
 	entry := makeEntry("a <- b [upto b <- c]")
 
 	assert.NotNil(t, entry)
@@ -66,6 +72,8 @@ func TestMakeEntry(t *testing.T) {
 }
 
 func TestMakeEndpointCollectionElement(t *testing.T) {
+	t.Parallel()
+
 	e := MakeEndpointCollectionElement("title",
 		[]string{"a <- b [upto b <- c]"},
 		map[string]*Upto{"": {Comment: ""},
@@ -76,6 +84,8 @@ func TestMakeEndpointCollectionElement(t *testing.T) {
 }
 
 func TestEndpointElementSender(t *testing.T) {
+	t.Parallel()
+
 	m := new(mockVarManager)
 	e := &EndpointElement{}
 	m.On("UniqueVarForAppName", mock.Anything).Return("a")
@@ -87,6 +97,8 @@ func TestEndpointElementSender(t *testing.T) {
 }
 
 func TestEndpointElementSenderWith(t *testing.T) {
+	t.Parallel()
+
 	m := new(mockVarManager)
 	e := &EndpointElement{
 		fromApp: &sysl.AppName{
@@ -102,6 +114,8 @@ func TestEndpointElementSenderWith(t *testing.T) {
 }
 
 func TestEndpointElementAgent(t *testing.T) {
+	t.Parallel()
+
 	m := new(mockVarManager)
 	e := &EndpointElement{
 		appName: "test",
@@ -115,6 +129,8 @@ func TestEndpointElementAgent(t *testing.T) {
 }
 
 func TestEndpointElementApplication(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"test": {},
@@ -130,6 +146,8 @@ func TestEndpointElementApplication(t *testing.T) {
 }
 
 func TestEndpointElementApplicationPanic(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Module{}
 	e := &EndpointElement{
 		appName: "test",
@@ -139,6 +157,8 @@ func TestEndpointElementApplicationPanic(t *testing.T) {
 }
 
 func TestEndpointElementEndpoint(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Application{
 		Endpoints: map[string]*sysl.Endpoint{
 			"test": {},
@@ -154,6 +174,8 @@ func TestEndpointElementEndpoint(t *testing.T) {
 }
 
 func TestEndpointElementEndpointPanic(t *testing.T) {
+	t.Parallel()
+
 	m := &sysl.Application{}
 	e := &EndpointElement{
 		endpointName: "test",
@@ -173,6 +195,8 @@ func (m *mockEndpointLabeler) LabelEndpoint(p *EndpointLabelerParam) string {
 }
 
 func TestEndpointElementEndpointLabel(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	l := new(mockEndpointLabeler)
 	m := &sysl.Module{}
@@ -181,13 +205,15 @@ func TestEndpointElementEndpointLabel(t *testing.T) {
 	}
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet(), false, false, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, syslutil.MakeStrSet(), false, false, false)
 
 	// Then
 	assert.Equal(t, " ⬄ b", actual)
 }
 
 func TestEndpointElementEndpointLabelWithValidStmt(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	l := new(mockEndpointLabeler)
 	m := &sysl.Module{}
@@ -198,12 +224,12 @@ func TestEndpointElementEndpointLabelWithValidStmt(t *testing.T) {
 				Call: &sysl.Call{},
 			},
 		},
-		senderEndpointPatterns: MakeStrSet(),
+		senderEndpointPatterns: syslutil.MakeStrSet(),
 	}
 	l.On("LabelEndpoint", mock.Anything).Return("test")
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet("a"), false, true, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, syslutil.MakeStrSet("a"), false, true, false)
 
 	// Then
 	l.AssertNumberOfCalls(t, "LabelEndpoint", 1)
@@ -211,6 +237,8 @@ func TestEndpointElementEndpointLabelWithValidStmt(t *testing.T) {
 }
 
 func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T) {
+	t.Parallel()
+
 	// Given
 	l := new(mockEndpointLabeler)
 	m := &sysl.Module{}
@@ -221,12 +249,12 @@ func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T)
 				Call: &sysl.Call{},
 			},
 		},
-		senderEndpointPatterns: MakeStrSet(),
+		senderEndpointPatterns: syslutil.MakeStrSet(),
 	}
 	l.On("LabelEndpoint", mock.Anything).Return("test")
 
 	// When
-	actual := e.label(l, m, &sysl.Endpoint{}, MakeStrSet(), false, true, false)
+	actual := e.label(l, m, &sysl.Endpoint{}, syslutil.MakeStrSet(), false, true, false)
 
 	// Then
 	l.AssertNumberOfCalls(t, "LabelEndpoint", 1)
@@ -234,27 +262,24 @@ func TestEndpointElementEndpointLabelWithValidStmtAndEmptyPatterns(t *testing.T)
 }
 
 func TestStatementElementIsLastStmt(t *testing.T) {
-	// Given
+	t.Parallel()
+
 	e := &StatementElement{
 		isLastParentStmt: true,
 		stmts:            []*sysl.Statement{{}},
 	}
-
-	// When
-	actual := e.isLastStmt(0)
-
-	// Then
-	assert.True(t, actual)
+	assert.True(t, e.isLastStmt(0))
 }
 
 func readModule(p string) (*sysl.Module, error) {
 	m := &sysl.Module{}
-	f, _ := os.Open(p)
-
+	f, err := os.Open(p)
+	if err != nil {
+		return nil, err
+	}
 	if err := jsonpb.Unmarshal(f, m); err != nil {
 		return nil, err
 	}
-
 	return m, nil
 }
 
@@ -269,12 +294,14 @@ func (l *labeler) LabelEndpoint(p *EndpointLabelerParam) string {
 }
 
 func TestSequenceDiagramVisitorVisit(t *testing.T) {
-	// Given
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname", "")
+	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname", "", logger)
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{
 		"Frontend <- Profile": {
 			ValueType:  BBEndpointCollection,
@@ -293,10 +320,8 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 		},
 	})
 
-	// When
 	require.NoError(t, e.Accept(v))
 
-	// Then
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
 ''  AUTOGENERATED CODE -- DO NOT EDIT!  ''
@@ -329,19 +354,19 @@ deactivate _0
 }
 
 func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
-	// Given
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_name_format.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(al, el, w, m, "appname", "")
+	v := MakeSequenceDiagramVisitor(al, el, w, m, "appname", "", logger)
 	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, map[string]*Upto{})
 
-	// When
 	require.NoError(t, e.Accept(v))
 
-	// Then
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
 ''  AUTOGENERATED CODE -- DO NOT EDIT!  ''
@@ -380,11 +405,14 @@ title Diagram
 }
 
 func TestVisitStatement(t *testing.T) {
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule("./tests/sequence_diagram_project.golden.json")
 	require.NoError(t, err)
-	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname", "")
+	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname", "", logger)
 	stmt := []*sysl.Statement{
 		{Stmt: &sysl.Statement_Loop{Loop: &sysl.Loop{Stmt: []*sysl.Statement{}}}},
 		{Stmt: &sysl.Statement_LoopN{LoopN: &sysl.LoopN{Stmt: []*sysl.Statement{}}}},

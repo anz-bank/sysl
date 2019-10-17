@@ -57,6 +57,8 @@ func (r *dummyRecognizer) GetATN() *antlr.ATN {
 }
 
 func TestSyslParserErrorListenerSyntaxError(t *testing.T) {
+	t.Parallel()
+
 	listener := &SyslParserErrorListener{}
 	recognizer := &dummyRecognizer{antlr.NewBaseRecognizer()}
 	recognizer.SymbolicNames = []string{"some_token", "some_other_token"}
@@ -71,6 +73,8 @@ func TestSyslParserErrorListenerSyntaxError(t *testing.T) {
 }
 
 func TestSyslParserErrorListenerReportAttemptingFullContext(t *testing.T) {
+	t.Parallel()
+
 	listener := &SyslParserErrorListener{}
 	assertNoLog(t, func() {
 		listener.ReportAttemptingFullContext(nil, nil, 42, 43, nil, nil)
@@ -81,6 +85,8 @@ func TestSyslParserErrorListenerReportAttemptingFullContext(t *testing.T) {
 }
 
 func TestSyslParserErrorListenerReportAmbiguity(t *testing.T) {
+	t.Parallel()
+
 	listener := &SyslParserErrorListener{}
 	assertNoLog(t, func() {
 		listener.ReportAmbiguity(nil, nil, 42, 43, false, nil, nil)
@@ -91,6 +97,8 @@ func TestSyslParserErrorListenerReportAmbiguity(t *testing.T) {
 }
 
 func TestSyslParserErrorListenerReportContextSensitivity(t *testing.T) {
+	t.Parallel()
+
 	listener := &SyslParserErrorListener{}
 	assertNoLog(t, func() {
 		listener.ReportContextSensitivity(nil, nil, 42, 43, 0, nil)

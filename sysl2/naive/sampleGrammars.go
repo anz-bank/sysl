@@ -200,7 +200,6 @@ func makeEBNF() *sysl.Grammar {
 				},
 			},
 		}}
-
 }
 
 // E  -> T E'
@@ -274,7 +273,6 @@ func makeEXPR() *sysl.Grammar {
 			},
 		},
 	}
-
 }
 
 // obj
@@ -314,7 +312,6 @@ func makeRepeatSeq(quantifier *sysl.Quantifier) *sysl.Grammar {
 			},
 		},
 	}
-
 }
 
 // json
@@ -435,7 +432,6 @@ func makeJSON(quantifier *sysl.Quantifier) *sysl.Grammar {
 			},
 		},
 	}
-
 }
 
 func makeG2() *sysl.Grammar {

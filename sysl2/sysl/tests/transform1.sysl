@@ -1,0 +1,327 @@
+CodeGenTransform:
+  !view EntryPoint(app <: sysl.App) -> EntryPoint:
+    app -> (:
+      let abc = ""
+    )
+
+  !view EntryPointInvalid(app <: sysl.App) -> string:
+    app -> (:
+      let abc = ""
+    )
+
+  !view TfmDefaultEmpty(app <: sysl.App) -> goFile:
+    app -> (:
+      let abc = ""
+    )
+
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename =  "servicehandler.go"
+    )
+
+  !view TfmFilenameInvalid1(app <: sysl.App) -> int:
+    app -> (:
+      filename =  "servicehandler.go"
+    )
+
+  !view TfmFilenameInvalid2(app <: sysl.App) -> string:
+    app -> (:
+      foo =  "servicehandler.go"
+    )
+
+  !view TfmFilenameInvalid3(app <: sysl.App) -> string:
+    app -> (:
+      filename =  "servicehandler.go"
+      foo =  ""
+    )
+
+  !view TfmValid(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  input -> <Receiver> (:
+        ReceiverType = ""
+      )
+      FunctionName =  ""
+      Signature =  ""
+      Block =  ""
+    )
+
+  !view TfmInvalid(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      Signature =  ""
+      Block =  ""
+    )
+
+  !view TfmNoOptional(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      FunctionName =  ""
+    )
+
+  !view TfmExcessAttrs1(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      FunctionName =  ""
+      ExcessAttr1 =  ""
+    )
+
+  !view TfmExcessAttrs2(input <: string) -> MethodDecl:
+    input -> (:
+      Receiver =  ""
+      FunctionName =  ""
+      Signature =  ""
+      Block =  ""
+      ExcessAttr1 =  ""
+    )
+
+  !view ValidChoice(input <: string) -> Statement:
+    input -> (:
+      VarDecl = input -> <VarDecl> (:
+        identifier = input
+        TypeName = typeName
+      )
+    )
+
+  !view InvalidChoice(input <: string) -> Statement:
+    input -> (:
+      Foo = input -> <Foo> (:
+        let f = "b"
+      )
+
+      let Bar = ""
+    )
+
+  !view Relational(input <: string) -> RelationalType:
+    input -> (:
+      Foo = input -> <Foo> (:
+        let f = "b"
+      )
+    )
+
+  !view InnerRelational(input <: string) -> MethodSpec:
+    input -> (:
+      let foo = input -> <RelationalType> (:
+        bar = input -> <RelationalType> (:
+          bar = ""
+        )
+      )
+
+      MethodName = ""
+      Signature = ""
+    )
+
+  !view TransformVarValid(input <: string) -> Statement:
+    input -> (:
+      let varDeclaration = input -> <VarDecl> (:
+        identifier = ""
+        TypeName = ""
+      )
+
+      VarDecl = varDeclaration
+    )
+
+  !view TransformVarRedefined(input <: string) -> Statement:
+    input -> (:
+      let varDeclaration = input -> <VarDecl> (:
+        identifier = ""
+        TypeName = ""
+      )
+      let varDeclaration = input -> <VarDecl> (:
+        identifier = ""
+        TypeName = ""
+      )
+
+      VarDecl = varDeclaration
+    )
+
+  !view TransformInnerVarRedefined(input <: string) -> Statement:
+    input -> (:
+      let varDeclaration = input -> <VarDecl> (:
+        identifier = ""
+        TypeName = ""
+        let foo = ""
+        let foo = ""
+      )
+
+      VarDecl = varDeclaration
+    )
+
+  !view TransformAssignRedefined(input <: string) -> Statement:
+    input -> (:
+      VarDecl = varDeclaration
+      VarDecl = varDeclaration
+    )
+
+  !view TransformInnerAssignRedefined(input <: string) -> Statement:
+    input -> (:
+      VarDecl = input -> <VarDecl> (:
+        identifier = ""
+        TypeName = ""
+        TypeName = ""
+      )
+    )
+
+  !view TransformVarInvalid(input <: string) -> Statement:
+    input -> (:
+      let varDeclaration = input -> <VarDecl> (:
+        foo = ""
+        TypeName = ""
+      )
+
+      VarDecl = varDeclaration
+    )
+
+  !view ValidChoiceCombination(input <: string) -> MethodSpec:
+    input -> (:
+      MethodName = ""
+      Signature = ""
+    )
+
+
+  !view ValidChoiceNonCombination(input <: string) -> MethodSpec:
+    input -> (:
+      InterfaceTypeName = ""
+    )
+
+  !view InvalidChoiceCombinationExcess(input <: string) -> MethodSpec:
+    input -> (:
+      MethodName = ""
+      Signature = ""
+      Foo = ""
+    )
+
+  !view InvalidChoiceCombiMissing(input <: string) -> MethodSpec:
+    input -> (:
+      MethodName = ""
+      Foo = ""
+    )
+
+  !view InvalidChoiceNonCombination(input <: string) -> MethodSpec:
+    input -> (:
+      Interface = ""
+    )
+
+  !view inferExprTypeNonTransform(input <: string) -> MethodDecl:
+    input -> (:
+      stringType =  ""
+      intType =  5
+      boolType =  true
+      decimalType =  5.5
+      unaryResultValidBool = !true
+      unaryResultValidInt = -5
+      unaryResultInvalidBool = !"Foo"
+      unaryResultInvalidInt = +"Foo"
+    )
+
+  !view inferExprTypeTransformAssign(input <: string) -> MethodDecl:
+    input -> (:
+      transformTypeAssign = input -> <string> (:
+        let foo = "foo"
+        bar = "bar"
+      )
+    )
+
+  !view inferExprTypeTransformNestedAssign(input <: string) -> MethodDecl:
+    input -> (:
+      nestedTransformTypeAssignTfm = input -> <string> (:
+        bar = input -> <Expression> (:
+          let variable = 5
+          assign = ""
+        )
+      )
+    )
+
+  !view inferExprTypeTransformNestedLet(input <: string) -> MethodDecl:
+    input -> (:
+      nestedTransformTypeLetTfm = input -> <string> (:
+        let bar = input -> <Expression> (:
+          let variable = 5
+          assign = ""
+        )
+        foo = bar
+      )
+    )
+
+  !view ValidInnerAttrs(input <: string) -> goFile:
+    input -> (:
+      PackageClause = input -> <PackageClause> (:
+        PackageName = ""
+      )
+      ImportDecl = ""
+      Comment = ""
+      TopLevelDecl = ""
+    )
+
+  !view InvalidInnerAttrs(input <: string) -> goFile:
+    input -> (:
+      PackageClause = input -> <PackageClause> (:
+        Foo = ""
+      )
+      ImportDecl = ""
+      Comment = ""
+      TopLevelDecl = ""
+    )
+
+  !view validViewReturnSingleObj(input <: string) -> VarDecl:
+    input -> (:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view validViewReturnSequence(inputs <: sequence of string) -> sequence of VarDecl:
+    inputs -> (input:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view validViewReturnSet(inputs <: set of string) -> set of VarDecl:
+    inputs -> (input:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view invalidViewReturnSingleObj(inputs <: sequence of string) -> VarDecl:
+    inputs -> (input:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view invalidViewReturnSequence(inputs <: sequence of string) -> sequence of VarDecl:
+    inputs -> (:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view invalidViewReturnSet(inputs <: set of string) -> set of VarDecl:
+    inputs -> (:
+      identifier = input
+      TypeName = "typeName"
+    )
+
+  !view validInnerTfmReturnSingleObj(input <: string) -> StatementList:
+    input -> (:
+      Statement = input -> <Statement>(:
+        identifier = input
+      )
+    )
+
+  !view validInnerTfmReturnCollection(inputs <: sequence of string) -> StatementList:
+    inputs -> (:
+      Statement = inputs -> <sequence of Statement>(input:
+        identifier = input
+      )
+    )
+
+  !view InvalidInnerTfmReturnSingleObj(inputs <: sequence of string) -> StatementList:
+    inputs -> (:
+      Statement = inputs -> <Statement>(input:
+        identifier = input
+      )
+    )
+
+  !view InvalidInnerTfmReturnCollection(input <: string) -> StatementList:
+    input -> (:
+      Statement = input -> <sequence of Statement>(:
+        identifier = input
+      )
+    )

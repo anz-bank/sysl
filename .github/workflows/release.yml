@@ -1,0 +1,105 @@
+name: Release
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+
+  release-sysl:
+    name: Release Sysl
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.12
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.12
+      id: go
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up python 2.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: '2.7'
+        architecture: 'x64'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check out code
+      uses: actions/checkout@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+        pip install wheel
+        pip install flake8==3.5.0
+        pip install . pytest
+        pip install codecov -e .
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test and Build
+      run: |
+        GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
+        ./scripts/check-coverage.sh 80
+        ./scripts/test-pysysl.sh
+        gradle test -b test/java/build.gradle
+        python setup.py sdist bdist_wheel
+        gradle build -b src/libs/java/build.gradle :jar
+        ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-darwin  darwin  amd64
+        ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-linux   linux   amd64
+        ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-windows windows amd64
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
+    - name: Build docker images
+      run: |
+        GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
+        docker build -t "$DOCKER_IMAGE_LATEST" -f Dockerfile .
+        docker build -t "$DOCKER_IMAGE_SYSL2_LATEST" -f Dockerfile-sysl2-ubuntu .
+        DOCKER_IMAGE_VERSIONED="${DOCKER_IMAGE_LATEST}:${GIT_TAG:1}"
+        docker tag "$DOCKER_IMAGE_LATEST" "$DOCKER_IMAGE_VERSIONED"
+        DOCKER_IMAGE_SYSL2_VERSIONED="${DOCKER_IMAGE_SYSL2_LATEST}:${GIT_TAG:1}-ubuntu18.04"
+        docker tag "$DOCKER_IMAGE_SYSL2_LATEST" "$DOCKER_IMAGE_SYSL2_VERSIONED"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DOCKER_IMAGE_LATEST: "anzbank/sysl"
+        DOCKER_IMAGE_SYSL2_LATEST: "anzbank/sysl2"
+
+    - name: Publish images, sysl lib, and sysl_js
+      run: |
+        GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
+        DOCKER_IMAGE_VERSIONED="${DOCKER_IMAGE_LATEST}:${GIT_TAG:1}"
+        DOCKER_IMAGE_SYSL2_VERSIONED="${DOCKER_IMAGE_SYSL2_LATEST}:${GIT_TAG:1}-ubuntu18.04"
+        echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+        docker push "$DOCKER_IMAGE_VERSIONED"
+        docker push "$DOCKER_IMAGE_LATEST"
+        docker push "$DOCKER_IMAGE_SYSL2_VERSIONED"
+        docker push "$DOCKER_IMAGE_SYSL2_LATEST"
+        gradle -b src/libs/java/build.gradle bintrayUpload
+        cd sysl2/sysl/sysl_js && NPM_AUTH_TOKEN=$NPM_PUBLISH_TOKEN npm publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DOCKER_IMAGE_LATEST: "anzbank/sysl"
+        DOCKER_IMAGE_SYSL2_LATEST: "anzbank/sysl2"
+        NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+        BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
+
+    - name: Publish python package
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: __token__
+        password: ${{ secrets.PIPY_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload binaries to release
+      run: |
+        ./scripts/upload-artifacts.sh gosysl/* dist/* src/libs/java/build/libs/sysl-lib-*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -4,18 +4,8 @@ tokens { INDENT, DEDENT}
 
 @lexer::members {
 
-var spaces int
-var linenum int
-var in_sq_brackets int
-var parens int
-
-var gotNewLine bool
-var gotHttpVerb bool
-var gotView bool
-var prevTokenIndex = -1
-
 func (l *SyslLexer) NextToken() antlr.Token {
-    return GetNextToken(l)
+    return getNextToken(l)
 }
 
 }
@@ -49,11 +39,11 @@ fragment Z : [zZ];
 
 NativeDataTypes     :
                     ( (I N T '3' '2') | (I N T '6' '4') | (I N T) | (F L O A T) | ( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L) | (A N Y))
-                    { in_sq_brackets == 0 }?
+                    { ls(p).inSqBrackets == 0 }?
                     ;
 
 HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' ) [ \t]*
-                    { gotHttpVerb = true; }
+                    { ls(l).gotHTTPVerb = true }
                     ;
 
 WRAP                : '!wrap';
@@ -61,7 +51,7 @@ TABLE               : '!table';
 TYPE                : '!type';
 ALIAS               : '!alias';
 UNION               : '!union';
-VIEW                : '!view' { gotView = true;};
+VIEW                : '!view' { ls(l).gotView = true;};
 
 fragment
 IMPORT_KEY: 'import';
@@ -70,7 +60,13 @@ fragment
 SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
 IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE
-                     { gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
+                    {
+                        ls := ls(l)
+                        ls.gotNewLine = true
+                        ls.spaces = 0
+                        ls.gotHTTPVerb=false
+                        ls.linenum++
+                    }
                     ;
 
 RETURN              : ( R E T U R N )           -> pushMode(NOT_NEWLINE); //revisit this?
@@ -97,23 +93,23 @@ ARROW_RIGHT         : [ \t]* '->' [ \t]* ;
 COLLECTOR           : '.. * <- *';
 PLUS                : '+';
 ABSTRACT            :
-                    { gotView}?
+                    { ls(p).gotView}?
                     '[~abstract]'
-                    { gotView = false;}
+                    { ls(l).gotView = false;}
                     ;
 TILDE               : '~';
 COMMA               : ',';
 EQ                  : '=';
 FORWARD_SLASH       : '/'
-                    { gotHttpVerb = true; }
+                    { ls(l).gotHTTPVerb = true; }
                     ;
 COLON               : ':';
 DOT                 : '.';
 QN                  : '?';
 AT                  : '@'       -> pushMode(AT_VAR_DECL);
-AMP                 : '&' { gotHttpVerb }? ;
-SQ_OPEN             : '['   { in_sq_brackets++;};
-SQ_CLOSE            : ']'   { in_sq_brackets--;};
+AMP                 : '&' { ls(p).gotHTTPVerb }? ;
+SQ_OPEN             : '['   { ls(l).inSqBrackets++;};
+SQ_CLOSE            : ']'   { ls(l).inSqBrackets--;};
 CURLY_OPEN          : '{';
 CURLY_CLOSE         : '}';
 OPEN_PAREN          : '(';
@@ -121,19 +117,37 @@ CLOSE_PAREN         : ')';
 // OPEN_ANGLE          : '<';
 // CLOSE_ANGLE         : '>';
 EMPTY_COMMENT       : ('#' '\r'? '\n')
-                    { gotNewLine = true; spaces=0; gotHttpVerb=false;linenum++;}
+                    {
+                        ls := ls(l)
+                        ls.gotNewLine = true
+                        ls.spaces = 0
+                        ls.gotHTTPVerb=false
+                        ls.linenum++;
+                    }
                     -> channel(HIDDEN)
                     ;
 HASH                : '#'       -> pushMode(NOT_NEWLINE);
 PIPE                : '|'       -> pushMode(NOT_NEWLINE);
 
 EMPTY_LINE          : ([ \t]+ ( [\r\n] | EOF ))
-                    { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++;}
+                    {
+                        ls := ls(l)
+                        ls.gotNewLine = true
+                        ls.spaces = 0
+                        ls.gotHTTPVerb = false
+                        ls.linenum++
+                    }
                     -> channel(HIDDEN)
                     ;
 // added '#' to skip comments that start with an indent
 INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
-                    { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++; }
+                    {
+                        ls := ls(l)
+                        ls.gotNewLine = true
+                        ls.spaces = 0
+                        ls.gotHTTPVerb = false
+                        ls.linenum++
+                    }
                     -> channel(HIDDEN)
                     ;
 DIGITS              : [0-9][0-9]*;
@@ -146,8 +160,14 @@ SINGLE_QUOTE_STRING: ['] (~['])* ['];
 QSTRING     : DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING;
 
 NEWLINE     : '\r'? '\n'
-            {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
-            { if (gotView) { l.PushMode(SyslLexerVIEW_TRANSFORM);}}
+            {
+                ls := ls(l)
+                ls.gotNewLine = true
+                ls.gotHTTPVerb=false
+                ls.spaces = 0
+                ls.linenum++
+            }
+            { if (ls(l).gotView) { l.PushMode(SyslLexerVIEW_TRANSFORM);}}
             -> channel(HIDDEN)
             ;
 
@@ -171,8 +191,8 @@ IN_ANGLE        : '<' PRINTABLE '>';
 
 TEXT_LINE       :
                 PRINTABLE ([ \-]+ (PRINTABLE | IN_ANGLE))+
-                { in_sq_brackets == 0 }?
-                { startsWithKeyword(p.GetText()) == false}?
+                { ls(p).inSqBrackets == 0 }?
+                { !startsWithKeyword(p.GetText()) }?
                 ;
 
 Name            : [a-zA-Z_][-a-zA-Z0-9_]*;
@@ -184,7 +204,7 @@ Name            : [a-zA-Z_][-a-zA-Z0-9_]*;
 //                 ;
 
 WS              : [ \t]+
-                { spaces =  calcSpaces(l.GetText());}
+                { ls(l).spaces =  calcSpaces(l.GetText());}
                 -> channel(HIDDEN)
                 ;
 
@@ -204,12 +224,18 @@ TVALUE          : (~[()\][\r\n'"])+
 
 TEXT_VALUE      : TVALUE
                 { l.SetType(SyslLexerName)}
-                { l.SetText(TrimText(l))}
+                { l.SetText(trimText(l))}
                 -> popMode
                 ;
 
 NEWLINE_2           : '\r'? '\n'
-                    {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
+                    {
+                        ls := ls(l)
+                        ls.gotNewLine = true
+                        ls.gotHTTPVerb=false
+                        ls.spaces = 0
+                        ls.linenum++
+                    }
                     -> channel(HIDDEN), popMode
                     ;
 
@@ -228,7 +254,13 @@ E_NativeDataTypes     :
                     ;
 
 E_INDENTED_COMMENT    : ([ \t]+ '#' ~[\n]* ('\n' | EOF))
-                    { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++; }
+                    {
+                        ls := ls(l)
+                        ls.gotNewLine = true
+                        ls.spaces = 0
+                        ls.gotHTTPVerb=false
+                        ls.linenum++
+                    }
                     -> channel(HIDDEN)
                     ;
 E_WHATEVER      : '...';
@@ -248,8 +280,8 @@ E_TABLE_OF      : 'table' [ \t]+ 'of';
 E_POW           : '**';
 E_COALESCE      : [ \t]* '??' [ \t]*;
 E_COLON         : ':';
-E_OPEN_PAREN    : '(' { parens++;};
-E_CLOSE_PAREN   : ')' { parens--;};
+E_OPEN_PAREN    : '(' { ls(l).parens++;};
+E_CLOSE_PAREN   : ')' { ls(l).parens--;};
 E_COMMA         : ',';
 E_EQ            : '=';
 E_PLUS          : '+';
@@ -305,9 +337,14 @@ fragment
 NAME            : [a-zA-Z_][a-zA-Z0-9_-]*;
 
 E_DOT_NAME_NL    :
-                { spaces > 1 }?
+                { ls(p).spaces > 1 }?
                 NAME? '.' NAME [ \t]* '\r'? '\n'
-                { gotNewLine = true; gotHttpVerb=false; linenum++;}
+                {
+                    ls := ls(l)
+                    ls.gotNewLine = true
+                    ls.gotHTTPVerb = false
+                    ls.linenum++
+                }
                 ;
 // does not work for
 //  'input.table of....'
@@ -318,18 +355,36 @@ E_Name          : NAME;
 // want a greedy
 E_DOT           : '.';
 E_WS            : [ \t]+
-                { spaces =  calcSpaces(l.GetText());}
+                { ls(l).spaces = calcSpaces(l.GetText());}
                 -> channel(HIDDEN)
                 ;
 
 E_EMPTY_LINE    :
-                {gotNewLine}?
+                {ls(p).gotNewLine}?
                 [ \t]* (( '\r'? '\n') | EOF )
-                { gotNewLine = true; spaces=0; gotHttpVerb=false; linenum++;}
+                {
+                    ls := ls(l)
+                    ls.gotNewLine = true
+                    ls.spaces = 0
+                    ls.gotHTTPVerb=false
+                    ls.linenum++
+                }
                 -> channel(HIDDEN)
                 ;
 
 E_NL  : '\r'? '\n'
-      {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
-      {if (parens==0) { gotView=false; l.PopMode();} }
+      {
+          ls := ls(l)
+          ls.gotNewLine = true
+          ls.gotHTTPVerb=false
+          ls.spaces = 0
+          ls.linenum++
+      }
+      {
+          ls := ls(l)
+          if (ls.parens==0) {
+              ls.gotView=false
+              l.PopMode()
+          }
+      }
       ;

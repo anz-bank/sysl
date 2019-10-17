@@ -7,33 +7,44 @@ import (
 	"os"
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/dkumor/revhttpfs"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestFileExists(t *testing.T) {
+	t.Parallel()
+
 	// I think, therefore I am.
-	assert.True(t, fileExists("fs_test.go", http.Dir(".")))
+	assert.True(t, fileExists("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
 }
 
 func TestFileExistsBadFile(t *testing.T) {
-	assert.False(t, fileExists("x", http.Dir("/non-existent.dir")))
-	assert.False(t, fileExists("non-existent.file", http.Dir(".")))
-	assert.False(t, fileExists("non-existent.file", http.Dir(".")))
+	t.Parallel()
+
+	assert.False(t, fileExists("x", syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir")))
+	assert.False(t, fileExists("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
+	assert.False(t, fileExists("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
 }
 
 func TestNewFSFileStream(t *testing.T) {
-	fs, err := newFSFileStream("fs_test.go", http.Dir("."))
+	t.Parallel()
+
+	fs, err := newFSFileStream("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), "."))
 	if assert.NoError(t, err) {
 		assert.Equal(t, "package parse\n", fs.GetText(0, 13))
 	}
 }
 
 func TestNewFSFileStreamNotFound(t *testing.T) {
-	_, err := newFSFileStream("x", http.Dir("/non-existent.dir"))
+	t.Parallel()
+
+	_, err := newFSFileStream("x", syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir"))
 	assert.Error(t, err)
-	_, err = newFSFileStream("non-existent.file", http.Dir("."))
+	_, err = newFSFileStream("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), "."))
 	assert.Error(t, err)
 }
 
@@ -86,6 +97,8 @@ func (ffs flappyFileSystem) Open(name string) (http.File, error) {
 }
 
 func TestFlappyFileSystem(t *testing.T) {
+	t.Parallel()
+
 	f, err := flappyFileSystem{[]byte("package ma"), false}.Open("won't.go")
 	assert.NoError(t, err)
 
@@ -101,7 +114,7 @@ func TestFlappyFileSystem(t *testing.T) {
 	var p [7]byte
 	n, err := f.Read(p[:])
 	if assert.NoError(t, err) {
-		assert.Equal(t, len(p), n)
+		assert.Len(t, p, n)
 		assert.Equal(t, "package", string(p[:]))
 	}
 
@@ -115,16 +128,19 @@ func TestFlappyFileSystem(t *testing.T) {
 	var q [20]byte
 	n, err = f.Read(q[:])
 	if assert.Equal(t, io.EOF, err) {
-		assert.Equal(t, len(content), n)
-		assert.Equal(t, content, string(q[:len(content)]))
+		if assert.Len(t, content, n) {
+			assert.Equal(t, content, string(q[:n]))
+		}
 	}
 }
 
 func TestNewFSFileStreamReadFailure(t *testing.T) {
-	fs, err := newFSFileStream("will.go", flappyFileSystem{[]byte("package main\n"), true})
+	t.Parallel()
+
+	fs, err := newFSFileStream("will.go", revhttpfs.NewReverseHttpFs(flappyFileSystem{[]byte("package main\n"), true}))
 	require.NoError(t, err)
 	assert.Equal(t, "package main\n", fs.GetText(0, 12))
 
-	_, err = newFSFileStream("won't.go", flappyFileSystem{[]byte("package ma"), false})
+	_, err = newFSFileStream("won't.go", revhttpfs.NewReverseHttpFs(flappyFileSystem{[]byte("package ma"), false}))
 	assert.Error(t, err)
 }

@@ -2,7 +2,6 @@ package parse
 
 import (
 	"fmt"
-	"net/http"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -10,24 +9,27 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
+	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
-// Parse parses a Sysl file under a specified root.
-func Parse(filename string, root string) (*sysl.Module, error) {
-	if root == "" {
-		root = "."
-	}
-	if !dirExists(root) {
-		return nil, Exitf(ImportError, "root directory does not exist")
-	}
-	root, _ = filepath.Abs(root)
-	return FSParse(filename, http.Dir(root))
+// TypeData contains referenced type and actual tuple of referenced type
+type TypeData struct {
+	RefType *sysl.Type
+	Tuple   *sysl.Type
 }
 
-// FSParse ...
-func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
+// Parser holds assign types and let(variable) definitions in hierarchical order, and messages generated while parsing
+type Parser struct {
+	AssignTypes map[string]TypeData
+	LetTypes    map[string]TypeData
+	Messages    map[string][]msg.Msg
+}
+
+func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	if !strings.HasSuffix(filename, ".sysl") {
 		filename += ".sysl"
 	}
@@ -47,6 +49,7 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 		listener.filename = filename
 		listener.base = filepath.Dir(filename)
 		lexer := parser.NewSyslLexer(input)
+		defer parser.DeleteLexerState(lexer)
 		stream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewSyslParser(stream)
 		p.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
@@ -77,7 +80,7 @@ func FSParse(filename string, fs http.FileSystem) (*sysl.Module, error) {
 		}
 	}
 
-	postProcess(listener.module)
+	p.postProcess(listener.module)
 	return listener.module, nil
 }
 
@@ -233,105 +236,192 @@ func checkEndpointCalls(mod *sysl.Module) bool {
 	return valid
 }
 
+func inferAnonymousType(mod *sysl.Module, appName string, anonCount int, t *sysl.Expr_Transform_, expr *sysl.Expr) int {
+	// logrus.Printf("found anonymous type\n")
+	newType := &sysl.Type{
+		Type: &sysl.Type_Tuple_{
+			Tuple: &sysl.Type_Tuple{
+				AttrDefs: map[string]*sysl.Type{},
+			},
+		},
+	}
+	typeName := fmt.Sprintf("AnonType_%d__", anonCount)
+	anonCount++
+	if mod.Apps[appName].Types == nil {
+		mod.Apps[appName].Types = map[string]*sysl.Type{}
+	}
+	mod.Apps[appName].Types[typeName] = newType
+	attr := newType.GetTuple().AttrDefs
+	for _, stmt := range t.Transform.Stmt {
+		if stmt.GetAssign() != nil {
+			assign := stmt.GetAssign()
+			aexpr := assign.Expr
+			syslutil.Assert(aexpr.GetTransform() != nil, "expression should be of type transform")
+			ftype := aexpr.Type
+			setof := ftype.GetSet() != nil
+			if setof {
+				ftype = ftype.GetSet()
+			}
+			syslutil.Assert(ftype.GetTypeRef() != nil, "transform type should be type_ref")
+			t1 := &sysl.Type{
+				Type: &sysl.Type_TypeRef{
+					TypeRef: &sysl.ScopedRef{
+						Context: &sysl.Scope{
+							Appname: mod.Apps[appName].Name,
+							Path:    []string{typeName},
+						},
+						Ref: ftype.GetTypeRef().Ref,
+					},
+				},
+			}
+			if setof {
+				t1 = &sysl.Type{
+					Type: &sysl.Type_Set{
+						Set: t1,
+					},
+				}
+			}
+			attr[assign.Name] = t1
+		}
+	}
+	expr.Type = &sysl.Type{
+		Type: &sysl.Type_Set{
+			Set: &sysl.Type{
+				Type: &sysl.Type_TypeRef{
+					TypeRef: &sysl.ScopedRef{
+						Context: &sysl.Scope{
+							Appname: mod.Apps[appName].Name,
+						},
+						Ref: &sysl.Scope{
+							Appname: mod.Apps[appName].Name,
+							Path:    []string{typeName},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	return anonCount
+}
+
 // for nested transform's Type
-func inferExprType(mod *sysl.Module,
+func (p *Parser) inferExprType(mod *sysl.Module,
 	appName string,
 	expr *sysl.Expr, top bool,
-	anonCount int) (*sysl.Type, int) {
+	anonCount int,
+	viewName string,
+	scope string,
+	refType *sysl.Type) (exprType *sysl.Type, anonymousCount int, inferredType *sysl.Type) {
+	switch t := expr.Expr.(type) {
+	case *sysl.Expr_Transform_:
+		newTuple := &sysl.Type{
+			Type: &sysl.Type_Tuple_{
+				Tuple: &sysl.Type_Tuple{
+					AttrDefs: map[string]*sysl.Type{},
+				},
+			},
+		}
 
-	if expr.GetTransform() != nil {
-		for _, stmt := range expr.GetTransform().Stmt {
-			if stmt.GetLet() != nil {
-				_, anonCount = inferExprType(mod, appName, stmt.GetLet().Expr, false, anonCount)
-			} else if stmt.GetAssign() != nil {
-				_, anonCount = inferExprType(mod, appName, stmt.GetAssign().Expr, false, anonCount)
+		attrDefs := newTuple.GetTuple().AttrDefs
+
+		for _, stmt := range t.Transform.Stmt {
+			switch s := stmt.Stmt.(type) {
+			case *sysl.Expr_Transform_Stmt_Assign_:
+				varName := s.Assign.GetName()
+
+				if _, exists := attrDefs[varName]; exists {
+					p.Messages[viewName] = append(p.Messages[viewName], *msg.NewMsg(msg.ErrRedefined, []string{scope,
+						varName}))
+				} else {
+					var inferredType *sysl.Type
+					_, anonCount, inferredType = p.inferExprType(mod, appName, s.Assign.Expr, false, anonCount,
+						viewName, scope+":"+varName, refType)
+					attrDefs[varName] = inferredType
+					p.AssignTypes[viewName] = TypeData{RefType: refType, Tuple: newTuple}
+				}
+			case *sysl.Expr_Transform_Stmt_Let:
+				varName := s.Let.GetName()
+				if _, exists := p.LetTypes[scope+":"+varName]; exists {
+					p.Messages[viewName] = append(p.Messages[viewName], *msg.NewMsg(msg.ErrRedefined, []string{scope, varName}))
+				} else {
+					var inferredType *sysl.Type
+					_, anonCount, inferredType = p.inferExprType(mod, appName, s.Let.Expr, false, anonCount,
+						viewName, scope+":"+varName, s.Let.GetExpr().GetType())
+					p.LetTypes[scope+":"+varName] = TypeData{RefType: s.Let.GetExpr().GetType(), Tuple: inferredType}
+				}
 			}
 		}
 
 		if !top && expr.Type == nil {
-			// logrus.Printf("found anonymous type\n")
-			newType := &sysl.Type{
-				Type: &sysl.Type_Tuple_{
-					Tuple: &sysl.Type_Tuple{
-						AttrDefs: map[string]*sysl.Type{},
-					},
-				},
-			}
-			typeName := fmt.Sprintf("AnonType_%d__", anonCount)
-			anonCount++
-			if mod.Apps[appName].Types == nil {
-				mod.Apps[appName].Types = map[string]*sysl.Type{}
-			}
-			mod.Apps[appName].Types[typeName] = newType
-			attr := newType.GetTuple().AttrDefs
-			for _, stmt := range expr.GetTransform().Stmt {
-				if stmt.GetAssign() != nil {
-					assign := stmt.GetAssign()
-					aexpr := assign.Expr
-					if aexpr.GetTransform() == nil {
-						panic("expression should be of type transform")
-					}
-					ftype := aexpr.Type
-					setof := ftype.GetSet() != nil
-					if setof {
-						ftype = ftype.GetSet()
-					}
-					if ftype.GetTypeRef() == nil {
-						panic("transform type should be type_ref")
-					}
-					t1 := &sysl.Type{
-						Type: &sysl.Type_TypeRef{
-							TypeRef: &sysl.ScopedRef{
-								Context: &sysl.Scope{
-									Appname: mod.Apps[appName].Name,
-									Path:    []string{typeName},
-								},
-								Ref: ftype.GetTypeRef().Ref,
-							},
-						},
-					}
-					if setof {
-						t1 = &sysl.Type{
-							Type: &sysl.Type_Set{
-								Set: t1,
-							},
-						}
-					}
-					attr[assign.Name] = t1
-				}
-			}
-			expr.Type = &sysl.Type{
-				Type: &sysl.Type_Set{
-					Set: &sysl.Type{
-						Type: &sysl.Type_TypeRef{
-							TypeRef: &sysl.ScopedRef{
-								Context: &sysl.Scope{
-									Appname: mod.Apps[appName].Name,
-								},
-								Ref: &sysl.Scope{
-									Appname: mod.Apps[appName].Name,
-									Path:    []string{typeName},
-								},
-							},
-						},
-					},
-				},
-			}
+			anonCount = inferAnonymousType(mod, appName, anonCount, t, expr)
 		}
-	} else if expr.GetRelexpr() != nil {
-		relexpr := expr.GetRelexpr()
-		if relexpr.Op == sysl.Expr_RelExpr_RANK {
+
+		return expr.Type, anonCount, newTuple
+	case *sysl.Expr_Relexpr:
+		if t.Relexpr.Op == sysl.Expr_RelExpr_RANK {
 			if !top && expr.Type == nil {
-				type1, c := inferExprType(mod, appName, relexpr.Target, true, anonCount)
+				type1, c, _ := p.inferExprType(mod, appName, t.Relexpr.Target, true, anonCount, viewName, scope, refType)
 				anonCount = c
 				logrus.Printf(type1.String())
 			}
 		}
+	case *sysl.Expr_Literal:
+		expr.Type = valueTypeToSysl(t.Literal)
+	case *sysl.Expr_List_:
+		expr.Type, _, _ = p.inferExprType(mod, appName, t.List.Expr[0], true, anonCount, viewName, scope, refType)
+	case *sysl.Expr_Ifelse:
+		exprTypeIfTrue, _, _ := p.inferExprType(mod, appName, t.Ifelse.GetIfTrue(), true, anonCount,
+			viewName, scope, refType)
+		expr.Type = exprTypeIfTrue
+		if t.Ifelse.GetIfFalse() != nil {
+			exprTypeIfFalse, _, _ := p.inferExprType(mod, appName, t.Ifelse.GetIfFalse(), true, anonCount,
+				viewName, scope, refType)
+			// TODO if exprTypeIfTrue != exprTypeIfFalse, raise an error. Then remove following 3 lines
+			if exprTypeIfFalse != nil {
+				expr.Type = exprTypeIfFalse
+			}
+		}
+	case *sysl.Expr_Binexpr:
+		exprTypeLHS, _, _ := p.inferExprType(mod, appName, t.Binexpr.GetLhs(), true, anonCount, viewName, scope, refType)
+		expr.Type = exprTypeLHS
+		exprTypeRHS, _, _ := p.inferExprType(mod, appName, t.Binexpr.GetRhs(), true, anonCount, viewName, scope, refType)
+		// TODO if exprTypeRHS != exprTypeLHS, raise an error. Then remove following 3 lines
+		if exprTypeRHS != nil {
+			expr.Type = exprTypeRHS
+		}
+
+	case *sysl.Expr_Unexpr:
+		varType, _, _ := p.inferExprType(mod, appName, expr.GetUnexpr().GetArg(), true, anonCount, viewName, scope, refType)
+		switch t.Unexpr.GetOp() {
+		case sysl.Expr_UnExpr_NOT, sysl.Expr_UnExpr_INV:
+			if !syslutil.HasSameType(varType, syslutil.TypeBool()) {
+				_, typeDetail := syslutil.GetTypeDetail(varType)
+				p.Messages[viewName] = append(p.Messages[viewName],
+					*msg.NewMsg(msg.ErrInvalidUnary, []string{viewName, typeDetail}))
+			}
+			expr.Type = syslutil.TypeBool()
+		case sysl.Expr_UnExpr_NEG, sysl.Expr_UnExpr_POS:
+			if !syslutil.HasSameType(varType, syslutil.TypeInt()) {
+				_, typeDetail := syslutil.GetTypeDetail(varType)
+				p.Messages[viewName] = append(p.Messages[viewName],
+					*msg.NewMsg(msg.ErrInvalidUnary, []string{viewName, typeDetail}))
+			}
+			expr.Type = syslutil.TypeInt()
+		default:
+			expr.Type = syslutil.TypeNone()
+		}
+
+	default:
+		// TODO Handle expression
+		logrus.Debug("[Parse.infer_expr_type] Unhandled type", t)
+		return syslutil.TypeNone(), anonCount, syslutil.TypeNone()
 	}
-	return expr.Type, anonCount
+
+	return expr.Type, anonCount, expr.Type
 }
 
-func inferTypes(mod *sysl.Module, appName string) {
+func (p *Parser) inferTypes(mod *sysl.Module, appName string) {
 	for viewName, view := range mod.Apps[appName].Views {
 		if syslutil.HasPattern(view.Attrs, "abstract") {
 			continue
@@ -340,11 +430,11 @@ func inferTypes(mod *sysl.Module, appName string) {
 			logrus.Warnf("view %s expression should be of type transform", viewName)
 			continue
 		}
-		inferExprType(mod, appName, view.Expr, true, 0)
+		p.inferExprType(mod, appName, view.Expr, true, 0, viewName, viewName, view.GetRetType())
 	}
 }
 
-func postProcess(mod *sysl.Module) {
+func (p *Parser) postProcess(mod *sysl.Module) {
 	appNames := make([]string, 0, len(mod.Apps))
 	for a := range mod.Apps {
 		appNames = append(appNames, a)
@@ -435,8 +525,65 @@ func postProcess(mod *sysl.Module) {
 				}
 			}
 		}
-		inferTypes(mod, appName)
+		p.inferTypes(mod, appName)
 		collectorPubSubCalls(appName, app)
 	}
 	checkEndpointCalls(mod)
+}
+
+func valueTypeToSysl(value *sysl.Value) *sysl.Type {
+	switch value.Value.(type) {
+	case *sysl.Value_B:
+		return syslutil.TypeBool()
+	case *sysl.Value_I:
+		return syslutil.TypeInt()
+	case *sysl.Value_D:
+		return syslutil.TypeFloat()
+	case *sysl.Value_S:
+		return syslutil.TypeString()
+	case *sysl.Value_Decimal:
+		return syslutil.TypeDecimal()
+	case *sysl.Value_Null_:
+		return syslutil.TypeEmpty()
+	default:
+		panic(errors.Errorf("valueTypeToSysl: unhandled type: %v", value))
+	}
+}
+
+// return the one and only app defined in the module
+func getDefaultAppName(mod *sysl.Module) string {
+	for app := range mod.Apps {
+		return app
+	}
+	return ""
+}
+
+func LoadAndGetDefaultApp(model string, fs afero.Fs, p *Parser) (*sysl.Module, string, error) {
+	// Model we want to generate code for
+	mod, err := p.Parse(model, fs)
+	if err != nil {
+		return nil, "", err
+	}
+	modelAppName := getDefaultAppName(mod)
+	return mod, modelAppName, nil
+}
+
+func (p *Parser) GetAssigns() map[string]TypeData {
+	return p.AssignTypes
+}
+
+func (p *Parser) GetLets() map[string]TypeData {
+	return p.LetTypes
+}
+
+func (p *Parser) GetMessages() map[string][]msg.Msg {
+	return p.Messages
+}
+
+func NewParser() *Parser {
+	return &Parser{
+		AssignTypes: map[string]TypeData{},
+		LetTypes:    map[string]TypeData{},
+		Messages:    map[string][]msg.Msg{},
+	}
 }
