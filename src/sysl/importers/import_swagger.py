@@ -117,8 +117,7 @@ class SwaggerTranslator:
         return self._words
 
     def javaParam(self, param):
-        # TODO(anz-rfc) this seems janky and fragile.
-        param = param[1:-1]
+        param = param.strip('{}')
         ident = self._param_cache.get(param)
 
         if ident is None:
@@ -235,14 +234,17 @@ class SwaggerTranslator:
                     else:
                         paramStr = ' ({})'.format(methodBody + header)
 
-                    w(u'{}{}{}{}:',
+                    qpWithHyphen = [p for p in queryParams if '-' in p['name']]
+
+                    w(u'{}{}{}{}{}:',
                         method.upper(),
                         paramStr,
                         ' ?' if queryParams else '',
                         '&'.join(
-                            '{}={}{}'.format(p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
-                            for p in queryParams
-                        ))
+                            '{}={}{}'.format(self.javaParam(p['name']) if '-' in p['name'] else p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
+                            for p in queryParams),
+                        '' if len(qpWithHyphen) == 0 else ' [queryParamNames=[' + ','.join('["{}","{}"]'.format(self.javaParam(p['name']),p['name']) for p in qpWithHyphen) + ']]'
+                    )
                     with w.indent():
                         for line in textwrap.wrap(
                                 body.get('description', 'No description.').strip(), 64):
@@ -265,9 +267,7 @@ class SwaggerTranslator:
                                     returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
                                 else:
                                     returnValues[schema['$ref'].rpartition('/')[2]] = True
-                            else:
-                                returnValues[', '.join(responses.keys())] = True
-                            if key == 'default' or key.startswith('x-'):
+                            if key.startswith('x-'):
                                 self.warn('default responses and x-* responses are not implemented')
 
                         w(u'return {}'.format(', '.join(returnValues)))
@@ -395,7 +395,7 @@ class SwaggerTranslator:
 
         if ref:
             assert not set(tspec.keys()) - {'$ref'}, tspec
-            return r(ref.lstrip('#/definitions/'))
+            return r( ref.replace('#/definitions/',''))
         if (typ, fmt) == ('string', None):
             return r('string')
         if (typ, fmt) == ('boolean', None):
