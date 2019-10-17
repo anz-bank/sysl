@@ -14,5 +14,27 @@ definitions:
     title: GetGoalsResponse
     type: object
 
-
+  ObjectWithArrayPropsComplicate:
+    properties:
+      baselineReferenceNumber:
+        type: string
+      resultantId:
+        type: string
+      applications:
+        type: array
+        items:
+          type: object
+          properties:
+            applicationId:
+              type: string
+            applicationNum:
+              type: number
+      otherObjArray:
+        type: array
+        items:
+          $ref: '#/definitions/OtherObject'
+  OtherObject:
+    properties:
+      Foo:
+        type: string
 paths: {}

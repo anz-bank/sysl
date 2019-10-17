@@ -13,8 +13,16 @@ testapp "Fruit API" [package="package_foo"]:
     # definitions
 
     !type FruitBasket:
+        basket <: FruitBasket_basket_obj?:
+            @json_tag = "basket"
         fruit <: EXTERNAL_FruitBasket_fruit_obj?:
             @json_tag = "fruit"
+
+    !type FruitBasket_basket_obj:
+        bar <: string?:
+            @json_tag = "bar"
+        foo <: string?:
+            @json_tag = "foo"
 
     !alias EXTERNAL_FruitBasket_fruit_obj:
         string
