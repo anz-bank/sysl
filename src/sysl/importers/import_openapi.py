@@ -75,33 +75,16 @@ def make_default_logger():
     return logger
 
 
-def load_vocabulary(words_fn='/usr/share/dict/words'):
-    if not os.path.exists(words_fn):
-        return []
-    else:
-        return (w.strip() for w in open(words_fn))
-
-
 class OpenApiTranslator:
-    def __init__(self, logger, vocabulary_factory=load_vocabulary):
+    def __init__(self, logger):
         self._logger = logger
         self._param_cache = {}
-        self._words = set()
-        self._vocabulary_factory = vocabulary_factory
 
     def warn(self, msg):
         self._logger.warn(msg)
 
     def error(self, msg):
         self._logger.error(msg)
-
-    def words(self):
-        """Lazy-load WORDS."""
-        if not self._words:
-            self._words.update(self._vocabulary_factory())
-            if not self._words:
-                self.warn("could not load any vocabulary, janky environment-specific heuristics for renaming path template names may fail")
-        return self._words
 
     def javaParam(self, param):
         # TODO(anz-rfc) this seems janky and fragile.
@@ -111,12 +94,6 @@ class OpenApiTranslator:
         if ident is None:
             # foo-bar to fooBar
             ident = re.sub(r'-(\w?)', lambda m: m.group(1).upper(), param)
-            # {fooid} -> fooId (only if foo is in WORDS but fooid isn't)
-            m = re.match(r'([a-z]+)id$', ident)
-            if m:
-                word = m.group(1)
-                if word in self.words() and word + 'id' not in self.words():
-                    ident = word + 'Id'
             self._param_cache[param] = ident
 
         return ident

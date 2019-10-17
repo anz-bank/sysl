@@ -781,52 +781,52 @@ paths:
 
 
 def test_parse_typespec_boolean():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'boolean', 'description': 'foo'}) == ('bool', 'foo')
 
 
 def test_parse_typespec_datetime():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'string', 'format': 'date-time', 'description': 'foo'}) == ('datetime', 'foo')
 
 
 def test_parse_typespec_integer():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'integer', 'description': 'foo'}) == ('int', 'foo')
 
 
 def test_parse_typespec_int32():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'integer', 'format': 'int32', 'description': 'foo'}) == ('int32', 'foo')
 
 
 def test_parse_typespec_int64():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'integer', 'format': 'int64', 'description': 'foo'}) == ('int64', 'foo')
 
 
 def test_parse_typespec_number_is_translated_to_float():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'number', 'description': 'foo'}) == ('float', 'foo')
 
 
 def test_parse_typespec_float_is_translated_to_float():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'number', 'format': 'float', 'description': 'foo'}) == ('float', 'foo')
 
 
 def test_parse_typespec_double_is_translated_to_float():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'number', 'format': 'double', 'description': 'foo'}) == ('float', 'foo')
 
 
 def test_parse_typespec_object():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'type': 'object', 'description': 'foo'}, '', 'Object') == ('EXTERNAL_Object_obj', 'foo')
 
 
 def test_parse_typespec_ref():
-    t = OpenApiTranslator(None)
+    t = OpenApiTranslator(FakeLogger())
     assert t.parse_typespec({'$ref': '#/components/schemas/Barr', 'description': 'foo'}) == ('Barr', 'foo')
 
 
@@ -849,7 +849,7 @@ def test_parse_typespec_warns_and_ignores_type_if_array_items_type_has_both_type
 
 def test_translate_path_template_params_leaves_paths_without_templates_unchanged():
     l = FakeLogger()
-    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['x']))
+    t = OpenApiTranslator(logger=l)
     expected_warnings = []
     assert t.translate_path_template_params('/foo/barr/', []) == '/foo/barr/'
     assert l.warnings == expected_warnings
@@ -857,39 +857,10 @@ def test_translate_path_template_params_leaves_paths_without_templates_unchanged
 
 def test_translate_path_template_params_rewrites_dashed_template_names_as_camelcase_string_typed_parameters():
     l = FakeLogger()
-    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['x']))
+    t = OpenApiTranslator(logger=l)
     assert t.translate_path_template_params('/foo/{fizz-buzz}/', []) == '/foo/{fizzBuzz<:string}/'
     expected_warnings = ['not enough path params path: /foo/{fizz-buzz}/', 'could not find type for path param: {fizz-buzz} in params[]']
     assert l.warnings == expected_warnings
-
-
-def test_translate_path_template_params_rewrites_names_of_things_that_look_like_a_dictionary_word_ending_with_id_suffix_as_camelcase():
-    l = FakeLogger()
-    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['bread']))
-    assert t.translate_path_template_params('/foo/{breadid}/', []) == '/foo/{breadId<:string}/'
-    expected_warnings = ['not enough path params path: /foo/{breadid}/', 'could not find type for path param: {breadid} in params[]']
-    assert l.warnings == expected_warnings
-
-
-def test_translate_path_template_params_wont_rewrite_names_of_things_ending_with_id_suffix_as_camelcase_if_no_vocabulary_present():
-    l = FakeLogger()
-    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: []))
-    # perhaps breadid is a valid word. we dont know, we have no vocab.
-    assert t.translate_path_template_params('/foo/{breadid}/', []) == '/foo/{breadid<:string}/'
-    expected_warnings = ['not enough path params path: /foo/{breadid}/', 'could not find type for path param: {breadid} in params[]']
-    assert l.warnings == expected_warnings + ['could not load any vocabulary, janky environment-specific heuristics for renaming path template names may fail']
-
-
-def test_translate_path_template_params_doesnt_rewrite_nonwords_ending_in_id_typed_parameters():
-    l = FakeLogger()
-    t = OpenApiTranslator(logger=l, vocabulary_factory=(lambda: ['bread']))
-    assert t.translate_path_template_params('/foo/{braedid}/', []) == '/foo/{braedid<:string}/'
-
-
-@pytest.mark.skipif(platform.system() not in ('Linux', 'Darwin'), reason='no defined source of vocabulary for this platform')
-def test_default_vocabulary_containing_common_business_nouns_is_defined_for_non_windows_platforms():
-    t = OpenApiTranslator(None)
-    assert 'customer' in t.words()
 
 
 def test_make_default_logger_returns_something_thats_probably_a_logger():

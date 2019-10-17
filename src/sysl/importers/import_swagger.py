@@ -86,35 +86,16 @@ def make_default_logger():
     return logger
 
 
-def load_vocabulary(words_fn='/usr/share/dict/words'):
-    if not os.path.exists(words_fn):
-        return []
-    else:
-        return (w.strip() for w in open(words_fn))
-
-
 class SwaggerTranslator:
-    def __init__(self, logger, vocabulary_factory=None):
-        if vocabulary_factory is None:
-            vocabulary_factory = load_vocabulary
+    def __init__(self, logger):
         self._logger = logger
         self._param_cache = {}
-        self._words = set()
-        self._vocabulary_factory = vocabulary_factory
 
     def warn(self, msg):
         self._logger.warn(msg)
 
     def error(self, msg):
         self._logger.error(msg)
-
-    def words(self):
-        """Lazy-load WORDS."""
-        if not self._words:
-            self._words.update(self._vocabulary_factory())
-            if not self._words:
-                self.warn("could not load any vocabulary, janky environment-specific heuristics for renaming path template names may fail")
-        return self._words
 
     def javaParam(self, param):
         param = param.strip('{}')
@@ -123,13 +104,6 @@ class SwaggerTranslator:
         if ident is None:
             # foo-bar to fooBar
             ident = re.sub(r'-(\w?)', lambda m: m.group(1).upper(), param)
-            # {fooid} -> fooId (only if foo is in WORDS but fooid isn't)
-            m = re.match(r'([a-z]+)id$', ident)
-            if m:
-                word = m.group(1)
-                if word in self.words() and word + 'id' not in self.words():
-                    ident = word + 'Id'
-            self._param_cache[param] = ident
 
         return ident
 
@@ -243,8 +217,7 @@ class SwaggerTranslator:
                         '&'.join(
                             '{}={}{}'.format(self.javaParam(p['name']) if '-' in p['name'] else p['name'], TYPE_MAP[p['type']], '' if p['required'] else '?')
                             for p in queryParams),
-                        '' if len(qpWithHyphen) == 0 else ' [queryParamNames=[' + ','.join('["{}","{}"]'.format(self.javaParam(p['name']),p['name']) for p in qpWithHyphen) + ']]'
-                    )
+                        '' if len(qpWithHyphen) == 0 else ' [queryParamNames=[' + ','.join('["{}","{}"]'.format(self.javaParam(p['name']), p['name']) for p in qpWithHyphen) + ']]')
                     with w.indent():
                         for line in textwrap.wrap(
                                 body.get('description', 'No description.').strip(), 64):
@@ -268,7 +241,7 @@ class SwaggerTranslator:
                                 else:
                                     returnValues[schema['$ref'].rpartition('/')[2]] = True
                             if key.startswith('x-'):
-                                self.warn('default responses and x-* responses are not implemented')
+                                self.warn('x-* responses are not implemented')
 
                         w(u'return {}'.format(', '.join(returnValues)))
 
@@ -395,7 +368,7 @@ class SwaggerTranslator:
 
         if ref:
             assert not set(tspec.keys()) - {'$ref'}, tspec
-            return r( ref.replace('#/definitions/',''))
+            return r(ref.replace('#/definitions/', ''))
         if (typ, fmt) == ('string', None):
             return r('string')
         if (typ, fmt) == ('boolean', None):
