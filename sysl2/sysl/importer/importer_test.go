@@ -20,6 +20,7 @@ type testConfig struct {
 }
 
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
+	t.Parallel()
 	files, err := ioutil.ReadDir(cfg.testDir)
 	require.NoError(t, err)
 	for _, f := range files {
