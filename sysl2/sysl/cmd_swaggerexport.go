@@ -17,7 +17,6 @@ func (p *swaggerExportCmd) Name() string            { return "export-swagger" }
 func (p *swaggerExportCmd) RequireSyslModule() bool { return true }
 
 func (p *swaggerExportCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-
 	cmd := app.Command(p.Name(), "Generate swagger")
 	cmd.Flag("app-name",
 		"name of the sysl app defined in sysl model."+

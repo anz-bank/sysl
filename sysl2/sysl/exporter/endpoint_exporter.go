@@ -29,16 +29,9 @@ const (
 	dataType = "type"
 )
 
-func (v *EndpointExporter) exportEndpoint(path string, endpoint *proto.Endpoint, paths map[string]spec.PathItem) error {
-	// extract the endpoint info and populate spec.PathItem
-	var pathItem spec.PathItem
-	var pathExists bool
-	if pathItem, pathExists = paths[strings.Split(path, " ")[1]]; !pathExists {
-		pathItem = spec.PathItem{}
-	}
-	var retValues []string
-	returnStatusMap := map[int]spec.Response{}
+func (v *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Response, endpoint *proto.Endpoint) {
 	regex := regexp.MustCompile(`^\d{3}$`)
+	var retValues []string
 	for _, stmt := range endpoint.GetStmt() {
 		if ret, ok := stmt.Stmt.(*proto.Statement_Ret); ok {
 			retValues = strings.Split(ret.Ret.GetPayload(), " <: ")
@@ -66,7 +59,8 @@ func (v *EndpointExporter) exportEndpoint(path string, endpoint *proto.Endpoint,
 			case hasStatusCode:
 				status, err := strconv.Atoi(retValues[0])
 				if err != nil {
-					return err
+					v.log.Warnf("Error converting return code %s", err)
+					continue
 				}
 				res.ResponseProps.Description = http.StatusText(status)
 				returnStatusMap[status] = *res
@@ -82,6 +76,17 @@ func (v *EndpointExporter) exportEndpoint(path string, endpoint *proto.Endpoint,
 			}
 		}
 	}
+}
+
+func (v *EndpointExporter) exportEndpoint(path string, endpoint *proto.Endpoint, paths map[string]spec.PathItem) error {
+	// extract the endpoint info and populate spec.PathItem
+	var pathItem spec.PathItem
+	var pathExists bool
+	if pathItem, pathExists = paths[strings.Split(path, " ")[1]]; !pathExists {
+		pathItem = spec.PathItem{}
+	}
+	returnStatusMap := map[int]spec.Response{}
+	v.exportChildStmts(returnStatusMap, endpoint)
 	op := v.parseHTTPMethod(path, endpoint, &pathItem)
 	op.Description = endpoint.GetDocstring()
 	op.Summary = endpoint.GetDocstring()
