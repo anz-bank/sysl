@@ -1,0 +1,45 @@
+definitions:
+  Attachment:
+    format: tuple
+    properties:
+      data:
+        type: string
+      type:
+        type: string
+    type: object
+  Attachments:
+    format: tuple
+    properties:
+      sequenceA:
+        items:
+          format: Email
+          type: object
+        type: ""
+      setA:
+        items:
+          format: Attachment
+          type: object
+        type: ""
+    type: object
+  Email:
+    format: tuple
+    properties:
+      text:
+        type: string
+    type: object
+  sequenceA:
+    items:
+      format: Email
+      type: object
+    type: array
+  setA:
+    items:
+      format: Attachment
+      type: object
+    type: array
+info:
+  description: foo
+  title: foo
+  version: 0.0.0
+paths: {}
+swagger: "2.0"

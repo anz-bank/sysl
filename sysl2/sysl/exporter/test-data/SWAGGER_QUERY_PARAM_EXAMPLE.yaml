@@ -1,0 +1,29 @@
+info:
+  description: No description.
+  title: Simple
+  version: 0.0.0
+paths:
+  /test:
+    get:
+      consumes:
+      - application/json
+      description: No description.
+      parameters:
+      - format: string
+        in: query
+        name: key
+        required: true
+        type: string
+      - format: string
+        in: query
+        name: min_date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+      summary: No description.
+swagger: "2.0"

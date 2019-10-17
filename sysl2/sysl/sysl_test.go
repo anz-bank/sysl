@@ -438,7 +438,7 @@ func TestMain2WithTextPbMode(t *testing.T) {
 			"pb",
 			"--mode", "textpb",
 			"-o", out,
-			"tests/call.sysl",
+			"tests/api.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -458,7 +458,7 @@ func TestMain2WithJSONMode(t *testing.T) {
 			"pb",
 			"--mode", "json",
 			"-o", out,
-			"tests/call.sysl",
+			"tests/api.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -607,4 +607,14 @@ func TestMain2WithBinaryInfoCmd(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	exitCode := main2([]string{"sysl", "info"}, nil, logger, main3)
 	assert.Equal(t, 0, exitCode)
+}
+
+func TestSwaggerExportCmd(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	_, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "export-swagger", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
+		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+	_, err := ioutil.ReadFile("SIMPLE_SWAGGER_EXAMPLE.yaml")
+	assert.NoError(t, err)
 }

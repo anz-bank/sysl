@@ -1,0 +1,36 @@
+definitions:
+  Goat:
+    format: tuple
+    properties:
+      birthday:
+        type: string
+      name:
+        type: string
+    type: object
+host: goat.example.com
+info:
+  description: No description.
+  title: Goat CRUD API
+  version: 1.2.3
+paths:
+  /api/v1/goat/create-goat:
+    put:
+      consumes:
+      - application/json
+      description: Creates a goat.
+      parameters:
+      - format: Goat
+        in: header
+        name: body
+        schema:
+          $ref: '#/definitions/Goat'
+        type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Goat'
+      summary: Creates a goat.
+swagger: "2.0"

@@ -1,0 +1,20 @@
+host: goat.example.com
+info:
+  description: No description.
+  title: Goat CRUD API
+  version: 1.2.3
+paths:
+  /api/v1/goat/status:
+    get:
+      consumes:
+      - application/json
+      description: Check goat status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/x-banana'
+      summary: Check goat status
+swagger: "2.0"
