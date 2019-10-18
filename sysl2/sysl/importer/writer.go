@@ -278,7 +278,7 @@ func (w *writer) writeDefinition(t *StandardType) {
 		suffix = appendAttributesString(suffix, prop.Attributes)
 
 		name := prop.Name
-		if IsKeyword(name) {
+		if IsBuiltIn(name) {
 			name += "_"
 		}
 

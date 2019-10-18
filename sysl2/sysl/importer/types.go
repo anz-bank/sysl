@@ -111,7 +111,7 @@ type FieldList []Field
 // nolint:gochecknoglobals
 var builtIns = []string{"int32", "int64", "int", "float", "string", "date", "bool", "decimal", "datetime", "xml"}
 
-func IsKeyword(name string) bool {
+func IsBuiltIn(name string) bool {
 	for _, kw := range builtIns {
 		if name == kw {
 			return true

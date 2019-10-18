@@ -25,7 +25,7 @@ func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out s
 	result := &bytes.Buffer{}
 
 	swagger := doc.Spec()
-	types := InitSwaggerTypes(swagger, logger)
+	types := initSwaggerTypes(swagger, logger)
 	globalParams := buildGlobalParams(swagger.Parameters, types, logger)
 	endpoints := InitEndpoints(swagger, types, globalParams, logger)
 	info := SyslInfo{
@@ -59,7 +59,7 @@ func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out s
 	return result.String(), nil
 }
 
-func InitSwaggerTypes(doc *spec.Swagger, logger *logrus.Logger) TypeList {
+func initSwaggerTypes(doc *spec.Swagger, logger *logrus.Logger) TypeList {
 	types := TypeList{}
 	// First init the swagger -> sysl mappings
 	var swaggerToSyslMappings = map[string]string{
@@ -183,7 +183,7 @@ func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type
 		st := &StandardType{
 			name: name,
 		}
-		AddSwaggerProperties(st, schema.Properties, schema.Required, data)
+		addSwaggerProperties(st, schema.Properties, schema.Required, data)
 		item = st
 	}
 
@@ -192,9 +192,9 @@ func createTypeFromSchema(name string, schema *spec.Schema, data *typeData) Type
 	return item
 }
 
-func (t TypeList) FindFromSchema(schema spec.Schema, data *typeData) (Type, bool) {
+func (t TypeList) findFromSchema(schema spec.Schema, data *typeData) (Type, bool) {
 	if isSwaggerArrayType(schema) {
-		items, found := t.FindFromSchema(*schema.Items.Schema, data)
+		items, found := t.findFromSchema(*schema.Items.Schema, data)
 		if found {
 			return &Array{Items: items}, true
 		}
@@ -213,11 +213,11 @@ func isSwaggerArrayType(schema spec.Schema) bool {
 	return false
 }
 
-func AddSwaggerProperties(s *StandardType, props map[string]spec.Schema, requiredProps []string, data *typeData) {
+func addSwaggerProperties(s *StandardType, props map[string]spec.Schema, requiredProps []string, data *typeData) {
 	keys := []string{}
 	fields := map[string]Field{}
 	for pname, prop := range props {
-		propType, found := data.knownTypes.FindFromSchema(prop, data)
+		propType, found := data.knownTypes.findFromSchema(prop, data)
 		if !found {
 			var refType string
 			refType = findReferencedType(prop, data)

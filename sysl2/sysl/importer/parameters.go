@@ -74,7 +74,7 @@ func buildParam(param spec.Parameter, types TypeList, globals Parameters, logger
 	paramTypeName := param.Type
 	if paramTypeName == "" {
 		if param.Schema != nil {
-			if ptype, ok := types.FindFromSchema(*param.Schema, &typeData{logger: logger}); ok {
+			if ptype, ok := types.findFromSchema(*param.Schema, &typeData{logger: logger}); ok {
 				return fromType(ptype), nil
 			}
 			return Param{}, fmt.Errorf("referenced parameter type not found: %+v", param.Schema)

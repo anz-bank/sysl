@@ -77,11 +77,10 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 
 	for _, name := range keys {
 		data := schema.Types[name]
-		logger.Infof("name: %+v\n", name)
 		if name.Local == "_self" {
 			rootType := data.(*xsd.ComplexType)
 			data = rootType.Elements[0].Type
-			t := FindType(data, &types)
+			t := findType(data, &types)
 			if t == nil {
 				t = makeType(name, data, &types, logger)
 				if name.Space != "" {
@@ -92,7 +91,7 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 			if !contains("~xml_root", x.Attributes) {
 				x.Attributes = append(x.Attributes, "~xml_root")
 			}
-		} else if t := FindType(data, &types); t == nil {
+		} else if t := findType(data, &types); t == nil {
 			types.Add(makeType(name, data, &types, logger))
 		}
 	}
@@ -100,7 +99,7 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 	return types
 }
 
-func FindType(t xsd.Type, knownTypes *TypeList) Type {
+func findType(t xsd.Type, knownTypes *TypeList) Type {
 	if res, found := knownTypes.Find(fmt.Sprintf("%s:%s", xsd.XMLName(t).Space, xsd.XMLName(t).Local)); found {
 		return res
 	}
@@ -124,7 +123,7 @@ func makeType(_ xml.Name, from xsd.Type, knownTypes *TypeList, logger *logrus.Lo
 
 func makeComplexType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus.Logger) Type {
 	createChildItem := func(name xml.Name, data xsd.Type, isAttr, optional, plural bool) Field {
-		childType := FindType(data, knownTypes)
+		childType := findType(data, knownTypes)
 		if childType == nil {
 			childType = makeType(name, data, knownTypes, logger)
 			knownTypes.Add(childType)
