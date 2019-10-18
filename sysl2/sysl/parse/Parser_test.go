@@ -44,12 +44,12 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	return module, nil
 }
 
-func retainOrRemove(err error, file *os.File, retainOnError bool) error {
+func retainOrRemove(err error, filename string, retainOnError bool) error {
 	if err != nil {
 		if retainOnError {
-			fmt.Printf("%#v retained for checking\n", file.Name())
+			fmt.Printf("%#v retained for checking\n", filename)
 		} else {
-			os.Remove(file.Name())
+			os.Remove(filename)
 		}
 	}
 	return err
@@ -159,7 +159,7 @@ func parseAndCompare(
 		}
 	}()
 
-	if err = retainOrRemove(pbutil.FTextPB(generated, module), generated, retainOnError); err != nil {
+	if err = retainOrRemove(pbutil.FTextPB(generated, module), generated.Name(), retainOnError); err != nil {
 		return false, errors.Wrapf(err, "Generate %#v", generated)
 	}
 	if err := generated.Close(); err != nil {
@@ -167,7 +167,7 @@ func parseAndCompare(
 	}
 	generatedClosed = true
 
-	cmd := exec.Command("diff", "-y", golden, generated.Name())
+	cmd := exec.Command("diff", "-yw", golden, generated.Name())
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
@@ -176,7 +176,7 @@ func parseAndCompare(
 		} else {
 			os.Remove(generated.Name())
 		}
-		return false, errors.Wrapf(err, "diff -y %#v %#v", golden, generated.Name())
+		return false, errors.Wrapf(err, "diff -yw %#v %#v", golden, generated.Name())
 	}
 
 	os.Remove(generated.Name())
@@ -380,6 +380,12 @@ func TestImports(t *testing.T) {
 	t.Parallel()
 
 	testParseAgainstGolden(t, "tests/library.sysl", "")
+}
+
+func TestForeignImports(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/foreign_import_swagger.sysl", "")
 }
 
 func TestRootArg(t *testing.T) {

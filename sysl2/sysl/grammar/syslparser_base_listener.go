@@ -1073,11 +1073,11 @@ func (s *BaseSyslParserListener) EnterApplication(ctx *ApplicationContext) {}
 // ExitApplication is called when production application is exited.
 func (s *BaseSyslParserListener) ExitApplication(ctx *ApplicationContext) {}
 
-// EnterPath is called when production path is entered.
-func (s *BaseSyslParserListener) EnterPath(ctx *PathContext) {}
+// EnterImport_mode is called when production import_mode is entered.
+func (s *BaseSyslParserListener) EnterImport_mode(ctx *Import_modeContext) {}
 
-// ExitPath is called when production path is exited.
-func (s *BaseSyslParserListener) ExitPath(ctx *PathContext) {}
+// ExitImport_mode is called when production import_mode is exited.
+func (s *BaseSyslParserListener) ExitImport_mode(ctx *Import_modeContext) {}
 
 // EnterImport_stmt is called when production import_stmt is entered.
 func (s *BaseSyslParserListener) EnterImport_stmt(ctx *Import_stmtContext) {}

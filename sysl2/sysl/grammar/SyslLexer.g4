@@ -59,16 +59,9 @@ IMPORT_KEY: 'import';
 fragment
 SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
-IMPORT              : IMPORT_KEY ' '+ (SUB_PATH_NAME |   ('/' SUB_PATH_NAME)+) [ \t]* NEWLINE
-                    {
-                        ls := ls(l)
-                        ls.gotNewLine = true
-                        ls.spaces = 0
-                        ls.gotHTTPVerb=false
-                        ls.linenum++
-                    }
-                    ;
+IMPORT             : IMPORT_KEY WS { ls(l).blockTextLine++ } ->pushMode(FILENAME);
 
+AS                  : A S ;
 RETURN              : ( R E T U R N )           -> pushMode(NOT_NEWLINE); //revisit this?
 IF                  : (I F)  [ \t]*             -> pushMode(PREDICATE);
 FOR_EACH            : (F O R) [ \t]* (E A C H) [ \t]* -> pushMode(PREDICATE);
@@ -168,6 +161,7 @@ NEWLINE     : '\r'? '\n'
                 ls.linenum++
             }
             { if (ls(l).gotView) { l.PushMode(SyslLexerVIEW_TRANSFORM);}}
+            { if ls(l).blockTextLine > 0 { ls(l).blockTextLine-- }}
             -> channel(HIDDEN)
             ;
 
@@ -192,6 +186,7 @@ IN_ANGLE        : '<' PRINTABLE '>';
 TEXT_LINE       :
                 PRINTABLE ([ \-]+ (PRINTABLE | IN_ANGLE))+
                 { ls(p).inSqBrackets == 0 }?
+                { ls(p).blockTextLine == 0 }?
                 { !startsWithKeyword(p.GetText()) }?
                 ;
 
@@ -388,3 +383,6 @@ E_NL  : '\r'? '\n'
           }
       }
       ;
+
+mode FILENAME;
+IMPORT_PATH         : (SUB_PATH_NAME | ('/' SUB_PATH_NAME))+ -> popMode;

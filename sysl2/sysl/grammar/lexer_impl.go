@@ -15,6 +15,7 @@ var (
 	syslLexerLog = os.Getenv("SYSL_LEXER_LOG") != ""
 
 	keywords = [...]string{
+		"import",
 		"sequence of",
 		"set of",
 		"return",
@@ -37,13 +38,14 @@ type lexerState struct {
 	prevToken []antlr.Token
 	level     stack
 
-	spaces       int
-	linenum      int
-	inSqBrackets int
-	parens       int
-	gotNewLine   bool
-	gotHTTPVerb  bool
-	gotView      bool
+	spaces        int
+	linenum       int
+	inSqBrackets  int
+	parens        int
+	gotNewLine    bool
+	gotHTTPVerb   bool
+	gotView       bool
+	blockTextLine int
 }
 
 func ls(l *SyslLexer) *lexerState {

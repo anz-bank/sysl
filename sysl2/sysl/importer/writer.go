@@ -81,8 +81,11 @@ func (w *writer) writeHeader(info SyslInfo) error {
 `)
 	title := info.Title
 
-	w.writeLines(fmt.Sprintf("%s [package=%s]:", spaceSeparate(info.AppName, quote(title)), quote(info.Package)))
-	w.ind.Push()
+	pkg := ""
+	if info.Package != "" {
+		pkg = fmt.Sprintf("[package=%s]", quote(info.Package))
+	}
+	w.writeLines(spaceSeparate(info.AppName, quote(title), pkg)+":", PushIndent)
 
 	for i := 0; i < len(info.OtherFields); i += 2 {
 		key := info.OtherFields[i]

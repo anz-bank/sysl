@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/importer"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
@@ -29,6 +31,60 @@ type Parser struct {
 	Messages    map[string][]msg.Msg
 }
 
+func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
+	errorListener := SyslParserErrorListener{}
+	lexer := parser.NewSyslLexer(input)
+	defer parser.DeleteLexerState(lexer)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	p := parser.NewSyslParser(stream)
+	p.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
+	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	p.AddErrorListener(&errorListener)
+
+	p.BuildParseTrees = true
+	tree := p.Sysl_file()
+	if errorListener.hasErrors {
+		return nil, Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
+	}
+	return tree, nil
+}
+
+func guessMode(filename string) string {
+	switch filepath.Ext(filename) {
+	case ".sysl":
+		return "~sysl"
+	case ".yaml", ".json":
+		return "~swagger"
+	default:
+		return ""
+	}
+}
+
+func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
+	od := importer.OutputData{
+		AppName: def.appname,
+		Package: def.pkg,
+	}
+	var text string
+	var err error
+	logger := logrus.StandardLogger()
+
+	if def.mode == "" {
+		def.mode = guessMode(def.filename)
+	}
+
+	switch def.mode {
+	case "~sysl":
+		return input, nil
+	case "~swagger":
+		text, err = importer.LoadSwaggerText(od, input.GetText(0, input.Size()), logger)
+	default:
+		return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format - (%s)\n", def.filename, def.mode))
+	}
+
+	return antlr.NewInputStream(text), err
+}
+
 func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	if !strings.HasSuffix(filename, ".sysl") {
 		filename += ".sysl"
@@ -38,28 +94,29 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	}
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener(fs)
-	errorListener := SyslParserErrorListener{}
+
+	source := importDef{
+		filename: filename,
+	}
 
 	for {
+		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
-		input, err := newFSFileStream(filename, fs)
+		fsinput, err := newFSFileStream(filename, fs)
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
-		listener.filename = filename
+		listener.filename = source.filename
 		listener.base = filepath.Dir(filename)
-		lexer := parser.NewSyslLexer(input)
-		defer parser.DeleteLexerState(lexer)
-		stream := antlr.NewCommonTokenStream(lexer, 0)
-		p := parser.NewSyslParser(stream)
-		p.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
-		p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-		p.AddErrorListener(&errorListener)
 
-		p.BuildParseTrees = true
-		tree := p.Sysl_file()
-		if errorListener.hasErrors {
-			return nil, Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
+		input, err := importForeign(source, fsinput)
+		if err != nil {
+			return nil, err
+		}
+
+		tree, err := parseString(filename, input)
+		if err != nil {
+			return nil, err
 		}
 
 		antlr.ParseTreeWalkerDefault.Walk(listener, tree)
@@ -69,13 +126,13 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		imported[filename] = struct{}{}
 
 		for len(listener.imports) > 0 {
-			filename = listener.imports[0]
+			source = listener.imports[0]
 			listener.imports = listener.imports[1:]
-			if _, has := imported[filename]; !has {
+			if _, has := imported[source.filename]; !has {
 				break
 			}
 		}
-		if _, has := imported[filename]; has {
+		if _, has := imported[source.filename]; has {
 			break
 		}
 	}
