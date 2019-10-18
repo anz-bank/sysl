@@ -81,7 +81,7 @@ func (w *writer) writeHeader(info SyslInfo) error {
 `)
 	title := info.Title
 
-	w.writeLines(fmt.Sprintf("%s %s [package=%s]:", info.AppName, quote(title), quote(info.Package)))
+	w.writeLines(fmt.Sprintf("%s [package=%s]:", spaceSeparate(info.AppName, quote(title)), quote(info.Package)))
 	w.ind.Push()
 
 	for i := 0; i < len(info.OtherFields); i += 2 {
@@ -126,6 +126,28 @@ func buildDescriptionLines(prefix, description string, wrapAt int) []string {
 	return result
 }
 
+func appendAttributesString(prefix string, attrs []string) string {
+	if len(attrs) == 0 {
+		return prefix
+	}
+	return prefix + " [" + strings.Join(attrs, ", ") + "]"
+}
+
+func appendSizeSpec(prefix string, spec *sizeSpec) string {
+	if spec == nil {
+		return prefix
+	}
+	switch spec.MaxType {
+	case MaxSpecified:
+		return fmt.Sprintf("%s(%d..%d)", prefix, spec.Min, spec.Max)
+	case OpenEnded:
+		return fmt.Sprintf("%s(%d..)", prefix, spec.Min)
+	case MinOnly:
+		return fmt.Sprintf("%s(%d)", prefix, spec.Min)
+	}
+	return prefix
+}
+
 func buildQueryString(params []Param) string {
 	query := ""
 	if len(params) > 0 {
@@ -135,7 +157,7 @@ func buildQueryString(params []Param) string {
 			if p.Optional {
 				optional = "?"
 			}
-			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), p.Type.Name(), optional))
+			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), getSyslTypeName(p.Type), optional))
 		}
 		query = " ?" + strings.Join(parts, "&")
 	}
@@ -150,7 +172,7 @@ func buildRequestBodyString(params []Param) string {
 		})
 		var parts []string
 		for _, p := range params {
-			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, p.Type.Name()))
+			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, getSyslTypeName(p.Type)))
 		}
 		body = strings.Join(parts, ", ")
 	}
@@ -165,7 +187,8 @@ func buildRequestHeadersString(params []Param) string {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
 
 			safeName := strings.ToLower(strings.ReplaceAll(p.Name, "-", "_"))
-			text := fmt.Sprintf("%s <: %s [~header, %s, name=%s]", safeName, p.Type.Name(), optional, quote(p.Name))
+			text := fmt.Sprintf("%s <: %s", safeName,
+				appendAttributesString(getSyslTypeName(p.Type), []string{"~header", optional, "name=" + quote(p.Name)}))
 			parts = append(parts, text)
 		}
 		headers = strings.Join(parts, ", ")
@@ -177,7 +200,7 @@ func buildPathString(path string, params []Param) string {
 	result := path
 
 	for _, p := range params {
-		replacement := fmt.Sprintf("{%s<:%s}", p.Name, p.Type.Name())
+		replacement := fmt.Sprintf("{%s<:%s}", p.Name, getSyslTypeName(p.Type))
 		result = strings.ReplaceAll(result, fmt.Sprintf("{%s}", p.Name), replacement)
 	}
 
@@ -221,9 +244,11 @@ func (w *writer) writeDefinitions(types TypeList) {
 	w.writeLines("#" + strings.Repeat("-", 75))
 	w.writeLines("# definitions")
 	var others []Type
-	for _, t := range types {
+	for _, t := range types.Items() {
 		_, isEnum := t.(*Enum)
 		switch {
+		case isBuiltInType(t):
+			// do nothing
 		case isEnum:
 			// We want the enum aliases listed with the real types
 			w.writeLines(BlankLine)
@@ -243,15 +268,17 @@ func (w *writer) writeDefinitions(types TypeList) {
 
 func (w *writer) writeDefinition(t *StandardType) {
 	bangName := "type"
-	w.writeLines(fmt.Sprintf("!%s %s:", bangName, getSyslTypeName(t)))
+	w.writeLines(fmt.Sprintf("!%s %s:", bangName, appendAttributesString(getSyslTypeName(t), t.Attributes)))
 	for _, prop := range t.Properties {
 		suffix := ""
 		if prop.Optional {
 			suffix = "?"
 		}
+		suffix = appendSizeSpec(suffix, prop.SizeSpec)
+		suffix = appendAttributesString(suffix, prop.Attributes)
 
 		name := prop.Name
-		if IsKeyword(name) {
+		if IsBuiltIn(name) {
 			name += "_"
 		}
 
@@ -269,6 +296,8 @@ func (w *writer) writeExternalAlias(item Type) {
 		if len(t.Properties) > 0 {
 			aliasType = getSyslTypeName(t.Properties[0].Type)
 		}
+	case *ExternalAlias:
+		aliasType = getSyslTypeName(t.Target)
 	case *Alias:
 		aliasType = getSyslTypeName(t.Target)
 	case *Array:

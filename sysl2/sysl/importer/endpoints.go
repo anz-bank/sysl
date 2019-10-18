@@ -46,7 +46,7 @@ func buildResponses(path string, responses *spec.Responses, types TypeList, logg
 
 	for statusCode, response := range responses.StatusCodeResponses {
 		if schema := response.Schema; schema != nil {
-			t, found := types.FindFromSchema(*schema, &typeData{logger: logger})
+			t, found := types.findFromSchema(*schema, &typeData{logger: logger})
 			if !found {
 				logger.Errorf("Responses type for code %d not found, endpoint: %s, skipping", statusCode, path)
 				continue
