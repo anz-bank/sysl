@@ -19,13 +19,20 @@ import (
 
 var _ = fmt.Println
 
+type importDef struct {
+	filename string
+	appname  string
+	pkg      string
+	mode     string
+}
+
 // TreeShapeListener ..
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base                  string
 	fs                    afero.Fs
 	filename              string
-	imports               []string
+	imports               []importDef
 	module                *sysl.Module
 	appname               string
 	typename              string
@@ -3671,21 +3678,38 @@ func (s *TreeShapeListener) EnterApplication(*parser.ApplicationContext) {}
 // ExitApplication is called when production application is exited.
 func (s *TreeShapeListener) ExitApplication(*parser.ApplicationContext) {}
 
-// EnterPath is called when production path is entered.
-func (s *TreeShapeListener) EnterPath(*parser.PathContext) {}
-
-// ExitPath is called when production path is exited.
-func (s *TreeShapeListener) ExitPath(*parser.PathContext) {}
-
 // EnterImport_stmt is called when production import_stmt is entered.
 func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
-	p := strings.Split(strings.TrimSpace(ctx.IMPORT().GetText()), " ")
-	path := p[len(p)-1]
-	if path[0] != '/' {
+	path := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
+	if !strings.HasPrefix(path, "/") {
 		path = filepath.ToSlash(s.base) + "/" + path
 	}
-	path += syslExt
-	s.imports = append(s.imports, path)
+
+	if !strings.Contains(filepath.Base(path), ".") {
+		path += syslExt
+	}
+
+	id := importDef{
+		filename: path,
+	}
+
+	if ctx.AS() != nil {
+		parts := ctx.AllName()
+		switch len(parts) {
+		case 1:
+			id.appname = parts[0].GetText()
+		case 2:
+			id.pkg = parts[0].GetText()
+			id.appname = parts[1].GetText()
+		}
+	}
+
+	if ctx.Import_mode() != nil {
+		mode := ctx.Import_mode()
+		id.mode = mode.GetText()
+	}
+
+	s.imports = append(s.imports, id)
 }
 
 // ExitImport_stmt is called when production import_stmt is exited.

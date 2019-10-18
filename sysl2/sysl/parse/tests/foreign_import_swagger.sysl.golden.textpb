@@ -1,0 +1,193 @@
+apps: <
+  key: "app"
+  value: <
+    name: <
+      part: "app"
+    >
+    long_name: "Simple"
+    attrs: <
+      key: "description"
+      value: <
+        s: "No description."
+      >
+    >
+    attrs: <
+      key: "package"
+      value: <
+        s: "pck"
+      >
+    >
+    endpoints: <
+      key: "GET /test"
+      value: <
+        name: "GET /test"
+        docstring: "No description."
+        attrs: <
+          key: "patterns"
+          value: <
+            a: <
+              elt: <
+                s: "rest"
+              >
+            >
+          >
+        >
+        stmt: <
+          ret: <
+            payload: "SimpleObj"
+          >
+        >
+        rest_params: <
+          method: GET
+          path: "/test"
+        >
+      >
+    >
+    types: <
+      key: "SimpleObj"
+      value: <
+        tuple: <
+          attr_defs: <
+            key: "name"
+            value: <
+              primitive: STRING
+              attrs: <
+                key: "json_tag"
+                value: <
+                  s: "name"
+                >
+              >
+              opt: true
+              source_context: <
+                start: <
+                  line: 21
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
+  key: "testapp"
+  value: <
+    name: <
+      part: "testapp"
+    >
+    long_name: "Goat CRUD API"
+    attrs: <
+      key: "description"
+      value: <
+        s: "No description."
+      >
+    >
+    attrs: <
+      key: "host"
+      value: <
+        s: "goat.example.com"
+      >
+    >
+    attrs: <
+      key: "package"
+      value: <
+        s: "package_foo"
+      >
+    >
+    attrs: <
+      key: "version"
+      value: <
+        s: "1.2.3"
+      >
+    >
+    endpoints: <
+      key: "GET /first"
+      value: <
+        name: "GET /first"
+        attrs: <
+          key: "patterns"
+          value: <
+            a: <
+              elt: <
+                s: "rest"
+              >
+            >
+          >
+        >
+        stmt: <
+          action: <
+            action: "..."
+          >
+        >
+        rest_params: <
+          method: GET
+          path: "/first"
+          query_param: <
+            name: "depth"
+            type: <
+              source_context: <
+                start: <
+                  line: 19
+                >
+              >
+            >
+          >
+          query_param: <
+            name: "limit"
+            type: <
+              primitive: INT
+              opt: true
+              source_context: <
+                start: <
+                  line: 19
+                >
+              >
+            >
+          >
+          query_param: <
+            name: "offset"
+            type: <
+              primitive: INT
+              opt: true
+              source_context: <
+                start: <
+                  line: 19
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    types: <
+      key: "Something"
+      value: <
+        tuple: <
+          attr_defs: <
+            key: "field1"
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
+                    part: "testapp"
+                  >
+                  path: "Something"
+                >
+                ref: <
+                  path: "FooBar"
+                >
+              >
+              opt: true
+              source_context: <
+                start: <
+                  line: 16
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

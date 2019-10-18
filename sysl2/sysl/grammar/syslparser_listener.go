@@ -533,8 +533,8 @@ type SyslParserListener interface {
 	// EnterApplication is called when entering the application production.
 	EnterApplication(c *ApplicationContext)
 
-	// EnterPath is called when entering the path production.
-	EnterPath(c *PathContext)
+	// EnterImport_mode is called when entering the import_mode production.
+	EnterImport_mode(c *Import_modeContext)
 
 	// EnterImport_stmt is called when entering the import_stmt production.
 	EnterImport_stmt(c *Import_stmtContext)
@@ -1070,8 +1070,8 @@ type SyslParserListener interface {
 	// ExitApplication is called when exiting the application production.
 	ExitApplication(c *ApplicationContext)
 
-	// ExitPath is called when exiting the path production.
-	ExitPath(c *PathContext)
+	// ExitImport_mode is called when exiting the import_mode production.
+	ExitImport_mode(c *Import_modeContext)
 
 	// ExitImport_stmt is called when exiting the import_stmt production.
 	ExitImport_stmt(c *Import_stmtContext)
