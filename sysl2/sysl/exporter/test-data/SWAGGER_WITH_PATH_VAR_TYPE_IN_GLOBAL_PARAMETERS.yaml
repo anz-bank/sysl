@@ -10,15 +10,15 @@ paths:
       - application/json
       description: No description.
       parameters:
-      - in: query
-        name: metadata
-        required: true
-        type: boolean
       - format: integer
         in: path
         name: id
         required: true
         type: number
+      - in: query
+        name: metadata
+        required: true
+        type: boolean
       - format: string
         in: header
         name: request-id

@@ -21,34 +21,34 @@ func MakeSwaggerExporter(app *proto.Application, logger *logrus.Logger) *Swagger
 	}
 }
 
-func (v *SwaggerExporter) GenerateSwagger() error {
-	v.buildSwagger.Swagger = "2.0"
-	v.buildSwagger.Host = v.app.GetAttrs()["host"].GetS()
+func (s *SwaggerExporter) GenerateSwagger() error {
+	s.buildSwagger.Swagger = "2.0"
+	s.buildSwagger.Host = s.app.GetAttrs()["host"].GetS()
 
-	v.buildSwagger.SwaggerProps.Info = &spec.Info{}
-	v.buildSwagger.Paths = &spec.Paths{}
-	v.buildSwagger.Paths.Paths = map[string]spec.PathItem{}
-	v.buildSwagger.Definitions = spec.Definitions{}
+	s.buildSwagger.SwaggerProps.Info = &spec.Info{}
+	s.buildSwagger.Paths = &spec.Paths{}
+	s.buildSwagger.Paths.Paths = map[string]spec.PathItem{}
+	s.buildSwagger.Definitions = spec.Definitions{}
 
-	v.buildSwagger.SwaggerProps.Info.Title = v.app.LongName
-	v.buildSwagger.SwaggerProps.Info.Description = v.app.GetAttrs()["description"].GetS()
-	v.buildSwagger.SwaggerProps.Info.Version = v.app.GetAttrs()["version"].GetS()
-	if v.buildSwagger.SwaggerProps.Info.Version == "" {
-		v.buildSwagger.SwaggerProps.Info.Version = "0.0.0"
+	s.buildSwagger.SwaggerProps.Info.Title = s.app.LongName
+	s.buildSwagger.SwaggerProps.Info.Description = s.app.GetAttrs()["description"].GetS()
+	s.buildSwagger.SwaggerProps.Info.Version = s.app.GetAttrs()["version"].GetS()
+	if s.buildSwagger.SwaggerProps.Info.Version == "" {
+		s.buildSwagger.SwaggerProps.Info.Version = "0.0.0"
 	}
 
 	// parse type defs
-	typeExporter := makeTypeExporter(v.log)
-	typeExportError := typeExporter.exportTypes(v.app.GetTypes(), v.buildSwagger.Definitions)
+	typeExporter := makeTypeExporter(s.log)
+	typeExportError := typeExporter.populateTypes(s.app.GetTypes(), s.buildSwagger.Definitions)
 	if typeExportError != nil {
 		return typeExportError
 	}
 
-	endpointExporter := makeEndpointExporter(typeExporter, v.log)
+	endpointExporter := makeEndpointExporter(typeExporter, s.log)
 
 	// iterate over each endpoint in the selected application
-	for endpointName, endpoint := range v.app.Endpoints {
-		err := endpointExporter.exportEndpoint(endpointName, endpoint, v.buildSwagger.Paths.Paths)
+	for endpointName, endpoint := range s.app.Endpoints {
+		err := endpointExporter.populateEndpoint(endpointName, endpoint, s.buildSwagger.Paths.Paths)
 		if err != nil {
 			return err
 		}
@@ -56,8 +56,8 @@ func (v *SwaggerExporter) GenerateSwagger() error {
 	return nil
 }
 
-func (v *SwaggerExporter) SerializeToYaml() ([]byte, error) {
-	jsonSpec, err := v.buildSwagger.MarshalJSON()
+func (s *SwaggerExporter) SerializeToYaml() ([]byte, error) {
+	jsonSpec, err := s.buildSwagger.MarshalJSON()
 	if err != nil {
 		return nil, err
 	}

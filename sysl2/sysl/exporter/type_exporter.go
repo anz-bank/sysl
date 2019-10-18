@@ -9,41 +9,46 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type protoType struct {
+	Format string
+	Type   string
+}
+
 type TypeExporter struct {
-	primitiveTypesMap map[proto.Type_Primitive]map[string]string
+	primitiveTypesMap map[proto.Type_Primitive]protoType
 	log               *logrus.Logger
 }
 
 func makeTypeExporter(logger *logrus.Logger) *TypeExporter {
 	return &TypeExporter{
-		primitiveTypesMap: map[proto.Type_Primitive]map[string]string{
-			proto.Type_NO_Primitive: {"format": "", "type": "object"},
-			proto.Type_BOOL:         {"format": "", "type": "boolean"},
-			proto.Type_INT:          {"format": "integer", "type": "number"},
-			proto.Type_FLOAT:        {"format": "double", "type": "number"},
-			proto.Type_DECIMAL:      {"format": "double", "type": "number"},
-			proto.Type_STRING:       {"format": "string", "type": "string"},
-			proto.Type_BYTES:        {"format": "string", "type": "string"},
-			proto.Type_STRING_8:     {"format": "string", "type": "string"},
-			proto.Type_DATE:         {"format": "string", "type": "string"},
-			proto.Type_DATETIME:     {"format": "string", "type": "string"},
-			proto.Type_XML:          {"format": "string", "type": "string"},
+		primitiveTypesMap: map[proto.Type_Primitive]protoType{
+			proto.Type_NO_Primitive: {Format: "", Type: "object"},
+			proto.Type_BOOL:         {Format: "", Type: "boolean"},
+			proto.Type_INT:          {Format: "integer", Type: "number"},
+			proto.Type_FLOAT:        {Format: "double", Type: "number"},
+			proto.Type_DECIMAL:      {Format: "double", Type: "number"},
+			proto.Type_STRING:       {Format: "string", Type: "string"},
+			proto.Type_BYTES:        {Format: "string", Type: "string"},
+			proto.Type_STRING_8:     {Format: "string", Type: "string"},
+			proto.Type_DATE:         {Format: "string", Type: "string"},
+			proto.Type_DATETIME:     {Format: "string", Type: "string"},
+			proto.Type_XML:          {Format: "string", Type: "string"},
 		},
 		log: logger,
 	}
 }
 
-func (v *TypeExporter) exportTypes(syslTypes map[string]*proto.Type, swaggerTypes spec.Definitions) error {
-	for typeName, typeType := range syslTypes {
+func (t *TypeExporter) populateTypes(syslTypes map[string]*proto.Type, swaggerTypes spec.Definitions) error {
+	for typeName, dataType := range syslTypes {
 		typeSchema := spec.Schema{}
-		if v.isComposite(typeType) {
-			v.parseComposite(typeType, &typeSchema)
+		if t.isComposite(dataType) {
+			t.parseComposite(dataType, &typeSchema)
 			swaggerTypes[typeName] = typeSchema
 			continue
 		}
-		valueMap, err := v.findSwaggerType(typeType)
+		valueMap, err := t.findSwaggerType(dataType)
 		if err != nil {
-			v.log.Warnf("Type matching failed %s", err)
+			t.log.Warnf("Type matching failed %s", err)
 			return err
 		}
 		var ok bool
@@ -57,19 +62,20 @@ func (v *TypeExporter) exportTypes(syslTypes map[string]*proto.Type, swaggerType
 			typeSchema.Properties = map[string]spec.Schema{}
 		}
 		if valueMap["format"] == "tuple" {
-			memberTypes = typeType.GetTuple().GetAttrDefs()
+			memberTypes = dataType.GetTuple().GetAttrDefs()
 		} else if valueMap["format"] == "relation" {
-			memberTypes = typeType.GetRelation().GetAttrDefs()
+			memberTypes = dataType.GetRelation().GetAttrDefs()
 		}
 		var attrValueMap map[string]string
 		for attK, attV := range memberTypes {
 			elementSchema := spec.Schema{}
-			if v.isComposite(attV) {
-				v.parseComposite(attV, &elementSchema)
+			if t.isComposite(attV) {
+				t.parseComposite(attV, &elementSchema)
 				swaggerTypes[attK] = elementSchema
 			} else {
-				attrValueMap, err = v.findSwaggerType(attV)
+				attrValueMap, err = t.findSwaggerType(attV)
 				if err != nil {
+					t.log.Warnf("Type matching failed %s", err)
 					return err
 				}
 			}
@@ -82,10 +88,13 @@ func (v *TypeExporter) exportTypes(syslTypes map[string]*proto.Type, swaggerType
 	return nil
 }
 
-func (v *TypeExporter) findSwaggerType(syslType *proto.Type) (map[string]string, error) {
+func (t *TypeExporter) findSwaggerType(syslType *proto.Type) (map[string]string, error) {
 	switch s := syslType.Type.(type) {
 	case *proto.Type_Primitive_:
-		return v.primitiveTypesMap[syslType.GetPrimitive()], nil
+		typeMap := map[string]string{}
+		typeMap["format"] = t.primitiveTypesMap[syslType.GetPrimitive()].Format
+		typeMap["type"] = t.primitiveTypesMap[syslType.GetPrimitive()].Type
+		return typeMap, nil
 	case *proto.Type_Enum_:
 		return map[string]string{"format": "integer", "type": "number"}, nil
 	case *proto.Type_Tuple_:
@@ -102,7 +111,7 @@ func (v *TypeExporter) findSwaggerType(syslType *proto.Type) (map[string]string,
 	}
 }
 
-func (v *TypeExporter) isComposite(containerType *proto.Type) bool {
+func (t *TypeExporter) isComposite(containerType *proto.Type) bool {
 	if _, isSet := containerType.Type.(*proto.Type_Set); isSet {
 		return true
 	} else if _, isSeq := containerType.Type.(*proto.Type_Sequence); isSeq {
@@ -111,7 +120,7 @@ func (v *TypeExporter) isComposite(containerType *proto.Type) bool {
 	return false
 }
 
-func (v *TypeExporter) isCompositeString(containerType string) bool {
+func (t *TypeExporter) isCompositeString(containerType string) bool {
 	typeTokens := strings.Split(strings.ToLower(containerType), " ")
 	switch typeTokens[0] {
 	case "set", "sequence", "map":
@@ -121,23 +130,23 @@ func (v *TypeExporter) isCompositeString(containerType string) bool {
 	}
 }
 
-func (v *TypeExporter) parseComposite(containerType *proto.Type, schema *spec.Schema) {
+func (t *TypeExporter) parseComposite(containerType *proto.Type, schema *spec.Schema) {
 	schema.Items = &spec.SchemaOrArray{}
 	schema.Items.Schema = &spec.Schema{}
 	if cType, isSet := containerType.Type.(*proto.Type_Set); isSet {
 		schema.Type = []string{"array"}
-		retMap, err := v.findSwaggerType(cType.Set)
+		retMap, err := t.findSwaggerType(cType.Set)
 		if err != nil {
-			v.log.Warnf("Type matching failed %s", err)
+			t.log.Warnf("Type matching failed %s", err)
 			return
 		}
 		schema.Items.Schema.Format = retMap["format"]
 		schema.Items.Schema.Type = append(schema.Items.Schema.Type, retMap["type"])
 	} else if cType, isSeq := containerType.Type.(*proto.Type_Sequence); isSeq {
 		schema.Type = []string{"array"}
-		retMap, err := v.findSwaggerType(cType.Sequence)
+		retMap, err := t.findSwaggerType(cType.Sequence)
 		if err != nil {
-			v.log.Warnf("Type matching failed %s", err)
+			t.log.Warnf("Type matching failed %s", err)
 			return
 		}
 		schema.Items.Schema.Format = retMap["format"]

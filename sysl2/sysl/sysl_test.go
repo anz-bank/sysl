@@ -438,7 +438,7 @@ func TestMain2WithTextPbMode(t *testing.T) {
 			"pb",
 			"--mode", "textpb",
 			"-o", out,
-			"tests/api.sysl",
+			"tests/call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -458,7 +458,7 @@ func TestMain2WithJSONMode(t *testing.T) {
 			"pb",
 			"--mode", "json",
 			"-o", out,
-			"tests/api.sysl",
+			"tests/call.sysl",
 		},
 		fs, logger, main3,
 	)

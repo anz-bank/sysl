@@ -29,7 +29,7 @@ const (
 	dataType = "type"
 )
 
-func (v *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Response, endpoint *proto.Endpoint) {
+func (e *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Response, endpoint *proto.Endpoint) {
 	regex := regexp.MustCompile(`^\d{3}$`)
 	var retValues []string
 	for _, stmt := range endpoint.GetStmt() {
@@ -45,11 +45,11 @@ func (v *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Respons
 				status, err := strconv.Atoi(retValues[0])
 				if err != nil {
 					// log and ignore type
-					v.log.Warnf("Type matching failed %s", err)
+					e.log.Warnf("Type matching failed %s", err)
 					continue
 				}
 				res.ResponseProps.Description = http.StatusText(status)
-				if v.typeEx.isCompositeString(retValues[1]) {
+				if e.typeEx.isCompositeString(retValues[1]) {
 					str := strings.Split(retValues[1], " ")
 					res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + str[len(str)-1]
 				} else {
@@ -59,14 +59,14 @@ func (v *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Respons
 			case hasStatusCode:
 				status, err := strconv.Atoi(retValues[0])
 				if err != nil {
-					v.log.Warnf("Error converting return code %s", err)
+					e.log.Warnf("Error converting return code %s", err)
 					continue
 				}
 				res.ResponseProps.Description = http.StatusText(status)
 				returnStatusMap[status] = *res
 			default:
 				res.ResponseProps.Description = http.StatusText(200)
-				if v.typeEx.isCompositeString(retValues[0]) {
+				if e.typeEx.isCompositeString(retValues[0]) {
 					str := strings.Split(retValues[0], " ")
 					res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + str[len(str)-1]
 				} else {
@@ -78,7 +78,8 @@ func (v *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Respons
 	}
 }
 
-func (v *EndpointExporter) exportEndpoint(path string, endpoint *proto.Endpoint, paths map[string]spec.PathItem) error {
+func (e *EndpointExporter) populateEndpoint(path string, endpoint *proto.Endpoint, paths map[string]spec.PathItem,
+) error {
 	// extract the endpoint info and populate spec.PathItem
 	var pathItem spec.PathItem
 	var pathExists bool
@@ -86,23 +87,23 @@ func (v *EndpointExporter) exportEndpoint(path string, endpoint *proto.Endpoint,
 		pathItem = spec.PathItem{}
 	}
 	returnStatusMap := map[int]spec.Response{}
-	v.exportChildStmts(returnStatusMap, endpoint)
-	op := v.parseHTTPMethod(path, endpoint, &pathItem)
+	e.exportChildStmts(returnStatusMap, endpoint)
+	op := e.setHTTPMethod(path, endpoint, &pathItem)
 	op.Description = endpoint.GetDocstring()
 	op.Summary = endpoint.GetDocstring()
 	op.Responses.StatusCodeResponses = returnStatusMap
 	op.Produces = []string{"application/json"}
 	op.Consumes = []string{"application/json"}
 
-	pathParamError := v.parsePathParams(endpoint, op)
+	pathParamError := e.setPathParams(endpoint, op)
 	if pathParamError != nil {
 		return pathParamError
 	}
-	queryParamError := v.parseQueryParams(endpoint, op)
+	queryParamError := e.setQueryParams(endpoint, op)
 	if queryParamError != nil {
 		return queryParamError
 	}
-	paramError := v.parseOtherParams(endpoint, op)
+	paramError := e.setOtherParams(endpoint, op)
 	if paramError != nil {
 		return paramError
 	}
@@ -110,44 +111,33 @@ func (v *EndpointExporter) exportEndpoint(path string, endpoint *proto.Endpoint,
 	return nil
 }
 
-func (v *EndpointExporter) parseHTTPMethod(path string, endpoint *proto.Endpoint, pathItem *spec.PathItem,
+func (e *EndpointExporter) setHTTPMethod(path string, endpoint *proto.Endpoint, pathItem *spec.PathItem,
 ) *spec.Operation {
 	endpointTokens := strings.Split(path, " ")
+	op := &spec.Operation{}
+	op.Description = endpoint.GetLongName()
+	op.Responses = &spec.Responses{}
 	switch endpointTokens[0] {
 	case `GET`:
-		pathItem.PathItemProps.Get = &spec.Operation{}
-		pathItem.PathItemProps.Get.Description = endpoint.GetLongName()
-		pathItem.PathItemProps.Get.Responses = &spec.Responses{}
-		return pathItem.PathItemProps.Get
+		pathItem.PathItemProps.Get = op
 	case `POST`:
-		pathItem.PathItemProps.Post = &spec.Operation{}
-		pathItem.PathItemProps.Post.Description = endpoint.GetLongName()
-		pathItem.PathItemProps.Post.Responses = &spec.Responses{}
-		return pathItem.PathItemProps.Post
+		pathItem.PathItemProps.Post = op
 	case `PUT`:
-		pathItem.PathItemProps.Put = &spec.Operation{}
-		pathItem.PathItemProps.Put.Description = endpoint.GetLongName()
-		pathItem.PathItemProps.Put.Responses = &spec.Responses{}
-		return pathItem.PathItemProps.Put
+		pathItem.PathItemProps.Put = op
 	case `DELETE`:
-		pathItem.PathItemProps.Delete = &spec.Operation{}
-		pathItem.PathItemProps.Delete.Description = endpoint.GetLongName()
-		pathItem.PathItemProps.Delete.Responses = &spec.Responses{}
-		return pathItem.PathItemProps.Delete
+		pathItem.PathItemProps.Delete = op
 	case `PATCH`:
-		pathItem.PathItemProps.Patch = &spec.Operation{}
-		pathItem.PathItemProps.Patch.Description = endpoint.GetLongName()
-		pathItem.PathItemProps.Patch.Responses = &spec.Responses{}
-		return pathItem.PathItemProps.Patch
+		pathItem.PathItemProps.Patch = op
 	}
-	return nil
+	return op
 }
 
-func (v *EndpointExporter) parseQueryParams(endpoint *proto.Endpoint, op *spec.Operation) error {
+func (e *EndpointExporter) setPathParams(endpoint *proto.Endpoint, op *spec.Operation) error {
 	for _, inParam := range endpoint.GetRestParams().GetUrlParam() {
 		param := spec.PathParam(inParam.GetName())
-		valueMap, err := v.typeEx.findSwaggerType(inParam.GetType())
+		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
 		if err != nil {
+			e.log.Warnf("Setting path params failed %s", err)
 			return err
 		}
 		param.Format = valueMap[format]
@@ -162,11 +152,12 @@ func (v *EndpointExporter) parseQueryParams(endpoint *proto.Endpoint, op *spec.O
 	return nil
 }
 
-func (v *EndpointExporter) parsePathParams(endpoint *proto.Endpoint, op *spec.Operation) error {
+func (e *EndpointExporter) setQueryParams(endpoint *proto.Endpoint, op *spec.Operation) error {
 	for _, inParam := range endpoint.GetRestParams().GetQueryParam() {
 		param := spec.QueryParam(inParam.GetName())
-		valueMap, err := v.typeEx.findSwaggerType(inParam.GetType())
+		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
 		if err != nil {
+			e.log.Warnf("Setting query params failed %s", err)
 			return err
 		}
 		param.Format = valueMap[format]
@@ -181,13 +172,14 @@ func (v *EndpointExporter) parsePathParams(endpoint *proto.Endpoint, op *spec.Op
 	return nil
 }
 
-func (v *EndpointExporter) parseOtherParams(endpoint *proto.Endpoint, op *spec.Operation) error {
+func (e *EndpointExporter) setOtherParams(endpoint *proto.Endpoint, op *spec.Operation) error {
 	var attrMap map[string]*proto.Attribute
 	for _, inParam := range endpoint.GetParam() {
 		attrMap = inParam.GetType().GetAttrs()
 		param := &spec.Parameter{}
-		valueMap, err := v.typeEx.findSwaggerType(inParam.GetType())
+		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
 		if err != nil {
+			e.log.Warnf("Setting header params failed %s", err)
 			return err
 		}
 		if _, ok := attrMap["header"]; ok {
