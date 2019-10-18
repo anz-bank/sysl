@@ -1,0 +1,17 @@
+definitions:
+  Goat:
+    format: tuple
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      weight:
+        type: number
+    type: object
+info:
+  description: No description.
+  title: Simple
+  version: 0.0.0
+paths: {}
+swagger: "2.0"

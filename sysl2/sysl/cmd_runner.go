@@ -46,6 +46,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&importCmd{},
 		&infoCmd{},
 		&validateCmd{},
+		&swaggerExportCmd{},
 	}
 	r.commands = map[string]Command{}
 

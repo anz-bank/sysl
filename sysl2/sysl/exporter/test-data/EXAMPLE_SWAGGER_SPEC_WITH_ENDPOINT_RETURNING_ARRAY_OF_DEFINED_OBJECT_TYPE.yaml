@@ -1,0 +1,42 @@
+definitions:
+  Goat:
+    format: tuple
+    properties:
+      birthday:
+        type: string
+      name:
+        type: string
+    type: object
+host: goat.example.com
+info:
+  description: No description.
+  title: Goat CRUD API
+  version: 1.2.3
+paths:
+  /api/v1/goat/get-seq-goats:
+    get:
+      consumes:
+      - application/json
+      description: Gotta get goats.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Goat'
+      summary: Gotta get goats.
+  /api/v1/goat/get-set-goats:
+    get:
+      consumes:
+      - application/json
+      description: Gotta get goats.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Goat'
+      summary: Gotta get goats.
+swagger: "2.0"

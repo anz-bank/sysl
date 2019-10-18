@@ -1,0 +1,33 @@
+definitions:
+  Acknowledgement:
+    format: tuple
+    properties:
+      message:
+        type: string
+    type: object
+host: goat.example.com
+info:
+  description: No description.
+  title: Goat CRUD API
+  version: 1.2.3
+paths:
+  /api/v1/goat/delete-goat:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a goat.
+      parameters:
+      - format: string
+        in: query
+        name: goat_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Acknowledgement'
+      summary: Delete a goat.
+swagger: "2.0"

@@ -1,0 +1,43 @@
+info:
+  description: foo
+  title: foo
+  version: 0.0.0
+paths:
+  /random/createfoo:
+    patch:
+      consumes:
+      - application/json
+      description: Create a foo.
+      parameters:
+      - format: string
+        in: header
+        name: UUID
+        type: string
+      - format: string
+        in: header
+        name: FooID
+        type: string
+      - format: string
+        in: header
+        name: RequestID
+        type: string
+      - format: string
+        in: header
+        name: sessionId
+        type: string
+      - format: string
+        in: header
+        name: deviceId
+        type: string
+      - format: string
+        in: header
+        name: ipAddress
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+      summary: Create a foo.
+swagger: "2.0"
