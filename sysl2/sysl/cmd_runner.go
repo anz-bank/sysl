@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"sort"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -42,7 +43,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&datamodelCmd{},
 		&codegenCmd{},
 		&sequenceDiagramCmd{},
-		&importSwaggerCmd{},
+		&importCmd{},
 		&infoCmd{},
 		&validateCmd{},
 		&swaggerExportCmd{},
@@ -53,6 +54,9 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		"sysl root directory for input model file (default: .)").
 		Default(".").StringVar(&r.Root)
 
+	sort.Slice(commands, func(i, j int) bool {
+		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
+	})
 	for _, cmd := range commands {
 		c := cmd.Configure(app)
 		if cmd.RequireSyslModule() {

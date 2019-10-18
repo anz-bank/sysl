@@ -3,6 +3,7 @@ module github.com/anz-bank/sysl
 go 1.12
 
 require (
+	aqwari.net/xml v0.0.0-20190526204230-8dd125f7c15c
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20191011202612-ad2bd05285ca

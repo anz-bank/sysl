@@ -1,3 +1,5 @@
+aqwari.net/xml v0.0.0-20190526204230-8dd125f7c15c h1:f+Wj60YseBrCYBznS+vlUE14rsBfPj/MAWhUSHsLTEg=
+aqwari.net/xml v0.0.0-20190526204230-8dd125f7c15c/go.mod h1:NIqcJ5inc6DJNSGCVEYGd3vohE6xF4fhUKHSl5bItVE=
 github.com/PuerkitoBio/purell v1.1.0/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/purell v1.1.1 h1:WEQqlqaGbrPkxLJWfBwQmfEAE1Z7ONdDLqrN38tNFfI=
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
