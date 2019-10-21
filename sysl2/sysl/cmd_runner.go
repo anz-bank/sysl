@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -21,8 +22,9 @@ const (
 type cmdRunner struct {
 	commands map[string]Command
 
-	Root   string
-	module string
+	RootStatus *roothandler.RootStatus
+	root       string
+	module     string
 }
 
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
@@ -36,12 +38,13 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 					return err
 				}
 
-				mod, _, err = LoadSyslModule(r.Root, r.module, fs, logger)
+				mod, _, err = LoadSyslModule(r, r.module, fs, logger)
 				if err != nil {
 					return err
 				}
 			}
 
+			// TODO: what filesystem to pass for execution?
 			return cmd.Execute(ExecuteArgs{mod, fs, logger})
 		}
 	}
@@ -49,71 +52,8 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 }
 
 func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
-	moduleAbsolutePath, err := filepath.Abs(r.module)
-	if err != nil {
-		return err
-	}
-
-	syslRootPath, err := r.findRootFromASyslModule(moduleAbsolutePath, fs)
-	if err != nil {
-		return err
-	}
-
-	rootIsDefined := r.Root != ""
-	syslRootExists := syslRootPath != ""
-
-	switch {
-	case rootIsDefined && syslRootExists:
-		logger.WithFields(logrus.Fields{
-			"root":      r.Root,
-			"SYSL_ROOT": syslRootPath,
-		}).Warningf("root is defined even though %s exists\n", syslRootMarker)
-	case rootIsDefined && !syslRootExists:
-		logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.Root)
-	case !rootIsDefined && !syslRootExists:
-		logger.Errorf("root and %s are undefined", syslRootMarker)
-		return errors.New("root is not defined")
-	}
-
-	// r.Root must be relative to the current directory
-	absoluteRoot, err := filepath.Abs(".")
-	if err != nil {
-		return err
-	}
-
-	if !rootIsDefined && syslRootExists {
-		relativeSyslRootPath, err := filepath.Rel(absoluteRoot, syslRootPath)
-		if err != nil {
-			return err
-		}
-		r.Root = relativeSyslRootPath
-	}
-
-	return nil
-}
-
-func (r *cmdRunner) findRootFromASyslModule(absolutePath string, fs afero.Fs) (string, error) {
-	// Takes the closest root marker
-	currentPath := absolutePath
-
-	for {
-		// Keep walking up the directories
-		currentPath = filepath.Dir(currentPath)
-
-		rootPath := filepath.Join(currentPath, syslRootMarker)
-
-		if exists, err := afero.Exists(fs, rootPath); err != nil {
-			return "", err
-		} else if exists {
-			break
-		}
-		if currentPath == "." || currentPath == "/" {
-			return "", nil
-		}
-	}
-
-	// returned path is always an absolute path
-	return currentPath, nil
+	r.RootStatus = roothandler.NewRootStatus(r.root)
+	return r.RootStatus.RootHandler(r.module, fs, logger)
 }
 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
@@ -134,7 +74,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 
 	app.Flag("root",
 		"sysl root directory for input model file (default: .)").
-		Default("").StringVar(&r.Root)
+		Default("").StringVar(&r.root)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
