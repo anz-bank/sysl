@@ -1,0 +1,15 @@
+definitions:
+  EXTERNAL_TopLevelArray_obj:
+    format: string
+    type: string
+  TopLevelArray:
+    items:
+      format: EXTERNAL_TopLevelArray_obj
+      type: object
+    type: array
+info:
+  description: No description.
+  title: Simple
+  version: 0.0.0
+paths: {}
+swagger: "2.0"

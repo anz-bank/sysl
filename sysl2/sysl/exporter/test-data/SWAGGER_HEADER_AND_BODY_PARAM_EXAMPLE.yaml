@@ -1,0 +1,39 @@
+definitions:
+  SimpleObj:
+    format: tuple
+    properties:
+      name:
+        type: string
+    type: object
+info:
+  description: No description.
+  title: Simple
+  version: 0.0.0
+paths:
+  /test:
+    post:
+      consumes:
+      - application/json
+      description: No description.
+      parameters:
+      - format: SimpleObj
+        in: header
+        schema:
+          $ref: '#/definitions/SimpleObj'
+        type: object
+      - format: integer
+        in: header
+        name: key
+        type: number
+      - format: string
+        in: header
+        name: min_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+      summary: No description.
+swagger: "2.0"

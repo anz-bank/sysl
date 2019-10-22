@@ -1,0 +1,28 @@
+host: api.example.com
+info:
+  description: API description in Markdown.
+  title: Sample API
+  version: 1.0.0
+paths:
+  /v1/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: No description.
+      parameters:
+      - format: integer
+        in: path
+        name: id
+        required: true
+        type: number
+      - in: header
+        name: metadata
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+      summary: No description.
+swagger: "2.0"
