@@ -130,41 +130,52 @@ func (e *EndpointExporter) setHTTPMethod(path string, endpoint *proto.Endpoint, 
 	return op
 }
 
+func (e *EndpointExporter) setCommonAttributes(
+	name string,
+	param *spec.Parameter,
+	attrMap map[string]*proto.Attribute,
+	valueMap protoType,
+) {
+	param.Format = valueMap.Format
+	param.Type = valueMap.Type
+	param.Name = name
+	if _, ok := attrMap["required"]; ok {
+		param.Required = true
+	} else {
+		param = param.AsOptional()
+	}
+	if param.Type == object {
+		param.Schema.ExtraProps["$ref"] = "#/definitions/" + param.Format
+	}
+}
+
 func (e *EndpointExporter) setPathParams(endpoint *proto.Endpoint, op *spec.Operation) error {
+	var attrMap map[string]*proto.Attribute
 	for _, inParam := range endpoint.GetRestParams().GetUrlParam() {
+		attrMap = inParam.GetType().GetAttrs()
 		param := spec.PathParam(inParam.GetName())
 		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
 		if err != nil {
 			e.log.Warnf("Setting path params failed %s", err)
 			return err
 		}
-		param.Format = valueMap.Format
-		param.Type = valueMap.Type
-		param.Name = inParam.GetName()
-		param.Required = true
-		if param.Type == object {
-			param.Schema.ExtraProps["$ref"] = "#/definitions/" + param.Format
-		}
+		e.setCommonAttributes(inParam.GetName(), param, attrMap, valueMap)
 		op.Parameters = append(op.Parameters, *param)
 	}
 	return nil
 }
 
 func (e *EndpointExporter) setQueryParams(endpoint *proto.Endpoint, op *spec.Operation) error {
+	var attrMap map[string]*proto.Attribute
 	for _, inParam := range endpoint.GetRestParams().GetQueryParam() {
+		attrMap = inParam.GetType().GetAttrs()
 		param := spec.QueryParam(inParam.GetName())
 		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
 		if err != nil {
 			e.log.Warnf("Setting query params failed %s", err)
 			return err
 		}
-		param.Format = valueMap.Format
-		param.Type = valueMap.Type
-		param.Name = inParam.GetName()
-		param.Required = true
-		if param.Type == object {
-			param.Schema.ExtraProps["$ref"] = "#/definitions/" + param.Format
-		}
+		e.setCommonAttributes(inParam.GetName(), param, attrMap, valueMap)
 		op.Parameters = append(op.Parameters, *param)
 	}
 	return nil

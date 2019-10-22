@@ -609,12 +609,32 @@ func TestMain2WithBinaryInfoCmd(t *testing.T) {
 	assert.Equal(t, 0, exitCode)
 }
 
-func TestSwaggerExportCmd(t *testing.T) {
+func TestSwaggerExport(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	_, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "export-swagger", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
+	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-t", "swagger", "-a", "testapp",
 		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
 	_, err := ioutil.ReadFile("SIMPLE_SWAGGER_EXAMPLE.yaml")
+	assert.NoError(t, err)
+}
+
+func TestSwaggerExportYaml(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	_, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
+		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+	_, err := ioutil.ReadFile("SIMPLE_SWAGGER_EXAMPLE.yaml")
+	assert.NoError(t, err)
+}
+
+func TestSwaggerExportJson(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	_, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.json", "-f", "json", "-a", "testapp",
+		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+	_, err := ioutil.ReadFile("SIMPLE_SWAGGER_EXAMPLE.json")
 	assert.NoError(t, err)
 }
