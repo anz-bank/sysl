@@ -413,7 +413,7 @@ application:  SYSL_COMMENT*
                 ;
 
 import_mode     : TILDE Name;
-import_stmt     : IMPORT IMPORT_PATH (AS (Name|Name DOT Name))?WS*import_mode? (SYSL_COMMENT*|NEWLINE);
+import_stmt     : IMPORT IMPORT_PATH (AS Name (DOT Name)*)? WS* import_mode? (SYSL_COMMENT*|NEWLINE);
 imports_decl    : import_stmt+;
 
 sysl_file       : imports_decl? application+ EOF;

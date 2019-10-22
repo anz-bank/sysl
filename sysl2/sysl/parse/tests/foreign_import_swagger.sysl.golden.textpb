@@ -14,7 +14,7 @@ apps: <
     attrs: <
       key: "package"
       value: <
-        s: "pck"
+        s: "com.foo.bar"
       >
     >
     endpoints: <
