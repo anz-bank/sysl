@@ -41,7 +41,8 @@ func TestExportAll(t *testing.T) {
 				yamlFileBytes, err := ioutil.ReadFile("../exporter/test-data/" + parts[0] + `.yaml`)
 				require.NoError(t, err)
 				if string(yamlFileBytes) != string(out) {
-					t.Errorf("Content mismatched\n%s\n*******\n%s for Filename %s", string(yamlFileBytes), string(out), parts[0]+`.sysl`)
+					t.Errorf("Content mismatched\n%s\n*******\n%s for Filename %s", string(yamlFileBytes),
+						string(out), parts[0]+`.sysl`)
 				}
 			})
 		}
