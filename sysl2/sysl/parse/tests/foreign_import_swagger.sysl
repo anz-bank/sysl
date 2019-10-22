@@ -1,4 +1,4 @@
-import foreign_import_swagger.yaml as pck.app ~swagger
+import foreign_import_swagger.yaml as com.foo.bar.app ~swagger
 
 ##########################################
 ##                                      ##

@@ -3694,14 +3694,13 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	}
 
 	if ctx.AS() != nil {
-		parts := ctx.AllName()
-		switch len(parts) {
-		case 1:
-			id.appname = parts[0].GetText()
-		case 2:
-			id.pkg = parts[0].GetText()
-			id.appname = parts[1].GetText()
+		parts := make([]string, len(ctx.AllName()))
+		for i, name := range ctx.AllName() {
+			parts[i] = name.GetText()
 		}
+
+		id.appname = parts[len(parts)-1]
+		id.pkg = strings.Join(parts[0:len(parts)-1], ".")
 	}
 
 	if ctx.Import_mode() != nil {
