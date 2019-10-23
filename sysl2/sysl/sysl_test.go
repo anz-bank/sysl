@@ -609,32 +609,56 @@ func TestMain2WithBinaryInfoCmd(t *testing.T) {
 	assert.Equal(t, 0, exitCode)
 }
 
-func TestSwaggerExport(t *testing.T) {
+func TestSwaggerExportCurrentDir(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	_, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-t", "swagger", "-a", "testapp",
-		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
-	_, err := ioutil.ReadFile("SIMPLE_SWAGGER_EXAMPLE.yaml")
-	assert.NoError(t, err)
-}
-
-func TestSwaggerExportYaml(t *testing.T) {
-	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	_, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
 		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
-	_, err := ioutil.ReadFile("SIMPLE_SWAGGER_EXAMPLE.yaml")
-	assert.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs, "/SIMPLE_SWAGGER_EXAMPLE.yaml")
+}
+
+func TestSwaggerExportTargetDir(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "export", "-o", "tests/SIMPLE_SWAGGER_EXAMPLE1.yaml", "-a", "testapp",
+		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+	testutil.AssertFsHasExactly(t, memFs, "/tests/SIMPLE_SWAGGER_EXAMPLE1.yaml")
 }
 
 func TestSwaggerExportJson(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	_, fs := testutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.json", "-f", "json", "-a", "testapp",
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "export", "-o", "tests/SIMPLE_SWAGGER_EXAMPLE2.json", "-a", "testapp",
 		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
-	_, err := ioutil.ReadFile("SIMPLE_SWAGGER_EXAMPLE.json")
-	assert.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs, "/tests/SIMPLE_SWAGGER_EXAMPLE2.json")
+}
+
+func TestSwaggerExportInvalid(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	_, fs := testutil.WriteToMemOverlayFs(".")
+	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
+		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+	assert.True(t, errInt == 1)
+}
+
+func TestSwaggerAppExportNoDir(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "export", "-o", "out/%(appname).yaml",
+		"exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, fs, logger, main3)
+	testutil.AssertFsHasExactly(t, memFs, "/out/single.yaml", "/out/multiple.yaml")
+}
+
+func TestSwaggerAppExportDirExists(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	main2([]string{"sysl", "export", "-o", "tests/%(appname).yaml",
+		"exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, fs, logger, main3)
+	testutil.AssertFsHasExactly(t, memFs, "/tests/single.yaml", "/tests/multiple.yaml")
 }

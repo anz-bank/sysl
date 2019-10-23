@@ -1,0 +1,51 @@
+definitions:
+  SimpleObj:
+    format: tuple
+    properties:
+      name:
+        format: string
+        type: string
+    type: object
+info:
+  description: No description.
+  title: Simple
+  version: 0.0.0
+paths:
+  /test:
+    delete:
+      consumes:
+      - application/json
+      description: No description.
+      produces:
+      - application/json
+      responses:
+        "203":
+          description: Non-Authoritative Information
+          schema: {}
+      summary: No description.
+    get:
+      consumes:
+      - application/json
+      description: No description.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SimpleObj'
+      summary: No description.
+  /tests:
+    get:
+      consumes:
+      - application/json
+      description: No description.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SimpleObj'
+      summary: No description.
+swagger: "2.0"
