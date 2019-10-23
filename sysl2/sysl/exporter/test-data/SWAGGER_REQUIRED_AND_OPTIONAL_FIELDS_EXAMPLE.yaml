@@ -3,10 +3,13 @@ definitions:
     format: tuple
     properties:
       id:
+        format: string
         type: string
       name:
+        format: string
         type: string
       weight:
+        format: double
         type: number
     type: object
 info:

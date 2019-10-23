@@ -3,6 +3,7 @@ definitions:
     format: tuple
     properties:
       name:
+        format: string
         type: string
     type: object
 info:

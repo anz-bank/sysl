@@ -3,8 +3,10 @@ definitions:
     format: tuple
     properties:
       birthday:
+        format: string
         type: string
       name:
+        format: string
         type: string
     type: object
 host: goat.example.com
