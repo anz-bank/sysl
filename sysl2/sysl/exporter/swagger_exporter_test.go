@@ -27,23 +27,19 @@ func TestExportAll(t *testing.T) {
 		if strings.EqualFold(parts[1], "sysl") {
 			t.Run(parts[0], func(t *testing.T) {
 				t.Parallel()
-				mod, _, err1 := parse.LoadAndGetDefaultApp("exporter/test-data/"+parts[0]+`.sysl`,
+				mod, _, err := parse.LoadAndGetDefaultApp("exporter/test-data/"+parts[0]+`.sysl`,
 					syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
-				require.NoError(t, err1)
-				if err1 != nil {
+				require.NoError(t, err)
+				if err != nil {
 					t.Errorf("Error reading sysl %s", parts[0]+`.sysl`)
 				}
 				swaggerExporter := MakeSwaggerExporter(mod.GetApps()["testapp"], logrus.StandardLogger())
-				err2 := swaggerExporter.GenerateSwagger()
-				require.NoError(t, err2)
+				require.NoError(t, swaggerExporter.GenerateSwagger())
 				out, err := swaggerExporter.SerializeToYaml()
 				require.NoError(t, err)
 				yamlFileBytes, err := ioutil.ReadFile("../exporter/test-data/" + parts[0] + `.yaml`)
 				require.NoError(t, err)
-				if string(yamlFileBytes) != string(out) {
-					t.Errorf("Content mismatched\n%s\n*******\n%s for Filename %s", string(yamlFileBytes),
-						string(out), parts[0]+`.sysl`)
-				}
+				require.Equal(t, string(yamlFileBytes), string(out))
 			})
 		}
 	}

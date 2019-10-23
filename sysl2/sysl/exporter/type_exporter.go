@@ -51,36 +51,31 @@ func (t *TypeExporter) populateTypes(syslTypes map[string]*proto.Type, swaggerTy
 			t.log.Warnf("Type matching failed %s", err)
 			return err
 		}
-		var ok bool
-		typeSchema.Format, ok = valueMap["format"]
-		typeSchema.Type = append(typeSchema.Type, valueMap["type"])
-		if !ok {
-			return fmt.Errorf("malformed sysl missing type info")
-		}
+		typeSchema.Format = valueMap.Format
+		typeSchema.Type = append(typeSchema.Type, valueMap.Type)
 		memberTypes := map[string]*proto.Type{}
 		if typeSchema.Properties == nil {
 			typeSchema.Properties = map[string]spec.Schema{}
 		}
-		if valueMap["format"] == "tuple" {
+		if valueMap.Format == "tuple" {
 			memberTypes = dataType.GetTuple().GetAttrDefs()
-		} else if valueMap["format"] == "relation" {
+		} else if valueMap.Format == "relation" {
 			memberTypes = dataType.GetRelation().GetAttrDefs()
 		}
-		var attrValueMap map[string]string
 		for attK, attV := range memberTypes {
 			elementSchema := spec.Schema{}
 			if t.isComposite(attV) {
 				t.parseComposite(attV, &elementSchema)
 				swaggerTypes[attK] = elementSchema
 			} else {
-				attrValueMap, err = t.findSwaggerType(attV)
+				attrValueMap, err := t.findSwaggerType(attV)
 				if err != nil {
 					t.log.Warnf("Type matching failed %s", err)
 					return err
 				}
+				elementSchema.Format = attrValueMap.Format
+				elementSchema.Type = []string{attrValueMap.Type}
 			}
-			elementSchema.Format = attrValueMap["Format"]
-			elementSchema.Type = []string{attrValueMap["type"]}
 			typeSchema.Properties[attK] = elementSchema
 		}
 		swaggerTypes[typeName] = typeSchema
@@ -88,26 +83,26 @@ func (t *TypeExporter) populateTypes(syslTypes map[string]*proto.Type, swaggerTy
 	return nil
 }
 
-func (t *TypeExporter) findSwaggerType(syslType *proto.Type) (map[string]string, error) {
+func (t *TypeExporter) findSwaggerType(syslType *proto.Type) (protoType, error) {
 	switch s := syslType.Type.(type) {
 	case *proto.Type_Primitive_:
-		typeMap := map[string]string{}
-		typeMap["format"] = t.primitiveTypesMap[syslType.GetPrimitive()].Format
-		typeMap["type"] = t.primitiveTypesMap[syslType.GetPrimitive()].Type
-		return typeMap, nil
+		return protoType{
+			Format: t.primitiveTypesMap[syslType.GetPrimitive()].Format,
+			Type:   t.primitiveTypesMap[syslType.GetPrimitive()].Type,
+		}, nil
 	case *proto.Type_Enum_:
-		return map[string]string{"format": "integer", "type": "number"}, nil
+		return protoType{Format: "integer", Type: "number"}, nil
 	case *proto.Type_Tuple_:
-		return map[string]string{"format": "tuple", "type": "object"}, nil
+		return protoType{Format: "tuple", Type: "object"}, nil
 	case *proto.Type_Relation_:
-		return map[string]string{"format": "relation", "type": "object"}, nil
+		return protoType{Format: "relation", Type: "object"}, nil
 	case *proto.Type_TypeRef:
 		if s.TypeRef.GetRef().GetAppname() == nil {
-			return map[string]string{"format": s.TypeRef.GetRef().Path[0], "type": "object"}, nil
+			return protoType{Format: s.TypeRef.GetRef().Path[0], Type: "object"}, nil
 		}
-		return map[string]string{"format": s.TypeRef.GetRef().GetAppname().Part[0], "type": "object"}, nil
+		return protoType{Format: s.TypeRef.GetRef().GetAppname().Part[0], Type: "object"}, nil
 	default:
-		return nil, fmt.Errorf("none of the Swagger Types match")
+		return protoType{}, fmt.Errorf("none of the Swagger Types match")
 	}
 }
 
@@ -140,8 +135,8 @@ func (t *TypeExporter) parseComposite(containerType *proto.Type, schema *spec.Sc
 			t.log.Warnf("Type matching failed %s", err)
 			return
 		}
-		schema.Items.Schema.Format = retMap["format"]
-		schema.Items.Schema.Type = append(schema.Items.Schema.Type, retMap["type"])
+		schema.Items.Schema.Format = retMap.Format
+		schema.Items.Schema.Type = append(schema.Items.Schema.Type, retMap.Type)
 	} else if cType, isSeq := containerType.Type.(*proto.Type_Sequence); isSeq {
 		schema.Type = []string{"array"}
 		retMap, err := t.findSwaggerType(cType.Sequence)
@@ -149,7 +144,7 @@ func (t *TypeExporter) parseComposite(containerType *proto.Type, schema *spec.Sc
 			t.log.Warnf("Type matching failed %s", err)
 			return
 		}
-		schema.Items.Schema.Format = retMap["format"]
-		schema.Items.Schema.Type = append(schema.Items.Schema.Type, retMap["type"])
+		schema.Items.Schema.Format = retMap.Format
+		schema.Items.Schema.Type = append(schema.Items.Schema.Type, retMap.Type)
 	}
 }

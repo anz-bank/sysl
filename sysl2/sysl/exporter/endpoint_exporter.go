@@ -24,9 +24,7 @@ func makeEndpointExporter(typeEx *TypeExporter, logger *logrus.Logger) *Endpoint
 }
 
 const (
-	object   = "object"
-	format   = "format"
-	dataType = "type"
+	object = "object"
 )
 
 func (e *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Response, endpoint *proto.Endpoint) {
@@ -140,8 +138,8 @@ func (e *EndpointExporter) setPathParams(endpoint *proto.Endpoint, op *spec.Oper
 			e.log.Warnf("Setting path params failed %s", err)
 			return err
 		}
-		param.Format = valueMap[format]
-		param.Type = valueMap[dataType]
+		param.Format = valueMap.Format
+		param.Type = valueMap.Type
 		param.Name = inParam.GetName()
 		param.Required = true
 		if param.Type == object {
@@ -160,8 +158,8 @@ func (e *EndpointExporter) setQueryParams(endpoint *proto.Endpoint, op *spec.Ope
 			e.log.Warnf("Setting query params failed %s", err)
 			return err
 		}
-		param.Format = valueMap[format]
-		param.Type = valueMap[dataType]
+		param.Format = valueMap.Format
+		param.Type = valueMap.Type
 		param.Name = inParam.GetName()
 		param.Required = true
 		if param.Type == object {
@@ -187,7 +185,7 @@ func (e *EndpointExporter) setOtherParams(endpoint *proto.Endpoint, op *spec.Ope
 		} else if _, ok := attrMap["body"]; ok {
 			param = spec.BodyParam(attrMap["name"].GetS(), param.ParamProps.Schema)
 		} else if _, ok := attrMap["array"]; ok {
-			param = spec.SimpleArrayParam(attrMap["name"].GetS(), valueMap["type"], valueMap["format"])
+			param = spec.SimpleArrayParam(attrMap["name"].GetS(), valueMap.Type, valueMap.Format)
 		} else {
 			param = spec.HeaderParam(attrMap["name"].GetS())
 		}
@@ -196,8 +194,8 @@ func (e *EndpointExporter) setOtherParams(endpoint *proto.Endpoint, op *spec.Ope
 		} else {
 			param = param.AsOptional()
 		}
-		param.Format = valueMap[format]
-		param.Type = valueMap[dataType]
+		param.Format = valueMap.Format
+		param.Type = valueMap.Type
 		if param.Type == object {
 			param.ParamProps.Schema = &spec.Schema{}
 			param.ParamProps.Schema.ExtraProps = map[string]interface{}{
