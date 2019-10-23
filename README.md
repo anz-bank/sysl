@@ -74,7 +74,24 @@ Try the following commands
 
 See `https://hub.docker.com/r/anzbank/sysl/` for more details.
 
-## Development
+## Developent (go-sysl)
+
+Install go toolchain
+
+Install protoc:
+* Download relevant release from https://github.com/protocolbuffers/protobuf/releases/tag/v3.10.0
+    * Copy the bin/protoc file into your `$PATH`
+    * Copy the include/google directory into your `$GOPATH/src`
+
+### Builds
+```bash
+> go generate ./sysl2/... # Regenerate any codegen dependancies (usually not required)
+> go build ./sysl2/...
+> go test ./sysl2/...
+# Or execute ./local_ci.sh
+```
+
+## Development (OUT OF DATE)
 
 Install dependencies and the `sysl` package with symlinks
 
