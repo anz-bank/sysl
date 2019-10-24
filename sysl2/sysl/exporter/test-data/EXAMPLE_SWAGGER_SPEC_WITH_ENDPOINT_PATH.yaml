@@ -3,6 +3,7 @@ definitions:
     format: tuple
     properties:
       message:
+        format: string
         type: string
     type: object
 host: goat.example.com

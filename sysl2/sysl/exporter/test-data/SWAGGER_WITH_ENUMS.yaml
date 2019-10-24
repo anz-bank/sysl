@@ -3,8 +3,10 @@ definitions:
     format: tuple
     properties:
       data:
+        format: string
         type: string
       type:
+        format: string
         type: string
     type: object
   Attachments:
@@ -14,17 +16,18 @@ definitions:
         items:
           format: Email
           type: object
-        type: ""
+        type: array
       setA:
         items:
           format: Attachment
           type: object
-        type: ""
+        type: array
     type: object
   Email:
     format: tuple
     properties:
       text:
+        format: string
         type: string
     type: object
   sequenceA:

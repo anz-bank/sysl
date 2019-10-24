@@ -20,7 +20,6 @@ type testConfig struct {
 }
 
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
-	t.Parallel()
 	files, err := ioutil.ReadDir(cfg.testDir)
 	require.NoError(t, err)
 	for _, f := range files {
@@ -34,6 +33,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 		if strings.EqualFold(parts[1], cfg.testExtension) {
 			filename := strings.Join(parts[:len(parts)-1], ".")
 			t.Run(fmt.Sprintf("%s - %s", cfg.name, filename), func(t *testing.T) {
+				t.Parallel()
 				input, err := ioutil.ReadFile(path.Join(cfg.testDir, filename+"."+cfg.testExtension))
 				require.NoError(t, err)
 				expected, err := ioutil.ReadFile(path.Join(cfg.testDir, filename+".sysl"))
