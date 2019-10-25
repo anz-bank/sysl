@@ -15,6 +15,12 @@ type folderStructure struct {
 	folders, files []string
 }
 
+type testStructure struct {
+	root, module, foundRoot, name string
+	folders, files                []string
+	rootIsFound                   bool
+}
+
 func buildFolderTest(folders, files []string) (fs afero.Fs, err error) {
 	fs = afero.NewMemMapFs()
 	var folder, file string
@@ -44,6 +50,34 @@ func buildFolderTest(folders, files []string) (fs afero.Fs, err error) {
 	}
 
 	return
+}
+
+func testRun(test *testStructure) func(t *testing.T) {
+	return func(t *testing.T) {
+		logger := logrus.StandardLogger()
+		fs, err := buildFolderTest(test.folders, test.files)
+		assert.NoError(t, err)
+
+		rootHandler := NewRootHandler(test.root, test.module)
+		err = rootHandler.HandleRoot(fs, logger)
+
+		assert.NoError(t, err)
+		assert.Equal(t, test.foundRoot, rootHandler.Root())
+		assert.Equal(t, test.rootIsFound, rootHandler.RootIsFound())
+	}
+}
+
+func absPathRelativeToCurrentDirectory(path string, t *testing.T) string {
+
+	currentDirectory, err := filepath.Abs(".")
+	assert.NoError(t, err)
+
+	absPath, err := filepath.Abs(path)
+	assert.NoError(t, err)
+
+	relPath, err := filepath.Rel(currentDirectory, absPath)
+	assert.NoError(t, err)
+	return relPath
 }
 
 func TestRootHandler(t *testing.T) {
@@ -90,24 +124,7 @@ func TestRootHandler(t *testing.T) {
 		},
 	}
 
-	currentDirectory, err := filepath.Abs(".")
-	assert.NoError(t, err)
-
-	absPathRelativeToCurrentDirectory := func(path string) string {
-		absPath, err := filepath.Abs(path)
-		assert.NoError(t, err)
-
-		relPath, err := filepath.Rel(currentDirectory, absPath)
-		assert.NoError(t, err)
-		return relPath
-	}
-
-	tests := []struct {
-		root, module, foundRoot, name string
-		errAssert                     func(t *testing.T, err error)
-		folders, files                []string
-		rootIsFound                   bool
-	}{
+	tests := []*testStructure{
 		{
 			root:        "",
 			name:        "Successful test: finding a root marker",
@@ -157,7 +174,7 @@ func TestRootHandler(t *testing.T) {
 			root:        "/",
 			name:        "Root with absolute output",
 			module:      definedRootFlagUndefinedMarker.files[0],
-			foundRoot:   absPathRelativeToCurrentDirectory("/"),
+			foundRoot:   absPathRelativeToCurrentDirectory("/", t),
 			folders:     definedRootFlagUndefinedMarker.folders,
 			files:       definedRootFlagUndefinedMarker.files,
 			rootIsFound: true,
@@ -166,7 +183,7 @@ func TestRootHandler(t *testing.T) {
 			root:        "~",
 			name:        "Root flag and Root marker is defined",
 			module:      definedRootFlagAndMarkerFound.files[0],
-			foundRoot:   absPathRelativeToCurrentDirectory("~"),
+			foundRoot:   absPathRelativeToCurrentDirectory("~", t),
 			folders:     definedRootFlagAndMarkerFound.folders,
 			files:       definedRootFlagAndMarkerFound.files,
 			rootIsFound: true,
@@ -183,20 +200,6 @@ func TestRootHandler(t *testing.T) {
 	}
 
 	for _, test := range tests {
-
-		testRun := func(t *testing.T) {
-			logger := logrus.StandardLogger()
-			fs, err := buildFolderTest(test.folders, test.files)
-			assert.NoError(t, err)
-
-			rootHandler := NewRootHandler(test.root, test.module)
-			err = rootHandler.HandleRoot(fs, logger)
-			
-			assert.NoError(t, err)
-			assert.Equal(t, test.foundRoot, rootHandler.Root())
-			assert.Equal(t, test.rootIsFound, rootHandler.RootIsFound())
-		}
-
-		t.Run(test.name, testRun)
+		t.Run(test.name, testRun(test))
 	}
 }

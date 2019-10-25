@@ -11,6 +11,7 @@ const (
 	syslRootMarker = ".sysl"
 )
 
+// RootHandler handles all operations about root and argument module
 type RootHandler interface {
 	Root() string
 	Module() string
@@ -24,6 +25,7 @@ type rootStatus struct {
 	rootIsDefined bool
 }
 
+// NewRootHandler returns a root handler
 func NewRootHandler(root, module string) RootHandler {
 	return &rootStatus{root: root, module: module, rootIsDefined: true}
 }
@@ -66,7 +68,8 @@ func (r *rootStatus) HandleRoot(fs afero.Fs, logger *logrus.Logger) error {
 				"SYSL_ROOT": syslRootPath,
 			}).Warningf("root is defined even though %s exists\n", syslRootMarker)
 		} else {
-			logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, absoluteRootFlag)
+			warningFormat := "%s is not defined but root flag is defined in %s and will be used"
+			logger.Warningf(warningFormat, syslRootMarker, absoluteRootFlag)
 		}
 
 	case !rootIsDefined && !rootMarkerExists:
