@@ -11,6 +11,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/pkg/errors"
@@ -233,8 +234,9 @@ func GenerateCode(
 	logger.Debugf("start: %s\n", codegenParams.start)
 
 	transformFs := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
+	rootHandler := roothandler.NewRootHandler(codegenParams.rootTransform, codegenParams.transform)
 	tfmParser := parse.NewParser()
-	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.transform, transformFs, tfmParser)
+	tx, transformAppName, err := parse.LoadAndGetDefaultApp(rootHandler, transformFs, tfmParser)
 	if err != nil {
 		return nil, err
 	}

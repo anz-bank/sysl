@@ -6,6 +6,7 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -36,6 +37,8 @@ func DoValidate(validateParams Params) error {
 	logrus.Debugf("grammar: %s\n", validateParams.Grammar)
 	logrus.Debugf("start: %s\n", validateParams.Start)
 
+	rootHandler := roothandler.NewRootHandler(validateParams.RootTransform, validateParams.Transform)
+
 	grammar, err := LoadGrammar(validateParams.Grammar, validateParams.Filesystem)
 	if err != nil {
 		return err
@@ -43,7 +46,7 @@ func DoValidate(validateParams Params) error {
 
 	parser := parse.NewParser()
 	transform, err := loadTransform(
-		validateParams.Transform,
+		rootHandler,
 		syslutil.NewChrootFs(validateParams.Filesystem, validateParams.RootTransform),
 		parser,
 	)
@@ -322,8 +325,8 @@ func getAttrNames(attrs map[string]*sysl.Type) map[string]struct{} {
 	return implAttrNames
 }
 
-func loadTransform(transformFile string, fs afero.Fs, p *parse.Parser) (*sysl.Application, error) {
-	transform, name, err := parse.LoadAndGetDefaultApp(transformFile, fs, p)
+func loadTransform(rootHandler roothandler.RootHandler, fs afero.Fs, p *parse.Parser) (*sysl.Application, error) {
+	transform, name, err := parse.LoadAndGetDefaultApp(rootHandler, fs, p)
 	if err != nil {
 		return nil, err
 	}
@@ -336,13 +339,13 @@ func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 	tokens := strings.Split(grammarFile, "/")
 	rootGrammar := strings.Join(tokens[:len(tokens)-1], "/")
 	grammarFileName := tokens[len(tokens)-1]
-
 	tokens = strings.Split(grammarFileName, ".")
 	tokens[len(tokens)-1] = "sysl"
 	grammarSyslFile := strings.Join(tokens, ".")
 	p := parse.NewParser()
+	rootHandler := roothandler.NewRootHandler(rootGrammar, grammarSyslFile)
 
-	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile, syslutil.NewChrootFs(fs, rootGrammar), p)
+	grammar, name, err := parse.LoadAndGetDefaultApp(rootHandler, syslutil.NewChrootFs(fs, rootHandler.Root()), p)
 	if err != nil {
 		return nil, err
 	}

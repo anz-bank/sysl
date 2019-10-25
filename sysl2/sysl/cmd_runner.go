@@ -3,9 +3,6 @@ package main
 import (
 	"errors"
 	"sort"
-	"fmt"
-	"log"
-	"path/filepath"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -15,16 +12,12 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const (
-	syslRootMarker = ".SYSL_ROOT"
-)
-
 type cmdRunner struct {
 	commands map[string]Command
 
-	RootStatus *roothandler.RootStatus
-	root       string
-	module     string
+	rootHandler roothandler.RootHandler
+	rootFlag    string
+	module      string
 }
 
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
@@ -33,27 +26,26 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 			var mod *sysl.Module
 			var err error
 			if cmd.RequireSyslModule() {
-				err = r.rootHandler(fs, logger)
+				err = r.handleRootFlag(fs, logger)
 				if err != nil {
 					return err
 				}
 
-				mod, _, err = LoadSyslModule(r, r.module, fs, logger)
+				mod, _, err = LoadSyslModule(r.rootHandler, fs, logger)
 				if err != nil {
 					return err
 				}
 			}
 
-			// TODO: what filesystem to pass for execution?
 			return cmd.Execute(ExecuteArgs{mod, fs, logger})
 		}
 	}
 	return nil
 }
 
-func (r *cmdRunner) rootHandler(fs afero.Fs, logger *logrus.Logger) error {
-	r.RootStatus = roothandler.NewRootStatus(r.root)
-	return r.RootStatus.RootHandler(r.module, fs, logger)
+func (r *cmdRunner) handleRootFlag(fs afero.Fs, logger *logrus.Logger) error {
+	r.rootHandler = roothandler.NewRootHandler(r.rootFlag, r.module)
+	return r.rootHandler.HandleRoot(fs, logger)
 }
 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
@@ -73,8 +65,8 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	r.commands = map[string]Command{}
 
 	app.Flag("root",
-		"sysl root directory for input model file (default: .)").
-		Default("").StringVar(&r.root)
+		"sysl root directory for input model file").
+		Default("").StringVar(&r.rootFlag)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
