@@ -7,6 +7,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -27,10 +28,10 @@ var (
 
 const debug string = "debug"
 
-func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
-	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
+func LoadSyslModule(rootHandler roothandler.RootHandler, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
+	logger.Debugf("Attempting to load module:%s (root:%s)", rootHandler.Module(), rootHandler.Root())
 	modelParser := parse.NewParser()
-	return parse.LoadAndGetDefaultApp(filename, syslutil.NewChrootFs(fs, root), modelParser)
+	return parse.LoadAndGetDefaultApp(rootHandler, syslutil.NewChrootFs(fs, rootHandler.Root()), modelParser)
 }
 
 // main3 is the real main function. It takes its output streams and command-line

@@ -12,6 +12,7 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -615,9 +616,9 @@ func getDefaultAppName(mod *sysl.Module) string {
 	return ""
 }
 
-func LoadAndGetDefaultApp(model string, fs afero.Fs, p *Parser) (*sysl.Module, string, error) {
+func LoadAndGetDefaultApp(rootHandler roothandler.RootHandler, fs afero.Fs, p *Parser) (*sysl.Module, string, error) {
 	// Model we want to generate code for
-	mod, err := p.Parse(model, fs)
+	mod, err := p.Parse(rootHandler, fs)
 	if err != nil {
 		return nil, "", err
 	}
