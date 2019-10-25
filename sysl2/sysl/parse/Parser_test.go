@@ -14,6 +14,7 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/golang/protobuf/proto"
@@ -59,7 +60,9 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
+
+	rootHandler := roothandler.NewRootHandler(root, filename)
+	module, err := NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	if err != nil {
 		return nil, err
 	}
@@ -510,11 +513,12 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 		inferredType *sysl.Type
 		messages     map[string][]msg.Msg
 	}
-
-	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
+	root := "../tests"
+	memFs, fs := testutil.WriteToMemOverlayFs(root)
 	parser := NewParser()
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
 	expressions := map[string]*sysl.Expr{}
-	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
+	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
 	viewName := "inferExprTypeNonTransform"
@@ -588,10 +592,11 @@ func TestInferExprTypeTransform(t *testing.T) {
 		letTypeScope string
 		messages     map[string][]msg.Msg
 	}
-
-	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
+	root := "../tests"
+	memFs, fs := testutil.WriteToMemOverlayFs(root)
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
 	parser := NewParser()
-	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
+	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
 	views := transform.GetApps()[appName].Views

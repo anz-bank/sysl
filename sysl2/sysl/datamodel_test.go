@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +25,8 @@ type dataArgs struct {
 
 func TestGenerateDataDiagFail(t *testing.T) {
 	t.Parallel()
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	root := ""
+	_, err := parse.NewParser().Parse(roothandler.NewRootHandler(root, "doesn't-exist.sysl"), syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.Error(t, err)
 }
 
@@ -75,7 +77,7 @@ func DoConstructDataDiagramsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules), afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

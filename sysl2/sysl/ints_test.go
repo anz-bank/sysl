@@ -8,6 +8,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -32,8 +33,8 @@ skinparam component {
 
 func TestGenerateIntegrations(t *testing.T) {
 	t.Parallel()
-
-	m, err := parse.NewParser().Parse("demo/simple/sysl-ints.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	rootHandler := roothandler.NewRootHandler("../../", "demo/simple/sysl-ints.sysl")
+	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	require.NotNil(t, m)
 
@@ -501,7 +502,7 @@ func GenerateIntegrationsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules), afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

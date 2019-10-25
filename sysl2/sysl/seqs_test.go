@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -17,16 +18,18 @@ import (
 
 func TestGenerateSequenceDiagFail(t *testing.T) {
 	t.Parallel()
-
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	root := ""
+	rootHandler := roothandler.NewRootHandler(root, "doesn't-exist.sysl")
+	_, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.Error(t, err)
 }
 
 func TestGenerateSequenceDiag(t *testing.T) {
 	t.Parallel()
-
+	root := "../../"
+	rootHandler := roothandler.NewRootHandler(root, "demo/simple/sysl-sd.sysl")
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -72,9 +75,10 @@ deactivate _0
 
 func TestGenerateSequenceDiag2(t *testing.T) {
 	t.Parallel()
-
+	root := "../../"
+	rootHandler := roothandler.NewRootHandler(root, "demo/simple/sysl-sd2.sysl")
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -123,8 +127,11 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs("tests")
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
+	root := "tests"
+	memFs, fs := testutil.WriteToMemOverlayFs(root)
+	rootHandler := roothandler.NewRootHandler(root, "sequence_diagram_name_format.sysl")
+
+	m, err := parse.NewParser().Parse(rootHandler, fs)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
@@ -178,8 +185,10 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs("tests")
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
+	root := "tests"
+	memFs, fs := testutil.WriteToMemOverlayFs(root)
+	rootHandler := roothandler.NewRootHandler(root, "sequence_diagram_name_format.sysl")
+	m, err := parse.NewParser().Parse(rootHandler, fs)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
@@ -240,9 +249,10 @@ func TestLoadAppReturnError(t *testing.T) {
 	args := loadAppArgs{
 		"../../demo/simple/", "",
 	}
+	rootHandler := roothandler.NewRootHandler(args.root, args.models)
 	_, fs := testutil.WriteToMemOverlayFs(args.root)
 	logger, _ := test.NewNullLogger()
-	_, _, err := LoadSyslModule(args.root, args.models, fs, logger)
+	_, _, err := LoadSyslModule(rootHandler, fs, logger)
 	assert.Error(t, err)
 }
 
@@ -254,7 +264,8 @@ func TestLoadApp(t *testing.T) {
 	}
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	logger, _ := test.NewNullLogger()
-	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
+	rootHandler := roothandler.NewRootHandler(args.root, args.models)
+	mod, name, err := LoadSyslModule(rootHandler, fs, logger)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
 	testutil.AssertFsHasExactly(t, memFs)
@@ -619,7 +630,7 @@ func DoConstructSequenceDiagramsWithParams(
 	group string,
 ) (map[string]string, error) {
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules), afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

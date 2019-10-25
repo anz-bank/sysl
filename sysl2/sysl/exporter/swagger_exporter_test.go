@@ -7,6 +7,7 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
@@ -25,8 +26,10 @@ func TestExportAll(t *testing.T) {
 		}
 		parts := strings.Split(file.Name(), ".")
 		if strings.EqualFold(parts[1], "sysl") {
-			mod, _, err1 := parse.LoadAndGetDefaultApp("exporter/test-data/"+file.Name(),
-				syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
+			root := ".."
+			rootHandler := roothandler.NewRootHandler(root, "exporter/test-data/"+file.Name())
+			mod, _, err1 := parse.LoadAndGetDefaultApp(rootHandler,
+				syslutil.NewChrootFs(afero.NewOsFs(), root), modelParser)
 			require.NoError(t, err1)
 			if err1 != nil {
 				t.Errorf("Error reading sysl %s", file.Name())
