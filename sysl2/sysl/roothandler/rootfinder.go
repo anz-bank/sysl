@@ -1,57 +1,46 @@
 package roothandler
 
 import (
-	"errors"
+	"path/filepath"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"path/filepath"
 )
 
 const (
-	syslRootMarker = ".SYSL_ROOT"
+	syslRootMarker = ".sysl"
 )
 
-type RootFinder interface {
-	Root() (string, error)
+type RootHandler interface {
+	Root() string
+	Module() string
+	RootIsFound() bool
+	HandleRoot(fs afero.Fs, logger *logrus.Logger) error
 }
 
-type RootStatus struct {
-	root string
-	rootIsDefined, rootMarkerExists bool // makes decision on filesystem to use
+type rootStatus struct {
+	root          string
+	module        string
+	rootIsDefined bool
 }
 
-func NewRootStatus(root string) *RootStatus{
-	return &RootStatus{root: root}
+func NewRootHandler(root, module string) RootHandler {
+	return &rootStatus{root: root, module: module, rootIsDefined: true}
 }
 
-func (r *RootStatus) RootHandler(modulePath string, fs afero.Fs, logger *logrus.Logger) error {
+func (r *rootStatus) HandleRoot(fs afero.Fs, logger *logrus.Logger) error {
 
-	moduleAbsolutePath, err := filepath.Abs(modulePath)
+	moduleAbsolutePath, err := filepath.Abs(r.module)
+	if err != nil {
+		return err
+	}
+	syslRootPath, err := findRootFromASyslModule(moduleAbsolutePath, fs)
 	if err != nil {
 		return err
 	}
 
-	syslRootPath, err := r.findRootFromASyslModule(moduleAbsolutePath, fs)
-	if err != nil {
-		return err
-	}
-
-	r.rootIsDefined = r.root != ""
-	r.rootMarkerExists = syslRootPath != ""
-
-	switch {
-	case r.rootIsDefined && r.rootMarkerExists:
-		logger.WithFields(logrus.Fields{
-			"root":      r.root,
-			"SYSL_ROOT": syslRootPath,
-		}).Warningf("root is defined even though %s exists\n", syslRootMarker)
-	case r.rootIsDefined && !r.rootMarkerExists:
-		logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, r.root)
-	case !r.rootIsDefined && !r.rootMarkerExists:
-		logger.Errorf("root and %s are undefined", syslRootMarker)
-		r.root = ""
-		return nil
-	}
+	rootIsDefined := r.root != ""
+	rootMarkerExists := syslRootPath != ""
 
 	// r.Root must be relative to the current directory
 	currentUserDirectory, err := filepath.Abs(".")
@@ -59,7 +48,39 @@ func (r *RootStatus) RootHandler(modulePath string, fs afero.Fs, logger *logrus.
 		return err
 	}
 
-	if !r.rootIsDefined && r.rootMarkerExists {
+	switch {
+	case rootIsDefined:
+		absoluteRootFlag, err := filepath.Abs(r.root)
+		if err != nil {
+			return err
+		}
+		relativeRootPath, err := filepath.Rel(currentUserDirectory, absoluteRootFlag)
+		if err != nil {
+			return err
+		}
+		r.root = relativeRootPath
+
+		if rootMarkerExists {
+			logger.WithFields(logrus.Fields{
+				"root":      absoluteRootFlag,
+				"SYSL_ROOT": syslRootPath,
+			}).Warningf("root is defined even though %s exists\n", syslRootMarker)
+		} else {
+			logger.Warningf("%s is not defined but root flag is defined in %s and will be used", syslRootMarker, absoluteRootFlag)
+		}
+
+	case !rootIsDefined && !rootMarkerExists:
+		relativeModulePath, err := filepath.Rel(currentUserDirectory, moduleAbsolutePath)
+		if err != nil {
+			return err
+		}
+		relativeModulePath = filepath.Dir(relativeModulePath)
+		logger.Warningf("root and %s are undefined, %s will be used instead", syslRootMarker, relativeModulePath)
+		// uses the module directory as the root
+		r.root = relativeModulePath
+		r.rootIsDefined = false
+
+	case !rootIsDefined && rootMarkerExists:
 		relativeSyslRootPath, err := filepath.Rel(currentUserDirectory, syslRootPath)
 		if err != nil {
 			return err
@@ -67,10 +88,21 @@ func (r *RootStatus) RootHandler(modulePath string, fs afero.Fs, logger *logrus.
 		r.root = relativeSyslRootPath
 	}
 
+	absoluteRootPath, err := filepath.Abs(r.root)
+	if err != nil {
+		return err
+	}
+
+	relativeModulePath, err := filepath.Rel(absoluteRootPath, moduleAbsolutePath)
+	if err != nil {
+		return err
+	}
+
+	r.module = relativeModulePath
 	return nil
 }
 
-func (r *RootStatus) findRootFromASyslModule(absolutePath string, fs afero.Fs) (string, error) {
+func findRootFromASyslModule(absolutePath string, fs afero.Fs) (string, error) {
 	// Takes the closest root marker
 	currentPath := absolutePath
 
@@ -95,9 +127,15 @@ func (r *RootStatus) findRootFromASyslModule(absolutePath string, fs afero.Fs) (
 }
 
 // Root lazily loads the root and returns an error if root is not defined
-func (r *RootStatus) Root() (string, error) {
-	if r.root == "" {
-		return "", errors.New("root is not defined")
-	}
-	return r.root, nil
+func (r *rootStatus) Root() string {
+	return r.root
+}
+
+// RootIsFound shows whether a root marker or a root flag is defined
+func (r *rootStatus) RootIsFound() bool {
+	return r.rootIsDefined
+}
+
+func (r *rootStatus) Module() string {
+	return r.module
 }
