@@ -374,7 +374,7 @@ func TestMain2WithGenerateIntegrations(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
-	out := "/indirect_1.png"
+	out := "/tests/indirect_1.png"
 	main2(
 		[]string{
 			"sysl",
@@ -382,7 +382,7 @@ func TestMain2WithGenerateIntegrations(t *testing.T) {
 			"--root", "./tests/",
 			"-o", out,
 			"-j", "Project",
-			"./indirect_1.sysl",
+			"tests/indirect_1.sysl",
 		},
 		fs, logger, main3,
 	)
