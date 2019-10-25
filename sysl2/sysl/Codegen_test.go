@@ -7,6 +7,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
@@ -192,7 +193,7 @@ func GenerateCodeWithParamsFs(
 		start:         start,
 	}
 	logger, _ := test.NewNullLogger()
-	mod, modAppName, err := LoadSyslModule(rootModel, model, fs, logger)
+	mod, modAppName, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, model), fs, logger)
 	if err != nil {
 		return nil, err
 	}

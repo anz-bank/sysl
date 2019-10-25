@@ -9,9 +9,14 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
+)
+
+const (
+	root = "../tests"
 )
 
 func TestValidatorGetTypeName(t *testing.T) {
@@ -116,7 +121,8 @@ func TestValidatorValidateEntryPoint(t *testing.T) {
 
 	start := "EntryPoint"
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	transform, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -165,7 +171,8 @@ func TestValidatorValidateFileName(t *testing.T) {
 
 	viewName := "filename"
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	transform, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -224,7 +231,8 @@ func TestValidatorValidateViews(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	transform, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -310,7 +318,8 @@ func TestValidatorValidateViewsInnerTypes(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	transform, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -352,7 +361,8 @@ func TestValidatorValidateViewsChoiceTypes(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	transform, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -432,7 +442,8 @@ func TestValidatorValidate(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform2.sysl")
+	transform, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -450,7 +461,8 @@ func TestValidatorLoadTransformSuccess(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	tfm, err := loadTransform("transform2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform2.sysl")
+	tfm, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	assert.NotNil(t, tfm, "Unexpected result")
 	assert.Nil(t, err, "Unexpected result")
 }
@@ -459,7 +471,9 @@ func TestValidatorLoadTransformError(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	tfm, err := loadTransform("bar.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "foo"), p)
+	errorRoot := "foo"
+	rootHandler := roothandler.NewRootHandler(errorRoot, "bar.sysl")
+	tfm, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), errorRoot), p)
 	assert.Nil(t, tfm, "Unexpected result")
 	assert.NotNil(t, err, "Unexpected result")
 }
@@ -484,7 +498,8 @@ func TestValidatorValidateTfmReturn(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
+	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	transform, err := loadTransform(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
