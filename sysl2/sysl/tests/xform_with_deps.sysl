@@ -1,0 +1,35 @@
+TransformDeps:
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename = app.name + ".java"
+    )
+
+  !view javaFile(app <: sysl.App, deps <: sequence of sysl.App) -> javaFile:
+    app -> (:
+
+      package = .attrs.package -> <sequence of package> (name1:
+        packageName = name1
+      )
+
+      let myList = app.endpoints -> <sequence of out> (ep:
+        let calls = ep.value.stmts where (.type == "call") -> <sequence of out> (call:
+          # SYSL bug? this didn't work: where (.name == call.target)
+          let pkgList = deps -> <sequence of out> (dep:
+            let depEpList = dep.endpoints -> <sequence of out> (depEp:
+                out = if depEp.value.name == call.endpoint then depEp.value.name else "not found"
+            )
+            out = if dep.name == call.target then Join(depEpList flatten(.out),"") + dep.attrs.package else ""
+          )
+
+          out = Join(pkgList flatten(.out), "")
+        )
+        out = Join(calls flatten(.out),"")
+      )
+
+      comment =  myList flatten(.out)
+      import = {"import1", "import2"} -> <set of import>(name:
+        importPath = name
+      )
+
+      definition = "some_value"
+    )

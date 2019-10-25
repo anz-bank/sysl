@@ -1,0 +1,13 @@
+import /tests/deps
+
+Model [package="model"]:
+  !type Response:
+    userId <: int
+    id <: int
+    title <: string
+
+  /responses:
+    /{id<:int}:
+      GET:
+        Dep <- GET /dep/{id}
+        return Response

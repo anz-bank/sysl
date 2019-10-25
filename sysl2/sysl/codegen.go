@@ -178,11 +178,15 @@ func applyTranformToModel(
 	}
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
+	s.AddDeps("deps", model.Apps)
 	var result *sysl.Value
 	// assume args are
 	//  app <: sysl.App and
 	//  type <: sysl.Type
-	if len(view.Param) >= 2 {
+	//  typeName <: string
+	//  deps <: sequence of sysl.App
+
+	if perTypeTransform(view.Param) {
 		result = eval.MakeValueList()
 		var tNames []string
 		for tName := range modelApp.Types {
@@ -200,6 +204,23 @@ func applyTranformToModel(
 	}
 
 	return result, nil
+}
+
+func perTypeTransform(params []*sysl.Param) bool {
+	paramMap := make(map[string]struct{})
+
+	for _, p := range params {
+		paramMap[p.Name] = struct{}{}
+	}
+
+	if _, has := paramMap["app"]; has {
+		if _, has := paramMap["type"]; has {
+			return true
+		}
+	} else {
+		panic("Expecting at least an app <: sysl.App")
+	}
+	return false
 }
 
 // Serialize serializes node to string
@@ -261,18 +282,28 @@ func GenerateCode(
 	if err != nil {
 		return nil, err
 	}
-	if result.GetMap() != nil {
+	if fileNames.GetMap() != nil {
 		filename := fileNames.GetMap().Items["filename"].GetS()
 		logger.Println(filename)
-		r := processRule(g, result, g.Start, logger)
-		codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
-	} else {
+
+		if result.GetMap() != nil  {
+			r := processRule(g, result, g.Start, logger)
+			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+		} else if result.GetList() != nil {
+			for _, v := range result.GetList().Value {
+				r := processRule(g, v, g.Start, logger)
+				codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+			}
+		}
+	} else if fileNames.GetList() != nil && result.GetList() != nil {
 		fileValues := fileNames.GetList().Value
 		for i, v := range result.GetList().Value {
 			filename := fileValues[i].GetMap().Items["filename"].GetS()
 			r := processRule(g, v, g.Start, logger)
 			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 		}
+	} else {
+		panic("Unexpected combination for filenames and transformation results")
 	}
 	return codeOutput, nil
 }

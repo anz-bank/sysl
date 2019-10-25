@@ -283,7 +283,7 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 		}
 		if len(retValues) > 1 {
 			retTypes.GetMap().Items[retValues[0]] = MakeValueString(retValues[1])
-		} else {
+		} else if len(retValues) == 1 {
 			retTypes.GetMap().Items["payload"] = MakeValueString(retValues[0])
 		}
 	}
@@ -313,12 +313,28 @@ func (s Scope) AddString(name string, val string) {
 
 // AddApp add sysl.App to scope
 func (s Scope) AddApp(name string, app *sysl.Application) {
+	s[name] = addAppToValueMap(app)
+}
+
+// AddDeps add deps <: sequence of sysl.App to scope
+func (s Scope) AddDeps(name string, apps map[string]*sysl.Application) {
+	vl := MakeValueList()
+
+	for _, app := range apps {
+		vl.GetList().Value = append(vl.GetList().Value, addAppToValueMap(app))
+	}
+
+	s[name] = vl
+}
+
+func addAppToValueMap(app *sysl.Application) *sysl.Value {
 	m := MakeValueMap()
-	s[name] = m
 	AddItemToValueMap(m, "name", MakeValueString(syslutil.GetAppName(app.Name)))
 	AddItemToValueMap(m, "attrs", attrsToValueMap(app.Attrs))
 	AddItemToValueMap(m, "types", typesToValueMap(app.Types))
 	AddItemToValueMap(m, "union", unionToValueMap(app.Types))
 	AddItemToValueMap(m, "alias", aliasToValueMap(app.Types))
 	AddItemToValueMap(m, "endpoints", endpointsToValueMap(app.Endpoints))
+
+	return m
 }
