@@ -1,7 +1,9 @@
 package roothandler
 
 import (
+	"errors"
 	"path/filepath"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -17,6 +19,7 @@ type RootHandler interface {
 	Module() string
 	RootIsFound() bool
 	HandleRoot(fs afero.Fs, logger *logrus.Logger) error
+	ImportAllowed(modulePath string) (bool, error)
 }
 
 type rootStatus struct {
@@ -141,4 +144,14 @@ func (r *rootStatus) RootIsFound() bool {
 
 func (r *rootStatus) Module() string {
 	return r.module
+}
+
+func (r *rootStatus) ImportAllowed(modulePath string) (bool, error) {
+	modulePath = filepath.Clean(modulePath)
+
+	if strings.Contains(modulePath, "..") {
+		return false, errors.New("import does not allow \"..\"")
+	}
+
+	return true, nil
 }
