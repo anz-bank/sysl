@@ -86,7 +86,8 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	return antlr.NewInputStream(text), err
 }
 
-func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
+func (p *Parser) Parse(rootHandler roothandler.RootHandler, fs afero.Fs) (*sysl.Module, error) {
+	filename := rootHandler.Module()
 	if !strings.HasSuffix(filename, ".sysl") {
 		filename += ".sysl"
 	}
@@ -128,6 +129,15 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 
 		for len(listener.imports) > 0 {
 			source = listener.imports[0]
+
+			if !rootHandler.RootIsFound() && strings.HasPrefix(source.filename, "/") {
+				return nil, errors.New("Import from the root is not allowed if root is not defined")
+			}
+
+			if allowed, err := rootHandler.ImportAllowed(source.filename); !allowed {
+				return nil, err
+			}
+
 			listener.imports = listener.imports[1:]
 			if _, has := imported[source.filename]; !has {
 				break
