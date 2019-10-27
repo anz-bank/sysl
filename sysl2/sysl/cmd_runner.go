@@ -3,13 +3,6 @@ package main
 import (
 	"errors"
 	"sort"
-	"fmt"
-	"log"
-	"path/filepath"
-	"sort"
-	"fmt"
-	"log"
-	"path/filepath"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
