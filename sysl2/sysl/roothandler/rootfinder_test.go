@@ -1,6 +1,7 @@
 package roothandler
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -13,6 +14,12 @@ import (
 
 type folderStructure struct {
 	folders, files []string
+}
+
+type rootHandlerTestStructure struct {
+	root, module, foundRoot, name string
+	folders, files                []string
+	rootIsFound                   bool
 }
 
 func buildFolderTest(folders, files []string) (fs afero.Fs, err error) {
@@ -103,11 +110,7 @@ func TestRootHandler(t *testing.T) {
 		},
 	}
 
-	tests := []struct{
-		root, module, foundRoot, name string
-		folders, files                []string
-		rootIsFound                   bool
-	}{
+	tests := []rootHandlerTestStructure{
 		{
 			root:        "",
 			name:        "Successful test: finding a root marker",
@@ -183,78 +186,80 @@ func TestRootHandler(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			t.Parallel()
-			logger := logrus.StandardLogger()
-			fs, err := buildFolderTest(test.folders, test.files)
-			assert.NoError(t, err)
+		t.Run(test.name, func(test rootHandlerTestStructure) func(t *testing.T) {
+			return func(t *testing.T) {
+				t.Parallel()
+				logger := logrus.StandardLogger()
+				fs, err := buildFolderTest(test.folders, test.files)
+				assert.NoError(t, err)
 
-			rootHandler := NewRootHandler(test.root, test.module)
-			err = rootHandler.HandleRoot(fs, logger)
+				rootHandler := NewRootHandler(test.root, test.module)
+				err = rootHandler.HandleRoot(fs, logger)
 
-			assert.NoError(t, err)
-			assert.Equal(t, test.foundRoot, rootHandler.Root())
-			assert.Equal(t, test.rootIsFound, rootHandler.RootIsFound())
-		})
+				assert.NoError(t, err)
+				assert.Equal(t, test.foundRoot, rootHandler.Root())
+				assert.Equal(t, test.rootIsFound, rootHandler.RootIsFound())
+			}
+		}(test))
 	}
 }
 
 func TestImportAllowed(t *testing.T) {
-	tests := []struct{
+	tests := []struct {
 		name, module string
-		handledRoot *rootStatus
-		result bool
-		errAssert func(t *testing.T, err error)
+		handledRoot  *rootStatus
+		result       bool
+		err          error
 	}{
 		{
-			name: "Successful test, regular relative import",
+			name:   "Successful test, regular relative import",
 			module: "test/module",
 			handledRoot: &rootStatus{
-				root: "../",
+				root:          "../",
 				rootIsDefined: true,
 			},
 			result: true,
-			errAssert: func(t *testing.T, err error) {assert.Equal(t, err, nil)},
+			err:    nil,
 		},
 		{
-			name: "Successful test, regular absolute import",
+			name:   "Successful test, regular absolute import",
 			module: "/test/module",
 			handledRoot: &rootStatus{
-				root: "../",
+				root:          "../",
 				rootIsDefined: true,
 			},
 			result: true,
-			errAssert: func(t *testing.T, err error) {assert.Equal(t, err, nil)},
+			err:    nil,
 		},
 		{
-			name: "Relative import with ..",
+			name:   "Relative import with ..",
 			module: "../test/module",
 			handledRoot: &rootStatus{
-				root: "../",
+				root:          "../",
 				rootIsDefined: true,
 			},
 			result: false,
-			errAssert: func(t *testing.T, err error) {assert.EqualError(t, err, "import does not allow \"..\"")},
+			err:    errors.New("import does not allow \"..\""),
 		},
 		{
-			name: "Absolute import with ..",
+			name:   "Absolute import with ..",
 			module: "/../test/module",
 			handledRoot: &rootStatus{
-				root: "../",
+				root:          "../",
 				rootIsDefined: true,
 			},
 			result: false,
-			errAssert: func(t *testing.T, err error) {assert.EqualError(t, err, "import does not allow \"..\"")},
+			err:    errors.New("import does not allow \"..\""),
 		},
 		{
-			name: "Strange case, \"..\" in the middle",
+			name:   "Strange case, \"..\" in the middle",
 			module: "/test/../module",
 			handledRoot: &rootStatus{
-				root: "",
+				root:          "",
 				rootIsDefined: false,
 			},
 			result: true,
-			errAssert: func(t *testing.T, err error) {assert.Equal(t, err, nil)},
+			err:    nil,
 		},
 	}
 
@@ -263,7 +268,7 @@ func TestImportAllowed(t *testing.T) {
 			t.Parallel()
 			result, err := test.handledRoot.ImportAllowed(test.module)
 			assert.Equal(t, test.result, result)
-			test.errAssert(t, err)
+			assert.Equal(t, test.err, err)
 		})
 	}
 }
