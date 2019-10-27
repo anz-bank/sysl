@@ -77,7 +77,8 @@ func DoConstructDataDiagramsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules), afero.NewOsFs(), logger)
+	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules),
+		afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

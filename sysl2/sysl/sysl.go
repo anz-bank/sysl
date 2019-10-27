@@ -28,7 +28,8 @@ var (
 
 const debug string = "debug"
 
-func LoadSyslModule(rootHandler roothandler.RootHandler, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
+func LoadSyslModule(rootHandler roothandler.RootHandler, fs afero.Fs,
+	logger *logrus.Logger) (*sysl.Module, string, error) {
 	logger.Debugf("Attempting to load module:%s (root:%s)", rootHandler.Module(), rootHandler.Root())
 	modelParser := parse.NewParser()
 	return parse.LoadAndGetDefaultApp(rootHandler, syslutil.NewChrootFs(fs, rootHandler.Root()), modelParser)
