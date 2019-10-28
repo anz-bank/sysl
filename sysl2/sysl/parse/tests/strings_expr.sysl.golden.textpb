@@ -122,7 +122,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/strings_expr.sysl"
+          file: "strings_expr.sysl"
           start: <
             line: 2
             col: 2
@@ -131,7 +131,7 @@ apps: <
       >
     >
     source_context: <
-      file: "tests/strings_expr.sysl"
+      file: "strings_expr.sysl"
       start: <
         line: 1
         col: 1

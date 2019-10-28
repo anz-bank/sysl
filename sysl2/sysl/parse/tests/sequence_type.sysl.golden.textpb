@@ -35,7 +35,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/sequence_type.sysl"
+          file: "sequence_type.sysl"
           start: <
             line: 2
             col: 4
@@ -44,7 +44,7 @@ apps: <
       >
     >
     source_context: <
-      file: "tests/sequence_type.sysl"
+      file: "sequence_type.sysl"
       start: <
         line: 1
         col: 1

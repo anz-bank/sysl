@@ -83,7 +83,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/rest_url_params.sysl"
+          file: "rest_url_params.sysl"
           start: <
             line: 7
             col: 24
@@ -92,7 +92,7 @@ apps: <
       >
     >
     source_context: <
-      file: "tests/rest_url_params.sysl"
+      file: "rest_url_params.sysl"
       start: <
         line: 1
         col: 1

@@ -28,7 +28,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 48
             col: 4
@@ -73,7 +73,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 59
             col: 4
@@ -104,7 +104,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 51
             col: 4
@@ -131,7 +131,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 55
             col: 4
@@ -168,7 +168,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 43
             col: 4
@@ -177,7 +177,7 @@ apps: <
       >
     >
     source_context: <
-      file: "tests/test_rest_api.sysl"
+      file: "test_rest_api.sysl"
       start: <
         line: 41
         col: 1
@@ -226,7 +226,7 @@ apps: <
           path: "/"
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 3
             col: 8
@@ -269,7 +269,7 @@ apps: <
           path: "/first"
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 20
             col: 8
@@ -382,7 +382,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 35
             col: 8
@@ -475,7 +475,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 23
             col: 12
@@ -513,7 +513,7 @@ apps: <
           path: "/foo"
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 6
             col: 8
@@ -551,7 +551,7 @@ apps: <
           path: "/foo/"
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 9
             col: 12
@@ -601,7 +601,7 @@ apps: <
           path: "/foo/blah"
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 17
             col: 12
@@ -653,7 +653,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 32
             col: 16
@@ -718,7 +718,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 29
             col: 20
@@ -775,7 +775,7 @@ apps: <
           path: "/foo/bar/baz"
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 13
             col: 16
@@ -827,7 +827,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/test_rest_api.sysl"
+          file: "test_rest_api.sysl"
           start: <
             line: 26
             col: 16
@@ -836,7 +836,7 @@ apps: <
       >
     >
     source_context: <
-      file: "tests/test_rest_api.sysl"
+      file: "test_rest_api.sysl"
       start: <
         line: 1
         col: 1

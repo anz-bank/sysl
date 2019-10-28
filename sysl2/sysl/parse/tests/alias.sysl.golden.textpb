@@ -25,7 +25,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/alias.sysl"
+          file: "alias.sysl"
           start: <
             line: 3
             col: 2
@@ -50,7 +50,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/alias.sysl"
+          file: "alias.sysl"
           start: <
             line: 6
             col: 2
@@ -96,7 +96,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/alias.sysl"
+          file: "alias.sysl"
           start: <
             line: 9
             col: 2
@@ -120,7 +120,7 @@ apps: <
             >
           >
           source_context: <
-            file: "tests/alias.sysl"
+            file: "alias.sysl"
             start: <
               line: 13
               col: 2
@@ -128,7 +128,7 @@ apps: <
           >
         >
         source_context: <
-          file: "tests/alias.sysl"
+          file: "alias.sysl"
           start: <
             line: 13
             col: 2
@@ -137,7 +137,7 @@ apps: <
       >
     >
     source_context: <
-      file: "tests/alias.sysl"
+      file: "alias.sysl"
       start: <
         line: 1
         col: 1
