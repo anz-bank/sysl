@@ -2,8 +2,9 @@ package main
 
 import (
 	"io/ioutil"
-	"testing"
 	"path/filepath"
+	"testing"
+
 	"github.com/sirupsen/logrus/hooks/test"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
