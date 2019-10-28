@@ -1,6 +1,6 @@
-import /tests/deps
+import deps
 
-Model [package="model"]:
+ModelWithDeps [package="model"]:
   !type Response:
     userId <: int
     id <: int
