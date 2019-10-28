@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -549,7 +550,8 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 	root := "../tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
 	parser := NewParser()
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/transform1.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "transform1.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	expressions := map[string]*sysl.Expr{}
 	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)
@@ -628,7 +630,8 @@ func TestInferExprTypeTransform(t *testing.T) {
 	}
 	root := "../tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/transform1.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "transform1.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	parser := NewParser()
 	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)

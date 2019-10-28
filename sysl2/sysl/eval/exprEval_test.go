@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -40,8 +41,8 @@ func TestEvalStrategySetup(t *testing.T) {
 
 func TestScopeAddApp(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -91,8 +92,8 @@ func TestScopeAddApp(t *testing.T) {
 
 func TestEvalIntegerMath(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -117,8 +118,8 @@ func TestEvalIntegerMath(t *testing.T) {
 
 func TestEvalCompare(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -141,8 +142,8 @@ func TestEvalCompare(t *testing.T) {
 
 func TestEvalListSetOps(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -176,8 +177,8 @@ func TestEvalListSetOps(t *testing.T) {
 
 func TestEvalIsKeyword(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -195,8 +196,8 @@ func TestEvalIsKeyword(t *testing.T) {
 
 func TestEvalIfElseAlt(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -219,8 +220,8 @@ func TestEvalIfElseAlt(t *testing.T) {
 
 func TestEvalGetAppAttributes(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -277,8 +278,8 @@ func TestEvalGetAppAttributes(t *testing.T) {
 
 func TestEvalNullCheckAppAttrs(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -296,8 +297,8 @@ func TestEvalNullCheckAppAttrs(t *testing.T) {
 
 func TestScopeAddRestApp(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -355,8 +356,8 @@ func TestScopeAddRestApp(t *testing.T) {
 
 func TestEvalStringOps(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -403,8 +404,8 @@ func TestEvalStringOps(t *testing.T) {
 
 func TestIncorrectArgsToGoFunc(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -425,8 +426,8 @@ func TestIncorrectArgsToGoFunc(t *testing.T) {
 
 func TestEvalFlatten(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -458,8 +459,8 @@ func TestEvalFlatten(t *testing.T) {
 
 func TestEvalWhere(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -490,8 +491,8 @@ func TestEvalWhere(t *testing.T) {
 
 func TestEvalLinks(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -521,8 +522,8 @@ func TestEvalLinks(t *testing.T) {
 
 func TestDotScope(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -536,8 +537,8 @@ func TestDotScope(t *testing.T) {
 
 func TestListOfTypeNames(t *testing.T) {
 	t.Parallel()
-
-	rootHandler, err := roothandler.NewRootHandler(root, "../tests/eval_expr.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(root, "tests/eval_expr.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	mod, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)

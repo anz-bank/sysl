@@ -3,8 +3,8 @@ package main
 import (
 	"io"
 	"io/ioutil"
-	"sort"
 	"path/filepath"
+	"sort"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"

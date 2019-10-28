@@ -1,8 +1,8 @@
 package validate
 
 import (
-	"strings"
 	"path/filepath"
+	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
@@ -41,6 +41,9 @@ func DoValidate(validateParams Params) error {
 	module := filepath.Join(validateParams.RootTransform, validateParams.Transform)
 	rootHandler, err := roothandler.NewRootHandler(validateParams.RootTransform,
 		module, validateParams.Filesystem, validateParams.Logger)
+	if err != nil {
+		return err
+	}
 
 	grammar, err := LoadGrammar(validateParams.Grammar, validateParams.Filesystem)
 	if err != nil {
