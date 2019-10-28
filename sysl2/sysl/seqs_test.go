@@ -1,7 +1,6 @@
 package main
 
 import (
-	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -31,8 +30,8 @@ func TestGenerateSequenceDiagFail(t *testing.T) {
 func TestGenerateSequenceDiag(t *testing.T) {
 	t.Parallel()
 	root := "../../"
-	module := filepath.Join(root, "demo/simple/sysl-sd.sysl")
-	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	rootHandler, err := roothandler.NewRootHandler(root, "demo/simple/sysl-sd.sysl",
+		afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
@@ -82,8 +81,8 @@ deactivate _0
 func TestGenerateSequenceDiag2(t *testing.T) {
 	t.Parallel()
 	root := "../../"
-	module := filepath.Join(root, "demo/simple/sysl-sd2.sysl")
-	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	rootHandler, err := roothandler.NewRootHandler(root, "demo/simple/sysl-sd2.sysl",
+		afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
@@ -137,8 +136,7 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	root := "tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
-	module := filepath.Join(root, "sequence_diagram_name_format.sysl")
-	rootHandler, err := roothandler.NewRootHandler(root, module, fs, logger)
+	rootHandler, err := roothandler.NewRootHandler(root, "sequence_diagram_name_format.sysl", fs, logger)
 	assert.NoError(t, err)
 
 	m, err := parse.NewParser().Parse(rootHandler, fs)
@@ -197,8 +195,8 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	root := "tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
-	module := filepath.Join(root, "sequence_diagram_name_format.sysl")
-	rootHandler, err := roothandler.NewRootHandler(root, module, fs, logger)
+	rootHandler, err := roothandler.NewRootHandler(root,
+		"sequence_diagram_name_format.sysl", fs, logger)
 	assert.NoError(t, err)
 	m, err := parse.NewParser().Parse(rootHandler, fs)
 	require.NoError(t, err)
@@ -277,8 +275,7 @@ func TestLoadApp(t *testing.T) {
 	}
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	logger, _ := test.NewNullLogger()
-	module := filepath.Join(args.root, args.models)
-	rootHandler, err := roothandler.NewRootHandler(args.root, module, fs, logger)
+	rootHandler, err := roothandler.NewRootHandler(args.root, args.models, fs, logger)
 	assert.NoError(t, err)
 	mod, name, err := LoadSyslModule(rootHandler, fs, logger)
 	require.NoError(t, err)
@@ -645,7 +642,6 @@ func DoConstructSequenceDiagramsWithParams(
 	group string,
 ) (map[string]string, error) {
 	logger, _ := test.NewNullLogger()
-	modules = filepath.Join(rootModel, modules)
 	rootHandler, err := roothandler.NewRootHandler(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err

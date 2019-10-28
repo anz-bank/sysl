@@ -53,7 +53,7 @@ func TestDoGenerateDataDiagrams(t *testing.T) {
 func TestDoConstructDataDiagrams(t *testing.T) {
 	args := &dataArgs{
 		root:    "./tests/",
-		modules: "./tests/data.sysl",
+		modules: "/data.sysl",
 		output:  "%(epname).png",
 		project: "Project",
 		title:   "empdata",

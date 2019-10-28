@@ -29,7 +29,7 @@ func TestExportAll(t *testing.T) {
 			t.Run(parts[0], func(t *testing.T) {
 				t.Parallel()
 				root := ".."
-				rootHandler, err := roothandler.NewRootHandler(root, root+"/exporter/test-data/"+parts[0]+`.sysl`,
+				rootHandler, err := roothandler.NewRootHandler(root, "/exporter/test-data/"+parts[0]+`.sysl`,
 					afero.NewOsFs(), logrus.StandardLogger())
 				require.NoError(t, err)
 				mod, _, err := parse.LoadAndGetDefaultApp(rootHandler,

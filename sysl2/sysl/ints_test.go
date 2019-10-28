@@ -2,7 +2,6 @@ package main
 
 import (
 	"io/ioutil"
-	"path/filepath"
 	"testing"
 
 	"github.com/sirupsen/logrus/hooks/test"
@@ -39,9 +38,8 @@ const (
 
 func TestGenerateIntegrations(t *testing.T) {
 	t.Parallel()
-	module := filepath.Join(generateIntegrationsRoot, "demo/simple/sysl-ints.sysl")
 	rootHandler, err := roothandler.NewRootHandler(generateIntegrationsRoot,
-		module, afero.NewOsFs(), logrus.StandardLogger())
+		"demo/simple/sysl-ints.sysl", afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
@@ -511,7 +509,6 @@ func GenerateIntegrationsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	modules = filepath.Join(rootModel, modules)
 	rootHandler, err := roothandler.NewRootHandler(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err

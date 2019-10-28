@@ -3,7 +3,6 @@ package main
 import (
 	"io"
 	"io/ioutil"
-	"path/filepath"
 	"sort"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -234,10 +233,8 @@ func GenerateCode(
 	logger.Debugf("grammar: %s\n", codegenParams.grammar)
 	logger.Debugf("start: %s\n", codegenParams.start)
 
-	module := filepath.Join(codegenParams.rootTransform, codegenParams.transform)
-
 	rootHandler, err := roothandler.NewRootHandler(codegenParams.rootTransform,
-		module, fs, logger)
+		codegenParams.transform, fs, logger)
 	transformFs := syslutil.NewChrootFs(fs, rootHandler.Root())
 	if err != nil {
 		return nil, err

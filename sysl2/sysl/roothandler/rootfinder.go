@@ -30,6 +30,7 @@ type rootStatus struct {
 // NewRootHandler returns a root handler
 func NewRootHandler(root, module string, fs afero.Fs, logger *logrus.Logger) (RootHandler, error) {
 	rh := &rootStatus{root: root, module: module, rootIsDefined: true}
+
 	err := rh.handleRoot(fs, logger)
 	if err != nil {
 		return nil, err
@@ -38,7 +39,6 @@ func NewRootHandler(root, module string, fs afero.Fs, logger *logrus.Logger) (Ro
 }
 
 func (r *rootStatus) handleRoot(fs afero.Fs, logger *logrus.Logger) error {
-
 	moduleAbsolutePath, err := filepath.Abs(r.module)
 	if err != nil {
 		return err
@@ -47,7 +47,6 @@ func (r *rootStatus) handleRoot(fs afero.Fs, logger *logrus.Logger) error {
 	if err != nil {
 		return err
 	}
-
 	rootIsDefined := r.root != ""
 	rootMarkerExists := syslRootPath != ""
 
@@ -78,7 +77,6 @@ func (r *rootStatus) handleRoot(fs afero.Fs, logger *logrus.Logger) error {
 			warningFormat := "%s is not defined but root flag is defined in %s and will be used"
 			logger.Warningf(warningFormat, syslRootMarker, absoluteRootFlag)
 		}
-
 	case !rootIsDefined && !rootMarkerExists:
 		relativeModulePath, err := filepath.Rel(currentUserDirectory, moduleAbsolutePath)
 		if err != nil {
@@ -89,7 +87,6 @@ func (r *rootStatus) handleRoot(fs afero.Fs, logger *logrus.Logger) error {
 		// uses the module directory as the root
 		r.root = relativeModulePath
 		r.rootIsDefined = false
-
 	case !rootIsDefined && rootMarkerExists:
 		relativeSyslRootPath, err := filepath.Rel(currentUserDirectory, syslRootPath)
 		if err != nil {
@@ -97,22 +94,24 @@ func (r *rootStatus) handleRoot(fs afero.Fs, logger *logrus.Logger) error {
 		}
 		r.root = relativeSyslRootPath
 	}
-
-	return r.handleModule(moduleAbsolutePath)
+	return r.handleModule(moduleAbsolutePath, rootIsDefined)
 }
 
-func (r *rootStatus) handleModule(moduleAbsolutePath string) error {
+func (r *rootStatus) handleModule(moduleAbsolutePath string, rootIsDefined bool) error {
 	absoluteRootPath, err := filepath.Abs(r.root)
 	if err != nil {
 		return err
 	}
 
-	relativeModulePath, err := filepath.Rel(absoluteRootPath, moduleAbsolutePath)
-	if err != nil {
-		return err
+	// module is changed to relative to the root if root flag is not defined
+	if !rootIsDefined {
+		r.module, err = filepath.Rel(absoluteRootPath, moduleAbsolutePath)
+		if err != nil {
+			return err
+		}
 	}
 
-	r.module = relativeModulePath
+	logrus.Warn(r.module, " ", r.root)
 	return nil
 }
 

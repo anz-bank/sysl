@@ -1,7 +1,6 @@
 package validate
 
 import (
-	"path/filepath"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -38,9 +37,8 @@ func DoValidate(validateParams Params) error {
 	logrus.Debugf("grammar: %s\n", validateParams.Grammar)
 	logrus.Debugf("start: %s\n", validateParams.Start)
 
-	module := filepath.Join(validateParams.RootTransform, validateParams.Transform)
 	rootHandler, err := roothandler.NewRootHandler(validateParams.RootTransform,
-		module, validateParams.Filesystem, validateParams.Logger)
+		validateParams.Transform, validateParams.Filesystem, validateParams.Logger)
 	if err != nil {
 		return err
 	}
@@ -344,9 +342,13 @@ func loadTransform(rootHandler roothandler.RootHandler, fs afero.Fs, p *parse.Pa
 func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 	tokens := strings.Split(grammarFile, "/")
 	rootGrammar := strings.Join(tokens[:len(tokens)-1], "/")
+	grammarFileName := tokens[len(tokens)-1]
+	tokens = strings.Split(grammarFileName, ".")
+	tokens[len(tokens)-1] = "sysl"
+	grammarSyslFile := strings.Join(tokens, ".")
 	p := parse.NewParser()
 
-	rootHandler, err := roothandler.NewRootHandler(rootGrammar, grammarFile,
+	rootHandler, err := roothandler.NewRootHandler(rootGrammar, grammarSyslFile,
 		fs, logrus.StandardLogger())
 	if err != nil {
 		return nil, err

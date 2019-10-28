@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -238,7 +237,7 @@ func TestNestedImport(t *testing.T) {
 	assert.NoError(t, err)
 
 	// root defined
-	_, err = parseComparable("tests/importnested.sysl", "tests", false)
+	_, err = parseComparable("/importnested.sysl", "tests", false)
 	assert.NoError(t, err)
 }
 
@@ -421,7 +420,7 @@ func TestForeignImports(t *testing.T) {
 func TestRootArg(t *testing.T) {
 	t.Parallel()
 
-	testParseAgainstGolden(t, "tests/school.sysl", "tests")
+	testParseAgainstGolden(t, "school.sysl", "tests")
 }
 
 func TestSequenceType(t *testing.T) {
@@ -549,8 +548,8 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 	root := "../tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
 	parser := NewParser()
-	module := filepath.Join(root, "transform1.sysl")
-	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	rootHandler, err := roothandler.NewRootHandler(root, "transform1.sysl",
+		afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	expressions := map[string]*sysl.Expr{}
 	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)
@@ -629,8 +628,8 @@ func TestInferExprTypeTransform(t *testing.T) {
 	}
 	root := "../tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
-	module := filepath.Join(root, "transform1.sysl")
-	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	rootHandler, err := roothandler.NewRootHandler(root, "transform1.sysl",
+		afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
 	parser := NewParser()
 	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)
