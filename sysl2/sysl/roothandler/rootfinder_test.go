@@ -193,8 +193,7 @@ func TestRootHandler(t *testing.T) {
 				fs, err := buildFolderTest(test.folders, test.files)
 				assert.NoError(t, err)
 
-				rootHandler := NewRootHandler(test.root, test.module)
-				err = rootHandler.HandleRoot(fs, logger)
+				rootHandler, err := NewRootHandler(test.root, test.module, fs, logger)
 
 				assert.NoError(t, err)
 				assert.Equal(t, test.foundRoot, rootHandler.Root())

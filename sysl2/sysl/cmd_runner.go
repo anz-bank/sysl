@@ -43,9 +43,12 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 	return nil
 }
 
-func (r *cmdRunner) handleRootFlag(fs afero.Fs, logger *logrus.Logger) error {
-	r.rootHandler = roothandler.NewRootHandler(r.rootFlag, r.module)
-	return r.rootHandler.HandleRoot(fs, logger)
+func (r *cmdRunner) handleRootFlag(fs afero.Fs, logger *logrus.Logger) (err error) {
+	r.rootHandler, err = roothandler.NewRootHandler(r.rootFlag, r.module, fs, logger)
+	if err != nil {
+		return err
+	}
+	return
 }
 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {

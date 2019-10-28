@@ -18,7 +18,6 @@ type RootHandler interface {
 	Root() string
 	Module() string
 	RootIsFound() bool
-	HandleRoot(fs afero.Fs, logger *logrus.Logger) error
 	ImportAllowed(modulePath string) (bool, error)
 }
 
@@ -29,11 +28,16 @@ type rootStatus struct {
 }
 
 // NewRootHandler returns a root handler
-func NewRootHandler(root, module string) RootHandler {
-	return &rootStatus{root: root, module: module, rootIsDefined: true}
+func NewRootHandler(root, module string, fs afero.Fs, logger *logrus.Logger) (RootHandler, error) {
+	rh := &rootStatus{root: root, module: module, rootIsDefined: true}
+	err := rh.handleRoot(fs, logger)
+	if err != nil {
+		return nil, err
+	}
+	return rh, nil
 }
 
-func (r *rootStatus) HandleRoot(fs afero.Fs, logger *logrus.Logger) error {
+func (r *rootStatus) handleRoot(fs afero.Fs, logger *logrus.Logger) error {
 
 	moduleAbsolutePath, err := filepath.Abs(r.module)
 	if err != nil {
