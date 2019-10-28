@@ -13,12 +13,11 @@ TransformDeps:
 
       let myList = app.endpoints -> <sequence of out> (ep:
         let calls = ep.value.stmts where (.type == "call") -> <sequence of out> (call:
-          # SYSL bug? this didn't work: where (.name == call.target)
-          let pkgList = module.apps -> <sequence of out> (dep:
-            let depEpList = dep.value.endpoints -> <sequence of out> (depEp:
-                out = if depEp.value.name == call.endpoint then depEp.value.name else "not found"
+          let pkgList = module.apps where(.value.name == call.target) -> <sequence of out> (dep:
+            let depEpList = dep.value.endpoints where(.value.name == call.endpoint) -> <sequence of out> (depEp:
+                out = depEp.value.name
             )
-            out = if dep.value.name == call.target then dep.value.attrs.package + "." + Join(depEpList flatten(.out),"")  else ""
+            out = dep.value.attrs.package + "." + Join(depEpList flatten(.out),"")
           )
 
           out = Join(pkgList flatten(.out), "")
