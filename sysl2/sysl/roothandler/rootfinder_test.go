@@ -250,16 +250,6 @@ func TestImportAllowed(t *testing.T) {
 			result: false,
 			err:    errors.New("import does not allow \"..\""),
 		},
-		{
-			name:   "Strange case, \"..\" in the middle",
-			module: "/test/../module",
-			handledRoot: &rootStatus{
-				root:          "",
-				rootIsDefined: false,
-			},
-			result: true,
-			err:    nil,
-		},
 	}
 
 	for _, test := range tests {

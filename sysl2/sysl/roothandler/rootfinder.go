@@ -151,8 +151,6 @@ func (r *rootStatus) Module() string {
 }
 
 func (r *rootStatus) ImportAllowed(modulePath string) (bool, error) {
-	modulePath = filepath.Clean(modulePath)
-
 	if strings.Contains(modulePath, "..") {
 		return false, errors.New("import does not allow \"..\"")
 	}
