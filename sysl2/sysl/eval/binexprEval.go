@@ -24,6 +24,9 @@ type Strategy interface {
 // DefaultBinExprStrategy is to evaluate lhs and rhs expr's first and then pass it to fn
 type DefaultBinExprStrategy struct{}
 
+// NegateBinExprStrategy is to evaluate the negative of the DefaultBinExprStrategy
+type NegateBinExprStrategy struct{}
+
 // LHSOverRHSStrategy binds rhs expression over each element of the LHS.
 // Assumes lhs is a collection
 type LHSOverRHSStrategy struct{}
@@ -43,7 +46,7 @@ var (
 		sysl.Expr_BinExpr_LT:      DefaultBinExprStrategy{},
 		sysl.Expr_BinExpr_GE:      DefaultBinExprStrategy{},
 		sysl.Expr_BinExpr_LE:      DefaultBinExprStrategy{},
-		sysl.Expr_BinExpr_NE:      DefaultBinExprStrategy{},
+		sysl.Expr_BinExpr_NE:      NegateBinExprStrategy{},
 		sysl.Expr_BinExpr_AND:     DefaultBinExprStrategy{},
 		sysl.Expr_BinExpr_FLATTEN: LHSOverRHSStrategy{},
 		sysl.Expr_BinExpr_WHERE:   LHSOverRHSStrategy{},
@@ -71,16 +74,11 @@ var (
 		makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueList):    stringInList,
 		makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueNull):    stringInNull,
 		makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueSet):     stringInSet,
+		makeKey(sysl.Expr_BinExpr_IN, ValueString, ValueMap):     stringInMapKey,
 		makeKey(sysl.Expr_BinExpr_LE, ValueInt, ValueInt):        leInt64,
 		makeKey(sysl.Expr_BinExpr_LT, ValueInt, ValueInt):        ltInt64,
 		makeKey(sysl.Expr_BinExpr_MOD, ValueInt, ValueInt):       modInt64,
 		makeKey(sysl.Expr_BinExpr_MUL, ValueInt, ValueInt):       mulInt64,
-		makeKey(sysl.Expr_BinExpr_NE, ValueBool, ValueBool):      not(cmpBool),
-		makeKey(sysl.Expr_BinExpr_NE, ValueInt, ValueInt):        not(cmpInt),
-		makeKey(sysl.Expr_BinExpr_NE, ValueNull, ValueNull):      cmpNullFalse,
-		makeKey(sysl.Expr_BinExpr_NE, ValueNull, ValueString):    cmpNullTrue,
-		makeKey(sysl.Expr_BinExpr_NE, ValueString, ValueNull):    cmpNullTrue,
-		makeKey(sysl.Expr_BinExpr_NE, ValueString, ValueString):  not(cmpString),
 		makeKey(sysl.Expr_BinExpr_SUB, ValueInt, ValueInt):       subInt64,
 	}
 
@@ -117,7 +115,18 @@ func (op DefaultBinExprStrategy) eval(txApp *sysl.Application, assign Scope, bin
 	if f, has := valueFunctions[key]; has {
 		return f(lhsValue, rhsValue)
 	}
+
 	panic(errors.Errorf("Unsupported operation:DefaultBinExprStrategy: %s", key))
+}
+
+func (op NegateBinExprStrategy) eval(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
+	if binexpr.Op != sysl.Expr_BinExpr_NE {
+		panic(errors.Errorf("Attempting to call Negate Strategy on a non == operator"))
+	}
+
+	negated := *binexpr
+	negated.Op = sysl.Expr_BinExpr_EQ
+	return unaryNeg(DefaultBinExprStrategy{}.eval(txApp, assign, &negated))
 }
 
 func (op LHSOverRHSStrategy) eval(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
