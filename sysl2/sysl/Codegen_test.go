@@ -193,7 +193,11 @@ func GenerateCodeWithParamsFs(
 		start:         start,
 	}
 	logger, _ := test.NewNullLogger()
-	mod, modAppName, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, model), fs, logger)
+	rootHandler, err := roothandler.NewRootHandler(rootModel, model, fs, logger)
+	if err != nil {
+		return nil, err
+	}
+	mod, modAppName, err := LoadSyslModule(rootHandler, fs, logger)
 	if err != nil {
 		return nil, err
 	}
