@@ -316,15 +316,24 @@ func (s Scope) AddApp(name string, app *sysl.Application) {
 	s[name] = addAppToValueMap(app)
 }
 
-// AddDeps add deps <: sequence of sysl.App to scope
-func (s Scope) AddDeps(name string, apps map[string]*sysl.Application) {
-	vl := MakeValueList()
+// AddModule add module <: sysl.Module to scope
+func (s Scope) AddModule(name string, module *sysl.Module) {
+	apps := MakeValueMap()
+	types := MakeValueMap()
 
-	for _, app := range apps {
-		vl.GetList().Value = append(vl.GetList().Value, addAppToValueMap(app))
+	for n, a := range module.GetApps() {
+		AddItemToValueMap(apps, n, addAppToValueMap(a))
 	}
 
-	s[name] = vl
+	for n, t := range module.Types {
+		AddItemToValueMap(types, n, TypeToValue(t))
+	}
+
+	m := MakeValueMap()
+	AddItemToValueMap(m, "apps", apps)
+	AddItemToValueMap(m, "types", types)
+
+	s[name] = m
 }
 
 func addAppToValueMap(app *sysl.Application) *sysl.Value {

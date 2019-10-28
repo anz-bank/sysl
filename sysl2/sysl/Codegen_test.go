@@ -130,7 +130,7 @@ func TestGenerateCodePerType(t *testing.T) {
 	assert.Equal(t, "Request", definition1)
 }
 
-func TestGenerateCodeWithDeps(t *testing.T) {
+func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(".", "tests/model_with_deps.sysl", ".", "tests/xform_with_deps.sysl",
@@ -139,35 +139,17 @@ func TestGenerateCodeWithDeps(t *testing.T) {
 	root := output[0].output
 	assert.Len(t, output, 1)
 	assert.Len(t, root, 1)
-	//n1 := root[0].(Node)
-	//assert.Len(t, n1, 4)
-	//package1 := n1[0].(Node)
-	//comment1 := n1[1].(Node)
-	//import1 := n1[2].(Node)
-	//definition1 := n1[3].(string)
-	//assert.Len(t, package1, 1)
-	//assert.Len(t, comment1, 2)
-	//assert.Len(t, import1, 2)
-	//assert.Equal(t, "some_value", definition1)
+	n1 := root[0].(Node)
+	assert.Len(t, n1, 4)
+	comment1 := n1[1].(Node)
+	assert.Len(t, comment1, 1)
 
-	//package2 := package1[0].(Node)
-	//assert.Len(t, package2, 3)
-	//assert.Equal(t, "model", package2[1].(string))
-
-	//for i, comment := range []string{"model", "dep"} {
-	//	comment0 := comment1[i].(Node)
-	//	assert.Len(t, comment0, 1)
-	//	comment0_0 := comment0[0].(string)
-	//	assert.Equal(t, comment, comment0_0)
-	//}
-
-	//for i, imports := range []string{"import1", "import2"} {
-	//	import0 := import1[i].(Node)
-	//	assert.Len(t, import0, 1)
-	//	import0_0 := import0[0].(Node)
-	//	assert.Len(t, import0_0, 3)
-	//	assert.Equal(t, imports, import0_0[1].(string))
-	//}
+	for i, comment := range []string{"dep.GET /dep/{id}"} {
+		comment0 := comment1[i].(Node)
+		assert.Len(t, comment0, 1)
+		comment0_0 := comment0[0].(string)
+		assert.Equal(t, comment, comment0_0)
+	}
 }
 
 func TestSerialize(t *testing.T) {

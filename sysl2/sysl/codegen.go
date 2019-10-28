@@ -178,7 +178,7 @@ func applyTranformToModel(
 	}
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
-	s.AddDeps("deps", model.Apps)
+	s.AddModule("module", model)
 	var result *sysl.Value
 	// assume args are
 	//  app <: sysl.App and
@@ -286,7 +286,7 @@ func GenerateCode(
 		filename := fileNames.GetMap().Items["filename"].GetS()
 		logger.Println(filename)
 
-		if result.GetMap() != nil  {
+		if result.GetMap() != nil {
 			r := processRule(g, result, g.Start, logger)
 			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 		} else if result.GetList() != nil {

@@ -4,7 +4,7 @@ TransformDeps:
       filename = app.name + ".java"
     )
 
-  !view javaFile(app <: sysl.App, deps <: sequence of sysl.App) -> javaFile:
+  !view javaFile(app <: sysl.App, module <: sysl.Module) -> javaFile:
     app -> (:
 
       package = .attrs.package -> <sequence of package> (name1:
@@ -14,11 +14,11 @@ TransformDeps:
       let myList = app.endpoints -> <sequence of out> (ep:
         let calls = ep.value.stmts where (.type == "call") -> <sequence of out> (call:
           # SYSL bug? this didn't work: where (.name == call.target)
-          let pkgList = deps -> <sequence of out> (dep:
-            let depEpList = dep.endpoints -> <sequence of out> (depEp:
+          let pkgList = module.apps -> <sequence of out> (dep:
+            let depEpList = dep.value.endpoints -> <sequence of out> (depEp:
                 out = if depEp.value.name == call.endpoint then depEp.value.name else "not found"
             )
-            out = if dep.name == call.target then Join(depEpList flatten(.out),"") + dep.attrs.package else ""
+            out = if dep.value.name == call.target then dep.value.attrs.package + "." + Join(depEpList flatten(.out),"")  else ""
           )
 
           out = Join(pkgList flatten(.out), "")
