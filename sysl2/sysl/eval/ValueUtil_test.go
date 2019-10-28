@@ -3,10 +3,13 @@ package eval
 import (
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/spf13/afero"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMakeValueBool(t *testing.T) {
@@ -427,4 +430,18 @@ func TestStmtToValueCall(t *testing.T) {
 			}}},
 		),
 	)
+}
+
+func TestAddModule(t *testing.T) {
+	mod, err := parse.NewParser().Parse("tests/model_with_deps.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
+	require.NoError(t, err)
+	require.NotNil(t, mod)
+	s := Scope{}
+	s.AddModule("module", mod)
+	module := s["module"].GetMap().Items
+	assert.Equal(t, "ModelWithDeps", module["apps"].GetMap().Items["ModelWithDeps"].GetMap().Items["name"].GetS())
+	assert.Equal(t, "Dep", module["apps"].GetMap().Items["Dep"].GetMap().Items["name"].GetS())
+
+	_, hasKey := module["types"]
+	assert.Equal(t, true, hasKey)
 }
