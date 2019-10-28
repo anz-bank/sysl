@@ -219,8 +219,7 @@ func addSwaggerProperties(s *StandardType, props map[string]spec.Schema, require
 	for pname, prop := range props {
 		propType, found := data.knownTypes.findFromSchema(prop, data)
 		if !found {
-			var refType string
-			refType = findReferencedType(prop, data)
+			refType := findReferencedType(prop, data)
 			if refType == "" || refType == "object" {
 				p := prop
 				propType = createTypeFromSchema(fmt.Sprintf("%s_%s_obj", s.Name(), pname), &p, data)

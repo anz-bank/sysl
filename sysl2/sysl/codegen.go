@@ -282,7 +282,8 @@ func GenerateCode(
 	if err != nil {
 		return nil, err
 	}
-	if fileNames.GetMap() != nil {
+	switch {
+	case fileNames.GetMap() != nil:
 		filename := fileNames.GetMap().Items["filename"].GetS()
 		logger.Println(filename)
 
@@ -295,16 +296,17 @@ func GenerateCode(
 				codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 			}
 		}
-	} else if fileNames.GetList() != nil && result.GetList() != nil {
+	case fileNames.GetList() != nil && result.GetList() != nil:
 		fileValues := fileNames.GetList().Value
 		for i, v := range result.GetList().Value {
 			filename := fileValues[i].GetMap().Items["filename"].GetS()
 			r := processRule(g, v, g.Start, logger)
 			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 		}
-	} else {
+	default:
 		panic("Unexpected combination for filenames and transformation results")
 	}
+
 	return codeOutput, nil
 }
 
