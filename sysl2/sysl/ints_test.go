@@ -3,13 +3,14 @@ package main
 import (
 	"io/ioutil"
 	"testing"
-
+	"path/filepath"
 	"github.com/sirupsen/logrus/hooks/test"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -33,8 +34,11 @@ skinparam component {
 
 func TestGenerateIntegrations(t *testing.T) {
 	t.Parallel()
-	rootHandler := roothandler.NewRootHandler("../../", "demo/simple/sysl-ints.sysl")
-	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	root := "../../"
+	module := filepath.Join(root, "demo/simple/sysl-ints.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	assert.NoError(t, err)
+	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.NoError(t, err)
 	require.NotNil(t, m)
 
@@ -502,7 +506,12 @@ func GenerateIntegrationsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules), afero.NewOsFs(), logger)
+	modules = filepath.Join(rootModel, modules)
+	rootHandler, err := roothandler.NewRootHandler(rootModel, modules, afero.NewOsFs(), logger)
+	if err != nil {
+		return nil, err
+	}
+	mod, _, err := LoadSyslModule(rootHandler, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

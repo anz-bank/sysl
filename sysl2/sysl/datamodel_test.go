@@ -8,6 +8,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -26,7 +27,10 @@ type dataArgs struct {
 func TestGenerateDataDiagFail(t *testing.T) {
 	t.Parallel()
 	root := ""
-	_, err := parse.NewParser().Parse(roothandler.NewRootHandler(root, "doesn't-exist.sysl"), syslutil.NewChrootFs(afero.NewOsFs(), root))
+	rootHandler, err := roothandler.NewRootHandler(root, "doesn't-exist.sysl",
+		afero.NewOsFs(), logrus.StandardLogger())
+	assert.NoError(t, err)
+	_, err = parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.Error(t, err)
 }
 
@@ -49,7 +53,7 @@ func TestDoGenerateDataDiagrams(t *testing.T) {
 func TestDoConstructDataDiagrams(t *testing.T) {
 	args := &dataArgs{
 		root:    "./tests/",
-		modules: "data.sysl",
+		modules: "./tests/data.sysl",
 		output:  "%(epname).png",
 		project: "Project",
 		title:   "empdata",
@@ -77,8 +81,11 @@ func DoConstructDataDiagramsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules),
-		afero.NewOsFs(), logger)
+	rootHandler, err := roothandler.NewRootHandler(rootModel, modules, afero.NewOsFs(), logger)
+	if err != nil {
+		return nil, err
+	}
+	mod, _, err := LoadSyslModule(rootHandler, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

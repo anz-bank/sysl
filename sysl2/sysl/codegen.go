@@ -4,6 +4,7 @@ import (
 	"io"
 	"io/ioutil"
 	"sort"
+	"path/filepath"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"
@@ -233,8 +234,14 @@ func GenerateCode(
 	logger.Debugf("grammar: %s\n", codegenParams.grammar)
 	logger.Debugf("start: %s\n", codegenParams.start)
 
-	transformFs := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
-	rootHandler := roothandler.NewRootHandler(codegenParams.rootTransform, codegenParams.transform)
+	module := filepath.Join(codegenParams.rootTransform, codegenParams.transform)
+
+	rootHandler, err := roothandler.NewRootHandler(codegenParams.rootTransform,
+		module, fs, logger)
+	transformFs := syslutil.NewChrootFs(fs, rootHandler.Root())
+	if err != nil {
+		return nil, err
+	}
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(rootHandler, transformFs, tfmParser)
 	if err != nil {

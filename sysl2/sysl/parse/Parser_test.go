@@ -19,6 +19,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -61,8 +62,11 @@ func parseComparable(
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
 
-	rootHandler := roothandler.NewRootHandler(root, filename)
-	module, err := NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
+	rootHandler, err := roothandler.NewRootHandler(root, filename, afero.NewOsFs(), logrus.StandardLogger())
+	if err != nil {
+		return nil, err
+	}
+	module, err := NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	if err != nil {
 		return nil, err
 	}
@@ -187,13 +191,17 @@ func parseAndCompare(
 }
 
 func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
-	goldenFilename := filename
+	rootHandler, err := roothandler.NewRootHandler(root, filename, afero.NewOsFs(), logrus.StandardLogger())
+	if err != nil {
+		return false, err
+	}
+	goldenFilename := rootHandler.Module()
 	if !strings.HasSuffix(goldenFilename, syslExt) {
 		goldenFilename += syslExt
 	}
 	goldenFilename += ".golden.textpb"
-	golden := path.Join(root, goldenFilename)
 
+	golden := path.Join(rootHandler.Root(), goldenFilename)
 	goldenModule, err := readSyslModule(golden)
 	if err != nil {
 		return false, err
@@ -213,6 +221,25 @@ func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
 	if assert.NoError(t, err) {
 		assert.True(t, equal, "%#v", filename)
 	}
+}
+
+func TestBadImportFromTheRootWithoutRootFlag(t *testing.T) {
+	t.Parallel()
+
+	_, err := parseComparable("tests/badimportfromtheroot.sysl", "", false)
+	assert.EqualError(t, err, "Import from the root is not allowed if root is not defined")
+}
+
+func TestNestedImport(t *testing.T) {
+	t.Parallel()
+
+	// No root
+	_, err := parseComparable("tests/importnested.sysl", "", false)
+	assert.NoError(t, err)
+
+	// root defined
+	_, err = parseComparable("tests/importnested.sysl", "tests", false)
+	assert.NoError(t, err)
 }
 
 func TestParseBadRoot(t *testing.T) {
@@ -394,7 +421,7 @@ func TestForeignImports(t *testing.T) {
 func TestRootArg(t *testing.T) {
 	t.Parallel()
 
-	testParseAgainstGolden(t, "school.sysl", "tests")
+	testParseAgainstGolden(t, "tests/school.sysl", "tests")
 }
 
 func TestSequenceType(t *testing.T) {
@@ -522,7 +549,8 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 	root := "../tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
 	parser := NewParser()
-	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, "../tests/transform1.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	assert.NoError(t, err)
 	expressions := map[string]*sysl.Expr{}
 	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)
 	require.NoError(t, err)
@@ -600,7 +628,8 @@ func TestInferExprTypeTransform(t *testing.T) {
 	}
 	root := "../tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
-	rootHandler := roothandler.NewRootHandler(root, "transform1.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, "../tests/transform1.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	assert.NoError(t, err)
 	parser := NewParser()
 	transform, appName, err := LoadAndGetDefaultApp(rootHandler, fs, parser)
 	require.NoError(t, err)

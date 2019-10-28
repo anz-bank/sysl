@@ -1,6 +1,7 @@
 package main
 
 import (
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -9,6 +10,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/roothandler"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -19,15 +21,19 @@ import (
 func TestGenerateSequenceDiagFail(t *testing.T) {
 	t.Parallel()
 	root := ""
-	rootHandler := roothandler.NewRootHandler(root, "doesn't-exist.sysl")
-	_, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
+	rootHandler, err := roothandler.NewRootHandler(root, "doesn't-exist.sysl",
+		afero.NewOsFs(), logrus.StandardLogger())
+	assert.NoError(t, err)
+	_, err = parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.Error(t, err)
 }
 
 func TestGenerateSequenceDiag(t *testing.T) {
 	t.Parallel()
 	root := "../../"
-	rootHandler := roothandler.NewRootHandler(root, "demo/simple/sysl-sd.sysl")
+	module := filepath.Join(root, "demo/simple/sysl-sd.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	assert.NoError(t, err)
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.NoError(t, err)
@@ -76,7 +82,9 @@ deactivate _0
 func TestGenerateSequenceDiag2(t *testing.T) {
 	t.Parallel()
 	root := "../../"
-	rootHandler := roothandler.NewRootHandler(root, "demo/simple/sysl-sd2.sysl")
+	module := filepath.Join(root, "demo/simple/sysl-sd2.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	assert.NoError(t, err)
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	require.NoError(t, err)
@@ -129,7 +137,9 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	root := "tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
-	rootHandler := roothandler.NewRootHandler(root, "sequence_diagram_name_format.sysl")
+	module := filepath.Join(root, "sequence_diagram_name_format.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, fs, logger)
+	assert.NoError(t, err)
 
 	m, err := parse.NewParser().Parse(rootHandler, fs)
 	require.NoError(t, err)
@@ -187,7 +197,9 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	root := "tests"
 	memFs, fs := testutil.WriteToMemOverlayFs(root)
-	rootHandler := roothandler.NewRootHandler(root, "sequence_diagram_name_format.sysl")
+	module := filepath.Join(root, "sequence_diagram_name_format.sysl")
+	rootHandler, err := roothandler.NewRootHandler(root, module, fs, logger)
+	assert.NoError(t, err)
 	m, err := parse.NewParser().Parse(rootHandler, fs)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
@@ -249,10 +261,11 @@ func TestLoadAppReturnError(t *testing.T) {
 	args := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	rootHandler := roothandler.NewRootHandler(args.root, args.models)
 	_, fs := testutil.WriteToMemOverlayFs(args.root)
 	logger, _ := test.NewNullLogger()
-	_, _, err := LoadSyslModule(rootHandler, fs, logger)
+	rootHandler, err := roothandler.NewRootHandler(args.root, args.models, fs, logger)
+	assert.NoError(t, err)
+	_, _, err = LoadSyslModule(rootHandler, fs, logger)
 	assert.Error(t, err)
 }
 
@@ -264,7 +277,9 @@ func TestLoadApp(t *testing.T) {
 	}
 	memFs, fs := testutil.WriteToMemOverlayFs(".")
 	logger, _ := test.NewNullLogger()
-	rootHandler := roothandler.NewRootHandler(args.root, args.models)
+	module := filepath.Join(args.root, args.models)
+	rootHandler, err := roothandler.NewRootHandler(args.root, module, fs, logger)
+	assert.NoError(t, err)
 	mod, name, err := LoadSyslModule(rootHandler, fs, logger)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
@@ -630,7 +645,12 @@ func DoConstructSequenceDiagramsWithParams(
 	group string,
 ) (map[string]string, error) {
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(roothandler.NewRootHandler(rootModel, modules), afero.NewOsFs(), logger)
+	modules = filepath.Join(rootModel, modules)
+	rootHandler, err := roothandler.NewRootHandler(rootModel, modules, afero.NewOsFs(), logger)
+	if err != nil {
+		return nil, err
+	}
+	mod, _, err := LoadSyslModule(rootHandler, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}
