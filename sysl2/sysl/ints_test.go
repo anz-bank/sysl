@@ -33,13 +33,17 @@ skinparam component {
   ArrowColor Crimson
 }`
 
+const (
+	generateIntegrationsRoot = "../../"
+)
+
 func TestGenerateIntegrations(t *testing.T) {
 	t.Parallel()
-	root := "../../"
-	module := filepath.Join(root, "demo/simple/sysl-ints.sysl")
-	rootHandler, err := roothandler.NewRootHandler(root, module, afero.NewOsFs(), logrus.StandardLogger())
+	module := filepath.Join(generateIntegrationsRoot, "demo/simple/sysl-ints.sysl")
+	rootHandler, err := roothandler.NewRootHandler(generateIntegrationsRoot,
+		module, afero.NewOsFs(), logrus.StandardLogger())
 	assert.NoError(t, err)
-	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), root))
+	m, err := parse.NewParser().Parse(rootHandler, syslutil.NewChrootFs(afero.NewOsFs(), rootHandler.Root()))
 	require.NoError(t, err)
 	require.NotNil(t, m)
 

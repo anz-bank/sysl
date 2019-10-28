@@ -62,7 +62,6 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-
 	rootHandler, err := roothandler.NewRootHandler(root, filename, afero.NewOsFs(), logrus.StandardLogger())
 	if err != nil {
 		return nil, err

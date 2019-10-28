@@ -98,6 +98,10 @@ func (r *rootStatus) handleRoot(fs afero.Fs, logger *logrus.Logger) error {
 		r.root = relativeSyslRootPath
 	}
 
+	return r.handleModule(moduleAbsolutePath)
+}
+
+func (r *rootStatus) handleModule(moduleAbsolutePath string) error {
 	absoluteRootPath, err := filepath.Abs(r.root)
 	if err != nil {
 		return err

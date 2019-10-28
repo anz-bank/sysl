@@ -22,6 +22,13 @@ type rootHandlerTestStructure struct {
 	rootIsFound                   bool
 }
 
+type importAllowedTestStructure struct {
+	name, module string
+	handledRoot  *rootStatus
+	result       bool
+	err          error
+}
+
 func buildFolderTest(folders, files []string) (fs afero.Fs, err error) {
 	fs = afero.NewMemMapFs()
 	var folder, file string
@@ -54,7 +61,6 @@ func buildFolderTest(folders, files []string) (fs afero.Fs, err error) {
 }
 
 func absPathRelativeToCurrentDirectory(path string, t *testing.T) string {
-
 	currentDirectory, err := filepath.Abs(".")
 	assert.NoError(t, err)
 
@@ -67,7 +73,6 @@ func absPathRelativeToCurrentDirectory(path string, t *testing.T) string {
 }
 
 func TestRootHandler(t *testing.T) {
-
 	successfulTest := folderStructure{
 		folders: []string{
 			"./SuccessfulTest/path/to/module",
@@ -187,29 +192,24 @@ func TestRootHandler(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(test rootHandlerTestStructure) func(t *testing.T) {
-			return func(t *testing.T) {
-				t.Parallel()
+			return func(tt *testing.T) {
+				tt.Parallel()
 				logger := logrus.StandardLogger()
 				fs, err := buildFolderTest(test.folders, test.files)
-				assert.NoError(t, err)
+				assert.NoError(tt, err)
 
 				rootHandler, err := NewRootHandler(test.root, test.module, fs, logger)
 
-				assert.NoError(t, err)
-				assert.Equal(t, test.foundRoot, rootHandler.Root())
-				assert.Equal(t, test.rootIsFound, rootHandler.RootIsFound())
+				assert.NoError(tt, err)
+				assert.Equal(tt, test.foundRoot, rootHandler.Root())
+				assert.Equal(tt, test.rootIsFound, rootHandler.RootIsFound())
 			}
 		}(test))
 	}
 }
 
 func TestImportAllowed(t *testing.T) {
-	tests := []struct {
-		name, module string
-		handledRoot  *rootStatus
-		result       bool
-		err          error
-	}{
+	tests := []importAllowedTestStructure{
 		{
 			name:   "Successful test, regular relative import",
 			module: "test/module",
@@ -253,11 +253,13 @@ func TestImportAllowed(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			t.Parallel()
-			result, err := test.handledRoot.ImportAllowed(test.module)
-			assert.Equal(t, test.result, result)
-			assert.Equal(t, test.err, err)
-		})
+		t.Run(test.name, func(test importAllowedTestStructure) func(*testing.T) {
+			return func(tt *testing.T) {
+				tt.Parallel()
+				result, err := test.handledRoot.ImportAllowed(test.module)
+				assert.Equal(tt, test.result, result)
+				assert.Equal(tt, test.err, err)
+			}
+		}(test))
 	}
 }
