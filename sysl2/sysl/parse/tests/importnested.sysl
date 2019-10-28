@@ -1,0 +1,11 @@
+import importnested/nested1.sysl
+My :: Server [~rest]:
+    /first:
+        GET ?depth=int&limit=int?&offset=int?:
+            ...
+        /{id<:App.Token}:
+          GET:
+              ...
+          /second:
+              GET (foo <: int) ?depth=int [~bar]:
+                  ...
