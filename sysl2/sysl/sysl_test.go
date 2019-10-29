@@ -30,7 +30,7 @@ func assertLogEntry(
 
 func testMain2(t *testing.T, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
-	_, fs := testutil.WriteToMemOverlayFs(".")
+	_, fs := testutil.WriteToMemOverlayFs("/")
 	output := "out.textpb"
 	rc := main2(append([]string{"sysl", "pb", "-o", output}, args...), fs, logger, main3)
 	assert.Zero(t, rc)
@@ -58,7 +58,7 @@ func TestMain2JSON(t *testing.T) {
 
 func testMain2Stdout(t *testing.T, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(append([]string{"sysl", "pb", "-o", " - "}, args...), fs, logger, main3)
 	assert.Zero(t, rc)
 
@@ -87,7 +87,7 @@ func TestMain2BadMode(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -109,7 +109,7 @@ func TestMain2BadLog(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -128,7 +128,7 @@ func TestMain2SeqdiagWithMissingFile(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sd",
@@ -147,7 +147,7 @@ func TestMain2SeqdiagWithNonsensicalOutput(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	out := "/out.zzz"
-	_, fs := testutil.WriteToMemOverlayFs(".")
+	_, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -170,7 +170,7 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	out := filepath.Clean("/out1.png")
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -194,7 +194,7 @@ func TestMain2WithReadOnlyFs(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	out := "/out2.png"
-	_, fs := testutil.WriteToMemOverlayFs(".")
+	_, fs := testutil.WriteToMemOverlayFs("/")
 	fs = afero.NewReadOnlyFs(fs)
 	rc := main2(
 		[]string{
@@ -217,7 +217,7 @@ func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	ret := main2(
 		[]string{
 			"sysl",
@@ -240,7 +240,7 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -266,7 +266,7 @@ func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -297,7 +297,7 @@ func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -319,7 +319,7 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	out := filepath.Clean("/out3.png")
 	rc := main2(
 		[]string{
@@ -340,7 +340,7 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	rc := main2(
 		[]string{
 			"sysl",
@@ -362,7 +362,7 @@ func TestMain2WithGenerateIntegrations(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	out := "/indirect_1.png"
 	main2(
 		[]string{
@@ -382,12 +382,13 @@ func TestMain2WithGenerateCode(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
+	root := "."
 	ret := main2(
 		[]string{
 			"sysl",
 			"gen",
-			"--root", ".",
+			"--root", root,
 			"--root-transform", ".",
 			"--transform", "tests/test.gen_multiple_annotations.sysl",
 			"--grammar", "tests/test.gen.g",
@@ -398,14 +399,16 @@ func TestMain2WithGenerateCode(t *testing.T) {
 		fs, logger, main3,
 	)
 	assert.Equal(t, 0, ret)
-	testutil.AssertFsHasExactly(t, memFs, "/Model.java")
+	out, err := filepath.Abs(filepath.Join(root, "Model.java"))
+	require.NoError(t, err)
+	testutil.AssertFsHasExactly(t, memFs, out)
 }
 
 func TestMain2WithGenerateCodeReadOnlyFs(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	_, fs := testutil.WriteToMemOverlayFs(".")
+	_, fs := testutil.WriteToMemOverlayFs("/")
 	fs = afero.NewReadOnlyFs(fs)
 	ret := main2(
 		[]string{
@@ -430,7 +433,7 @@ func TestMain2WithTextPbMode(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	out := "/out.textpb"
 	ret := main2(
 		[]string{
@@ -450,7 +453,7 @@ func TestMain2WithJSONMode(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	out := filepath.Clean("/out.json")
 	ret := main2(
 		[]string{
@@ -470,7 +473,7 @@ func TestMain2WithTextPbModeStdout(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	ret := main2(
 		[]string{
 			"sysl",
@@ -489,7 +492,7 @@ func TestMain2WithJSONModeStdout(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	ret := main2(
 		[]string{
 			"sysl",
@@ -508,7 +511,7 @@ func TestMain2WithEmptySdParams(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "sd", "-g", " ", "-o", "", "tests/groupby.sysl", "-a", " "}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t, "'output' value passed is empty\n"+
@@ -521,7 +524,7 @@ func TestMain2WithEmptyPbParams(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "pb", "-o", " ", "--mode", "", "tests/call.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
@@ -533,7 +536,7 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "gen", "--transform",
 		"tests/test.gen_multiple_annotations.sysl", "--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
@@ -548,7 +551,7 @@ func TestMain2WithEmptyIntsParams(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "ints", "-o", "", "-j", " ", "indirect_1.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
@@ -560,7 +563,7 @@ func TestMain2WithEmptyIntsParams(t *testing.T) {
 func TestMain2WithDataMultipleFiles(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl", "-j", "Project"}, fs, logger, main3)
 	testutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
@@ -568,7 +571,7 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 func TestMain2WithDataSingleFile(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "data.png", "tests/data.sysl", "-j", "Project"}, fs, logger, main3)
 	testutil.AssertFsHasExactly(t, memFs, "/data.png")
 }
@@ -576,7 +579,7 @@ func TestMain2WithDataSingleFile(t *testing.T) {
 func TestMain2WithDataNoProject(t *testing.T) {
 	t.Parallel()
 	logger, testHook := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "project not found in sysl", testHook.LastEntry().Message)
@@ -587,7 +590,7 @@ func TestMain2WithDataNoProject(t *testing.T) {
 func TestMain2WithDataFilter(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f", "Object-Model.png", "tests/data.sysl", "-j",
 		"Project"}, fs, logger, main3)
 	testutil.AssertFsHasExactly(t, memFs, "/Object-Model.png")
@@ -596,7 +599,7 @@ func TestMain2WithDataFilter(t *testing.T) {
 func TestMain2WithDataMultipleRelationships(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/datareferences.sysl", "-j", "Project"},
 		fs, logger, main3)
 	testutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
@@ -612,7 +615,7 @@ func TestMain2WithBinaryInfoCmd(t *testing.T) {
 func TestSwaggerExportCurrentDir(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
 		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
 	testutil.AssertFsHasExactly(t, memFs, "/SIMPLE_SWAGGER_EXAMPLE.yaml")
@@ -645,7 +648,7 @@ func TestSwaggerExportJson(t *testing.T) {
 func TestSwaggerExportInvalid(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	_, fs := testutil.WriteToMemOverlayFs(".")
+	_, fs := testutil.WriteToMemOverlayFs("/")
 	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
 		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
 	assert.True(t, errInt == 1)
