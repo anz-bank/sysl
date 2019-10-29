@@ -59,7 +59,7 @@ func TestOpen(t *testing.T) {
 			files: []string{
 				"/bad.sysl",
 			},
-			expectedErr: errors.New("import can not go up the directory"),
+			expectedErr: errors.New("permission denied, file outside root"),
 		},
 		{
 			name:   "successful import",
@@ -72,6 +72,19 @@ func TestOpen(t *testing.T) {
 				"/a/good.sysl",
 			},
 			expectedErr: nil,
+		},
+		{
+			name:   "deeply nested structure",
+			root:   "/",
+			module: "../../bar.sysl",
+			folders: []string{
+				"/a/b/c/d/e",
+			},
+			files: []string{
+				"bar.sysl",
+				"/a/b/c/d/e/foo.sysl",
+			},
+			expectedErr: errors.New("permission denied, file outside root"),
 		},
 	}
 
