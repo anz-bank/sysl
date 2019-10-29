@@ -1,8 +1,11 @@
 package syslutil
 
 import (
+	"errors"
 	"os"
 	"path"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/spf13/afero"
@@ -36,10 +39,16 @@ func (fs *ChrootFs) MkdirAll(path string, perm os.FileMode) error {
 }
 
 func (fs *ChrootFs) Open(name string) (afero.File, error) {
+	if err := fs.openAllowed(name); err != nil {
+		return nil, err
+	}
 	return fs.fs.Open(fs.join(name))
 }
 
 func (fs *ChrootFs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
+	if err := fs.openAllowed(name); err != nil {
+		return nil, err
+	}
 	return fs.fs.OpenFile(fs.join(name), flag, perm)
 }
 
@@ -69,4 +78,12 @@ func (fs *ChrootFs) Chmod(name string, mode os.FileMode) error {
 
 func (fs *ChrootFs) Chtimes(name string, atime time.Time, mtime time.Time) error {
 	return fs.fs.Chtimes(fs.join(name), atime, mtime)
+}
+
+func (fs *ChrootFs) openAllowed(name string) (err error) {
+	modulePath := filepath.Join(fs.root, name)
+	if !strings.HasPrefix(modulePath, fs.root) {
+		err = errors.New("import can not go up the directory")
+	}
+	return
 }
