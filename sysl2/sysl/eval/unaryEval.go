@@ -20,8 +20,11 @@ func evalUnaryFunc(op sysl.Expr_UnExpr_Op, arg *sysl.Value) *sysl.Value {
 }
 
 func unaryNeg(arg *sysl.Value) *sysl.Value {
-	if x, ok := arg.Value.(*sysl.Value_I); ok {
+	switch x := arg.Value.(type) {
+	case *sysl.Value_I:
 		return MakeValueI64(-x.I)
+	case *sysl.Value_B:
+		return MakeValueBool(!x.B)
 	}
 	panic(errors.Errorf("unaryNeg for %v not supported", arg.Value))
 }
