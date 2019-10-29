@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"path"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -81,9 +80,8 @@ func (fs *ChrootFs) Chtimes(name string, atime time.Time, mtime time.Time) error
 }
 
 func (fs *ChrootFs) openAllowed(name string) (err error) {
-	modulePath := filepath.Join(fs.root, name)
-	if !strings.HasPrefix(modulePath, fs.root) {
-		err = errors.New("import can not go up the directory")
+	if strings.Contains(name, "..") {
+		return errors.New("permission denied, file outside root")
 	}
 	return
 }
