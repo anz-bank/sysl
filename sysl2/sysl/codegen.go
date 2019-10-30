@@ -288,26 +288,29 @@ func GenerateCode(
 		logger.Println(filename)
 
 		if result.GetMap() != nil {
-			r := processRule(g, result, g.Start, logger)
-			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+			codeOutput = appendCodeOutput(g, result, logger, codeOutput, filename)
 		} else if result.GetList() != nil {
 			for _, v := range result.GetList().Value {
-				r := processRule(g, v, g.Start, logger)
-				codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+				codeOutput = appendCodeOutput(g, v, logger, codeOutput, filename)
 			}
 		}
 	case fileNames.GetList() != nil && result.GetList() != nil:
 		fileValues := fileNames.GetList().Value
 		for i, v := range result.GetList().Value {
 			filename := fileValues[i].GetMap().Items["filename"].GetS()
-			r := processRule(g, v, g.Start, logger)
-			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+			codeOutput = appendCodeOutput(g, v, logger, codeOutput, filename)
 		}
 	default:
 		panic("Unexpected combination for filenames and transformation results")
 	}
 
 	return codeOutput, nil
+}
+
+func appendCodeOutput(g *ebnfGrammar.Grammar, v *sysl.Value, logger *logrus.Logger, codeOutput []*CodeGenOutput, filename string) []*CodeGenOutput {
+	r := processRule(g, v, g.Start, logger)
+	codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+	return codeOutput
 }
 
 func outputToFiles(output []*CodeGenOutput, fs afero.Fs) error {
