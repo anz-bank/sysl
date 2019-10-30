@@ -29,12 +29,6 @@ func leInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(lhs.GetI() <= rhs.GetI())
 }
 
-func not(f func(lhs, rhs *sysl.Value) *sysl.Value) func(lhs, rhs *sysl.Value) *sysl.Value {
-	return func(lhs, rhs *sysl.Value) *sysl.Value {
-		return MakeValueBool(!f(lhs, rhs).GetB())
-	}
-}
-
 func subInt64(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueI64(lhs.GetI() - rhs.GetI())
 }
@@ -222,6 +216,12 @@ func stringInSet(lhs, rhs *sysl.Value) *sysl.Value {
 		}
 	}
 	return MakeValueBool(false)
+}
+
+func stringInMapKey(lhs, rhs *sysl.Value) *sysl.Value {
+	str := lhs.GetS()
+	_, has := rhs.GetMap().Items[str]
+	return MakeValueBool(has)
 }
 
 func intSet(list []*sysl.Value) map[int64]struct{} {
