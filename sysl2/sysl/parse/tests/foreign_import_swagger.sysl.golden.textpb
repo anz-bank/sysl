@@ -165,7 +165,7 @@ apps: <
       value: <
         tuple: <
           attr_defs: <
-            key: "field1"
+            key: "import"
             value: <
               type_ref: <
                 context: <

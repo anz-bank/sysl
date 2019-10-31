@@ -59,7 +59,7 @@ IMPORT_KEY: 'import';
 fragment
 SUB_PATH_NAME: ~[ \r\n\t\\/:]+ ;
 
-IMPORT             : IMPORT_KEY WS { ls(l).blockTextLine++ } ->pushMode(FILENAME);
+IMPORT             : IMPORT_KEY WS { ls(l).blockTextLine++ }  { !ls(p).noMoreImports }? ->pushMode(FILENAME);
 
 AS                  : A S ;
 RETURN              : ( R E T U R N )           -> pushMode(NOT_NEWLINE); //revisit this?
@@ -96,7 +96,7 @@ EQ                  : '=';
 FORWARD_SLASH       : '/'
                     { ls(l).gotHTTPVerb = true; }
                     ;
-COLON               : ':';
+COLON               : ':' { ls(l).noMoreImports = true };
 DOT                 : '.';
 QN                  : '?';
 AT                  : '@'       -> pushMode(AT_VAR_DECL);
@@ -187,7 +187,7 @@ TEXT_LINE       :
                 PRINTABLE ([ \-]+ (PRINTABLE | IN_ANGLE))+
                 { ls(p).inSqBrackets == 0 }?
                 { ls(p).blockTextLine == 0 }?
-                { !startsWithKeyword(p.GetText()) }?
+                { !startsWithKeyword(ls(p), p.GetText()) }?
                 ;
 
 Name            : [a-zA-Z_][-a-zA-Z0-9_]*;

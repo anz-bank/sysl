@@ -13,8 +13,9 @@ testapp "Goat CRUD API" [package="package_foo"]:
         | No description.
 
     !type Something:
-        field1 <: FooBar?
+        import <: FooBar?
 
     /first:
         GET ?depth=SimpleObj&limit=int?&offset=int?:
             ...
+

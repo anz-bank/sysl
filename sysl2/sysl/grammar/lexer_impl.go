@@ -15,7 +15,6 @@ var (
 	syslLexerLog = os.Getenv("SYSL_LEXER_LOG") != ""
 
 	keywords = [...]string{
-		"import",
 		"sequence of",
 		"set of",
 		"return",
@@ -34,6 +33,8 @@ var (
 	lexerStates = &hashmap.HashMap{}
 )
 
+const importKeyword = "import"
+
 type lexerState struct {
 	prevToken []antlr.Token
 	level     stack
@@ -42,10 +43,11 @@ type lexerState struct {
 	linenum       int
 	inSqBrackets  int
 	parens        int
+	blockTextLine int
 	gotNewLine    bool
 	gotHTTPVerb   bool
 	gotView       bool
-	blockTextLine int
+	noMoreImports bool // Used to allow the import keyword after the application definition has started
 }
 
 func ls(l *SyslLexer) *lexerState {
@@ -77,15 +79,19 @@ func calcSpaces(text string) int {
 	return s
 }
 
-func startsWithKeyword(text string) bool {
+func startsWithKeyword(l *lexerState, text string) bool {
 	var lower = s.ToLower(text)
 
-	for k := range keywords {
-		if s.HasPrefix(lower, keywords[k]) {
+	for _, kw := range keywords {
+		if s.HasPrefix(lower, kw) {
 			return true
 		}
 	}
-	return false
+
+	// import is only a keyword before the application starts
+	isImport := s.HasPrefix(text, importKeyword) && !l.noMoreImports
+
+	return isImport
 }
 
 func createDedentToken(source *antlr.TokenSourceCharStreamPair) *antlr.CommonToken {
