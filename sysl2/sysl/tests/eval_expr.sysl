@@ -248,3 +248,11 @@ TransformApp:
     app.types -> (type:
       name = type.key
     )
+
+  !view TextTemplatingView(app <: sysl.App) -> string:
+    app -> (:
+        $ this is a  {$ 1+1 $} foo
+        $ we do what we must, because we can!
+
+    )
+

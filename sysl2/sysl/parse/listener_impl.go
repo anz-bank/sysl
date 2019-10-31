@@ -2337,6 +2337,10 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 	s.pushExpr(expr)
 }
 
+func makeLiteralString(val string) *sysl.Expr {
+	return &sysl.Expr{Expr: &sysl.Expr_Literal{Literal: &sysl.Value{Value: &sysl.Value_S{S: val}}}}
+}
+
 func makeGetAttr(arg *sysl.Expr, name string, nullsafe, setof bool) *sysl.Expr {
 	return &sysl.Expr{
 		Expr: &sysl.Expr_GetAttr_{
@@ -3393,6 +3397,55 @@ func (s *TreeShapeListener) ExitExpr_inject_stmt(*parser.Expr_inject_stmtContext
 			Inject: expr,
 		},
 	}
+	tx.Stmt = append(tx.Stmt, stmt)
+}
+
+// EnterTemplate_expression is called when production template_expression is entered.
+func (s *TreeShapeListener) EnterTemplate_expression(ctx *parser.Template_expressionContext) {
+}
+
+// ExitTemplate_expression is called when production template_expression is exited.
+func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_expressionContext) {
+	var lhs, rhs *sysl.Expr
+
+	if txt := ctx.TMPL_TEXT(); txt != nil {
+		rhs = makeLiteralString(txt.GetText())
+	} else {
+		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr())
+	}
+
+	if top := s.topExpr(); top.GetTransform() != nil {
+		lhs = makeExprName(TemplateImpliedResult)
+	} else {
+		lhs = s.popExpr()
+	}
+
+	s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs))
+}
+
+// EnterTemplate_statement is called when production template_statement is entered.
+func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {}
+
+const TemplateImpliedResult = "__$"
+
+// ExitTemplate_statement is called when production template_statement is exited.
+func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
+	statements := s.popExpr()
+	tx := s.topExpr().GetTransform()
+	if tx == nil {
+		fmt.Printf("%v", s.topExpr())
+		panic("ExitTemplate_statement: Unexpected expression!")
+	}
+
+	stmt := &sysl.Expr_Transform_Stmt{
+		Stmt: &sysl.Expr_Transform_Stmt_Let{
+			Let: &sysl.Expr_Transform_Stmt_Assign{
+				Name: TemplateImpliedResult,
+				Expr: makeBinaryExpr(sysl.Expr_BinExpr_ADD, statements, makeLiteralString("\n")),
+			},
+		},
+	}
+
 	tx.Stmt = append(tx.Stmt, stmt)
 }
 

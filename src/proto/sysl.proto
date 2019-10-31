@@ -408,6 +408,7 @@ message Expr {
 
             SINGLE = 5;
             SINGLE_OR_NULL = 6;
+            STRING = 7;
         }
     }
 

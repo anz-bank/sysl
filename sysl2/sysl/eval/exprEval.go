@@ -4,6 +4,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -155,7 +157,7 @@ func evalTransform(txApp *sysl.Application, assign Scope, x *sysl.Expr_Transform
 
 func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.Value {
 	if callTransform, has := txApp.Views[x.Call.Func]; has {
-		logrus.Debugf("Calling View %s\n", x.Call.Func)
+		logrus.Debugf("Calling View %s", x.Call.Func)
 		params := callTransform.Param
 		if len(params) != len(x.Call.Arg) {
 			logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n",
@@ -262,5 +264,11 @@ func EvaluateView(mod *sysl.Module, appName, viewName string, s Scope) *sysl.Val
 	if view.Expr.Type == nil {
 		view.Expr.Type = view.RetType
 	}
-	return Eval(txApp, s, view.Expr)
+	res := Eval(txApp, s, view.Expr)
+	if rt, ok := view.GetRetType().GetType().(*sysl.Type_Primitive_); ok && rt.Primitive == sysl.Type_STRING {
+		if text, has := s[parse.TemplateImpliedResult]; has {
+			return text
+		}
+	}
+	return res
 }

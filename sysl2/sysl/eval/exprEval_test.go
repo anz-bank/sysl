@@ -515,3 +515,22 @@ func TestListOfTypeNames(t *testing.T) {
 	assert.NotNil(t, l)
 	assert.Len(t, l.Value, 2)
 }
+
+func TestTemplatingSimple(t *testing.T) {
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("tests/eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
+	require.NoError(t, err)
+	require.NotNil(t, mod)
+
+	s := Scope{
+		"__$": MakeValueString(""),
+	}
+	s.AddApp("app", mod.Apps[modelAppName])
+	out := EvaluateView(mod, "TransformApp", "TextTemplatingView", s)
+	l := out.GetS()
+	assert.NotNil(t, l)
+	assert.Equal(t, ` this is a  2 foo
+ we do what we must, because we can!
+`, l)
+}
