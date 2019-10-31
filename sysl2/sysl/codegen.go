@@ -307,7 +307,8 @@ func GenerateCode(
 	return codeOutput, nil
 }
 
-func appendCodeOutput(g *ebnfGrammar.Grammar, v *sysl.Value, logger *logrus.Logger, codeOutput []*CodeGenOutput, filename string) []*CodeGenOutput {
+func appendCodeOutput(g *ebnfGrammar.Grammar, v *sysl.Value,
+	logger *logrus.Logger, codeOutput []*CodeGenOutput, filename string) []*CodeGenOutput {
 	r := processRule(g, v, g.Start, logger)
 	codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
 	return codeOutput
