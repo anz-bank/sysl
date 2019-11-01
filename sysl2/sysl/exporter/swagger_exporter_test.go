@@ -35,7 +35,7 @@ func TestExportAll(t *testing.T) {
 				}
 				swaggerExporter := MakeSwaggerExporter(mod.GetApps()["testapp"], logrus.StandardLogger())
 				require.NoError(t, swaggerExporter.GenerateSwagger())
-				out, err := swaggerExporter.SerializeToYaml()
+				out, err := swaggerExporter.SerializeOutput("yaml")
 				require.NoError(t, err)
 				yamlFileBytes, err := ioutil.ReadFile("../exporter/test-data/" + parts[0] + `.yaml`)
 				require.NoError(t, err)

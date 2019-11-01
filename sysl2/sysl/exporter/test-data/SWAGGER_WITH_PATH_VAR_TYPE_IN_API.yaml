@@ -13,11 +13,9 @@ paths:
       - format: integer
         in: path
         name: id
-        required: true
         type: number
       - in: query
         name: metadata
-        required: true
         type: boolean
       - format: string
         in: header

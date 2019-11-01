@@ -13,7 +13,6 @@ paths:
       - format: integer
         in: path
         name: id
-        required: true
         type: number
       - in: header
         name: metadata
