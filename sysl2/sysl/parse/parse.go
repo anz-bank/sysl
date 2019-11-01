@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/importer"
 
@@ -42,7 +43,9 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	p.AddErrorListener(&errorListener)
 
 	p.BuildParseTrees = true
+	start := time.Now()
 	tree := p.Sysl_file()
+	logrus.Debugf("parse [%s], %s", filename, time.Now().Sub(start).Round(time.Millisecond))
 	if errorListener.hasErrors {
 		return nil, Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
 	}
@@ -77,7 +80,9 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	case "~sysl":
 		return input, nil
 	case "~swagger":
+		start := time.Now()
 		text, err = importer.LoadSwaggerText(od, input.GetText(0, input.Size()), logger)
+		logger.Debugf("swagger->sysl, %s", time.Now().Sub(start).Round(time.Millisecond))
 	default:
 		return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format - (%s)\n", def.filename, def.mode))
 	}
@@ -137,7 +142,9 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		}
 	}
 
-	p.postProcess(listener.module)
+	start := time.Now()
+	p.postProcess(listener.module, listener.typereferences)
+	logrus.Debugf("postprocess [%s], %s", filename, time.Now().Sub(start).Round(time.Millisecond))
 	return listener.module, nil
 }
 
@@ -278,19 +285,63 @@ func collectorPubSubCalls(appName string, app *sysl.Application) {
 	}
 }
 
+// This handles endpoint params which don't have an explicit type, so this will attempt to map the name to a type
+func checkEndpointParams(mod *sysl.Module, ep *sysl.Endpoint) bool {
+	for _, param := range ep.Param {
+		if param.GetType().GetNoType() != nil {
+			if t, has := mod.GetTypes()[param.Name]; has {
+				logrus.Warnf("param '%s' appears to be a typename", param.Name)
+				param.Type = t
+			} else {
+				logrus.Warnf("param '%s' has no type specified, defaulting to string", param.Name)
+				param.Type = &sysl.Type{
+					Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING},
+				}
+			}
+
+		}
+	}
+	return true
+}
+
 func checkEndpointCalls(mod *sysl.Module) bool {
 	valid := false
 	for appName, app := range mod.Apps {
 		for epname, ep := range app.Endpoints {
+			if !checkEndpointParams(mod, ep) {
+				return false
+			}
 			for _, stmt := range ep.Stmt {
-				valid = checkCalls(mod, appName, epname, stmt)
-				if !valid {
+				if !checkCalls(mod, appName, epname, stmt) {
 					return valid
 				}
 			}
 		}
 	}
 	return valid
+}
+
+func resolveScope(mod *sysl.Module, ref *sysl.Scope) *sysl.Type {
+	app, ok := mod.Apps[ref.Appname.Part[0]]
+	if !ok {
+		return nil
+	}
+	result, ok := app.Types[ref.Path[0]]
+	if !ok {
+		return nil
+	}
+	for i := 1; i < len(ref.Path); i++ {
+		if result.GetMap() != nil {
+			return nil
+		}
+	}
+	return result
+}
+
+func checkTypeRef(mod *sysl.Module, ref typeRef) bool {
+
+	resolveScope(mod, ref.ref.TypeRef.Context)
+	return true
 }
 
 func inferAnonymousType(mod *sysl.Module, appName string, anonCount int, t *sysl.Expr_Transform_, expr *sysl.Expr) int {
@@ -491,7 +542,7 @@ func (p *Parser) inferTypes(mod *sysl.Module, appName string) {
 	}
 }
 
-func (p *Parser) postProcess(mod *sysl.Module) {
+func (p *Parser) postProcess(mod *sysl.Module, typerefs []typeRef) {
 	appNames := make([]string, 0, len(mod.Apps))
 	for a := range mod.Apps {
 		appNames = append(appNames, a)
@@ -586,6 +637,9 @@ func (p *Parser) postProcess(mod *sysl.Module) {
 		collectorPubSubCalls(appName, app)
 	}
 	checkEndpointCalls(mod)
+	for _, ref := range typerefs {
+		checkTypeRef(mod, ref)
+	}
 }
 
 func valueTypeToSysl(value *sysl.Value) *sysl.Type {

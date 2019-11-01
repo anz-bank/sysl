@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/anz-bank/sysl/sysl2/sysl/eval"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -15,6 +16,10 @@ func (p *validateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *validateCmd) Execute(args ExecuteArgs) error {
-	// Nothing to do here, the runner loads the sysl file automatically. If we got here the file was successfully loaded
+
+	s := eval.Scope{}
+	for name, app := range args.Module.Apps {
+		s.AddApp(name, app)
+	}
 	return nil
 }

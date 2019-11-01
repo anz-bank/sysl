@@ -26,6 +26,11 @@ type importDef struct {
 	mode     string
 }
 
+type typeRef struct {
+	ref    *sysl.Type_TypeRef
+	source *sysl.SourceContext
+}
+
 // TreeShapeListener ..
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
@@ -53,6 +58,7 @@ type TreeShapeListener struct {
 	stmt_scope            []interface{} // Endpoint, if, if_else, loop
 	expr_stack            []*sysl.Expr
 	opmap                 map[string]sysl.Expr_BinExpr_Op
+	typereferences        []typeRef
 }
 
 // NewTreeShapeListener ...
@@ -75,7 +81,8 @@ func NewTreeShapeListener(fs afero.Fs) *TreeShapeListener {
 		module: &sysl.Module{
 			Apps: map[string]*sysl.Application{},
 		},
-		opmap: opmap,
+		opmap:          opmap,
+		typereferences: []typeRef{},
 	}
 }
 
@@ -121,11 +128,11 @@ func (s *TreeShapeListener) EnterModifiers(*parser.ModifiersContext) {}
 func (s *TreeShapeListener) ExitModifiers(*parser.ModifiersContext) {}
 
 // EnterReference is called when production reference is entered.
-func (s *TreeShapeListener) EnterReference(*parser.ReferenceContext) {
+func (s *TreeShapeListener) EnterReference(ctx *parser.ReferenceContext) {
 	context_app_part := s.module.Apps[s.appname].Name.Part
 	context_path := strings.Split(s.typename, ".")
 
-	s.currentType().Type = &sysl.Type_TypeRef{
+	ref := &sysl.Type_TypeRef{
 		TypeRef: &sysl.ScopedRef{
 			Context: &sysl.Scope{
 				Appname: &sysl.AppName{
@@ -135,6 +142,10 @@ func (s *TreeShapeListener) EnterReference(*parser.ReferenceContext) {
 			},
 		},
 	}
+	source := buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	s.typereferences = append(s.typereferences, typeRef{ref, source})
+
+	s.currentType().Type = ref
 	s.app_name = []string{}
 }
 
