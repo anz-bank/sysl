@@ -12,12 +12,10 @@ paths:
       - format: string
         in: query
         name: key
-        required: true
         type: string
       - format: string
         in: query
         name: min_date
-        required: true
         type: string
       produces:
       - application/json

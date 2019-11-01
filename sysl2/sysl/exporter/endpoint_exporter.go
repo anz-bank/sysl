@@ -1,6 +1,7 @@
 package exporter
 
 import (
+	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -24,7 +25,9 @@ func makeEndpointExporter(typeEx *TypeExporter, logger *logrus.Logger) *Endpoint
 }
 
 const (
-	object = "object"
+	object    = "object"
+	pathParam = iota
+	queryParam
 )
 
 func (e *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Response, endpoint *proto.Endpoint) {
@@ -93,15 +96,17 @@ func (e *EndpointExporter) populateEndpoint(path string, endpoint *proto.Endpoin
 	op.Produces = []string{"application/json"}
 	op.Consumes = []string{"application/json"}
 
-	pathParamError := e.setPathParams(endpoint, op)
+	pathParamError := e.setEndpointParams(endpoint.GetRestParams().GetUrlParam(), pathParam, op)
 	if pathParamError != nil {
+		e.log.Warnf("Setting path params failed %s", pathParamError)
 		return pathParamError
 	}
-	queryParamError := e.setQueryParams(endpoint, op)
+	queryParamError := e.setEndpointParams(endpoint.GetRestParams().GetQueryParam(), queryParam, op)
 	if queryParamError != nil {
+		e.log.Warnf("Setting query params failed %s", queryParamError)
 		return queryParamError
 	}
-	paramError := e.setOtherParams(endpoint, op)
+	paramError := e.setEndpointHeaderParams(endpoint, op)
 	if paramError != nil {
 		return paramError
 	}
@@ -130,60 +135,65 @@ func (e *EndpointExporter) setHTTPMethod(path string, endpoint *proto.Endpoint, 
 	return op
 }
 
-func (e *EndpointExporter) setPathParams(endpoint *proto.Endpoint, op *spec.Operation) error {
-	for _, inParam := range endpoint.GetRestParams().GetUrlParam() {
-		param := spec.PathParam(inParam.GetName())
+func (e *EndpointExporter) setCommonAttributes(
+	name string,
+	param *spec.Parameter,
+	attrMap map[string]*proto.Attribute,
+	valueMap protoType,
+) {
+	param.Format = valueMap.Format
+	param.Type = valueMap.Type
+	param.Name = name
+	if _, ok := attrMap["required"]; ok {
+		param.Required = true
+	} else {
+		param = param.AsOptional()
+	}
+	if param.Type == object {
+		param.Schema.ExtraProps["$ref"] = "#/definitions/" + param.Format
+	}
+}
+
+func (e *EndpointExporter) setEndpointParams(
+	params []*proto.Endpoint_RestParams_QueryParam,
+	paramType int,
+	op *spec.Operation,
+) error {
+	for _, inParam := range params {
+		attrMap := inParam.GetType().GetAttrs()
+		var param *spec.Parameter
+		switch paramType {
+		case pathParam:
+			param = spec.PathParam(inParam.GetName())
+		case queryParam:
+			param = spec.QueryParam(inParam.GetName())
+		default:
+			return fmt.Errorf("invalid param type %d", paramType)
+		}
 		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
 		if err != nil {
-			e.log.Warnf("Setting path params failed %s", err)
 			return err
 		}
-		param.Format = valueMap.Format
-		param.Type = valueMap.Type
-		param.Name = inParam.GetName()
-		param.Required = true
-		if param.Type == object {
-			param.Schema.ExtraProps["$ref"] = "#/definitions/" + param.Format
-		}
+		e.setCommonAttributes(inParam.GetName(), param, attrMap, valueMap)
 		op.Parameters = append(op.Parameters, *param)
 	}
 	return nil
 }
 
-func (e *EndpointExporter) setQueryParams(endpoint *proto.Endpoint, op *spec.Operation) error {
-	for _, inParam := range endpoint.GetRestParams().GetQueryParam() {
-		param := spec.QueryParam(inParam.GetName())
-		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
-		if err != nil {
-			e.log.Warnf("Setting query params failed %s", err)
-			return err
-		}
-		param.Format = valueMap.Format
-		param.Type = valueMap.Type
-		param.Name = inParam.GetName()
-		param.Required = true
-		if param.Type == object {
-			param.Schema.ExtraProps["$ref"] = "#/definitions/" + param.Format
-		}
-		op.Parameters = append(op.Parameters, *param)
-	}
-	return nil
-}
-
-func (e *EndpointExporter) setOtherParams(endpoint *proto.Endpoint, op *spec.Operation) error {
-	var attrMap map[string]*proto.Attribute
+func (e *EndpointExporter) setEndpointHeaderParams(endpoint *proto.Endpoint, op *spec.Operation) error {
 	for _, inParam := range endpoint.GetParam() {
-		attrMap = inParam.GetType().GetAttrs()
-		param := &spec.Parameter{}
+		attrMap := inParam.GetType().GetAttrs()
 		valueMap, err := e.typeEx.findSwaggerType(inParam.GetType())
 		if err != nil {
 			e.log.Warnf("Setting header params failed %s", err)
 			return err
 		}
+		var param *spec.Parameter
+		schema := &spec.Schema{}
 		if _, ok := attrMap["header"]; ok {
 			param = spec.HeaderParam(attrMap["name"].GetS())
 		} else if _, ok := attrMap["body"]; ok {
-			param = spec.BodyParam(attrMap["name"].GetS(), param.ParamProps.Schema)
+			param = spec.BodyParam(attrMap["name"].GetS(), schema)
 		} else if _, ok := attrMap["array"]; ok {
 			param = spec.SimpleArrayParam(attrMap["name"].GetS(), valueMap.Type, valueMap.Format)
 		} else {
