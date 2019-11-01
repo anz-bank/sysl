@@ -178,11 +178,15 @@ func applyTranformToModel(
 	}
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
+	s.AddModule("module", model)
 	var result *sysl.Value
 	// assume args are
 	//  app <: sysl.App and
 	//  type <: sysl.Type
-	if len(view.Param) >= 2 {
+	//  typeName <: string
+	//  deps <: sequence of sysl.App
+
+	if perTypeTransform(view.Param) {
 		result = eval.MakeValueList()
 		var tNames []string
 		for tName := range modelApp.Types {
@@ -200,6 +204,23 @@ func applyTranformToModel(
 	}
 
 	return result, nil
+}
+
+func perTypeTransform(params []*sysl.Param) bool {
+	paramMap := make(map[string]struct{})
+
+	for _, p := range params {
+		paramMap[p.Name] = struct{}{}
+	}
+
+	if _, has := paramMap["app"]; has {
+		if _, has := paramMap["type"]; has {
+			return true
+		}
+	} else {
+		panic("Expecting at least an app <: sysl.App")
+	}
+	return false
 }
 
 // Serialize serializes node to string
@@ -261,20 +282,36 @@ func GenerateCode(
 	if err != nil {
 		return nil, err
 	}
-	if result.GetMap() != nil {
+	switch {
+	case fileNames.GetMap() != nil:
 		filename := fileNames.GetMap().Items["filename"].GetS()
 		logger.Println(filename)
-		r := processRule(g, result, g.Start, logger)
-		codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
-	} else {
+
+		if result.GetMap() != nil {
+			codeOutput = appendCodeOutput(g, result, logger, codeOutput, filename)
+		} else if result.GetList() != nil {
+			for _, v := range result.GetList().Value {
+				codeOutput = appendCodeOutput(g, v, logger, codeOutput, filename)
+			}
+		}
+	case fileNames.GetList() != nil && result.GetList() != nil:
 		fileValues := fileNames.GetList().Value
 		for i, v := range result.GetList().Value {
 			filename := fileValues[i].GetMap().Items["filename"].GetS()
-			r := processRule(g, v, g.Start, logger)
-			codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+			codeOutput = appendCodeOutput(g, v, logger, codeOutput, filename)
 		}
+	default:
+		panic("Unexpected combination for filenames and transformation results")
 	}
+
 	return codeOutput, nil
+}
+
+func appendCodeOutput(g *ebnfGrammar.Grammar, v *sysl.Value,
+	logger *logrus.Logger, codeOutput []*CodeGenOutput, filename string) []*CodeGenOutput {
+	r := processRule(g, v, g.Start, logger)
+	codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+	return codeOutput
 }
 
 func outputToFiles(output []*CodeGenOutput, fs afero.Fs) error {
