@@ -1,0 +1,22 @@
+# Example template file demonstrating how to use the template views
+# -> Will dump the input model to a simplified text file
+
+
+DependencyTemplate:
+
+    !view findEpDeps(ep <: sysl.Endpoint) -> set of string:
+        ep -> (s:
+            let targets = ep.value.stmts where(.type == "call") -> <sequence of string> (t:
+                arg = t.target
+            )
+            out = Unique(targets flatten(.arg))
+        )
+
+    !view start(app <: sysl.App) -> string:
+        app -> (:
+            let targets = app.endpoints -> <sequence of string> (ep:
+                out = findEpDeps(ep)
+            )
+
+            $ {$ app.name $} -> {$ Unique(targets flatten(.out) flatten(.out) flatten(.)) $}:
+        )

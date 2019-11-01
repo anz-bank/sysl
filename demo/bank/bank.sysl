@@ -9,7 +9,7 @@ BankModel [package="io.sysl.bank.model"]:
         customer_name <: string?
         customer_address <: string?
         customer_dob <: date?
-        branch_id <: Branches.branch_id
+        branch_id <: Branch.branch_id
 
     !table Account:
         account_number <: int [~pk]
@@ -22,12 +22,12 @@ BankModel [package="io.sysl.bank.model"]:
         transaction_type <: string?
         transaction_date_time <: date?
         transaction_amount <: int?
-        from_account_number <: Accounts.account_number
-        to_account_number <: Accounts.account_number
+        from_account_number <: Account.account_number
+        to_account_number <: Account.account_number
 
     !table CustomerAccount:
-        customer_id <: Customers.customer_id
-        account_number <: Accounts.account_number
+        customer_id <: Customer.customer_id
+        account_number <: Account.account_number
 
 
 BankFacade [package="io.sysl.bank.facade"]:
@@ -58,11 +58,11 @@ CustomerApi [package="io.sysl.customer.api"]:
                 BankDatabase <- GetCustomer
 
             /update:
-                POST (Customer):
+                POST (customer <: Customer):
                     BankDatabase <- UpdateCustomer
 
             /delete:
-                POST (Customer):
+                POST (customer <: Customer):
                     BankDatabase <- DeleteCustomer
 
     !type Customer:
@@ -78,23 +78,23 @@ AccountTransactionApi [package="io.sysl.account.api"]:
                 BankDatabase <- GetAccount(account_number)
 
             /update:
-                POST (Account):
+                POST (a<:Account):
                     BankDatabase <- UpdateAccount(account_number)
 
             /delete:
-                POST (Account):
+                POST (a<:Account):
                     BankDatabase <- DeleteAccount(account_number)
 
             /withdraw:
-                POST (Transaction):
+                POST (a<:Transaction):
                     BankDatabase <- WithdrawFunds(account_number)
 
             /deposit:
-                POST (Transaction):
+                POST (a<:Transaction):
                     BankDatabase <- DepositFunds(account_number)
 
             /transfer:
-                POST (Transaction):
+                POST (a<:Transaction):
                     BankDatabase <- TransferFunds(account_number)
 
     !type Account:
@@ -108,8 +108,8 @@ AccountTransactionApi [package="io.sysl.account.api"]:
         transaction_type <: string?
         transaction_date_time <: date?
         transaction_amount <: int?
-        from_account_number <: Accounts.account_number
-        to_account_number <: Accounts.account_number
+        from_account_number <: Account.account_number
+        to_account_number <: Account.account_number
 
 ATM:
     GetBalance:

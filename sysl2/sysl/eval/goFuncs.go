@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -87,6 +89,7 @@ var (
 		"TrimRight":     {reflect.ValueOf(strings.TrimRight), []*sysl.Type{stringType, stringType}, stringType},
 		"TrimSpace":     {reflect.ValueOf(strings.TrimSpace), []*sysl.Type{stringType}, stringType},
 		"TrimSuffix":    {reflect.ValueOf(strings.TrimSuffix), []*sysl.Type{stringType, stringType}, stringType},
+		"Unique":        {reflect.ValueOf(Unique), []*sysl.Type{listStringType}, listStringType},
 	}
 )
 
@@ -165,8 +168,12 @@ func isReflectValueExpectedType(r reflect.Value, typ *sysl.Type) bool {
 		if typ.GetList() == nil || typ.GetSet() != nil {
 			return false
 		}
-		_, has = kindToPrimitiveType[r.Index(0).Kind()]
-		return has
+		if r.Len() > 0 {
+			_, has = kindToPrimitiveType[r.Index(0).Kind()]
+			return has
+		} else {
+			return true
+		}
 	}
 	return false
 }
@@ -235,4 +242,8 @@ func MatchString(pattern, word string) bool {
 // FindAllString exposes regexp.FindAllString to sysl transforms
 func FindAllString(pattern, word string, n int) []string {
 	return regexp.MustCompile(pattern).FindAllString(word, n)
+}
+
+func Unique(items []string) []string {
+	return syslutil.MakeStrSet(items...).ToSlice()
 }

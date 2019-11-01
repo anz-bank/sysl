@@ -166,8 +166,8 @@ func readGrammar(filename, grammarName, startRule string) (*ebnfGrammar.Grammar,
 	return parser.ParseEBNF(string(dat), grammarName, startRule), nil
 }
 
-// applyTranformToModel loads applies the transform to input model
-func applyTranformToModel(
+// applyTransformToModel loads applies the transform to input model
+func applyTransformToModel(
 	modelName, transformAppName, viewName string,
 	model, transform *sysl.Module,
 ) (*sysl.Value, error) {
@@ -177,6 +177,7 @@ func applyTranformToModel(
 		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
 	}
 	s := eval.Scope{}
+	s.AddString(parse.TemplateImpliedResult, "")
 	s.AddApp("app", modelApp)
 	s.AddModule("module", model)
 	var result *sysl.Value
@@ -274,11 +275,11 @@ func GenerateCode(
 		validator.LogMessages()
 	}
 
-	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", model, tx)
+	fileNames, err := applyTransformToModel(modelAppName, transformAppName, "filename", model, tx)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(modelAppName, transformAppName, g.Start, model, tx)
+	result, err := applyTransformToModel(modelAppName, transformAppName, g.Start, model, tx)
 	if err != nil {
 		return nil, err
 	}
