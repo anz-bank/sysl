@@ -44,9 +44,8 @@ func (s *SwaggerExporter) GenerateSwagger() error {
 		return typeExportError
 	}
 
+	// parse endpoints
 	endpointExporter := makeEndpointExporter(typeExporter, s.log)
-
-	// iterate over each endpoint in the selected application
 	for endpointName, endpoint := range s.app.Endpoints {
 		err := endpointExporter.populateEndpoint(endpointName, endpoint, s.buildSwagger.Paths.Paths)
 		if err != nil {
@@ -56,10 +55,13 @@ func (s *SwaggerExporter) GenerateSwagger() error {
 	return nil
 }
 
-func (s *SwaggerExporter) SerializeToYaml() ([]byte, error) {
+func (s *SwaggerExporter) SerializeOutput(mode string) ([]byte, error) {
 	jsonSpec, err := s.buildSwagger.MarshalJSON()
 	if err != nil {
 		return nil, err
+	}
+	if mode == "json" {
+		return jsonSpec, nil
 	}
 	yamlSpec, err := yaml.JSONToYAML(jsonSpec)
 	if err != nil {

@@ -24,12 +24,10 @@ paths:
       - format: string
         in: query
         name: name
-        required: true
         type: string
       - format: string
         in: query
         name: birthday
-        required: true
         type: string
       produces:
       - application/json

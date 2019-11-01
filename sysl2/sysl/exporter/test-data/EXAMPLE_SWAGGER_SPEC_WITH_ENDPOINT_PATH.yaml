@@ -21,7 +21,6 @@ paths:
       - format: string
         in: query
         name: goat_id
-        required: true
         type: string
       produces:
       - application/json
