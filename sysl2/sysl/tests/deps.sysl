@@ -1,0 +1,9 @@
+Dep [package="dep"]:
+  !type Dep:
+    id <: int
+    title <: string
+
+  /dep:
+    /{id<:int}:
+      GET:
+        return Dep

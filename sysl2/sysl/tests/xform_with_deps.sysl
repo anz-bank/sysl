@@ -1,0 +1,34 @@
+TransformDeps:
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename = app.name + ".java"
+    )
+
+  !view javaFile(app <: sysl.App, module <: sysl.Module) -> javaFile:
+    app -> (:
+
+      package = .attrs.package -> <sequence of package> (name1:
+        packageName = name1
+      )
+
+      let myList = app.endpoints -> <sequence of out> (ep:
+        let calls = ep.value.stmts where (.type == "call") -> <sequence of out> (call:
+          let pkgList = module.apps where(.value.name == call.target) -> <sequence of out> (dep:
+            let depEpList = dep.value.endpoints where(.value.name == call.endpoint) -> <sequence of out> (depEp:
+                out = depEp.value.name
+            )
+            out = dep.value.attrs.package + "." + Join(depEpList flatten(.out),"")
+          )
+
+          out = Join(pkgList flatten(.out), "")
+        )
+        out = Join(calls flatten(.out),"")
+      )
+
+      comment =  myList flatten(.out)
+      import = {"import1", "import2"} -> <set of import>(name:
+        importPath = name
+      )
+
+      definition = "some_value"
+    )
