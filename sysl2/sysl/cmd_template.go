@@ -1,7 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 
@@ -75,8 +77,35 @@ func (p *templateCmd) run(template, model modData) error {
 	if err != nil {
 		return err
 	}
+	if m := res.GetMap(); m != nil {
+		filename, has := m.GetItems()["Filename"]
+		if has {
+			if data, has := m.GetItems()["Data"]; has {
+				mode, has := m.GetItems()["Mode"]
+				a := has && strings.EqualFold(mode.GetS(), "append")
 
-	fmt.Printf(res.GetS())
+				writeOutput(filepath.Join(p.outDir, filename.GetS()), data.GetS(), a)
+			}
+		}
+	}
 
 	return err
+}
+
+func writeOutput(filename string, data string, append bool) error {
+	flags := os.O_RDWR | os.O_CREATE
+	switch append {
+	case true:
+		flags |= os.O_APPEND
+	case false:
+		flags |= os.O_TRUNC
+	}
+	f, err := os.OpenFile(filename, flags, 0644)
+	defer f.Close()
+	if err != nil {
+		return err
+	}
+	f.WriteString(data)
+
+	return nil
 }

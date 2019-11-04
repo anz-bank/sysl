@@ -705,6 +705,9 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 			s.filename, s.typename, fieldName)
 	} else {
 		type1 = &sysl.Type{}
+		type1.Type = &sysl.Type_NoType_{
+			NoType: &sysl.Type_NoType{},
+		}
 	}
 
 	type1.SourceContext = &sysl.SourceContext{
@@ -853,6 +856,8 @@ func fixFieldDefinitions(collection *sysl.Type) {
 				type1 = t.Set.GetTypeRef()
 			case *sysl.Type_List_:
 				type1 = t.List.GetType().GetTypeRef()
+			case *sysl.Type_NoType_:
+				continue
 			default:
 				panic("unhandled type:" + name)
 			}
@@ -1672,10 +1677,12 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 		params = append(params, &p)
 	}
 	ep := s.module.Apps[s.appname].Endpoints[s.typename]
-	if ep.Param == nil {
-		ep.Param = params
-	} else {
-		ep.Param = append(ep.Param, params...)
+	if len(params) > 0 {
+		if ep.Param == nil {
+			ep.Param = params
+		} else {
+			ep.Param = append(ep.Param, params...)
+		}
 	}
 	s.typemap = nil
 	s.fieldname = []string{}
@@ -1915,10 +1922,13 @@ func (s *TreeShapeListener) ExitMethod_def(*parser.Method_defContext) {
 		qparams = append(qparams, s.method_urlparams...)
 		s.module.Apps[s.appname].Endpoints[s.typename].RestParams.QueryParam = qparams
 	}
-	if s.module.Apps[s.appname].Endpoints[s.typename].Param != nil {
-		for i, p := range s.module.Apps[s.appname].Endpoints[s.typename].Param {
+	if params := s.module.Apps[s.appname].Endpoints[s.typename].Param; params != nil {
+		for i, p := range params {
+			if p.Type == nil {
+				logrus.Errorf("oops")
+			}
 			if p.GetType().GetNoType() != nil {
-				s.module.Apps[s.appname].Endpoints[s.typename].Param[i] = &sysl.Param{}
+				params[i] = &sysl.Param{}
 			}
 		}
 	}
@@ -3420,7 +3430,8 @@ func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_express
 	var lhs, rhs *sysl.Expr
 
 	if txt := ctx.TMPL_TEXT(); txt != nil {
-		rhs = makeLiteralString(txt.GetText())
+		text := strings.NewReplacer("{{", "{", "}}", "}").Replace(txt.GetText())
+		rhs = makeLiteralString(text)
 	} else {
 		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr())
 	}

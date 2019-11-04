@@ -340,7 +340,7 @@ func resolveScope(mod *sysl.Module, ref *sysl.Scope) *sysl.Type {
 
 func checkTypeRef(mod *sysl.Module, ref typeRef) bool {
 
-	resolveScope(mod, ref.ref.TypeRef.Context)
+	//resolveScope(mod, ref.ref.TypeRef.Context)
 	return true
 }
 

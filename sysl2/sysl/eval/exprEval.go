@@ -29,6 +29,9 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
 	}
+	if text, has := assign[parse.TemplateImpliedResult]; has {
+		return text
+	}
 	return result
 }
 
@@ -202,7 +205,12 @@ func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.V
 func evalName(assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
-		logrus.Errorf("Key: %s does not exist in scope", x.Name)
+		if x.Name == parse.TemplateImpliedResult {
+			val = MakeValueString("")
+			assign[x.Name] = val
+		} else {
+			logrus.Errorf("Key: %s does not exist in scope", x.Name)
+		}
 	}
 	return val
 }
@@ -264,11 +272,5 @@ func EvaluateView(mod *sysl.Module, appName, viewName string, s Scope) *sysl.Val
 	if view.Expr.Type == nil {
 		view.Expr.Type = view.RetType
 	}
-	res := Eval(txApp, s, view.Expr)
-	if rt, ok := view.GetRetType().GetType().(*sysl.Type_Primitive_); ok && rt.Primitive == sysl.Type_STRING {
-		if text, has := s[parse.TemplateImpliedResult]; has {
-			return text
-		}
-	}
-	return res
+	return Eval(txApp, s, view.Expr)
 }

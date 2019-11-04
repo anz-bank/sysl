@@ -177,7 +177,6 @@ func applyTransformToModel(
 		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
 	}
 	s := eval.Scope{}
-	s.AddString(parse.TemplateImpliedResult, "")
 	s.AddApp("app", modelApp)
 	s.AddModule("module", model)
 	var result *sysl.Value
