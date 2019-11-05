@@ -18,8 +18,16 @@ type ChrootFs struct {
 
 var _ afero.Fs = &ChrootFs{}
 
-func NewChrootFs(fs afero.Fs, root string) *ChrootFs {
-	return &ChrootFs{fs: fs, root: root}
+func NewChrootFs(fs afero.Fs, root string) (*ChrootFs, error) {
+	var err error
+	if !filepath.IsAbs(root) {
+		root, err = filepath.Abs(root)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &ChrootFs{fs: fs, root: root}, nil
 }
 
 func (fs *ChrootFs) join(name string) string {
@@ -94,7 +102,7 @@ func (fs *ChrootFs) openAllowed(name string) (err error) {
 		return
 	}
 
-	if strings.HasPrefix(relativePath, "../") {
+	if strings.HasPrefix(relativePath, ".."+string(os.PathSeparator)) {
 		return errors.New("permission denied, file outside root")
 	}
 
