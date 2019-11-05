@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
@@ -18,7 +17,7 @@ import (
 func TestGenerateSequenceDiagFail(t *testing.T) {
 	t.Parallel()
 
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := parse.NewParser().Parse("doesn't-exist.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 
@@ -26,7 +25,8 @@ func TestGenerateSequenceDiag(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
+		testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -74,7 +74,8 @@ func TestGenerateSequenceDiag2(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
+		testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -123,7 +124,7 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	memFs, fs := testutil.WriteToMemOverlayFs(t, "tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
@@ -178,7 +179,7 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	memFs, fs := testutil.WriteToMemOverlayFs(t, "tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
@@ -240,7 +241,7 @@ func TestLoadAppReturnError(t *testing.T) {
 	args := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	_, fs := testutil.WriteToMemOverlayFs(args.root)
+	_, fs := testutil.WriteToMemOverlayFs(t, args.root)
 	logger, _ := test.NewNullLogger()
 	_, _, err := LoadSyslModule(args.root, args.models, fs, logger)
 	assert.Error(t, err)
@@ -252,7 +253,7 @@ func TestLoadApp(t *testing.T) {
 	args := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs(t, ".")
 	logger, _ := test.NewNullLogger()
 	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)

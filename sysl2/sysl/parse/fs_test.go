@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/dkumor/revhttpfs"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -19,21 +19,21 @@ func TestFileExists(t *testing.T) {
 	t.Parallel()
 
 	// I think, therefore I am.
-	assert.True(t, fileExists("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
+	assert.True(t, fileExists("fs_test.go", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ".")))
 }
 
 func TestFileExistsBadFile(t *testing.T) {
 	t.Parallel()
 
-	assert.False(t, fileExists("x", syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir")))
-	assert.False(t, fileExists("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
-	assert.False(t, fileExists("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
+	assert.False(t, fileExists("x", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "/non-existent.dir")))
+	assert.False(t, fileExists("non-existent.file", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ".")))
+	assert.False(t, fileExists("non-existent.file", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ".")))
 }
 
 func TestNewFSFileStream(t *testing.T) {
 	t.Parallel()
 
-	fs, err := newFSFileStream("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), "."))
+	fs, err := newFSFileStream("fs_test.go", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "."))
 	if assert.NoError(t, err) {
 		assert.Equal(t, "package parse\n", fs.GetText(0, 13))
 	}
@@ -42,9 +42,9 @@ func TestNewFSFileStream(t *testing.T) {
 func TestNewFSFileStreamNotFound(t *testing.T) {
 	t.Parallel()
 
-	_, err := newFSFileStream("x", syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir"))
+	_, err := newFSFileStream("x", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "/non-existent.dir"))
 	assert.Error(t, err)
-	_, err = newFSFileStream("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), "."))
+	_, err = newFSFileStream("non-existent.file", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "."))
 	assert.Error(t, err)
 }
 
