@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -80,8 +81,22 @@ func (fs *ChrootFs) Chtimes(name string, atime time.Time, mtime time.Time) error
 }
 
 func (fs *ChrootFs) openAllowed(name string) (err error) {
-	if strings.Contains(name, "..") {
+	var absoluteRoot, absoluteModulePath, relativePath string
+	absoluteRoot, err = filepath.Abs(fs.root)
+	if err != nil {
+		return
+	}
+
+	absoluteModulePath = filepath.Join(absoluteRoot, name)
+
+	relativePath, err = filepath.Rel(absoluteRoot, absoluteModulePath)
+	if err != nil {
+		return
+	}
+
+	if strings.HasPrefix(relativePath, "../") {
 		return errors.New("permission denied, file outside root")
 	}
+
 	return
 }
