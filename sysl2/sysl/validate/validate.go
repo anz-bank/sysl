@@ -42,9 +42,13 @@ func DoValidate(validateParams Params) error {
 	}
 
 	parser := parse.NewParser()
+	chrootFs, err := syslutil.NewChrootFs(validateParams.Filesystem, validateParams.RootTransform)
+	if err != nil {
+		return err
+	}
 	transform, err := loadTransform(
 		validateParams.Transform,
-		syslutil.NewChrootFs(validateParams.Filesystem, validateParams.RootTransform),
+		chrootFs,
 		parser,
 	)
 	if err != nil {
@@ -342,7 +346,11 @@ func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 	grammarSyslFile := strings.Join(tokens, ".")
 	p := parse.NewParser()
 
-	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile, syslutil.NewChrootFs(fs, rootGrammar), p)
+	chrootFs, err := syslutil.NewChrootFs(fs, rootGrammar)
+	if err != nil {
+		return nil, err
+	}
+	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile, chrootFs, p)
 	if err != nil {
 		return nil, err
 	}
