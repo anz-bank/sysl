@@ -17,7 +17,7 @@ import (
 func TestGenerateCode(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+	output, err := GenerateCodeWithParams(t, ".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
@@ -57,7 +57,7 @@ func TestGenerateCode(t *testing.T) {
 func TestGenerateCodeNoComment(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
+	output, err := GenerateCodeWithParams(t, ".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
@@ -88,7 +88,7 @@ func TestGenerateCodeNoComment(t *testing.T) {
 func TestGenerateCodeNoPackage(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
+	output, err := GenerateCodeWithParams(t, ".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
@@ -98,7 +98,7 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
+	output, err := GenerateCodeWithParams(t, ".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
@@ -108,7 +108,7 @@ func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 func TestGenerateCodePerType(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
+	output, err := GenerateCodeWithParams(t, ".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
@@ -155,7 +155,7 @@ func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 func TestSerialize(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
+	output, err := GenerateCodeWithParams(t, ".", "tests/model.sysl", ".", "tests/test.gen.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	out := new(bytes.Buffer)
@@ -197,8 +197,9 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 }
 
 func GenerateCodeWithParams(
+	t *testing.T,
 	rootModel, model, rootTransform, transform, grammar, start string) ([]*CodeGenOutput, error) {
-	_, fs := testutil.WriteToMemOverlayFs(rootModel)
+	_, fs := testutil.WriteToMemOverlayFs(t, rootModel)
 	return GenerateCodeWithParamsFs(
 		rootModel, model, rootTransform, transform, grammar, start, fs,
 	)

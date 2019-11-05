@@ -36,8 +36,15 @@ func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 	return assert.Equal(t, expected, actual)
 }
 
-func WriteToMemOverlayFs(osRoot string) (memFs, fs afero.Fs) {
-	memFs = syslutil.NewChrootFs(afero.NewMemMapFs(), "/")
-	fs = afero.NewCopyOnWriteFs(syslutil.NewChrootFs(afero.NewOsFs(), osRoot), memFs)
+func WriteToMemOverlayFs(t *testing.T, osRoot string) (memFs, fs afero.Fs) {
+	memFs = CreateTestChrootFs(t, afero.NewMemMapFs(), "/")
+	fs = afero.NewCopyOnWriteFs(CreateTestChrootFs(t, afero.NewOsFs(), osRoot), memFs)
 	return
+}
+
+func CreateTestChrootFs(t *testing.T, fs afero.Fs, root string) (chrootfs afero.Fs) {
+	var err error
+	chrootfs, err = syslutil.NewChrootFs(fs, root)
+	require.NoError(t, err)
+	return chrootfs
 }
