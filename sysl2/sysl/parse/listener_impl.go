@@ -694,6 +694,9 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 			s.filename, s.typename, fieldName)
 	} else {
 		type1 = &sysl.Type{}
+		type1.Type = &sysl.Type_NoType_{
+			NoType: &sysl.Type_NoType{},
+		}
 	}
 
 	type1.SourceContext = &sysl.SourceContext{
@@ -842,6 +845,8 @@ func fixFieldDefinitions(collection *sysl.Type) {
 				type1 = t.Set.GetTypeRef()
 			case *sysl.Type_List_:
 				type1 = t.List.GetType().GetTypeRef()
+			case *sysl.Type_NoType_:
+				continue
 			default:
 				panic("unhandled type:" + name)
 			}
@@ -1661,10 +1666,12 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 		params = append(params, &p)
 	}
 	ep := s.module.Apps[s.appname].Endpoints[s.typename]
-	if ep.Param == nil {
-		ep.Param = params
-	} else {
-		ep.Param = append(ep.Param, params...)
+	if len(params) > 0 {
+		if ep.Param == nil {
+			ep.Param = params
+		} else {
+			ep.Param = append(ep.Param, params...)
+		}
 	}
 	s.typemap = nil
 	s.fieldname = []string{}
@@ -2335,6 +2342,10 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 		expr.Type = type1
 	}
 	s.pushExpr(expr)
+}
+
+func makeLiteralString(val string) *sysl.Expr {
+	return &sysl.Expr{Expr: &sysl.Expr_Literal{Literal: &sysl.Value{Value: &sysl.Value_S{S: val}}}}
 }
 
 func makeGetAttr(arg *sysl.Expr, name string, nullsafe, setof bool) *sysl.Expr {
@@ -3393,6 +3404,86 @@ func (s *TreeShapeListener) ExitExpr_inject_stmt(*parser.Expr_inject_stmtContext
 			Inject: expr,
 		},
 	}
+	tx.Stmt = append(tx.Stmt, stmt)
+}
+
+// EnterTemplate_expression is called when production template_expression is entered.
+func (s *TreeShapeListener) EnterTemplate_expression(ctx *parser.Template_expressionContext) {
+}
+
+// ExitTemplate_expression is called when production template_expression is exited.
+func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_expressionContext) {
+	var lhs, rhs *sysl.Expr
+
+	if txt := ctx.TMPL_TEXT(); txt != nil {
+		text := strings.NewReplacer("{{", "{", "}}", "}").Replace(txt.GetText())
+		rhs = makeLiteralString(text)
+	} else {
+		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr())
+	}
+
+	if top := s.topExpr(); top.GetTransform() != nil {
+		lhs = makeExprName(TemplateImpliedResult)
+	} else {
+		lhs = s.popExpr()
+	}
+
+	s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs))
+}
+
+// EnterTemplate_statement is called when production template_statement is entered.
+func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {}
+
+const TemplateImpliedResult = "__$"
+
+// ExitTemplate_statement is called when production template_statement is exited.
+func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
+	statements := s.popExpr()
+	tx := s.topExpr().GetTransform()
+	if tx == nil {
+		fmt.Printf("%v", s.topExpr())
+		panic("ExitTemplate_statement: Unexpected expression!")
+	}
+
+	getRHS := func(expr *sysl.Expr) *sysl.Expr {
+		if out, ok := expr.Expr.(*sysl.Expr_Binexpr); ok {
+			return out.Binexpr.Rhs
+		}
+		return nil
+	}
+	rhs := getRHS(statements)
+	for {
+		r := getRHS(rhs)
+		if r == nil {
+			break
+		}
+		rhs = r
+	}
+	wantNewLine := true
+	if e, ok := rhs.Expr.(*sysl.Expr_Literal); ok {
+		if strings.HasSuffix(e.Literal.GetS(), "\\") {
+			wantNewLine = false
+			e.Literal = &sysl.Value{
+				Value: &sysl.Value_S{
+					S: strings.TrimSuffix(e.Literal.GetS(), "\\"),
+				},
+			}
+		}
+	}
+
+	if wantNewLine {
+		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, statements, makeLiteralString("\n"))
+	}
+
+	stmt := &sysl.Expr_Transform_Stmt{
+		Stmt: &sysl.Expr_Transform_Stmt_Let{
+			Let: &sysl.Expr_Transform_Stmt_Assign{
+				Name: TemplateImpliedResult,
+				Expr: statements,
+			},
+		},
+	}
+
 	tx.Stmt = append(tx.Stmt, stmt)
 }
 
