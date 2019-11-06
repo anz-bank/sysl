@@ -19,23 +19,11 @@ var _ afero.Fs = &ChrootFs{}
 
 // NewChrootFs returns a filesystem that is rooted at root argument
 func NewChrootFs(fs afero.Fs, root string) (*ChrootFs, error) {
-	var err error
-	if !filepath.IsAbs(root) {
-		root, err = filepath.Abs(root)
-
-		if err != nil {
-			return nil, err
-		}
-	}
 	return &ChrootFs{fs: fs, root: root}, nil
 }
 
-func (fs *ChrootFs) join(name string) string {
-	volumeName := filepath.VolumeName(name)
-	cleaned := filepath.ToSlash(name)
-	cleaned = strings.TrimLeft(cleaned, volumeName)
-	joined := filepath.Join(fs.root, cleaned)
-	return joined
+func (fs *ChrootFs) join(name string) (string, error) {
+	return filepath.Abs(filepath.Join(fs.root, name))
 }
 
 func (fs *ChrootFs) Create(name string) (afero.File, error) {
@@ -97,7 +85,11 @@ func (fs *ChrootFs) RemoveAll(path string) error {
 
 func (fs *ChrootFs) Rename(oldname, newname string) error {
 	return fs.wrapCall(oldname, func(fixedPath string) error {
-		return fs.fs.Rename(fixedPath, fs.join(newname))
+		newFile, err := fs.join(newname)
+		if err != nil {
+			return err
+		}
+		return fs.fs.Rename(fixedPath, newFile)
 	})
 }
 
@@ -118,7 +110,7 @@ func (fs *ChrootFs) Name() string {
 
 func (fs *ChrootFs) Chmod(name string, mode os.FileMode) error {
 	return fs.wrapCall(name, func(fixedPath string) error {
-		return fs.fs.Chmod(fs.join(fixedPath), mode)
+		return fs.fs.Chmod(fixedPath, mode)
 	})
 }
 
@@ -134,12 +126,17 @@ func (fs *ChrootFs) openAllowed(name string) error {
 		return err
 	}
 
-	relativePath, err := filepath.Rel(absoluteRoot, name)
+	fullName, err := filepath.Abs(name)
 	if err != nil {
 		return err
 	}
 
-	if strings.Split(relativePath, string(os.PathSeparator))[0] == ".." {
+	relativePath, err := filepath.Rel(absoluteRoot, fullName)
+	if err != nil {
+		return err
+	}
+
+	if relativePath != "" && strings.Split(relativePath, string(os.PathSeparator))[0] == ".." {
 		return errors.New("permission denied, file outside root")
 	}
 
@@ -147,7 +144,10 @@ func (fs *ChrootFs) openAllowed(name string) error {
 }
 
 func (fs *ChrootFs) wrapCall(path string, fn func(string) error) error {
-	filename := fs.join(path)
+	filename, err := fs.join(path)
+	if err != nil {
+		return err
+	}
 	if err := fs.openAllowed(filename); err != nil {
 		return err
 	}
@@ -157,7 +157,10 @@ func (fs *ChrootFs) wrapCall(path string, fn func(string) error) error {
 func (fs *ChrootFs) wrapCallWithData(
 	path string,
 	fn func(string) (interface{}, error)) (interface{}, error) {
-	filename := fs.join(path)
+	filename, err := fs.join(path)
+	if err != nil {
+		return nil, err
+	}
 	if err := fs.openAllowed(filename); err != nil {
 		return nil, err
 	}
