@@ -2314,6 +2314,12 @@ func makeGetAttr(arg *sysl.Expr, name string, nullsafe, setof bool, ctx *sysl.So
 	return expr
 }
 
+func makeLiteralString(val string, ctx *sysl.SourceContext) *sysl.Expr {
+	expr := makeExpr(ctx)
+	expr.Expr = &sysl.Expr_Literal{Literal: &sysl.Value{Value: &sysl.Value_S{S: val}}}
+	return expr
+}
+
 func makeRelExpr(op sysl.Expr_RelExpr_Op, ctx *sysl.SourceContext) *sysl.Expr {
 	expr := makeExpr(ctx)
 	expr.Expr = &sysl.Expr_Relexpr{
@@ -3348,6 +3354,88 @@ func (s *TreeShapeListener) ExitExpr_inject_stmt(ctx *parser.Expr_inject_stmtCon
 			Inject: expr,
 		},
 	}
+	tx.Stmt = append(tx.Stmt, stmt)
+}
+
+// EnterTemplate_expression is called when production template_expression is entered.
+func (s *TreeShapeListener) EnterTemplate_expression(ctx *parser.Template_expressionContext) {
+}
+
+// ExitTemplate_expression is called when production template_expression is exited.
+func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_expressionContext) {
+	var lhs, rhs *sysl.Expr
+
+	if txt := ctx.TMPL_TEXT(); txt != nil {
+		text := strings.NewReplacer("{{", "{", "}}", "}").Replace(txt.GetText())
+		rhs = makeLiteralString(text, s.sc.Get(ctx.BaseParserRuleContext))
+	} else {
+		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext))
+	}
+
+	if top := s.topExpr(); top.GetTransform() != nil {
+		lhs = makeExprName(TemplateImpliedResult, s.sc.Get(ctx.BaseParserRuleContext))
+	} else {
+		lhs = s.popExpr()
+	}
+
+	s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
+}
+
+// EnterTemplate_statement is called when production template_statement is entered.
+func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {}
+
+const TemplateImpliedResult = "__$"
+
+// ExitTemplate_statement is called when production template_statement is exited.
+func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
+	statements := s.popExpr()
+	tx := s.topExpr().GetTransform()
+	if tx == nil {
+		fmt.Printf("%v", s.topExpr())
+		panic("ExitTemplate_statement: Unexpected expression!")
+	}
+
+	getRHS := func(expr *sysl.Expr) *sysl.Expr {
+		if out, ok := expr.Expr.(*sysl.Expr_Binexpr); ok {
+			return out.Binexpr.Rhs
+		}
+		return nil
+	}
+	rhs := getRHS(statements)
+	for {
+		r := getRHS(rhs)
+		if r == nil {
+			break
+		}
+		rhs = r
+	}
+	wantNewLine := true
+	if e, ok := rhs.Expr.(*sysl.Expr_Literal); ok {
+		if strings.HasSuffix(e.Literal.GetS(), "\\") {
+			wantNewLine = false
+			e.Literal = &sysl.Value{
+				Value: &sysl.Value_S{
+					S: strings.TrimSuffix(e.Literal.GetS(), "\\"),
+				},
+			}
+		}
+	}
+
+	if wantNewLine {
+		sc := s.sc.Get(ctx.BaseParserRuleContext)
+		expr := makeLiteralString("\n", sc)
+		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, statements, expr, sc)
+	}
+
+	stmt := &sysl.Expr_Transform_Stmt{
+		Stmt: &sysl.Expr_Transform_Stmt_Let{
+			Let: &sysl.Expr_Transform_Stmt_Assign{
+				Name: TemplateImpliedResult,
+				Expr: statements,
+			},
+		},
+	}
+
 	tx.Stmt = append(tx.Stmt, stmt)
 }
 
