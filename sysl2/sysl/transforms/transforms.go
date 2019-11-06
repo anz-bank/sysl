@@ -5,6 +5,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 )
 
 type Worker interface {
@@ -26,6 +27,12 @@ func NewWorker(transformMod *sysl.Module, appName, viewName string) (Worker, err
 		view: view,
 	}
 
+	if len(view.Param) == 1 {
+		_, detail := syslutil.GetTypeDetail(view.Param[0].Type)
+		if detail == templateInputType {
+			return &templated{base: b}, nil
+		}
+	}
 	filenames, has := app.Views["filename"]
 	if !has {
 		return nil, fmt.Errorf("view '%s' not found in transform app", view)
