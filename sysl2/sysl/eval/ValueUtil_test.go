@@ -5,6 +5,7 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/spf13/afero"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -433,7 +434,8 @@ func TestStmtToValueCall(t *testing.T) {
 }
 
 func TestAddModule(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/model_with_deps.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
+	mod, err := parse.NewParser().Parse("tests/model_with_deps.sysl",
+		testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	s := Scope{}
