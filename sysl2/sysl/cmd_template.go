@@ -56,7 +56,9 @@ func (p *templateCmd) Execute(args ExecuteArgs) error {
 	output := t.Apply(args.Module)
 
 	for filename, data := range output {
-		_ = ioutil.WriteFile(filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644) //nolint:errcheck
+		if err := ioutil.WriteFile(filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644); err != nil {
+			return err
+		}
 	}
 	return nil
 }
