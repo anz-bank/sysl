@@ -133,7 +133,7 @@ func TestGenerateCodePerType(t *testing.T) {
 func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model_with_deps.sysl", ".", "tests/xform_with_deps.sysl",
+	output, err := GenerateCodeWithParams(t, ".", "tests/model_with_deps.sysl", ".", "tests/xform_with_deps.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
@@ -199,7 +199,7 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 func GenerateCodeWithParams(
 	t *testing.T,
 	rootModel, model, rootTransform, transform, grammar, start string) ([]*CodeGenOutput, error) {
-	_, fs := testutil.WriteToMemOverlayFs(t, rootModel)
+	_, fs := testutil.WriteToMemOverlayFs(t, "/")
 	return GenerateCodeWithParamsFs(
 		rootModel, model, rootTransform, transform, grammar, start, fs,
 	)
