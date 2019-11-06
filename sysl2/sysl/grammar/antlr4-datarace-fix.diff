@@ -9,8 +9,7 @@ Without this, the lexer and parser are not safe to run in multiple threads
 index 11ab4f7..d98f55f 100644
 --- a/sysl2/sysl/grammar/sysl_lexer.go
 +++ b/sysl2/sysl/grammar/sysl_lexer.go
-@@ -782,9 +782,6 @@ var serializedLexerAtn = []uint16{
- 	3, 176, 26, 3, 177, 27, 3, 177, 28,
+@@ -782,8 +782,5 @@ var serializedLexerAtn = []uint16{
  }
  
 -var lexerDeserializer = antlr.NewATNDeserializer(nil)
