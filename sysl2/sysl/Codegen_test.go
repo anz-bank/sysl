@@ -244,7 +244,7 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 func GenerateCodeWithParams(
 	t *testing.T,
 	rootModel, model, rootTransform, transform, grammar, start string) ([]*CodeGenOutput, error) {
-	_, fs := testutil.WriteToMemOverlayFs(t, rootModel)
+	_, fs := testutil.WriteToMemOverlayFs(t, "/")
 	return GenerateCodeWithParamsFs(
 		rootModel, model, rootTransform, transform, grammar, start, fs,
 	)
