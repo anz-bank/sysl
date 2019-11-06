@@ -23,6 +23,10 @@ func NewChrootFs(fs afero.Fs, root string) (*ChrootFs, error) {
 }
 
 func (fs *ChrootFs) join(name string) (string, error) {
+	volumeName := filepath.VolumeName(name)
+	if volumeName != "" {
+		name = strings.TrimLeft(name, volumeName)
+	}
 	return filepath.Abs(filepath.Join(fs.root, name))
 }
 
@@ -126,12 +130,7 @@ func (fs *ChrootFs) openAllowed(name string) error {
 		return err
 	}
 
-	fullName, err := filepath.Abs(name)
-	if err != nil {
-		return err
-	}
-
-	relativePath, err := filepath.Rel(absoluteRoot, fullName)
+	relativePath, err := filepath.Rel(absoluteRoot, name)
 	if err != nil {
 		return err
 	}
