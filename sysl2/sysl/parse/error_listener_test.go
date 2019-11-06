@@ -12,6 +12,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 )
 
+// assertNoLog not to be used in parallel due to logging clashes
 func assertNoLog(t *testing.T, f func()) {
 	var buf bytes.Buffer
 	std := logrus.StandardLogger()
@@ -29,6 +30,7 @@ func assertNoLog(t *testing.T, f func()) {
 	assert.Empty(t, buf.String())
 }
 
+// assertLog not to be used in parallel due to logging clashes
 func assertLog(t *testing.T, msg string, f func()) {
 	var buf bytes.Buffer
 	std := logrus.StandardLogger()
@@ -57,8 +59,6 @@ func (r *dummyRecognizer) GetATN() *antlr.ATN {
 }
 
 func TestSyslParserErrorListenerSyntaxError(t *testing.T) {
-	t.Parallel()
-
 	listener := &SyslParserErrorListener{}
 	recognizer := &dummyRecognizer{antlr.NewBaseRecognizer()}
 	recognizer.SymbolicNames = []string{"some_token", "some_other_token"}
@@ -73,8 +73,6 @@ func TestSyslParserErrorListenerSyntaxError(t *testing.T) {
 }
 
 func TestSyslParserErrorListenerReportAttemptingFullContext(t *testing.T) {
-	t.Parallel()
-
 	listener := &SyslParserErrorListener{}
 	assertNoLog(t, func() {
 		listener.ReportAttemptingFullContext(nil, nil, 42, 43, nil, nil)
@@ -85,8 +83,6 @@ func TestSyslParserErrorListenerReportAttemptingFullContext(t *testing.T) {
 }
 
 func TestSyslParserErrorListenerReportAmbiguity(t *testing.T) {
-	t.Parallel()
-
 	listener := &SyslParserErrorListener{}
 	assertNoLog(t, func() {
 		listener.ReportAmbiguity(nil, nil, 42, 43, false, nil, nil)
@@ -97,8 +93,6 @@ func TestSyslParserErrorListenerReportAmbiguity(t *testing.T) {
 }
 
 func TestSyslParserErrorListenerReportContextSensitivity(t *testing.T) {
-	t.Parallel()
-
 	listener := &SyslParserErrorListener{}
 	assertNoLog(t, func() {
 		listener.ReportContextSensitivity(nil, nil, 42, 43, 0, nil)
