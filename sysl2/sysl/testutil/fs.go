@@ -42,9 +42,8 @@ func WriteToMemOverlayFs(t *testing.T, osRoot string) (memFs, fs afero.Fs) {
 	return
 }
 
-func CreateTestChrootFs(t *testing.T, fs afero.Fs, root string) (chrootfs afero.Fs) {
-	var err error
-	chrootfs, err = syslutil.NewChrootFs(fs, root)
+func CreateTestChrootFs(t *testing.T, fs afero.Fs, root string) afero.Fs {
+	chrootfs, err := syslutil.NewChrootFs(fs, root)
 	require.NoError(t, err)
 	return chrootfs
 }
