@@ -2,7 +2,6 @@ package syslutil
 
 import (
 	"errors"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,7 +35,6 @@ func (fs *ChrootFs) join(name string) string {
 	cleaned := filepath.ToSlash(name)
 	cleaned = strings.TrimLeft(cleaned, volumeName)
 	joined := filepath.Join(fs.root, cleaned)
-	log.Println("Cleaned: ", cleaned, "Joined: ", joined)
 	return joined
 }
 
