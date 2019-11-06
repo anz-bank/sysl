@@ -32,9 +32,11 @@ func NewChrootFs(fs afero.Fs, root string) (*ChrootFs, error) {
 }
 
 func (fs *ChrootFs) join(name string) string {
+	volumeName := filepath.VolumeName(name)
 	cleaned := filepath.ToSlash(name)
+	cleaned = strings.TrimLeft(cleaned, volumeName)
 	joined := filepath.Join(fs.root, cleaned)
-	log.Println("ToSlash: ", cleaned, "Joined: ", joined)
+	log.Println("Cleaned: ", cleaned, "Joined: ", joined)
 	return joined
 }
 
