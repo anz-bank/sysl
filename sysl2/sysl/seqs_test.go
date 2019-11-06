@@ -253,7 +253,7 @@ func TestLoadApp(t *testing.T) {
 	args := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	memFs, fs := testutil.WriteToMemOverlayFs(t, ".")
+	memFs, fs := testutil.WriteToMemOverlayFs(t, "/")
 	logger, _ := test.NewNullLogger()
 	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)
