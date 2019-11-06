@@ -43,5 +43,6 @@ func (b *base) eval(view *sysl.View, scope eval.Scope) *sysl.Value {
 	if view.Expr.Type == nil {
 		view.Expr.Type = view.RetType
 	}
-	return eval.Eval(b.app, scope, view.Expr)
+
+	return eval.EvaluateApp(b.app, view, scope)
 }
