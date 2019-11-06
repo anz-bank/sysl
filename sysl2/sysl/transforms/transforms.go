@@ -1,0 +1,47 @@
+package transforms
+
+import (
+	"fmt"
+
+	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+)
+
+type Worker interface {
+	Apply(mod *sysl.Module, appNames ...string) map[string]*sysl.Value
+}
+
+func NewWorker(transformMod *sysl.Module, appName, viewName string) (Worker, error) {
+	app, has := transformMod.Apps[appName]
+	if !has {
+		return nil, fmt.Errorf("app '%s' not found in transform module", appName)
+	}
+	view, has := app.Views[viewName]
+	if !has {
+		return nil, fmt.Errorf("view '%s' not found in transform app", view)
+	}
+	b := base{
+		mod:  transformMod,
+		app:  app,
+		view: view,
+	}
+
+	filenames, has := app.Views["filename"]
+	if !has {
+		return nil, fmt.Errorf("view '%s' not found in transform app", view)
+	}
+	return &semantic{base: b, filenames: filenames}, nil
+}
+
+type base struct {
+	mod  *sysl.Module
+	app  *sysl.Application
+	view *sysl.View
+}
+
+func (b *base) eval(view *sysl.View, scope eval.Scope) *sysl.Value {
+	if view.Expr.Type == nil {
+		view.Expr.Type = view.RetType
+	}
+	return eval.EvaluateApp(b.app, view, scope)
+}
