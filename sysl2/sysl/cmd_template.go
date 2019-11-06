@@ -6,8 +6,6 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/transforms"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
-
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -42,13 +40,7 @@ func (p *templateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-type modData struct {
-	appName string
-	mod     *sysl.Module
-}
-
 func (p *templateCmd) Execute(args ExecuteArgs) error {
-
 	tmplFs := syslutil.NewChrootFs(args.Filesystem, p.rootTemplate)
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(p.template, tmplFs, tfmParser)
@@ -64,8 +56,9 @@ func (p *templateCmd) Execute(args ExecuteArgs) error {
 	output := t.Apply(args.Module)
 
 	for filename, data := range output {
-		ioutil.WriteFile(filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644)
+		if err := ioutil.WriteFile(filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644); err != nil {
+			return err
+		}
 	}
-
 	return nil
 }
