@@ -2,6 +2,7 @@ package syslutil
 
 import (
 	"errors"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -31,8 +32,10 @@ func NewChrootFs(fs afero.Fs, root string) (*ChrootFs, error) {
 }
 
 func (fs *ChrootFs) join(name string) string {
-	joined := filepath.Join(fs.root, name)
-	return filepath.ToSlash(joined)
+	cleaned := filepath.ToSlash(name)
+	joined := filepath.Join(fs.root, cleaned)
+	log.Println("ToSlash: ", cleaned, "Joined: ", joined)
+	return joined
 }
 
 func (fs *ChrootFs) Create(name string) (afero.File, error) {
