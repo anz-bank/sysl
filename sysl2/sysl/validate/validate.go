@@ -89,9 +89,10 @@ func (v *Validator) validateEntryPoint(start string) {
 		return
 	}
 
-	if getTypeName(view.GetRetType()) != start || isCollectionType(view.GetRetType()) {
+	typeName := getTypeName(view.GetRetType())
+	if typeName != start || isCollectionType(view.GetRetType()) {
 		v.messages["EntryPoint"] = append(v.messages["EntryPoint"],
-			*msg.NewMsg(msg.ErrInvalidEntryPointReturn, []string{start, start}))
+			*msg.NewMsg(msg.ErrInvalidEntryPointReturn, []string{typeName, start}))
 	}
 }
 

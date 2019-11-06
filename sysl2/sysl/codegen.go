@@ -3,7 +3,8 @@ package main
 import (
 	"io"
 	"io/ioutil"
-	"sort"
+
+	"github.com/anz-bank/sysl/sysl2/sysl/transforms"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"
@@ -166,63 +167,6 @@ func readGrammar(filename, grammarName, startRule string) (*ebnfGrammar.Grammar,
 	return parser.ParseEBNF(string(dat), grammarName, startRule), nil
 }
 
-// applyTranformToModel loads applies the transform to input model
-func applyTranformToModel(
-	modelName, transformAppName, viewName string,
-	model, transform *sysl.Module,
-) (*sysl.Value, error) {
-	modelApp := model.Apps[modelName]
-	view := transform.Apps[transformAppName].Views[viewName]
-	if view == nil {
-		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
-	}
-	s := eval.Scope{}
-	s.AddApp("app", modelApp)
-	s.AddModule("module", model)
-	var result *sysl.Value
-	// assume args are
-	//  app <: sysl.App and
-	//  type <: sysl.Type
-	//  typeName <: string
-	//  deps <: sequence of sysl.App
-
-	if perTypeTransform(view.Param) {
-		result = eval.MakeValueList()
-		var tNames []string
-		for tName := range modelApp.Types {
-			tNames = append(tNames, tName)
-		}
-		sort.Strings(tNames)
-		for _, tName := range tNames {
-			t := modelApp.Types[tName]
-			s["typeName"] = eval.MakeValueString(tName)
-			s["type"] = eval.TypeToValue(t)
-			eval.AppendItemToValueList(result.GetList(), eval.EvaluateView(transform, transformAppName, viewName, s))
-		}
-	} else {
-		result = eval.EvaluateView(transform, transformAppName, viewName, s)
-	}
-
-	return result, nil
-}
-
-func perTypeTransform(params []*sysl.Param) bool {
-	paramMap := make(map[string]struct{})
-
-	for _, p := range params {
-		paramMap[p.Name] = struct{}{}
-	}
-
-	if _, has := paramMap["app"]; has {
-		if _, has := paramMap["type"]; has {
-			return true
-		}
-	} else {
-		panic("Expecting at least an app <: sysl.App")
-	}
-	return false
-}
-
 // Serialize serializes node to string
 func Serialize(w io.Writer, delim string, node Node) error {
 	for _, n := range node {
@@ -274,34 +218,22 @@ func GenerateCode(
 		validator.LogMessages()
 	}
 
-	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", model, tx)
+	t, err := transforms.NewWorker(tx, transformAppName, codegenParams.start)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(modelAppName, transformAppName, g.Start, model, tx)
-	if err != nil {
-		return nil, err
-	}
-	switch {
-	case fileNames.GetMap() != nil:
-		filename := fileNames.GetMap().Items["filename"].GetS()
+
+	output := t.Apply(model, modelAppName)
+	for filename, value := range output {
 		logger.Println(filename)
 
-		if result.GetMap() != nil {
-			codeOutput = appendCodeOutput(g, result, logger, codeOutput, filename)
-		} else if result.GetList() != nil {
-			for _, v := range result.GetList().Value {
+		if value.GetMap() != nil {
+			codeOutput = appendCodeOutput(g, value, logger, codeOutput, filename)
+		} else if value.GetList() != nil {
+			for _, v := range value.GetList().Value {
 				codeOutput = appendCodeOutput(g, v, logger, codeOutput, filename)
 			}
 		}
-	case fileNames.GetList() != nil && result.GetList() != nil:
-		fileValues := fileNames.GetList().Value
-		for i, v := range result.GetList().Value {
-			filename := fileValues[i].GetMap().Items["filename"].GetS()
-			codeOutput = appendCodeOutput(g, v, logger, codeOutput, filename)
-		}
-	default:
-		panic("Unexpected combination for filenames and transformation results")
 	}
 
 	return codeOutput, nil
