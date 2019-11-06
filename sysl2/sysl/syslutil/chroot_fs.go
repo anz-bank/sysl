@@ -32,8 +32,8 @@ func NewChrootFs(fs afero.Fs, root string) (*ChrootFs, error) {
 }
 
 func (fs *ChrootFs) join(name string) string {
-	log.Println("Opening: ", filepath.Join(fs.root, name), " From: ", name)
-	return filepath.Join(fs.root, name)
+	joined := filepath.Join(fs.root, name)
+	return filepath.ToSlash(joined)
 }
 
 func (fs *ChrootFs) Create(name string) (afero.File, error) {
