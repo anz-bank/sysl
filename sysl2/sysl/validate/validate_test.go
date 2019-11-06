@@ -145,7 +145,7 @@ func TestValidatorValidateEntryPoint(t *testing.T) {
 			input: &sysl.Application{
 				Views: map[string]*sysl.View{start: invalidEntryPointView, "nonEntryPoint": nonEntryPointView}},
 			expected: map[string][]msg.Msg{
-				"EntryPoint": {{MessageID: msg.ErrInvalidEntryPointReturn, MessageData: []string{start, start}}}}},
+				"EntryPoint": {{MessageID: msg.ErrInvalidEntryPointReturn, MessageData: []string{"STRING", start}}}}},
 	}
 
 	for name, test := range cases {
