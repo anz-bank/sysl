@@ -23,6 +23,7 @@ func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 
 	actual := []string{}
 	require.NoError(t, afero.Walk(fs, "/", func(path string, info os.FileInfo, err error) error {
+		t.Log("Walking: ", path)
 		if err != nil {
 			return err
 		}
