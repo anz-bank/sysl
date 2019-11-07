@@ -3422,19 +3422,19 @@ func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_express
 		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr())
 	}
 
-	if top := s.topExpr(); top.GetTransform() != nil {
-		lhs = makeExprName(TemplateImpliedResult)
-	} else {
+	if top := s.topExpr(); top.GetTransform() == nil {
 		lhs = s.popExpr()
+		s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs))
+	} else {
+		s.pushExpr(rhs)
 	}
-
-	s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs))
 }
 
 // EnterTemplate_statement is called when production template_statement is entered.
 func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {}
 
 const TemplateImpliedResult = "__$"
+const TemplateLogString = "__$Log"
 
 // ExitTemplate_statement is called when production template_statement is exited.
 func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
@@ -3475,10 +3475,17 @@ func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statemen
 		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, statements, makeLiteralString("\n"))
 	}
 
+	resultName := TemplateImpliedResult
+	if ctx.TMPL_DEBUG() != nil {
+		resultName = TemplateLogString
+	} else {
+		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, makeExprName(TemplateImpliedResult), statements)
+	}
+
 	stmt := &sysl.Expr_Transform_Stmt{
 		Stmt: &sysl.Expr_Transform_Stmt_Let{
 			Let: &sysl.Expr_Transform_Stmt_Assign{
-				Name: TemplateImpliedResult,
+				Name: resultName,
 				Expr: statements,
 			},
 		},

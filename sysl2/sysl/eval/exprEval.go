@@ -20,7 +20,11 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 		case *sysl.Expr_Transform_Stmt_Let:
 			logrus.Debugf("Evaluating var %s", ss.Let.Name)
 			res := Eval(txApp, assign, ss.Let.Expr)
-			assign[ss.Let.Name] = res
+			if ss.Let.Name == parse.TemplateLogString {
+				logrus.Printf("%s", res.GetS())
+			} else {
+				assign[ss.Let.Name] = res
+			}
 			logrus.Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
 			logrus.Debugf("Evaluating %s", ss.Assign.Name)
