@@ -126,6 +126,23 @@ func flattenListSet(
 	return listResult
 }
 
+func flattenSetList(
+	txApp *sysl.Application,
+	assign Scope,
+	list *sysl.Value,
+	scopeVar string,
+	rhs *sysl.Expr,
+) *sysl.Value {
+	setResult := MakeValueSet()
+	for _, l := range list.GetSet().Value {
+		for _, ll := range l.GetList().Value {
+			assign[scopeVar] = ll
+			AppendItemToValueList(setResult.GetSet(), Eval(txApp, assign, rhs))
+		}
+	}
+	return setResult
+}
+
 func flattenSetMap(
 	txApp *sysl.Application,
 	assign Scope,
@@ -168,17 +185,23 @@ func flattenSetSet(txApp *sysl.Application,
 	return setResult
 }
 
-func concatList(lhs, rhs *sysl.Value) *sysl.Value {
+func concat(lhs, rhs *sysl.Value_List) *sysl.Value {
 	result := MakeValueList()
 	{
 		result := result.GetList()
-		lhs := lhs.GetList()
-		rhs := rhs.GetList()
 		result.Value = lhs.Value
 		result.Value = append(result.Value, rhs.Value...)
 		logrus.Tracef("concatList: lhs %d | rhs %d = %d\n", len(lhs.Value), len(rhs.Value), len(result.Value))
 	}
 	return result
+}
+
+func concatListList(lhs, rhs *sysl.Value) *sysl.Value {
+	return concat(lhs.GetList(), rhs.GetList())
+}
+
+func concatListSet(lhs, rhs *sysl.Value) *sysl.Value {
+	return concat(lhs.GetList(), rhs.GetSet())
 }
 
 func setUnion(lhs, rhs *sysl.Value) *sysl.Value {

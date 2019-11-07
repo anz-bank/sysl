@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
+	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -30,11 +31,31 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 	return result
 }
 
-func evalTransformUsingValueList(
+func setAppender(collection []*sysl.Value, newVal *sysl.Value) []*sysl.Value {
+	found := false
+	for _, result := range collection {
+		if proto.Equal(newVal, result) {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		collection = append(collection, newVal)
+	}
+	return collection
+}
+
+func listAppender(collection []*sysl.Value, newVal *sysl.Value) []*sysl.Value {
+	return append(collection, newVal)
+}
+
+func evalTransformUsingAppender(
 	txApp *sysl.Application,
 	x *sysl.Expr_Transform,
 	assign Scope,
 	v []*sysl.Value,
+	appender func(collection []*sysl.Value, newVal *sysl.Value) []*sysl.Value,
 ) []*sysl.Value {
 	listResult := []*sysl.Value{}
 	scopeVar := x.Scopevar
@@ -43,11 +64,29 @@ func evalTransformUsingValueList(
 	for _, svar := range v {
 		assign[scopeVar] = svar
 		res := evalTransformStmts(txApp, assign, x)
-		listResult = append(listResult, res)
+		listResult = appender(listResult, res)
 	}
 	delete(assign, scopeVar)
 	logrus.Tracef("Transform Result (As List/Set): %v", listResult)
 	return listResult
+}
+
+func evalTransformUsingValueSet(
+	txApp *sysl.Application,
+	x *sysl.Expr_Transform,
+	assign Scope,
+	v []*sysl.Value,
+) []*sysl.Value {
+	return evalTransformUsingAppender(txApp, x, assign, v, setAppender)
+}
+
+func evalTransformUsingValueList(
+	txApp *sysl.Application,
+	x *sysl.Expr_Transform,
+	assign Scope,
+	v []*sysl.Value,
+) []*sysl.Value {
+	return evalTransformUsingAppender(txApp, x, assign, v, listAppender)
 }
 
 // Eval expr
@@ -96,16 +135,19 @@ func evalTransform(txApp *sysl.Application, assign Scope, x *sysl.Expr_Transform
 	}()
 
 	switch argValue.Value.(type) {
-	case *sysl.Value_Set:
-		logrus.Debugf("Evaluation Argvalue as a set: %d times\n", len(argValue.GetSet().Value))
-		setResult := MakeValueSet()
-		setResult.GetSet().Value = evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetSet().Value)
-		return setResult
-	case *sysl.Value_List_:
-		logrus.Debugf("Evaluation Argvalue as a list: %d times\n", len(argValue.GetList().Value))
-		listResult := MakeValueList()
-		listResult.GetList().Value = evalTransformUsingValueList(txApp, x.Transform, assign, argValue.GetList().Value)
-		return listResult
+	case *sysl.Value_Set, *sysl.Value_List_:
+		switch e.Type.Type.(type) {
+		case *sysl.Type_Set:
+			logrus.Debugf("Evaluation Argvalue as a set: %d times\n", len(GetValueSlice(argValue)))
+			setResult := MakeValueSet()
+			setResult.GetSet().Value = evalTransformUsingValueSet(txApp, x.Transform, assign, GetValueSlice(argValue))
+			return setResult
+		default:
+			logrus.Debugf("Evaluation Argvalue as a list: %d times\n", len(GetValueSlice(argValue)))
+			listResult := MakeValueList()
+			listResult.GetList().Value = evalTransformUsingValueList(txApp, x.Transform, assign, GetValueSlice(argValue))
+			return listResult
+		}
 	default:
 		// HACK: scopevar == '.', then we are not unpacking the map entries
 		scopeVar := x.Transform.Scopevar

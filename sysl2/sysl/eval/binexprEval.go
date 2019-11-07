@@ -57,8 +57,9 @@ var (
 		makeKey(sysl.Expr_BinExpr_ADD, ValueInt, ValueInt):       addInt64,
 		makeKey(sysl.Expr_BinExpr_ADD, ValueString, ValueString): addString,
 		makeKey(sysl.Expr_BinExpr_AND, ValueBool, ValueBool):     andBool,
-		makeKey(sysl.Expr_BinExpr_BITOR, ValueList, ValueList):   concatList,
+		makeKey(sysl.Expr_BinExpr_BITOR, ValueList, ValueList):   concatListList,
 		makeKey(sysl.Expr_BinExpr_BITOR, ValueSet, ValueSet):     setUnion,
+		makeKey(sysl.Expr_BinExpr_BITOR, ValueList, ValueSet):    concatListSet,
 		makeKey(sysl.Expr_BinExpr_DIV, ValueInt, ValueInt):       divInt64,
 		makeKey(sysl.Expr_BinExpr_EQ, ValueBool, ValueBool):      cmpBool,
 		makeKey(sysl.Expr_BinExpr_EQ, ValueInt, ValueInt):        cmpInt,
@@ -87,8 +88,10 @@ var (
 		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueNoArg): flattenListList, // empty list
 		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueList):  flattenListList,
 		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueSet):   flattenListSet,
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueList):   flattenSetList,
 		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueList, ValueMap):   flattenListMap,
 		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueMap):    flattenSetMap,
+		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueNoArg):  flattenSetSet, // empty list
 		makeKey(sysl.Expr_BinExpr_FLATTEN, ValueSet, ValueSet):    flattenSetSet,
 		makeKey(sysl.Expr_BinExpr_WHERE, ValueList, ValueNoArg):   whereList,
 		makeKey(sysl.Expr_BinExpr_WHERE, ValueList, ValueList):    whereList,

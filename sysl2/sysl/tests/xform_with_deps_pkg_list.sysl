@@ -14,12 +14,8 @@ TransformDeps:
       let myList = app.endpoints -> <sequence of out> (ep:
         let calls = ep.value.stmts where (.type == "call") -> <sequence of out> (call:
           let pkgList = module.apps where(.value.name == call.target) -> <sequence of out> (dep:
-            let depEpList = dep.value.endpoints where(.value.name == call.endpoint) -> <sequence of out> (depEp:
-                out = depEp.value.name
-            )
-            out = dep.value.attrs.package + "." + Join(depEpList flatten(.out),"")
+            out = dep.value.attrs.package
           )
-
           out = Join(pkgList flatten(.out), "")
         )
         out = Join(calls flatten(.out),",")

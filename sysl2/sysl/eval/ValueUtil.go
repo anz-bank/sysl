@@ -74,6 +74,18 @@ func MakeValueSet() *sysl.Value {
 	}
 }
 
+// GetValueSlice returns the slice from either a set or a list
+func GetValueSlice(obj *sysl.Value) []*sysl.Value {
+	switch obj.Value.(type) {
+	case *sysl.Value_List_:
+		return obj.GetList().Value
+	case *sysl.Value_Set:
+		return obj.GetSet().Value
+	default:
+		panic("GetValueSlice expecting a collection type")
+	}
+}
+
 // IsCollectionType does obj holds multiple instances of the same thing?
 func IsCollectionType(obj *sysl.Value) bool {
 	switch obj.Value.(type) {
