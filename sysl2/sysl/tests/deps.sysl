@@ -7,3 +7,8 @@ Dep [package="dep"]:
     /{id<:int}:
       GET:
         return Dep
+
+  /moredep:
+    /{id<:int}:
+      GET:
+        return Dep

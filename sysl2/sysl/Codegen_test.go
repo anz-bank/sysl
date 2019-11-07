@@ -132,7 +132,6 @@ func TestGenerateCodePerType(t *testing.T) {
 
 func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	t.Parallel()
-
 	output, err := GenerateCodeWithParams(".", "tests/model_with_deps.sysl", ".", "tests/xform_with_deps.sysl",
 		"tests/test.gen.g", "javaFile")
 	require.NoError(t, err)
@@ -144,7 +143,53 @@ func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	comment1 := n1[1].(Node)
 	assert.Len(t, comment1, 1)
 
-	for i, comment := range []string{"dep.GET /dep/{id}"} {
+	for i, comment := range []string{"dep.GET /dep/{id},dep.GET /moredep/{id}"} {
+		comment0 := comment1[i].(Node)
+		assert.Len(t, comment0, 1)
+		comment0_0 := comment0[0].(string)
+		assert.Equal(t, comment, comment0_0)
+	}
+}
+
+func TestGenerateCodePutDepPackageInCommentUsingSets(t *testing.T) {
+	t.Parallel()
+	output, err := GenerateCodeWithParams(".",
+		"tests/model_with_deps.sysl", ".",
+		"tests/xform_with_deps_pkg_set.sysl",
+		"tests/test.gen.g", "javaFile")
+	require.NoError(t, err)
+	root := output[0].output
+	assert.Len(t, output, 1)
+	assert.Len(t, root, 1)
+	n1 := root[0].(Node)
+	assert.Len(t, n1, 4)
+	comment1 := n1[1].(Node)
+	assert.Len(t, comment1, 1)
+
+	for i, comment := range []string{"dep"} {
+		comment0 := comment1[i].(Node)
+		assert.Len(t, comment0, 1)
+		comment0_0 := comment0[0].(string)
+		assert.Equal(t, comment, comment0_0)
+	}
+}
+
+func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
+	t.Parallel()
+	output, err := GenerateCodeWithParams(".",
+		"tests/model_with_deps.sysl", ".",
+		"tests/xform_with_deps_pkg_list.sysl",
+		"tests/test.gen.g", "javaFile")
+	require.NoError(t, err)
+	root := output[0].output
+	assert.Len(t, output, 1)
+	assert.Len(t, root, 1)
+	n1 := root[0].(Node)
+	assert.Len(t, n1, 4)
+	comment1 := n1[1].(Node)
+	assert.Len(t, comment1, 1)
+
+	for i, comment := range []string{"dep,dep"} {
 		comment0 := comment1[i].(Node)
 		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)

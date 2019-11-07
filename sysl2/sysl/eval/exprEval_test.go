@@ -515,3 +515,35 @@ func TestListOfTypeNames(t *testing.T) {
 	assert.NotNil(t, l)
 	assert.Len(t, l.Value, 2)
 }
+
+func TestListAppender_Nil(t *testing.T) {
+	result := listAppender(nil, nil)
+	require.Nil(t, result[0])
+}
+
+func TestSetAppender_Nil(t *testing.T) {
+	result := setAppender(nil, nil)
+	require.Nil(t, result[0])
+}
+
+func TestListAppender_AllowDup(t *testing.T) {
+	val := MakeValueString("val")
+	list := MakeValueList(MakeValueString("val"))
+
+	result := listAppender(list.GetList().Value, val)
+
+	require.Len(t, result, 2)
+	assert.Equal(t, "val", result[0].GetS())
+	assert.Equal(t, "val", result[1].GetS())
+}
+
+func TestListAppender_BlockDup(t *testing.T) {
+	val := MakeValueString("val")
+	set := MakeValueSet()
+	set.GetSet().Value = append(set.GetSet().Value, MakeValueString("val"))
+
+	result := setAppender(set.GetSet().Value, val)
+
+	require.Len(t, result, 1)
+	assert.Equal(t, "val", result[0].GetS())
+}

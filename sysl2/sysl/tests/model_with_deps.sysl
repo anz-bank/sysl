@@ -10,4 +10,5 @@ ModelWithDeps [package="model"]:
     /{id<:int}:
       GET:
         Dep <- GET /dep/{id}
+        Dep <- GET /moredep/{id}
         return Response

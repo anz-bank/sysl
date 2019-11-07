@@ -445,3 +445,40 @@ func TestAddModule(t *testing.T) {
 	_, hasKey := module["types"]
 	assert.Equal(t, true, hasKey)
 }
+
+func TestGetValueSlice_NullPanic(t *testing.T) {
+	defer func() {
+		r := recover()
+		require.NotNil(t, r)
+	}()
+	_ = GetValueSlice(MakeValueBool(true))
+}
+
+func TestGetValueSlice_ListNoPanic(t *testing.T) {
+	defer func() {
+		r := recover()
+		require.Nil(t, r)
+	}()
+	_ = GetValueSlice(MakeValueList(MakeValueBool(true)))
+}
+
+func TestGetValueSlice_SetNoPanic(t *testing.T) {
+	defer func() {
+		r := recover()
+		require.Nil(t, r)
+	}()
+	_ = GetValueSlice(MakeValueSet())
+}
+
+func TestGetValueSlice_SameList(t *testing.T) {
+	boolList := MakeValueList(MakeValueBool(true))
+	result := GetValueSlice(boolList)
+	assert.Equal(t, &result[0], &boolList.GetList().Value[0])
+}
+
+func TestGetValueSlice_SameSet(t *testing.T) {
+	boolSet := MakeValueSet()
+	boolSet.GetSet().Value = append(boolSet.GetSet().Value, MakeValueBool(true))
+	result := GetValueSlice(boolSet)
+	assert.Equal(t, &result[0], &boolSet.GetSet().Value[0])
+}
