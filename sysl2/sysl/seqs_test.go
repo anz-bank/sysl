@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
@@ -17,7 +18,7 @@ import (
 func TestGenerateSequenceDiagFail(t *testing.T) {
 	t.Parallel()
 
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ""))
+	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 
@@ -26,7 +27,7 @@ func TestGenerateSequenceDiag(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
-		testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../../"))
+		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -75,7 +76,7 @@ func TestGenerateSequenceDiag2(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
-		testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../../"))
+		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}

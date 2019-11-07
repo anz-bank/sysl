@@ -155,8 +155,7 @@ func TestOpen(t *testing.T) {
 				fs, err := buildFolderTest(ts.folders, ts.files)
 				tt.Parallel()
 				require.NoError(tt, err)
-				chrootfs, err := NewChrootFs(fs, ts.root)
-				require.NoError(tt, err)
+				chrootfs := NewChrootFs(fs, ts.root)
 				_, err = chrootfs.Open(ts.module)
 				require.Equal(tt, ts.expectedErr, err)
 			}

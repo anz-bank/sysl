@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
@@ -29,7 +29,7 @@ func TestExportAll(t *testing.T) {
 				t.Parallel()
 
 				mod, _, err := parse.LoadAndGetDefaultApp("exporter/test-data/"+parts[0]+`.sysl`,
-					testutil.CreateTestChrootFs(t, afero.NewOsFs(), ".."), modelParser)
+					syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
 				require.NoError(t, err)
 				if err != nil {
 					t.Errorf("Error reading sysl %s", parts[0]+`.sysl`)

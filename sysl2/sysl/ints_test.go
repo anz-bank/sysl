@@ -9,7 +9,6 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,7 +34,7 @@ func TestGenerateIntegrations(t *testing.T) {
 	t.Parallel()
 
 	m, err := parse.NewParser().Parse("demo/simple/sysl-ints.sysl",
-		testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../../"))
+		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	require.NotNil(t, m)
 

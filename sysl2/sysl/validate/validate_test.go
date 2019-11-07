@@ -8,7 +8,7 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"
@@ -116,7 +116,7 @@ func TestValidatorValidateEntryPoint(t *testing.T) {
 
 	start := "EntryPoint"
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -165,7 +165,7 @@ func TestValidatorValidateFileName(t *testing.T) {
 
 	viewName := "filename"
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -224,7 +224,7 @@ func TestValidatorValidateViews(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -310,7 +310,7 @@ func TestValidatorValidateViewsInnerTypes(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -352,7 +352,7 @@ func TestValidatorValidateViewsChoiceTypes(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -432,7 +432,7 @@ func TestValidatorValidate(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform2.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	transform, err := loadTransform("transform2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
@@ -450,7 +450,7 @@ func TestValidatorLoadTransformSuccess(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	tfm, err := loadTransform("transform2.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	tfm, err := loadTransform("transform2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	assert.NotNil(t, tfm, "Unexpected result")
 	assert.Nil(t, err, "Unexpected result")
 }
@@ -459,7 +459,7 @@ func TestValidatorLoadTransformError(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	tfm, err := loadTransform("bar.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "foo"), p)
+	tfm, err := loadTransform("bar.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "foo"), p)
 	assert.Nil(t, tfm, "Unexpected result")
 	assert.NotNil(t, err, "Unexpected result")
 }
@@ -484,7 +484,7 @@ func TestValidatorValidateTfmReturn(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), "../tests"), p)
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 

@@ -56,11 +56,10 @@ func retainOrRemove(err error, filename string, retainOnError bool) error {
 }
 
 func parseComparable(
-	t *testing.T,
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := NewParser().Parse(filename, testutil.CreateTestChrootFs(t, afero.NewOsFs(), root))
+	module, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	if err != nil {
 		return nil, err
 	}
@@ -130,13 +129,12 @@ func nullifyType(expr *sysl.Expr) {
 }
 
 func parseAndCompare(
-	t *testing.T,
 	filename, root, golden string,
 	goldenProto proto.Message,
 	retainOnError bool,
 	stripSourceContext bool,
 ) (bool, error) {
-	module, err := parseComparable(t, filename, root, stripSourceContext)
+	module, err := parseComparable(filename, root, stripSourceContext)
 	if err != nil {
 		return false, err
 	}
@@ -185,7 +183,7 @@ func parseAndCompare(
 	return false, nil
 }
 
-func parseAndCompareWithGolden(t *testing.T, filename, root string, stripSourceContext bool) (bool, error) {
+func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
 	goldenFilename := filename
 	if !strings.HasSuffix(goldenFilename, syslExt) {
 		goldenFilename += syslExt
@@ -197,18 +195,18 @@ func parseAndCompareWithGolden(t *testing.T, filename, root string, stripSourceC
 	if err != nil {
 		return false, err
 	}
-	return parseAndCompare(t, filename, root, golden, goldenModule, true, stripSourceContext)
+	return parseAndCompare(filename, root, golden, goldenModule, true, stripSourceContext)
 }
 
 func testParseAgainstGolden(t *testing.T, filename, root string) {
-	equal, err := parseAndCompareWithGolden(t, filename, root, true)
+	equal, err := parseAndCompareWithGolden(filename, root, true)
 	if assert.NoError(t, err) {
 		assert.True(t, equal, "%#v %#v", root, filename)
 	}
 }
 
 func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
-	equal, err := parseAndCompareWithGolden(t, filename, "", false)
+	equal, err := parseAndCompareWithGolden(filename, "", false)
 	if assert.NoError(t, err) {
 		assert.True(t, equal, "%#v", filename)
 	}
@@ -217,14 +215,14 @@ func testParseAgainstGoldenWithSourceContext(t *testing.T, filename string) {
 func TestParseBadRoot(t *testing.T) {
 	t.Parallel()
 
-	_, err := parseComparable(t, "dontcare.sysl", "NON-EXISTENT-ROOT", false)
+	_, err := parseComparable("dontcare.sysl", "NON-EXISTENT-ROOT", false)
 	assert.Error(t, err)
 }
 
 func TestParseMissingFile(t *testing.T) {
 	t.Parallel()
 
-	_, err := parseComparable(t, "doesn't.exist.sysl", "tests", false)
+	_, err := parseComparable("doesn't.exist.sysl", "tests", false)
 	assert.Error(t, err)
 }
 
@@ -236,14 +234,14 @@ func TestParseDirectoryAsFile(t *testing.T) {
 	tmpdir := path.Join(tmproot, dirname)
 	require.NoError(t, os.Mkdir(tmpdir, 0755))
 	defer os.Remove(tmpdir)
-	_, err := parseComparable(t, dirname, tmproot, false)
+	_, err := parseComparable(dirname, tmproot, false)
 	assert.Error(t, err)
 }
 
 func TestParseBadFile(t *testing.T) {
 	t.Parallel()
 
-	_, err := parseAndCompareWithGolden(t, "sysl.go", "", false)
+	_, err := parseAndCompareWithGolden("sysl.go", "", false)
 	assert.Error(t, err)
 }
 

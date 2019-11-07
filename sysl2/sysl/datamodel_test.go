@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,7 +24,7 @@ type dataArgs struct {
 
 func TestGenerateDataDiagFail(t *testing.T) {
 	t.Parallel()
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ""))
+	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 

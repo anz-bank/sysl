@@ -18,8 +18,8 @@ type ChrootFs struct {
 var _ afero.Fs = &ChrootFs{}
 
 // NewChrootFs returns a filesystem that is rooted at root argument
-func NewChrootFs(fs afero.Fs, root string) (*ChrootFs, error) {
-	return &ChrootFs{fs: fs, root: root}, nil
+func NewChrootFs(fs afero.Fs, root string) *ChrootFs {
+	return &ChrootFs{fs: fs, root: root}
 }
 
 func (fs *ChrootFs) join(name string) (string, error) {
