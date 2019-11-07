@@ -3372,13 +3372,13 @@ func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_express
 		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext))
 	}
 
-	if top := s.topExpr(); top.GetTransform() != nil {
+	if top := s.TopExpr(); top.GetTransform() != nil {
 		lhs = makeExprName(TemplateImpliedResult, s.sc.Get(ctx.BaseParserRuleContext))
 	} else {
 		lhs = s.popExpr()
 	}
 
-	s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
+	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // EnterTemplate_statement is called when production template_statement is entered.
@@ -3389,9 +3389,9 @@ const TemplateImpliedResult = "__$"
 // ExitTemplate_statement is called when production template_statement is exited.
 func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
 	statements := s.popExpr()
-	tx := s.topExpr().GetTransform()
+	tx := s.TopExpr().GetTransform()
 	if tx == nil {
-		fmt.Printf("%v", s.topExpr())
+		fmt.Printf("%v", s.TopExpr())
 		panic("ExitTemplate_statement: Unexpected expression!")
 	}
 

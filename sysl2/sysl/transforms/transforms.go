@@ -19,7 +19,7 @@ func NewWorker(transformMod *sysl.Module, appName, viewName string) (Worker, err
 	}
 	view, has := app.Views[viewName]
 	if !has {
-		return nil, fmt.Errorf("view '%s' not found in transform app", view)
+		return nil, fmt.Errorf("view '%s' not found in transform app", viewName)
 	}
 	b := base{
 		mod:  transformMod,
