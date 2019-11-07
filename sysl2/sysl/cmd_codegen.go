@@ -55,9 +55,5 @@ func (p *codegenCmd) Execute(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	chrootFs, err := syslutil.NewChrootFs(args.Filesystem, p.outDir)
-	if err != nil {
-		return err
-	}
-	return outputToFiles(output, chrootFs)
+	return outputToFiles(output, syslutil.NewChrootFs(args.Filesystem, p.outDir))
 }

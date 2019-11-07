@@ -30,11 +30,7 @@ const debug string = "debug"
 func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
 	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
 	modelParser := parse.NewParser()
-	chrootFs, err := syslutil.NewChrootFs(fs, root)
-	if err != nil {
-		return nil, "", err
-	}
-	return parse.LoadAndGetDefaultApp(filename, chrootFs, modelParser)
+	return parse.LoadAndGetDefaultApp(filename, syslutil.NewChrootFs(fs, root), modelParser)
 }
 
 // main3 is the real main function. It takes its output streams and command-line

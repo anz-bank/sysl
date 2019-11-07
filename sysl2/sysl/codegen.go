@@ -253,10 +253,7 @@ func GenerateCode(
 	logger.Debugf("grammar: %s\n", codegenParams.grammar)
 	logger.Debugf("start: %s\n", codegenParams.start)
 
-	transformFs, err := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
-	if err != nil {
-		return nil, err
-	}
+	transformFs := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.transform, transformFs, tfmParser)
 	if err != nil {
