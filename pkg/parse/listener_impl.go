@@ -3376,6 +3376,7 @@ func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_express
 		lhs = makeExprName(TemplateImpliedResult, s.sc.Get(ctx.BaseParserRuleContext))
 	} else {
 		lhs = s.popExpr()
+		s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 
 	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
@@ -3385,6 +3386,7 @@ func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_express
 func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {}
 
 const TemplateImpliedResult = "__$"
+const TemplateLogString = "__$Log"
 
 // ExitTemplate_statement is called when production template_statement is exited.
 func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
@@ -3421,16 +3423,23 @@ func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statemen
 		}
 	}
 
+	sc := s.sc.Get(ctx.BaseParserRuleContext)
 	if wantNewLine {
-		sc := s.sc.Get(ctx.BaseParserRuleContext)
 		expr := makeLiteralString("\n", sc)
 		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, statements, expr, sc)
+	}
+
+	resultName := TemplateImpliedResult
+	if ctx.TMPL_DEBUG() != nil {
+		resultName = TemplateLogString
+	} else {
+		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, makeExprName(TemplateImpliedResult, sc), statements, sc)
 	}
 
 	stmt := &sysl.Expr_Transform_Stmt{
 		Stmt: &sysl.Expr_Transform_Stmt_Let{
 			Let: &sysl.Expr_Transform_Stmt_Assign{
-				Name: TemplateImpliedResult,
+				Name: resultName,
 				Expr: statements,
 			},
 		},

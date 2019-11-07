@@ -2,6 +2,7 @@ package transforms
 
 import (
 	"fmt"
+	"log"
 	"sort"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
@@ -65,6 +66,7 @@ func (t *templated) Apply(mod *sysl.Module, appNames ...string) map[string]*sysl
 	} else if fname, data, err := fn(evalRes); err == nil {
 		result[fname] = eval.MakeValueString(data)
 	}
+	log.Printf("%+v", result)
 	return result
 }
 
