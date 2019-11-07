@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
@@ -17,7 +18,7 @@ import (
 func TestGenerateSequenceDiagFail(t *testing.T) {
 	t.Parallel()
 
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ""))
+	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 
@@ -124,7 +125,7 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(t, "tests")
+	memFs, fs := testutil.WriteToMemOverlayFs("tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
@@ -179,7 +180,7 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs(t, "tests")
+	memFs, fs := testutil.WriteToMemOverlayFs("tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	testutil.AssertFsHasExactly(t, memFs)
@@ -241,7 +242,7 @@ func TestLoadAppReturnError(t *testing.T) {
 	args := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	_, fs := testutil.WriteToMemOverlayFs(t, args.root)
+	_, fs := testutil.WriteToMemOverlayFs(args.root)
 	logger, _ := test.NewNullLogger()
 	_, _, err := LoadSyslModule(args.root, args.models, fs, logger)
 	assert.Error(t, err)
@@ -253,7 +254,7 @@ func TestLoadApp(t *testing.T) {
 	args := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	memFs, fs := testutil.WriteToMemOverlayFs(t, "/")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	logger, _ := test.NewNullLogger()
 	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)

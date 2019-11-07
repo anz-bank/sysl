@@ -517,7 +517,7 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 		messages     map[string][]msg.Msg
 	}
 
-	memFs, fs := testutil.WriteToMemOverlayFs(t, "../tests")
+	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
 	parser := NewParser()
 	expressions := map[string]*sysl.Expr{}
 	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
@@ -595,7 +595,7 @@ func TestInferExprTypeTransform(t *testing.T) {
 		messages     map[string][]msg.Msg
 	}
 
-	memFs, fs := testutil.WriteToMemOverlayFs(t, "../tests")
+	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
 	parser := NewParser()
 	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
 	require.NoError(t, err)
