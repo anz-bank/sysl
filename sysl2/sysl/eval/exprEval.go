@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
@@ -30,6 +32,9 @@ func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) 
 			AddItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
+	}
+	if text, has := assign[parse.TemplateImpliedResult]; has {
+		return text
 	}
 	return result
 }
@@ -235,7 +240,12 @@ func isInternalMap(val *sysl.Value_Map) bool {
 func evalName(ee *exprEval, assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
-		ee.LogEntry().Errorf("Key: %s does not exist in scope", x.Name)
+		if x.Name == parse.TemplateImpliedResult {
+			val = MakeValueString("")
+			assign[x.Name] = val
+		} else {
+			ee.LogEntry().Errorf("Key: %s does not exist in scope", x.Name)
+		}
 	}
 	return val
 }

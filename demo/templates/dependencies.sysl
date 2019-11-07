@@ -9,7 +9,7 @@ DependencyTemplate:
             let targets = ep.value.stmts where(.type == "call") -> <sequence of string> (t:
                 arg = '"' + t.target + '"'
             )
-            out = Unique(targets flatten(.arg))
+            out = targets flatten(.arg)
         )
 
     !view dump(app <: sysl.App) -> string:
@@ -18,7 +18,7 @@ DependencyTemplate:
                 out = findEpDeps(ep)
             )
 
-            $ {{ "{$ app.name $}": {$ Unique(targets flatten(.out) flatten(.out) flatten(.)) $} }}\
+            $ {{ "{$ app.name $}": {$ targets flatten(.out) flatten(.out) flatten(.) $} }}\
         )
 
     !view start(mod <: sysl.TemplateInput) -> sysl.TemplateResult:
@@ -27,5 +27,5 @@ DependencyTemplate:
             let apps = mod.Apps -> <sequence of string> (a:
                 out = dump(a)
             )
-            Data = "[\n" + Join(apps flatten(.out), ",\n") + "\n]"
+            Data = "[\n" + Join(apps, ",\n") + "\n]"
         )
