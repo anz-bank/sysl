@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
@@ -18,7 +17,7 @@ import (
 func TestGenerateSequenceDiagFail(t *testing.T) {
 	t.Parallel()
 
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := parse.NewParser().Parse("doesn't-exist.sysl", testutil.CreateTestChrootFs(t, afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 
