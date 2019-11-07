@@ -4,6 +4,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/parse"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
@@ -27,6 +29,9 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 			AddItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
+	}
+	if text, has := assign[parse.TemplateImpliedResult]; has {
+		return text
 	}
 	return result
 }
@@ -197,7 +202,7 @@ func evalTransform(txApp *sysl.Application, assign Scope, x *sysl.Expr_Transform
 
 func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.Value {
 	if callTransform, has := txApp.Views[x.Call.Func]; has {
-		logrus.Debugf("Calling View %s\n", x.Call.Func)
+		logrus.Debugf("Calling View %s", x.Call.Func)
 		params := callTransform.Param
 		if len(params) != len(x.Call.Arg) {
 			logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n",
@@ -242,7 +247,12 @@ func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.V
 func evalName(assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
-		logrus.Errorf("Key: %s does not exist in scope", x.Name)
+		if x.Name == parse.TemplateImpliedResult {
+			val = MakeValueString("")
+			assign[x.Name] = val
+		} else {
+			logrus.Errorf("Key: %s does not exist in scope", x.Name)
+		}
 	}
 	return val
 }
