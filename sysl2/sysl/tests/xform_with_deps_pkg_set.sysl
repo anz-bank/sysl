@@ -11,17 +11,17 @@ TransformDeps:
         packageName = name1
       )
 
-      let myList = app.endpoints -> <set of out> (ep:
+      let myList = app.endpoints -> <sequence of out> (ep:
         let calls = ep.value.stmts where (.type == "call") -> <set of out> (call:
           let pkgList = module.apps where(.value.name == call.target) -> <set of out> (dep:
             out = dep.value.attrs.package
           )
-          out = Join(pkgList flatten(.out), "")
+          out = pkgList flatten(.out)
         )
-        out = Join(calls flatten(.out),",")
+        out = calls flatten(.out)
       )
 
-      comment =  myList flatten(.out)
+      comment =  myList flatten(.out) flatten(.)
       import = {"import1", "import2"} -> <set of import>(name:
         importPath = name
       )

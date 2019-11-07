@@ -141,9 +141,9 @@ func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	n1 := root[0].(Node)
 	assert.Len(t, n1, 4)
 	comment1 := n1[1].(Node)
-	assert.Len(t, comment1, 1)
+	assert.Len(t, comment1, 3)
 
-	for i, comment := range []string{"dep.GET /dep/{id},dep.GET /moredep/{id}"} {
+	for i, comment := range []string{"dep.GET /dep/{id}", "dep.GET /moredep/{id}", "dep2.GET /dep2/{id}"} {
 		comment0 := comment1[i].(Node)
 		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)
@@ -164,9 +164,9 @@ func TestGenerateCodePutDepPackageInCommentUsingSets(t *testing.T) {
 	n1 := root[0].(Node)
 	assert.Len(t, n1, 4)
 	comment1 := n1[1].(Node)
-	assert.Len(t, comment1, 1)
+	assert.Len(t, comment1, 2)
 
-	for i, comment := range []string{"dep"} {
+	for i, comment := range []string{"dep", "dep2"} {
 		comment0 := comment1[i].(Node)
 		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)
@@ -187,9 +187,9 @@ func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 	n1 := root[0].(Node)
 	assert.Len(t, n1, 4)
 	comment1 := n1[1].(Node)
-	assert.Len(t, comment1, 1)
+	assert.Len(t, comment1, 3)
 
-	for i, comment := range []string{"dep,dep"} {
+	for i, comment := range []string{"dep", "dep", "dep2"} {
 		comment0 := comment1[i].(Node)
 		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)
@@ -197,6 +197,28 @@ func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 	}
 }
 
+func TestNamesFromCalls(t *testing.T) {
+	t.Parallel()
+	output, err := GenerateCodeWithParams(".",
+		"tests/model_with_deps.sysl", ".",
+		"tests/xform_names_from_calls.sysl",
+		"tests/test.gen.g", "javaFile")
+	require.NoError(t, err)
+	root := output[0].output
+	assert.Len(t, output, 1)
+	assert.Len(t, root, 1)
+	n1 := root[0].(Node)
+	assert.Len(t, n1, 3)
+	comment1 := n1[1].(Node)
+	assert.Len(t, comment1, 2)
+
+	for i, comment := range []string{"\"Dep\"", "\"Dep2\""} {
+		comment0 := comment1[i].(Node)
+		assert.Len(t, comment0, 1)
+		comment0_0 := comment0[0].(string)
+		assert.Equal(t, comment, comment0_0)
+	}
+}
 func TestSerialize(t *testing.T) {
 	t.Parallel()
 

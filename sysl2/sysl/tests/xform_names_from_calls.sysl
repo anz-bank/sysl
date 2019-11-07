@@ -1,0 +1,27 @@
+TransformDeps:
+  !view filename(app <: sysl.App) -> string:
+    app -> (:
+      filename = app.name + ".java"
+    )
+
+  !view javaFile(app <: sysl.App, module <: sysl.Module) -> javaFile:
+    module -> (:
+
+      let apps = module.apps -> <set of string> (a:
+        let targets = a.value.endpoints -> <set of string> (ep:
+          let calls = ep.value.stmts where(.type == "call") -> <set of string> (t:
+            arg = '"' + t.target + '"'
+          )
+          out = calls flatten(.arg)
+        )
+        out = targets flatten(.out)
+      )
+
+      package = module -> <package> (:
+        packageName = "my package"
+      )
+
+      comment = apps flatten(.out)
+
+      definition = "some_value"
+    )
