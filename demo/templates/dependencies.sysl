@@ -3,29 +3,25 @@
 
 
 DependencyTemplate:
+    !view start(module <: sysl.TemplateInput) -> sysl.TemplateResult:
+        module -> (:
 
-    !view findEpDeps(ep <: sysl.Endpoint) -> set of string:
-        ep -> (s:
-            let targets = ep.value.stmts where(.type == "call") -> <sequence of string> (t:
+          let apps = module.Apps -> <set of string> (a:
+            out = getDeps(a)
+          )
+
+          $! comment {$ apps flatten(.out) $}
+          Data = "[\n" + Join(apps flatten(.out), "\n")  + "\n]"
+          Filename = "deps.json"
+        )
+
+    !view getDeps(app <: sysl.App) -> set of string:
+        app -> (a:
+            let targets = a.value.endpoints -> <set of string> (ep:
+              let calls = ep.value.stmts where(.type == "call") -> <set of string> (t:
                 arg = '"' + t.target + '"'
+              )
+              out = calls flatten(.arg)
             )
-            out = targets flatten(.arg)
-        )
-
-    !view dump(app <: sysl.App) -> string:
-        app -> (:
-            let targets = app.endpoints -> <sequence of string> (ep:
-                out = findEpDeps(ep)
-            )
-
-            $ {{ "{$ app.name $}": {$ targets flatten(.out) flatten(.out) flatten(.) $} }}\
-        )
-
-    !view start(mod <: sysl.TemplateInput) -> sysl.TemplateResult:
-        mod -> (:
-            Filename = "foo.json"
-            let apps = mod.Apps -> <sequence of string> (a:
-                out = dump(a)
-            )
-            Data = "[\n" + Join(apps, ",\n") + "\n]"
+            out = targets flatten(.out)
         )

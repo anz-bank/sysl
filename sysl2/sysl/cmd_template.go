@@ -34,8 +34,8 @@ func (p *templateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 			" if there are multiple apps defined in sysl model,"+
 			" code will be generated only for the given app").
 		Short('a').Default("").StringVar(&p.appName)
-	cmd.Flag("start", "start rule for the template").Default(".").StringVar(&p.start)
-	cmd.Flag("outdir", "output directory").Default(".").StringVar(&p.outDir)
+	cmd.Flag("start", "start rule for the template").Required().StringVar(&p.start)
+	cmd.Flag("outdir", "output directory").Short('o').Default(".").StringVar(&p.outDir)
 	EnsureFlagsNonEmpty(cmd, "app-name")
 	return cmd
 }
