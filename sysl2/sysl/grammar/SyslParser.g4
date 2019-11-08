@@ -77,7 +77,7 @@ http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
 http_path       : (FORWARD_SLASH | http_path_suffix+);
 
-endpoint_name   : name_str (FORWARD_SLASH name_str)*;
+endpoint_name   : name_str (FORWARD_SLASH name_str)*; // (FORWARD_SLASH name_str)*; is
 
 ret_stmt        : RETURN TEXT;
 
@@ -384,10 +384,13 @@ view
     (ARROW_RIGHT view_return_type)?
     ( attribs_or_modifiers? COLON expr_block | abstract_view {$abstractView=true;} );
 
-alias: ALIAS name_str attribs_or_modifiers? COLON
-        INDENT annotation* (types | collection_type) DEDENT;
+alias:
+      ALIAS name_str attribs_or_modifiers? COLON (
+        (annotation* (types | collection_type))
+        | (INDENT annotation* (types | collection_type) DEDENT)
+      );
 
-app_decl
+app_decl 
   locals [bool check]:
     INDENT  (
         alias
