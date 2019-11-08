@@ -1,0 +1,14 @@
+apps: <
+ key: "Model"
+ value: <
+   name: <
+     part: "Model"
+   >
+   types: <
+     key: "FooBar"
+     value: <
+       primitive: STRING
+     >
+   >
+ >
+>
