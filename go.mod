@@ -10,7 +10,6 @@ require (
 	github.com/cornelk/hashmap v1.0.1
 	github.com/creack/pty v1.1.9 // indirect
 	github.com/dchest/siphash v1.2.1 // indirect
-	github.com/dkumor/revhttpfs v0.0.0-20190804203940-8dd55c115095
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/loads v0.19.3

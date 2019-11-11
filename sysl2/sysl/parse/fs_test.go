@@ -8,11 +8,9 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/dkumor/revhttpfs"
 	"github.com/sirupsen/logrus"
 	"github.com/nofun97/afero"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestFileExists(t *testing.T) {
@@ -132,15 +130,4 @@ func TestFlappyFileSystem(t *testing.T) {
 			assert.Equal(t, content, string(q[:n]))
 		}
 	}
-}
-
-func TestNewFSFileStreamReadFailure(t *testing.T) {
-	t.Parallel()
-
-	fs, err := newFSFileStream("will.go", revhttpfs.NewReverseHttpFs(flappyFileSystem{[]byte("package main\n"), true}))
-	require.NoError(t, err)
-	assert.Equal(t, "package main\n", fs.GetText(0, 12))
-
-	_, err = newFSFileStream("won't.go", revhttpfs.NewReverseHttpFs(flappyFileSystem{[]byte("package ma"), false}))
-	assert.Error(t, err)
 }
