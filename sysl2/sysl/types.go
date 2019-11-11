@@ -3,7 +3,7 @@ package main
 import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/sirupsen/logrus"
-	"github.com/nofun97/afero"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 

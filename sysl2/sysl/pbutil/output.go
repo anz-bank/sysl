@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
-	"github.com/nofun97/afero"
+	"github.com/spf13/afero"
 )
 
 // JSONPB ...

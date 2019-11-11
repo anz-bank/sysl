@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/nofun97/afero"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 )
 

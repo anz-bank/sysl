@@ -14,7 +14,7 @@ import (
 	parser "github.com/anz-bank/sysl/sysl2/sysl/grammar"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus"
-	"github.com/nofun97/afero"
+	"github.com/spf13/afero"
 )
 
 var _ = fmt.Println
