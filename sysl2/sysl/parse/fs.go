@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 )
 
 func fileExists(filename string, fs afero.Fs) bool {

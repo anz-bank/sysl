@@ -18,7 +18,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

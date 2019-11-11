@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 )
 
 type ChrootFs struct {

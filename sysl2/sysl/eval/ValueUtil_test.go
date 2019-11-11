@@ -5,7 +5,7 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/stretchr/testify/assert"

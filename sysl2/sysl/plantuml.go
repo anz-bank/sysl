@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )

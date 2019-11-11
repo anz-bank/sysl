@@ -10,13 +10,13 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 )
 
 func OutputPlantuml(output, plantuml, umlInput string, fs afero.Fs) error {
 	l := len(output)
 	mode := output[l-3:]
-
+	
 	switch mode {
 	case "png", "svg":
 		encoded, err := DeflateAndEncode([]byte(umlInput))

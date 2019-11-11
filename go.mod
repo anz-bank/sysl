@@ -22,7 +22,8 @@ require (
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.4.2
-	github.com/spf13/afero v1.2.2
+	// github.com/spf13/afero v1.2.2 commented due to a bug affecting sysl
+	github.com/nofun97/afero v1.2.3 // temporary 
 	github.com/stretchr/testify v1.4.0
 	go.mongodb.org/mongo-driver v1.1.2 // indirect
 	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 // indirect

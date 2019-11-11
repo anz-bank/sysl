@@ -15,7 +15,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 )
 
 // Node can be string or node

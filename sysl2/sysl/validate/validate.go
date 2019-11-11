@@ -9,7 +9,7 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
+	"github.com/nofun97/afero"
 )
 
 type Validator struct {
