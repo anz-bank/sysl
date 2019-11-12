@@ -499,7 +499,7 @@ func TestCrash(t *testing.T) {
 func TestAlias(t *testing.T) {
 	t.Parallel()
 
-	testParseAgainstGolden(t, "tests/alias_new.sysl", "")
+	testParseAgainstGolden(t, "tests/alias_inline.sysl", "")
 }
 
 func TestStrings(t *testing.T) {
