@@ -106,7 +106,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
-		listener.filename = source.filename
+		listener.sc = sourceCtxHelper{source.filename}
 		listener.base = filepath.Dir(filename)
 
 		input, err := importForeign(source, fsinput)

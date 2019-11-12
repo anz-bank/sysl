@@ -273,7 +273,10 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 
 	params := MakeValueList()
 	for _, param := range e.Param {
+		// Somehow empty params can get here from the parser
+		//	if param.Name != "" && param.Type != nil {
 		AppendItemToValueList(params.GetList(), paramToValue(param))
+		//	}
 	}
 	AddItemToValueMap(m, "params", params)
 
@@ -289,9 +292,11 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 				retValues = strings.Split(s.Group.GetStmt()[0].GetRet().GetPayload(), " <: ")
 			} else {
 				log.Warnf("Unexpected statement %s found", s.Group.GetTitle())
+				retValues = []string{stmtToValue(s.Group.Stmt[0]).GetS()}
 			}
 		default:
 			AppendItemToValueList(stmtsList.GetList(), stmtToValue(stmt))
+			continue
 		}
 		if len(retValues) > 1 {
 			retTypes.GetMap().Items[retValues[0]] = MakeValueString(retValues[1])
@@ -346,6 +351,16 @@ func (s Scope) AddModule(name string, module *sysl.Module) {
 	AddItemToValueMap(m, "types", types)
 
 	s[name] = m
+}
+
+func (s Scope) ToValue() *sysl.Value {
+	return &sysl.Value{
+		Value: &sysl.Value_Map_{
+			Map: &sysl.Value_Map{
+				Items: s,
+			},
+		},
+	}
 }
 
 func addAppToValueMap(app *sysl.Application) *sysl.Value {
