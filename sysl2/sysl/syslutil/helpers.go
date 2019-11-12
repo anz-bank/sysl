@@ -15,6 +15,7 @@ var LogLevels = map[string]logrus.Level{
 	"debug": logrus.DebugLevel,
 	"info":  logrus.InfoLevel,
 	"warn":  logrus.WarnLevel,
+	"trace": logrus.TraceLevel,
 }
 
 func GetAppName(appname *sysl.AppName) string {
