@@ -7,35 +7,17 @@ import (
 	"testing"
 
 	"github.com/spf13/afero"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
+type mockFunctionCall struct {
+	mock.Mock
+}
 type testStructure struct {
 	name, root, module string
 	folders, files     []string
 	expectedErr        error
-}
-
-func buildFolderTest(t *testing.T, folders, files []string) (fs afero.Fs) {
-	fs = afero.NewMemMapFs()
-
-	for _, folder := range folders {
-		folder, err := filepath.Abs(folder)
-		require.NoError(t, err)
-
-		err = fs.MkdirAll(folder, os.ModeTemporary)
-		require.NoError(t, err)
-	}
-
-	for _, file := range files {
-		file, err := filepath.Abs(file)
-		require.NoError(t, err)
-
-		_, err = fs.Create(file)
-		require.NoError(t, err)
-	}
-
-	return
 }
 
 func generateCases() []testStructure {
@@ -141,6 +123,54 @@ func generateCases() []testStructure {
 	}
 }
 
+func (ts *testStructure) buildFolderTest(t *testing.T, fs afero.Fs) {
+	for _, folder := range ts.folders {
+		folder, err := filepath.Abs(folder)
+		require.NoError(t, err)
+
+		err = fs.MkdirAll(folder, os.ModeTemporary)
+		require.NoError(t, err)
+	}
+
+	for _, file := range ts.files {
+		file, err := filepath.Abs(file)
+		require.NoError(t, err)
+
+		_, err = fs.Create(file)
+		require.NoError(t, err)
+	}
+}
+
+func (ts *testStructure) checkResultWithData(
+	t *testing.T, res interface{}, err error, mockFs *MockFs) {
+	require.Equal(t, ts.expectedErr, err)
+	if ts.expectedErr == nil {
+		require.NotEmpty(t, res)
+		mockFs.AssertExpectations(t)
+	} else {
+		require.Empty(t, res)
+	}
+}
+
+func (ts *testStructure) getSetUpMemMapFs(t *testing.T) afero.Fs {
+	fs := afero.NewMemMapFs()
+	ts.buildFolderTest(t, fs)
+	return fs
+}
+
+func (ts *testStructure) getSetUpMockFs(t *testing.T) (*MockFs, *ChrootFs) {
+	memFs := ts.getSetUpMemMapFs(t)
+	fs := NewMockFs(t, memFs)
+	mockChrootFs := NewChrootFs(fs, ts.root)
+	return fs, mockChrootFs
+}
+
+func (ts *testStructure) getJoined(t *testing.T, fs *ChrootFs) string {
+	joined, err := fs.join(ts.module)
+	require.NoError(t, err)
+	return joined
+}
+
 func TestOpen(t *testing.T) {
 	tests := generateCases()
 
@@ -148,16 +178,37 @@ func TestOpen(t *testing.T) {
 		t.Run(test.name, func(ts testStructure) func(t *testing.T) {
 			return func(tt *testing.T) {
 				tt.Parallel()
-				fs := buildFolderTest(tt, ts.folders, ts.files)
-				chrootfs := NewChrootFs(fs, ts.root)
 
-				_, err := chrootfs.Open(ts.module)
+				mockedFs, chrootfs := ts.getSetUpMockFs(tt)
+				mockedFs.On("Open", ts.getJoined(tt, chrootfs)).Return(mock.AnythingOfType("afero.File"), nil)
+				res, err := chrootfs.Open(ts.module)
 				require.Equal(tt, ts.expectedErr, err)
+				ts.checkResultWithData(tt, res, err, mockedFs)
 			}
 		}(test))
 	}
 }
 
+func TestOpenFile(t *testing.T) {
+	tests := generateCases()
+
+	for _, test := range tests {
+		t.Run(test.name, func(ts testStructure) func(t *testing.T) {
+			return func(tt *testing.T) {
+				tt.Parallel()
+
+				mockedFs, chrootfs := ts.getSetUpMockFs(tt)
+				mockedFs.On(
+					"OpenFile",
+					ts.getJoined(tt, chrootfs),
+					os.O_RDONLY,
+					os.ModePerm).Return(mock.AnythingOfType("afero.File"), nil)
+				res, err := chrootfs.OpenFile(ts.module, os.O_RDONLY, os.ModePerm)
+				ts.checkResultWithData(t, res, err, mockedFs)
+			}
+		}(test))
+	}
+}
 func TestStat(t *testing.T) {
 	tests := generateCases()
 
@@ -165,12 +216,70 @@ func TestStat(t *testing.T) {
 		t.Run(test.name, func(ts testStructure) func(t *testing.T) {
 			return func(tt *testing.T) {
 				tt.Parallel()
-				fs := buildFolderTest(tt, ts.folders, ts.files)
-				chrootfs := NewChrootFs(fs, ts.root)
 
-				_, err := chrootfs.Stat(ts.module)
-				require.Equal(tt, ts.expectedErr, err)
+				mockedFs, chrootfs := ts.getSetUpMockFs(tt)
+				mockedFs.On("Stat", ts.getJoined(tt, chrootfs)).Return(mock.AnythingOfType("os.FileInfo"), nil)
+				res, err := chrootfs.Stat(ts.module)
+				ts.checkResultWithData(t, res, err, mockedFs)
 			}
 		}(test))
 	}
+}
+
+func TestWrapCall(t *testing.T) {
+	tests := generateCases()
+
+	for _, test := range tests {
+		t.Run(test.name, func(ts testStructure) func(t *testing.T) {
+			return func(tt *testing.T) {
+				tt.Parallel()
+
+				mockedFunction := new(mockFunctionCall)
+				chrootfs := NewChrootFs(ts.getSetUpMemMapFs(tt), ts.root)
+
+				joined := ts.getJoined(tt, chrootfs)
+
+				mockedFunction.On("mockCall", joined).Return(nil)
+				err := chrootfs.wrapCall(ts.module, mockedFunction.mockCall)
+				require.Equal(t, ts.expectedErr, err)
+			}
+		}(test))
+	}
+}
+
+func TestWrapCallWithData(t *testing.T) {
+	tests := generateCases()
+
+	for _, test := range tests {
+		t.Run(test.name, func(ts testStructure) func(t *testing.T) {
+			return func(tt *testing.T) {
+				tt.Parallel()
+
+				mockedFunction := new(mockFunctionCall)
+				chrootfs := NewChrootFs(ts.getSetUpMemMapFs(tt), ts.root)
+
+				joined := ts.getJoined(tt, chrootfs)
+
+				mockedFunction.On("mockCallWithData", joined).Return(mock.Anything, nil)
+				res, err := chrootfs.wrapCallWithData(ts.module, mockedFunction.mockCallWithData)
+
+				require.Equal(t, ts.expectedErr, err)
+				if ts.expectedErr == nil {
+					require.NotEmpty(t, res)
+					mockedFunction.AssertExpectations(t)
+				} else {
+					require.Empty(t, res)
+				}
+			}
+		}(test))
+	}
+}
+
+func (m *mockFunctionCall) mockCall(path string) error {
+	return m.Called(path).Error(0)
+}
+
+func (m *mockFunctionCall) mockCallWithData(path string) (interface{}, error) {
+	res := m.Called(path)
+	return res.Get(0), res.Error(1)
 }
