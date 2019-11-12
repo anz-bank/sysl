@@ -17,15 +17,15 @@ TransformDeps:
             let depEpList = dep.value.endpoints where(.value.name == call.endpoint) -> <sequence of out> (depEp:
                 out = depEp.value.name
             )
-            out = dep.value.attrs.package + "." + Join(depEpList flatten(.out),"")
+            out = dep.value.attrs.package + "." + Join(depEpList flatten(.out),",")
           )
 
-          out = Join(pkgList flatten(.out), "")
+          out = pkgList flatten(.out)
         )
-        out = Join(calls flatten(.out),",")
+        out = calls flatten(.out)
       )
 
-      comment =  myList flatten(.out)
+      comment = myList flatten(.out) flatten(.) flatten(.)
       import = {"import1", "import2"} -> <set of import>(name:
         importPath = name
       )
