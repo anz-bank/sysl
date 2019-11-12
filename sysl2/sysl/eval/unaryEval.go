@@ -9,7 +9,8 @@ type unaryFunc func(*sysl.Value) *sysl.Value
 
 //nolint:gochecknoglobals
 var unaryFunctions = map[sysl.Expr_UnExpr_Op]unaryFunc{
-	sysl.Expr_UnExpr_NEG: unaryNeg,
+	sysl.Expr_UnExpr_NEG:    unaryNeg,
+	sysl.Expr_UnExpr_SINGLE: unarySingle,
 }
 
 func evalUnaryFunc(op sysl.Expr_UnExpr_Op, arg *sysl.Value) *sysl.Value {
@@ -27,4 +28,25 @@ func unaryNeg(arg *sysl.Value) *sysl.Value {
 		return MakeValueBool(!x.B)
 	}
 	panic(errors.Errorf("unaryNeg for %v not supported", arg.Value))
+}
+
+func unarySingle(list *sysl.Value) *sysl.Value {
+	if list == nil {
+		panic(errors.Errorf("unarySingle received nil parameter"))
+	}
+
+	var v []*sysl.Value
+
+	if _, ok := list.Value.(*sysl.Value_List_); ok {
+		v = list.GetList().Value
+	} else if _, ok := list.Value.(*sysl.Value_Set); ok {
+		v = list.GetSet().Value
+	} else {
+		panic(errors.Errorf("unarySingle expecting List or Set, got %T", list))
+	}
+
+	if len(v) != 1 {
+		panic(errors.Errorf("unarySingle expecting array length 1, got %v", len(v)))
+	}
+	return v[0]
 }
