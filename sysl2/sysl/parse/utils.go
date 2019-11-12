@@ -5,6 +5,12 @@ import (
 	sysl "github.com/anz-bank/sysl/src/proto"
 )
 
+func makeExpr(ctx *sysl.SourceContext) *sysl.Expr {
+	return &sysl.Expr{
+		SourceContext: ctx,
+	}
+}
+
 type sourceCtxHelper struct {
 	filename string
 }
