@@ -31,7 +31,7 @@ type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base                  string
 	fs                    afero.Fs
-	filename              string
+	sc                    sourceCtxHelper
 	imports               []importDef
 	module                *sysl.Module
 	appname               string
@@ -691,7 +691,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	type1, has := s.typemap[fieldName]
 	if has {
 		logrus.Warnf("%s) %s.%s defined multiple times",
-			s.filename, s.typename, fieldName)
+			s.sc.filename, s.typename, fieldName)
 	} else {
 		type1 = &sysl.Type{}
 	}
@@ -811,7 +811,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	}
 	type1 := types[s.typename]
 	s.pushScope(type1)
-	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 func attributesForType(collection *sysl.Type) map[string]*sysl.Type {
@@ -966,7 +966,7 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 		}
 	}
 	s.pushScope(type1)
-	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitUnion is called when production union is exited.
@@ -1053,8 +1053,8 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 			mergeAttrs(attrs, s.module.Apps[s.appname].Attrs)
 		}
 	}
-	s.module.Apps[s.appname].SourceContext = buildSourceContext(
-		s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()+1)
+	s.module.Apps[s.appname].SourceContext =
+		s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitName_with_attribs is called when production name_with_attribs is exited.
@@ -1891,7 +1891,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 		}
 		restEndpoint.RestParams.UrlParam = qparams
 	}
-	restEndpoint.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	restEndpoint.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitMethod_def is called when production method_def is exited.
@@ -1968,7 +1968,7 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 
 		s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
 	}
-	ep.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitSimple_endpoint is called when production simple_endpoint is exited.
@@ -2146,7 +2146,7 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 		}
 		s.pushScope(ep)
 	}
-	ep.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitCollector is called when production collector is exited.
@@ -2171,7 +2171,7 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 			ep = &sysl.Endpoint{
 				Name:          s.typename,
 				IsPubsub:      true,
-				SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+				SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 			}
 			s.module.Apps[s.appname].Endpoints[s.typename] = ep
 		}
@@ -2211,7 +2211,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		typeEndpoint := &sysl.Endpoint{
 			Name:          s.typename,
 			Source:        app_src,
-			SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 		}
 		if ctx.Attribs_or_modifiers() != nil {
 			typeEndpoint.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
@@ -2922,7 +2922,7 @@ func (s *TreeShapeListener) EnterAtomT_paren(*parser.AtomT_parenContext) {}
 func (s *TreeShapeListener) ExitAtomT_paren(*parser.AtomT_parenContext) {}
 
 // EnterExpr_atom_list is called when production expr_atom_list is entered.
-func (s *TreeShapeListener) EnterExpr_atom_list(*parser.Expr_atom_listContext) {
+func (s *TreeShapeListener) EnterExpr_atom_list(ctx *parser.Expr_atom_listContext) {
 	expr := &sysl.Expr{
 		Expr: &sysl.Expr_List_{
 			List: &sysl.Expr_List{
@@ -3537,7 +3537,7 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 	s.module.Apps[s.appname].Views[viewName] = &sysl.View{
 		Param:         []*sysl.Param{},
 		RetType:       &sysl.Type{},
-		SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	}
 	if ctx.Attribs_or_modifiers() != nil {
 		v := s.module.Apps[s.appname].Views[viewName]
@@ -3583,16 +3583,6 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 	s.typename = ""
 }
 
-func buildSourceContext(filename string, line int, col int) *sysl.SourceContext {
-	return &sysl.SourceContext{
-		File: filename,
-		Start: &sysl.SourceContext_Location{
-			Line: int32(line),
-			Col:  int32(col),
-		},
-	}
-}
-
 // EnterAlias is called when production alias is entered.
 func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	if s.typename == "" {
@@ -3614,7 +3604,7 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	if ctx.Annotation(0) != nil {
 		s.pushScope(type1)
 	}
-	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitAlias is called when production alias is exited.
