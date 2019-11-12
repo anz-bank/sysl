@@ -1,10 +1,9 @@
 package eval
 
 import (
+	"fmt"
 	"sort"
 	"strings"
-
-	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/golang/protobuf/proto"
@@ -20,11 +19,7 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 		case *sysl.Expr_Transform_Stmt_Let:
 			logrus.Debugf("Evaluating var %s", ss.Let.Name)
 			res := Eval(txApp, assign, ss.Let.Expr)
-			if ss.Let.Name == parse.TemplateLogString {
-				logrus.Printf("%s", res.GetS())
-			} else {
-				assign[ss.Let.Name] = res
-			}
+			assign[ss.Let.Name] = res
 			logrus.Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
 			logrus.Debugf("Evaluating %s", ss.Assign.Name)
@@ -33,9 +28,6 @@ func evalTransformStmts(txApp *sysl.Application, assign Scope, tform *sysl.Expr_
 			AddItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
-	}
-	if text, has := assign[parse.TemplateImpliedResult]; has {
-		return text
 	}
 	return result
 }
@@ -101,6 +93,13 @@ func evalTransformUsingValueList(
 // Eval expr
 // TODO: Add type checks
 func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
+	defer func() {
+		if r := recover(); r != nil {
+			sc := e.SourceContext
+			e := logrus.WithField("source", len(fmt.Sprintf("%s:%d.%d", sc.File, sc.Start.Line, sc.Start.Col)))
+			e.Panic(r)
+		}
+	}()
 	switch x := e.Expr.(type) {
 	case *sysl.Expr_Transform_:
 		return evalTransform(txApp, assign, x, e)
@@ -251,12 +250,7 @@ func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.V
 func evalName(assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
-		if x.Name == parse.TemplateImpliedResult {
-			val = MakeValueString("")
-			assign[x.Name] = val
-		} else {
-			logrus.Errorf("Key: %s does not exist in scope", x.Name)
-		}
+		logrus.Errorf("Key: %s does not exist in scope", x.Name)
 	}
 	return val
 }
