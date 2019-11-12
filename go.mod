@@ -2,7 +2,7 @@ module github.com/anz-bank/sysl
 
 go 1.12
 
-replace github.com/spf13/afero => github.com/nofun97/afero v1.2.3
+replace github.com/spf13/afero => github.com/anz-bank/afero v1.2.3
 
 require (
 	aqwari.net/xml v0.0.0-20190526204230-8dd125f7c15c
