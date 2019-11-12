@@ -12,6 +12,9 @@ func GetTypeDetail(t *sysl.Type) (typeName string, typeDetail string) {
 		typeName = "type_ref"
 		if x.TypeRef.Ref != nil && len(x.TypeRef.Ref.Path) == 1 {
 			typeDetail = x.TypeRef.Ref.Path[0]
+			if x.TypeRef.Ref.Appname != nil {
+				typeDetail = x.TypeRef.Ref.Appname.Part[0] + "." + typeDetail
+			}
 		} else {
 			typeDetail = x.TypeRef.Ref.Appname.Part[0]
 		}
