@@ -43,3 +43,16 @@ func TestUnarySingle_TwoValuePanic(t *testing.T) {
 	myList := MakeValueList(MakeValueBool(true), MakeValueBool(false))
 	require.Panics(t, func() { _ = unarySingle(myList) })
 }
+
+func TestUnarySingle_OneValueSetOK(t *testing.T) {
+	mySet := MakeValueSet()
+	mySet.GetSet().Value = append(mySet.GetSet().Value, MakeValueBool(true))
+	result := unarySingle(mySet)
+	require.Equal(t, result.GetB(), true)
+}
+
+func TestUnarySingle_TwoValueSetPanic(t *testing.T) {
+	mySet := MakeValueSet()
+	mySet.GetSet().Value = append(mySet.GetSet().Value, MakeValueBool(true), MakeValueBool(false))
+	require.Panics(t, func() { _ = unarySingle(mySet) })
+}
