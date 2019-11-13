@@ -36,6 +36,7 @@ $(EXE): $(CODE_FILES)
 
 grammar/sysl_parser.go grammar/sysl_lexer.go: grammar/SyslParser.g4 grammar/SyslLexer.g4
 	$(ANTLR) -Dlanguage=Go -lib grammar $^
+	git apply grammar/antlr4-datarace-fix.diff
 
 $(JS): sysl_js/SyslParser.g4 sysl_js/SyslLexer.g4
 	$(ANTLR) -Dlanguage=JavaScript -lib sysl_js $^
