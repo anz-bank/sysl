@@ -1,4 +1,4 @@
-package testutil
+package syslutil
 
 import (
 	"os"
@@ -6,7 +6,6 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -39,8 +38,8 @@ func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 }
 
 func WriteToMemOverlayFs(osRoot string) (memFs, fs afero.Fs) {
-	memFs = syslutil.NewChrootFs(afero.NewMemMapFs(), "/")
-	fs = afero.NewCopyOnWriteFs(syslutil.NewChrootFs(afero.NewOsFs(), osRoot), memFs)
+	memFs = NewChrootFs(afero.NewMemMapFs(), "/")
+	fs = afero.NewCopyOnWriteFs(NewChrootFs(afero.NewOsFs(), osRoot), memFs)
 	return
 }
 

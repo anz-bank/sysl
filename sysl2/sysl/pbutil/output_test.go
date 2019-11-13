@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -103,7 +104,7 @@ func TestJSONPBNilModule(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	filename := "out.pb.json"
 	require.Error(t, JSONPB(nil, filename, fs))
-	testutil.AssertFsHasExactly(t, fs)
+	syslutil.AssertFsHasExactly(t, fs)
 }
 
 func TestFJSONPB(t *testing.T) {
@@ -139,7 +140,7 @@ func TestTextPBNilModule(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	filename := "/out.textpb"
 	require.Error(t, TextPB(nil, filename, fs))
-	testutil.AssertFsHasExactly(t, fs)
+	syslutil.AssertFsHasExactly(t, fs)
 }
 
 func TestFTextPB(t *testing.T) {

@@ -7,7 +7,6 @@ import (
 
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -125,10 +124,10 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs("tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
-	testutil.AssertFsHasExactly(t, memFs)
+	syslutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
@@ -180,10 +179,10 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := testutil.WriteToMemOverlayFs("tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs("tests")
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
-	testutil.AssertFsHasExactly(t, memFs)
+	syslutil.AssertFsHasExactly(t, memFs)
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	p := &sequenceDiagParam{}
@@ -242,7 +241,7 @@ func TestLoadAppReturnError(t *testing.T) {
 	args := loadAppArgs{
 		"../../demo/simple/", "",
 	}
-	_, fs := testutil.WriteToMemOverlayFs(args.root)
+	_, fs := syslutil.WriteToMemOverlayFs(args.root)
 	logger, _ := test.NewNullLogger()
 	_, _, err := LoadSyslModule(args.root, args.models, fs, logger)
 	assert.Error(t, err)
@@ -254,12 +253,12 @@ func TestLoadApp(t *testing.T) {
 	args := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	memFs, fs := testutil.WriteToMemOverlayFs("/")
+	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	logger, _ := test.NewNullLogger()
 	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
-	testutil.AssertFsHasExactly(t, memFs)
+	syslutil.AssertFsHasExactly(t, memFs)
 	apps := mod.GetApps()
 	app := apps["Database"]
 
