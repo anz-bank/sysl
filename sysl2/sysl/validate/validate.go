@@ -342,7 +342,8 @@ func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 	grammarSyslFile := strings.Join(tokens, ".")
 	p := parse.NewParser()
 
-	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile, syslutil.NewChrootFs(fs, rootGrammar), p)
+	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile,
+		syslutil.NewChrootFs(fs, rootGrammar), p)
 	if err != nil {
 		return nil, err
 	}

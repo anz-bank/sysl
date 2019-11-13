@@ -15,7 +15,6 @@ import (
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
 	"github.com/anz-bank/sysl/sysl2/sysl/pbutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
@@ -575,12 +574,12 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 		messages     map[string][]msg.Msg
 	}
 
-	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs("../tests")
 	parser := NewParser()
 	expressions := map[string]*sysl.Expr{}
 	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
 	require.NoError(t, err)
-	testutil.AssertFsHasExactly(t, memFs)
+	syslutil.AssertFsHasExactly(t, memFs)
 	viewName := "inferExprTypeNonTransform"
 	viewRetType := transform.GetApps()[appName].Views[viewName].GetRetType()
 
@@ -653,11 +652,11 @@ func TestInferExprTypeTransform(t *testing.T) {
 		messages     map[string][]msg.Msg
 	}
 
-	memFs, fs := testutil.WriteToMemOverlayFs("../tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs("../tests")
 	parser := NewParser()
 	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
 	require.NoError(t, err)
-	testutil.AssertFsHasExactly(t, memFs)
+	syslutil.AssertFsHasExactly(t, memFs)
 	views := transform.GetApps()[appName].Views
 
 	cases := map[string]struct {

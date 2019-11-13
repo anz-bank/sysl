@@ -119,7 +119,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 			return nil, err
 		}
 
-		antlr.ParseTreeWalkerDefault.Walk(listener, tree)
+		antlr.NewParseTreeWalker().Walk(listener, tree)
 		if len(listener.imports) == 0 {
 			break
 		}

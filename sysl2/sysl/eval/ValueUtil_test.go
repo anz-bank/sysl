@@ -433,7 +433,8 @@ func TestStmtToValueCall(t *testing.T) {
 }
 
 func TestAddModule(t *testing.T) {
-	mod, err := parse.NewParser().Parse("tests/model_with_deps.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../"))
+	mod, err := parse.NewParser().Parse("tests/model_with_deps.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 	s := Scope{}
