@@ -26,7 +26,8 @@ func TestGenerateSequenceDiag(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -74,7 +75,8 @@ func TestGenerateSequenceDiag2(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -252,7 +254,7 @@ func TestLoadApp(t *testing.T) {
 	args := loadAppArgs{
 		"./tests/", "sequence_diagram_test.sysl",
 	}
-	memFs, fs := testutil.WriteToMemOverlayFs(".")
+	memFs, fs := testutil.WriteToMemOverlayFs("/")
 	logger, _ := test.NewNullLogger()
 	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)
