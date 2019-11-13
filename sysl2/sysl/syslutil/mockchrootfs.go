@@ -1,17 +1,15 @@
 package syslutil
 
 import (
+	"log"
 	"os"
-	"testing"
 	"time"
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
 )
 
 type MockFs struct {
-	fs afero.Fs
 	mock.Mock
 }
 
@@ -19,67 +17,60 @@ var _ afero.Fs = &MockFs{}
 
 // NewMockFs creates a wrapper fs to record function calls with the
 // mock library, it requires a memory map fs
-func NewMockFs(t *testing.T, memFs afero.Fs) *MockFs {
-	require.IsType(t, &afero.MemMapFs{}, memFs)
-	return &MockFs{fs: memFs}
+func NewMockChrootFs(root string) (*MockFs, *ChrootFs) {
+	mockFs := &MockFs{}
+	return mockFs, NewChrootFs(mockFs, root)
 }
 
 func (m *MockFs) Create(name string) (afero.File, error) {
-	m.Called(name)
-	return m.fs.Create(name)
+	res := m.Called(name)
+	return res.Get(0).(afero.File), res.Error(1)
 }
 
 func (m *MockFs) Mkdir(name string, perm os.FileMode) error {
-	m.Called(name, perm)
-	return m.fs.Mkdir(name, perm)
+	return m.Called(name, perm).Error(0)
 }
 
 func (m *MockFs) MkdirAll(name string, perm os.FileMode) error {
-	m.Called(name, perm)
-	return m.fs.MkdirAll(name, perm)
+	return m.Called(name, perm).Error(0)
 }
 
 func (m *MockFs) Open(name string) (afero.File, error) {
-	m.Called(name)
-	return m.fs.Open(name)
+	res := m.Called(name)
+	log.Println(res)
+	return res.Get(0).(afero.File), res.Error(1)
 }
 
 func (m *MockFs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
-	m.Called(name, flag, perm)
-	return m.fs.OpenFile(name, flag, perm)
+	res := m.Called(name, flag, perm)
+	return res.Get(0).(afero.File), res.Error(1)
 }
 
 func (m *MockFs) Remove(name string) error {
-	m.Called(name)
-	return m.fs.Remove(name)
+	return m.Called(name).Error(0)
 }
 
 func (m *MockFs) RemoveAll(path string) error {
-	m.Called(path)
-	return m.fs.RemoveAll(path)
+	return m.Called(path).Error(0)
 }
 
 func (m *MockFs) Rename(oldname, newname string) error {
-	m.Called(oldname, newname)
-	return m.fs.Rename(oldname, newname)
+	return m.Called(oldname, newname).Error(0)
 }
 
 func (m *MockFs) Stat(name string) (os.FileInfo, error) {
-	m.Called(name)
-	return m.fs.Stat(name)
+	res := m.Called(name)
+	return res.Get(0).(os.FileInfo), res.Error(1)
 }
 
 func (m *MockFs) Name() string {
-	m.Called()
-	return "MockFs"
+	return m.Called().String(0)
 }
 
 func (m *MockFs) Chmod(name string, mode os.FileMode) error {
-	m.Called(name, mode)
-	return m.fs.Chmod(name, mode)
+	return m.Called(name, mode).Error(0)
 }
 
 func (m *MockFs) Chtimes(name string, atime time.Time, mtime time.Time) error {
-	m.Called(name, atime, mtime)
-	return m.fs.Chtimes(name, atime, mtime)
+	return m.Called(name, atime, mtime).Error(0)
 }
