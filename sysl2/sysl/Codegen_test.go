@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+
 	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -265,7 +266,7 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 
 func GenerateCodeWithParams(
 	rootModel, model, rootTransform, transform, grammar, start string) ([]*CodeGenOutput, error) {
-	_, fs := testutil.WriteToMemOverlayFs("/")
+	_, fs := syslutil.WriteToMemOverlayFs("/")
 	return GenerateCodeWithParamsFs(
 		rootModel, model, rootTransform, transform, grammar, start, fs,
 	)
