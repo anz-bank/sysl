@@ -42,26 +42,4 @@ linters:
 linters-settings:
   errcheck:
     check-blank: true
-issues:
-  exclude-rules:
-    - path: sysl2/sysl/parse/listener_impl.go
-      text: "ST1003:" # should not use underscores in Go names
-    # Allow some existing TODO's
-    - path: (sysl2/naive/(grammarParser.go|Grammar1_test.go)|sysl2/sysl/parse/parse.go|sysl2/sysl/eval/exprEval.go)
-      text: 'Line contains TODO/BUG/FIXME: "TODO'
-    # disable funlen checks on some existing bad code
-    - path: ".*_test.go"
-      linters:
-        - funlen
-    - path: "sysl2/naive/(grammarParser|sampleGrammars).go"
-      linters:
-        - funlen
-    - path: "sysl2/sysl/eval/(exprEval|ValueUtil).go"
-      linters:
-        - funlen
-    - path: "sysl2/sysl/parse/(listener_impl|parse).go"
-      linters:
-        - funlen
-    - path: "sysl2/sysl/(codegen|datamodelview|visitor|fmtParser|ints_builder|ints_view|seqs|utils).go"
-      linters:
-        - funlen
+
