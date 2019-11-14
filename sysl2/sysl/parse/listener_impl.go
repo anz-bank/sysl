@@ -1,4 +1,4 @@
-//nolint:golint
+//nolint:golint,stylecheck,funlen
 package parse // SyslParser
 
 import (

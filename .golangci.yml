@@ -39,7 +39,6 @@ linters:
     - unused
     - varcheck
     - whitespace
-    # - unparam
 linters-settings:
   errcheck:
     check-blank: true
