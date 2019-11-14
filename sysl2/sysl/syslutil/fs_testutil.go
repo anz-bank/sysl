@@ -1,4 +1,4 @@
-package testutil
+package syslutil
 
 import (
 	"os"
@@ -6,7 +6,6 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -17,12 +16,14 @@ import (
 func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 	expected := make([]string, 0, len(paths))
 	for _, p := range paths {
-		expected = append(expected, filepath.Clean(p))
+		expected = append(expected, getAbsolute(t, p))
 	}
 	sort.Strings(expected)
 
 	actual := []string{}
-	require.NoError(t, afero.Walk(fs, "/", func(path string, info os.FileInfo, err error) error {
+	root, err := filepath.Abs(string(os.PathSeparator))
+	require.NoError(t, err)
+	require.NoError(t, afero.Walk(fs, root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -37,7 +38,13 @@ func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 }
 
 func WriteToMemOverlayFs(osRoot string) (memFs, fs afero.Fs) {
-	memFs = syslutil.NewChrootFs(afero.NewMemMapFs(), "/")
-	fs = afero.NewCopyOnWriteFs(syslutil.NewChrootFs(afero.NewOsFs(), osRoot), memFs)
+	memFs = NewChrootFs(afero.NewMemMapFs(), "/")
+	fs = afero.NewCopyOnWriteFs(NewChrootFs(afero.NewOsFs(), osRoot), memFs)
 	return
+}
+
+func getAbsolute(t *testing.T, path string) string {
+	fullPath, err := filepath.Abs(path)
+	require.NoError(t, err)
+	return fullPath
 }

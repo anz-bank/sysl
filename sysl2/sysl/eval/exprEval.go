@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -92,6 +93,13 @@ func evalTransformUsingValueList(
 // Eval expr
 // TODO: Add type checks
 func Eval(txApp *sysl.Application, assign Scope, e *sysl.Expr) *sysl.Value {
+	defer func() {
+		if r := recover(); r != nil {
+			sc := e.SourceContext
+			e := logrus.WithField("source", len(fmt.Sprintf("%s:%d.%d", sc.File, sc.Start.Line, sc.Start.Col)))
+			e.Panic(r)
+		}
+	}()
 	switch x := e.Expr.(type) {
 	case *sysl.Expr_Transform_:
 		return evalTransform(txApp, assign, x, e)
@@ -197,7 +205,7 @@ func evalTransform(txApp *sysl.Application, assign Scope, x *sysl.Expr_Transform
 
 func evalCall(txApp *sysl.Application, assign Scope, x *sysl.Expr_Call_) *sysl.Value {
 	if callTransform, has := txApp.Views[x.Call.Func]; has {
-		logrus.Debugf("Calling View %s\n", x.Call.Func)
+		logrus.Debugf("Calling View %s", x.Call.Func)
 		params := callTransform.Param
 		if len(params) != len(x.Call.Arg) {
 			logrus.Warnf("Skipping Calling func(%s), args mismatch, %d args passed, %d required\n",
