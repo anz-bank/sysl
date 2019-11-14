@@ -67,7 +67,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	r.commands = map[string]Command{}
 
 	app.Flag("root",
-		"sysl root directory for input model file (default: .)").
+		"sysl root directory for input model file. If root is not found, the module directory becomes the root").
 		Default("").StringVar(&r.Root)
 
 	sort.Slice(commands, func(i, j int) bool {
