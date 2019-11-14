@@ -123,12 +123,18 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 }
 
 func (r *cmdRunner) getProjectRoot(fs afero.Fs, logger *logrus.Logger) error {
-	syslRootPath, err := findRootFromSyslModule(r.module, fs)
+	rootIsDefined := r.Root != ""
+
+	modulePath := r.module
+	if rootIsDefined {
+		modulePath = filepath.Join(r.Root, r.module)
+	}
+
+	syslRootPath, err := findRootFromSyslModule(modulePath, fs)
 	if err != nil {
 		return err
 	}
 
-	rootIsDefined := r.Root != ""
 	rootMarkerExists := syslRootPath != ""
 
 	switch {

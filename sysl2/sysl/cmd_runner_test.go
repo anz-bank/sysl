@@ -131,15 +131,15 @@ func TestGetProjectRoot(t *testing.T) {
 		{
 			name: "Root flag is defined and root marker does not exist",
 			root: "DefinedRootAndSyslRootUndefinedTest/path/",
-			module: syslutil.MustRelative(t,
-				"DefinedRootAndSyslRootUndefinedTest/path/", definedRootNoMarker.files[0]),
+			module: syslutil.MustRelative(t, "DefinedRootAndSyslRootUndefinedTest/path/",
+				definedRootNoMarker.files[0]),
 			structure:        definedRootNoMarker,
 			expectedRoot:     "DefinedRootAndSyslRootUndefinedTest/path/",
 			expectedLog:      noRootMarkerLog,
 			rootMarkerExists: false,
 		},
 		{
-			name:             "Defined root with relative output",
+			name:             "Defined relative root",
 			root:             currentWorkingDirectory,
 			module:           filepath.Clean(definedRootNoMarker.files[0]),
 			structure:        definedRootNoMarker,
@@ -149,7 +149,7 @@ func TestGetProjectRoot(t *testing.T) {
 		},
 		{
 			root:             systemRoot,
-			name:             "Defined root with absolute output",
+			name:             "Defined absolute path root",
 			module:           syslutil.MustAbsolute(t, definedRootNoMarker.files[0]),
 			structure:        definedRootNoMarker,
 			expectedRoot:     systemRoot,
@@ -157,11 +157,30 @@ func TestGetProjectRoot(t *testing.T) {
 			rootMarkerExists: false,
 		},
 		{
-			name:             "Defined root flag and Root marker is defined",
+			name:             "Defined relative root with absolute module path rooted at root",
+			root:             currentWorkingDirectory,
+			module:           filepath.Join(systemRoot, filepath.Clean(definedRootNoMarker.files[0])),
+			structure:        definedRootNoMarker,
+			expectedRoot:     currentWorkingDirectory,
+			expectedLog:      noRootMarkerLog,
+			rootMarkerExists: false,
+		},
+		{
+			name:             "Defined root flag and root",
 			root:             currentWorkingDirectory,
 			module:           syslutil.MustRelative(t, currentWorkingDirectory, definedRootFlagAndMarkerFound.files[0]),
 			structure:        definedRootFlagAndMarkerFound,
 			expectedRoot:     currentWorkingDirectory,
+			expectedLog:      rootMarkerExistsLog,
+			rootMarkerPath:   syslutil.MustAbsolute(t, "./DefinedRootAndSyslRootDefinedTest/path/"),
+			rootMarkerExists: false,
+		},
+		{
+			name:             "Defined root flag and root marker with absolute path module rooted at root",
+			root:             "./DefinedRootAndSyslRootDefinedTest/",
+			module:           "/path/to/module/test.sysl",
+			structure:        definedRootFlagAndMarkerFound,
+			expectedRoot:     "./DefinedRootAndSyslRootDefinedTest/",
 			expectedLog:      rootMarkerExistsLog,
 			rootMarkerPath:   syslutil.MustAbsolute(t, "./DefinedRootAndSyslRootDefinedTest/path/"),
 			rootMarkerExists: false,
@@ -180,6 +199,8 @@ func TestGetProjectRoot(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(ts folderTestStructure) func(t *testing.T) {
 			return func(tt *testing.T) {
+				tt.Parallel()
+
 				logger, hook := log.NewNullLogger()
 				fs := afero.NewMemMapFs()
 				syslutil.BuildFolderTest(tt, fs, ts.structure.folders, ts.structure.files)
@@ -203,17 +224,11 @@ func TestGetProjectRoot(t *testing.T) {
 }
 
 func (ts folderTestStructure) getExpectedModule(t *testing.T) string {
-	module := ts.module
-	// if root is defined, expected root and root param is the same
+	// if root is defined, expected root and root param is the same and module is not changed
 	if ts.expectedRoot == ts.root {
-		// handles special case where if root is system root, module can be relative
-		// or absolute
-		if ts.expectedRoot == syslutil.MustAbsolute(t, string(os.PathSeparator)) {
-			return module
-		}
-		module = filepath.Join(ts.expectedRoot, ts.module)
+		return ts.module
 	}
-	return syslutil.MustRelative(t, ts.expectedRoot, module)
+	return syslutil.MustRelative(t, ts.expectedRoot, ts.module)
 }
 
 func (ts folderTestStructure) getExpectedLog() string {
