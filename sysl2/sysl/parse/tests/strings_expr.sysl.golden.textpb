@@ -47,6 +47,13 @@ apps: <
           transform: <
             arg: <
               name: "."
+              source_context: <
+                file: "tests/strings_expr.sysl"
+                start: <
+                  line: 3
+                  col: 4
+                >
+              >
             >
             scopevar: "scopeVar"
             stmt: <
@@ -55,6 +62,13 @@ apps: <
                 expr: <
                   literal: <
                     s: "abc"
+                  >
+                  source_context: <
+                    file: "tests/strings_expr.sysl"
+                    start: <
+                      line: 4
+                      col: 12
+                    >
                   >
                 >
               >
@@ -66,6 +80,13 @@ apps: <
                   literal: <
                     s: "'abc'"
                   >
+                  source_context: <
+                    file: "tests/strings_expr.sysl"
+                    start: <
+                      line: 5
+                      col: 13
+                    >
+                  >
                 >
               >
             >
@@ -75,6 +96,13 @@ apps: <
                 expr: <
                   literal: <
                     s: "\"On\nMultiple\nLines\""
+                  >
+                  source_context: <
+                    file: "tests/strings_expr.sysl"
+                    start: <
+                      line: 6
+                      col: 13
+                    >
                   >
                 >
               >
@@ -86,6 +114,13 @@ apps: <
                   literal: <
                     s: "\"abc\""
                   >
+                  source_context: <
+                    file: "tests/strings_expr.sysl"
+                    start: <
+                      line: 8
+                      col: 13
+                    >
+                  >
                 >
               >
             >
@@ -95,6 +130,13 @@ apps: <
                 expr: <
                   literal: <
                     s: "abc"
+                  >
+                  source_context: <
+                    file: "tests/strings_expr.sysl"
+                    start: <
+                      line: 9
+                      col: 13
+                    >
                   >
                 >
               >
@@ -106,8 +148,22 @@ apps: <
                   literal: <
                     s: "\"abc\\ndef\""
                   >
+                  source_context: <
+                    file: "tests/strings_expr.sysl"
+                    start: <
+                      line: 12
+                      col: 13
+                    >
+                  >
                 >
               >
+            >
+          >
+          source_context: <
+            file: "tests/strings_expr.sysl"
+            start: <
+              line: 3
+              col: 4
             >
           >
         >

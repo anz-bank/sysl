@@ -54,6 +54,63 @@ func retainOrRemove(err error, filename string, retainOnError bool) error {
 	return err
 }
 
+func removeSourceContextFromExpr(expr *sysl.Expr) {
+	if expr == nil {
+		return
+	}
+	expr.SourceContext = nil
+	// All the Expr types which contain nested expressions
+	switch e := expr.Expr.(type) {
+	case *sysl.Expr_GetAttr_:
+		removeSourceContextFromExpr(e.GetAttr.Arg)
+	case *sysl.Expr_Transform_:
+		removeSourceContextFromExpr(e.Transform.Arg)
+		for _, stmt := range e.Transform.Stmt {
+			switch s := stmt.Stmt.(type) {
+			case *sysl.Expr_Transform_Stmt_Assign_:
+				removeSourceContextFromExpr(s.Assign.Expr)
+			case *sysl.Expr_Transform_Stmt_Let:
+				removeSourceContextFromExpr(s.Let.Expr)
+			case *sysl.Expr_Transform_Stmt_Inject:
+				removeSourceContextFromExpr(s.Inject)
+			}
+		}
+	case *sysl.Expr_Ifelse:
+		removeSourceContextFromExpr(e.Ifelse.Cond)
+		removeSourceContextFromExpr(e.Ifelse.IfFalse)
+		removeSourceContextFromExpr(e.Ifelse.IfTrue)
+	case *sysl.Expr_Call_:
+		for _, arg := range e.Call.Arg {
+			removeSourceContextFromExpr(arg)
+		}
+	case *sysl.Expr_Unexpr:
+		removeSourceContextFromExpr(e.Unexpr.Arg)
+	case *sysl.Expr_Binexpr:
+		removeSourceContextFromExpr(e.Binexpr.Lhs)
+		removeSourceContextFromExpr(e.Binexpr.Rhs)
+	case *sysl.Expr_Relexpr:
+		for _, arg := range e.Relexpr.Arg {
+			removeSourceContextFromExpr(arg)
+		}
+		removeSourceContextFromExpr(e.Relexpr.Target)
+	case *sysl.Expr_Navigate_:
+		removeSourceContextFromExpr(e.Navigate.Arg)
+
+	case *sysl.Expr_List_:
+		for _, arg := range e.List.Expr {
+			removeSourceContextFromExpr(arg)
+		}
+	case *sysl.Expr_Set:
+		for _, arg := range e.Set.Expr {
+			removeSourceContextFromExpr(arg)
+		}
+	case *sysl.Expr_Tuple_:
+		for _, arg := range e.Tuple.Attrs {
+			removeSourceContextFromExpr(arg)
+		}
+	}
+}
+
 func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
@@ -84,6 +141,7 @@ func parseComparable(
 			}
 			for _, t := range app.Views {
 				t.SourceContext = nil
+				removeSourceContextFromExpr(t.Expr)
 			}
 		}
 	}
