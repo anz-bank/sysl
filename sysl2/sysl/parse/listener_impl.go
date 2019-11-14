@@ -31,7 +31,7 @@ type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base                  string
 	fs                    afero.Fs
-	filename              string
+	sc                    sourceCtxHelper
 	imports               []importDef
 	module                *sysl.Module
 	appname               string
@@ -691,7 +691,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	type1, has := s.typemap[fieldName]
 	if has {
 		logrus.Warnf("%s) %s.%s defined multiple times",
-			s.filename, s.typename, fieldName)
+			s.sc.filename, s.typename, fieldName)
 	} else {
 		type1 = &sysl.Type{}
 	}
@@ -811,7 +811,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	}
 	type1 := types[s.typename]
 	s.pushScope(type1)
-	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 func attributesForType(collection *sysl.Type) map[string]*sysl.Type {
@@ -966,7 +966,7 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 		}
 	}
 	s.pushScope(type1)
-	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitUnion is called when production union is exited.
@@ -1053,8 +1053,9 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 			mergeAttrs(attrs, s.module.Apps[s.appname].Attrs)
 		}
 	}
-	s.module.Apps[s.appname].SourceContext = buildSourceContext(
-		s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()+1)
+	sc := s.sc.Get(ctx.BaseParserRuleContext)
+	sc.Start.Col += 1
+	s.module.Apps[s.appname].SourceContext = sc
 }
 
 // ExitName_with_attribs is called when production name_with_attribs is exited.
@@ -1891,7 +1892,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 		}
 		restEndpoint.RestParams.UrlParam = qparams
 	}
-	restEndpoint.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	restEndpoint.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitMethod_def is called when production method_def is exited.
@@ -1968,7 +1969,7 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 
 		s.pushScope(s.module.Apps[s.appname].Endpoints[s.typename])
 	}
-	ep.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitSimple_endpoint is called when production simple_endpoint is exited.
@@ -2146,7 +2147,7 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 		}
 		s.pushScope(ep)
 	}
-	ep.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitCollector is called when production collector is exited.
@@ -2171,7 +2172,7 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 			ep = &sysl.Endpoint{
 				Name:          s.typename,
 				IsPubsub:      true,
-				SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+				SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 			}
 			s.module.Apps[s.appname].Endpoints[s.typename] = ep
 		}
@@ -2211,7 +2212,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		typeEndpoint := &sysl.Endpoint{
 			Name:          s.typename,
 			Source:        app_src,
-			SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 		}
 		if ctx.Attribs_or_modifiers() != nil {
 			typeEndpoint.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
@@ -2326,10 +2327,9 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 		}
 	}
 
-	expr := &sysl.Expr{
-		Expr: &sysl.Expr_Literal{
-			Literal: val,
-		},
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_Literal{
+		Literal: val,
 	}
 	if type1 != nil {
 		expr.Type = type1
@@ -2337,58 +2337,58 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 	s.pushExpr(expr)
 }
 
-func makeGetAttr(arg *sysl.Expr, name string, nullsafe, setof bool) *sysl.Expr {
-	return &sysl.Expr{
-		Expr: &sysl.Expr_GetAttr_{
-			GetAttr: &sysl.Expr_GetAttr{
-				Arg:      arg,
-				Attr:     name,
-				Setof:    setof,
-				Nullsafe: nullsafe,
-			},
+func makeGetAttr(arg *sysl.Expr, name string, nullsafe, setof bool, ctx *sysl.SourceContext) *sysl.Expr {
+	expr := makeExpr(ctx)
+	expr.Expr = &sysl.Expr_GetAttr_{
+		GetAttr: &sysl.Expr_GetAttr{
+			Arg:      arg,
+			Attr:     name,
+			Setof:    setof,
+			Nullsafe: nullsafe,
 		},
 	}
+	return expr
 }
 
-func makeRelExpr(op sysl.Expr_RelExpr_Op) *sysl.Expr {
-	return &sysl.Expr{
-		Expr: &sysl.Expr_Relexpr{
-			Relexpr: &sysl.Expr_RelExpr{
-				Op: op,
-			},
+func makeRelExpr(op sysl.Expr_RelExpr_Op, ctx *sysl.SourceContext) *sysl.Expr {
+	expr := makeExpr(ctx)
+	expr.Expr = &sysl.Expr_Relexpr{
+		Relexpr: &sysl.Expr_RelExpr{
+			Op: op,
 		},
 	}
+	return expr
 }
 
-func makeExprName(name string) *sysl.Expr {
-	return &sysl.Expr{
-		Expr: &sysl.Expr_Name{
-			Name: name,
-		},
+func makeExprName(name string, ctx *sysl.SourceContext) *sysl.Expr {
+	expr := makeExpr(ctx)
+	expr.Expr = &sysl.Expr_Name{
+		Name: name,
 	}
+	return expr
 }
 
-func makeUnaryExpr(op sysl.Expr_UnExpr_Op, expr *sysl.Expr) *sysl.Expr {
-	return &sysl.Expr{
-		Expr: &sysl.Expr_Unexpr{
-			Unexpr: &sysl.Expr_UnExpr{
-				Op:  op,
-				Arg: expr,
-			},
+func makeUnaryExpr(op sysl.Expr_UnExpr_Op, arg *sysl.Expr, ctx *sysl.SourceContext) *sysl.Expr {
+	expr := makeExpr(ctx)
+	expr.Expr = &sysl.Expr_Unexpr{
+		Unexpr: &sysl.Expr_UnExpr{
+			Op:  op,
+			Arg: arg,
 		},
 	}
+	return expr
 }
 
-func makeBinaryExpr(op sysl.Expr_BinExpr_Op, lhs, rhs *sysl.Expr) *sysl.Expr {
-	return &sysl.Expr{
-		Expr: &sysl.Expr_Binexpr{
-			Binexpr: &sysl.Expr_BinExpr{
-				Op:  op,
-				Lhs: lhs,
-				Rhs: rhs,
-			},
+func makeBinaryExpr(op sysl.Expr_BinExpr_Op, lhs, rhs *sysl.Expr, ctx *sysl.SourceContext) *sysl.Expr {
+	expr := makeExpr(ctx)
+	expr.Expr = &sysl.Expr_Binexpr{
+		Binexpr: &sysl.Expr_BinExpr{
+			Op:  op,
+			Lhs: lhs,
+			Rhs: rhs,
 		},
 	}
+	return expr
 }
 
 func addStmt(ifelse *sysl.Expr, stmt *sysl.Expr) {
@@ -2430,7 +2430,7 @@ func (s *TreeShapeListener) ExitExpr_table_of_op(ctx *parser.Expr_table_of_opCon
 	table_of := ctx.E_TABLE_OF() != nil
 	attrName := ctx.E_Name().GetText()
 	arg := s.popExpr()
-	s.pushExpr(makeGetAttr(arg, attrName, nullsafe, table_of))
+	s.pushExpr(makeGetAttr(arg, attrName, nullsafe, table_of, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // EnterFunc_arg is called when production func_arg is entered.
@@ -2468,13 +2468,11 @@ func (s *TreeShapeListener) EnterExpr_func(ctx *parser.Expr_funcContext) {
 	default:
 		funcName = ctx.NativeDataTypes().GetText()
 	}
-
-	expr := &sysl.Expr{
-		Expr: &sysl.Expr_Call_{
-			Call: &sysl.Expr_Call{
-				Func: funcName,
-				Arg:  []*sysl.Expr{},
-			},
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_Call_{
+		Call: &sysl.Expr_Call{
+			Func: funcName,
+			Arg:  []*sysl.Expr{},
 		},
 	}
 	s.pushExpr(expr)
@@ -2503,7 +2501,7 @@ func (s *TreeShapeListener) ExitRank_expr_list(*parser.Rank_expr_listContext) {}
 // EnterExpr_rank_func is called when production expr_rank_func is entered.
 func (s *TreeShapeListener) EnterExpr_rank_func(ctx *parser.Expr_rank_funcContext) {
 	target := s.popExpr()
-	s.pushExpr(makeRelExpr(sysl.Expr_RelExpr_RANK))
+	s.pushExpr(makeRelExpr(sysl.Expr_RelExpr_RANK, s.sc.Get(ctx.BaseParserRuleContext)))
 	relexpr := s.topExpr().GetRelexpr()
 	relexpr.AttrName = append(relexpr.AttrName, ctx.E_Name().GetText())
 	relexpr.Target = target
@@ -2554,7 +2552,7 @@ func (s *TreeShapeListener) EnterExpr_agg_func(ctx *parser.Expr_agg_funcContext)
 		op = sysl.Expr_RelExpr_AVERAGE
 	}
 	expr := s.popExpr()
-	s.pushExpr(makeRelExpr(op))
+	s.pushExpr(makeRelExpr(op, s.sc.Get(ctx.BaseParserRuleContext)))
 	relexpr := s.topExpr().GetRelexpr()
 	relexpr.Target = expr
 }
@@ -2594,14 +2592,13 @@ func (s *TreeShapeListener) ExitFirst_func_target(ctx *parser.First_func_targetC
 			Null: &sysl.Value_Null{},
 		}
 
-		expr = &sysl.Expr{
-			Expr: &sysl.Expr_Literal{
-				Literal: val,
-			},
-			Type: &sysl.Type{
-				Type: &sysl.Type_Primitive_{
-					Primitive: sysl.Type_EMPTY,
-				},
+		expr = makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+		expr.Expr = &sysl.Expr_Literal{
+			Literal: val,
+		}
+		expr.Type = &sysl.Type{
+			Type: &sysl.Type_Primitive_{
+				Primitive: sysl.Type_EMPTY,
 			},
 		}
 	} else {
@@ -2612,8 +2609,8 @@ func (s *TreeShapeListener) ExitFirst_func_target(ctx *parser.First_func_targetC
 }
 
 // EnterExpr_first_func is called when production expr_first_func is entered.
-func (s *TreeShapeListener) EnterExpr_first_func(*parser.Expr_first_funcContext) {
-	expr := makeRelExpr(sysl.Expr_RelExpr_FIRST_BY)
+func (s *TreeShapeListener) EnterExpr_first_func(ctx *parser.Expr_first_funcContext) {
+	expr := makeRelExpr(sysl.Expr_RelExpr_FIRST_BY, s.sc.Get(ctx.BaseParserRuleContext))
 	relexpr := expr.GetRelexpr()
 	relexpr.Target = s.popExpr()
 	s.pushExpr(expr)
@@ -2640,7 +2637,7 @@ func (s *TreeShapeListener) ExitE_single_arg_func(ctx *parser.E_single_arg_funcC
 	} else if ctx.E_RELOPS_FLATTEN() != nil {
 		op = sysl.Expr_BinExpr_FLATTEN
 	}
-	s.pushExpr(makeBinaryExpr(op, nil, nil))
+	s.pushExpr(makeBinaryExpr(op, nil, nil, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // EnterExpr_single_arg_func is called when production expr_single_arg_func is entered.
@@ -2664,15 +2661,14 @@ func (s *TreeShapeListener) ExitExpr_single_arg_func(ctx *parser.Expr_single_arg
 func (s *TreeShapeListener) EnterExpr_any_func(*parser.Expr_any_funcContext) {}
 
 // ExitExpr_any_func is called when production expr_any_func is exited.
-func (s *TreeShapeListener) ExitExpr_any_func(*parser.Expr_any_funcContext) {
+func (s *TreeShapeListener) ExitExpr_any_func(ctx *parser.Expr_any_funcContext) {
 	limit := s.popExpr()
 	arg := s.popExpr()
-	expr := &sysl.Expr{
-		Expr: &sysl.Expr_Call_{
-			Call: &sysl.Expr_Call{
-				Func: ".any",
-				Arg:  []*sysl.Expr{arg, limit},
-			},
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_Call_{
+		Call: &sysl.Expr_Call{
+			Func: ".any",
+			Arg:  []*sysl.Expr{arg, limit},
 		},
 	}
 	s.pushExpr(expr)
@@ -2687,7 +2683,7 @@ func (s *TreeShapeListener) ExitExpr_single_or_null(ctx *parser.Expr_single_or_n
 	if ctx.GetText() == "single" {
 		op = sysl.Expr_UnExpr_SINGLE
 	}
-	expr := makeUnaryExpr(op, s.popExpr())
+	expr := makeUnaryExpr(op, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext))
 	s.pushExpr(expr)
 }
 
@@ -2695,9 +2691,9 @@ func (s *TreeShapeListener) ExitExpr_single_or_null(ctx *parser.Expr_single_or_n
 func (s *TreeShapeListener) EnterExpr_snapshot(*parser.Expr_snapshotContext) {}
 
 // ExitExpr_snapshot is called when production expr_snapshot is exited.
-func (s *TreeShapeListener) ExitExpr_snapshot(*parser.Expr_snapshotContext) {
+func (s *TreeShapeListener) ExitExpr_snapshot(ctx *parser.Expr_snapshotContext) {
 	expr := s.popExpr()
-	s.pushExpr(makeRelExpr(sysl.Expr_RelExpr_SNAPSHOT))
+	s.pushExpr(makeRelExpr(sysl.Expr_RelExpr_SNAPSHOT, s.sc.Get(ctx.BaseParserRuleContext)))
 	relexpr := s.topExpr().GetRelexpr()
 	relexpr.Target = expr
 }
@@ -2706,14 +2702,13 @@ func (s *TreeShapeListener) ExitExpr_snapshot(*parser.Expr_snapshotContext) {
 func (s *TreeShapeListener) EnterExpr_count(*parser.Expr_countContext) {}
 
 // ExitExpr_count is called when production expr_count is exited.
-func (s *TreeShapeListener) ExitExpr_count(*parser.Expr_countContext) {
+func (s *TreeShapeListener) ExitExpr_count(ctx *parser.Expr_countContext) {
 	expr := s.popExpr()
-	callExpr := &sysl.Expr{
-		Expr: &sysl.Expr_Call_{
-			Call: &sysl.Expr_Call{
-				Func: ".count",
-				Arg:  []*sysl.Expr{expr},
-			},
+	callExpr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	callExpr.Expr = &sysl.Expr_Call_{
+		Call: &sysl.Expr_Call{
+			Func: ".count",
+			Arg:  []*sysl.Expr{expr},
 		},
 	}
 	s.pushExpr(callExpr)
@@ -2751,10 +2746,9 @@ func (s *TreeShapeListener) EnterExpr_navigate(ctx *parser.Expr_navigateContext)
 		nav.Via = ctx.E_Name().GetText()
 	}
 
-	expr := &sysl.Expr{
-		Expr: &sysl.Expr_Navigate_{
-			Navigate: nav,
-		},
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_Navigate_{
+		Navigate: nav,
 	}
 	s.pushExpr(expr)
 }
@@ -2765,14 +2759,14 @@ func (s *TreeShapeListener) ExitExpr_navigate(*parser.Expr_navigateContext) {}
 // EnterMatching_rhs is called when production matching_rhs is entered.
 func (s *TreeShapeListener) EnterMatching_rhs(ctx *parser.Matching_rhsContext) {
 	if ctx.E_Name() == nil && ctx.AtomT_paren() == nil {
-		s.pushExpr(makeExprName("."))
+		s.pushExpr(makeExprName(".", s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
 // ExitMatching_rhs is called when production matching_rhs is exited.
 func (s *TreeShapeListener) ExitMatching_rhs(ctx *parser.Matching_rhsContext) {
 	if ctx.E_Name() != nil {
-		s.pushExpr(makeExprName(ctx.E_Name().GetText()))
+		s.pushExpr(makeExprName(ctx.E_Name().GetText(), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -2795,7 +2789,7 @@ func (s *TreeShapeListener) EnterExpr_matching(ctx *parser.Expr_matchingContext)
 		op = sysl.Expr_BinExpr_TO_NOT_MATCHING
 	}
 	lhs := s.popExpr()
-	s.pushExpr(makeBinaryExpr(op, lhs, nil))
+	s.pushExpr(makeBinaryExpr(op, lhs, nil, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // ExitExpr_matching is called when production expr_matching is exited.
@@ -2847,17 +2841,16 @@ func (s *TreeShapeListener) ExitExpr_list(*parser.Expr_listContext) {
 }
 
 // EnterExpr_set is called when production expr_set is entered.
-func (s *TreeShapeListener) EnterExpr_set(*parser.Expr_setContext) {
-	expr := &sysl.Expr{
-		Expr: &sysl.Expr_Set{
-			Set: &sysl.Expr_List{
-				Expr: []*sysl.Expr{},
-			},
+func (s *TreeShapeListener) EnterExpr_set(ctx *parser.Expr_setContext) {
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_Set{
+		Set: &sysl.Expr_List{
+			Expr: []*sysl.Expr{},
 		},
-		Type: &sysl.Type{
-			Type: &sysl.Type_Set{
-				Set: &sysl.Type{},
-			},
+	}
+	expr.Type = &sysl.Type{
+		Type: &sysl.Type_Set{
+			Set: &sysl.Type{},
 		},
 	}
 	s.pushExpr(expr)
@@ -2870,17 +2863,17 @@ func (s *TreeShapeListener) ExitExpr_set(*parser.Expr_setContext) {}
 func (s *TreeShapeListener) EnterEmpty_tuple(*parser.Empty_tupleContext) {}
 
 // ExitEmpty_tuple is called when production empty_tuple is exited.
-func (s *TreeShapeListener) ExitEmpty_tuple(*parser.Empty_tupleContext) {
-	s.pushExpr(&sysl.Expr{
-		Expr: &sysl.Expr_Tuple_{
-			Tuple: &sysl.Expr_Tuple{},
+func (s *TreeShapeListener) ExitEmpty_tuple(ctx *parser.Empty_tupleContext) {
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_Tuple_{
+		Tuple: &sysl.Expr_Tuple{},
+	}
+	expr.Type = &sysl.Type{
+		Type: &sysl.Type_Tuple_{
+			Tuple: &sysl.Type_Tuple{},
 		},
-		Type: &sysl.Type{
-			Type: &sysl.Type_Tuple_{
-				Tuple: &sysl.Type_Tuple{},
-			},
-		},
-	})
+	}
+	s.pushExpr(expr)
 }
 
 // EnterAtom_dot_relop is called when production atom_dot_relop is entered.
@@ -2890,8 +2883,8 @@ func (s *TreeShapeListener) EnterAtom_dot_relop(*parser.Atom_dot_relopContext) {
 func (s *TreeShapeListener) ExitAtom_dot_relop(*parser.Atom_dot_relopContext) {}
 
 // EnterAtomT_implied_dot is called when production atomT_implied_dot is entered.
-func (s *TreeShapeListener) EnterAtomT_implied_dot(*parser.AtomT_implied_dotContext) {
-	s.pushExpr(makeExprName("."))
+func (s *TreeShapeListener) EnterAtomT_implied_dot(ctx *parser.AtomT_implied_dotContext) {
+	s.pushExpr(makeExprName(".", s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // ExitAtomT_implied_dot is called when production atomT_implied_dot is exited.
@@ -2905,11 +2898,11 @@ func (s *TreeShapeListener) ExitAtomT_name(ctx *parser.AtomT_nameContext) {
 	switch {
 	case ctx.E_Name() != nil:
 		txt := ctx.E_Name().GetText()
-		s.pushExpr(makeExprName(txt))
+		s.pushExpr(makeExprName(txt, s.sc.Get(ctx.BaseParserRuleContext)))
 	case ctx.E_WHATEVER() != nil:
-		s.pushExpr(&sysl.Expr{})
+		s.pushExpr(makeExpr(s.sc.Get(ctx.BaseParserRuleContext)))
 	case ctx.E_DOT() != nil:
-		s.pushExpr(makeExprName("."))
+		s.pushExpr(makeExprName(".", s.sc.Get(ctx.BaseParserRuleContext)))
 	default:
 		panic("ExitAtomT_name: should not be here")
 	}
@@ -2922,12 +2915,11 @@ func (s *TreeShapeListener) EnterAtomT_paren(*parser.AtomT_parenContext) {}
 func (s *TreeShapeListener) ExitAtomT_paren(*parser.AtomT_parenContext) {}
 
 // EnterExpr_atom_list is called when production expr_atom_list is entered.
-func (s *TreeShapeListener) EnterExpr_atom_list(*parser.Expr_atom_listContext) {
-	expr := &sysl.Expr{
-		Expr: &sysl.Expr_List_{
-			List: &sysl.Expr_List{
-				Expr: []*sysl.Expr{},
-			},
+func (s *TreeShapeListener) EnterExpr_atom_list(ctx *parser.Expr_atom_listContext) {
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_List_{
+		List: &sysl.Expr_List{
+			Expr: []*sysl.Expr{},
 		},
 	}
 	s.pushExpr(expr)
@@ -2962,7 +2954,7 @@ func (s *TreeShapeListener) ExitPower(ctx *parser.PowerContext) {
 	if ctx.PowerT() != nil {
 		rhs := s.popExpr()
 		lhs := s.popExpr()
-		s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_POW, lhs, rhs))
+		s.pushExpr(makeBinaryExpr(sysl.Expr_BinExpr_POW, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -2984,7 +2976,7 @@ func (s *TreeShapeListener) ExitUnaryTerm(ctx *parser.UnaryTermContext) {
 		op = sysl.Expr_UnExpr_POS
 	}
 	if op != sysl.Expr_UnExpr_NO_Op {
-		expr := makeUnaryExpr(op, s.popExpr())
+		expr := makeUnaryExpr(op, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext))
 		s.pushExpr(expr)
 	}
 }
@@ -3004,7 +2996,7 @@ func (s *TreeShapeListener) ExitTermT(ctx *parser.TermTContext) {
 	rhs := s.popExpr()
 	lhs := s.popExpr()
 
-	s.pushExpr(makeBinaryExpr(op, lhs, rhs))
+	s.pushExpr(makeBinaryExpr(op, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // EnterTerm is called when production term is entered.
@@ -3027,7 +3019,7 @@ func (s *TreeShapeListener) ExitBinexprT(ctx *parser.BinexprTContext) {
 	}
 	rhs := s.popExpr()
 	lhs := s.popExpr()
-	s.pushExpr(makeBinaryExpr(op, lhs, rhs))
+	s.pushExpr(makeBinaryExpr(op, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // EnterBinexpr is called when production binexpr is entered.
@@ -3052,7 +3044,7 @@ func (s *TreeShapeListener) ExitExpr_rel(ctx *parser.Expr_relContext) {
 			op := s.opmap[ctx.E_compare_ops(i).GetText()]
 			rhs := s.popExpr()
 			lhs := s.popExpr()
-			s.pushExpr(makeBinaryExpr(op, lhs, rhs))
+			s.pushExpr(makeBinaryExpr(op, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 		}
 	}
 }
@@ -3063,7 +3055,7 @@ func (s *TreeShapeListener) EnterExpr_bitand(*parser.Expr_bitandContext) {}
 // ExitExpr_bitand is called when production expr_bitand is exited.
 func (s *TreeShapeListener) ExitExpr_bitand(ctx *parser.Expr_bitandContext) {
 	if ctx.E_AMP(0) != nil || ctx.E_AND(0) != nil {
-		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BITAND, len(ctx.AllExpr_rel())-1))
+		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BITAND, len(ctx.AllExpr_rel())-1, s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -3073,7 +3065,7 @@ func (s *TreeShapeListener) EnterExpr_bitxor(*parser.Expr_bitxorContext) {}
 // ExitExpr_bitxor is called when production expr_bitxor is exited.
 func (s *TreeShapeListener) ExitExpr_bitxor(ctx *parser.Expr_bitxorContext) {
 	if ctx.E_XOR(0) != nil {
-		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BITXOR, len(ctx.AllE_XOR())))
+		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BITXOR, len(ctx.AllE_XOR()), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -3083,7 +3075,7 @@ func (s *TreeShapeListener) EnterExpr_bitor(*parser.Expr_bitorContext) {}
 // ExitExpr_bitor is called when production expr_bitor is exited.
 func (s *TreeShapeListener) ExitExpr_bitor(ctx *parser.Expr_bitorContext) {
 	if ctx.E_BITOR(0) != nil {
-		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BITOR, len(ctx.AllE_BITOR())))
+		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BITOR, len(ctx.AllE_BITOR()), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -3093,7 +3085,7 @@ func (s *TreeShapeListener) EnterExpr_and(*parser.Expr_andContext) {}
 // ExitExpr_and is called when production expr_and is exited.
 func (s *TreeShapeListener) ExitExpr_and(ctx *parser.Expr_andContext) {
 	if ctx.E_DOUBLE_AMP(0) != nil {
-		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_AND, len(ctx.AllE_DOUBLE_AMP())))
+		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_AND, len(ctx.AllE_DOUBLE_AMP()), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -3103,7 +3095,7 @@ func (s *TreeShapeListener) EnterExpr_or(*parser.Expr_orContext) {}
 // ExitExpr_or is called when production expr_or is exited.
 func (s *TreeShapeListener) ExitExpr_or(ctx *parser.Expr_orContext) {
 	if ctx.E_LOGIC_OR(0) != nil {
-		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_OR, len(ctx.AllE_LOGIC_OR())))
+		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_OR, len(ctx.AllE_LOGIC_OR()), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -3113,27 +3105,27 @@ func (s *TreeShapeListener) EnterExpr_but_not(*parser.Expr_but_notContext) {}
 // ExitExpr_but_not is called when production expr_but_not is exited.
 func (s *TreeShapeListener) ExitExpr_but_not(ctx *parser.Expr_but_notContext) {
 	if ctx.E_BUTNOT(0) != nil {
-		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BUTNOT, len(ctx.AllE_BUTNOT())))
+		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_BUTNOT, len(ctx.AllE_BUTNOT()), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
 // EnterExpr_coalesce is called when production expr_coalesce is entered.
 func (s *TreeShapeListener) EnterExpr_coalesce(*parser.Expr_coalesceContext) {}
 
-func (s *TreeShapeListener) reverseOp(op sysl.Expr_BinExpr_Op, count int) *sysl.Expr {
+func (s *TreeShapeListener) reverseOp(op sysl.Expr_BinExpr_Op, count int, ctx *sysl.SourceContext) *sysl.Expr {
 	if count == 0 {
 		return s.popExpr()
 	}
 	rhs := s.popExpr()
-	lhs := s.reverseOp(op, count-1)
-	return makeBinaryExpr(op, lhs, rhs)
+	lhs := s.reverseOp(op, count-1, ctx)
+	return makeBinaryExpr(op, lhs, rhs, ctx)
 }
 
 // ExitExpr_coalesce is called when production expr_coalesce is exited.
 func (s *TreeShapeListener) ExitExpr_coalesce(ctx *parser.Expr_coalesceContext) {
 	exprs := ctx.AllExpr_but_not()
 	if len(exprs) > 1 {
-		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_COALESCE, len(exprs)-1))
+		s.pushExpr(s.reverseOp(sysl.Expr_BinExpr_COALESCE, len(exprs)-1, s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
 
@@ -3145,14 +3137,13 @@ func (s *TreeShapeListener) ExitIf_one_liner(ctx *parser.If_one_linerContext) {
 	if_false := s.popExpr()
 	if_true := s.popExpr()
 	cond := s.popExpr()
-	expr := &sysl.Expr{
-		Expr: &sysl.Expr_Ifelse{
-			Ifelse: &sysl.Expr_IfElse{
-				Cond:     cond,
-				IfTrue:   if_true,
-				IfFalse:  if_false,
-				Nullsafe: ctx.E_QN() != nil,
-			},
+	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr.Expr = &sysl.Expr_Ifelse{
+		Ifelse: &sysl.Expr_IfElse{
+			Cond:     cond,
+			IfTrue:   if_true,
+			IfFalse:  if_false,
+			Nullsafe: ctx.E_QN() != nil,
 		},
 	}
 	s.pushExpr(expr)
@@ -3172,7 +3163,7 @@ func (s *TreeShapeListener) ExitElse_block_stmt(*parser.Else_block_stmtContext) 
 func (s *TreeShapeListener) EnterControl_item(*parser.Control_itemContext) {}
 
 // ExitControl_item is called when production control_item is exited.
-func (s *TreeShapeListener) ExitControl_item(*parser.Control_itemContext) {
+func (s *TreeShapeListener) ExitControl_item(ctx *parser.Control_itemContext) {
 	control := s.popExpr()
 	expr := s.topExpr()
 	ifelse := expr.GetIfelse()
@@ -3181,19 +3172,19 @@ func (s *TreeShapeListener) ExitControl_item(*parser.Control_itemContext) {
 		if ifelse.Cond.GetBinexpr().Rhs == nil {
 			ifelse.Cond.GetBinexpr().Rhs = control
 		} else {
-			newCond := makeBinaryExpr(sysl.Expr_BinExpr_EQ, ifelse.Cond.GetBinexpr().Lhs, control)
+			lhs := ifelse.Cond.GetBinexpr().Lhs
+			newCond := makeBinaryExpr(sysl.Expr_BinExpr_EQ, lhs, control, s.sc.Get(ctx.BaseParserRuleContext))
 			addIfElseControl(expr, newCond)
 		}
 	} else {
 		if len(ifelse.Cond.GetCall().Arg) == 0 {
 			ifelse.Cond.GetCall().Arg = append(ifelse.Cond.GetCall().Arg, control)
 		} else {
-			newCond := &sysl.Expr{
-				Expr: &sysl.Expr_Call_{
-					Call: &sysl.Expr_Call{
-						Func: "bool",
-						Arg:  []*sysl.Expr{control},
-					},
+			newCond := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+			newCond.Expr = &sysl.Expr_Call_{
+				Call: &sysl.Expr_Call{
+					Func: "bool",
+					Arg:  []*sysl.Expr{control},
 				},
 			}
 			addIfElseControl(expr, newCond)
@@ -3230,24 +3221,24 @@ func (s *TreeShapeListener) ExitFinal_else(*parser.Final_elseContext) {
 func (s *TreeShapeListener) EnterIfvar(*parser.IfvarContext) {}
 
 // ExitIfvar is called when production ifvar is exited.
-func (s *TreeShapeListener) ExitIfvar(*parser.IfvarContext) {
+func (s *TreeShapeListener) ExitIfvar(ctx *parser.IfvarContext) {
 	lhs := s.popExpr()
 	ifelse := s.topExpr()
-	ifelse.GetIfelse().Cond = makeBinaryExpr(sysl.Expr_BinExpr_EQ, lhs, nil)
+	ifelse.GetIfelse().Cond = makeBinaryExpr(sysl.Expr_BinExpr_EQ, lhs, nil, s.sc.Get(ctx.BaseParserRuleContext))
 }
 
 // EnterIf_multiple_lines is called when production if_multiple_lines is entered.
 func (s *TreeShapeListener) EnterIf_multiple_lines(ctx *parser.If_multiple_linesContext) {
 	expr := makeIfElseExpr()
 	if ctx.Ifvar() == nil {
-		expr.GetIfelse().Cond = &sysl.Expr{
-			Expr: &sysl.Expr_Call_{
-				Call: &sysl.Expr_Call{
-					Func: "bool",
-					Arg:  []*sysl.Expr{},
-				},
+		newCond := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+		newCond.Expr = &sysl.Expr_Call_{
+			Call: &sysl.Expr_Call{
+				Func: "bool",
+				Arg:  []*sysl.Expr{},
 			},
 		}
+		expr.GetIfelse().Cond = newCond
 	}
 	s.pushExpr(expr)
 }
@@ -3352,12 +3343,12 @@ func (s *TreeShapeListener) ExitExpr_dot_assign(ctx *parser.Expr_dot_assignConte
 	if names[0] == "" {
 		names[0] = "."
 	}
-	arg = makeExprName(names[0])
+	arg = makeExprName(names[0], s.sc.Get(ctx.BaseParserRuleContext))
 	stmt := &sysl.Expr_Transform_Stmt{
 		Stmt: &sysl.Expr_Transform_Stmt_Assign_{
 			Assign: &sysl.Expr_Transform_Stmt_Assign{
 				Name: names[1],
-				Expr: makeGetAttr(arg, names[1], false, false),
+				Expr: makeGetAttr(arg, names[1], false, false, s.sc.Get(ctx.BaseParserRuleContext)),
 			},
 		},
 	}
@@ -3380,14 +3371,14 @@ func (s *TreeShapeListener) ExitExpr_statement(*parser.Expr_statementContext) {}
 func (s *TreeShapeListener) EnterExpr_inject_stmt(*parser.Expr_inject_stmtContext) {}
 
 // ExitExpr_inject_stmt is called when production expr_inject_stmt is exited.
-func (s *TreeShapeListener) ExitExpr_inject_stmt(*parser.Expr_inject_stmtContext) {
+func (s *TreeShapeListener) ExitExpr_inject_stmt(ctx *parser.Expr_inject_stmtContext) {
 	expr := s.popExpr()
 	tx := s.topExpr().GetTransform()
 	if tx == nil {
 		fmt.Printf("%v", s.topExpr())
 		panic("ExitExpr_inject_stmt: Unexpected expression!")
 	}
-	expr.GetCall().Arg = append(expr.GetCall().Arg, makeExprName("out"))
+	expr.GetCall().Arg = append(expr.GetCall().Arg, makeExprName("out", s.sc.Get(ctx.BaseParserRuleContext)))
 	stmt := &sysl.Expr_Transform_Stmt{
 		Stmt: &sysl.Expr_Transform_Stmt_Inject{
 			Inject: expr,
@@ -3470,22 +3461,21 @@ func (s *TreeShapeListener) ExitTransform_arg(*parser.Transform_argContext) {
 }
 
 // EnterTransform is called when production transform is entered.
-func (s *TreeShapeListener) EnterTransform(*parser.TransformContext) {
-	tx := &sysl.Expr{
-		Expr: &sysl.Expr_Transform_{
-			Transform: &sysl.Expr_Transform{
-				Stmt: []*sysl.Expr_Transform_Stmt{},
-			},
+func (s *TreeShapeListener) EnterTransform(ctx *parser.TransformContext) {
+	tx := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	tx.Expr = &sysl.Expr_Transform_{
+		Transform: &sysl.Expr_Transform{
+			Stmt: []*sysl.Expr_Transform_Stmt{},
 		},
 	}
 	s.pushExpr(tx)
 }
 
 // ExitTransform is called when production transform is exited.
-func (s *TreeShapeListener) ExitTransform(*parser.TransformContext) {
+func (s *TreeShapeListener) ExitTransform(ctx *parser.TransformContext) {
 	tx := s.topExpr().GetTransform()
 	if tx.Arg == nil {
-		tx.Arg = makeExprName(".")
+		tx.Arg = makeExprName(".", s.sc.Get(ctx.BaseParserRuleContext))
 	}
 	if tx.Scopevar == "" {
 		tx.Scopevar = "."
@@ -3537,7 +3527,7 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 	s.module.Apps[s.appname].Views[viewName] = &sysl.View{
 		Param:         []*sysl.Param{},
 		RetType:       &sysl.Type{},
-		SourceContext: buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	}
 	if ctx.Attribs_or_modifiers() != nil {
 		v := s.module.Apps[s.appname].Views[viewName]
@@ -3583,16 +3573,6 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 	s.typename = ""
 }
 
-func buildSourceContext(filename string, line int, col int) *sysl.SourceContext {
-	return &sysl.SourceContext{
-		File: filename,
-		Start: &sysl.SourceContext_Location{
-			Line: int32(line),
-			Col:  int32(col),
-		},
-	}
-}
-
 // EnterAlias is called when production alias is entered.
 func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	if s.typename == "" {
@@ -3614,7 +3594,7 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	if ctx.Annotation(0) != nil {
 		s.pushScope(type1)
 	}
-	type1.SourceContext = buildSourceContext(s.filename, ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitAlias is called when production alias is exited.
