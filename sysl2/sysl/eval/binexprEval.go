@@ -9,7 +9,7 @@ import (
 
 type evalValueFunc func(*sysl.Value, *sysl.Value) *sysl.Value
 type evalExprFunc func(
-	txApp *sysl.Application,
+	ee *exprEval,
 	assign Scope,
 	list *sysl.Value,
 	scopeVar string,
@@ -18,7 +18,7 @@ type evalExprFunc func(
 
 // Strategy interface to evaluate binary expr
 type Strategy interface {
-	eval(*sysl.Application, Scope, *sysl.Expr_BinExpr) *sysl.Value
+	eval(*exprEval, Scope, *sysl.Expr_BinExpr) *sysl.Value
 }
 
 // DefaultBinExprStrategy is to evaluate lhs and rhs expr's first and then pass it to fn
@@ -110,9 +110,9 @@ func makeKey(op sysl.Expr_BinExpr_Op, lhs, rhs valueType) string {
 	return fmt.Sprintf("%s_%s_%s", op, lhs.String(), rhs.String())
 }
 
-func (op DefaultBinExprStrategy) eval(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
-	lhsValue := Eval(txApp, assign, binexpr.Lhs)
-	rhsValue := Eval(txApp, assign, binexpr.Rhs)
+func (op DefaultBinExprStrategy) eval(ee *exprEval, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
+	lhsValue := Eval(ee, assign, binexpr.Lhs)
+	rhsValue := Eval(ee, assign, binexpr.Rhs)
 	key := makeKey(binexpr.Op, getValueType(lhsValue), getValueType(rhsValue))
 
 	if f, has := valueFunctions[key]; has {
@@ -122,24 +122,24 @@ func (op DefaultBinExprStrategy) eval(txApp *sysl.Application, assign Scope, bin
 	panic(errors.Errorf("Unsupported operation:DefaultBinExprStrategy: %s", key))
 }
 
-func (op NegateBinExprStrategy) eval(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
+func (op NegateBinExprStrategy) eval(ee *exprEval, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
 	if binexpr.Op != sysl.Expr_BinExpr_NE {
 		panic(errors.Errorf("Attempting to call Negate Strategy on a non == operator"))
 	}
 
 	negated := *binexpr
 	negated.Op = sysl.Expr_BinExpr_EQ
-	return unaryNeg(DefaultBinExprStrategy{}.eval(txApp, assign, &negated))
+	return unaryNeg(DefaultBinExprStrategy{}.eval(ee, assign, &negated))
 }
 
-func (op LHSOverRHSStrategy) eval(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
-	lhsValue := Eval(txApp, assign, binexpr.Lhs)
+func (op LHSOverRHSStrategy) eval(ee *exprEval, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
+	lhsValue := Eval(ee, assign, binexpr.Lhs)
 	vType := getValueType(lhsValue)
 	itemType := getContainedType(lhsValue)
 	key := makeKey(binexpr.Op, vType, itemType)
 	scopeVarValue, hasScopeVar := assign[binexpr.Scopevar]
 	if f, has := exprFunctions[key]; has {
-		result := f(txApp, assign, lhsValue, binexpr.Scopevar, binexpr.Rhs)
+		result := f(ee, assign, lhsValue, binexpr.Scopevar, binexpr.Rhs)
 		delete(assign, binexpr.Scopevar)
 		if hasScopeVar {
 			assign[binexpr.Scopevar] = scopeVarValue
@@ -149,9 +149,9 @@ func (op LHSOverRHSStrategy) eval(txApp *sysl.Application, assign Scope, binexpr
 	panic(errors.Errorf("Unsupported operation: Cannot Execute %s", key))
 }
 
-func evalBinExpr(txApp *sysl.Application, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
+func evalBinExpr(ee *exprEval, assign Scope, binexpr *sysl.Expr_BinExpr) *sysl.Value {
 	if strategy, has := functionEvalStrategy[binexpr.Op]; has {
-		return strategy.eval(txApp, assign, binexpr)
+		return strategy.eval(ee, assign, binexpr)
 	}
 	panic(errors.Errorf("Unsupported operation: %s", binexpr.Op))
 }
