@@ -553,6 +553,12 @@ func TestCrash(t *testing.T) {
 	testParseAgainstGolden(t, "tests/crash.sysl", "")
 }
 
+func TestAlias(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/alias_inline.sysl", "")
+}
+
 func TestStrings(t *testing.T) {
 	t.Parallel()
 
