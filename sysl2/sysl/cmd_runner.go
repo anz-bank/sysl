@@ -13,9 +13,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const (
-	syslRootMarker = ".sysl"
-)
+const syslRootMarker = ".sysl"
 
 type cmdRunner struct {
 	commands map[string]Command
@@ -61,8 +59,8 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	r.commands = map[string]Command{}
 
 	app.Flag("root",
-		"sysl root directory for input model file. If root is not found, the module directory becomes the root").
-		Default("").StringVar(&r.Root)
+		"sysl root directory for input model file. If root is not found, the module directory becomes "+
+			"the root, but the module can not import with absolute paths (or imports must be relative).").StringVar(&r.Root)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
