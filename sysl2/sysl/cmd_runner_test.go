@@ -14,13 +14,15 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const (
-	currentWorkingDirectory = "."
-)
+const currentWorkingDirectory = "."
 
 type folderTestStructure struct {
-	name, module, root, expectedRoot, rootMarkerPath string
-	structure                                        folderStructure
+	name,
+	module,
+	root,
+	expectedRoot,
+	rootMarkerPath string
+	structure folderStructure
 }
 
 type folderStructure struct {
