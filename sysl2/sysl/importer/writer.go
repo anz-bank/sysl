@@ -12,8 +12,9 @@ import (
 )
 
 type OutputData struct {
-	AppName string
-	Package string
+	AppName   string
+	Package   string
+	StartRule string
 }
 
 type SyslInfo struct {
@@ -252,6 +253,9 @@ func (w *writer) writeDefinitions(types TypeList) {
 		switch {
 		case isBuiltInType(t):
 			// do nothing
+		case isUnionType(t):
+			w.writeLines(BlankLine)
+			w.writeUnion(t)
 		case isEnum:
 			// We want the enum aliases listed with the real types
 			w.writeLines(BlankLine)
@@ -309,6 +313,14 @@ func (w *writer) writeExternalAlias(item Type) {
 	}
 	w.writeLines(fmt.Sprintf("!alias %s:", aliasName),
 		PushIndent, aliasType, PopIndent)
+}
+
+func (w *writer) writeUnion(item Type) {
+	unionName := getSyslTypeName(item)
+	t := item.(*Union)
+	w.writeLines(fmt.Sprintf("!union %s:", unionName), PushIndent)
+	w.writeLines(t.Attributes...)
+	w.writeLines(PopIndent)
 }
 
 func (w *writer) mustWrite(s string) {

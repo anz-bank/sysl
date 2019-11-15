@@ -21,6 +21,13 @@ type StandardType struct {
 
 func (s *StandardType) Name() string { return s.name }
 
+type Union struct {
+	name       string
+	Attributes []string
+}
+
+func (u *Union) Name() string { return u.name }
+
 type SyslBuiltIn struct {
 	name string
 }
