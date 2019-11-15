@@ -16,13 +16,12 @@ import (
 func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 	expected := make([]string, 0, len(paths))
 	for _, p := range paths {
-		expected = append(expected, getAbsolute(t, p))
+		expected = append(expected, MustAbsolute(t, p))
 	}
 	sort.Strings(expected)
 
 	actual := []string{}
-	root, err := filepath.Abs(string(os.PathSeparator))
-	require.NoError(t, err)
+	root := MustAbsolute(t, string(os.PathSeparator))
 	require.NoError(t, afero.Walk(fs, root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -43,8 +42,34 @@ func WriteToMemOverlayFs(osRoot string) (memFs, fs afero.Fs) {
 	return
 }
 
-func getAbsolute(t *testing.T, path string) string {
+func MustAbsolute(t *testing.T, path string) string {
 	fullPath, err := filepath.Abs(path)
 	require.NoError(t, err)
 	return fullPath
+}
+
+func MustRelative(t *testing.T, base, target string) string {
+	base = MustAbsolute(t, base)
+	target = MustAbsolute(t, target)
+	rel, err := filepath.Rel(base, target)
+	require.NoError(t, err)
+	return rel
+}
+
+func BuildFolderTest(t *testing.T, fs afero.Fs, folders, files []string) {
+	for _, folder := range folders {
+		folder, err := filepath.Abs(folder)
+		require.NoError(t, err)
+
+		err = fs.MkdirAll(folder, os.ModeTemporary)
+		require.NoError(t, err)
+	}
+
+	for _, file := range files {
+		file, err := filepath.Abs(file)
+		require.NoError(t, err)
+
+		_, err = fs.Create(file)
+		require.NoError(t, err)
+	}
 }

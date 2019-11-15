@@ -19,11 +19,14 @@ var _ afero.Fs = &ChrootFs{}
 
 // NewChrootFs returns a filesystem that is rooted at root argument
 func NewChrootFs(fs afero.Fs, root string) *ChrootFs {
-	absoluteRoot, err := filepath.Abs(root)
-	if err != nil {
-		panic(err)
+	if !filepath.IsAbs(root) {
+		var err error
+		root, err = filepath.Abs(root)
+		if err != nil {
+			panic(err)
+		}
 	}
-	return &ChrootFs{fs: fs, root: absoluteRoot}
+	return &ChrootFs{fs: fs, root: root}
 }
 
 func (fs *ChrootFs) join(name string) (string, error) {

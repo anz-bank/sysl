@@ -111,7 +111,7 @@
       }
      ],
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 12,
        "col": 4
@@ -120,7 +120,7 @@
     }
    },
    "sourceContext": {
-    "file": "args.sysl",
+    "file": "tests/args.sysl",
     "start": {
      "line": 11,
      "col": 1
@@ -144,7 +144,7 @@
       }
      ],
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 2,
        "col": 4
@@ -176,7 +176,7 @@
       "path": "/foo"
      },
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 6,
        "col": 8
@@ -208,7 +208,7 @@
       "path": "/foo/"
      },
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 9,
        "col": 12
@@ -217,7 +217,7 @@
     }
    },
    "sourceContext": {
-    "file": "args.sysl",
+    "file": "tests/args.sysl",
     "start": {
      "line": 1,
      "col": 1

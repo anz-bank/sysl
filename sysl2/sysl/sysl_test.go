@@ -29,9 +29,8 @@ func assertLogEntry(
 	return okLevel && okMessage
 }
 
-func testMain2(t *testing.T, args []string, golden string) {
+func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
-	_, fs := syslutil.WriteToMemOverlayFs("/")
 	output := "out.textpb"
 	rc := main2(append([]string{"sysl", "pb", "-o", output}, args...), fs, logger, main3)
 	assert.Zero(t, rc)
@@ -45,16 +44,43 @@ func testMain2(t *testing.T, args []string, golden string) {
 	assert.Equal(t, string(expected), string(actual))
 }
 
+func testMain2WithSyslRootMarker(t *testing.T, args []string, golden string) {
+	_, fs := syslutil.WriteToMemOverlayFs("/")
+	dir := syslutil.MustAbsolute(t, fmt.Sprintf("tests/%s", syslRootMarker))
+	require.NoError(t, fs.MkdirAll(dir, os.ModeDir))
+	runMain2(t, fs, args, golden)
+}
+
+func testMain2(t *testing.T, args []string, golden string) {
+	_, fs := syslutil.WriteToMemOverlayFs("/")
+	runMain2(t, fs, args, golden)
+}
+
+func testAllMain2(t *testing.T, args []string, golden string) {
+	// no root defined
+	testMain2(t, args, golden)
+
+	// root marker
+	testMain2WithSyslRootMarker(t, args, golden)
+
+	// root flag defined
+	args = append([]string{"--root", "."}, args...)
+	out := "rooted" + filepath.Base(golden)
+	golden = filepath.Join(filepath.Dir(golden), out)
+	testMain2(t, args, golden)
+	testMain2WithSyslRootMarker(t, args, golden)
+}
+
 func TestMain2TextPB(t *testing.T) {
 	t.Parallel()
 
-	testMain2(t, []string{"tests/args.sysl"}, "tests/args.sysl.golden.textpb")
+	testAllMain2(t, []string{"tests/args.sysl"}, "tests/args.sysl.golden.textpb")
 }
 
 func TestMain2JSON(t *testing.T) {
 	t.Parallel()
 
-	testMain2(t, []string{"--mode", "json", "tests/args.sysl"}, "tests/args.sysl.golden.json")
+	testAllMain2(t, []string{"--mode", "json", "tests/args.sysl"}, "tests/args.sysl.golden.json")
 }
 
 func testMain2Stdout(t *testing.T, args []string, golden string) {
