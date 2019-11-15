@@ -38,6 +38,7 @@ func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 	syslCmd.Version(Version)
+	syslCmd.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 
 	(&debugTypeData{}).add(syslCmd)
 

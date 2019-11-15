@@ -60,7 +60,7 @@ func TestEnsureFlagsNonEmpty(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestGetProjectRoot(t *testing.T) {
+func TestSetProjectRoot(t *testing.T) {
 	successfulTest := folderStructure{
 		folders: []string{
 			"./SuccessfulTest/path/to/module",
@@ -207,7 +207,7 @@ func TestGetProjectRoot(t *testing.T) {
 
 				r := &cmdRunner{Root: ts.root, module: ts.module}
 
-				require.NoError(tt, r.getProjectRoot(fs, logger))
+				require.NoError(tt, r.setProjectRoot(fs, logger))
 				require.Equal(tt, ts.expectedRoot, r.Root)
 				require.Equal(tt, ts.getExpectedModule(tt), r.module)
 
