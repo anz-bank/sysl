@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
-	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -16,17 +15,11 @@ import (
 )
 
 const (
-	currentWorkingDirectory          = "."
-	noRootMarkerLog         logCases = iota
-	rootMarkerExistsLog
-	noRootLog
+	currentWorkingDirectory = "."
 )
 
-type logCases int
 type folderTestStructure struct {
 	name, module, root, expectedRoot, rootMarkerPath string
-	expectedLog                                      logCases
-	rootMarkerExists                                 bool
 	structure                                        folderStructure
 }
 
@@ -105,94 +98,77 @@ func TestSetProjectRoot(t *testing.T) {
 	systemRoot := syslutil.MustAbsolute(t, string(os.PathSeparator))
 	tests := []folderTestStructure{
 		{
-			name:             "Successful test: finding a root marker",
-			root:             "",
-			module:           successfulTest.files[0],
-			structure:        successfulTest,
-			expectedRoot:     syslutil.MustAbsolute(t, "SuccessfulTest"),
-			rootMarkerExists: true,
+			name:         "Successful test: finding a root marker",
+			root:         "",
+			module:       successfulTest.files[0],
+			structure:    successfulTest,
+			expectedRoot: syslutil.MustAbsolute(t, "SuccessfulTest"),
 		},
 		{
-			name:             "Successful test: finding a root marker in the same directory as the module",
-			root:             "",
-			module:           successfulTest.files[1],
-			structure:        successfulTest,
-			expectedRoot:     syslutil.MustAbsolute(t, "SuccessfulTest"),
-			rootMarkerExists: true,
+			name:         "Successful test: finding a root marker in the same directory as the module",
+			root:         "",
+			module:       successfulTest.files[1],
+			structure:    successfulTest,
+			expectedRoot: syslutil.MustAbsolute(t, "SuccessfulTest"),
 		},
 		{
-			name:             "Successful test: finding the closest root marker",
-			root:             "",
-			module:           successfulTest.files[2],
-			structure:        successfulTest,
-			expectedRoot:     syslutil.MustAbsolute(t, "SuccessfulTest/path/to/another"),
-			rootMarkerExists: true,
+			name:         "Successful test: finding the closest root marker",
+			root:         "",
+			module:       successfulTest.files[2],
+			structure:    successfulTest,
+			expectedRoot: syslutil.MustAbsolute(t, "SuccessfulTest/path/to/another"),
 		},
 		{
 			name: "Root flag is defined and root marker does not exist",
 			root: "DefinedRootAndSyslRootUndefinedTest/path/",
 			module: syslutil.MustRelative(t, "DefinedRootAndSyslRootUndefinedTest/path/",
 				definedRootNoMarker.files[0]),
-			structure:        definedRootNoMarker,
-			expectedRoot:     "DefinedRootAndSyslRootUndefinedTest/path/",
-			expectedLog:      noRootMarkerLog,
-			rootMarkerExists: false,
+			structure:    definedRootNoMarker,
+			expectedRoot: "DefinedRootAndSyslRootUndefinedTest/path/",
 		},
 		{
-			name:             "Defined relative root",
-			root:             currentWorkingDirectory,
-			module:           filepath.Clean(definedRootNoMarker.files[0]),
-			structure:        definedRootNoMarker,
-			expectedRoot:     currentWorkingDirectory,
-			expectedLog:      noRootMarkerLog,
-			rootMarkerExists: false,
+			name:         "Defined relative root",
+			root:         currentWorkingDirectory,
+			module:       filepath.Clean(definedRootNoMarker.files[0]),
+			structure:    definedRootNoMarker,
+			expectedRoot: currentWorkingDirectory,
 		},
 		{
-			root:             systemRoot,
-			name:             "Defined absolute path root",
-			module:           syslutil.MustAbsolute(t, definedRootNoMarker.files[0]),
-			structure:        definedRootNoMarker,
-			expectedRoot:     systemRoot,
-			expectedLog:      noRootMarkerLog,
-			rootMarkerExists: false,
+			root:         systemRoot,
+			name:         "Defined absolute path root",
+			module:       syslutil.MustAbsolute(t, definedRootNoMarker.files[0]),
+			structure:    definedRootNoMarker,
+			expectedRoot: systemRoot,
 		},
 		{
-			name:             "Defined relative root with absolute module path rooted at root",
-			root:             currentWorkingDirectory,
-			module:           filepath.Join(systemRoot, filepath.Clean(definedRootNoMarker.files[0])),
-			structure:        definedRootNoMarker,
-			expectedRoot:     currentWorkingDirectory,
-			expectedLog:      noRootMarkerLog,
-			rootMarkerExists: false,
+			name:         "Defined relative root with absolute module path rooted at root",
+			root:         currentWorkingDirectory,
+			module:       filepath.Join(systemRoot, filepath.Clean(definedRootNoMarker.files[0])),
+			structure:    definedRootNoMarker,
+			expectedRoot: currentWorkingDirectory,
 		},
 		{
-			name:             "Defined root flag and root",
-			root:             currentWorkingDirectory,
-			module:           syslutil.MustRelative(t, currentWorkingDirectory, definedRootFlagAndMarkerFound.files[0]),
-			structure:        definedRootFlagAndMarkerFound,
-			expectedRoot:     currentWorkingDirectory,
-			expectedLog:      rootMarkerExistsLog,
-			rootMarkerPath:   syslutil.MustAbsolute(t, "./DefinedRootAndSyslRootDefinedTest/path/"),
-			rootMarkerExists: false,
+			name:           "Defined root flag and root",
+			root:           currentWorkingDirectory,
+			module:         syslutil.MustRelative(t, currentWorkingDirectory, definedRootFlagAndMarkerFound.files[0]),
+			structure:      definedRootFlagAndMarkerFound,
+			expectedRoot:   currentWorkingDirectory,
+			rootMarkerPath: syslutil.MustAbsolute(t, "./DefinedRootAndSyslRootDefinedTest/path/"),
 		},
 		{
-			name:             "Defined root flag and root marker with absolute path module rooted at root",
-			root:             "./DefinedRootAndSyslRootDefinedTest/",
-			module:           "/path/to/module/test.sysl",
-			structure:        definedRootFlagAndMarkerFound,
-			expectedRoot:     "./DefinedRootAndSyslRootDefinedTest/",
-			expectedLog:      rootMarkerExistsLog,
-			rootMarkerPath:   syslutil.MustAbsolute(t, "./DefinedRootAndSyslRootDefinedTest/path/"),
-			rootMarkerExists: false,
+			name:           "Defined root flag and root marker with absolute path module rooted at root",
+			root:           "./DefinedRootAndSyslRootDefinedTest/",
+			module:         "/path/to/module/test.sysl",
+			structure:      definedRootFlagAndMarkerFound,
+			expectedRoot:   "./DefinedRootAndSyslRootDefinedTest/",
+			rootMarkerPath: syslutil.MustAbsolute(t, "./DefinedRootAndSyslRootDefinedTest/path/"),
 		},
 		{
-			name:             "Root is not defined",
-			root:             "",
-			module:           undefinedRoot.files[0],
-			structure:        undefinedRoot,
-			expectedRoot:     filepath.Dir(undefinedRoot.files[0]),
-			expectedLog:      noRootLog,
-			rootMarkerExists: false,
+			name:         "Root is not defined",
+			root:         "",
+			module:       undefinedRoot.files[0],
+			structure:    undefinedRoot,
+			expectedRoot: filepath.Dir(undefinedRoot.files[0]),
 		},
 	}
 
@@ -200,7 +176,7 @@ func TestSetProjectRoot(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			logger, hook := log.NewNullLogger()
+			logger, _ := log.NewNullLogger()
 			fs := afero.NewMemMapFs()
 			syslutil.BuildFolderTest(t, fs, test.structure.folders, test.structure.files)
 
@@ -209,14 +185,6 @@ func TestSetProjectRoot(t *testing.T) {
 			require.NoError(t, r.setProjectRoot(fs, logger))
 			require.Equal(t, test.expectedRoot, r.Root)
 			require.Equal(t, test.getExpectedModule(t), r.module)
-
-			if !test.rootMarkerExists {
-				require.Equal(t, 1, len(hook.Entries))
-				require.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
-				require.Equal(t, test.getExpectedLog(), hook.LastEntry().Message)
-			} else {
-				require.Equal(t, 0, len(hook.Entries))
-			}
 		})
 	}
 }
@@ -227,16 +195,4 @@ func (ts folderTestStructure) getExpectedModule(t *testing.T) string {
 		return ts.module
 	}
 	return syslutil.MustRelative(t, ts.expectedRoot, ts.module)
-}
-
-func (ts folderTestStructure) getExpectedLog() string {
-	switch ts.expectedLog {
-	case noRootMarkerLog:
-		return fmt.Sprintf(noRootMarkerWarning, syslRootMarker, ts.expectedRoot)
-	case rootMarkerExistsLog:
-		return fmt.Sprintf(rootMarkerExistsWarning, syslRootMarker, ts.rootMarkerPath, ts.expectedRoot)
-	case noRootLog:
-		return fmt.Sprintf(noRootWarning, syslRootMarker, ts.expectedRoot)
-	}
-	return ""
 }

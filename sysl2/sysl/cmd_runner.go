@@ -14,10 +14,7 @@ import (
 )
 
 const (
-	syslRootMarker          = ".sysl"
-	noRootMarkerWarning     = "%s is not defined but root flag is defined in %s"
-	rootMarkerExistsWarning = "%s found in %s but will use %s instead"
-	noRootWarning           = "root and %s are undefined, %s will be used instead"
+	syslRootMarker = ".sysl"
 )
 
 type cmdRunner struct {
@@ -136,9 +133,11 @@ func (r *cmdRunner) setProjectRoot(fs afero.Fs, logger *logrus.Logger) error {
 
 	if rootIsDefined {
 		if rootMarkerExists {
-			logger.Warningf(rootMarkerExistsWarning, syslRootMarker, syslRootPath, r.Root)
+			logger.Warningf("%s found in %s but will use %s instead",
+				syslRootMarker, syslRootPath, r.Root)
 		} else {
-			logger.Warningf(noRootMarkerWarning, syslRootMarker, r.Root)
+			logger.Warningf("%s is not defined but root flag is defined in %s",
+				syslRootMarker, r.Root)
 		}
 	} else {
 		if rootMarkerExists {
@@ -157,7 +156,8 @@ func (r *cmdRunner) setProjectRoot(fs afero.Fs, logger *logrus.Logger) error {
 			// uses the module directory as the root, changing the module to be relative to the root
 			r.Root = filepath.Dir(r.module)
 			r.module = filepath.Base(r.module)
-			logger.Warningf(noRootWarning, syslRootMarker, r.Root)
+			logger.Warningf("root and %s are undefined, %s will be used instead",
+				syslRootMarker, r.Root)
 		}
 	}
 
