@@ -197,29 +197,27 @@ func TestSetProjectRoot(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func(ts folderTestStructure) func(t *testing.T) {
-			return func(tt *testing.T) {
-				tt.Parallel()
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
 
-				logger, hook := log.NewNullLogger()
-				fs := afero.NewMemMapFs()
-				syslutil.BuildFolderTest(tt, fs, ts.structure.folders, ts.structure.files)
+			logger, hook := log.NewNullLogger()
+			fs := afero.NewMemMapFs()
+			syslutil.BuildFolderTest(t, fs, test.structure.folders, test.structure.files)
 
-				r := &cmdRunner{Root: ts.root, module: ts.module}
+			r := &cmdRunner{Root: test.root, module: test.module}
 
-				require.NoError(tt, r.setProjectRoot(fs, logger))
-				require.Equal(tt, ts.expectedRoot, r.Root)
-				require.Equal(tt, ts.getExpectedModule(tt), r.module)
+			require.NoError(t, r.setProjectRoot(fs, logger))
+			require.Equal(t, test.expectedRoot, r.Root)
+			require.Equal(t, test.getExpectedModule(t), r.module)
 
-				if !ts.rootMarkerExists {
-					require.Equal(tt, 1, len(hook.Entries))
-					require.Equal(tt, logrus.WarnLevel, hook.LastEntry().Level)
-					require.Equal(tt, ts.getExpectedLog(), hook.LastEntry().Message)
-				} else {
-					require.Equal(tt, 0, len(hook.Entries))
-				}
+			if !test.rootMarkerExists {
+				require.Equal(t, 1, len(hook.Entries))
+				require.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
+				require.Equal(t, test.getExpectedLog(), hook.LastEntry().Message)
+			} else {
+				require.Equal(t, 0, len(hook.Entries))
 			}
-		}(test))
+		})
 	}
 }
 
