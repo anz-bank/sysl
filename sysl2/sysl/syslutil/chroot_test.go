@@ -131,24 +131,6 @@ func generateCases() []testStructure {
 	}
 }
 
-func (ts *testStructure) buildFolderTest(t *testing.T, fs afero.Fs) {
-	for _, folder := range ts.folders {
-		folder, err := filepath.Abs(folder)
-		require.NoError(t, err)
-
-		err = fs.MkdirAll(folder, os.ModeTemporary)
-		require.NoError(t, err)
-	}
-
-	for _, file := range ts.files {
-		file, err := filepath.Abs(file)
-		require.NoError(t, err)
-
-		_, err = fs.Create(file)
-		require.NoError(t, err)
-	}
-}
-
 func (ts *testStructure) checkMockFsResult(
 	t *testing.T, res interface{}, err error, mockFs *MockFs) {
 	require.Equal(t, ts.expectedErr, err)
@@ -178,7 +160,7 @@ func (ts *testStructure) checkResult(t *testing.T, res interface{}, err error) {
 
 func (ts *testStructure) getTestFs(t *testing.T) afero.Fs {
 	fs := afero.NewMemMapFs()
-	ts.buildFolderTest(t, fs)
+	BuildFolderTest(t, fs, ts.folders, ts.files)
 	return NewChrootFs(fs, ts.root)
 }
 

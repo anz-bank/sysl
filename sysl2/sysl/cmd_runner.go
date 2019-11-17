@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -10,6 +12,8 @@ import (
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
+
+const syslRootMarker = ".sysl"
 
 type cmdRunner struct {
 	commands map[string]Command
@@ -24,6 +28,10 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 			var mod *sysl.Module
 			var err error
 			if cmd.RequireSyslModule() {
+				if err = r.setProjectRoot(fs, logger); err != nil {
+					return err
+				}
+
 				mod, _, err = LoadSyslModule(r.Root, r.module, fs, logger)
 				if err != nil {
 					return err
@@ -51,8 +59,8 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	r.commands = map[string]Command{}
 
 	app.Flag("root",
-		"sysl root directory for input model file (default: .)").
-		Default(".").StringVar(&r.Root)
+		"sysl root directory for input model file. If root is not found, the module directory becomes "+
+			"the root, but the module can not import with absolute paths (or imports must be relative).").StringVar(&r.Root)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
@@ -104,4 +112,79 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 	}
 
 	cmd.PreAction(fn)
+}
+
+func (r *cmdRunner) setProjectRoot(fs afero.Fs, logger *logrus.Logger) error {
+	rootIsDefined := r.Root != ""
+
+	modulePath := r.module
+	if rootIsDefined {
+		modulePath = filepath.Join(r.Root, r.module)
+	}
+
+	syslRootPath, err := findRootFromSyslModule(modulePath, fs)
+	if err != nil {
+		return err
+	}
+
+	rootMarkerExists := syslRootPath != ""
+
+	if rootIsDefined {
+		if rootMarkerExists {
+			logger.Warningf("%s found in %s but will use %s instead",
+				syslRootMarker, syslRootPath, r.Root)
+		} else {
+			logger.Warningf("%s is not defined but root flag is defined in %s",
+				syslRootMarker, r.Root)
+		}
+	} else {
+		if rootMarkerExists {
+			r.Root = syslRootPath
+
+			// module has to be relative to the root
+			absModulePath, err := filepath.Abs(r.module)
+			if err != nil {
+				return err
+			}
+			r.module, err = filepath.Rel(r.Root, absModulePath)
+			if err != nil {
+				return err
+			}
+		} else {
+			// uses the module directory as the root, changing the module to be relative to the root
+			r.Root = filepath.Dir(r.module)
+			r.module = filepath.Base(r.module)
+			logger.Warningf("root and %s are undefined, %s will be used instead",
+				syslRootMarker, r.Root)
+		}
+	}
+
+	return nil
+}
+
+func findRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
+	currentPath, err := filepath.Abs(modulePath)
+	if err != nil {
+		return "", err
+	}
+
+	systemRoot, err := filepath.Abs(string(os.PathSeparator))
+	if err != nil {
+		return "", err
+	}
+
+	// Keep walking up the directories to find nearest root marker
+	for {
+		currentPath = filepath.Dir(currentPath)
+		exists, err := afero.Exists(fs, filepath.Join(currentPath, syslRootMarker))
+		reachedRoot := currentPath == systemRoot || (err != nil && os.IsPermission(err))
+		switch {
+		case exists:
+			return currentPath, nil
+		case reachedRoot:
+			return "", nil
+		case err != nil:
+			return "", err
+		}
+	}
 }
