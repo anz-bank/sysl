@@ -121,7 +121,7 @@ func TestFlattenSetList_AllNilPanic(t *testing.T) {
 		r := recover()
 		require.NotNil(t, r)
 	}()
-	_ = flattenSetList(nil, Scope{}, nil, "", nil)
+	_ = flattenSetList(newExprEval(nil), Scope{}, nil, "", nil)
 }
 
 func TestFlattenSetList_NameExpr(t *testing.T) {
@@ -137,7 +137,7 @@ func TestFlattenSetList_NameExpr(t *testing.T) {
 	setOfList := MakeValueSet()
 	setOfList.GetSet().Value = append(setOfList.GetSet().Value,
 		MakeValueList(MakeValueString("name2")))
-	result := flattenSetList(nil, s, setOfList, "var", nameExpr)
+	result := flattenSetList(newExprEval(nil), s, setOfList, "var", nameExpr)
 	require.Equal(t, "name2", result.GetSet().Value[0].GetS())
 }
 
@@ -155,6 +155,6 @@ func TestFlattenListSet_NameExpr(t *testing.T) {
 	listOfSet.GetList().Value[0].GetSet().Value = append(
 		listOfSet.GetList().Value[0].GetSet().Value,
 		MakeValueString("name2"))
-	result := flattenListSet(nil, s, listOfSet, "var", nameExpr)
+	result := flattenListSet(newExprEval(nil), s, listOfSet, "var", nameExpr)
 	require.Equal(t, "name2", result.GetList().Value[0].GetS())
 }

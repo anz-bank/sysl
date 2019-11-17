@@ -4,6 +4,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/sirupsen/logrus/hooks/test"
+
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/parse"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
@@ -16,6 +18,15 @@ const (
 	modelAppName = "Model"
 	todoAppName  = "TodoApp"
 )
+
+func newExprEval(txApp *sysl.Application) *exprEval {
+	log, _ := test.NewNullLogger()
+	return &exprEval{
+		txApp:     txApp,
+		exprStack: exprStack{},
+		logger:    log,
+	}
+}
 
 func TestEvalStrategySetup(t *testing.T) {
 	t.Parallel()
@@ -97,7 +108,7 @@ func TestEvalIntegerMath(t *testing.T) {
 	s := Scope{}
 	s.AddInt("lhs", 1)
 	s.AddInt("rhs", 1)
-	out := Eval(txApp, s, txApp.Views[viewName].Expr).GetMap().Items
+	out := Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr).GetMap().Items
 	assert.Equal(t, int64(2), out["out1"].GetI())
 
 	assert.Equal(t, int64(6), out["out2"].GetMap().Items["out3"].GetI())
@@ -120,7 +131,7 @@ func TestEvalCompare(t *testing.T) {
 	s := Scope{}
 	s.AddInt("lhs", 1)
 	s.AddInt("rhs", 1)
-	out := Eval(txApp, s, txApp.Views[viewName].Expr).GetMap().Items
+	out := Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr).GetMap().Items
 	assert.Len(t, out, 6)
 	assert.True(t, out["eq"].GetB())
 	assert.False(t, out["gt"].GetB())
@@ -143,7 +154,7 @@ func TestEvalListSetOps(t *testing.T) {
 	assert.Len(t, txApp.Views[viewName].Param, 1)
 	s := Scope{}
 	s.AddInt("lhs", 1)
-	out := Eval(txApp, s, txApp.Views[viewName].Expr)
+	out := Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr)
 	strs := out.GetMap().Items["strs"].GetSet()
 	assert.NotNil(t, strs)
 	assert.Len(t, strs.Value, 2)
@@ -176,7 +187,7 @@ func TestEvalIsKeyword(t *testing.T) {
 	assert.Len(t, txApp.Views[viewName].Param, 1)
 	s := Scope{}
 	s.AddString("word", "defer")
-	out := Eval(txApp, s, txApp.Views[viewName].Expr)
+	out := Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr)
 	assert.True(t, out.GetMap().Items["out"].GetB())
 }
 
@@ -194,11 +205,11 @@ func TestEvalIfElseAlt(t *testing.T) {
 	s := Scope{}
 	s.AddApp("app", mod.Apps[modelAppName])
 	s["t"] = s["app"].GetMap().Items["types"].GetMap().Items["Request"].GetMap().Items["fields"].GetMap().Items["payload"]
-	out := Eval(txApp, s, txApp.Views[viewName].Expr)
+	out := Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr)
 	assert.Equal(t, "String", out.GetMap().Items["out"].GetS())
 
 	s["t"] = s["app"].GetMap().Items["types"].GetMap().Items["Response"].GetMap().Items["fields"].GetMap().Items["names"]
-	out = Eval(txApp, s, txApp.Views[viewName].Expr)
+	out = Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr)
 	assert.Equal(t, "List<Request>", out.GetMap().Items["out"].GetS())
 }
 

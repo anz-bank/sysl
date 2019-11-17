@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"testing"
 
-	"gopkg.in/alecthomas/kingpin.v2"
+	"github.com/spf13/afero"
+	kingpin "gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/eval"
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -133,7 +133,7 @@ func TestGenerateCodePerType(t *testing.T) {
 func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	t.Parallel()
 	output, err := GenerateCodeWithParams(".", "tests/model_with_deps.sysl", ".", "tests/xform_with_deps.sysl",
-		"tests/test.gen.g", "javaFile")
+		"tests/test.gen.g", "javaFile", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -141,9 +141,9 @@ func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	n1 := root[0].(Node)
 	assert.Len(t, n1, 4)
 	comment1 := n1[1].(Node)
-	assert.Len(t, comment1, 1)
+	assert.Len(t, comment1, 3)
 
-	for i, comment := range []string{"dep.GET /dep/{id},dep.GET /moredep/{id}"} {
+	for i, comment := range []string{"dep.GET /dep/{id}", "dep.GET /moredep/{id}", "dep2.GET /dep2/{id}"} {
 		comment0 := comment1[i].(Node)
 		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)
@@ -156,7 +156,7 @@ func TestGenerateCodePutDepPackageInCommentUsingSets(t *testing.T) {
 	output, err := GenerateCodeWithParams(".",
 		"tests/model_with_deps.sysl", ".",
 		"tests/xform_with_deps_pkg_set.sysl",
-		"tests/test.gen.g", "javaFile")
+		"tests/test.gen.g", "javaFile", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -164,9 +164,9 @@ func TestGenerateCodePutDepPackageInCommentUsingSets(t *testing.T) {
 	n1 := root[0].(Node)
 	assert.Len(t, n1, 4)
 	comment1 := n1[1].(Node)
-	assert.Len(t, comment1, 1)
+	assert.Len(t, comment1, 2)
 
-	for i, comment := range []string{"dep"} {
+	for i, comment := range []string{"dep", "dep2"} {
 		comment0 := comment1[i].(Node)
 		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)
@@ -179,7 +179,7 @@ func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 	output, err := GenerateCodeWithParams(".",
 		"tests/model_with_deps.sysl", ".",
 		"tests/xform_with_deps_pkg_list.sysl",
-		"tests/test.gen.g", "javaFile")
+		"tests/test.gen.g", "javaFile", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -187,9 +187,9 @@ func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 	n1 := root[0].(Node)
 	assert.Len(t, n1, 4)
 	comment1 := n1[1].(Node)
-	assert.Len(t, comment1, 1)
+	assert.Len(t, comment1, 3)
 
-	for i, comment := range []string{"dep,dep"} {
+	for i, comment := range []string{"dep", "dep", "dep2"} {
 		comment0 := comment1[i].(Node)
 		assert.Len(t, comment0, 1)
 		comment0_0 := comment0[0].(string)
@@ -197,6 +197,28 @@ func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 	}
 }
 
+func TestNamesFromCalls(t *testing.T) {
+	t.Parallel()
+	output, err := GenerateCodeWithParams(".",
+		"tests/model_with_deps.sysl", ".",
+		"tests/xform_names_from_calls.sysl",
+		"tests/test.gen.g", "javaFile", "ModelWithDeps")
+	require.NoError(t, err)
+	root := output[0].output
+	assert.Len(t, output, 1)
+	assert.Len(t, root, 1)
+	n1 := root[0].(Node)
+	assert.Len(t, n1, 3)
+	comment1 := n1[1].(Node)
+	assert.Len(t, comment1, 2)
+
+	for i, comment := range []string{"\"Dep\"", "\"Dep2\""} {
+		comment0 := comment1[i].(Node)
+		assert.Len(t, comment0, 1)
+		comment0_0 := comment0[0].(string)
+		assert.Equal(t, comment, comment0_0)
+	}
+}
 func TestSerialize(t *testing.T) {
 	t.Parallel()
 
@@ -242,15 +264,13 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 }
 
 func GenerateCodeWithParams(
-	rootModel, model, rootTransform, transform, grammar, start string) ([]*CodeGenOutput, error) {
-	_, fs := testutil.WriteToMemOverlayFs(rootModel)
-	return GenerateCodeWithParamsFs(
-		rootModel, model, rootTransform, transform, grammar, start, fs,
-	)
+	rootModel, model, rootTransform, transform, grammar, start string, appname ...string) ([]*CodeGenOutput, error) {
+	_, fs := syslutil.WriteToMemOverlayFs("/")
+	return GenerateCodeWithParamsFs(rootModel, model, rootTransform, transform, grammar, start, fs, appname...)
 }
 
 func GenerateCodeWithParamsFs(
-	rootModel, model, rootTransform, transform, grammar, start string, fs afero.Fs,
+	rootModel, model, rootTransform, transform, grammar, start string, fs afero.Fs, appname ...string,
 ) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
 		rootTransform: rootTransform,
@@ -263,7 +283,10 @@ func GenerateCodeWithParamsFs(
 	if err != nil {
 		return nil, err
 	}
-	return GenerateCode(cmdContextParamCodegen, mod, modAppName, fs, logger)
+	if len(appname) == 0 {
+		appname = []string{modAppName}
+	}
+	return GenerateCode(cmdContextParamCodegen, mod, appname[0], fs, logger)
 }
 
 func TestValidatorDoValidate(t *testing.T) {

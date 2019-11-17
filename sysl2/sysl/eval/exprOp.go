@@ -78,7 +78,7 @@ func cmpListNull(lhs, rhs *sysl.Value) *sysl.Value {
 }
 
 func flattenListMap(
-	txApp *sysl.Application,
+	ee *exprEval,
 	assign Scope,
 	list *sysl.Value,
 	scopeVar string,
@@ -87,13 +87,13 @@ func flattenListMap(
 	listResult := MakeValueList()
 	for _, l := range list.GetList().Value {
 		assign[scopeVar] = l
-		AppendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
+		AppendItemToValueList(listResult.GetList(), Eval(ee, assign, rhs))
 	}
 	return listResult
 }
 
 func flattenListList(
-	txApp *sysl.Application,
+	ee *exprEval,
 	assign Scope,
 	list *sysl.Value,
 	scopeVar string,
@@ -103,14 +103,14 @@ func flattenListList(
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetList().Value {
 			assign[scopeVar] = ll
-			AppendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
+			AppendItemToValueList(listResult.GetList(), Eval(ee, assign, rhs))
 		}
 	}
 	return listResult
 }
 
 func flattenListSet(
-	txApp *sysl.Application,
+	ee *exprEval,
 	assign Scope,
 	list *sysl.Value,
 	scopeVar string,
@@ -120,14 +120,14 @@ func flattenListSet(
 	for _, l := range list.GetList().Value {
 		for _, ll := range l.GetSet().Value {
 			assign[scopeVar] = ll
-			AppendItemToValueList(listResult.GetList(), Eval(txApp, assign, rhs))
+			AppendItemToValueList(listResult.GetList(), Eval(ee, assign, rhs))
 		}
 	}
 	return listResult
 }
 
 func flattenSetList(
-	txApp *sysl.Application,
+	ee *exprEval,
 	assign Scope,
 	list *sysl.Value,
 	scopeVar string,
@@ -137,14 +137,14 @@ func flattenSetList(
 	for _, l := range list.GetSet().Value {
 		for _, ll := range l.GetList().Value {
 			assign[scopeVar] = ll
-			AppendItemToValueList(setResult.GetSet(), Eval(txApp, assign, rhs))
+			AppendItemToValueList(setResult.GetSet(), Eval(ee, assign, rhs))
 		}
 	}
 	return setResult
 }
 
 func flattenSetMap(
-	txApp *sysl.Application,
+	ee *exprEval,
 	assign Scope,
 	list *sysl.Value,
 	scopeVar string,
@@ -156,7 +156,7 @@ func flattenSetMap(
 			panic(errors.Errorf("flattenSetMap: expecting map instead of %v ", l))
 		}
 		assign[scopeVar] = l
-		res := Eval(txApp, assign, rhs)
+		res := Eval(ee, assign, rhs)
 		switch x := res.Value.(type) {
 		case *sysl.Value_Set:
 			for _, ll := range x.Set.Value {
@@ -169,7 +169,7 @@ func flattenSetMap(
 	return setResult
 }
 
-func flattenSetSet(txApp *sysl.Application,
+func flattenSetSet(ee *exprEval,
 	assign Scope,
 	list *sysl.Value,
 	scopeVar string,
@@ -179,7 +179,7 @@ func flattenSetSet(txApp *sysl.Application,
 	for _, l := range list.GetSet().Value {
 		for _, ll := range l.GetSet().Value {
 			assign[scopeVar] = ll
-			AppendItemToValueList(setResult.GetSet(), Eval(txApp, assign, rhs))
+			AppendItemToValueList(setResult.GetSet(), Eval(ee, assign, rhs))
 		}
 	}
 	return setResult
@@ -355,11 +355,11 @@ func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
-func whereSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func whereSet(ee *exprEval, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
 	setResult := MakeValueSet()
 	for _, l := range list.GetSet().Value {
 		assign[scopeVar] = l
-		predicate := Eval(txApp, assign, rhs)
+		predicate := Eval(ee, assign, rhs)
 		if predicate.GetB() {
 			AppendItemToValueList(setResult.GetSet(), l)
 		}
@@ -367,12 +367,12 @@ func whereSet(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar 
 	return setResult
 }
 
-func whereList(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func whereList(ee *exprEval, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
 	listResult := MakeValueList()
 	logrus.Printf("scope: %s, list len: %d", scopeVar, len(list.GetList().Value))
 	for _, l := range list.GetList().Value {
 		assign[scopeVar] = l
-		predicate := Eval(txApp, assign, rhs)
+		predicate := Eval(ee, assign, rhs)
 		if predicate.GetB() {
 			AppendItemToValueList(listResult.GetList(), l)
 		}
@@ -380,7 +380,7 @@ func whereList(txApp *sysl.Application, assign Scope, list *sysl.Value, scopeVar
 	return listResult
 }
 
-func whereMap(txApp *sysl.Application, assign Scope, m *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
+func whereMap(ee *exprEval, assign Scope, m *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {
 	mapResult := MakeValueMap()
 	logrus.Printf("scope: %s, list len: %d", scopeVar, len(m.GetMap().Items))
 	for key, val := range m.GetMap().Items {
@@ -388,7 +388,7 @@ func whereMap(txApp *sysl.Application, assign Scope, m *sysl.Value, scopeVar str
 		AddItemToValueMap(m, "key", MakeValueString(key))
 		AddItemToValueMap(m, "value", val)
 		assign[scopeVar] = m
-		predicate := Eval(txApp, assign, rhs)
+		predicate := Eval(ee, assign, rhs)
 		if predicate.GetB() {
 			AddItemToValueMap(mapResult, key, val)
 		}

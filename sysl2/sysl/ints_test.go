@@ -33,7 +33,8 @@ skinparam component {
 func TestGenerateIntegrations(t *testing.T) {
 	t.Parallel()
 
-	m, err := parse.NewParser().Parse("demo/simple/sysl-ints.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+	m, err := parse.NewParser().Parse("demo/simple/sysl-ints.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
 	require.NoError(t, err)
 	require.NotNil(t, m)
 

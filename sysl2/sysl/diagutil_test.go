@@ -3,7 +3,8 @@ package main
 import (
 	"testing"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/testutil"
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -54,7 +55,7 @@ func TestDeflateAndEncode(t *testing.T) {
 func testOutputPlantuml(t *testing.T, output, output2 string) {
 	fs := afero.NewMemMapFs()
 	require.NoError(t, OutputPlantuml(output, plantumlDotCom, testPlantumlInput, fs))
-	testutil.AssertFsHasExactly(t, fs, output2)
+	syslutil.AssertFsHasExactly(t, fs, output2)
 }
 
 func TestOutputPlantumlWithPng(t *testing.T) {
@@ -113,7 +114,7 @@ func TestOutPutWithWrongFormat(t *testing.T) {
 
 	fs := afero.NewMemMapFs()
 	require.Error(t, OutputPlantuml("test.wrong", plantumlDotCom, testPlantumlInput, fs))
-	testutil.AssertFsHasExactly(t, fs)
+	syslutil.AssertFsHasExactly(t, fs)
 }
 
 func TestWrongHttpRequest(t *testing.T) {
