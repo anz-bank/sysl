@@ -87,9 +87,9 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	return antlr.NewInputStream(text), err
 }
 
-func (p *Parser) RestrictToLocalImport(rootIsDefined bool) {
+func (p *Parser) RestrictToLocalImport(restrict bool) {
 	// if root is not defined, only relative imports are allowed
-	if !rootIsDefined {
+	if restrict {
 		p.allowAbsoluteImport = false
 	}
 }
