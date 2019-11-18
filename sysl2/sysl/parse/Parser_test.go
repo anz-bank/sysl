@@ -571,6 +571,15 @@ func TestTypeAlias(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl")
 }
 
+func TestUndefinedRootAbsoluteImport(t *testing.T) {
+	t.Parallel()
+
+	parser := NewParser()
+	parser.RestrictToLocalImport()
+	_, err := parser.Parse("absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
+	require.EqualError(t, err, "error importing: importing outside current directory is only allowed when root is defined")
+}
+
 func TestInferExprTypeNonTransform(t *testing.T) {
 	t.Parallel()
 
