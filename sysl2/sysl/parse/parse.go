@@ -87,11 +87,9 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	return antlr.NewInputStream(text), err
 }
 
-func (p *Parser) RestrictToLocalImport(restrict bool) {
+func (p *Parser) RestrictToLocalImport() {
 	// if root is not defined, only relative imports are allowed
-	if restrict {
-		p.allowAbsoluteImport = false
-	}
+	p.allowAbsoluteImport = false
 }
 
 func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
@@ -136,7 +134,6 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 
 		for len(listener.imports) > 0 {
 			source = listener.imports[0]
-
 			listener.imports = listener.imports[1:]
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {

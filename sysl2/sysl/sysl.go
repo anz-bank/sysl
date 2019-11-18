@@ -42,7 +42,9 @@ func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (
 	}
 
 	modelParser := parse.NewParser()
-	modelParser.RestrictToLocalImport(!projectConfig.rootIsFound)
+	if !projectConfig.rootIsFound {
+		modelParser.RestrictToLocalImport()
+	}
 	return parse.LoadAndGetDefaultApp(projectConfig.module, projectConfig.fs, modelParser)
 }
 
