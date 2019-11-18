@@ -24,11 +24,13 @@ type TypeData struct {
 	Tuple   *sysl.Type
 }
 
-// Parser holds assign types and let(variable) definitions in hierarchical order, and messages generated while parsing
+// Parser holds assign types and let(variable) definitions in hierarchical order, messages generated while parsing
+// and whether a root was found or not
 type Parser struct {
-	AssignTypes map[string]TypeData
-	LetTypes    map[string]TypeData
-	Messages    map[string][]msg.Msg
+	AssignTypes         map[string]TypeData
+	LetTypes            map[string]TypeData
+	Messages            map[string][]msg.Msg
+	allowAbsoluteImport bool
 }
 
 func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
@@ -85,6 +87,13 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	return antlr.NewInputStream(text), err
 }
 
+func (p *Parser) RestrictToLocalImport(rootIsDefined bool) {
+	// if root is not defined, only relative imports are allowed
+	if !rootIsDefined {
+		p.allowAbsoluteImport = false
+	}
+}
+
 func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	if !strings.HasSuffix(filename, ".sysl") {
 		filename += ".sysl"
@@ -127,8 +136,13 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 
 		for len(listener.imports) > 0 {
 			source = listener.imports[0]
+
 			listener.imports = listener.imports[1:]
 			if _, has := imported[source.filename]; !has {
+				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
+					return nil, Exitf(2,
+						"error importing: importing outside current directory is only allowed when root is defined")
+				}
 				break
 			}
 		}
@@ -639,8 +653,9 @@ func (p *Parser) GetMessages() map[string][]msg.Msg {
 
 func NewParser() *Parser {
 	return &Parser{
-		AssignTypes: map[string]TypeData{},
-		LetTypes:    map[string]TypeData{},
-		Messages:    map[string][]msg.Msg{},
+		AssignTypes:         map[string]TypeData{},
+		LetTypes:            map[string]TypeData{},
+		Messages:            map[string][]msg.Msg{},
+		allowAbsoluteImport: true,
 	}
 }

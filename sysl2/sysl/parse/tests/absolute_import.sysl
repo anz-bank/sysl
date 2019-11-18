@@ -1,0 +1,4 @@
+import /alias
+
+Model:
+    !alias FooBar : string
