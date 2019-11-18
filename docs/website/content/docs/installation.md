@@ -7,60 +7,30 @@ draft: false
 bref: "Sysl can be installed on Windows, MacOS and Linux - follow this guide"
 toc: true
 ---
-Sysl is a CLI (Command Line Interface), split between two executables: `sysl` and `reljam` (Relational Java Model generator).
-Windows users can download and run standalone Sysl executables whereas users of other operating systems need to work with either Python or Docker. `sysl --version` will display the currently installed version of Sysl.
+Sysl is a CLI (Command Line Interface) that excecutes with the `sysl` command. 
 
-Windows Exe
+Prerequisites
 -----------
-Windows users can download the `sysl-bundle-windows.zip`, containing the command line tools `sysl.exe` and `reljam.exe`, from the [Sysl release page](https://github.com/anz-bank/sysl/releases>).
+- [Go](https://golang.org)
+- [PlantUML](https://hub.docker.com/r/plantuml/plantuml-server/) server for diagram generation for use if using the [external service](http://www.plantuml.com/plantuml/) is not appropriate 
 
-Users on other operating systems need to work with Python or Docker.
+Linux/Macos
+-----------
+1. Clone the repo
 
-Python
-------
-Install [Python 2.7](https://www.python.org/downloads/).
-If your specific environment causes problems you might find our [guide](/docs/environment) helpful.
+`git clone https://github.com/anz-bank/sysl.git`
 
-Install Sysl with
+2. Build the binary
 
-	> pip install sysl
+`cd sysl/sysl2/sysl && go build`
 
-Now you can execute Sysl on the command line with
+(note that sysl2 is the new sysl version written in go)
 
-	> sysl   textpb -o out/petshop.txt /demo/petshop/petshop
-	> reljam model /demo/petshop/petshop PetShopModel
+3. To insall it globally copy it to your bin directory:
+`cp sysl /usr/local/bin`
 
-See `sysl --help` and `reljam --help` for more options.
+Congrats: Now sysl is installed and the fun can begin!
 
-Docker
-------
-Install [Docker](https://docs.docker.com/install/) and pull the Docker Image with
-
-	> docker pull anzbank/sysl
-
-Consider tagging the docker image to make commands shorter
-
-	> docker tag anzbank/sysl sysl
-
-Try the following commands
-
-	> docker run sysl
-	> docker run sysl sysl -h
-	> docker run sysl reljam -h
-
-See [Sysl Image on Docker Hub](https://hub.docker.com/r/anzbank/sysl/) for more details.
-
-
-Alternatively, create the following bash function aliases
-
-	function reljam(){
-	  docker run -it --rm -v "$(pwd):/sysl" --entrypoint reljam anzbank/sysl "$@"
-	}
-	function sysl(){
-	  docker run -it --rm -v "$(pwd):/sysl" --entrypoint sysl anzbank/sysl "$@"
-	}
-
-This way the `sysl` and `reljam` commands work as if they are installed binaries
-
-	> sysl --version
-	> reljam --version
+Windows
+-----------
+1. Install your Preferred linux distro and then go to section "Linux/Macos"
