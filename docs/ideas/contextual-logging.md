@@ -106,3 +106,30 @@ func Warnf(ctx context.Context, format string, args... interface{}) {...}
 ```
 
 These functions will extract logger from the context. To keep logger modular, a custom interface `Logger` will be made which can be implemented for any custom loggers. The logger interface itself will consist of trimmed logrus API similar to the above functions without context for the argument. Additional API can be added in the future should the need arises but so far, only these functions are used in the sysl engine. Initially Logrus' `StandardLogger` and `NullLogger` will be used as the underlying logger as they are used in the sysl engine frequently.
+
+The `Logger` interface is defined as below
+```go
+type Logger interface {
+  Debug(args... interface{})
+  Debugf(format string, args... interface{})
+  Error(args... interface{})
+  Errorf(format string, args... interface{})
+  Exit(code int)
+  Fatal(args... interface{})
+  Fatalf(format string, args... interface{})
+  Info(args... interface{})
+  Infof(format string, args... interface{})
+  Log(level Level, args... interface{})
+  Logf(level Level, format string, args... interface{})
+  Panic(args... interface{})
+  Panicf(format string, args... interface{})
+  Print(args... interface{})
+  Printf(format string, args... interface{})
+  Trace(args... interface{})
+  Tracef(format string, args... interface{})
+  Warn(args... interface{})
+  Warnf(format string, args... interface{})
+}
+```
+
+It is not receommended to interact with this interface unless it is for adding log specific fields as this does not produce a new context.
