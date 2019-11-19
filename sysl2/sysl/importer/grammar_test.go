@@ -24,8 +24,7 @@ func TestLoadGrammar(t *testing.T) {
 			t.Run(parts[0], func(t *testing.T) {
 				t.Parallel()
 				outArgs := OutputData{
-					AppName:   strings.Title(strings.ToLower(parts[0])),
-					StartRule: parts[0] + "File",
+					AppName: strings.Title(strings.ToLower(parts[0])),
 				}
 				data, err := ioutil.ReadFile("../importer/tests-grammar/" + parts[0] + ".gen.g")
 				if err != nil {

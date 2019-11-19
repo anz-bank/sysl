@@ -12,9 +12,8 @@ import (
 )
 
 type OutputData struct {
-	AppName   string
-	Package   string
-	StartRule string
+	AppName string
+	Package string
 }
 
 type SyslInfo struct {

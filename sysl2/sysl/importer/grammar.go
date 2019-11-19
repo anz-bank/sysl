@@ -11,7 +11,6 @@ import (
 
 type grammarParam struct {
 	grammarInput string
-	startRule    string
 	grammarName  string
 }
 
@@ -26,7 +25,6 @@ type Grammar struct {
 func LoadGrammar(args OutputData, grammarInput string, logger *logrus.Logger) (out string, err error) {
 	gParam := grammarParam{
 		grammarInput: grammarInput,
-		startRule:    args.StartRule,
 		grammarName:  args.AppName,
 	}
 	return newGrammar(gParam, logger).writeSysl()
@@ -158,37 +156,24 @@ func (g *Grammar) createRule(rule *ebnfGrammar.Rule, name string) Type {
 }
 
 func (g *Grammar) writeSysl() (string, error) {
-	g.grammar = parser.ParseEBNF(g.grammarParam.grammarInput, g.grammarParam.grammarName,
-		g.grammarParam.startRule)
-	rule := g.grammar.Rules[g.grammarParam.startRule]
-	if rule == nil {
-		return "", fmt.Errorf("start rule not found")
-	}
-	var outputData OutputData
+	g.grammar = parser.ParseEBNF(g.grammarParam.grammarInput, "", "")
 	var syslBytes bytes.Buffer
 	syslWriter := newWriter(&syslBytes, g.logger)
-	switch g.grammarParam.startRule {
-	case `goFile`:
-		outputData = OutputData{
-			AppName: "Go",
-		}
-	case `javaFile`:
-		outputData = OutputData{
-			AppName: "Java",
-		}
-	default:
-		return "", fmt.Errorf("unexpected entry rule")
-	}
 	info := SyslInfo{
-		OutputData:  outputData,
-		Title:       g.grammarParam.startRule,
-		Description: outputData.AppName + " Grammar",
+		OutputData: OutputData{
+			AppName: g.grammarName,
+		},
+		Title:       g.grammarName + "File",
+		Description: g.grammarName + " Grammar",
 	}
-
-	startRule := g.grammar.GetRules()[g.grammarParam.startRule]
-	ruleType := g.createRule(startRule, g.grammarParam.startRule)
-	g.types.types = append([]Type{ruleType}, g.types.types...)
-	g.visitedMap[g.grammarParam.startRule] = true
+	for keyRuleName, keyRule := range g.grammar.GetRules() {
+		if _, visited := g.visitedMap[keyRuleName]; !visited {
+			ruleType := g.createRule(keyRule, keyRuleName)
+			g.types.types = append([]Type{ruleType}, g.types.types...)
+			g.visitedMap[keyRuleName] = true
+		}
+	}
+	g.types.Sort()
 	if err := syslWriter.Write(info, g.types, ""); err != nil {
 		g.logger.Errorf("writing into buffer failed %s", err)
 		return "", err
