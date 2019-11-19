@@ -978,9 +978,31 @@ def getOutputString(input):
 
 
 def test_importing_simple_swagger_with_json_tags():
+    output, _ = getOutputString(r"""
+swagger: "2.0"
+info:
+  title: Simple
+paths:
+  /test:
+    get:
+      responses:
+        400:
+          description: client error
+          schema:
+            $ref: '#/definitions/SimpleObj'
+definitions:
+  SimpleObj:
+
+    type: object
+    properties:
+      name:
+        type: string
+""")
+    assert 'return error <: SimpleObj' in output
+
+def test_importing_simple_swagger_with_json_tags():
     output, _ = getOutputString(SIMPLE_SWAGGER_EXAMPLE)
     assert 'name <: string?:\n            @json_tag = "name"' in output
-
 
 def test_importing_swagger_with_top_level_array():
     output, _ = getOutputString(SWAGGER_TOP_LEVEL_ARRAY_EXAMPLE)

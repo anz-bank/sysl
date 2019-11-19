@@ -25,6 +25,48 @@ def getOutputString(input):
     return str(w), logger
 
 
+def test_importing_simple_openapi_with_error_type():
+    output, _ = getOutputString(r"""
+"openapi": "3.0"
+info:
+  title: Simple
+paths:
+  /test:
+    get:
+      responses:
+        400:
+          description: "client error"
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/SimpleObj"
+components:
+  schemas:
+    SimpleObj:
+
+      type: object
+      properties:
+        name:
+          type: string
+""")
+    assert r"""
+ "Simple" [package=""]:
+    @description =:
+        | No description.
+
+    /test:
+        GET:
+            | No description.
+            return error <: SimpleObj
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type SimpleObj:
+        name <: string?:
+            @json_tag = "name"
+""" in output
+
 def test_importing_simple_openapi_with_json_tags():
     output, _ = getOutputString(r"""
 "openapi": "3.0"
