@@ -884,8 +884,7 @@ func TestCodegenGrammarImportDefOut(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/go.gen.g", "-s", "goFile", "-a",
-		"Go"}, fs, logger, main3)
+	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/go.gen.g"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/output.sysl")
 }
 
@@ -893,7 +892,6 @@ func TestCodegenGrammarImport(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/go.gen.g", "-s", "goFile", "-a",
-		"Go", "-o", "out.sysl"}, fs, logger, main3)
+	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/go.gen.g", "-o", "out.sysl"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }

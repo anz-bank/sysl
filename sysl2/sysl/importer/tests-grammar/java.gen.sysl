@@ -4,12 +4,16 @@
 ##                                      ##
 ##########################################
 
-Java "javaFile":
+Java "JavaFile":
     @description =:
         | Java Grammar
 
     #---------------------------------------------------------------------------
     # definitions
+
+    !type import:
+        importPath <: string:
+            @json_tag = "importPath"
 
     !type javaFile:
         package <: package:
@@ -22,10 +26,6 @@ Java "javaFile":
             @json_tag = "import"
         definition <: string:
             @json_tag = "definition"
-
-    !type import:
-        importPath <: string:
-            @json_tag = "importPath"
 
     !type package:
         packageName <: string:
