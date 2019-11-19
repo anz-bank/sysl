@@ -73,8 +73,8 @@ func NewLogger() Logger {...} // One for each logger type
  * The fields setup in AddField and AddFields are for context specific fields
  * Fields will be logged alphabetically
  */
-func AddField(key string, val interface{}) context.Context {...}
-func AddFields(fields map[string]interface{}) context.Context {...}
+func AddField(ctx context.Context, key string, val interface{}) context.Context {...}
+func AddFields(ctx context.Context, fields map[string]interface{}) context.Context {...}
 
 /**
  * LogFields and LogField are meant to be used for a specific log. It does not return context with
@@ -104,6 +104,8 @@ func Tracef(ctx context.Context, format string, args... interface{}) {...}
 func Warn(ctx context.Context, args... interface{}) {...}
 func Warnf(ctx context.Context, format string, args... interface{}) {...}
 ```
+
+You can view expected use [here](contextual-logging-example/main.go)
 
 These functions will extract logger from the context. To keep logger modular, a custom interface `Logger` will be made which can be implemented for any custom loggers. The logger interface itself will consist of trimmed logrus API similar to the above functions without context for the argument. Additional API can be added in the future should the need arises but so far, only these functions are used in the sysl engine. Initially Logrus' `StandardLogger` and `NullLogger` will be used as the underlying logger as they are used in the sysl engine frequently.
 
