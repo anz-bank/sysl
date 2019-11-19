@@ -2,7 +2,38 @@
 
 ## Problem
 
-The current logger library, Logrus, makes the use of context quite difficult. In Logrus, the use of context makes use of an intermediate data structure that processes the context data before logging. To achieve this, it is necessary to set up how context is processed through the use of Logrus interface method `Format`. This library aims to make using context with logging easier by standardising log formats and enforces the use of context as part of the effort to use context more in sysl (see issue [#397](https://github.com/anz-bank/sysl/issues/397))
+The current logger library, Logrus, makes the use of context quite difficult. In Logrus, the use of context makes use of an intermediate data structure that processes the context data before logging.
+
+A typical use of context in logrus is demonstrated below
+```go
+logger.WithContext(ctx).Debug("This is a debug message")
+```
+
+However, to be able to do this, logrus requires the user to define a format on how context data is processed and logged through the use of their `Format` interface which you can see the detail [here](https://godoc.org/github.com/sirupsen/logrus#TextFormatter.Format).
+
+An example of using a format taken from [here](https://github.com/sirupsen/logrus)
+```go
+type MyJSONFormatter struct {
+}
+
+log.SetFormatter(new(MyJSONFormatter))
+
+func (f *MyJSONFormatter) Format(entry *Entry) ([]byte, error) {
+    // Note this doesn't include Time, Level and Message which are available on
+    // the Entry. Consult `godoc` on information about those fields or read the
+    // source of the official loggers.
+
+    // context data has to be processed here
+    serialized, err := json.Marshal(entry.Data)
+    if err != nil {
+      return nil, fmt.Errorf("Failed to marshal fields to JSON, %v", err)
+    }
+
+    return append(serialized, '\n'), nil
+}
+```
+
+This library aims to make using context with logging easier by standardising log formats and enforces the use of context as part of the effort to use context more in sysl (see issue [#397](https://github.com/anz-bank/sysl/issues/397))
 
 ## Idea
 
