@@ -9,7 +9,7 @@ func AddLogger(ctx context.Context, logger Logger) context.Context {
 	return context.WithValue(ctx, key, logger)
 }
 
-func Debug(ctx context.Context, args... interface{}) {
+func Debug(ctx context.Context, args ...interface{}) {
 	log := ctx.Value(key).(Logger)
 	if log == nil {
 		panic(errors.New("Logger does not exist in context"))

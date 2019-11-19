@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/anz-bank/sysl/docs/ideas/contextual-logging-example/syslLogger"
+
+	logger "github.com/anz-bank/sysl/docs/ideas/contextual-logging-example/syslLogger"
 )
 
 func main() {
@@ -31,7 +32,7 @@ func main() {
 	 * Expected to log
 	 * 2006-01-02T15:04:05Z07:00 id=12345 DEBUG This is a debug with context specific field again (main.go:34)
 	 */
-	 logger.Debug(ctx, "This is a debug with context specific field again")
+	logger.Debug(ctx, "This is a debug with context specific field again")
 }
 
 func setupLogger(ctx context.Context) context.Context {
