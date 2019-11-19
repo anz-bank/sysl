@@ -173,15 +173,23 @@ class OpenApiTranslator:
                             schema = schema['schema']
 
                 if schema is not None:
-                    if schema.get('type') == 'array':
-                        returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
-                    else:
-                        returnValues[schema['$ref'].rpartition('/')[2]] = True
+                    varName = ""
+                    if rc.startswith('2'):
+                        varName = "ok <: "
+                    elif rc.startswith('4') or rc.startswith('5'):
+                        varName = "error <: "
+                    elif rc == 'default' or rc.startswith('x-'):
+                        self.warn('default responses and x-* responses are not implemented')
+                    if varName != "":
+                        if schema.get('type') == 'array':
+                            returnValues[varName + 'sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
+                        else:
+                            returnValues[varName + schema['$ref'].rpartition('/')[2]] = True
 
-                if rc == 'default' or rc.startswith('x-'):
-                    self.warn('default responses and x-* responses are not implemented')
-
-            w(u'return {}', ', '.join(returnValues))
+            if len(returnValues) > 2:
+                self.error('invalid return value set:' + json.dumps(returnValues))
+            for rv in returnValues:
+                w(u'return {}', rv)
 
         for (path, api) in sorted(oaSpec['paths'].iteritems()):
             apiParams = api.pop('parameters') if 'parameters' in api else []

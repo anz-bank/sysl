@@ -236,14 +236,25 @@ class SwaggerTranslator:
                         for key in sorted(responses):
                             schema = responses.get(key, {}).get('schema')
                             if schema is not None:
-                                if schema.get('type') == 'array':
-                                    returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
-                                else:
-                                    returnValues[schema['$ref'].rpartition('/')[2]] = True
-                            if key.startswith('x-'):
-                                self.warn('x-* responses are not implemented')
+                                varName = ""
+                                if key.startswith('2'):
+                                    varName = "ok <: "
+                                elif key.startswith('4') or key.startswith('5'):
+                                    varName = "error <: "
+                                elif key == 'default' or key.startswith('x-'):
+                                    self.warn('default and x-* responses are not implemented')
 
-                        w(u'return {}'.format(', '.join(returnValues)))
+                                if varName != "":
+                                    if schema.get('type') == 'array':
+                                        returnValues[varName + 'sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
+                                    else:
+                                        returnValues[varName + schema['$ref'].rpartition('/')[2]] = True
+                        
+                        if len(returnValues) > 2:
+                            self.error('invalid return value set:' + json.dumps(returnValues))
+                        
+                        for rv in returnValues:
+                            w(u'return {}', rv)
 
     def writeDefs(self, swag, w):
         w()
