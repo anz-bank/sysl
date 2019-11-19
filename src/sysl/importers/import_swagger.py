@@ -233,20 +233,19 @@ class SwaggerTranslator:
                         # ref: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responses-object
 
                         returnValues = OrderedDict()
-                        for key in sorted(responses):                            
+                        for key in sorted(responses):
                             if key == 'default' or key.startswith('x-'):
                                 self.warn('default and x-* responses are not implemented')
                                 continue
 
                             schema = responses.get(key, {}).get('schema')
-                            
+
                             if schema is not None:
                                 varName = ""
                                 if key.startswith('2'):
                                     varName = "ok <: "
                                 elif key.startswith('4') or key.startswith('5'):
                                     varName = "error <: "
-                                
 
                                 if varName != "":
                                     if schema.get('type') == 'array':
@@ -258,9 +257,9 @@ class SwaggerTranslator:
                             self.error('invalid return value set:' + json.dumps(returnValues))
 
                         if len(returnValues) == 0:
-                            w(u'return') 
+                            w(u'return')
                         else:
-                            for rv in returnValues: 
+                            for rv in returnValues:
                                 w(u'return {}', rv)
 
     def writeDefs(self, swag, w):

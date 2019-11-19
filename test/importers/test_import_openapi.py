@@ -67,6 +67,7 @@ components:
             @json_tag = "name"
 """ in output
 
+
 def test_importing_simple_openapi_with_json_tags():
     output, _ = getOutputString(r"""
 "openapi": "3.0"

@@ -164,7 +164,7 @@ class OpenApiTranslator:
             returnValues = OrderedDict()
 
             for rc, rspec in sorted(responses.iteritems()):
-                
+
                 if rc == 'default' or rc.startswith('x-'):
                     self.warn('default and x-* responses are not implemented')
                     continue
@@ -183,7 +183,7 @@ class OpenApiTranslator:
                         varName = "ok <: "
                     elif rc.startswith('4') or rc.startswith('5'):
                         varName = "error <: "
-                    
+
                     if varName != "":
                         if schema.get('type') == 'array':
                             returnValues[varName + 'sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
@@ -192,11 +192,11 @@ class OpenApiTranslator:
 
             if len(returnValues) > 2:
                 self.error('invalid return value set:' + json.dumps(returnValues))
-            
+
             if len(returnValues) == 0:
-                w(u'return') 
+                w(u'return')
             else:
-                for rv in returnValues: 
+                for rv in returnValues:
                     w(u'return {}', rv)
 
         for (path, api) in sorted(oaSpec['paths'].iteritems()):
