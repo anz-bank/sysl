@@ -57,7 +57,7 @@ components:
     /test:
         GET:
             | No description.
-            return SimpleObj
+            return ok <: SimpleObj
 
     #---------------------------------------------------------------------------
     # definitions
@@ -352,7 +352,7 @@ paths:
         /goat/delete-goat:
             POST ?goat_id=string:
                 | Delete a goat.
-                return Acknowledgement
+                return ok <: Acknowledgement
 
     #---------------------------------------------------------------------------
     # definitions
@@ -439,7 +439,7 @@ paths:
         /goat/get-goats:
             GET:
                 | Gotta get goats.
-                return sequence of Goat
+                return ok <: sequence of Goat
 
     #---------------------------------------------------------------------------
     # definitions
@@ -667,7 +667,7 @@ paths:
           description: 'here be default response'
       summary: Check goat status
 """)
-    expected_warnings = ['default responses and x-* responses are not implemented']
+    expected_warnings = ['default and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
 
 
@@ -692,7 +692,7 @@ paths:
           description: 'here be an x-banana response'
       summary: Check goat status
 """)
-    expected_warnings = ['default responses and x-* responses are not implemented']
+    expected_warnings = ['default and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
 
 

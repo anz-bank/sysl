@@ -280,7 +280,7 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_EXPECTED_SYSL = r"""
         /goat/delete-goat:
             POST ?goat_id=string:
                 | Delete a goat.
-                return Acknowledgement
+                return ok <: Acknowledgement
 
     #---------------------------------------------------------------------------
     # definitions
@@ -356,7 +356,7 @@ EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_RETURNING_ARRAY_OF_DEFINED_OBJECT_TYPE_EXPECT
         /goat/get-goats:
             GET:
                 | Gotta get goats.
-                return sequence of Goat
+                return ok <: sequence of Goat
 
     #---------------------------------------------------------------------------
     # definitions
@@ -1072,13 +1072,13 @@ def test_import_of_swagger_path_with_error_response():
 
 def test_import_of_swagger_path_with_default_response_is_not_implemented():
     _, logger = getOutputString(EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_DEFAULT_RESPONSE)
-    expected_warnings = []
+    expected_warnings = ['default and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
 
 
 def test_import_of_swagger_path_with_x_dash_whatever_response_is_not_implemented():
     _, logger = getOutputString(EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_X_DASH_WHATEVER_RESPONSE)
-    expected_warnings = ['x-* responses are not implemented']
+    expected_warnings = ['default and x-* responses are not implemented']
     assert logger.warnings == expected_warnings
 
 
