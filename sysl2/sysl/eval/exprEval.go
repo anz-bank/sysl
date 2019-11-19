@@ -219,6 +219,20 @@ func evalCall(ee *exprEval, assign Scope, x *sysl.Expr_Call_) *sysl.Value {
 	return evalGoFunc(x.Call.Func, list)
 }
 
+// isInternalMap checks if this Value is created inplicitly inside evalTransform()
+func isInternalMap(val *sysl.Value_Map) bool {
+	founds := 0
+	for key := range val.Items {
+		switch key {
+		case "key", "value":
+			founds++
+		default:
+			return false
+		}
+	}
+	return founds == 2
+}
+
 func evalName(assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
@@ -232,6 +246,17 @@ func evalGetAttr(ee *exprEval, assign Scope, x *sysl.Expr_GetAttr_) *sysl.Value 
 	arg := Eval(ee, assign, x.GetAttr.Arg)
 	if arg.GetMap() == nil {
 		panic(errors.Errorf("%v", arg))
+	}
+
+	if isInternalMap(arg.GetMap()) {
+		switch key := x.GetAttr.Attr; key {
+		case "value":
+			ee.logger.Warnf("Unnecessary use of .value")
+			fallthrough
+		case "key":
+			return arg.GetMap().Items[key]
+		}
+		arg = arg.GetMap().Items["value"]
 	}
 	val, has := arg.GetMap().Items[x.GetAttr.Attr]
 	logrus.Tracef("GetAttribute: %v result: %v: ", has, val)

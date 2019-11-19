@@ -558,3 +558,45 @@ func TestListAppender_BlockDup(t *testing.T) {
 	require.Len(t, result, 1)
 	assert.Equal(t, "val", result[0].GetS())
 }
+
+func Test_isInternalMap(t *testing.T) {
+	type data struct {
+		name     string
+		keys     []string
+		expected bool
+	}
+	tests := []data{
+		{
+			name:     "simple-yes",
+			keys:     []string{"key", "value"},
+			expected: true,
+		},
+		{
+			name:     "simple-no",
+			keys:     []string{"value"},
+			expected: false,
+		},
+		{
+			name:     "simple-no2",
+			keys:     []string{"key"},
+			expected: false,
+		},
+		{
+			name:     "extra-items",
+			keys:     []string{"key", "value", "foo"},
+			expected: false,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			m := MakeValueMap().GetMap()
+			for _, x := range tt.keys {
+				m.Items[x] = MakeValueString(x)
+			}
+			assert.Equal(t, tt.expected, isInternalMap(m))
+		})
+	}
+}
