@@ -17,7 +17,7 @@ The idea is to have [logrus](https://github.com/sirupsen/logrus)-like API while 
 Formatting is to be standardised. General format would look like
 
 ```txt
-Time Fields Level Message (Caller)
+[Time in RFC3339 format] Fields Level Message (Caller)
 ```
 
 For example
