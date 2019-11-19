@@ -1,0 +1,52 @@
+name: Go-Windows
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+jobs:
+
+  build-and-test-windows:
+    name: Build Windows and test
+    runs-on: windows-latest
+    steps:
+
+    - name: Set up Go 1.12
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.12
+      id: go
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get dependencies
+      run: go get -v -t -d .\...
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test
+      run: go test -coverprofile=coverage.txt -covermode=atomic .\...
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
+    - name: Build
+      run: |
+        md dist\
+        go build -o dist\gosysl.exe .\sysl2\sysl\
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test installed
+      run: .\scripts\test-gosysl.bat
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOPATH: .
+        SYSL_PLANTUML: http://www.plantuml.com/plantuml

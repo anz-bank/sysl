@@ -2,6 +2,7 @@ package parse
 
 import (
 	"fmt"
+	"runtime"
 	"io"
 	"net/http"
 	"os"
@@ -33,7 +34,11 @@ func TestNewFSFileStream(t *testing.T) {
 
 	fs, err := newFSFileStream("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), "."))
 	if assert.NoError(t, err) {
-		assert.Equal(t, "package parse\n", fs.GetText(0, 13))
+		if runtime.GOOS == "windows" {
+			assert.Equal(t, "package parse\r", fs.GetText(0, 13))
+		} else {
+			assert.Equal(t, "package parse\n", fs.GetText(0, 13))
+		}
 	}
 }
 

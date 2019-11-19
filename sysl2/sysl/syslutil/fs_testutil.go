@@ -2,6 +2,8 @@ package syslutil
 
 import (
 	"os"
+	"runtime"
+	"regexp"
 	"path/filepath"
 	"sort"
 	"testing"
@@ -72,4 +74,12 @@ func BuildFolderTest(t *testing.T, fs afero.Fs, folders, files []string) {
 		_, err = fs.Create(file)
 		require.NoError(t, err)
 	}
+}
+
+func HandleCRLF(text []byte) []byte {
+	if runtime.GOOS == "windows" {
+		re := regexp.MustCompile(`\r?\n`)
+		text = re.ReplaceAll(text, []byte("\n"))
+	}
+	return text
 }
