@@ -3372,14 +3372,14 @@ func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_express
 		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext))
 	}
 
-	if top := s.TopExpr(); top.GetTransform() != nil {
-		lhs = makeExprName(TemplateImpliedResult, s.sc.Get(ctx.BaseParserRuleContext))
-	} else {
+	if top := s.TopExpr(); top.GetTransform() == nil {
 		lhs = s.popExpr()
 		s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
+	} else {
+		s.PushExpr(rhs)
 	}
 
-	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
+	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
 // EnterTemplate_statement is called when production template_statement is entered.
