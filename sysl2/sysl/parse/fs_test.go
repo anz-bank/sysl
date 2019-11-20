@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"runtime"
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
@@ -34,11 +33,8 @@ func TestNewFSFileStream(t *testing.T) {
 
 	fs, err := newFSFileStream("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), "."))
 	if assert.NoError(t, err) {
-		if runtime.GOOS == "windows" {
-			assert.Equal(t, "package parse\r", fs.GetText(0, 13))
-		} else {
-			assert.Equal(t, "package parse\n", fs.GetText(0, 13))
-		}
+		text := syslutil.HandleCRLF([]byte(fs.GetText(0, 13)))
+		assert.Equal(t, "package parse\n", string(text))
 	}
 }
 

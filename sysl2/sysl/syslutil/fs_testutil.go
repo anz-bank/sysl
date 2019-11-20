@@ -78,7 +78,7 @@ func BuildFolderTest(t *testing.T, fs afero.Fs, folders, files []string) {
 
 func HandleCRLF(text []byte) []byte {
 	if runtime.GOOS == "windows" {
-		re := regexp.MustCompile(`\r?\n`)
+		re := regexp.MustCompile("(\r\n|\r)")
 		text = re.ReplaceAll(text, []byte("\n"))
 	}
 	return text
