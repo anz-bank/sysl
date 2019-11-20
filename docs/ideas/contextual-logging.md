@@ -93,8 +93,6 @@ func Fatal(ctx context.Context, args... interface{}) {...}
 func Fatalf(ctx context.Context, format string, args... interface{}) {...}
 func Info(ctx context.Context, args... interface{}) {...}
 func Infof(ctx context.Context, format string, args... interface{}) {...}
-func Log(ctx context.Context, level Level, args... interface{}) {...}
-func Logf(ctx context.Context, level Level, format string, args... interface{}) {...}
 func Panic(ctx context.Context, args... interface{}) {...}
 func Panicf(ctx context.Context, format string, args... interface{}) {...}
 func Print(ctx context.Context, args... interface{}) {...}
@@ -121,8 +119,6 @@ type Logger interface {
   Fatalf(format string, args... interface{})
   Info(args... interface{})
   Infof(format string, args... interface{})
-  Log(level Level, args... interface{})
-  Logf(level Level, format string, args... interface{})
   Panic(args... interface{})
   Panicf(format string, args... interface{})
   Print(args... interface{})
