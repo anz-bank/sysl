@@ -2,9 +2,9 @@ package syslutil
 
 import (
 	"os"
-	"runtime"
-	"regexp"
 	"path/filepath"
+	"regexp"
+	"runtime"
 	"sort"
 	"testing"
 

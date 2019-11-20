@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/stretchr/testify/require"
 )

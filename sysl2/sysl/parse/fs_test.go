@@ -2,10 +2,10 @@ package parse
 
 import (
 	"fmt"
-	"runtime"
 	"io"
 	"net/http"
 	"os"
+	"runtime"
 	"testing"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
