@@ -1,6 +1,10 @@
 package syslutil
 
-import sysl "github.com/anz-bank/sysl/src/proto"
+import (
+	"strings"
+
+	sysl "github.com/anz-bank/sysl/src/proto"
+)
 
 // GetTypeDetail returns name of the type and details in string format
 func GetTypeDetail(t *sysl.Type) (typeName string, typeDetail string) {
@@ -10,15 +14,14 @@ func GetTypeDetail(t *sysl.Type) (typeName string, typeDetail string) {
 		typeDetail = sysl.Type_Primitive_name[int32(x.Primitive)]
 	case *sysl.Type_TypeRef:
 		typeName = "type_ref"
-		if x.TypeRef.Ref != nil && len(x.TypeRef.Ref.Path) == 1 {
+		switch {
+		case x.TypeRef.Ref != nil && len(x.TypeRef.Ref.Path) == 1:
 			typeDetail = x.TypeRef.Ref.Path[0]
-			if x.TypeRef.Ref.Appname != nil {
-				typeDetail = x.TypeRef.Ref.Appname.Part[0] + "." + typeDetail
-			}
-		} else {
+		case x.TypeRef.Ref.Appname != nil:
 			typeDetail = x.TypeRef.Ref.Appname.Part[0]
+		default:
+			typeDetail = strings.Join(x.TypeRef.Ref.Path, ".")
 		}
-
 	case *sysl.Type_Sequence:
 		typeName = "sequence"
 		_, d := GetTypeDetail(x.Sequence)
