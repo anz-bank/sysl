@@ -100,7 +100,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		return nil, Exitf(ImportError, "input file does not exist: %#v", filename)
 	}
 	imported := map[string]struct{}{}
-	listener := NewTreeShapeListener(fs)
+	listener := NewTreeShapeListener()
 
 	source := importDef{
 		filename: filename,

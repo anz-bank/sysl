@@ -15,6 +15,7 @@ require (
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/loads v0.19.3
 	github.com/go-openapi/spec v0.19.3
+	github.com/go-openapi/swag v0.19.5
 	github.com/golang/protobuf v1.3.2
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
