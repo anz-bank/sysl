@@ -57,6 +57,7 @@ func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 	expected, err := ioutil.ReadFile(golden)
 	assert.NoError(t, err)
 
+	expected = syslutil.HandleCRLF(expected)
 	assert.Equal(t, string(expected), string(actual))
 }
 

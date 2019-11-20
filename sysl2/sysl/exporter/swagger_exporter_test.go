@@ -39,6 +39,8 @@ func TestExportAll(t *testing.T) {
 				require.NoError(t, err)
 				yamlFileBytes, err := ioutil.ReadFile("../exporter/test-data/" + parts[0] + `.yaml`)
 				require.NoError(t, err)
+
+				yamlFileBytes = syslutil.HandleCRLF(yamlFileBytes)
 				require.Equal(t, string(yamlFileBytes), string(out))
 			})
 		}
