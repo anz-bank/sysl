@@ -234,16 +234,33 @@ class SwaggerTranslator:
 
                         returnValues = OrderedDict()
                         for key in sorted(responses):
-                            schema = responses.get(key, {}).get('schema')
-                            if schema is not None:
-                                if schema.get('type') == 'array':
-                                    returnValues['sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
-                                else:
-                                    returnValues[schema['$ref'].rpartition('/')[2]] = True
-                            if key.startswith('x-'):
-                                self.warn('x-* responses are not implemented')
+                            if key == 'default' or key.startswith('x-'):
+                                self.warn('default and x-* responses are not implemented')
+                                continue
 
-                        w(u'return {}'.format(', '.join(returnValues)))
+                            schema = responses.get(key, {}).get('schema')
+
+                            if schema is not None:
+                                varName = ""
+                                if key.startswith('2'):
+                                    varName = "ok <: "
+                                elif key.startswith('4') or key.startswith('5'):
+                                    varName = "error <: "
+
+                                if varName != "":
+                                    if schema.get('type') == 'array':
+                                        returnValues[varName + 'sequence of ' + schema['items']['$ref'].rpartition('/')[2]] = True
+                                    else:
+                                        returnValues[varName + schema['$ref'].rpartition('/')[2]] = True
+
+                        if len(returnValues) > 2:
+                            self.error('invalid return value set:' + json.dumps(returnValues))
+
+                        if len(returnValues) == 0:
+                            w(u'return')
+                        else:
+                            for rv in returnValues:
+                                w(u'return {}', rv)
 
     def writeDefs(self, swag, w):
         w()
