@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/stretchr/testify/require"
@@ -38,6 +39,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				expected, err := ioutil.ReadFile(path.Join(cfg.testDir, filename+".sysl"))
 				require.NoError(t, err)
+				expected = syslutil.HandleCRLF(expected)
 
 				result, err := cfg.fn(OutputData{AppName: "testapp", Package: "package_foo"}, string(input), logger)
 				require.NoError(t, err)

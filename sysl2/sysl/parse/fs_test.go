@@ -33,7 +33,8 @@ func TestNewFSFileStream(t *testing.T) {
 
 	fs, err := newFSFileStream("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), "."))
 	if assert.NoError(t, err) {
-		assert.Equal(t, "package parse\n", fs.GetText(0, 13))
+		text := syslutil.HandleCRLF([]byte(fs.GetText(0, 13)))
+		assert.Equal(t, "package parse\n", string(text))
 	}
 }
 

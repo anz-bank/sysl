@@ -93,6 +93,7 @@ func comparePUML(t *testing.T, expected, actual map[string]string) {
 			err := ioutil.WriteFile("tests/"+name+".puml", []byte(actual[name]), 0777)
 			assert.Nil(t, err)
 		}
+		golden = syslutil.HandleCRLF(golden)
 		assert.Equal(t, string(golden), actual[name])
 	}
 
