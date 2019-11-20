@@ -84,6 +84,11 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 	}
 	fn := func(c *kingpin.ParseContext) error {
 		var errorMsg strings.Builder
+		for _, elem := range c.Elements {
+			if f, _ := elem.Clause.(*kingpin.FlagClause); f != nil && f.Model().Name == "help" {
+				return nil // help requested, don't need to check for empty flags
+			}
+		}
 		for _, f := range cmd.Model().Flags {
 			if inExcludes(f.Name) {
 				continue
