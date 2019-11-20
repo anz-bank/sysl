@@ -80,8 +80,8 @@ func AddFields(ctx context.Context, fields map[string]interface{}) context.Conte
  * LogFields and LogField are meant to be used for a specific log. It does not return context with
  * a new logger, fields here will be logged in the AdditionalField format
  */
-func LogFields(ctx context.Context, fields map[string]interface{}) *Logger {...}
-func LogField(ctx context.Context, key string, value interface{}) *Logger {...}
+func LogFields(ctx context.Context, fields map[string]interface{}) Logger {...}
+func LogField(ctx context.Context, key string, value interface{}) Logger {...}
 
 // Logger functionalities, Logger API will be similar to this
 func Debug(ctx context.Context, args... interface{}) {...}
