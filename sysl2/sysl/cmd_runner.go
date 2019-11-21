@@ -25,14 +25,15 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 		if cmd.Name() == which {
 			var mod *sysl.Module
 			var err error
+			var appName string
 			if cmd.RequireSyslModule() {
-				mod, _, err = LoadSyslModule(r.Root, r.module, fs, logger)
+				mod, appName, err = LoadSyslModule(r.Root, r.module, fs, logger)
 				if err != nil {
 					return err
 				}
 			}
 
-			return cmd.Execute(ExecuteArgs{mod, fs, logger})
+			return cmd.Execute(ExecuteArgs{Module: mod, Filesystem: fs, Logger: logger, DefaultAppName: appName})
 		}
 	}
 	return nil

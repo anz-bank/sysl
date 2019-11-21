@@ -48,8 +48,11 @@ func (p *codegenCmd) Execute(args ExecuteArgs) error {
 		})
 	}
 	if p.appName == "" {
-		args.Logger.Errorf("required argument --app-name value missing")
-		return fmt.Errorf("missing required argument")
+		if len(args.Module.Apps) > 1 {
+			args.Logger.Errorf("required argument --app-name value missing")
+			return fmt.Errorf("missing required argument")
+		}
+		p.appName = args.DefaultAppName
 	}
 	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Module, p.appName, args.Filesystem, args.Logger)
 	if err != nil {
