@@ -691,6 +691,9 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 			s.sc.filename, s.typename, fieldName)
 	} else {
 		type1 = &sysl.Type{}
+		type1.Type = &sysl.Type_NoType_{
+			NoType: &sysl.Type_NoType{},
+		}
 	}
 
 	type1.SourceContext = &sysl.SourceContext{
@@ -839,6 +842,8 @@ func fixFieldDefinitions(collection *sysl.Type) {
 				type1 = t.Set.GetTypeRef()
 			case *sysl.Type_List_:
 				type1 = t.List.GetType().GetTypeRef()
+			case *sysl.Type_NoType_:
+				continue
 			default:
 				panic("unhandled type:" + name)
 			}
@@ -1659,10 +1664,12 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 		params = append(params, &p)
 	}
 	ep := s.module.Apps[s.appname].Endpoints[s.typename]
-	if ep.Param == nil {
-		ep.Param = params
-	} else {
-		ep.Param = append(ep.Param, params...)
+	if len(params) > 0 {
+		if ep.Param == nil {
+			ep.Param = params
+		} else {
+			ep.Param = append(ep.Param, params...)
+		}
 	}
 	s.typemap = nil
 	s.fieldname = []string{}
