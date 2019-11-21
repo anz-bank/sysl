@@ -12,7 +12,7 @@ testapp [package="package_foo"]:
     # definitions
 
     !type PurchaseOrderType [~xml_root]:
-        ShipTo <: sequence of USAddress(0..2):
+        ShipTo(0..2) <: sequence of USAddress:
             @json_tag = "ShipTo"
         BillTo <: USAddress:
             @json_tag = "BillTo"
