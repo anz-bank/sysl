@@ -3403,13 +3403,13 @@ func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statemen
 		}
 		return nil
 	}
-	rhs := getRHS(statements)
+	rhs := statements
 	for {
-		r := getRHS(rhs)
-		if r == nil {
+		if x := getRHS(rhs); x != nil {
+			rhs = x
+		} else {
 			break
 		}
-		rhs = r
 	}
 	wantNewLine := true
 	if e, ok := rhs.Expr.(*sysl.Expr_Literal); ok {
