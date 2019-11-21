@@ -62,7 +62,6 @@ func evalTransformUsingAppender(
 ) []*sysl.Value {
 	listResult := []*sysl.Value{}
 	scopeVar := x.Scopevar
-	logrus.Debugf("Scopevar: %s", scopeVar)
 
 	for _, svar := range v {
 		assign[scopeVar] = svar
@@ -233,16 +232,16 @@ func isInternalMap(val *sysl.Value_Map) bool {
 	return founds == 2
 }
 
-func evalName(assign Scope, x *sysl.Expr_Name) *sysl.Value {
+func evalName(ee *exprEval, assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
-		logrus.Errorf("Key: %s does not exist in scope", x.Name)
+		ee.LogEntry().Errorf("Key: %s does not exist in scope", x.Name)
 	}
 	return val
 }
 
 func evalGetAttr(ee *exprEval, assign Scope, x *sysl.Expr_GetAttr_) *sysl.Value {
-	logrus.Tracef("Evaluating x: %v:", x)
+	entry := ee.LogEntry()
 	arg := Eval(ee, assign, x.GetAttr.Arg)
 	if arg.GetMap() == nil {
 		panic(errors.Errorf("%v", arg))
@@ -251,7 +250,7 @@ func evalGetAttr(ee *exprEval, assign Scope, x *sysl.Expr_GetAttr_) *sysl.Value 
 	if isInternalMap(arg.GetMap()) {
 		switch key := x.GetAttr.Attr; key {
 		case "value":
-			ee.logger.Warnf("Unnecessary use of .value")
+			ee.LogEntry().Warnf("Unnecessary use of .value")
 			fallthrough
 		case "key":
 			return arg.GetMap().Items[key]
@@ -259,11 +258,11 @@ func evalGetAttr(ee *exprEval, assign Scope, x *sysl.Expr_GetAttr_) *sysl.Value 
 		arg = arg.GetMap().Items["value"]
 	}
 	val, has := arg.GetMap().Items[x.GetAttr.Attr]
-	logrus.Tracef("GetAttribute: %v result: %v: ", has, val)
+	entry.Tracef("GetAttribute: %v result: %v: ", has, val)
 	if !has {
-		logrus.Warnf("Failed to get key: %s\nMap has following keys:", x.GetAttr.Attr)
+		entry.Warnf("Failed to get key: %s. Map has following keys:", x.GetAttr.Attr)
 		for key := range arg.GetMap().Items {
-			logrus.Warnf("\t%s", key)
+			entry.Warnf("\t%s", key)
 		}
 		return &sysl.Value{
 			Value: &sysl.Value_Null_{
@@ -343,23 +342,16 @@ func logentry(logger *logrus.Logger, expr *sysl.Expr) *logrus.Entry {
 	})
 }
 
+func (ee *exprEval) LogEntry() *logrus.Entry {
+	return logentry(ee.logger, ee.exprStack.Peek().e)
+}
+
 func (ee *exprEval) handlePanic() {
 	if r := recover(); r != nil {
 		ee.logger.Errorf("Evaluation Failed: ")
 		stack := ee.exprStack.s
 		for i := len(stack) - 1; i >= 0; i-- {
-			var text string
-			switch e := stack[i].e.Expr.(type) {
-			case *sysl.Expr_Call_:
-				text = fmt.Sprintf("Call -> %s()", e.Call.Func)
-			case *sysl.Expr_GetAttr_:
-				text = fmt.Sprintf("GetAttr -> %s", e.GetAttr.Attr)
-			case *sysl.Expr_Binexpr:
-				text = fmt.Sprintf("BinaryOp -> %s", e.Binexpr.Op.String())
-			default:
-				text = fmt.Sprintf("Eval -> %s", reflect.TypeOf(stack[i].e.Expr).String())
-			}
-			logentry(ee.logger, stack[i].e).Errorf("... %s", text)
+			logentry(ee.logger, stack[i].e).Errorf("... %s", getExprText(stack[i].e))
 		}
 		os.Exit(1)
 	}
@@ -368,7 +360,7 @@ func (ee *exprEval) handlePanic() {
 func (ee *exprEval) eval(scope Scope, expr *sysl.Expr) (val *sysl.Value, err error) {
 	entry := logentry(ee.logger, expr)
 
-	entry.Tracef("Entering")
+	entry.Tracef("Entering: %s", getExprText(expr))
 
 	ee.exprStack.Push(scope, expr)
 	defer ee.exprStack.Pop()
@@ -382,7 +374,7 @@ func (ee *exprEval) eval(scope Scope, expr *sysl.Expr) (val *sysl.Value, err err
 	case *sysl.Expr_Call_:
 		val = evalCall(ee, scope, e)
 	case *sysl.Expr_Name:
-		val = evalName(scope, e)
+		val = evalName(ee, scope, e)
 	case *sysl.Expr_GetAttr_:
 		val = evalGetAttr(ee, scope, e)
 	case *sysl.Expr_Ifelse:
