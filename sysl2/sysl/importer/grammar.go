@@ -52,13 +52,11 @@ func (g *Grammar) addTerm(name string, term *ebnfGrammar.Term, props *FieldList)
 		*props = append(*props, choiceField)
 
 	case *ebnfGrammar.Atom_Rulename:
-		typeString := "string"
+		var typeString string
 		if t, found := g.types.Find(x.Rulename.GetName()); found {
 			typeString = t.Name()
-		} else if _, exists := g.grammar.Rules[x.Rulename.GetName()]; exists {
-			typeString = x.Rulename.Name
-			g.incompleteTypes[typeString] = struct{}{}
 		} else {
+			typeString = x.Rulename.Name
 			g.incompleteTypes[typeString] = struct{}{}
 		}
 		ruleField := g.quantifyUnionType(x.Rulename.Name, typeString, term.Quantifier)
@@ -128,8 +126,6 @@ func (g *Grammar) createRule(rule *ebnfGrammar.Rule, name string) Type {
 				name:   name,
 				Target: &SyslBuiltIn{name: StringTypeName},
 			}
-			g.types.Add(t)
-			return t
 		}
 		return t
 	}
@@ -148,9 +144,11 @@ func (g *Grammar) writeSysl() (string, error) {
 		Title:       g.grammarName + "File",
 		Description: g.grammarName + " Grammar",
 	}
-	for keyRuleName, keyRule := range g.grammar.GetRules() {
-		ruleType := g.createRule(keyRule, keyRuleName)
-		g.types.Add(ruleType)
+	for ruleName, rule := range g.grammar.GetRules() {
+		if _, found := g.types.Find(ruleName); !found {
+			ruleType := g.createRule(rule, ruleName)
+			g.types.Add(ruleType)
+		}
 	}
 	for name := range g.incompleteTypes {
 		if _, found := g.types.Find(name); !found {

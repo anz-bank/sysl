@@ -44,7 +44,6 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 
 				result, err := cfg.fn(OutputData{AppName: "testapp", Package: "package_foo"}, string(input), logger)
 				require.NoError(t, err)
-				//ioutil.WriteFile(path.Join(cfg.testDir, filename+".sysl"), []byte(result), 0644)
 				require.Equal(t, string(expected), result)
 			})
 		}
