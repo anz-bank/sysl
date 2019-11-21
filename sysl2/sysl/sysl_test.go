@@ -884,15 +884,16 @@ func (ts folderTestStructure) getExpectedModule(t *testing.T) string {
 func TestCodegenGrammarImportDefOut(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/go.gen.g"}, fs, logger, main3)
+	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/output.sysl")
 }
 
 func TestCodegenGrammarImport(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs(".")
-	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/go.gen.g", "-o", "out.sysl"}, fs, logger, main3)
+	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/unions.gen.g",
+		"-o", "out.sysl", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }

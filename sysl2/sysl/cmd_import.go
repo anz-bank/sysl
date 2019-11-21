@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"sort"
 	"strings"
 
 	"github.com/anz-bank/sysl/sysl2/sysl/importer"
@@ -21,18 +22,22 @@ func (p *importCmd) Name() string            { return "import" }
 func (p *importCmd) RequireSyslModule() bool { return false }
 
 func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Import foreign type to sysl. Supported types: swagger, xsd and grammar")
+	opts := []string{modeGrammar, modeSwagger, modeXSD}
+	sort.Strings(opts)
+	optsText := strings.Join(opts, ", ")
+	opts = append(opts, modeAuto)
+
+	cmd := app.Command(p.Name(), "Import foreign type to sysl. Supported types: ["+optsText+"]")
 	cmd.Flag("input", "input filename").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
-		"name of the sysl app to define in sysl model.").Short('a').StringVar(&p.AppName)
+		"name of the sysl app to define in sysl model.").Required().Short('a').StringVar(&p.AppName)
 	cmd.Flag("package",
 		"name of the sysl package to define in sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
 
-	opts := []string{"auto", "swagger", "xsd", "grammar"}
-	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]", strings.Join(opts, ", "))).
+	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s, %s]", modeAuto, optsText)).
 		Short('f').
-		Default("auto").
+		Default(modeAuto).
 		HintOptions(opts...).
 		EnumVar(&p.mode, opts...)
 
@@ -44,6 +49,7 @@ const (
 	modeSwagger = "swagger"
 	modeXSD     = "xsd"
 	modeGrammar = "grammar"
+	modeAuto    = "auto"
 )
 
 func (p *importCmd) Execute(args ExecuteArgs) error {
@@ -65,10 +71,6 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 		imp = importer.LoadXSDText
 	case modeGrammar:
 		args.Logger.Infof("Using grammar importer\n")
-		p.OutputData.AppName, err = findGrammarType(p.filename)
-		if err != nil {
-			args.Logger.Fatalf(err.Error())
-		}
 		imp = importer.LoadGrammar
 	default:
 		args.Logger.Fatalf("Unsupported input format: %s\n", p.mode)
@@ -78,14 +80,6 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 		return err
 	}
 	return afero.WriteFile(args.Filesystem, p.outfile, []byte(output), 0644)
-}
-
-func findGrammarType(filename string) (string, error) {
-	parts := strings.Split(filename, ".")
-	if len(parts) > 0 {
-		return strings.Title(strings.ToLower(parts[0])), nil
-	}
-	return "", fmt.Errorf("invalid input grammar file name")
 }
 
 func guessFileType(filename string) string {
