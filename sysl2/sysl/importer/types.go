@@ -15,15 +15,15 @@ type Type interface {
 
 type StandardType struct {
 	name       string
-	Properties []Field
+	Properties FieldList
 	Attributes []string
 }
 
 func (s *StandardType) Name() string { return s.name }
 
 type Union struct {
-	name       string
-	Attributes []string
+	name    string
+	Options FieldList
 }
 
 func (u *Union) Name() string { return u.name }

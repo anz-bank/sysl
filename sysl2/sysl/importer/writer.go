@@ -33,6 +33,8 @@ type writer struct {
 	io.Writer
 	ind    *IndentWriter
 	logger *logrus.Logger
+
+	DisableJSONTags bool
 }
 
 const CommentLineLength = 80
@@ -280,7 +282,6 @@ func (w *writer) writeDefinition(t *StandardType) {
 		if prop.Optional {
 			suffix = "?"
 		}
-		suffix = appendSizeSpec(suffix, prop.SizeSpec)
 		suffix = appendAttributesString(suffix, prop.Attributes)
 
 		name := prop.Name
@@ -288,9 +289,16 @@ func (w *writer) writeDefinition(t *StandardType) {
 			name += "_"
 		}
 
-		w.writeLines(PushIndent, fmt.Sprintf("%s <: %s%s:", name, getSyslTypeName(prop.Type), suffix))
-		w.writeLines(PushIndent, fmt.Sprintf("@json_tag = %s", quote(prop.Name)))
-		w.writeLines(PopIndent, PopIndent)
+		if !w.DisableJSONTags {
+			suffix += ":"
+		}
+
+		w.writeLines(PushIndent, fmt.Sprintf("%s <: %s%s", appendSizeSpec(name, prop.SizeSpec),
+			getSyslTypeName(prop.Type), suffix))
+		if !w.DisableJSONTags {
+			w.writeLines(PushIndent, fmt.Sprintf("@json_tag = %s", quote(prop.Name)), PopIndent)
+		}
+		w.writeLines(PopIndent)
 	}
 }
 
@@ -318,7 +326,9 @@ func (w *writer) writeUnion(item Type) {
 	unionName := getSyslTypeName(item)
 	t := item.(*Union)
 	w.writeLines(fmt.Sprintf("!union %s:", unionName), PushIndent)
-	w.writeLines(t.Attributes...)
+	for _, option := range t.Options {
+		w.writeLines(option.Name)
+	}
 	w.writeLines(PopIndent)
 }
 

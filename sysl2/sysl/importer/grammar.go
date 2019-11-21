@@ -2,7 +2,6 @@ package importer
 
 import (
 	"bytes"
-	"fmt"
 
 	parser "github.com/anz-bank/sysl/sysl2/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/sysl2/proto"
@@ -16,10 +15,10 @@ type grammarParam struct {
 
 type Grammar struct {
 	grammarParam
-	grammar    *ebnfGrammar.Grammar
-	logger     *logrus.Logger
-	types      TypeList
-	visitedMap map[string]bool
+	grammar         *ebnfGrammar.Grammar
+	logger          *logrus.Logger
+	types           TypeList
+	incompleteTypes map[string]struct{}
 }
 
 func LoadGrammar(args OutputData, grammarInput string, logger *logrus.Logger) (out string, err error) {
@@ -32,10 +31,38 @@ func LoadGrammar(args OutputData, grammarInput string, logger *logrus.Logger) (o
 
 func newGrammar(param grammarParam, logger *logrus.Logger) *Grammar {
 	return &Grammar{
-		grammarParam: param,
-		logger:       logger,
-		types:        TypeList{},
-		visitedMap:   map[string]bool{},
+		grammarParam:    param,
+		logger:          logger,
+		types:           TypeList{},
+		incompleteTypes: map[string]struct{}{},
+	}
+}
+
+func (g *Grammar) addTerm(name string, term *ebnfGrammar.Term, props *FieldList) {
+	switch x := term.Atom.Union.(type) {
+	case *ebnfGrammar.Atom_String_:
+		// hit the leaf node
+		// return
+	case *ebnfGrammar.Atom_Choices:
+		cname := "__Choice_" + name
+		if _, found := g.types.Find(cname); !found {
+			g.types.Add(g.createChoice(x.Choices, cname))
+		}
+		choiceField := g.quantifyUnionType(cname, cname, term.Quantifier)
+		*props = append(*props, choiceField)
+
+	case *ebnfGrammar.Atom_Rulename:
+		typeString := "string"
+		if t, found := g.types.Find(x.Rulename.GetName()); found {
+			typeString = t.Name()
+		} else if _, exists := g.grammar.Rules[x.Rulename.GetName()]; exists {
+			typeString = x.Rulename.Name
+			g.incompleteTypes[typeString] = struct{}{}
+		} else {
+			g.incompleteTypes[typeString] = struct{}{}
+		}
+		ruleField := g.quantifyUnionType(x.Rulename.Name, typeString, term.Quantifier)
+		*props = append(*props, ruleField)
 	}
 }
 
@@ -43,122 +70,77 @@ func (g *Grammar) createChoice(choice *ebnfGrammar.Choice, name string) Type {
 	choiceType := Union{
 		name: name,
 	}
-	// mark the node as visited if not visited before
-	if !g.visitedMap[name] {
-		g.visitedMap[name] = true
-	}
 	for _, seq := range choice.Sequence {
 		for _, term := range seq.Term {
-			switch x := term.Atom.Union.(type) {
-			case *ebnfGrammar.Atom_String_:
-				// hit the leaf node
-				// return
-			case *ebnfGrammar.Atom_Choices:
-				choiceType.Attributes = append(choiceType.Attributes, "__Choice_"+name)
-
-				// visit the unvisited node
-				if !g.visitedMap["__Choice_"+name] {
-					childChoiceType := g.createChoice(x.Choices, "__Choice_"+name)
-					g.types.types = append([]Type{childChoiceType}, g.types.types...)
-				}
-			case *ebnfGrammar.Atom_Rulename:
-				var childRuleType Type
-				choiceType.Attributes = append(choiceType.Attributes, x.Rulename.GetName())
-
-				// visit the unvisited node
-				if !g.visitedMap[x.Rulename.GetName()] {
-					if rule, exists := g.grammar.Rules[x.Rulename.GetName()]; exists {
-						childRuleType = g.createRule(g.grammar.Rules[rule.Name.Name], rule.Name.Name)
-					} else {
-						childRuleType = g.createEnumType(x.Rulename.GetName())
-					}
-					g.types.types = append([]Type{childRuleType}, g.types.types...)
-				}
-			default:
-				g.logger.Warnf("unexpected term type")
-			}
+			g.addTerm(name, term, &choiceType.Options)
 		}
 	}
-	var baseType Type = &choiceType
-	return baseType
+	return &choiceType
 }
 
-func (g *Grammar) quantifyUnionType(fieldName, fieldType string, quant *ebnfGrammar.Quantifier) Field {
-	if quant == nil {
-		return Field{
-			Name: fieldName,
-			Type: &StandardType{
-				name: fieldType,
-			}}
-	}
-	switch quant.Union.(type) {
-	case *ebnfGrammar.Quantifier_Optional:
-		fieldType = fmt.Sprintf("%s?", fieldType)
-	case *ebnfGrammar.Quantifier_ZeroPlus:
-		fieldType = fmt.Sprintf("sequence of %s?", fieldType)
-	case *ebnfGrammar.Quantifier_OnePlus:
-		fieldName = fmt.Sprintf("%s(1..)", fieldName)
-	default:
-		g.logger.Warnf("unexpected quantifier type")
-	}
-	return Field{
+func (g *Grammar) quantifyUnionType(fieldName, fieldType string, q *ebnfGrammar.Quantifier) Field {
+	field := Field{
 		Name: fieldName,
 		Type: &StandardType{
 			name: fieldType,
 		}}
+
+	if q != nil {
+		switch q.Union.(type) {
+		case *ebnfGrammar.Quantifier_Optional:
+			field.Optional = true
+		case *ebnfGrammar.Quantifier_ZeroPlus:
+			field.Type = &Array{
+				name:  fieldName,
+				Items: field.Type,
+			}
+			field.Optional = true
+			field.SizeSpec = &sizeSpec{
+				Min:     1,
+				Max:     0,
+				MaxType: OpenEnded,
+			}
+		case *ebnfGrammar.Quantifier_OnePlus:
+			field.SizeSpec = &sizeSpec{
+				Min:     1,
+				Max:     0,
+				MaxType: OpenEnded,
+			}
+		}
+	}
+	return field
 }
 
 func (g *Grammar) createRule(rule *ebnfGrammar.Rule, name string) Type {
 	ruleType := StandardType{
 		name: name,
 	}
-	if !g.visitedMap[name] {
-		g.visitedMap[name] = true
-	}
 	for _, seq := range rule.Choices.Sequence {
 		for _, term := range seq.Term {
-			switch x := term.Atom.Union.(type) {
-			case *ebnfGrammar.Atom_String_:
-				// hit the leaf node
-				// return
-			case *ebnfGrammar.Atom_Choices:
-				choiceField := g.quantifyUnionType("__Choice_"+name, "__Choice_"+name, term.Quantifier)
-				ruleType.Properties = append(ruleType.Properties, choiceField)
-
-				// visit the unvisited node
-				if !g.visitedMap["__Choice_"+name] {
-					childChoiceType := g.createChoice(x.Choices, "__Choice_"+name)
-					g.types.types = append([]Type{childChoiceType}, g.types.types...)
-				}
-			case *ebnfGrammar.Atom_Rulename:
-				var childRuleType Type
-				typeString := "string"
-				if _, exists := g.grammar.Rules[x.Rulename.GetName()]; exists {
-					typeString = x.Rulename.Name
-				}
-				ruleField := g.quantifyUnionType(x.Rulename.Name, typeString, term.Quantifier)
-				ruleType.Properties = append(ruleType.Properties, ruleField)
-
-				// visit the unvisited node
-				if !g.visitedMap[x.Rulename.GetName()] {
-					if rule, exists := g.grammar.Rules[x.Rulename.GetName()]; exists {
-						childRuleType = g.createRule(g.grammar.Rules[rule.Name.Name], rule.Name.Name)
-						g.types.types = append([]Type{childRuleType}, g.types.types...)
-					}
-				}
-			default:
-				g.logger.Warnf("unexpected term type")
-			}
+			g.addTerm(name, term, &ruleType.Properties)
 		}
 	}
-	var baseType Type = &ruleType
-	return baseType
+
+	if len(ruleType.Properties) == 0 {
+		t, found := g.types.Find(name)
+		if !found {
+			t = &Alias{
+				name:   name,
+				Target: &SyslBuiltIn{name: StringTypeName},
+			}
+			g.types.Add(t)
+			return t
+		}
+		return t
+	}
+	return &ruleType
 }
 
 func (g *Grammar) writeSysl() (string, error) {
 	g.grammar = parser.ParseEBNF(g.grammarParam.grammarInput, "", "")
 	var syslBytes bytes.Buffer
 	syslWriter := newWriter(&syslBytes, g.logger)
+	syslWriter.DisableJSONTags = true
 	info := SyslInfo{
 		OutputData: OutputData{
 			AppName: g.grammarName,
@@ -167,24 +149,22 @@ func (g *Grammar) writeSysl() (string, error) {
 		Description: g.grammarName + " Grammar",
 	}
 	for keyRuleName, keyRule := range g.grammar.GetRules() {
-		if _, visited := g.visitedMap[keyRuleName]; !visited {
-			ruleType := g.createRule(keyRule, keyRuleName)
-			g.types.types = append([]Type{ruleType}, g.types.types...)
-			g.visitedMap[keyRuleName] = true
+		ruleType := g.createRule(keyRule, keyRuleName)
+		g.types.Add(ruleType)
+	}
+	for name := range g.incompleteTypes {
+		if _, found := g.types.Find(name); !found {
+			g.types.Add(&Alias{
+				name:   name,
+				Target: &SyslBuiltIn{name: StringTypeName},
+			})
 		}
 	}
+
 	g.types.Sort()
 	if err := syslWriter.Write(info, g.types, ""); err != nil {
 		g.logger.Errorf("writing into buffer failed %s", err)
 		return "", err
 	}
 	return syslBytes.String(), nil
-}
-
-func (g *Grammar) createEnumType(typeName string) Type {
-	ruleEnum := Enum{
-		name: typeName,
-	}
-	var baseType Type = &ruleEnum
-	return baseType
 }

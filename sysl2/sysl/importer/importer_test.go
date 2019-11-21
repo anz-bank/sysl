@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -29,20 +30,21 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 		}
 
 		logger, _ := test.NewNullLogger()
-
-		parts := strings.Split(f.Name(), ".")
-		if strings.EqualFold(parts[1], cfg.testExtension) {
-			filename := strings.Join(parts[:len(parts)-1], ".")
+		ext := filepath.Ext(f.Name())
+		if strings.EqualFold(ext[1:], cfg.testExtension) {
+			filename := strings.TrimSuffix(f.Name(), ext)
 			t.Run(fmt.Sprintf("%s - %s", cfg.name, filename), func(t *testing.T) {
 				t.Parallel()
 				input, err := ioutil.ReadFile(path.Join(cfg.testDir, filename+"."+cfg.testExtension))
 				require.NoError(t, err)
-				expected, err := ioutil.ReadFile(path.Join(cfg.testDir, filename+".sysl"))
+				syslFile := path.Join(cfg.testDir, filename+".sysl")
+				expected, err := ioutil.ReadFile(syslFile)
 				require.NoError(t, err)
 				expected = syslutil.HandleCRLF(expected)
 
 				result, err := cfg.fn(OutputData{AppName: "testapp", Package: "package_foo"}, string(input), logger)
 				require.NoError(t, err)
+				//ioutil.WriteFile(path.Join(cfg.testDir, filename+".sysl"), []byte(result), 0644)
 				require.Equal(t, string(expected), result)
 			})
 		}
@@ -64,5 +66,14 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 		testDir:       "tests-xsd",
 		testExtension: "xsd",
 		fn:            LoadXSDText,
+	})
+}
+
+func TestLoadGrammarFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadGrammarFromTestFiles",
+		testDir:       "tests-grammar",
+		testExtension: "g",
+		fn:            LoadGrammar,
 	})
 }
