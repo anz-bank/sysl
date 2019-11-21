@@ -20,9 +20,7 @@ func (p *codegenCmd) RequireSyslModule() bool { return true }
 
 func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate code").Alias("gen")
-	cmd.Flag("root-transform",
-		"sysl root directory for input transform file (default: .)").
-		Default(".").StringVar(&p.rootTransform)
+	cmd.Flag("root-transform", "Deprecated").Default(".").Hidden().StringVar(&p.rootTransform)
 	cmd.Flag("transform", "path to transform file from the root transform directory").Required().StringVar(&p.transform)
 	cmd.Flag("grammar", "path to grammar file").Required().StringVar(&p.grammar)
 	cmd.Flag("app-name",

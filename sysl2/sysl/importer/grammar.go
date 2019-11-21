@@ -92,9 +92,8 @@ func (g *Grammar) quantifyUnionType(fieldName, fieldType string, q *ebnfGrammar.
 				name:  fieldName,
 				Items: field.Type,
 			}
-			field.Optional = true
 			field.SizeSpec = &sizeSpec{
-				Min:     1,
+				Min:     0,
 				Max:     0,
 				MaxType: OpenEnded,
 			}
