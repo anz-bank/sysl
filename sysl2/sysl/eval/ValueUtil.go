@@ -348,6 +348,16 @@ func (s Scope) AddModule(name string, module *sysl.Module) {
 	s[name] = m
 }
 
+func (s Scope) ToValue() *sysl.Value {
+	return &sysl.Value{
+		Value: &sysl.Value_Map_{
+			Map: &sysl.Value_Map{
+				Items: s,
+			},
+		},
+	}
+}
+
 func addAppToValueMap(app *sysl.Application) *sysl.Value {
 	m := MakeValueMap()
 	AddItemToValueMap(m, "name", MakeValueString(syslutil.GetAppName(app.Name)))
