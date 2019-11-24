@@ -92,6 +92,9 @@ apps: <
             line: 12
             col: 4
           >
+          end: <
+            line: 17
+          >
         >
       >
     >
@@ -100,6 +103,9 @@ apps: <
       start: <
         line: 11
         col: 1
+      >
+      end: <
+        line: 11
       >
     >
   >
@@ -123,6 +129,10 @@ apps: <
           file: "tests/args.sysl"
           start: <
             line: 2
+            col: 4
+          >
+          end: <
+            line: 5
             col: 4
           >
         >
@@ -157,6 +167,10 @@ apps: <
             line: 6
             col: 8
           >
+          end: <
+            line: 8
+            col: 8
+          >
         >
       >
     >
@@ -189,6 +203,10 @@ apps: <
             line: 9
             col: 12
           >
+          end: <
+            line: 11
+            col: 6
+          >
         >
       >
     >
@@ -197,6 +215,9 @@ apps: <
       start: <
         line: 1
         col: 1
+      >
+      end: <
+        line: 1
       >
     >
   >

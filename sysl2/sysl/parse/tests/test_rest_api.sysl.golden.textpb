@@ -33,6 +33,10 @@ apps: <
             line: 48
             col: 4
           >
+          end: <
+            line: 51
+            col: 4
+          >
         >
       >
     >
@@ -78,6 +82,9 @@ apps: <
             line: 59
             col: 4
           >
+          end: <
+            line: 63
+          >
         >
       >
     >
@@ -109,6 +116,10 @@ apps: <
             line: 51
             col: 4
           >
+          end: <
+            line: 55
+            col: 4
+          >
         >
       >
     >
@@ -134,6 +145,10 @@ apps: <
           file: "tests/test_rest_api.sysl"
           start: <
             line: 55
+            col: 4
+          >
+          end: <
+            line: 59
             col: 4
           >
         >
@@ -173,6 +188,10 @@ apps: <
             line: 43
             col: 4
           >
+          end: <
+            line: 48
+            col: 4
+          >
         >
       >
     >
@@ -181,6 +200,10 @@ apps: <
       start: <
         line: 41
         col: 1
+      >
+      end: <
+        line: 41
+        col: 17
       >
     >
   >
@@ -231,6 +254,10 @@ apps: <
             line: 3
             col: 8
           >
+          end: <
+            line: 5
+            col: 4
+          >
         >
       >
     >
@@ -272,6 +299,10 @@ apps: <
           file: "tests/test_rest_api.sysl"
           start: <
             line: 20
+            col: 8
+          >
+          end: <
+            line: 22
             col: 8
           >
         >
@@ -387,6 +418,10 @@ apps: <
             line: 35
             col: 8
           >
+          end: <
+            line: 41
+            col: 10
+          >
         >
       >
     >
@@ -480,6 +515,10 @@ apps: <
             line: 23
             col: 12
           >
+          end: <
+            line: 25
+            col: 12
+          >
         >
       >
     >
@@ -516,6 +555,10 @@ apps: <
           file: "tests/test_rest_api.sysl"
           start: <
             line: 6
+            col: 8
+          >
+          end: <
+            line: 8
             col: 8
           >
         >
@@ -555,6 +598,10 @@ apps: <
           start: <
             line: 9
             col: 12
+          >
+          end: <
+            line: 11
+            col: 8
           >
         >
       >
@@ -605,6 +652,10 @@ apps: <
           start: <
             line: 17
             col: 12
+          >
+          end: <
+            line: 19
+            col: 4
           >
         >
       >
@@ -657,6 +708,10 @@ apps: <
           start: <
             line: 32
             col: 16
+          >
+          end: <
+            line: 34
+            col: 4
           >
         >
       >
@@ -723,6 +778,10 @@ apps: <
             line: 29
             col: 20
           >
+          end: <
+            line: 31
+            col: 12
+          >
         >
       >
     >
@@ -780,6 +839,10 @@ apps: <
             line: 13
             col: 16
           >
+          end: <
+            line: 16
+            col: 8
+          >
         >
       >
     >
@@ -832,6 +895,10 @@ apps: <
             line: 26
             col: 16
           >
+          end: <
+            line: 28
+            col: 16
+          >
         >
       >
     >
@@ -840,6 +907,10 @@ apps: <
       start: <
         line: 1
         col: 1
+      >
+      end: <
+        line: 1
+        col: 19
       >
     >
   >

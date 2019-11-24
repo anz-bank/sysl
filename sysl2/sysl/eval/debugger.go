@@ -25,6 +25,7 @@ type repl struct {
 	output      io.Writer
 	breakpoints []*sysl.SourceContext
 	step        bool
+	lastCommand string
 }
 
 func (r *repl) run(scope *Scope, app *sysl.Application, expr *sysl.Expr) error {
@@ -36,16 +37,23 @@ func (r *repl) run(scope *Scope, app *sysl.Application, expr *sysl.Expr) error {
 
 func (r *repl) handleInput(scope *Scope, app *sysl.Application, expr *sysl.Expr) error {
 	for {
+		if expr != nil && expr.SourceContext.Text != "" {
+			writeOutput(expr.SourceContext.Text+"\n", r.output)
+		}
 		writeOutput("sysl> ", r.output)
 		if !r.input.Scan() {
 			r.step = false
 			return fmt.Errorf("input closed")
 		}
 		text := r.input.Text()
+		if len(text) == 0 {
+			text = r.lastCommand
+		}
 		switch len(text) {
 		case 0:
 			printUsage(r.output)
 		case 1:
+			r.lastCommand = text
 			switch text[0] {
 			case 's':
 				writeOutput("(step)\n", r.output)
@@ -58,16 +66,21 @@ func (r *repl) handleInput(scope *Scope, app *sysl.Application, expr *sysl.Expr)
 			case 'd':
 				writeOutput("(dump scope)\n", r.output)
 				dumpScope(r.output, *scope)
+			case 'l':
+				writeOutput("(list)\n", r.output)
+				if app != nil {
+					dumpApp(r.output, app)
+				}
 			case 'q':
 				writeOutput("(quit)\n", r.output)
 				os.Exit(0)
 			case '?', 'h':
 				printUsage(r.output)
 			default:
-				writeOutput(parseExpression(text, scope), r.output)
+				writeOutput(parseExpression(text, app, scope), r.output)
 			}
 		default:
-			writeOutput(parseExpression(text, scope), r.output)
+			writeOutput(parseExpression(text, app, scope), r.output)
 		}
 	}
 }
@@ -120,6 +133,7 @@ func printUsage(out io.Writer) {
 d		Dump the current scope
 c		Continue execution until the next breakpoint
 s		Step execution
+q		quit
 EXPRESSION	Print the value of the supplied EXPRESSION
 `
 	writeOutput(text, out)
@@ -133,13 +147,23 @@ func dumpScope(out io.Writer, scope Scope) {
 	sort.Strings(names)
 	lines := make([]string, 0, len(scope))
 	for _, k := range names {
-		lines = append(lines, fmt.Sprintf("  %s:  %s", k, scope[k].String()))
+		l := fmt.Sprintf("  %s:  %s", k, unaryStringFn(scope[k], true).GetS())
+		lines = append(lines, l)
 	}
 
 	writeOutput(strings.Join(lines, "\n")+"\n", out)
 }
 
-func parseExpression(text string, scope *Scope) string {
+func dumpApp(out io.Writer, app *sysl.Application) {
+	writeOutput(" App -> "+app.Name.String()+"\n", out)
+	writeOutput(" -- views --\n", out)
+
+	for _, view := range app.Views {
+		writeOutput(strings.Split(view.SourceContext.Text, "\n")[0]+"\n", out)
+	}
+}
+
+func parseExpression(text string, app *sysl.Application, scope *Scope) string {
 	errorListener := parse.SyslParserErrorListener{}
 	lexer := parser.NewSyslLexer(antlr.NewInputStream(text))
 	lexer.SetMode(parser.SyslLexerVIEW_TRANSFORM)
@@ -149,27 +173,34 @@ func parseExpression(text string, scope *Scope) string {
 
 	p := parser.NewSyslParser(stream)
 	p.AddErrorListener(&errorListener)
-	p.AddParseListener(listener)
+	p.BuildParseTrees = true
+
+	defer func() {
+		_ = recover() //nolint:errcheck
+	}()
 
 	var res *sysl.Expr
 
 	ee := exprEval{
-		txApp:     nil,
+		txApp:     app,
 		exprStack: exprStack{},
 		logger:    logrus.StandardLogger(),
+		// needed so the eval doesnt os.Exit()
+		dbg: func(scope *Scope, app *sysl.Application, expr *sysl.Expr) error { return nil },
 	}
-
 	// Need to figure out what sort of expression this is going to be
 	lookAhead := []int{stream.LA(1), stream.LA(2)}
 	if lookAhead[0] == parser.SyslLexerE_LET || lookAhead[1] == parser.SyslLexerE_EQ {
 		// Need to push a transform onto the expression stack
 		transform := &sysl.Expr_Transform{}
 		listener.PushExpr(&sysl.Expr{Expr: &sysl.Expr_Transform_{Transform: transform}})
+		var tree antlr.Tree
 		if lookAhead[0] == parser.SyslLexerE_LET {
-			p.Expr_let_statement()
+			tree = p.Expr_let_statement()
 		} else {
-			p.Expr_simple_assign()
+			tree = p.Expr_simple_assign()
 		}
+		antlr.NewParseTreeWalker().Walk(listener, tree)
 		xformres := evalTransformStmts(&ee, *scope, transform)
 
 		for k, v := range xformres.GetMap().Items {
@@ -177,12 +208,13 @@ func parseExpression(text string, scope *Scope) string {
 		}
 		return ""
 	}
-	p.Expr()
+
+	antlr.NewParseTreeWalker().Walk(listener, p.Expr())
+
 	res = listener.TopExpr()
 
 	// There should be a single Expression in the listener,
 	// Take it and force it to a string for output
-
 	expr := &sysl.Expr{
 		Expr: &sysl.Expr_Unexpr{
 			Unexpr: &sysl.Expr_UnExpr{

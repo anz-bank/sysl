@@ -301,12 +301,19 @@ func evalList(ee *exprEval, assign Scope, x *sysl.Expr_List_) *sysl.Value {
 	}
 }
 
+var EnableDebugger = false
+
 func EvaluateApp(app *sysl.Application, view *sysl.View, s Scope) *sysl.Value {
 	ee := exprEval{
 		txApp:     app,
 		exprStack: exprStack{},
 		logger:    logrus.StandardLogger(),
 	}
+
+	if EnableDebugger {
+		ee.dbg = NewREPL(os.Stdin, os.Stdout)
+	}
+
 	val, err := ee.eval(s, view.Expr)
 	if err != nil {
 		logrus.Panic(err.Error())
@@ -329,17 +336,22 @@ type exprEval struct {
 	txApp     *sysl.Application
 	exprStack exprStack
 	logger    *logrus.Logger
+	dbg       DebugFunc
 }
 
 func logentry(logger *logrus.Logger, expr *sysl.Expr) *logrus.Entry {
 	if expr.SourceContext == nil {
 		return logger.WithFields(logrus.Fields{})
 	}
-	return logger.WithFields(logrus.Fields{
+	fields := logrus.Fields{
 		"filename": expr.SourceContext.File,
-		"line":     expr.SourceContext.Start.Line,
-		"col":      expr.SourceContext.Start.Col,
-	})
+		"start":    fmt.Sprintf("%d:%d", expr.SourceContext.Start.Line, expr.SourceContext.Start.Col),
+		"end":      fmt.Sprintf("%d:%d", expr.SourceContext.End.Line, expr.SourceContext.End.Col),
+	}
+	if expr.SourceContext.Text != "" {
+		fields["text"] = expr.SourceContext.Text
+	}
+	return logger.WithFields(fields)
 }
 
 func (ee *exprEval) LogEntry() *logrus.Entry {
@@ -353,14 +365,22 @@ func (ee *exprEval) handlePanic() {
 		for i := len(stack) - 1; i >= 0; i-- {
 			logentry(ee.logger, stack[i].e).Errorf("... %s", getExprText(stack[i].e))
 		}
-		os.Exit(1)
+		if ee.dbg == nil {
+			os.Exit(1)
+		}
 	}
 }
 
 func (ee *exprEval) eval(scope Scope, expr *sysl.Expr) (val *sysl.Value, err error) {
 	entry := logentry(ee.logger, expr)
-
 	entry.Tracef("Entering: %s", getExprText(expr))
+
+	if ee.dbg != nil {
+		if err := ee.dbg(&scope, ee.txApp, expr); err != nil {
+			ee.logger.Warnf("REPL error: %s", err.Error())
+			ee.dbg = nil
+		}
+	}
 
 	ee.exprStack.Push(scope, expr)
 	defer ee.exprStack.Pop()

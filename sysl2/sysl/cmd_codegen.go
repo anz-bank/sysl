@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+
 	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
 	"github.com/anz-bank/sysl/sysl2/sysl/validate"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -10,9 +12,10 @@ import (
 
 type codegenCmd struct {
 	CmdContextParamCodegen
-	outDir       string
-	appName      string
-	validateOnly bool
+	outDir         string
+	appName        string
+	validateOnly   bool
+	enableDebugger bool
 }
 
 func (p *codegenCmd) Name() string            { return "codegen" }
@@ -34,6 +37,7 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("validate-only", "Only Perform validation on the transform grammar").BoolVar(&p.validateOnly)
 	cmd.Flag("disable-validator", "Disable validation on the transform grammar").
 		Default("false").BoolVar(&p.disableValidator)
+	cmd.Flag("debugger", "Enable the evaluation debugger on error").Default("false").BoolVar(&p.enableDebugger)
 	EnsureFlagsNonEmpty(cmd, "app-name")
 	return cmd
 }
@@ -56,6 +60,7 @@ func (p *codegenCmd) Execute(args ExecuteArgs) error {
 		}
 		p.appName = args.DefaultAppName
 	}
+	eval.EnableDebugger = p.enableDebugger
 	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Module, p.appName, args.Filesystem, args.Logger)
 	if err != nil {
 		return err

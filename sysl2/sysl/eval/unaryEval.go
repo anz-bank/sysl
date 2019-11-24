@@ -56,6 +56,10 @@ func unarySingle(list *sysl.Value) *sysl.Value {
 }
 
 func unaryString(arg *sysl.Value) *sysl.Value {
+	return unaryStringFn(arg, false)
+}
+
+func unaryStringFn(arg *sysl.Value, short bool) *sysl.Value {
 	listfn := func(items []*sysl.Value) *sysl.Value {
 		var parts []string
 		for _, item := range items {
@@ -74,6 +78,14 @@ func unaryString(arg *sysl.Value) *sysl.Value {
 		return listfn(x.List.GetValue())
 	case *sysl.Value_Set:
 		return listfn(x.Set.GetValue())
+	case *sysl.Value_Map_:
+		if short {
+			var parts []string
+			for k := range x.Map.Items {
+				parts = append(parts, k)
+			}
+			return MakeValueString(fmt.Sprintf("map-keys:[%s]", strings.Join(parts, ", ")))
+		}
 	}
 	return MakeValueString(arg.String())
 }

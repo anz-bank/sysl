@@ -40,6 +40,9 @@ apps: <
             line: 2
             col: 4
           >
+          end: <
+            line: 5
+          >
         >
       >
     >
@@ -48,6 +51,9 @@ apps: <
       start: <
         line: 1
         col: 1
+      >
+      end: <
+        line: 1
       >
     >
   >

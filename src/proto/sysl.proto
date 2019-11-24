@@ -18,6 +18,7 @@ message SourceContext {
     string      file    = 1;
     Location    start   = 2;
     Location    end     = 3;  // Currently unpopulated
+    string      text    = 4;
 
     Delta   delta       = 6;
 
