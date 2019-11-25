@@ -319,7 +319,10 @@ E_RELOPS_FLATTEN       : 'flatten';
 E_RELOPS_FIRST         : 'first';
 E_FUNC          : 'autoinc' | 'str' | 'substr';
 
-E_RAW_TEXT_START    : '$'? ->pushMode(TEMPLATE);
+fragment
+TEMPLATE_MAGIC  : '$';
+E_RAW_TEXT_END     : '{' TEMPLATE_MAGIC;
+E_RAW_TEXT_START    : TEMPLATE_MAGIC '}'? ->pushMode(TEMPLATE);
 
 E_STRING_DBL           : ["] (~["\\] | [\\][\\brntu'"])* ["];
 E_STRING_SINGLE        : ['] ~[']* ['];

@@ -19,9 +19,31 @@ DependencyTemplate:
 
     !view findEpDeps(ep <: sysl.Endpoint) -> set of string:
         ep -> (s:
-            $  {hello}
+            let targets = ep.value.stmts where(.type == "call") -> <set of string> (t:
+                arg = '"' + t.target + '"'
+            )
+            $  {$ targets $}
             out = targets flatten(.arg)
         )
+
+    !view dump(app <: sysl.App) -> string:
+        app -> (:
+            let targets = app.endpoints -> <set of string> (ep:
+                out = findEpDeps(ep)
+            )
+
+            $ {{ "{$ app.name $}": {$ targets flatten(.out) flatten(.out) flatten(.) $} }}\
+        )
+
+    !view start(mod <: sysl.TemplateInput) -> sysl.TemplateResult:
+        mod -> (:
+            Filename = "foo.json"
+            let apps = mod.Apps -> <sequence of string> (a:
+                out = dump(a)
+            )
+            Data = "[\n" + apps + "\n]"
+        )
+
 
 `
 
