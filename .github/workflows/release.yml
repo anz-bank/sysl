@@ -60,32 +60,32 @@ jobs:
       run: |
         GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
         docker build -t "$DOCKER_IMAGE_LATEST" -f Dockerfile .
-        docker build -t "$DOCKER_IMAGE_SYSL2_LATEST" -f Dockerfile-sysl2-ubuntu .
+        docker build -t "$DOCKER_IMAGE_src_LATEST" -f Dockerfile-src-ubuntu .
         DOCKER_IMAGE_VERSIONED="${DOCKER_IMAGE_LATEST}:${GIT_TAG:1}"
         docker tag "$DOCKER_IMAGE_LATEST" "$DOCKER_IMAGE_VERSIONED"
-        DOCKER_IMAGE_SYSL2_VERSIONED="${DOCKER_IMAGE_SYSL2_LATEST}:${GIT_TAG:1}-ubuntu18.04"
-        docker tag "$DOCKER_IMAGE_SYSL2_LATEST" "$DOCKER_IMAGE_SYSL2_VERSIONED"
+        DOCKER_IMAGE_src_VERSIONED="${DOCKER_IMAGE_src_LATEST}:${GIT_TAG:1}-ubuntu18.04"
+        docker tag "$DOCKER_IMAGE_src_LATEST" "$DOCKER_IMAGE_src_VERSIONED"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DOCKER_IMAGE_LATEST: "anzbank/sysl"
-        DOCKER_IMAGE_SYSL2_LATEST: "anzbank/sysl2"
+        DOCKER_IMAGE_src_LATEST: "anzbank/src"
 
     - name: Publish images, sysl lib, and sysl_js
       run: |
         GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
         DOCKER_IMAGE_VERSIONED="${DOCKER_IMAGE_LATEST}:${GIT_TAG:1}"
-        DOCKER_IMAGE_SYSL2_VERSIONED="${DOCKER_IMAGE_SYSL2_LATEST}:${GIT_TAG:1}-ubuntu18.04"
+        DOCKER_IMAGE_src_VERSIONED="${DOCKER_IMAGE_src_LATEST}:${GIT_TAG:1}-ubuntu18.04"
         echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
         docker push "$DOCKER_IMAGE_VERSIONED"
         docker push "$DOCKER_IMAGE_LATEST"
-        docker push "$DOCKER_IMAGE_SYSL2_VERSIONED"
-        docker push "$DOCKER_IMAGE_SYSL2_LATEST"
+        docker push "$DOCKER_IMAGE_src_VERSIONED"
+        docker push "$DOCKER_IMAGE_src_LATEST"
         gradle -b src/libs/java/build.gradle bintrayUpload
-        cd sysl2/sysl/sysl_js && NPM_AUTH_TOKEN=$NPM_PUBLISH_TOKEN npm publish
+        cd src/sysl/sysl_js && NPM_AUTH_TOKEN=$NPM_PUBLISH_TOKEN npm publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DOCKER_IMAGE_LATEST: "anzbank/sysl"
-        DOCKER_IMAGE_SYSL2_LATEST: "anzbank/sysl2"
+        DOCKER_IMAGE_src_LATEST: "anzbank/src"
         NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
         BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}

@@ -52,10 +52,10 @@ FLAGS="\
 
 if [[ ${CMD} = "build" ]]; then
     if [[ -n ${GOOS} && -n ${GOARCH} ]]; then
-        GOOS=${GOOS} GOARCH=${GOARCH} go build -o ${OUT} -ldflags "${FLAGS}" -v github.com/anz-bank/sysl/sysl2/sysl
+        GOOS=${GOOS} GOARCH=${GOARCH} go build -o ${OUT} -ldflags "${FLAGS}" -v github.com/anz-bank/sysl/src/sysl
     else
-        go build -o ${OUT} -ldflags "${FLAGS}" -v github.com/anz-bank/sysl/sysl2/sysl
+        go build -o ${OUT} -ldflags "${FLAGS}" -v github.com/anz-bank/sysl/src/sysl
     fi
 elif [[ ${CMD} = "install" ]]; then
-    go install -ldflags "${FLAGS}" -v ./sysl2/sysl
+    go install -ldflags "${FLAGS}" -v ./src/sysl
 fi

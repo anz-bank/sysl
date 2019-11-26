@@ -7,7 +7,7 @@ RUN apt-get -qq update -y --fix-missing && \
 WORKDIR /sysl
 
 ADD dist/sysl-*.whl /sysl
-ADD gosysl/sysl-linux /usr/bin/sysl2
+ADD gosysl/sysl-linux /usr/bin/src
 
 RUN pip install sysl-*.whl
-RUN ln -s /usr/bin/sysl2 /usr/bin/syslgen
+RUN ln -s /usr/bin/src /usr/bin/syslgen

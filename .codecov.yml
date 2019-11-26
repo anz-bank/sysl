@@ -1,4 +1,4 @@
 ignore:
-  - sysl2/sysl/sysl_js/SyslLexer.js
-  - sysl2/sysl/sysl_js/SyslParser.js
-  - sysl2/sysl/sysl_js/SyslParserListener.js
+  - src/sysl/sysl_js/SyslLexer.js
+  - src/sysl/sysl_js/SyslParser.js
+  - src/sysl/sysl_js/SyslParserListener.js

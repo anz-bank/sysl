@@ -40,7 +40,7 @@ jobs:
     - name: Build
       run: |
         md dist\
-        go build -o dist\gosysl.exe .\sysl2\sysl\
+        go build -o dist\gosysl.exe .\src\sysl\
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

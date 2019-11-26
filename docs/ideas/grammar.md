@@ -42,4 +42,4 @@ The output would be a grammar protobuf, which is handed to a grammar interpreter
 Example: Java Grammar
 --------------
 
-See [sysl2/lib/lang/java.sysl](../../sysl2/lib/lang/java.sysl).
+See [src/lib/lang/java.sysl](../../src/lib/lang/java.sysl).
