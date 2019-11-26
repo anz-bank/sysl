@@ -4,6 +4,7 @@ import (
 	"io"
 	"io/ioutil"
 	"sort"
+	"strings"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	parser "github.com/anz-bank/sysl/sysl2/naive"
@@ -171,7 +172,15 @@ func applyTranformToModel(
 	modelName, transformAppName, viewName string,
 	model, transform *sysl.Module,
 ) (*sysl.Value, error) {
-	modelApp := model.Apps[modelName]
+	modelApp, has := model.Apps[modelName]
+	if !has {
+		var apps []string
+		for k := range model.Apps {
+			apps = append(apps, k)
+		}
+		sort.Strings(apps)
+		return nil, errors.Errorf("app %s does not exist in model, available apps: [%s]", modelName, strings.Join(apps, ", "))
+	}
 	view := transform.Apps[transformAppName].Views[viewName]
 	if view == nil {
 		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
