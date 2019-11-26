@@ -1,0 +1,43 @@
+---
+title: "Keywords"
+description: "Sysl keyword dictionary"
+date: 2018-11-26
+weight: 10
+draft: false
+toc: true
+---
+`!type`
+The type keyword is used to define a type. 
+In the following example we define a `Post` type made up of multiple attributes.
+```
+  !type Post:
+    userId <: int
+    id <: int
+    title <: string
+    body <: string
+```
+
+
+`!alias`
+Alias' can be used to simplify a type;
+
+```
+  !alias Posts:
+    sequence of Post
+```
+
+`!view`
+Views are sysl's functions; we can use them in the transformation language, see [docs/transformation.html]for more info
+
+
+`!union`
+Unions are a union type; 
+`!union string, int32`
+can either be a string, int32, but not both.
+
+`!table` Add more here
+
+`!wrap` Add more here
+
+
+
