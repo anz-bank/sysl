@@ -61,14 +61,24 @@ func evalTransformUsingAppender(
 	appender func(collection []*sysl.Value, newVal *sysl.Value) []*sysl.Value,
 ) []*sysl.Value {
 	listResult := []*sysl.Value{}
-	scopeVar := x.Scopevar
 
-	for _, svar := range v {
-		assign[scopeVar] = svar
+	for i, svar := range v {
+		if len(x.Scopevar) == 1 {
+			assign[x.Scopevar[0]] = svar
+		} else {
+			assign[x.Scopevar[0]] = &sysl.Value{
+				Value: &sysl.Value_I{
+					I: int64(i),
+				},
+			}
+			assign[x.Scopevar[1]] = svar
+		}
 		res := evalTransformStmts(ee, assign, x)
 		listResult = appender(listResult, res)
 	}
-	delete(assign, scopeVar)
+	for _, val := range x.Scopevar {
+		delete(assign, val)
+	}
 	logrus.Tracef("Transform Result (As List/Set): %v", listResult)
 	return listResult
 }
@@ -130,7 +140,7 @@ func (ee *exprEval) evalTransform(assign Scope, x *sysl.Expr_Transform_, e *sysl
 	default:
 		// HACK: scopevar == '.', then we are not unpacking the map entries
 		scopeVar := x.Transform.Scopevar
-		if argValue.GetMap() != nil && scopeVar != "." {
+		if argValue.GetMap() != nil && scopeVar[0] != "." {
 			// TODO: add check that return type is defined as 'set of ...'
 			resultList := &sysl.Value_List{}
 			// Sort keys, to get stable output
@@ -141,17 +151,24 @@ func (ee *exprEval) evalTransform(assign Scope, x *sysl.Expr_Transform_, e *sysl
 			sort.Strings(keys)
 			items := argValue.GetMap().Items
 			for _, key := range keys {
-				item := items[key]
 				logrus.Debugf("Evaluation Argvalue %s", key)
-				a := MakeValueMap()
+				item := items[key]
 				logrus.Tracef("Evaluation Argvalue as a map: key=(%s), value=(%v)\n", key, item)
-				AddItemToValueMap(a, "key", MakeValueString(key))
-				AddItemToValueMap(a, "value", item)
-				assign[scopeVar] = a
+				if len(scopeVar) == 1 {
+					a := MakeValueMap()
+					AddItemToValueMap(a, "key", MakeValueString(key))
+					AddItemToValueMap(a, "value", item)
+					assign[scopeVar[0]] = a
+				} else {
+					assign[scopeVar[0]] = MakeValueString(key)
+					assign[scopeVar[1]] = item
+				}
 				res := evalTransformStmts(ee, assign, x.Transform)
 				AppendItemToValueList(resultList, res)
 			}
-			delete(assign, scopeVar)
+			for _, varname := range scopeVar {
+				delete(assign, varname)
+			}
 			if e.Type.GetSet() != nil {
 				return &sysl.Value{
 					Value: &sysl.Value_Set{
@@ -166,9 +183,9 @@ func (ee *exprEval) evalTransform(assign Scope, x *sysl.Expr_Transform_, e *sysl
 			}
 		}
 		logrus.Tracef("Argvalue: %v", argValue)
-		assign[scopeVar] = argValue
+		assign[scopeVar[0]] = argValue
 		res := evalTransformStmts(ee, assign, x.Transform)
-		delete(assign, scopeVar)
+		delete(assign, scopeVar[0])
 		logrus.Tracef("Transform Result: %v", res)
 		return res
 	}

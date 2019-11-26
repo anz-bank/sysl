@@ -256,13 +256,13 @@ func (v *Validator) validateTfmReturn(viewName string, expr *sysl.Expr, retType 
 
 		switch retType.Type.(type) {
 		case *sysl.Type_Sequence, *sysl.Type_Set:
-			if tfm.Transform.Scopevar == "." {
+			if tfm.Transform.Scopevar[0] == "." {
 				typeName, typeDetail := syslutil.GetTypeDetail(retType)
 				v.messages[viewName] = append(v.messages[viewName],
 					*msg.NewMsg(msg.ErrInvalidReturn, []string{viewName, "Expected a " + typeName + " of " + typeDetail}))
 			}
 		default:
-			if tfm.Transform.Scopevar != "." {
+			if tfm.Transform.Scopevar[0] != "." {
 				_, typeDetail := syslutil.GetTypeDetail(retType)
 				v.messages[viewName] = append(v.messages[viewName],
 					*msg.NewMsg(msg.ErrInvalidReturn, []string{viewName, "Expected a single " + typeDetail}))

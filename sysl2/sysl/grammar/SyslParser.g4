@@ -357,7 +357,7 @@ expr_stmt: expr_statement_no_nl | expr_statement | expr_inject_stmt;
 transform_return_type:  set_of | sequence_of | view_type_spec;
 view_return_type: view_type_spec;
 
-transform_scope_var: E_Name;
+transform_scope_var: E_Name (E_COMMA E_Name)?;
 transform_arg: expr;
 
 transform: transform_arg?

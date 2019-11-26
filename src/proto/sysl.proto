@@ -363,7 +363,7 @@ message Expr {
 
     message Transform {
         Expr arg = 1;
-        string scopevar = 2;
+        repeated string scopevar = 2;
         repeated Stmt stmt = 3;
         bool all_attrs = 4;
         repeated string except_attrs = 5;

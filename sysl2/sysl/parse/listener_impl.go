@@ -3448,7 +3448,9 @@ func (s *TreeShapeListener) ExitView_return_type(*parser.View_return_typeContext
 // EnterTransform_scope_var is called when production transform_scope_var is entered.
 func (s *TreeShapeListener) EnterTransform_scope_var(ctx *parser.Transform_scope_varContext) {
 	tx := s.TopExpr().GetTransform()
-	tx.Scopevar = ctx.GetText()
+	for _, val := range ctx.AllE_Name() {
+		tx.Scopevar = append(tx.Scopevar, val.GetText())
+	}
 }
 
 // ExitTransform_scope_var is called when production transform_scope_var is exited.
@@ -3481,8 +3483,8 @@ func (s *TreeShapeListener) ExitTransform(ctx *parser.TransformContext) {
 	if tx.Arg == nil {
 		tx.Arg = makeExprName(".", s.sc.Get(ctx.BaseParserRuleContext))
 	}
-	if tx.Scopevar == "" {
-		tx.Scopevar = "."
+	if len(tx.Scopevar) == 0 {
+		tx.Scopevar = []string{"."}
 	}
 }
 
