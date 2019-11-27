@@ -24,7 +24,7 @@ install:
 build: off
 
 build_script:
-  - go build -o dist/gosysl.exe github.com/anz-bank/sysl/src/sysl
+  - go build -o dist/gosysl.exe github.com/anz-bank/sysl/pkg/sysl
 
 test_script:
   - flake8
