@@ -41,7 +41,7 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		HintOptions(opts...).
 		EnumVar(&p.mode, opts...)
 
-	EnsureFlagsNonEmpty(cmd)
+	EnsureFlagsNonEmpty(cmd, "package")
 	return cmd
 }
 

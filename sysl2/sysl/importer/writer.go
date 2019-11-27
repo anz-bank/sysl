@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/go-openapi/swag"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -232,13 +234,17 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 	if len(endpoint.Responses) > 0 {
 		var outs []string
 		for _, resp := range endpoint.Responses {
+			var newline string
 			switch {
 			case resp.Type != nil && resp.Text != "":
-				outs = append(outs, fmt.Sprintf("return %s <: %s", resp.Text, getSyslTypeName(resp.Type)))
+				newline = fmt.Sprintf("return %s <: %s", resp.Text, getSyslTypeName(resp.Type))
 			case resp.Type != nil:
-				outs = append(outs, "return "+getSyslTypeName(resp.Type))
+				newline = "return " + getSyslTypeName(resp.Type)
 			default:
-				outs = append(outs, "return "+resp.Text)
+				newline = "return " + resp.Text
+			}
+			if !swag.ContainsStrings(outs, newline) {
+				outs = append(outs, newline)
 			}
 		}
 		w.writeLines(outs...)
