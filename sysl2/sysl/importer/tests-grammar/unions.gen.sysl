@@ -18,20 +18,17 @@ testapp "testappFile":
         ImportSpec(0..) <: sequence of ImportSpec
 
     !type ImportSpec:
-        __Choice_ImportSpec <: __Choice_ImportSpec
+        __ImportSpec_00 <: __ImportSpec_00
 
-    !type ImportSpec2:
-        Import <: Import
-        NamedImport <: NamedImport
-
-    !type ImportSpec3:
-        __Choice_ImportSpec3 <: __Choice_ImportSpec3
-
-    !union __Choice_ImportSpec:
+    !union ImportSpec2:
         Import
         NamedImport
 
-    !union __Choice_ImportSpec3:
+    !union ImportSpec3:
+        Import
+        NamedImport
+
+    !union __ImportSpec_00:
         Import
         NamedImport
 

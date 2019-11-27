@@ -11,38 +11,55 @@ testapp "testappFile":
     #---------------------------------------------------------------------------
     # definitions
 
-    !type Asterix:
+    !type Astrix:
         foo(0..) <: sequence of foo
 
-    !type ForwardDeclTest:
-        UnnamedRule <: UnnamedRule
+    !union HardChoice:
+        __HardChoice_02
+        ForwardDeclTest
 
-    !type HardChoice:
-        __Choice_HardChoice(0..) <: sequence of __Choice_HardChoice
-        ForwardDeclTest <: ForwardDeclTest
-
-    !union __Choice_HardChoice:
+    !union __HardChoice_01:
         atLeastOne
         simpleForward
 
+    !type __HardChoice_02:
+        __HardChoice_01(0..) <: sequence of __HardChoice_01
+
+    !union a:
+        __a_01
+        atLeastOne
+
+    !type __a_01:
+        b(1..) <: sequence of b
+
     !type atLeastOne:
-        foo(1..) <: foo
+        foo(1..) <: sequence of foo
 
     !type optional:
         foo <: foo?
 
-    !type simpleChoice:
+    !union simpleChoice:
+        textOnly
+        foo
+
+    !type simpleRequired:
         textOnly <: textOnly
         foo <: foo
 
-    !type simpleForward:
-        textOnly <: textOnly
+    !alias ForwardDeclTest:
+        UnnamedRule
 
     !alias UnnamedRule:
         string
 
+    !alias b:
+        string
+
     !alias foo:
         string
+
+    !alias simpleForward:
+        textOnly
 
     !alias textOnly:
         string
