@@ -6,9 +6,9 @@ import (
 	"sort"
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	parser "github.com/anz-bank/sysl/pkg/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/pkg/proto"
+	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/sysl/eval"
 	"github.com/anz-bank/sysl/pkg/sysl/msg"
 	"github.com/anz-bank/sysl/pkg/sysl/parse"
