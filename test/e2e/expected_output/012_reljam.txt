@@ -1,5 +1,0 @@
-UserFacade.java
-UserFacadeJsonDeserializer.java
-UserFacadeJsonSerializer.java
-UserFacadeXmlDeserializer.java
-UserFacadeXmlSerializer.java
