@@ -1,0 +1,8 @@
+TestTableXsdModel [package="io.sysl.test.data"]:
+
+    !table TopLevelType:
+        field1 <: SecondLevelType.key
+
+    !table SecondLevelType:
+        key <: int [~pk]
+        field1 <: string

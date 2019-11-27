@@ -1,0 +1,14 @@
+Test EPA :: Events [title="%(epname)", appfmt="**%(appname)**"]:
+    Event1:
+        Test EPA :: App1
+
+Test EPA :: App1:
+    
+    Trigger:
+        . <- App1 Event
+
+    <-> App1 Event: ...   
+
+Test EPA :: App2:
+    
+    Test EPA :: App1 -> App1 Event: ...

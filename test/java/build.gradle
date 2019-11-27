@@ -1,0 +1,69 @@
+apply plugin: "java"
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+def tempDirectory = "../../tmp/src/main/java"
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+test {
+    testLogging {
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
+}
+
+task generateUserFormComplex(type:Exec) {
+  commandLine "reljam",  "--out", "$tempDirectory", "model", "/tuplecomplex", "UserFormComplex"
+}
+
+task generateUserModel(type:Exec) {
+  commandLine "reljam",  "--out", "$tempDirectory", "model", "/relationalmodel", "UserModel"
+}
+
+task generateUserModelFacade(type:Exec) {
+  commandLine "reljam",  "--out", "$tempDirectory", "facade", "/relationalmodel", "UserFacade"
+}
+
+task generateArticle(type:Exec) {
+commandLine "reljam",  "--out", "$tempDirectory", "model", "/article", "ArticleModel"
+}
+
+
+compileJava.dependsOn generateUserFormComplex
+compileJava.dependsOn generateUserModel
+generateUserModelFacade.dependsOn generateUserFormComplex
+compileJava.dependsOn generateUserModelFacade
+compileJava.dependsOn generateArticle
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["../../src/libs/java/src/main", "$tempDirectory"]
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ["src/test/java"]
+        }
+        resources {
+            srcDir "src/test/resources"
+        }
+    }
+}
+
+clean {
+    delete "$tempDirectory"
+}
+
+dependencies {
+    compile "joda-time:joda-time:2.5"
+    compile "org.apache.commons:commons-lang3:3.5"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3"
+    testCompile "junit:junit:4.12"
+}

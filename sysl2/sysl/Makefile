@@ -2,6 +2,7 @@ EXE = $(GOPATH)/bin/sysl
 SD_EXE = $(GOPATH)/bin/sd
 JS = sysl_js/SyslParser.js
 ANTLR = java -jar lib/antlr-4.7-complete.jar
+SYSL_PYTHON_BIN = /usr/local/bin/sysl
 
 GRAMMARS = SyslParser.g4 SyslLexer.g4
 
@@ -85,6 +86,9 @@ SYSL_TEST_FILES = \
 tests: $(patsubst %,tests/%.sysl.golden.textpb,$(SYSL_TEST_FILES))
 
 tests/school.sysl.golden.pb: root = tests
+
+tests/%.sysl.golden.textpb: tests/%.sysl $(SYSL_PYTHON_BIN)
+	$(SYSL_PYTHON_BIN) $(if $(root),--root $(root),) textpb -o $@ $<
 
 seqs:
 	go build -o $(SD_EXE)

@@ -1,0 +1,8 @@
+TestTypeAttrXsdModel [package="io.sysl.test.data"]:
+
+    !type TopLevelType [~xml_root]:
+        field1 <: SecondLevelType
+        attr1 <: int [~xml_attribute]
+
+    !type SecondLevelType:
+        field1 <: string

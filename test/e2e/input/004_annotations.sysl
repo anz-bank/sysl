@@ -1,0 +1,18 @@
+ThatApp:
+	foo:
+		...
+	bar:
+		...
+MyApp:
+    ep1:
+        ThatApp <- foo
+
+    ep2:
+        ThatApp <- foo
+
+    ep3:
+        ThatApp <- bar
+
+MyApp:
+    *:
+        ThatApp <- foo [~abc]

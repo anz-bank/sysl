@@ -1,0 +1,9 @@
+TestTableAttrXsdModel [package="io.sysl.test.data"]:
+
+    !table TopLevelType:
+        field1 <: SecondLevelType.key
+        attr1 <: int [~xml_attribute]
+
+    !table SecondLevelType:
+        key <: int [~pk]
+        field1 <: string
