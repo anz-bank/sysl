@@ -232,14 +232,16 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 	if len(endpoint.Responses) > 0 {
 		var outs []string
 		for _, resp := range endpoint.Responses {
-			if resp.Type != nil {
-				outs = append(outs, getSyslTypeName(resp.Type))
-			} else {
-				outs = append(outs, resp.Text)
+			switch {
+			case resp.Type != nil && resp.Text != "":
+				outs = append(outs, fmt.Sprintf("return %s <: %s", resp.Text, getSyslTypeName(resp.Type)))
+			case resp.Type != nil:
+				outs = append(outs, "return "+getSyslTypeName(resp.Type))
+			default:
+				outs = append(outs, "return "+resp.Text)
 			}
 		}
-		sort.Strings(outs)
-		w.writeLines(fmt.Sprintf("return %s", strings.Join(outs, ", ")))
+		w.writeLines(outs...)
 	}
 
 	w.writeLines(PopIndent, PopIndent)
