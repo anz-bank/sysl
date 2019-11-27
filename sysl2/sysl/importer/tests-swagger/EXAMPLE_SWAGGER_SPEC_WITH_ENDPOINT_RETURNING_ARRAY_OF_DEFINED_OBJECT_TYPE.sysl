@@ -15,7 +15,7 @@ testapp "Goat CRUD API" [package="package_foo"]:
         /goat/get-goats:
             GET:
                 | Gotta get goats.
-                return sequence of Goat
+                return ok <: sequence of Goat
 
     #---------------------------------------------------------------------------
     # definitions

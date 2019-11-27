@@ -34,7 +34,7 @@ apps: <
         >
         stmt: <
           ret: <
-            payload: "SimpleObj"
+            payload: "ok <: SimpleObj"
           >
         >
         rest_params: <
