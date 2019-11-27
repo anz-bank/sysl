@@ -1,7 +1,0 @@
-TestTypeXsdModel [package="io.sysl.test.data"]:
-
-    !type TopLevelType [~xml_root]:
-        field1 <: SecondLevelType
-
-    !type SecondLevelType:
-        field1 <: string

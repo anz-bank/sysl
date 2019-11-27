@@ -18,14 +18,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up python 2.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: '2.7'
-        architecture: 'x64'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Check out code
       uses: actions/checkout@master
       env:
@@ -45,10 +37,6 @@ jobs:
       run: |
         GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
         ./scripts/check-coverage.sh 80
-        ./scripts/test-pysysl.sh
-        gradle test -b test/java/build.gradle
-        python setup.py sdist bdist_wheel
-        gradle build -b src/libs/java/build.gradle :jar
         ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-darwin  darwin  amd64
         ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-linux   linux   amd64
         ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-windows windows amd64
@@ -89,14 +77,6 @@ jobs:
         NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
         BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
-
-    - name: Publish python package
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        user: __token__
-        password: ${{ secrets.PIPY_TOKEN }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload binaries to release
       run: |
