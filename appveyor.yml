@@ -2,13 +2,6 @@ environment:
   PYTHON: "C:\\Python27"
   SYSL_PLANTUML: http://www.plantuml.com/plantuml
   JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-  GOPATH: c:\gopath
-
-init:
-  - git config --global core.autocrlf input
-  - go env
-
-clone_folder: c:\gopath\src\github.com\anz-bank\sysl
 
 install:
   - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_HOME%\bin;%PATH%
@@ -19,20 +12,14 @@ install:
   - pip install . pytest
   - pip freeze
   - choco install gradle
-  - go get -t -v github.com/anz-bank/sysl/...
 
 build: off
-
-build_script:
-  - go build -o dist/gosysl.exe github.com/anz-bank/sysl/pkg/sysl
 
 test_script:
   - flake8
   - pytest
   - pytest test/e2e --syslexe=sysl --reljamexe=reljam
   - gradle --no-daemon -b test\java\build.gradle test
-  - go test -coverprofile=coverage.txt -covermode=atomic github.com/anz-bank/sysl/...
-  - scripts/test-gosysl.bat
 
 after_test:
   - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"

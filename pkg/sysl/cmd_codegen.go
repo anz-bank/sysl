@@ -30,6 +30,8 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("start", "start rule for the grammar").Default(".").StringVar(&p.start)
 	cmd.Flag("outdir", "output directory").Default(".").StringVar(&p.outDir)
 	cmd.Flag("validate-only", "Only Perform validation on the transform grammar").BoolVar(&p.validateOnly)
+	cmd.Flag("disable-validator", "Disable validation on the transform grammar").
+		Default("false").BoolVar(&p.disableValidator)
 	EnsureFlagsNonEmpty(cmd, "app-name")
 	return cmd
 }

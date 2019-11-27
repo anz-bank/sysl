@@ -15,7 +15,7 @@ testapp "Goat CRUD API" [package="package_foo"]:
         /goat/delete-goat:
             POST ?goat_id=string:
                 | Delete a goat.
-                return Acknowledgement
+                return ok <: Acknowledgement
 
     #---------------------------------------------------------------------------
     # definitions

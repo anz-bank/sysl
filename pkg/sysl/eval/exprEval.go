@@ -250,7 +250,7 @@ func evalGetAttr(ee *exprEval, assign Scope, x *sysl.Expr_GetAttr_) *sysl.Value 
 	if isInternalMap(arg.GetMap()) {
 		switch key := x.GetAttr.Attr; key {
 		case "value":
-			ee.LogEntry().Warnf("Unnecessary use of .value")
+			ee.LogEntry().Debugf("Unnecessary use of .value")
 			fallthrough
 		case "key":
 			return arg.GetMap().Items[key]

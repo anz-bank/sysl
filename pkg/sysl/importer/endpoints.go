@@ -51,7 +51,11 @@ func buildResponses(path string, responses *spec.Responses, types TypeList, logg
 				logger.Errorf("Responses type for code %d not found, endpoint: %s, skipping", statusCode, path)
 				continue
 			}
-			outs = append(outs, Response{Type: t})
+			text := "error"
+			if statusCode < 300 {
+				text = "ok"
+			}
+			outs = append(outs, Response{Text: text, Type: t})
 		} else {
 			outs = append(outs, Response{Text: fmt.Sprintf("%d", statusCode)})
 		}
@@ -64,7 +68,6 @@ func buildResponses(path string, responses *spec.Responses, types TypeList, logg
 	}
 	if responses.Default != nil {
 		logger.Warnf("default responses not implemented, endpoint: %s", path)
-		outs = append(outs, Response{Text: "default"})
 	}
 
 	return outs

@@ -19,4 +19,6 @@ paths:
           description: 'here be status'
         '500':
           description: 'alas, the server is broken'
+        '400':
+          description: 'woopsies'
       summary: Check goat status

@@ -274,13 +274,15 @@ func GenerateCode(
 		return nil, err
 	}
 
-	grammarSysl, err := validate.LoadGrammar(codegenParams.grammar, fs)
-	if err != nil {
-		msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
-	} else {
-		validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-		validator.Validate(codegenParams.start)
-		validator.LogMessages()
+	if !codegenParams.disableValidator {
+		grammarSysl, err := validate.LoadGrammar(codegenParams.grammar, fs)
+		if err != nil {
+			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
+		} else {
+			validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
+			validator.Validate(codegenParams.start)
+			validator.LogMessages()
+		}
 	}
 
 	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", model, tx)
