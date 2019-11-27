@@ -16,8 +16,8 @@ testapp "Goat CRUD API" [package="package_foo"]:
             GET:
                 | Check goat status
                 return 200
-                return 500
                 return 400
+                return 500
 
     #---------------------------------------------------------------------------
     # definitions

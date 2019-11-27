@@ -247,6 +247,7 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 				outs = append(outs, newline)
 			}
 		}
+		sort.Strings(outs)
 		w.writeLines(outs...)
 	}
 

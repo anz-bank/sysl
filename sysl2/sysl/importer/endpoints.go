@@ -68,7 +68,6 @@ func buildResponses(path string, responses *spec.Responses, types TypeList, logg
 	}
 	if responses.Default != nil {
 		logger.Warnf("default responses not implemented, endpoint: %s", path)
-		outs = append(outs, Response{Text: "default"})
 	}
 
 	return outs
