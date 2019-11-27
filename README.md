@@ -3,8 +3,7 @@
 [![GitHub Actions Go-Darwin status](https://github.com/anz-bank/sysl/workflows/Go-Darwin/badge.svg)](.)
 [![GitHub Actions Go-Linux status](https://github.com/anz-bank/sysl/workflows/Go-Linux/badge.svg)](.)
 [![GitHub Actions node-linux status](https://github.com/anz-bank/sysl/workflows/node-linux/badge.svg)](.)
-[![GitHub Actions python-darwin status](https://github.com/anz-bank/sysl/workflows/python-darwin/badge.svg)](.)
-[![GitHub Actions python-linux status](https://github.com/anz-bank/sysl/workflows/python-linux/badge.svg)](.)
+
 
 [![AppVeyor build](https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor)](https://ci.appveyor.com/project/anz-bank/sysl/branch/master)
 [![Codecov](https://img.shields.io/codecov/c/github/anz-bank/sysl/master.svg)](https://codecov.io/gh/anz-bank/sysl/branch/master)
@@ -22,82 +21,7 @@ representations over time.
 
 ## Installation
 
-Windows users can download the `sysl-bundle-windows.zip`, containing `sysl.exe`
-and `reljam.exe`, from our
-[release page](https://github.com/anz-bank/sysl/releases).
 
-Users on other operating systems need to work with Python or Docker.
-
-### Python
-
-Install [Python 2.7](https://www.python.org/downloads/). If your specific
-environment causes problems you might find our
-[guide](docs/environment_guide.md) helpful.
-
-Install Sysl with
-
-```bash
-> pip install sysl
-```
-
-Now you can execute Sysl on the command line with
-
-```bash
-> sysl   textpb -o out/petshop.txt /demo/petshop/petshop
-> reljam model /demo/petshop/petshop PetShopModel
-```
-
-See `sysl --help` and `reljam --help` for more options.
-
-### Docker
-
-Install [Docker](https://docs.docker.com/install/) and pull the Docker Image
-with
-
-```bash
-> docker pull anzbank/sysl
-```
-
-Consider tagging the docker image to make commands shorter
-
-```bash
-> docker tag anzbank/sysl sysl
-```
-
-Try the following commands
-
-```bash
-> docker run sysl
-> docker run sysl sysl -h
-> docker run sysl reljam -h
-```
-
-See `https://hub.docker.com/r/anzbank/sysl/` for more details.
-
-## Developent (go-sysl)
-
-Install go toolchain
-
-Install protoc:
-* Download relevant release from https://github.com/protocolbuffers/protobuf/releases/tag/v3.10.0
-    * Copy the bin/protoc file into your `$PATH`
-    * Copy the include/google directory into your `$GOPATH/src`
-
-### Builds
-```bash
-> go generate ./sysl2/... # Regenerate any codegen dependancies (usually not required)
-> go build ./sysl2/...
-> go test ./sysl2/...
-# Or execute ./local_ci.sh
-```
-
-## Development (OUT OF DATE)
-
-Install dependencies and the `sysl` package with symlinks
-
-```bash
-> pip install pytest flake8 -e .
-```
 
 Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some
 of the automated tests require a PlantUML dependency. Provide PlantUML access
@@ -114,10 +38,6 @@ the following options to set up your environment:
 
 Test and lint the source code and your changes with
 
-```bash
-> pytest
-> flake8
-```
 
 Consider using [virtualenv](https://virtualenv.pypa.io/en/stable/) and
 [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to
@@ -160,17 +80,6 @@ step or on every build. You can then easily consume Sysl models in your
 programming language of choice in a typesafe way without having to write a ton
 of mapping boilerplate. With that you can create your own tailored output
 diagrams, source code, views, integrations or other desired outputs.
-
-In this project, several Python based exporters exist under `src/sysl/exporters`
-and the relevant Python protobuf definitions `sysl_pb2.py` have been created
-from `sysl.proto` with
-
-```bash
-> protoc --python_out=src/sysl/proto  --proto_path=src/proto sysl.proto
-```
-
-If `sysl.proto` is updated, the above command needs to be re-run to update the
-corresponding Python definitions in `sysl_pb2.py`.
 
 ## Status
 
