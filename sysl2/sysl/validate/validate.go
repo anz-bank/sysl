@@ -1,10 +1,7 @@
 package validate
 
 import (
-	"io/ioutil"
 	"strings"
-
-	"github.com/anz-bank/sysl/sysl2/sysl/importer"
 
 	sysl "github.com/anz-bank/sysl/src/proto"
 	"github.com/anz-bank/sysl/sysl2/sysl/msg"
@@ -337,29 +334,17 @@ func loadTransform(transformFile string, fs afero.Fs, p *parse.Parser) (*sysl.Ap
 // LoadGrammar loads sysl conversion of given grammar.
 // eg: if grammarFile is ./foo/bar.g, this tries to load ./foo/bar.sysl
 func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
-	memFS := afero.NewMemMapFs()
-	text, err := ioutil.ReadFile(grammarFile)
-	if err != nil {
-		return nil, err
-	}
-	syslText, err := importer.LoadGrammar(importer.OutputData{AppName: "Grammar"},
-		string(text), logrus.StandardLogger())
-	if err != nil {
-		return nil, err
-	}
+	tokens := strings.Split(grammarFile, "/")
+	rootGrammar := strings.Join(tokens[:len(tokens)-1], "/")
+	grammarFileName := tokens[len(tokens)-1]
 
-	f, err := memFS.Create("temp.sysl")
-	if err != nil {
-		return nil, err
-	}
-	_, err = f.WriteString(syslText)
-	if err != nil {
-		return nil, err
-	}
-
+	tokens = strings.Split(grammarFileName, ".")
+	tokens[len(tokens)-1] = "sysl"
+	grammarSyslFile := strings.Join(tokens, ".")
 	p := parse.NewParser()
 
-	grammar, name, err := parse.LoadAndGetDefaultApp("temp.sysl", memFS, p)
+	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile,
+		syslutil.NewChrootFs(fs, rootGrammar), p)
 	if err != nil {
 		return nil, err
 	}
