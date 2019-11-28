@@ -14,32 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type loaderRes struct {
-	transform       *sysl.Application
-	transformParser *parse.Parser
-	grammar         *sysl.Application
-}
-
-func loadTransformAndGrammarSysls(transformFile, grammarFile string) (*loaderRes, error) {
-	res := &loaderRes{}
-	p := parse.NewParser()
-	fs := syslutil.NewChrootFs(afero.NewOsFs(), "../tests")
-	xform, err := loadTransform(transformFile, fs, p)
-	if err != nil {
-		return nil, err
-	}
-	res.transform = xform
-	res.transformParser = p
-
-	grammar, err := loadTransform(grammarFile, fs, parse.NewParser())
-	if err != nil {
-		return nil, err
-	}
-	res.grammar = grammar
-
-	return res, nil
-}
-
 func TestValidatorGetTypeName(t *testing.T) {
 	t.Parallel()
 
@@ -249,12 +223,14 @@ func TestValidatorValidateFileName(t *testing.T) {
 func TestValidatorValidateViews(t *testing.T) {
 	t.Parallel()
 
-	data, err := loadTransformAndGrammarSysls("transform1.sysl", "grammar.sysl")
+	p := parse.NewParser()
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
-	require.NotNil(t, data)
-	transform := data.transform
-	grammar := data.grammar
-	p := data.transformParser
+	require.NotNil(t, transform)
+
+	grammar, err := LoadGrammar("../tests/grammar.sysl", afero.NewOsFs())
+	require.NoError(t, err)
+	require.NotNil(t, grammar)
 
 	cases := map[string]struct {
 		input    string
@@ -333,12 +309,14 @@ func TestValidatorValidateViews(t *testing.T) {
 func TestValidatorValidateViewsInnerTypes(t *testing.T) {
 	t.Parallel()
 
-	data, err := loadTransformAndGrammarSysls("transform1.sysl", "grammar.sysl")
+	p := parse.NewParser()
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
-	require.NotNil(t, data)
-	transform := data.transform
-	grammar := data.grammar
-	p := data.transformParser
+	require.NotNil(t, transform)
+
+	grammar, err := LoadGrammar("../tests/grammar.sysl", afero.NewOsFs())
+	require.NoError(t, err)
+	require.NotNil(t, grammar)
 
 	cases := map[string]struct {
 		inputAssign map[string]parse.TypeData
@@ -373,12 +351,14 @@ func TestValidatorValidateViewsInnerTypes(t *testing.T) {
 func TestValidatorValidateViewsChoiceTypes(t *testing.T) {
 	t.Parallel()
 
-	data, err := loadTransformAndGrammarSysls("transform1.sysl", "grammar.sysl")
+	p := parse.NewParser()
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
-	require.NotNil(t, data)
-	transform := data.transform
-	grammar := data.grammar
-	p := data.transformParser
+	require.NotNil(t, transform)
+
+	grammar, err := LoadGrammar("../tests/grammar.sysl", afero.NewOsFs())
+	require.NoError(t, err)
+	require.NotNil(t, grammar)
 
 	cases := map[string]struct {
 		inputAssign map[string]parse.TypeData
@@ -451,12 +431,14 @@ func TestValidatorValidateViewsChoiceTypes(t *testing.T) {
 func TestValidatorValidate(t *testing.T) {
 	t.Parallel()
 
-	data, err := loadTransformAndGrammarSysls("transform2.sysl", "grammar.sysl")
+	p := parse.NewParser()
+	transform, err := loadTransform("transform2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
-	require.NotNil(t, data)
-	transform := data.transform
-	grammar := data.grammar
-	p := data.transformParser
+	require.NotNil(t, transform)
+
+	grammar, err := LoadGrammar("../tests/grammar.sysl", afero.NewOsFs())
+	require.NoError(t, err)
+	require.NotNil(t, grammar)
 
 	validator := NewValidator(grammar, transform, p)
 	validator.Validate("goFile")
@@ -501,12 +483,14 @@ func TestValidatorLoadGrammarError(t *testing.T) {
 func TestValidatorValidateTfmReturn(t *testing.T) {
 	t.Parallel()
 
-	data, err := loadTransformAndGrammarSysls("transform1.sysl", "grammar.sysl")
+	p := parse.NewParser()
+	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "../tests"), p)
 	require.NoError(t, err)
-	require.NotNil(t, data)
-	transform := data.transform
-	grammar := data.grammar
-	p := data.transformParser
+	require.NotNil(t, transform)
+
+	grammar, err := LoadGrammar("../tests/grammar.sysl", afero.NewOsFs())
+	require.NoError(t, err)
+	require.NotNil(t, grammar)
 
 	cases := map[string]struct {
 		input    string
