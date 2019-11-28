@@ -602,23 +602,25 @@ type Agent struct {
 	Name     string
 }
 
-//nolint:gochecknoglobals
-var agents = map[string]Agent{
-	"human":    {0, "actor"},
-	"ui":       {1, "boundary"},
-	"cron":     {2, "control"},
-	"db":       {4, "database"},
-	"external": {5, "control"},
-	"file":     {6, "collections"},
-	"topic":    {7, "queue"},
-}
-
 func MakeAgent(attrs map[string]*sysl.Attribute) Agent {
 	if patterns, ok := attrs["patterns"]; ok {
 		if x := patterns.GetA(); x != nil {
 			for _, y := range x.Elt {
-				if v, ok := agents[y.GetS()]; ok {
-					return v
+				switch y.GetS() {
+				case "human":
+					return Agent{0, "actor"}
+				case "ui":
+					return Agent{1, "boundary"}
+				case "cron":
+					return Agent{2, "control"}
+				case "db":
+					return Agent{4, "database"}
+				case "external":
+					return Agent{5, "control"}
+				case "file":
+					return Agent{6, "collections"}
+				case "topic":
+					return Agent{7, "queue"}
 				}
 			}
 		}

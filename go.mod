@@ -3,17 +3,23 @@ module github.com/anz-bank/sysl
 go 1.18
 
 require (
-	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
-	github.com/alecthomas/assert v1.0.0
-	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f
-	github.com/anz-bank/golden-retriever v0.25.0
-	github.com/anz-bank/mermaid-go v0.1.1
-	github.com/anz-bank/pkg v0.0.48
-	github.com/arr-ai/arrai v0.315.0
-	github.com/arr-ai/frozen v0.20.1
-	github.com/arr-ai/proto v0.0.0-20180422074755-2ffbedebee50
-	github.com/arr-ai/wbnf v0.35.1
-	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
+	aqwari.net/xml v0.0.0-20190526204230-8dd125f7c15c
+	cloud.google.com/go v0.55.0 // indirect
+	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
+	github.com/alecthomas/chroma v0.7.1
+	github.com/alecthomas/colour v0.1.0 // indirect
+	github.com/alecthomas/repr v0.0.0-20181024024818-d37bc2a10ba1 // indirect
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
+	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
+	github.com/antlr/antlr4 v0.0.0-20200309161749-1284814c2112
+	github.com/anz-bank/decimal v1.0.0
+	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
+	github.com/arr-ai/frozen v0.13.0
+	github.com/arr-ai/hash v0.5.0
+	github.com/arr-ai/wbnf v0.13.0
+	github.com/bitly/go-simplejson v0.5.0
+	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
+	github.com/cncf/udpa/go v0.0.0-20200313221541-5f7e5dd04533 // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
