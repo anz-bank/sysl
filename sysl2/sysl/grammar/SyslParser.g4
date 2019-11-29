@@ -341,7 +341,7 @@ expr_dot_assign: E_DOT_NAME_NL;
 
 expr_statement_no_nl: expr_dot_assign;
 
-template_expression: TMPL_TEXT|(E_CURLY_OPEN expr* E_CURLY_CLOSE);
+template_expression: TMPL_TEXT|(E_RAW_TEXT_END expr* E_RAW_TEXT_START);
 template_statement:  E_RAW_TEXT_START TMPL_DEBUG? template_expression* (E_NL|TMPL_NL);
 
 expr_statement locals [bool nested]:
