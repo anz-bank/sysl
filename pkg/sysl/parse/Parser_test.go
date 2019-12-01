@@ -22,6 +22,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const mainTestDir = "../../../cmd/tests/"
+
 func readSyslModule(filename string) (*sysl.Module, error) {
 	var buf bytes.Buffer
 
@@ -589,7 +591,7 @@ func TestInferExprTypeNonTransform(t *testing.T) {
 		messages     map[string][]msg.Msg
 	}
 
-	memFs, fs := syslutil.WriteToMemOverlayFs("../tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs(mainTestDir)
 	parser := NewParser()
 	expressions := map[string]*sysl.Expr{}
 	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
@@ -667,7 +669,7 @@ func TestInferExprTypeTransform(t *testing.T) {
 		messages     map[string][]msg.Msg
 	}
 
-	memFs, fs := syslutil.WriteToMemOverlayFs("../tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs(mainTestDir)
 	parser := NewParser()
 	transform, appName, err := LoadAndGetDefaultApp("transform1.sysl", fs, parser)
 	require.NoError(t, err)

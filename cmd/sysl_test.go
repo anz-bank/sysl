@@ -18,6 +18,7 @@ import (
 )
 
 const currentWorkingDirectory = "."
+const syslDir = "../pkg/sysl/"
 
 type folderTestStructure struct {
 	name,
@@ -661,7 +662,7 @@ func TestSwaggerExportCurrentDir(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
-		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+		syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/SIMPLE_SWAGGER_EXAMPLE.yaml")
 }
 
@@ -671,7 +672,7 @@ func TestSwaggerExportTargetDir(t *testing.T) {
 	tmp1, err := ioutil.TempDir("", "tmp1")
 	assert.Nil(t, err)
 	main2([]string{"sysl", "export", "-o", tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml", "-a", "testapp",
-		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	_, err = ioutil.ReadFile(tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml")
 	assert.Nil(t, err)
 	os.RemoveAll(tmp1)
@@ -683,7 +684,7 @@ func TestSwaggerExportJson(t *testing.T) {
 	tmp2, err := ioutil.TempDir("", "tmp2")
 	assert.Nil(t, err)
 	main2([]string{"sysl", "export", "-o", tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json",
-		"-a", "testapp", "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		"-a", "testapp", syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	_, err = ioutil.ReadFile(tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json")
 	assert.Nil(t, err)
 	os.RemoveAll(tmp2)
@@ -694,7 +695,7 @@ func TestSwaggerExportInvalid(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
-		"exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+		syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
 	assert.True(t, errInt == 1)
 }
 
@@ -702,7 +703,7 @@ func TestSwaggerAppExportNoDir(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	main2([]string{"sysl", "export", "-o", "out/%(appname).yaml",
-		"exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		syslDir + "exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	for _, file := range []string{"out/single.yaml", "out/multiple.yaml"} {
 		_, err := ioutil.ReadFile(file)
 		assert.Nil(t, err)
@@ -716,7 +717,7 @@ func TestSwaggerAppExportDirExists(t *testing.T) {
 	tmp3, err := ioutil.TempDir("", "tmp3")
 	assert.Nil(t, err)
 	main2([]string{"sysl", "export", "-o", tmp3 + "/%(appname).yaml",
-		"exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		syslDir + "exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	for _, file := range []string{tmp3 + "/single.yaml", tmp3 + "/multiple.yaml"} {
 		_, err := ioutil.ReadFile(file)
 		assert.Nil(t, err)
@@ -885,7 +886,7 @@ func TestCodegenGrammarImportDefOut(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, main3)
+	main2([]string{"sysl", "import", "-i", syslDir + "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/output.sysl")
 }
 
@@ -893,7 +894,7 @@ func TestCodegenGrammarImport(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "import", "-i", "importer/tests-grammar/unions.gen.g",
+	main2([]string{"sysl", "import", "-i", syslDir + "importer/tests-grammar/unions.gen.g",
 		"-o", "out.sysl", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }

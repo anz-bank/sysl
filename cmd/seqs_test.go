@@ -26,7 +26,7 @@ func TestGenerateSequenceDiag(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
-		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+		syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
@@ -75,7 +75,7 @@ func TestGenerateSequenceDiag2(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
-		syslutil.NewChrootFs(afero.NewOsFs(), "../../"))
+		syslutil.NewChrootFs(afero.NewOsFs(), "../"))
 	require.NoError(t, err)
 	l := &labeler{}
 	p := &sequenceDiagParam{}
