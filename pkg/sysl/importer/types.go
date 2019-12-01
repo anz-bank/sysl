@@ -109,7 +109,9 @@ func (t TypeList) Items() []Type {
 
 func (t TypeList) Sort() {
 	sort.SliceStable(t.types, func(i, j int) bool {
-		return strings.Compare(t.types[i].Name(), t.types[j].Name()) < 0
+		a := t.types[i].Name()
+		b := t.types[j].Name()
+		return strings.Compare(a, b) < 0
 	})
 }
 

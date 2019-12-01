@@ -2,11 +2,13 @@ textOnly: 'hello';
 
 foo: 'foo';
 simpleForward: textOnly;
-simpleChoice: textOnly 'something' foo;
+simpleRequired: textOnly 'something' foo;
+
+simpleChoice: textOnly | foo;
 
 optional: foo?;
 atLeastOne: foo+;
-Asterix: foo*;
+Astrix: foo*;
 
 HardChoice: (atLeastOne | simpleForward)* | ForwardDeclTest;
 
@@ -14,3 +16,6 @@ ForwardDeclTest: UnnamedRule;
 
 
 UnnamedRule: 'hello';
+
+
+a: b+ | atLeastOne;
