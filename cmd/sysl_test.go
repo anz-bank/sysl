@@ -886,7 +886,8 @@ func TestCodegenGrammarImportDefOut(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "import", "-i", syslDir + "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, main3)
+	main2([]string{"sysl", "import", "-i",
+		syslDir + "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/output.sysl")
 }
 
