@@ -57,5 +57,5 @@ if [[ ${CMD} = "build" ]]; then
         go build -o ${OUT} -ldflags "${FLAGS}" -v github.com/anz-bank/sysl/pkg/sysl
     fi
 elif [[ ${CMD} = "install" ]]; then
-    go install -ldflags "${FLAGS}" -v ./src/sysl
+    go install -ldflags "${FLAGS}" -v ./pkg/sysl
 fi

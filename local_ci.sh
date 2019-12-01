@@ -14,7 +14,7 @@ fi
 }
 
 golangci-lint run &&
-go generate ./src/... && run_tests &&
+go generate ./pkg/... && run_tests &&
 ./scripts/check-coverage.sh 80 #&&
-#go build -o tmp/sysl ./src/sysl  &&
-#find ./src/ -iname "*.sysl" -exec tmp/sysl validate '{}' \;
+#go build -o tmp/sysl ./pkg/sysl  &&
+#find ./pkg/ -iname "*.sysl" -exec tmp/sysl validate '{}' \;

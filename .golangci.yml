@@ -2,9 +2,9 @@ service:
   golangci-lint-version: 1.19.1
 run:
   skip-files:
-    - src/sysl/grammar/sysl_lexer.go
-    - src/sysl/grammar/sysl_parser.go
-    - src/sysl/grammar/syslparser_base_listener.go
+    - pkg/sysl/grammar/sysl_lexer.go
+    - pkg/sysl/grammar/sysl_parser.go
+    - pkg/sysl/grammar/syslparser_base_listener.go
 linters:
   disable-all: true
   enable:

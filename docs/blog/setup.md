@@ -35,7 +35,7 @@ Our original (upstream, parent) repository is owned by the Github organization [
 
 Sysl releases are available on Sysl's [Github releases page](https://github.com/anz-bank/sysl/releases) and on various package registries (e.g. PyPI, BinTray, Docker Hub).  We follow [Semver](https://semver.org/) for versioning.
 
-Our release process has been automated with script and artefact deployment by CI. A new release can be started with `src/scripts/release.sh prepare X.Y.Z`. After the automatically generated pull request is approved and merged, `src/scripts/release.sh deploy X.Y.Z` will create and push the release tag, which will then trigger Travis and Appveyor to deploy the artefacts (see the [Releasing documentation](https://github.com/anz-bank/sysl/blob/master/docs/releasing.md) for more details).
+Our release process has been automated with script and artefact deployment by CI. A new release can be started with `pkg/scripts/release.sh prepare X.Y.Z`. After the automatically generated pull request is approved and merged, `pkg/scripts/release.sh deploy X.Y.Z` will create and push the release tag, which will then trigger Travis and Appveyor to deploy the artefacts (see the [Releasing documentation](https://github.com/anz-bank/sysl/blob/master/docs/releasing.md) for more details).
 
 Happy coding and project setup!
 

@@ -68,8 +68,8 @@ jobs:
         docker push "$DOCKER_IMAGE_LATEST"
         docker push "$DOCKER_IMAGE_src_VERSIONED"
         docker push "$DOCKER_IMAGE_src_LATEST"
-        gradle -b src/libs/java/build.gradle bintrayUpload
-        cd src/sysl/sysl_js && NPM_AUTH_TOKEN=$NPM_PUBLISH_TOKEN npm publish
+        gradle -b pkg/libs/java/build.gradle bintrayUpload
+        cd pkg/sysl/sysl_js && NPM_AUTH_TOKEN=$NPM_PUBLISH_TOKEN npm publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DOCKER_IMAGE_LATEST: "anzbank/sysl"
@@ -80,6 +80,6 @@ jobs:
 
     - name: Upload binaries to release
       run: |
-        ./scripts/upload-artifacts.sh gosysl/* dist/* src/libs/java/build/libs/sysl-lib-*
+        ./scripts/upload-artifacts.sh gosysl/* dist/* pkg/libs/java/build/libs/sysl-lib-*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
