@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const testDir = "../../../cmd/tests/"
+const testDir = "../../../cmd/sysl/tests/"
 
 const (
 	modelAppName = "Model"

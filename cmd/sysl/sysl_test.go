@@ -18,7 +18,6 @@ import (
 )
 
 const currentWorkingDirectory = "."
-const syslDir = "../pkg/sysl/"
 
 type folderTestStructure struct {
 	name,
