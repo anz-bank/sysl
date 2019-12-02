@@ -19,7 +19,7 @@ describe('parse', function() {
 
   it('parses all test files', function() {
     const listener = new SyslParserErrorListener();
-    const prefix = "../tests/";
+    const prefix = "../../../cmd/sysl/tests/";
     const files = fs.readdirSync(prefix)
     files.forEach(f => {
       if (f.endsWith(".sysl") === true) {
