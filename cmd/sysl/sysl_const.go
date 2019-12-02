@@ -1,4 +1,4 @@
 package main
 
-const syslDir = "../../pkg/sysl/"
+const syslDir = "../../pkg/"
 const projDir = "../../"

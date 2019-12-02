@@ -12,8 +12,8 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	parser "github.com/anz-bank/sysl/pkg/sysl/grammar"
-	"github.com/anz-bank/sysl/pkg/sysl/parse"
+	parser "github.com/anz-bank/sysl/pkg/grammar"
+	"github.com/anz-bank/sysl/pkg/parse"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 )

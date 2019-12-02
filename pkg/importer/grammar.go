@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	parser "github.com/anz-bank/sysl/pkg/naive"
 	ebnfGrammar "github.com/anz-bank/sysl/pkg/proto"

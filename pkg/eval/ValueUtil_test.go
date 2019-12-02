@@ -3,8 +3,8 @@ package eval
 import (
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/sysl/parse"
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/spf13/afero"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"

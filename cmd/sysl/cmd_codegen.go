@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
-	"github.com/anz-bank/sysl/pkg/sysl/validate"
+	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/anz-bank/sysl/pkg/validate"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 

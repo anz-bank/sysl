@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 )
 

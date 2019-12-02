@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/sysl/importer"
+	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )

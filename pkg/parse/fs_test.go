@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"

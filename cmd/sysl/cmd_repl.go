@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/anz-bank/sysl/pkg/sysl/eval"
+	"github.com/anz-bank/sysl/pkg/eval"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 

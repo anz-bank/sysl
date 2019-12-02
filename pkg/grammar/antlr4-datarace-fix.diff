@@ -1,4 +1,4 @@
-diff --git a/pkg/sysl/grammar/sysl_lexer.go b/pkg/sysl/grammar/sysl_lexer.go
+diff --git a/pkg/grammar/sysl_lexer.go b/pkg/grammar/sysl_lexer.go
 
 This patch is needed to remove some mutable global variables from the generated go code!
 Without this, the lexer and parser are not safe to run in multiple threads
@@ -7,8 +7,8 @@ Without this, the lexer and parser are not safe to run in multiple threads
 
 
 index 11ab4f7..d98f55f 100644
---- a/pkg/sysl/grammar/sysl_lexer.go
-+++ b/pkg/sysl/grammar/sysl_lexer.go
+--- a/pkg/grammar/sysl_lexer.go
++++ b/pkg/grammar/sysl_lexer.go
 @@ -782,9 +782,6 @@ var serializedLexerAtn = []uint16{
  	3, 176, 26, 3, 177, 27, 3, 177, 28,
  }
@@ -43,10 +43,10 @@ index 11ab4f7..d98f55f 100644
  
  	l.BaseLexer = antlr.NewBaseLexer(input)
  	l.Interpreter = antlr.NewLexerATNSimulator(l, lexerAtn, lexerDecisionToDFA, antlr.NewPredictionContextCache())
-diff --git a/pkg/sysl/grammar/sysl_parser.go b/pkg/sysl/grammar/sysl_parser.go
+diff --git a/pkg/grammar/sysl_parser.go b/pkg/grammar/sysl_parser.go
 index 06e6f61..e7e25e0 100644
---- a/pkg/sysl/grammar/sysl_parser.go
-+++ b/pkg/sysl/grammar/sysl_parser.go
+--- a/pkg/grammar/sysl_parser.go
++++ b/pkg/grammar/sysl_parser.go
 @@ -818,8 +818,6 @@ var parserATN = []uint16{
  	1580, 1587, 1592, 1599, 1604, 1624, 1626, 1630, 1635, 1653, 1656, 1661,
  	1665, 1670, 1674, 1679, 1682, 1687,

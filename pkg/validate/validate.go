@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
-	"github.com/anz-bank/sysl/pkg/sysl/msg"
-	"github.com/anz-bank/sysl/pkg/sysl/parse"
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/msg"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"

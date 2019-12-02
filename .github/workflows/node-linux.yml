@@ -25,8 +25,8 @@ jobs:
 
     - name: Install and test sysl_js
       run: |
-        npm install --prefix pkg/sysl/sysl_js
-        npm test --prefix pkg/sysl/sysl_js
+        npm install --prefix pkg/sysl_js
+        npm test --prefix pkg/sysl_js
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: "SOME-RANDOM-KEY"

@@ -7,14 +7,14 @@ import (
 	"github.com/sirupsen/logrus/hooks/test"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
-	"github.com/anz-bank/sysl/pkg/sysl/parse"
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-const testDir = "../../../cmd/sysl/tests/"
+const testDir = "../../cmd/sysl/tests/"
 
 const (
 	modelAppName = "Model"

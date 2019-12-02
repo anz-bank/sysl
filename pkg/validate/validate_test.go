@@ -6,15 +6,15 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 
-	"github.com/anz-bank/sysl/pkg/sysl/msg"
-	"github.com/anz-bank/sysl/pkg/sysl/parse"
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/msg"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/stretchr/testify/assert"
 )
 
-const testDir = "../../../cmd/sysl/tests/"
+const testDir = "../../cmd/sysl/tests/"
 
 func TestValidatorGetTypeName(t *testing.T) {
 	t.Parallel()

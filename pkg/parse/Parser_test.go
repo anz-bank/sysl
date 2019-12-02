@@ -12,9 +12,9 @@ import (
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
-	"github.com/anz-bank/sysl/pkg/sysl/msg"
-	"github.com/anz-bank/sysl/pkg/sysl/pbutil"
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/msg"
+	"github.com/anz-bank/sysl/pkg/pbutil"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
@@ -22,7 +22,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const mainTestDir = "../../../cmd/sysl/tests/"
+const mainTestDir = "../../cmd/sysl/tests/"
 
 func readSyslModule(filename string) (*sysl.Module, error) {
 	var buf bytes.Buffer

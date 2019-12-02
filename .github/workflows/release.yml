@@ -69,7 +69,7 @@ jobs:
         docker push "$DOCKER_IMAGE_src_VERSIONED"
         docker push "$DOCKER_IMAGE_src_LATEST"
         gradle -b pkg/libs/java/build.gradle bintrayUpload
-        cd pkg/sysl/sysl_js && NPM_AUTH_TOKEN=$NPM_PUBLISH_TOKEN npm publish
+        cd pkg/sysl_js && NPM_AUTH_TOKEN=$NPM_PUBLISH_TOKEN npm publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DOCKER_IMAGE_LATEST: "anzbank/sysl"

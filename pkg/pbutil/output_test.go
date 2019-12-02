@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/spf13/afero"
