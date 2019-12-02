@@ -9,9 +9,9 @@ import (
 	"github.com/anz-bank/sysl/pkg/importer"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/msg"
+	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"

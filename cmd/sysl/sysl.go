@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/parse"
+	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"

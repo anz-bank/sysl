@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
+	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 )
