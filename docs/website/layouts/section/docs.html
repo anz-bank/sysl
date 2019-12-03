@@ -11,18 +11,15 @@
   <div id="components">
     <div class="row gutters">
       <!-- only show pages where dir is the same as the _index.md -->
-      
-      {{ $pages := where .Site.Pages ".Dir" $parentDir }}
-      {{ $pages := $pages | union (where .Site.Pages ".File.LogicalName" "_index.md") }}
-
+      {{ $pages := .Sections }}
+      {{ $pages := union $pages (where .Site.RegularPages ".Dir" $parentDir )}}
       {{ range $pages}}
-      {{if .IsDescendant $this}}
+
       <div class="col col-4 item">
         <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
         <p>{{ .Params.description }}</p>
-        <p>{{.Dir}}</p>
       </div>
-      {{ end }}
+
       {{ end }}
 
     </div>
