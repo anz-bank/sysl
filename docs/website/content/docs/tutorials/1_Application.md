@@ -2,9 +2,6 @@
 title: "Applications"
 date: 2019
 weight: 50
-draft: true
-bref: ""
-toc: true
 ---
 ## Concepts
 Sysl allows you to specify [Application](#application) behaviour and [Data Model](#data) that is shared between your applications. Another related concept is of software [Projects](#projects) where you can document what changes happened in each project or a release.

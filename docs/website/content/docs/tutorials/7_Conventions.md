@@ -2,9 +2,7 @@
 title: "Conventions"
 date: 2019
 weight: 50
-draft: true
-bref: ""
-toc: false
+
 ---
 
 #### Multiple Declarations

@@ -1,0 +1,26 @@
+<nav class="entry-navigation">
+	<div class="clearfix">
+	{{ if ne .PrevInSection  nil }}
+	<div class="entry-navigation--left">
+		<i class="ui-arrow-left"></i>
+		<span class="entry-navigation__label">Previous Event</span>
+		<div class="entry-navigation__link">
+		{{ with .PrevInSection }}
+		<a href="{{.Permalink}}" rel="next">{{ .Title }}</a>
+		{{ end }}
+		</div>
+	</div>
+	{{ end }}
+	{{ if ne .NextInSection  nil }}
+	<div class="entry-navigation--right">
+		<span class="entry-navigation__label">Next Event</span>
+		<i class="ui-arrow-right"></i>
+		<div class="entry-navigation__link">
+		{{ with .NextInSection }}
+		<a href="{{ .Permalink }}" rel="prev">{{ .Title }}</a>
+		{{ end }}
+		</div>
+	</div>
+	{{ end }}
+	</div>
+</nav>

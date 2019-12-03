@@ -2,9 +2,7 @@
 title: "Imports"
 date: 2019
 weight: 50
-draft: true
-bref: ""
-toc: false
+
 ---
 
 To keep things modular, sysl allows you to import definitions created in other `.sysl` files.

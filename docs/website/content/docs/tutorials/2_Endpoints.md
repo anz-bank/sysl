@@ -2,9 +2,6 @@
 title: "Endpoints"
 date: 2019
 weight: 50
-draft: true
-bref: ""
-toc: true
 ---
 
 Endpoints are the services that an application offers. Let's add endpoints to our `MobileApp`.

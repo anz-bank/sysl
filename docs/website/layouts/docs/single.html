@@ -6,7 +6,7 @@
   <div id="sidebar">
     <ul>
         {{ range where .Pages "Section" "docs"  }}
-
+            
             <li>
               <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active"{{end}}>
                 {{.Title}}
@@ -28,7 +28,10 @@
       <p class="hero-lead">{{ .Params.bref | safeHTML }}</p>
     </div>
     {{ .Content}}
+    {{ partial "nav.html" . }}
+
   </div>
 </div>
+
 {{ end }}
-{{ define "footer"}} {{ partial "footer.html" .}} {{ end }}
+{{ define "nav"}} {{ partial "nav.html" .}} {{ end }}
