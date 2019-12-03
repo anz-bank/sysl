@@ -4,11 +4,13 @@
 {{ define "main" }}
 
 <div id="hero" class="wrap">
-  <h1>{{ .Site.Params.author}} Blog</h1>
-    <p>Our vision, news and ideas, and whatever feels important.<br>
+  <h1>{{ .Title}}</h1>
+    <p>{{ .Description}}<br>
 </div>
 <ul id="posts">
- {{ range .Paginator.Pages.ByWeight }} {{ partial "page-summary" . }} {{ end }}
+ {{ range .Pages.ByWeight }}
+ {{ partial "page-summary" . }}
+ {{ end }}
 </ul>
 
 {{ end }}

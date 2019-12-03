@@ -1,0 +1,6 @@
+HelloWorld:
+    /application:
+        /{id<:int}:
+            /documents:
+                POST:
+                    return string

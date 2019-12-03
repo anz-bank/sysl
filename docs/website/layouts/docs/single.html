@@ -5,7 +5,8 @@
 <div id="docs-main">
   <div id="sidebar">
     <ul>
-        {{ range where .Site.RegularPages "Section" "docs"  }}
+        {{ range where .Pages "Section" "docs"  }}
+
             <li>
               <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active"{{end}}>
                 {{.Title}}

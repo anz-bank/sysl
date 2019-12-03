@@ -1,0 +1,7 @@
+HelloWorld:
+    /endpoint1:
+        GET:
+            return string
+proj:
+    _:
+        HelloWorld

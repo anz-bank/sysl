@@ -633,7 +633,7 @@ See [api.sysl](assets/api.sysl) for complete example.
 
 Command to generate code:
 
-Run this in the same directory as `api.sysl`:
+Run this in the same directory as `sapi.sysl`:
 ```
 reljam spring-rest-service api AccountTransactionApi
 ```
