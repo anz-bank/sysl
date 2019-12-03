@@ -4,7 +4,6 @@ package parse // SyslParser
 import (
 	"encoding/json"
 	"fmt"
-	"math"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -240,55 +239,16 @@ func (s *TreeShapeListener) ExitAttribs_or_modifiers(*parser.Attribs_or_modifier
 
 // EnterTypes is called when production types is entered.
 func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
-	native := ctx.NativeDataTypes()
-
-	if native != nil {
-		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[strings.ToUpper(native.GetText())])
-		var constraint *sysl.Type_Constraint
-		if primitive_type == sysl.Type_NO_Primitive {
-			if native.GetText() == "int32" {
-				primitive_type = sysl.Type_Primitive(sysl.Type_Primitive_value["INT"])
-				constraint = &sysl.Type_Constraint{
-					Range: &sysl.Type_Constraint_Range{
-						Min: &sysl.Value{
-							Value: &sysl.Value_I{
-								I: math.MinInt32,
-							},
-						},
-						Max: &sysl.Value{
-							Value: &sysl.Value_I{
-								I: math.MaxInt32,
-							},
-						},
-					},
-				}
-			} else if native.GetText() == "int64" {
-				primitive_type = sysl.Type_Primitive(sysl.Type_Primitive_value["INT"])
-				constraint = &sysl.Type_Constraint{
-					Range: &sysl.Type_Constraint_Range{
-						Min: &sysl.Value{
-							Value: &sysl.Value_I{
-								I: math.MinInt64,
-							},
-						},
-						Max: &sysl.Value{
-							Value: &sysl.Value_I{
-								I: math.MaxInt64,
-							},
-						},
-					},
-				}
+	type1 := s.currentType()
+	primType, constraints := primitiveFromNativeDataType(ctx.NativeDataTypes())
+	if primType != nil {
+		type1.Type = primType
+		if constraints != nil {
+			if type1.Constraint == nil {
+				type1.Constraint = []*sysl.Type_Constraint{constraints}
+			} else {
+				type1.Constraint = append(type1.Constraint, constraints)
 			}
-		}
-		type1 := s.currentType()
-		type1.Type = &sysl.Type_Primitive_{
-			Primitive: primitive_type,
-		}
-		if type1.Constraint == nil {
-			type1.Constraint = []*sysl.Type_Constraint{}
-		}
-		if constraint != nil {
-			type1.Constraint = append(type1.Constraint, constraint)
 		}
 	}
 }
@@ -1132,12 +1092,12 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 			},
 		}
 	case ctx.NativeDataTypes() != nil:
-		type_str := strings.ToUpper(ctx.NativeDataTypes().GetText())
-		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[type_str])
+		primType, constraints := primitiveFromNativeDataType(ctx.NativeDataTypes())
 		type1 = &sysl.Type{
-			Type: &sysl.Type_Primitive_{
-				Primitive: primitive_type,
-			},
+			Type: primType,
+		}
+		if constraints != nil {
+			type1.Constraint = []*sysl.Type_Constraint{constraints}
 		}
 	case ctx.Name_str() != nil:
 		type1 = &sysl.Type{}
@@ -1175,12 +1135,12 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 	var type1 *sysl.Type
 	switch {
 	case ctx.NativeDataTypes() != nil:
-		type_str := strings.ToUpper(ctx.NativeDataTypes().GetText())
-		primitive_type := sysl.Type_Primitive(sysl.Type_Primitive_value[type_str])
+		primType, constraints := primitiveFromNativeDataType(ctx.NativeDataTypes())
 		type1 = &sysl.Type{
-			Type: &sysl.Type_Primitive_{
-				Primitive: primitive_type,
-			},
+			Type: primType,
+		}
+		if constraints != nil {
+			type1.Constraint = []*sysl.Type_Constraint{constraints}
 		}
 	case ctx.Reference() != nil:
 		s.fieldname = append(s.fieldname, var_name)
