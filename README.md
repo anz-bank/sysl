@@ -75,7 +75,7 @@ creating your own Sysl exporter.
 
 Using the [protoc compiler](https://developers.google.com/protocol-buffers/) you
 can translate the definition file of the intermediate representation
-`src/proto/sysl.proto` into your preferred programming language in a one-off
+`pkg/proto/sysl.proto` into your preferred programming language in a one-off
 step or on every build. You can then easily consume Sysl models in your
 programming language of choice in a typesafe way without having to write a ton
 of mapping boilerplate. With that you can create your own tailored output

@@ -1,4 +1,4 @@
-sysl2 Syntax
+Sysl Syntax
 ============
 The following is a collection of unrelated, unevaluated ideas on how to improve the sysl Syntax:
 

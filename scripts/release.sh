@@ -39,8 +39,8 @@ if [[ $COMMAND = "prepare" ]]; then
     git checkout -b "$RELEASE_BRANCH" || fatal "Cannot create release branch $RELEASE_BRANCH"
 
     echo "------- Update version and commit ---------"
-    echo "__version__ = '$VERSION'" > 'src/sysl/__version__.py' || fatal "Could not override src/sysl/__version__.py"
-    echo "syslVersion=$VERSION" > 'src/libs/java/gradle.properties' || fatal "Could not override src/sysl/__version__.py"
+    echo "__version__ = '$VERSION'" > 'pkg/__version__.py' || fatal "Could not override pkg/__version__.py"
+    echo "syslVersion=$VERSION" > 'pkg/libs/java/gradle.properties' || fatal "Could not override pkg/__version__.py"
     git commit -am "Bump version to $VERSION" || fatal "Cannot commit version update"
 
     echo "------- Push ---------"
@@ -75,7 +75,7 @@ if [[ $COMMAND = "prepare" ]]; then
         fatal "Unknown error"
     fi
 elif [[ $COMMAND = "deploy" ]]; then
-    PY_VERSION=$(sed -n "s/__version__ = '\\([^ ]*\\)'/\\1/p" src/sysl/__version__.py)
+    PY_VERSION=$(sed -n "s/__version__ = '\\([^ ]*\\)'/\\1/p" pkg/__version__.py)
     RELEASE_TAG="v$VERSION"
     [[  "$VERSION" =  "$PY_VERSION" ]] || fatal "Version ($VERSION) different from __version__.py ($PY_VERSION)"
     echo "------- Tag release ---------"

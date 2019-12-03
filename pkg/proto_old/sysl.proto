@@ -1,0 +1,523 @@
+syntax = "proto3";
+
+package sysl;
+
+option go_package = "github.com/anz-bank/sysl/pkg/proto_old;sysl";
+
+// Deltas are diff annotations set for each major element in a model.
+// TODO: Is this really needed? Investigate protobuf diff tools.
+enum Delta {
+    NO_Delta = 0;
+    DELTA_SAME      = 1;
+    DELTA_CHANGE    = 2;
+    DELTA_ADD       = 3;
+    DELTA_REMOVE    = 4;
+}
+
+message SourceContext {
+    string      file    = 1;
+    Location    start   = 2;
+    Location    end     = 3;  // Currently unpopulated
+
+    Delta   delta       = 6;
+
+    message Location {
+        int32   line    = 1;
+        int32   col     = 2;  // Currently unpopulated
+    }
+}
+
+message Module {
+    reserved 1;  // Don't know what this was before.
+    map<string, Application>    apps    = 2;
+    map<string, Type>           types   = 3;
+
+    SourceContext source_context = 99;
+}
+
+message Attribute {
+    oneof attribute {
+        string  s   = 4;
+        int64   i   = 5;
+        double  n   = 6;
+        Array   a   = 7;
+    }
+
+    message Array {
+        repeated Attribute  elt = 1;
+    }
+
+    SourceContext source_context = 99;
+}
+
+message AppName {
+    repeated string part    = 1;
+}
+
+message Application {
+    AppName                 name        = 1;
+    string                  long_name   = 2;
+    string                  docstring   = 3;
+    map<string, Attribute>  attrs       = 4;
+    map<string, Endpoint>   endpoints   = 5;
+    map<string, Type>       types       = 6;
+    map<string, View>       views       = 10;
+    repeated Application    mixin2      = 8;
+    Application             wrapped     = 9;
+
+    SourceContext source_context = 99;
+
+    repeated AppName        DONOTUSE_mixin       = 7;
+}
+
+message Endpoint {
+    string                  name        = 1;
+    string                  long_name   = 2;
+    string                  docstring   = 3;
+    map<string, Attribute>  attrs       = 4;
+    repeated string         flag        = 10; // ~attrs
+    AppName                 source      = 5;  // denotes pubsub subscription
+    bool                    is_pubsub   = 6;
+    repeated Param          param       = 9;
+    repeated Statement      stmt        = 7;
+    RestParams              rest_params = 8;
+
+    SourceContext source_context = 99;
+
+    message RestParams {
+        Method              method      = 1;
+        string              path        = 2;
+        repeated QueryParam query_param = 3;
+        repeated QueryParam url_param = 4;
+
+        enum Method {
+            NO_Method = 0;
+            GET     = 1;
+            PUT     = 3;
+            POST    = 4;
+            DELETE  = 5;
+            PATCH   = 6;
+
+            DONOTUSE_OPTIONS = 7;  // plumbing
+            DONOTUSE_HEAD = 2;  // derivative of GET
+        }
+
+        message QueryParam {
+            string  name    = 1;  // Name used in url
+            Type    type    = 2;
+            bool    loc  = 4; // no longer used
+            string  DONOTUSE_param   = 3;  // Internal name
+        }
+    }
+}
+
+message Param {
+    string  name    = 1;
+    Type    type    = 2;
+}
+
+message Statement {
+    oneof stmt {
+        Action  action  = 1;
+        Call    call    = 2;
+        Cond    cond    = 3;
+        Loop    loop    = 4;
+        LoopN   loop_n  = 5;
+        Foreach foreach = 9;
+        Alt     alt     = 6;
+        Group   group   = 7;
+        Return  ret     = 8;
+    }
+    map<string, Attribute> attrs = 10;
+
+    SourceContext source_context = 99;
+}
+
+message Action {
+    string action = 2;
+}
+
+message Call {
+    AppName         target      = 1;
+    string          endpoint    = 2;
+    repeated Arg    arg         = 4;
+
+    message Arg {
+        Value   value   = 3;
+        string  name    = 1;
+
+        Type    DONOTUSE_type    = 2;
+    }
+
+    map<string, Attribute>  DONOTUSE_attrs       = 3;
+}
+
+message Cond {
+    string              test    = 1;
+    repeated Statement  stmt    = 2;
+}
+
+message Loop {
+    Mode                mode        = 1;
+    string              criterion   = 2;
+    repeated Statement  stmt        = 3;
+
+    enum Mode {
+        NO_Mode = 0;
+        WHILE   = 1;
+        UNTIL   = 2;
+    }
+}
+
+message LoopN {
+    int32               count   = 1;
+    repeated Statement  stmt    = 3;
+}
+
+message Foreach {
+    string              collection  = 1;
+    repeated Statement  stmt        = 3;
+}
+
+message Alt {
+    repeated Choice choice  = 1;
+
+    message Choice {
+        string              cond    = 1;
+        repeated Statement  stmt    = 2;
+    }
+}
+
+message Group {
+    string              title   = 1;
+    repeated Statement  stmt    = 2;
+}
+
+message Return {
+    string  payload = 1;
+}
+
+message Type {
+    oneof type {
+        Primitive   primitive   = 1;
+        Enum        enum        = 2;
+        Tuple       tuple       = 3;
+        List        list        = 4;
+        Map         map         = 5;
+        OneOf       one_of      = 6;
+        Relation    relation    = 7;
+        ScopedRef   type_ref    = 9;
+        Type        set         = 13;
+        Type        sequence    = 15;
+        NoType      no_type     = 14;
+    }
+    map<string, Attribute>  attrs       = 8;
+    repeated Constraint     constraint  = 10;
+    string                  docstring   = 11;
+    bool                    opt         = 12;
+
+    SourceContext source_context = 99;
+
+    enum Primitive {
+        NO_Primitive = 0;
+        EMPTY       = 1;
+        ANY         = 2;
+        BOOL        = 3;
+        INT         = 4;
+        FLOAT       = 5;
+        DECIMAL     = 12;
+
+        // Unicode string (Python 2 unicode, Python 3 str, and SQL nvarchar).
+        STRING      = 6;
+
+        // Octet sequence, like Python 3 bytes and SQL varbinary.
+        BYTES       = 7;
+
+        // = STRING, but only 8-bit, like Python 2 str or SQL varchar.
+        STRING_8    = 8;
+
+        DATE        = 9;
+        DATETIME    = 10;
+        XML         = 11;
+        UUID        = 13;
+    }
+
+    message Enum {
+        map<string, int64> items = 1;
+    }
+
+    message Tuple {
+        map<string, Type>   attr_defs       = 1;
+        map<string, Field>  FUTURE_fields   = 2;
+
+        message Field {
+            Type    type        = 1;
+            int64   min_repeats = 2;
+            int64   max_repeats = 3;
+        }
+    }
+
+    message List {
+        Type    type    = 1;
+    }
+
+    message Map {
+        Type    key     = 1;
+        Type    value   = 2;
+    }
+
+    message OneOf {
+        repeated Type type = 1;
+    }
+
+    message Relation {
+        map<string, Type>   attr_defs   = 1;
+        Key                 primary_key = 2;
+        repeated Key        key         = 3;
+        repeated string     inject      = 4;
+
+        message Key {
+            repeated string attr_name = 1;
+        }
+    }
+
+    message Foreign {
+        AppName app         = 1;
+        string  relation    = 2;
+        string  attr_name   = 3;
+    }
+
+    message Constraint {
+        Range range = 1;
+        Length length = 2;
+        Resolution resolution = 3;
+        int32 precision = 4;
+        int32 scale = 5;
+
+        message Range {
+            Value min = 1;
+            Value max = 2;
+        }
+
+        message Length {
+            int64 min = 1;
+            int64 max = 2;
+        }
+
+        // e.g.: 3 decimal places = {base = 10, index = -3}
+        message Resolution {
+            int32 base = 1;
+            int32 index = 2;
+        }
+    }
+
+    message NoType { }
+}
+
+message View {
+    repeated Param          param       = 1;
+    Type                    ret_type    = 2;
+    Expr                    expr        = 3;
+    map<string, View>       views       = 4;
+    map<string, Attribute>  attrs       = 8;
+    SourceContext           source_context = 99;
+}
+
+message Expr {
+    oneof expr {
+        string      name        = 1;
+        Value       literal     = 2;
+        GetAttr     get_attr    = 3;
+        Transform   transform   = 4;
+        IfElse      ifelse      = 5;
+        Call        call        = 6;
+        UnExpr      unexpr      = 7;
+        BinExpr     binexpr     = 8;
+        RelExpr     relexpr     = 12;
+        Navigate    navigate    = 9;
+        List        list        = 10;
+        List        set         = 11;
+        Tuple       tuple       = 14;
+    }
+    Type type = 13;
+    SourceContext source_context = 99;
+
+    message GetAttr {
+        Expr arg = 1;
+        string attr = 2;
+        bool nullsafe = 3;
+        bool setof = 4;
+    }
+
+    message Navigate {
+        Expr arg = 1;
+        string attr = 2;
+        bool nullsafe = 3;
+        bool setof = 4;
+        string via = 5;
+    }
+
+    message List {
+        repeated Expr expr = 1;
+    }
+
+    message Transform {
+        Expr arg = 1;
+        string scopevar = 2;
+        repeated Stmt stmt = 3;
+        bool all_attrs = 4;
+        repeated string except_attrs = 5;
+        bool nullsafe = 6;
+
+        message Stmt {
+            oneof stmt {
+                Assign  assign      = 1;
+                Assign  let         = 2;
+                Expr    inject      = 4;
+            }
+
+            message Assign {
+                string name = 1;
+                Expr expr = 2;
+                bool table = 3;
+            }
+        }
+    }
+
+    message IfElse {
+        Expr cond = 1;
+        Expr if_true = 2;
+        Expr if_false = 3;
+        bool nullsafe = 4;
+    }
+
+    message Call {
+        string func = 1;
+        repeated Expr arg = 2;
+    }
+
+    message UnExpr {
+        Op op = 1;
+        Expr arg = 2;
+
+        enum Op {
+            NO_Op = 0;
+            NEG = 1;
+            POS = 2;
+            NOT = 3;
+            INV = 4;
+
+            SINGLE = 5;
+            SINGLE_OR_NULL = 6;
+            STRING = 7;
+        }
+    }
+
+    message BinExpr {
+        Op op = 1;
+        Expr lhs = 2;
+        Expr rhs = 3;
+        string scopevar = 4;
+        repeated string attr_name = 5;
+
+        enum Op {
+            NO_Op = 0;
+            EQ = 1;
+            NE = 2;
+            LT = 3;
+            LE = 4;
+            GT = 5;
+            GE = 6;
+            IN = 24;
+            CONTAINS = 25;
+            NOT_IN = 26;
+            NOT_CONTAINS = 27;
+
+            ADD = 7;
+            SUB = 8;
+            MUL = 9;
+            DIV = 10;
+            MOD = 11;
+            POW = 12;
+
+            AND = 13;
+            OR = 14;
+            BUTNOT = 21;
+
+            BITAND = 15;
+            BITOR = 16;
+            BITXOR = 17;
+
+            COALESCE = 18;
+
+            WHERE = 19;
+            TO_MATCHING = 20;
+            TO_NOT_MATCHING = 23;
+            FLATTEN = 22;
+        }
+    }
+
+    // TODO: Migrate BinExpr ops to RelExpr as appropriate.
+    message RelExpr {
+        Op op = 1;
+        Expr target = 2;
+        repeated Expr arg = 3;
+        string scopevar = 4;
+        repeated bool descending = 5;
+        repeated string attr_name = 6;
+
+        enum Op {
+            NO_Op = 0;
+            MIN = 1;
+            MAX = 2;
+            SUM = 3;
+            AVERAGE = 4;
+            FUTURE_WHERE = 5;
+            FUTURE_FLATTEN = 6;
+            RANK = 7;
+            SNAPSHOT = 8;
+            FIRST_BY = 9;
+        }
+    }
+
+    message Tuple {
+        map<string, Expr> attrs = 1;
+    }
+}
+
+message Value {
+    oneof value {
+        bool    b       = 1;
+        int64   i       = 2;
+        double  d       = 3;
+        string  s       = 4;
+        string  decimal = 11;
+        bytes   data    = 5;
+        int64   enum    = 6;
+        List    list    = 7;
+        Map     map     = 8;
+        List    set     = 9;
+        Null    null    = 10;
+        bytes   uuid    = 12;
+    }
+
+    message List {
+        repeated Value value = 1;
+    }
+
+    message Map {
+        map<string, Value> items = 1;
+    }
+
+    message Null { }
+}
+
+message ScopedRef {
+    Scope context   = 1;  // The context in which the ref appeared.
+    Scope ref       = 2;
+}
+
+message Scope {
+    AppName appname = 1;
+    repeated string path = 2;
+}
