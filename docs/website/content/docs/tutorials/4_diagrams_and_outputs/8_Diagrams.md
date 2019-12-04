@@ -1,5 +1,5 @@
 ---
-title: "Diagrams"
+title: "Sequence Diagrams"
 date: 2019
 weight: 50
 sequence: true

@@ -5,6 +5,7 @@
 {{$this := .Page}}
 {{ partial "sidebar" . }}
 
+
 <div id="main">
   <div id="hero">
     <h1>{{.Title}}</h1>
@@ -17,12 +18,12 @@
       {{ range $pages}}
 
       <div class="col col-4 item">
-        <h3>{{ .Title }}</h3>
+        <h4>{{ .Title }}</h4>
         <p>{{ .Params.description }}</p>
 
         {{range .Pages}}
-        <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
-
+        <a href="{{ .Permalink }}">{{ .Title }}</a> <br/>
+        
         {{end}}
         
       </div>

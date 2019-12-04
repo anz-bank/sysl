@@ -7,7 +7,10 @@
             {{ range where .Page.Parent.Parent.Pages "Section" "docs"  }}
                 
                 <li>
+                    <a href="{{.Permalink}}">
                     {{.Title}}
+                  </a>
+
                 </li>
                 {{ range where .Page.Pages "Section" "docs"  }}
     
@@ -16,6 +19,13 @@
                         <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active"{{end}}>
                             {{.Title}}
                           </a>
+                          {{ if and false (.Params.toc) }}
+                          <li>
+                            <ul>
+                              {{.TableOfContents}}
+                            </ul>
+                          </li>
+                        {{ end }}
     
                     </ul>
                   </li>

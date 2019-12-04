@@ -28,13 +28,15 @@ Notes about sysl syntax:
 
 #### Data Types
 Sysl supports following data types out of the box.
-  * int, int64, int32
-  * float, decimal
-  * string
-  * bool
-  * datetime, date
-  * any
-  * xml
+```
+double 
+int64 
+float64 
+string 
+bool 
+date.Date 
+time.Time 
+```
 
 
 Now, we have two apps `MobileApp` and `Server`, but they do not interact with each other. Time to add some statements.
