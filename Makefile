@@ -62,7 +62,7 @@ deps:
 	go get -v -t -d ./...
 
 .PHONY: release
-release: windows linux darwin ## Build release binaries for all supported platforms into ./release
+release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
 
 install: build ## Install the sysl binary into $(GOPATH)/bin
 	cp ./dist/sysl $(GOPATH)/bin
@@ -75,7 +75,7 @@ ANTLR = java -jar pkg/lib/antlr-4.7-complete.jar
 GRAMMARS = pkg/grammar/SyslParser.g4 \
 		   pkg/grammar/SyslLexer.g4
 
-antlr: pkg/grammar/SyslParser.g4 pkg/grammar/SyslLexer.g4
+antlr: $(GRAMMARS)
 	$(ANTLR) -Dlanguage=Go -lib pkg/grammar -o pkg/grammar/temp $^
 
 pkg/grammar/sysl_parser.go: antlr
