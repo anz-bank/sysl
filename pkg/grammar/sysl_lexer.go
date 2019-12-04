@@ -1,4 +1,4 @@
-// Generated from grammar/SyslLexer.g4 by ANTLR 4.7.
+// Generated from pkg/grammar/SyslLexer.g4 by ANTLR 4.7.
 
 package parser
 

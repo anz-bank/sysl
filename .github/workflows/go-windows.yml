@@ -27,7 +27,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get dependencies
-      run: go get -v -t -d .\...
+      run: make deps
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

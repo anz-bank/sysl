@@ -24,12 +24,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test and Build
-      run: |
-        GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
-        ./scripts/check-coverage.sh 80
-        ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-darwin  darwin  amd64
-        ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-linux   linux   amd64
-        ./scripts/build.sh build ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE} gosysl/sysl-windows windows amd64
+      run: make release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
