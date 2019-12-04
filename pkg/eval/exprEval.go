@@ -409,6 +409,6 @@ func (ee *exprEval) eval(scope Scope, expr *sysl.Expr) (val *sysl.Value, err err
 			reflect.TypeOf(expr.Expr).String(),
 			expr.SourceContext.File, expr.SourceContext.Start.Line, expr.SourceContext.Start.Col)
 	}
-	//entry.Tracef("Result: %s", val.String())
+	entry.Tracef("Result: %s", val.String())
 	return val, err
 }

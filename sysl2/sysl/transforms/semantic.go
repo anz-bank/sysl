@@ -13,7 +13,7 @@ type semantic struct {
 	filenames *sysl.View
 }
 
-// assume args are
+// valid args are
 //  app <: sysl.App and
 //  type <: sysl.Type
 //  typeName <: string

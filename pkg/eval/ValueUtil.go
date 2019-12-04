@@ -273,10 +273,7 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 
 	params := MakeValueList()
 	for _, param := range e.Param {
-		// Somehow empty params can get here from the parser
-		//	if param.Name != "" && param.Type != nil {
 		AppendItemToValueList(params.GetList(), paramToValue(param))
-		//	}
 	}
 	AddItemToValueMap(m, "params", params)
 
