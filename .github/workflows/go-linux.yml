@@ -27,18 +27,18 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get dependencies
-      run: go get -v -t -d ./...
+      run: make deps
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test
-      run: ./scripts/check-coverage.sh 80
+      run: make coverage
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
     - name: Build
-      run: go build -v ./...
+      run: make build
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
