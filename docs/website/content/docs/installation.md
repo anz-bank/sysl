@@ -14,23 +14,12 @@ Prerequisites
 - [Go](https://golang.org)
 - [PlantUML](https://hub.docker.com/r/plantuml/plantuml-server/) server for diagram generation for use if using the [external service](http://www.plantuml.com/plantuml/) is not appropriate 
 
-Linux/Macos
+Linux/Macos/Windows
 -----------
-1. Clone the repo
+`go get -v github.com/anz-bank/sysl/cmd/sysl`
 
-`git clone https://github.com/anz-bank/sysl.git`
-
-2. Build the binary
-
-`cd sysl/sysl2/sysl && go build`
-
-(note that sysl2 is the new sysl version written in go)
-
-3. To insall it globally copy it to your bin directory:
-`cp sysl /usr/local/bin`
-
-Congrats: Now sysl is installed and the fun can begin!
-
-Windows
+Setting PlantUML Environment variable
 -----------
-1. Install your Preferred linux distro and then go to section "Linux/Macos"
+In order to be able to generate diagrams the `SYSL_PLANTUML` Environment variable needs to be set
+
+`export SYSL_PLANTUML=http://www.plantuml.com/plantuml`
