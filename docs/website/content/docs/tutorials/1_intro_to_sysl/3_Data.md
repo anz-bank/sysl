@@ -1,8 +1,8 @@
 ---
 title: "Data"
 date: 2019
-weight: 50
-
+weight: 3
+sequence: true
 ---
 
 You will have various kinds of data passing through your systems. Sysl allows you to express ownership, information classification and other attributes of your data in one place.

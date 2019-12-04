@@ -2,7 +2,8 @@
 title: "datatypes"
 description: "Sysl datatypes"
 date: 2018-11-26
-weight: 10
+weight: 4
+sequence: true
 ---
 ```
 double 

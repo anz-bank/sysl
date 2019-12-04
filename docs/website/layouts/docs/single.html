@@ -2,36 +2,44 @@
 {{ define "header"}} {{ partial "header" .}} {{end}}
 {{ define "main"}}
 {{ $currentPage := . }}
+
 <div id="docs-main">
   <div id="sidebar">
+
     <ul>
-        {{ range where .Pages "Section" "docs"  }}
+        <a href="{{.Parent.Parent.Permalink}}">{{.Parent.Parent.Title}}</a>
+
+        {{ range where .Page.Parent.Parent.Pages "Section" "docs"  }}
             
             <li>
-              <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active"{{end}}>
                 {{.Title}}
-              </a>
             </li>
-             {{ if and (eq .Title $currentPage.Title) (.Params.toc) }}
+            {{ range where .Page.Pages "Section" "docs"  }}
+
               <li>
                 <ul>
-                  {{.TableOfContents}}
+                    <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active"{{end}}>
+                        {{.Title}}
+                      </a>
+
                 </ul>
               </li>
             {{ end }}
         {{ end }}
     </ul>
+    
   </div>
   <div id="docs-area">
     <div id="hero">
       <h1>{{ .Title}} </h1>
       <p class="hero-lead">{{ .Params.bref | safeHTML }}</p>
-    </div>
-    {{ .Content}}
-    {{ partial "nav.html" . }}
 
+    </div >
+    {{ .Content}}
   </div>
 </div>
 
+
+
 {{ end }}
-{{ define "nav"}} {{ partial "nav.html" .}} {{ end }}
+{{ define "footer"}} {{ partial "footer.html" .}} {{ end }}

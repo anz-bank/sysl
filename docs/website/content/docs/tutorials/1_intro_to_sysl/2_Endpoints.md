@@ -1,7 +1,8 @@
 ---
 title: "Endpoints"
 date: 2019
-weight: 50
+weight: 2
+sequence: true
 ---
 
 Endpoints are the services that an application offers. Let's add endpoints to our `MobileApp`.

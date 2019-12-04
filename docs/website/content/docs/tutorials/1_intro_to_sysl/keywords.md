@@ -2,9 +2,10 @@
 title: "Keywords"
 description: "Sysl keyword dictionary"
 date: 2018-11-26
-weight: 10
+weight: 5
 draft: false
 toc: true
+sequence: true
 ---
 `!type`
 The type keyword is used to define a type. 

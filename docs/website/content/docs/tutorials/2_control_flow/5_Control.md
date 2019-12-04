@@ -2,7 +2,7 @@
 title: "Control"
 date: 2019
 weight: 50
-
+sequence: true
 ---
 
 Sysl allows you to express high level of detail about your design. You can specify decisions, processing loops etc.

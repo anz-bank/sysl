@@ -2,7 +2,7 @@
 title: "Imports"
 date: 2019
 weight: 50
-
+sequence: true
 ---
 
 To keep things modular, sysl allows you to import definitions created in other `.sysl` files.

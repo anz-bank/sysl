@@ -5,7 +5,7 @@ weight: 50
 draft: true
 bref: ""
 toc: true
-
+layout: "tutorial"
 ---
 
 # Language Guide

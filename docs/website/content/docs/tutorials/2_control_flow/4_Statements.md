@@ -2,7 +2,7 @@
 title: "Statements"
 date: 2019
 weight: 50
-
+sequence: true
 ---
 
 Our `MobileApp` does not have any detail yet on how it behaves. Let's use sysl statements to describe behaviour. Sysl supports following types of statements:
