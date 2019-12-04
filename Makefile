@@ -28,10 +28,10 @@ endif
 
 LDFLAGS = $(shell echo -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE))
 
-all: test lint build ## test, lint then build
+all: test lint build coverage ## test, lint, build, coverage test run
 
 
-.PHONY: build lint test
+.PHONY: build lint test coverage
 lint: ## Run golangci-lint
 	golangci-lint run
 
