@@ -3365,29 +3365,27 @@ func (s *TreeShapeListener) EnterTemplate_expression(ctx *parser.Template_expres
 func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_expressionContext) {
 	var lhs, rhs *sysl.Expr
 
+	sourceCtx := s.sc.Get(ctx.BaseParserRuleContext)
+
 	if txt := ctx.TMPL_TEXT(); txt != nil {
 		text := strings.NewReplacer("{{", "{", "}}", "}").Replace(txt.GetText())
-		rhs = makeLiteralString(text, s.sc.Get(ctx.BaseParserRuleContext))
+		rhs = makeLiteralString(text, sourceCtx)
 	} else {
-		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext))
+		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr(), sourceCtx)
 	}
 
 	if top := s.TopExpr(); top.GetTransform() == nil {
 		lhs = s.popExpr()
-		s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 	} else {
 		lhs = makeLiteralString("", nil)
-		s.PushExpr(rhs)
 	}
-
-	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext)))
+	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, sourceCtx))
 }
 
 // EnterTemplate_statement is called when production template_statement is entered.
 func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {
 	if len(ctx.AllTemplate_expression()) == 0 {
 		s.PushExpr(makeLiteralString("", s.sc.Get(ctx.BaseParserRuleContext)))
-
 	}
 }
 

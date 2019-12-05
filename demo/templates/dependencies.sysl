@@ -5,24 +5,43 @@
 DependencyTemplate:
     !view start(module <: sysl.TemplateInput) -> sysl.TemplateResult:
         module -> (:
+            let apps = module.Apps -> <set of string> (a:
+                out = getAppDeps(a)
+            )
+            $! 1 {$ apps flatten(.out) $}
+            let x = set(set(apps flatten(.out)))
+            $! 2 {$ x $}
 
-          let apps = module.Apps -> <set of string> (a:
-            out = getDeps(a)
-          )
-
-          $ comment {$ apps flatten(.out) $} foo {$ module $} sdf
-          $! bar
-          Data = "[\n" + Join(apps flatten(.out), "\n")  + "\n]"
-          Filename = "deps.json"
+            $! data: {$ apps $}
+            Data = x flatten(.a)
+            Filename = "deps.json"
         )
 
-    !view getDeps(app <: sysl.App) -> set of string:
-        app -> (a:
-            let targets = a.value.endpoints -> <set of string> (ep:
-              let calls = ep.value.stmts where(.type == "call") -> <set of string> (t:
+    !view getAppDeps_old(app <: sysl.App) -> set of string:
+        app.endpoints -> <set of string> (ep :
+            let x = getEndpointCalls(ep)
+            $! {$app.name$}.>   {$ x $}
+            $ {$app.name$}.ep: {$ ep.name $} -> {$ x $}
+        )
+
+    !view getEndpointCalls(ep <: sysl.Endpoint) -> set of string:
+        ep -> (:
+            let calls = ep.stmts where(.type == "call") -> <set of string> (t:
                 arg = '"' + t.target + '"'
-              )
-              out = calls flatten(.arg)
             )
-            out = targets flatten(.out)
+            out = calls flatten(.arg)
+        )
+
+    !view getAppDeps(app <: sysl.App) -> set of string:
+        app -> (:
+            let appDeps = app.endpoints -> <set of string> (ep :
+                x = getEndpointCalls(ep).out
+            )
+            out = appDeps flatten(.x)
+        )
+
+    !view set(items <: sequence of string) -> set of string:
+        items -> (i:
+            $! in set: {$ i $}
+            i = i
         )

@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
@@ -14,7 +15,7 @@ type unaryFunc func(*sysl.Value) *sysl.Value
 var unaryFunctions = map[sysl.Expr_UnExpr_Op]unaryFunc{
 	sysl.Expr_UnExpr_NEG:    unaryNeg,
 	sysl.Expr_UnExpr_SINGLE: unarySingle,
-	sysl.Expr_UnExpr_STRING: unaryString,
+	sysl.Expr_UnExpr_STRING: UnaryString,
 }
 
 func evalUnaryFunc(op sysl.Expr_UnExpr_Op, arg *sysl.Value) *sysl.Value {
@@ -55,13 +56,16 @@ func unarySingle(list *sysl.Value) *sysl.Value {
 	return v[0]
 }
 
-func unaryString(arg *sysl.Value) *sysl.Value {
+func UnaryString(arg *sysl.Value) *sysl.Value {
 	listfn := func(items []*sysl.Value) *sysl.Value {
 		var parts []string
 		for _, item := range items {
-			parts = append(parts, unaryString(item).GetS())
+			parts = append(parts, UnaryString(item).GetS())
 		}
 		return MakeValueString(fmt.Sprintf("[%s]", strings.Join(parts, ", ")))
+	}
+	if arg == nil {
+		arg = &sysl.Value{Value: &sysl.Value_Null_{}}
 	}
 	switch x := arg.Value.(type) {
 	case *sysl.Value_S:
@@ -74,6 +78,13 @@ func unaryString(arg *sysl.Value) *sysl.Value {
 		return listfn(x.List.GetValue())
 	case *sysl.Value_Set:
 		return listfn(x.Set.GetValue())
+	case *sysl.Value_Map_:
+		var parts []string
+		for key, val := range x.Map.Items {
+			parts = append(parts, fmt.Sprintf("%s: %s", key, UnaryString(val).GetS()))
+		}
+		sort.Strings(parts)
+		return MakeValueString(fmt.Sprintf("{%s}", strings.Join(parts, ", ")))
 	}
 	return MakeValueString(arg.String())
 }

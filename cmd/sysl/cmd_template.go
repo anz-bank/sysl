@@ -4,17 +4,16 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/transforms"
-
-	"github.com/anz-bank/sysl/sysl2/sysl/parse"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/anz-bank/sysl/pkg/transforms"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type templateCmd struct {
 	rootTemplate string
 	template     string
-	appName      string
+	appName      []string
 	start        string
 	outDir       string
 }
@@ -33,7 +32,7 @@ func (p *templateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		"name of the sysl app defined in sysl model."+
 			" if there are multiple apps defined in sysl model,"+
 			" code will be generated only for the given app").
-		Short('a').Default("").StringVar(&p.appName)
+		Short('a').Default("").StringsVar(&p.appName)
 	cmd.Flag("start", "start rule for the template").Required().StringVar(&p.start)
 	cmd.Flag("outdir", "output directory").Short('o').Default(".").StringVar(&p.outDir)
 	EnsureFlagsNonEmpty(cmd, "app-name")
@@ -53,7 +52,7 @@ func (p *templateCmd) Execute(args ExecuteArgs) error {
 		return err
 	}
 
-	output := t.Apply(args.Module)
+	output := t.Apply(args.Module, p.appName...)
 
 	for filename, data := range output {
 		if err := ioutil.WriteFile(filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644); err != nil {

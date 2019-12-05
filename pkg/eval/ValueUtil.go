@@ -273,6 +273,10 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 
 	params := MakeValueList()
 	for _, param := range e.Param {
+		if param.GetType() == nil {
+			log.Warnf("empty param defined in endpoint: %s", e.Name)
+			continue
+		}
 		AppendItemToValueList(params.GetList(), paramToValue(param))
 	}
 	AddItemToValueMap(m, "params", params)

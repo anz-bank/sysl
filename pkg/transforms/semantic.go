@@ -3,9 +3,9 @@ package transforms
 import (
 	"sort"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/eval"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/eval"
+	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 type semantic struct {
@@ -78,11 +78,11 @@ func createScope(view *sysl.View, mod *sysl.Module, app *sysl.Application) trans
 	for _, param := range view.Param {
 		_, detail := syslutil.GetTypeDetail(param.Type)
 		switch detail {
-		case "App", "Application":
+		case "sysl.App", "sysl.Application":
 			res.scope.AddApp(param.Name, app)
-		case "Module":
+		case "sysl.Module":
 			res.scope.AddModule(param.Name, mod)
-		case "Type":
+		case "sysl.Type":
 			tp.t = param.Name
 		case "STRING": // Assuming it must be the type name
 			tp.name = param.Name

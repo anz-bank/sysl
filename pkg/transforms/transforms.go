@@ -3,9 +3,9 @@ package transforms
 import (
 	"fmt"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/eval"
-	"github.com/anz-bank/sysl/sysl2/sysl/syslutil"
+	"github.com/anz-bank/sysl/pkg/eval"
+	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 type Worker interface {

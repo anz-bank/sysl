@@ -243,10 +243,13 @@ func isInternalMap(val *sysl.Value_Map) bool {
 func evalName(ee *exprEval, assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
-		if x.Name == parse.TemplateImpliedResult {
+		switch x.Name {
+		case parse.TemplateImpliedResult:
 			val = MakeValueString("")
 			assign[x.Name] = val
-		} else {
+		case parse.TemplateLogString:
+			val = MakeValueString("")
+		default:
 			ee.LogEntry().Errorf("Key: %s does not exist in scope", x.Name)
 		}
 	}

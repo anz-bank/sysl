@@ -5,8 +5,8 @@ import (
 	"log"
 	"sort"
 
-	sysl "github.com/anz-bank/sysl/src/proto"
-	"github.com/anz-bank/sysl/sysl2/sysl/eval"
+	"github.com/anz-bank/sysl/pkg/eval"
+	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 )
 
 type templated struct {
@@ -52,7 +52,8 @@ func (t *templated) Apply(mod *sysl.Module, appNames ...string) map[string]*sysl
 		if !ok {
 			return "", "", fmt.Errorf("'Data' not set")
 		}
-		data = val.GetS()
+
+		data = eval.UnaryString(val).GetS()
 		return
 	}
 

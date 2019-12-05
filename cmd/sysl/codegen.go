@@ -4,8 +4,6 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/anz-bank/sysl/sysl2/sysl/transforms"
-
 	"github.com/anz-bank/sysl/pkg/eval"
 	"github.com/anz-bank/sysl/pkg/msg"
 	parser "github.com/anz-bank/sysl/pkg/naive"
@@ -13,6 +11,7 @@ import (
 	ebnfGrammar "github.com/anz-bank/sysl/pkg/proto"
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/anz-bank/sysl/pkg/transforms"
 	"github.com/anz-bank/sysl/pkg/validate"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
