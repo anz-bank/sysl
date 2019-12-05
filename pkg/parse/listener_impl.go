@@ -2136,7 +2136,7 @@ func (s *TreeShapeListener) EnterExpr_func(ctx *parser.Expr_funcContext) {
 	default:
 		funcName = ctx.NativeDataTypes().GetText()
 	}
-	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
+	expr := makeExpr(s.sc.GetWithText(ctx.BaseParserRuleContext))
 	expr.Expr = &sysl.Expr_Call_{
 		Call: &sysl.Expr_Call{
 			Func: funcName,
@@ -2731,6 +2731,7 @@ func (s *TreeShapeListener) EnterIf_multiple_lines(ctx *parser.If_multiple_lines
 // ExitExpr_simple_assign is called when production expr_simple_assign is exited.
 func (s *TreeShapeListener) ExitExpr_simple_assign(ctx *parser.Expr_simple_assignContext) {
 	expr := s.popExpr()
+	expr.SourceContext = s.sc.GetWithText(ctx.BaseParserRuleContext)
 	tx := s.TopExpr().GetTransform()
 	if tx == nil {
 		fmt.Printf("%v\n", s.TopExpr())
@@ -2750,6 +2751,7 @@ func (s *TreeShapeListener) ExitExpr_simple_assign(ctx *parser.Expr_simple_assig
 // ExitExpr_let_statement is called when production expr_let_statement is exited.
 func (s *TreeShapeListener) ExitExpr_let_statement(ctx *parser.Expr_let_statementContext) {
 	expr := s.popExpr()
+	expr.SourceContext = s.sc.GetWithText(ctx.BaseParserRuleContext)
 	tx := s.TopExpr().GetTransform()
 	if tx == nil {
 		fmt.Printf("%v", s.TopExpr())
@@ -2934,7 +2936,7 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 	s.module.Apps[s.appname].Views[viewName] = &sysl.View{
 		Param:         []*sysl.Param{},
 		RetType:       &sysl.Type{},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext: s.sc.GetWithText(ctx.BaseParserRuleContext),
 	}
 	if ctx.Attribs_or_modifiers() != nil {
 		v := s.module.Apps[s.appname].Views[viewName]

@@ -53,6 +53,10 @@ apps: <
                   line: 3
                   col: 4
                 >
+                end: <
+                  line: 13
+                  col: 5
+                >
               >
             >
             scopevar: "scopeVar"
@@ -67,8 +71,13 @@ apps: <
                     file: "tests/strings_expr.sysl"
                     start: <
                       line: 4
+                      col: 6
+                    >
+                    end: <
+                      line: 4
                       col: 12
                     >
+                    text: "out = \"abc\""
                   >
                 >
               >
@@ -84,8 +93,13 @@ apps: <
                     file: "tests/strings_expr.sysl"
                     start: <
                       line: 5
+                      col: 6
+                    >
+                    end: <
+                      line: 5
                       col: 13
                     >
+                    text: "out1 = \"'abc'\""
                   >
                 >
               >
@@ -101,8 +115,13 @@ apps: <
                     file: "tests/strings_expr.sysl"
                     start: <
                       line: 6
+                      col: 6
+                    >
+                    end: <
+                      line: 6
                       col: 13
                     >
+                    text: "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
                   >
                 >
               >
@@ -118,8 +137,13 @@ apps: <
                     file: "tests/strings_expr.sysl"
                     start: <
                       line: 8
+                      col: 6
+                    >
+                    end: <
+                      line: 8
                       col: 13
                     >
+                    text: "out3 = '\"abc\"'"
                   >
                 >
               >
@@ -135,8 +159,13 @@ apps: <
                     file: "tests/strings_expr.sysl"
                     start: <
                       line: 9
+                      col: 6
+                    >
+                    end: <
+                      line: 9
                       col: 13
                     >
+                    text: "out4 = 'abc'"
                   >
                 >
               >
@@ -152,8 +181,13 @@ apps: <
                     file: "tests/strings_expr.sysl"
                     start: <
                       line: 12
+                      col: 6
+                    >
+                    end: <
+                      line: 12
                       col: 13
                     >
+                    text: "out5 = '\"abc\\ndef\"'"
                   >
                 >
               >
@@ -164,6 +198,10 @@ apps: <
             start: <
               line: 3
               col: 4
+            >
+            end: <
+              line: 13
+              col: 5
             >
           >
         >
@@ -183,6 +221,10 @@ apps: <
             line: 2
             col: 2
           >
+          end: <
+            line: 14
+          >
+          text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:\n    -> (scopeVar:\n      out = \"abc\"\n      out1 = \"'abc'\"\n      out2 = \"\\\"On\\nMultiple\\nLines\\\"\"\n\n      out3 = '\"abc\"'\n      out4 = 'abc'\n      # output does not match legacy!\n      # golden output had to be modified for this test to work.\n      out5 = '\"abc\\ndef\"'\n    )\n"
         >
       >
     >
@@ -191,6 +233,10 @@ apps: <
       start: <
         line: 1
         col: 1
+      >
+      end: <
+        line: 1
+        col: 64
       >
     >
   >

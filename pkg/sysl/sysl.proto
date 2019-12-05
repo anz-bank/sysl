@@ -17,13 +17,14 @@ enum Delta {
 message SourceContext {
     string      file    = 1;
     Location    start   = 2;
-    Location    end     = 3;  // Currently unpopulated
+    Location    end     = 3;
+    string      text    = 4;
 
     Delta   delta       = 6;
 
     message Location {
         int32   line    = 1;
-        int32   col     = 2;  // Currently unpopulated
+        int32   col     = 2;
     }
 }
 
