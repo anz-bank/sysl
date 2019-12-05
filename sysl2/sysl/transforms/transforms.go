@@ -35,7 +35,7 @@ func NewWorker(transformMod *sysl.Module, appName, viewName string) (Worker, err
 	}
 	filenames, has := app.Views["filename"]
 	if !has {
-		return nil, fmt.Errorf("view '%s' not found in transform app", view)
+		return nil, fmt.Errorf("view '%s' not found in transform app", "filename")
 	}
 	return &semantic{base: b, filenames: filenames}, nil
 }

@@ -70,4 +70,4 @@ func (t *templated) Apply(mod *sysl.Module, appNames ...string) map[string]*sysl
 	return result
 }
 
-const templateInputType = "TemplateInput"
+const templateInputType = "sysl.TemplateInput"

@@ -3382,8 +3382,47 @@ func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_express
 	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, s.popExpr(), s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
+func findTransformForTemplateLet(tx *sysl.Expr_Transform, which string) bool {
+	for _, stmts := range tx.Stmt {
+		switch s := stmts.Stmt.(type) {
+		case *sysl.Expr_Transform_Stmt_Assign_:
+			if which == s.Assign.Name {
+				return true
+			}
+
+		case *sysl.Expr_Transform_Stmt_Let:
+			if which == s.Let.Name {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 // EnterTemplate_statement is called when production template_statement is entered.
-func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {}
+func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {
+	tx := s.TopExpr().GetTransform()
+	if tx == nil {
+		fmt.Printf("%v", s.TopExpr())
+		panic("ExitTemplate_statement: Unexpected expression!")
+	}
+	resultName := TemplateImpliedResult
+	if ctx.TMPL_DEBUG() != nil {
+		resultName = TemplateLogString
+	}
+	if !findTransformForTemplateLet(tx, resultName) {
+		stmt := &sysl.Expr_Transform_Stmt{
+			Stmt: &sysl.Expr_Transform_Stmt_Let{
+				Let: &sysl.Expr_Transform_Stmt_Assign{
+					Name: resultName,
+					Expr: makeLiteralString("", nil),
+				},
+			},
+		}
+
+		tx.Stmt = append(tx.Stmt, stmt)
+	}
+}
 
 const TemplateImpliedResult = "__$"
 const TemplateLogString = "__$Log"
@@ -3432,10 +3471,20 @@ func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statemen
 	resultName := TemplateImpliedResult
 	if ctx.TMPL_DEBUG() != nil {
 		resultName = TemplateLogString
-	} else {
-		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, makeExprName(TemplateImpliedResult, sc), statements, sc)
 	}
-
+	output := makeExprName(resultName, sc)
+	output.Type = &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING}}
+	statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, output, statements, sc)
+	/*
+		for _, stmt := range tx.Stmt {
+			if s, ok := stmt.Stmt.(*sysl.Expr_Transform_Stmt_Let); ok {
+				s.Let = &sysl.Expr_Transform_Stmt_Assign{
+					Name: resultName,
+					Expr: statements,
+				}
+				return
+			}
+		}*/
 	stmt := &sysl.Expr_Transform_Stmt{
 		Stmt: &sysl.Expr_Transform_Stmt_Let{
 			Let: &sysl.Expr_Transform_Stmt_Assign{

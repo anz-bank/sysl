@@ -10,7 +10,8 @@ DependencyTemplate:
             out = getDeps(a)
           )
 
-          $! comment {$ apps flatten(.out) $}
+          $ comment {$ apps flatten(.out) $}
+          $! bar
           Data = "[\n" + Join(apps flatten(.out), "\n")  + "\n]"
           Filename = "deps.json"
         )
