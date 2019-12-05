@@ -79,6 +79,10 @@ apps: <
             line: 3
             col: 8
           >
+          end: <
+            line: 5
+            col: 8
+          >
         >
       >
     >
@@ -131,6 +135,10 @@ apps: <
           file: "tests/rest_api_query_params.sysl"
           start: <
             line: 6
+            col: 10
+          >
+          end: <
+            line: 8
             col: 10
           >
         >
@@ -207,6 +215,9 @@ apps: <
             line: 9
             col: 14
           >
+          end: <
+            line: 11
+          >
         >
       >
     >
@@ -215,6 +226,10 @@ apps: <
       start: <
         line: 1
         col: 1
+      >
+      end: <
+        line: 1
+        col: 19
       >
     >
   >

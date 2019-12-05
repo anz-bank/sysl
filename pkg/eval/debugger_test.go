@@ -2,9 +2,13 @@ package eval
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/spf13/afero"
+
+	"github.com/anz-bank/sysl/pkg/sysl"
 
 	"github.com/stretchr/testify/require"
 )
@@ -156,7 +160,23 @@ func TestREPL_DumpScope(t *testing.T) {
 
 	result := output.String()
 	require.Contains(t, result, "(dump scope)\n")
-	require.Contains(t, result, "a:  s:\"hello\"")
-	require.Contains(t, result, "b:  b:false")
-	require.Contains(t, result, "c:  null:<>")
+	for k, v := range *scope {
+		require.Contains(t, result, fmt.Sprintf("%s:  %s", k, unaryString(v).GetS()))
+	}
+}
+
+func TestREPL_CallView(t *testing.T) {
+	filename := "../../cmd/sysl/tests/transform1.sysl"
+	sysl, appname, err := parse.LoadAndGetDefaultApp(filename, afero.NewOsFs(), parse.NewParser())
+	require.NoError(t, err)
+
+	scope := &Scope{}
+	scope.AddApp("app", sysl.Apps[appname])
+	input := bytes.NewBufferString("l\nTfmFilenameInvalid2(app).foo\n")
+	output := bytes.Buffer{}
+
+	r := NewREPL(input, &output)
+	r(scope, sysl.Apps[appname], nil) //nolint: errcheck
+	result := output.String()
+	require.Contains(t, result, "servicehandler.go\n")
 }
