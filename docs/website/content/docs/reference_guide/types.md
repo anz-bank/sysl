@@ -1,4 +1,12 @@
-this
+---
+title: "Types"
+description: "Sysl keyword dictionary"
+date: 2018-11-26
+weight: 5
+draft: false
+toc: true
+sequence: true
+---
 - Types are either `primitive` or composite types
 - Primitives are:
     - decimals

@@ -14,7 +14,7 @@
     <div class="row gutters">
       <!-- only show pages where dir is the same as the _index.md -->
       {{ $pages := .Sections }}
-      <!-- {{ $pages := union $pages (where .Site.RegularPages ".Dir" $parentDir )}} -->
+      
       {{ range $pages}}
 
       <div class="col col-4 item">
@@ -22,12 +22,24 @@
         <p>{{ .Params.description }}</p>
 
         {{range .Pages}}
+        <br>
         <a href="{{ .Permalink }}">{{ .Title }}</a> <br/>
         
         {{end}}
         
       </div>
       {{ end }}
+      {{ $pages := where .Site.RegularPages ".Dir" $parentDir }}
+      {{ range $pages}}
+      <div class="col col-4 item">
+          
+          <a href="{{ .Permalink }}"><h4>{{ .Title }}</h4></a>
+          {{replace .TableOfContents `href="#` (printf `href="%s#` .Permalink) | safeHTML }}
+          
+        </div>
+        {{ end }}
+        
+
 
     </div>
   </div>

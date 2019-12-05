@@ -1,4 +1,5 @@
 {{ $currentPage := . }}
+{{$toc := .Params.toc}}
 <div id="sidebar">
 
         <ul>
@@ -19,10 +20,13 @@
                         <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active"{{end}}>
                             {{.Title}}
                           </a>
-                          {{ if and false (.Params.toc) }}
+
+                          {{ if or true $toc}}
                           <li>
                             <ul>
-                              {{.TableOfContents}}
+                              
+                              {{ replace .TableOfContents `href="#` (printf `href="%s#` .Permalink) | safeHTML }}
+
                             </ul>
                           </li>
                         {{ end }}
