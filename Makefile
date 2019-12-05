@@ -12,26 +12,21 @@ COMMIT=$(shell git rev-parse --short HEAD)
 TAG = $(shell git tag --points-at HEAD)
 
 
-ifneq ("$(which gotestsum)", "")
+ifneq ("$(shell which gotestsum)", "")
 	TESTEXE := gotestsum --
 else
 	TESTEXE := go test ./...
 endif
 
-
 BUILD_DATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
-ifneq ("$(TAG)", "")
-	VERSION := $(TAG)
-else
-	VERSION := $(COMMIT)-$(BRANCH)-$(BUILD_DATE)
-endif
+VERSION := $(or $(TAG),$(COMMIT)-$(BRANCH)-$(BUILD_DATE))
 
-LDFLAGS = $(shell echo -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE))
+LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE)
 
 all: test lint build coverage ## test, lint, build, coverage test run
 
 
-.PHONY: build lint test coverage
+.PHONY: all deps install grammar antlr build lint test coverage clean
 lint: ## Run golangci-lint
 	golangci-lint run
 
@@ -44,13 +39,11 @@ test: ## Run tests without coverage
 
 BINARY := sysl
 PLATFORMS := windows linux darwin
-os = $(word 1, $@)
-
 .PHONY: $(PLATFORMS)
 $(PLATFORMS): build
 	mkdir -p release
-	GOOS=$(os) GOARCH=amd64 \
-		go build -o release/$(BINARY)-$(VERSION)-$(os)$(shell test $(os) = windows && echo .exe) \
+	GOOS=$@ GOARCH=amd64 \
+		go build -o release/$(BINARY)-$(VERSION)-$@$(shell test $@ = windows && echo .exe) \
 		-ldflags="$(LDFLAGS)" \
 		-v \
 		./cmd/sysl
@@ -58,7 +51,7 @@ $(PLATFORMS): build
 build: ## Build sysl into the ./dist folder
 	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
 
-deps:
+deps: ## Download the project dependencies with `go get`
 	go get -v -t -d ./...
 
 .PHONY: release
