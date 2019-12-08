@@ -5,12 +5,12 @@ weight: 1
 sequence: true
 toc: true
 ---
-Sysl allows you to specify Application behaviour and Data Models that are shared between your applications. This is useful in many use cases, expecially in software Projects where documentation of what changes occur in each release.
+Sysl allows you to specify Application behaviour and Data Models that are shared between your applications. This is useful in many use cases, especially in software projects with many moving parts which need their documentation kept up to date.
 
 To explain these concepts, we will design an application called `MobileApp` which interacts with another application called `Server`.
 
 Applications
-==== 
+====
 
 An __application__ is an independent entity that provides services via its various __endpoints__.
 
@@ -22,7 +22,7 @@ MobileApp:
 Server:
   ...
 ```
-`MobileApp` and `Server` are user-defined Applications that does not have any endpoints yet. We will design this app as we move along.
+`MobileApp` and `Server` are user-defined Applications that do not have any endpoints yet. We will design this app as we move along.
 
 Notes about sysl syntax:
 
@@ -84,7 +84,13 @@ bool
 date.Date 
 time.Time 
 ```
+We can Also define our own datatypes using the `!type` keyword within an application.
 
+```
+!type response:
+  data <: string
+  type <: int
+```
 
 Now, we have two apps `MobileApp` and `Server`, but they do not interact with each other. Time to add some statements.
 
@@ -94,4 +100,13 @@ An endpoint can return response to the caller. Everything after `return` keyword
   * string - a description of what is returned, or
   * Sysl type - formal type to return to the caller
 
-Sequence diagram will render the response accordingly. In the previous example, `data` is a generic description of what `DB <- Query` returns. `Server.Response` is the Sysl type that is returned by `Login` endpoint.
+```
+MobileApp:
+  Login: 
+    return string
+  Search: 
+    return string
+  Order: 
+    return sequence of string
+```
+

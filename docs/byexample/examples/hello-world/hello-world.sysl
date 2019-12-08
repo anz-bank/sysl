@@ -1,0 +1,10 @@
+// Our first program will print the classic "hello world"
+// message. Here's the full source code.
+HelloWorld:
+    /endpoint1:
+		GET:
+			// Here we can specify a return type
+            return string
+proj:
+    _:
+        HelloWorld

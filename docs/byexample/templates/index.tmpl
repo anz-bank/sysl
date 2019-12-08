@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Go by Example</title>
+    <link rel=stylesheet href="site.css">
+  </head>
+  <body>
+    <div id="intro">
+      <h2><a href="./">Go by Example</a></h2>
+      <p>
+        <a href="http://golang.org">Go</a> is an
+        open source programming language designed for
+        building simple, fast, and reliable software.
+      </p>
+
+      <p>
+        <em>Go by Example</em> is a hands-on introduction
+        to Go using annotated example programs. Check out
+        the <a href="hello-world">first example</a> or
+        browse the full list below.
+      </p>
+
+      <ul>
+      {{range .}}
+        <li><a href="{{.ID}}">{{.Name}}</a></li>
+      {{end}}
+      </ul>
+      <p class="footer">
+        by <a href="https://markmcgranaghan.com">Mark McGranaghan</a> | <a href="https://github.com/mmcgrana/gobyexample">source</a> | <a href="https://github.com/mmcgrana/gobyexample#license">license</a>
+      </p>
+    </div>
+  </body>
+</html>

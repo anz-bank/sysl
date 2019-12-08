@@ -1,0 +1,16 @@
++++
+title= "{{.Name}}"
+draft= false
+description= "Your one stop shop for all things sysl."
+layout= "byexample"
+
+
+ID = "{{.ID}}"
+Segs = [{{range .Segs}}
+  {{range .}}
+      {CodeEmpty= {{.CodeEmpty}},CodeLeading= {{.CodeLeading}},CodeRun= {{.CodeRun}},CodeRendered="""{{.CodeRendered}}""",DocsRendered= """{{.DocsRendered}}"""},
+{{end}}
+{{end}}
+]
++++
+

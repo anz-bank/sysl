@@ -1,0 +1,3 @@
+<div class="highlight"><pre><span class="gp">$</span> go run hello-world.go
+<span class="go">hello world</span>
+</pre></div>

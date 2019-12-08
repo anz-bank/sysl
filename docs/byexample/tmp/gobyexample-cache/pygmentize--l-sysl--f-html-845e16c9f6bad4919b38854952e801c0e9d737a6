@@ -1,0 +1,5 @@
+<div class="highlight"><pre>            <span class="k">return</span> <span class="kt">string</span>
+<span class="nx">proj</span><span class="p">:</span>
+    <span class="nx">_</span><span class="p">:</span>
+        <span class="nx">HelloWorld</span>
+</pre></div>
