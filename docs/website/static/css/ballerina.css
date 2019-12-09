@@ -63,10 +63,18 @@ h2 {
 h2 a {
     text-decoration: none;
 }
+
+tr td:first-child {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+
 div.example {
-    width: 900px;
-    min-width: 900px;
-    max-width: 900px;
+    width: 1000px;
+    min-width: 1000px;
+    max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 120px;
@@ -78,6 +86,9 @@ div.example table {
 p.next {
     margin-bottom: 20px;
 }
+p.prev {
+    margin-bottom: 20px;
+}
 p.footer {
     color: grey;
 }
@@ -85,9 +96,9 @@ p.footer a, p.footer a:visited {
     color: grey;
 }
 div#intro {
-    width: 420px;
-    min-width: 420px;
-    max-width: 420px;
+    width: 470px;
+    min-width: 470px;
+    max-width: 470px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 120px;
@@ -103,9 +114,9 @@ table td {
     outline: 0;
 }
 td.docs {
-    width: 420px;
-    max-width: 420px;
-    min-width: 420px;
+    width: 470px;
+    max-width: 470px;
+    min-width: 470px;
     min-height: 5px;
     vertical-align: top;
     text-align: left;
@@ -116,18 +127,18 @@ td.docs p {
     padding-bottom: 15px;
 }
 td.code {
-    width: 480px;
-    max-width: 480px;
-    min-width: 480px;
+    width: 530px;
+    max-width: 530px;
+    min-width: 530px;
     padding-top: 5px;
     padding-right: 5px;
     padding-left: 5px;
     padding-bottom: 5px;
     vertical-align: top;
-    background: #f6f8fa;
+    background: #f0f0f0;
 }
 td.code.leading {
-    padding-bottom: 10px;
+    padding-bottom: 11px;
 }
 td.code.empty {
     background: #ffffff;
@@ -136,21 +147,15 @@ pre, code {
     font-size: 14px; line-height: 18px;
     font-family: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console', monospace;
 }
-img.copy, img.run {
+img.run {
   height: 16px;
   width: 16px;
   float: right
 }
-img.copy, img.run {
-  cursor: pointer;
-}
-img.copy {
-    margin-right: 4px;
-}
 
 /* Syntax highlighting */
 body .hll { background-color: #ffffcc }
-body .err { border: 1px solid #FF0000 }         /* Error */
+/*body .err { border: 1px solid #FF0000 }          Error */
 body .c  { color: #408080; font-style: italic } /* Comment */
 body .k  { color: #954121 }                     /* Keyword */
 body .o  { color: #666666 }                     /* Operator */

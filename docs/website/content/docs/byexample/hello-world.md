@@ -1,12 +1,12 @@
 +++
 title= "hello-world"
 draft= false
-description= "Your one stop shop for all things sysl."
+description= ""
 layout= "byexample"
 
 
 ID = "hello-world.md"
-Segs = [
+Segs = [[
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre><span class="nx">HelloWorld</span><span class="p">:</span>
     <span class="o">/</span><span class="nx">endpoint1</span><span class="p">:</span>
@@ -23,12 +23,13 @@ Segs = [
 """,DocsRendered= """<p>Here we can specify a return type</p>
 """},
 
-
+],
+[
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre><span class="gp">$</span> go run hello-world.go
 <span class="go">hello world</span>
 </pre></div>
-""",DocsRendered= """<p>To run the program, put the code in <code>hello-world.go</code> anduse <code>go run</code>.</p>
+""",DocsRendered= """<p>To run the program, put the code in <code>hello-world.go</code> anduse  go run.</p>
 """},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre><span class="gp">$</span> go build hello-world.go
@@ -47,7 +48,9 @@ Segs = [
       {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Now that we can run and build basic Go programs, let&rsquo;slearn more about the language.</p>
 """},
 
+],
 
 ]
 +++
+
 

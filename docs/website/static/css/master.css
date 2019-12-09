@@ -1,3 +1,5 @@
+@import url("site.css");
+
 @media (min-width: 768px) {
   html, body {
     position: relative;

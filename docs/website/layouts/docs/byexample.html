@@ -11,31 +11,31 @@
   <head>
     <meta charset="utf-8">
     <title>Go by Example: {{.Title}}</title>
-  <link rel=stylesheet href="/css/site.css">
+    <link rel=stylesheet href="/css/master.css">
   </head>
+
   <body>
     <div class="example" id="{{.Params.ID}}">
       <h2><a href="./">Go by Example</a>: {{.Title}}</h2>
+      
       {{range .Params.Segs}}
       <table>
+        {{range .}}
         <tr>
           <td class="docs">
             {{safeHTML .DocsRendered}}
           </td>
-
           <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
           {{safeHTML .CodeRendered}}
           </td>
         </tr>
         {{end}}
-        <script>
-          var codeLines = [];
-          {{range .Params.Segs}}codeLines.push('{{js .CodeForJs}}');{{end}}
-        </script>
-        <script src="/css/site.js" async></script>
-      </body>
-    </html>
-
+      </table>
+      {{end}}
+    
+    
+  </body>
+</html>
 
 
 
@@ -44,3 +44,4 @@
 
 
 {{end}}
+
