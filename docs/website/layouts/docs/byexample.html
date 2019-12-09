@@ -27,10 +27,16 @@
           </td>
           <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
           {{safeHTML .CodeRendered}}
+
           </td>
         </tr>
         {{end}}
       </table>
+      {{end}}
+      {{range .Params.Images}}
+      <img src = "{{.}}" alt = "Image" />
+      <h4>Example</h4>
+      {{.}}
       {{end}}
       {{partial "nav" .}}
   </body>

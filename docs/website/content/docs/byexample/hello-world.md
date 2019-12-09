@@ -3,7 +3,11 @@ title= "hello-world"
 draft= false
 description= ""
 layout= "byexample"
-
+Images = [
+  
+  "/assets/byexample/images/hello-world2.png",
+  
+]
 
 ID = "hello-world.md"
 Segs = [[

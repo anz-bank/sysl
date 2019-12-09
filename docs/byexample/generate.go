@@ -3,22 +3,23 @@ package main
 import (
 	"crypto/sha1"
 	"fmt"
+	"github.com/russross/blackfriday"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
-
-	"github.com/russross/blackfriday"
 )
 
 // siteDir is the target directory into which the HTML gets generated. Its
 // default is set here but can be changed by an argument passed into the
 // program.
-var siteDir = "../website/content/docs/byexample/"
+const siteDir = "../website/content/docs/byexample/"
+const assetDir = "../website/static/assets/byexample/"
 
 var cacheDir = "./tmp/gobyexample-cache"
 var pygmentizeBin = "./vendor/pygments/pygmentize"
@@ -119,6 +120,8 @@ func whichLexer(path string) string {
 		return "sysl"
 	} else if strings.HasSuffix(path, ".sh") {
 		return "console"
+	} else if strings.HasSuffix(path, ".png") {
+		return "png"
 	}
 	panic("No lexer for " + path)
 }
@@ -142,6 +145,7 @@ type Seg struct {
 // Example is info extracted from an example file
 type Example struct {
 	ID, Name                    string
+	Images                      []string
 	GoCode, GoCodeHash, URLHash string
 	Segs                        [][]*Seg
 	PrevExample                 *Example
@@ -261,8 +265,23 @@ func parseExamples() []*Example {
 		sourcePaths := mustGlob("examples/" + exampleID + "/*")
 		for i := range sourcePaths {
 			sourcePath := sourcePaths[len(sourcePaths)-i-1]
-			if strings.HasSuffix(sourcePath, ".hash") {
-				example.GoCodeHash, example.URLHash = parseHashFile(sourcePath)
+			if strings.HasSuffix(sourcePath, ".png") {
+				destination := assetDir + "images/" + exampleID + strconv.Itoa(i) + ".png"
+				copyFile(sourcePath, destination)
+				example.Images = append(example.Images, "/assets/byexample/images/hello-world2.png")
+				// infile, err := os.Open(sourcePath)
+				// if err != nil {
+				// 	panic("opening image failed")
+				// }
+				// defer infile.Close()
+
+				// src, _, err := image.Decode(infile)
+				// if err != nil {
+				// 	println(sourcePath)
+				// 	panic(err)
+				// }
+				// example.Images = append(example.Images, src)
+
 			} else {
 				sourceSegs, filecontents := parseAndRenderSegs(sourcePath)
 				if filecontents != "" {
@@ -316,17 +335,7 @@ func renderExamples(examples []*Example) {
 }
 
 func main() {
-	if len(os.Args) > 1 {
-		siteDir = os.Args[1]
-	}
 	ensureDir(siteDir)
-
-	// copyFile(templates+"/site.css", siteDir+"/site.css")
-	// copyFile(templates+"/site.js", siteDir+"/site.js")
-	// copyFile(templates+"/favicon.ico", siteDir+"/favicon.ico")
-	// copyFile(templates+"/404.html", siteDir+"/404.html")
-	// copyFile(templates+"/play.png", siteDir+"/play.png")
-	// copyFile(templates+"/clipboard.png", siteDir+"/clipboard.png")
 	examples := parseExamples()
 	renderExamples(examples)
 }

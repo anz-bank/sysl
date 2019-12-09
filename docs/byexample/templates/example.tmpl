@@ -3,7 +3,11 @@ title= "{{.Name}}"
 draft= false
 description= ""
 layout= "byexample"
-
+Images = [
+  {{range .Images}}
+  "{{.}}",
+  {{end}}
+]
 
 ID = "{{.ID}}"
 Segs = [{{range .Segs}}[
