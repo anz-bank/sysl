@@ -1,4 +1,4 @@
-{{ define "title"}} {{ .Title}} {{end}}
+{{ define "title"}} Sysl by Example: {{ .Title}} {{end}}
 {{ define "header"}} {{ partial "header" .}} {{end}}
 {{ define "main"}}
 {{$parentDir := .Dir}}
@@ -28,7 +28,14 @@
         {{range .}}
         
         <tr>
-          <td class="docs">
+            {{if eq .DocsRendered ""}} 
+            <td class="docs">
+            {{else}}
+            <td class="docs dotted">
+            {{end}}
+
+          
+        
             {{safeHTML .DocsRendered}}
           </td>
           
@@ -37,8 +44,6 @@
               
 
           {{safeHTML .CodeRendered}}
-          
-
           </td> 
         </tr>
         {{end}}

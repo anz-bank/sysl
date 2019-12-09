@@ -48,7 +48,7 @@ Segs = [[
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>            <span class="k">return</span> <span class="kt">string</span>
 </pre></div>
-""",DocsRendered= """<p>Here we can specify a return type for our endpoint</p>
+""",DocsRendered= """<p>Here we can specify a return type for our endpoint Everything after return keyword till the end-of-line is considered response payload</p>
 """, CodeForJs = """            return string
 """},
 

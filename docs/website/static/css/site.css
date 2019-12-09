@@ -116,6 +116,11 @@ td.docs {
     min-height: 5px;
     vertical-align: top;
     text-align: left;
+   
+}
+
+td.dotted{
+    border-top: 1px dotted #c3c3c3;
 }
 td.docs p {
     padding-right: 5px;
@@ -138,6 +143,8 @@ td.code.leading {
 }
 td.code.empty {
     background: #ffffff;
+    
+
 }
 pre, code {
     font-size: 14px; line-height: 18px;

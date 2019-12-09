@@ -11,7 +11,7 @@ HelloWorld:
     /endpoint2:
         # Here we can specify the parameters for our endpoints
 		POST(request <: string):
-			# Here we can specify a return type for our endpoint
+			# Here we can specify a return type for our endpoint Everything after return keyword till the end-of-line is considered response payload
             return string
 
 # Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands
