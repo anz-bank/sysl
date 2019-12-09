@@ -1,0 +1,3 @@
+<div class="highlight"><pre>  <span class="p">!</span><span class="nx">alias</span> <span class="nx">Posts</span><span class="p">:</span>
+    <span class="nx">sequence</span> <span class="nx">of</span> <span class="nx">Post</span>
+</pre></div>

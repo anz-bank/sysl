@@ -1,0 +1,8 @@
+<div class="highlight"><pre><span class="nx">Todos</span><span class="p">:</span>
+<span class="err">#</span><span class="nx">Here</span> <span class="nx">we</span> <span class="nx">can</span> <span class="nx">define</span> <span class="nx">a</span> <span class="kd">type</span> <span class="nx">with</span> <span class="nx">different</span> <span class="nx">fields</span>
+  <span class="p">!</span><span class="kd">type</span> <span class="nx">Todo</span><span class="p">:</span>
+    <span class="nx">userId</span> <span class="p">&lt;:</span> <span class="kt">int</span>
+    <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
+    <span class="nx">title</span> <span class="p">&lt;:</span> <span class="kt">string</span>
+    <span class="nx">completed</span> <span class="p">&lt;:</span> <span class="kt">bool</span>
+</pre></div>

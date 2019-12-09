@@ -1,0 +1,3 @@
+<div class="highlight"><pre>  <span class="p">!</span><span class="kd">type</span> <span class="nx">ResourceNotFoundError</span><span class="p">:</span>
+    <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span>
+</pre></div>

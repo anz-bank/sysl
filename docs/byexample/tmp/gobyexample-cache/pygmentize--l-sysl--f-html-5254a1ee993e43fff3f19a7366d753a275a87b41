@@ -1,0 +1,9 @@
+<div class="highlight"><pre>  <span class="o">/</span><span class="nx">posts</span><span class="p">:</span>
+    <span class="nx">GET</span><span class="p">:</span>
+      <span class="k">if</span> <span class="nx">notfound</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">404</span> <span class="p">&lt;:</span> <span class="nx">ResourceNotFoundError</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="nx">failed</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">500</span> <span class="p">&lt;:</span> <span class="nx">ErrorResponse</span>
+      <span class="k">else</span><span class="p">:</span>    
+        <span class="k">return</span> <span class="mi">200</span> <span class="p">&lt;:</span> <span class="nx">Posts</span>
+</pre></div>
