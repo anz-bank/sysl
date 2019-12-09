@@ -13,7 +13,7 @@ Images = [
 ID = "{{.ID}}"
 Segs = [{{range .Segs}}[
   {{range .}}
-      {CodeEmpty= {{.CodeEmpty}},CodeLeading= {{.CodeLeading}},CodeRun= {{.CodeRun}},CodeRendered="""{{.CodeRendered}}""",DocsRendered= """{{.DocsRendered}}"""},
+      {CodeEmpty= {{.CodeEmpty}},CodeLeading= {{.CodeLeading}},CodeRun= {{.CodeRun}},CodeRendered="""{{.CodeRendered}}""",DocsRendered= """{{.DocsRendered}}""", CodeForJs = """{{.CodeForJs}}"""},
 {{end}}
 ],
 {{end}}

@@ -6,17 +6,23 @@
 {{ partial "sidebar" . }}
 
 
-<!DOCTYPE html>
+
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>Sysl by Example: {{.Title}}</title>
+      
+      <div id="main">
+          <div id="hero">
+            <h1>Sysl By example {{.Title}}</h1>
+        </div>
+
+
+
     <link rel=stylesheet href="/css/master.css">
   </head>
 
   <body>
     <div class="example" id="{{.Params.ID}}">
-      <h2><a href="{{.Parent.Permalink}}">Sysl by Example</a>: {{.Title}}</h2>
+
       
       {{range .Params.Segs}}
       <table>
@@ -26,9 +32,12 @@
             {{safeHTML .DocsRendered}}
           </td>
           <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
-          {{safeHTML .CodeRendered}}
+              {{if .CodeRun}}<img title="Copy code" src="/img/clipboard.png" class="copy" />{{end}}
 
-          </td>
+          {{safeHTML .CodeRendered}}
+          
+
+          </td> 
         </tr>
         {{end}}
       </table>
@@ -38,6 +47,17 @@
 
       {{end}}
       {{partial "nav" .}}
+      <script>
+          var codeLines = [];
+          {{range .Params.Segs}}
+          {{range .}}
+              {{if ne .CodeForJs "\n"}}
+                  codeLines.push('{{safeJS .CodeForJs}}');
+                {{end}}
+                {{end}}
+                {{end}}
+        </script>
+        <script src="/js/site.js" async></script>
   </body>
 </html>
 {{end}}

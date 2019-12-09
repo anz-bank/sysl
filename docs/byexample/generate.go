@@ -219,7 +219,7 @@ func parseSegs(sourcePath string) ([]*Seg, string) {
 	for i, seg := range segs {
 		seg.CodeEmpty = (seg.Code == "")
 		seg.CodeLeading = (i < (len(segs) - 1))
-		seg.CodeRun = strings.Contains(seg.Code, "package main")
+		seg.CodeRun = i == 1
 	}
 	return segs, filecontent
 }

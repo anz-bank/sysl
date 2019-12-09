@@ -1,4 +1,0 @@
-<div class="highlight"><pre><span class="gp">$</span> go build hello-world.go
-<span class="gp">$</span> ls
-<span class="go">hello-world    hello-world.go</span>
-</pre></div>

@@ -1,12 +1,17 @@
-# Our first program will print the classic "hello world"
-# message. Here's the full source code. this is more text for doing more stuff
+# Our first program will make a simple "Hello world application with one endpoint"
+
+# Here we specify an application called `HelloWorld`
 HelloWorld:
+    # With an indentation on the next line and now our endpoint name can be listed
     /endpoint1:
+        # We can list our http method
 		GET:
 			# Here we can specify a return type
             return string
+    /endpoint2:
+        # Here we can specify the parameters for our endpoints
+		POST(request <: string):
+			# Here we can specify a return type for our endpoint
+            return string
 
-# message. Here's the full source code. this is more text for doing more stuff
-proj:
-    _:
-        HelloWorld
+# Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands
