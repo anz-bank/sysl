@@ -116,9 +116,9 @@ td.docs p {
     padding-bottom: 15px;
 }
 td.code {
-    width: 480px;
-    max-width: 480px;
-    min-width: 480px;
+    width: 400px;
+    max-width: 400px;
+    min-width: 400px;
     padding-top: 5px;
     padding-right: 5px;
     padding-left: 5px;

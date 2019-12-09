@@ -328,6 +328,5 @@ func main() {
 	// copyFile(templates+"/play.png", siteDir+"/play.png")
 	// copyFile(templates+"/clipboard.png", siteDir+"/clipboard.png")
 	examples := parseExamples()
-	renderIndex(examples)
 	renderExamples(examples)
 }
