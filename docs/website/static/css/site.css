@@ -105,6 +105,10 @@ table td {
 table tr:hover{
     color: #f03c69;
 }
+img.center {
+    display: block;
+    margin: 0 auto;
+}
 td.docs {
     width: 420px;
     max-width: 420px;
