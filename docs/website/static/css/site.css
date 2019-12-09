@@ -102,6 +102,9 @@ table td {
     border: 0;
     outline: 0;
 }
+table tr:hover{
+    color: #f03c69;
+}
 td.docs {
     width: 420px;
     max-width: 420px;
