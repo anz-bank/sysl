@@ -22,24 +22,27 @@
   <body>
     <div class="example" id="{{.Params.ID}}">
 
-      
+      <!-- Each segment is  a short snipped of code-->
       {{range .Params.Segs}}
       <table>
+
         {{range .}}
         
         <tr>
+            <!-- If the comments are empty then don't put a vertical dotted line  -->
             {{if eq .DocsRendered ""}} 
             <td class="docs">
             {{else}}
             <td class="docs dotted">
             {{end}}
 
-          
-        
             {{safeHTML .DocsRendered}}
           </td>
           
+          <!--  -->
           <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
+
+          <!-- Here we ass the copy code button -->
           {{if .CodeRun}}<img title="Copy code" src="/img/clipboard.png" class="copy" />{{end}}
               
 
