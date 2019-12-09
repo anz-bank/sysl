@@ -12,9 +12,8 @@
       
       <div id="main">
           <div id="hero">
-            <h1>Sysl By example {{.Title}}</h1>
+            <h1>Sysl by xample {{.Title}}</h1>
         </div>
-
 
 
     <link rel=stylesheet href="/css/master.css">
@@ -27,12 +26,15 @@
       {{range .Params.Segs}}
       <table>
         {{range .}}
+        
         <tr>
           <td class="docs">
             {{safeHTML .DocsRendered}}
           </td>
+          
           <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
-              {{if .CodeRun}}<img title="Copy code" src="/img/clipboard.png" class="copy" />{{end}}
+          {{if .CodeRun}}<img title="Copy code" src="/img/clipboard.png" class="copy" />{{end}}
+              
 
           {{safeHTML .CodeRendered}}
           
@@ -51,14 +53,11 @@
           var codeLines = [];
           {{range .Params.Segs}}
           {{range .}}
-              {{if ne .CodeForJs "\n"}}
-                  codeLines.push('{{safeJS .CodeForJs}}');
-                {{end}}
-                {{end}}
-                {{end}}
+                codeLines.push('{{trim (safeJS .CodeForJs) "\n"}}');
+          {{end}}
+          {{end}}
         </script>
         <script src="/js/site.js" async></script>
   </body>
 </html>
 {{end}}
-
