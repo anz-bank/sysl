@@ -38,7 +38,11 @@ linters:
     - unused
     - varcheck
     - whitespace
+    - funlen
 linters-settings:
   errcheck:
     check-blank: true
+  funlen:
+    lines: 146
+    statements: 64
 
