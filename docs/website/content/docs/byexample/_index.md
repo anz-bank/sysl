@@ -1,8 +1,11 @@
 ---
 title: "Sysl By Example"
 draft: false
-description: "Your one stop shop for all things sysl."
-type: list
+description: "Learn by examples"
+type: tutorial
+weight: 50
+bref: ""
+toc: true
 
 ---
 
