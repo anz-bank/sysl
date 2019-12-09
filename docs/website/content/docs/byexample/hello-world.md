@@ -46,10 +46,10 @@ Segs = [[
 """, CodeForJs = """        POST(request <: string):
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>            <span class="k">return</span> <span class="kt">string</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>            <span class="k">return</span> <span class="nx">break</span>
 </pre></div>
 """,DocsRendered= """<p>Here we can specify a return type for our endpoint Everything after return keyword till the end-of-line is considered response payload</p>
-""", CodeForJs = """            return string
+""", CodeForJs = """            return break
 """},
 
       {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands</p>

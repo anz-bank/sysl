@@ -17,7 +17,7 @@ Segs = [[
 """, CodeForJs = """Todos:
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<div class="highlight"><pre>  <span class="p">!</span><span class="kd">type</span> <span class="nx">Todo</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<div class="highlight"><pre>  <span class="k">!type</span> <span class="nx">Todo</span><span class="p">:</span>
     <span class="nx">userId</span> <span class="p">&lt;:</span> <span class="kt">int</span>
     <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
     <span class="nx">title</span> <span class="p">&lt;:</span> <span class="kt">string</span>
@@ -31,7 +31,7 @@ Segs = [[
     completed <: bool
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="p">!</span><span class="kd">type</span> <span class="nx">Post</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="k">!type</span> <span class="nx">Post</span><span class="p">:</span>
     <span class="nx">userId</span> <span class="p">&lt;:</span> <span class="kt">int</span>
     <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
     <span class="nx">title</span> <span class="p">&lt;:</span> <span class="kt">string</span>
@@ -45,21 +45,21 @@ Segs = [[
     body <: string
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="p">!</span><span class="nx">alias</span> <span class="nx">Posts</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="k">!alias</span> <span class="nx">Posts</span><span class="p">:</span>
     <span class="nx">sequence</span> <span class="nx">of</span> <span class="nx">Post</span>
 </pre></div>
 """,DocsRendered= """""", CodeForJs = """  !alias Posts:
     sequence of Post
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="p">!</span><span class="kd">type</span> <span class="nx">ErrorResponse</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="k">!type</span> <span class="nx">ErrorResponse</span><span class="p">:</span>
     <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span>
 </pre></div>
 """,DocsRendered= """""", CodeForJs = """  !type ErrorResponse:
     status <: string
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="p">!</span><span class="kd">type</span> <span class="nx">ResourceNotFoundError</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="k">!type</span> <span class="nx">ResourceNotFoundError</span><span class="p">:</span>
     <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span>
 </pre></div>
 """,DocsRendered= """""", CodeForJs = """  !type ResourceNotFoundError:
@@ -69,11 +69,11 @@ Segs = [[
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="o">/</span><span class="nx">todos</span><span class="p">:</span>
     <span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">&lt;:</span><span class="kt">int</span><span class="p">}:</span>
       <span class="nx">GET</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nx">notfound</span><span class="p">:</span>
+        <span class="nx">if</span> <span class="nx">notfound</span><span class="p">:</span>
           <span class="k">return</span> <span class="mi">404</span> <span class="p">&lt;:</span> <span class="nx">ResourceNotFoundError</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="nx">failed</span><span class="p">:</span>
+        <span class="nx">else</span> <span class="nx">if</span> <span class="nx">failed</span><span class="p">:</span>
           <span class="k">return</span> <span class="mi">500</span> <span class="p">&lt;:</span> <span class="nx">ErrorResponse</span>
-        <span class="k">else</span><span class="p">:</span>    
+        <span class="nx">else</span><span class="p">:</span>    
           <span class="k">return</span> <span class="mi">200</span> <span class="p">&lt;:</span> <span class="nx">Todo</span> 
 </pre></div>
 """,DocsRendered= """<p>Here we define the todos endpoint with a get reponse</p>
@@ -90,11 +90,11 @@ Segs = [[
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>  <span class="o">/</span><span class="nx">posts</span><span class="p">:</span>
     <span class="nx">GET</span><span class="p">:</span>
-      <span class="k">if</span> <span class="nx">notfound</span><span class="p">:</span>
+      <span class="nx">if</span> <span class="nx">notfound</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">404</span> <span class="p">&lt;:</span> <span class="nx">ResourceNotFoundError</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">failed</span><span class="p">:</span>
+      <span class="nx">else</span> <span class="nx">if</span> <span class="nx">failed</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">500</span> <span class="p">&lt;:</span> <span class="nx">ErrorResponse</span>
-      <span class="k">else</span><span class="p">:</span>    
+      <span class="nx">else</span><span class="p">:</span>    
         <span class="k">return</span> <span class="mi">200</span> <span class="p">&lt;:</span> <span class="nx">Posts</span>
 </pre></div>
 """,DocsRendered= """""", CodeForJs = """  /posts:

@@ -34,37 +34,27 @@ class SyslLexer(RegexLexer):
     tokens = {
         'root': [
             (r'\n', Text),
+            # (r'(\w+?)(?=:)', Keyword),
             (r'\s+', Text),
             (r'\\\n', Text),  # line continuations
             (r'//(.*?)\n', Comment.Single),
             (r'/(\\\n)?[*](.|\n)*?[*](\\\n)?/', Comment.Multiline),
             (r'(import|package)\b', Keyword.Namespace),
-            (r'(var|func|struct|map|chan|type|interface|const)\b',
+            (r'(var|func|struct|map|chan|interface|const)\b',
              Keyword.Declaration),
-            (words((
-                'break', 'default', 'select', 'case', 'defer', 'go',
-                'else', 'goto', 'switch', 'fallthrough', 'if', 'range',
-                'continue', 'for', 'return'), suffix=r'\b'),
+            (
+                words(('!wrap','!table','!type','!alias','!union','!view',
+                'while', 'for', 'return'), suffix=r'\b'),
              Keyword),
             (r'(true|false|iota|nil)\b', Keyword.Constant),
             # It seems the builtin types aren't actually keywords, but
             # can be used as functions. So we need two declarations.
-            (words((
-                'uint', 'uint8', 'uint16', 'uint32', 'uint64',
-                'int', 'int8', 'int16', 'int32', 'int64',
-                'float', 'float32', 'float64',
-                'complex64', 'complex128', 'byte', 'rune',
-                'string', 'bool', 'error', 'uintptr',
-                'print', 'println', 'panic', 'recover', 'close', 'complex',
-                'real', 'imag', 'len', 'cap', 'append', 'copy', 'delete',
-                'new', 'make'), suffix=r'\b(\()'),
+            (words(('!wrap','!table','!type','!alias','!union','!view'
+                ), suffix=r'\b(\()'),
              bygroups(Name.Builtin, Punctuation)),
             (words((
-                'uint', 'uint8', 'uint16', 'uint32', 'uint64',
-                'int', 'int8', 'int16', 'int32', 'int64',
-                'float', 'float32', 'float64',
-                'complex64', 'complex128', 'byte', 'rune',
-                'string', 'bool', 'error', 'uintptr'), suffix=r'\b'),
+                'string', 'bool', 'double', 'int', 'float',
+                'date.Date', 'time.Time'), suffix=r'\b'),
              Keyword.Type),
             # imaginary_lit
             (r'\d+i', Number),
