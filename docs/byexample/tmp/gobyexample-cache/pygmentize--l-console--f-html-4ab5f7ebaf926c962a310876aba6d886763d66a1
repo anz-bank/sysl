@@ -1,0 +1,2 @@
+<div class="highlight"><pre><span class="go">sysl sd -o &quot;diagrams.png&quot; -s &quot;MobileApp &lt;- Login&quot; diagrams.sysl</span>
+</pre></div>

@@ -1,7 +1,0 @@
-<div class="highlight"><pre>  <span class="o">/</span><span class="nx">comments</span><span class="p">:</span>
-    <span class="nx">GET</span> <span class="err">?</span><span class="nx">postId</span><span class="p">=</span><span class="kt">int</span><span class="p">:</span>
-      <span class="k">return</span> <span class="nx">Posts</span>
-      
-    <span class="nx">POST</span> <span class="p">(</span><span class="nx">newPost</span> <span class="p">&lt;:</span> <span class="nx">Post</span> <span class="p">[</span><span class="err">~</span><span class="nx">body</span><span class="p">]):</span>
-      <span class="k">return</span> <span class="nx">Post</span>
-</pre></div>

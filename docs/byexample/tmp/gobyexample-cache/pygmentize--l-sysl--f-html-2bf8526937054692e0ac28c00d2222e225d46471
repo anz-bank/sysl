@@ -1,0 +1,3 @@
+<div class="highlight"><pre>    <span class="k">!type</span> <span class="nx">LoginResponse</span><span class="p">:</span>
+        <span class="nx">message</span> <span class="p">&lt;:</span> <span class="kt">string</span>
+</pre></div>

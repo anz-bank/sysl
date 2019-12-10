@@ -4,6 +4,7 @@ title= "hello-world"
 draft= false
 description= ""
 layout= "byexample"
+weight = 1
 Images = [
   
 ]
@@ -11,48 +12,36 @@ Images = [
 ID = "hello-world.md"
 Segs = [[
   
-      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Our first program will make a simple &ldquo;Hello world application with one endpoint&rdquo;</p>
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Our first program will make a simple &ldquo;Hello world&rdquo; application with two endpoints</p>
 """, CodeForJs = """"""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<div class="highlight"><pre><span class="nx">HelloWorld</span><span class="p">:</span>
 </pre></div>
-""",DocsRendered= """<p>Here we specify an application called <code>HelloWorld</code></p>
+""",DocsRendered= """<p>Specify an application called <code>HelloWorld</code></p>
 """, CodeForJs = """HelloWorld:
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>    <span class="o">/</span><span class="nx">endpoint1</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>    <span class="nx">endpoint1</span><span class="p">:</span>
 </pre></div>
-""",DocsRendered= """<p>With an indentation on the next line and now our endpoint name can be listed</p>
-""", CodeForJs = """    /endpoint1:
+""",DocsRendered= """<p>Specify an endpoint as the next indent.</p>
+""", CodeForJs = """    endpoint1:
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>        <span class="nx">GET</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>        <span class="k">return</span> <span class="kt">string</span>
 </pre></div>
-""",DocsRendered= """<p>We can list our http method</p>
-""", CodeForJs = """        GET:
+""",DocsRendered= """<p>Specify a return type for the endpoint. Anything after the return is considered a payload.</p>
+""", CodeForJs = """        return string
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>            <span class="k">return</span> <span class="kt">string</span>
-    <span class="o">/</span><span class="nx">endpoint2</span><span class="p">:</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>    <span class="nx">endpoint2</span><span class="p">(</span><span class="nx">request</span> <span class="p">&lt;:</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kt">string</span>
 </pre></div>
-""",DocsRendered= """<p>Here we can specify a return type</p>
-""", CodeForJs = """            return string
-    /endpoint2:
+""",DocsRendered= """<p>Specify parameters; a string parameter named &ldquo;request&rdquo; and an int named &ldquo;id&rdquo; to the endpoint</p>
+""", CodeForJs = """    endpoint2(request <: string, id <: int):
+        return string
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>        <span class="nx">POST</span><span class="p">(</span><span class="nx">request</span> <span class="p">&lt;:</span> <span class="kt">string</span><span class="p">):</span>
-</pre></div>
-""",DocsRendered= """<p>Here we can specify the parameters for our endpoints</p>
-""", CodeForJs = """        POST(request <: string):
-"""},
-
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre>            <span class="k">return</span> <span class="nx">break</span>
-</pre></div>
-""",DocsRendered= """<p>Here we can specify a return type for our endpoint Everything after return keyword till the end-of-line is considered response payload</p>
-""", CodeForJs = """            return break
-"""},
-
-      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands</p>
+      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands.</p>
 """, CodeForJs = """"""},
 
 ],

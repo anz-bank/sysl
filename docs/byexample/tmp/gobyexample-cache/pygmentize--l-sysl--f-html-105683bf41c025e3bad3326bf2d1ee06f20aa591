@@ -1,0 +1,7 @@
+<div class="highlight"><pre><span class="nx">Server</span><span class="p">:</span>
+    <span class="nx">Login</span><span class="p">(</span><span class="nx">data</span> <span class="p">&lt;:</span> <span class="nx">LoginData</span><span class="p">):</span>
+        <span class="nx">build</span> <span class="nx">query</span>
+        <span class="nx">DB</span> <span class="o">&lt;-</span> <span class="nx">Query</span>
+        <span class="nx">check</span> <span class="nx">result</span>
+        <span class="k">return</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">LoginResponse</span>
+</pre></div>
