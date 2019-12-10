@@ -1,2 +1,0 @@
-<div class="highlight"><pre><span class="go">sysl ints -o diagram.png sysl-ints.sysl --project Project</span>
-</pre></div>

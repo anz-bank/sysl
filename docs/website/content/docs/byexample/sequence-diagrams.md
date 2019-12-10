@@ -60,7 +60,7 @@ Segs = [[
 """,DocsRendered= """<p>First, make sure to set the environment variable SYSL_PLANTUML</p>
 """, CodeForJs = """"""},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<div class="highlight"><pre><span class="go">sysl sd -o &quot;diagrams.png&quot; -s &quot;MobileApp &lt;- Login&quot; diagrams.sysl</span>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<div class="highlight"><pre><span class="go">sysl sd -o &quot;project.png&quot; -s &quot;MobileApp &lt;- Login&quot; project.sysl</span>
 </pre></div>
 """,DocsRendered= """<p>Now run the sysl sd (sequence diagram) command</p>
 """, CodeForJs = """"""},
@@ -71,10 +71,10 @@ Segs = [[
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>-s</code> specifies a starting endpoint for the sequence diagram to initiate</p>
 """, CodeForJs = """"""},
 
-      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>diagrams.sysl</code> is the input sysl file</p>
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>project.sysl</code> is the input sysl file</p>
 """, CodeForJs = """"""},
 
-      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>diagrams.png:</p>
+      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>project.png:</p>
 """, CodeForJs = """"""},
 
 ],
