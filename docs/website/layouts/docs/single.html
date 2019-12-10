@@ -4,13 +4,13 @@
 {{ $currentPage := . }}
 
 <div id="docs-main">
-    {{ partial "sidebar" . }}
+  {{ partial "sidebar" . }}
   <div id="kube-faq">
     <div id="hero">
       <h1>{{ .Title}} </h1>
       <p class="hero-lead">{{ .Params.bref | safeHTML }}</p>
 
-    </div >
+    </div>
     {{ .Content}}
   </div>
 </div>

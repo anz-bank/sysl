@@ -1,40 +1,28 @@
 {{ $currentPage := . }}
 {{$toc := .Params.toc}}
 <div id="sidebar">
+  <ul>
+    <a href="{{.Parent.Parent.Permalink}}">{{.Parent.Parent.Title}}</a>
 
-        <ul>
-            <a href="{{.Parent.Parent.Permalink}}">{{.Parent.Parent.Title}}</a>
-    
-            {{ range where .Page.Parent.Parent.Pages "Section" "docs"  }}
-                
-                <li>
-                    <a href="{{.Permalink}}">
-                    {{.Title}}
-                  </a>
+    {{ range where .Page.Parent.Parent.Pages "Section" "docs"  }}
 
-                </li>
-                {{ range where .Page.Pages "Section" "docs"  }}
-    
-                  <li>
-                    <ul>
-                        <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active"{{end}}>
-                            {{.Title}}
-                          </a>
+    <li>
+      <a href="{{.Permalink}}">
+        {{.Title}}
+      </a>
 
-                          <!-- {{ if or true $toc}}
-                          <li>
-                            <ul>
-                              
-                              {{ replace .TableOfContents `href="#` (printf `href="%s#` .Permalink) | safeHTML }}
+    </li>
+    {{ range where .Page.Pages "Section" "docs"  }}
 
-                            </ul>
-                          </li>
-                        {{ end }} -->
-    
-                    </ul>
-                  </li>
-                {{ end }}
-            {{ end }}
-        </ul>
-        
-      </div>
+    <li>
+      <ul>
+        <a href="{{.Permalink}}" {{if eq $currentPage.Title .Title }} class="active" {{end}}>
+          {{.Title}}
+        </a>
+      </ul>
+    </li>
+    {{ end }}
+    {{ end }}
+  </ul>
+
+</div>

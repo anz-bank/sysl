@@ -8,43 +8,44 @@
 
 
 <html>
-  <head>
-      
-      <div id="main">
-          <div id="hero">
-            <h1>{{.Title}}</h1>
-            <h2>Sysl by Example:</h2>
-            <h2>{{.Params.Topic}}</h2>
-        </div>
-            
+
+<head>
+
+  <div id="main">
+    <div id="hero">
+      <h1>{{.Title}}</h1>
+      <h2>Sysl by Example:</h2>
+      <h2>{{.Params.Topic}}</h2>
+    </div>
+
 
 
 
     <link rel=stylesheet href="/css/master.css">
-  </head>
+</head>
 
-  <body>
-    <div class="example" id="{{.Params.ID}}">
+<body>
+  <div class="example" id="{{.Params.ID}}">
 
-      <!-- Each segment is  a short snipped of code-->
-      {{range .Params.Segs}}
-      <table>
+    <!-- Each segment is  a short snipped of code-->
+    {{range .Params.Segs}}
+    <table>
 
-        {{range .}}
-        
-        <tr>
-            <!-- If the comments are empty then don't put a vertical dotted line  -->
-            {{if eq .DocsRendered ""}} 
-            <td class="docs">
-            {{else}}
-            <td class="docs dotted">
-            {{end}}
+      {{range .}}
 
-            {{safeHTML .DocsRendered}}
-          </td>
-          
-          <!--  -->
-          <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
+      <tr>
+        <!-- If the comments are empty then don't put a vertical dotted line  -->
+        {{if eq .DocsRendered ""}}
+        <td class="docs">
+          {{else}}
+        <td class="docs dotted">
+          {{end}}
+
+          {{safeHTML .DocsRendered}}
+        </td>
+
+        <!--  -->
+        <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
 
           <!-- Here we ass the copy code button -->
           {{if .CodeRun}}
@@ -53,29 +54,29 @@
           {{$copyButtonActive = true}}
           {{end}}
           {{end}}
-              
+
 
           {{safeHTML .CodeRendered}}
-          </td> 
-        </tr>
-        {{end}}
-      </table>
+        </td>
+      </tr>
       {{end}}
-      {{range .Params.Images}}
-      <img class="center" src = "{{.}}" alt = "Image" />
+    </table>
+    {{end}}
+    {{range .Params.Images}}
+    <img class="center" src="{{.}}" alt="Image" />
 
-      {{end}}
-      {{partial "nav" .}}
-      <script>
-          var codeLines = [];
-          {{range .Params.Segs}}
-          {{range .}}
-                codeLines.push('{{trim (safeJS .CodeForJs) "\n"}}');
-          {{end}}
-          {{end}}
-        </script>
-        <script src="/js/site.js" async></script>
-  </body>
+    {{end}}
+    {{partial "nav" .}}
+    <script>
+      var codeLines = [];
+      { { range.Params.Segs } }
+      { { range.} }
+      codeLines.push('{{trim (safeJS .CodeForJs) "\n"}}');
+      { { end } }
+      { { end } }
+    </script>
+    <script src="/js/site.js" async></script>
+</body>
+
 </html>
 {{end}}
-

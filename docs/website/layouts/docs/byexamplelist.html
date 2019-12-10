@@ -14,22 +14,24 @@
   <div id="components">
     <div class="row gutters">
       <!-- only show pages where dir is the same as the _index.md -->
-     
-      
+
+
       {{ $pages := where .Site.RegularPages ".Dir" $parentDir }}
       {{ range $pages.GroupByParam "Topic"}}
 
       <div class="col col-4 item">
-          <a style="text-decoration:none"><h4>{{ .Key }}<h4></a>
+        <a style="text-decoration:none">
+          <h4>{{ .Key }}<h4>
+        </a>
         {{range .Pages}}
-          <a href="{{ .Permalink }}" style="text-decoration:none; font-size:17px; color:#3794de; ">{{ .Title }}</a><br>
-          
-          
-        
+        <a href="{{ .Permalink }}" style="text-decoration:none; font-size:17px; color:#3794de; ">{{ .Title }}</a><br>
+
+
+
         {{ end }}
       </div>
-        {{end}}
-        
+      {{end}}
+
 
 
     </div>

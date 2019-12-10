@@ -5,15 +5,15 @@
 
 <div id="hero" class="wrap">
   <h1>{{ .Title}}</h1>
-    <p>{{ .Description}}<br>
+  <p>{{ .Description}}<br>
 </div>
 <ul id="posts">
- {{ range .Pages.ByWeight }}
- {{ partial "page-summary" . }}
- {{ end }}
+  {{ range .Pages.ByWeight }}
+  {{ partial "page-summary" . }}
+  {{ end }}
 </ul>
 
 {{ end }}
 {{ define "footer" }}
-  {{ partial "footer" . }}
+{{ partial "footer" . }}
 {{ end }}
