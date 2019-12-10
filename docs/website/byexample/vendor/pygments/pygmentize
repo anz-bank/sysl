@@ -4,5 +4,9 @@ import sys
 import pygments.cmdline
 try:
     sys.exit(pygments.cmdline.main(sys.argv))
+    print("\n\n\n>>>>>\n\n\n")
+    print(sys.argv)
+    print("\n\n\n<<<<\n\n\n")
+
 except KeyboardInterrupt:
     sys.exit(1)

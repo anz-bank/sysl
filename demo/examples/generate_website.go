@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha1"
 	"fmt"
 	"io/ioutil"
@@ -12,6 +13,10 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/alecthomas/chroma"
+	"github.com/alecthomas/chroma/formatters"
+	"github.com/alecthomas/chroma/lexers"
+	"github.com/alecthomas/chroma/styles"
 	"github.com/russross/blackfriday"
 	"gopkg.in/yaml.v2"
 )
@@ -91,20 +96,49 @@ func cachedPygmentize(lex string, src string) string {
 	ensureDir(cacheDir)
 	arg := []string{"-l", lex, "-f", "html"}
 	cachePath := cacheDir + "/pygmentize-" + strings.Join(arg, "-") + "-" + sha1Sum(src)
-	fmt.Println(cachePath)
+	// fmt.Println(cachePath)
+	fmt.Println(arg)
 
 	cacheBytes, cacheErr := ioutil.ReadFile(cachePath)
 	if cacheErr == nil {
 		return string(cacheBytes)
 	}
-	renderBytes := pipe(pygmentizeBin, arg, src)
-	// Newer versions of Pygments add silly empty spans.
-	renderCleanString := strings.Replace(string(renderBytes), "<span></span>", "", -1)
-	writeErr := ioutil.WriteFile(cachePath, []byte(renderCleanString), 0600)
-	check(writeErr)
-	return renderCleanString
-}
+	// code := ""
+	// renderBytes := pipe(pygmentizeBin, arg, src)
+	// for _, i := range
+	code := chromaFormat(src)
 
+	return code
+	// Newer versions of Pygments add silly empty spans.
+	// renderCleanString := strings.Replace(string(renderBytes), "<span></span>", "", -1)
+	// writeErr := ioutil.WriteFile(cachePath, []byte(renderCleanString), 0600)
+	// check(writeErr)
+	// return renderCleanString
+}
+func chromaFormat(code string) string {
+	lexer := lexers.Get("go")
+	if lexer == nil {
+		lexer = lexers.Fallback
+	}
+	lexer = chroma.Coalesce(lexer)
+
+	style := styles.Get("swapoff")
+	if style == nil {
+		style = styles.Fallback
+	}
+	formatter := formatters.Get("html")
+	if formatter == nil {
+		formatter = formatters.Fallback
+	}
+
+	iterator, err := lexer.Tokenise(nil, string(code))
+	check(err)
+	buf := new(bytes.Buffer)
+	err = formatter.Format(buf, style, iterator)
+	check(err)
+	return buf.String()
+
+}
 func markdown(src string) string {
 	return string(blackfriday.Run([]byte(src)))
 }

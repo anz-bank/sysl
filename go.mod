@@ -6,6 +6,7 @@ replace github.com/spf13/afero => github.com/anz-bank/afero v1.2.3
 
 require (
 	aqwari.net/xml v0.0.0-20190526204230-8dd125f7c15c
+	github.com/alecthomas/chroma v0.7.0
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20191011202612-ad2bd05285ca
@@ -21,6 +22,7 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/pkg/errors v0.8.1
+	github.com/rubenv/pygmentize v0.0.0-20150323185546-0a6438ede9e4
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.4.2

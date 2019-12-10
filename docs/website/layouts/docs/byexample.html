@@ -69,11 +69,11 @@
     {{partial "nav" .}}
     <script>
       var codeLines = [];
-      { { range.Params.Segs } }
-      { { range.} }
+      {{ range .Params.Segs }}
+      {{ range .}}
       codeLines.push('{{trim (safeJS .CodeForJs) "\n"}}');
-      { { end } }
-      { { end } }
+      {{ end }}
+      {{ end }}
     </script>
     <script src="/js/site.js" async></script>
 </body>
