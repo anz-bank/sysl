@@ -4,7 +4,7 @@
 {{$parentDir := .Dir}}
 {{$this := .Page}}
 {{ partial "sidebar" . }}
-
+{{$copyButtonActive := false}}
 
 
 <html>
@@ -43,7 +43,12 @@
           <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
 
           <!-- Here we ass the copy code button -->
-          {{if .CodeRun}}<img title="Copy code" src="/img/clipboard.png" class="copy" />{{end}}
+          {{if .CodeRun}}
+          {{if eq $copyButtonActive false}}
+          <img title="Copy code" src="/img/clipboard.png" class="copy" />
+          {{$copyButtonActive = true}}
+          {{end}}
+          {{end}}
               
 
           {{safeHTML .CodeRendered}}
@@ -69,3 +74,4 @@
   </body>
 </html>
 {{end}}
+
