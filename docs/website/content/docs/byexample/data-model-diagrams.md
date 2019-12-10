@@ -8,7 +8,7 @@ weight = 7
 topic = "Diagrams"
 Images = [
   
-  "../../docs/website/static/assets/byexample/images/data-model-diagrams6.png",
+  "/assets/byexample/images/data-model-diagrams6.png",
   
 ]
 
@@ -21,10 +21,13 @@ Segs = [[
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<div class="highlight"><pre><span class="nx">Project</span><span class="p">:</span>
     <span class="nx">_</span><span class="p">:</span>
         <span class="nx">App</span>
+        
 </pre></div>
-""",DocsRendered= """""", CodeForJs = """Project:
+""",DocsRendered= """<p>this is a comment</p>
+""", CodeForJs = """Project:
     _:
         App
+        
 """},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<div class="highlight"><pre><span class="nx">App</span><span class="p">:</span>

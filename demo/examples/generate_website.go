@@ -267,7 +267,11 @@ func parseExamples() []*Example {
 				if ok, ext := isImageFile(sourcePath); ok {
 					destination := assetDir + "images/" + exampleID + strconv.Itoa(weight) + ext
 					copyFile(sourcePath, destination)
-					example.Images = append(example.Images, assetDir+"images/"+exampleID+strconv.Itoa(weight)+ext)
+
+					// This is the path that gets rendered in the markdown file
+					imagesRelativeToSite := "/assets/byexample/images/"
+
+					example.Images = append(example.Images, imagesRelativeToSite+exampleID+strconv.Itoa(weight)+ext)
 				} else {
 					sourceSegs, filecontents := parseAndRenderSegs(sourcePath)
 					if filecontents != "" {

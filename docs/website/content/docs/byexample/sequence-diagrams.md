@@ -8,7 +8,7 @@ weight = 5
 topic = "Diagrams"
 Images = [
   
-  "../../docs/website/static/assets/byexample/images/sequence-diagrams4.png",
+  "/assets/byexample/images/sequence-diagrams4.png",
   
 ]
 
