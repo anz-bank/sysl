@@ -14,7 +14,7 @@ import (
 	"text/template"
 
 	"github.com/alecthomas/chroma"
-	"github.com/alecthomas/chroma/formatters"
+	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
 	"github.com/russross/blackfriday"
@@ -118,6 +118,7 @@ func cachedPygmentize(lex string, src string) string {
 func chromaFormat(code string) string {
 	lexer := lexers.Get("go")
 	if lexer == nil {
+		panic("")
 		lexer = lexers.Fallback
 	}
 	lexer = chroma.Coalesce(lexer)
@@ -126,10 +127,10 @@ func chromaFormat(code string) string {
 	if style == nil {
 		style = styles.Fallback
 	}
-	formatter := formatters.Get("html")
-	if formatter == nil {
-		formatter = formatters.Fallback
-	}
+	formatter := html.New(html.WithClasses(true))
+	// if formatter == nil {
+	// 	formatter = formatters.Fallback
+	// }
 
 	iterator, err := lexer.Tokenise(nil, string(code))
 	check(err)

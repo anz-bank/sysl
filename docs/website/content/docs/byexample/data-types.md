@@ -16,123 +16,12 @@ Segs = [[
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Our first program will make a simple &ldquo;Hello world&rdquo; application with two endpoints</p>
 """, CodeForJs = """"""},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<html>
-<style type="text/css">
-/* Background */ .chroma { color: #e5e5e5; background-color: #000000 }
-/* Error */ .chroma .err { color: #ff0000 }
-/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
-/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; width: auto; overflow: auto; display: block; }
-/* LineHighlight */ .chroma .hl { display: block; width: 100%;background-color: #191919 }
-/* LineNumbersTable */ .chroma .lnt { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* LineNumbers */ .chroma .ln { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* Keyword */ .chroma .k { color: #ffffff; font-weight: bold }
-/* KeywordConstant */ .chroma .kc { color: #ffffff; font-weight: bold }
-/* KeywordDeclaration */ .chroma .kd { color: #ffffff; font-weight: bold }
-/* KeywordNamespace */ .chroma .kn { color: #ffffff; font-weight: bold }
-/* KeywordPseudo */ .chroma .kp { color: #ffffff; font-weight: bold }
-/* KeywordReserved */ .chroma .kr { color: #ffffff; font-weight: bold }
-/* KeywordType */ .chroma .kt { color: #ffffff; font-weight: bold }
-/* NameAttribute */ .chroma .na { color: #007f7f }
-/* NameBuiltin */ .chroma .nb { color: #ffffff; font-weight: bold }
-/* NameTag */ .chroma .nt { font-weight: bold }
-/* LiteralDate */ .chroma .ld { color: #ffff00; font-weight: bold }
-/* LiteralString */ .chroma .s { color: #00ffff; font-weight: bold }
-/* LiteralStringAffix */ .chroma .sa { color: #00ffff; font-weight: bold }
-/* LiteralStringBacktick */ .chroma .sb { color: #00ffff; font-weight: bold }
-/* LiteralStringChar */ .chroma .sc { color: #00ffff; font-weight: bold }
-/* LiteralStringDelimiter */ .chroma .dl { color: #00ffff; font-weight: bold }
-/* LiteralStringDoc */ .chroma .sd { color: #00ffff; font-weight: bold }
-/* LiteralStringDouble */ .chroma .s2 { color: #00ffff; font-weight: bold }
-/* LiteralStringEscape */ .chroma .se { color: #00ffff; font-weight: bold }
-/* LiteralStringHeredoc */ .chroma .sh { color: #00ffff; font-weight: bold }
-/* LiteralStringInterpol */ .chroma .si { color: #00ffff; font-weight: bold }
-/* LiteralStringOther */ .chroma .sx { color: #00ffff; font-weight: bold }
-/* LiteralStringRegex */ .chroma .sr { color: #00ffff; font-weight: bold }
-/* LiteralStringSingle */ .chroma .s1 { color: #00ffff; font-weight: bold }
-/* LiteralStringSymbol */ .chroma .ss { color: #00ffff; font-weight: bold }
-/* LiteralNumber */ .chroma .m { color: #ffff00; font-weight: bold }
-/* LiteralNumberBin */ .chroma .mb { color: #ffff00; font-weight: bold }
-/* LiteralNumberFloat */ .chroma .mf { color: #ffff00; font-weight: bold }
-/* LiteralNumberHex */ .chroma .mh { color: #ffff00; font-weight: bold }
-/* LiteralNumberInteger */ .chroma .mi { color: #ffff00; font-weight: bold }
-/* LiteralNumberIntegerLong */ .chroma .il { color: #ffff00; font-weight: bold }
-/* LiteralNumberOct */ .chroma .mo { color: #ffff00; font-weight: bold }
-/* Comment */ .chroma .c { color: #007f7f }
-/* CommentHashbang */ .chroma .ch { color: #007f7f }
-/* CommentMultiline */ .chroma .cm { color: #007f7f }
-/* CommentSingle */ .chroma .c1 { color: #007f7f }
-/* CommentSpecial */ .chroma .cs { color: #007f7f }
-/* CommentPreproc */ .chroma .cp { color: #00ff00; font-weight: bold }
-/* CommentPreprocFile */ .chroma .cpf { color: #00ff00; font-weight: bold }
-/* GenericHeading */ .chroma .gh { font-weight: bold }
-/* GenericStrong */ .chroma .gs { font-weight: bold }
-/* GenericSubheading */ .chroma .gu { font-weight: bold }
-/* GenericUnderline */ .chroma .gl { text-decoration: underline }
-body { color: #e5e5e5; background-color: #000000; }
-</style><body class="chroma">
-<pre class="chroma">
-<span class="nx">HelloWorld</span><span class="p">:</span></pre>
-</body>
-</html>
-""",DocsRendered= """<p>Specify an application called <code>HelloWorld</code></p>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
+<span class="nx">HelloWorld</span><span class="p">:</span></pre>""",DocsRendered= """<p>Specify an application called <code>HelloWorld</code></p>
 """, CodeForJs = """HelloWorld:
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<html>
-<style type="text/css">
-/* Background */ .chroma { color: #e5e5e5; background-color: #000000 }
-/* Error */ .chroma .err { color: #ff0000 }
-/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
-/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; width: auto; overflow: auto; display: block; }
-/* LineHighlight */ .chroma .hl { display: block; width: 100%;background-color: #191919 }
-/* LineNumbersTable */ .chroma .lnt { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* LineNumbers */ .chroma .ln { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* Keyword */ .chroma .k { color: #ffffff; font-weight: bold }
-/* KeywordConstant */ .chroma .kc { color: #ffffff; font-weight: bold }
-/* KeywordDeclaration */ .chroma .kd { color: #ffffff; font-weight: bold }
-/* KeywordNamespace */ .chroma .kn { color: #ffffff; font-weight: bold }
-/* KeywordPseudo */ .chroma .kp { color: #ffffff; font-weight: bold }
-/* KeywordReserved */ .chroma .kr { color: #ffffff; font-weight: bold }
-/* KeywordType */ .chroma .kt { color: #ffffff; font-weight: bold }
-/* NameAttribute */ .chroma .na { color: #007f7f }
-/* NameBuiltin */ .chroma .nb { color: #ffffff; font-weight: bold }
-/* NameTag */ .chroma .nt { font-weight: bold }
-/* LiteralDate */ .chroma .ld { color: #ffff00; font-weight: bold }
-/* LiteralString */ .chroma .s { color: #00ffff; font-weight: bold }
-/* LiteralStringAffix */ .chroma .sa { color: #00ffff; font-weight: bold }
-/* LiteralStringBacktick */ .chroma .sb { color: #00ffff; font-weight: bold }
-/* LiteralStringChar */ .chroma .sc { color: #00ffff; font-weight: bold }
-/* LiteralStringDelimiter */ .chroma .dl { color: #00ffff; font-weight: bold }
-/* LiteralStringDoc */ .chroma .sd { color: #00ffff; font-weight: bold }
-/* LiteralStringDouble */ .chroma .s2 { color: #00ffff; font-weight: bold }
-/* LiteralStringEscape */ .chroma .se { color: #00ffff; font-weight: bold }
-/* LiteralStringHeredoc */ .chroma .sh { color: #00ffff; font-weight: bold }
-/* LiteralStringInterpol */ .chroma .si { color: #00ffff; font-weight: bold }
-/* LiteralStringOther */ .chroma .sx { color: #00ffff; font-weight: bold }
-/* LiteralStringRegex */ .chroma .sr { color: #00ffff; font-weight: bold }
-/* LiteralStringSingle */ .chroma .s1 { color: #00ffff; font-weight: bold }
-/* LiteralStringSymbol */ .chroma .ss { color: #00ffff; font-weight: bold }
-/* LiteralNumber */ .chroma .m { color: #ffff00; font-weight: bold }
-/* LiteralNumberBin */ .chroma .mb { color: #ffff00; font-weight: bold }
-/* LiteralNumberFloat */ .chroma .mf { color: #ffff00; font-weight: bold }
-/* LiteralNumberHex */ .chroma .mh { color: #ffff00; font-weight: bold }
-/* LiteralNumberInteger */ .chroma .mi { color: #ffff00; font-weight: bold }
-/* LiteralNumberIntegerLong */ .chroma .il { color: #ffff00; font-weight: bold }
-/* LiteralNumberOct */ .chroma .mo { color: #ffff00; font-weight: bold }
-/* Comment */ .chroma .c { color: #007f7f }
-/* CommentHashbang */ .chroma .ch { color: #007f7f }
-/* CommentMultiline */ .chroma .cm { color: #007f7f }
-/* CommentSingle */ .chroma .c1 { color: #007f7f }
-/* CommentSpecial */ .chroma .cs { color: #007f7f }
-/* CommentPreproc */ .chroma .cp { color: #00ff00; font-weight: bold }
-/* CommentPreprocFile */ .chroma .cpf { color: #00ff00; font-weight: bold }
-/* GenericHeading */ .chroma .gh { font-weight: bold }
-/* GenericStrong */ .chroma .gs { font-weight: bold }
-/* GenericSubheading */ .chroma .gu { font-weight: bold }
-/* GenericUnderline */ .chroma .gl { text-decoration: underline }
-body { color: #e5e5e5; background-color: #000000; }
-</style><body class="chroma">
-<pre class="chroma">
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="p">!</span><span class="kd">type</span> <span class="nx">Request</span><span class="p">:</span>
         <span class="nx">userId</span> <span class="p">&lt;:</span> <span class="kt">int</span>
         <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
@@ -140,10 +29,7 @@ body { color: #e5e5e5; background-color: #000000; }
         <span class="nx">completed</span> <span class="p">&lt;:</span> <span class="kt">bool</span>
     
     <span class="p">!</span><span class="kd">type</span> <span class="nx">ErrorResponse</span><span class="p">:</span>
-        <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>
-</body>
-</html>
-""",DocsRendered= """<p>Specify composite types with &ldquo;!type&rdquo; followed by type fields</p>
+        <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """<p>Specify composite types with &ldquo;!type&rdquo; followed by type fields</p>
 """, CodeForJs = """    !type Request:
         userId <: int
         id <: int
@@ -154,191 +40,20 @@ body { color: #e5e5e5; background-color: #000000; }
         status <: string
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<html>
-<style type="text/css">
-/* Background */ .chroma { color: #e5e5e5; background-color: #000000 }
-/* Error */ .chroma .err { color: #ff0000 }
-/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
-/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; width: auto; overflow: auto; display: block; }
-/* LineHighlight */ .chroma .hl { display: block; width: 100%;background-color: #191919 }
-/* LineNumbersTable */ .chroma .lnt { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* LineNumbers */ .chroma .ln { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* Keyword */ .chroma .k { color: #ffffff; font-weight: bold }
-/* KeywordConstant */ .chroma .kc { color: #ffffff; font-weight: bold }
-/* KeywordDeclaration */ .chroma .kd { color: #ffffff; font-weight: bold }
-/* KeywordNamespace */ .chroma .kn { color: #ffffff; font-weight: bold }
-/* KeywordPseudo */ .chroma .kp { color: #ffffff; font-weight: bold }
-/* KeywordReserved */ .chroma .kr { color: #ffffff; font-weight: bold }
-/* KeywordType */ .chroma .kt { color: #ffffff; font-weight: bold }
-/* NameAttribute */ .chroma .na { color: #007f7f }
-/* NameBuiltin */ .chroma .nb { color: #ffffff; font-weight: bold }
-/* NameTag */ .chroma .nt { font-weight: bold }
-/* LiteralDate */ .chroma .ld { color: #ffff00; font-weight: bold }
-/* LiteralString */ .chroma .s { color: #00ffff; font-weight: bold }
-/* LiteralStringAffix */ .chroma .sa { color: #00ffff; font-weight: bold }
-/* LiteralStringBacktick */ .chroma .sb { color: #00ffff; font-weight: bold }
-/* LiteralStringChar */ .chroma .sc { color: #00ffff; font-weight: bold }
-/* LiteralStringDelimiter */ .chroma .dl { color: #00ffff; font-weight: bold }
-/* LiteralStringDoc */ .chroma .sd { color: #00ffff; font-weight: bold }
-/* LiteralStringDouble */ .chroma .s2 { color: #00ffff; font-weight: bold }
-/* LiteralStringEscape */ .chroma .se { color: #00ffff; font-weight: bold }
-/* LiteralStringHeredoc */ .chroma .sh { color: #00ffff; font-weight: bold }
-/* LiteralStringInterpol */ .chroma .si { color: #00ffff; font-weight: bold }
-/* LiteralStringOther */ .chroma .sx { color: #00ffff; font-weight: bold }
-/* LiteralStringRegex */ .chroma .sr { color: #00ffff; font-weight: bold }
-/* LiteralStringSingle */ .chroma .s1 { color: #00ffff; font-weight: bold }
-/* LiteralStringSymbol */ .chroma .ss { color: #00ffff; font-weight: bold }
-/* LiteralNumber */ .chroma .m { color: #ffff00; font-weight: bold }
-/* LiteralNumberBin */ .chroma .mb { color: #ffff00; font-weight: bold }
-/* LiteralNumberFloat */ .chroma .mf { color: #ffff00; font-weight: bold }
-/* LiteralNumberHex */ .chroma .mh { color: #ffff00; font-weight: bold }
-/* LiteralNumberInteger */ .chroma .mi { color: #ffff00; font-weight: bold }
-/* LiteralNumberIntegerLong */ .chroma .il { color: #ffff00; font-weight: bold }
-/* LiteralNumberOct */ .chroma .mo { color: #ffff00; font-weight: bold }
-/* Comment */ .chroma .c { color: #007f7f }
-/* CommentHashbang */ .chroma .ch { color: #007f7f }
-/* CommentMultiline */ .chroma .cm { color: #007f7f }
-/* CommentSingle */ .chroma .c1 { color: #007f7f }
-/* CommentSpecial */ .chroma .cs { color: #007f7f }
-/* CommentPreproc */ .chroma .cp { color: #00ff00; font-weight: bold }
-/* CommentPreprocFile */ .chroma .cpf { color: #00ff00; font-weight: bold }
-/* GenericHeading */ .chroma .gh { font-weight: bold }
-/* GenericStrong */ .chroma .gs { font-weight: bold }
-/* GenericSubheading */ .chroma .gu { font-weight: bold }
-/* GenericUnderline */ .chroma .gl { text-decoration: underline }
-body { color: #e5e5e5; background-color: #000000; }
-</style><body class="chroma">
-<pre class="chroma">
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="p">!</span><span class="nx">alias</span> <span class="nx">Requests</span><span class="p">:</span>
-        <span class="nx">sequence</span> <span class="nx">of</span> <span class="nx">Request</span></pre>
-</body>
-</html>
-""",DocsRendered= """<p>Use the <code>!alias</code> keyword to alias to another name</p>
+        <span class="nx">sequence</span> <span class="nx">of</span> <span class="nx">Request</span></pre>""",DocsRendered= """<p>Use the <code>!alias</code> keyword to alias to another name</p>
 """, CodeForJs = """    !alias Requests:
         sequence of Request
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<html>
-<style type="text/css">
-/* Background */ .chroma { color: #e5e5e5; background-color: #000000 }
-/* Error */ .chroma .err { color: #ff0000 }
-/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
-/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; width: auto; overflow: auto; display: block; }
-/* LineHighlight */ .chroma .hl { display: block; width: 100%;background-color: #191919 }
-/* LineNumbersTable */ .chroma .lnt { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* LineNumbers */ .chroma .ln { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* Keyword */ .chroma .k { color: #ffffff; font-weight: bold }
-/* KeywordConstant */ .chroma .kc { color: #ffffff; font-weight: bold }
-/* KeywordDeclaration */ .chroma .kd { color: #ffffff; font-weight: bold }
-/* KeywordNamespace */ .chroma .kn { color: #ffffff; font-weight: bold }
-/* KeywordPseudo */ .chroma .kp { color: #ffffff; font-weight: bold }
-/* KeywordReserved */ .chroma .kr { color: #ffffff; font-weight: bold }
-/* KeywordType */ .chroma .kt { color: #ffffff; font-weight: bold }
-/* NameAttribute */ .chroma .na { color: #007f7f }
-/* NameBuiltin */ .chroma .nb { color: #ffffff; font-weight: bold }
-/* NameTag */ .chroma .nt { font-weight: bold }
-/* LiteralDate */ .chroma .ld { color: #ffff00; font-weight: bold }
-/* LiteralString */ .chroma .s { color: #00ffff; font-weight: bold }
-/* LiteralStringAffix */ .chroma .sa { color: #00ffff; font-weight: bold }
-/* LiteralStringBacktick */ .chroma .sb { color: #00ffff; font-weight: bold }
-/* LiteralStringChar */ .chroma .sc { color: #00ffff; font-weight: bold }
-/* LiteralStringDelimiter */ .chroma .dl { color: #00ffff; font-weight: bold }
-/* LiteralStringDoc */ .chroma .sd { color: #00ffff; font-weight: bold }
-/* LiteralStringDouble */ .chroma .s2 { color: #00ffff; font-weight: bold }
-/* LiteralStringEscape */ .chroma .se { color: #00ffff; font-weight: bold }
-/* LiteralStringHeredoc */ .chroma .sh { color: #00ffff; font-weight: bold }
-/* LiteralStringInterpol */ .chroma .si { color: #00ffff; font-weight: bold }
-/* LiteralStringOther */ .chroma .sx { color: #00ffff; font-weight: bold }
-/* LiteralStringRegex */ .chroma .sr { color: #00ffff; font-weight: bold }
-/* LiteralStringSingle */ .chroma .s1 { color: #00ffff; font-weight: bold }
-/* LiteralStringSymbol */ .chroma .ss { color: #00ffff; font-weight: bold }
-/* LiteralNumber */ .chroma .m { color: #ffff00; font-weight: bold }
-/* LiteralNumberBin */ .chroma .mb { color: #ffff00; font-weight: bold }
-/* LiteralNumberFloat */ .chroma .mf { color: #ffff00; font-weight: bold }
-/* LiteralNumberHex */ .chroma .mh { color: #ffff00; font-weight: bold }
-/* LiteralNumberInteger */ .chroma .mi { color: #ffff00; font-weight: bold }
-/* LiteralNumberIntegerLong */ .chroma .il { color: #ffff00; font-weight: bold }
-/* LiteralNumberOct */ .chroma .mo { color: #ffff00; font-weight: bold }
-/* Comment */ .chroma .c { color: #007f7f }
-/* CommentHashbang */ .chroma .ch { color: #007f7f }
-/* CommentMultiline */ .chroma .cm { color: #007f7f }
-/* CommentSingle */ .chroma .c1 { color: #007f7f }
-/* CommentSpecial */ .chroma .cs { color: #007f7f }
-/* CommentPreproc */ .chroma .cp { color: #00ff00; font-weight: bold }
-/* CommentPreprocFile */ .chroma .cpf { color: #00ff00; font-weight: bold }
-/* GenericHeading */ .chroma .gh { font-weight: bold }
-/* GenericStrong */ .chroma .gs { font-weight: bold }
-/* GenericSubheading */ .chroma .gu { font-weight: bold }
-/* GenericUnderline */ .chroma .gl { text-decoration: underline }
-body { color: #e5e5e5; background-color: #000000; }
-</style><body class="chroma">
-<pre class="chroma">
-    <span class="nf">endpoint</span><span class="p">(</span><span class="nx">input</span> <span class="p">&lt;:</span> <span class="nx">Request</span><span class="p">):</span></pre>
-</body>
-</html>
-""",DocsRendered= """<p>Specify an endpoint as the next indent.</p>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
+    <span class="nf">endpoint</span><span class="p">(</span><span class="nx">input</span> <span class="p">&lt;:</span> <span class="nx">Request</span><span class="p">):</span></pre>""",DocsRendered= """<p>Specify an endpoint as the next indent.</p>
 """, CodeForJs = """    endpoint(input <: Request):
 """},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<html>
-<style type="text/css">
-/* Background */ .chroma { color: #e5e5e5; background-color: #000000 }
-/* Error */ .chroma .err { color: #ff0000 }
-/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
-/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; width: auto; overflow: auto; display: block; }
-/* LineHighlight */ .chroma .hl { display: block; width: 100%;background-color: #191919 }
-/* LineNumbersTable */ .chroma .lnt { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* LineNumbers */ .chroma .ln { margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
-/* Keyword */ .chroma .k { color: #ffffff; font-weight: bold }
-/* KeywordConstant */ .chroma .kc { color: #ffffff; font-weight: bold }
-/* KeywordDeclaration */ .chroma .kd { color: #ffffff; font-weight: bold }
-/* KeywordNamespace */ .chroma .kn { color: #ffffff; font-weight: bold }
-/* KeywordPseudo */ .chroma .kp { color: #ffffff; font-weight: bold }
-/* KeywordReserved */ .chroma .kr { color: #ffffff; font-weight: bold }
-/* KeywordType */ .chroma .kt { color: #ffffff; font-weight: bold }
-/* NameAttribute */ .chroma .na { color: #007f7f }
-/* NameBuiltin */ .chroma .nb { color: #ffffff; font-weight: bold }
-/* NameTag */ .chroma .nt { font-weight: bold }
-/* LiteralDate */ .chroma .ld { color: #ffff00; font-weight: bold }
-/* LiteralString */ .chroma .s { color: #00ffff; font-weight: bold }
-/* LiteralStringAffix */ .chroma .sa { color: #00ffff; font-weight: bold }
-/* LiteralStringBacktick */ .chroma .sb { color: #00ffff; font-weight: bold }
-/* LiteralStringChar */ .chroma .sc { color: #00ffff; font-weight: bold }
-/* LiteralStringDelimiter */ .chroma .dl { color: #00ffff; font-weight: bold }
-/* LiteralStringDoc */ .chroma .sd { color: #00ffff; font-weight: bold }
-/* LiteralStringDouble */ .chroma .s2 { color: #00ffff; font-weight: bold }
-/* LiteralStringEscape */ .chroma .se { color: #00ffff; font-weight: bold }
-/* LiteralStringHeredoc */ .chroma .sh { color: #00ffff; font-weight: bold }
-/* LiteralStringInterpol */ .chroma .si { color: #00ffff; font-weight: bold }
-/* LiteralStringOther */ .chroma .sx { color: #00ffff; font-weight: bold }
-/* LiteralStringRegex */ .chroma .sr { color: #00ffff; font-weight: bold }
-/* LiteralStringSingle */ .chroma .s1 { color: #00ffff; font-weight: bold }
-/* LiteralStringSymbol */ .chroma .ss { color: #00ffff; font-weight: bold }
-/* LiteralNumber */ .chroma .m { color: #ffff00; font-weight: bold }
-/* LiteralNumberBin */ .chroma .mb { color: #ffff00; font-weight: bold }
-/* LiteralNumberFloat */ .chroma .mf { color: #ffff00; font-weight: bold }
-/* LiteralNumberHex */ .chroma .mh { color: #ffff00; font-weight: bold }
-/* LiteralNumberInteger */ .chroma .mi { color: #ffff00; font-weight: bold }
-/* LiteralNumberIntegerLong */ .chroma .il { color: #ffff00; font-weight: bold }
-/* LiteralNumberOct */ .chroma .mo { color: #ffff00; font-weight: bold }
-/* Comment */ .chroma .c { color: #007f7f }
-/* CommentHashbang */ .chroma .ch { color: #007f7f }
-/* CommentMultiline */ .chroma .cm { color: #007f7f }
-/* CommentSingle */ .chroma .c1 { color: #007f7f }
-/* CommentSpecial */ .chroma .cs { color: #007f7f }
-/* CommentPreproc */ .chroma .cp { color: #00ff00; font-weight: bold }
-/* CommentPreprocFile */ .chroma .cpf { color: #00ff00; font-weight: bold }
-/* GenericHeading */ .chroma .gh { font-weight: bold }
-/* GenericStrong */ .chroma .gs { font-weight: bold }
-/* GenericSubheading */ .chroma .gu { font-weight: bold }
-/* GenericUnderline */ .chroma .gl { text-decoration: underline }
-body { color: #e5e5e5; background-color: #000000; }
-</style><body class="chroma">
-<pre class="chroma">
-        <span class="k">return</span> <span class="nx">Requests</span></pre>
-</body>
-</html>
-""",DocsRendered= """<p>Specify a return type for the endpoint. Anything after the return is considered a payload.</p>
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
+        <span class="k">return</span> <span class="nx">Requests</span></pre>""",DocsRendered= """<p>Specify a return type for the endpoint. Anything after the return is considered a payload.</p>
 """, CodeForJs = """        return Requests
 """},
 
