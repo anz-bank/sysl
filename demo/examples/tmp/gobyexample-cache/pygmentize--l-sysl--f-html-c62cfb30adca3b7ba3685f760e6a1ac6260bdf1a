@@ -1,4 +1,0 @@
-<div class="highlight"><pre><span class="nx">App</span><span class="p">:</span>
-    <span class="k">!type</span> <span class="nx">Order</span><span class="p">:</span>
-        <span class="nx">order_id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
-</pre></div>

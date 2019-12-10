@@ -1,6 +1,0 @@
-<div class="highlight"><pre><span class="nx">IntegratedSystem</span><span class="p">:</span>
-    <span class="nx">integrated_endpoint_1</span><span class="p">:</span>
-        <span class="nx">System1</span> <span class="o">&lt;-</span> <span class="nx">endpoint</span>
-    <span class="nx">integrated_endpoint_2</span><span class="p">:</span>
-        <span class="nx">System2</span> <span class="o">&lt;-</span> <span class="nx">endpoint</span>
-</pre></div>

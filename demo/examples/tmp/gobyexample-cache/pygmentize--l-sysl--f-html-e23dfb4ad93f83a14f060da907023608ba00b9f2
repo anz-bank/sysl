@@ -1,3 +1,0 @@
-<div class="highlight"><pre>    <span class="k">!alias</span> <span class="nx">Requests</span><span class="p">:</span>
-        <span class="nx">sequence</span> <span class="nx">of</span> <span class="nx">Request</span>
-</pre></div>

@@ -8,11 +8,11 @@ weight = 7
 topic = "Diagrams"
 Images = [
   
-  "/assets/byexample/images/hello-world2.png",
+  "../../docs/website/static/assets/byexample/images/data-model-diagrams6.png",
   
 ]
 
-ID = "data-model-diagrams.md"
+ID = "data-model-diagrams"
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example will use a simple system and start using the sysl command to generate diagrams.</p>

@@ -25,8 +25,10 @@ const siteDir = syslRoot + "docs/website/content/docs/byexample/"
 const assetDir = syslRoot + "docs/website/static/assets/byexample/"
 const pygmentizeBin = syslRoot + "docs/website/byexample/vendor/pygments/pygmentize"
 const templates = syslRoot + "docs/website/byexample/templates"
-const cacheDir = "./tmp/gobyexample-cache"
+const cacheDir = "./.tmp/gobyexample-cache"
 const orderingfile = "ordering.yaml"
+
+var imageFiles = []string{".png", ".svg"}
 
 func verbose() bool {
 	return len(os.Getenv("VERBOSE")) > 0
@@ -246,6 +248,11 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string) {
 	}
 	return segs, filecontent
 }
+
+// unmarshalYaml unmarshals a yaml file of form
+// key1:
+// 		- value 1
+// 		- value 2
 func unmarshalYaml(filename string) map[string][]string {
 	source, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -258,33 +265,31 @@ func unmarshalYaml(filename string) map[string][]string {
 	}
 	return this
 }
+
 func parseExamples() []*Example {
-	examples := make([]*Example, 0)
-	var exampleNames []string
+	var examples []*Example
 	ordering := unmarshalYaml(orderingfile)
-	i := 0
-	for key, value := range ordering {
-		for _, exampleName := range value {
-			i++
-			if verbose() {
-				fmt.Printf("Processing %s [%d/%d]\n", exampleName, i+1, len(exampleNames))
-			}
+	weight := 0
+	for topic, tutorial := range ordering {
+		for _, exampleName := range tutorial {
+			weight++
 			example := Example{Name: exampleName}
 			exampleID := strings.ToLower(exampleName)
 			exampleID = strings.Replace(exampleID, " ", "-", -1)
 			exampleID = strings.Replace(exampleID, "/", "-", -1)
 			exampleID = strings.Replace(exampleID, "'", "", -1)
 			exampleID = dashPat.ReplaceAllString(exampleID, "-")
-			example.ID = exampleID + ".md"
-			example.Weight = i + 1
-			example.Topic = key
+			example.ID = exampleID
+			example.Weight = weight + 1
+			example.Topic = topic
 			example.Segs = make([][]*Seg, 0)
 			sourcePaths := mustGlob(exampleID + "/*")
+
 			for _, sourcePath := range sourcePaths {
-				if strings.HasSuffix(sourcePath, ".png") {
-					destination := assetDir + "images/" + exampleID + strconv.Itoa(i) + ".png"
+				if ok, ext := isImageFile(sourcePath); ok {
+					destination := assetDir + "images/" + exampleID + strconv.Itoa(weight) + ext
 					copyFile(sourcePath, destination)
-					example.Images = append(example.Images, "/assets/byexample/images/hello-world2.png")
+					example.Images = append(example.Images, assetDir+"images/"+exampleID+strconv.Itoa(weight)+ext)
 				} else {
 					sourceSegs, filecontents := parseAndRenderSegs(sourcePath)
 					if filecontents != "" {
@@ -295,7 +300,7 @@ func parseExamples() []*Example {
 			}
 			newCodeHash := sha1Sum(example.GoCode)
 			if example.GoCodeHash != newCodeHash {
-				example.URLHash = resetURLHashFile(newCodeHash, example.GoCode, example.ID+"/"+example.ID+".hash")
+
 			}
 			examples = append(examples, &example)
 		}
@@ -321,12 +326,19 @@ func renderExamples(examples []*Example) {
 	_, err := exampleTmpl.Parse(mustReadFile(templates + "/example.tmpl"))
 	check(err)
 	for _, example := range examples {
-		exampleF, err := os.Create(siteDir + "/" + example.ID)
+		exampleF, err := os.Create(siteDir + example.ID + ".md")
 		check(err)
 		exampleTmpl.Execute(exampleF, example)
 	}
 }
-
+func isImageFile(filename string) (bool, string) {
+	for _, extension := range imageFiles {
+		if strings.HasSuffix(filename, extension) {
+			return true, extension
+		}
+	}
+	return false, ""
+}
 func main() {
 	ensureDir(siteDir)
 	examples := parseExamples()

@@ -1,9 +1,0 @@
-<div class="highlight"><pre>    <span class="k">!type</span> <span class="nx">Request</span><span class="p">:</span>
-        <span class="nx">userId</span> <span class="p">&lt;:</span> <span class="kt">int</span>
-        <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
-        <span class="nx">title</span> <span class="p">&lt;:</span> <span class="kt">string</span>
-        <span class="nx">completed</span> <span class="p">&lt;:</span> <span class="kt">bool</span>
-    
-    <span class="k">!type</span> <span class="nx">ErrorResponse</span><span class="p">:</span>
-        <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span>
-</pre></div>

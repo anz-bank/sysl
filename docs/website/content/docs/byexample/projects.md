@@ -10,7 +10,7 @@ Images = [
   
 ]
 
-ID = "projects.md"
+ID = "projects"
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example we will use the &ldquo;call&rdquo; syntax to link two applications together.</p>

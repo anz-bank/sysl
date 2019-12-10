@@ -10,7 +10,7 @@ Images = [
   
 ]
 
-ID = "data-types.md"
+ID = "data-types"
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Our first program will make a simple &ldquo;Hello world&rdquo; application with two endpoints</p>

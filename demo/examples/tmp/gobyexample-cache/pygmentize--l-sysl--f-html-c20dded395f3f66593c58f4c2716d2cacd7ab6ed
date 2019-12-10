@@ -1,7 +1,0 @@
-<div class="highlight"><pre><span class="nx">MobileApp</span><span class="p">:</span>
-    <span class="nx">Login</span><span class="p">:</span>
-        <span class="nx">Server</span> <span class="o">&lt;-</span> <span class="nx">Login</span>
-    <span class="k">!type</span> <span class="nx">LoginData</span><span class="p">:</span>
-        <span class="nx">username</span> <span class="p">&lt;:</span> <span class="kt">string</span>
-        <span class="nx">password</span> <span class="p">&lt;:</span> <span class="kt">string</span>
-</pre></div>

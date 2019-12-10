@@ -10,7 +10,7 @@ Images = [
   
 ]
 
-ID = "hello-world.md"
+ID = "hello-world"
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Our first program will make a simple &ldquo;Hello world&rdquo; application with two endpoints</p>
