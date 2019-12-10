@@ -20,14 +20,13 @@ import (
 // siteDir is the target directory into which the HTML gets generated. Its
 // default is set here but can be changed by an argument passed into the
 // program.
-const siteDir = "../website/content/docs/byexample/"
-const assetDir = "../website/static/assets/byexample/"
-const orderingfile = "examples/ordering.yaml"
-
-var cacheDir = "./tmp/gobyexample-cache"
-var pygmentizeBin = "./vendor/pygments/pygmentize"
-
-const templates = "./templates"
+const syslRoot = "../../"
+const siteDir = syslRoot + "docs/website/content/docs/byexample/"
+const assetDir = syslRoot + "docs/website/static/assets/byexample/"
+const pygmentizeBin = syslRoot + "docs/website/byexample/vendor/pygments/pygmentize"
+const templates = syslRoot + "docs/website/byexample/templates"
+const cacheDir = "./tmp/gobyexample-cache"
+const orderingfile = "ordering.yaml"
 
 func verbose() bool {
 	return len(os.Getenv("VERBOSE")) > 0
@@ -265,19 +264,8 @@ func unmarshalYaml(filename string) map[string][]string {
 func parseExamples() []*Example {
 	examples := make([]*Example, 0)
 	var exampleNames []string
-	// files, err := ioutil.ReadDir("examples/")
-	// if err != nil {
-	// 	panic(err)
-	// }
 	ordering := unmarshalYaml(orderingfile)
 	i := 0
-
-	// for _, line := range value {
-	// 	if line != "" && !strings.HasPrefix(line, "#") {
-	// 		exampleNames = append(exampleNames, line)
-	// 	}
-	// }
-	// }
 	for key, value := range ordering {
 		for _, exampleName := range value {
 			i++
@@ -294,7 +282,7 @@ func parseExamples() []*Example {
 			example.Weight = i + 1
 			example.Topic = key
 			example.Segs = make([][]*Seg, 0)
-			sourcePaths := mustGlob("examples/" + exampleID + "/*")
+			sourcePaths := mustGlob(exampleID + "/*")
 			for _, sourcePath := range sourcePaths {
 				if strings.HasSuffix(sourcePath, ".png") {
 					destination := assetDir + "images/" + exampleID + strconv.Itoa(i) + ".png"
@@ -310,7 +298,7 @@ func parseExamples() []*Example {
 			}
 			newCodeHash := sha1Sum(example.GoCode)
 			if example.GoCodeHash != newCodeHash {
-				example.URLHash = resetURLHashFile(newCodeHash, example.GoCode, "examples/"+example.ID+"/"+example.ID+".hash")
+				example.URLHash = resetURLHashFile(newCodeHash, example.GoCode, example.ID+"/"+example.ID+".hash")
 			}
 			examples = append(examples, &example)
 		}
@@ -328,25 +316,12 @@ func parseExamples() []*Example {
 	return examples
 }
 
-func renderIndex(examples []*Example) {
-	if verbose() {
-		fmt.Println("Rendering index")
-	}
-	indexTmpl := template.New("index")
-	_, err := indexTmpl.Parse(mustReadFile("templates/index.tmpl"))
-	check(err)
-	indexF, err := os.Create(siteDir + "/index.html")
-	check(err)
-	err = indexTmpl.Execute(indexF, examples)
-	check(err)
-}
-
 func renderExamples(examples []*Example) {
 	if verbose() {
 		fmt.Println("Rendering examples")
 	}
 	exampleTmpl := template.New("example")
-	_, err := exampleTmpl.Parse(mustReadFile("templates/example.tmpl"))
+	_, err := exampleTmpl.Parse(mustReadFile(templates + "/example.tmpl"))
 	check(err)
 	for _, example := range examples {
 		exampleF, err := os.Create(siteDir + "/" + example.ID)

@@ -1,0 +1,6 @@
+<div class="highlight"><pre><span class="nx">Project</span> <span class="p">[</span><span class="nx">appfmt</span><span class="p">=</span><span class="s">&quot;%(appname)&quot;</span><span class="p">]:</span>
+    <span class="nx">_</span><span class="p">:</span>
+        <span class="nx">IntegratedSystem</span>
+        <span class="nx">System1</span>
+        <span class="nx">System2</span>
+</pre></div>

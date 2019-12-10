@@ -1,4 +1,0 @@
-<div class="highlight"><pre><span class="nx">Server</span><span class="p">:</span>
-    <span class="nx">Login</span><span class="p">(</span><span class="nx">data</span> <span class="p">&lt;:</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginData</span><span class="p">):</span>
-        <span class="nx">build</span> <span class="nx">query</span>
-</pre></div>

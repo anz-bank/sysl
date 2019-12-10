@@ -1,7 +1,0 @@
-<div class="highlight"><pre><span class="nx">DB</span><span class="p">:</span>
-    <span class="nx">Query</span><span class="p">:</span>
-        <span class="nx">lookup</span> <span class="nx">data</span>
-        <span class="k">return</span> <span class="nx">data</span>
-        <span class="nx">Save</span><span class="p">:</span>
-            <span class="o">...</span>
-</pre></div>

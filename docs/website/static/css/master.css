@@ -838,6 +838,7 @@ body.page-account #hero {
     background: #f8f8f8;
     padding: 68px 24px 60px 24px;
     margin-bottom: 20px; }
+
     #components .item:hover {
       -moz-transition: all linear 0.2s;
       transition: all linear 0.2s;
