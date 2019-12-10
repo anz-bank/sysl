@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -30,8 +29,10 @@ const orderingfile = "ordering.yaml"
 
 var imageFiles = []string{".png", ".svg"}
 
-func verbose() bool {
-	return len(os.Getenv("VERBOSE")) > 0
+func main() {
+	ensureDir(siteDir)
+	examples := parseExamples()
+	renderExamples(examples)
 }
 
 func check(err error) {
@@ -158,25 +159,6 @@ type Example struct {
 	NextExample                 *Example
 }
 
-func parseHashFile(sourcePath string) (string, string) {
-	lines := readLines(sourcePath)
-	return lines[0], lines[1]
-}
-
-func resetURLHashFile(codehash, code, sourcePath string) string {
-	payload := strings.NewReader(code)
-	resp, err := http.Post("https://play.golang.org/share", "text/plain", payload)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	urlkey := string(body)
-	data := fmt.Sprintf("%s\n%s\n", codehash, urlkey)
-	ioutil.WriteFile(sourcePath, []byte(data), 0644)
-	return urlkey
-}
-
 func parseSegs(sourcePath string) ([]*Seg, string) {
 	var lines []string
 	// Convert tabs to spaces for uniform rendering.
@@ -255,14 +237,10 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string) {
 // 		- value 2
 func unmarshalYaml(filename string) map[string][]string {
 	source, err := ioutil.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	this := make(map[string][]string)
 	err = yaml.Unmarshal(source, this)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	return this
 }
 
@@ -319,9 +297,6 @@ func parseExamples() []*Example {
 }
 
 func renderExamples(examples []*Example) {
-	if verbose() {
-		fmt.Println("Rendering examples")
-	}
 	exampleTmpl := template.New("example")
 	_, err := exampleTmpl.Parse(mustReadFile(templates + "/example.tmpl"))
 	check(err)
@@ -338,9 +313,4 @@ func isImageFile(filename string) (bool, string) {
 		}
 	}
 	return false, ""
-}
-func main() {
-	ensureDir(siteDir)
-	examples := parseExamples()
-	renderExamples(examples)
 }
