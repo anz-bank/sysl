@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/sha1"
 	"fmt"
-	"github.com/russross/blackfriday"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -13,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+
+	"github.com/russross/blackfriday"
 )
 
 // siteDir is the target directory into which the HTML gets generated. Its
@@ -20,6 +21,7 @@ import (
 // program.
 const siteDir = "../website/content/docs/byexample/"
 const assetDir = "../website/static/assets/byexample/"
+const orderingfile = "examples/ordering.txt"
 
 var cacheDir = "./tmp/gobyexample-cache"
 var pygmentizeBin = "./vendor/pygments/pygmentize"
@@ -145,6 +147,7 @@ type Seg struct {
 // Example is info extracted from an example file
 type Example struct {
 	ID, Name                    string
+	Weight                      int
 	Images                      []string
 	GoCode, GoCodeHash, URLHash string
 	Segs                        [][]*Seg
@@ -248,12 +251,20 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string) {
 
 func parseExamples() []*Example {
 	examples := make([]*Example, 0)
-	files, err := ioutil.ReadDir("examples/")
-	if err != nil {
-		panic(err)
+	var exampleNames []string
+	// files, err := ioutil.ReadDir("examples/")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	for _, line := range readLines(orderingfile) {
+		if line != "" && !strings.HasPrefix(line, "#") {
+			exampleNames = append(exampleNames, line)
+		}
 	}
-	for _, file := range files {
-		exampleName := file.Name()
+	for i, exampleName := range exampleNames {
+		if verbose() {
+			fmt.Printf("Processing %s [%d/%d]\n", exampleName, i+1, len(exampleNames))
+		}
 		example := Example{Name: exampleName}
 		exampleID := strings.ToLower(exampleName)
 		exampleID = strings.Replace(exampleID, " ", "-", -1)
@@ -261,27 +272,14 @@ func parseExamples() []*Example {
 		exampleID = strings.Replace(exampleID, "'", "", -1)
 		exampleID = dashPat.ReplaceAllString(exampleID, "-")
 		example.ID = exampleID + ".md"
+		example.Weight = i + 1
 		example.Segs = make([][]*Seg, 0)
 		sourcePaths := mustGlob("examples/" + exampleID + "/*")
-		for i := range sourcePaths {
-			sourcePath := sourcePaths[len(sourcePaths)-i-1]
+		for _, sourcePath := range sourcePaths {
 			if strings.HasSuffix(sourcePath, ".png") {
 				destination := assetDir + "images/" + exampleID + strconv.Itoa(i) + ".png"
 				copyFile(sourcePath, destination)
 				example.Images = append(example.Images, "/assets/byexample/images/hello-world2.png")
-				// infile, err := os.Open(sourcePath)
-				// if err != nil {
-				// 	panic("opening image failed")
-				// }
-				// defer infile.Close()
-
-				// src, _, err := image.Decode(infile)
-				// if err != nil {
-				// 	println(sourcePath)
-				// 	panic(err)
-				// }
-				// example.Images = append(example.Images, src)
-
 			} else {
 				sourceSegs, filecontents := parseAndRenderSegs(sourcePath)
 				if filecontents != "" {
@@ -290,10 +288,10 @@ func parseExamples() []*Example {
 				example.Segs = append(example.Segs, sourceSegs)
 			}
 		}
-		// newCodeHash := sha1Sum(example.GoCode)
-		// if example.GoCodeHash != newCodeHash {
-		// 	example.URLHash = resetURLHashFile(newCodeHash, example.GoCode, "examples/"+example.ID+"/"+example.ID+".hash")
-		// }
+		newCodeHash := sha1Sum(example.GoCode)
+		if example.GoCodeHash != newCodeHash {
+			example.URLHash = resetURLHashFile(newCodeHash, example.GoCode, "examples/"+example.ID+"/"+example.ID+".hash")
+		}
 		examples = append(examples, &example)
 	}
 	for i, example := range examples {
