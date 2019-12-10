@@ -162,9 +162,6 @@ func parseHashFile(sourcePath string) (string, string) {
 }
 
 func resetURLHashFile(codehash, code, sourcePath string) string {
-	if verbose() {
-		fmt.Println("  Sending request to play.golang.org")
-	}
 	payload := strings.NewReader(code)
 	resp, err := http.Post("https://play.golang.org/share", "text/plain", payload)
 	if err != nil {
@@ -237,13 +234,13 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string) {
 		}
 		if seg.Code != "" {
 			seg.CodeRendered = cachedPygmentize(lexer, seg.Code)
+
 			// adding the content to the js code for copying to the clipboard
 			if strings.HasSuffix(sourcePath, ".sysl") {
 				seg.CodeForJs = strings.Trim(seg.Code, "\n") + "\n"
 			}
 		}
 	}
-	// we are only interested in the 'go' code to pass to play.golang.org
 	if lexer != "sysl" {
 		filecontent = ""
 	}
