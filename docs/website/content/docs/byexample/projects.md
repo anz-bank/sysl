@@ -4,7 +4,7 @@ title= "Projects"
 draft= false
 description= ""
 layout= "byexample"
-weight = 4
+weight = 7
 topic = "Basics"
 Images = [
   

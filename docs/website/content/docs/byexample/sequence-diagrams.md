@@ -4,11 +4,11 @@ title= "Sequence Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 5
+weight = 2
 topic = "Diagrams"
 Images = [
   
-  "/assets/byexample/images/sequence-diagrams4.png",
+  "/assets/byexample/images/sequence-diagrams1.png",
   
 ]
 
