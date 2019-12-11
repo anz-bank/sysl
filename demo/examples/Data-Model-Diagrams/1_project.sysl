@@ -5,7 +5,7 @@ Project:
     _:
         App
         
-# this is a comment
+
 App:
     !type Order:
         order_id <: int
