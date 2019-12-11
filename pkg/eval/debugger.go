@@ -15,7 +15,7 @@ import (
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/parse"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 )
 
 type DebugFunc func(scope *Scope, app *sysl.Application, expr *sysl.Expr) error

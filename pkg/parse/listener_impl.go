@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	parser "github.com/anz-bank/sysl/pkg/grammar"
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 )
