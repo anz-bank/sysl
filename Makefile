@@ -64,7 +64,7 @@ clean: ## Clean temp and build files
 	rm -rf release dist pkg/grammar/temp
 
 # Autogen rules
-ANTLR = java -jar pkg/lib/antlr-4.7-complete.jar
+ANTLR = java -jar pkg/antlr-4.7-complete.jar
 GRAMMARS = pkg/grammar/SyslParser.g4 \
 		   pkg/grammar/SyslLexer.g4
 
