@@ -3,10 +3,11 @@ title: "Conventions"
 date: 2019
 weight: 3
 sequence: true
+toc: true
 ---
 
-Multiple Declarations
-===
+## Multiple Declarations
+
 Sysl allows you to define an application in multiple places. There is no redefinition error in sysl.
 
 ```
@@ -25,13 +26,13 @@ UserService:
   Register: ...
 ```
 
-### Projects
+## Projects
 Most of the changes to your system will be done as part of a well defined `project` or a `software release`.
 
 `TODO: Elaborate`
 
-Imports
-===
+## Imports
+
 
 To keep things modular, sysl allows you to import definitions created in other `.sysl` files.
 
@@ -44,7 +45,7 @@ Server:
 
 and you use `import` in `client.sysl`
 
-```js
+```
 import server
 
 Client:

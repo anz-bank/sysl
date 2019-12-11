@@ -195,7 +195,7 @@ Server:
 
 and you use `import` in `client.sysl`
 
-```js
+```
 import server
 
 Client:

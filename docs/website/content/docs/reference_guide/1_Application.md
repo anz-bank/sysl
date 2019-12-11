@@ -9,8 +9,8 @@ Sysl allows you to specify Application behaviour and Data Models that are shared
 
 To explain these concepts, we will design an application called `MobileApp` which interacts with another application called `Server`.
 
-Applications
-====
+## Applications
+
 
 An __application__ is an independent entity that provides services via its various __endpoints__.
 
@@ -30,8 +30,8 @@ Notes about sysl syntax:
     * All lines after `:` should be indented. The only exception to this rule is when you want to use the shortcut `...`.
     * The `...` (aka shortcut) means that we don't have enough details yet to describe how this endpoint behaves. Sysl allows you to take an iterative approach in documenting the behaviour. You add more as you know more.
 
-Endpoints
-===
+## Endpoints
+
 
 Endpoints are the services that an application offers. Let's add endpoints to our `MobileApp`.
 ```
@@ -71,8 +71,8 @@ Notes about sysl syntax:
   * Data types (like `LoginData`) belong to the app under which it is defined.
   * Refer to the newly defined type by its fully qualified name. e.g. `Server.LoginData`.
 
-Data Types
-==== 
+## Data Types
+
 
 Sysl supports following data types out of the box.
 ```

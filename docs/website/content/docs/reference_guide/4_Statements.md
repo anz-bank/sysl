@@ -6,8 +6,8 @@ sequence: true
 ---
 
 
-Statements
-==== 
+## Statements
+
 Our `MobileApp` does not have any detail yet on how it behaves. Let's use sysl statements to describe behaviour. Sysl supports following types of statements:
   * [Text](#text)
   * [Call](#Call)
@@ -65,11 +65,11 @@ Now we have all the ingredients to draw a sequence diagram. Here is one generate
 See [Generate Diagrams](#generate-diagrams) on how to draw sequence and other types of diagrams using sysl.
 
 
-Control flows
-==== 
+## Control flows
 
-If/else
-==== 
+
+## If/else
+
 Sysl allows you to express high level of detail about your design. You can specify decisions, processing loops etc.
 
 ##### If, else
@@ -90,8 +90,8 @@ See [/assets/if-else.sysl](/assets/if-else.sysl) for complete example.
 
 ![](/assets/if-else-Seq.png)
 
-For, Loop, Until, While
-==== 
+## For, Loop, Until, While
+
 Express processing loop using FOR:
 ```
 Server:
