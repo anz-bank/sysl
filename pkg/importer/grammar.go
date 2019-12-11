@@ -8,8 +8,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
-	parser "github.com/anz-bank/sysl/pkg/naive"
-	ebnfGrammar "github.com/anz-bank/sysl/pkg/proto"
+	"github.com/anz-bank/sysl/pkg/parser"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,7 +19,7 @@ type grammarParam struct {
 
 type Grammar struct {
 	grammarParam
-	grammar *ebnfGrammar.Grammar
+	grammar *parser.Grammar
 	logger  *logrus.Logger
 	types   TypeList
 }
@@ -92,7 +91,7 @@ func (g *Grammar) writeSysl() (string, error) {
 	return syslBytes.String(), nil
 }
 
-func makeRule(rule *ebnfGrammar.Rule) ruleProcessor {
+func makeRule(rule *parser.Rule) ruleProcessor {
 	rp := ruleProcessor{
 		rule: rule,
 		deps: syslutil.MakeStrSet(),
@@ -120,7 +119,7 @@ func makeRule(rule *ebnfGrammar.Rule) ruleProcessor {
 }
 
 type ruleProcessor struct {
-	rule    *ebnfGrammar.Rule
+	rule    *parser.Rule
 	deps    syslutil.StrSet // Names of external rules which this rule depends on
 	types   TypeList
 	counter int
@@ -132,7 +131,7 @@ func (rp *ruleProcessor) newName() string {
 	return out
 }
 
-func (rp *ruleProcessor) createChoice(c *ebnfGrammar.Choice) string {
+func (rp *ruleProcessor) createChoice(c *parser.Choice) string {
 	if len(c.Sequence) == 1 {
 		return rp.buildSequence(c.Sequence[0])
 	}
@@ -148,7 +147,7 @@ func (rp *ruleProcessor) createChoice(c *ebnfGrammar.Choice) string {
 	return t.name
 }
 
-func makeSizedField(name string, q *ebnfGrammar.Quantifier) *Field {
+func makeSizedField(name string, q *parser.Quantifier) *Field {
 	field := Field{
 		Name: name,
 	}
@@ -159,16 +158,16 @@ func makeSizedField(name string, q *ebnfGrammar.Quantifier) *Field {
 		return nil
 	}
 	switch q.Union.(type) {
-	case *ebnfGrammar.Quantifier_Optional:
+	case *parser.Quantifier_Optional:
 		field.Optional = true
-	case *ebnfGrammar.Quantifier_ZeroPlus:
+	case *parser.Quantifier_ZeroPlus:
 		field.Type = nested
 		field.SizeSpec = &sizeSpec{
 			Min:     0,
 			Max:     0,
 			MaxType: OpenEnded,
 		}
-	case *ebnfGrammar.Quantifier_OnePlus:
+	case *parser.Quantifier_OnePlus:
 		field.Type = nested
 		field.SizeSpec = &sizeSpec{
 			Min:     1,
@@ -179,7 +178,7 @@ func makeSizedField(name string, q *ebnfGrammar.Quantifier) *Field {
 	return &field
 }
 
-func (rp *ruleProcessor) buildSequence(s *ebnfGrammar.Sequence) string {
+func (rp *ruleProcessor) buildSequence(s *parser.Sequence) string {
 	var fields []term
 	for _, t := range s.Term {
 		fields = append(fields, rp.buildTerm(t))
@@ -212,14 +211,14 @@ type term struct {
 	field *Field
 }
 
-func (rp *ruleProcessor) buildTerm(t *ebnfGrammar.Term) term {
+func (rp *ruleProcessor) buildTerm(t *parser.Term) term {
 	res := term{}
 	switch a := t.Atom.Union.(type) {
-	case *ebnfGrammar.Atom_String_:
+	case *parser.Atom_String_:
 		res.name = StringTypeName
-	case *ebnfGrammar.Atom_Rulename:
+	case *parser.Atom_Rulename:
 		res.name = a.Rulename.Name
-	case *ebnfGrammar.Atom_Choices:
+	case *parser.Atom_Choices:
 		res.name = rp.createChoice(a.Choices)
 	default:
 		logrus.Fatal("Unhandled Term type")

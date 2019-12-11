@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package sysl;
 
-option go_package = "github.com/anz-bank/sysl/pkg/proto;sysl";
+option go_package = "parser";
 
 import "google/protobuf/descriptor.proto";
 import "google/protobuf/empty.proto";

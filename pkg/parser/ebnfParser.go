@@ -4,29 +4,28 @@ import (
 	"encoding/json"
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto"
 	"github.com/sirupsen/logrus"
 )
 
-func makeStringAtom(str string) *sysl.Atom {
-	return &sysl.Atom{
-		Union: &sysl.Atom_String_{
+func makeStringAtom(str string) *Atom {
+	return &Atom{
+		Union: &Atom_String_{
 			String_: str,
 		},
 	}
 }
 
-func makeRuleNameAtom(ruleName string) *sysl.Atom {
-	return &sysl.Atom{
-		Union: &sysl.Atom_Rulename{
-			Rulename: &sysl.RuleName{
+func makeRuleNameAtom(ruleName string) *Atom {
+	return &Atom{
+		Union: &Atom_Rulename{
+			Rulename: &RuleName{
 				Name: ruleName,
 			},
 		},
 	}
 }
 
-func makeQuantifier(item interface{}) *sysl.Quantifier {
+func makeQuantifier(item interface{}) *Quantifier {
 	qs := item.([]interface{})
 
 	if _, quantifier := ruleSeq(qs[0], "quantifier"); quantifier != nil {
@@ -44,11 +43,11 @@ func makeQuantifier(item interface{}) *sysl.Quantifier {
 	return nil
 }
 
-func makeTerm(a *sysl.Atom, q *sysl.Quantifier) *sysl.Term {
-	return &sysl.Term{Atom: a, Quantifier: q}
+func makeTerm(a *Atom, q *Quantifier) *Term {
+	return &Term{Atom: a, Quantifier: q}
 }
 
-func makeAtom(term interface{}) *sysl.Atom {
+func makeAtom(term interface{}) *Atom {
 	atomType, atom := ruleSeq(term, "atom")
 
 	switch atomType {
@@ -68,8 +67,8 @@ func makeAtom(term interface{}) *sysl.Atom {
 			logrus.Errorf("unexpected index for choice: %d", c)
 			panic("unexpected index for rule choice")
 		}
-		return &sysl.Atom{
-			Union: &sysl.Atom_Choices{
+		return &Atom{
+			Union: &Atom_Choices{
 				Choices: buildChoice(r),
 			},
 		}
@@ -101,8 +100,8 @@ func ruleSeq(item interface{}, rulename string) (int, []interface{}) {
 	return -1, nil
 }
 
-func buildSequence(s0 []interface{}) *sysl.Sequence {
-	terms := []*sysl.Term{}
+func buildSequence(s0 []interface{}) *Sequence {
+	terms := []*Term{}
 
 	if s0 != nil {
 		for _, term := range s0[0].([]interface{}) {
@@ -115,9 +114,9 @@ func buildSequence(s0 []interface{}) *sysl.Sequence {
 	return makeSequence(terms...)
 }
 
-func buildChoice(choice []interface{}) *sysl.Choice {
+func buildChoice(choice []interface{}) *Choice {
 	_, s0 := ruleSeq(choice[0], "seq")
-	choiceS := []*sysl.Sequence{buildSequence(s0)}
+	choiceS := []*Sequence{buildSequence(s0)}
 	if len(choice) > 1 {
 		x := choice[1].([]interface{})
 		if x[0] != nil {
@@ -128,17 +127,17 @@ func buildChoice(choice []interface{}) *sysl.Choice {
 			}
 		}
 	}
-	return &sysl.Choice{Sequence: choiceS}
+	return &Choice{Sequence: choiceS}
 }
 
-func buildRule(ast interface{}) *sysl.Rule {
+func buildRule(ast interface{}) *Rule {
 	_, rule := ruleSeq(ast, "rule")
 	_, lhs := ruleSeq(rule[0], "lhs")
 	ruleName, _ := makeRule(symbolTerm(lhs[0]).tok.text)
 	_, rhs := ruleSeq(rule[2], "rhs")
 	_, choice := ruleSeq(rhs[0], "choice")
 
-	return &sysl.Rule{Name: ruleName, Choices: buildChoice(choice)}
+	return &Rule{Name: ruleName, Choices: buildChoice(choice)}
 }
 
 // grammar := rule+
@@ -149,15 +148,15 @@ func buildRule(ast interface{}) *sysl.Rule {
 // seq := term+
 // term := atom quantifier?
 // atom := STRING | ruleName | '(' choice  ')'
-func buildGrammar(name string, start string, ast []interface{}) *sysl.Grammar {
+func buildGrammar(name string, start string, ast []interface{}) *Grammar {
 	_, grammar := ruleSeq(ast[0], "grammar")
-	rules := map[string]*sysl.Rule{}
+	rules := map[string]*Rule{}
 	for _, r := range grammar[0].([]interface{}) {
 		rule := buildRule(r)
 		rules[rule.GetName().Name] = rule
 	}
 
-	return &sysl.Grammar{
+	return &Grammar{
 		Name:  name,
 		Start: start,
 		Rules: rules,
@@ -165,7 +164,7 @@ func buildGrammar(name string, start string, ast []interface{}) *sysl.Grammar {
 }
 
 // ParseEBNF Parses and build the EBNF grammar
-func ParseEBNF(ebnfText string, name string, start string) *sysl.Grammar {
+func ParseEBNF(ebnfText string, name string, start string) *Grammar {
 	p := makeParser(makeEBNF(), ebnfText)
 	actual := []token{}
 

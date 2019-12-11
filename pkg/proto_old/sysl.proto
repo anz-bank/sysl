@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package sysl;
 
-option go_package = "github.com/anz-bank/sysl/pkg/proto_old;sysl";
+option go_package = "sysl";
 
 // Deltas are diff annotations set for each major element in a model.
 // TODO: Is this really needed? Investigate protobuf diff tools.
@@ -30,7 +30,7 @@ message SourceContext {
 message Module {
     reserved 1;  // Don't know what this was before.
     map<string, Application>    apps    = 2;
-    map<string, Type>           types   = 3;
+    reserved 3; // Previously the unused "types" field
 
     SourceContext source_context = 99;
 }

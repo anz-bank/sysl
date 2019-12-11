@@ -3,7 +3,6 @@ package parser
 import (
 	"testing"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +13,7 @@ type cases struct {
 }
 
 func testParser(
-	g *sysl.Grammar,
+	g *Grammar,
 	numTerms int,
 	tokens []int,
 	text string,
