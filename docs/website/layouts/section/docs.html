@@ -1,7 +1,7 @@
 {{ define "title"}} {{ .Title}} {{end}}
 {{ define "header"}} {{ partial "header" .}} {{end}}
 {{ define "main"}}
-{{$parentDir := .Dir}}
+{{$parentDir := .File.Dir}}
 {{$this := .Page}}
 
 <div id="main">
@@ -12,7 +12,7 @@
     <div class="row gutters">
       <!-- only show pages where dir is the same as the _index.md -->
       {{ $pages := .Sections }}
-      {{ $pages := union $pages (where .Site.RegularPages ".Dir" $parentDir )}}
+      {{ $pages := union $pages (where .Site.RegularPages ".File.Dir" $parentDir )}}
       {{ range $pages}}
 
       <div class="col col-4 item">

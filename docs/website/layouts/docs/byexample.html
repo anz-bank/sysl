@@ -1,7 +1,7 @@
 {{ define "title"}} Sysl by Example: {{ .Title}} {{end}}
 {{ define "header"}} {{ partial "header" .}} {{end}}
 {{ define "main"}}
-{{$parentDir := .Dir}}
+{{$parentDir := .File.Dir}}
 {{$this := .Page}}
 {{ partial "sidebar" . }}
 {{$copyButtonActive := false}}
