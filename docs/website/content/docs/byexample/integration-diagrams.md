@@ -4,11 +4,11 @@ title= "Integration Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 3
+weight = 6
 topic = "Diagrams"
 Images = [
   
-  "/assets/byexample/images/integration-diagrams2.png",
+  "/assets/byexample/images/integration-diagrams5.png",
   
 ]
 

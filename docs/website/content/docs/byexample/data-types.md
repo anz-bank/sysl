@@ -4,7 +4,7 @@ title= "Data-types"
 draft= false
 description= ""
 layout= "byexample"
-weight = 6
+weight = 3
 topic = "Basics"
 Images = [
   

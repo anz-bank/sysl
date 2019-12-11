@@ -4,11 +4,11 @@ title= "Data Model Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 4
+weight = 7
 topic = "Diagrams"
 Images = [
   
-  "/assets/byexample/images/data-model-diagrams3.png",
+  "/assets/byexample/images/data-model-diagrams6.png",
   
 ]
 
