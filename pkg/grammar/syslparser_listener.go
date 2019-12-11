@@ -14,12 +14,6 @@ type SyslParserListener interface {
 	// EnterSize_spec is called when entering the size_spec production.
 	EnterSize_spec(c *Size_specContext)
 
-	// EnterModifier_list is called when entering the modifier_list production.
-	EnterModifier_list(c *Modifier_listContext)
-
-	// EnterModifiers is called when entering the modifiers production.
-	EnterModifiers(c *ModifiersContext)
-
 	// EnterName_str is called when entering the name_str production.
 	EnterName_str(c *Name_strContext)
 
@@ -40,9 +34,6 @@ type SyslParserListener interface {
 
 	// EnterNvp is called when entering the nvp production.
 	EnterNvp(c *NvpContext)
-
-	// EnterAttributes is called when entering the attributes production.
-	EnterAttributes(c *AttributesContext)
 
 	// EnterEntry is called when entering the entry production.
 	EnterEntry(c *EntryContext)
@@ -133,9 +124,6 @@ type SyslParserListener interface {
 
 	// EnterFacade is called when entering the facade production.
 	EnterFacade(c *FacadeContext)
-
-	// EnterDocumentation_stmts is called when entering the documentation_stmts production.
-	EnterDocumentation_stmts(c *Documentation_stmtsContext)
 
 	// EnterVar_in_curly is called when entering the var_in_curly production.
 	EnterVar_in_curly(c *Var_in_curlyContext)
@@ -551,12 +539,6 @@ type SyslParserListener interface {
 	// ExitSize_spec is called when exiting the size_spec production.
 	ExitSize_spec(c *Size_specContext)
 
-	// ExitModifier_list is called when exiting the modifier_list production.
-	ExitModifier_list(c *Modifier_listContext)
-
-	// ExitModifiers is called when exiting the modifiers production.
-	ExitModifiers(c *ModifiersContext)
-
 	// ExitName_str is called when exiting the name_str production.
 	ExitName_str(c *Name_strContext)
 
@@ -577,9 +559,6 @@ type SyslParserListener interface {
 
 	// ExitNvp is called when exiting the nvp production.
 	ExitNvp(c *NvpContext)
-
-	// ExitAttributes is called when exiting the attributes production.
-	ExitAttributes(c *AttributesContext)
 
 	// ExitEntry is called when exiting the entry production.
 	ExitEntry(c *EntryContext)
@@ -670,9 +649,6 @@ type SyslParserListener interface {
 
 	// ExitFacade is called when exiting the facade production.
 	ExitFacade(c *FacadeContext)
-
-	// ExitDocumentation_stmts is called when exiting the documentation_stmts production.
-	ExitDocumentation_stmts(c *Documentation_stmtsContext)
 
 	// ExitVar_in_curly is called when exiting the var_in_curly production.
 	ExitVar_in_curly(c *Var_in_curlyContext)

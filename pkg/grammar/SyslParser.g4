@@ -4,9 +4,6 @@ options { tokenVocab=SyslLexer; }
 
 modifier        : TILDE Name (PLUS Name)*;
 size_spec       : OPEN_PAREN DIGITS ( DOT DIGITS)? CLOSE_PAREN;
-modifier_list   : modifier (COMMA modifier)*;
-
-modifiers       : SQ_OPEN modifier_list SQ_CLOSE;
 name_str        : Name|TEXT_LINE|E_Name;
 
 reference       : app_name ((E_DOT | DOT) name_str)+;
@@ -15,7 +12,6 @@ quoted_string       : QSTRING;
 array_of_strings    : SQ_OPEN quoted_string (COMMA quoted_string)* SQ_CLOSE;
 array_of_arrays     : SQ_OPEN array_of_strings (COMMA array_of_strings)* SQ_CLOSE;
 nvp                 : Name EQ (quoted_string | array_of_strings| array_of_arrays);
-attributes          : SQ_OPEN nvp (COMMA nvp)* SQ_CLOSE;
 entry               : nvp | modifier ;
 attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
 
@@ -64,8 +60,6 @@ model_name          :  Name COLON ;
 inplace_table_def   :  COLON INDENT (Name attribs_or_modifiers?)+ DEDENT;
 table_refs          :  (TABLE | TYPE | UNION) Name inplace_table_def?;
 facade              :  SYSL_COMMENT* WRAP model_name INDENT table_refs+ DEDENT;
-
-documentation_stmts     : AT Name EQ QSTRING NEWLINE;
 
 var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
 query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;

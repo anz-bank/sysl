@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -75,46 +74,10 @@ func NewTreeShapeListener() *TreeShapeListener {
 	}
 }
 
-// VisitErrorNode is called when an error node is visited.
-func (s *TreeShapeListener) VisitErrorNode(antlr.ErrorNode) {}
-
-// EnterEveryRule is called when any rule is entered.
-func (s *TreeShapeListener) EnterEveryRule(antlr.ParserRuleContext) {}
-
-// ExitEveryRule is called when any rule is exited.
-func (s *TreeShapeListener) ExitEveryRule(antlr.ParserRuleContext) {}
-
 // EnterName_str is called when production name_str is entered.
 func (s *TreeShapeListener) EnterName_str(ctx *parser.Name_strContext) {
 	s.app_name = append(s.app_name, ctx.GetText())
 }
-
-// ExitName_str is called when production name_str is exited.
-func (s *TreeShapeListener) ExitName_str(*parser.Name_strContext) {}
-
-// EnterModifier is called when production modifier is entered.
-func (s *TreeShapeListener) EnterModifier(*parser.ModifierContext) {}
-
-// ExitModifier is called when production modifier is exited.
-func (s *TreeShapeListener) ExitModifier(*parser.ModifierContext) {}
-
-// EnterSize_spec is called when production size_spec is entered.
-func (s *TreeShapeListener) EnterSize_spec(*parser.Size_specContext) {}
-
-// ExitSize_spec is called when production size_spec is exited.
-func (s *TreeShapeListener) ExitSize_spec(*parser.Size_specContext) {}
-
-// EnterModifier_list is called when production modifier_list is entered.
-func (s *TreeShapeListener) EnterModifier_list(*parser.Modifier_listContext) {}
-
-// ExitModifier_list is called when production modifier_list is exited.
-func (s *TreeShapeListener) ExitModifier_list(*parser.Modifier_listContext) {}
-
-// EnterModifiers is called when production modifiers is entered.
-func (s *TreeShapeListener) EnterModifiers(*parser.ModifiersContext) {}
-
-// ExitModifiers is called when production modifiers is exited.
-func (s *TreeShapeListener) ExitModifiers(*parser.ModifiersContext) {}
 
 // EnterReference is called when production reference is entered.
 func (s *TreeShapeListener) EnterReference(*parser.ReferenceContext) {
@@ -192,51 +155,6 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 	attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += str
 }
 
-// ExitDoc_string is called when production doc_string is exited.
-func (s *TreeShapeListener) ExitDoc_string(*parser.Doc_stringContext) {}
-
-// EnterQuoted_string is called when production quoted_string is entered.
-func (s *TreeShapeListener) EnterQuoted_string(*parser.Quoted_stringContext) {}
-
-// ExitQuoted_string is called when production quoted_string is exited.
-func (s *TreeShapeListener) ExitQuoted_string(*parser.Quoted_stringContext) {}
-
-// EnterArray_of_strings is called when production array_of_strings is entered.
-func (s *TreeShapeListener) EnterArray_of_strings(*parser.Array_of_stringsContext) {}
-
-// ExitArray_of_strings is called when production array_of_strings is exited.
-func (s *TreeShapeListener) ExitArray_of_strings(*parser.Array_of_stringsContext) {}
-
-// EnterArray_of_arrays is called when production array_of_arrays is entered.
-func (s *TreeShapeListener) EnterArray_of_arrays(*parser.Array_of_arraysContext) {}
-
-// ExitArray_of_arrays is called when production array_of_arrays is exited.
-func (s *TreeShapeListener) ExitArray_of_arrays(*parser.Array_of_arraysContext) {}
-
-// EnterNvp is called when production nvp is entered.
-func (s *TreeShapeListener) EnterNvp(*parser.NvpContext) {}
-
-// ExitNvp is called when production nvp is exited.
-func (s *TreeShapeListener) ExitNvp(*parser.NvpContext) {}
-
-// EnterAttributes is called when production attributes is entered.
-func (s *TreeShapeListener) EnterAttributes(*parser.AttributesContext) {}
-
-// ExitAttributes is called when production attributes is exited.
-func (s *TreeShapeListener) ExitAttributes(*parser.AttributesContext) {}
-
-// EnterEntry is called when production entry is entered.
-func (s *TreeShapeListener) EnterEntry(*parser.EntryContext) {}
-
-// ExitEntry is called when production entry is exited.
-func (s *TreeShapeListener) ExitEntry(*parser.EntryContext) {}
-
-// EnterAttribs_or_modifiers is called when production attribs_or_modifiers is entered.
-func (s *TreeShapeListener) EnterAttribs_or_modifiers(*parser.Attribs_or_modifiersContext) {}
-
-// ExitAttribs_or_modifiers is called when production attribs_or_modifiers is exited.
-func (s *TreeShapeListener) ExitAttribs_or_modifiers(*parser.Attribs_or_modifiersContext) {}
-
 // EnterTypes is called when production types is entered.
 func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
 	type1 := s.currentType()
@@ -252,12 +170,6 @@ func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
 		}
 	}
 }
-
-// ExitTypes is called when production types is exited.
-func (s *TreeShapeListener) ExitTypes(*parser.TypesContext) {}
-
-// EnterSet_type is called when production set_type is entered.
-func (s *TreeShapeListener) EnterSet_type(*parser.Set_typeContext) {}
 
 // exitSetOrSequence_type is common between ExitSet_type and ExitSequence_type.
 func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specContext) (type1, newType1 *sysl.Type) {
@@ -301,12 +213,6 @@ func (s *TreeShapeListener) ExitSequence_type(ctx *parser.Sequence_typeContext) 
 	newType1.Type = &sysl.Type_Sequence{Sequence: type1}
 }
 
-// EnterCollection_type is called when production collection_type is entered.
-func (s *TreeShapeListener) EnterCollection_type(*parser.Collection_typeContext) {}
-
-// ExitCollection_type is called when production collection_type is exited.
-func (s *TreeShapeListener) ExitCollection_type(*parser.Collection_typeContext) {}
-
 // EnterUser_defined_type is called when production user_defined_type is entered.
 func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_typeContext) {
 	if len(s.fieldname) == 0 {
@@ -332,15 +238,6 @@ func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_type
 		},
 	}
 }
-
-// ExitUser_defined_type is called when production user_defined_type is exited.
-func (s *TreeShapeListener) ExitUser_defined_type(*parser.User_defined_typeContext) {}
-
-// EnterMulti_line_docstring is called when production multi_line_docstring is entered.
-func (s *TreeShapeListener) EnterMulti_line_docstring(*parser.Multi_line_docstringContext) {}
-
-// ExitMulti_line_docstring is called when production multi_line_docstring is exited.
-func (s *TreeShapeListener) ExitMulti_line_docstring(*parser.Multi_line_docstringContext) {}
 
 func fromQString(str string) string {
 	l := len(str)
@@ -402,12 +299,6 @@ func (s *TreeShapeListener) EnterAnnotation(ctx *parser.AnnotationContext) {
 func (s *TreeShapeListener) ExitAnnotation(*parser.AnnotationContext) {
 	s.annotation = ""
 }
-
-// EnterAnnotations is called when production annotations is entered.
-func (s *TreeShapeListener) EnterAnnotations(*parser.AnnotationsContext) {}
-
-// ExitAnnotations is called when production annotations is exited.
-func (s *TreeShapeListener) ExitAnnotations(*parser.AnnotationsContext) {}
 
 // EnterField_type is called when production field_type is entered.
 func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
@@ -701,12 +592,6 @@ func (s *TreeShapeListener) ExitField(ctx *parser.FieldContext) {
 	}
 }
 
-// EnterInplace_table is called when production inplace_table is entered.
-func (s *TreeShapeListener) EnterInplace_table(*parser.Inplace_tableContext) {}
-
-// ExitInplace_table is called when production inplace_table is exited.
-func (s *TreeShapeListener) ExitInplace_table(*parser.Inplace_tableContext) {}
-
 // EnterTable_stmts is called when production table_stmts is entered.
 func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 	type1 := s.module.Apps[s.appname].Types[s.typename]
@@ -720,9 +605,6 @@ func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 	}
 }
 
-// ExitTable_stmts is called when production table_stmts is exited.
-func (s *TreeShapeListener) ExitTable_stmts(*parser.Table_stmtsContext) {}
-
 // EnterTable_def is called when production table_def is entered.
 func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
 	type1 := s.module.Apps[s.appname].Types[s.typename]
@@ -733,9 +615,6 @@ func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
 		type1.Type = nil
 	}
 }
-
-// ExitTable_def is called when production table_def is exited.
-func (s *TreeShapeListener) ExitTable_def(*parser.Table_defContext) {}
 
 // EnterTable is called when production table is entered.
 func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
@@ -964,12 +843,6 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.typemap = nil
 }
 
-// EnterPackage_name is called when production package_name is entered.
-func (s *TreeShapeListener) EnterPackage_name(*parser.Package_nameContext) {}
-
-// ExitPackage_name is called when production package_name is exited.
-func (s *TreeShapeListener) ExitPackage_name(*parser.Package_nameContext) {}
-
 // EnterSub_package is called when production sub_package is entered.
 func (s *TreeShapeListener) EnterSub_package(ctx *parser.Sub_packageContext) {
 	top := len(s.app_name) - 1
@@ -990,9 +863,6 @@ func (s *TreeShapeListener) ExitSub_package(ctx *parser.Sub_packageContext) {
 func (s *TreeShapeListener) EnterApp_name(*parser.App_nameContext) {
 	s.app_name = []string{}
 }
-
-// ExitApp_name is called when production app_name is exited.
-func (s *TreeShapeListener) ExitApp_name(*parser.App_nameContext) {}
 
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribsContext) {
@@ -1039,34 +909,10 @@ func (s *TreeShapeListener) EnterModel_name(ctx *parser.Model_nameContext) {
 	}
 }
 
-// ExitModel_name is called when production model_name is exited.
-func (s *TreeShapeListener) ExitModel_name(*parser.Model_nameContext) {}
-
-// EnterInplace_table_def is called when production inplace_table_def is entered.
-func (s *TreeShapeListener) EnterInplace_table_def(*parser.Inplace_table_defContext) {}
-
-// ExitInplace_table_def is called when production inplace_table_def is exited.
-func (s *TreeShapeListener) ExitInplace_table_def(*parser.Inplace_table_defContext) {}
-
 // EnterTable_refs is called when production table_refs is entered.
 func (s *TreeShapeListener) EnterTable_refs(ctx *parser.Table_refsContext) {
 	s.module.Apps[s.appname].Wrapped.Types[ctx.Name().GetText()] = &sysl.Type{}
 }
-
-// ExitTable_refs is called when production table_refs is exited.
-func (s *TreeShapeListener) ExitTable_refs(*parser.Table_refsContext) {}
-
-// EnterFacade is called when production facade is entered.
-func (s *TreeShapeListener) EnterFacade(*parser.FacadeContext) {}
-
-// ExitFacade is called when production facade is exited.
-func (s *TreeShapeListener) ExitFacade(*parser.FacadeContext) {}
-
-// EnterDocumentation_stmts is called when production documentation_stmts is entered.
-func (s *TreeShapeListener) EnterDocumentation_stmts(*parser.Documentation_stmtsContext) {}
-
-// ExitDocumentation_stmts is called when production documentation_stmts is exited.
-func (s *TreeShapeListener) ExitDocumentation_stmts(*parser.Documentation_stmtsContext) {}
 
 // EnterQuery_var is called when production query_var is entered.
 func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
@@ -1119,15 +965,6 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 	}
 	s.method_urlparams = append(s.method_urlparams, rest_param)
 }
-
-// ExitQuery_var is called when production query_var is exited.
-func (s *TreeShapeListener) ExitQuery_var(*parser.Query_varContext) {}
-
-// EnterQuery_param is called when production query_param is entered.
-func (s *TreeShapeListener) EnterQuery_param(*parser.Query_paramContext) {}
-
-// ExitQuery_param is called when production query_param is exited.
-func (s *TreeShapeListener) ExitQuery_param(*parser.Query_paramContext) {}
 
 // EnterHttp_path_var_with_type is called when production http_path_var_with_type is entered.
 func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_var_with_typeContext) {
@@ -1194,16 +1031,10 @@ func (s *TreeShapeListener) EnterHttp_path_static(ctx *parser.Http_path_staticCo
 	s.typename += ctx.GetText()
 }
 
-// ExitHttp_path_static is called when production http_path_static is exited.
-func (s *TreeShapeListener) ExitHttp_path_static(*parser.Http_path_staticContext) {}
-
 // EnterHttp_path_suffix is called when production http_path_suffix is entered.
 func (s *TreeShapeListener) EnterHttp_path_suffix(ctx *parser.Http_path_suffixContext) {
 	s.typename += ctx.FORWARD_SLASH().GetText()
 }
-
-// ExitHttp_path_suffix is called when production http_path_suffix is exited.
-func (s *TreeShapeListener) ExitHttp_path_suffix(*parser.Http_path_suffixContext) {}
 
 // EnterHttp_path is called when production http_path is entered.
 func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
@@ -1220,12 +1051,6 @@ func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 	s.url_prefix = append(s.url_prefix, s.typename)
 }
 
-// EnterEndpoint_name is called when production endpoint_name is entered.
-func (s *TreeShapeListener) EnterEndpoint_name(*parser.Endpoint_nameContext) {}
-
-// ExitEndpoint_name is called when production endpoint_name is exited.
-func (s *TreeShapeListener) ExitEndpoint_name(*parser.Endpoint_nameContext) {}
-
 // EnterRet_stmt is called when production ret_stmt is entered.
 func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
 	s.addToCurrentScope(&sysl.Statement{
@@ -1236,9 +1061,6 @@ func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
 		},
 	})
 }
-
-// ExitRet_stmt is called when production ret_stmt is exited.
-func (s *TreeShapeListener) ExitRet_stmt(*parser.Ret_stmtContext) {}
 
 // EnterTarget is called when production target is entered.
 func (s *TreeShapeListener) EnterTarget(*parser.TargetContext) {
@@ -1254,12 +1076,6 @@ func (s *TreeShapeListener) ExitTarget(*parser.TargetContext) {
 	s.app_name = []string{}
 }
 
-// EnterTarget_endpoint is called when production target_endpoint is entered.
-func (s *TreeShapeListener) EnterTarget_endpoint(*parser.Target_endpointContext) {}
-
-// ExitTarget_endpoint is called when production target_endpoint is exited.
-func (s *TreeShapeListener) ExitTarget_endpoint(*parser.Target_endpointContext) {}
-
 // EnterCall_arg is called when production call_arg is entered.
 func (s *TreeShapeListener) EnterCall_arg(ctx *parser.Call_argContext) {
 	arg := &sysl.Call_Arg{
@@ -1267,15 +1083,6 @@ func (s *TreeShapeListener) EnterCall_arg(ctx *parser.Call_argContext) {
 	}
 	s.lastStatement().GetCall().Arg = append(s.lastStatement().GetCall().Arg, arg)
 }
-
-// ExitCall_arg is called when production call_arg is exited.
-func (s *TreeShapeListener) ExitCall_arg(*parser.Call_argContext) {}
-
-// EnterCall_args is called when production call_args is entered.
-func (s *TreeShapeListener) EnterCall_args(*parser.Call_argsContext) {}
-
-// ExitCall_args is called when production call_args is exited.
-func (s *TreeShapeListener) ExitCall_args(*parser.Call_argsContext) {}
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
@@ -1295,9 +1102,6 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 		s.lastStatement().GetCall().Arg = []*sysl.Call_Arg{}
 	}
 }
-
-// ExitCall_stmt is called when production call_stmt is exited.
-func (s *TreeShapeListener) ExitCall_stmt(*parser.Call_stmtContext) {}
 
 // EnterIf_stmt is called when production if_stmt is entered.
 func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
@@ -1340,14 +1144,6 @@ func (s *TreeShapeListener) EnterElse_stmt(ctx *parser.Else_stmtContext) {
 // ExitElse_stmt is called when production else_stmt is exited.
 func (s *TreeShapeListener) ExitElse_stmt(*parser.Else_stmtContext) {
 	s.popScope()
-}
-
-// EnterIf_else is called when production if_else is entered.
-func (s *TreeShapeListener) EnterIf_else(ctx *parser.If_elseContext) {
-}
-
-// ExitIf_else is called when production if_else is exited.
-func (s *TreeShapeListener) ExitIf_else(ctx *parser.If_elseContext) {
 }
 
 // EnterFor_stmt is called when production for_stmt is entered.
@@ -1410,12 +1206,6 @@ func (s *TreeShapeListener) ExitFor_stmt(*parser.For_stmtContext) {
 	s.popScope()
 }
 
-// EnterHttp_method_comment is called when production http_method_comment is entered.
-func (s *TreeShapeListener) EnterHttp_method_comment(*parser.Http_method_commentContext) {}
-
-// ExitHttp_method_comment is called when production http_method_comment is exited.
-func (s *TreeShapeListener) ExitHttp_method_comment(*parser.Http_method_commentContext) {}
-
 // EnterGroup_stmt is called when production group_stmt is entered.
 func (s *TreeShapeListener) EnterGroup_stmt(ctx *parser.Group_stmtContext) {
 	stmt := &sysl.Statement{}
@@ -1436,12 +1226,6 @@ func (s *TreeShapeListener) EnterGroup_stmt(ctx *parser.Group_stmtContext) {
 func (s *TreeShapeListener) ExitGroup_stmt(*parser.Group_stmtContext) {
 	s.popScope()
 }
-
-// EnterOne_of_case_label is called when production one_of_case_label is entered.
-func (s *TreeShapeListener) EnterOne_of_case_label(*parser.One_of_case_labelContext) {}
-
-// ExitOne_of_case_label is called when production one_of_case_label is exited.
-func (s *TreeShapeListener) ExitOne_of_case_label(*parser.One_of_case_labelContext) {}
 
 // EnterOne_of_cases is called when production one_of_cases is entered.
 func (s *TreeShapeListener) EnterOne_of_cases(ctx *parser.One_of_casesContext) {
@@ -1529,9 +1313,6 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 	}
 }
 
-// ExitText_stmt is called when production text_stmt is exited.
-func (s *TreeShapeListener) ExitText_stmt(*parser.Text_stmtContext) {}
-
 // EnterMixin is called when production mixin is entered.
 func (s *TreeShapeListener) EnterMixin(*parser.MixinContext) {
 	if s.module.Apps[s.appname].Mixin2 == nil {
@@ -1568,12 +1349,6 @@ func (s *TreeShapeListener) ExitParam(ctx *parser.ParamContext) {
 		}
 	}
 }
-
-// EnterParam_list is called when production param_list is entered.
-func (s *TreeShapeListener) EnterParam_list(*parser.Param_listContext) {}
-
-// ExitParam_list is called when production param_list is exited.
-func (s *TreeShapeListener) ExitParam_list(*parser.Param_listContext) {}
 
 // EnterParams is called when production params is entered.
 func (s *TreeShapeListener) EnterParams(*parser.ParamsContext) {
@@ -1634,9 +1409,6 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 	s.typemap = nil
 	s.fieldname = []string{}
 }
-
-// EnterStatements is called when production statements is entered.
-func (s *TreeShapeListener) EnterStatements(*parser.StatementsContext) {}
 
 // ExitStatements is called when production statements is exited.
 func (s *TreeShapeListener) ExitStatements(ctx *parser.StatementsContext) {
@@ -1886,12 +1658,6 @@ func (s *TreeShapeListener) ExitMethod_def(*parser.Method_defContext) {
 	s.http_path_query_param = ""
 }
 
-// EnterShortcut is called when production shortcut is entered.
-func (s *TreeShapeListener) EnterShortcut(*parser.ShortcutContext) {}
-
-// ExitShortcut is called when production shortcut is exited.
-func (s *TreeShapeListener) ExitShortcut(*parser.ShortcutContext) {}
-
 // EnterSimple_endpoint is called when production api_endpoint is entered.
 func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointContext) {
 	if ctx.WHATEVER() != nil {
@@ -1976,18 +1742,6 @@ func (s *TreeShapeListener) ExitRest_endpoint(*parser.Rest_endpointContext) {
 	}
 }
 
-// EnterCollector_query_var is called when production collector_query_var is entered.
-func (s *TreeShapeListener) EnterCollector_query_var(*parser.Collector_query_varContext) {}
-
-// ExitCollector_query_var is called when production collector_query_var is exited.
-func (s *TreeShapeListener) ExitCollector_query_var(*parser.Collector_query_varContext) {}
-
-// EnterCollector_query_param is called when production collector_query_param is entered.
-func (s *TreeShapeListener) EnterCollector_query_param(*parser.Collector_query_paramContext) {}
-
-// ExitCollector_query_param is called when production collector_query_param is exited.
-func (s *TreeShapeListener) ExitCollector_query_param(*parser.Collector_query_paramContext) {}
-
 // EnterCollector_call_stmt is called when production collector_call_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
 	appName := &sysl.AppName{}
@@ -2002,17 +1756,6 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 	})
 }
 
-// ExitCollector_call_stmt is called when production collector_call_stmt is exited.
-func (s *TreeShapeListener) ExitCollector_call_stmt(*parser.Collector_call_stmtContext) {}
-
-// EnterCollector_http_stmt_part is called when production collector_http_stmt_part is entered.
-func (s *TreeShapeListener) EnterCollector_http_stmt_part(ctx *parser.Collector_http_stmt_partContext) {
-}
-
-// ExitCollector_http_stmt_part is called when production collector_http_stmt_part is exited.
-func (s *TreeShapeListener) ExitCollector_http_stmt_part(ctx *parser.Collector_http_stmt_partContext) {
-}
-
 // EnterCollector_http_stmt is called when production collector_http_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_stmtContext) {
 	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " + ctx.Collector_http_stmt_suffix().GetText()
@@ -2025,21 +1768,6 @@ func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_
 		},
 	})
 }
-
-// ExitCollector_http_stmt is called when production collector_http_stmt is exited.
-func (s *TreeShapeListener) ExitCollector_http_stmt(*parser.Collector_http_stmtContext) {}
-
-// EnterCollector_stmts is called when production collector_stmts is entered.
-func (s *TreeShapeListener) EnterCollector_stmts(*parser.Collector_stmtsContext) {}
-
-// EnterPublisher is called when production publisher is entered.
-func (s *TreeShapeListener) EnterPublisher(*parser.PublisherContext) {}
-
-// ExitPublisher is called when production publisher is exited.
-func (s *TreeShapeListener) ExitPublisher(*parser.PublisherContext) {}
-
-// EnterSubscriber is called when production subscriber is entered.
-func (s *TreeShapeListener) EnterSubscriber(*parser.SubscriberContext) {}
 
 // ExitSubscriber is called when production subscriber is exited.
 func (s *TreeShapeListener) ExitSubscriber(*parser.SubscriberContext) {
@@ -2066,9 +1794,6 @@ func (s *TreeShapeListener) EnterCollector_pubsub_call(ctx *parser.Collector_pub
 	})
 }
 
-// ExitCollector_pubsub_call is called when production collector_pubsub_call is exited.
-func (s *TreeShapeListener) ExitCollector_pubsub_call(*parser.Collector_pubsub_callContext) {}
-
 // EnterCollector_action_stmt is called when production collector_action_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_action_stmt(ctx *parser.Collector_action_stmtContext) {
 	text := ctx.Name_str().GetText()
@@ -2080,9 +1805,6 @@ func (s *TreeShapeListener) EnterCollector_action_stmt(ctx *parser.Collector_act
 		},
 	})
 }
-
-// ExitCollector_action_stmt is called when production collector_action_stmt is exited.
-func (s *TreeShapeListener) ExitCollector_action_stmt(*parser.Collector_action_stmtContext) {}
 
 // ExitCollector_stmts is called when production collector_stmts is exited.
 func (s *TreeShapeListener) ExitCollector_stmts(ctx *parser.Collector_stmtsContext) {
@@ -2227,9 +1949,6 @@ func (s *TreeShapeListener) ExitSubscribe(ctx *parser.SubscribeContext) {
 	s.typename = ""
 }
 
-// EnterView_type_spec is called when production view_type_spec is entered.
-func (s *TreeShapeListener) EnterView_type_spec(*parser.View_type_specContext) {}
-
 // ExitView_type_spec is called when production view_type_spec is exited.
 func (s *TreeShapeListener) ExitView_type_spec(*parser.View_type_specContext) {
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
@@ -2246,9 +1965,6 @@ func (s *TreeShapeListener) ExitView_type_spec(*parser.View_type_specContext) {
 		}
 	}
 }
-
-// EnterLiteral is called when production literal is entered.
-func (s *TreeShapeListener) EnterLiteral(*parser.LiteralContext) {}
 
 // ExitLiteral is called when production literal is exited.
 func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
@@ -2385,9 +2101,6 @@ func addIfElseControl(ifelse *sysl.Expr, cond *sysl.Expr) {
 	addIfElseControl(root.IfFalse, cond)
 }
 
-// EnterExpr_table_of_op is called when production expr_table_of_op is entered.
-func (s *TreeShapeListener) EnterExpr_table_of_op(*parser.Expr_table_of_opContext) {}
-
 // ExitExpr_table_of_op is called when production expr_table_of_op is exited.
 func (s *TreeShapeListener) ExitExpr_table_of_op(ctx *parser.Expr_table_of_opContext) {
 	nullsafe := ctx.E_NULLSAFE_DOT() != nil
@@ -2396,9 +2109,6 @@ func (s *TreeShapeListener) ExitExpr_table_of_op(ctx *parser.Expr_table_of_opCon
 	arg := s.popExpr()
 	s.PushExpr(makeGetAttr(arg, attrName, nullsafe, table_of, s.sc.Get(ctx.BaseParserRuleContext)))
 }
-
-// EnterFunc_arg is called when production func_arg is entered.
-func (s *TreeShapeListener) EnterFunc_arg(*parser.Func_argContext) {}
 
 // ExitFunc_arg is called when production func_arg is exited.
 func (s *TreeShapeListener) ExitFunc_arg(*parser.Func_argContext) {
@@ -2414,12 +2124,6 @@ func (s *TreeShapeListener) ExitFunc_arg(*parser.Func_argContext) {
 	syslutil.Assert(args != nil, "ExitFunc_arg: should not be here")
 	*args = append(*args, arg)
 }
-
-// EnterFunc_args is called when production func_args is entered.
-func (s *TreeShapeListener) EnterFunc_args(*parser.Func_argsContext) {}
-
-// ExitFunc_args is called when production func_args is exited.
-func (s *TreeShapeListener) ExitFunc_args(*parser.Func_argsContext) {}
 
 // EnterExpr_func is called when production expr_func is entered.
 func (s *TreeShapeListener) EnterExpr_func(ctx *parser.Expr_funcContext) {
@@ -2442,12 +2146,6 @@ func (s *TreeShapeListener) EnterExpr_func(ctx *parser.Expr_funcContext) {
 	s.PushExpr(expr)
 }
 
-// ExitExpr_func is called when production expr_func is exited.
-func (s *TreeShapeListener) ExitExpr_func(*parser.Expr_funcContext) {}
-
-// EnterRank_expr is called when production rank_expr is entered.
-func (s *TreeShapeListener) EnterRank_expr(*parser.Rank_exprContext) {}
-
 // ExitRank_expr is called when production rank_expr is exited.
 func (s *TreeShapeListener) ExitRank_expr(ctx *parser.Rank_exprContext) {
 	expr := s.popExpr()
@@ -2455,12 +2153,6 @@ func (s *TreeShapeListener) ExitRank_expr(ctx *parser.Rank_exprContext) {
 	relexpr.Arg = append(relexpr.Arg, expr)
 	relexpr.Descending = append(relexpr.Descending, ctx.E_DESC() != nil)
 }
-
-// EnterRank_expr_list is called when production rank_expr_list is entered.
-func (s *TreeShapeListener) EnterRank_expr_list(*parser.Rank_expr_listContext) {}
-
-// ExitRank_expr_list is called when production rank_expr_list is exited.
-func (s *TreeShapeListener) ExitRank_expr_list(*parser.Rank_expr_listContext) {}
 
 // EnterExpr_rank_func is called when production expr_rank_func is entered.
 func (s *TreeShapeListener) EnterExpr_rank_func(ctx *parser.Expr_rank_funcContext) {
@@ -2529,9 +2221,6 @@ func (s *TreeShapeListener) ExitExpr_agg_func(*parser.Expr_agg_funcContext) {
 	}
 }
 
-// EnterE_scope_var is called when production e_scope_var is entered.
-func (s *TreeShapeListener) EnterE_scope_var(*parser.E_scope_varContext) {}
-
 // ExitE_scope_var is called when production e_scope_var is exited.
 func (s *TreeShapeListener) ExitE_scope_var(ctx *parser.E_scope_varContext) {
 	expr := s.TopExpr()
@@ -2543,9 +2232,6 @@ func (s *TreeShapeListener) ExitE_scope_var(ctx *parser.E_scope_varContext) {
 		relexpr.Scopevar = ctx.E_Name().GetText()
 	}
 }
-
-// EnterFirst_func_target is called when production first_func_target is entered.
-func (s *TreeShapeListener) EnterFirst_func_target(*parser.First_func_targetContext) {}
 
 // ExitFirst_func_target is called when production first_func_target is exited.
 func (s *TreeShapeListener) ExitFirst_func_target(ctx *parser.First_func_targetContext) {
@@ -2590,9 +2276,6 @@ func (s *TreeShapeListener) ExitExpr_first_func(*parser.Expr_first_funcContext) 
 	relexpr.Arg = append(relexpr.Arg, relexpr.Arg...)
 }
 
-// EnterE_single_arg_func is called when production e_single_arg_func is entered.
-func (s *TreeShapeListener) EnterE_single_arg_func(*parser.E_single_arg_funcContext) {}
-
 // ExitE_single_arg_func is called when production e_single_arg_func is exited.
 func (s *TreeShapeListener) ExitE_single_arg_func(ctx *parser.E_single_arg_funcContext) {
 	op := sysl.Expr_BinExpr_NO_Op
@@ -2603,9 +2286,6 @@ func (s *TreeShapeListener) ExitE_single_arg_func(ctx *parser.E_single_arg_funcC
 	}
 	s.PushExpr(makeBinaryExpr(op, nil, nil, s.sc.Get(ctx.BaseParserRuleContext)))
 }
-
-// EnterExpr_single_arg_func is called when production expr_single_arg_func is entered.
-func (s *TreeShapeListener) EnterExpr_single_arg_func(*parser.Expr_single_arg_funcContext) {}
 
 // ExitExpr_single_arg_func is called when production expr_single_arg_func is exited.
 func (s *TreeShapeListener) ExitExpr_single_arg_func(ctx *parser.Expr_single_arg_funcContext) {
@@ -2621,9 +2301,6 @@ func (s *TreeShapeListener) ExitExpr_single_arg_func(ctx *parser.Expr_single_arg
 	s.PushExpr(expr)
 }
 
-// EnterExpr_any_func is called when production expr_any_func is entered.
-func (s *TreeShapeListener) EnterExpr_any_func(*parser.Expr_any_funcContext) {}
-
 // ExitExpr_any_func is called when production expr_any_func is exited.
 func (s *TreeShapeListener) ExitExpr_any_func(ctx *parser.Expr_any_funcContext) {
 	limit := s.popExpr()
@@ -2638,9 +2315,6 @@ func (s *TreeShapeListener) ExitExpr_any_func(ctx *parser.Expr_any_funcContext) 
 	s.PushExpr(expr)
 }
 
-// EnterExpr_single_or_null is called when production expr_single_or_null is entered.
-func (s *TreeShapeListener) EnterExpr_single_or_null(*parser.Expr_single_or_nullContext) {}
-
 // ExitExpr_single_or_null is called when production expr_single_or_null is exited.
 func (s *TreeShapeListener) ExitExpr_single_or_null(ctx *parser.Expr_single_or_nullContext) {
 	op := sysl.Expr_UnExpr_SINGLE_OR_NULL
@@ -2651,9 +2325,6 @@ func (s *TreeShapeListener) ExitExpr_single_or_null(ctx *parser.Expr_single_or_n
 	s.PushExpr(expr)
 }
 
-// EnterExpr_snapshot is called when production expr_snapshot is entered.
-func (s *TreeShapeListener) EnterExpr_snapshot(*parser.Expr_snapshotContext) {}
-
 // ExitExpr_snapshot is called when production expr_snapshot is exited.
 func (s *TreeShapeListener) ExitExpr_snapshot(ctx *parser.Expr_snapshotContext) {
 	expr := s.popExpr()
@@ -2661,9 +2332,6 @@ func (s *TreeShapeListener) ExitExpr_snapshot(ctx *parser.Expr_snapshotContext) 
 	relexpr := s.TopExpr().GetRelexpr()
 	relexpr.Target = expr
 }
-
-// EnterExpr_count is called when production expr_count is entered.
-func (s *TreeShapeListener) EnterExpr_count(*parser.Expr_countContext) {}
 
 // ExitExpr_count is called when production expr_count is exited.
 func (s *TreeShapeListener) ExitExpr_count(ctx *parser.Expr_countContext) {
@@ -2677,9 +2345,6 @@ func (s *TreeShapeListener) ExitExpr_count(ctx *parser.Expr_countContext) {
 	}
 	s.PushExpr(callExpr)
 }
-
-// EnterExpr_navigate_attr is called when production expr_navigate_attr is entered.
-func (s *TreeShapeListener) EnterExpr_navigate_attr(*parser.Expr_navigate_attrContext) {}
 
 // ExitExpr_navigate_attr is called when production expr_navigate_attr is exited.
 func (s *TreeShapeListener) ExitExpr_navigate_attr(ctx *parser.Expr_navigate_attrContext) {
@@ -2717,9 +2382,6 @@ func (s *TreeShapeListener) EnterExpr_navigate(ctx *parser.Expr_navigateContext)
 	s.PushExpr(expr)
 }
 
-// ExitExpr_navigate is called when production expr_navigate is exited.
-func (s *TreeShapeListener) ExitExpr_navigate(*parser.Expr_navigateContext) {}
-
 // EnterMatching_rhs is called when production matching_rhs is entered.
 func (s *TreeShapeListener) EnterMatching_rhs(ctx *parser.Matching_rhsContext) {
 	if ctx.E_Name() == nil && ctx.AtomT_paren() == nil {
@@ -2743,9 +2405,6 @@ func (s *TreeShapeListener) EnterSquiggly_args(ctx *parser.Squiggly_argsContext)
 	}
 }
 
-// ExitSquiggly_args is called when production squiggly_args is exited.
-func (s *TreeShapeListener) ExitSquiggly_args(*parser.Squiggly_argsContext) {}
-
 // EnterExpr_matching is called when production expr_matching is entered.
 func (s *TreeShapeListener) EnterExpr_matching(ctx *parser.Expr_matchingContext) {
 	op := sysl.Expr_BinExpr_TO_MATCHING
@@ -2767,15 +2426,6 @@ func (s *TreeShapeListener) ExitExpr_matching(*parser.Expr_matchingContext) {
 	}
 }
 
-// EnterRelop is called when production relop is entered.
-func (s *TreeShapeListener) EnterRelop(*parser.RelopContext) {}
-
-// ExitRelop is called when production relop is exited.
-func (s *TreeShapeListener) ExitRelop(*parser.RelopContext) {}
-
-// EnterList_item is called when production list_item is entered.
-func (s *TreeShapeListener) EnterList_item(*parser.List_itemContext) {}
-
 // ExitList_item is called when production list_item is exited.
 func (s *TreeShapeListener) ExitList_item(*parser.List_itemContext) {
 	item := s.popExpr()
@@ -2788,9 +2438,6 @@ func (s *TreeShapeListener) ExitList_item(*parser.List_itemContext) {
 		list.Expr = append(list.Expr, item)
 	}
 }
-
-// EnterExpr_list is called when production expr_list is entered.
-func (s *TreeShapeListener) EnterExpr_list(*parser.Expr_listContext) {}
 
 // ExitExpr_list is called when production expr_list is exited.
 func (s *TreeShapeListener) ExitExpr_list(*parser.Expr_listContext) {
@@ -2820,12 +2467,6 @@ func (s *TreeShapeListener) EnterExpr_set(ctx *parser.Expr_setContext) {
 	s.PushExpr(expr)
 }
 
-// ExitExpr_set is called when production expr_set is exited.
-func (s *TreeShapeListener) ExitExpr_set(*parser.Expr_setContext) {}
-
-// EnterEmpty_tuple is called when production empty_tuple is entered.
-func (s *TreeShapeListener) EnterEmpty_tuple(*parser.Empty_tupleContext) {}
-
 // ExitEmpty_tuple is called when production empty_tuple is exited.
 func (s *TreeShapeListener) ExitEmpty_tuple(ctx *parser.Empty_tupleContext) {
 	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
@@ -2840,22 +2481,10 @@ func (s *TreeShapeListener) ExitEmpty_tuple(ctx *parser.Empty_tupleContext) {
 	s.PushExpr(expr)
 }
 
-// EnterAtom_dot_relop is called when production atom_dot_relop is entered.
-func (s *TreeShapeListener) EnterAtom_dot_relop(*parser.Atom_dot_relopContext) {}
-
-// ExitAtom_dot_relop is called when production atom_dot_relop is exited.
-func (s *TreeShapeListener) ExitAtom_dot_relop(*parser.Atom_dot_relopContext) {}
-
 // EnterAtomT_implied_dot is called when production atomT_implied_dot is entered.
 func (s *TreeShapeListener) EnterAtomT_implied_dot(ctx *parser.AtomT_implied_dotContext) {
 	s.PushExpr(makeExprName(".", s.sc.Get(ctx.BaseParserRuleContext)))
 }
-
-// ExitAtomT_implied_dot is called when production atomT_implied_dot is exited.
-func (s *TreeShapeListener) ExitAtomT_implied_dot(*parser.AtomT_implied_dotContext) {}
-
-// EnterAtomT_name is called when production atomT_name is entered.
-func (s *TreeShapeListener) EnterAtomT_name(*parser.AtomT_nameContext) {}
 
 // ExitAtomT_name is called when production atomT_name is exited.
 func (s *TreeShapeListener) ExitAtomT_name(ctx *parser.AtomT_nameContext) {
@@ -2872,12 +2501,6 @@ func (s *TreeShapeListener) ExitAtomT_name(ctx *parser.AtomT_nameContext) {
 	}
 }
 
-// EnterAtomT_paren is called when production atomT_paren is entered.
-func (s *TreeShapeListener) EnterAtomT_paren(*parser.AtomT_parenContext) {}
-
-// ExitAtomT_paren is called when production atomT_paren is exited.
-func (s *TreeShapeListener) ExitAtomT_paren(*parser.AtomT_parenContext) {}
-
 // EnterExpr_atom_list is called when production expr_atom_list is entered.
 func (s *TreeShapeListener) EnterExpr_atom_list(ctx *parser.Expr_atom_listContext) {
 	expr := makeExpr(s.sc.Get(ctx.BaseParserRuleContext))
@@ -2889,30 +2512,6 @@ func (s *TreeShapeListener) EnterExpr_atom_list(ctx *parser.Expr_atom_listContex
 	s.PushExpr(expr)
 }
 
-// ExitExpr_atom_list is called when production expr_atom_list is exited.
-func (s *TreeShapeListener) ExitExpr_atom_list(*parser.Expr_atom_listContext) {}
-
-// EnterAtomT is called when production atomT is entered.
-func (s *TreeShapeListener) EnterAtomT(*parser.AtomTContext) {}
-
-// ExitAtomT is called when production atomT is exited.
-func (s *TreeShapeListener) ExitAtomT(*parser.AtomTContext) {}
-
-// EnterAtom is called when production atom is entered.
-func (s *TreeShapeListener) EnterAtom(*parser.AtomContext) {}
-
-// ExitAtom is called when production atom is exited.
-func (s *TreeShapeListener) ExitAtom(*parser.AtomContext) {}
-
-// EnterPowerT is called when production powerT is entered.
-func (s *TreeShapeListener) EnterPowerT(*parser.PowerTContext) {}
-
-// ExitPowerT is called when production powerT is exited.
-func (s *TreeShapeListener) ExitPowerT(*parser.PowerTContext) {}
-
-// EnterPower is called when production power is entered.
-func (s *TreeShapeListener) EnterPower(*parser.PowerContext) {}
-
 // ExitPower is called when production power is exited.
 func (s *TreeShapeListener) ExitPower(ctx *parser.PowerContext) {
 	if ctx.PowerT() != nil {
@@ -2921,9 +2520,6 @@ func (s *TreeShapeListener) ExitPower(ctx *parser.PowerContext) {
 		s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_POW, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
-
-// EnterUnaryTerm is called when production unaryTerm is entered.
-func (s *TreeShapeListener) EnterUnaryTerm(*parser.UnaryTermContext) {}
 
 // ExitUnaryTerm is called when production unaryTerm is exited.
 func (s *TreeShapeListener) ExitUnaryTerm(ctx *parser.UnaryTermContext) {
@@ -2945,9 +2541,6 @@ func (s *TreeShapeListener) ExitUnaryTerm(ctx *parser.UnaryTermContext) {
 	}
 }
 
-// EnterTermT is called when production termT is entered.
-func (s *TreeShapeListener) EnterTermT(*parser.TermTContext) {}
-
 // ExitTermT is called when production termT is exited.
 func (s *TreeShapeListener) ExitTermT(ctx *parser.TermTContext) {
 	op := sysl.Expr_BinExpr_MOD
@@ -2963,15 +2556,6 @@ func (s *TreeShapeListener) ExitTermT(ctx *parser.TermTContext) {
 	s.PushExpr(makeBinaryExpr(op, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
-// EnterTerm is called when production term is entered.
-func (s *TreeShapeListener) EnterTerm(*parser.TermContext) {}
-
-// ExitTerm is called when production term is exited.
-func (s *TreeShapeListener) ExitTerm(*parser.TermContext) {}
-
-// EnterBinexprT is called when production binexprT is entered.
-func (s *TreeShapeListener) EnterBinexprT(*parser.BinexprTContext) {}
-
 // ExitBinexprT is called when production binexprT is exited.
 func (s *TreeShapeListener) ExitBinexprT(ctx *parser.BinexprTContext) {
 	var op sysl.Expr_BinExpr_Op
@@ -2986,21 +2570,6 @@ func (s *TreeShapeListener) ExitBinexprT(ctx *parser.BinexprTContext) {
 	s.PushExpr(makeBinaryExpr(op, lhs, rhs, s.sc.Get(ctx.BaseParserRuleContext)))
 }
 
-// EnterBinexpr is called when production binexpr is entered.
-func (s *TreeShapeListener) EnterBinexpr(*parser.BinexprContext) {}
-
-// ExitBinexpr is called when production binexpr is exited.
-func (s *TreeShapeListener) ExitBinexpr(*parser.BinexprContext) {}
-
-// EnterE_compare_ops is called when production e_compare_ops is entered.
-func (s *TreeShapeListener) EnterE_compare_ops(*parser.E_compare_opsContext) {}
-
-// ExitE_compare_ops is called when production e_compare_ops is exited.
-func (s *TreeShapeListener) ExitE_compare_ops(*parser.E_compare_opsContext) {}
-
-// EnterExpr_rel is called when production expr_rel is entered.
-func (s *TreeShapeListener) EnterExpr_rel(*parser.Expr_relContext) {}
-
 // ExitExpr_rel is called when production expr_rel is exited.
 func (s *TreeShapeListener) ExitExpr_rel(ctx *parser.Expr_relContext) {
 	if ctx.E_compare_ops(0) != nil {
@@ -3013,18 +2582,12 @@ func (s *TreeShapeListener) ExitExpr_rel(ctx *parser.Expr_relContext) {
 	}
 }
 
-// EnterExpr_bitand is called when production expr_bitand is entered.
-func (s *TreeShapeListener) EnterExpr_bitand(*parser.Expr_bitandContext) {}
-
 // ExitExpr_bitand is called when production expr_bitand is exited.
 func (s *TreeShapeListener) ExitExpr_bitand(ctx *parser.Expr_bitandContext) {
 	if ctx.E_AMP(0) != nil || ctx.E_AND(0) != nil {
 		s.PushExpr(s.reverseOp(sysl.Expr_BinExpr_BITAND, len(ctx.AllExpr_rel())-1, s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
-
-// EnterExpr_bitxor is called when production expr_bitxor is entered.
-func (s *TreeShapeListener) EnterExpr_bitxor(*parser.Expr_bitxorContext) {}
 
 // ExitExpr_bitxor is called when production expr_bitxor is exited.
 func (s *TreeShapeListener) ExitExpr_bitxor(ctx *parser.Expr_bitxorContext) {
@@ -3033,18 +2596,12 @@ func (s *TreeShapeListener) ExitExpr_bitxor(ctx *parser.Expr_bitxorContext) {
 	}
 }
 
-// EnterExpr_bitor is called when production expr_bitor is entered.
-func (s *TreeShapeListener) EnterExpr_bitor(*parser.Expr_bitorContext) {}
-
 // ExitExpr_bitor is called when production expr_bitor is exited.
 func (s *TreeShapeListener) ExitExpr_bitor(ctx *parser.Expr_bitorContext) {
 	if ctx.E_BITOR(0) != nil {
 		s.PushExpr(s.reverseOp(sysl.Expr_BinExpr_BITOR, len(ctx.AllE_BITOR()), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
-
-// EnterExpr_and is called when production expr_and is entered.
-func (s *TreeShapeListener) EnterExpr_and(*parser.Expr_andContext) {}
 
 // ExitExpr_and is called when production expr_and is exited.
 func (s *TreeShapeListener) ExitExpr_and(ctx *parser.Expr_andContext) {
@@ -3053,9 +2610,6 @@ func (s *TreeShapeListener) ExitExpr_and(ctx *parser.Expr_andContext) {
 	}
 }
 
-// EnterExpr_or is called when production expr_or is entered.
-func (s *TreeShapeListener) EnterExpr_or(*parser.Expr_orContext) {}
-
 // ExitExpr_or is called when production expr_or is exited.
 func (s *TreeShapeListener) ExitExpr_or(ctx *parser.Expr_orContext) {
 	if ctx.E_LOGIC_OR(0) != nil {
@@ -3063,18 +2617,12 @@ func (s *TreeShapeListener) ExitExpr_or(ctx *parser.Expr_orContext) {
 	}
 }
 
-// EnterExpr_but_not is called when production expr_but_not is entered.
-func (s *TreeShapeListener) EnterExpr_but_not(*parser.Expr_but_notContext) {}
-
 // ExitExpr_but_not is called when production expr_but_not is exited.
 func (s *TreeShapeListener) ExitExpr_but_not(ctx *parser.Expr_but_notContext) {
 	if ctx.E_BUTNOT(0) != nil {
 		s.PushExpr(s.reverseOp(sysl.Expr_BinExpr_BUTNOT, len(ctx.AllE_BUTNOT()), s.sc.Get(ctx.BaseParserRuleContext)))
 	}
 }
-
-// EnterExpr_coalesce is called when production expr_coalesce is entered.
-func (s *TreeShapeListener) EnterExpr_coalesce(*parser.Expr_coalesceContext) {}
 
 func (s *TreeShapeListener) reverseOp(op sysl.Expr_BinExpr_Op, count int, ctx *sysl.SourceContext) *sysl.Expr {
 	if count == 0 {
@@ -3093,9 +2641,6 @@ func (s *TreeShapeListener) ExitExpr_coalesce(ctx *parser.Expr_coalesceContext) 
 	}
 }
 
-// EnterIf_one_liner is called when production if_one_liner is entered.
-func (s *TreeShapeListener) EnterIf_one_liner(*parser.If_one_linerContext) {}
-
 // ExitIf_one_liner is called when production if_one_liner is exited.
 func (s *TreeShapeListener) ExitIf_one_liner(ctx *parser.If_one_linerContext) {
 	if_false := s.popExpr()
@@ -3113,18 +2658,12 @@ func (s *TreeShapeListener) ExitIf_one_liner(ctx *parser.If_one_linerContext) {
 	s.PushExpr(expr)
 }
 
-// EnterElse_block_stmt is called when production else_block_stmt is entered.
-func (s *TreeShapeListener) EnterElse_block_stmt(*parser.Else_block_stmtContext) {}
-
 // ExitElse_block_stmt is called when production else_block_stmt is exited.
 func (s *TreeShapeListener) ExitElse_block_stmt(*parser.Else_block_stmtContext) {
 	stmt := s.popExpr()
 	ifelse := s.TopExpr()
 	addStmt(ifelse, stmt)
 }
-
-// EnterControl_item is called when production control_item is entered.
-func (s *TreeShapeListener) EnterControl_item(*parser.Control_itemContext) {}
 
 // ExitControl_item is called when production control_item is exited.
 func (s *TreeShapeListener) ExitControl_item(ctx *parser.Control_itemContext) {
@@ -3156,21 +2695,6 @@ func (s *TreeShapeListener) ExitControl_item(ctx *parser.Control_itemContext) {
 	}
 }
 
-// EnterIf_controls is called when production if_controls is entered.
-func (s *TreeShapeListener) EnterIf_controls(*parser.If_controlsContext) {}
-
-// ExitIf_controls is called when production if_controls is exited.
-func (s *TreeShapeListener) ExitIf_controls(*parser.If_controlsContext) {}
-
-// EnterCond_block is called when production cond_block is entered.
-func (s *TreeShapeListener) EnterCond_block(*parser.Cond_blockContext) {}
-
-// ExitCond_block is called when production cond_block is exited.
-func (s *TreeShapeListener) ExitCond_block(*parser.Cond_blockContext) {}
-
-// EnterFinal_else is called when production final_else is entered.
-func (s *TreeShapeListener) EnterFinal_else(*parser.Final_elseContext) {}
-
 // ExitFinal_else is called when production final_else is exited.
 func (s *TreeShapeListener) ExitFinal_else(*parser.Final_elseContext) {
 	elseStmt := s.popExpr()
@@ -3180,9 +2704,6 @@ func (s *TreeShapeListener) ExitFinal_else(*parser.Final_elseContext) {
 	}
 	ifelse.GetIfelse().IfFalse = elseStmt
 }
-
-// EnterIfvar is called when production ifvar is entered.
-func (s *TreeShapeListener) EnterIfvar(*parser.IfvarContext) {}
 
 // ExitIfvar is called when production ifvar is exited.
 func (s *TreeShapeListener) ExitIfvar(ctx *parser.IfvarContext) {
@@ -3207,30 +2728,6 @@ func (s *TreeShapeListener) EnterIf_multiple_lines(ctx *parser.If_multiple_lines
 	s.PushExpr(expr)
 }
 
-// ExitIf_multiple_lines is called when production if_multiple_lines is exited.
-func (s *TreeShapeListener) ExitIf_multiple_lines(*parser.If_multiple_linesContext) {}
-
-// EnterExpr_if_else is called when production expr_if_else is entered.
-func (s *TreeShapeListener) EnterExpr_if_else(*parser.Expr_if_elseContext) {}
-
-// ExitExpr_if_else is called when production expr_if_else is exited.
-func (s *TreeShapeListener) ExitExpr_if_else(*parser.Expr_if_elseContext) {}
-
-// EnterExpr is called when production expr is entered.
-func (s *TreeShapeListener) EnterExpr(*parser.ExprContext) {}
-
-// ExitExpr is called when production expr is exited.
-func (s *TreeShapeListener) ExitExpr(*parser.ExprContext) {}
-
-// EnterExpr_assign is called when production expr_assign is entered.
-func (s *TreeShapeListener) EnterExpr_assign(*parser.Expr_assignContext) {}
-
-// ExitExpr_assign is called when production expr_assign is exited.
-func (s *TreeShapeListener) ExitExpr_assign(*parser.Expr_assignContext) {}
-
-// EnterExpr_simple_assign is called when production expr_simple_assign is entered.
-func (s *TreeShapeListener) EnterExpr_simple_assign(*parser.Expr_simple_assignContext) {}
-
 // ExitExpr_simple_assign is called when production expr_simple_assign is exited.
 func (s *TreeShapeListener) ExitExpr_simple_assign(ctx *parser.Expr_simple_assignContext) {
 	expr := s.popExpr()
@@ -3249,9 +2746,6 @@ func (s *TreeShapeListener) ExitExpr_simple_assign(ctx *parser.Expr_simple_assig
 	}
 	tx.Stmt = append(tx.Stmt, stmt)
 }
-
-// EnterExpr_let_statement is called when production expr_let_statement is entered.
-func (s *TreeShapeListener) EnterExpr_let_statement(*parser.Expr_let_statementContext) {}
 
 // ExitExpr_let_statement is called when production expr_let_statement is exited.
 func (s *TreeShapeListener) ExitExpr_let_statement(ctx *parser.Expr_let_statementContext) {
@@ -3272,9 +2766,6 @@ func (s *TreeShapeListener) ExitExpr_let_statement(ctx *parser.Expr_let_statemen
 	tx.Stmt = append(tx.Stmt, stmt)
 }
 
-// EnterExpr_table_of_statement is called when production expr_table_of_statement is entered.
-func (s *TreeShapeListener) EnterExpr_table_of_statement(*parser.Expr_table_of_statementContext) {}
-
 // ExitExpr_table_of_statement is called when production expr_table_of_statement is exited.
 func (s *TreeShapeListener) ExitExpr_table_of_statement(ctx *parser.Expr_table_of_statementContext) {
 	expr := s.popExpr()
@@ -3294,9 +2785,6 @@ func (s *TreeShapeListener) ExitExpr_table_of_statement(ctx *parser.Expr_table_o
 	}
 	tx.Stmt = append(tx.Stmt, stmt)
 }
-
-// EnterExpr_dot_assign is called when production expr_dot_assign is entered.
-func (s *TreeShapeListener) EnterExpr_dot_assign(*parser.Expr_dot_assignContext) {}
 
 // ExitExpr_dot_assign is called when production expr_dot_assign is exited.
 func (s *TreeShapeListener) ExitExpr_dot_assign(ctx *parser.Expr_dot_assignContext) {
@@ -3319,21 +2807,6 @@ func (s *TreeShapeListener) ExitExpr_dot_assign(ctx *parser.Expr_dot_assignConte
 	tx.Stmt = append(tx.Stmt, stmt)
 }
 
-// EnterExpr_statement_no_nl is called when production expr_statement_no_nl is entered.
-func (s *TreeShapeListener) EnterExpr_statement_no_nl(*parser.Expr_statement_no_nlContext) {}
-
-// ExitExpr_statement_no_nl is called when production expr_statement_no_nl is exited.
-func (s *TreeShapeListener) ExitExpr_statement_no_nl(*parser.Expr_statement_no_nlContext) {}
-
-// EnterExpr_statement is called when production expr_statement is entered.
-func (s *TreeShapeListener) EnterExpr_statement(*parser.Expr_statementContext) {}
-
-// ExitExpr_statement is called when production expr_statement is exited.
-func (s *TreeShapeListener) ExitExpr_statement(*parser.Expr_statementContext) {}
-
-// EnterExpr_inject_stmt is called when production expr_inject_stmt is entered.
-func (s *TreeShapeListener) EnterExpr_inject_stmt(*parser.Expr_inject_stmtContext) {}
-
 // ExitExpr_inject_stmt is called when production expr_inject_stmt is exited.
 func (s *TreeShapeListener) ExitExpr_inject_stmt(ctx *parser.Expr_inject_stmtContext) {
 	expr := s.popExpr()
@@ -3350,18 +2823,6 @@ func (s *TreeShapeListener) ExitExpr_inject_stmt(ctx *parser.Expr_inject_stmtCon
 	}
 	tx.Stmt = append(tx.Stmt, stmt)
 }
-
-// EnterExpr_stmt is called when production expr_stmt is entered.
-func (s *TreeShapeListener) EnterExpr_stmt(*parser.Expr_stmtContext) {}
-
-// ExitExpr_stmt is called when production expr_stmt is exited.
-func (s *TreeShapeListener) ExitExpr_stmt(*parser.Expr_stmtContext) {}
-
-// EnterSet_of is called when production set_of is entered.
-func (s *TreeShapeListener) EnterSet_of(*parser.Set_ofContext) {}
-
-// ExitSet_of is called when production set_of is exited.
-func (s *TreeShapeListener) ExitSet_of(*parser.Set_ofContext) {}
 
 // EnterTransform_return_type is called when production transform_return_type is entered.
 func (s *TreeShapeListener) EnterTransform_return_type(ctx *parser.Transform_return_typeContext) {
@@ -3411,12 +2872,6 @@ func (s *TreeShapeListener) EnterTransform_scope_var(ctx *parser.Transform_scope
 	tx.Scopevar = ctx.GetText()
 }
 
-// ExitTransform_scope_var is called when production transform_scope_var is exited.
-func (s *TreeShapeListener) ExitTransform_scope_var(*parser.Transform_scope_varContext) {}
-
-// EnterTransform_arg is called when production transform_arg is entered.
-func (s *TreeShapeListener) EnterTransform_arg(*parser.Transform_argContext) {}
-
 // ExitTransform_arg is called when production transform_arg is exited.
 func (s *TreeShapeListener) ExitTransform_arg(*parser.Transform_argContext) {
 	expr := s.popExpr()
@@ -3446,12 +2901,6 @@ func (s *TreeShapeListener) ExitTransform(ctx *parser.TransformContext) {
 	}
 }
 
-// EnterExpr_block is called when production expr_block is entered.
-func (s *TreeShapeListener) EnterExpr_block(*parser.Expr_blockContext) {}
-
-// ExitExpr_block is called when production expr_block is exited.
-func (s *TreeShapeListener) ExitExpr_block(*parser.Expr_blockContext) {}
-
 // EnterView_param is called when production view_param is entered.
 func (s *TreeShapeListener) EnterView_param(ctx *parser.View_paramContext) {
 	s.fieldname = append(s.fieldname, ctx.Name_str().GetText())
@@ -3478,12 +2927,6 @@ func (s *TreeShapeListener) ExitView_param(*parser.View_paramContext) {
 	}
 	view.Param = append(view.Param, p)
 }
-
-// EnterView_params is called when production view_params is entered.
-func (s *TreeShapeListener) EnterView_params(*parser.View_paramsContext) {}
-
-// ExitView_params is called when production view_params is exited.
-func (s *TreeShapeListener) ExitView_params(*parser.View_paramsContext) {}
 
 // EnterView is called when production view is entered.
 func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
@@ -3578,11 +3021,11 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	if s.module.Apps[s.appname].Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil) {
 		s.module.Apps[s.appname].Types = map[string]*sysl.Type{}
 	}
-	has_stmts := (ctx.Simple_endpoint(0) != nil ||
+	has_stmts := ctx.Simple_endpoint(0) != nil ||
 		ctx.Rest_endpoint(0) != nil ||
 		ctx.Event(0) != nil ||
 		ctx.Subscribe(0) != nil ||
-		ctx.Collector(0) != nil)
+		ctx.Collector(0) != nil
 	if s.module.Apps[s.appname].Endpoints == nil && has_stmts {
 		s.module.Apps[s.appname].Endpoints = map[string]*sysl.Endpoint{}
 	}
@@ -3616,12 +3059,6 @@ func (s *TreeShapeListener) ExitApp_decl(ctx *parser.App_declContext) {
 	s.typename = ""
 }
 
-// EnterApplication is called when production application is entered.
-func (s *TreeShapeListener) EnterApplication(*parser.ApplicationContext) {}
-
-// ExitApplication is called when production application is exited.
-func (s *TreeShapeListener) ExitApplication(*parser.ApplicationContext) {}
-
 // EnterImport_stmt is called when production import_stmt is entered.
 func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	path := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
@@ -3653,19 +3090,6 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	}
 
 	s.imports = append(s.imports, id)
-}
-
-// ExitImport_stmt is called when production import_stmt is exited.
-func (s *TreeShapeListener) ExitImport_stmt(*parser.Import_stmtContext) {}
-
-// EnterImports_decl is called when production imports_decl is entered.
-func (s *TreeShapeListener) EnterImports_decl(*parser.Imports_declContext) {}
-
-// ExitImports_decl is called when production imports_decl is exited.
-func (s *TreeShapeListener) ExitImports_decl(*parser.Imports_declContext) {}
-
-// EnterSysl_file is called when production sysl_file is entered.
-func (s *TreeShapeListener) EnterSysl_file(ctx *parser.Sysl_fileContext) {
 }
 
 // ExitSysl_file is called when production sysl_file is exited.
