@@ -10,8 +10,8 @@ toc: true
 
 Sysl consists of two executables: `sysl` and `reljam`.</br> The **Sy**stem **S**pecification **L**anguage `sysl` is mainly concerned with diagram creation whereas the **Rel**ational **Ja**va **M**odel program `reljam` generates different types of source code output.
 
-Sysl outputs
-------------
+## Sysl outputs
+
 | Command | Description |
 |---------|-------------|
 | data    | Data Model diagrams |
@@ -21,8 +21,8 @@ Sysl outputs
 | textpb  | Text based Protocol Buffer files of the Sysl definitions (plugins, debugging) |
 
 
-Sysl examples
--------------
+## Sysl examples
+
 `sysl` can generate diagrams - Data model diagrams, Integration Diagrams and Sequence Diagrams - and Protobuf intermediate representations from `*.sysl` input files.
 
 ### Integration Diagrams
@@ -167,10 +167,10 @@ apps {
 }
 ```
 
-Reljam examples
----------------
+## Reljam examples
 
-### Java Model
+
+## Java Model
 In the following example we will use `reljam model` to generate Java source code for a sysl data model.
 
 The input file `reljam-model.sysl` contains:
