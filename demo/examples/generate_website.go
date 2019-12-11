@@ -97,24 +97,15 @@ func cachedPygmentize(lex string, src string) string {
 	ensureDir(cacheDir)
 	arg := []string{"-l", lex, "-f", "html"}
 	cachePath := cacheDir + "/pygmentize-" + strings.Join(arg, "-") + "-" + sha1Sum(src)
-	// fmt.Println(cachePath)
 	fmt.Println(arg)
 
 	cacheBytes, cacheErr := ioutil.ReadFile(cachePath)
 	if cacheErr == nil {
 		return string(cacheBytes)
 	}
-	// code := ""
-	// renderBytes := pipe(pygmentizeBin, arg, src)
-	// for _, i := range
 	code := chromaFormat(src)
 
 	return code
-	// Newer versions of Pygments add silly empty spans.
-	// renderCleanString := strings.Replace(string(renderBytes), "<span></span>", "", -1)
-	// writeErr := ioutil.WriteFile(cachePath, []byte(renderCleanString), 0600)
-	// check(writeErr)
-	// return renderCleanString
 }
 func chromaFormat(code string) string {
 	lexer := syslchroma.Sysl
@@ -129,10 +120,6 @@ func chromaFormat(code string) string {
 		style = styles.Fallback
 	}
 	formatter := html.New(html.WithClasses(true))
-	// if formatter == nil {
-	// 	formatter = formatters.Fallback
-	// }
-
 	iterator, err := lexer.Tokenise(nil, string(code))
 	check(err)
 	buf := new(bytes.Buffer)
