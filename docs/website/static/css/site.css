@@ -66,11 +66,12 @@ h2 a {
 }
 div.example {
     display: inline-block;
-    margin-left: auto;
+    margin-left: 100px;
+
     margin-right: auto;
     margin-bottom: 120px;
     position: absolute;
-    left: 33.333%;
+
     
 }
 div.example table {
