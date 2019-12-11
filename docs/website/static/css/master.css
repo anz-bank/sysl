@@ -1,5 +1,3 @@
-@import url("site.css");
-
 @media (min-width: 768px) {
   html, body {
     position: relative;
@@ -10,7 +8,6 @@
     bottom:0;
   }
 }
-
 
 body {
   font-family: Lato, Arial, sans-serif; }
@@ -1127,13 +1124,14 @@ tr.border-none td {
   }
 }
 #sidebar {
-    position: fixed;
+    position: absolute;
     border: 0px solid red;
     border-right: 1px solid rgba(0,0,0,.07);
     width: 220px;
     margin-top: 40px;
     margin-left: 40px;
-    padding-right: 40px;
+    margin-right: 40px;
+    padding-right: 30px;
 }
 #sidebar ul {
   list-style: none;
