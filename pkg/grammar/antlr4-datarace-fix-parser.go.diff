@@ -16,9 +16,7 @@ index 06e6f61..e7e25e0 100644
 
  var literalNames = []string{
  	"", "", "", "", "", "'!wrap'", "'!table'", "'!type'", "'!alias'", "'!union'",
-@@ -898,13 +896,6 @@ var ruleNames = []string{
- 	"abstract_view", "view", "alias", "app_decl", "application", "import_mode",
- 	"import_stmt", "imports_decl", "sysl_file",
+@@ -898,11 +896,4 @@ var ruleNames = []string{
  }
 -var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
 -

@@ -33,18 +33,6 @@ func (s *BaseSyslParserListener) EnterSize_spec(ctx *Size_specContext) {}
 // ExitSize_spec is called when production size_spec is exited.
 func (s *BaseSyslParserListener) ExitSize_spec(ctx *Size_specContext) {}
 
-// EnterModifier_list is called when production modifier_list is entered.
-func (s *BaseSyslParserListener) EnterModifier_list(ctx *Modifier_listContext) {}
-
-// ExitModifier_list is called when production modifier_list is exited.
-func (s *BaseSyslParserListener) ExitModifier_list(ctx *Modifier_listContext) {}
-
-// EnterModifiers is called when production modifiers is entered.
-func (s *BaseSyslParserListener) EnterModifiers(ctx *ModifiersContext) {}
-
-// ExitModifiers is called when production modifiers is exited.
-func (s *BaseSyslParserListener) ExitModifiers(ctx *ModifiersContext) {}
-
 // EnterName_str is called when production name_str is entered.
 func (s *BaseSyslParserListener) EnterName_str(ctx *Name_strContext) {}
 
@@ -86,12 +74,6 @@ func (s *BaseSyslParserListener) EnterNvp(ctx *NvpContext) {}
 
 // ExitNvp is called when production nvp is exited.
 func (s *BaseSyslParserListener) ExitNvp(ctx *NvpContext) {}
-
-// EnterAttributes is called when production attributes is entered.
-func (s *BaseSyslParserListener) EnterAttributes(ctx *AttributesContext) {}
-
-// ExitAttributes is called when production attributes is exited.
-func (s *BaseSyslParserListener) ExitAttributes(ctx *AttributesContext) {}
 
 // EnterEntry is called when production entry is entered.
 func (s *BaseSyslParserListener) EnterEntry(ctx *EntryContext) {}
@@ -272,12 +254,6 @@ func (s *BaseSyslParserListener) EnterFacade(ctx *FacadeContext) {}
 
 // ExitFacade is called when production facade is exited.
 func (s *BaseSyslParserListener) ExitFacade(ctx *FacadeContext) {}
-
-// EnterDocumentation_stmts is called when production documentation_stmts is entered.
-func (s *BaseSyslParserListener) EnterDocumentation_stmts(ctx *Documentation_stmtsContext) {}
-
-// ExitDocumentation_stmts is called when production documentation_stmts is exited.
-func (s *BaseSyslParserListener) ExitDocumentation_stmts(ctx *Documentation_stmtsContext) {}
 
 // EnterVar_in_curly is called when production var_in_curly is entered.
 func (s *BaseSyslParserListener) EnterVar_in_curly(ctx *Var_in_curlyContext) {}
