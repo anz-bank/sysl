@@ -88,7 +88,7 @@ pkg/parser/grammar.pb.go: pkg/parser/grammar.proto
 pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
 	protoc -I pkg/proto_old -I $(GOPATH)/src --go_out=pkg/proto_old/ sysl.proto
 
-proto: pkg/proto_old/sysl.pb.go
+proto: pkg/sysl/sysl.pb.go
 
 .PHONY: help
 

@@ -3,7 +3,7 @@ package syslutil
 import (
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 )
 

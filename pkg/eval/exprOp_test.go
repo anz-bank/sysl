@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/stretchr/testify/require"
 )
 

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/parse"
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"

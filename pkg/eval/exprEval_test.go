@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/anz-bank/sysl/pkg/parse"
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"

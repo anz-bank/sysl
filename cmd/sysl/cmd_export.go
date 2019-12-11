@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/exporter"
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"

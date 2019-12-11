@@ -6,7 +6,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

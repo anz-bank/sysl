@@ -3,7 +3,7 @@ package syslutil
 import (
 	"sort"
 
-	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	sysl "github.com/anz-bank/sysl/pkg/sysl"
 )
 
 type StrSet map[string]struct{}
