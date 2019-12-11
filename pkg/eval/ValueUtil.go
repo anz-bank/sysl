@@ -337,10 +337,6 @@ func (s Scope) AddModule(name string, module *sysl.Module) {
 		AddItemToValueMap(apps, n, addAppToValueMap(a))
 	}
 
-	for n, t := range module.Types {
-		AddItemToValueMap(types, n, TypeToValue(t))
-	}
-
 	m := MakeValueMap()
 	AddItemToValueMap(m, "apps", apps)
 	AddItemToValueMap(m, "types", types)

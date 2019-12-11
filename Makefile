@@ -80,7 +80,15 @@ pkg/grammar/sysl_lexer.go: antlr
 	git apply pkg/grammar/antlr4-datarace-fix-lexer.go.diff
 
 
-grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go ## Regenerate the antlr4 grammars
+grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go pkg/parser/grammar.pb.go ## Regenerate the grammars
+
+pkg/parser/grammar.pb.go: pkg/parser/grammar.proto
+	protoc -I pkg/parser -I $(GOPATH)/src --go_out=pkg/parser grammar.proto
+
+pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
+	protoc -I pkg/proto_old -I $(GOPATH)/src --go_out=pkg/proto_old/ sysl.proto
+
+proto: pkg/proto_old/sysl.pb.go
 
 .PHONY: help
 

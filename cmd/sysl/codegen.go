@@ -8,9 +8,8 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/eval"
 	"github.com/anz-bank/sysl/pkg/msg"
-	parser "github.com/anz-bank/sysl/pkg/naive"
 	"github.com/anz-bank/sysl/pkg/parse"
-	ebnfGrammar "github.com/anz-bank/sysl/pkg/proto"
+	"github.com/anz-bank/sysl/pkg/parser"
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/validate"
@@ -35,9 +34,9 @@ func getKeyFromValueMap(v *sysl.Value, key string) *sysl.Value {
 }
 
 func processChoice(
-	g *ebnfGrammar.Grammar,
+	g *parser.Grammar,
 	obj *sysl.Value,
-	choice *ebnfGrammar.Choice,
+	choice *parser.Choice,
 	logger *logrus.Logger,
 ) Node {
 	var result Node
@@ -48,9 +47,9 @@ func processChoice(
 		for _, term := range seq.Term {
 			switch x := term.Atom.Union.(type) {
 			// String tokens dont have quantifiers
-			case *ebnfGrammar.Atom_String_:
+			case *parser.Atom_String_:
 				seqResult = append(seqResult, x.String_)
-			case *ebnfGrammar.Atom_Rulename:
+			case *parser.Atom_Rulename:
 				var ruleResult interface{}
 
 				minc, maxc := parser.GetTermMinMaxCount(term)
@@ -114,7 +113,7 @@ func processChoice(
 					}
 				}
 				seqResult = append(seqResult, ruleResult)
-			case *ebnfGrammar.Atom_Choices:
+			case *parser.Atom_Choices:
 				// minc, maxc := parser.GetMinMaxCount(term)
 				node := processChoice(g, obj, x.Choices, logger)
 				if len(node) == 0 {
@@ -138,7 +137,7 @@ func processChoice(
 	return result
 }
 
-func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string, logger *logrus.Logger) Node {
+func processRule(g *parser.Grammar, obj *sysl.Value, ruleName string, logger *logrus.Logger) Node {
 	var str string
 	if x := obj.GetMap(); x != nil {
 		for key := range x.Items {
@@ -159,7 +158,7 @@ func processRule(g *ebnfGrammar.Grammar, obj *sysl.Value, ruleName string, logge
 	return root
 }
 
-func readGrammar(filename, grammarName, startRule string) (*ebnfGrammar.Grammar, error) {
+func readGrammar(filename, grammarName, startRule string) (*parser.Grammar, error) {
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -318,7 +317,7 @@ func GenerateCode(
 	return codeOutput, nil
 }
 
-func appendCodeOutput(g *ebnfGrammar.Grammar, v *sysl.Value,
+func appendCodeOutput(g *parser.Grammar, v *sysl.Value,
 	logger *logrus.Logger, codeOutput []*CodeGenOutput, filename string) []*CodeGenOutput {
 	r := processRule(g, v, g.Start, logger)
 	codeOutput = append(codeOutput, &CodeGenOutput{filename, r})

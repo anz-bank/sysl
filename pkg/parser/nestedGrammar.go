@@ -1,9 +1,5 @@
 package parser
 
-import (
-	sysl "github.com/anz-bank/sysl/pkg/proto"
-)
-
 type parserStack []*parser
 
 func (s *parserStack) push(p *parser) {
@@ -26,7 +22,7 @@ type nestedParser struct {
 	nested   *parser
 }
 
-func makeNestedGrammarParser(text string, grammars ...*sysl.Grammar) *nestedParser {
+func makeNestedGrammarParser(text string, grammars ...*Grammar) *nestedParser {
 	nested := nestedParser{
 		stack:    parserStack{},
 		grammars: map[string]*parser{},
