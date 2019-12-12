@@ -8,10 +8,13 @@ HelloWorld:
         id <: int
         title <: string
         completed <: bool
+        # specify mandatory fields by using "?" at the end of the datatype 
+        something <: string?
+
     
     !type ErrorResponse:
         status <: string
-    # Use the `!alias` keyword to alias to another name 
+    # Use the `!alias` keyword to alias to another identifier 
     !alias Requests:
         sequence of Request
     # Specify an endpoint as the next indent.
@@ -21,3 +24,5 @@ HelloWorld:
 
 
 # Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands.
+
+# TODO: Mandatory vs optional fields

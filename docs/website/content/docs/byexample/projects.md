@@ -42,12 +42,15 @@ Segs = [[
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">Server</span><span class="p">:</span></pre>""",DocsRendered= """""", CodeForJs = """Server:
 """},
 
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="nf">Login</span><span class="p">(</span><span class="nx">data</span> <span class="p">&lt;:</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginData</span><span class="p">):</span>
         <span class="k">return</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginResponse</span></pre>""",DocsRendered= """<p>Use &ldquo;Application.Type&rdquo; to use a data type defined in another application</p>
 """, CodeForJs = """    Login(data <: MobileApp.LoginData):
         return MobileApp.LoginResponse
 """},
+
+      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>TODO: Imports</p>
+""", CodeForJs = """"""},
 
 ],
 

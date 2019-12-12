@@ -4,11 +4,11 @@ title= "Data Model Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 7
+weight = 8
 topic = "Diagrams"
 Images = [
   
-  "/assets/byexample/images/data-model-diagrams6.png",
+  "/assets/byexample/images/data-model-diagrams7.png",
   
 ]
 
@@ -21,8 +21,7 @@ Segs = [[
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">Project</span><span class="p">:</span>
     <span class="nx">_</span><span class="p">:</span>
         <span class="nx">App</span>
-        </pre>""",DocsRendered= """<p>this is a comment</p>
-""", CodeForJs = """Project:
+        </pre>""",DocsRendered= """""", CodeForJs = """Project:
     _:
         App
         
