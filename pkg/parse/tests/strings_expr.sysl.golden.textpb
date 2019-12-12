@@ -224,7 +224,7 @@ apps: <
           end: <
             line: 14
           >
-          text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:\n    -> (scopeVar:\n      out = \"abc\"\n      out1 = \"'abc'\"\n      out2 = \"\\\"On\\nMultiple\\nLines\\\"\"\n\n      out3 = '\"abc\"'\n      out4 = 'abc'\n      # output does not match legacy!\n      # golden output had to be modified for this test to work.\n      out5 = '\"abc\\ndef\"'\n    )\n"
+          text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
         >
       >
     >

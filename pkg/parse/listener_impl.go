@@ -2933,10 +2933,28 @@ func (s *TreeShapeListener) ExitView_param(*parser.View_paramContext) {
 // EnterView is called when production view is entered.
 func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 	viewName := ctx.Name_str().GetText()
+
+	// There is a bug in the antlr4 go runtime that means we cant directly get the text between 2 tokens!
+	// To work around this, take the full text and the just cut it off at the expected text index
+	sc := s.sc.GetWithText(ctx.BaseParserRuleContext)
+
+	for index := 0; index < len(sc.Text); {
+		next := strings.Index(sc.Text[index:], ":")
+		if next < 1 {
+			break
+		}
+		index += next
+		if sc.Text[index-1] != '<' {
+			sc.Text = sc.Text[:index+1]
+			break
+		}
+		index++
+	}
+
 	s.module.Apps[s.appname].Views[viewName] = &sysl.View{
 		Param:         []*sysl.Param{},
 		RetType:       &sysl.Type{},
-		SourceContext: s.sc.GetWithText(ctx.BaseParserRuleContext),
+		SourceContext: sc,
 	}
 	if ctx.Attribs_or_modifiers() != nil {
 		v := s.module.Apps[s.appname].Views[viewName]
