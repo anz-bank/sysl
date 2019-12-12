@@ -201,7 +201,7 @@ func (v *DatabaseScriptView) writeCreateSQLForRelation(
 	var tableData string
 	for _, attrName := range attrNames {
 		attrType := entity.AttrDefs[attrName]
-		s, _ := v.writeCreateSQLForAColumn(attrType, entityName, attrName, &primaryKeys, 
+		s, _ := v.writeCreateSQLForAColumn(attrType, entityName, attrName, &primaryKeys,
 			&foreignKeyConstraints, visitedAttributes)
 		tableData += s
 	}
@@ -250,7 +250,7 @@ func (v *DatabaseScriptView) writeModifySQLForRelation(
 		if attrTypeOld == nil {
 			//attribute added
 			var foreignKeyConstraints = []string{}
-			str, isNewColumnPK := v.writeCreateSQLForAColumn(attrTypeNew, entityName, attrNameNew, 
+			str, isNewColumnPK := v.writeCreateSQLForAColumn(attrTypeNew, entityName, attrNameNew,
 				&primaryKeys, &foreignKeyConstraints, visitedAttributes)
 			str = strings.TrimSpace(str)
 			str = str[:len(str)-1]
@@ -266,7 +266,7 @@ func (v *DatabaseScriptView) writeModifySQLForRelation(
 		}
 		if attrTypeOld != nil {
 			//column retained. Find out it anything changed about the column. And then write alter queries for those columns
-			primaryKeyChangedByColumn, wasOldPrimaryKey := v.writeModifySQLForAColumn(attrTypeOld, attrTypeNew, 
+			primaryKeyChangedByColumn, wasOldPrimaryKey := v.writeModifySQLForAColumn(attrTypeOld, attrTypeNew,
 				entityName, attrNameNew, &primaryKeys, visitedAttributes)
 			if primaryKeyChangedByColumn {
 				primaryKeyChanged = true
@@ -288,10 +288,10 @@ func (v *DatabaseScriptView) writeModifySQLForRelation(
 	if primaryKeyChanged {
 		pk := v.getPrimaryKeyString(primaryKeys)
 		v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY(%s);\n",
-		 entityName, pkConstraintName, pk))
+			entityName, pkConstraintName, pk))
 	}
 }
-func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, entityName, attrName string, 
+func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, entityName, attrName string,
 	primaryKeys, foreignKeyConstraints *[]string, visitedAttributes map[string]string) (string, bool) {
 	var s string
 	isAutoIncrement, isPrimaryKey := v.isAutoIncrementAndPrimaryKey(attrType)
@@ -332,7 +332,7 @@ func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, enti
 	return s, isPrimaryKey
 }
 
-func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *proto.Type, entityName, 
+func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *proto.Type, entityName,
 	attrName string, primaryKeys *[]string, visitedAttributes map[string]string) (bool, bool) {
 	typeRefNew := attrTypeNew.GetTypeRef()
 	typeRefOld := attrTypeOld.GetTypeRef()
@@ -353,18 +353,18 @@ func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *
 		datatype = visitedAttributes[typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1]]
 		if typeRefOld == nil {
 			// typeref added. Add Foreign Key Constraint
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", 
-			entityName, attrName, datatype))
+			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n",
+				entityName, attrName, datatype))
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
-			 	entityName, attrName, typeRefNew.GetRef().Path[0], typeRefNew.GetRef().Path[1]))
+				entityName, attrName, typeRefNew.GetRef().Path[0], typeRefNew.GetRef().Path[1]))
 			visitedAttributes[entityName+"."+attrName] = datatype
-		} else if !strings.EqualFold(typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1], 
-		typeRefOld.GetRef().Path[0]+"."+typeRefOld.GetRef().Path[1]) {
+		} else if !strings.EqualFold(typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1],
+			typeRefOld.GetRef().Path[0]+"."+typeRefOld.GetRef().Path[1]) {
 			//typeref changed. Drop previous foreign key constraint and add new.
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s DROP CONSTRAINT %s;\n", entityName, fkName))
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
-			 entityName, attrName, typeRefNew.GetRef().Path[0],
-			typeRefNew.GetRef().Path[1]))
+				entityName, attrName, typeRefNew.GetRef().Path[0],
+				typeRefNew.GetRef().Path[1]))
 			visitedAttributes[entityName+"."+attrName] = datatype
 		}
 	} else {
@@ -384,7 +384,8 @@ func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *
 				datatype = v.getDataTypeAndSize(attrTypeNew)
 				visitedAttributes[entityName+"."+attrName] = datatype
 			}
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", entityName, attrName, datatype))
+			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", entityName,
+				attrName, datatype))
 			//datatype has not changed. Check if the autoincrement has changed
 		} else if isAutoIncrementNew != isAutoIncrementOld {
 			if isAutoIncrementNew {
@@ -396,7 +397,8 @@ func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *
 				datatype = v.getDataTypeAndSize(attrTypeNew)
 				visitedAttributes[entityName+"."+attrName] = datatype
 			}
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", entityName, attrName, datatype))
+			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n",
+				entityName, attrName, datatype))
 		}
 	}
 	return primaryKeyChanged, isPrimaryKeyOld
@@ -522,7 +524,8 @@ func (v *DatabaseScriptView) createTableDepthMap(typeMap map[string]*proto.Type)
 	for tableName := range typeMap {
 		incompleteTableDepthMap[tableName] = 0
 	}
-	v.processTableDepth(typeMap, completedTableDepthMap, completeTableDepthMap, incompleteTableDepthMap, visitedTableAttrDepth)
+	v.processTableDepth(typeMap, completedTableDepthMap, completeTableDepthMap, incompleteTableDepthMap,
+		visitedTableAttrDepth)
 	return completedTableDepthMap
 }
 
@@ -534,7 +537,8 @@ func (v *DatabaseScriptView) processTableDepth(
 	visitedTableAttrs map[string]string,
 ) {
 	for tableName := range incompleteTableDepthMap {
-		processComplete, size, tempVisitedAttrs := v.findTableDepth(tableName, typeMap[tableName], visitedTableAttrs, completeTableDepthMap)
+		processComplete, size, tempVisitedAttrs := v.findTableDepth(tableName, typeMap[tableName],
+			visitedTableAttrs, completeTableDepthMap)
 		if processComplete {
 			processedTablesSlice := completedTableDepthMap[size]
 			if processedTablesSlice == nil {
@@ -550,7 +554,8 @@ func (v *DatabaseScriptView) processTableDepth(
 		}
 	}
 	if len(incompleteTableDepthMap) != 0 {
-		v.processTableDepth(typeMap, completedTableDepthMap, completeTableDepthMap, incompleteTableDepthMap, visitedTableAttrs)
+		v.processTableDepth(typeMap, completedTableDepthMap, completeTableDepthMap, incompleteTableDepthMap,
+			visitedTableAttrs)
 	}
 }
 
