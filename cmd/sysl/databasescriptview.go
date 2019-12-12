@@ -146,7 +146,8 @@ func (v *DatabaseScriptView) GenerateDatabaseScriptCreate(dataParam *DatabaseScr
 	return v.stringBuilder.String()
 }
 
-func (v *DatabaseScriptView) writeCreateSQLForRelationship(relationshipMap map[string]map[string]RelationshipParam, viewType string) {
+func (v *DatabaseScriptView) writeCreateSQLForRelationship(
+	relationshipMap map[string]map[string]RelationshipParam, viewType string) {
 	relNames := []string{}
 	for relName := range relationshipMap {
 		relNames = append(relNames, relName)
@@ -200,7 +201,8 @@ func (v *DatabaseScriptView) writeCreateSQLForRelation(
 	var tableData string
 	for _, attrName := range attrNames {
 		attrType := entity.AttrDefs[attrName]
-		s, _ := v.writeCreateSQLForAColumn(attrType, entityName, attrName, &primaryKeys, &foreignKeyConstraints, visitedAttributes)
+		s, _ := v.writeCreateSQLForAColumn(attrType, entityName, attrName, &primaryKeys, 
+			&foreignKeyConstraints, visitedAttributes)
 		tableData += s
 	}
 	tableData = v.addConstraints(tableData, entityName, foreignKeyConstraints, primaryKeys)
@@ -248,7 +250,8 @@ func (v *DatabaseScriptView) writeModifySQLForRelation(
 		if attrTypeOld == nil {
 			//attribute added
 			var foreignKeyConstraints = []string{}
-			str, isNewColumnPK := v.writeCreateSQLForAColumn(attrTypeNew, entityName, attrNameNew, &primaryKeys, &foreignKeyConstraints, visitedAttributes)
+			str, isNewColumnPK := v.writeCreateSQLForAColumn(attrTypeNew, entityName, attrNameNew, 
+				&primaryKeys, &foreignKeyConstraints, visitedAttributes)
 			str = strings.TrimSpace(str)
 			str = str[:len(str)-1]
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD COLUMN %s;\n", entityName, str))
@@ -263,7 +266,8 @@ func (v *DatabaseScriptView) writeModifySQLForRelation(
 		}
 		if attrTypeOld != nil {
 			//column retained. Find out it anything changed about the column. And then write alter queries for those columns
-			primaryKeyChangedByColumn, wasOldPrimaryKey := v.writeModifySQLForAColumn(attrTypeOld, attrTypeNew, entityName, attrNameNew, &primaryKeys, visitedAttributes)
+			primaryKeyChangedByColumn, wasOldPrimaryKey := v.writeModifySQLForAColumn(attrTypeOld, attrTypeNew, 
+				entityName, attrNameNew, &primaryKeys, visitedAttributes)
 			if primaryKeyChangedByColumn {
 				primaryKeyChanged = true
 			}
@@ -283,10 +287,12 @@ func (v *DatabaseScriptView) writeModifySQLForRelation(
 	//ADD A PRIMARY KEY
 	if primaryKeyChanged {
 		pk := v.getPrimaryKeyString(primaryKeys)
-		v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY(%s);\n", entityName, pkConstraintName, pk))
+		v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY(%s);\n",
+		 entityName, pkConstraintName, pk))
 	}
 }
-func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, entityName, attrName string, primaryKeys, foreignKeyConstraints *[]string, visitedAttributes map[string]string) (string, bool) {
+func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, entityName, attrName string, 
+	primaryKeys, foreignKeyConstraints *[]string, visitedAttributes map[string]string) (string, bool) {
 	var s string
 	isAutoIncrement, isPrimaryKey := v.isAutoIncrementAndPrimaryKey(attrType)
 	if isPrimaryKey {
@@ -326,7 +332,8 @@ func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, enti
 	return s, isPrimaryKey
 }
 
-func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *proto.Type, entityName, attrName string, primaryKeys *[]string, visitedAttributes map[string]string) (bool, bool) {
+func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *proto.Type, entityName, 
+	attrName string, primaryKeys *[]string, visitedAttributes map[string]string) (bool, bool) {
 	typeRefNew := attrTypeNew.GetTypeRef()
 	typeRefOld := attrTypeOld.GetTypeRef()
 	primaryKeyChanged := false
@@ -346,13 +353,18 @@ func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *
 		datatype = visitedAttributes[typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1]]
 		if typeRefOld == nil {
 			// typeref added. Add Foreign Key Constraint
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", entityName, attrName, datatype))
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n", entityName, attrName, typeRefNew.GetRef().Path[0], typeRefNew.GetRef().Path[1]))
+			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", 
+			entityName, attrName, datatype))
+			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
+			 	entityName, attrName, typeRefNew.GetRef().Path[0], typeRefNew.GetRef().Path[1]))
 			visitedAttributes[entityName+"."+attrName] = datatype
-		} else if !strings.EqualFold(typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1], typeRefOld.GetRef().Path[0]+"."+typeRefOld.GetRef().Path[1]) {
+		} else if !strings.EqualFold(typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1], 
+		typeRefOld.GetRef().Path[0]+"."+typeRefOld.GetRef().Path[1]) {
 			//typeref changed. Drop previous foreign key constraint and add new.
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s DROP CONSTRAINT %s;\n", entityName, fkName))
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n", entityName, attrName, typeRefNew.GetRef().Path[0], typeRefNew.GetRef().Path[1]))
+			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
+			 entityName, attrName, typeRefNew.GetRef().Path[0],
+			typeRefNew.GetRef().Path[1]))
 			visitedAttributes[entityName+"."+attrName] = datatype
 		}
 	} else {
