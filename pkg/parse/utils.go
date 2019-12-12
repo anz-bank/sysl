@@ -19,17 +19,14 @@ type sourceCtxHelper struct {
 }
 
 func (s sourceCtxHelper) Get(ctx *antlr.BaseParserRuleContext) *sysl.SourceContext {
-	return s.get(ctx, false)
+	return s.get(ctx.GetStart(), ctx.GetStop(), false)
 }
 
 func (s sourceCtxHelper) GetWithText(ctx *antlr.BaseParserRuleContext) *sysl.SourceContext {
-	return s.get(ctx, true)
+	return s.get(ctx.GetStart(), ctx.GetStop(), true)
 }
 
-func (s sourceCtxHelper) get(ctx *antlr.BaseParserRuleContext, withText bool) *sysl.SourceContext {
-	start := ctx.GetStart()
-	end := ctx.GetStop()
-
+func (s sourceCtxHelper) get(start, end antlr.Token, withText bool) *sysl.SourceContext {
 	var text string
 	if withText {
 		is := start.GetInputStream()
