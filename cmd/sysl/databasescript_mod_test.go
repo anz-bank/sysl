@@ -8,6 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const percent = '%'
+
 type scriptModArgs struct {
 	root       string
 	title      string
@@ -23,7 +25,7 @@ func TestDoConstructDatabaseScriptMod(t *testing.T) {
 		root:       "./tests/",
 		modulesOld: "dataForSqlScriptOrg.sysl",
 		modulesNew: "dataForSqlScriptModified.sysl",
-		output:     "%(epname).sql",
+		output:     databaseScriptHeader + "(epname).sql",
 		project:    "Project",
 		title:      "Petstore Schema",
 		expected: map[string]string{
@@ -39,7 +41,7 @@ func TestDoConstructDatabaseScriptMod(t *testing.T) {
 func DoConstructModDatabaseScriptWithParams(
 	rootModel, filter, title, output, project, modulesOld, modulesNew string,
 ) (map[string]string, error) {
-	classFormat := "%(classname)"
+	classFormat := databaseScriptHeader + "(classname)"
 	cmdContextParamDatagen := &CmdContextParamDatagen{
 		filter:      filter,
 		title:       title,
