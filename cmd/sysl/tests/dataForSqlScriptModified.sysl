@@ -1,0 +1,42 @@
+Project [seqtitle="DataModel"]:
+  Relational-Model:
+    RelModel
+
+RelModel:
+    !table EmployeeTendsPet:
+        employeeId <: Employee.employeeId [~pk]
+        petId <: Pet.petId [~pk]
+
+    !table Employee:
+        employeeId <: int [~pk, ~autoinc]
+        name <: string(3..25)?
+        dob <: date?
+        error <: int
+        dept <: Department.deptId
+
+    !table Pet:
+        petId <: int [~pk, ~autoinc]
+        breedId <: Breed.breedId
+        name <: string?
+        dob <: date?
+        numLegs <: string(0..1)?
+        diet <: string(3..45)
+        petCounter <: int[~autoinc]
+
+    !table Breed:
+        breedId <: int [~pk, ~autoinc]
+        breedName <: string(6..35)?
+        species <: string?
+        numLegs <: string(0..1)?
+        legRank <: int?
+
+    !table Department:
+        deptId <: int [~pk]
+        deptName <: string(6..40)?
+        deptLoc <: string?
+        abn <: Company.abnNumber
+
+    !table Company:
+        abnNumber <: string [~pk]
+        companyName <: string(0..30)?
+        companyCountry <: string(0..10)?

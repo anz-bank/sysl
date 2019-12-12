@@ -82,6 +82,7 @@ type CmdContextParamDatagen struct {
 
 type ExecuteArgs struct {
 	Module         *sysl.Module
+	ModuleNew      *sysl.Module
 	Filesystem     afero.Fs
 	Logger         *logrus.Logger
 	DefaultAppName string
