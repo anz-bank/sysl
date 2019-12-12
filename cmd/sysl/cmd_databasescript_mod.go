@@ -39,8 +39,8 @@ func GenerateModDatabaseScripts(datagenParams *CmdContextParamDatagen,
 		of := MakeFormatParser(datagenParams.output)
 		outputDir = of.FmtOutput(datagenParams.project, epname, "", nil)
 	}
-	generateModDatabaseScripts(spclass, outmap, modelOld, modelNew, endptOld.GetStmt(), endptNew.GetStmt(), datagenParams.title, datagenParams.project, outputDir)
-
+	generateModDatabaseScripts(spclass, outmap, modelOld, modelNew, endptOld.GetStmt(), endptNew.GetStmt(),
+		datagenParams.title, datagenParams.project, outputDir)
 	return outmap, nil
 }
 
@@ -86,7 +86,8 @@ func generateModDatabaseScripts(pclass ClassLabeler, outmap map[string]string, m
 
 }
 
-func processTables(tableDetails []TableDetails, title, project, outDir string, pclass ClassLabeler, stringBuilder strings.Builder, outmap map[string]string) {
+func processTables(tableDetails []TableDetails, title, project, outDir string, pclass ClassLabeler,
+	stringBuilder strings.Builder, outmap map[string]string) {
 	dataParam := &DatabaseScriptModifyParam{
 		tableDetails: tableDetails,
 		title:        title,

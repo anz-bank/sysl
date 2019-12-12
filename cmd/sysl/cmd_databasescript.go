@@ -10,6 +10,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const datamodel = `datamodel`
+
 func GenerateDatabaseScripts(datagenParams *CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
 	outmap := make(map[string]string)
@@ -66,7 +68,7 @@ type databaseScriptCmd struct {
 	CmdContextParamDatagen
 }
 
-func (p *databaseScriptCmd) Name() string            { return "datamodel" }
+func (p *databaseScriptCmd) Name() string            { return datamodel }
 func (p *databaseScriptCmd) RequireSyslModule() bool { return true }
 
 func (p *databaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
