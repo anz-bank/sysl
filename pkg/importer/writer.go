@@ -179,7 +179,8 @@ func buildRequestBodyString(params []Param) string {
 		})
 		var parts []string
 		for _, p := range params {
-			parts = append(parts, fmt.Sprintf("%s <: %s [~body]", p.Name, getSyslTypeName(p.Type)))
+			attrs := appendAttributesString("", append(p.Field.Attributes, "~body"))
+			parts = append(parts, fmt.Sprintf("%s <: %s%s", p.Name, getSyslTypeName(p.Type), attrs))
 		}
 		body = strings.Join(parts, ", ")
 	}

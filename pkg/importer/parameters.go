@@ -28,6 +28,13 @@ func (p *Parameters) Add(param Param) {
 	p.items[param.Name] = param
 }
 
+func (p *Parameters) Extend(others Parameters) Parameters {
+	for _, name := range others.insertOrder {
+		p.Add(others.items[name])
+	}
+	return *p
+}
+
 func (p Parameters) findParams(where string) []Param {
 	var res []Param
 	for _, name := range p.insertOrder {

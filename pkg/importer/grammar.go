@@ -64,7 +64,7 @@ func (g *Grammar) writeSysl() (string, error) {
 
 	for k := range allTypes {
 		if _, found := g.types.Find(k); !found {
-			g.types.Add(&Alias{name: k, Target: &SyslBuiltIn{StringTypeName}})
+			g.types.Add(&Alias{name: k, Target: StringAlias})
 		}
 	}
 
@@ -237,7 +237,7 @@ func linkType(t *Type, types TypeList, cache *map[string]Type) {
 			(*cache)[name] = val
 			return val
 		}
-		return &SyslBuiltIn{StringTypeName}
+		return StringAlias
 	}
 	switch x := (*t).(type) {
 	case *Union:

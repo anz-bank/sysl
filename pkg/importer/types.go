@@ -34,6 +34,8 @@ type SyslBuiltIn struct {
 
 func (s *SyslBuiltIn) Name() string { return s.name }
 
+var StringAlias = &SyslBuiltIn{name: StringTypeName}
+
 // !alias type without the EXTERNAL_ prefix
 type Alias struct {
 	name   string
@@ -47,12 +49,16 @@ type ExternalAlias struct {
 	Target Type
 }
 
-const StringTypeName = "string"
+const (
+	StringTypeName = "string"
+	ObjectTypeName = "object"
+	ArrayTypeName  = "array"
+)
 
 func NewStringAlias(name string) Type {
 	return &ExternalAlias{
 		name:   name,
-		Target: &SyslBuiltIn{name: StringTypeName},
+		Target: StringAlias,
 	}
 }
 
@@ -147,6 +153,11 @@ func (t TypeList) Find(name string) (Type, bool) {
 
 func (t *TypeList) Add(item ...Type) {
 	t.types = append(t.types, item...)
+}
+
+func (t *TypeList) AddAndRet(item Type) Type {
+	t.types = append(t.types, item)
+	return item
 }
 
 func checkBuiltInTypes(name string) (Type, bool) {
