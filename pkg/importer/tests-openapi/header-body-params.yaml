@@ -1,0 +1,33 @@
+openapi: "3.0"
+info:
+  title: Simple
+paths:
+  /test:
+    post:
+      responses:
+        200:
+          description: 200 OK
+      parameters:
+        - name: key
+          schema:
+            type: integer
+          required: false
+          in: header
+        - name: min_date
+          schema:
+            type: string
+          required: true
+          in: header
+          format: date
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleObj'
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        name:
+          type: string

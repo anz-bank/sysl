@@ -59,6 +59,15 @@ func TestLoadSwaggerFromTestFiles(t *testing.T) {
 	})
 }
 
+func TestLoadOpenApiFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadOpenAPIFromTestFiles",
+		testDir:       "tests-openapi",
+		testExtension: "yaml",
+		fn:            LoadOpenAPIText,
+	})
+}
+
 func TestLoadXSDFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadXSDFromTestFiles",

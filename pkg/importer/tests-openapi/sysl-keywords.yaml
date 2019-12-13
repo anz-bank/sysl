@@ -1,0 +1,15 @@
+openapi: "3.0"
+basePath: /fruit-basket
+info:
+  title: Fruit API
+  version: 1.0.0
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        date:
+          type: string
+        string:
+          type: string
+paths: {}
