@@ -1,0 +1,17 @@
+# In this example will use a simple system and start using the sysl command to generate diagrams.
+
+
+MobileApp:
+    Login:
+        Server <- Login
+    !type LoginData:
+        username <: string
+        password <: string
+
+    !type LoginResponse:
+        message <: string
+
+Server:
+
+    Login(data <: MobileApp.LoginData):
+        return MobileApp.LoginResponse

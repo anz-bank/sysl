@@ -46,7 +46,7 @@ isolate your development environment.
 For Java tests, install [Java 8][java-8-install] and
 [gradle](https://gradle.org/install/) and run
 
-```bash
+```
 > gradle test -b test/java/build.gradle
 ```
 

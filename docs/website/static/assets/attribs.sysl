@@ -1,0 +1,33 @@
+User [~human]:
+  Check Balance:
+    MobileApp <- Login
+    MobileApp <- Check Balance
+
+MobileApp [~ui]:
+  Login:
+    Server <- Login
+  Check Balance:
+    Server <- Read User Balance
+
+Server:
+  Login:
+    do input validation
+    DB <- Save
+    return success or failure
+
+  Read User Balance:
+    DB <- Load
+    return balance
+
+DB [~db]:
+  Save: ...
+  Load: ...
+
+Server [status="modified"]:
+  .. * <- *:
+    DB <- Save [status="modified"]
+    DB <- Load [status="modified"]
+
+Project [seqtitle="Diagram", appfmt="%(@status?<color red>%(appname)</color>|%(appname))", epfmt="%(@status? <color green>%(epname)</color>|%(epname))"]:
+  Seq:
+    User <- Check Balance

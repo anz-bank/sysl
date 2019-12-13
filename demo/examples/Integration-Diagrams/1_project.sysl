@@ -1,0 +1,19 @@
+# In this example will use a simple system and start using the sysl command to generate diagrams.
+
+
+IntegratedSystem:
+    integrated_endpoint_1:
+        System1 <- endpoint
+    integrated_endpoint_2:
+        System2 <- endpoint
+
+System1:
+    endpoint: ...
+System2:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    _:
+        IntegratedSystem
+        System1
+        System2

@@ -1,0 +1,4 @@
+Foo:
+    /endpoint:
+        POST (newPost <: string [~body]):
+            return string

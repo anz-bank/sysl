@@ -1,0 +1,28 @@
+MobileApp:
+  Login:
+    Server <- Login
+
+Server:
+  Login(data <: LoginData):
+    build query
+    DB <- Query
+    check result
+    return Server.LoginResponse
+
+  !type LoginData:
+    username <: string
+    password <: string
+
+  !type LoginResponse:
+    message <: string
+
+DB:
+  Query:
+    lookup data
+    return data
+  Save:
+    ...
+
+Project [seqtitle="Diagram"]:
+  Seq:
+    MobileApp <- Login

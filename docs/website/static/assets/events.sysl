@@ -1,0 +1,18 @@
+UserService:
+  <-> RegisterEvent: ...
+
+  Register:
+    do registration
+    . <- RegisterEvent
+
+EmailNotifier:
+    UserService -> RegisterEvent:
+        EmailNotifier got the RegisterEvent
+
+SmsNotifier:
+    UserService -> RegisterEvent:
+        SmsNotifier got RegisterEvent
+
+Project [seqtitle="Publisher Subscriber Model"]:
+  Seq:
+    UserService <- Register

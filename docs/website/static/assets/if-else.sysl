@@ -1,0 +1,22 @@
+Browser:
+  On Submit Button:
+    Server <- HandleFormSubmit
+
+Server:
+  HandleFormSubmit:
+    validate input
+    IF session exists:
+      use existing session
+    Else:
+      create new session
+    process input
+    DB <- Save
+
+DB:
+  Save:
+    ...
+
+Project [seqtitle="Diagram"]:
+  Seq:
+    Browser <- On Submit Button
+
