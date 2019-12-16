@@ -287,11 +287,14 @@ func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, enti
 		*primaryKeys = append(*primaryKeys, attrName)
 	}
 	if typeRef := attrType.GetTypeRef(); typeRef != nil {
+		path0 := typeRef.GetRef().Path[0]
+		path1 := typeRef.GetRef().Path[1]
 		s = fmt.Sprintf("  %s %s,\n",
-			attrName, visitedAttributes[typeRef.GetRef().Path[0]+"."+typeRef.GetRef().Path[1]])
+			attrName, visitedAttributes[path0+"."+path1])
 		fkName := strings.ToUpper(entityName + "_" + attrName + "_FK")
-		*foreignKeyConstraints = append(*foreignKeyConstraints, "  CONSTRAINT "+fkName+" FOREIGN KEY("+attrName+") REFERENCES ")
-		*foreignKeyConstraints = append(*foreignKeyConstraints, typeRef.GetRef().Path[0]+" ("+typeRef.GetRef().Path[1]+"),")
+		*foreignKeyConstraints = append(
+			*foreignKeyConstraints,
+			"  CONSTRAINT "+fkName+" FOREIGN KEY("+attrName+") REFERENCES "+path0+" ("+path1+"),")
 	} else {
 		if isAutoIncrement {
 			s = fmt.Sprintf("  %s %s,\n", attrName, "bigserial")
@@ -343,14 +346,16 @@ func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *
 			// typeref added. Add Foreign Key Constraint
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n",
 				entityName, attrName, datatype))
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
+			v.stringBuilder.WriteString(fmt.Sprintf(
+				"ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
 				entityName, attrName, typeRefNew.GetRef().Path[0], typeRefNew.GetRef().Path[1]))
 			visitedAttributes[entityName+"."+attrName] = datatype
 		} else if !strings.EqualFold(typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1],
 			typeRefOld.GetRef().Path[0]+"."+typeRefOld.GetRef().Path[1]) {
 			//typeref changed. Drop previous foreign key constraint and add new.
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s DROP CONSTRAINT %s;\n", entityName, fkName))
-			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
+			v.stringBuilder.WriteString(fmt.Sprintf(
+				"ALTER TABLE %s ADD CONSTRAINT "+fkName+" FOREIGN KEY(%s) REFERENCES %s(%s);\n",
 				entityName, attrName, typeRefNew.GetRef().Path[0],
 				typeRefNew.GetRef().Path[1]))
 			visitedAttributes[entityName+"."+attrName] = datatype

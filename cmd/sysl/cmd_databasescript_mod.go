@@ -63,7 +63,8 @@ func generateModDatabaseScripts(pclass ClassLabeler, outmap map[string]string, m
 				tableDepthMapOld := v.createTableDepthMap(typeMapOld)
 				tableDepthMapNew := v.createTableDepthMap(typeMapNew)
 				tablesWithActions := findAddedDeletedRetainedTables(typeMapOld, typeMapNew, tableDepthMapOld, tableDepthMapNew)
-				processTables(tablesWithActions, title, project, outDir, pclass, stringBuilder, outmap)
+				processTablesForModifiedApps(tablesWithActions, title, project,
+					outDir, pclass, stringBuilder, outmap)
 			}
 		}
 	}
@@ -73,14 +74,20 @@ func generateModDatabaseScripts(pclass ClassLabeler, outmap map[string]string, m
 			appOld := appsOld[a.Action.Action]
 			// app added in the new sysl file
 			if appNew != nil && appOld == nil {
-				//typeMapNew := appNew.GetTypes()
-				//processAddedTables(typeMapNew, title, project, outDir, pclass, stringBuilder, outmap)
+				dataParam := &DatabaseScriptParam{
+					types:   appNew.GetTypes(),
+					title:   title,
+					project: project,
+				}
+				v := MakeDatabaseScriptView(pclass, &stringBuilder, dataParam.title, dataParam.project)
+				outmap[outDir] = v.GenerateDatabaseScriptCreate(dataParam)
 			}
 		}
 	}
 }
 
-func processTables(tableDetails []TableDetails, title, project, outDir string, pclass ClassLabeler,
+func processTablesForModifiedApps(tableDetails []TableDetails, title,
+	project, outDir string, pclass ClassLabeler,
 	stringBuilder strings.Builder, outmap map[string]string) {
 	dataParam := &DatabaseScriptModifyParam{
 		tableDetails: tableDetails,
