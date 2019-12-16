@@ -8,8 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const percent = '%'
-
 type scriptModArgs struct {
 	root       string
 	title      string

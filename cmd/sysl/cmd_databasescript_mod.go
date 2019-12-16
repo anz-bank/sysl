@@ -85,7 +85,6 @@ func generateModDatabaseScripts(pclass ClassLabeler, outmap map[string]string, m
 	}
 
 }
-
 func processTables(tableDetails []TableDetails, title, project, outDir string, pclass ClassLabeler,
 	stringBuilder strings.Builder, outmap map[string]string) {
 	dataParam := &DatabaseScriptModifyParam{
