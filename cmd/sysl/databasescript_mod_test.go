@@ -23,7 +23,7 @@ func TestDoConstructDatabaseScriptMod(t *testing.T) {
 		root:       "./tests/",
 		modulesOld: "dataForSqlScriptOrg.sysl",
 		modulesNew: "dataForSqlScriptModified.sysl",
-		output:     databaseScriptHeader + "(epname).sql",
+		output:     "%(epname).sql",
 		project:    "Project",
 		title:      "Petstore Schema",
 		expected: map[string]string{

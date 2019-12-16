@@ -80,7 +80,8 @@ func generateModDatabaseScripts(pclass ClassLabeler, outmap map[string]string, m
 					project: project,
 				}
 				v := MakeDatabaseScriptView(pclass, &stringBuilder, dataParam.title, dataParam.project)
-				outmap[outDir] = v.GenerateDatabaseScriptCreate(dataParam)
+				outputStr := v.GenerateDatabaseScriptCreate(dataParam)
+				outmap[outDir] = outputStr
 			}
 		}
 	}
@@ -95,7 +96,8 @@ func processTablesForModifiedApps(tableDetails []TableDetails, title,
 		project:      project,
 	}
 	v := MakeDatabaseScriptView(pclass, &stringBuilder, dataParam.title, dataParam.project)
-	outmap[outDir] = v.GenerateDatabaseScriptModify(dataParam)
+	outputStr := v.GenerateDatabaseScriptModify(dataParam)
+	outmap[outDir] = outputStr
 }
 
 func findAddedDeletedRetainedTables(
