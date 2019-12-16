@@ -39,7 +39,6 @@ The output would be a grammar protobuf, which is handed to a grammar interpreter
 ```
 
 
-Example: Java Grammar
---------------
+## Example: Java Grammar
 
 See [pkg/lib/lang/java.sysl](../../pkg/lib/lang/java.sysl).

@@ -1,0 +1,51 @@
+
+# Here we define an Application
+Todos:
+# Here we can define a type with different fields
+  !type Todo:
+    userId <: int
+    id <: int
+    title <: string
+    completed <: bool
+
+  !type Post:
+    userId <: int
+    id <: int
+    title <: string
+    body <: string
+# Use the `!alias` keyword to alias to another name or a set or sequence
+  !alias Posts:
+    sequence of Post
+
+  !type ErrorResponse:
+    status <: string
+
+  !type ResourceNotFoundError:
+    status <: string
+
+# Here we define the todos endpoint with a get reponse
+  /todos:
+    /{id<:int}:
+      GET:
+        if notfound:
+          return 404 <: ResourceNotFoundError
+        else if failed:
+          return 500 <: ErrorResponse
+        else:    
+          return 200 <: Todo 
+
+  /posts:
+    GET:
+      if notfound:
+        return 404 <: ResourceNotFoundError
+      else if failed:
+        return 500 <: ErrorResponse
+      else:    
+        return 200 <: Posts
+
+  /comments:
+    GET ?postId=int:
+      return Posts
+      
+    POST (newPost <: Post [~body]):
+      return Post

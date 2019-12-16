@@ -195,7 +195,7 @@ Server:
 
 and you use `import` in `client.sysl`
 
-```js
+```
 import server
 
 Client:
@@ -242,11 +242,11 @@ Sysl aims to generate code and documentation from only one source of truth i.e. 
 ### Sequence Diagrams
 You can generate the Sequence Diagram using the following command:
 
-```bash
+```
 sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
 ```
 You can omit the the `.sysl` and sysl will pickup the correct file.
-```bash
+```
 sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call
 ```
 
@@ -258,7 +258,7 @@ See [assets/call.sysl](assets/call.sysl) for complete example.
 
 #### How sysl generates sequence diagram?
 Let's breakdown the `sd` aka `sequence diagram` command:
-```bash
+```
 sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
 ```
   * `-o` specifies the output filename
