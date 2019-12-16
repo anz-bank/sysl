@@ -11,6 +11,8 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+// The idea of syslRootMarker is to be similar to how .git folder works
+// Might have more features using the folder but right now it's just an empty folder
 const syslRootMarker = ".sysl"
 
 type cmdRunner struct {
@@ -36,6 +38,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 			return cmd.Execute(ExecuteArgs{Module: mod, Filesystem: fs, Logger: logger, DefaultAppName: appName})
 		}
 	}
+	logger.Debugf("command %s was configured but not in CmdRunner's commands", which)
 	return nil
 }
 
@@ -51,6 +54,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&validateCmd{},
 		&exportCmd{},
 		&replCmd{},
+		&modCmd{},
 	}
 	r.commands = map[string]Command{}
 
