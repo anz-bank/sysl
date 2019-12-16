@@ -243,7 +243,7 @@ func (v *DatabaseScriptView) writeModifySQLForRelation(
 			str = strings.TrimSpace(str)
 			str = str[:len(str)-1]
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD COLUMN %s;\n", entityName, str))
-			if foreignKeyConstraints != nil && len(foreignKeyConstraints) > 0 {
+			if len(foreignKeyConstraints) > 0 {
 				constraint := foreignKeyConstraints[0]
 				constraint = constraint[:len(constraint)-1]
 				v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD %s;\n", entityName, strings.TrimSpace(constraint)))
@@ -292,7 +292,6 @@ func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, enti
 		fkName := strings.ToUpper(entityName + "_" + attrName + "_FK")
 		*foreignKeyConstraints = append(*foreignKeyConstraints, "  CONSTRAINT "+fkName+" FOREIGN KEY("+attrName+") REFERENCES ")
 		*foreignKeyConstraints = append(*foreignKeyConstraints, typeRef.GetRef().Path[0]+" ("+typeRef.GetRef().Path[1]+"),")
-
 	} else {
 		if isAutoIncrement {
 			s = fmt.Sprintf("  %s %s,\n", attrName, "bigserial")
@@ -336,7 +335,7 @@ func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *
 			*primaryKeys = append(*primaryKeys, attrName)
 		}
 	}
-	var datatype = ""
+	datatype := ""
 	fkName := strings.ToUpper(entityName + "_" + attrName + "_FK")
 	if typeRefNew != nil {
 		datatype = visitedAttributes[typeRefNew.GetRef().Path[0]+"."+typeRefNew.GetRef().Path[1]]
@@ -398,14 +397,13 @@ func (v *DatabaseScriptView) isAutoIncrementAndPrimaryKey(attrType *proto.Type) 
 	isPrimaryKey := false
 	if patterns := attrType.GetAttrs(); patterns != nil {
 		if attributesArray := patterns["patterns"].GetA(); attributesArray != nil {
-			if nestedAttrs := attributesArray.GetElt(); nestedAttrs != nil {
-				for _, nestedAttr := range nestedAttrs {
-					if strings.EqualFold("autoinc", nestedAttr.GetS()) {
-						isAutoIncrement = true
-					}
-					if strings.EqualFold("pk", nestedAttr.GetS()) {
-						isPrimaryKey = true
-					}
+			nestedAttrs := attributesArray.GetElt()
+			for _, nestedAttr := range nestedAttrs {
+				if strings.EqualFold("autoinc", nestedAttr.GetS()) {
+					isAutoIncrement = true
+				}
+				if strings.EqualFold("pk", nestedAttr.GetS()) {
+					isPrimaryKey = true
 				}
 			}
 		}
@@ -469,7 +467,7 @@ func (v *DatabaseScriptView) addConstraints(
 
 func (v *DatabaseScriptView) getPrimaryKeyString(primaryKeys []string) string {
 	pk := ""
-	if primaryKeys != nil && len(primaryKeys) > 0 {
+	if len(primaryKeys) > 0 {
 		for curIndex, primaryKey := range primaryKeys {
 			if curIndex != 0 {
 				pk = pk + "," + primaryKey

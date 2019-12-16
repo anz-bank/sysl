@@ -49,10 +49,13 @@ func DoConstructModDatabaseScriptWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	modOld, _, err := LoadSyslModule(rootModel, modulesOld, afero.NewOsFs(), logger)
-	modNew, _, err := LoadSyslModule(rootModel, modulesNew, afero.NewOsFs(), logger)
-	if err != nil {
-		return nil, err
+	modOld, _, err1 := LoadSyslModule(rootModel, modulesOld, afero.NewOsFs(), logger)
+	modNew, _, err2 := LoadSyslModule(rootModel, modulesNew, afero.NewOsFs(), logger)
+	if err1 != nil {
+		return nil, err1
+	}
+	if err2 != nil {
+		return nil, err2
 	}
 	return GenerateModDatabaseScripts(cmdContextParamDatagen, modOld, modNew, logger)
 }

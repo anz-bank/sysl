@@ -62,13 +62,8 @@ func generateModDatabaseScripts(pclass ClassLabeler, outmap map[string]string, m
 				typeMapNew := appNew.GetTypes()
 				tableDepthMapOld := v.createTableDepthMap(typeMapOld)
 				tableDepthMapNew := v.createTableDepthMap(typeMapNew)
-
 				tablesWithActions := findAddedDeletedRetainedTables(typeMapOld, typeMapNew, tableDepthMapOld, tableDepthMapNew)
 				processTables(tablesWithActions, title, project, outDir, pclass, stringBuilder, outmap)
-			}
-			// app deleted from the new sysl file
-			if appOld != nil && appNew == nil {
-				//typeMapOld := appOld.GetTypes()
 			}
 		}
 	}
@@ -83,8 +78,8 @@ func generateModDatabaseScripts(pclass ClassLabeler, outmap map[string]string, m
 			}
 		}
 	}
-
 }
+
 func processTables(tableDetails []TableDetails, title, project, outDir string, pclass ClassLabeler,
 	stringBuilder strings.Builder, outmap map[string]string) {
 	dataParam := &DatabaseScriptModifyParam{
@@ -99,34 +94,9 @@ func processTables(tableDetails []TableDetails, title, project, outDir string, p
 func findAddedDeletedRetainedTables(
 	tableMapOld map[string]*sysl.Type,
 	tableMapNew map[string]*sysl.Type,
-	tableDepthMapOld map[int][]string,
-	tableDepthMapNew map[int][]string) []TableDetails {
-
-	tableDepthsListOld := makeSortedListOfTableDepth(tableDepthMapOld)
+	tableDepthMapOld, tableDepthMapNew map[int][]string) []TableDetails {
 	tableDepthsListNew := makeSortedListOfTableDepth(tableDepthMapNew)
-
 	tableWithAction := []TableDetails{}
-	for _, depth := range tableDepthsListOld {
-		tableNames := tableDepthMapOld[depth]
-		sort.Strings(tableNames)
-		for _, tableName := range tableNames {
-			found := ifTableExisted(tableName, tableMapNew)
-			if !found {
-				tableDetails := TableDetails{
-					table:  nil,
-					action: "DELETE",
-					name:   tableName,
-				}
-				tableWithAction = append(tableWithAction, tableDetails)
-			}
-		}
-	}
-	//reverse it
-	tableWithActionNew := []TableDetails{}
-	for _, item := range tableWithAction {
-		tableWithActionNew = append(tableWithActionNew, item)
-	}
-
 	//Add the retained and added tables
 	for _, depth := range tableDepthsListNew {
 		tableNames := tableDepthMapNew[depth]
@@ -140,27 +110,24 @@ func findAddedDeletedRetainedTables(
 					action:   "RETAIN",
 					name:     tableName,
 				}
-				tableWithActionNew = append(tableWithActionNew, tableDetails)
+				tableWithAction = append(tableWithAction, tableDetails)
 			} else {
 				tableDetails := TableDetails{
 					table:  tableMapNew[tableName],
 					action: "ADD",
 					name:   tableName,
 				}
-				tableWithActionNew = append(tableWithActionNew, tableDetails)
+				tableWithAction = append(tableWithAction, tableDetails)
 			}
 		}
 	}
 
-	return tableWithActionNew
+	return tableWithAction
 }
 
 func ifTableExisted(tableName string, tableMap map[string]*sysl.Type) bool {
 	item := tableMap[tableName]
-	if item != nil {
-		return true
-	}
-	return false
+	return item != nil
 }
 
 func makeSortedListOfTableDepth(tableDepthMap map[int][]string) []int {
