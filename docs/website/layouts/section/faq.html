@@ -5,12 +5,12 @@
 
 <div id="hero" class="wrap faq">
   <h1>{{.Title }}</h1>
-    <p>{{.Params.description}}<br></p>
+  <p>{{.Params.description}}<br></p>
 </div>
 <div id="kube-faq">
-{{.Content}}
+  {{.Content}}
 </div>
 {{ end }}
 {{ define "footer" }}
-  {{ partial "footer" . }}
+{{ partial "footer" . }}
 {{ end }}

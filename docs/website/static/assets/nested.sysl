@@ -1,0 +1,6 @@
+Model [package="io.sysl.example.nested"]:
+  !type Request:
+    Header <:
+      header_id <: int
+    Body <:
+      details <: string
