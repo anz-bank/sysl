@@ -11,8 +11,8 @@ System1:
 System2:
     endpoint: ...
 
-Project:
-    this:
+Project [appfmt="%(appname)"]:
+    _:
         IntegratedSystem
         System1
         System2
