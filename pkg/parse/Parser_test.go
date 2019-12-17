@@ -22,7 +22,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const mainTestDir = "../../cmd/sysl/tests/"
+const mainTestDir = "../../tests/"
 
 func readSyslModule(filename string) (*sysl.Module, error) {
 	var buf bytes.Buffer
