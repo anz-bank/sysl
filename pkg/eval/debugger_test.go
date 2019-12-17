@@ -166,7 +166,7 @@ func TestREPL_DumpScope(t *testing.T) {
 }
 
 func TestREPL_CallView(t *testing.T) {
-	filename := "../../cmd/sysl/tests/transform1.sysl"
+	filename := testDir + "transform1.sysl"
 	sysl, appname, err := parse.LoadAndGetDefaultApp(filename, afero.NewOsFs(), parse.NewParser())
 	require.NoError(t, err)
 
