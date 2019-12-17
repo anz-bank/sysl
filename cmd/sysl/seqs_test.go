@@ -298,7 +298,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_test.sysl",
 	}
 	expected := make(map[string]string)
@@ -318,7 +318,7 @@ func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "MISSING_FILE.sysl",
 	}
 
@@ -334,7 +334,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_test.sysl",
 		endpoints: []string{"QueryUser"},
 		output:    "_.png",
@@ -354,7 +354,7 @@ func TestDoConstructSequenceDiagrams(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_project.sysl",
 		output:    "%(epname).png",
 		apps:      []string{"Project"},
@@ -453,7 +453,7 @@ func TestDoConstructSequenceDiagramsToFormatComplexName(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_complex_format.sysl",
 		output:    "%(epname).png",
 		apps:      []string{"Project"},
@@ -512,7 +512,7 @@ func TestDoConstructSequenceDiagramWithGroupingCommandline(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "call.sysl",
 		output:    "tests/call.png",
 		endpoints: []string{"MobileApp <- Login"},
@@ -550,7 +550,7 @@ func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "groupby.sysl",
 		output:    "%(epname).png",
 		endpoints: []string{"SEQ-One"},
@@ -587,7 +587,7 @@ func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "groupby.sysl",
 		output:    "%(epname).png",
 		endpoints: []string{"SEQ-Two"},

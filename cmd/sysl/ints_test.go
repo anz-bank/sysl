@@ -106,7 +106,7 @@ func TestGenerateIntegrationsWithTestFile(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "indirect_1.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -133,7 +133,7 @@ func TestGenerateIntegrationsWithTestFileAndFilters(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -156,7 +156,7 @@ func TestGenerateIntegrationsWithImmediatePredecessors(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_immediate_predecessors_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -180,7 +180,7 @@ func TestGenerateIntegrationsWithExclude(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_excludes_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -205,7 +205,7 @@ func TestGenerateIntegrationsWithPassthrough(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_passthrough_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -248,7 +248,7 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_cluster.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -274,7 +274,7 @@ func TestGenerateIntegrationsWithEpa(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_epa.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -300,7 +300,7 @@ func TestGenerateIntegrationsWithIndirectArrow(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "indirect_2.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -330,7 +330,7 @@ func TestGenerateIntegrationsWithRestrictBy(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_restrict_by.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -357,7 +357,7 @@ func TestGenerateIntegrationsWithFilter(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_filter.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -383,7 +383,7 @@ func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_or_without_passthrough.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -410,7 +410,7 @@ func TestPassthrough2(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "passthrough_1.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -441,7 +441,7 @@ func TestGenerateIntegrationsWithPubSub(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_pubsub.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
