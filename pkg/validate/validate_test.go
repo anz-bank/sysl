@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const testDir = "../../cmd/sysl/tests/"
+const testDir = "../../tests/"
 
 func TestValidatorGetTypeName(t *testing.T) {
 	t.Parallel()
