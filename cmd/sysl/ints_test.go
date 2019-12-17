@@ -467,7 +467,7 @@ func TestAllStmts(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "ints_stmts.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -480,7 +480,7 @@ func TestAllStmts(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"all_stmts.png": "tests/all_stmts-golden.puml",
+		"all_stmts.png": testDir + "all_stmts-golden.puml",
 	}
 
 	// Then
