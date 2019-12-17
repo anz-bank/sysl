@@ -405,7 +405,7 @@ func TestDoConstructSequenceDiagramWithBlackbox(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel:  "./tests/",
+		rootModel:  testDir,
 		modules:    "call.sysl",
 		output:     "tests/call.png",
 		endpoints:  []string{"MobileApp <- Login"},
