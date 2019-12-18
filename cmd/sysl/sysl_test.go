@@ -106,6 +106,7 @@ func TestMain2JSON(t *testing.T) {
 
 	testAllMain2(t, []string{"--mode", "json"}, "/args.sysl", "/args.sysl.golden.json")
 }
+
 func testMain2Stdout(t *testing.T, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
@@ -124,13 +125,13 @@ func testMain2Stdout(t *testing.T, args []string, golden string) {
 func TestMain2TextPBStdout(t *testing.T) {
 	t.Parallel()
 
-	testMain2Stdout(t, []string{"tests/args.sysl"}, "tests/args.sysl.golden.textpb")
+	testMain2Stdout(t, []string{testDir + "args.sysl"}, testDir+"args.sysl.golden.textpb")
 }
 
 func TestMain2JSONStdout(t *testing.T) {
 	t.Parallel()
 
-	testMain2Stdout(t, []string{"--mode", "json", "tests/args.sysl"}, "tests/args.sysl.golden.json")
+	testMain2Stdout(t, []string{"--mode", "json", testDir + "args.sysl"}, testDir+"args.sysl.golden.json")
 }
 
 func TestMain2BadMode(t *testing.T) {
