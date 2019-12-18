@@ -63,7 +63,7 @@ func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 
 func testMain2WithSyslRootMarker(t *testing.T, args []string, golden string) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
-	dir := syslutil.MustAbsolute(t, fmt.Sprintf("tests/%s", syslRootMarker))
+	dir := syslutil.MustAbsolute(t, fmt.Sprintf(testDir+"%s", syslRootMarker))
 	require.NoError(t, fs.MkdirAll(dir, os.ModeDir))
 	runMain2(t, fs, args, golden)
 }
@@ -138,7 +138,7 @@ func TestMain2BadMode(t *testing.T) {
 			"pb",
 			"-o", " - ",
 			"--mode", "BAD",
-			"tests/args.sysl",
+			testDir + "args.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -160,7 +160,7 @@ func TestMain2BadLog(t *testing.T) {
 			"pb",
 			"-o", "-",
 			"--log", "BAD",
-			"tests/args.sysl",
+			testDir + "args.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -177,7 +177,7 @@ func TestMain2SeqdiagWithMissingFile(t *testing.T) {
 		[]string{
 			"sd",
 			"-o", "%(epname).png",
-			"tests/MISSING.sysl",
+			testDir + "MISSING.sysl",
 			"-a", "Project :: Sequences",
 		},
 		fs, logger, main3,
@@ -200,7 +200,7 @@ func TestMain2SeqdiagWithNonsensicalOutput(t *testing.T) {
 			"-o", out,
 			"-b", "Server <- DB=call to database",
 			"-b", "Server <- Login=call to database",
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -223,7 +223,7 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 			"-o", out,
 			"-b", "Server <- DB=call to database",
 			"-b", "Server <- Login=call to database",
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -248,7 +248,7 @@ func TestMain2WithReadOnlyFs(t *testing.T) {
 			"-o", out,
 			"-b", "Server <- DB=call to database",
 			"-b", "Server <- Login=call to database",
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -267,10 +267,10 @@ func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
 			"sysl",
 			"sd",
 			"-s", "MobileApp <- Login",
-			"-o", "tests/call2.png",
+			"-o", "call2.png",
 			"-b", "Server <- DB",
 			"-b", "Server <- Login",
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -290,7 +290,7 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 			"sysl",
 			"sd",
 			"-o", "%(epname).png",
-			"tests/blackbox.sysl",
+			testDir + "blackbox.sysl",
 			"-a", "Project :: Sequences",
 		},
 		fs, logger, main3,
@@ -316,7 +316,7 @@ func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
 			"sysl",
 			"sd",
 			"-o", "%(epname).png",
-			"tests/blackbox.sysl",
+			testDir + "blackbox.sysl",
 			"-a", "Project :: Integrations",
 		},
 		fs, logger, main3,
@@ -349,7 +349,7 @@ func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 			"-s", "MobileApp <- Login",
 			"-g",
 			"-o", "tests/call3.png",
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -372,7 +372,7 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 			"-s", "MobileApp <- Login",
 			"-g", "owner",
 			"-o", out,
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -391,7 +391,7 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 			"sd",
 			"-g", "location",
 			"-o", "%(epname).png",
-			"tests/groupby.sysl",
+			testDir + "groupby.sysl",
 			"-a", "Project :: Sequences",
 		},
 		fs, logger, main3,
@@ -412,7 +412,7 @@ func TestMain2WithGenerateIntegrations(t *testing.T) {
 		[]string{
 			"sysl",
 			"ints",
-			"--root", "./tests/",
+			"--root", testDir,
 			"-o", out,
 			"-j", "Project",
 			"indirect_1.sysl",
@@ -427,23 +427,22 @@ func TestMain2WithGenerateCode(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	root := "."
 	ret := main2(
 		[]string{
 			"sysl",
 			"gen",
-			"--root", root,
-			"--root-transform", ".",
-			"--transform", "tests/test.gen_multiple_annotations.sysl",
-			"--grammar", "tests/test.gen.g",
+			"--root", testDir,
+			"--root-transform", testDir,
+			"--transform", "test.gen_multiple_annotations.sysl",
+			"--grammar", testDir + "test.gen.g",
 			"--app-name", "Model",
 			"--start", "javaFile",
-			"tests/model.sysl",
+			"model.sysl",
 		},
 		fs, logger, main3,
 	)
 	assert.Equal(t, 0, ret)
-	out, err := filepath.Abs(filepath.Join(root, "Model.java"))
+	out, err := filepath.Abs(filepath.Join(".", "Model.java"))
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs, out)
 }
@@ -458,13 +457,13 @@ func TestMain2WithGenerateCodeReadOnlyFs(t *testing.T) {
 		[]string{
 			"sysl",
 			"gen",
-			"--root", ".",
-			"--root-transform", ".",
-			"--transform", "tests/test.gen_multiple_annotations.sysl",
-			"--grammar", "tests/test.gen.g",
+			"--root", testDir,
+			"--root-transform", testDir,
+			"--transform", "test.gen_multiple_annotations.sysl",
+			"--grammar", testDir + "test.gen.g",
 			"--app-name", "Model",
 			"--start", "javaFile",
-			"tests/model.sysl",
+			"model.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -485,7 +484,7 @@ func TestMain2WithTextPbMode(t *testing.T) {
 			"pb",
 			"--mode", "textpb",
 			"-o", out,
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -505,7 +504,7 @@ func TestMain2WithJSONMode(t *testing.T) {
 			"pb",
 			"--mode", "json",
 			"-o", out,
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -524,7 +523,7 @@ func TestMain2WithTextPbModeStdout(t *testing.T) {
 			"pb",
 			"--mode", "textpb",
 			"-o", " - ",
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -543,7 +542,7 @@ func TestMain2WithJSONModeStdout(t *testing.T) {
 			"pb",
 			"--mode", "json",
 			"-o", " - ",
-			"tests/call.sysl",
+			testDir + "call.sysl",
 		},
 		fs, logger, main3,
 	)
@@ -569,7 +568,7 @@ func TestMain2WithEmptyPbParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "pb", "-o", " ", "--mode", "", "tests/call.sysl"}, fs, logger, main3)
+	main2([]string{"sysl", "pb", "-o", " ", "--mode", "", testDir + "call.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
 		"'output' value passed is empty\n'mode' value passed is empty\n", hook.LastEntry().Message)
@@ -582,7 +581,7 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "gen", "--transform",
-		"tests/test.gen_multiple_annotations.sysl", "--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, main3)
+		testDir + "test.gen_multiple_annotations.sysl", "--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
 		"'grammar' value passed is empty\n"+
@@ -608,7 +607,7 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl", "-j", "Project"}, fs, logger, main3)
+	main2([]string{"sysl", "data", "-o", "%(epname).png", testDir + "data.sysl", "-j", "Project"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
 
@@ -616,7 +615,7 @@ func TestMain2WithDataSingleFile(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "data.png", "tests/data.sysl", "-j", "Project"}, fs, logger, main3)
+	main2([]string{"sysl", "data", "-o", "data.png", testDir + "data.sysl", "-j", "Project"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/data.png")
 }
 
@@ -624,7 +623,7 @@ func TestMain2WithDataNoProject(t *testing.T) {
 	t.Parallel()
 	logger, testHook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/data.sysl"}, fs, logger, main3)
+	main2([]string{"sysl", "data", "-o", "%(epname).png", testDir + "data.sysl"}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "project not found in sysl", testHook.LastEntry().Message)
 	testHook.Reset()
@@ -635,7 +634,7 @@ func TestMain2WithDataFilter(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f", "Object-Model.png", "tests/data.sysl", "-j",
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f", "Object-Model.png", testDir + "data.sysl", "-j",
 		"Project"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Object-Model.png")
 }
@@ -644,7 +643,7 @@ func TestMain2WithDataMultipleRelationships(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", "tests/datareferences.sysl", "-j", "Project"},
+	main2([]string{"sysl", "data", "-o", "%(epname).png", testDir + "datareferences.sysl", "-j", "Project"},
 		fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
