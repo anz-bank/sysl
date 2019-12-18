@@ -72,13 +72,13 @@ func testMain2(t *testing.T, args []string, golden string) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	runMain2(t, fs, args, golden)
 }
-func testAllMain2(t *testing.T, args []string, inputFile string, golden string) {
 
+func testAllMain2(t *testing.T, args []string, inputFile string, golden string) {
 	// no root defined
 	noRootFile := filepath.Join(testDir, inputFile)
 	testMain2(t, append(args, noRootFile), testDir+golden)
 
-	// // // // root marker
+	// root marker
 	testMain2WithSyslRootMarker(t, append(args, noRootFile), testDir+golden)
 
 	// root flag defined
@@ -87,9 +87,7 @@ func testAllMain2(t *testing.T, args []string, inputFile string, golden string) 
 	args = append([]string{"--root", projDir}, args...)
 	golden = testDir + golden
 	out := "rooted" + filepath.Base(golden)
-	fmt.Println(out, filepath.Dir(golden))
 	golden = filepath.Join(filepath.Dir(golden), out)
-	fmt.Println(golden)
 	testMain2(t, append(args, rootFile), golden)
 
 	testMain2WithSyslRootMarker(t, append(args, rootFile), golden)
