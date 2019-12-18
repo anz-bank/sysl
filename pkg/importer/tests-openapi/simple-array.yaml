@@ -1,0 +1,12 @@
+openapi: "3.0"
+info:
+  title: Simple
+paths: {}
+components:
+  schemas:
+    TopLevelArray:
+      type: array
+      items:
+        properties:
+          name:
+            type: string

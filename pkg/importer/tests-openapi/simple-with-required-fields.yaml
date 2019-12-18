@@ -1,0 +1,18 @@
+openapi: "3.0"
+info:
+  title: Simple
+paths: {}
+components:
+  schemas:
+    Goat:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        weight:
+          type: number

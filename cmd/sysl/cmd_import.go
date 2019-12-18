@@ -22,7 +22,7 @@ func (p *importCmd) Name() string            { return "import" }
 func (p *importCmd) RequireSyslModule() bool { return false }
 
 func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	opts := []string{modeGrammar, modeSwagger, modeXSD}
+	opts := []string{modeGrammar, modeSwagger, modeXSD, modeOpenAPI}
 	sort.Strings(opts)
 	optsText := strings.Join(opts, ", ")
 	opts = append(opts, modeAuto)
@@ -46,6 +46,7 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 const (
+	modeOpenAPI = "openapi"
 	modeSwagger = "swagger"
 	modeXSD     = "xsd"
 	modeGrammar = "grammar"
@@ -59,7 +60,7 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 	}
 
 	if p.mode == "auto" {
-		p.mode = guessFileType(p.filename)
+		p.mode = guessFileType(p.filename, data)
 	}
 	var imp importer.Func
 	switch p.mode {
@@ -72,6 +73,9 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 	case modeGrammar:
 		args.Logger.Infof("Using grammar importer\n")
 		imp = importer.LoadGrammar
+	case modeOpenAPI:
+		args.Logger.Infof("Using OpenAPI importer\n")
+		imp = importer.LoadOpenAPIText
 	default:
 		args.Logger.Fatalf("Unsupported input format: %s\n", p.mode)
 	}
@@ -82,13 +86,23 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 	return afero.WriteFile(args.Filesystem, p.outfile, []byte(output), 0644)
 }
 
-func guessFileType(filename string) string {
+func guessYamlType(filename string, data []byte) string {
+	for _, check := range []string{modeSwagger, modeOpenAPI} {
+		if strings.Contains(string(data), check) {
+			return check
+		}
+	}
+
+	return "unknown"
+}
+
+func guessFileType(filename string, data []byte) string {
 	parts := strings.Split(filename, ".")
 	switch ext := parts[len(parts)-1]; ext {
 	case "xml", "xsd":
 		return modeXSD
 	case "yaml", "yml", "json":
-		return modeSwagger
+		return guessYamlType(filename, data)
 	case "g":
 		return modeGrammar
 	default:

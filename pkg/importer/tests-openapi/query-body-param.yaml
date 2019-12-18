@@ -1,0 +1,37 @@
+openapi: "3.0"
+basePath: /api/v1
+host: goat.example.com
+info:
+  title: Goat CRUD API
+  version: 1.2.3
+components:
+  schemas:
+    Goat:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        birthday:
+          type: string
+          format: date
+      type: object
+paths:
+  /goat/create-goat:
+    post:
+      consumes:
+        - application/json
+      description: Creates a goat.
+      produces:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Goat'
+      responses:
+        '201':
+          description: ''
+          headers:
+            Location:
+              description: Location of the newly allocated goat.
+      summary: Creates a goat.

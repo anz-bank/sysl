@@ -1,0 +1,39 @@
+"openapi": "3.0"
+info:
+  title: Simple
+paths:
+  /test:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+        400:
+          description: Bad request
+        401:
+          description: Authentication error
+        500:
+          description: Server Error
+        503:
+          description: Service unavailable
+        504:
+          description: Gatewaytimeout error
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        name:
+          type: string
+    SimpleObj2:
+      type: object
+      properties:
+        name:
+          type: SimpleObj
