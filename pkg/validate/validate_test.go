@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -230,7 +231,7 @@ func TestValidatorValidateViews(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(testDir+"grammar.sysl", afero.NewOsFs())
+	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -316,7 +317,7 @@ func TestValidatorValidateViewsInnerTypes(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(testDir+"grammar.sysl", afero.NewOsFs())
+	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -358,7 +359,7 @@ func TestValidatorValidateViewsChoiceTypes(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(testDir+"grammar.sysl", afero.NewOsFs())
+	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -438,7 +439,7 @@ func TestValidatorValidate(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(testDir+"grammar.sysl", afero.NewOsFs())
+	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -469,7 +470,7 @@ func TestValidatorLoadTransformError(t *testing.T) {
 func TestValidatorLoadGrammarSuccess(t *testing.T) {
 	t.Parallel()
 
-	grammar, err := LoadGrammar(testDir+"grammar.sysl", afero.NewOsFs())
+	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
 	assert.NotNil(t, grammar, "Unexpected result")
 	assert.Nil(t, err, "Unexpected result")
 }
@@ -490,7 +491,7 @@ func TestValidatorValidateTfmReturn(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(testDir+"grammar.sysl", afero.NewOsFs())
+	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
