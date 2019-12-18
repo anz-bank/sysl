@@ -44,6 +44,8 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&protobuf{},
 		&intsCmd{},
 		&datamodelCmd{},
+		&databaseScriptCmd{},
+		&modDatabaseScriptCmd{},
 		&codegenCmd{},
 		&sequenceDiagramCmd{},
 		&importCmd{},

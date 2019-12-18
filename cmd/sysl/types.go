@@ -80,6 +80,23 @@ type CmdContextParamDatagen struct {
 	classFormat string
 }
 
+type CmdDatabaseScript struct {
+	title   string
+	output  string
+	project string
+	root    string
+	source  string
+}
+
+type CmdDatabaseScriptMod struct {
+	title     string
+	output    string
+	project   string
+	root      string
+	orgSource string
+	newSource string
+}
+
 type ExecuteArgs struct {
 	Module         *sysl.Module
 	Filesystem     afero.Fs
