@@ -76,8 +76,8 @@ func (m *MockLogger) PutField(key string, val interface{}) Logger {
 	return m.Called(key, val).Get(0).(Logger)
 }
 
-func (m *MockLogger) PutFields(fields map[string]interface{}) {
-	m.Called(fields)
+func (m *MockLogger) PutFields(fields map[string]interface{}) Logger {
+	return m.Called(fields).Get(0).(Logger)
 }
 
 func (m *MockLogger) Copy() Logger {

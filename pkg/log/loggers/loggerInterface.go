@@ -35,7 +35,7 @@ type Logger interface {
 	// PutField returns the Logger with the new field added
 	PutField(key string, val interface{}) Logger
 	// PutFields returns the Logger with the new fields added
-	PutFields(fields map[string]interface{})
+	PutFields(fields map[string]interface{}) Logger
 	// Copy returns a logger whose data is copied from the caller
 	Copy() Logger
 }

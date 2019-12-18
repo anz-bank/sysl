@@ -22,12 +22,11 @@ var testField = testutil.GenerateMultipleFieldsCases()[0].Fields
 func TestCopyStandardLogger(t *testing.T) {
 	t.Parallel()
 
-	logger := getNewStandardLogger()
-	logger.PutFields(map[string]interface{}{
+	logger := getNewStandardLogger().PutFields(map[string]interface{}{
 		"numberVal": 1,
 		"byteVal":   'k',
 		"stringVal": "this is a sentence",
-	})
+	}).(*standardLogger)
 	copiedLogger := logger.Copy().(*standardLogger)
 
 	assert.True(t, &logger.internal != &copiedLogger.internal)
@@ -197,12 +196,11 @@ func TestGetFormattedFieldEmptyFields(t *testing.T) {
 func TestGetFormattedFieldWithFields(t *testing.T) {
 	t.Parallel()
 
-	logger := getNewStandardLogger()
-	logger.PutFields(map[string]interface{}{
+	logger := getNewStandardLogger().PutFields(map[string]interface{}{
 		"numberVal": 1,
 		"byteVal":   byte('k'),
 		"stringVal": "this is a sentence",
-	})
+	}).(*standardLogger)
 
 	expected := "byteVal=107 numberVal=1 stringVal=this is a sentence"
 	assert.Equal(t, expected, logger.getFormattedField())
@@ -253,8 +251,7 @@ func TestSetInfo(t *testing.T) {
 			return func(tt *testing.T) {
 				tt.Parallel()
 
-				logger := getNewStandardLogger()
-				logger.PutFields(mc.Fields)
+				logger := getNewStandardLogger().PutFields(mc.Fields).(*standardLogger)
 				entry := logger.setInfo()
 				expected := testutil.OutputFormattedFields(mc.Fields)
 
@@ -361,8 +358,7 @@ func TestWithFieldsReplaceValues(t *testing.T) {
 		"3": 3,
 	}
 
-	logger := getNewStandardLogger()
-	logger.PutFields(field)
+	logger := getNewStandardLogger().PutFields(field).(*standardLogger)
 
 	assertFieldExists(t, logger, field)
 
@@ -388,7 +384,6 @@ func getNewStandardLogger() *standardLogger {
 }
 
 func getStandardLoggerWithFields() *standardLogger {
-	logger := NewStandardLogger()
-	logger.PutFields(testField)
+	logger := NewStandardLogger().PutFields(testField)
 	return logger.(*standardLogger)
 }

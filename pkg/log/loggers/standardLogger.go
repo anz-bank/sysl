@@ -143,7 +143,7 @@ func (sl *standardLogger) PutField(key string, val interface{}) Logger {
 	return sl
 }
 
-func (sl *standardLogger) PutFields(fields map[string]interface{}) {
+func (sl *standardLogger) PutFields(fields map[string]interface{}) Logger {
 	if fields == nil {
 		panic("fields can not be empty")
 	}
@@ -160,6 +160,7 @@ func (sl *standardLogger) PutFields(fields map[string]interface{}) {
 	if index > 0 {
 		sl.insertFieldsKey(keys[:index]...)
 	}
+	return sl
 }
 
 func (sl *standardLogger) insertFieldsKey(fields ...string) {

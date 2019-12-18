@@ -20,16 +20,12 @@ func WithLogger(ctx context.Context, logger loggers.Logger) context.Context {
 
 // WithField adds a single field in the scope of the context
 func WithField(ctx context.Context, key string, val interface{}) context.Context {
-	newLogger := getLogger(ctx).Copy()
-	newLogger.PutField(key, val)
-	return context.WithValue(ctx, loggerKey, newLogger)
+	return context.WithValue(ctx, loggerKey, getLogger(ctx).Copy().PutField(key, val))
 }
 
 // WithFields adds multiple fields in the scope of the context
 func WithFields(ctx context.Context, fields map[string]interface{}) context.Context {
-	newLogger := getLogger(ctx).Copy()
-	newLogger.PutFields(fields)
-	return context.WithValue(ctx, loggerKey, newLogger)
+	return context.WithValue(ctx, loggerKey, getLogger(ctx).Copy().PutFields(fields))
 }
 
 // Field adds a single field for log specific fields. Does not add to the context.
@@ -39,9 +35,7 @@ func Field(ctx context.Context, key string, value interface{}) loggers.Logger {
 
 // Fields adds multiple fields for log specific fields. Does not add to the context.
 func Fields(ctx context.Context, fields map[string]interface{}) loggers.Logger {
-	newLogger := getLogger(ctx).Copy()
-	newLogger.PutFields(fields)
-	return newLogger
+	return getLogger(ctx).Copy().PutFields(fields)
 }
 
 // Debug logs the message at the Debug level
