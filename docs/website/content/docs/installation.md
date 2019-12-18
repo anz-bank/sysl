@@ -8,7 +8,7 @@ bref: "Sysl can be installed on Windows, MacOS and Linux - follow this guide"
 toc: true
 ---
 
-Sysl is a CLI (Command Line Interface) that excecutes with the `sysl` command.
+Sysl is a CLI (Command Line Interface) that executes with the `sysl` command.
 
     GO111MODULE=on go get github.com/anz-bank/sysl/cmd/sysl@v0.4.0
 
