@@ -1,10 +1,10 @@
-package sysllogger
+package log
 
 import (
 	"context"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/syslLogger/loggers"
+	"github.com/anz-bank/sysl/pkg/log/loggers"
 	"github.com/stretchr/testify/require"
 )
 
@@ -23,7 +23,7 @@ func testEmptyContext(t *testing.T) {
 
 func testContextWithLogger(t *testing.T) {
 	ctx := context.Background()
-	ctx = AddLogger(ctx, loggers.NewStandardLogger())
+	ctx = WithLogger(ctx, loggers.NewStandardLogger())
 
 	logger := getLogger(ctx)
 	require.NotNil(t, logger)

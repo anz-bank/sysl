@@ -135,7 +135,7 @@ func (sl *standardLogger) Warnf(format string, args ...interface{}) {
 	sl.setInfo().Warnf(format, args...)
 }
 
-func (sl *standardLogger) WithField(key string, val interface{}) Logger {
+func (sl *standardLogger) PutField(key string, val interface{}) Logger {
 	if _, exists := sl.fields[key]; !exists {
 		sl.insertFieldsKey(key)
 	}
@@ -143,7 +143,7 @@ func (sl *standardLogger) WithField(key string, val interface{}) Logger {
 	return sl
 }
 
-func (sl *standardLogger) WithFields(fields map[string]interface{}) {
+func (sl *standardLogger) PutFields(fields map[string]interface{}) {
 	if fields == nil {
 		panic("fields can not be empty")
 	}
@@ -157,7 +157,9 @@ func (sl *standardLogger) WithFields(fields map[string]interface{}) {
 		}
 		sl.fields[key] = val
 	}
-	sl.insertFieldsKey(keys[:index]...)
+	if index > 0 {
+		sl.insertFieldsKey(keys[:index]...)
+	}
 }
 
 func (sl *standardLogger) insertFieldsKey(fields ...string) {

@@ -5,8 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/syslLogger/testutil"
+	"github.com/anz-bank/sysl/pkg/log/testutil"
 	"github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -16,24 +17,24 @@ const (
 )
 
 // to test fields output for all log
-var testField = testutil.GenerateMultipleFieldCases()[0].Fields
+var testField = testutil.GenerateMultipleFieldsCases()[0].Fields
 
 func TestCopyStandardLogger(t *testing.T) {
 	t.Parallel()
 
 	logger := getNewStandardLogger()
-	logger.WithFields(map[string]interface{}{
+	logger.PutFields(map[string]interface{}{
 		"numberVal": 1,
 		"byteVal":   'k',
 		"stringVal": "this is a sentence",
 	})
 	copiedLogger := logger.Copy().(*standardLogger)
 
-	require.True(t, &logger.internal != &copiedLogger.internal)
-	require.Equal(t, logger.fields, copiedLogger.fields)
-	require.Equal(t, logger.sortedFields, copiedLogger.sortedFields)
-	require.True(t, sort.StringsAreSorted(logger.sortedFields))
-	require.True(t, &logger != &copiedLogger)
+	assert.True(t, &logger.internal != &copiedLogger.internal)
+	assert.Equal(t, logger.fields, copiedLogger.fields)
+	assert.Equal(t, logger.sortedFields, copiedLogger.sortedFields)
+	assert.True(t, sort.StringsAreSorted(logger.sortedFields))
+	assert.True(t, &logger != &copiedLogger)
 }
 
 func TestDebug(t *testing.T) {
@@ -175,7 +176,7 @@ func testLogOutput(t *testing.T, level logrus.Level, fields map[string]interface
 	actualOutput := testutil.RedirectOutput(t, logFunc)
 
 	// uses Contains to avoid checking timestamps
-	require.Contains(t, actualOutput, expectedOutput)
+	assert.Contains(t, actualOutput, expectedOutput)
 }
 
 func TestNewStandardLogger(t *testing.T) {
@@ -184,7 +185,7 @@ func TestNewStandardLogger(t *testing.T) {
 	logger := NewStandardLogger()
 
 	require.NotNil(t, logger)
-	require.IsType(t, logger, &standardLogger{})
+	assert.IsType(t, logger, &standardLogger{})
 }
 
 func TestGetFormattedFieldEmptyFields(t *testing.T) {
@@ -197,14 +198,14 @@ func TestGetFormattedFieldWithFields(t *testing.T) {
 	t.Parallel()
 
 	logger := getNewStandardLogger()
-	logger.WithFields(map[string]interface{}{
+	logger.PutFields(map[string]interface{}{
 		"numberVal": 1,
 		"byteVal":   byte('k'),
 		"stringVal": "this is a sentence",
 	})
 
 	expected := "byteVal=107 numberVal=1 stringVal=this is a sentence"
-	require.Equal(t, expected, logger.getFormattedField())
+	assert.Equal(t, expected, logger.getFormattedField())
 }
 
 func TestInsertFieldsKeyEmpty(t *testing.T) {
@@ -212,7 +213,7 @@ func TestInsertFieldsKeyEmpty(t *testing.T) {
 
 	logger := getNewStandardLogger()
 	logger.insertFieldsKey()
-	require.Equal(t, 0, len(logger.sortedFields))
+	assert.Equal(t, 0, len(logger.sortedFields))
 }
 
 func TestInsertFieldsKey(t *testing.T) {
@@ -222,10 +223,8 @@ func TestInsertFieldsKey(t *testing.T) {
 	fields := []string{"some", "random", "fields"}
 	logger.insertFieldsKey(fields...)
 
-	require.True(t, sort.StringsAreSorted(logger.sortedFields))
-
 	sort.Strings(fields)
-	require.Equal(t, fields, logger.sortedFields)
+	assert.Equal(t, fields, logger.sortedFields)
 }
 
 func TestInsertFieldsKeyAddMoreFields(t *testing.T) {
@@ -237,15 +236,14 @@ func TestInsertFieldsKeyAddMoreFields(t *testing.T) {
 
 	logger.insertFieldsKey(fields1...)
 	logger.insertFieldsKey(fields2...)
-	require.True(t, sort.StringsAreSorted(logger.sortedFields))
 
 	combined := append(fields1, fields2...)
 	sort.Strings(combined)
-	require.Equal(t, combined, logger.sortedFields)
+	assert.Equal(t, combined, logger.sortedFields)
 }
 
 func TestSetInfo(t *testing.T) {
-	cases := testutil.GenerateMultipleFieldCases()
+	cases := testutil.GenerateMultipleFieldsCases()
 	for _, c := range cases {
 		if c.Fields == nil {
 			continue
@@ -256,18 +254,18 @@ func TestSetInfo(t *testing.T) {
 				tt.Parallel()
 
 				logger := getNewStandardLogger()
-				logger.WithFields(mc.Fields)
+				logger.PutFields(mc.Fields)
 				entry := logger.setInfo()
 				expected := testutil.OutputFormattedFields(mc.Fields)
 
-				require.Equal(tt, expected, entry.Data[keyFields])
+				assert.Equal(tt, expected, entry.Data[keyFields])
 			}
 		}(c))
 	}
 }
 
 func TestWithFields(t *testing.T) {
-	cases := testutil.GenerateMultipleFieldCases()
+	cases := testutil.GenerateMultipleFieldsCases()
 	for _, c := range cases {
 		t.Run("TestWithFields"+c.Name,
 			func(mc testutil.MultipleFields) func(*testing.T) {
@@ -278,17 +276,15 @@ func TestWithFields(t *testing.T) {
 
 					if mc.Fields == nil {
 						require.Panics(tt, func() {
-							logger.WithFields(mc.Fields)
+							logger.PutFields(mc.Fields)
 						})
 						return
 					}
 
-					logger.WithFields(mc.Fields)
-					require.True(tt, sort.StringsAreSorted(logger.sortedFields))
-
+					logger.PutFields(mc.Fields)
 					expectedKeys := testutil.GetSortedKeys(mc.Fields)
-					require.Equal(tt, expectedKeys, logger.sortedFields)
-					require.Equal(tt, mc.Fields, logger.fields)
+					assert.Equal(tt, expectedKeys, logger.sortedFields)
+					assert.Equal(tt, mc.Fields, logger.fields)
 				}
 			}(c))
 	}
@@ -303,18 +299,18 @@ func TestWithField(t *testing.T) {
 					tt.Parallel()
 
 					logger := getNewStandardLogger()
-					logger.WithField(sc.Key, sc.Val)
+					logger.PutField(sc.Key, sc.Val)
 					value, exists := logger.fields[sc.Key]
 
 					require.True(tt, exists)
-					require.Equal(tt, sc.Val, value)
+					assert.Equal(tt, sc.Val, value)
 				}
 			}(c))
 	}
 }
 
 func TestWithFieldWithAddingMoreValues(t *testing.T) {
-	cases := testutil.GenerateMultipleFieldCases()
+	cases := testutil.GenerateMultipleFieldsCases()
 	for _, c := range cases {
 		if c.Fields == nil {
 			continue
@@ -328,13 +324,12 @@ func TestWithFieldWithAddingMoreValues(t *testing.T) {
 					logger := getNewStandardLogger()
 
 					for k, v := range mc.Fields {
-						logger.WithField(k, v)
+						logger.PutField(k, v)
 					}
 
-					require.True(tt, sort.StringsAreSorted(logger.sortedFields))
 					expectedKeys := testutil.GetSortedKeys(mc.Fields)
-					require.Equal(tt, expectedKeys, logger.sortedFields)
-					require.Equal(tt, mc.Fields, logger.fields)
+					assert.Equal(tt, expectedKeys, logger.sortedFields)
+					assert.Equal(tt, mc.Fields, logger.fields)
 				}
 			}(c))
 	}
@@ -349,12 +344,12 @@ func TestWithFieldReplaceValues(t *testing.T) {
 
 	logger := getNewStandardLogger()
 
-	logger.WithField(key, oldVal)
+	logger.PutField(key, oldVal)
 	assertFieldExists(t, logger, map[string]interface{}{key: oldVal})
 
-	logger.WithField(key, newVal)
+	logger.PutField(key, newVal)
 	assertFieldExists(t, logger, map[string]interface{}{key: newVal})
-	require.Equal(t, []string{key}, logger.sortedFields)
+	assert.Equal(t, []string{key}, logger.sortedFields)
 }
 
 func TestWithFieldsReplaceValues(t *testing.T) {
@@ -367,24 +362,24 @@ func TestWithFieldsReplaceValues(t *testing.T) {
 	}
 
 	logger := getNewStandardLogger()
-	logger.WithFields(field)
+	logger.PutFields(field)
 
 	assertFieldExists(t, logger, field)
 
 	for k := range field {
 		field[k] = "replaced"
 	}
-	logger.WithFields(field)
+	logger.PutFields(field)
 
 	assertFieldExists(t, logger, field)
-	require.Equal(t, testutil.GetSortedKeys(field), logger.sortedFields)
+	assert.Equal(t, testutil.GetSortedKeys(field), logger.sortedFields)
 }
 
 func assertFieldExists(t *testing.T, logger *standardLogger, fieldToCheck map[string]interface{}) {
 	for key, expectedVal := range fieldToCheck {
 		curVal, exists := logger.fields[key]
 		require.True(t, exists)
-		require.Equal(t, expectedVal, curVal)
+		assert.Equal(t, expectedVal, curVal)
 	}
 }
 
@@ -394,6 +389,6 @@ func getNewStandardLogger() *standardLogger {
 
 func getStandardLoggerWithFields() *standardLogger {
 	logger := NewStandardLogger()
-	logger.WithFields(testField)
+	logger.PutFields(testField)
 	return logger.(*standardLogger)
 }

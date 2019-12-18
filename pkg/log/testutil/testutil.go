@@ -62,7 +62,7 @@ func GenerateSingleFieldCases() []SingleField {
 	}
 }
 
-func GenerateMultipleFieldCases() []MultipleFields {
+func GenerateMultipleFieldsCases() []MultipleFields {
 	return []MultipleFields{
 		{
 			Name: "Multiple types of Values",

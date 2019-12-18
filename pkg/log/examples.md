@@ -8,8 +8,8 @@ package main
 import (
     "context"
 
-    sysllogger "github.com/anz-bank/sysl/pkg/syslLogger"
-    "github.com/anz-bank/sysl/pkg/syslLogger/loggers"
+    "github.com/anz-bank/sysl/pkg/log"
+    "github.com/anz-bank/sysl/pkg/log/loggers"
 )
 
 func main() {
@@ -19,8 +19,8 @@ func main() {
     // this is a logger based on the logrus standard logger
     logger := loggers.NewStandardLogger()
 
-    // AddLogger returns a new context
-    ctx = sysllogger.AddLogger(ctx, logger)
+    // WithLogger returns a new context
+    ctx = log.WithLogger(ctx, logger)
 }
 ```
 
@@ -30,18 +30,18 @@ That's all in setup, now logging can be used by using the context.
 
 ```go
 import (
-    sysllogger "github.com/anz-bank/sysl/pkg/syslLogger"
+    "github.com/anz-bank/sysl/pkg/log"
 )
 
 func stuffToLog(ctx context.Context) {
     // logging uses the context variable so it must be given to any function that requires it
-    sysllogger.Debug(ctx, "Debug")
-    sysllogger.Print(ctx, "Print")
-    sysllogger.Trace(ctx, "Trace")
-    sysllogger.Warn(ctx, "Warn")
-    sysllogger.Error(ctx, "Error")
-    sysllogger.Fatal(ctx, "Fatal")
-    sysllogger.Panic(ctx, "Panic")
+    log.Debug(ctx, "Debug")
+    log.Print(ctx, "Print")
+    log.Trace(ctx, "Trace")
+    log.Warn(ctx, "Warn")
+    log.Error(ctx, "Error")
+    log.Fatal(ctx, "Fatal")
+    log.Panic(ctx, "Panic")
 
     /**
      * Expected to log
@@ -59,7 +59,7 @@ Fields are also supported in the logging. There are two kinds of fields, context
 
 ```go
 import (
-    sysllogger "github.com/anz-bank/sysl/pkg/syslLogger"
+    "github.com/anz-bank/sysl/pkg/log"
 )
 
     /**
@@ -77,8 +77,8 @@ import (
 
 func logWithField(ctx context.Context) {
     // context-level field adds fields to the context and creates a new context
-    ctx = sysllogger.AddField(ctx, "random", "stuff")
-    ctx = sysllogger.AddFields(ctx, map[string]interface{}{
+    ctx = log.AddField(ctx, "random", "stuff")
+    ctx = log.AddFields(ctx, map[string]interface{}{
         "just": "stuff",
         "stuff": 1
     })
@@ -98,7 +98,7 @@ func contextLevelField(ctx context.Context) {
      *
      * 2019-12-12T08:23:59.210878+11:00 just=stuff random=stuff stuff=1 WARN Warn
      */
-    sysllogger.Warn(ctx, "Warn")
+    log.Warn(ctx, "Warn")
 }
 
 func logLevelField(ctx context.Context) {
@@ -115,7 +115,7 @@ func logLevelField(ctx context.Context) {
      *
      * 2019-12-12T08:23:59.210878+11:00 just=stuff more=random stuff random=stuff stuff=1 very=random WARN Warn
      */
-    sysllogger.LogFields(ctx, map[string]interface{}{
+    log.LogFields(ctx, map[string]interface{}{
         "more": "random stuff",
         "very": "random"
     }).Warn("Warn")
@@ -128,7 +128,7 @@ func logLevelField(ctx context.Context) {
      * 2019-12-12T08:23:59.210878+11:00 epicly=random just=stuff more=stuff random=crap stuff=1 WARN Warn
      */
 
-    sysllogger.LogField(ctx, "epicly", "random").WithField("more", "stuff").WithField("random", "crap").Warn("Warn")
+    log.LogField(ctx, "epicly", "random").WithField("more", "stuff").WithField("random", "crap").Warn("Warn")
 
     /**
      * As long as context logger is not modified, it will log again the context level field

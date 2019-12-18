@@ -1,9 +1,9 @@
-package sysllogger
+package log
 
 import (
 	"context"
 
-	"github.com/anz-bank/sysl/pkg/syslLogger/loggers"
+	"github.com/anz-bank/sysl/pkg/log/loggers"
 )
 
 func getLogger(ctx context.Context) loggers.Logger {

@@ -2,6 +2,7 @@ package loggers
 
 import "github.com/stretchr/testify/mock"
 
+// MockLogger is a mock interface for testing the main API, not for use
 type MockLogger struct {
 	Logger
 	mock.Mock
@@ -16,8 +17,7 @@ func (m *MockLogger) Debug(args ...interface{}) {
 }
 
 func (m *MockLogger) Debugf(format string, args ...interface{}) {
-	arguments := append([]interface{}{format}, args...)
-	m.Called(arguments...)
+	m.Called(append([]interface{}{format}, args...)...)
 }
 
 func (m *MockLogger) Error(args ...interface{}) {
@@ -25,8 +25,7 @@ func (m *MockLogger) Error(args ...interface{}) {
 }
 
 func (m *MockLogger) Errorf(format string, args ...interface{}) {
-	arguments := append([]interface{}{format}, args...)
-	m.Called(arguments...)
+	m.Called(append([]interface{}{format}, args...)...)
 }
 
 func (m *MockLogger) Exit(code int) {
@@ -38,8 +37,7 @@ func (m *MockLogger) Fatal(args ...interface{}) {
 }
 
 func (m *MockLogger) Fatalf(format string, args ...interface{}) {
-	arguments := append([]interface{}{format}, args...)
-	m.Called(arguments...)
+	m.Called(append([]interface{}{format}, args...)...)
 }
 
 func (m *MockLogger) Panic(args ...interface{}) {
@@ -47,8 +45,7 @@ func (m *MockLogger) Panic(args ...interface{}) {
 }
 
 func (m *MockLogger) Panicf(format string, args ...interface{}) {
-	arguments := append([]interface{}{format}, args...)
-	m.Called(arguments...)
+	m.Called(append([]interface{}{format}, args...)...)
 }
 
 func (m *MockLogger) Print(args ...interface{}) {
@@ -56,8 +53,7 @@ func (m *MockLogger) Print(args ...interface{}) {
 }
 
 func (m *MockLogger) Printf(format string, args ...interface{}) {
-	arguments := append([]interface{}{format}, args...)
-	m.Called(arguments...)
+	m.Called(append([]interface{}{format}, args...)...)
 }
 
 func (m *MockLogger) Trace(args ...interface{}) {
@@ -65,8 +61,7 @@ func (m *MockLogger) Trace(args ...interface{}) {
 }
 
 func (m *MockLogger) Tracef(format string, args ...interface{}) {
-	arguments := append([]interface{}{format}, args...)
-	m.Called(arguments...)
+	m.Called(append([]interface{}{format}, args...)...)
 }
 
 func (m *MockLogger) Warn(args ...interface{}) {
@@ -74,15 +69,14 @@ func (m *MockLogger) Warn(args ...interface{}) {
 }
 
 func (m *MockLogger) Warnf(format string, args ...interface{}) {
-	arguments := append([]interface{}{format}, args...)
-	m.Called(arguments...)
+	m.Called(append([]interface{}{format}, args...)...)
 }
 
-func (m *MockLogger) WithField(key string, val interface{}) Logger {
+func (m *MockLogger) PutField(key string, val interface{}) Logger {
 	return m.Called(key, val).Get(0).(Logger)
 }
 
-func (m *MockLogger) WithFields(fields map[string]interface{}) {
+func (m *MockLogger) PutFields(fields map[string]interface{}) {
 	m.Called(fields)
 }
 
