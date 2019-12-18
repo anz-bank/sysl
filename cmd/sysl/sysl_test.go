@@ -82,7 +82,7 @@ func testAllMain2(t *testing.T, args []string, inputFile string, golden string) 
 	testMain2WithSyslRootMarker(t, append(args, noRootFile), filepath.Join(testDir, golden))
 
 	// root flag defined
-	rootFile := filepath.Join("tests/", inputFile)
+	rootFile := "tests/" + inputFile
 
 	args = append([]string{"--root", projDir}, args...)
 	golden = filepath.Join(testDir, golden)
