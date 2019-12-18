@@ -129,7 +129,8 @@ func TestMain2TextPBStdout(t *testing.T) {
 func TestMain2JSONStdout(t *testing.T) {
 	t.Parallel()
 
-	testMain2Stdout(t, []string{"--mode", "json", filepath.Join(testDir, "args.sysl")}, filepath.Join(testDir, "args.sysl.golden.json"))
+	testMain2Stdout(t, []string{"--mode", "json",
+		filepath.Join(testDir, "args.sysl")}, filepath.Join(testDir, "args.sysl.golden.json"))
 }
 
 func TestMain2BadMode(t *testing.T) {
@@ -586,7 +587,8 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "gen", "--transform",
-		filepath.Join(testDir, "test.gen_multiple_annotations.sysl"), "--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, main3)
+		filepath.Join(testDir, "test.gen_multiple_annotations.sysl"),
+		"--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
 		"'grammar' value passed is empty\n"+
@@ -612,7 +614,8 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, main3)
+	main2([]string{"sysl", "data", "-o", "%(epname).png",
+		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
 
@@ -620,7 +623,8 @@ func TestMain2WithDataSingleFile(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "data.png", filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, main3)
+	main2([]string{"sysl", "data", "-o", "data.png",
+		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/data.png")
 }
 
@@ -628,7 +632,8 @@ func TestMain2WithDataNoProject(t *testing.T) {
 	t.Parallel()
 	logger, testHook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", filepath.Join(testDir, "data.sysl")}, fs, logger, main3)
+	main2([]string{"sysl", "data", "-o", "%(epname).png",
+		filepath.Join(testDir, "data.sysl")}, fs, logger, main3)
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "project not found in sysl", testHook.LastEntry().Message)
 	testHook.Reset()
@@ -639,7 +644,8 @@ func TestMain2WithDataFilter(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f", "Object-Model.png", filepath.Join(testDir, "data.sysl"), "-j",
+	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f",
+		"Object-Model.png", filepath.Join(testDir, "data.sysl"), "-j",
 		"Project"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Object-Model.png")
 }
@@ -648,7 +654,8 @@ func TestMain2WithDataMultipleRelationships(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "data", "-o", "%(epname).png", filepath.Join(testDir, "datareferences.sysl"), "-j", "Project"},
+	main2([]string{"sysl", "data", "-o", "%(epname).png",
+		filepath.Join(testDir, "datareferences.sysl"), "-j", "Project"},
 		fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
