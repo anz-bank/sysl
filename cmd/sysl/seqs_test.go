@@ -124,7 +124,7 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs("tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs(testDir)
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -179,7 +179,7 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs("tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs(testDir)
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -239,7 +239,7 @@ func TestLoadAppReturnError(t *testing.T) {
 	t.Parallel()
 
 	args := loadAppArgs{
-		"projDirdemo/simple/", "",
+		"demo/simple/", "",
 	}
 	_, fs := syslutil.WriteToMemOverlayFs(args.root)
 	logger, _ := test.NewNullLogger()
@@ -251,7 +251,7 @@ func TestLoadApp(t *testing.T) {
 	t.Parallel()
 
 	args := loadAppArgs{
-		"./tests/", "sequence_diagram_test.sysl",
+		testDir, "sequence_diagram_test.sysl",
 	}
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	logger, _ := test.NewNullLogger()
