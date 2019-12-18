@@ -6,7 +6,6 @@
 
 testapp "Goat CRUD API" [package="package_foo"]:
     @version = "1.2.3"
-    @license = "1.2.3"
     @description =:
         | No description.
 

@@ -17,7 +17,7 @@ require (
 	github.com/bep/tmc v0.5.1 // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
-	github.com/getkin/kin-openapi v0.2.0
+	github.com/getkin/kin-openapi v0.2.1-0.20191216082429-70fbea30aeb8
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/loads v0.19.3

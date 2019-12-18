@@ -9,9 +9,9 @@ testapp "Simple" [package="package_foo"]:
         | No description.
 
     /test:
-        GET ?key=string?&min_date=string:
+        GET ?key=string?&min_date=date:
             | No description.
-            return 200
+            return ok
 
     #---------------------------------------------------------------------------
     # definitions

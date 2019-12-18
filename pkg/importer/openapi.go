@@ -3,6 +3,7 @@ package importer
 import (
 	"bytes"
 	"fmt"
+	"net/url"
 	"sort"
 	"strings"
 
@@ -15,7 +16,12 @@ func LoadOpenAPIText(args OutputData, text string, logger *logrus.Logger) (out s
 	if err != nil {
 		return "", err
 	}
+	return importOpenAPI(args, swagger, logger, "")
+}
 
+func importOpenAPI(args OutputData,
+	swagger *openapi3.Swagger,
+	logger *logrus.Logger, basepath string) (out string, err error) {
 	l := &loader{
 		logger: logger,
 		spec:   swagger,
@@ -26,7 +32,7 @@ func LoadOpenAPIText(args OutputData, text string, logger *logrus.Logger) (out s
 
 	result := &bytes.Buffer{}
 	w := newWriter(result, logger)
-	if err := w.Write(l.initInfo(args), l.types, "", endpoints...); err != nil {
+	if err := w.Write(l.initInfo(args), l.types, basepath, endpoints...); err != nil {
 		return "", err
 	}
 	return result.String(), nil
@@ -48,8 +54,16 @@ func (l *loader) initInfo(args OutputData) SyslInfo {
 	}
 	values := []string{
 		"version", l.spec.Info.Version,
-		"license", l.spec.Info.Version,
 		"termsOfService", l.spec.Info.TermsOfService,
+	}
+	if l.spec.Info.License != nil {
+		values = append(values, "license", l.spec.Info.License.Name)
+	}
+	if len(l.spec.Servers) > 0 {
+		u, err := url.Parse(l.spec.Servers[0].URL)
+		if err == nil {
+			values = append(values, "host", u.Hostname())
+		}
 	}
 	for i := 0; i < len(values); i += 2 {
 		key := values[i]
@@ -125,7 +139,7 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 		}
 		for pname, pschema := range schema.Properties {
 			var fieldType Type
-			if pschema.Value.Type == ArrayTypeName {
+			if pschema.Value != nil && pschema.Value.Type == ArrayTypeName {
 				if atype := l.typeFromRef(pschema.Value.Items.Ref); atype != nil {
 					fieldType = &Array{Items: atype}
 				} else if atype := l.typeFromRef(pschema.Value.Items.Value.Type); atype != nil {

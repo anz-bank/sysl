@@ -6,7 +6,6 @@
 
 testapp "Fruit API" [package="package_foo"]:
     @version = "1.0.0"
-    @license = "1.0.0"
     @description =:
         | No description.
 
