@@ -107,7 +107,7 @@ func compareSQL(t *testing.T, expected, actual map[string]string) {
 		golden, err := ioutil.ReadFile(goldenFile)
 		assert.Nil(t, err)
 		if string(golden) != actual[name] {
-			err := ioutil.WriteFile(filepath.Join(testDir, name, []byte(actual[name]), 0777)
+			err := ioutil.WriteFile(filepath.Join(testDir, name), []byte(actual[name]), 0777)
 			assert.Nil(t, err)
 		}
 		golden = syslutil.HandleCRLF(golden)
