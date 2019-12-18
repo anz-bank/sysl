@@ -10,7 +10,7 @@ toc: true
 
 Sysl is a CLI (Command Line Interface) that excecutes with the `sysl` command.
 
-`go get -v github.com/anz-bank/sysl/cmd/sysl`
+    go get -v github.com/anz-bank/sysl/cmd/sysl
 
 ## Prerequisites
 
@@ -21,4 +21,4 @@ Sysl is a CLI (Command Line Interface) that excecutes with the `sysl` command.
 
 In order to be able to generate diagrams the `SYSL_PLANTUML` Environment variable needs to be set
 
-`export SYSL_PLANTUML=http://www.plantuml.com/plantuml`
+    export SYSL_PLANTUML=http://www.plantuml.com/plantuml
