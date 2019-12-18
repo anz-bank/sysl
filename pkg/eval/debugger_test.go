@@ -3,6 +3,7 @@ package eval
 import (
 	"bytes"
 	"fmt"
+	"path/filepath"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/parse"
@@ -166,7 +167,7 @@ func TestREPL_DumpScope(t *testing.T) {
 }
 
 func TestREPL_CallView(t *testing.T) {
-	filename := "../../cmd/sysl/tests/transform1.sysl"
+	filename := filepath.Join(testDir, "transform1.sysl")
 	sysl, appname, err := parse.LoadAndGetDefaultApp(filename, afero.NewOsFs(), parse.NewParser())
 	require.NoError(t, err)
 

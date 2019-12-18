@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"os"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/msg"
@@ -334,8 +335,8 @@ func loadTransform(transformFile string, fs afero.Fs, p *parse.Parser) (*sysl.Ap
 // LoadGrammar loads sysl conversion of given grammar.
 // eg: if grammarFile is ./foo/bar.g, this tries to load ./foo/bar.sysl
 func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
-	tokens := strings.Split(grammarFile, "/")
-	rootGrammar := strings.Join(tokens[:len(tokens)-1], "/")
+	tokens := strings.Split(grammarFile, string(os.PathSeparator))
+	rootGrammar := strings.Join(tokens[:len(tokens)-1], string(os.PathSeparator))
 	grammarFileName := tokens[len(tokens)-1]
 
 	tokens = strings.Split(grammarFileName, ".")

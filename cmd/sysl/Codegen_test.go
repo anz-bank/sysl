@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"path/filepath"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -17,8 +18,8 @@ import (
 func TestGenerateCode(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
-		"tests/test.gen.g", "javaFile")
+	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -57,8 +58,8 @@ func TestGenerateCode(t *testing.T) {
 func TestGenerateCodeNoComment(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_comment.sysl",
-		"tests/test.gen.g", "javaFile")
+	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen_no_comment.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	root := output[0].output
@@ -88,8 +89,8 @@ func TestGenerateCodeNoComment(t *testing.T) {
 func TestGenerateCodeNoPackage(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_no_package.sysl",
-		"tests/test.gen.g", "javaFile")
+	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen_no_package.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
@@ -98,8 +99,8 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen_multiple_annotations.sysl",
-		"tests/test.gen.g", "javaFile")
+	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen_multiple_annotations.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
@@ -108,8 +109,8 @@ func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 func TestGenerateCodePerType(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/multiple_file.gen.sysl",
-		"tests/test.gen.g", "javaFile")
+	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "multiple_file.gen.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	assert.Equal(t, "Request.java", output[0].filename)
@@ -132,8 +133,8 @@ func TestGenerateCodePerType(t *testing.T) {
 
 func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	t.Parallel()
-	output, err := GenerateCodeWithParams(".", "tests/model_with_deps.sysl", ".", "tests/xform_with_deps.sysl",
-		"tests/test.gen.g", "javaFile", "ModelWithDeps")
+	output, err := GenerateCodeWithParams(testDir, "model_with_deps.sysl", testDir, "xform_with_deps.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -153,10 +154,10 @@ func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 
 func TestGenerateCodePutDepPackageInCommentUsingSets(t *testing.T) {
 	t.Parallel()
-	output, err := GenerateCodeWithParams(".",
-		"tests/model_with_deps.sysl", ".",
-		"tests/xform_with_deps_pkg_set.sysl",
-		"tests/test.gen.g", "javaFile", "ModelWithDeps")
+	output, err := GenerateCodeWithParams(testDir,
+		"model_with_deps.sysl", testDir,
+		"xform_with_deps_pkg_set.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -176,10 +177,10 @@ func TestGenerateCodePutDepPackageInCommentUsingSets(t *testing.T) {
 
 func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 	t.Parallel()
-	output, err := GenerateCodeWithParams(".",
-		"tests/model_with_deps.sysl", ".",
-		"tests/xform_with_deps_pkg_list.sysl",
-		"tests/test.gen.g", "javaFile", "ModelWithDeps")
+	output, err := GenerateCodeWithParams(testDir,
+		"model_with_deps.sysl", testDir,
+		"xform_with_deps_pkg_list.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -199,10 +200,10 @@ func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 
 func TestNamesFromCalls(t *testing.T) {
 	t.Parallel()
-	output, err := GenerateCodeWithParams(".",
-		"tests/model_with_deps.sysl", ".",
-		"tests/xform_names_from_calls.sysl",
-		"tests/test.gen.g", "javaFile", "ModelWithDeps")
+	output, err := GenerateCodeWithParams(testDir,
+		"model_with_deps.sysl", testDir,
+		"xform_names_from_calls.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -222,8 +223,8 @@ func TestNamesFromCalls(t *testing.T) {
 func TestSerialize(t *testing.T) {
 	t.Parallel()
 
-	output, err := GenerateCodeWithParams(".", "tests/model.sysl", ".", "tests/test.gen.sysl",
-		"tests/test.gen.g", "javaFile")
+	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen.sysl",
+		filepath.Join(testDir, "test.gen.g"), "javaFile")
 	require.NoError(t, err)
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
@@ -234,7 +235,7 @@ func TestSerialize(t *testing.T) {
 func TestOutputForPureTokenOnlyRule(t *testing.T) {
 	t.Parallel()
 
-	g, err := readGrammar("tests/token_only_rule.g", "gen", "pureToken")
+	g, err := readGrammar(filepath.Join(testDir, "token_only_rule.g"), "gen", "pureToken")
 	require.NoError(t, err)
 	obj := eval.MakeValueMap()
 	m := eval.MakeValueMap()
@@ -298,20 +299,20 @@ func TestValidatorDoValidate(t *testing.T) {
 	}{
 		"Success": {
 			args: []string{
-				"src", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "transform2.sysl", "--grammar",
-				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: true},
+				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform2.sysl", "--grammar",
+				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile"}, isErrNil: true},
 		"Grammar loading fail": {
 			args: []string{
-				"src", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "transform2.sysl", "--grammar",
-				"./tests/go.sysl", "--start", "goFile"}, isErrNil: false},
+				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform2.sysl", "--grammar",
+				filepath.Join(testDir, "go.sysl"), "--start", "goFile"}, isErrNil: false},
 		"Transform loading fail": {
 			args: []string{
-				"src", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "tfm.sysl", "--grammar",
-				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
+				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "tfm.sysl", "--grammar",
+				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile"}, isErrNil: false},
 		"Has validation messages": {
 			args: []string{
-				"src", "codegen", "--validate-only", "--root-transform", "./tests", "--transform", "transform1.sysl", "--grammar",
-				"./tests/grammar.sysl", "--start", "goFile"}, isErrNil: false},
+				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform1.sysl", "--grammar",
+				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile"}, isErrNil: false},
 	}
 
 	for name, tt := range cases {

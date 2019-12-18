@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -299,7 +300,7 @@ func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m, err := readModule("./tests/sequence_diagram_project.golden.json")
+	m, err := readModule(filepath.Join(testDir, "sequence_diagram_project.golden.json"))
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname", "", logger)
 	e := MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- RequestProfile"}, map[string]*Upto{
@@ -360,7 +361,7 @@ func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
 	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m, err := readModule("./tests/sequence_diagram_name_format.golden.json")
+	m, err := readModule(filepath.Join(testDir, "sequence_diagram_name_format.golden.json"))
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(al, el, w, m, "appname", "", logger)
 	e := MakeEndpointCollectionElement("Diagram", []string{"User <- Check Balance"}, map[string]*Upto{})
@@ -410,7 +411,7 @@ func TestVisitStatement(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	l := &labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	m, err := readModule("./tests/sequence_diagram_project.golden.json")
+	m, err := readModule(filepath.Join(testDir, "sequence_diagram_project.golden.json"))
 	require.NoError(t, err)
 	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname", "", logger)
 	stmt := []*sysl.Statement{

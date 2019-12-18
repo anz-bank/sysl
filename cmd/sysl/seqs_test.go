@@ -124,7 +124,7 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs("tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs(testDir)
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -179,7 +179,7 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs("tests")
+	memFs, fs := syslutil.WriteToMemOverlayFs(testDir)
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -239,7 +239,7 @@ func TestLoadAppReturnError(t *testing.T) {
 	t.Parallel()
 
 	args := loadAppArgs{
-		"projDirdemo/simple/", "",
+		"demo/simple/", "",
 	}
 	_, fs := syslutil.WriteToMemOverlayFs(args.root)
 	logger, _ := test.NewNullLogger()
@@ -251,7 +251,7 @@ func TestLoadApp(t *testing.T) {
 	t.Parallel()
 
 	args := loadAppArgs{
-		"./tests/", "sequence_diagram_test.sysl",
+		testDir, "sequence_diagram_test.sysl",
 	}
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	logger, _ := test.NewNullLogger()
@@ -298,7 +298,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFiltersWithoutEndpoints(t *testing.T
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_test.sysl",
 	}
 	expected := make(map[string]string)
@@ -318,7 +318,7 @@ func TestDoConstructSequenceDiagramsMissingFile(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "MISSING_FILE.sysl",
 	}
 
@@ -334,7 +334,7 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_test.sysl",
 		endpoints: []string{"QueryUser"},
 		output:    "_.png",
@@ -354,7 +354,7 @@ func TestDoConstructSequenceDiagrams(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_project.sysl",
 		output:    "%(epname).png",
 		apps:      []string{"Project"},
@@ -405,7 +405,7 @@ func TestDoConstructSequenceDiagramWithBlackbox(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel:  "./tests/",
+		rootModel:  testDir,
 		modules:    "call.sysl",
 		output:     "tests/call.png",
 		endpoints:  []string{"MobileApp <- Login"},
@@ -453,7 +453,7 @@ func TestDoConstructSequenceDiagramsToFormatComplexName(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "sequence_diagram_complex_format.sysl",
 		output:    "%(epname).png",
 		apps:      []string{"Project"},
@@ -512,7 +512,7 @@ func TestDoConstructSequenceDiagramWithGroupingCommandline(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "call.sysl",
 		output:    "tests/call.png",
 		endpoints: []string{"MobileApp <- Login"},
@@ -550,7 +550,7 @@ func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "groupby.sysl",
 		output:    "%(epname).png",
 		endpoints: []string{"SEQ-One"},
@@ -587,7 +587,7 @@ func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
 
 	// Given
 	args := &sdArgs{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "groupby.sysl",
 		output:    "%(epname).png",
 		endpoints: []string{"SEQ-Two"},

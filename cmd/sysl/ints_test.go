@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"path/filepath"
 	"testing"
 
 	"github.com/sirupsen/logrus/hooks/test"
@@ -90,7 +91,7 @@ func comparePUML(t *testing.T, expected, actual map[string]string) {
 		golden, err := ioutil.ReadFile(goldenFile)
 		assert.Nil(t, err)
 		if string(golden) != actual[name] {
-			err := ioutil.WriteFile("tests/"+name+".puml", []byte(actual[name]), 0777)
+			err := ioutil.WriteFile(filepath.Join(testDir, name+".puml"), []byte(actual[name]), 0777)
 			assert.Nil(t, err)
 		}
 		golden = syslutil.HandleCRLF(golden)
@@ -106,16 +107,16 @@ func TestGenerateIntegrationsWithTestFile(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "indirect_1.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
 	}
 
 	expected := map[string]string{
-		"all.png":            "tests/indirect_1-all-golden.puml",
-		"indirect_arrow.png": "tests/indirect_1-indirect_arrow-golden.puml",
-		"my_callers.png":     "tests/indirect_1-my_callers-golden.puml",
+		"all.png":            filepath.Join(testDir, "indirect_1-all-golden.puml"),
+		"indirect_arrow.png": filepath.Join(testDir, "indirect_1-indirect_arrow-golden.puml"),
+		"my_callers.png":     filepath.Join(testDir, "indirect_1-my_callers-golden.puml"),
 	}
 
 	// When
@@ -133,7 +134,7 @@ func TestGenerateIntegrationsWithTestFileAndFilters(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -156,13 +157,13 @@ func TestGenerateIntegrationsWithImmediatePredecessors(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_immediate_predecessors_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
 	}
 	expected := map[string]string{
-		"immediate_predecessors.png": "tests/immediate_predecessors-golden.puml",
+		"immediate_predecessors.png": filepath.Join(testDir, "immediate_predecessors-golden.puml"),
 	}
 
 	// When
@@ -180,14 +181,14 @@ func TestGenerateIntegrationsWithExclude(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_excludes_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
 	}
 
 	expected := map[string]string{
-		"excludes.png": "tests/excludes-golden.puml",
+		"excludes.png": filepath.Join(testDir, "excludes-golden.puml"),
 	}
 
 	// When
@@ -205,14 +206,14 @@ func TestGenerateIntegrationsWithPassthrough(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_passthrough_test.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
 	}
 
 	expected := map[string]string{
-		"passthrough.png": "tests/passthrough-golden.puml",
+		"passthrough.png": filepath.Join(testDir, "passthrough-golden.puml"),
 	}
 
 	// When
@@ -248,7 +249,7 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_cluster.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -262,7 +263,7 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"cluster.png": "tests/cluster-golden.puml",
+		"cluster.png": filepath.Join(testDir, "cluster-golden.puml"),
 	}
 
 	// Then
@@ -274,7 +275,7 @@ func TestGenerateIntegrationsWithEpa(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_epa.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -288,7 +289,7 @@ func TestGenerateIntegrationsWithEpa(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"epa.png": "tests/epa-golden.puml",
+		"epa.png": filepath.Join(testDir, "epa-golden.puml"),
 	}
 
 	// Then
@@ -300,7 +301,7 @@ func TestGenerateIntegrationsWithIndirectArrow(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "indirect_2.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -313,12 +314,12 @@ func TestGenerateIntegrationsWithIndirectArrow(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"all_indirect_2.png":  "tests/all_indirect_2-golden.puml",
-		"no_passthrough.png":  "tests/no_passthrough-golden.puml",
-		"passthrough_b.png":   "tests/passthrough_b-golden.puml",
-		"passthrough_c.png":   "tests/passthrough_c-golden.puml",
-		"passthrough_d.png":   "tests/passthrough_d-golden.puml",
-		"passthrough_c_e.png": "tests/passthrough_c_e-golden.puml",
+		"all_indirect_2.png":  filepath.Join(testDir, "all_indirect_2-golden.puml"),
+		"no_passthrough.png":  filepath.Join(testDir, "no_passthrough-golden.puml"),
+		"passthrough_b.png":   filepath.Join(testDir, "passthrough_b-golden.puml"),
+		"passthrough_c.png":   filepath.Join(testDir, "passthrough_c-golden.puml"),
+		"passthrough_d.png":   filepath.Join(testDir, "passthrough_d-golden.puml"),
+		"passthrough_c_e.png": filepath.Join(testDir, "passthrough_c_e-golden.puml"),
 	}
 
 	// Then
@@ -330,7 +331,7 @@ func TestGenerateIntegrationsWithRestrictBy(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_restrict_by.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -344,8 +345,8 @@ func TestGenerateIntegrationsWithRestrictBy(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"with_restrict_by.png":    "tests/with_restrict_by-golden.puml",
-		"without_restrict_by.png": "tests/without_restrict_by-golden.puml",
+		"with_restrict_by.png":    filepath.Join(testDir, "with_restrict_by-golden.puml"),
+		"without_restrict_by.png": filepath.Join(testDir, "without_restrict_by-golden.puml"),
 	}
 
 	// Then
@@ -357,7 +358,7 @@ func TestGenerateIntegrationsWithFilter(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_filter.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -365,7 +366,7 @@ func TestGenerateIntegrationsWithFilter(t *testing.T) {
 	}
 
 	expected := map[string]string{
-		"matched.png": "tests/matched-golden.puml",
+		"matched.png": filepath.Join(testDir, "matched-golden.puml"),
 	}
 
 	// When
@@ -383,7 +384,7 @@ func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_or_without_passthrough.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -396,9 +397,9 @@ func TestGenerateIntegrationWithOrWithoutPassThrough(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"with_passthrough.png":    "tests/with_passthrough-golden.puml",
-		"without_passthrough.png": "tests/without_passthrough-golden.puml",
-		"with_systema.png":        "tests/with_systema-golden.puml",
+		"with_passthrough.png":    filepath.Join(testDir, "with_passthrough-golden.puml"),
+		"without_passthrough.png": filepath.Join(testDir, "without_passthrough-golden.puml"),
+		"with_systema.png":        filepath.Join(testDir, "with_systema-golden.puml"),
 	}
 
 	// Then
@@ -410,7 +411,7 @@ func TestPassthrough2(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "passthrough_1.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -423,13 +424,13 @@ func TestPassthrough2(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"pass_1_all.png":   "tests/pass_1_all-golden.puml",
-		"pass_1_sys_a.png": "tests/pass_1_sys_a-golden.puml",
-		"pass_b.png":       "tests/pass_b-golden.puml",
-		"pass_b_c.png":     "tests/pass_b_c-golden.puml",
-		"pass_f.png":       "tests/pass_f-golden.puml",
-		"pass_D.png":       "tests/pass_D-golden.puml",
-		"pass_e.png":       "tests/pass_e-golden.puml",
+		"pass_1_all.png":   filepath.Join(testDir, "pass_1_all-golden.puml"),
+		"pass_1_sys_a.png": filepath.Join(testDir, "pass_1_sys_a-golden.puml"),
+		"pass_b.png":       filepath.Join(testDir, "pass_b-golden.puml"),
+		"pass_b_c.png":     filepath.Join(testDir, "pass_b_c-golden.puml"),
+		"pass_f.png":       filepath.Join(testDir, "pass_f-golden.puml"),
+		"pass_D.png":       filepath.Join(testDir, "pass_D-golden.puml"),
+		"pass_e.png":       filepath.Join(testDir, "pass_e-golden.puml"),
 	}
 
 	// Then
@@ -441,7 +442,7 @@ func TestGenerateIntegrationsWithPubSub(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "integration_with_pubsub.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -455,7 +456,7 @@ func TestGenerateIntegrationsWithPubSub(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"pubsub.png": "tests/pubsub-golden.puml",
+		"pubsub.png": filepath.Join(testDir, "pubsub-golden.puml"),
 	}
 
 	// Then
@@ -467,7 +468,7 @@ func TestAllStmts(t *testing.T) {
 
 	// Given
 	args := &intsArg{
-		rootModel: "./tests/",
+		rootModel: testDir,
 		modules:   "ints_stmts.sysl",
 		output:    "%(epname).png",
 		project:   "Project",
@@ -480,7 +481,7 @@ func TestAllStmts(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"all_stmts.png": "tests/all_stmts-golden.puml",
+		"all_stmts.png": filepath.Join(testDir, "all_stmts-golden.puml"),
 	}
 
 	// Then
