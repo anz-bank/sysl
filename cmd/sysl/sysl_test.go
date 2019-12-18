@@ -72,34 +72,40 @@ func testMain2(t *testing.T, args []string, golden string) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	runMain2(t, fs, args, golden)
 }
+func testAllMain2(t *testing.T, args []string, inputFile string, golden string) {
 
-func testAllMain2(t *testing.T, args []string, golden string) {
 	// no root defined
-	testMain2(t, args, golden)
+	noRootFile := filepath.Join(testDir, inputFile)
+	testMain2(t, append(args, noRootFile), testDir+golden)
 
-	// root marker
-	testMain2WithSyslRootMarker(t, args, golden)
+	// // // // root marker
+	testMain2WithSyslRootMarker(t, append(args, noRootFile), testDir+golden)
 
 	// root flag defined
-	args = append([]string{"--root", "."}, args...)
+	rootFile := filepath.Join("tests/", inputFile)
+
+	args = append([]string{"--root", projDir}, args...)
+	golden = testDir + golden
 	out := "rooted" + filepath.Base(golden)
+	fmt.Println(out, filepath.Dir(golden))
 	golden = filepath.Join(filepath.Dir(golden), out)
-	testMain2(t, args, golden)
-	testMain2WithSyslRootMarker(t, args, golden)
+	fmt.Println(golden)
+	testMain2(t, append(args, rootFile), golden)
+
+	testMain2WithSyslRootMarker(t, append(args, rootFile), golden)
 }
 
 func TestMain2TextPB(t *testing.T) {
 	t.Parallel()
-
-	testAllMain2(t, []string{"tests/args.sysl"}, "tests/args.sysl.golden.textpb")
+	// tests/ is used because the projDir in args is expecting to have a directory called tests
+	testAllMain2(t, []string{}, "/args.sysl", "/args.sysl.golden.textpb")
 }
 
 func TestMain2JSON(t *testing.T) {
 	t.Parallel()
 
-	testAllMain2(t, []string{"--mode", "json", "tests/args.sysl"}, "tests/args.sysl.golden.json")
+	testAllMain2(t, []string{"--mode", "json"}, "/args.sysl", "/args.sysl.golden.json")
 }
-
 func testMain2Stdout(t *testing.T, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
