@@ -169,9 +169,8 @@ func testLogOutput(t *testing.T, level logrus.Level, fields map[string]interface
 	if fields != nil {
 		outputtedFields = testutil.OutputFormattedFields(fields)
 	}
-	parsedLevel := parseLevel(level)
 
-	expectedOutput := strings.Join([]string{outputtedFields, parsedLevel, testMessage}, " ")
+	expectedOutput := strings.Join([]string{outputtedFields, strings.ToUpper(level.String()), testMessage}, " ")
 	actualOutput := testutil.RedirectOutput(t, logFunc)
 
 	// uses Contains to avoid checking timestamps

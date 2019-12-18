@@ -30,7 +30,7 @@ func (sf *standardFormat) Format(entry *logrus.Entry) ([]byte, error) {
 		message.WriteByte(' ')
 	}
 
-	message.WriteString(parseLevel(entry.Level))
+	message.WriteString(strings.ToUpper(entry.Level.String()))
 
 	if entry.Message != "" {
 		message.WriteByte(' ')
@@ -40,28 +40,6 @@ func (sf *standardFormat) Format(entry *logrus.Entry) ([]byte, error) {
 	// TODO: add codelinker's message here
 	message.WriteByte('\n')
 	return []byte(message.String()), nil
-}
-
-func parseLevel(level logrus.Level) string {
-	switch level {
-	case logrus.DebugLevel:
-		return "DEBUG"
-	case logrus.TraceLevel:
-		return "TRACE"
-	case logrus.WarnLevel:
-		return "WARN"
-	case logrus.ErrorLevel:
-		return "ERROR"
-	case logrus.InfoLevel:
-		// Print logs at the InfoLevel
-		return "PRINT"
-	case logrus.PanicLevel:
-		return "PANIC"
-	case logrus.FatalLevel:
-		return "FATAL"
-	default:
-		panic("Logging: Unsupported log level")
-	}
 }
 
 // NewStandardLogger returns a logger with logrus standard logger as the internal logger
