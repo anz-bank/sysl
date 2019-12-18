@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-ROOT="cmd/sysl/tests"
+ROOT="tests"
 for f in $ROOT/*.sysl; do
  f=`basename $f`
  $GOPATH/bin/sysl -v pb --mode textpb --root $ROOT -o $ROOT/$f.out.txt /$f
