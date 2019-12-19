@@ -34,7 +34,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 		if strings.EqualFold(ext[1:], cfg.testExtension) {
 			filename := strings.TrimSuffix(f.Name(), ext)
 			t.Run(fmt.Sprintf("%s - %s", cfg.name, filename), func(t *testing.T) {
-				//t.Parallel()
+				t.Parallel()
 				input, err := ioutil.ReadFile(path.Join(cfg.testDir, filename+"."+cfg.testExtension))
 				require.NoError(t, err)
 				syslFile := path.Join(cfg.testDir, filename+".sysl")
