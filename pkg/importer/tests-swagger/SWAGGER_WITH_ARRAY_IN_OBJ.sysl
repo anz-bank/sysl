@@ -17,7 +17,7 @@ testapp "Fruit API" [package="package_foo"]:
             @json_tag = "payload"
 
     !type ObjectWithArrayPropsComplicate:
-        applications <: sequence of ObjectWithArrayPropsComplicate_applications_obj?:
+        applications <: sequence of ObjectWithArrayPropsComplicate_applications?:
             @json_tag = "applications"
         baselineReferenceNumber <: string?:
             @json_tag = "baselineReferenceNumber"
@@ -26,7 +26,7 @@ testapp "Fruit API" [package="package_foo"]:
         resultantId <: string?:
             @json_tag = "resultantId"
 
-    !type ObjectWithArrayPropsComplicate_applications_obj:
+    !type ObjectWithArrayPropsComplicate_applications:
         applicationId <: string?:
             @json_tag = "applicationId"
         applicationNum <: float?:

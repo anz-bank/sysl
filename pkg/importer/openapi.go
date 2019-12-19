@@ -126,8 +126,11 @@ func sortProperties(props FieldList) {
 }
 
 func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
-	for _, check := range []string{name, mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, l.logger)} {
-		if t, found := l.types.Find(check); found {
+	if t, found := l.types.Find(name); found {
+		return t
+	}
+	if len(schema.Enum) == 0 {
+		if t, found := l.types.Find(mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, l.logger)); found {
 			return t
 		}
 	}
@@ -144,6 +147,9 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 					fieldType = &Array{Items: atype}
 				} else if atype := l.typeFromRef(pschema.Value.Items.Value.Type); atype != nil {
 					fieldType = &Array{Items: atype}
+				} else if pschema.Value.Items.Value.Type == ObjectTypeName {
+					atype := l.typeFromSchema(name+"_"+pname, pschema.Value.Items.Value)
+					fieldType = &Array{Items: atype}
 				}
 			}
 			if fieldType == nil {
@@ -159,6 +165,9 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 			t.Properties = append(t.Properties, f)
 		}
 		sortProperties(t.Properties)
+		if len(t.Properties) == 0 {
+			return l.types.AddAndRet(NewStringAlias(name))
+		}
 		return l.types.AddAndRet(t)
 	case ArrayTypeName:
 		t := &Array{
@@ -170,6 +179,9 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 		}
 		return t
 	default:
+		if len(schema.Enum) > 0 {
+			return l.types.AddAndRet(&Enum{name: name})
+		}
 		baseType := mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, l.logger)
 		if t, found := l.types.Find(baseType); found {
 			return t
@@ -321,7 +333,7 @@ func (l *loader) buildParams(params openapi3.Parameters) Parameters {
 }
 
 func (l *loader) buildParam(p *openapi3.Parameter) Param {
-	t := l.typeFromSchemaRef("", p.Schema)
+	t := l.typeFromSchemaRef(fmt.Sprintf("_param_%s", p.Name), p.Schema)
 	return Param{
 		Field: Field{
 			Name:       p.Name,

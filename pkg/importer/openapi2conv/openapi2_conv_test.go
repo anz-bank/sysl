@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/importer"
-
 	"github.com/getkin/kin-openapi/openapi2"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/stretchr/testify/require"
@@ -16,7 +14,7 @@ func TestConvOpenAPIV3ToV2(t *testing.T) {
 	err := json.Unmarshal([]byte(exampleV3), &swagger3)
 	require.NoError(t, err)
 
-	actualV2, err := importer.FromV3Swagger(&swagger3)
+	actualV2, err := FromV3Swagger(&swagger3)
 	require.NoError(t, err)
 	data, err := json.Marshal(actualV2)
 	require.NoError(t, err)
@@ -28,7 +26,7 @@ func TestConvOpenAPIV2ToV3(t *testing.T) {
 	err := json.Unmarshal([]byte(exampleV2), &swagger2)
 	require.NoError(t, err)
 
-	actualV3, err := importer.ToV3Swagger(&swagger2)
+	actualV3, err := ToV3Swagger(&swagger2)
 	require.NoError(t, err)
 	data, err := json.Marshal(actualV3)
 	require.NoError(t, err)
