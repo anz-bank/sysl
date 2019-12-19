@@ -28,12 +28,11 @@ func TestCopyStandardLogger(t *testing.T) {
 		"stringVal": "this is a sentence",
 	}).(*standardLogger)
 	copiedLogger := logger.Copy().(*standardLogger)
-
-	assert.True(t, &logger.internal != &copiedLogger.internal)
+	assert.True(t, logger.internal != copiedLogger.internal)
 	assert.Equal(t, logger.fields, copiedLogger.fields)
 	assert.Equal(t, logger.sortedFields, copiedLogger.sortedFields)
 	assert.True(t, sort.StringsAreSorted(logger.sortedFields))
-	assert.True(t, &logger != &copiedLogger)
+	assert.True(t, logger != copiedLogger)
 }
 
 func TestDebug(t *testing.T) {

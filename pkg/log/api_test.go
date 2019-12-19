@@ -17,11 +17,9 @@ func TestWithLogger(t *testing.T) {
 	logger := loggers.NewMockLogger()
 	logger.On("Copy").Return(loggers.NewMockLogger()).Once()
 	newCtx := WithLogger(ctx, logger)
-	newLogger := newCtx.Value(loggerKey).(*loggers.MockLogger)
 
 	require.True(t, logger.AssertExpectations(t))
-	assert.True(t, &ctx != &newCtx)
-	assert.True(t, &logger != &newLogger)
+	assert.True(t, ctx != newCtx)
 }
 
 func TestWithField(t *testing.T) {
@@ -29,11 +27,9 @@ func TestWithField(t *testing.T) {
 		func(tt *testing.T, ctx context.Context, sc testutil.SingleField) {
 			logger := ctx.Value(loggerKey).(*loggers.MockLogger)
 			newCtx := WithField(ctx, sc.Key, sc.Val)
-			newLogger := newCtx.Value(loggerKey).(*loggers.MockLogger)
 
 			require.True(tt, logger.AssertExpectations(tt))
-			assert.True(tt, &ctx != &newCtx)
-			assert.True(tt, &logger != &newLogger)
+			assert.True(tt, ctx != newCtx)
 		})
 }
 
@@ -41,10 +37,9 @@ func TestField(t *testing.T) {
 	testSingleFieldCases(t, "TestField",
 		func(tt *testing.T, ctx context.Context, sc testutil.SingleField) {
 			logger := ctx.Value(loggerKey).(*loggers.MockLogger)
-			newLogger := Field(ctx, sc.Key, sc.Val).(*loggers.MockLogger)
+			Field(ctx, sc.Key, sc.Val)
 
 			require.True(tt, logger.AssertExpectations(tt))
-			assert.True(tt, &logger != &newLogger)
 		})
 }
 
@@ -53,11 +48,9 @@ func TestWithFields(t *testing.T) {
 		func(tt *testing.T, ctx context.Context, mc testutil.MultipleFields) {
 			logger := ctx.Value(loggerKey).(*loggers.MockLogger)
 			newCtx := WithFields(ctx, mc.Fields)
-			newLogger := newCtx.Value(loggerKey).(*loggers.MockLogger)
 
 			require.True(tt, logger.AssertExpectations(tt))
-			assert.True(tt, &ctx != &newCtx)
-			assert.True(tt, &logger != &newLogger)
+			assert.True(tt, ctx != newCtx)
 		})
 }
 
@@ -65,10 +58,9 @@ func TestFields(t *testing.T) {
 	testMultipleFieldsCases(t, "TestFields",
 		func(tt *testing.T, ctx context.Context, mc testutil.MultipleFields) {
 			logger := ctx.Value(loggerKey).(*loggers.MockLogger)
-			newLogger := Fields(ctx, mc.Fields).(*loggers.MockLogger)
+			Fields(ctx, mc.Fields)
 
 			require.True(tt, logger.AssertExpectations(tt))
-			assert.True(tt, &logger != &newLogger)
 		})
 }
 
@@ -197,8 +189,8 @@ func testSingleFieldCases(
 			tt.Parallel()
 
 			logger := loggers.NewMockLogger()
-			// this is done so that the mock logger is of the
-			// same reference, for testing purposes
+			// this is done so that the mock logger is of the same reference, for testing purposes
+			// in real use, it will return a different logger
 			logger.On("Copy").Return(logger)
 			logger.On("PutField", c.Key, c.Val).Return(loggers.NewMockLogger())
 			testFunc(tt, context.WithValue(context.Background(), loggerKey, logger), c)
@@ -218,8 +210,8 @@ func testMultipleFieldsCases(
 			tt.Parallel()
 
 			logger := loggers.NewMockLogger()
-			// this is done so that the mock logger is of the
-			// same reference, for testing purposes
+			// this is done so that the mock logger is of the same reference, for testing purposes
+			// in real use, it will return a different logger
 			logger.On("Copy").Return(logger)
 			logger.On("PutFields", c.Fields).Return(loggers.NewMockLogger())
 			testFunc(tt, context.WithValue(context.Background(), loggerKey, logger), c)

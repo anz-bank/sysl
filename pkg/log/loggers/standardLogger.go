@@ -176,17 +176,16 @@ func (sl *standardLogger) Copy() Logger {
 	}
 	sortedFields := make([]string, len(sl.fields))
 	copy(sortedFields, sl.sortedFields)
-	logger := setupStandardLogger()
 
 	return &standardLogger{
 		fields:       fieldsCopy,
-		internal:     logger,
+		internal:     setupStandardLogger(),
 		sortedFields: sortedFields,
 	}
 }
 
 func setupStandardLogger() *logrus.Logger {
-	logger := logrus.StandardLogger()
+	logger := logrus.New()
 	logger.SetFormatter(&standardFormat{})
 
 	// makes sure that it always logs every level

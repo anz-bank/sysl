@@ -15,7 +15,7 @@ func WithLogger(ctx context.Context, logger loggers.Logger) context.Context {
 	return context.WithValue(ctx, loggerKey, logger.Copy())
 }
 
-// The fields setup in WithField and WithFields are for context specific fields
+// The fields setup in WithField and WithFields are for context-specific fields
 // Fields will be logged alphabetically
 
 // WithField adds a single field in the scope of the context
