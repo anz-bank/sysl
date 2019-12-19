@@ -314,9 +314,13 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 }
 
 func (l *loader) initGlobalParams() {
-	l.globalParams = Parameters{}
-	for _, param := range l.spec.Components.Parameters {
-		l.globalParams.Add(l.buildParam(param.Value))
+	l.globalParams = Parameters{
+		items:       map[string]Param{},
+		insertOrder: []string{},
+	}
+	for name, param := range l.spec.Components.Parameters {
+		l.globalParams.items[name] = l.buildParam(param.Value)
+		l.globalParams.insertOrder = append(l.globalParams.insertOrder, name)
 	}
 }
 
