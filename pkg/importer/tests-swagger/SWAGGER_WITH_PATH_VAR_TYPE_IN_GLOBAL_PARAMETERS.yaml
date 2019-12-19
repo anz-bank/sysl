@@ -19,7 +19,7 @@ paths:
           required: false
           description: If true, the endpoint returns only the user metadata.
         - $ref: '#/parameters/id'
-        - $ref: '#/parameters/request-id'
+        - $ref: '#/parameters/Request-id'
       responses:
         '200':
           description: OK
@@ -30,7 +30,7 @@ parameters:
     type: integer
     required: true
     description: The user ID.
-  request-id:
+  Request-id:
     in: header
     name: request-id
     type: string
