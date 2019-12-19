@@ -4,76 +4,68 @@ import (
 	"path/filepath"
 	"testing"
 
+	db "github.com/anz-bank/sysl/pkg/database"
 	"github.com/sirupsen/logrus/hooks/test"
 
-	"github.com/anz-bank/sysl/pkg/parse"
-	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type scriptArgs struct {
-	root     string
-	title    string
-	output   string
-	project  string
-	source   string
-	expected map[string]string
-}
-
-func TestGenerateDataScriptFail(t *testing.T) {
-	t.Parallel()
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
-	require.Error(t, err)
+	inputDir  string
+	title     string
+	outputDir string
+	source    string
+	appNames  string
+	expected  map[string]string
 }
 
 func TestDoGenerateDataScript(t *testing.T) {
 	args := &scriptArgs{
-		root:    testDir + "db_scripts/",
-		source:  "dataForSqlScriptOrg.sysl",
-		output:  "%(epname).sql",
-		project: "Project",
-		title:   "Petstore Schema",
+		inputDir:  testDir + "db_scripts/",
+		source:    "dataForSqlScriptOrg.sysl",
+		outputDir: testDir + "db_scripts/",
+		title:     "Petstore Schema",
+		appNames:  "RelModel",
 	}
-	argsData := []string{"sysl", "generatescript", "-t", args.title, "-o", args.output,
-		"-r", args.root, "-s", args.source, "-j", args.project}
+	argsData := []string{"sysl", "generatedbscripts", "-t", args.title, "-o", args.outputDir,
+		"-i", args.inputDir, "-s", args.source, "-a", args.appNames}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 
 	r := cmdRunner{}
 	assert.NoError(t, r.Configure(syslCmd))
 	selectedCommand, err := syslCmd.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl data")
-	assert.Equal(t, selectedCommand, "generate-script")
+	assert.Equal(t, selectedCommand, "generate-db-scripts")
 }
 
 func TestDoConstructDatabaseScript(t *testing.T) {
 	args := &scriptArgs{
-		root:    testDir + "db_scripts/",
-		source:  "dataForSqlScriptOrg.sysl",
-		output:  "%(epname).sql",
-		project: "Project",
-		title:   "Petstore Schema",
+		inputDir:  testDir + "db_scripts/",
+		source:    "dataForSqlScriptOrg.sysl",
+		outputDir: testDir + "db_scripts/",
+		title:     "Petstore Schema",
+		appNames:  "RelModel",
 		expected: map[string]string{
-			"Relational-Model.sql": filepath.Join(testDir, "db_scripts/postgres-create-script-golden.sql"),
+			filepath.Join(testDir, "db_scripts/RelModel.sql"): filepath.Join(testDir,
+				"db_scripts/postgres-create-script-golden.sql"),
 		},
 	}
-	result, err := DoConstructDatabaseScriptWithParams(args.root, "", args.title, args.output, args.project,
-		args.source)
+	result, err := DoConstructDatabaseScriptWithParams(args.inputDir, "", args.title, args.outputDir,
+		args.appNames, args.source)
 	assert.Nil(t, err, "Generating the sql script failed")
-	compareSQL(t, args.expected, result)
+	db.CompareSQL(t, args.expected, result)
 }
 
 func DoConstructDatabaseScriptWithParams(
-	rootModel, filter, title, output, project, modules string,
-) (map[string]string, error) {
+	inputDir, filter, title, output, appNames, source string,
+) ([]db.ScriptOutput, error) {
 	cmdDatabaseScript := &CmdDatabaseScript{
-		title:   title,
-		output:  output,
-		root:    rootModel,
-		source:  modules,
-		project: project,
+		title:     title,
+		outputDir: output,
+		inputDir:  inputDir,
+		source:    source,
+		appNames:  appNames,
 	}
 
 	logger, _ := test.NewNullLogger()

@@ -102,22 +102,6 @@ func comparePUML(t *testing.T, expected, actual map[string]string) {
 	assert.Equal(t, len(expected), len(actual))
 }
 
-func compareSQL(t *testing.T, expected, actual map[string]string) {
-	for name, goldenFile := range expected {
-		golden, err := ioutil.ReadFile(goldenFile)
-		assert.Nil(t, err)
-		if string(golden) != actual[name] {
-			err := ioutil.WriteFile(filepath.Join(testDir, name), []byte(actual[name]), 0777)
-			assert.Nil(t, err)
-		}
-		golden = syslutil.HandleCRLF(golden)
-		assert.Equal(t, string(golden), actual[name])
-	}
-
-	// Then
-	assert.Equal(t, len(expected), len(actual))
-}
-
 func TestGenerateIntegrationsWithTestFile(t *testing.T) {
 	t.Parallel()
 

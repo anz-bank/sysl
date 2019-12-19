@@ -40,19 +40,6 @@ func OutputPlantuml(output, plantuml, umlInput string, fs afero.Fs) error {
 	}
 }
 
-func GenerateFromSQLMap(m map[string]string, fs afero.Fs) error {
-	for output, input := range m {
-		l := len(output)
-		out := output[:l-3]
-		out += "sql"
-		err := errors.Wrapf(afero.WriteFile(fs, out, []byte(input), os.ModePerm), "writing %q", out)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func sendHTTPRequest(url string) ([]byte, error) {
 	resp, err := http.Get(url) //nolint:gosec
 	if err != nil {

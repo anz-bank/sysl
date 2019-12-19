@@ -2,102 +2,77 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
+	db "github.com/anz-bank/sysl/pkg/database"
+	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
-
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/sirupsen/logrus"
 )
 
 func GenerateDatabaseScripts(scriptParams *CmdDatabaseScript,
-	logger *logrus.Logger) (map[string]string, error) {
-	outmap := make(map[string]string)
-
-	logger.Debugf("project: %v\n", scriptParams.project)
+	logger *logrus.Logger) ([]db.ScriptOutput, error) {
+	logger.Debugf("Application names: %v\n", scriptParams.appNames)
 	logger.Debugf("title: %s\n", scriptParams.title)
-	logger.Debugf("output: %s\n", scriptParams.output)
-	logger.Debugf("root: %s\n", scriptParams.root)
+	logger.Debugf("outputDir: %s\n", scriptParams.outputDir)
+	logger.Debugf("inputDir: %s\n", scriptParams.inputDir)
 	logger.Debugf("source: %s\n", scriptParams.source)
-	model, _, err := LoadSyslModule(scriptParams.root, scriptParams.source, afero.NewOsFs(), logger)
+	logger.Debugf("db type: %s\n", scriptParams.dbType)
+	appNamesStr := strings.TrimSpace(scriptParams.appNames)
+	if appNamesStr == "" {
+		return nil, fmt.Errorf("No application names specified")
+	}
+	model, _, err := LoadSyslModule(scriptParams.inputDir, scriptParams.source, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}
-	// The "project" app that specifies the data models to be built
-	var app *sysl.Application
-	var exists bool
-	if app, exists = model.GetApps()[scriptParams.project]; !exists {
-		return nil, fmt.Errorf("project not found in sysl")
-	}
-
-	epname := "Relational-Model"
-	endpt := app.GetEndpoints()[epname]
-	outputDir := scriptParams.output
-	if strings.Contains(outputDir, "%(epname)") {
-		of := MakeFormatParser(scriptParams.output)
-		outputDir = of.FmtOutput(scriptParams.project, epname, "", nil)
-	}
-	generateDatabaseScripts(outmap, model, endpt.GetStmt(), scriptParams.title, scriptParams.project, outputDir)
-	return outmap, nil
+	appNames := strings.Split(appNamesStr, db.Delimiter)
+	outputSlice := processSysl(model, appNames, scriptParams.outputDir, scriptParams.title, scriptParams.dbType)
+	return outputSlice, nil
 }
-
-func generateDatabaseScripts(outmap map[string]string, mod *sysl.Module,
-	stmts []*sysl.Statement, title, project, outDir string) {
+func processSysl(mod *sysl.Module,
+	appNames []string, outputDir, title, dbType string) []db.ScriptOutput {
+	outputSlice := []db.ScriptOutput{}
 	apps := mod.GetApps()
-
-	// Parse all the applications in the project
-	outStr := ""
-	if title != "" {
-		outStr += "/*TITLE : " + title + "*/\n"
-	}
-	outStr += databaseScriptHeader
-	for _, stmt := range stmts {
-		if a, ok := stmt.Stmt.(*sysl.Statement_Action); ok {
-			var stringBuilder strings.Builder
-			app := apps[a.Action.Action]
-			if app != nil {
-				dataParam := &DatabaseScriptParam{
-					types:   app.GetTypes(),
-					title:   title,
-					project: project,
-				}
-				v := MakeDatabaseScriptView(&stringBuilder, dataParam.title, dataParam.project)
-				outStr += "\n\n/*-----------------------Relation Model : " +
-					a.Action.Action + "-----------------------------------------------*/\n"
-				outStr += v.GenerateDatabaseScriptCreate(dataParam)
-			}
+	for _, appName := range appNames {
+		app := apps[appName]
+		if app != nil {
+			v := db.MakeDatabaseScriptView(title, appName)
+			outStr := v.GenerateDatabaseScriptCreate(app.GetTypes(), dbType)
+			outputFile := filepath.Join(outputDir, appName+db.SQLExtension)
+			outputStruct := db.MakeScriptOutput(outputFile, outStr)
+			outputSlice = append(outputSlice, *outputStruct)
 		}
 	}
-	outmap[outDir] = outStr
+	return outputSlice
 }
 
 type databaseScriptCmd struct {
 	CmdDatabaseScript
 }
 
-func (p *databaseScriptCmd) Name() string            { return "generate-script" }
+func (p *databaseScriptCmd) Name() string            { return "generate-db-scripts" }
 func (p *databaseScriptCmd) RequireSyslModule() bool { return false }
 
 func (p *databaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Generate postgres sql script").Alias("generatescript")
+	cmd := app.Command(p.Name(), "Generate postgres sql script").Alias("generatedbscripts")
 
-	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
-	cmd.Flag("rootDir", "root dir").Short('r').StringVar(&p.root)
+	cmd.Flag("title", "file title").Short('t').StringVar(&p.title)
+	cmd.Flag("input-dir", "input dir").Short('i').StringVar(&p.inputDir)
 	cmd.Flag("source", "source sysl").Short('s').StringVar(&p.source)
-	cmd.Flag("output",
-		"output file (default: %(epname).sql)",
-	).Default("%(epname).sql").Short('o').StringVar(&p.output)
-	cmd.Flag("project", "project pseudo-app to render").Short('j').StringVar(&p.project)
-
+	cmd.Flag("output-dir", "output directory for generated file").Short('o').StringVar(&p.outputDir)
+	cmd.Flag("app-names", "application names to parse").Short('a').StringVar(&p.appNames)
+	cmd.Flag("db-type", "database type e.g postgres").Short('d').StringVar(&p.dbType)
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
 
 func (p *databaseScriptCmd) Execute(args ExecuteArgs) error {
-	outmap, err := GenerateDatabaseScripts(&p.CmdDatabaseScript, args.Logger)
+	outputSlice, err := GenerateDatabaseScripts(&p.CmdDatabaseScript, args.Logger)
 	if err != nil {
 		return err
 	}
-	return GenerateFromSQLMap(outmap, args.Filesystem)
+	return db.GenerateFromSQLMap(outputSlice, args.Filesystem)
 }

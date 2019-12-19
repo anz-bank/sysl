@@ -4,97 +4,92 @@ import (
 	"path/filepath"
 	"testing"
 
+	db "github.com/anz-bank/sysl/pkg/database"
 	"github.com/sirupsen/logrus/hooks/test"
 
-	"github.com/anz-bank/sysl/pkg/parse"
-	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type scriptModArgs struct {
-	root      string
+	inputDir  string
 	title     string
-	output    string
-	project   string
-	sourceOld string
-	sourceNew string
+	outputDir string
+	appNames  string
+	orgSource string
+	newSource string
 	expected  map[string]string
-}
-
-func TestGenerateDataScriptModFail(t *testing.T) {
-	t.Parallel()
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
-	require.Error(t, err)
 }
 
 func TestDoGenerateDataScriptMod(t *testing.T) {
 	args := &scriptModArgs{
-		root:      testDir + "db_scripts/",
-		sourceOld: "dataForSqlScriptOrg.sysl",
-		sourceNew: "dataForSqlScriptModified.sysl",
-		output:    "%(epname).sql",
-		project:   "Project",
+		inputDir:  testDir + "db_scripts/",
+		orgSource: "dataForSqlScriptOrg.sysl",
+		newSource: "dataForSqlScriptModifiedTwo.sysl",
+		outputDir: testDir + "db_scripts/",
+		appNames:  "RelModel,RelModelNew",
 		title:     "Petstore Schema",
 	}
-	argsData := []string{"sysl", "generatescriptdelta", "-t", args.title, "-o", args.output,
-		"-r", args.root, "-s", args.sourceOld, "-n", args.sourceNew, "-j", args.project}
+	argsData := []string{"sysl", "generatedbscriptsdelta", "-t", args.title, "-o", args.outputDir,
+		"-r", args.inputDir, "-s", args.newSource, "-n", args.orgSource, "-a", args.appNames}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 
 	r := cmdRunner{}
 	assert.NoError(t, r.Configure(syslCmd))
 	selectedCommand, err := syslCmd.Parse(argsData[1:])
 	assert.Nil(t, err, "Cmd line parse failed for sysl data")
-	assert.Equal(t, selectedCommand, "generate-script-delta")
+	assert.Equal(t, selectedCommand, "generate-db-scripts-delta")
 }
 func TestDoConstructDatabaseScriptMod(t *testing.T) {
 	args := &scriptModArgs{
-		root:      testDir + "db_scripts/",
-		sourceOld: "dataForSqlScriptOrg.sysl",
-		sourceNew: "dataForSqlScriptModified.sysl",
-		output:    "%(epname).sql",
-		project:   "Project",
+		inputDir:  testDir + "db_scripts/",
+		orgSource: "dataForSqlScriptOrg.sysl",
+		newSource: "dataForSqlScriptModified.sysl",
+		outputDir: testDir + "db_scripts/",
+		appNames:  "RelModel",
 		title:     "Petstore Schema",
 		expected: map[string]string{
-			"Relational-Model.sql": filepath.Join(testDir, "db_scripts/postgres-modify-script-golden.sql"),
+			filepath.Join(testDir, "db_scripts/RelModel.sql"): filepath.Join(testDir,
+				"db_scripts/postgres-modify-script-golden.sql"),
 		},
 	}
-	result, err := DoConstructModDatabaseScriptWithParams(args.root, "", args.title, args.output, args.project,
-		args.sourceOld, args.sourceNew)
+	result, err := DoConstructModDatabaseScriptWithParams(args.inputDir, "", args.title,
+		args.outputDir, args.appNames, args.orgSource, args.newSource)
 	assert.Nil(t, err, "Generating the sql script failed")
-	compareSQL(t, args.expected, result)
+	db.CompareSQL(t, args.expected, result)
 }
 
 func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
 	args := &scriptModArgs{
-		root:      testDir + "db_scripts/",
-		sourceOld: "dataForSqlScriptOrg.sysl",
-		sourceNew: "dataForSqlScriptModifiedTwoApps.sysl",
-		output:    "%(epname).sql",
-		project:   "Project",
+		inputDir:  testDir + "db_scripts/",
+		orgSource: "dataForSqlScriptOrg.sysl",
+		newSource: "dataForSqlScriptModifiedTwoApps.sysl",
+		outputDir: testDir + "db_scripts/",
+		appNames:  "RelModel,RelModelNew",
 		title:     "Petstore Schema",
 		expected: map[string]string{
-			"Relational-Model.sql": filepath.Join(testDir, "/db_scripts/postgres-modify-script-golden_two_apps.sql"),
+			filepath.Join(testDir, "db_scripts/RelModel.sql"): filepath.Join(testDir,
+				"/db_scripts/postgres-modify-script-golden.sql"),
+			filepath.Join(testDir, "db_scripts/RelModelNew.sql"): filepath.Join(testDir,
+				"/db_scripts/postgres-modify-script-golden_second_app.sql"),
 		},
 	}
-	result, err := DoConstructModDatabaseScriptWithParams(args.root, "", args.title, args.output, args.project,
-		args.sourceOld, args.sourceNew)
+	result, err := DoConstructModDatabaseScriptWithParams(args.inputDir, "", args.title, args.outputDir,
+		args.appNames, args.orgSource, args.newSource)
 	assert.Nil(t, err, "Generating the sql script failed")
-	compareSQL(t, args.expected, result)
+	db.CompareSQL(t, args.expected, result)
 }
 
 func DoConstructModDatabaseScriptWithParams(
-	rootModel, filter, title, output, project, modulesOld, modulesNew string,
-) (map[string]string, error) {
+	inputDir, filter, title, outputDir, appNames, orgSource, newSource string,
+) ([]db.ScriptOutput, error) {
 	cmdDatabaseScriptMod := &CmdDatabaseScriptMod{
 		title:     title,
-		root:      rootModel,
-		orgSource: modulesOld,
-		newSource: modulesNew,
-		output:    output,
-		project:   project,
+		inputDir:  inputDir,
+		orgSource: orgSource,
+		newSource: newSource,
+		outputDir: outputDir,
+		appNames:  appNames,
 	}
 
 	logger, _ := test.NewNullLogger()

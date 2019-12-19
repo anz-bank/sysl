@@ -81,20 +81,22 @@ type CmdContextParamDatagen struct {
 }
 
 type CmdDatabaseScript struct {
-	title   string
-	output  string
-	project string
-	root    string
-	source  string
+	title     string
+	outputDir string
+	appNames  string
+	inputDir  string
+	source    string
+	dbType    string
 }
 
 type CmdDatabaseScriptMod struct {
 	title     string
-	output    string
-	project   string
-	root      string
+	outputDir string
+	appNames  string
+	inputDir  string
 	orgSource string
 	newSource string
+	dbType    string
 }
 
 type ExecuteArgs struct {
