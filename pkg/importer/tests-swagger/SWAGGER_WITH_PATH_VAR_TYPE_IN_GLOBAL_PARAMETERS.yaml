@@ -18,8 +18,8 @@ paths:
           type: boolean
           required: false
           description: If true, the endpoint returns only the user metadata.
-        - $ref: '#parameters/id'
-        - $ref: '#parameters/request-id'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/request-id'
       responses:
         '200':
           description: OK

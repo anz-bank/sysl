@@ -311,7 +311,11 @@ func (l *loader) initGlobalParams() {
 func (l *loader) buildParams(params openapi3.Parameters) Parameters {
 	out := Parameters{}
 	for _, param := range params {
-		out.Add(l.buildParam(param.Value))
+		if param.Ref != "" {
+			out.Add(l.globalParams.items[strings.TrimPrefix(param.Ref, "#/components/parameters/")])
+		} else {
+			out.Add(l.buildParam(param.Value))
+		}
 	}
 	return out
 }
