@@ -10,6 +10,8 @@ toc: true
 
 Sysl is a CLI (Command Line Interface) that executes with the `sysl` command.
 
+Install it with
+
     GO111MODULE=on go get github.com/anz-bank/sysl/cmd/sysl@v0.4.0
 
 Note: Do NOT run it from inside a Go source directory that is module enabled,
@@ -17,11 +19,11 @@ otherwise it gets added to go.mod/go.sum.
 
 ## Prerequisites
 
-- [Go](https://golang.org)
-- [PlantUML](https://hub.docker.com/r/plantuml/plantuml-server/) server for diagram generation for use if using the [external service](http://www.plantuml.com/plantuml/) is not appropriate
+- [Go 1.13](https://golang.org/doc/install)
+- PlantUML environment variable for diagram generation:
+  `export SYSL_PLANTUML=http://www.plantuml.com/plantuml`
 
-## Setting PlantUML Environment variable
-
-In order to be able to generate diagrams the `SYSL_PLANTUML` Environment variable needs to be set
-
-    export SYSL_PLANTUML=http://www.plantuml.com/plantuml
+If the external PlantUML service is not suitable for your use case, you can run
+a local instance of the [PlantUML
+server](https://hub.docker.com/r/plantuml/plantuml-server/) using the docker
+image and point the `SYSL_PLANTUML` environment variable to that instance.
