@@ -21,10 +21,15 @@ func (p *Parameters) Add(param Param) {
 }
 
 func (p *Parameters) Extend(others Parameters) Parameters {
-	for _, name := range others.insertOrder {
-		p.Add(others.items[name])
+	res := Parameters{}
+	for _, name := range p.insertOrder {
+		res.Add(p.items[name])
 	}
-	return *p
+
+	for _, name := range others.insertOrder {
+		res.Add(others.items[name])
+	}
+	return res
 }
 
 func (p Parameters) findParams(where string) []Param {
