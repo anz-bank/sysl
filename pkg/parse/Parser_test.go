@@ -2,18 +2,17 @@ package parse
 
 import (
 	"bytes"
-	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
-	"os/exec"
 	"path"
 	"strings"
 	"testing"
 
+	"github.com/pmezard/go-difflib/difflib"
+
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/pbutil"
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
@@ -43,17 +42,6 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 		return nil, errors.Wrapf(err, "Unmarshal proto: %s", filename)
 	}
 	return module, nil
-}
-
-func retainOrRemove(err error, filename string, retainOnError bool) error {
-	if err != nil {
-		if retainOnError {
-			fmt.Printf("%#v retained for checking\n", filename)
-		} else {
-			os.Remove(filename)
-		}
-	}
-	return err
 }
 
 func removeSourceContextFromExpr(expr *sysl.Expr) {
@@ -202,44 +190,27 @@ func parseAndCompare(
 		return true, nil
 	}
 
-	if err = pbutil.TextPB(goldenProto, golden, afero.NewMemMapFs()); err != nil {
+	expected := bytes.Buffer{}
+	actual := bytes.Buffer{}
+	if err = pbutil.FTextPB(&expected, goldenProto); err != nil {
 		return false, err
 	}
-
-	pattern := "sysl-test-*.textpb"
-	generated, err := ioutil.TempFile("", pattern)
+	if err = pbutil.FTextPB(&actual, module); err != nil {
+		return false, err
+	}
+	diff, err := difflib.GetUnifiedDiffString(difflib.UnifiedDiff{
+		A:        difflib.SplitLines(expected.String()),
+		B:        difflib.SplitLines(actual.String()),
+		FromFile: "Expected: " + golden,
+		FromDate: "",
+		ToFile:   "Actual",
+		ToDate:   "",
+		Context:  1,
+	})
 	if err != nil {
-		return false, errors.Wrapf(err, "Create tempfile: %s", pattern)
+		return false, err
 	}
-	generatedClosed := false
-	defer func() {
-		if !generatedClosed {
-			generated.Close()
-		}
-	}()
-
-	if err = retainOrRemove(pbutil.FTextPB(generated, module), generated.Name(), retainOnError); err != nil {
-		return false, errors.Wrapf(err, "Generate %#v", generated)
-	}
-	if err := generated.Close(); err != nil {
-		return false, errors.Wrapf(err, "Close %#v", generated)
-	}
-	generatedClosed = true
-
-	cmd := exec.Command("diff", "-yw", golden, generated.Name())
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		if retainOnError {
-			fmt.Printf("%#v retained for checking\n", generated.Name())
-		} else {
-			os.Remove(generated.Name())
-		}
-		return false, errors.Wrapf(err, "diff -yw %#v %#v", golden, generated.Name())
-	}
-
-	os.Remove(generated.Name())
-	return false, nil
+	return false, errors.New(diff)
 }
 
 func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (bool, error) {
