@@ -99,3 +99,47 @@ func primitiveFromNativeDataType(native antlr.TerminalNode) (*sysl.Type_Primitiv
 	}
 	return &sysl.Type_Primitive_{Primitive: primitiveType}, constraint
 }
+
+type pathStack struct {
+	sep   string
+	parts []string
+
+	path   string
+	prefix string
+}
+
+func NewPathStack(sep string) pathStack {
+	return pathStack{
+		sep:   sep,
+		parts: []string{},
+	}
+}
+
+func (p pathStack) Get() string {
+	return p.path
+}
+
+func (p *pathStack) Push(items ...string) string {
+	p.parts = append(p.parts, items...)
+	return p.update()
+}
+
+func (p *pathStack) Pop() string {
+	p.parts = p.parts[:len(p.parts)-1]
+	return p.update()
+}
+
+func (p *pathStack) Reset() string {
+	p.parts = []string{}
+	return p.update()
+}
+
+func (p *pathStack) update() string {
+	p.path = p.prefix + strings.Join(p.parts, p.sep)
+	return p.path
+}
+
+func (p *pathStack) setPrefix(prefix string) string {
+	p.prefix = prefix
+	return p.update()
+}
