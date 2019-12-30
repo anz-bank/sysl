@@ -38,7 +38,7 @@ type TreeShapeListener struct {
 	viewname            string
 
 	fieldname             []string
-	url_prefix            []string
+	urlPrefixes           PathStack
 	app_name              []string
 	annotation            string
 	typemap               map[string]*sysl.Type
@@ -78,6 +78,7 @@ func NewTreeShapeListener() *TreeShapeListener {
 		opmap:               opmap,
 		currentTypePath:     NewPathStack("."),
 		currentEndpointPath: NewPathStack("/"),
+		urlPrefixes:         NewPathStack(""),
 	}
 }
 
@@ -1025,8 +1026,8 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 // ExitHttp_path is called when production http_path is exited.
 func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 	// s.typename is built along as we enter http_path/http_path_suffix/http_path_var_with_type
-	// commit this value to url_prefix
-	s.url_prefix = append(s.url_prefix, s.typename)
+	// commit this value to urlPrefixes
+	s.urlPrefixes.Push(s.typename)
 }
 
 // EnterRet_stmt is called when production ret_stmt is entered.
@@ -1396,14 +1397,6 @@ func (s *TreeShapeListener) ExitStatements(ctx *parser.StatementsContext) {
 	}
 }
 
-func (s *TreeShapeListener) urlString() string {
-	var url string
-	for _, str := range s.url_prefix {
-		url += str
-	}
-	return url
-}
-
 func (s *TreeShapeListener) PushExpr(expr *sysl.Expr) {
 	s.expr_stack = append(s.expr_stack, expr)
 }
@@ -1533,7 +1526,7 @@ func mergeAttrs(src map[string]*sysl.Attribute, dst map[string]*sysl.Attribute) 
 
 // EnterMethod_def is called when production method_def is entered.
 func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
-	url := s.urlString()
+	url := s.urlPrefixes.Get()
 	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
 	s.typename = method + " " + url
 	s.method_urlparams = []*sysl.Endpoint_RestParams_QueryParam{}
@@ -1706,7 +1699,7 @@ func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext)
 
 // ExitRest_endpoint is called when production rest_endpoint is exited.
 func (s *TreeShapeListener) ExitRest_endpoint(*parser.Rest_endpointContext) {
-	s.url_prefix = s.url_prefix[:len(s.url_prefix)-1]
+	s.urlPrefixes.Pop()
 	ltop := len(s.rest_urlparams_len) - 1
 	if ltop >= 0 {
 		l := s.rest_urlparams_len[ltop]
@@ -1715,7 +1708,7 @@ func (s *TreeShapeListener) ExitRest_endpoint(*parser.Rest_endpointContext) {
 	}
 	s.rest_attrs = s.rest_attrs[:len(s.rest_attrs)-1]
 
-	if len(s.url_prefix) != len(s.rest_attrs) {
+	if len(s.urlPrefixes.parts) != len(s.rest_attrs) {
 		panic("something is wrong")
 	}
 }
@@ -3036,10 +3029,9 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 		s.pushScope(s.module.Apps[s.appname])
 	}
 
-	s.url_prefix = []string{""}
 	s.rest_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	s.rest_queryparams_len = []int{0}
-	s.rest_attrs = []map[string]*sysl.Attribute{nil}
+	s.rest_attrs = []map[string]*sysl.Attribute{}
 	s.typemap = map[string]*sysl.Type{}
 }
 
