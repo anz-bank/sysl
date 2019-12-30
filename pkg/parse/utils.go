@@ -100,7 +100,7 @@ func primitiveFromNativeDataType(native antlr.TerminalNode) (*sysl.Type_Primitiv
 	return &sysl.Type_Primitive_{Primitive: primitiveType}, constraint
 }
 
-type pathStack struct {
+type PathStack struct {
 	sep   string
 	parts []string
 
@@ -108,38 +108,40 @@ type pathStack struct {
 	prefix string
 }
 
-func NewPathStack(sep string) pathStack {
-	return pathStack{
+func NewPathStack(sep string) PathStack {
+	return PathStack{
 		sep:   sep,
 		parts: []string{},
 	}
 }
 
-func (p pathStack) Get() string {
+func (p PathStack) Get() string {
 	return p.path
 }
 
-func (p *pathStack) Push(items ...string) string {
+func (p *PathStack) Push(items ...string) string {
 	p.parts = append(p.parts, items...)
 	return p.update()
 }
 
-func (p *pathStack) Pop() string {
+func (p *PathStack) Pop() string {
 	p.parts = p.parts[:len(p.parts)-1]
 	return p.update()
 }
 
-func (p *pathStack) Reset() string {
+func (p *PathStack) Reset() string {
 	p.parts = []string{}
 	return p.update()
 }
 
-func (p *pathStack) update() string {
-	p.path = p.prefix + strings.Join(p.parts, p.sep)
-	return p.path
+// Parts() clones the path items into a new slice so that it is safe to store
+func (p PathStack) Parts() []string {
+	out := make([]string, len(p.parts))
+	copy(out, p.parts)
+	return out
 }
 
-func (p *pathStack) setPrefix(prefix string) string {
-	p.prefix = prefix
-	return p.update()
+func (p *PathStack) update() string {
+	p.path = p.prefix + strings.Join(p.parts, p.sep)
+	return p.path
 }

@@ -26,12 +26,15 @@ type importDef struct {
 // TreeShapeListener ..
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
-	base                  string
-	sc                    sourceCtxHelper
-	imports               []importDef
-	module                *sysl.Module
-	appname               string
-	typename              string
+	base     string
+	sc       sourceCtxHelper
+	imports  []importDef
+	module   *sysl.Module
+	appname  string
+	typename string
+
+	currentTypePath PathStack
+
 	fieldname             []string
 	url_prefix            []string
 	app_name              []string
@@ -70,7 +73,8 @@ func NewTreeShapeListener() *TreeShapeListener {
 		module: &sysl.Module{
 			Apps: map[string]*sysl.Application{},
 		},
-		opmap: opmap,
+		opmap:           opmap,
+		currentTypePath: NewPathStack("."),
 	}
 }
 
@@ -82,7 +86,7 @@ func (s *TreeShapeListener) EnterName_str(ctx *parser.Name_strContext) {
 // EnterReference is called when production reference is entered.
 func (s *TreeShapeListener) EnterReference(*parser.ReferenceContext) {
 	context_app_part := s.module.Apps[s.appname].Name.Part
-	context_path := strings.Split(s.typename, ".")
+	context_path := s.currentTypePath.Parts()
 
 	s.currentType().Type = &sysl.Type_TypeRef{
 		TypeRef: &sysl.ScopedRef{
@@ -221,7 +225,7 @@ func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_type
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
 	context_app_part := s.module.Apps[s.appname].Name.Part
-	context_path := strings.Split(s.typename, ".")
+	context_path := s.currentTypePath.Parts()
 	ref_path := []string{ctx.GetText()}
 
 	type1.Type = &sysl.Type_TypeRef{
@@ -513,9 +517,9 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 
 // EnterInplace_tuple is called when production inplace_tuple is entered.
 func (s *TreeShapeListener) EnterInplace_tuple(*parser.Inplace_tupleContext) {
-	s.typename = s.typename + "." + s.fieldname[len(s.fieldname)-1]
+	s.currentTypePath.Push(s.fieldname[len(s.fieldname)-1])
 	s.typemap = map[string]*sysl.Type{}
-	s.module.Apps[s.appname].Types[s.typename] = &sysl.Type{
+	s.module.Apps[s.appname].Types[s.currentTypePath.Get()] = &sysl.Type{
 		Type: &sysl.Type_Tuple_{
 			Tuple: &sysl.Type_Tuple{
 				AttrDefs: s.typemap,
@@ -526,10 +530,9 @@ func (s *TreeShapeListener) EnterInplace_tuple(*parser.Inplace_tupleContext) {
 
 // ExitInplace_tuple is called when production inplace_tuple is exited.
 func (s *TreeShapeListener) ExitInplace_tuple(*parser.Inplace_tupleContext) {
-	fixFieldDefinitions(s.module.Apps[s.appname].Types[s.typename])
-	l := strings.LastIndex(s.typename, ".")
-	s.typename = s.typename[:l]
-	s.typemap = s.module.Apps[s.appname].Types[s.typename].GetTuple().GetAttrDefs()
+	fixFieldDefinitions(s.module.Apps[s.appname].Types[s.currentTypePath.Get()])
+	s.currentTypePath.Pop()
+	s.typemap = s.module.Apps[s.appname].Types[s.currentTypePath.Get()].GetTuple().GetAttrDefs()
 }
 
 // EnterField is called when production field is entered.
@@ -539,7 +542,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	type1, has := s.typemap[fieldName]
 	if has {
 		logrus.Warnf("%s) %s.%s defined multiple times",
-			s.sc.filename, s.typename, fieldName)
+			s.sc.filename, s.currentTypePath.Get(), fieldName)
 	} else {
 		type1 = &sysl.Type{}
 		type1.Type = &sysl.Type_NoType_{
@@ -594,7 +597,7 @@ func (s *TreeShapeListener) ExitField(ctx *parser.FieldContext) {
 
 // EnterTable_stmts is called when production table_stmts is entered.
 func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
-	type1 := s.module.Apps[s.appname].Types[s.typename]
+	type1 := s.module.Apps[s.appname].Types[s.currentTypePath.Get()]
 	if ctx.Annotation(0) != nil {
 		if type1.Attrs == nil {
 			type1.Attrs = map[string]*sysl.Attribute{}
@@ -607,7 +610,7 @@ func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 
 // EnterTable_def is called when production table_def is entered.
 func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
-	type1 := s.module.Apps[s.appname].Types[s.typename]
+	type1 := s.module.Apps[s.appname].Types[s.currentTypePath.Get()]
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		type1.Attrs = makeAttributeArray(attribs)
 	}
@@ -618,20 +621,16 @@ func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
 
 // EnterTable is called when production table is entered.
 func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
-	if s.typename == "" {
-		s.typename = ctx.Name_str().GetText()
-	} else {
-		s.typename = s.typename + "." + ctx.Name_str().GetText()
-	}
+	s.currentTypePath.Push(ctx.Name_str().GetText())
 	s.typemap = map[string]*sysl.Type{}
 
 	types := s.module.Apps[s.appname].Types
 	if ctx.TABLE() != nil {
-		if types[s.typename].GetRelation().GetAttrDefs() != nil {
+		if types[s.currentTypePath.Get()].GetRelation().GetAttrDefs() != nil {
 			panic("not implemented yet")
 		}
 
-		types[s.typename] = &sysl.Type{
+		types[s.currentTypePath.Get()] = &sysl.Type{
 			Type: &sysl.Type_Relation_{
 				Relation: &sysl.Type_Relation{
 					AttrDefs: s.typemap,
@@ -640,7 +639,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 		}
 	}
 	if ctx.TYPE() != nil {
-		types[s.typename] = &sysl.Type{
+		types[s.currentTypePath.Get()] = &sysl.Type{
 			Type: &sysl.Type_Tuple_{
 				Tuple: &sysl.Type_Tuple{
 					AttrDefs: s.typemap,
@@ -648,7 +647,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 			},
 		}
 	}
-	type1 := types[s.typename]
+	type1 := types[s.currentTypePath.Get()]
 	s.pushScope(type1)
 	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
@@ -703,7 +702,7 @@ func fixFieldDefinitions(collection *sysl.Type) {
 // ExitTable is called when production table is exited.
 func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	// wire up primary key
-	if rel := s.module.Apps[s.appname].Types[s.typename].GetRelation(); rel != nil {
+	if rel := s.module.Apps[s.appname].Types[s.currentTypePath.Get()].GetRelation(); rel != nil {
 		pks := []string{}
 		for _, name := range s.fieldname {
 			f := rel.GetAttrDefs()[name]
@@ -728,16 +727,10 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	s.popScope()
 
 	// Match legacy behavior
-	fixFieldDefinitions(s.module.Apps[s.appname].Types[s.typename])
+	fixFieldDefinitions(s.module.Apps[s.appname].Types[s.currentTypePath.Get()])
 	// End
 
-	l := strings.LastIndex(s.typename, ".")
-	if l > 0 {
-		s.typename = s.typename[:l]
-	} else {
-		s.typename = ""
-	}
-
+	s.currentTypePath.Pop()
 	s.fieldname = []string{}
 	s.typemap = nil
 }
@@ -747,7 +740,7 @@ func (s *TreeShapeListener) applyAnnotations(
 ) {
 	// Match legacy behavior
 	// Copy the annotations from the parent (tuple or relation) to each child
-	collection := s.module.Apps[s.appname].Types[s.typename]
+	collection := s.module.Apps[s.appname].Types[s.currentTypePath.Get()]
 
 	for _, annotation := range annotations {
 		varname := annotation.(*parser.AnnotationContext).VAR_NAME().GetText()
@@ -763,41 +756,24 @@ func (s *TreeShapeListener) applyAnnotations(
 	}
 }
 
-func (s *TreeShapeListener) pushTypename(typename string) string {
-	if s.typename != "" {
-		s.typename += "."
-	}
-	s.typename += typename
-	return s.typename
-}
-
-func (s *TreeShapeListener) popTypename() string {
-	if lastDot := strings.LastIndex(s.typename, "."); lastDot != -1 {
-		s.typename = s.typename[:lastDot]
-	} else {
-		s.typename = ""
-	}
-	return s.typename
-}
-
 // EnterUnion is called when production union is entered.
 func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
-	s.pushTypename(ctx.Name_str().GetText())
+	s.currentTypePath.Push(ctx.Name_str().GetText())
 	s.typemap = map[string]*sysl.Type{}
 
 	types := s.module.Apps[s.appname].Types
 
-	if types[s.typename].GetOneOf().GetType() != nil {
+	if types[s.currentTypePath.Get()].GetOneOf().GetType() != nil {
 		panic("not implemented yet")
 	}
 
-	types[s.typename] = &sysl.Type{
+	types[s.currentTypePath.Get()] = &sysl.Type{
 		Type: &sysl.Type_OneOf_{
 			OneOf: &sysl.Type_OneOf{},
 		},
 	}
 
-	type1 := types[s.typename]
+	type1 := types[s.currentTypePath.Get()]
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		type1.Attrs = makeAttributeArray(attribs)
 	}
@@ -816,9 +792,9 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.popScope()
 
 	context_app_part := s.module.Apps[s.appname].Name.Part
-	context_path := strings.Split(s.typename, ".")
+	context_path := s.currentTypePath.Parts()
 
-	oneof := s.module.Apps[s.appname].Types[s.typename].GetOneOf()
+	oneof := s.module.Apps[s.appname].Types[s.currentTypePath.Get()].GetOneOf()
 	for _, ref := range ctx.AllUser_defined_type() {
 		oneof.Type = append(oneof.Type, &sysl.Type{
 			Type: &sysl.Type_TypeRef{
@@ -837,8 +813,7 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 		})
 	}
 
-	s.popTypename()
-
+	s.currentTypePath.Pop()
 	s.fieldname = []string{}
 	s.typemap = nil
 }
@@ -3002,18 +2977,14 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 
 // EnterAlias is called when production alias is entered.
 func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
-	if s.typename == "" {
-		s.typename = ctx.Name_str().GetText()
-	} else {
-		s.typename = s.typename + "." + ctx.Name_str().GetText()
-	}
+	s.currentTypePath.Push(ctx.Name_str().GetText())
 	type1 := &sysl.Type{}
 
 	s.typemap = map[string]*sysl.Type{
-		s.typename: type1,
+		s.currentTypePath.Get(): type1,
 	}
-	s.fieldname = []string{s.typename}
-	s.module.Apps[s.appname].Types[s.typename] = type1
+	s.fieldname = []string{s.currentTypePath.Get()}
+	s.module.Apps[s.appname].Types[s.currentTypePath.Get()] = type1
 
 	if ctx.Attribs_or_modifiers() != nil {
 		type1.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
@@ -3026,9 +2997,9 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 
 // ExitAlias is called when production alias is exited.
 func (s *TreeShapeListener) ExitAlias(ctx *parser.AliasContext) {
-	s.module.Apps[s.appname].Types[s.typename] = s.typemap[s.fieldname[len(s.fieldname)-1]]
+	s.module.Apps[s.appname].Types[s.currentTypePath.Get()] = s.typemap[s.fieldname[len(s.fieldname)-1]]
 
-	s.typename = ""
+	s.currentTypePath.Pop()
 	s.fieldname = []string{}
 	s.typemap = map[string]*sysl.Type{}
 	if ctx.Annotation(0) != nil {
