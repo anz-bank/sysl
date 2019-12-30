@@ -34,6 +34,7 @@ type TreeShapeListener struct {
 	typename string
 
 	currentTypePath PathStack
+	viewname        string
 
 	fieldname             []string
 	url_prefix            []string
@@ -2827,7 +2828,7 @@ func (s *TreeShapeListener) ExitTransform_return_type(ctx *parser.Transform_retu
 
 // EnterView_return_type is called when production view_return_type is entered.
 func (s *TreeShapeListener) EnterView_return_type(*parser.View_return_typeContext) {
-	s.fieldname = append(s.fieldname, "view-return"+s.typename)
+	s.fieldname = append(s.fieldname, "view-return"+s.viewname)
 	s.typemap[s.fieldname[len(s.fieldname)-1]] = &sysl.Type{}
 }
 
@@ -2886,7 +2887,7 @@ func (s *TreeShapeListener) EnterView_param(ctx *parser.View_paramContext) {
 
 // ExitView_param is called when production view_param is exited.
 func (s *TreeShapeListener) ExitView_param(*parser.View_paramContext) {
-	view := s.module.Apps[s.appname].Views[s.typename]
+	view := s.module.Apps[s.appname].Views[s.viewname]
 	paramName := s.fieldname[len(s.fieldname)-1]
 	type1 := s.typemap[paramName]
 
@@ -2907,7 +2908,7 @@ func (s *TreeShapeListener) ExitView_param(*parser.View_paramContext) {
 
 // EnterView is called when production view is entered.
 func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
-	viewName := ctx.Name_str().GetText()
+	s.viewname = ctx.Name_str().GetText()
 
 	// There is a bug in the antlr4 go runtime that means we cant directly get the text between 2 tokens!
 	// To work around this, take the full text and the just cut it off at the expected text index
@@ -2926,24 +2927,23 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 		index++
 	}
 
-	s.module.Apps[s.appname].Views[viewName] = &sysl.View{
+	s.module.Apps[s.appname].Views[s.viewname] = &sysl.View{
 		Param:         []*sysl.Param{},
 		RetType:       &sysl.Type{},
 		SourceContext: sc,
 	}
 	if ctx.Attribs_or_modifiers() != nil {
-		v := s.module.Apps[s.appname].Views[viewName]
+		v := s.module.Apps[s.appname].Views[s.viewname]
 		v.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 
-	s.typename = viewName
 	s.fieldname = []string{}
 	s.typemap = map[string]*sysl.Type{}
 }
 
 // ExitView is called when production view is exited.
 func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
-	view := s.module.Apps[s.appname].Views[s.typename]
+	view := s.module.Apps[s.appname].Views[s.viewname]
 	if ctx.Abstract_view() == nil {
 		view.Expr = s.popExpr()
 	} else {
@@ -2964,7 +2964,7 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 		}
 		view.Attrs = attributes
 	}
-	t1, has := s.typemap["view-return"+s.typename]
+	t1, has := s.typemap["view-return"+s.viewname]
 	if has {
 		view.RetType = t1
 	} else {
@@ -2972,7 +2972,6 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 	}
 	s.fieldname = []string{}
 	s.typemap = map[string]*sysl.Type{}
-	s.typename = ""
 }
 
 // EnterAlias is called when production alias is entered.
