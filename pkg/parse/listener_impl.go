@@ -33,8 +33,9 @@ type TreeShapeListener struct {
 	appname  string
 	typename string
 
-	currentTypePath PathStack
-	viewname        string
+	currentTypePath     PathStack
+	currentEndpointPath PathStack
+	viewname            string
 
 	fieldname             []string
 	url_prefix            []string
@@ -74,8 +75,9 @@ func NewTreeShapeListener() *TreeShapeListener {
 		module: &sysl.Module{
 			Apps: map[string]*sysl.Application{},
 		},
-		opmap:           opmap,
-		currentTypePath: NewPathStack("."),
+		opmap:               opmap,
+		currentTypePath:     NewPathStack("."),
+		currentEndpointPath: NewPathStack("/"),
 	}
 }
 
@@ -1792,14 +1794,14 @@ func (s *TreeShapeListener) ExitCollector_stmts(ctx *parser.Collector_stmtsConte
 
 // EnterCollector is called when production collector is entered.
 func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
-	s.typename = ctx.COLLECTOR().GetText()
-	ep := s.module.Apps[s.appname].Endpoints[s.typename]
+	collector := ctx.COLLECTOR().GetText()
+	ep := s.module.Apps[s.appname].Endpoints[collector]
 
 	if ep == nil {
 		ep = &sysl.Endpoint{
-			Name: s.typename,
+			Name: collector,
 		}
-		s.module.Apps[s.appname].Endpoints[s.typename] = ep
+		s.module.Apps[s.appname].Endpoints[collector] = ep
 	}
 
 	if ctx.Collector_stmts(0) != nil {
@@ -1814,14 +1816,14 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 
 // ExitCollector is called when production collector is exited.
 func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {
+	collector := ctx.COLLECTOR().GetText()
 	if ctx.Collector_stmts(0) != nil {
 		s.popScope()
 	}
-	ep := s.module.Apps[s.appname].Endpoints[s.typename]
+	ep := s.module.Apps[s.appname].Endpoints[collector]
 	if len(ep.Attrs) == 0 {
 		ep.Attrs = nil
 	}
-	s.typename = ""
 }
 
 // EnterEvent is called when production event is entered.
