@@ -30,15 +30,15 @@ type TreeShapeListener struct {
 	sc           sourceCtxHelper
 	imports      []importDef
 	module       *sysl.Module
-	appName      string
 	endpointName string
 
+	app             *sysl.Application
 	currentTypePath PathStack
 	viewName        string
 
 	fieldname             []string
 	urlPrefixes           PathStack
-	app_name              []string
+	app_name              PathStack
 	annotation            string
 	typemap               map[string]*sysl.Type
 	prevLineEmpty         bool
@@ -77,17 +77,22 @@ func NewTreeShapeListener() *TreeShapeListener {
 		opmap:           opmap,
 		currentTypePath: NewPathStack("."),
 		urlPrefixes:     NewPathStack(""),
+		app_name:        NewPathStack(" :: "),
 	}
+}
+
+func (s *TreeShapeListener) currentApp() *sysl.Application {
+	return s.app
 }
 
 // EnterName_str is called when production name_str is entered.
 func (s *TreeShapeListener) EnterName_str(ctx *parser.Name_strContext) {
-	s.app_name = append(s.app_name, ctx.GetText())
+	s.app_name.Push(ctx.GetText())
 }
 
 // EnterReference is called when production reference is entered.
 func (s *TreeShapeListener) EnterReference(*parser.ReferenceContext) {
-	context_app_part := s.module.Apps[s.appName].Name.Part
+	context_app_part := s.currentApp().Name.Part
 	context_path := s.currentTypePath.Parts()
 
 	s.currentType().Type = &sysl.Type_TypeRef{
@@ -100,12 +105,12 @@ func (s *TreeShapeListener) EnterReference(*parser.ReferenceContext) {
 			},
 		},
 	}
-	s.app_name = []string{}
+	s.app_name.Reset()
 }
 
 // ExitReference is called when production reference is exited.
 func (s *TreeShapeListener) ExitReference(ctx *parser.ReferenceContext) {
-	s.currentType().GetTypeRef().Ref = makeScope(s.app_name, ctx)
+	s.currentType().GetTypeRef().Ref = makeScope(s.app_name.Parts(), ctx)
 }
 
 func lastTwoChars(str string) string {
@@ -122,7 +127,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		text = strings.Replace(text, `"`, `\"`, -1)
 		text = fromQString(`"` + text[1:] + `"`)
 
-		if s.module.Apps[s.appName].Endpoints[s.endpointName].GetRestParams() != nil {
+		if s.currentApp().Endpoints[s.endpointName].GetRestParams() != nil {
 			if x := s.peekScope().(*sysl.Endpoint); x != nil && len(x.Stmt) == 0 {
 				if len(x.Docstring) > 0 {
 					space = " "
@@ -226,7 +231,7 @@ func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_type
 	}
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
-	context_app_part := s.module.Apps[s.appName].Name.Part
+	context_app_part := s.currentApp().Name.Part
 	context_path := s.currentTypePath.Parts()
 	ref_path := []string{ctx.GetText()}
 
@@ -308,7 +313,7 @@ func (s *TreeShapeListener) ExitAnnotation(*parser.AnnotationContext) {
 
 // EnterField_type is called when production field_type is entered.
 func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
-	s.app_name = []string{}
+	s.app_name.Reset()
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
@@ -521,7 +526,7 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 func (s *TreeShapeListener) EnterInplace_tuple(*parser.Inplace_tupleContext) {
 	s.currentTypePath.Push(s.fieldname[len(s.fieldname)-1])
 	s.typemap = map[string]*sysl.Type{}
-	s.module.Apps[s.appName].Types[s.currentTypePath.Get()] = &sysl.Type{
+	s.currentApp().Types[s.currentTypePath.Get()] = &sysl.Type{
 		Type: &sysl.Type_Tuple_{
 			Tuple: &sysl.Type_Tuple{
 				AttrDefs: s.typemap,
@@ -532,9 +537,9 @@ func (s *TreeShapeListener) EnterInplace_tuple(*parser.Inplace_tupleContext) {
 
 // ExitInplace_tuple is called when production inplace_tuple is exited.
 func (s *TreeShapeListener) ExitInplace_tuple(*parser.Inplace_tupleContext) {
-	fixFieldDefinitions(s.module.Apps[s.appName].Types[s.currentTypePath.Get()])
+	fixFieldDefinitions(s.currentApp().Types[s.currentTypePath.Get()])
 	s.currentTypePath.Pop()
-	s.typemap = s.module.Apps[s.appName].Types[s.currentTypePath.Get()].GetTuple().GetAttrDefs()
+	s.typemap = s.currentApp().Types[s.currentTypePath.Get()].GetTuple().GetAttrDefs()
 }
 
 // EnterField is called when production field is entered.
@@ -571,7 +576,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 		}
 	}
 	s.typemap[fieldName] = type1
-	s.app_name = []string{}
+	s.app_name.Reset()
 }
 
 // ExitField is called when production field is exited.
@@ -599,7 +604,7 @@ func (s *TreeShapeListener) ExitField(ctx *parser.FieldContext) {
 
 // EnterTable_stmts is called when production table_stmts is entered.
 func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
-	type1 := s.module.Apps[s.appName].Types[s.currentTypePath.Get()]
+	type1 := s.currentApp().Types[s.currentTypePath.Get()]
 	if ctx.Annotation(0) != nil {
 		if type1.Attrs == nil {
 			type1.Attrs = map[string]*sysl.Attribute{}
@@ -612,7 +617,7 @@ func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 
 // EnterTable_def is called when production table_def is entered.
 func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
-	type1 := s.module.Apps[s.appName].Types[s.currentTypePath.Get()]
+	type1 := s.currentApp().Types[s.currentTypePath.Get()]
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		type1.Attrs = makeAttributeArray(attribs)
 	}
@@ -626,7 +631,7 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	s.currentTypePath.Push(ctx.Name_str().GetText())
 	s.typemap = map[string]*sysl.Type{}
 
-	types := s.module.Apps[s.appName].Types
+	types := s.currentApp().Types
 	if ctx.TABLE() != nil {
 		if types[s.currentTypePath.Get()].GetRelation().GetAttrDefs() != nil {
 			panic("not implemented yet")
@@ -704,7 +709,7 @@ func fixFieldDefinitions(collection *sysl.Type) {
 // ExitTable is called when production table is exited.
 func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	// wire up primary key
-	if rel := s.module.Apps[s.appName].Types[s.currentTypePath.Get()].GetRelation(); rel != nil {
+	if rel := s.currentApp().Types[s.currentTypePath.Get()].GetRelation(); rel != nil {
 		pks := []string{}
 		for _, name := range s.fieldname {
 			f := rel.GetAttrDefs()[name]
@@ -729,7 +734,7 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	s.popScope()
 
 	// Match legacy behavior
-	fixFieldDefinitions(s.module.Apps[s.appName].Types[s.currentTypePath.Get()])
+	fixFieldDefinitions(s.currentApp().Types[s.currentTypePath.Get()])
 	// End
 
 	s.currentTypePath.Pop()
@@ -742,7 +747,7 @@ func (s *TreeShapeListener) applyAnnotations(
 ) {
 	// Match legacy behavior
 	// Copy the annotations from the parent (tuple or relation) to each child
-	collection := s.module.Apps[s.appName].Types[s.currentTypePath.Get()]
+	collection := s.currentApp().Types[s.currentTypePath.Get()]
 
 	for _, annotation := range annotations {
 		varname := annotation.(*parser.AnnotationContext).VAR_NAME().GetText()
@@ -763,7 +768,7 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 	s.currentTypePath.Push(ctx.Name_str().GetText())
 	s.typemap = map[string]*sysl.Type{}
 
-	types := s.module.Apps[s.appName].Types
+	types := s.currentApp().Types
 
 	if types[s.currentTypePath.Get()].GetOneOf().GetType() != nil {
 		panic("not implemented yet")
@@ -793,10 +798,10 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.applyAnnotations(ctx.AllAnnotation())
 	s.popScope()
 
-	context_app_part := s.module.Apps[s.appName].Name.Part
+	context_app_part := s.currentApp().Name.Part
 	context_path := s.currentTypePath.Parts()
 
-	oneof := s.module.Apps[s.appName].Types[s.currentTypePath.Get()].GetOneOf()
+	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
 	for _, ref := range ctx.AllUser_defined_type() {
 		oneof.Type = append(oneof.Type, &sysl.Type{
 			Type: &sysl.Type_TypeRef{
@@ -820,75 +825,57 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.typemap = nil
 }
 
-// EnterSub_package is called when production sub_package is entered.
-func (s *TreeShapeListener) EnterSub_package(ctx *parser.Sub_packageContext) {
-	top := len(s.app_name) - 1
-	str := ctx.NAME_SEP().GetText()
-	sp := strings.Split(str, "::")
-	s.app_name[top] += sp[0]
-}
-
-// ExitSub_package is called when production sub_package is exited.
-func (s *TreeShapeListener) ExitSub_package(ctx *parser.Sub_packageContext) {
-	top := len(s.app_name) - 1
-	str := ctx.NAME_SEP().GetText()
-	sp := strings.Split(str, "::")
-	s.app_name[top] = sp[1] + s.app_name[top]
-}
-
 // EnterApp_name is called when production app_name is entered.
 func (s *TreeShapeListener) EnterApp_name(*parser.App_nameContext) {
-	s.app_name = []string{}
+	s.app_name.Reset()
 }
 
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribsContext) {
-	s.appName = ctx.App_name().GetText()
-	if _, has := s.module.Apps[s.appName]; !has {
-		s.module.Apps[s.appName] = &sysl.Application{
+	appName := ctx.App_name().GetText()
+	if _, has := s.module.Apps[appName]; !has {
+		s.module.Apps[appName] = &sysl.Application{
 			Name: &sysl.AppName{},
 		}
 	}
+	s.app = s.module.Apps[appName]
 
 	if ctx.QSTRING() != nil {
-		s.module.Apps[s.appName].LongName = fromQString(ctx.QSTRING().GetText())
+		s.currentApp().LongName = fromQString(ctx.QSTRING().GetText())
 	}
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		attrs := makeAttributeArray(attribs)
-		if s.module.Apps[s.appName].Attrs == nil {
-			s.module.Apps[s.appName].Attrs = attrs
+		if s.currentApp().Attrs == nil {
+			s.currentApp().Attrs = attrs
 		} else {
-			mergeAttrs(attrs, s.module.Apps[s.appName].Attrs)
+			mergeAttrs(attrs, s.currentApp().Attrs)
 		}
 	}
 	sc := s.sc.Get(ctx.BaseParserRuleContext)
 	sc.Start.Col += 1
-	s.module.Apps[s.appName].SourceContext = sc
+	s.currentApp().SourceContext = sc
 }
 
 // ExitName_with_attribs is called when production name_with_attribs is exited.
 func (s *TreeShapeListener) ExitName_with_attribs(*parser.Name_with_attribsContext) {
-	for i := range s.app_name {
-		s.app_name[i] = strings.TrimSpace(s.app_name[i])
-	}
-	s.module.Apps[s.appName].GetName().Part = s.app_name
+	s.currentApp().Name.Part = s.app_name.Parts()
 }
 
 // EnterModel_name is called when production model_name is entered.
 func (s *TreeShapeListener) EnterModel_name(ctx *parser.Model_nameContext) {
-	if s.module.Apps[s.appName].Wrapped.Name != nil {
+	if s.currentApp().Wrapped.Name != nil {
 		panic("not implemented yet?")
 	}
 
-	s.module.Apps[s.appName].Wrapped.Name = &sysl.AppName{
+	s.currentApp().Wrapped.Name = &sysl.AppName{
 		Part: []string{ctx.Name().GetText()},
 	}
 }
 
 // EnterTable_refs is called when production table_refs is entered.
 func (s *TreeShapeListener) EnterTable_refs(ctx *parser.Table_refsContext) {
-	s.module.Apps[s.appName].Wrapped.Types[ctx.Name().GetText()] = &sysl.Type{}
+	s.currentApp().Wrapped.Types[ctx.Name().GetText()] = &sysl.Type{}
 }
 
 // EnterQuery_var is called when production query_var is entered.
@@ -905,7 +892,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 				TypeRef: &sysl.ScopedRef{
 					Context: &sysl.Scope{
 						Appname: &sysl.AppName{
-							Part: s.module.Apps[s.appName].Name.Part,
+							Part: s.currentApp().Name.Part,
 						},
 					},
 					Ref: &sysl.Scope{
@@ -968,7 +955,7 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 				TypeRef: &sysl.ScopedRef{
 					Context: &sysl.Scope{
 						Appname: &sysl.AppName{
-							Part: s.module.Apps[s.appName].Name.Part,
+							Part: s.currentApp().Name.Part,
 						},
 					},
 					Ref: &sysl.Scope{
@@ -1041,16 +1028,13 @@ func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
 
 // EnterTarget is called when production target is entered.
 func (s *TreeShapeListener) EnterTarget(*parser.TargetContext) {
-	s.app_name = []string{s.appName}
+	s.app_name.Reset()
 }
 
 // ExitTarget is called when production target is exited.
 func (s *TreeShapeListener) ExitTarget(*parser.TargetContext) {
-	for i := range s.app_name {
-		s.app_name[i] = strings.TrimSpace(s.app_name[i])
-	}
-	s.lastStatement().GetCall().Target.Part = s.app_name
-	s.app_name = []string{}
+	s.lastStatement().GetCall().Target.Part = s.app_name.Parts()
+	s.app_name.Reset()
 }
 
 // EnterCall_arg is called when production call_arg is entered.
@@ -1065,7 +1049,7 @@ func (s *TreeShapeListener) EnterCall_arg(ctx *parser.Call_argContext) {
 func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 	appName := &sysl.AppName{}
 	if ctx.DOT_ARROW() != nil {
-		appName.Part = s.module.Apps[s.appName].Name.Part
+		appName.Part = s.currentApp().Name.Part
 	}
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
@@ -1267,7 +1251,7 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 	} else {
 		s.pendingDocString = true
 
-		if s.module.Apps[s.appName].Endpoints[s.endpointName].GetRestParams() != nil {
+		if s.currentApp().Endpoints[s.endpointName].GetRestParams() != nil {
 			if x := s.peekScope().(*sysl.Endpoint); x != nil && len(x.Stmt) == 0 {
 				return
 			}
@@ -1292,16 +1276,16 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 
 // EnterMixin is called when production mixin is entered.
 func (s *TreeShapeListener) EnterMixin(*parser.MixinContext) {
-	if s.module.Apps[s.appName].Mixin2 == nil {
-		s.module.Apps[s.appName].Mixin2 = []*sysl.Application{}
+	if s.currentApp().Mixin2 == nil {
+		s.currentApp().Mixin2 = []*sysl.Application{}
 	}
 }
 
 // ExitMixin is called when production mixin is exited.
 func (s *TreeShapeListener) ExitMixin(*parser.MixinContext) {
-	s.module.Apps[s.appName].Mixin2 = append(s.module.Apps[s.appName].Mixin2, &sysl.Application{
+	s.currentApp().Mixin2 = append(s.currentApp().Mixin2, &sysl.Application{
 		Name: &sysl.AppName{
-			Part: s.app_name,
+			Part: s.app_name.Parts(),
 		},
 	})
 }
@@ -1313,7 +1297,7 @@ func (s *TreeShapeListener) EnterParam(ctx *parser.ParamContext) {
 		type1 := &sysl.Type{}
 		s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
 	}
-	s.app_name = []string{}
+	s.app_name.Reset()
 }
 
 // ExitParam is called when production param is exited.
@@ -1375,7 +1359,7 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 		}
 		params = append(params, &p)
 	}
-	ep := s.module.Apps[s.appName].Endpoints[s.endpointName]
+	ep := s.currentApp().Endpoints[s.endpointName]
 	if len(params) > 0 {
 		if ep.Param == nil {
 			ep.Param = params
@@ -1528,8 +1512,8 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
 	s.endpointName = method + " " + url
 	s.method_urlparams = []*sysl.Endpoint_RestParams_QueryParam{}
-	if _, has := s.module.Apps[s.appName].Endpoints[s.endpointName]; !has {
-		s.module.Apps[s.appName].Endpoints[s.endpointName] = &sysl.Endpoint{
+	if _, has := s.currentApp().Endpoints[s.endpointName]; !has {
+		s.currentApp().Endpoints[s.endpointName] = &sysl.Endpoint{
 			Name: s.endpointName,
 			RestParams: &sysl.Endpoint_RestParams{
 				Method: sysl.Endpoint_RestParams_Method(sysl.Endpoint_RestParams_Method_value[method]),
@@ -1538,7 +1522,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 			Stmt: []*sysl.Statement{},
 		}
 	}
-	restEndpoint := s.module.Apps[s.appName].Endpoints[s.endpointName]
+	restEndpoint := s.currentApp().Endpoints[s.endpointName]
 	s.pushScope(restEndpoint)
 
 	attrs := map[string]*sysl.Attribute{
@@ -1603,23 +1587,23 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 // ExitMethod_def is called when production method_def is exited.
 func (s *TreeShapeListener) ExitMethod_def(*parser.Method_defContext) {
 	if len(s.method_urlparams) > 0 {
-		qparams := s.module.Apps[s.appName].Endpoints[s.endpointName].RestParams.QueryParam
+		qparams := s.currentApp().Endpoints[s.endpointName].RestParams.QueryParam
 		if qparams == nil {
 			qparams = []*sysl.Endpoint_RestParams_QueryParam{}
 		}
 		qparams = append(qparams, s.method_urlparams...)
-		s.module.Apps[s.appName].Endpoints[s.endpointName].RestParams.QueryParam = qparams
+		s.currentApp().Endpoints[s.endpointName].RestParams.QueryParam = qparams
 	}
-	if s.module.Apps[s.appName].Endpoints[s.endpointName].Param != nil {
-		for i, p := range s.module.Apps[s.appName].Endpoints[s.endpointName].Param {
+	if s.currentApp().Endpoints[s.endpointName].Param != nil {
+		for i, p := range s.currentApp().Endpoints[s.endpointName].Param {
 			if p.GetType().GetNoType() != nil {
-				s.module.Apps[s.appName].Endpoints[s.endpointName].Param[i] = &sysl.Param{}
+				s.currentApp().Endpoints[s.endpointName].Param[i] = &sysl.Param{}
 			}
 		}
 	}
 
-	if len(s.module.Apps[s.appName].Endpoints[s.endpointName].Stmt) == 0 {
-		s.module.Apps[s.appName].Endpoints[s.endpointName].Stmt = nil
+	if len(s.currentApp().Endpoints[s.endpointName].Stmt) == 0 {
+		s.currentApp().Endpoints[s.endpointName].Stmt = nil
 	}
 
 	s.popScope()
@@ -1630,19 +1614,19 @@ func (s *TreeShapeListener) ExitMethod_def(*parser.Method_defContext) {
 // EnterSimple_endpoint is called when production api_endpoint is entered.
 func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointContext) {
 	if ctx.WHATEVER() != nil {
-		s.module.Apps[s.appName].Endpoints[ctx.WHATEVER().GetText()] = &sysl.Endpoint{
+		s.currentApp().Endpoints[ctx.WHATEVER().GetText()] = &sysl.Endpoint{
 			Name: ctx.WHATEVER().GetText(),
 		}
 		return
 	}
 	s.endpointName = ctx.Endpoint_name().GetText()
-	ep := s.module.Apps[s.appName].Endpoints[s.endpointName]
+	ep := s.currentApp().Endpoints[s.endpointName]
 
 	if ep == nil {
 		ep = &sysl.Endpoint{
 			Name: s.endpointName,
 		}
-		s.module.Apps[s.appName].Endpoints[s.endpointName] = ep
+		s.currentApp().Endpoints[s.endpointName] = ep
 	}
 
 	if ctx.QSTRING() != nil {
@@ -1666,7 +1650,7 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 			ep.Stmt = []*sysl.Statement{}
 		}
 
-		s.pushScope(s.module.Apps[s.appName].Endpoints[s.endpointName])
+		s.pushScope(s.currentApp().Endpoints[s.endpointName])
 	}
 	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
@@ -1676,7 +1660,7 @@ func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointConte
 	if ctx.Statements(0) != nil {
 		s.popScope()
 	}
-	ep := s.module.Apps[s.appName].Endpoints[s.endpointName]
+	ep := s.currentApp().Endpoints[s.endpointName]
 	if ep != nil && len(ep.Attrs) == 0 {
 		ep.Attrs = nil
 	}
@@ -1714,7 +1698,7 @@ func (s *TreeShapeListener) ExitRest_endpoint(*parser.Rest_endpointContext) {
 // EnterCollector_call_stmt is called when production collector_call_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
 	appName := &sysl.AppName{}
-	s.app_name = []string{}
+	s.app_name.Reset()
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
@@ -1740,18 +1724,14 @@ func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_
 
 // ExitSubscriber is called when production subscriber is exited.
 func (s *TreeShapeListener) ExitSubscriber(*parser.SubscriberContext) {
-	for i := range s.app_name {
-		s.app_name[i] = strings.TrimSpace(s.app_name[i])
-	}
-
-	s.lastStatement().GetCall().Target.Part = s.app_name
-	s.app_name = []string{}
+	s.lastStatement().GetCall().Target.Part = s.app_name.Parts()
+	s.app_name.Reset()
 }
 
 // EnterCollector_pubsub_call is called when production collector_pubsub_call is entered.
 func (s *TreeShapeListener) EnterCollector_pubsub_call(ctx *parser.Collector_pubsub_callContext) {
 	appName := &sysl.AppName{}
-	s.app_name = []string{}
+	s.app_name.Reset()
 	publisher := ctx.Publisher().GetText() + ctx.ARROW_RIGHT().GetText()
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
@@ -1786,13 +1766,13 @@ func (s *TreeShapeListener) ExitCollector_stmts(ctx *parser.Collector_stmtsConte
 // EnterCollector is called when production collector is entered.
 func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 	collector := ctx.COLLECTOR().GetText()
-	ep := s.module.Apps[s.appName].Endpoints[collector]
+	ep := s.currentApp().Endpoints[collector]
 
 	if ep == nil {
 		ep = &sysl.Endpoint{
 			Name: collector,
 		}
-		s.module.Apps[s.appName].Endpoints[collector] = ep
+		s.currentApp().Endpoints[collector] = ep
 	}
 
 	if ctx.Collector_stmts(0) != nil {
@@ -1811,7 +1791,7 @@ func (s *TreeShapeListener) ExitCollector(ctx *parser.CollectorContext) {
 	if ctx.Collector_stmts(0) != nil {
 		s.popScope()
 	}
-	ep := s.module.Apps[s.appName].Endpoints[collector]
+	ep := s.currentApp().Endpoints[collector]
 	if len(ep.Attrs) == 0 {
 		ep.Attrs = nil
 	}
@@ -1822,14 +1802,14 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 	if ctx.Name_str() != nil {
 		s.endpointName = ctx.Name_str().GetText()
 		// fmt.Printf("Event: %s\n", s.endpointName)
-		ep := s.module.Apps[s.appName].Endpoints[s.endpointName]
+		ep := s.currentApp().Endpoints[s.endpointName]
 		if ep == nil {
 			ep = &sysl.Endpoint{
 				Name:          s.endpointName,
 				IsPubsub:      true,
 				SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 			}
-			s.module.Apps[s.appName].Endpoints[s.endpointName] = ep
+			s.currentApp().Endpoints[s.endpointName] = ep
 		}
 		if ctx.Attribs_or_modifiers() != nil {
 			ep.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
@@ -1876,7 +1856,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 			typeEndpoint.Stmt = []*sysl.Statement{}
 			s.pushScope(typeEndpoint)
 		}
-		s.module.Apps[s.appName].Endpoints[s.endpointName] = typeEndpoint
+		s.currentApp().Endpoints[s.endpointName] = typeEndpoint
 		srcAppName := syslutil.GetAppName(app_src)
 		srcApp := syslutil.GetApp(app_src, s.module)
 		if srcApp == nil {
@@ -1901,7 +1881,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		stmt := &sysl.Statement{
 			Stmt: &sysl.Statement_Call{
 				Call: &sysl.Call{
-					Target:   s.module.Apps[s.appName].Name,
+					Target:   s.currentApp().Name,
 					Endpoint: s.endpointName,
 				},
 			},
@@ -2880,7 +2860,7 @@ func (s *TreeShapeListener) EnterView_param(ctx *parser.View_paramContext) {
 
 // ExitView_param is called when production view_param is exited.
 func (s *TreeShapeListener) ExitView_param(*parser.View_paramContext) {
-	view := s.module.Apps[s.appName].Views[s.viewName]
+	view := s.currentApp().Views[s.viewName]
 	paramName := s.fieldname[len(s.fieldname)-1]
 	type1 := s.typemap[paramName]
 
@@ -2920,13 +2900,13 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 		index++
 	}
 
-	s.module.Apps[s.appName].Views[s.viewName] = &sysl.View{
+	s.currentApp().Views[s.viewName] = &sysl.View{
 		Param:         []*sysl.Param{},
 		RetType:       &sysl.Type{},
 		SourceContext: sc,
 	}
 	if ctx.Attribs_or_modifiers() != nil {
-		v := s.module.Apps[s.appName].Views[s.viewName]
+		v := s.currentApp().Views[s.viewName]
 		v.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 
@@ -2936,7 +2916,7 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 
 // ExitView is called when production view is exited.
 func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
-	view := s.module.Apps[s.appName].Views[s.viewName]
+	view := s.currentApp().Views[s.viewName]
 	if ctx.Abstract_view() == nil {
 		view.Expr = s.popExpr()
 	} else {
@@ -2976,7 +2956,7 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 		s.currentTypePath.Get(): type1,
 	}
 	s.fieldname = []string{s.currentTypePath.Get()}
-	s.module.Apps[s.appName].Types[s.currentTypePath.Get()] = type1
+	s.currentApp().Types[s.currentTypePath.Get()] = type1
 
 	if ctx.Attribs_or_modifiers() != nil {
 		type1.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
@@ -2989,7 +2969,7 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 
 // ExitAlias is called when production alias is exited.
 func (s *TreeShapeListener) ExitAlias(ctx *parser.AliasContext) {
-	s.module.Apps[s.appName].Types[s.currentTypePath.Get()] = s.typemap[s.fieldname[len(s.fieldname)-1]]
+	s.currentApp().Types[s.currentTypePath.Get()] = s.typemap[s.fieldname[len(s.fieldname)-1]]
 
 	s.currentTypePath.Pop()
 	s.fieldname = []string{}
@@ -3001,30 +2981,30 @@ func (s *TreeShapeListener) ExitAlias(ctx *parser.AliasContext) {
 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
-	if s.module.Apps[s.appName].Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil) {
-		s.module.Apps[s.appName].Types = map[string]*sysl.Type{}
+	if s.currentApp().Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil) {
+		s.currentApp().Types = map[string]*sysl.Type{}
 	}
 	has_stmts := ctx.Simple_endpoint(0) != nil ||
 		ctx.Rest_endpoint(0) != nil ||
 		ctx.Event(0) != nil ||
 		ctx.Subscribe(0) != nil ||
 		ctx.Collector(0) != nil
-	if s.module.Apps[s.appName].Endpoints == nil && has_stmts {
-		s.module.Apps[s.appName].Endpoints = map[string]*sysl.Endpoint{}
+	if s.currentApp().Endpoints == nil && has_stmts {
+		s.currentApp().Endpoints = map[string]*sysl.Endpoint{}
 	}
-	if s.module.Apps[s.appName].Wrapped == nil && len(ctx.AllFacade()) > 0 {
-		s.module.Apps[s.appName].Wrapped = &sysl.Application{
+	if s.currentApp().Wrapped == nil && len(ctx.AllFacade()) > 0 {
+		s.currentApp().Wrapped = &sysl.Application{
 			Types: map[string]*sysl.Type{},
 		}
 	}
-	if s.module.Apps[s.appName].Views == nil && ctx.View(0) != nil {
-		s.module.Apps[s.appName].Views = map[string]*sysl.View{}
+	if s.currentApp().Views == nil && ctx.View(0) != nil {
+		s.currentApp().Views = map[string]*sysl.View{}
 	}
 	if ctx.Annotation(0) != nil {
-		if s.module.Apps[s.appName].Attrs == nil {
-			s.module.Apps[s.appName].Attrs = map[string]*sysl.Attribute{}
+		if s.currentApp().Attrs == nil {
+			s.currentApp().Attrs = map[string]*sysl.Attribute{}
 		}
-		s.pushScope(s.module.Apps[s.appName])
+		s.pushScope(s.currentApp())
 	}
 
 	s.rest_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
@@ -3071,11 +3051,6 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	}
 
 	s.imports = append(s.imports, id)
-}
-
-// ExitSysl_file is called when production sysl_file is exited.
-func (s *TreeShapeListener) ExitSysl_file(*parser.Sysl_fileContext) {
-	s.appName = ""
 }
 
 func (s *TreeShapeListener) currentType() *sysl.Type {

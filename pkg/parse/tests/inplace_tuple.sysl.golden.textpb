@@ -507,7 +507,7 @@ apps: <
                 >
                 ref: <
                   appname: <
-                    part: "My "
+                    part: "My"
                   >
                   path: "Tuple Model"
                   path: "TopLevelPayload"
@@ -536,7 +536,7 @@ apps: <
                     >
                     ref: <
                       appname: <
-                        part: "My "
+                        part: "My"
                       >
                       path: "Tuple Model"
                       path: "Response"
@@ -786,7 +786,7 @@ apps: <
                 >
                 ref: <
                   appname: <
-                    part: "My "
+                    part: "My"
                   >
                   path: "Client Model"
                   path: "Request"
@@ -876,8 +876,8 @@ apps: <
                 >
                 ref: <
                   appname: <
-                    part: "My "
-                    part: "    Browser "
+                    part: "My"
+                    part: "Browser"
                   >
                   path: "Client Model"
                   path: "Request"
