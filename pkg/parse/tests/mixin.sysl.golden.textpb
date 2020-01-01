@@ -1,254 +1,272 @@
-apps {
+apps: <
   key: "API"
-  value {
-    name {
+  value: <
+    name: <
       part: "API"
-    }
-    endpoints {
+    >
+    endpoints: <
       key: "Service Call"
-      value {
+      value: <
         name: "Service Call"
-      }
-    }
-    types {
+      >
+    >
+    types: <
       key: "UberUser"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "user"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "API"
-                  }
+                  >
                   path: "UberUser"
-                }
-                ref {
+                >
+                ref: <
                   path: "User"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/mixin.sysl"
+                start: <
                   line: 19
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    types {
+                  col: 16
+                >
+                end: <
+                  line: 19
+                  col: 16
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    types: <
       key: "User"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "id"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "description"
-                value {
+                value: <
                   s: "some description"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/mixin.sysl"
+                start: <
                   line: 4
-                }
-              }
-            }
-          }
-        }
-        attrs {
+                  col: 14
+                >
+                end: <
+                  line: 4
+                  col: 14
+                >
+              >
+            >
+          >
+        >
+        attrs: <
           key: "description"
-          value {
+          value: <
             s: "some description"
-          }
-        }
-        attrs {
+          >
+        >
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "foo"
-              }
-            }
-          }
-        }
-      }
-    }
-    mixin2 {
-      name {
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
+      key: "FooTransform"
+      value: <
+        param: <
+          name: "number"
+          type: <
+            primitive: INT
+          >
+        >
+        ret_type: <
+          primitive: INT
+        >
+        expr: <
+          transform: <
+            arg: <
+              name: "number"
+            >
+            scopevar: "."
+            stmt: <
+              assign: <
+                name: "out"
+                expr: <
+                  binexpr: <
+                    op: ADD
+                    lhs: <
+                      name: "number"
+                    >
+                    rhs: <
+                      literal: <
+                        i: 1
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    mixin2: <
+      name: <
         part: "Relational Model"
-      }
-    }
-    mixin2 {
-      name {
+      >
+    >
+    mixin2: <
+      name: <
         part: "TransformApp"
-      }
-    }
-    views {
-      key: "FooTransform"
-      value {
-        param {
-          name: "number"
-          type {
-            primitive: INT
-          }
-        }
-        ret_type {
-          primitive: INT
-        }
-        expr {
-          transform {
-            arg {
-              name: "number"
-            }
-            scopevar: "."
-            stmt {
-              assign {
-                name: "out"
-                expr {
-                  binexpr {
-                    op: ADD
-                    lhs {
-                      name: "number"
-                    }
-                    rhs {
-                      literal {
-                        i: 1
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+      >
+    >
+  >
+>
+apps: <
   key: "Relational Model"
-  value {
-    name {
+  value: <
+    name: <
       part: "Relational Model"
-    }
-    attrs {
+    >
+    attrs: <
       key: "patterns"
-      value {
-        a {
-          elt {
+      value: <
+        a: <
+          elt: <
             s: "abstract"
-          }
-        }
-      }
-    }
-    types {
+          >
+        >
+      >
+    >
+    types: <
       key: "User"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "id"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "description"
-                value {
+                value: <
                   s: "some description"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/mixin.sysl"
+                start: <
                   line: 4
-                }
-              }
-            }
-          }
-        }
-        attrs {
+                  col: 14
+                >
+                end: <
+                  line: 4
+                  col: 14
+                >
+              >
+            >
+          >
+        >
+        attrs: <
           key: "description"
-          value {
+          value: <
             s: "some description"
-          }
-        }
-        attrs {
+          >
+        >
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "foo"
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "TransformApp"
-  value {
-    name {
+  value: <
+    name: <
       part: "TransformApp"
-    }
-    attrs {
+    >
+    attrs: <
       key: "package"
-      value {
+      value: <
         s: "com.foo.example"
-      }
-    }
-    attrs {
+      >
+    >
+    attrs: <
       key: "patterns"
-      value {
-        a {
-          elt {
+      value: <
+        a: <
+          elt: <
             s: "abstract"
-          }
-        }
-      }
-    }
-    views {
+          >
+        >
+      >
+    >
+    views: <
       key: "FooTransform"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
+          >
+        >
+        ret_type: <
           primitive: INT
-        }
-        expr {
-          transform {
-            arg {
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "number"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
-                      literal {
+                    >
+                    rhs: <
+                      literal: <
                         i: 1
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

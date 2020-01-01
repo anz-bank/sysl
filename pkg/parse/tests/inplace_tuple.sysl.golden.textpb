@@ -19,8 +19,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 19
+                  col: 15
+                >
+                end: <
+                  line: 19
+                  col: 31
                 >
               >
             >
@@ -53,8 +59,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 14
+                  col: 15
+                >
+                end: <
+                  line: 14
+                  col: 31
                 >
               >
             >
@@ -71,8 +83,14 @@ apps: <
                 scale: 2
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 15
+                  col: 15
+                >
+                end: <
+                  line: 15
+                  col: 27
                 >
               >
             >
@@ -87,8 +105,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 13
+                  col: 15
+                >
+                end: <
+                  line: 13
+                  col: 25
                 >
               >
             >
@@ -121,8 +145,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 9
+                  col: 15
+                >
+                end: <
+                  line: 9
+                  col: 31
                 >
               >
             >
@@ -151,8 +181,14 @@ apps: <
                     >
                   >
                   source_context: <
+                    file: "tests/inplace_tuple.sysl"
                     start: <
                       line: 5
+                      col: 22
+                    >
+                    end: <
+                      line: 5
+                      col: 22
                     >
                   >
                 >
@@ -176,8 +212,14 @@ apps: <
                     >
                   >
                   source_context: <
+                    file: "tests/inplace_tuple.sysl"
                     start: <
                       line: 6
+                      col: 23
+                    >
+                    end: <
+                      line: 6
+                      col: 23
                     >
                   >
                 >
@@ -202,8 +244,14 @@ apps: <
                     >
                   >
                   source_context: <
+                    file: "tests/inplace_tuple.sysl"
                     start: <
                       line: 4
+                      col: 24
+                    >
+                    end: <
+                      line: 4
+                      col: 24
                     >
                   >
                 >
@@ -227,14 +275,26 @@ apps: <
                   >
                 >
                 source_context: <
+                  file: "tests/inplace_tuple.sysl"
                   start: <
                     line: 3
+                    col: 20
+                  >
+                  end: <
+                    line: 3
+                    col: 27
                   >
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 3
+                  col: 20
+                >
+                end: <
+                  line: 3
+                  col: 27
                 >
               >
             >
@@ -264,8 +324,13 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 56
+                  col: 8
+                >
+                end: <
+                  line: 67
                 >
               >
             >
@@ -279,8 +344,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 49
+                  col: 8
+                >
+                end: <
+                  line: 56
+                  col: 8
                 >
               >
             >
@@ -298,8 +369,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 58
+                  col: 12
+                >
+                end: <
+                  line: 58
+                  col: 12
                 >
               >
             >
@@ -309,8 +386,14 @@ apps: <
             value: <
               primitive: BOOL
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 59
+                  col: 26
+                >
+                end: <
+                  line: 59
+                  col: 26
                 >
               >
             >
@@ -321,8 +404,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 57
+                  col: 12
+                >
+                end: <
+                  line: 57
+                  col: 12
                 >
               >
             >
@@ -338,8 +427,14 @@ apps: <
                     >
                   >
                   source_context: <
+                    file: "tests/inplace_tuple.sysl"
                     start: <
                       line: 60
+                      col: 12
+                    >
+                    end: <
+                      line: 64
+                      col: 12
                     >
                   >
                 >
@@ -357,8 +452,13 @@ apps: <
                     >
                   >
                   source_context: <
+                    file: "tests/inplace_tuple.sysl"
                     start: <
                       line: 64
+                      col: 12
+                    >
+                    end: <
+                      line: 67
                     >
                   >
                 >
@@ -378,8 +478,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 62
+                  col: 16
+                >
+                end: <
+                  line: 62
+                  col: 16
                 >
               >
             >
@@ -390,8 +496,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 61
+                  col: 16
+                >
+                end: <
+                  line: 61
+                  col: 16
                 >
               >
             >
@@ -402,8 +514,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 63
+                  col: 16
+                >
+                end: <
+                  line: 63
+                  col: 16
                 >
               >
             >
@@ -421,8 +539,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 65
+                  col: 16
+                >
+                end: <
+                  line: 65
+                  col: 16
                 >
               >
             >
@@ -433,8 +557,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 66
+                  col: 16
+                >
+                end: <
+                  line: 66
+                  col: 16
                 >
               >
             >
@@ -452,8 +582,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 51
+                  col: 12
+                >
+                end: <
+                  line: 51
+                  col: 12
                 >
               >
             >
@@ -463,8 +599,14 @@ apps: <
             value: <
               primitive: DATE
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 53
+                  col: 23
+                >
+                end: <
+                  line: 53
+                  col: 23
                 >
               >
             >
@@ -475,8 +617,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 52
+                  col: 12
+                >
+                end: <
+                  line: 52
+                  col: 12
                 >
               >
             >
@@ -487,8 +635,14 @@ apps: <
               no_type: <
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 54
+                  col: 12
+                >
+                end: <
+                  line: 54
+                  col: 12
                 >
               >
             >
@@ -514,8 +668,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 50
+                  col: 20
+                >
+                end: <
+                  line: 50
+                  col: 38
                 >
               >
             >
@@ -543,8 +703,14 @@ apps: <
                     >
                   >
                   source_context: <
+                    file: "tests/inplace_tuple.sysl"
                     start: <
                       line: 55
+                      col: 36
+                    >
+                    end: <
+                      line: 55
+                      col: 54
                     >
                   >
                 >
@@ -568,8 +734,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 26
+                  col: 15
+                >
+                end: <
+                  line: 26
+                  col: 27
                 >
               >
             >
@@ -584,8 +756,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 27
+                  col: 15
+                >
+                end: <
+                  line: 27
+                  col: 30
                 >
               >
             >
@@ -600,8 +778,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 24
+                  col: 16
+                >
+                end: <
+                  line: 24
+                  col: 27
                 >
               >
             >
@@ -617,8 +801,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 25
+                  col: 15
+                >
+                end: <
+                  line: 25
+                  col: 31
                 >
               >
             >
@@ -639,8 +829,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 29
+                  col: 18
+                >
+                end: <
+                  line: 29
+                  col: 18
                 >
               >
             >
@@ -655,8 +851,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 23
+                  col: 18
+                >
+                end: <
+                  line: 23
+                  col: 31
                 >
               >
             >
@@ -677,8 +879,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 28
+                  col: 20
+                >
+                end: <
+                  line: 28
+                  col: 20
                 >
               >
             >
@@ -695,8 +903,14 @@ apps: <
             value: <
               primitive: XML
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 36
+                  col: 22
+                >
+                end: <
+                  line: 36
+                  col: 22
                 >
               >
             >
@@ -706,8 +920,14 @@ apps: <
             value: <
               primitive: INT
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 32
+                  col: 20
+                >
+                end: <
+                  line: 32
+                  col: 20
                 >
               >
             >
@@ -729,8 +949,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 34
+                  col: 20
+                >
+                end: <
+                  line: 34
+                  col: 34
                 >
               >
             >
@@ -744,8 +970,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 35
+                  col: 22
+                >
+                end: <
+                  line: 35
+                  col: 32
                 >
               >
             >
@@ -760,8 +992,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 33
+                  col: 21
+                >
+                end: <
+                  line: 33
+                  col: 28
                 >
               >
             >
@@ -794,8 +1032,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 44
+                  col: 16
+                >
+                end: <
+                  line: 44
+                  col: 45
                 >
               >
             >
@@ -810,8 +1054,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 39
+                  col: 16
+                >
+                end: <
+                  line: 39
+                  col: 26
                 >
               >
             >
@@ -827,14 +1077,26 @@ apps: <
                   >
                 >
                 source_context: <
+                  file: "tests/inplace_tuple.sysl"
                   start: <
                     line: 40
+                    col: 17
+                  >
+                  end: <
+                    line: 40
+                    col: 34
                   >
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 40
+                  col: 17
+                >
+                end: <
+                  line: 40
+                  col: 34
                 >
               >
             >
@@ -857,8 +1119,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 42
+                  col: 18
+                >
+                end: <
+                  line: 42
+                  col: 32
                 >
               >
             >
@@ -885,8 +1153,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 43
+                  col: 18
+                >
+                end: <
+                  line: 43
+                  col: 59
                 >
               >
             >
@@ -909,14 +1183,26 @@ apps: <
                   >
                 >
                 source_context: <
+                  file: "tests/inplace_tuple.sysl"
                   start: <
                     line: 45
+                    col: 16
+                  >
+                  end: <
+                    line: 45
+                    col: 32
                   >
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 45
+                  col: 16
+                >
+                end: <
+                  line: 45
+                  col: 32
                 >
               >
             >
@@ -938,14 +1224,26 @@ apps: <
                   >
                 >
                 source_context: <
+                  file: "tests/inplace_tuple.sysl"
                   start: <
                     line: 46
+                    col: 23
+                  >
+                  end: <
+                    line: 46
+                    col: 30
                   >
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 46
+                  col: 23
+                >
+                end: <
+                  line: 46
+                  col: 30
                 >
               >
             >
@@ -967,8 +1265,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/inplace_tuple.sysl"
                 start: <
                   line: 41
+                  col: 18
+                >
+                end: <
+                  line: 41
+                  col: 27
                 >
               >
             >

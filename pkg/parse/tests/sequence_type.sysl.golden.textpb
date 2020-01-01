@@ -14,8 +14,13 @@ apps: <
               sequence: <
                 primitive: INT
                 source_context: <
+                  file: "tests/sequence_type.sysl"
                   start: <
                     line: 4
+                    col: 13
+                  >
+                  end: <
+                    line: 5
                   >
                 >
               >
@@ -27,8 +32,13 @@ apps: <
               >
               opt: true
               source_context: <
+                file: "tests/sequence_type.sysl"
                 start: <
                   line: 4
+                  col: 13
+                >
+                end: <
+                  line: 5
                 >
               >
             >

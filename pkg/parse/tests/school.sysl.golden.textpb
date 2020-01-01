@@ -1,113 +1,131 @@
-apps {
+apps: <
   key: "School"
-  value {
-    name {
+  value: <
+    name: <
       part: "School"
-    }
-    types {
+    >
+    types: <
       key: "Class"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "Id"
-            value {
+            value: <
               primitive: INT
-              attrs {
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "pk"
-                    }
-                    elt {
+                    >
+                    elt: <
                       s: "autoinc"
-                    }
-                  }
-                }
-              }
-              source_context {
-                start {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                file: "school.sysl"
+                start: <
                   line: 3
-                }
-              }
-            }
-          }
-          primary_key {
+                  col: 14
+                >
+                end: <
+                  line: 3
+                  col: 32
+                >
+              >
+            >
+          >
+          primary_key: <
             attr_name: "Id"
-          }
-        }
-      }
-    }
-    types {
+          >
+        >
+      >
+    >
+    types: <
       key: "Student"
-      value {
-        relation {
-          attr_defs {
+      value: <
+        relation: <
+          attr_defs: <
             key: "ClassId"
-            value {
-              attrs {
-                key: "description"
-                value {
-                  s: "describe the table"
-                }
-              }
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "School"
-                  }
+                  >
                   path: "Student"
-                }
-                ref {
+                >
+                ref: <
                   path: "Class"
                   path: "Idd"
-                }
-              }
-              source_context {
-                start {
-                  line: 7
-                }
-              }
-            }
-          }
-          attr_defs {
-            key: "Id"
-            value {
-              primitive: INT
-              attrs {
+                >
+              >
+              attrs: <
                 key: "description"
-                value {
+                value: <
                   s: "describe the table"
-                }
-              }
-              attrs {
+                >
+              >
+              source_context: <
+                file: "school.sysl"
+                start: <
+                  line: 7
+                  col: 19
+                >
+                end: <
+                  line: 7
+                  col: 25
+                >
+              >
+            >
+          >
+          attr_defs: <
+            key: "Id"
+            value: <
+              primitive: INT
+              attrs: <
+                key: "description"
+                value: <
+                  s: "describe the table"
+                >
+              >
+              attrs: <
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: <
+                  a: <
+                    elt: <
                       s: "pk"
-                    }
-                  }
-                }
-              }
-              source_context {
-                start {
+                    >
+                  >
+                >
+              >
+              source_context: <
+                file: "school.sysl"
+                start: <
                   line: 6
-                }
-              }
-            }
-          }
-          primary_key {
+                  col: 14
+                >
+                end: <
+                  line: 6
+                  col: 22
+                >
+              >
+            >
+          >
+          primary_key: <
             attr_name: "Id"
-          }
-        }
-        attrs {
+          >
+        >
+        attrs: <
           key: "description"
-          value {
+          value: <
             s: "describe the table"
-          }
-        }
-      }
-    }
-  }
-}
+          >
+        >
+      >
+    >
+  >
+>

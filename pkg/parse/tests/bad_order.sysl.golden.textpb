@@ -41,8 +41,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/bad_order.sysl"
                 start: <
                   line: 3
+                  col: 13
+                >
+                end: <
+                  line: 3
+                  col: 19
                 >
               >
             >
@@ -53,8 +59,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/bad_order.sysl"
                 start: <
                   line: 3
+                  col: 23
+                >
+                end: <
+                  line: 3
+                  col: 32
                 >
               >
             >
@@ -65,8 +77,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/bad_order.sysl"
                 start: <
                   line: 3
+                  col: 34
+                >
+                end: <
+                  line: 3
+                  col: 44
                 >
               >
             >
@@ -76,8 +94,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/bad_order.sysl"
                 start: <
                   line: 2
+                  col: 5
+                >
+                end: <
+                  line: 2
+                  col: 13
                 >
               >
             >
@@ -123,8 +147,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/bad_order.sysl"
                 start: <
                   line: 2
+                  col: 5
+                >
+                end: <
+                  line: 2
+                  col: 13
                 >
               >
             >
@@ -134,8 +164,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/bad_order.sysl"
                 start: <
                   line: 6
+                  col: 15
+                >
+                end: <
+                  line: 6
+                  col: 25
                 >
               >
             >
