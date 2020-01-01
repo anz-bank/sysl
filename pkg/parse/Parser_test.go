@@ -400,12 +400,6 @@ func TestInplaceTuple(t *testing.T) {
 	testParseAgainstGolden(t, "tests/inplace_tuple.sysl", "")
 }
 
-func TestRelational(t *testing.T) {
-	t.Parallel()
-
-	testParseAgainstGolden(t, "tests/school.sysl", "")
-}
-
 func TestImports(t *testing.T) {
 	t.Parallel()
 
@@ -418,7 +412,7 @@ func TestForeignImports(t *testing.T) {
 	testParseAgainstGolden(t, "tests/foreign_import_swagger.sysl", "")
 }
 
-func TestRootArg(t *testing.T) {
+func TestRootArgAndRelational(t *testing.T) {
 	t.Parallel()
 
 	testParseAgainstGolden(t, "school.sysl", "tests")

@@ -1,280 +1,334 @@
-apps {
+apps: <
   key: "Browser App"
-  value {
-    name {
+  value: <
+    name: <
       part: "Browser App"
-    }
-    endpoints {
+    >
+    endpoints: <
       key: "EP"
-      value {
+      value: <
         name: "EP"
-        param {
+        param: <
           name: "p1"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "GO"
                   part: "Sample"
                   part: "My Todo App"
-                }
+                >
                 path: "id"
-              }
-            }
-          }
-        }
-      }
-    }
-    endpoints {
+              >
+            >
+          >
+        >
+      >
+    >
+    endpoints: <
       key: "EP1"
-      value {
+      value: <
         name: "EP1"
-        param {
+        param: <
           name: "p2"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "Sample"
                   part: "My Todo App"
-                }
+                >
                 path: "id"
-              }
-            }
-          }
-        }
-      }
-    }
-    endpoints {
+              >
+            >
+          >
+        >
+      >
+    >
+    endpoints: <
       key: "EP2"
-      value {
+      value: <
         name: "EP2"
-        param {
+        param: <
           name: "p3"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "My Todo App"
-                }
+                >
                 path: "id"
-              }
-            }
-          }
-        }
-      }
-    }
-    endpoints {
+              >
+            >
+          >
+        >
+      >
+    >
+    endpoints: <
       key: "EP3"
-      value {
+      value: <
         name: "EP3"
-        param {
+        param: <
           name: "p4"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "id"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    types {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    types: <
       key: "Data"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "id"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "Browser App"
-                  }
+                  >
                   path: "Data"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "GO"
                     part: "Sample"
-                  }
+                  >
                   path: "My Todo App"
                   path: "id"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 18
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 14
+                >
+                end: <
+                  line: 18
+                  col: 42
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "id2"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "Browser App"
-                  }
+                  >
                   path: "Data"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "Sample"
-                  }
+                  >
                   path: "My Todo App"
                   path: "id"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 19
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 15
+                >
+                end: <
+                  line: 19
+                  col: 37
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "id3"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "Browser App"
-                  }
+                  >
                   path: "Data"
-                }
-                ref {
+                >
+                ref: <
                   path: "My Todo App"
                   path: "id"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 20
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                  col: 15
+                >
+                end: <
+                  line: 20
+                  col: 27
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "GO ::Sample:: My Todo App"
-  value {
-    name {
+  value: <
+    name: <
       part: "GO"
       part: "Sample"
       part: "My Todo App"
-    }
-    types {
+    >
+    types: <
       key: "Todo"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "id"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 3
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 14
+                >
+                end: <
+                  line: 3
+                  col: 14
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "note"
-            value {
+            value: <
               primitive: STRING
-              source_context {
-                start {
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 4
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                  col: 16
+                >
+                end: <
+                  line: 4
+                  col: 16
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "My Todo App"
-  value {
-    name {
+  value: <
+    name: <
       part: "My Todo App"
-    }
-    types {
+    >
+    types: <
       key: "Todo"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "id"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 13
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 14
+                >
+                end: <
+                  line: 13
+                  col: 14
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "note"
-            value {
+            value: <
               primitive: STRING
-              source_context {
-                start {
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 14
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                  col: 16
+                >
+                end: <
+                  line: 14
+                  col: 16
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "Sample::My Todo App"
-  value {
-    name {
+  value: <
+    name: <
       part: "Sample"
       part: "My Todo App"
-    }
-    types {
+    >
+    types: <
       key: "Todo"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "id"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 8
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 14
+                >
+                end: <
+                  line: 8
+                  col: 14
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "note"
-            value {
+            value: <
               primitive: STRING
-              source_context {
-                start {
+              source_context: <
+                file: "tests/test4.sysl"
+                start: <
                   line: 9
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+                  col: 16
+                >
+                end: <
+                  line: 9
+                  col: 16
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

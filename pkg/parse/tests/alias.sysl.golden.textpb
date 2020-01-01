@@ -46,8 +46,14 @@ apps: <
             value: <
               primitive: STRING
               source_context: <
+                file: "tests/alias.sysl"
                 start: <
                   line: 7
+                  col: 18
+                >
+                end: <
+                  line: 7
+                  col: 18
                 >
               >
             >
@@ -85,8 +91,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/alias.sysl"
                 start: <
                   line: 10
+                  col: 15
+                >
+                end: <
+                  line: 10
+                  col: 15
                 >
               >
             >
@@ -96,8 +108,14 @@ apps: <
             value: <
               primitive: STRING
               source_context: <
+                file: "tests/alias.sysl"
                 start: <
                   line: 11
+                  col: 18
+                >
+                end: <
+                  line: 11
+                  col: 18
                 >
               >
             >

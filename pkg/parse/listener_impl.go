@@ -323,11 +323,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	if ctx.QN() != nil {
 		type1.Opt = true
 	}
-	type1.SourceContext = &sysl.SourceContext{
-		Start: &sysl.SourceContext_Location{
-			Line: int32(ctx.GetStart().GetLine()),
-		},
-	}
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 
 	if ctx.Annotations() != nil {
 		if type1.Attrs == nil {
@@ -557,11 +553,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 		}
 	}
 
-	type1.SourceContext = &sysl.SourceContext{
-		Start: &sysl.SourceContext_Location{
-			Line: int32(ctx.GetStart().GetLine()),
-		},
-	}
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 	if ctx.QSTRING() != nil {
 		type1.Docstring = fromQString(ctx.QSTRING().GetText())
 	}
@@ -922,11 +914,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 		rest_param.Type.Opt = true
 	}
 
-	rest_param.Type.SourceContext = &sysl.SourceContext{
-		Start: &sysl.SourceContext_Location{
-			Line: int32(ctx.GetStart().GetLine()),
-		},
-	}
+	rest_param.Type.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 	s.method_urlparams = append(s.method_urlparams, rest_param)
 }
 
@@ -970,11 +958,7 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 		Type: type1,
 	}
 
-	rest_param.Type.SourceContext = &sysl.SourceContext{
-		Start: &sysl.SourceContext_Location{
-			Line: int32(ctx.GetStart().GetLine()),
-		},
-	}
+	rest_param.Type.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 
 	s.rest_urlparams = append(s.rest_urlparams, rest_param)
 	s.endpointName += ctx.CURLY_OPEN().GetText() + var_name + ctx.CURLY_CLOSE().GetText()
@@ -1561,12 +1545,8 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 			qcopy := &sysl.Endpoint_RestParams_QueryParam{
 				Name: q.Name,
 				Type: &sysl.Type{
-					Type: q.Type.Type,
-					SourceContext: &sysl.SourceContext{
-						Start: &sysl.SourceContext_Location{
-							Line: int32(ctx.GetStart().GetLine()),
-						},
-					},
+					Type:          q.Type.Type,
+					SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 				},
 			}
 			qparams = append(qparams, qcopy)

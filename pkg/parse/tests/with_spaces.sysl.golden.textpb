@@ -1,172 +1,208 @@
-apps {
+apps: <
   key: "AnotherApp"
-  value {
-    name {
+  value: <
+    name: <
       part: "AnotherApp"
-    }
-    types {
+    >
+    types: <
       key: "SecondTable"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "Id"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "AnotherApp"
-                  }
+                  >
                   path: "SecondTable"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "App with"
-                  }
+                  >
                   path: "space"
                   path: "Id"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/with_spaces.sysl"
+                start: <
                   line: 11
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 14
+                >
+                end: <
+                  line: 11
+                  col: 32
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "Id2"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "AnotherApp"
-                  }
+                  >
                   path: "SecondTable"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "App with"
-                  }
+                  >
                   path: "space"
                   path: "Id"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/with_spaces.sysl"
+                start: <
                   line: 12
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 15
+                >
+                end: <
+                  line: 12
+                  col: 35
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "Id3"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "AnotherApp"
-                  }
+                  >
                   path: "SecondTable"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "My"
                     part: "App with"
-                  }
+                  >
                   path: "space"
                   path: "Id"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/with_spaces.sysl"
+                start: <
                   line: 13
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 15
+                >
+                end: <
+                  line: 13
+                  col: 41
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "Id4"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "AnotherApp"
-                  }
+                  >
                   path: "SecondTable"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "My"
                     part: "App with"
-                  }
+                  >
                   path: "space"
                   path: "Id"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/with_spaces.sysl"
+                start: <
                   line: 14
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                  col: 15
+                >
+                end: <
+                  line: 14
+                  col: 44
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "App with :: space"
-  value {
-    name {
+  value: <
+    name: <
       part: "App with"
       part: "space"
-    }
-    types {
+    >
+    types: <
       key: "SomeTable"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "Id"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                file: "tests/with_spaces.sysl"
+                start: <
                   line: 3
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                  col: 14
+                >
+                end: <
+                  line: 3
+                  col: 14
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "My ::  App with :: space"
-  value {
-    name {
+  value: <
+    name: <
       part: "My"
       part: "App with"
       part: "space"
-    }
-    types {
+    >
+    types: <
       key: "SomeTable"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "Id"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                file: "tests/with_spaces.sysl"
+                start: <
                   line: 7
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+                  col: 14
+                >
+                end: <
+                  line: 7
+                  col: 14
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

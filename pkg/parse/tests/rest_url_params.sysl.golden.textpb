@@ -31,8 +31,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/rest_url_params.sysl"
                 start: <
                   line: 2
+                  col: 5
+                >
+                end: <
+                  line: 2
+                  col: 14
                 >
               >
             >
@@ -42,8 +48,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/rest_url_params.sysl"
                 start: <
                   line: 3
+                  col: 9
+                >
+                end: <
+                  line: 3
+                  col: 18
                 >
               >
             >
@@ -53,8 +65,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/rest_url_params.sysl"
                 start: <
                   line: 4
+                  col: 13
+                >
+                end: <
+                  line: 4
+                  col: 23
                 >
               >
             >
@@ -64,8 +82,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/rest_url_params.sysl"
                 start: <
                   line: 5
+                  col: 17
+                >
+                end: <
+                  line: 5
+                  col: 26
                 >
               >
             >
@@ -75,8 +99,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/rest_url_params.sysl"
                 start: <
                   line: 6
+                  col: 21
+                >
+                end: <
+                  line: 6
+                  col: 31
                 >
               >
             >

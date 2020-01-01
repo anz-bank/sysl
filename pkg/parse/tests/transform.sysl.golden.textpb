@@ -1,769 +1,781 @@
-apps {
+apps: <
   key: "TransformApp"
-  value {
-    name {
+  value: <
+    name: <
       part: "TransformApp"
-    }
-    attrs {
+    >
+    attrs: <
       key: "package"
-      value {
+      value: <
         s: "io.sysl.demo.petshop.views"
-      }
-    }
-    types {
+      >
+    >
+    types: <
       key: "AnonType_0__"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "breed"
-            value {
-              type_ref {
-                context {
-                  appname {
+            value: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "TransformApp"
-                  }
+                  >
                   path: "AnonType_0__"
-                }
-                ref {
-                  appname {
+                >
+                ref: <
+                  appname: <
                     part: "PetShopModel"
-                  }
+                  >
                   path: "Breed"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    types {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    types: <
       key: "FooType"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "amount"
-            value {
+            value: <
               primitive: DECIMAL
-              constraint {
-                length {
+              constraint: <
+                length: <
                   max: 14
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/transform.sysl"
+                start: <
                   line: 59
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 16
+                >
+                end: <
+                  line: 59
+                  col: 26
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "id"
-            value {
+            value: <
               primitive: INT
-              source_context {
-                start {
+              source_context: <
+                file: "tests/transform.sysl"
+                start: <
                   line: 58
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                  col: 12
+                >
+                end: <
+                  line: 58
+                  col: 12
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "NoArgTransform"
-      value {
-        param {
+      value: <
+        param: <
           name: "number1"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        param {
+          >
+        >
+        param: <
           name: "foo"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "Some"
-                }
+                >
                 path: "Type"
-              }
-            }
-          }
-        }
-        ret_type {
-          type_ref {
-            ref {
-              appname {
+              >
+            >
+          >
+        >
+        ret_type: <
+          type_ref: <
+            ref: <
+              appname: <
                 part: "Model"
-              }
+              >
               path: "Type"
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "."
-            }
+            >
             scopevar: "scopeVar"
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: SUB
-                    lhs {
-                      binexpr {
+                    lhs: <
+                      binexpr: <
                         op: ADD
-                        lhs {
+                        lhs: <
                           name: "number"
-                        }
-                        rhs {
-                          literal {
+                        >
+                        rhs: <
+                          literal: <
                             i: 1
-                          }
-                        }
-                      }
-                    }
-                    rhs {
+                          >
+                        >
+                      >
+                    >
+                    rhs: <
                       name: "scopeVar"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        attrs {
+                    >
+                  >
+                >
+              >
+            >
+          >
+        >
+        attrs: <
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: <
+            a: <
+              elt: <
                 s: "partial"
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "WithArgTransform"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
+          >
+        >
+        ret_type: <
           primitive: INT
-        }
-        expr {
-          transform {
-            arg {
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "scopeVar"
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: SUB
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
-                      literal {
+                    >
+                    rhs: <
+                      literal: <
                         i: 1
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        attrs {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+        >
+        attrs: <
           key: "abc"
-          value {
+          value: <
             s: "foo"
-          }
-        }
-      }
-    }
-    views {
+          >
+        >
+      >
+    >
+    views: <
       key: "nestedTransformWithAnonymousType"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
-          type_ref {
-            ref {
-              appname {
+          >
+        >
+        ret_type: <
+          type_ref: <
+            ref: <
+              appname: <
                 part: "Some1"
-              }
+              >
               path: "Type"
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              let {
+            stmt: <
+              let: <
                 name: "_breedsAndPets"
-                expr {
-                  transform {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: <
+                  transform: <
+                    arg: <
+                      get_attr: <
+                        arg: <
                           name: "."
-                        }
+                        >
                         attr: "breeds"
-                      }
-                    }
+                      >
+                    >
                     scopevar: "."
-                    stmt {
-                      let {
+                    stmt: <
+                      let: <
                         name: "breedId"
-                        expr {
-                          call {
+                        expr: <
+                          call: <
                             func: "autoinc"
-                          }
-                        }
-                      }
-                    }
-                    stmt {
-                      assign {
+                          >
+                        >
+                      >
+                    >
+                    stmt: <
+                      assign: <
                         name: "breed"
-                        expr {
-                          transform {
-                            arg {
+                        expr: <
+                          transform: <
+                            arg: <
                               name: "."
-                            }
+                            >
                             scopevar: "."
-                            stmt {
-                              assign {
+                            stmt: <
+                              assign: <
                                 name: "breedName"
-                                expr {
-                                  get_attr {
-                                    arg {
+                                expr: <
+                                  get_attr: <
+                                    arg: <
                                       name: "."
-                                    }
+                                    >
                                     attr: "name"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                          type {
-                            type_ref {
-                              context {
-                                appname {
+                                  >
+                                >
+                              >
+                            >
+                          >
+                          type: <
+                            type_ref: <
+                              context: <
+                                appname: <
                                   part: "TransformApp"
-                                }
-                              }
-                              ref {
-                                appname {
+                                >
+                              >
+                              ref: <
+                                appname: <
                                   part: "PetShopModel"
-                                }
+                                >
                                 path: "Breed"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                  type {
-                    set {
-                      type_ref {
-                        context {
-                          appname {
+                              >
+                            >
+                          >
+                        >
+                      >
+                    >
+                  >
+                  type: <
+                    set: <
+                      type_ref: <
+                        context: <
+                          appname: <
                             part: "TransformApp"
-                          }
-                        }
-                        ref {
-                          appname {
+                          >
+                        >
+                        ref: <
+                          appname: <
                             part: "TransformApp"
-                          }
+                          >
                           path: "AnonType_0__"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            type_ref {
-              context {
-                appname {
+                        >
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "TransformApp"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "Some"
-                }
+                >
                 path: "Type"
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "noReturnType"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
-          type_ref {
-            context {
-              appname {
+          >
+        >
+        ret_type: <
+          type_ref: <
+            context: <
+              appname: <
                 part: "TransformApp"
-              }
-            }
-            ref {
-              appname {
+              >
+            >
+            ref: <
+              appname: <
                 part: "Some"
-              }
+              >
               path: "Type"
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
-                      literal {
+                    >
+                    rhs: <
+                      literal: <
                         s: "foo"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            type_ref {
-              context {
-                appname {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "TransformApp"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "Some"
-                }
+                >
                 path: "Type"
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "noScopeVar"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
+          >
+        >
+        ret_type: <
           primitive: INT
-        }
-        expr {
-          transform {
-            arg {
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
-                      binexpr {
+                    lhs: <
+                      binexpr: <
                         op: MUL
-                        lhs {
+                        lhs: <
                           name: "number"
-                        }
-                        rhs {
-                          literal {
+                        >
+                        rhs: <
+                          literal: <
                             decimal: "1.5"
-                          }
-                        }
-                      }
-                    }
-                    rhs {
-                      literal {
+                          >
+                        >
+                      >
+                    >
+                    rhs: <
+                      literal: <
                         i: 2
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "withAnonymousSetOfReturnType"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
+          >
+        >
+        ret_type: <
           primitive: INT
-        }
-        expr {
-          transform {
-            arg {
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: POW
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
-                      binexpr {
+                    >
+                    rhs: <
+                      binexpr: <
                         op: POW
-                        lhs {
-                          literal {
+                        lhs: <
+                          literal: <
                             i: 2
-                          }
-                        }
-                        rhs {
-                          literal {
+                          >
+                        >
+                        rhs: <
+                          literal: <
                             i: 3
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                          >
+                        >
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "withSetOfReturnType"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
-          set {
-            type_ref {
-              ref {
-                appname {
+          >
+        >
+        ret_type: <
+          set: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "Some1"
-                }
+                >
                 path: "Type"
-              }
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+              >
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: DIV
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
+                    >
+                    rhs: <
                       name: "number"
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            set {
-              type_ref {
-                context {
-                  appname {
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            set: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "TransformApp"
-                  }
-                }
-                ref {
-                  appname {
+                  >
+                >
+                ref: <
+                  appname: <
                     part: "Some"
-                  }
+                  >
                   path: "Type"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "withSomeReturnType"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
+          type: <
             primitive: INT
-          }
-        }
-        ret_type {
-          type_ref {
-            ref {
-              appname {
+          >
+        >
+        ret_type: <
+          type_ref: <
+            ref: <
+              appname: <
                 part: "Some1"
-              }
+              >
               path: "Type"
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
-                      literal {
+                    >
+                    rhs: <
+                      literal: <
                         s: "foo"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            type_ref {
-              context {
-                appname {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "TransformApp"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "Some"
-                }
+                >
                 path: "Type"
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "withSomeReturnType2"
-      value {
-        param {
+      value: <
+        param: <
           name: "number"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "Sometype"
-                }
-              }
-            }
-          }
-        }
-        ret_type {
-          set {
-            type_ref {
-              ref {
-                appname {
+                >
+              >
+            >
+          >
+        >
+        ret_type: <
+          set: <
+            type_ref: <
+              ref: <
+                appname: <
                   part: "Sometype"
-                }
-              }
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+                >
+              >
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
-                      literal {
+                    >
+                    rhs: <
+                      literal: <
                         s: "foo"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            type_ref {
-              context {
-                appname {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "TransformApp"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "Sometype"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    views {
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+    views: <
       key: "withSomeReturnType3"
-      value {
-        param {
+      value: <
+        param: <
           name: "foo"
-          type {
-            set {
-              type_ref {
-                ref {
-                  appname {
+          type: <
+            set: <
+              type_ref: <
+                ref: <
+                  appname: <
                     part: "Model"
-                  }
+                  >
                   path: "SomeType"
-                }
-              }
-            }
-          }
-        }
-        ret_type {
-          set {
-            type_ref {
-              context {
-                appname {
+                >
+              >
+            >
+          >
+        >
+        ret_type: <
+          set: <
+            type_ref: <
+              context: <
+                appname: <
                   part: "TransformApp"
-                }
-              }
-              ref {
-                appname {
+                >
+              >
+              ref: <
+                appname: <
                   part: "Some"
-                }
+                >
                 path: "Type"
-              }
-            }
-          }
-        }
-        expr {
-          transform {
-            arg {
+              >
+            >
+          >
+        >
+        expr: <
+          transform: <
+            arg: <
               name: "argName"
-            }
+            >
             scopevar: "."
-            stmt {
-              assign {
+            stmt: <
+              assign: <
                 name: "out"
-                expr {
-                  binexpr {
+                expr: <
+                  binexpr: <
                     op: ADD
-                    lhs {
+                    lhs: <
                       name: "number"
-                    }
-                    rhs {
-                      literal {
+                    >
+                    rhs: <
+                      literal: <
                         s: "foo"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          type {
-            set {
-              type_ref {
-                context {
-                  appname {
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+          type: <
+            set: <
+              type_ref: <
+                context: <
+                  appname: <
                     part: "TransformApp"
-                  }
-                }
-                ref {
-                  appname {
+                  >
+                >
+                ref: <
+                  appname: <
                     part: "Some"
-                  }
+                  >
                   path: "Type"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>

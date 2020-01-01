@@ -1,143 +1,155 @@
-apps {
+apps: <
   key: "Another App"
-  value {
-    name {
+  value: <
+    name: <
       part: "Another App"
-    }
-    endpoints {
+    >
+    endpoints: <
       key: "Endpoint"
-      value {
+      value: <
         name: "Endpoint"
-        attrs {
+        attrs: <
           key: "description"
-          value {
+          value: <
             s: "multi-line documentation comment use it for long comments"
-          }
-        }
-        stmt {
-          action {
+          >
+        >
+        stmt: <
+          action: <
             action: "..."
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "App"
-  value {
-    name {
+  value: <
+    name: <
       part: "App"
-    }
-    attrs {
+    >
+    attrs: <
       key: "description"
-      value {
+      value: <
         s: "multi-line documentation comment use it for long comments"
-      }
-    }
-    endpoints {
+      >
+    >
+    endpoints: <
       key: "..."
-      value {
+      value: <
         name: "..."
-      }
-    }
-  }
-}
-apps {
+      >
+    >
+  >
+>
+apps: <
   key: "Model"
-  value {
-    name {
+  value: <
+    name: <
       part: "Model"
-    }
-    types {
+    >
+    types: <
       key: "TableName"
-      value {
-        attrs {
+      value: <
+        attrs: <
           key: "description"
-          value {
+          value: <
             s: "multi-line documentation comment use it for long comments"
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "ModelTwo"
-  value {
-    name {
+  value: <
+    name: <
       part: "ModelTwo"
-    }
-    types {
+    >
+    types: <
       key: "TableName"
-      value {
-        tuple {
-          attr_defs {
+      value: <
+        tuple: <
+          attr_defs: <
             key: "field"
-            value {
+            value: <
               primitive: STRING
-              attrs {
+              attrs: <
                 key: "description"
-                value {
+                value: <
                   s: "multi-line documentation comment use it for long comments"
-                }
-              }
-              source_context {
-                start {
+                >
+              >
+              source_context: <
+                file: "tests/docstrings.sysl"
+                start: <
                   line: 33
-                }
-              }
-            }
-          }
-          attr_defs {
+                  col: 17
+                >
+                end: <
+                  line: 36
+                  col: 8
+                >
+              >
+            >
+          >
+          attr_defs: <
             key: "field2"
-            value {
+            value: <
               primitive: STRING
               docstring: "short description here"
-              source_context {
-                start {
+              source_context: <
+                file: "tests/docstrings.sysl"
+                start: <
                   line: 36
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-apps {
+                  col: 18
+                >
+                end: <
+                  line: 36
+                  col: 18
+                >
+              >
+            >
+          >
+        >
+      >
+    >
+  >
+>
+apps: <
   key: "Yet Another App"
-  value {
-    name {
+  value: <
+    name: <
       part: "Yet Another App"
-    }
-    endpoints {
+    >
+    endpoints: <
       key: "AnotherEndpoint"
-      value {
+      value: <
         name: "AnotherEndpoint"
-        stmt {
-          action {
+        stmt: <
+          action: <
             action: "| a multi line text statement use it to well"
-          }
-        }
-        stmt {
-          action {
+          >
+        >
+        stmt: <
+          action: <
             action: "another text statement"
-          }
-        }
-      }
-    }
-    endpoints {
+          >
+        >
+      >
+    >
+    endpoints: <
       key: "Endpoint"
-      value {
+      value: <
         name: "Endpoint"
-        stmt {
-          action {
+        stmt: <
+          action: <
             action: "a simple text statement"
-          }
-        }
-      }
-    }
-  }
-}
+          >
+        >
+      >
+    >
+  >
+>
