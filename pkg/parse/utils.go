@@ -120,7 +120,9 @@ func (p PathStack) Get() string {
 }
 
 func (p *PathStack) Push(items ...string) string {
-	p.parts = append(p.parts, items...)
+	for _, i := range items {
+		p.parts = append(p.parts, strings.TrimSpace(i))
+	}
 	return p.update()
 }
 

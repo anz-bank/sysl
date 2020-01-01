@@ -98,8 +98,8 @@ apps {
                 }
                 ref {
                   appname {
-                    part: "GO "
-                    part: " Sample "
+                    part: "GO"
+                    part: "Sample"
                   }
                   path: "My Todo App"
                   path: "id"
@@ -124,7 +124,7 @@ apps {
                 }
                 ref {
                   appname {
-                    part: "Sample "
+                    part: "Sample"
                   }
                   path: "My Todo App"
                   path: "id"

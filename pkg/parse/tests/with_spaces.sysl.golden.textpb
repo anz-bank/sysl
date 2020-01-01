@@ -20,7 +20,7 @@ apps {
                 }
                 ref {
                   appname {
-                    part: "App with "
+                    part: "App with"
                   }
                   path: "space"
                   path: "Id"
@@ -45,7 +45,7 @@ apps {
                 }
                 ref {
                   appname {
-                    part: "App with  "
+                    part: "App with"
                   }
                   path: "space"
                   path: "Id"
@@ -70,8 +70,8 @@ apps {
                 }
                 ref {
                   appname {
-                    part: "My "
-                    part: " App with  "
+                    part: "My"
+                    part: "App with"
                   }
                   path: "space"
                   path: "Id"
@@ -96,8 +96,8 @@ apps {
                 }
                 ref {
                   appname {
-                    part: "My   "
-                    part: "  App with  "
+                    part: "My"
+                    part: "App with"
                   }
                   path: "space"
                   path: "Id"
