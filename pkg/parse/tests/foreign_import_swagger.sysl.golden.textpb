@@ -131,6 +131,16 @@ apps: <
           query_param: <
             name: "depth"
             type: <
+              type_ref: <
+                context: <
+                  appname: <
+                    part: "testapp"
+                  >
+                >
+                ref: <
+                  path: "SimpleObj"
+                >
+              >
               source_context: <
                 file: "tests/foreign_import_swagger.sysl"
                 start: <

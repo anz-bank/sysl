@@ -785,27 +785,15 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 		type1 = &sysl.Type{
 			Type: &sysl.Type_TypeRef{
 				TypeRef: &sysl.ScopedRef{
-					Context: &sysl.Scope{
-						Appname: &sysl.AppName{
-							Part: s.currentApp().Name.Part,
-						},
-					},
+					Context: s.currentScope(),
 					Ref: &sysl.Scope{
 						Path: ref_path,
 					},
 				},
 			},
 		}
-	case ctx.NativeDataTypes() != nil:
-		primType, constraints := primitiveFromNativeDataType(ctx.NativeDataTypes())
-		type1 = &sysl.Type{
-			Type: primType,
-		}
-		if constraints != nil {
-			type1.Constraint = []*sysl.Type_Constraint{constraints}
-		}
-	case ctx.Name_str() != nil:
-		type1 = &sysl.Type{}
+	default:
+		type1 = buildTypeReference(s.currentScope(), ctx.Types())
 	}
 
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{

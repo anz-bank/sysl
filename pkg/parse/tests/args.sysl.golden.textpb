@@ -86,6 +86,17 @@ apps: <
             >
           >
         >
+        stmt: <
+          call: <
+            target: <
+              part: "Server"
+            >
+            endpoint: "PUT /foo"
+            arg: <
+              name: "bar <: External.Foo"
+            >
+          >
+        >
         source_context: <
           file: "tests/args.sysl"
           start: <
@@ -93,7 +104,7 @@ apps: <
             col: 4
           >
           end: <
-            line: 17
+            line: 18
           >
         >
       >

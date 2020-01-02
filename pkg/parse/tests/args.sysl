@@ -14,3 +14,4 @@ Client:
         Server <- PUT /foo/
         Server <- PUT /foo (bar)
         Server <- PUT /foo (bar <: String)
+        Server <- PUT /foo (bar <: External.Foo)

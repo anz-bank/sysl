@@ -71,7 +71,7 @@ table_refs          :  (TABLE | TYPE | UNION) Name inplace_table_def?;
 facade              :  SYSL_COMMENT* WRAP model_name INDENT table_refs+ DEDENT;
 
 var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
-query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;
+query_var       : Name EQ (types | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
 http_path_part :name_str | DIGITS;
@@ -86,7 +86,7 @@ ret_stmt        : RETURN TEXT;
 
 target          : app_name;
 target_endpoint : name_str;
-call_arg : (QSTRING | name_str)+ | (name_str LESS_COLON (name_str|NativeDataTypes));
+call_arg : (QSTRING | name_str)+ | (name_str LESS_COLON types);
 call_args: OPEN_PAREN call_arg (COMMA call_arg)* CLOSE_PAREN;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
