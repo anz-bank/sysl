@@ -637,9 +637,7 @@ apps: <
           type: <
             type_ref: <
               ref: <
-                appname: <
-                  part: "Sometype"
-                >
+                path: "Sometype"
               >
             >
           >
@@ -648,9 +646,7 @@ apps: <
           set: <
             type_ref: <
               ref: <
-                appname: <
-                  part: "Sometype"
-                >
+                path: "Sometype"
               >
             >
           >
@@ -688,9 +684,7 @@ apps: <
                 >
               >
               ref: <
-                appname: <
-                  part: "Sometype"
-                >
+                path: "Sometype"
               >
             >
           >

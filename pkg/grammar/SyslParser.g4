@@ -2,27 +2,39 @@ parser grammar SyslParser;
 
 options { tokenVocab=SyslLexer; }
 
+// Token-Only Rules:
 modifier        : TILDE Name (PLUS Name)*;
 size_spec       : OPEN_PAREN DIGITS ( DOT DIGITS)? CLOSE_PAREN;
 name_str        : Name|TEXT_LINE|E_Name;
-
-reference       : app_name ((E_DOT | DOT) name_str)+;
 doc_string      : PIPE TEXT;
-quoted_string       : QSTRING;
+quoted_string   : QSTRING;
+set_of: SET_OF | (E_SET_OF);
+sequence_of: SEQUENCE_OF | (E_SEQUENCE_OF);
+
+// Type name rules. If the syntax calls for the type name use `types`
+// ---- internal helper rules  ----
+user_defined_type   : name_str;
+reference           : app_name ((E_DOT | DOT) name_str)+;
+
+package_name   : name_str;
+sub_package    : NAME_SEP package_name;
+
+// ---- useable rules ----
+// basic type names
+    app_name       : package_name sub_package*;
+    types          : user_defined_type | reference | NativeDataTypes;
+// collection types (TODO: maybe allow other collection types?)
+    set_type       : set_of types size_spec?;
+    sequence_type  : sequence_of types size_spec?;
+    collection_type: set_type | sequence_type;
+
 array_of_strings    : SQ_OPEN quoted_string (COMMA quoted_string)* SQ_CLOSE;
 array_of_arrays     : SQ_OPEN array_of_strings (COMMA array_of_strings)* SQ_CLOSE;
 nvp                 : Name EQ (quoted_string | array_of_strings| array_of_arrays);
 entry               : nvp | modifier ;
 attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
 
-user_defined_type       : name_str;
-types: user_defined_type | reference | NativeDataTypes;
-set_of: SET_OF | (E_SET_OF);
-set_type            : set_of types size_spec?;
-sequence_of: SEQUENCE_OF | (E_SEQUENCE_OF);
-sequence_type            : sequence_of types size_spec?;
-//TODO : allow for other collection types?
-collection_type     : set_type | sequence_type;
+
 multi_line_docstring    :   COLON INDENT doc_string+ DEDENT;
 annotation_value        :   QSTRING | array_of_strings | multi_line_docstring;
 annotation      : AT VAR_NAME EQ annotation_value;
@@ -47,12 +59,9 @@ table   :  SYSL_COMMENT* (TYPE | TABLE) name_str table_def;
 
 union   :   SYSL_COMMENT*
             UNION
-            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | user_defined_type | annotation | WHATEVER )+ DEDENT)
+            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | types | annotation | WHATEVER )+ DEDENT)
         ;
 
-package_name   : name_str;
-sub_package    : NAME_SEP package_name;
-app_name       : package_name sub_package*;
 
 name_with_attribs       :   app_name  QSTRING? attribs_or_modifiers?;
 
@@ -66,7 +75,7 @@ query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
 http_path_part :name_str | DIGITS;
-http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str | reference) CURLY_CLOSE;
+http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON types CURLY_CLOSE;
 http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
 http_path       : (FORWARD_SLASH | http_path_suffix+);

@@ -17,14 +17,44 @@ type SyslParserListener interface {
 	// EnterName_str is called when entering the name_str production.
 	EnterName_str(c *Name_strContext)
 
-	// EnterReference is called when entering the reference production.
-	EnterReference(c *ReferenceContext)
-
 	// EnterDoc_string is called when entering the doc_string production.
 	EnterDoc_string(c *Doc_stringContext)
 
 	// EnterQuoted_string is called when entering the quoted_string production.
 	EnterQuoted_string(c *Quoted_stringContext)
+
+	// EnterSet_of is called when entering the set_of production.
+	EnterSet_of(c *Set_ofContext)
+
+	// EnterSequence_of is called when entering the sequence_of production.
+	EnterSequence_of(c *Sequence_ofContext)
+
+	// EnterUser_defined_type is called when entering the user_defined_type production.
+	EnterUser_defined_type(c *User_defined_typeContext)
+
+	// EnterReference is called when entering the reference production.
+	EnterReference(c *ReferenceContext)
+
+	// EnterPackage_name is called when entering the package_name production.
+	EnterPackage_name(c *Package_nameContext)
+
+	// EnterSub_package is called when entering the sub_package production.
+	EnterSub_package(c *Sub_packageContext)
+
+	// EnterApp_name is called when entering the app_name production.
+	EnterApp_name(c *App_nameContext)
+
+	// EnterTypes is called when entering the types production.
+	EnterTypes(c *TypesContext)
+
+	// EnterSet_type is called when entering the set_type production.
+	EnterSet_type(c *Set_typeContext)
+
+	// EnterSequence_type is called when entering the sequence_type production.
+	EnterSequence_type(c *Sequence_typeContext)
+
+	// EnterCollection_type is called when entering the collection_type production.
+	EnterCollection_type(c *Collection_typeContext)
 
 	// EnterArray_of_strings is called when entering the array_of_strings production.
 	EnterArray_of_strings(c *Array_of_stringsContext)
@@ -40,27 +70,6 @@ type SyslParserListener interface {
 
 	// EnterAttribs_or_modifiers is called when entering the attribs_or_modifiers production.
 	EnterAttribs_or_modifiers(c *Attribs_or_modifiersContext)
-
-	// EnterUser_defined_type is called when entering the user_defined_type production.
-	EnterUser_defined_type(c *User_defined_typeContext)
-
-	// EnterTypes is called when entering the types production.
-	EnterTypes(c *TypesContext)
-
-	// EnterSet_of is called when entering the set_of production.
-	EnterSet_of(c *Set_ofContext)
-
-	// EnterSet_type is called when entering the set_type production.
-	EnterSet_type(c *Set_typeContext)
-
-	// EnterSequence_of is called when entering the sequence_of production.
-	EnterSequence_of(c *Sequence_ofContext)
-
-	// EnterSequence_type is called when entering the sequence_type production.
-	EnterSequence_type(c *Sequence_typeContext)
-
-	// EnterCollection_type is called when entering the collection_type production.
-	EnterCollection_type(c *Collection_typeContext)
 
 	// EnterMulti_line_docstring is called when entering the multi_line_docstring production.
 	EnterMulti_line_docstring(c *Multi_line_docstringContext)
@@ -100,15 +109,6 @@ type SyslParserListener interface {
 
 	// EnterUnion is called when entering the union production.
 	EnterUnion(c *UnionContext)
-
-	// EnterPackage_name is called when entering the package_name production.
-	EnterPackage_name(c *Package_nameContext)
-
-	// EnterSub_package is called when entering the sub_package production.
-	EnterSub_package(c *Sub_packageContext)
-
-	// EnterApp_name is called when entering the app_name production.
-	EnterApp_name(c *App_nameContext)
 
 	// EnterName_with_attribs is called when entering the name_with_attribs production.
 	EnterName_with_attribs(c *Name_with_attribsContext)
@@ -548,14 +548,44 @@ type SyslParserListener interface {
 	// ExitName_str is called when exiting the name_str production.
 	ExitName_str(c *Name_strContext)
 
-	// ExitReference is called when exiting the reference production.
-	ExitReference(c *ReferenceContext)
-
 	// ExitDoc_string is called when exiting the doc_string production.
 	ExitDoc_string(c *Doc_stringContext)
 
 	// ExitQuoted_string is called when exiting the quoted_string production.
 	ExitQuoted_string(c *Quoted_stringContext)
+
+	// ExitSet_of is called when exiting the set_of production.
+	ExitSet_of(c *Set_ofContext)
+
+	// ExitSequence_of is called when exiting the sequence_of production.
+	ExitSequence_of(c *Sequence_ofContext)
+
+	// ExitUser_defined_type is called when exiting the user_defined_type production.
+	ExitUser_defined_type(c *User_defined_typeContext)
+
+	// ExitReference is called when exiting the reference production.
+	ExitReference(c *ReferenceContext)
+
+	// ExitPackage_name is called when exiting the package_name production.
+	ExitPackage_name(c *Package_nameContext)
+
+	// ExitSub_package is called when exiting the sub_package production.
+	ExitSub_package(c *Sub_packageContext)
+
+	// ExitApp_name is called when exiting the app_name production.
+	ExitApp_name(c *App_nameContext)
+
+	// ExitTypes is called when exiting the types production.
+	ExitTypes(c *TypesContext)
+
+	// ExitSet_type is called when exiting the set_type production.
+	ExitSet_type(c *Set_typeContext)
+
+	// ExitSequence_type is called when exiting the sequence_type production.
+	ExitSequence_type(c *Sequence_typeContext)
+
+	// ExitCollection_type is called when exiting the collection_type production.
+	ExitCollection_type(c *Collection_typeContext)
 
 	// ExitArray_of_strings is called when exiting the array_of_strings production.
 	ExitArray_of_strings(c *Array_of_stringsContext)
@@ -571,27 +601,6 @@ type SyslParserListener interface {
 
 	// ExitAttribs_or_modifiers is called when exiting the attribs_or_modifiers production.
 	ExitAttribs_or_modifiers(c *Attribs_or_modifiersContext)
-
-	// ExitUser_defined_type is called when exiting the user_defined_type production.
-	ExitUser_defined_type(c *User_defined_typeContext)
-
-	// ExitTypes is called when exiting the types production.
-	ExitTypes(c *TypesContext)
-
-	// ExitSet_of is called when exiting the set_of production.
-	ExitSet_of(c *Set_ofContext)
-
-	// ExitSet_type is called when exiting the set_type production.
-	ExitSet_type(c *Set_typeContext)
-
-	// ExitSequence_of is called when exiting the sequence_of production.
-	ExitSequence_of(c *Sequence_ofContext)
-
-	// ExitSequence_type is called when exiting the sequence_type production.
-	ExitSequence_type(c *Sequence_typeContext)
-
-	// ExitCollection_type is called when exiting the collection_type production.
-	ExitCollection_type(c *Collection_typeContext)
 
 	// ExitMulti_line_docstring is called when exiting the multi_line_docstring production.
 	ExitMulti_line_docstring(c *Multi_line_docstringContext)
@@ -631,15 +640,6 @@ type SyslParserListener interface {
 
 	// ExitUnion is called when exiting the union production.
 	ExitUnion(c *UnionContext)
-
-	// ExitPackage_name is called when exiting the package_name production.
-	ExitPackage_name(c *Package_nameContext)
-
-	// ExitSub_package is called when exiting the sub_package production.
-	ExitSub_package(c *Sub_packageContext)
-
-	// ExitApp_name is called when exiting the app_name production.
-	ExitApp_name(c *App_nameContext)
 
 	// ExitName_with_attribs is called when exiting the name_with_attribs production.
 	ExitName_with_attribs(c *Name_with_attribsContext)

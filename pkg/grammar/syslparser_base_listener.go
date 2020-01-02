@@ -39,12 +39,6 @@ func (s *BaseSyslParserListener) EnterName_str(ctx *Name_strContext) {}
 // ExitName_str is called when production name_str is exited.
 func (s *BaseSyslParserListener) ExitName_str(ctx *Name_strContext) {}
 
-// EnterReference is called when production reference is entered.
-func (s *BaseSyslParserListener) EnterReference(ctx *ReferenceContext) {}
-
-// ExitReference is called when production reference is exited.
-func (s *BaseSyslParserListener) ExitReference(ctx *ReferenceContext) {}
-
 // EnterDoc_string is called when production doc_string is entered.
 func (s *BaseSyslParserListener) EnterDoc_string(ctx *Doc_stringContext) {}
 
@@ -56,6 +50,72 @@ func (s *BaseSyslParserListener) EnterQuoted_string(ctx *Quoted_stringContext) {
 
 // ExitQuoted_string is called when production quoted_string is exited.
 func (s *BaseSyslParserListener) ExitQuoted_string(ctx *Quoted_stringContext) {}
+
+// EnterSet_of is called when production set_of is entered.
+func (s *BaseSyslParserListener) EnterSet_of(ctx *Set_ofContext) {}
+
+// ExitSet_of is called when production set_of is exited.
+func (s *BaseSyslParserListener) ExitSet_of(ctx *Set_ofContext) {}
+
+// EnterSequence_of is called when production sequence_of is entered.
+func (s *BaseSyslParserListener) EnterSequence_of(ctx *Sequence_ofContext) {}
+
+// ExitSequence_of is called when production sequence_of is exited.
+func (s *BaseSyslParserListener) ExitSequence_of(ctx *Sequence_ofContext) {}
+
+// EnterUser_defined_type is called when production user_defined_type is entered.
+func (s *BaseSyslParserListener) EnterUser_defined_type(ctx *User_defined_typeContext) {}
+
+// ExitUser_defined_type is called when production user_defined_type is exited.
+func (s *BaseSyslParserListener) ExitUser_defined_type(ctx *User_defined_typeContext) {}
+
+// EnterReference is called when production reference is entered.
+func (s *BaseSyslParserListener) EnterReference(ctx *ReferenceContext) {}
+
+// ExitReference is called when production reference is exited.
+func (s *BaseSyslParserListener) ExitReference(ctx *ReferenceContext) {}
+
+// EnterPackage_name is called when production package_name is entered.
+func (s *BaseSyslParserListener) EnterPackage_name(ctx *Package_nameContext) {}
+
+// ExitPackage_name is called when production package_name is exited.
+func (s *BaseSyslParserListener) ExitPackage_name(ctx *Package_nameContext) {}
+
+// EnterSub_package is called when production sub_package is entered.
+func (s *BaseSyslParserListener) EnterSub_package(ctx *Sub_packageContext) {}
+
+// ExitSub_package is called when production sub_package is exited.
+func (s *BaseSyslParserListener) ExitSub_package(ctx *Sub_packageContext) {}
+
+// EnterApp_name is called when production app_name is entered.
+func (s *BaseSyslParserListener) EnterApp_name(ctx *App_nameContext) {}
+
+// ExitApp_name is called when production app_name is exited.
+func (s *BaseSyslParserListener) ExitApp_name(ctx *App_nameContext) {}
+
+// EnterTypes is called when production types is entered.
+func (s *BaseSyslParserListener) EnterTypes(ctx *TypesContext) {}
+
+// ExitTypes is called when production types is exited.
+func (s *BaseSyslParserListener) ExitTypes(ctx *TypesContext) {}
+
+// EnterSet_type is called when production set_type is entered.
+func (s *BaseSyslParserListener) EnterSet_type(ctx *Set_typeContext) {}
+
+// ExitSet_type is called when production set_type is exited.
+func (s *BaseSyslParserListener) ExitSet_type(ctx *Set_typeContext) {}
+
+// EnterSequence_type is called when production sequence_type is entered.
+func (s *BaseSyslParserListener) EnterSequence_type(ctx *Sequence_typeContext) {}
+
+// ExitSequence_type is called when production sequence_type is exited.
+func (s *BaseSyslParserListener) ExitSequence_type(ctx *Sequence_typeContext) {}
+
+// EnterCollection_type is called when production collection_type is entered.
+func (s *BaseSyslParserListener) EnterCollection_type(ctx *Collection_typeContext) {}
+
+// ExitCollection_type is called when production collection_type is exited.
+func (s *BaseSyslParserListener) ExitCollection_type(ctx *Collection_typeContext) {}
 
 // EnterArray_of_strings is called when production array_of_strings is entered.
 func (s *BaseSyslParserListener) EnterArray_of_strings(ctx *Array_of_stringsContext) {}
@@ -86,48 +146,6 @@ func (s *BaseSyslParserListener) EnterAttribs_or_modifiers(ctx *Attribs_or_modif
 
 // ExitAttribs_or_modifiers is called when production attribs_or_modifiers is exited.
 func (s *BaseSyslParserListener) ExitAttribs_or_modifiers(ctx *Attribs_or_modifiersContext) {}
-
-// EnterUser_defined_type is called when production user_defined_type is entered.
-func (s *BaseSyslParserListener) EnterUser_defined_type(ctx *User_defined_typeContext) {}
-
-// ExitUser_defined_type is called when production user_defined_type is exited.
-func (s *BaseSyslParserListener) ExitUser_defined_type(ctx *User_defined_typeContext) {}
-
-// EnterTypes is called when production types is entered.
-func (s *BaseSyslParserListener) EnterTypes(ctx *TypesContext) {}
-
-// ExitTypes is called when production types is exited.
-func (s *BaseSyslParserListener) ExitTypes(ctx *TypesContext) {}
-
-// EnterSet_of is called when production set_of is entered.
-func (s *BaseSyslParserListener) EnterSet_of(ctx *Set_ofContext) {}
-
-// ExitSet_of is called when production set_of is exited.
-func (s *BaseSyslParserListener) ExitSet_of(ctx *Set_ofContext) {}
-
-// EnterSet_type is called when production set_type is entered.
-func (s *BaseSyslParserListener) EnterSet_type(ctx *Set_typeContext) {}
-
-// ExitSet_type is called when production set_type is exited.
-func (s *BaseSyslParserListener) ExitSet_type(ctx *Set_typeContext) {}
-
-// EnterSequence_of is called when production sequence_of is entered.
-func (s *BaseSyslParserListener) EnterSequence_of(ctx *Sequence_ofContext) {}
-
-// ExitSequence_of is called when production sequence_of is exited.
-func (s *BaseSyslParserListener) ExitSequence_of(ctx *Sequence_ofContext) {}
-
-// EnterSequence_type is called when production sequence_type is entered.
-func (s *BaseSyslParserListener) EnterSequence_type(ctx *Sequence_typeContext) {}
-
-// ExitSequence_type is called when production sequence_type is exited.
-func (s *BaseSyslParserListener) ExitSequence_type(ctx *Sequence_typeContext) {}
-
-// EnterCollection_type is called when production collection_type is entered.
-func (s *BaseSyslParserListener) EnterCollection_type(ctx *Collection_typeContext) {}
-
-// ExitCollection_type is called when production collection_type is exited.
-func (s *BaseSyslParserListener) ExitCollection_type(ctx *Collection_typeContext) {}
 
 // EnterMulti_line_docstring is called when production multi_line_docstring is entered.
 func (s *BaseSyslParserListener) EnterMulti_line_docstring(ctx *Multi_line_docstringContext) {}
@@ -206,24 +224,6 @@ func (s *BaseSyslParserListener) EnterUnion(ctx *UnionContext) {}
 
 // ExitUnion is called when production union is exited.
 func (s *BaseSyslParserListener) ExitUnion(ctx *UnionContext) {}
-
-// EnterPackage_name is called when production package_name is entered.
-func (s *BaseSyslParserListener) EnterPackage_name(ctx *Package_nameContext) {}
-
-// ExitPackage_name is called when production package_name is exited.
-func (s *BaseSyslParserListener) ExitPackage_name(ctx *Package_nameContext) {}
-
-// EnterSub_package is called when production sub_package is entered.
-func (s *BaseSyslParserListener) EnterSub_package(ctx *Sub_packageContext) {}
-
-// ExitSub_package is called when production sub_package is exited.
-func (s *BaseSyslParserListener) ExitSub_package(ctx *Sub_packageContext) {}
-
-// EnterApp_name is called when production app_name is entered.
-func (s *BaseSyslParserListener) EnterApp_name(ctx *App_nameContext) {}
-
-// ExitApp_name is called when production app_name is exited.
-func (s *BaseSyslParserListener) ExitApp_name(ctx *App_nameContext) {}
 
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *BaseSyslParserListener) EnterName_with_attribs(ctx *Name_with_attribsContext) {}

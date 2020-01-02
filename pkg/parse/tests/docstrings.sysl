@@ -34,3 +34,4 @@ ModelTwo:
                 | multi-line documentation comment
                 | use it for long comments
         field2 <: string "short description here"
+        field3 <: set of Foo.Bar "another short description here"

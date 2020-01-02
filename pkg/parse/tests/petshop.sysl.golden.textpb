@@ -501,9 +501,7 @@ apps: <
               >
             >
             ref: <
-              appname: <
-                part: "PetShopModel"
-              >
+              path: "PetShopModel"
             >
           >
         >
@@ -1092,9 +1090,7 @@ apps: <
                 >
               >
               ref: <
-                appname: <
-                  part: "PetShopModel"
-                >
+                path: "PetShopModel"
               >
             >
           >
@@ -2039,9 +2035,7 @@ apps: <
           type: <
             type_ref: <
               ref: <
-                appname: <
-                  part: "PetShopModel"
-                >
+                path: "PetShopModel"
               >
             >
           >

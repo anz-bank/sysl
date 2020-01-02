@@ -113,6 +113,48 @@ apps: <
               >
             >
           >
+          attr_defs: <
+            key: "field3"
+            value: <
+              set: <
+                type_ref: <
+                  context: <
+                    appname: <
+                      part: "ModelTwo"
+                    >
+                    path: "TableName"
+                  >
+                  ref: <
+                    path: "Foo"
+                    path: "Bar"
+                  >
+                >
+                docstring: "another short description here"
+                source_context: <
+                  file: "tests/docstrings.sysl"
+                  start: <
+                    line: 37
+                    col: 18
+                  >
+                  end: <
+                    line: 37
+                    col: 29
+                  >
+                >
+              >
+              source_context: <
+                file: "tests/docstrings.sysl"
+                start: <
+                  line: 37
+                  col: 18
+                >
+                end: <
+                  line: 37
+                  col: 29
+                >
+              >
+            >
+          >
         >
       >
     >

@@ -90,29 +90,6 @@ func (s *TreeShapeListener) EnterName_str(ctx *parser.Name_strContext) {
 	s.app_name.Push(ctx.GetText())
 }
 
-// EnterReference is called when production reference is entered.
-func (s *TreeShapeListener) EnterReference(*parser.ReferenceContext) {
-	context_app_part := s.currentApp().Name.Part
-	context_path := s.currentTypePath.Parts()
-
-	s.currentType().Type = &sysl.Type_TypeRef{
-		TypeRef: &sysl.ScopedRef{
-			Context: &sysl.Scope{
-				Appname: &sysl.AppName{
-					Part: context_app_part,
-				},
-				Path: context_path,
-			},
-		},
-	}
-	s.app_name.Reset()
-}
-
-// ExitReference is called when production reference is exited.
-func (s *TreeShapeListener) ExitReference(ctx *parser.ReferenceContext) {
-	s.currentType().GetTypeRef().Ref = makeScope(s.app_name.Parts(), ctx)
-}
-
 func lastTwoChars(str string) string {
 	return str[len(str)-2:]
 }
@@ -166,25 +143,12 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 	attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += str
 }
 
-// EnterTypes is called when production types is entered.
-func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
-	type1 := s.currentType()
-	primType, constraints := primitiveFromNativeDataType(ctx.NativeDataTypes())
-	if primType != nil {
-		type1.Type = primType
-		if constraints != nil {
-			if type1.Constraint == nil {
-				type1.Constraint = []*sysl.Type_Constraint{constraints}
-			} else {
-				type1.Constraint = append(type1.Constraint, constraints)
-			}
-		}
-	}
-}
-
 // exitSetOrSequence_type is common between ExitSet_type and ExitSequence_type.
-func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specContext) (type1, newType1 *sysl.Type) {
+func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specContext, types parser.ITypesContext) (
+	type1, newType1 *sysl.Type) {
 	type1 = s.currentType()
+	type1.Type = buildTypeReference(s.currentScope(), types).Type
+
 	newType1 = &sysl.Type{
 		SourceContext: type1.SourceContext,
 		Opt:           type1.Opt,
@@ -211,7 +175,7 @@ func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specCon
 
 // ExitSet_type is called when production set_type is exited.
 func (s *TreeShapeListener) ExitSet_type(ctx *parser.Set_typeContext) {
-	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec())
+	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec(), ctx.Types())
 	newType1.Type = &sysl.Type_Set{Set: type1}
 }
 
@@ -220,34 +184,8 @@ func (s *TreeShapeListener) EnterSequence_type(*parser.Sequence_typeContext) {}
 
 // ExitSequence_type is called when production set_type is exited.
 func (s *TreeShapeListener) ExitSequence_type(ctx *parser.Sequence_typeContext) {
-	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec())
+	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec(), ctx.Types())
 	newType1.Type = &sysl.Type_Sequence{Sequence: type1}
-}
-
-// EnterUser_defined_type is called when production user_defined_type is entered.
-func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_typeContext) {
-	if len(s.fieldname) == 0 {
-		return
-	}
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-
-	context_app_part := s.currentApp().Name.Part
-	context_path := s.currentTypePath.Parts()
-	ref_path := []string{ctx.GetText()}
-
-	type1.Type = &sysl.Type_TypeRef{
-		TypeRef: &sysl.ScopedRef{
-			Context: &sysl.Scope{
-				Appname: &sysl.AppName{
-					Part: context_app_part,
-				},
-				Path: context_path,
-			},
-			Ref: &sysl.Scope{
-				Path: ref_path,
-			},
-		},
-	}
 }
 
 func fromQString(str string) string {
@@ -315,6 +253,11 @@ func (s *TreeShapeListener) ExitAnnotation(*parser.AnnotationContext) {
 func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	s.app_name.Reset()
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
+	if ctx.Types() != nil {
+		newType := buildTypeReference(s.currentScope(), ctx.Types())
+		type1.Type = newType.Type
+		type1.Constraint = newType.Constraint
+	}
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		type1.Attrs = makeAttributeArray(attribs)
@@ -331,25 +274,6 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 		}
 		s.pushScope(type1)
 	}
-}
-
-func makeScope(app_name []string, ctx *parser.ReferenceContext) *sysl.Scope {
-	scope := &sysl.Scope{}
-	var dotCount int
-	if ctx.DOT(0) != nil {
-		dotCount = len(ctx.AllDOT())
-	} else {
-		dotCount = len(ctx.AllE_DOT())
-	}
-	appComponentCount := len(app_name) - dotCount
-
-	if appComponentCount > 0 {
-		scope.Appname = &sysl.AppName{
-			Part: app_name[:appComponentCount],
-		}
-	}
-	scope.Path = app_name[appComponentCount:]
-	return scope
 }
 
 // ExitField_type is called when production field_type is exited.
@@ -766,9 +690,10 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 		panic("not implemented yet")
 	}
 
+	oneof := &sysl.Type_OneOf{}
 	types[s.currentTypePath.Get()] = &sysl.Type{
 		Type: &sysl.Type_OneOf_{
-			OneOf: &sysl.Type_OneOf{},
+			OneOf: oneof,
 		},
 	}
 
@@ -781,37 +706,15 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 			type1.Attrs = map[string]*sysl.Attribute{}
 		}
 	}
-	s.pushScope(type1)
+	for _, child := range ctx.AllTypes() {
+		oneof.Type = append(oneof.Type, buildTypeReference(s.currentScope(), child))
+	}
 	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
 // ExitUnion is called when production union is exited.
 func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.applyAnnotations(ctx.AllAnnotation())
-	s.popScope()
-
-	context_app_part := s.currentApp().Name.Part
-	context_path := s.currentTypePath.Parts()
-
-	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
-	for _, ref := range ctx.AllUser_defined_type() {
-		oneof.Type = append(oneof.Type, &sysl.Type{
-			Type: &sysl.Type_TypeRef{
-				TypeRef: &sysl.ScopedRef{
-					Context: &sysl.Scope{
-						Appname: &sysl.AppName{
-							Part: context_app_part,
-						},
-						Path: context_path,
-					},
-					Ref: &sysl.Scope{
-						Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
-					},
-				},
-			},
-		})
-	}
-
 	s.currentTypePath.Pop()
 	s.fieldname = []string{}
 	s.typemap = nil
@@ -921,57 +824,16 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 // EnterHttp_path_var_with_type is called when production http_path_var_with_type is entered.
 func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_var_with_typeContext) {
 	var_name := ctx.Http_path_part().GetText()
-	var type1 *sysl.Type
-	switch {
-	case ctx.NativeDataTypes() != nil:
-		primType, constraints := primitiveFromNativeDataType(ctx.NativeDataTypes())
-		type1 = &sysl.Type{
-			Type: primType,
-		}
-		if constraints != nil {
-			type1.Constraint = []*sysl.Type_Constraint{constraints}
-		}
-	case ctx.Reference() != nil:
-		s.fieldname = append(s.fieldname, var_name)
-		type1 = &sysl.Type{}
-		s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
-	default:
-		ref_path := []string{ctx.Name_str().GetText()}
 
-		type1 = &sysl.Type{
-			Type: &sysl.Type_TypeRef{
-				TypeRef: &sysl.ScopedRef{
-					Context: &sysl.Scope{
-						Appname: &sysl.AppName{
-							Part: s.currentApp().Name.Part,
-						},
-					},
-					Ref: &sysl.Scope{
-						Path: ref_path,
-					},
-				},
-			},
-		}
-	}
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
 		Name: var_name,
-		Type: type1,
+		Type: buildTypeReference(s.currentScope(), ctx.Types()),
 	}
 
 	rest_param.Type.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 
 	s.rest_urlparams = append(s.rest_urlparams, rest_param)
 	s.endpointName += ctx.CURLY_OPEN().GetText() + var_name + ctx.CURLY_CLOSE().GetText()
-}
-
-// ExitHttp_path_var_with_type is called when production http_path_var_with_type is exited.
-func (s *TreeShapeListener) ExitHttp_path_var_with_type(ctx *parser.Http_path_var_with_typeContext) {
-	if ctx.Reference() != nil {
-		type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-		type1.GetTypeRef().Context.Path = nil
-		type1.GetTypeRef().Ref.Path = append(type1.GetTypeRef().Ref.Appname.Part, type1.GetTypeRef().Ref.Path...)
-		type1.GetTypeRef().Ref.Appname = nil
-	}
 }
 
 // EnterHttp_path_static is called when production http_path_static is entered.
@@ -1879,19 +1741,9 @@ func (s *TreeShapeListener) ExitSubscribe(ctx *parser.SubscribeContext) {
 }
 
 // ExitView_type_spec is called when production view_type_spec is exited.
-func (s *TreeShapeListener) ExitView_type_spec(*parser.View_type_specContext) {
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-	if type1.GetSet() != nil {
-		type1 = type1.GetSet()
-	}
-	if type1.GetTypeRef() != nil {
-		tr := type1.GetTypeRef()
-		if tr.Ref.Appname == nil && len(tr.Ref.Path) == 1 {
-			tr.Ref.Appname = &sysl.AppName{
-				Part: tr.Ref.Path,
-			}
-			tr.Ref.Path = nil
-		}
+func (s *TreeShapeListener) ExitView_type_spec(ctx *parser.View_type_specContext) {
+	if t := ctx.Types(); t != nil {
+		s.setCurrentType(buildTypeReference(s.currentScope(), t))
 	}
 }
 
@@ -3032,6 +2884,9 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	s.currentTypePath.Push(ctx.Name_str().GetText())
 	type1 := &sysl.Type{}
+	if ctx.Types() != nil {
+		type1 = buildTypeReference(s.currentScope(), ctx.Types())
+	}
 
 	s.typemap = map[string]*sysl.Type{
 		s.currentTypePath.Get(): type1,
@@ -3144,4 +2999,13 @@ func (s *TreeShapeListener) currentType() *sysl.Type {
 
 func (s *TreeShapeListener) setCurrentType(type1 *sysl.Type) {
 	s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
+}
+
+func (s *TreeShapeListener) currentScope() *sysl.Scope {
+	return &sysl.Scope{
+		Appname: &sysl.AppName{
+			Part: s.currentApp().Name.Part,
+		},
+		Path: s.currentTypePath.Parts(),
+	}
 }

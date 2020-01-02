@@ -137,7 +137,9 @@ apps: <
                   >
                 >
                 ref: <
-                  path: "App"
+                  appname: <
+                    part: "App"
+                  >
                   path: "Token"
                 >
               >
@@ -227,7 +229,9 @@ apps: <
                   >
                 >
                 ref: <
-                  path: "App"
+                  appname: <
+                    part: "App"
+                  >
                   path: "Token"
                 >
               >
