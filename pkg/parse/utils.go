@@ -138,9 +138,7 @@ func (p *PathStack) Reset() string {
 
 // Parts() clones the path items into a new slice so that it is safe to store
 func (p PathStack) Parts() []string {
-	out := make([]string, len(p.parts))
-	copy(out, p.parts)
-	return out
+	return append([]string{}, p.parts...)
 }
 
 func (p *PathStack) update() string {
