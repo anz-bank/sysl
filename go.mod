@@ -1,6 +1,6 @@
 module github.com/anz-bank/sysl
 
-go 1.12
+go 1.13
 
 replace github.com/spf13/afero => github.com/anz-bank/afero v1.2.3
 
