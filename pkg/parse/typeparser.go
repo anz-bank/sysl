@@ -70,7 +70,58 @@ func (t *typeParser) ExitApp_name(ctx *parser.App_nameContext) {
 	t.namestrTarget = &t.typePath
 }
 
-func buildTypeReference(syslContext *sysl.Scope, ctx parser.ITypesContext) *sysl.Type {
+func (t *typeParser) doSet(syslContext *sysl.Scope, sc sourceCtxHelper, ctx *parser.Set_typeContext) *sysl.Type {
+	child := parseAllowedTypedContexts(syslContext, sc, ctx.Types())
+	parent := &sysl.Type{Type: &sysl.Type_Set{Set: child}}
+	t.handleCommonCollection(parent, child, ctx.Size_spec())
+	return parent
+}
+
+func (t *typeParser) doSequence(syslContext *sysl.Scope,
+	sc sourceCtxHelper,
+	ctx *parser.Sequence_typeContext,
+) *sysl.Type {
+	child := parseAllowedTypedContexts(syslContext, sc, ctx.Types())
+	parent := &sysl.Type{Type: &sysl.Type_Sequence{Sequence: child}}
+	t.handleCommonCollection(parent, child, ctx.Size_spec())
+	return parent
+}
+
+func (t *typeParser) handleCommonCollection(parent, child *sysl.Type, sizeSpec parser.ISize_specContext) {
+	parent.Attrs = child.Attrs
+	parent.Opt = child.Opt
+	parent.SourceContext = child.SourceContext
+
+	child.Attrs = nil
+	child.Opt = false
+	child.SourceContext = nil
+
+	if sizeSpec != nil {
+		if child.GetPrimitive() != sysl.Type_NO_Primitive {
+			spec := sizeSpec.(*parser.Size_specContext)
+			child.Constraint = makeTypeConstraint(child.GetPrimitive(), spec)
+		}
+	}
+}
+
+func parseAllowedTypedContexts(syslContext *sysl.Scope,
+	sc sourceCtxHelper,
+	contexts ...antlr.ParserRuleContext,
+) *sysl.Type {
 	tb := typeParser{}
-	return tb.run(syslContext, ctx)
+	for _, ctx := range contexts {
+		switch x := ctx.(type) {
+		case *parser.View_type_specContext:
+			return parseAllowedTypedContexts(syslContext, sc, x.Types(), x.Collection_type())
+		case *parser.Collection_typeContext:
+			return parseAllowedTypedContexts(syslContext, sc, x.Set_type(), x.Sequence_type())
+		case *parser.TypesContext:
+			return tb.run(syslContext, x)
+		case *parser.Set_typeContext:
+			return tb.doSet(syslContext, sc, x)
+		case *parser.Sequence_typeContext:
+			return tb.doSequence(syslContext, sc, x)
+		}
+	}
+	panic("Should never get here")
 }

@@ -35,6 +35,11 @@ apps: <
         >
         ret_type: <
           type_ref: <
+            context: <
+              appname: <
+                part: "TransformApp"
+              >
+            >
             ref: <
               appname: <
                 part: "Model"

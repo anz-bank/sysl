@@ -106,6 +106,11 @@ apps: <
         >
         ret_type: <
           type_ref: <
+            context: <
+              appname: <
+                part: "TransformApp"
+              >
+            >
             ref: <
               appname: <
                 part: "Model"
@@ -217,6 +222,11 @@ apps: <
         >
         ret_type: <
           type_ref: <
+            context: <
+              appname: <
+                part: "TransformApp"
+              >
+            >
             ref: <
               appname: <
                 part: "Some1"
@@ -515,6 +525,11 @@ apps: <
         ret_type: <
           set: <
             type_ref: <
+              context: <
+                appname: <
+                  part: "TransformApp"
+                >
+              >
               ref: <
                 appname: <
                   part: "Some1"
@@ -578,6 +593,11 @@ apps: <
         >
         ret_type: <
           type_ref: <
+            context: <
+              appname: <
+                part: "TransformApp"
+              >
+            >
             ref: <
               appname: <
                 part: "Some1"
@@ -645,6 +665,11 @@ apps: <
         ret_type: <
           set: <
             type_ref: <
+              context: <
+                appname: <
+                  part: "TransformApp"
+                >
+              >
               ref: <
                 path: "Sometype"
               >

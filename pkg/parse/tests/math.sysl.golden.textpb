@@ -34,6 +34,11 @@ apps {
         }
         ret_type {
           type_ref {
+            context: {
+              appname: {
+                part: "Calculator"
+              }
+            }
             ref {
               appname {
                 part: "Model"

@@ -1,4 +1,4 @@
-//nolint:golint,stylecheck,funlen
+//nolint:golint,stylecheck,funlen,interfacer
 package parse // SyslParser
 
 import (
@@ -147,7 +147,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specContext, types parser.ITypesContext) (
 	type1, newType1 *sysl.Type) {
 	type1 = s.currentType()
-	type1.Type = buildTypeReference(s.currentScope(), types).Type
+	type1.Type = parseAllowedTypedContexts(s.currentScope(), s.sc, types).Type
 
 	newType1 = &sysl.Type{
 		SourceContext: type1.SourceContext,
@@ -254,7 +254,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	s.app_name.Reset()
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 	if ctx.Types() != nil {
-		newType := buildTypeReference(s.currentScope(), ctx.Types())
+		newType := parseAllowedTypedContexts(s.currentScope(), s.sc, ctx.Types())
 		type1.Type = newType.Type
 		type1.Constraint = newType.Constraint
 	}
@@ -707,7 +707,7 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 		}
 	}
 	for _, child := range ctx.AllTypes() {
-		oneof.Type = append(oneof.Type, buildTypeReference(s.currentScope(), child))
+		oneof.Type = append(oneof.Type, parseAllowedTypedContexts(s.currentScope(), s.sc, child))
 	}
 	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
@@ -793,7 +793,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 			},
 		}
 	default:
-		type1 = buildTypeReference(s.currentScope(), ctx.Types())
+		type1 = parseAllowedTypedContexts(s.currentScope(), s.sc, ctx.Types())
 	}
 
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
@@ -815,7 +815,7 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
 		Name: var_name,
-		Type: buildTypeReference(s.currentScope(), ctx.Types()),
+		Type: parseAllowedTypedContexts(s.currentScope(), s.sc, ctx.Types()),
 	}
 
 	rest_param.Type.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
@@ -1731,7 +1731,7 @@ func (s *TreeShapeListener) ExitSubscribe(ctx *parser.SubscribeContext) {
 // ExitView_type_spec is called when production view_type_spec is exited.
 func (s *TreeShapeListener) ExitView_type_spec(ctx *parser.View_type_specContext) {
 	if t := ctx.Types(); t != nil {
-		s.setCurrentType(buildTypeReference(s.currentScope(), t))
+		s.setCurrentType(parseAllowedTypedContexts(s.currentScope(), s.sc, t))
 	}
 }
 
@@ -2721,14 +2721,11 @@ func (s *TreeShapeListener) ExitTransform_return_type(ctx *parser.Transform_retu
 }
 
 // EnterView_return_type is called when production view_return_type is entered.
-func (s *TreeShapeListener) EnterView_return_type(*parser.View_return_typeContext) {
+func (s *TreeShapeListener) EnterView_return_type(ctx *parser.View_return_typeContext) {
 	s.fieldname = append(s.fieldname, "view-return"+s.viewName)
-	s.typemap[s.fieldname[len(s.fieldname)-1]] = &sysl.Type{}
-}
+	vts := ctx.View_type_spec().(*parser.View_type_specContext)
+	type1 := parseAllowedTypedContexts(s.currentScope(), s.sc, vts.Types(), vts.Collection_type())
 
-// ExitView_return_type is called when production view_return_type is exited.
-func (s *TreeShapeListener) ExitView_return_type(*parser.View_return_typeContext) {
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 	if type1.GetSet() != nil {
 		type1.SourceContext = nil
 		type1 = type1.GetSet()
@@ -2736,6 +2733,7 @@ func (s *TreeShapeListener) ExitView_return_type(*parser.View_return_typeContext
 	if type1.GetTypeRef() != nil {
 		type1.GetTypeRef().Context = nil
 	}
+	s.setCurrentType(type1)
 }
 
 // EnterTransform_scope_var is called when production transform_scope_var is entered.
@@ -2871,10 +2869,7 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 // EnterAlias is called when production alias is entered.
 func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	s.currentTypePath.Push(ctx.Name_str().GetText())
-	type1 := &sysl.Type{}
-	if ctx.Types() != nil {
-		type1 = buildTypeReference(s.currentScope(), ctx.Types())
-	}
+	type1 := parseAllowedTypedContexts(s.currentScope(), s.sc, ctx.Types(), ctx.Collection_type())
 
 	s.typemap = map[string]*sysl.Type{
 		s.currentTypePath.Get(): type1,
