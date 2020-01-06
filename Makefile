@@ -96,10 +96,10 @@ grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go pkg/parser/grammar
 pkg/parser/grammar.pb.go: pkg/parser/grammar.proto
 	protoc -I pkg/parser -I $(GOPATH)/src --go_out=pkg/parser grammar.proto
 
-pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
-	protoc -I pkg/proto_old -I $(GOPATH)/src --go_out=pkg/proto_old/ sysl.proto
+pkg/sysl/sysl.pb.go: pkg/sysl/sysl.proto
+	protoc -I pkg/sysl -I $(GOPATH)/src --go_out=pkg/sysl/ sysl.proto
 
-proto: pkg/sysl/sysl.pb.go
+proto: pkg/sysl/sysl.pb.go ## Regenerate the sysl protobuf
 
 .PHONY: help
 
