@@ -55,6 +55,8 @@ type TreeShapeListener struct {
 	stmt_scope            []interface{} // Endpoint, if, if_else, loop
 	expr_stack            []*sysl.Expr
 	opmap                 map[string]sysl.Expr_BinExpr_Op
+
+	unresolvedRefs []*sysl.ScopedRef
 }
 
 // NewTreeShapeListener ...
@@ -89,6 +91,13 @@ func (s *TreeShapeListener) currentApp() *sysl.Application {
 
 func (s *TreeShapeListener) loadType(contexts ...antlr.ParserRuleContext) *sysl.Type {
 	type1 := parseAllowedTypedContexts(s.currentScope(), s.sc, contexts...)
+	if ref := type1.GetTypeRef(); ref != nil {
+		if target := resolveTypeRef(s.module, ref); target != nil {
+			ref.XXX_target = target
+		} else {
+			s.unresolvedRefs = append(s.unresolvedRefs, ref)
+		}
+	}
 	return type1
 }
 

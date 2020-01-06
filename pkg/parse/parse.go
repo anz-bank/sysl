@@ -172,7 +172,18 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 			break
 		}
 	}
-
+	for _, ref := range listener.unresolvedRefs {
+		found := false
+		if ref.Context != nil && ref.Ref != nil {
+			if target := resolveTypeRef(listener.module, ref); target != nil {
+				ref.XXX_target = target
+				found = true
+			}
+		}
+		if !found {
+			logrus.Warnf("Could not resolve the type reference: %s", ref.String())
+		}
+	}
 	p.postProcess(listener.module)
 	return listener.module, nil
 }

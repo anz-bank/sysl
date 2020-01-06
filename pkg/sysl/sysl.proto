@@ -516,6 +516,13 @@ message Value {
 message ScopedRef {
     Scope context   = 1;  // The context in which the ref appeared.
     Scope ref       = 2;
+    Type  SEDREPLACEMEtarget    = 3; // Hack alert!
+                                      // This field isn't really required, and can cause infinite recursion if the field
+                                      // gets serialised (i.e with the json serialiser) so we need to mark this to not
+                                      // get serialised! to do that the field needs to start with XXX_ but protoc-gen-go
+                                      // turns field names into go fmt'ed names (so this would be XXXTarget) which isnt
+                                      // good enough. So, run protoc-gen-go with the SEDREPLACEME prefix and then
+                                      // replace that string everywhere in the generated file with XXX_!
 }
 
 message Scope {

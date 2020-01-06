@@ -154,7 +154,6 @@ func Test_ResolveTypeRef_ComplexScope(t *testing.T) {
 }
 
 func Test_ResolveTypeRef_DoesntMutateRef(t *testing.T) {
-
 	mod := &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"Model": {

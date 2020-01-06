@@ -98,6 +98,8 @@ pkg/parser/grammar.pb.go: pkg/parser/grammar.proto
 
 pkg/sysl/sysl.pb.go: pkg/sysl/sysl.proto
 	protoc -I pkg/sysl -I $(GOPATH)/src --go_out=pkg/sysl/ sysl.proto
+	sed -i -e s/SEDREPLACEME/XXX_/g pkg/sysl/sysl.pb.go
+	gofmt -w pkg/sysl/sysl.pb.go
 
 proto: pkg/sysl/sysl.pb.go ## Regenerate the sysl protobuf
 
