@@ -2746,9 +2746,6 @@ func (s *TreeShapeListener) EnterView_return_type(ctx *parser.View_return_typeCo
 		type1.SourceContext = nil
 		type1 = type1.GetSet()
 	}
-	if type1.GetTypeRef() != nil {
-		type1.GetTypeRef().Context = nil
-	}
 	s.setCurrentType(type1)
 }
 
