@@ -31,7 +31,7 @@ func (modules goModules) GetByFilepath(p string) *goModule {
 	p = filepath.Clean(p)
 
 	for _, m := range modules {
-		if strings.HasPrefix(p, m.Path) {
+		if strings.HasPrefix(p, filepath.Clean(m.Path)) {
 			return m
 		}
 	}
