@@ -11,11 +11,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func runGo(
-	ctx context.Context,
-	stdout io.Writer,
-	args ...string) error {
-
+func runGo(ctx context.Context, stdout io.Writer, args ...string) error {
 	stderr := new(bytes.Buffer)
 	cmd := exec.CommandContext(ctx, "go", args...)
 
@@ -42,7 +38,6 @@ func runGo(
 			return nil
 		}
 		return errors.Errorf("go command failed: %s", stderr)
-
 	}
 
 	return nil

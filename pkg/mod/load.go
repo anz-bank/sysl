@@ -73,16 +73,16 @@ func goGetByFilepath(filename string) error {
 func GetExternalFile(filename string) (string, error) {
 	err := goGetByFilepath(filename)
 	if err != nil {
-		return filename, fmt.Errorf("%s not found\n", filename)
+		return filename, fmt.Errorf("%s not found", filename)
 	}
 
 	if err = LoadAll(); err != nil {
-		return filename, fmt.Errorf("error loading modules: %s\n", err.Error())
+		return filename, fmt.Errorf("error loading modules: %s", err.Error())
 	}
 
 	mod := GoMods.GetByFilepath(filename)
 	if mod == nil {
-		return filename, fmt.Errorf("error finding module of file %s\n", filename)
+		return filename, fmt.Errorf("error finding module of file %s", filename)
 	}
 
 	relpath, err := filepath.Rel(mod.Path, filename)
