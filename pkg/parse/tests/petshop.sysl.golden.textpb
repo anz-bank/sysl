@@ -45,8 +45,14 @@ apps: <
               primitive: DECIMAL
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 56
+                  col: 23
+                >
+                end: <
+                  line: 56
+                  col: 30
                 >
               >
             >
@@ -66,8 +72,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 57
+                  col: 17
+                >
+                end: <
+                  line: 57
+                  col: 36
                 >
               >
             >
@@ -78,8 +90,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 53
+                  col: 16
+                >
+                end: <
+                  line: 53
+                  col: 22
                 >
               >
             >
@@ -100,14 +118,26 @@ apps: <
                   >
                 >
                 source_context: <
+                  file: "tests/petshop.sysl"
                   start: <
                     line: 55
+                    col: 16
+                  >
+                  end: <
+                    line: 55
+                    col: 23
                   >
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 55
+                  col: 16
+                >
+                end: <
+                  line: 55
+                  col: 23
                 >
               >
             >
@@ -118,8 +148,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 54
+                  col: 19
+                >
+                end: <
+                  line: 54
+                  col: 25
                 >
               >
             >
@@ -137,8 +173,14 @@ apps: <
               primitive: DATE
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 49
+                  col: 15
+                >
+                end: <
+                  line: 49
+                  col: 19
                 >
               >
             >
@@ -158,8 +200,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 50
+                  col: 17
+                >
+                end: <
+                  line: 50
+                  col: 36
                 >
               >
             >
@@ -170,8 +218,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 48
+                  col: 16
+                >
+                end: <
+                  line: 48
+                  col: 22
                 >
               >
             >
@@ -189,8 +243,14 @@ apps: <
               primitive: DATE
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 61
+                  col: 15
+                >
+                end: <
+                  line: 61
+                  col: 19
                 >
               >
             >
@@ -200,8 +260,14 @@ apps: <
             value: <
               primitive: INT
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 63
+                  col: 19
+                >
+                end: <
+                  line: 63
+                  col: 19
                 >
               >
             >
@@ -212,8 +278,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 60
+                  col: 16
+                >
+                end: <
+                  line: 60
+                  col: 22
                 >
               >
             >
@@ -224,8 +296,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 62
+                  col: 19
+                >
+                end: <
+                  line: 62
+                  col: 22
                 >
               >
             >
@@ -253,14 +331,26 @@ apps: <
                   >
                 >
                 source_context: <
+                  file: "tests/petshop.sysl"
                   start: <
                     line: 44
+                    col: 18
+                  >
+                  end: <
+                    line: 44
+                    col: 25
                   >
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 44
+                  col: 18
+                >
+                end: <
+                  line: 44
+                  col: 25
                 >
               >
             >
@@ -281,14 +371,26 @@ apps: <
                   >
                 >
                 source_context: <
+                  file: "tests/petshop.sysl"
                   start: <
                     line: 43
+                    col: 21
+                  >
+                  end: <
+                    line: 43
+                    col: 28
                   >
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 43
+                  col: 21
+                >
+                end: <
+                  line: 43
+                  col: 28
                 >
               >
             >
@@ -299,8 +401,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 45
+                  col: 19
+                >
+                end: <
+                  line: 45
+                  col: 22
                 >
               >
             >
@@ -1063,8 +1171,14 @@ apps: <
               >
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 13
+                  col: 23
+                >
+                end: <
+                  line: 13
+                  col: 36
                 >
               >
             >
@@ -1080,8 +1194,14 @@ apps: <
               >
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 14
+                  col: 21
+                >
+                end: <
+                  line: 14
+                  col: 32
                 >
               >
             >
@@ -1104,8 +1224,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 9
+                  col: 19
+                >
+                end: <
+                  line: 9
+                  col: 37
                 >
               >
             >
@@ -1116,8 +1242,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 10
+                  col: 21
+                >
+                end: <
+                  line: 10
+                  col: 27
                 >
               >
             >
@@ -1128,8 +1260,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 15
+                  col: 19
+                >
+                end: <
+                  line: 15
+                  col: 22
                 >
               >
             >
@@ -1140,8 +1278,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 12
+                  col: 19
+                >
+                end: <
+                  line: 12
+                  col: 22
                 >
               >
             >
@@ -1152,8 +1296,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 11
+                  col: 19
+                >
+                end: <
+                  line: 11
+                  col: 25
                 >
               >
             >
@@ -1174,8 +1324,14 @@ apps: <
               primitive: DATE
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 5
+                  col: 15
+                >
+                end: <
+                  line: 5
+                  col: 19
                 >
               >
             >
@@ -1198,8 +1354,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 3
+                  col: 22
+                >
+                end: <
+                  line: 3
+                  col: 40
                 >
               >
             >
@@ -1209,8 +1371,14 @@ apps: <
             value: <
               primitive: INT
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 6
+                  col: 17
+                >
+                end: <
+                  line: 6
+                  col: 17
                 >
               >
             >
@@ -1221,8 +1389,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 4
+                  col: 16
+                >
+                end: <
+                  line: 4
+                  col: 22
                 >
               >
             >
@@ -1263,8 +1437,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 25
+                  col: 22
+                >
+                end: <
+                  line: 25
+                  col: 46
                 >
               >
             >
@@ -1295,8 +1475,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 26
+                  col: 17
+                >
+                end: <
+                  line: 26
+                  col: 31
                 >
               >
             >
@@ -1328,8 +1514,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 19
+                  col: 19
+                >
+                end: <
+                  line: 19
+                  col: 25
                 >
               >
             >
@@ -1340,8 +1532,14 @@ apps: <
               primitive: DATE
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 21
+                  col: 15
+                >
+                end: <
+                  line: 21
+                  col: 19
                 >
               >
             >
@@ -1352,8 +1550,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 20
+                  col: 16
+                >
+                end: <
+                  line: 20
+                  col: 22
                 >
               >
             >
@@ -1364,8 +1568,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 22
+                  col: 19
+                >
+                end: <
+                  line: 22
+                  col: 22
                 >
               >
             >
@@ -1388,8 +1598,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 18
+                  col: 17
+                >
+                end: <
+                  line: 18
+                  col: 35
                 >
               >
             >
@@ -1423,8 +1639,14 @@ apps: <
             value: <
               primitive: INT
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 117
+                  col: 19
+                >
+                end: <
+                  line: 117
+                  col: 19
                 >
               >
             >
@@ -1435,8 +1657,14 @@ apps: <
               primitive: DATE
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 119
+                  col: 15
+                >
+                end: <
+                  line: 119
+                  col: 19
                 >
               >
             >
@@ -1447,8 +1675,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 121
+                  col: 19
+                >
+                end: <
+                  line: 121
+                  col: 22
                 >
               >
             >
@@ -1459,8 +1693,14 @@ apps: <
               primitive: STRING
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 118
+                  col: 16
+                >
+                end: <
+                  line: 118
+                  col: 22
                 >
               >
             >
@@ -1471,8 +1711,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 120
+                  col: 19
+                >
+                end: <
+                  line: 120
+                  col: 22
                 >
               >
             >
@@ -1482,8 +1728,14 @@ apps: <
             value: <
               primitive: INT
               source_context: <
+                file: "tests/petshop.sysl"
                 start: <
                   line: 116
+                  col: 17
+                >
+                end: <
+                  line: 116
+                  col: 17
                 >
               >
             >

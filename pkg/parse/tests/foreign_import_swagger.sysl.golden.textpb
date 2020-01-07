@@ -59,8 +59,13 @@ apps: <
               >
               opt: true
               source_context: <
+                file: "tests/foreign_import_swagger.yaml"
                 start: <
                   line: 21
+                  col: 16
+                >
+                end: <
+                  line: 22
                 >
               >
             >
@@ -127,8 +132,14 @@ apps: <
             name: "depth"
             type: <
               source_context: <
+                file: "tests/foreign_import_swagger.sysl"
                 start: <
                   line: 19
+                  col: 13
+                >
+                end: <
+                  line: 19
+                  col: 19
                 >
               >
             >
@@ -139,8 +150,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/foreign_import_swagger.sysl"
                 start: <
                   line: 19
+                  col: 29
+                >
+                end: <
+                  line: 19
+                  col: 38
                 >
               >
             >
@@ -151,8 +168,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/foreign_import_swagger.sysl"
                 start: <
                   line: 19
+                  col: 40
+                >
+                end: <
+                  line: 19
+                  col: 50
                 >
               >
             >
@@ -180,8 +203,14 @@ apps: <
               >
               opt: true
               source_context: <
+                file: "tests/foreign_import_swagger.sysl"
                 start: <
                   line: 16
+                  col: 18
+                >
+                end: <
+                  line: 16
+                  col: 24
                 >
               >
             >

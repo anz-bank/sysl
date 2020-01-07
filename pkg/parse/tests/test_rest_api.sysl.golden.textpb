@@ -169,8 +169,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 46
+                  col: 15
+                >
+                end: <
+                  line: 46
+                  col: 15
                 >
               >
             >
@@ -352,8 +358,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 35
+                  col: 13
+                >
+                end: <
+                  line: 35
+                  col: 26
                 >
               >
             >
@@ -373,8 +385,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 35
+                  col: 28
+                >
+                end: <
+                  line: 35
+                  col: 43
                 >
               >
             >
@@ -394,8 +412,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 35
+                  col: 45
+                >
+                end: <
+                  line: 35
+                  col: 67
                 >
               >
             >
@@ -405,8 +429,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 34
+                  col: 17
+                >
+                end: <
+                  line: 34
+                  col: 25
                 >
               >
             >
@@ -467,8 +497,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 23
+                  col: 17
+                >
+                end: <
+                  line: 23
+                  col: 23
                 >
               >
             >
@@ -479,8 +515,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 23
+                  col: 27
+                >
+                end: <
+                  line: 23
+                  col: 36
                 >
               >
             >
@@ -491,8 +533,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 23
+                  col: 38
+                >
+                end: <
+                  line: 23
+                  col: 48
                 >
               >
             >
@@ -502,8 +550,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 22
+                  col: 9
+                >
+                end: <
+                  line: 22
+                  col: 17
                 >
               >
             >
@@ -696,8 +750,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 22
+                  col: 9
+                >
+                end: <
+                  line: 22
+                  col: 17
                 >
               >
             >
@@ -765,8 +825,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 22
+                  col: 9
+                >
+                end: <
+                  line: 22
+                  col: 17
                 >
               >
             >
@@ -882,8 +948,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/test_rest_api.sysl"
                 start: <
                   line: 22
+                  col: 9
+                >
+                end: <
+                  line: 22
+                  col: 17
                 >
               >
             >

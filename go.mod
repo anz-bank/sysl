@@ -1,6 +1,6 @@
 module github.com/anz-bank/sysl
 
-go 1.12
+go 1.13
 
 replace github.com/spf13/afero => github.com/anz-bank/afero v1.2.3
 
@@ -17,7 +17,7 @@ require (
 	github.com/bep/tmc v0.5.1 // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
-	github.com/getkin/kin-openapi v0.2.0
+	github.com/getkin/kin-openapi v0.2.1-0.20191216082429-70fbea30aeb8
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/loads v0.19.3
@@ -44,6 +44,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.4 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.8.1
+	github.com/pmezard/go-difflib v1.0.0
 	github.com/rogpeppe/go-internal v1.5.0 // indirect
 	github.com/rubenv/pygmentize v0.0.0-20150323185546-0a6438ede9e4
 	github.com/russross/blackfriday v2.0.0+incompatible

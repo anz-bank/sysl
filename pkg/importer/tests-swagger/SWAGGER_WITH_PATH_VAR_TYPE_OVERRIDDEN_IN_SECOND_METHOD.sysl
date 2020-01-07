@@ -13,14 +13,17 @@ testapp "Sample API" [package="package_foo"]:
     /v1:
 
         /users/{id<:int}:
-            GET (metadata <: string [~header, ~required, name="metadata"]):
+            GET (metadata <: _param_metadata [~header, ~required, name="metadata"]):
                 | No description.
-                return 200
+                return ok
 
         /users/{id<:string}:
             DELETE (metadata <: bool [~header, ~optional, name="metadata"]):
                 | No description.
-                return 200
+                return ok
 
     #---------------------------------------------------------------------------
     # definitions
+
+    !alias _param_metadata:
+        string

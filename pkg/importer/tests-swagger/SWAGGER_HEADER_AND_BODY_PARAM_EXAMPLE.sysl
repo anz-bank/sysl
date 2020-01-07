@@ -9,9 +9,9 @@ testapp "Simple" [package="package_foo"]:
         | No description.
 
     /test:
-        POST (createrequest <: SimpleObj [~body], key <: int [~header, ~optional, name="key"], min_date <: string [~header, ~required, name="min_date"]):
+        POST (SimpleObjRequest <: SimpleObj [mediatype="application/json", ~body], key <: int [~header, ~optional, name="key"], min_date <: date [~header, ~required, name="min_date"]):
             | No description.
-            return 200
+            return ok
 
     #---------------------------------------------------------------------------
     # definitions

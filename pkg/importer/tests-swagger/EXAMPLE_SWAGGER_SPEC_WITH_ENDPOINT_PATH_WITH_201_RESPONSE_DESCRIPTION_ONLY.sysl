@@ -15,7 +15,7 @@ testapp "Goat CRUD API" [package="package_foo"]:
         /goat/status:
             POST:
                 | Update goat status
-                return 201
+                return ok
 
     #---------------------------------------------------------------------------
     # definitions

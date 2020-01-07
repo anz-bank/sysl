@@ -42,8 +42,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/rest_api_query_params.sysl"
                 start: <
                   line: 3
+                  col: 13
+                >
+                end: <
+                  line: 3
+                  col: 19
                 >
               >
             >
@@ -54,8 +60,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/rest_api_query_params.sysl"
                 start: <
                   line: 3
+                  col: 23
+                >
+                end: <
+                  line: 3
+                  col: 32
                 >
               >
             >
@@ -66,8 +78,14 @@ apps: <
               primitive: INT
               opt: true
               source_context: <
+                file: "tests/rest_api_query_params.sysl"
                 start: <
                   line: 3
+                  col: 34
+                >
+                end: <
+                  line: 3
+                  col: 44
                 >
               >
             >
@@ -124,8 +142,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/rest_api_query_params.sysl"
                 start: <
                   line: 5
+                  col: 9
+                >
+                end: <
+                  line: 5
+                  col: 23
                 >
               >
             >
@@ -180,8 +204,14 @@ apps: <
             type: <
               primitive: INT
               source_context: <
+                file: "tests/rest_api_query_params.sysl"
                 start: <
                   line: 9
+                  col: 32
+                >
+                end: <
+                  line: 9
+                  col: 38
                 >
               >
             >
@@ -202,8 +232,14 @@ apps: <
                 >
               >
               source_context: <
+                file: "tests/rest_api_query_params.sysl"
                 start: <
                   line: 5
+                  col: 9
+                >
+                end: <
+                  line: 5
+                  col: 23
                 >
               >
             >
