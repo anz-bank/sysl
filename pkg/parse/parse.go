@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/importer"
+	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	parser "github.com/anz-bank/sysl/pkg/grammar"

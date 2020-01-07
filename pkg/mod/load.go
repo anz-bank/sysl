@@ -1,15 +1,49 @@
 package mod
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"path/filepath"
+	"regexp"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
 func LoadAll() error {
+	out := ioutil.Discard
+
+	err := runGo(context.Background(), out, "mod", "download")
+	if err != nil {
+		return errors.Wrap(err, "failed to download modules")
+	}
+
+	b := &bytes.Buffer{}
+	err = runGo(context.Background(), b, "list", "-m", "-json", "all")
+	if err != nil {
+		return errors.Wrap(err, "failed to list modules")
+	}
+
+	var modules goModules
+
+	dec := json.NewDecoder(b)
+	for {
+		m := &goModule{}
+		if err := dec.Decode(m); err != nil {
+			if err == io.EOF {
+				break
+			}
+			return errors.Wrap(err, "failed to decode modules list")
+		}
+
+		modules = append(modules, m)
+	}
+
+	GoMods = modules
 	return nil
 }
 
@@ -21,7 +55,19 @@ func goGet(args ...string) error {
 }
 
 func goGetByFilepath(filename string) error {
-	return nil
+	dir := filepath.Dir(filename)
+	re := regexp.MustCompile(`^\.|\.\.|/$`)
+
+	for !re.MatchString(dir) {
+		logrus.Debug(dir)
+		err := goGet(dir)
+		if err == nil {
+			return nil
+		}
+		dir = filepath.Dir(dir)
+	}
+
+	return errors.New("No such module")
 }
 
 func GetExternalFile(filename string) (string, error) {
