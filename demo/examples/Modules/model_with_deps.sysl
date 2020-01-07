@@ -1,0 +1,19 @@
+import deps
+import github.com/ChloePlanet/sysltestpub/pubbanana
+import github.com/ChloePlanet/sysltestpub/pubpkg/pubapple
+
+ModelWithDeps [package="model"]:
+  !type Response:
+    userId <: int
+    id <: int
+    title <: string
+
+  /responses:
+    /{id<:int}:
+      GET:
+        Dep <- GET /dep/{id}
+        Dep <- GET /moredep/{id}
+        Dep2 <- GET /dep2/{id}
+        PubBanana <- GET /banana/{id}
+        PubApple <- GET /apple/{id}
+        return Response
