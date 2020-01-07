@@ -2,6 +2,7 @@ package parse
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -99,6 +100,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	if !fileExists(filename, fs) {
 		return nil, Exitf(ImportError, "input file does not exist: %#v", filename)
 	}
+
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener()
 
@@ -109,10 +111,25 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	for {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
+
 		fsinput, err := newFSFileStream(filename, fs)
 		if err != nil {
-			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+			if _, ok := err.(*os.PathError); !ok {
+				return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+			}
+
+			filename, err = mod.GetExternalFile(filename)
+			if err != nil {
+				return nil, Exitf(ImportError, err.Error())
+			}
+
+			source.filename = filename
+			fsinput, err = newFSFileStream(filename, afero.NewOsFs())
+			if err != nil {
+				return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+			}
 		}
+
 		listener.sc = sourceCtxHelper{source.filename}
 		listener.base = filepath.Dir(filename)
 
@@ -143,6 +160,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 				break
 			}
 		}
+
 		if _, has := imported[source.filename]; has {
 			break
 		}
