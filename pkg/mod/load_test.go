@@ -25,5 +25,5 @@ func TestGetExternalFileWithWrongPath(t *testing.T) {
 	wrongpath := "wrong_file_path/deps.sysl"
 	importFilename, err := GetExternalFile(wrongpath)
 	assert.Equal(t, wrongpath, importFilename)
-	assert.Equal(t, fmt.Sprintf("%s not found\n", wrongpath), err.Error())
+	assert.Equal(t, fmt.Sprintf("%s not found", wrongpath), err.Error())
 }
