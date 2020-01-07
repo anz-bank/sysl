@@ -11,12 +11,12 @@ import (
 func TestGetExternalFile(t *testing.T) {
 	t.Parallel()
 
-	filename := "github.com/anz-bank/sysl/cmd/sysl/deps.sysl"
+	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	importFilename, err := GetExternalFile(filename)
 	assert.Nil(t, err)
 
-	mod := GoMods.GetByFilepath("github.com/anz-bank/sysl/cmd/sysl/deps.sysl")
-	assert.Equal(t, filepath.Join(mod.Dir, "/cmd/sysl/deps.sysl"), importFilename)
+	mod := GoMods.GetByFilepath(filename)
+	assert.Equal(t, filepath.Join(mod.Dir, "/demo/examples/Modules/deps.sysl"), importFilename)
 }
 
 func TestGetExternalFileWithWrongPath(t *testing.T) {
