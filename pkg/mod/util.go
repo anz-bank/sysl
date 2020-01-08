@@ -9,10 +9,10 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
-func runGo(ctx context.Context, stdout io.Writer, args ...string) error {
-	stderr := new(bytes.Buffer)
+func runGo(ctx context.Context, out io.Writer, args ...string) error {
 	cmd := exec.CommandContext(ctx, "go", args...)
 
 	wd, err := os.Getwd()
@@ -20,9 +20,12 @@ func runGo(ctx context.Context, stdout io.Writer, args ...string) error {
 		return errors.Errorf("get current working directory error: %s\n", err.Error())
 	}
 	cmd.Dir = wd
-	cmd.Stdout = stdout
-	cmd.Stderr = io.MultiWriter(stderr, os.Stderr)
 
+	errbuf := new(bytes.Buffer)
+	cmd.Stderr = errbuf
+	cmd.Stdout = out
+
+	logrus.Debugf("running command `go %v`\n", strings.Join(args, " "))
 	if err := cmd.Run(); err != nil {
 		if ee, ok := err.(*exec.Error); ok && ee.Err == exec.ErrNotFound {
 			return nil
@@ -34,10 +37,10 @@ func runGo(ctx context.Context, stdout io.Writer, args ...string) error {
 		}
 
 		// Too old Go version
-		if strings.Contains(stderr.String(), "flag provided but not defined") {
+		if strings.Contains(errbuf.String(), "flag provided but not defined") {
 			return nil
 		}
-		return errors.Errorf("go command failed: %s", stderr)
+		return errors.Errorf("go command failed: %s", errbuf)
 	}
 
 	return nil
