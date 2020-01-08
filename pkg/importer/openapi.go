@@ -337,10 +337,14 @@ func (l *loader) buildParams(params openapi3.Parameters) Parameters {
 }
 
 func (l *loader) buildParam(p *openapi3.Parameter) Param {
+	name := p.Name
+	if hasToBeSyslSafe(p.In) {
+		name = convertToSyslSafe(name)
+	}
 	t := l.typeFromSchemaRef(fmt.Sprintf("_param_%s", p.Name), p.Schema)
 	return Param{
 		Field: Field{
-			Name:       p.Name,
+			Name:       name,
 			Type:       t,
 			Optional:   !p.Required,
 			Attributes: nil,
@@ -348,4 +352,33 @@ func (l *loader) buildParam(p *openapi3.Parameter) Param {
 		},
 		In: p.In,
 	}
+}
+
+func hasToBeSyslSafe(in string) bool {
+	return strings.ToLower(in) == "query"
+}
+
+func convertToSyslSafe(name string) string {
+	if !strings.ContainsAny(name, "- ") {
+		return name
+	}
+
+	syslSafe := strings.Builder{}
+	toUppercase := false
+	for i := 0; i < len(name); i++ {
+		switch name[i] {
+		case '-':
+			toUppercase = true
+		case ' ':
+			continue
+		default:
+			if toUppercase {
+				syslSafe.WriteString(strings.ToUpper(string(name[i])))
+				toUppercase = false
+			} else {
+				syslSafe.WriteByte(name[i])
+			}
+		}
+	}
+	return syslSafe.String()
 }

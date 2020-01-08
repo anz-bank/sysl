@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -194,8 +195,8 @@ func buildRequestHeadersString(params []Param) string {
 		for _, p := range params {
 			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
 
-			safeName := strings.ToLower(strings.ReplaceAll(p.Name, "-", "_"))
-			text := fmt.Sprintf("%s <: %s", safeName,
+			safeName := regexp.MustCompile("( |-)+").ReplaceAll([]byte(p.Name), []byte("_"))
+			text := fmt.Sprintf("%s <: %s", strings.ToLower(string(safeName)),
 				appendAttributesString(getSyslTypeName(p.Type), []string{"~header", optional, "name=" + quote(p.Name)}))
 			parts = append(parts, text)
 		}
