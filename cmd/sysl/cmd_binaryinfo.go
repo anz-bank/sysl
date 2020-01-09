@@ -9,8 +9,8 @@ import (
 
 type infoCmd struct{}
 
-func (p *infoCmd) Name() string            { return "info" }
-func (p *infoCmd) RequireSyslModule() bool { return false }
+func (p *infoCmd) Name() string       { return "info" }
+func (p *infoCmd) MaxSyslModule() int { return 0 }
 
 func (p *infoCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Show binary information")

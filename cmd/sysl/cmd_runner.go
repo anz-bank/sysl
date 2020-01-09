@@ -16,36 +16,27 @@ const syslRootMarker = ".sysl"
 type cmdRunner struct {
 	commands map[string]Command
 
-	Root      string
-	module    string
-	moduleNew string
+	Root    string
+	modules []string
 }
 
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
 	if cmd, ok := r.commands[which]; ok {
 		if cmd.Name() == which {
-			var mod, modNew *sysl.Module
+			var mod *sysl.Module
 			var err error
 			var appName string
-			isThereASecondModule := false
-			if cmd.RequireSyslModule() {
-				mod, appName, err = LoadSyslModule(r.Root, r.module, fs, logger)
-				if err != nil {
-					return err
-				}
-				if r.moduleNew != "" {
-					modNew, appName, err = LoadSyslModule(r.Root, r.moduleNew, fs, logger)
+			mods := []*sysl.Module{}
+			if cmd.MaxSyslModule() > 0 {
+				for _, moduleName := range r.modules {
+					mod, appName, err = LoadSyslModule(r.Root, moduleName, fs, logger)
 					if err != nil {
 						return err
 					}
-					isThereASecondModule = true
+					mods = append(mods, mod)
 				}
 			}
-			if isThereASecondModule {
-				return cmd.Execute(ExecuteArgs{Module: mod, ModuleNew: modNew,
-					Filesystem: fs, Logger: logger, DefaultAppName: appName})
-			}
-			return cmd.Execute(ExecuteArgs{Module: mod, Filesystem: fs,
+			return cmd.Execute(ExecuteArgs{Modules: mods, Filesystem: fs,
 				Logger: logger, DefaultAppName: appName})
 		}
 	}
@@ -78,12 +69,10 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	})
 	for _, cmd := range commands {
 		c := cmd.Configure(app)
-		if cmd.RequireSyslModule() {
+		if cmd.MaxSyslModule() > 0 {
 			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
-				Required().StringVar(&r.module)
-			c.Arg("MODULENEW", "input files without .sysl extension and with leading /, eg: "+
-				"/project_dir/my_models combine with --root if needed").StringVar(&r.moduleNew)
+				Required().StringsVar(&r.modules)
 		}
 		r.commands[cmd.Name()] = cmd
 	}

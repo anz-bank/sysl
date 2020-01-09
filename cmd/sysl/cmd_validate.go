@@ -6,8 +6,8 @@ import (
 
 type validateCmd struct{}
 
-func (p *validateCmd) Name() string            { return "validate" }
-func (p *validateCmd) RequireSyslModule() bool { return true }
+func (p *validateCmd) Name() string       { return "validate" }
+func (p *validateCmd) MaxSyslModule() int { return 1 }
 
 func (p *validateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Validate the sysl file")

@@ -88,8 +88,7 @@ type CmdDatabaseScript struct {
 }
 
 type ExecuteArgs struct {
-	Module         *sysl.Module
-	ModuleNew      *sysl.Module
+	Modules        []*sysl.Module
 	Filesystem     afero.Fs
 	Logger         *logrus.Logger
 	DefaultAppName string
@@ -99,5 +98,5 @@ type Command interface {
 	Configure(*kingpin.Application) *kingpin.CmdClause
 	Execute(ExecuteArgs) error
 	Name() string
-	RequireSyslModule() bool
+	MaxSyslModule() int
 }

@@ -31,8 +31,8 @@ type modDatabaseScriptCmd struct {
 	CmdDatabaseScript
 }
 
-func (p *modDatabaseScriptCmd) Name() string            { return "generate-db-scripts-delta" }
-func (p *modDatabaseScriptCmd) RequireSyslModule() bool { return true }
+func (p *modDatabaseScriptCmd) Name() string       { return "generate-db-scripts-delta" }
+func (p *modDatabaseScriptCmd) MaxSyslModule() int { return 2 }
 
 func (p *modDatabaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate data models").Alias("generatedbscriptsdelta")
@@ -46,7 +46,7 @@ func (p *modDatabaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdC
 }
 
 func (p *modDatabaseScriptCmd) Execute(args ExecuteArgs) error {
-	outputSlice, err := GenerateModDatabaseScripts(&p.CmdDatabaseScript, args.Module, args.ModuleNew, args.Logger)
+	outputSlice, err := GenerateModDatabaseScripts(&p.CmdDatabaseScript, args.Modules[0], args.Modules[1], args.Logger)
 	if err != nil {
 		return err
 	}

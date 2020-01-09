@@ -47,8 +47,8 @@ type databaseScriptCmd struct {
 	CmdDatabaseScript
 }
 
-func (p *databaseScriptCmd) Name() string            { return "generate-db-scripts" }
-func (p *databaseScriptCmd) RequireSyslModule() bool { return true }
+func (p *databaseScriptCmd) Name() string       { return "generate-db-scripts" }
+func (p *databaseScriptCmd) MaxSyslModule() int { return 1 }
 
 func (p *databaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate postgres sql script").Alias("generatedbscripts")
@@ -62,7 +62,7 @@ func (p *databaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdClau
 }
 
 func (p *databaseScriptCmd) Execute(args ExecuteArgs) error {
-	outputSlice, err := GenerateDatabaseScripts(&p.CmdDatabaseScript, args.Module, args.Logger)
+	outputSlice, err := GenerateDatabaseScripts(&p.CmdDatabaseScript, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
 	}
