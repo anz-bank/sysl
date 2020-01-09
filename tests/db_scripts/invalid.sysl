@@ -1,9 +1,0 @@
-Project [seqtitle="DataModel"]:
-  Relational-Model:
-    RelModel
-RelModel
-    !table Employee:
-        employeeId <: int [~pk, ~autoinc]
-        name <: string(3..22)?
-        dob < date?
-        error <: int
