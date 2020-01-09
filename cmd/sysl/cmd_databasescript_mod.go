@@ -46,6 +46,9 @@ func (p *modDatabaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdC
 }
 
 func (p *modDatabaseScriptCmd) Execute(args ExecuteArgs) error {
+	if len(args.Modules) < 2 {
+		return fmt.Errorf("this command needs min 2 module(s)")
+	}
 	outputSlice, err := GenerateModDatabaseScripts(&p.CmdDatabaseScript, args.Modules[0], args.Modules[1], args.Logger)
 	if err != nil {
 		return err

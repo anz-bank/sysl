@@ -2,7 +2,9 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -35,6 +37,9 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 					}
 					mods = append(mods, mod)
 				}
+			}
+			if len(mods) > cmd.MaxSyslModule() {
+				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 			}
 			return cmd.Execute(ExecuteArgs{Modules: mods, Filesystem: fs,
 				Logger: logger, DefaultAppName: appName})

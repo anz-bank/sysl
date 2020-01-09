@@ -65,6 +65,30 @@ func TestModDBScriptInValidOrgSyslFile(t *testing.T) {
 	assert.Equal(t, 2, err)
 }
 
+func TestModDBScriptOneModule(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	_, fs := syslutil.WriteToMemOverlayFs("/")
+
+	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
+		filepath.Join(db.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
+		fs, logger, main3)
+	assert.Equal(t, 1, err)
+}
+
+func TestModDBScriptThreeModule(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	_, fs := syslutil.WriteToMemOverlayFs("/")
+
+	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
+		filepath.Join(db.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
+		filepath.Join(db.DbTestDir, "db_scripts/dataForSqlScriptModified.sysl"),
+		filepath.Join(db.DbTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
+		fs, logger, main3)
+	assert.Equal(t, 1, err)
+}
+
 func TestModDBScriptInValidNewSyslFile(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
