@@ -1,0 +1,105 @@
+swagger: "2.0"
+info:
+  title: Unsafe Param Names
+paths:
+  /with_a_hyphen:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/unsafe'
+      summary: Possible Unsafe Names
+      description: with a hyphen
+      parameters:
+        - name: test-sample
+          type: string
+          required: true
+          in: query
+  /contiguous_hyphens:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/unsafe'
+      summary: Possible Unsafe Names
+      description: contiguous hyphens
+      parameters:
+        - name: test----sample
+          type: string
+          required: true
+          in: query
+  /hyphens_in_weird_locations:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/unsafe'
+      summary: Possible Unsafe Names
+      description: hyphens in weird locations
+      parameters:
+        - name: test-sam--ple
+          type: string
+          required: true
+          in: query
+  /with_a_space:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/unsafe'
+      summary: Possible Unsafe Names
+      description: with a space
+      parameters:
+        - name: test sample
+          type: string
+          required: true
+          in: query
+  /with_multiple_spaces:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/unsafe'
+      summary: Possible Unsafe Names
+      description: with multiple spaces
+      parameters:
+        - name: test sam   ple
+          type: string
+          required: true
+          in: query
+  /spaces_and_hyphens_mixes:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/unsafe'
+      summary: Possible Unsafe Names
+      description: mixes of spaces and hyphens
+      parameters:
+        - name: te -- st sam--ple
+          type: string
+          required: true
+          in: query
+  /correct_name:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/unsafe'
+      summary: Possible Unsafe Names
+      description: correct param name
+      parameters:
+        - name: correctTestSample
+          type: string
+          required: true
+          in: query
+definitions:
+  unsafe:
+    type: string
