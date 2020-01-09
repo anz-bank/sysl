@@ -9,7 +9,7 @@ import (
 	proto "github.com/anz-bank/sysl/pkg/sysl"
 )
 
-func (v *DatabaseScriptView) writeCreateSQLForATable(
+func (v *ScriptView) writeCreateSQLForATable(
 	tableName string,
 	table *proto.Type_Relation,
 	visitedAttributes map[string]string,
@@ -47,7 +47,7 @@ func (v *DatabaseScriptView) writeCreateSQLForATable(
 	v.stringBuilder.WriteString("\n);\n")
 }
 
-func (v *DatabaseScriptView) writeModifySQLForATable(
+func (v *ScriptView) writeModifySQLForATable(
 	tableName string,
 	entityNew *proto.Type_Relation,
 	entityOld *proto.Type_Relation,
@@ -124,7 +124,7 @@ func (v *DatabaseScriptView) writeModifySQLForATable(
 			tableName, pkConstraintName, pk))
 	}
 }
-func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, tableName, attrName string,
+func (v *ScriptView) writeCreateSQLForAColumn(attrType *proto.Type, tableName, attrName string,
 	primaryKeys, foreignKeyConstraints *[]string, visitedAttributes map[string]string) (string, bool) {
 	var s string
 	isAutoIncrement, isPrimaryKey := isAutoIncrementAndPrimaryKey(attrType)
@@ -170,7 +170,7 @@ func (v *DatabaseScriptView) writeCreateSQLForAColumn(attrType *proto.Type, tabl
 	return s, isPrimaryKey
 }
 
-func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *proto.Type, tableName,
+func (v *ScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *proto.Type, tableName,
 	attrName string, primaryKeys *[]string, visitedAttributes map[string]string) (bool, bool) {
 	typeRefNew := attrTypeNew.GetTypeRef()
 	typeRefOld := attrTypeOld.GetTypeRef()
@@ -239,7 +239,7 @@ func (v *DatabaseScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *
 	return primaryKeyChanged, isPrimaryKeyOld
 }
 
-func (v *DatabaseScriptView) addConstraints(
+func (v *ScriptView) addConstraints(
 	s string,
 	tableName string,
 	foreignKeyConstraints []string,
@@ -256,7 +256,7 @@ func (v *DatabaseScriptView) addConstraints(
 	return s
 }
 
-func (v *DatabaseScriptView) getPrimaryKeyString(primaryKeys []string) string {
+func (v *ScriptView) getPrimaryKeyString(primaryKeys []string) string {
 	pk := ""
 	if len(primaryKeys) > 0 {
 		for curIndex, primaryKey := range primaryKeys {
@@ -270,7 +270,7 @@ func (v *DatabaseScriptView) getPrimaryKeyString(primaryKeys []string) string {
 	return pk
 }
 
-func (v *DatabaseScriptView) getPostgresDataTypes(input string, size int64) string {
+func (v *ScriptView) getPostgresDataTypes(input string, size int64) string {
 	switch input {
 	case strConst:
 		return "varchar (" + strconv.FormatInt(size, 10) + ")"

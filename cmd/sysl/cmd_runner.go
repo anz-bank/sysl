@@ -16,24 +16,37 @@ const syslRootMarker = ".sysl"
 type cmdRunner struct {
 	commands map[string]Command
 
-	Root   string
-	module string
+	Root      string
+	module    string
+	moduleNew string
 }
 
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
 	if cmd, ok := r.commands[which]; ok {
 		if cmd.Name() == which {
-			var mod *sysl.Module
+			var mod, modNew *sysl.Module
 			var err error
 			var appName string
+			isThereASecondModule := false
 			if cmd.RequireSyslModule() {
 				mod, appName, err = LoadSyslModule(r.Root, r.module, fs, logger)
 				if err != nil {
 					return err
 				}
+				if r.moduleNew != "" {
+					modNew, appName, err = LoadSyslModule(r.Root, r.moduleNew, fs, logger)
+					if err != nil {
+						return err
+					}
+					isThereASecondModule = true
+				}
 			}
-
-			return cmd.Execute(ExecuteArgs{Module: mod, Filesystem: fs, Logger: logger, DefaultAppName: appName})
+			if isThereASecondModule {
+				return cmd.Execute(ExecuteArgs{Module: mod, ModuleNew: modNew,
+					Filesystem: fs, Logger: logger, DefaultAppName: appName})
+			}
+			return cmd.Execute(ExecuteArgs{Module: mod, Filesystem: fs,
+				Logger: logger, DefaultAppName: appName})
 		}
 	}
 	return nil
@@ -69,6 +82,8 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
 				Required().StringVar(&r.module)
+			c.Arg("MODULENEW", "input files without .sysl extension and with leading /, eg: "+
+				"/project_dir/my_models combine with --root if needed").StringVar(&r.moduleNew)
 		}
 		r.commands[cmd.Name()] = cmd
 	}

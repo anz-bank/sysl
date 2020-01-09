@@ -23,3 +23,9 @@ func CompareSQL(t *testing.T, expected map[string]string, actual []ScriptOutput)
 	}
 	assert.Equal(t, len(expected), len(actual))
 }
+
+func CompareContent(t *testing.T, goldenFile, output string) {
+	golden, err := ioutil.ReadFile(goldenFile)
+	assert.Nil(t, err)
+	assert.Equal(t, string(golden), output)
+}
