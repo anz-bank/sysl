@@ -443,6 +443,7 @@ func TestMain2WithGenerateCode(t *testing.T) {
 			"--grammar", filepath.Join(testDir, "test.gen.g"),
 			"--app-name", "Model",
 			"--start", "javaFile",
+			"--gen-path", "github.service.anz/anzx/bff/gen/",
 			"model.sysl",
 		},
 		fs, logger, main3,
@@ -469,6 +470,7 @@ func TestMain2WithGenerateCodeReadOnlyFs(t *testing.T) {
 			"--grammar", filepath.Join(testDir, "test.gen.g"),
 			"--app-name", "Model",
 			"--start", "javaFile",
+			"--gen-path", "github.service.anz/anzx/bff/gen/",
 			"model.sysl",
 		},
 		fs, logger, main3,
@@ -593,7 +595,8 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 	assert.Equal(t,
 		"'grammar' value passed is empty\n"+
 			"'start' value passed is empty\n"+
-			"'outdir' value passed is empty\n", hook.LastEntry().Message)
+			"'outdir' value passed is empty\n"+
+			"'gen-path' value passed is empty\n", hook.LastEntry().Message)
 	syslutil.AssertFsHasExactly(t, memFs)
 }
 
