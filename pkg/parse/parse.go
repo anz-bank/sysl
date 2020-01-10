@@ -109,7 +109,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	}
 
 	if mod.SyslModules {
-		fs = mod.NewModSupportedFs(fs)
+		fs = mod.NewFs(fs)
 	}
 
 	for {

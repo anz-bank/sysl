@@ -9,15 +9,15 @@ import (
 	"github.com/spf13/afero"
 )
 
-type ModSupportedFs struct {
+type Fs struct {
 	fs afero.Fs
 }
 
-func NewModSupportedFs(fs afero.Fs) *ModSupportedFs {
-	return &ModSupportedFs{fs: fs}
+func NewFs(fs afero.Fs) *Fs {
+	return &Fs{fs: fs}
 }
 
-func (fs *ModSupportedFs) Open(name string) (afero.File, error) {
+func (fs *Fs) Open(name string) (afero.File, error) {
 	f, err := fs.fs.Open(name)
 	if err == nil {
 		return f, nil
@@ -35,46 +35,46 @@ func (fs *ModSupportedFs) Open(name string) (afero.File, error) {
 	return syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
 }
 
-func (fs *ModSupportedFs) Create(name string) (afero.File, error) {
+func (fs *Fs) Create(name string) (afero.File, error) {
 	return fs.fs.Create(name)
 }
 
-func (fs *ModSupportedFs) Mkdir(name string, perm os.FileMode) error {
+func (fs *Fs) Mkdir(name string, perm os.FileMode) error {
 	return fs.fs.Mkdir(name, perm)
 }
 
-func (fs *ModSupportedFs) MkdirAll(path string, perm os.FileMode) error {
+func (fs *Fs) MkdirAll(path string, perm os.FileMode) error {
 	return fs.fs.MkdirAll(path, perm)
 }
 
-func (fs *ModSupportedFs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
+func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
 	return fs.fs.OpenFile(name, flag, perm)
 }
 
-func (fs *ModSupportedFs) Remove(name string) error {
+func (fs *Fs) Remove(name string) error {
 	return fs.fs.Remove(name)
 }
 
-func (fs *ModSupportedFs) RemoveAll(path string) error {
+func (fs *Fs) RemoveAll(path string) error {
 	return fs.fs.RemoveAll(path)
 }
 
-func (fs *ModSupportedFs) Rename(oldname, newname string) error {
+func (fs *Fs) Rename(oldname, newname string) error {
 	return fs.fs.Rename(oldname, newname)
 }
 
-func (fs *ModSupportedFs) Stat(name string) (os.FileInfo, error) {
+func (fs *Fs) Stat(name string) (os.FileInfo, error) {
 	return fs.fs.Stat(name)
 }
 
-func (fs *ModSupportedFs) Name() string {
-	return "ModSupportedFs"
+func (fs *Fs) Name() string {
+	return "Fs"
 }
 
-func (fs *ModSupportedFs) Chmod(name string, mode os.FileMode) error {
+func (fs *Fs) Chmod(name string, mode os.FileMode) error {
 	return fs.fs.Chmod(name, mode)
 }
 
-func (fs *ModSupportedFs) Chtimes(name string, atime time.Time, mtime time.Time) error {
+func (fs *Fs) Chtimes(name string, atime time.Time, mtime time.Time) error {
 	return fs.fs.Chtimes(name, atime, mtime)
 }
