@@ -2,7 +2,6 @@ package parse
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -109,26 +108,17 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		filename: filename,
 	}
 
+	if mod.SyslModules {
+		fs = mod.NewModSupportedFs(fs)
+	}
+
 	for {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
 
 		fsinput, err := newFSFileStream(filename, fs)
 		if err != nil {
-			if _, ok := err.(*os.PathError); !ok {
-				return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
-			}
-
-			filename, err = mod.GetExternalFile(filename)
-			if err != nil {
-				return nil, Exitf(ImportError, err.Error())
-			}
-
-			source.filename = filename
-			fsinput, err = newFSFileStream(filename, afero.NewOsFs())
-			if err != nil {
-				return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
-			}
+			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 
 		listener.sc = sourceCtxHelper{source.filename}
