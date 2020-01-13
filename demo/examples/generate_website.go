@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"crypto/sha1"
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -24,6 +25,7 @@ import (
 // siteDir is the target directory into which the HTML gets generated. Its
 // default is set here but can be changed by an argument passed into the
 // program.
+const syslPlaygroundURL = "http://joshcarp.github.io/sysl-playground/"
 const syslRoot = "../../"
 const siteDir = syslRoot + "docs/website/content/docs/byexample/"
 const assetDir = syslRoot + "docs/website/static/assets/byexample/"
@@ -44,6 +46,15 @@ func check(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+// findSyslCommand is used to match only the command and not the comments for sysl-playground
+func findSyslCommand(input string) string {
+	var re = regexp.MustCompile(`(?m)(?:\n)(sysl.*)`)
+	ans := re.FindString(input)
+	ans = strings.Replace(ans, "\n", "", 1)
+	return ans
+
 }
 
 func ensureDir(dir string) {
@@ -82,6 +93,7 @@ func cacheChroma(lex string, src string) string {
 
 	return code
 }
+
 func chromaFormat(code string) string {
 	lexer := syslchroma.Sysl
 	if lexer == nil {
@@ -139,7 +151,7 @@ var dashPat = regexp.MustCompile("\\-+")
 // Seg is a segment of an example
 type Seg struct {
 	Docs, DocsRendered              string
-	Code, CodeRendered, CodeForJs   string
+	Code, CodeRendered              string
 	CodeEmpty, CodeLeading, CodeRun bool
 	Image                           string
 }
@@ -150,10 +162,12 @@ type Example struct {
 	Topic    string
 	Weight   int
 
-	GoCode, GoCodeHash, URLHash string
-	Segs                        [][]*Seg
-	PrevExample                 *Example
-	NextExample                 *Example
+	Code, URLHash, CodeWithoutComments string
+	Cmd                                string
+	PlaygroundURL                      string
+	Segs                               [][]*Seg
+	PrevExample                        *Example
+	NextExample                        *Example
 }
 
 func parseSegs(sourcePath string) ([]*Seg, string) {
@@ -206,9 +220,10 @@ func parseSegs(sourcePath string) ([]*Seg, string) {
 	return segs, filecontent
 }
 
-func parseAndRenderSegs(sourcePath string) ([]*Seg, string) {
+func parseAndRenderSegs(sourcePath string) ([]*Seg, string, string) {
 	lexer := whichLexer(sourcePath)
 	segs, filecontent := parseSegs(sourcePath)
+	codeWithoutComments := ""
 	for _, seg := range segs {
 		if seg.Docs != "" {
 			seg.DocsRendered = markdown(seg.Docs)
@@ -218,20 +233,20 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string) {
 
 			// adding the content to the js code for copying to the clipboard
 			if strings.HasSuffix(sourcePath, ".sysl") {
-				seg.CodeForJs = strings.Trim(seg.Code, "\n") + "\n"
+				codeWithoutComments += strings.Trim(seg.Code, "\n") + "\n"
+
 			}
 		}
+
 	}
-	if lexer != "sysl" {
-		filecontent = ""
-	}
-	return segs, filecontent
+
+	return segs, filecontent, codeWithoutComments
 }
 
 // unmarshalYaml unmarshals a yaml file of form
 // key1:
-// 		- value 1
-// 		- value 2
+//      - value 1
+//      - value 2
 func unmarshalYaml(filename string) map[string][]string {
 	source, err := ioutil.ReadFile(filename)
 	check(err)
@@ -251,10 +266,7 @@ func parseExamples() []*Example {
 	check(err)
 	for topic, tutorial := range ordering {
 		for _, exampleName := range tutorial {
-			fmt.Println(topic, exampleName, weight)
-
 			weight++
-
 			example := Example{Name: exampleName}
 			exampleID := strings.ToLower(exampleName)
 			exampleID = strings.Replace(exampleID, " ", "-", -1)
@@ -281,18 +293,24 @@ func parseExamples() []*Example {
 					example.Segs = append(example.Segs, Segment)
 
 				} else if whichLexer(sourcePath) != "" {
-					sourceSegs, filecontents := parseAndRenderSegs(sourcePath)
+					sourceSegs, filecontents, codeWithoutComments := parseAndRenderSegs(sourcePath)
+
 					if filecontents != "" {
-						example.GoCode = filecontents
+						switch whichLexer(sourcePath) {
+						case "sysl":
+							example.Code = filecontents
+							example.CodeWithoutComments = codeWithoutComments
+						case "console":
+							example.Cmd = findSyslCommand(filecontents)
+						}
+
 					}
 					example.Segs = append(example.Segs, sourceSegs)
 				}
 
 			}
-			newCodeHash := sha1Sum(example.GoCode)
-			if example.GoCodeHash != newCodeHash {
-
-			}
+			fmt.Println(example.CodeWithoutComments)
+			example.PlaygroundURL = syslplaygroundLink(example.CodeWithoutComments, example.Cmd)
 			examples = append(examples, &example)
 		}
 	}
@@ -326,4 +344,19 @@ func isImageFile(filename string) (bool, string) {
 		}
 	}
 	return false, ""
+}
+
+func syslplaygroundLink(code, cmd string) string {
+	code = encode(code)
+	cmd = encode(cmd)
+	return fmt.Sprintf(syslPlaygroundURL+"?input=%s&cmd=%s", code, cmd)
+}
+
+func encode(str string) string {
+	return base64.StdEncoding.EncodeToString([]byte(str))
+}
+
+func decode(str string) string {
+	this, _ := base64.StdEncoding.DecodeString(str)
+	return string(this)
 }

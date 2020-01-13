@@ -6,11 +6,13 @@ description= ""
 layout= "byexample"
 weight = {{.Weight}}
 topic = "{{.Topic}}"
-
+PlaygroundURL = "{{.PlaygroundURL}}"
 ID = "{{.ID}}"
+CodeWithoutComments = """{{.CodeWithoutComments}}"""
+
 Segs = [{{range .Segs}}[
   {{range .}}
-      {CodeEmpty= {{.CodeEmpty}},CodeLeading= {{.CodeLeading}},CodeRun= {{.CodeRun}},CodeRendered="""{{.CodeRendered}}""",DocsRendered= """{{.DocsRendered}}""", CodeForJs = """{{.CodeForJs}}""",Image = "{{.Image}}"},
+      {CodeEmpty= {{.CodeEmpty}},CodeLeading= {{.CodeLeading}},CodeRun= {{.CodeRun}},CodeRendered="""{{.CodeRendered}}""",DocsRendered= """{{.DocsRendered}}""",Image = "{{.Image}}"},
 {{end}}
 
 ],
