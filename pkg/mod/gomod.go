@@ -60,8 +60,8 @@ func (m *Modules) Load() error {
 
 	dec := json.NewDecoder(b)
 	for {
-		m := &goModule{}
-		if err := dec.Decode(m); err != nil {
+		goMod := &goModule{}
+		if err := dec.Decode(goMod); err != nil {
 			if err == io.EOF {
 				break
 			}
@@ -69,8 +69,8 @@ func (m *Modules) Load() error {
 		}
 
 		m.Add(&Module{
-			Name: m.Path,
-			Dir:  m.Dir,
+			Name: goMod.Path,
+			Dir:  goMod.Dir,
 		})
 	}
 
