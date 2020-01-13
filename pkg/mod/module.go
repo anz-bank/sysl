@@ -16,18 +16,14 @@ type Module struct {
 
 type Modules []*Module
 
-func (modules *Modules) Add(m *Module) {
-	*modules = append(*modules, m)
+func (m *Modules) Add(item *Module) {
+	*m = append(*m, item)
 }
 
-func (modules Modules) GetByFilename(p string) *Module {
-	if modules == nil {
-		return nil
-	}
-
+func (m *Modules) GetByFilename(p string) *Module {
 	p = filepath.Clean(p)
 
-	for _, m := range modules {
+	for _, m := range m {
 		if strings.HasPrefix(p, filepath.Clean(m.Name)) {
 			return m
 		}
@@ -45,6 +41,10 @@ func Find(name string) (*Module, error) {
 	var modules Modules
 	if err = modules.Load(); err != nil {
 		return nil, fmt.Errorf("error loading modules: %s", err.Error())
+	}
+
+	if mod == nil {
+		return nil, fmt.Error("modules list is empty")
 	}
 
 	mod := modules.GetByFilename(name)

@@ -44,7 +44,7 @@ func goGet(args ...string) error {
 	return nil
 }
 
-func (modules *Modules) Load() error {
+func (m *Modules) Load() error {
 	out := ioutil.Discard
 
 	err := runGo(context.Background(), out, "mod", "download")
@@ -68,7 +68,7 @@ func (modules *Modules) Load() error {
 			return errors.Wrap(err, "failed to decode modules list")
 		}
 
-		modules.Add(&Module{
+		m.Add(&Module{
 			Name: m.Path,
 			Dir:  m.Dir,
 		})
