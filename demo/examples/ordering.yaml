@@ -8,15 +8,14 @@ Diagrams:
   - Sequence Diagrams
   - Integration Diagrams
   - Data Model Diagrams
-Web protocols:
+Web protocals:
   - Rest and HTTP
-# TODO: The rest of these
-#   - grpc and proto
-# Sysl Transformation Language:
-#   - Code generation
-#   - Transformation scripts
-#   - views
-#   - 
+  - grpc and proto
+Sysl Transformation Language:
+  - Code generation
+  - Transformation scripts
+  - views
+  - 
 
 
   
