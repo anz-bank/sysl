@@ -6,20 +6,17 @@ description= ""
 layout= "byexample"
 weight = 3
 topic = "Basics"
-Images = [
-  
-]
 
 ID = "data-types"
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Our first program will make a simple &ldquo;Hello world&rdquo; application with two endpoints</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
 <span class="nx">HelloWorld</span><span class="p">:</span></pre>""",DocsRendered= """<p>Specify an application called <code>HelloWorld</code></p>
 """, CodeForJs = """HelloWorld:
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="p">!</span><span class="kd">type</span> <span class="nx">Request</span><span class="p">:</span>
@@ -32,39 +29,40 @@ Segs = [[
         id <: int
         title <: string
         completed <: bool
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
         <span class="nx">something</span> <span class="p">&lt;:</span> <span class="kt">string</span><span class="err">?</span></pre>""",DocsRendered= """<p>specify mandatory fields by using &ldquo;?&rdquo; at the end of the datatype</p>
 """, CodeForJs = """        something <: string?
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    
     <span class="p">!</span><span class="kd">type</span> <span class="nx">ErrorResponse</span><span class="p">:</span>
-        <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """<p>Use the <code>!alias</code> keyword to alias to another name</p>
+        <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """<p>Use the <code>!alias</code> keyword to alias to another identifier</p>
 """, CodeForJs = """    
     !type ErrorResponse:
         status <: string
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="p">!</span><span class="nx">alias</span> <span class="nx">Requests</span><span class="p">:</span>
         <span class="nx">sequence</span> <span class="nx">of</span> <span class="nx">Request</span></pre>""",DocsRendered= """<p>Specify an endpoint as the next indent.</p>
 """, CodeForJs = """    !alias Requests:
         sequence of Request
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="nf">endpoint</span><span class="p">(</span><span class="nx">input</span> <span class="p">&lt;:</span> <span class="nx">Request</span><span class="p">):</span></pre>""",DocsRendered= """<p>Specify a return type for the endpoint. Anything after the return is considered a payload.</p>
 """, CodeForJs = """    endpoint(input <: Request):
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">        <span class="k">return</span> <span class="nx">Requests</span></pre>""",DocsRendered= """""", CodeForJs = """        return Requests
-"""},
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands.</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>TODO: Mandatory vs optional fields</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
+
 
 ],
 

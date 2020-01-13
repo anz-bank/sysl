@@ -251,7 +251,10 @@ func parseExamples() []*Example {
 	check(err)
 	for topic, tutorial := range ordering {
 		for _, exampleName := range tutorial {
+			fmt.Println(topic, exampleName, weight)
+
 			weight++
+
 			example := Example{Name: exampleName}
 			exampleID := strings.ToLower(exampleName)
 			exampleID = strings.Replace(exampleID, " ", "-", -1)

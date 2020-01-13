@@ -6,51 +6,49 @@ description= ""
 layout= "byexample"
 weight = 4
 topic = "Basics"
-Images = [
-  
-]
 
 ID = "projects"
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example we will use the &ldquo;call&rdquo; syntax to link two applications together.</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
 <span class="nx">MobileApp</span><span class="p">:</span>
     <span class="nx">Login</span><span class="p">:</span></pre>""",DocsRendered= """""", CodeForJs = """MobileApp:
     Login:
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
         <span class="nx">Server</span> <span class="o">&lt;-</span> <span class="nx">Login</span></pre>""",DocsRendered= """<p>Here we specify that this endpoint has a depencency that it calls internally.</p>
 """, CodeForJs = """        Server <- Login
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="p">!</span><span class="kd">type</span> <span class="nx">LoginData</span><span class="p">:</span>
         <span class="nx">username</span> <span class="p">&lt;:</span> <span class="kt">string</span>
         <span class="nx">password</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""", CodeForJs = """    !type LoginData:
         username <: string
         password <: string
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="p">!</span><span class="kd">type</span> <span class="nx">LoginResponse</span><span class="p">:</span>
         <span class="nx">message</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""", CodeForJs = """    !type LoginResponse:
         message <: string
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">Server</span><span class="p">:</span></pre>""",DocsRendered= """""", CodeForJs = """Server:
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="nf">Login</span><span class="p">(</span><span class="nx">data</span> <span class="p">&lt;:</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginData</span><span class="p">):</span>
         <span class="k">return</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginResponse</span></pre>""",DocsRendered= """<p>Use &ldquo;Application.Type&rdquo; to use a data type defined in another application</p>
 """, CodeForJs = """    Login(data <: MobileApp.LoginData):
         return MobileApp.LoginResponse
-"""},
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>TODO: Imports</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
+
 
 ],
 

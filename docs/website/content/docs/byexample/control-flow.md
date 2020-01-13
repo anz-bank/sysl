@@ -6,9 +6,6 @@ description= ""
 layout= "byexample"
 weight = 5
 topic = "Basics"
-Images = [
-  
-]
 
 ID = "control-flow"
 Segs = [[
@@ -18,42 +15,46 @@ Segs = [[
     <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""", CodeForJs = """Foo:
   !type ErrorResponse:
     status <: string
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">  <span class="p">!</span><span class="kd">type</span> <span class="nx">ResourceNotFoundError</span><span class="p">:</span>
     <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span> 
-  <span class="o">/</span><span class="nx">todos</span><span class="p">:</span>
-    
-    <span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">&lt;:</span><span class="kt">int</span><span class="p">}:</span>
-      <span class="nx">GET</span><span class="p">:</span></pre>""",DocsRendered= """<p>Here we can use if (or IF) and specify conditional returns based on the https status codes</p>
+  <span class="nx">todos</span><span class="p">:</span>
+  </pre>""",DocsRendered= """<p>Here we can use if (or IF) and specify conditional returns based on the https status codesNote these variables don&rsquo;t need to be defined; they&rsquo;re just for sequence diagram generation</p>
 """, CodeForJs = """  !type ResourceNotFoundError:
     status <: string 
-  /todos:
-    
-    /{id<:int}:
-      GET:
-"""},
+  todos:
+  
+""",Image = ""},
 
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">        <span class="k">if</span> <span class="nx">notfound</span><span class="p">:</span>
-          <span class="k">return</span> <span class="mi">404</span> <span class="p">&lt;:</span> <span class="nx">ResourceNotFoundError</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="nx">failed</span><span class="p">:</span>
-          <span class="k">return</span> <span class="mi">500</span> <span class="p">&lt;:</span> <span class="nx">ErrorResponse</span>
-        <span class="k">else</span><span class="p">:</span>    
-          <span class="k">return</span> <span class="mi">200</span> <span class="p">&lt;:</span> <span class="nx">Todo</span> </pre>""",DocsRendered= """""", CodeForJs = """        if notfound:
-          return 404 <: ResourceNotFoundError
-        else if failed:
-          return 500 <: ErrorResponse
-        else:    
-          return 200 <: Todo 
-"""},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="k">if</span> <span class="nx">notfound</span><span class="p">:</span>
+      <span class="k">return</span> <span class="mi">404</span> <span class="p">&lt;:</span> <span class="nx">ResourceNotFoundError</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">failed</span><span class="p">:</span>
+      <span class="k">return</span> <span class="mi">500</span> <span class="p">&lt;:</span> <span class="nx">ErrorResponse</span>
+    <span class="k">else</span><span class="p">:</span>    
+      <span class="k">return</span> <span class="mi">200</span> <span class="p">&lt;:</span> <span class="nx">Todo</span> </pre>""",DocsRendered= """""", CodeForJs = """    if notfound:
+      return 404 <: ResourceNotFoundError
+    else if failed:
+      return 500 <: ErrorResponse
+    else:    
+      return 200 <: Todo 
+""",Image = ""},
+
 
 ],
 [
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>By creating a sequence diagram we can see that the conditional statements are rendered aswell</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
-      {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">sysl</span> <span class="nx">sd</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;project.png&#34;</span> <span class="o">-</span><span class="nx">s</span> <span class="s">&#34;Foo &lt;- todos&#34;</span> <span class="nx">project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """""", CodeForJs = """"""},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">sysl</span> <span class="nx">sd</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;3_project.svg&#34;</span> <span class="o">-</span><span class="nx">s</span> <span class="s">&#34;Foo &lt;- todos&#34;</span> <span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """""", CodeForJs = """""",Image = ""},
+
+
+],
+[
+  
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""", CodeForJs = """""",Image = "/assets/byexample/images/control-flow4.svg"},
+
 
 ],
 
