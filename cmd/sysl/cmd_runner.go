@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/mod"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -23,17 +24,22 @@ type cmdRunner struct {
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
 	if cmd, ok := r.commands[which]; ok {
 		if cmd.Name() == which {
-			var mod *sysl.Module
+			var module *sysl.Module
 			var err error
 			var appName string
+
+			if mod.SyslModules {
+				fs = mod.NewFs(fs)
+			}
+
 			if cmd.RequireSyslModule() {
-				mod, appName, err = LoadSyslModule(r.Root, r.module, fs, logger)
+				module, appName, err = LoadSyslModule(r.Root, r.module, fs, logger)
 				if err != nil {
 					return err
 				}
 			}
 
-			return cmd.Execute(ExecuteArgs{Module: mod, Filesystem: fs, Logger: logger, DefaultAppName: appName})
+			return cmd.Execute(ExecuteArgs{Module: module, Filesystem: fs, Logger: logger, DefaultAppName: appName})
 		}
 	}
 	return nil
