@@ -14,7 +14,7 @@ func TestNewFs(t *testing.T) {
 
 	backendFs := afero.NewOsFs()
 	fs := NewFs(backendFs)
-	assert.Equal(t, backendFs, fs.fs)
+	assert.Equal(t, backendFs, fs.source)
 }
 
 func TestOpenLocalFile(t *testing.T) {
