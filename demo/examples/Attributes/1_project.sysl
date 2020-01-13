@@ -1,0 +1,6 @@
+# Specify attributes of applications or endpoints in square brackets. 
+Foo [package="com.mycompany"]:
+
+    # Attributes can also be tags specified with tilda notation
+    Bar(newPost <: string [~body]):
+        return string
