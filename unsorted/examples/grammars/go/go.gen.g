@@ -1,5 +1,5 @@
 goFile: PackageClause  ImportDecl?  TopLevelDecl+;
-PackageClause: 'package' PackageName ';\n';
+PackageClause: 'package' PackageName '\n';
 
 ImportDecl: 'import' '(\n' ImportSpec* '\n)\n';
 ImportSpec: Import '\n';

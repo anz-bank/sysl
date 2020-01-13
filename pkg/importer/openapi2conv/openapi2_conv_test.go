@@ -9,31 +9,164 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestConvOpenAPIV3ToV2(t *testing.T) {
+func v3ToV2(t *testing.T, test testData) {
 	var swagger3 openapi3.Swagger
-	err := json.Unmarshal([]byte(exampleV3), &swagger3)
+	err := json.Unmarshal([]byte(test.v3), &swagger3)
 	require.NoError(t, err)
 
 	actualV2, err := FromV3Swagger(&swagger3)
 	require.NoError(t, err)
 	data, err := json.Marshal(actualV2)
 	require.NoError(t, err)
-	require.JSONEq(t, exampleV2, string(data))
+	require.JSONEq(t, test.v2, string(data))
 }
 
-func TestConvOpenAPIV2ToV3(t *testing.T) {
+func v2ToV3(t *testing.T, test testData) {
 	var swagger2 openapi2.Swagger
-	err := json.Unmarshal([]byte(exampleV2), &swagger2)
+	err := json.Unmarshal([]byte(test.v2), &swagger2)
 	require.NoError(t, err)
 
 	actualV3, err := ToV3Swagger(&swagger2)
 	require.NoError(t, err)
 	data, err := json.Marshal(actualV3)
 	require.NoError(t, err)
-	require.JSONEq(t, exampleV3, string(data))
+	require.JSONEq(t, test.v3, string(data))
 }
 
-const exampleV2 = `
+func TestTwoWayConversions(t *testing.T) {
+	for _, test := range twoWayTests {
+		v2ToV3(t, test)
+		v3ToV2(t, test)
+	}
+
+}
+func TestConvOpenAPIV3ToV2(t *testing.T) {
+	for _, test := range v3ToV2Tests {
+		v3ToV2(t, test)
+	}
+}
+
+func TestConvOpenAPIV2ToV3(t *testing.T) {
+	for _, test := range v2ToV3Tests {
+		v2ToV3(t, test)
+	}
+}
+
+type testData struct {
+	v2 string
+	v3 string
+}
+
+var v2ToV3Tests = [...]testData{{
+	v2: `
+  {
+    "info": {"title":"JustBasePath","version":"0.1"},
+    "schemes": [],
+    "basePath": "/v2"
+  }
+  `,
+	v3: `
+  {
+    "openapi": "3.0.2",
+    "info": {"title":"JustBasePath","version":"0.1"},
+    "servers": [
+      {
+        "url": "/v2"
+      }
+    ],
+    "components": {},
+    "paths": {}
+  }
+  `,
+}, {
+	v2: `
+  {
+    "info": {"title":"MissingHost","version":"0.1"},
+    "schemes": ["https"],
+    "basePath": "/v2"
+  }
+  `,
+	v3: `
+  {
+    "openapi": "3.0.2",
+    "info": {"title":"MissingHost","version":"0.1"},
+    "servers": [
+      {
+        "url": "/v2"
+      }
+    ],
+    "components": {},
+    "paths": {}
+  }
+  `,
+}, {
+	v2: `
+  {
+    "info": {"title":"MissingSchemes","version":"0.1"},
+    "host": "myhost",
+    "basePath": "/v2"
+  }
+  `,
+	v3: `
+  {
+    "openapi": "3.0.2",
+    "info": {"title":"MissingSchemes","version":"0.1"},
+    "servers": [
+      {
+        "url": "https://myhost/v2"
+      }
+    ],
+    "components": {},
+    "paths": {}
+  }
+  `,
+}}
+
+var v3ToV2Tests = [...]testData{{
+	v3: `
+  {
+    "openapi": "3.0.2",
+    "info": {"title":"JustBasePath","version":"0.1"},
+    "servers": [
+      {
+        "url": "/v2"
+      }
+    ]
+  }
+  `,
+	v2: `
+  {
+    "info": {"title":"JustBasePath","version":"0.1"},
+    "basePath": "/v2",
+    "schemes": [""]
+  }
+  `,
+}, {
+	v3: `
+  {
+    "openapi": "3.0.2",
+    "info": {"title":"Full URL","version":"0.1"},
+    "servers": [
+      {
+        "url": "https://myhost/v2"
+      }
+    ],
+    "components": {},
+    "paths": {}
+  }
+  `,
+	v2: `
+  {
+    "info": {"title":"Full URL","version":"0.1"},
+    "host": "myhost",
+    "basePath": "/v2",
+    "schemes": ["https"]
+  }
+  `,
+}}
+
+var twoWayTests = [...]testData{{
+	v2: `
 {
   "info": {"title":"MyAPI","version":"0.1"},
   "schemes": ["https"],
@@ -207,9 +340,8 @@ const exampleV2 = `
     }
   ]
 }
-`
-
-const exampleV3 = `
+`,
+	v3: `
 {
   "openapi": "3.0.2",
   "info": {"title":"MyAPI","version":"0.1"},
@@ -406,4 +538,5 @@ const exampleV3 = `
     }
   ]
 }
-`
+`,
+}}
