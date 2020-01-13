@@ -11,33 +11,71 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 )
 
+func toV3BasePath(swagger *openapi2.Swagger, openAPI *openapi3.Swagger) {
+	// basePath is valid without host or scheme: https://swagger.io/docs/specification/2-0/api-host-and-base-path/
+	if len(swagger.Host) == 0 {
+		openAPI.AddServer(&openapi3.Server{URL: swagger.BasePath})
+		return
+	}
+
+	if len(swagger.Schemes) == 0 {
+		u := url.URL{
+			Scheme: "https",
+			Host:   swagger.Host,
+			Path:   swagger.BasePath,
+		}
+		openAPI.AddServer(&openapi3.Server{
+			URL: u.String(),
+		})
+	} else {
+		for _, scheme := range swagger.Schemes {
+			u := url.URL{
+				Scheme: scheme,
+				Host:   swagger.Host,
+				Path:   swagger.BasePath,
+			}
+			openAPI.AddServer(&openapi3.Server{
+				URL: u.String(),
+			})
+		}
+	}
+}
+
+func fromV3BasePath(openAPI *openapi3.Swagger, swagger *openapi2.Swagger) {
+	var firstPath string
+	var firstHost string
+	for _, server := range openAPI.Servers {
+		pu, err := url.Parse(server.URL)
+		if err != nil {
+			continue
+		}
+
+		swagger.Schemes = append(swagger.Schemes, pu.Scheme)
+
+		if firstPath == "" {
+			firstPath = pu.Path
+		}
+
+		if firstHost == "" {
+			firstHost = pu.Host
+		}
+	}
+
+	swagger.BasePath = firstPath
+	swagger.Host = firstHost
+}
+
 func ToV3Swagger(swagger *openapi2.Swagger) (*openapi3.Swagger, error) {
 	result := &openapi3.Swagger{
 		OpenAPI:    "3.0.2",
 		Info:       &swagger.Info,
 		Components: openapi3.Components{},
+		Paths:      openapi3.Paths{},
 		Tags:       swagger.Tags,
 	}
-	host := swagger.Host
-	if len(host) > 0 {
-		schemes := swagger.Schemes
-		if len(schemes) == 0 {
-			schemes = []string{
-				"https://",
-			}
-		}
-		basePath := swagger.BasePath
-		for _, scheme := range schemes {
-			u := url.URL{
-				Scheme: scheme,
-				Host:   host,
-				Path:   basePath,
-			}
-			result.AddServer(&openapi3.Server{
-				URL: u.String(),
-			})
-		}
-	}
+
+	toV3BasePath(swagger, result)
+
 	if paths := swagger.Paths; paths != nil {
 		resultPaths := make(map[string]*openapi3.PathItem, len(paths))
 		for path, pathItem := range paths {
@@ -341,31 +379,9 @@ func FromV3Swagger(swagger *openapi3.Swagger) (*openapi2.Swagger, error) {
 		Responses:   resultResponses,
 		Tags:        swagger.Tags,
 	}
-	isHTTPS := false
-	isHTTP := false
-	servers := swagger.Servers
-	for i, server := range servers {
-		parsedURL, err := url.Parse(server.URL)
-		if err == nil {
-			// See which schemes seem to be supported
-			if parsedURL.Scheme == "https" {
-				isHTTPS = true
-			} else if parsedURL.Scheme == "http" {
-				isHTTP = true
-			}
-			// The first server is assumed to provide the base path
-			if i == 0 {
-				result.Host = parsedURL.Host
-				result.BasePath = parsedURL.Path
-			}
-		}
-	}
-	if isHTTPS {
-		result.Schemes = append(result.Schemes, "https")
-	}
-	if isHTTP {
-		result.Schemes = append(result.Schemes, "http")
-	}
+
+	fromV3BasePath(swagger, result)
+
 	for path, pathItem := range swagger.Paths {
 		if pathItem == nil {
 			continue
