@@ -6,16 +6,15 @@
 
 testapp "Sample API" [package="package_foo"]:
     @version = "1.0.0"
+    @basePath = "/v1"
     @host = "api.example.com"
     @description =:
         | API description in Markdown.
 
-    /v1:
-
-        /users/{id<:int}:
-            GET (metadata <: bool [~header, ~optional, name="metadata"]):
-                | No description.
-                return ok
+    /users/{id<:int}:
+        GET (metadata <: bool [~header, ~optional, name="metadata"]):
+            | No description.
+            return ok
 
     #---------------------------------------------------------------------------
     # definitions
