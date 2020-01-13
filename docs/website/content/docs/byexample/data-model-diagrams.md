@@ -6,51 +6,53 @@ description= ""
 layout= "byexample"
 weight = 9
 topic = "Diagrams"
-
+PlaygroundURL = "http://joshcarp.github.io/sysl-playground/?input=UHJvamVjdDoKICAgIFNlcnZlcjoKICAgICAgICBTZXJ2ZXIKICAgIEFwcDoKICAgICAgICBBcHAgClNlcnZlcjoKICAgICF0eXBlIGlkOgogICAgICAgIGlkIDw6IGludApBcHA6CiAgICAhdHlwZSBVc2VyOgogICAgICAgIGlkIDw6IFNlcnZlci5pZApBbm90aGVyT25lOgogICAgIXR5cGUgbmFtZToKICAgICAgICBmaXJzdE5hbWUgPDogc3RyaW5nCiAgICAgICAgbGFzdE5hbWUgPDogc3RyaW5nCg==&cmd=c3lzbCBkYXRhIC1vICIlKGVwbmFtZSkuc3ZnIiAtaiBQcm9qZWN0IDFfcHJvamVjdC5zeXNs"
 ID = "data-model-diagrams"
+CodeWithoutComments = """Project:
+    Server:
+        Server
+    App:
+        App 
+Server:
+    !type id:
+        id <: int
+App:
+    !type User:
+        id <: Server.id
+AnotherOne:
+    !type name:
+        firstName <: string
+        lastName <: string
+"""
+
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example will use a simple system and start using the sysl command to generate diagrams.</p>
-""", CodeForJs = """""",Image = ""},
-
-      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">Project</span><span class="p">:</span></pre>""",DocsRendered= """""", CodeForJs = """Project:
 """,Image = ""},
+
+      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">Project</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="nx">Server</span><span class="p">:</span>
         <span class="nx">Server</span>
     <span class="nx">App</span><span class="p">:</span>
         <span class="nx">App</span> </pre>""",DocsRendered= """<p>This is a &ldquo;root level application&rdquo; We can name it or leave it blank, at the moment we don&rsquo;t need to use it, so we can substitute with an _ . These &ldquo;root level applications&rdquo; don&rsquo;t really mean anything at the moment; they&rsquo;re just a &ldquo;dirty hack&rdquo; for sysl to know what to render</p>
-""", CodeForJs = """    Server:
-        Server
-    App:
-        App 
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">Server</span><span class="p">:</span>
     <span class="p">!</span><span class="kd">type</span> <span class="nx">id</span><span class="p">:</span>
         <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
 <span class="nx">App</span><span class="p">:</span>
-    <span class="p">!</span><span class="kd">type</span> <span class="nx">User</span><span class="p">:</span></pre>""",DocsRendered= """""", CodeForJs = """Server:
-    !type id:
-        id <: int
-App:
-    !type User:
-""",Image = ""},
+    <span class="p">!</span><span class="kd">type</span> <span class="nx">User</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
         <span class="nx">id</span> <span class="p">&lt;:</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">id</span></pre>""",DocsRendered= """<p>Here we define that this id refers to another type defined in the Server Application</p>
-""", CodeForJs = """        id <: Server.id
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">AnotherOne</span><span class="p">:</span>
     <span class="p">!</span><span class="kd">type</span> <span class="nx">name</span><span class="p">:</span>
         <span class="nx">firstName</span> <span class="p">&lt;:</span> <span class="kt">string</span>
-        <span class="nx">lastName</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""", CodeForJs = """AnotherOne:
-    !type name:
-        firstName <: string
-        lastName <: string
-""",Image = ""},
+        <span class="nx">lastName</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""",Image = ""},
 
 
 ],
@@ -58,37 +60,37 @@ App:
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="nx">export</span> <span class="nx">SYSL_PLANTUML</span><span class="p">=</span><span class="nx">http</span><span class="p">:</span><span class="o">//</span><span class="nx">www</span><span class="p">.</span><span class="nx">plantuml</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">plantuml</span></pre>""",DocsRendered= """<p>First, make sure to set the environment variable SYSL_PLANTUML</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
 <span class="nx">sysl</span> <span class="nx">data</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;3_project.svg&#34;</span> <span class="o">-</span><span class="nx">j</span> <span class="nx">Project</span> <span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """<p>Now run the sysl data model command</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="err">#</span><span class="nx">ls</span>
 <span class="err">#</span><span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span> <span class="mi">2</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sh</span>  <span class="nx">App</span><span class="p">.</span><span class="nx">svg</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">svg</span></pre>""",DocsRendered= """<p>&rdquo;-o&rdquo; is the output file&rdquo;%(epname).svg&rdquo; is a special &ldquo;hack&rdquo; and will generate a seperate data model diagram for all the applications defined within the project:</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>&rdquo;-j&rdquo; specifies the project to render</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>&ldquo;1_project.sysl&rdquo; is the input sysl file</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>NOTE: there is currently a bug where data-types defined in different applications don&rsquo;t render correctly</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>See <a href="https://github.com/anz-bank/sysl/issues/474">https://github.com/anz-bank/sysl/issues/474</a> for progress updates</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>project.svg:</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
 
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""", CodeForJs = """""",Image = "/assets/byexample/images/data-model-diagrams8.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams8.svg"},
 
 
 ],
@@ -96,22 +98,22 @@ App:
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="nx">sysl</span> <span class="nx">data</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;%(epname).svg&#34;</span> <span class="o">-</span><span class="nx">j</span> <span class="nx">Project</span> <span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """<p>If seperate data model diagrams are needed for every application, &ldquo;%(epname).svg&rdquo; can be used as the output file, and a data model will be rendered for every application</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">ls</span>
-<span class="err">#</span><span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span> <span class="mi">4</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sh</span>  <span class="nx">App</span><span class="p">.</span><span class="nx">svg</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">svg</span> <span class="nx">Bar</span><span class="p">.</span><span class="nx">svg</span></pre>""",DocsRendered= """""", CodeForJs = """""",Image = ""},
+<span class="err">#</span><span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span> <span class="mi">4</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sh</span>  <span class="nx">App</span><span class="p">.</span><span class="nx">svg</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">svg</span> <span class="nx">Bar</span><span class="p">.</span><span class="nx">svg</span></pre>""",DocsRendered= """""",Image = ""},
 
 
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""", CodeForJs = """""",Image = "/assets/byexample/images/data-model-diagrams8.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams8.svg"},
 
 
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""", CodeForJs = """""",Image = "/assets/byexample/images/data-model-diagrams8.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams8.svg"},
 
 
 ],

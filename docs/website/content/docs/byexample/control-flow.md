@@ -6,25 +6,33 @@ description= ""
 layout= "byexample"
 weight = 5
 topic = "Basics"
-
+PlaygroundURL = "http://joshcarp.github.io/sysl-playground/?input=Rm9vOgogICF0eXBlIEVycm9yUmVzcG9uc2U6CiAgICBzdGF0dXMgPDogc3RyaW5nCiAgIXR5cGUgUmVzb3VyY2VOb3RGb3VuZEVycm9yOgogICAgc3RhdHVzIDw6IHN0cmluZyAKICB0b2RvczoKICAKICAgIGlmIG5vdGZvdW5kOgogICAgICByZXR1cm4gNDA0IDw6IFJlc291cmNlTm90Rm91bmRFcnJvcgogICAgZWxzZSBpZiBmYWlsZWQ6CiAgICAgIHJldHVybiA1MDAgPDogRXJyb3JSZXNwb25zZQogICAgZWxzZTogICAgCiAgICAgIHJldHVybiAyMDAgPDogVG9kbyAK&cmd=c3lzbCBzZCAtbyAiM19wcm9qZWN0LnN2ZyIgLXMgIkZvbyA8LSB0b2RvcyIgMV9wcm9qZWN0LnN5c2w="
 ID = "control-flow"
+CodeWithoutComments = """Foo:
+  !type ErrorResponse:
+    status <: string
+  !type ResourceNotFoundError:
+    status <: string 
+  todos:
+  
+    if notfound:
+      return 404 <: ResourceNotFoundError
+    else if failed:
+      return 500 <: ErrorResponse
+    else:    
+      return 200 <: Todo 
+"""
+
 Segs = [[
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">Foo</span><span class="p">:</span>
   <span class="p">!</span><span class="kd">type</span> <span class="nx">ErrorResponse</span><span class="p">:</span>
-    <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""", CodeForJs = """Foo:
-  !type ErrorResponse:
-    status <: string
-""",Image = ""},
+    <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">  <span class="p">!</span><span class="kd">type</span> <span class="nx">ResourceNotFoundError</span><span class="p">:</span>
     <span class="nx">status</span> <span class="p">&lt;:</span> <span class="kt">string</span> 
   <span class="nx">todos</span><span class="p">:</span>
   </pre>""",DocsRendered= """<p>Here we can use if (or IF) and specify conditional returns based on the https status codesNote these variables don&rsquo;t need to be defined; they&rsquo;re just for sequence diagram generation</p>
-""", CodeForJs = """  !type ResourceNotFoundError:
-    status <: string 
-  todos:
-  
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="k">if</span> <span class="nx">notfound</span><span class="p">:</span>
@@ -32,28 +40,22 @@ Segs = [[
     <span class="k">else</span> <span class="k">if</span> <span class="nx">failed</span><span class="p">:</span>
       <span class="k">return</span> <span class="mi">500</span> <span class="p">&lt;:</span> <span class="nx">ErrorResponse</span>
     <span class="k">else</span><span class="p">:</span>    
-      <span class="k">return</span> <span class="mi">200</span> <span class="p">&lt;:</span> <span class="nx">Todo</span> </pre>""",DocsRendered= """""", CodeForJs = """    if notfound:
-      return 404 <: ResourceNotFoundError
-    else if failed:
-      return 500 <: ErrorResponse
-    else:    
-      return 200 <: Todo 
-""",Image = ""},
+      <span class="k">return</span> <span class="mi">200</span> <span class="p">&lt;:</span> <span class="nx">Todo</span> </pre>""",DocsRendered= """""",Image = ""},
 
 
 ],
 [
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>By creating a sequence diagram we can see that the conditional statements are rendered aswell</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
-      {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">sysl</span> <span class="nx">sd</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;3_project.svg&#34;</span> <span class="o">-</span><span class="nx">s</span> <span class="s">&#34;Foo &lt;- todos&#34;</span> <span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """""", CodeForJs = """""",Image = ""},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">sysl</span> <span class="nx">sd</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;3_project.svg&#34;</span> <span class="o">-</span><span class="nx">s</span> <span class="s">&#34;Foo &lt;- todos&#34;</span> <span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """""",Image = ""},
 
 
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""", CodeForJs = """""",Image = "/assets/byexample/images/control-flow4.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/control-flow4.svg"},
 
 
 ],

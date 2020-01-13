@@ -6,20 +6,22 @@ description= ""
 layout= "byexample"
 weight = 6
 topic = "Basics"
-
+PlaygroundURL = "http://joshcarp.github.io/sysl-playground/?input=Rm9vIFtwYWNrYWdlPSJjb20ubXljb21wYW55Il06CiAgICBCYXIobmV3UG9zdCA8OiBzdHJpbmcgW35ib2R5XSk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
 ID = "attributes"
+CodeWithoutComments = """Foo [package="com.mycompany"]:
+    Bar(newPost <: string [~body]):
+        return string
+"""
+
 Segs = [[
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="nx">Foo</span> <span class="p">[</span><span class="kn">package</span><span class="p">=</span><span class="s">&#34;com.mycompany&#34;</span><span class="p">]:</span></pre>""",DocsRendered= """<p>Specify attributes of applications or endpoints in square brackets.</p>
-""", CodeForJs = """Foo [package="com.mycompany"]:
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma">
     <span class="nf">Bar</span><span class="p">(</span><span class="nx">newPost</span> <span class="p">&lt;:</span> <span class="kt">string</span> <span class="p">[</span><span class="err">~</span><span class="nx">body</span><span class="p">]):</span>
         <span class="k">return</span> <span class="kt">string</span></pre>""",DocsRendered= """<p>Attributes can also be tags specified with tilda notation</p>
-""", CodeForJs = """    Bar(newPost <: string [~body]):
-        return string
 """,Image = ""},
 
 

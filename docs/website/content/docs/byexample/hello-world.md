@@ -6,37 +6,39 @@ description= ""
 layout= "byexample"
 weight = 2
 topic = "Basics"
-
+PlaygroundURL = "http://joshcarp.github.io/sysl-playground/?input=SGVsbG9Xb3JsZDoKICAgIGVuZHBvaW50MToKICAgICAgICByZXR1cm4gc3RyaW5nCiAgICBlbmRwb2ludDIocmVxdWVzdCA8OiBzdHJpbmcsIGlkIDw6IGludCk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
 ID = "hello-world"
+CodeWithoutComments = """HelloWorld:
+    endpoint1:
+        return string
+    endpoint2(request <: string, id <: int):
+        return string
+"""
+
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Our first program will make a simple &ldquo;Hello world&rdquo; application with two endpoints</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
 <span class="nx">HelloWorld</span><span class="p">:</span></pre>""",DocsRendered= """<p>Specify an application called <code>HelloWorld</code></p>
-""", CodeForJs = """HelloWorld:
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="nx">endpoint1</span><span class="p">:</span></pre>""",DocsRendered= """<p>Specify an endpoint as the next indent.</p>
-""", CodeForJs = """    endpoint1:
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
         <span class="k">return</span> <span class="kt">string</span></pre>""",DocsRendered= """<p>Specify a return type for the endpoint. Anything after the return is considered a payload.</p>
-""", CodeForJs = """        return string
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="nf">endpoint2</span><span class="p">(</span><span class="nx">request</span> <span class="p">&lt;:</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span><span class="p">):</span>
         <span class="k">return</span> <span class="kt">string</span></pre>""",DocsRendered= """<p>Specify parameters; a string parameter named &ldquo;request&rdquo; and an int named &ldquo;id&rdquo; to the endpoint</p>
-""", CodeForJs = """    endpoint2(request <: string, id <: int):
-        return string
 """,Image = ""},
 
       {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands.</p>
-""", CodeForJs = """""",Image = ""},
+""",Image = ""},
 
 
 ],
