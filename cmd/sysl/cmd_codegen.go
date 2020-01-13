@@ -13,7 +13,6 @@ type codegenCmd struct {
 	CmdContextParamCodegen
 	outDir         string
 	appName        string
-	genPath        string
 	validateOnly   bool
 	enableDebugger bool
 }
@@ -34,7 +33,7 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 			" code will be generated only for the given app").Default("").StringVar(&p.appName)
 	cmd.Flag("start", "start rule for the grammar").Default(".").StringVar(&p.start)
 	cmd.Flag("outdir", "output directory").Default(".").StringVar(&p.outDir)
-	cmd.Flag("gen-path", "path passed to sysl").Default("").StringVar(&p.genPath)
+	cmd.Flag("dep-path", "path passed to sysl").Default("").StringVar(&p.depPath)
 	cmd.Flag("validate-only", "Only Perform validation on the transform grammar").BoolVar(&p.validateOnly)
 	cmd.Flag("disable-validator", "Disable validation on the transform grammar").
 		Default("false").BoolVar(&p.disableValidator)

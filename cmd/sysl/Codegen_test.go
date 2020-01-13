@@ -301,22 +301,22 @@ func TestValidatorDoValidate(t *testing.T) {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform2.sysl", "--grammar",
 				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile",
-				"--gen-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: true},
+				"--dep-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: true},
 		"Grammar loading fail": {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform2.sysl", "--grammar",
 				filepath.Join(testDir, "go.sysl"), "--start", "goFile",
-				"--gen-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: false},
+				"--dep-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: false},
 		"Transform loading fail": {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "tfm.sysl", "--grammar",
 				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile",
-				"--gen-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: false},
+				"--dep-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: false},
 		"Has validation messages": {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform1.sysl", "--grammar",
 				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile",
-				"--gen-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: false},
+				"--dep-path", "github.service.anz/anzx/bff/gen/"}, isErrNil: false},
 	}
 
 	for name, tt := range cases {

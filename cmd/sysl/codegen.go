@@ -168,7 +168,7 @@ func readGrammar(filename, grammarName, startRule string) (*parser.Grammar, erro
 
 // applyTranformToModel loads applies the transform to input model
 func applyTranformToModel(
-	modelName, transformAppName, viewName string,
+	modelName, transformAppName, depPath string, viewName string,
 	model, transform *sysl.Module,
 ) (*sysl.Value, error) {
 	modelApp, has := model.Apps[modelName]
@@ -187,6 +187,7 @@ func applyTranformToModel(
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
 	s.AddModule("module", model)
+	s.AddString("dep", depPath)
 	var result *sysl.Value
 	// assume args are
 	//  app <: sysl.App and
@@ -255,9 +256,11 @@ func GenerateCode(
 	model *sysl.Module, modelAppName string,
 	fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
+	depPath := codegenParams.depPath
 
 	logger.Debugf("root-transform: %s\n", codegenParams.rootTransform)
 	logger.Debugf("transform: %s\n", codegenParams.transform)
+	logger.Debugf("dep-path: %s\n", codegenParams.depPath)
 	logger.Debugf("grammar: %s\n", codegenParams.grammar)
 	logger.Debugf("start: %s\n", codegenParams.start)
 
@@ -284,11 +287,11 @@ func GenerateCode(
 		}
 	}
 
-	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", model, tx)
+	fileNames, err := applyTranformToModel(modelAppName, transformAppName, depPath, "filename", model, tx)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(modelAppName, transformAppName, g.Start, model, tx)
+	result, err := applyTranformToModel(modelAppName, transformAppName, depPath, g.Start, model, tx)
 	if err != nil {
 		return nil, err
 	}
