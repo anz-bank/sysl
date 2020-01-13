@@ -1,0 +1,14 @@
+Lemontree [package="lemontree"]:
+  !type Lemon:
+    id <: int
+    title <: string
+
+  /lemon:
+    /{id<:int}:
+      GET:
+        return Lemon
+
+  /morelemon:
+    /{id<:int}:
+      GET:
+        return Lemon

@@ -5,14 +5,14 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/spf13/afero"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewFs(t *testing.T) {
 	t.Parallel()
 
-	backendFs := afero.NewOsFs()
+	_, backendFs := syslutil.WriteToMemOverlayFs("/")
 	fs := NewFs(backendFs)
 	assert.Equal(t, backendFs, fs.source)
 }
@@ -20,8 +20,9 @@ func TestNewFs(t *testing.T) {
 func TestOpenLocalFile(t *testing.T) {
 	t.Parallel()
 
-	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
-	fs := NewFs(afero.NewOsFs())
+	filename := "deps.sysl"
+	_, memfs := syslutil.WriteToMemOverlayFs("../../tests/")
+	fs := NewFs(memfs)
 	f, err := fs.Open(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
@@ -30,18 +31,20 @@ func TestOpenLocalFile(t *testing.T) {
 func TestOpenRemoteFile(t *testing.T) {
 	t.Parallel()
 
-	filename := "github.com/ChloePlanet/sysltestpub/pubbanana.sysl"
-	fs := NewFs(afero.NewOsFs())
+	filename := "github.com/anz-bank/sysl/tests/bananatree.sysl"
+	_, memfs := syslutil.WriteToMemOverlayFs("/")
+	fs := NewFs(memfs)
 	f, err := fs.Open(filename)
 	assert.Nil(t, err)
-	assert.Equal(t, "pubbanana.sysl", filepath.Base(f.Name()))
+	assert.Equal(t, "bananatree.sysl", filepath.Base(f.Name()))
 }
 
 func TestOpenRemoteFileFailed(t *testing.T) {
 	t.Parallel()
 
-	filename := "github.com/wrong/sysltestpub/pubbanana.sysl"
-	fs := NewFs(afero.NewOsFs())
+	filename := "github.com/wrong/repo/deps.sysl"
+	_, memfs := syslutil.WriteToMemOverlayFs("/")
+	fs := NewFs(memfs)
 	f, err := fs.Open(filename)
 	assert.Nil(t, f)
 	assert.Equal(t, fmt.Sprintf("%s not found", filename), err.Error())

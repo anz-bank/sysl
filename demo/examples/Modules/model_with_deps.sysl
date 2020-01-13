@@ -1,6 +1,6 @@
 import deps
-import github.com/ChloePlanet/sysltestpub/pubbanana
-import github.com/ChloePlanet/sysltestpub/pubpkg/pubapple
+import github.com/anz-bank/sysl/tests/bananatree
+import github.com/anz-bank/sysl/tests/orchard/lemontree
 
 ModelWithDeps [package="model"]:
   !type Response:
@@ -14,6 +14,6 @@ ModelWithDeps [package="model"]:
         Dep <- GET /dep/{id}
         Dep <- GET /moredep/{id}
         Dep2 <- GET /dep2/{id}
-        PubBanana <- GET /banana/{id}
-        PubApple <- GET /apple/{id}
+        Banana <- GET /banana/{id}
+        Lemon <- GET /morelemon
         return Response
