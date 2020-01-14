@@ -5,16 +5,17 @@ import (
 	"sort"
 	"strings"
 
-	proto "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
 
-func CreateTableDepthMap(tableMap map[string]*proto.Type) map[int][]string {
-	var completedTableDepthMap = make(map[int][]string)
-	var incompleteTableDepthMap = make(map[string]int)
-	var completeTableDepthMap = make(map[string]int)
-	var visitedTableAttrDepth = make(map[string]string)
+func CreateTableDepthMap(tableMap map[string]*sysl.Type) map[int][]string {
+	var completedTableDepthMap = map[int][]string{}
+	var incompleteTableDepthMap = map[string]int{}
+	var completeTableDepthMap = map[string]int{}
+	var visitedTableAttrDepth = map[string]string{}
 	for tableName := range tableMap {
 		incompleteTableDepthMap[tableName] = 0
 	}
@@ -24,7 +25,7 @@ func CreateTableDepthMap(tableMap map[string]*proto.Type) map[int][]string {
 }
 
 func processTableDepth(
-	tableMap map[string]*proto.Type,
+	tableMap map[string]*sysl.Type,
 	completedTableDepthMap map[int][]string,
 	completeTableDepthMap map[string]int,
 	incompleteTableDepthMap map[string]int,
@@ -36,7 +37,7 @@ func processTableDepth(
 		if processComplete {
 			processedTablesSlice := completedTableDepthMap[size]
 			if processedTablesSlice == nil {
-				processedTablesSlice = []string{}
+				processedTablesSlice = nil
 			}
 			processedTablesSlice = append(processedTablesSlice, tableName)
 			completedTableDepthMap[size] = processedTablesSlice
@@ -55,17 +56,15 @@ func processTableDepth(
 
 func findTableDepth(
 	tableName string,
-	table *proto.Type,
+	table *sysl.Type,
 	visitedTableAttrs map[string]string,
 	completeTableDepthMap map[string]int,
 ) (bool, int, map[string]string) {
-	var allAttrProcessed bool
-	allAttrProcessed = true
-	var tableDepth int
-	tableDepth = 0
-	var tempVisitedAttrs = make(map[string]string)
+	var allAttrProcessed bool = true
+	var tableDepth int = 0
+	var tempVisitedAttrs = map[string]string{}
 	if relEntity := table.GetRelation(); relEntity != nil {
-		attrNames := []string{}
+		var attrNames []string
 		for attrName := range relEntity.AttrDefs {
 			attrNames = append(attrNames, attrName)
 		}
@@ -89,18 +88,19 @@ func findTableDepth(
 	return allAttrProcessed, tableDepth, tempVisitedAttrs
 }
 
-func GenerateFromSQLMap(m []ScriptOutput, fs afero.Fs) error {
+func GenerateFromSQLMap(m []ScriptOutput, fs afero.Fs, logger *logrus.Logger) error { //nolint:interfacer
 	for _, e := range m {
 		err := errors.Wrapf(afero.WriteFile(fs, e.filename, []byte(e.content),
 			os.ModePerm), "writing %q", e.filename)
 		if err != nil {
+			logger.Errorf("error received while writing the file %s. The error message is - %s", e.filename, err.Error())
 			return err
 		}
 	}
 	return nil
 }
 
-func isAutoIncrementAndPrimaryKey(attrType *proto.Type) (bool, bool) {
+func isAutoIncrementAndPrimaryKey(attrType *sysl.Type) (bool, bool) {
 	isAutoIncrement := false
 	isPrimaryKey := false
 	if patterns := attrType.GetAttrs(); patterns != nil {
@@ -118,7 +118,7 @@ func isAutoIncrementAndPrimaryKey(attrType *proto.Type) (bool, bool) {
 	}
 	return isAutoIncrement, isPrimaryKey
 }
-func getDataTypeAndSize(attrType *proto.Type) (string, int64) {
+func getDataTypeAndSize(attrType *sysl.Type) (string, int64) {
 	syslDataType := strings.ToLower(attrType.GetPrimitive().String())
 	var attributeSize int64
 	attributeSize = defaultTextSize
@@ -137,8 +137,8 @@ func getDataTypeAndSize(attrType *proto.Type) (string, int64) {
 	return syslDataType, attributeSize
 }
 
-func sortColumnNamesIntoList(attrMap map[string]*proto.Type) []string {
-	sortedColumnNames := []string{}
+func sortColumnNamesIntoList(attrMap map[string]*sysl.Type) []string {
+	var sortedColumnNames []string
 	for columnName := range attrMap {
 		sortedColumnNames = append(sortedColumnNames, columnName)
 	}

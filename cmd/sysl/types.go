@@ -80,7 +80,7 @@ type CmdContextParamDatagen struct {
 	classFormat string
 }
 
-type CmdDatabaseScript struct {
+type CmdDatabaseScriptParams struct {
 	title     string
 	outputDir string
 	appNames  string

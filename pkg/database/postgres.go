@@ -6,21 +6,18 @@ import (
 	"strconv"
 	"strings"
 
-	proto "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
 func (v *ScriptView) writeCreateSQLForATable(
 	tableName string,
-	table *proto.Type_Relation,
+	table *sysl.Type_Relation,
 	visitedAttributes map[string]string,
 ) {
 	v.stringBuilder.WriteString(fmt.Sprintf("CREATE TABLE %s(\n", tableName))
-	foreignKeyConstraints := []string{}
-	primaryKeys := []string{}
-
-	lineNumbers := []int32{}
-	attrNames := []string{}
-	lineNumberMap := make(map[int32]string)
+	var foreignKeyConstraints, primaryKeys, attrNames []string
+	var lineNumbers []int32
+	lineNumberMap := map[int32]string{}
 	for columnName := range table.AttrDefs {
 		column := table.AttrDefs[columnName]
 		lineNumber := column.GetSourceContext().GetStart().GetLine()
@@ -49,11 +46,11 @@ func (v *ScriptView) writeCreateSQLForATable(
 
 func (v *ScriptView) writeModifySQLForATable(
 	tableName string,
-	entityNew *proto.Type_Relation,
-	entityOld *proto.Type_Relation,
+	entityNew *sysl.Type_Relation,
+	entityOld *sysl.Type_Relation,
 	visitedAttributes map[string]string,
 ) {
-	primaryKeys := []string{}
+	var primaryKeys []string
 	dropColumnQueries := ""
 	attrDefsNew := entityNew.AttrDefs
 	attrDefsOld := entityOld.AttrDefs
@@ -82,7 +79,7 @@ func (v *ScriptView) writeModifySQLForATable(
 		attrTypeNew := attrDefsNew[attrNameNew]
 		if attrTypeOld == nil {
 			//attribute added
-			var foreignKeyConstraints = []string{}
+			var foreignKeyConstraints []string
 			str, isNewColumnPK := v.writeCreateSQLForAColumn(attrTypeNew, tableName, attrNameNew,
 				&primaryKeys, &foreignKeyConstraints, visitedAttributes)
 			str = strings.TrimSpace(str)
@@ -124,7 +121,7 @@ func (v *ScriptView) writeModifySQLForATable(
 			tableName, pkConstraintName, pk))
 	}
 }
-func (v *ScriptView) writeCreateSQLForAColumn(attrType *proto.Type, tableName, attrName string,
+func (v *ScriptView) writeCreateSQLForAColumn(attrType *sysl.Type, tableName, attrName string,
 	primaryKeys, foreignKeyConstraints *[]string, visitedAttributes map[string]string) (string, bool) {
 	var s string
 	isAutoIncrement, isPrimaryKey := isAutoIncrementAndPrimaryKey(attrType)
@@ -170,7 +167,7 @@ func (v *ScriptView) writeCreateSQLForAColumn(attrType *proto.Type, tableName, a
 	return s, isPrimaryKey
 }
 
-func (v *ScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *proto.Type, tableName,
+func (v *ScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *sysl.Type, tableName,
 	attrName string, primaryKeys *[]string, visitedAttributes map[string]string) (bool, bool) {
 	typeRefNew := attrTypeNew.GetTypeRef()
 	typeRefOld := attrTypeOld.GetTypeRef()

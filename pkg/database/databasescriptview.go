@@ -5,21 +5,22 @@ import (
 	"path/filepath"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
-	proto "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/sirupsen/logrus"
 
 	"sort"
 	"strings"
 )
 
 type TableDetails struct {
-	table    *proto.Type
-	tableOld *proto.Type
+	table    *sysl.Type
+	tableOld *sysl.Type
 	action   string
 	name     string
 }
 
 type ScriptView struct {
 	stringBuilder *strings.Builder
+	logger        *logrus.Logger
 	title         string
 }
 
@@ -35,7 +36,7 @@ func MakeScriptOutput(filename, content string) *ScriptOutput {
 	}
 }
 
-func MakeTableDetails(table, tableOld *proto.Type,
+func MakeTableDetails(table, tableOld *sysl.Type,
 	action, name string,
 ) *TableDetails {
 	return &TableDetails{
@@ -46,37 +47,35 @@ func MakeTableDetails(table, tableOld *proto.Type,
 	}
 }
 
-func MakeDatabaseScriptView(title string,
+func MakeDatabaseScriptView(title string, logger *logrus.Logger,
 ) *ScriptView {
 	var stringBuilder strings.Builder
 	return &ScriptView{
 		stringBuilder: &stringBuilder,
 		title:         title,
+		logger:        logger,
 	}
 }
-func MakeEmptyDatabaseScriptView() *ScriptView {
-	return &ScriptView{}
-}
 
-func (v *ScriptView) GenerateDatabaseScriptCreate(tableMap map[string]*proto.Type,
+func (v *ScriptView) GenerateDatabaseScriptCreate(tableMap map[string]*sysl.Type,
 	dbType, appName string) string {
 	v.stringBuilder.WriteString(fmt.Sprintf("/*TITLE : %s*/\n", v.title))
-	v.stringBuilder.WriteString(fmt.Sprint(databaseScriptHeader))
+	v.stringBuilder.WriteString(databaseScriptHeader)
 	appHeader := "\n\n/*-----------------------Relation Model : " +
 		appName + "-----------------------------------------------*/\n"
-	v.stringBuilder.WriteString(fmt.Sprint(appHeader))
-	visitedAttributes := make(map[string]string)
+	v.stringBuilder.WriteString(appHeader)
+	visitedAttributes := map[string]string{}
 	completedTableDepthMap := CreateTableDepthMap(tableMap)
-	depthsFound := []int{}
+	var depthsFound []int
 	for depth := range completedTableDepthMap {
 		depthsFound = append(depthsFound, depth)
 	}
 	sort.Ints(depthsFound)
 	for _, depth := range depthsFound {
 		tableNames := completedTableDepthMap[depth]
-		lineNumbers := []int32{}
-		entityNames := []string{}
-		lineNumberMap := make(map[int32]string)
+		var lineNumbers []int32
+		var entityNames []string
+		lineNumberMap := map[int32]string{}
 		for _, tableName := range tableNames {
 			table := tableMap[tableName]
 			lineNumber := table.GetSourceContext().GetStart().GetLine()
@@ -100,7 +99,7 @@ func (v *ScriptView) GenerateDatabaseScriptCreate(tableMap map[string]*proto.Typ
 
 func (v *ScriptView) ProcessModSysls(appsOld, appsNew map[string]*sysl.Application,
 	appNames []string, outputDir, dbType string) []ScriptOutput {
-	outputSlice := []ScriptOutput{}
+	var outputSlice []ScriptOutput
 	for _, appName := range appNames {
 		appOld := appsOld[appName]
 		appNew := appsNew[appName]
@@ -137,14 +136,14 @@ func findAddedDeletedRetainedTables(
 	tableMapNew map[string]*sysl.Type,
 	tableDepthMapOld, tableDepthMapNew map[int][]string) []TableDetails {
 	tableDepthsListNew := makeSortedListOfTableDepth(tableDepthMapNew)
-	tableWithAction := []TableDetails{}
+	var tableWithAction []TableDetails
 	//Add the retained and added tables
 	for _, depth := range tableDepthsListNew {
 		tableNames := tableDepthMapNew[depth]
 		sort.Strings(tableNames)
 		for _, tableName := range tableNames {
-			found := ifTableExisted(tableName, tableMapOld)
-			if found {
+			_, ok := tableMapOld[tableName]
+			if ok {
 				tableDetails := MakeTableDetails(tableMapNew[tableName],
 					tableMapOld[tableName], Retain, tableName)
 				tableWithAction = append(tableWithAction, *tableDetails)
@@ -159,13 +158,8 @@ func findAddedDeletedRetainedTables(
 	return tableWithAction
 }
 
-func ifTableExisted(tableName string, tableMap map[string]*sysl.Type) bool {
-	item := tableMap[tableName]
-	return item != nil
-}
-
 func makeSortedListOfTableDepth(tableDepthMap map[int][]string) []int {
-	depthList := []int{}
+	var depthList []int
 	for depth := range tableDepthMap {
 		depthList = append(depthList, depth)
 	}
@@ -176,12 +170,12 @@ func makeSortedListOfTableDepth(tableDepthMap map[int][]string) []int {
 func (v *ScriptView) generateDatabaseScriptModify(tableDetails []TableDetails,
 	dbType, appName string) string {
 	v.stringBuilder.WriteString(fmt.Sprintf("/*TITLE : %s*/\n", v.title))
-	v.stringBuilder.WriteString(fmt.Sprint(databaseScriptHeader))
+	v.stringBuilder.WriteString(databaseScriptHeader)
 	appHeader := "\n\n/*-----------------------Relation Model : " +
 		appName + "-----------------------------------------------*/\n"
-	v.stringBuilder.WriteString(fmt.Sprint(appHeader))
+	v.stringBuilder.WriteString(appHeader)
 
-	visitedAttributes := make(map[string]string)
+	visitedAttributes := map[string]string{}
 	for _, tableDetail := range tableDetails {
 		switch tableDetail.action {
 		case "ADD":
@@ -189,6 +183,8 @@ func (v *ScriptView) generateDatabaseScriptModify(tableDetails []TableDetails,
 		case "RETAIN":
 			v.writeModifySQLForATable(tableDetail.name, tableDetail.table.GetRelation(),
 				tableDetail.tableOld.GetRelation(), visitedAttributes)
+		default:
+			v.logger.Warnf("the table action is spcified as %s, which is not valid\n", tableDetail.action)
 		}
 	}
 	return v.stringBuilder.String()
