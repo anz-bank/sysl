@@ -1,4 +1,5 @@
 import deps
+import github.com/anz-bank/sysl/tests/bananatree
 
 ModelWithDeps [package="model"]:
   !type Response:
@@ -12,4 +13,5 @@ ModelWithDeps [package="model"]:
         Dep <- GET /dep/{id}
         Dep <- GET /moredep/{id}
         Dep2 <- GET /dep2/{id}
+        Banana <- GET /banana/{id}
         return Response
