@@ -47,6 +47,7 @@ type CmdContextParamCodegen struct {
 	transform        string
 	grammar          string
 	start            string
+	basePath         string
 	disableValidator bool
 }
 
