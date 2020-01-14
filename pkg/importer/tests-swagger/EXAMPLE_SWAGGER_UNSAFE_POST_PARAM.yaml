@@ -1,0 +1,89 @@
+swagger: '2.0'
+info:
+  description: foo
+  title: foo
+  version: 0.0.0
+schemes:
+  - https
+
+paths:
+  /correct_name:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: teSt_saMple
+          type: string
+  /with_a_hyphen:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: Test-Sample
+          type: string
+  /contiguous_hyphens:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: test-----sample
+          type: string
+  /hyphens_in_weird_locations:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: te--s-t-s-Am----ple
+          type: string
+  /with_a_space:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: test sample
+          type: string
+  /contiguous_spaces:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: test     sample
+          type: string
+  /spaces_in_weird_locations:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: test     s a  m p  le
+          type: string
+  /space_and_hyphens_mixes:
+    post:
+      consumes:
+        - application/json
+      description: unsafe post param names
+      parameters:
+        - in: header
+          required: true
+          name: test - - s a -- m p - l-e
+          type: string
