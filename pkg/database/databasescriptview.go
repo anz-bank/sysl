@@ -184,7 +184,8 @@ func (v *ScriptView) generateDatabaseScriptModify(tableDetails []TableDetails,
 			v.writeModifySQLForATable(tableDetail.name, tableDetail.table.GetRelation(),
 				tableDetail.tableOld.GetRelation(), visitedAttributes)
 		default:
-			v.logger.Warnf("the table action is spcified as %s, which is not valid\n", tableDetail.action)
+			v.logger.Warnf("the table action is spcified as %s, which is not valid. Hence ignored\n",
+				tableDetail.action)
 		}
 	}
 	return v.stringBuilder.String()

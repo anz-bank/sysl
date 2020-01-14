@@ -60,8 +60,8 @@ func findTableDepth(
 	visitedTableAttrs map[string]string,
 	completeTableDepthMap map[string]int,
 ) (bool, int, map[string]string) {
-	var allAttrProcessed bool = true
-	var tableDepth int = 0
+	var allAttrProcessed = true
+	var tableDepth int
 	var tempVisitedAttrs = map[string]string{}
 	if relEntity := table.GetRelation(); relEntity != nil {
 		var attrNames []string
