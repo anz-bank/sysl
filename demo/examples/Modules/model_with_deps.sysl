@@ -1,0 +1,17 @@
+import deps
+import github.com/anz-bank/sysl/tests/bananatree
+
+ModelWithDeps [package="model"]:
+  !type Response:
+    userId <: int
+    id <: int
+    title <: string
+
+  /responses:
+    /{id<:int}:
+      GET:
+        Dep <- GET /dep/{id}
+        Dep <- GET /moredep/{id}
+        Dep2 <- GET /dep2/{id}
+        Banana <- GET /banana/{id}
+        return Response
