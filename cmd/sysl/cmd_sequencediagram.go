@@ -16,8 +16,8 @@ type sequenceDiagramCmd struct {
 	group          string
 }
 
-func (p *sequenceDiagramCmd) Name() string            { return "sd" }
-func (p *sequenceDiagramCmd) RequireSyslModule() bool { return true }
+func (p *sequenceDiagramCmd) Name() string       { return "sd" }
+func (p *sequenceDiagramCmd) MaxSyslModule() int { return 1 }
 
 func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	p.blackboxesFlag = map[string]string{}
@@ -78,7 +78,7 @@ func (p *sequenceDiagramCmd) Execute(args ExecuteArgs) error {
 		group:          p.group,
 	}
 
-	result, err := DoConstructSequenceDiagrams(sequenceParams, args.Module, args.Logger)
+	result, err := DoConstructSequenceDiagrams(sequenceParams, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
 	}
