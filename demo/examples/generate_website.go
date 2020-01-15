@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -33,7 +32,7 @@ const templates = syslRoot + "docs/website/byexample/templates"
 const cacheDir = "./.tmp/gobyexample-cache"
 const orderingfile = "ordering.yaml"
 
-var imageFiles = []string{".png", ".svg"}
+var imageFiles = []string{".svg"}
 
 func main() {
 	ensureDir(siteDir)
@@ -59,27 +58,6 @@ func copyFile(src, dst string) {
 	check(err)
 }
 
-func pipe(bin string, arg []string, src string) []byte {
-	fmt.Println(bin, arg)
-
-	cmd := exec.Command(bin, arg...)
-	in, err := cmd.StdinPipe()
-	check(err)
-	out, err := cmd.StdoutPipe()
-	check(err)
-	err = cmd.Start()
-	check(err)
-	_, err = in.Write([]byte(src))
-	check(err)
-	err = in.Close()
-	check(err)
-	bytes, err := ioutil.ReadAll(out)
-	check(err)
-	err = cmd.Wait()
-	check(err)
-	return bytes
-}
-
 func sha1Sum(s string) string {
 	h := sha1.New()
 	h.Write([]byte(s))
@@ -93,12 +71,9 @@ func mustReadFile(path string) string {
 	return string(bytes)
 }
 
-func cachedPygmentize(lex string, src string) string {
+func cacheChroma(lex string, src string) string {
 	ensureDir(cacheDir)
-	arg := []string{"-l", lex, "-f", "html"}
-	cachePath := cacheDir + "/pygmentize-" + strings.Join(arg, "-") + "-" + sha1Sum(src)
-	fmt.Println(arg)
-
+	cachePath := cacheDir + "/" + sha1Sum(src)
 	cacheBytes, cacheErr := ioutil.ReadFile(cachePath)
 	if cacheErr == nil {
 		return string(cacheBytes)
@@ -148,10 +123,8 @@ func whichLexer(path string) string {
 		return "sysl"
 	} else if strings.HasSuffix(path, ".sh") {
 		return "console"
-	} else if strings.HasSuffix(path, ".png") {
-		return "png"
 	}
-	panic("No lexer for " + path)
+	return ""
 }
 
 func debug(msg string) {
@@ -168,14 +141,15 @@ type Seg struct {
 	Docs, DocsRendered              string
 	Code, CodeRendered, CodeForJs   string
 	CodeEmpty, CodeLeading, CodeRun bool
+	Image                           string
 }
 
 // Example is info extracted from an example file
 type Example struct {
-	ID, Name                    string
-	Topic                       string
-	Weight                      int
-	Images                      []string
+	ID, Name string
+	Topic    string
+	Weight   int
+
 	GoCode, GoCodeHash, URLHash string
 	Segs                        [][]*Seg
 	PrevExample                 *Example
@@ -233,14 +207,14 @@ func parseSegs(sourcePath string) ([]*Seg, string) {
 }
 
 func parseAndRenderSegs(sourcePath string) ([]*Seg, string) {
-	segs, filecontent := parseSegs(sourcePath)
 	lexer := whichLexer(sourcePath)
+	segs, filecontent := parseSegs(sourcePath)
 	for _, seg := range segs {
 		if seg.Docs != "" {
 			seg.DocsRendered = markdown(seg.Docs)
 		}
 		if seg.Code != "" {
-			seg.CodeRendered = cachedPygmentize(lexer, seg.Code)
+			seg.CodeRendered = cacheChroma(lexer, seg.Code)
 
 			// adding the content to the js code for copying to the clipboard
 			if strings.HasSuffix(sourcePath, ".sysl") {
@@ -271,9 +245,16 @@ func parseExamples() []*Example {
 	var examples []*Example
 	ordering := unmarshalYaml(orderingfile)
 	weight := 0
+	err := os.RemoveAll(assetDir + "images")
+	check(err)
+	err = os.MkdirAll(assetDir+"images", 0755)
+	check(err)
 	for topic, tutorial := range ordering {
 		for _, exampleName := range tutorial {
+			fmt.Println(topic, exampleName, weight)
+
 			weight++
+
 			example := Example{Name: exampleName}
 			exampleID := strings.ToLower(exampleName)
 			exampleID = strings.Replace(exampleID, " ", "-", -1)
@@ -285,23 +266,28 @@ func parseExamples() []*Example {
 			example.Topic = topic
 			example.Segs = make([][]*Seg, 0)
 			sourcePaths := mustGlob(exampleID + "/*")
-
 			for _, sourcePath := range sourcePaths {
 				if ok, ext := isImageFile(sourcePath); ok {
 					destination := assetDir + "images/" + exampleID + strconv.Itoa(weight) + ext
+
 					copyFile(sourcePath, destination)
 
 					// This is the path that gets rendered in the markdown file
 					imagesRelativeToSite := "/assets/byexample/images/"
 
-					example.Images = append(example.Images, imagesRelativeToSite+exampleID+strconv.Itoa(weight)+ext)
-				} else {
+					var Segment = make([]*Seg, 1)
+					imageName := imagesRelativeToSite + exampleID + strconv.Itoa(weight) + ext
+					Segment[0] = &Seg{Image: imageName}
+					example.Segs = append(example.Segs, Segment)
+
+				} else if whichLexer(sourcePath) != "" {
 					sourceSegs, filecontents := parseAndRenderSegs(sourcePath)
 					if filecontents != "" {
 						example.GoCode = filecontents
 					}
 					example.Segs = append(example.Segs, sourceSegs)
 				}
+
 			}
 			newCodeHash := sha1Sum(example.GoCode)
 			if example.GoCodeHash != newCodeHash {

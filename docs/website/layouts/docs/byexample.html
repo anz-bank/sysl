@@ -43,28 +43,37 @@
           {{end}}
 
           {{safeHTML .DocsRendered}}
+          
         </td>
-
+          
         <!--  -->
+        {{if eq .Image ""}}
         <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
 
           <!-- Here we ass the copy code button -->
           {{if .CodeRun}}
           {{if eq $copyButtonActive false}}
           <img title="Copy code" src="/img/clipboard.png" class="copy" />
+
           {{$copyButtonActive = true}}
           {{end}}
           {{end}}
 
 
           {{safeHTML .CodeRendered}}
+
         </td>
+        
+        {{else}}
+        <img class="center" src="{{.Image}}" alt="Image" style="width:50%" />
+        {{end}}
+
+
       </tr>
+
       {{end}}
     </table>
-    {{end}}
-    {{range .Params.Images}}
-    <img class="center" src="{{.}}" alt="Image" />
+    
 
     {{end}}
     {{partial "nav" .}}
