@@ -30,11 +30,11 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 			var err error
 			var appName string
 			var mods []*sysl.Module
-      
-      if mod.SyslModules {
+
+			if mod.SyslModules {
 				fs = mod.NewFs(fs)
 			}
-      
+
 			if cmd.MaxSyslModule() > 0 {
 				for _, moduleName := range r.modules {
 					module, appName, err = LoadSyslModule(r.Root, moduleName, fs, logger)
