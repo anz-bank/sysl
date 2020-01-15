@@ -28,7 +28,7 @@ func OutputPlantuml(output, plantuml, umlInput string, fs afero.Fs) error {
 		if err != nil {
 			return err
 		}
-		return errors.Wrapf(afero.WriteFile(fs, output, out, os.ModePerm), "writing %q", output)
+		return errors.Wrapf(afero.WriteFile(fs, output, append(out, byte('\n')), os.ModePerm), "writing %q", output)
 
 	case "uml":
 		output := output[:l-3]
