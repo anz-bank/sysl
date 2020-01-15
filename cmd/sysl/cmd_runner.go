@@ -2,10 +2,12 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -16,8 +18,8 @@ const syslRootMarker = ".sysl"
 type cmdRunner struct {
 	commands map[string]Command
 
-	Root   string
-	module string
+	Root    string
+	modules []string
 }
 
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
@@ -26,14 +28,22 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 			var mod *sysl.Module
 			var err error
 			var appName string
-			if cmd.RequireSyslModule() {
-				mod, appName, err = LoadSyslModule(r.Root, r.module, fs, logger)
-				if err != nil {
-					return err
+			var mods []*sysl.Module
+			if cmd.MaxSyslModule() > 0 {
+				for _, moduleName := range r.modules {
+					mod, appName, err = LoadSyslModule(r.Root, moduleName, fs, logger)
+					if err != nil {
+						return err
+					}
+					mods = append(mods, mod)
 				}
 			}
-
-			return cmd.Execute(ExecuteArgs{Module: mod, Filesystem: fs, Logger: logger, DefaultAppName: appName})
+			if len(mods) > cmd.MaxSyslModule() {
+				logger.Error("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
+				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
+			}
+			return cmd.Execute(ExecuteArgs{Modules: mods, Filesystem: fs,
+				Logger: logger, DefaultAppName: appName})
 		}
 	}
 	return nil
@@ -44,6 +54,8 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&protobuf{},
 		&intsCmd{},
 		&datamodelCmd{},
+		&databaseScriptCmd{},
+		&modDatabaseScriptCmd{},
 		&codegenCmd{},
 		&sequenceDiagramCmd{},
 		&importCmd{},
@@ -63,10 +75,10 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	})
 	for _, cmd := range commands {
 		c := cmd.Configure(app)
-		if cmd.RequireSyslModule() {
+		if cmd.MaxSyslModule() > 0 {
 			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
-				Required().StringVar(&r.module)
+				Required().StringsVar(&r.modules)
 		}
 		r.commands[cmd.Name()] = cmd
 	}

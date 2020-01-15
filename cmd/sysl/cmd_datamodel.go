@@ -75,8 +75,8 @@ type datamodelCmd struct {
 	CmdContextParamDatagen
 }
 
-func (p *datamodelCmd) Name() string            { return "datamodel" }
-func (p *datamodelCmd) RequireSyslModule() bool { return true }
+func (p *datamodelCmd) Name() string       { return "datamodel" }
+func (p *datamodelCmd) MaxSyslModule() int { return 1 }
 
 func (p *datamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate data models").Alias("data")
@@ -100,7 +100,7 @@ func (p *datamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *datamodelCmd) Execute(args ExecuteArgs) error {
-	outmap, err := GenerateDataModels(&p.CmdContextParamDatagen, args.Module, args.Logger)
+	outmap, err := GenerateDataModels(&p.CmdContextParamDatagen, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
 	}
