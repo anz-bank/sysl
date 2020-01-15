@@ -1,0 +1,14 @@
+Bananatree [package="bananatree"]:
+  !type Banana:
+    id <: int
+    title <: string
+
+  /banana:
+    /{id<:int}:
+      GET:
+        return Banana
+
+  /morebanana:
+    /{id<:int}:
+      GET:
+        return Banana
