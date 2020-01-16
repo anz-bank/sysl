@@ -239,14 +239,25 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string, string) {
 // key1:
 //      - value 1
 //      - value 2
-func unmarshalYaml(filename string) map[string][]string {
+func unmarshalYaml(filename string) ordering {
 	source, err := ioutil.ReadFile(filename)
 	check(err)
-	this := make(map[string][]string)
-	err = yaml.Unmarshal(source, this)
-	check(err)
-	return this
+	that := yaml.MapSlice{}
+	err = yaml.Unmarshal(source, &that)
+	var items ordering
+	for _, item := range that {
+		new := make(map[string][]string)
+		key := item.Key.(string)
+		for _, val := range item.Value.([]interface{}) {
+			valString := val.(string)
+			new[key] = append(new[key], valString)
+		}
+		items = append(items, new)
+	}
+	return items
 }
+
+type ordering []map[string][]string
 
 func parseExamples() []*Example {
 	var examples []*Example
@@ -256,52 +267,56 @@ func parseExamples() []*Example {
 	check(err)
 	err = os.MkdirAll(assetDir+"images", 0755)
 	check(err)
-	for topic, tutorial := range ordering {
-		for _, exampleName := range tutorial {
-			weight++
-			example := Example{Name: exampleName}
-			exampleID := strings.ToLower(exampleName)
-			exampleID = strings.Replace(exampleID, " ", "-", -1)
-			exampleID = strings.Replace(exampleID, "/", "-", -1)
-			exampleID = strings.Replace(exampleID, "'", "", -1)
-			exampleID = dashPat.ReplaceAllString(exampleID, "-")
-			example.ID = exampleID
-			example.Weight = weight + 1
-			example.Topic = topic
-			example.Segs = make([][]*Seg, 0)
-			sourcePaths := mustGlob(exampleID + "/*")
-			for _, sourcePath := range sourcePaths {
-				if ok, ext := isImageFile(sourcePath); ok {
-					destination := assetDir + "images/" + exampleID + strconv.Itoa(weight) + ext
+	for _, tutorial := range ordering {
+		for topic, val := range tutorial {
+			fmt.Println(topic)
+			for _, exampleName := range val {
+				fmt.Println("\t" + exampleName)
+				weight++
+				example := Example{Name: exampleName}
+				exampleID := strings.ToLower(exampleName)
+				exampleID = strings.Replace(exampleID, " ", "-", -1)
+				exampleID = strings.Replace(exampleID, "/", "-", -1)
+				exampleID = strings.Replace(exampleID, "'", "", -1)
+				exampleID = dashPat.ReplaceAllString(exampleID, "-")
+				example.ID = exampleID
+				example.Weight = weight + 1
+				example.Topic = topic
+				example.Segs = make([][]*Seg, 0)
+				sourcePaths := mustGlob(exampleID + "/*")
+				for _, sourcePath := range sourcePaths {
+					if ok, ext := isImageFile(sourcePath); ok {
+						destination := assetDir + "images/" + exampleID + strconv.Itoa(weight) + ext
 
-					copyFile(sourcePath, destination)
+						copyFile(sourcePath, destination)
 
-					// This is the path that gets rendered in the markdown file
-					imagesRelativeToSite := "/assets/byexample/images/"
+						// This is the path that gets rendered in the markdown file
+						imagesRelativeToSite := "/assets/byexample/images/"
 
-					var Segment = make([]*Seg, 1)
-					imageName := imagesRelativeToSite + exampleID + strconv.Itoa(weight) + ext
-					Segment[0] = &Seg{Image: imageName}
-					example.Segs = append(example.Segs, Segment)
+						var Segment = make([]*Seg, 1)
+						imageName := imagesRelativeToSite + exampleID + strconv.Itoa(weight) + ext
+						Segment[0] = &Seg{Image: imageName}
+						example.Segs = append(example.Segs, Segment)
 
-				} else if whichLexer(sourcePath) != "" {
-					sourceSegs, filecontents, codeWithoutComments := parseAndRenderSegs(sourcePath)
+					} else if whichLexer(sourcePath) != "" {
+						sourceSegs, filecontents, codeWithoutComments := parseAndRenderSegs(sourcePath)
 
-					if filecontents != "" {
-						switch whichLexer(sourcePath) {
-						case "sysl":
-							example.CodeWithoutComments = codeWithoutComments
-						case "console":
-							example.Cmd = findSyslCommand(filecontents)
+						if filecontents != "" {
+							switch whichLexer(sourcePath) {
+							case "sysl":
+								example.CodeWithoutComments = codeWithoutComments
+							case "console":
+								example.Cmd = findSyslCommand(filecontents)
+							}
+
 						}
-
+						example.Segs = append(example.Segs, sourceSegs)
 					}
-					example.Segs = append(example.Segs, sourceSegs)
-				}
 
+				}
+				example.PlaygroundURL = syslplaygroundLink(example.CodeWithoutComments, example.Cmd)
+				examples = append(examples, &example)
 			}
-			example.PlaygroundURL = syslplaygroundLink(example.CodeWithoutComments, example.Cmd)
-			examples = append(examples, &example)
 		}
 	}
 
