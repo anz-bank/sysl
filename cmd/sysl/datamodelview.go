@@ -146,6 +146,24 @@ func (v *DataModelView) drawRelation(
 	v.stringBuilder.WriteString("}\n")
 }
 
+func (v *DataModelView) drawPrimitive(
+	viewParam EntityViewParam,
+	entity string,
+	relationshipMap map[string]map[string]RelationshipParam,
+) {
+	entityTokens := strings.Split(viewParam.entityName, ".")
+	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
+	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.entityName,
+		encEntity, entityLessThanArrow, viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
+
+	if _, exists := relationshipMap[encEntity]; !exists {
+		relationshipMap[encEntity] = map[string]RelationshipParam{}
+	}
+	// Add default properties for primitive types
+	v.stringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", "id", strings.ToLower(entity)))
+	v.stringBuilder.WriteString("}\n")
+}
+
 func (v *DataModelView) drawTuple(
 	viewParam EntityViewParam,
 	entity *proto.Type_Tuple,
@@ -254,6 +272,14 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 				entityName:   entityName,
 			}
 			v.drawTuple(viewParam, tupEntity, relationshipMap)
+		} else if primitiveEntity := entityType.GetPrimitive(); primitiveEntity != proto.Type_NO_Primitive && len(strings.TrimSpace(primitiveEntity.String())) > 0 {
+			isRelation = false
+			viewParam := EntityViewParam{
+				entityColor:  `orchid`,
+				entityHeader: `D`,
+				entityName:   entityName,
+			}
+			v.drawPrimitive(viewParam, primitiveEntity.String(), relationshipMap)
 		}
 	}
 	if isRelation {
