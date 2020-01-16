@@ -134,7 +134,7 @@ func TestGenerateCodePerType(t *testing.T) {
 func TestGenerateCodePutDepPackageAndParamTypeInComment(t *testing.T) {
 	t.Parallel()
 	output, err := GenerateCodeWithParams(testDir, "model_with_deps.sysl", testDir, "xform_with_deps.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "ModelWithDeps")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -157,7 +157,7 @@ func TestGenerateCodePutDepPackageInCommentUsingSets(t *testing.T) {
 	output, err := GenerateCodeWithParams(testDir,
 		"model_with_deps.sysl", testDir,
 		"xform_with_deps_pkg_set.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "ModelWithDeps")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -180,7 +180,7 @@ func TestGenerateCodePutDepPackageInCommentUsingLists(t *testing.T) {
 	output, err := GenerateCodeWithParams(testDir,
 		"model_with_deps.sysl", testDir,
 		"xform_with_deps_pkg_list.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "ModelWithDeps")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -203,7 +203,7 @@ func TestNamesFromCalls(t *testing.T) {
 	output, err := GenerateCodeWithParams(testDir,
 		"model_with_deps.sysl", testDir,
 		"xform_names_from_calls.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "ModelWithDeps")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "", "", "ModelWithDeps")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -268,11 +268,13 @@ func GenerateCodeWithParams(
 	rootModel, model, rootTransform, transform, grammar, start string,
 	depPath string, basePath string, appname ...string) ([]*CodeGenOutput, error) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
-	return GenerateCodeWithParamsFs(rootModel, model, rootTransform, transform, grammar, start, depPath, basePath, fs, appname...)
+	return GenerateCodeWithParamsFs(rootModel, model, rootTransform,
+		transform, grammar, start, depPath, basePath, fs, appname...)
 }
 
 func GenerateCodeWithParamsFs(
-	rootModel, model, rootTransform, transform, grammar, start string, depPath string, basePath string, fs afero.Fs, appname ...string,
+	rootModel, model, rootTransform, transform, grammar, start string,
+	depPath string, basePath string, fs afero.Fs, appname ...string,
 ) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
 		rootTransform: rootTransform,

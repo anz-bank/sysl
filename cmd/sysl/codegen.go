@@ -284,11 +284,13 @@ func GenerateCode(
 		}
 	}
 
-	fileNames, err := applyTranformToModel(modelAppName, transformAppName, depPath, "filename", codegenParams.basePath, model, tx)
+	fileNames, err := applyTranformToModel(modelAppName, transformAppName,
+		depPath, "filename", codegenParams.basePath, model, tx)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(modelAppName, transformAppName, depPath, g.Start, codegenParams.basePath, model, tx)
+	result, err := applyTranformToModel(modelAppName, transformAppName,
+		depPath, g.Start, codegenParams.basePath, model, tx)
 	if err != nil {
 		return nil, err
 	}

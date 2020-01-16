@@ -467,7 +467,7 @@ func TestValidatorValidate(t *testing.T) {
 	require.NotNil(t, grammar)
 
 	validator := NewValidator(grammar, transform, p)
-	validator.Validate("goFile", "")
+	validator.Validate("goFile", "", "")
 	actual := validator.GetMessages()
 	assert.Equal(t, map[string][]msg.Msg{}, actual, "Unexpected result")
 }

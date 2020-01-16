@@ -1,10 +1,10 @@
 TransformApp:
-  !view filename(app <: sysl.App, depPath <: string) -> string:
+  !view filename(app <: sysl.App) -> string:
     app -> (:
       filename = app.name + ".java"
     )
 
-  !view javaFile(app <: sysl.App, basePath <: string) -> string:
+  !view javaFile(app <: sysl.App, basePath <: string, depPath <: string) -> string:
     app -> (:
 
       package = .attrs.package -> <package> (name1:
