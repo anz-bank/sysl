@@ -168,7 +168,7 @@ func readGrammar(filename, grammarName, startRule string) (*parser.Grammar, erro
 
 // applyTranformToModel loads applies the transform to input model
 func applyTranformToModel(
-	modelName, transformAppName, viewName string,
+	modelName, transformAppName, viewName, basePath string,
 	model, transform *sysl.Module,
 ) (*sysl.Value, error) {
 	modelApp, has := model.Apps[modelName]
@@ -187,12 +187,9 @@ func applyTranformToModel(
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
 	s.AddModule("module", model)
+	s["basePath"] = eval.MakeValueString(basePath)
+
 	var result *sysl.Value
-	// assume args are
-	//  app <: sysl.App and
-	//  type <: sysl.Type
-	//  typeName <: string
-	//  deps <: sequence of sysl.App
 
 	if perTypeTransform(view.Param) {
 		result = eval.MakeValueList()
@@ -260,6 +257,7 @@ func GenerateCode(
 	logger.Debugf("transform: %s\n", codegenParams.transform)
 	logger.Debugf("grammar: %s\n", codegenParams.grammar)
 	logger.Debugf("start: %s\n", codegenParams.start)
+	logger.Debugf("basePath: %s\n", codegenParams.basePath)
 
 	transformFs := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
 	tfmParser := parse.NewParser()
@@ -279,16 +277,16 @@ func GenerateCode(
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {
 			validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-			validator.Validate(codegenParams.start)
+			validator.Validate(codegenParams.start, codegenParams.basePath)
 			validator.LogMessages()
 		}
 	}
 
-	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", model, tx)
+	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", codegenParams.basePath, model, tx)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(modelAppName, transformAppName, g.Start, model, tx)
+	result, err := applyTranformToModel(modelAppName, transformAppName, g.Start, codegenParams.basePath, model, tx)
 	if err != nil {
 		return nil, err
 	}
