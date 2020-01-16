@@ -6,7 +6,7 @@ description= ""
 layout= "byexample"
 weight = 10
 topic = "Web protocols"
-PlaygroundURL = "http://joshcarp.github.io/sysl-playground/?input=Rm9vOgogICAgL2VuZHBvaW50OgogICAgICAgIFBPU1QgKG5ld1Bvc3QgPDogc3RyaW5nIFt+Ym9keV0pOgogICAgICAgICAgICByZXR1cm4gc3RyaW5nCiAgICAgICAgR0VUIChuZXdQb3N0IDw6IHN0cmluZyk6CiAgICAgICAgICAgIHJldHVybiBzdHJpbmcK&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=Rm9vOgogICAgL2VuZHBvaW50OgogICAgICAgIFBPU1QgKG5ld1Bvc3QgPDogc3RyaW5nIFt+Ym9keV0pOgogICAgICAgICAgICByZXR1cm4gc3RyaW5nCiAgICAgICAgR0VUIChuZXdQb3N0IDw6IHN0cmluZyk6CiAgICAgICAgICAgIHJldHVybiBzdHJpbmcK&cmd="
 ID = "rest-and-http"
 CodeWithoutComments = """Foo:
     /endpoint:

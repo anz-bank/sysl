@@ -6,7 +6,7 @@ description= ""
 layout= "byexample"
 weight = 6
 topic = "Basics"
-PlaygroundURL = "http://joshcarp.github.io/sysl-playground/?input=Rm9vIFtwYWNrYWdlPSJjb20ubXljb21wYW55Il06CiAgICBCYXIobmV3UG9zdCA8OiBzdHJpbmcgW35ib2R5XSk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=Rm9vIFtwYWNrYWdlPSJjb20ubXljb21wYW55Il06CiAgICBCYXIobmV3UG9zdCA8OiBzdHJpbmcgW35ib2R5XSk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
 ID = "attributes"
 CodeWithoutComments = """Foo [package="com.mycompany"]:
     Bar(newPost <: string [~body]):

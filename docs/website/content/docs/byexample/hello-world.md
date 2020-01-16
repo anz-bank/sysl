@@ -6,7 +6,7 @@ description= ""
 layout= "byexample"
 weight = 2
 topic = "Basics"
-PlaygroundURL = "http://joshcarp.github.io/sysl-playground/?input=SGVsbG9Xb3JsZDoKICAgIGVuZHBvaW50MToKICAgICAgICByZXR1cm4gc3RyaW5nCiAgICBlbmRwb2ludDIocmVxdWVzdCA8OiBzdHJpbmcsIGlkIDw6IGludCk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=SGVsbG9Xb3JsZDoKICAgIGVuZHBvaW50MToKICAgICAgICByZXR1cm4gc3RyaW5nCiAgICBlbmRwb2ludDIocmVxdWVzdCA8OiBzdHJpbmcsIGlkIDw6IGludCk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
 ID = "hello-world"
 CodeWithoutComments = """HelloWorld:
     endpoint1:
