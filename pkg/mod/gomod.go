@@ -26,7 +26,6 @@ func goGetByFilepath(filename string) error {
 	re := regexp.MustCompile(`^\.|\.\.|/$`)
 
 	for !re.MatchString(dir) {
-		logrus.Debug(dir)
 		err := goGet(dir)
 		if err == nil {
 			return nil
