@@ -22,14 +22,14 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Code adapted from go by example; https://gobyexample.com/
 // siteDir is the target directory into which the HTML gets generated. Its
 // default is set here but can be changed by an argument passed into the
 // program.
-const syslPlaygroundURL = "http://joshcarp.github.io/sysl-playground/"
+const syslPlaygroundURL = "http://anz-bank.github.io/sysl-playground/"
 const syslRoot = "../../"
 const siteDir = syslRoot + "docs/website/content/docs/byexample/"
 const assetDir = syslRoot + "docs/website/static/assets/byexample/"
-const pygmentizeBin = syslRoot + "docs/website/byexample/vendor/pygments/pygmentize"
 const templates = syslRoot + "docs/website/byexample/templates"
 const cacheDir = "./.tmp/gobyexample-cache"
 const orderingfile = "ordering.yaml"
@@ -89,15 +89,12 @@ func cacheChroma(lex string, src string) string {
 	if cacheErr == nil {
 		return string(cacheBytes)
 	}
-	code := chromaFormat(src)
-
-	return code
+	return chromaFormat(src)
 }
 
 func chromaFormat(code string) string {
 	lexer := syslchroma.Sysl
 	if lexer == nil {
-		panic("")
 		lexer = lexers.Fallback
 	}
 	lexer = chroma.Coalesce(lexer)
@@ -107,7 +104,7 @@ func chromaFormat(code string) string {
 		style = styles.Fallback
 	}
 	formatter := html.New(html.WithClasses(true))
-	iterator, err := lexer.Tokenise(nil, string(code))
+	iterator, err := lexer.Tokenise(nil, code)
 	check(err)
 	buf := new(bytes.Buffer)
 	err = formatter.Format(buf, style, iterator)
@@ -158,16 +155,14 @@ type Seg struct {
 
 // Example is info extracted from an example file
 type Example struct {
-	ID, Name string
-	Topic    string
-	Weight   int
-
-	Code, URLHash, CodeWithoutComments string
-	Cmd                                string
-	PlaygroundURL                      string
-	Segs                               [][]*Seg
-	PrevExample                        *Example
-	NextExample                        *Example
+	ID, Name, Topic     string
+	Weight              int
+	CodeWithoutComments string
+	Cmd                 string
+	PlaygroundURL       string
+	Segs                [][]*Seg
+	PrevExample         *Example
+	NextExample         *Example
 }
 
 func parseSegs(sourcePath string) ([]*Seg, string) {
@@ -223,7 +218,7 @@ func parseSegs(sourcePath string) ([]*Seg, string) {
 func parseAndRenderSegs(sourcePath string) ([]*Seg, string, string) {
 	lexer := whichLexer(sourcePath)
 	segs, filecontent := parseSegs(sourcePath)
-	codeWithoutComments := ""
+	Code := ""
 	for _, seg := range segs {
 		if seg.Docs != "" {
 			seg.DocsRendered = markdown(seg.Docs)
@@ -233,14 +228,11 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string, string) {
 
 			// adding the content to the js code for copying to the clipboard
 			if strings.HasSuffix(sourcePath, ".sysl") {
-				codeWithoutComments += strings.Trim(seg.Code, "\n") + "\n"
-
+				Code += strings.Trim(seg.Code, "\n") + "\n"
 			}
 		}
-
 	}
-
-	return segs, filecontent, codeWithoutComments
+	return segs, filecontent, Code
 }
 
 // unmarshalYaml unmarshals a yaml file of form
@@ -298,7 +290,6 @@ func parseExamples() []*Example {
 					if filecontents != "" {
 						switch whichLexer(sourcePath) {
 						case "sysl":
-							example.Code = filecontents
 							example.CodeWithoutComments = codeWithoutComments
 						case "console":
 							example.Cmd = findSyslCommand(filecontents)
@@ -309,7 +300,6 @@ func parseExamples() []*Example {
 				}
 
 			}
-			fmt.Println(example.CodeWithoutComments)
 			example.PlaygroundURL = syslplaygroundLink(example.CodeWithoutComments, example.Cmd)
 			examples = append(examples, &example)
 		}
@@ -354,9 +344,4 @@ func syslplaygroundLink(code, cmd string) string {
 
 func encode(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))
-}
-
-func decode(str string) string {
-	this, _ := base64.StdEncoding.DecodeString(str)
-	return string(this)
 }
