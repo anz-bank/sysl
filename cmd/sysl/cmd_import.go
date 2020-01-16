@@ -18,8 +18,8 @@ type importCmd struct {
 	mode     string
 }
 
-func (p *importCmd) Name() string            { return "import" }
-func (p *importCmd) RequireSyslModule() bool { return false }
+func (p *importCmd) Name() string       { return "import" }
+func (p *importCmd) MaxSyslModule() int { return 0 }
 
 func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	opts := []string{modeGrammar, modeSwagger, modeXSD, modeOpenAPI}

@@ -169,7 +169,7 @@ func readGrammar(filename, grammarName, startRule string) (*parser.Grammar, erro
 // applyTranformToModel loads applies the transform to input model
 func applyTranformToModel(
 	modelName, transformAppName, depPath string, viewName string,
-	model, transform *sysl.Module,
+	basePath string, model, transform *sysl.Module,
 ) (*sysl.Value, error) {
 	modelApp, has := model.Apps[modelName]
 	if !has {
@@ -188,12 +188,8 @@ func applyTranformToModel(
 	s.AddApp("app", modelApp)
 	s.AddModule("module", model)
 	s.AddString("depPath", depPath)
+	s["basePath"] = eval.MakeValueString(basePath)
 	var result *sysl.Value
-	// assume args are
-	//  app <: sysl.App and
-	//  type <: sysl.Type
-	//  typeName <: string
-	//  deps <: sequence of sysl.App
 
 	if perTypeTransform(view.Param) {
 		result = eval.MakeValueList()
@@ -263,6 +259,7 @@ func GenerateCode(
 	logger.Debugf("dep-path: %s\n", codegenParams.depPath)
 	logger.Debugf("grammar: %s\n", codegenParams.grammar)
 	logger.Debugf("start: %s\n", codegenParams.start)
+	logger.Debugf("basePath: %s\n", codegenParams.basePath)
 
 	transformFs := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
 	tfmParser := parse.NewParser()
@@ -282,16 +279,16 @@ func GenerateCode(
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {
 			validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-			validator.Validate(codegenParams.start, codegenParams.depPath)
+			validator.Validate(codegenParams.start, codegenParams.depPath, codegenParams.basePath)
 			validator.LogMessages()
 		}
 	}
 
-	fileNames, err := applyTranformToModel(modelAppName, transformAppName, depPath, "filename", model, tx)
+	fileNames, err := applyTranformToModel(modelAppName, transformAppName, depPath, "filename", codegenParams.basePath, model, tx)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(modelAppName, transformAppName, depPath, g.Start, model, tx)
+	result, err := applyTranformToModel(modelAppName, transformAppName, depPath, g.Start, codegenParams.basePath, model, tx)
 	if err != nil {
 		return nil, err
 	}
@@ -333,7 +330,7 @@ func outputToFiles(output []*CodeGenOutput, fs afero.Fs) error {
 		if err != nil {
 			return errors.Wrapf(err, "unable to create %q", o.filename)
 		}
-		logrus.Warningln("Writing file: " + f.Name())
+		logrus.Infoln("Writing file: " + f.Name())
 		if err := Serialize(f, " ", o.output); err != nil {
 			return errors.Wrapf(err, "error writing to %q", o.filename)
 		}

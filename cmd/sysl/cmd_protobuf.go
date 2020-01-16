@@ -14,8 +14,8 @@ type protobuf struct {
 	mode   string
 }
 
-func (p *protobuf) Name() string            { return "protobuf" }
-func (p *protobuf) RequireSyslModule() bool { return true }
+func (p *protobuf) Name() string       { return "protobuf" }
+func (p *protobuf) MaxSyslModule() int { return 1 }
 
 func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate textpb/json").Alias("pb")
@@ -38,12 +38,12 @@ func (p *protobuf) Execute(args ExecuteArgs) error {
 
 	if toJSON {
 		if p.output == "-" {
-			return pbutil.FJSONPB(args.Logger.Out, args.Module)
+			return pbutil.FJSONPB(args.Logger.Out, args.Modules[0])
 		}
-		return pbutil.JSONPB(args.Module, p.output, args.Filesystem)
+		return pbutil.JSONPB(args.Modules[0], p.output, args.Filesystem)
 	}
 	if p.output == "-" {
-		return pbutil.FTextPB(logrus.StandardLogger().Out, args.Module)
+		return pbutil.FTextPB(logrus.StandardLogger().Out, args.Modules[0])
 	}
-	return pbutil.TextPB(args.Module, p.output, args.Filesystem)
+	return pbutil.TextPB(args.Modules[0], p.output, args.Filesystem)
 }

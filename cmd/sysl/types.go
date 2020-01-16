@@ -48,6 +48,7 @@ type CmdContextParamCodegen struct {
 	grammar          string
 	start            string
 	depPath          string
+	basePath         string
 	disableValidator bool
 }
 
@@ -81,8 +82,15 @@ type CmdContextParamDatagen struct {
 	classFormat string
 }
 
+type CmdDatabaseScriptParams struct {
+	title     string
+	outputDir string
+	appNames  string
+	dbType    string
+}
+
 type ExecuteArgs struct {
-	Module         *sysl.Module
+	Modules        []*sysl.Module
 	Filesystem     afero.Fs
 	Logger         *logrus.Logger
 	DefaultAppName string
@@ -92,5 +100,5 @@ type Command interface {
 	Configure(*kingpin.Application) *kingpin.CmdClause
 	Execute(ExecuteArgs) error
 	Name() string
-	RequireSyslModule() bool
+	MaxSyslModule() int
 }

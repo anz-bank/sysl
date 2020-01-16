@@ -13,6 +13,8 @@ func fileExists(filename string, fs afero.Fs) bool {
 	if err != nil {
 		return false
 	}
+	defer f.Close()
+
 	_, err = f.Stat()
 	return err == nil
 }

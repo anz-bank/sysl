@@ -3,12 +3,20 @@ Basics:
   - Data-types
   - Projects
   - Control Flow
+  - Attributes
 Diagrams:
   - Sequence Diagrams
   - Integration Diagrams
   - Data Model Diagrams
-Rest_Endpoints:
-  - Rest and Http
+Web protocols:
+  - Rest and HTTP
+# TODO: The rest of these
+#   - grpc and proto
+# Sysl Transformation Language:
+#   - Code generation
+#   - Transformation scripts
+#   - views
+#   - 
 
 
   

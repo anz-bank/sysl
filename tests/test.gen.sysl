@@ -4,7 +4,7 @@ TransformApp:
       filename = app.name + ".java"
     )
 
-  !view javaFile(app <: sysl.App) -> string:
+  !view javaFile(app <: sysl.App, basePath <: string) -> string:
     app -> (:
 
       package = .attrs.package -> <package> (name1:
@@ -16,5 +16,5 @@ TransformApp:
         importPath = name
       )
 
-      definition = "some_value"
+      definition = basePath
     )

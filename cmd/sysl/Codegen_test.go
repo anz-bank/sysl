@@ -19,7 +19,7 @@ func TestGenerateCode(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path", "/some_value")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Len(t, output, 1)
@@ -33,7 +33,7 @@ func TestGenerateCode(t *testing.T) {
 	assert.Len(t, package1, 1)
 	assert.Len(t, comment1, 2)
 	assert.Len(t, import1, 2)
-	assert.Equal(t, "some_value", definition1)
+	assert.Equal(t, "/some_value", definition1)
 
 	package2 := package1[0].(Node)
 	assert.Len(t, package2, 3)
@@ -59,7 +59,7 @@ func TestGenerateCodeNoComment(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen_no_comment.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path", "/some_value")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	root := output[0].output
@@ -90,7 +90,7 @@ func TestGenerateCodeNoPackage(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen_no_package.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path", "")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
@@ -100,7 +100,7 @@ func TestGenerateCodeMultipleAnnotations(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen_multiple_annotations.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path", "")
 	require.NoError(t, err)
 	root := output[0].output
 	assert.Nil(t, root)
@@ -110,7 +110,7 @@ func TestGenerateCodePerType(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "multiple_file.gen.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path", "")
 	require.NoError(t, err)
 	assert.Len(t, output, 1)
 	assert.Equal(t, "Request.java", output[0].filename)
@@ -224,11 +224,11 @@ func TestSerialize(t *testing.T) {
 	t.Parallel()
 
 	output, err := GenerateCodeWithParams(testDir, "model.sysl", testDir, "test.gen.sysl",
-		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path")
+		filepath.Join(testDir, "test.gen.g"), "javaFile", "dep_path", "/some_value")
 	require.NoError(t, err)
 	out := new(bytes.Buffer)
 	require.NoError(t, Serialize(out, " ", output[0].output))
-	golden := "package com.example.gen \n comment1 comment2 import import1 \n import dep_path \n some_value "
+	golden := "package com.example.gen \n comment1 comment2 import import1 \n import dep_path \n /some_value "
 	assert.Equal(t, golden, out.String())
 }
 
@@ -266,13 +266,13 @@ func TestOutputForPureTokenOnlyRule(t *testing.T) {
 
 func GenerateCodeWithParams(
 	rootModel, model, rootTransform, transform, grammar, start string,
-	depPath string, appname ...string) ([]*CodeGenOutput, error) {
+	depPath string, basePath string, appname ...string) ([]*CodeGenOutput, error) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
-	return GenerateCodeWithParamsFs(rootModel, model, rootTransform, transform, grammar, start, depPath, fs, appname...)
+	return GenerateCodeWithParamsFs(rootModel, model, rootTransform, transform, grammar, start, depPath, basePath, fs, appname...)
 }
 
 func GenerateCodeWithParamsFs(
-	rootModel, model, rootTransform, transform, grammar, start string, depPath string, fs afero.Fs, appname ...string,
+	rootModel, model, rootTransform, transform, grammar, start string, depPath string, basePath string, fs afero.Fs, appname ...string,
 ) ([]*CodeGenOutput, error) {
 	cmdContextParamCodegen := &CmdContextParamCodegen{
 		rootTransform: rootTransform,
@@ -280,6 +280,7 @@ func GenerateCodeWithParamsFs(
 		grammar:       grammar,
 		depPath:       depPath,
 		start:         start,
+		basePath:      basePath,
 	}
 	logger, _ := test.NewNullLogger()
 	mod, modAppName, err := LoadSyslModule(rootModel, model, fs, logger)
@@ -338,7 +339,7 @@ func TestValidatorDoValidate(t *testing.T) {
 			require.Equal(t, cmd.Name(), selectedCmd)
 			l, _ := test.NewNullLogger()
 			execArgs := ExecuteArgs{
-				Module:     nil,
+				Modules:    nil,
 				Filesystem: afero.NewOsFs(),
 				Logger:     l,
 			}
