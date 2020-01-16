@@ -187,7 +187,7 @@ func applyTranformToModel(
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
 	s.AddModule("module", model)
-	s.AddString("dep", depPath)
+	s.AddString("depPath", depPath)
 	var result *sysl.Value
 	// assume args are
 	//  app <: sysl.App and
@@ -282,7 +282,7 @@ func GenerateCode(
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {
 			validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-			validator.Validate(codegenParams.start)
+			validator.Validate(codegenParams.start, codegenParams.depPath)
 			validator.LogMessages()
 		}
 	}

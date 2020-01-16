@@ -1,5 +1,5 @@
 TransformApp:
-  !view filename(app <: sysl.App) -> string:
+  !view filename(app <: sysl.App, depPath <: string) -> string:
     app -> (:
       filename = app.name + ".java"
     )
@@ -12,7 +12,7 @@ TransformApp:
       )
       comment = {"comment1", "comment2"}
 
-      import = {"import1", "import2"} -> <set of import>(name:
+      import = {"import1", depPath} -> <set of import>(name:
         importPath = name
       )
 

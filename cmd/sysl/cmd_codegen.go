@@ -49,6 +49,7 @@ func (p *codegenCmd) Execute(args ExecuteArgs) error {
 			Transform:     p.transform,
 			Grammar:       p.grammar,
 			Start:         p.start,
+			DepPath:       p.depPath,
 			Filesystem:    args.Filesystem,
 			Logger:        args.Logger,
 		})

@@ -25,6 +25,7 @@ type Params struct {
 	RootTransform string
 	Transform     string
 	Grammar       string
+	DepPath       string
 	Start         string
 
 	Filesystem afero.Fs
@@ -34,6 +35,7 @@ type Params struct {
 func DoValidate(validateParams Params) error {
 	logrus.Debugf("root-transform: %s\n", validateParams.RootTransform)
 	logrus.Debugf("transform: %s\n", validateParams.Transform)
+	logrus.Debugf("dep-path: %s\n", validateParams.DepPath)
 	logrus.Debugf("grammar: %s\n", validateParams.Grammar)
 	logrus.Debugf("start: %s\n", validateParams.Start)
 
@@ -53,7 +55,7 @@ func DoValidate(validateParams Params) error {
 	}
 
 	validator := NewValidator(grammar, transform, parser)
-	validator.Validate(validateParams.Start)
+	validator.Validate(validateParams.Start, validateParams.DepPath)
 	validator.LogMessages()
 
 	if len(validator.GetMessages()) > 0 {
@@ -66,7 +68,7 @@ func DoValidate(validateParams Params) error {
 	return nil
 }
 
-func (v *Validator) Validate(start string) {
+func (v *Validator) Validate(start string, depPath string) {
 	v.validateEntryPoint(start)
 	v.validateFileName()
 	v.validateViews()
