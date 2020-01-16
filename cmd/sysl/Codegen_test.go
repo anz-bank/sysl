@@ -334,7 +334,7 @@ func TestValidatorDoValidate(t *testing.T) {
 			require.Equal(t, cmd.Name(), selectedCmd)
 			l, _ := test.NewNullLogger()
 			execArgs := ExecuteArgs{
-				Module:     nil,
+				Modules:    nil,
 				Filesystem: afero.NewOsFs(),
 				Logger:     l,
 			}

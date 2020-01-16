@@ -1,0 +1,11 @@
+Foo:
+
+    # To specify a rest endpoint use / to let sysl know that you're using rest
+    /endpoint:
+
+        # Now use rest methods with the endpoint
+        POST (newPost <: string [~body]):
+            return string
+
+        GET (newPost <: string):
+            return string

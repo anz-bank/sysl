@@ -26,8 +26,8 @@ const (
 	yamlMode    = "yaml"
 )
 
-func (p *exportCmd) Name() string            { return "export" }
-func (p *exportCmd) RequireSyslModule() bool { return true }
+func (p *exportCmd) Name() string       { return "export" }
+func (p *exportCmd) MaxSyslModule() int { return 1 }
 
 func (p *exportCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types: Swagger")
@@ -87,7 +87,7 @@ func (p *exportCmd) Execute(args ExecuteArgs) error {
 	}
 
 	if strings.Contains(p.out, "%(appname)") {
-		for appName, syslApp := range args.Module.GetApps() {
+		for appName, syslApp := range args.Modules[0].GetApps() {
 			outputFileName := MakeFormatParser(p.out).LabelApp(appName, "", syslApp.GetAttrs())
 			err := p.writeSwaggerForApp(args.Filesystem, outputFileName, syslApp, args.Logger)
 			if err != nil {
@@ -95,7 +95,7 @@ func (p *exportCmd) Execute(args ExecuteArgs) error {
 			}
 		}
 		return nil
-	} else if syslApp, syslAppFound := args.Module.GetApps()[p.appName]; syslAppFound {
+	} else if syslApp, syslAppFound := args.Modules[0].GetApps()[p.appName]; syslAppFound {
 		return p.writeSwaggerForApp(args.Filesystem, p.out, syslApp, args.Logger)
 	}
 	return fmt.Errorf("app not found in the Sysl file")

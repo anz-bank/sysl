@@ -17,8 +17,8 @@ type codegenCmd struct {
 	enableDebugger bool
 }
 
-func (p *codegenCmd) Name() string            { return "codegen" }
-func (p *codegenCmd) RequireSyslModule() bool { return true }
+func (p *codegenCmd) Name() string       { return "codegen" }
+func (p *codegenCmd) MaxSyslModule() int { return 1 }
 
 func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate code").Alias("gen")
@@ -55,14 +55,14 @@ func (p *codegenCmd) Execute(args ExecuteArgs) error {
 		})
 	}
 	if p.appName == "" {
-		if len(args.Module.Apps) > 1 {
+		if len(args.Modules[0].Apps) > 1 {
 			args.Logger.Errorf("required argument --app-name value missing")
 			return fmt.Errorf("missing required argument")
 		}
 		p.appName = args.DefaultAppName
 	}
 	eval.EnableDebugger = p.enableDebugger
-	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Module, p.appName, args.Filesystem, args.Logger)
+	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Modules[0], p.appName, args.Filesystem, args.Logger)
 	if err != nil {
 		return err
 	}

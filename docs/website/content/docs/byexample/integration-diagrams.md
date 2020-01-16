@@ -4,19 +4,14 @@ title= "Integration Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 7
+weight = 8
 topic = "Diagrams"
-Images = [
-  
-  "/assets/byexample/images/integration-diagrams6.png",
-  
-]
 
 ID = "integration-diagrams"
 Segs = [[
   
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example will use a simple system and start using the sysl command to generate diagrams.</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">IntegratedSystem</span><span class="p">:</span>
     <span class="nx">integrated_endpoint_1</span><span class="p">:</span>
@@ -27,7 +22,7 @@ Segs = [[
         System1 <- endpoint
     integrated_endpoint_2:
         System2 <- endpoint
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">System1</span><span class="p">:</span>
     <span class="nx">endpoint</span><span class="p">:</span> <span class="o">...</span>
@@ -36,7 +31,7 @@ Segs = [[
     endpoint: ...
 System2:
     endpoint: ...
-"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">Project</span> <span class="p">[</span><span class="nx">appfmt</span><span class="p">=</span><span class="s">&#34;%(appname)&#34;</span><span class="p">]:</span>
     <span class="nx">_</span><span class="p">:</span>
@@ -47,30 +42,38 @@ System2:
         IntegratedSystem
         System1
         System2
-"""},
+""",Image = ""},
+
 
 ],
 [
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="nx">export</span> <span class="nx">SYSL_PLANTUML</span><span class="p">=</span><span class="nx">http</span><span class="p">:</span><span class="o">//</span><span class="nx">www</span><span class="p">.</span><span class="nx">plantuml</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">plantuml</span></pre>""",DocsRendered= """<p>First, make sure to set the environment variable SYSL_PLANTUML</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
-<span class="nx">sysl</span> <span class="nx">ints</span> <span class="o">-</span><span class="nx">o</span> <span class="nx">project</span><span class="p">.</span><span class="nx">png</span> <span class="o">--</span><span class="nx">project</span> <span class="nx">Project</span> <span class="nx">project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """<p>Now run the sysl sd (sequence diagram) command</p>
-""", CodeForJs = """"""},
+<span class="nx">sysl</span> <span class="nx">ints</span> <span class="o">-</span><span class="nx">o</span> <span class="mi">3</span><span class="nx">_project</span><span class="p">.</span><span class="nx">svg</span> <span class="o">--</span><span class="nx">project</span> <span class="nx">Project</span> <span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """<p>Now run the sysl sd (sequence diagram) command</p>
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>-o</code> is the output file</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>-s</code> specifies a starting endpoint for the sequence diagram to initiate</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>project.sysl</code> is the input sysl file</p>
-""", CodeForJs = """"""},
+""", CodeForJs = """""",Image = ""},
 
-      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>project.png:</p>
-""", CodeForJs = """"""},
+      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>project.svg:</p>
+""", CodeForJs = """""",Image = ""},
+
+
+],
+[
+  
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""", CodeForJs = """""",Image = "/assets/byexample/images/integration-diagrams7.svg"},
+
 
 ],
 

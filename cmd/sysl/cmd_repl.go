@@ -9,8 +9,8 @@ import (
 
 type replCmd struct{}
 
-func (p *replCmd) Name() string            { return "repl" }
-func (p *replCmd) RequireSyslModule() bool { return false }
+func (p *replCmd) Name() string       { return "repl" }
+func (p *replCmd) MaxSyslModule() int { return 0 }
 
 func (p *replCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Enter a sysl REPL")
