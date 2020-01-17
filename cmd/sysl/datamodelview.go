@@ -159,7 +159,7 @@ func (v *DataModelView) drawPrimitive(
 	if _, exists := relationshipMap[encEntity]; !exists {
 		relationshipMap[encEntity] = map[string]RelationshipParam{}
 	}
-	// Add default properties for primitive types
+	// Add default property id for primitive types
 	v.stringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", "id", strings.ToLower(entity)))
 	v.stringBuilder.WriteString("}\n")
 }
@@ -272,14 +272,14 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 				entityName:   entityName,
 			}
 			v.drawTuple(viewParam, tupEntity, relationshipMap)
-		} else if primitiveEntity := entityType.GetPrimitive(); primitiveEntity != proto.Type_NO_Primitive && len(strings.TrimSpace(primitiveEntity.String())) > 0 {
+		} else if pe := entityType.GetPrimitive(); pe != proto.Type_NO_Primitive && len(strings.TrimSpace(pe.String())) > 0 {
 			isRelation = false
 			viewParam := EntityViewParam{
 				entityColor:  `orchid`,
 				entityHeader: `D`,
 				entityName:   entityName,
 			}
-			v.drawPrimitive(viewParam, primitiveEntity.String(), relationshipMap)
+			v.drawPrimitive(viewParam, pe.String(), relationshipMap)
 		}
 	}
 	if isRelation {
