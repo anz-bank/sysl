@@ -72,6 +72,7 @@ func DoValidate(validateParams Params) error {
 
 func (v *Validator) Validate(start string, depPath string, basepath string) {
 	v.validateEntryPoint(start)
+	v.validateDependencyPath(depPath)
 	v.validateBasePath(basepath)
 	v.validateFileName()
 	v.validateViews()
@@ -84,6 +85,19 @@ func (v *Validator) LogMessages() {
 		for _, message := range messages {
 			message.LogMsg()
 		}
+	}
+}
+
+func (v *Validator) validateDependencyPath(depPath string) {
+	if depPath == "" {
+		return
+	}
+
+	matchString := "^[[:alnum:]]+([.][[:alnum:]]+)*(/[[:alnum:]]+)*$"
+
+	if match, err := regexp.MatchString(matchString, depPath); err != nil || !match {
+		v.messages["DepPath"] = append(v.messages["DepPath"],
+			*msg.NewMsg(msg.ErrDepPathInvalid, []string{depPath, matchString}))
 	}
 }
 
