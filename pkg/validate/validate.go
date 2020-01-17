@@ -93,7 +93,7 @@ func (v *Validator) validateDependencyPath(depPath string) {
 		return
 	}
 
-	matchString := "^[[:alnum:]]+([.][[:alnum:]]+)*(/[[:alnum:]]+)*$"
+	matchString := "^[[:alnum:]]+([.][[:alnum:]]+)*(/[[:alnum:]]+)*[/]?$"
 
 	if match, err := regexp.MatchString(matchString, depPath); err != nil || !match {
 		v.messages["DepPath"] = append(v.messages["DepPath"],

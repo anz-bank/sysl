@@ -117,7 +117,7 @@ func TestValidatorIsCollectionType(t *testing.T) {
 func TestValidatorValidateDepPath_Valid(t *testing.T) {
 	v := Validator{messages: map[string][]msg.Msg{}}
 
-	validDepPaths := []string{"", "anz", "qwert.yuiop", "abc.xyz.lmno/sdsd/sdds", "abx/asx"}
+	validDepPaths := []string{"", "anz", "qwert.yuiop", "abc.xyz.lmno/sdsd/sdds", "abx/asx/", "level1/level2"}
 
 	for _, depPath := range validDepPaths {
 		v.validateDependencyPath(depPath)
@@ -128,7 +128,7 @@ func TestValidatorValidateDepPath_Valid(t *testing.T) {
 func TestValidatorValidateDepPath_Invalid(t *testing.T) {
 	v := Validator{messages: map[string][]msg.Msg{}}
 
-	validDepPaths := []string{"#", "//", "/level1/", "/", "level1/.", "asx/lmao.lol", "level1.level2/abx.sd"}
+	validDepPaths := []string{"#", "//", "/level1/", "/", "level1/.", "asx/lmao.lol", "level1.level2/abx.sd", "abx/asx//"}
 
 	for _, depPath := range validDepPaths {
 		v.validateDependencyPath(depPath)
