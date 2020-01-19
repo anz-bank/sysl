@@ -35,4 +35,5 @@ func TestDrawPrimitive(t *testing.T) {
 	expected := "class \"uuid\" as _0 << (D,orchid) >> {\n" +
 		"+ id : int\n}\n"
 	assert.EqualValues(t, expected, actual, nil)
+	clMock.AssertExpectations(t)
 }
