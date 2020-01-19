@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -15,17 +16,16 @@ type importCmd struct {
 	importer.OutputData
 	filename string
 	outfile  string
-	mode     string
 }
 
-func (p *importCmd) Name() string            { return "import" }
-func (p *importCmd) RequireSyslModule() bool { return false }
+func (p *importCmd) Name() string       { return "import" }
+func (p *importCmd) MaxSyslModule() int { return 0 }
 
 func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	opts := []string{modeGrammar, modeSwagger, modeXSD, modeOpenAPI}
+	opts := []string{importer.ModeGrammar, importer.ModeSwagger, importer.ModeXSD, importer.ModeOpenAPI}
 	sort.Strings(opts)
 	optsText := strings.Join(opts, ", ")
-	opts = append(opts, modeAuto)
+	opts = append(opts, importer.ModeAuto)
 
 	cmd := app.Command(p.Name(), "Import foreign type to sysl. Supported types: ["+optsText+"]")
 	cmd.Flag("input", "input filename").Short('i').Required().StringVar(&p.filename)
@@ -35,23 +35,16 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		"name of the sysl package to define in sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
 
-	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s, %s]", modeAuto, optsText)).
+	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s, %s]", importer.ModeAuto, optsText)).
 		Short('f').
-		Default(modeAuto).
+		Default(importer.ModeAuto).
 		HintOptions(opts...).
-		EnumVar(&p.mode, opts...)
+		EnumVar(&p.Mode, opts...)
+	//TODO: clean this up, remove p.mode
 
 	EnsureFlagsNonEmpty(cmd, "package")
 	return cmd
 }
-
-const (
-	modeOpenAPI = "openapi"
-	modeSwagger = "swagger"
-	modeXSD     = "xsd"
-	modeGrammar = "grammar"
-	modeAuto    = "auto"
-)
 
 func (p *importCmd) Execute(args ExecuteArgs) error {
 	data, err := ioutil.ReadFile(p.filename)
@@ -59,26 +52,31 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 		return err
 	}
 
-	if p.mode == "auto" {
-		p.mode = guessFileType(p.filename, data)
+	if p.Mode == "auto" {
+		p.Mode = guessFileType(p.filename, data)
 	}
 	var imp importer.Func
-	switch p.mode {
-	case modeSwagger:
+	switch p.Mode {
+	case importer.ModeSwagger:
 		args.Logger.Infof("Using swagger importer\n")
 		imp = importer.LoadSwaggerText
-	case modeXSD:
+	case importer.ModeXSD:
 		args.Logger.Infof("Using xsd importer\n")
 		imp = importer.LoadXSDText
-	case modeGrammar:
+	case importer.ModeGrammar:
 		args.Logger.Infof("Using grammar importer\n")
 		imp = importer.LoadGrammar
-	case modeOpenAPI:
+	case importer.ModeOpenAPI:
 		args.Logger.Infof("Using OpenAPI importer\n")
 		imp = importer.LoadOpenAPIText
 	default:
-		args.Logger.Fatalf("Unsupported input format: %s\n", p.mode)
+		args.Logger.Fatalf("Unsupported input format: %s\n", p.Mode)
 	}
+	p.SwaggerRoot, err = filepath.Abs(p.filename)
+	if err != nil {
+		return err
+	}
+	p.SwaggerRoot = filepath.Dir(p.SwaggerRoot)
 	output, err := imp(p.OutputData, string(data), args.Logger)
 	if err != nil {
 		return err
@@ -87,7 +85,7 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 }
 
 func guessYamlType(filename string, data []byte) string {
-	for _, check := range []string{modeSwagger, modeOpenAPI} {
+	for _, check := range []string{importer.ModeSwagger, importer.ModeOpenAPI} {
 		if strings.Contains(string(data), check) {
 			return check
 		}
@@ -100,11 +98,11 @@ func guessFileType(filename string, data []byte) string {
 	parts := strings.Split(filename, ".")
 	switch ext := parts[len(parts)-1]; ext {
 	case "xml", "xsd":
-		return modeXSD
+		return importer.ModeXSD
 	case "yaml", "yml", "json":
 		return guessYamlType(filename, data)
 	case "g":
-		return modeGrammar
+		return importer.ModeGrammar
 	default:
 		return ext
 	}

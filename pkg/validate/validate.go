@@ -2,6 +2,7 @@ package validate
 
 import (
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/msg"
@@ -26,9 +27,9 @@ type Params struct {
 	Transform     string
 	Grammar       string
 	Start         string
-
-	Filesystem afero.Fs
-	Logger     *logrus.Logger
+	BasePath      string
+	Filesystem    afero.Fs
+	Logger        *logrus.Logger
 }
 
 func DoValidate(validateParams Params) error {
@@ -36,6 +37,7 @@ func DoValidate(validateParams Params) error {
 	logrus.Debugf("transform: %s\n", validateParams.Transform)
 	logrus.Debugf("grammar: %s\n", validateParams.Grammar)
 	logrus.Debugf("start: %s\n", validateParams.Start)
+	logrus.Debugf("basepath: %s\n", validateParams.BasePath)
 
 	grammar, err := LoadGrammar(validateParams.Grammar, validateParams.Filesystem)
 	if err != nil {
@@ -53,7 +55,7 @@ func DoValidate(validateParams Params) error {
 	}
 
 	validator := NewValidator(grammar, transform, parser)
-	validator.Validate(validateParams.Start)
+	validator.Validate(validateParams.Start, validateParams.BasePath)
 	validator.LogMessages()
 
 	if len(validator.GetMessages()) > 0 {
@@ -66,8 +68,9 @@ func DoValidate(validateParams Params) error {
 	return nil
 }
 
-func (v *Validator) Validate(start string) {
+func (v *Validator) Validate(start, basepath string) {
 	v.validateEntryPoint(start)
+	v.validateBasePath(basepath)
 	v.validateFileName()
 	v.validateViews()
 	v.validateReturn()
@@ -79,6 +82,19 @@ func (v *Validator) LogMessages() {
 		for _, message := range messages {
 			message.LogMsg()
 		}
+	}
+}
+
+func (v *Validator) validateBasePath(basepath string) {
+	if basepath == "" || basepath == "/" {
+		return
+	}
+
+	matchString := "^/[[:alnum:]]+(/[[:alnum:]]+)*$"
+
+	if match, err := regexp.MatchString(matchString, basepath); err != nil || !match {
+		v.messages["BasePath"] = append(v.messages["BasePath"],
+			*msg.NewMsg(msg.ErrBasePathInvalid, []string{basepath, matchString}))
 	}
 }
 

@@ -5,6 +5,7 @@
 {{$this := .Page}}
 {{ partial "sidebar" . }}
 {{$copyButtonActive := false}}
+{{$PlaygroundURL := .Params.PlaygroundURL}}
 
 
 <html>
@@ -43,41 +44,49 @@
           {{end}}
 
           {{safeHTML .DocsRendered}}
+          
         </td>
-
+          
         <!--  -->
+        {{if eq .Image ""}}
         <td class="code{{if .CodeEmpty}} empty{{end}}{{if .CodeLeading}} leading{{end}}">
 
           <!-- Here we ass the copy code button -->
           {{if .CodeRun}}
           {{if eq $copyButtonActive false}}
+          <a href={{$PlaygroundURL}} target="_blank"><img title="Run code" src="/img/logo.png" class="run"></a>
+
           <img title="Copy code" src="/img/clipboard.png" class="copy" />
+
           {{$copyButtonActive = true}}
           {{end}}
           {{end}}
 
 
           {{safeHTML .CodeRendered}}
+
         </td>
+        
+        {{else}}
+        <img class="center" src="{{.Image}}" alt="Image" style="width:50%" />
+        {{end}}
+
+
       </tr>
+
       {{end}}
     </table>
-    {{end}}
-    {{range .Params.Images}}
-    <img class="center" src="{{.}}" alt="Image" />
+    
 
     {{end}}
     {{partial "nav" .}}
     <script>
       var codeLines = [];
-      {{ range .Params.Segs }}
-      {{ range .}}
-      codeLines.push('{{trim (safeJS .CodeForJs) "\n"}}');
-      {{ end }}
-      {{ end }}
+      codeLines.push('{{safeJS .Params.CodeWithoutComments}}');
     </script>
     <script src="/js/site.js" async></script>
 </body>
 
 </html>
 {{end}}
+

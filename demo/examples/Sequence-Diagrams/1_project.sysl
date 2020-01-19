@@ -3,7 +3,10 @@
 
 MobileApp:
     Login:
-        Server <- Login
+
+        # Here it is defined that this "Login" endpoint calls the server endpoint "LoginRequest"
+        Server <- LoginRequest
+
     !type LoginData:
         username <: string
         password <: string
@@ -13,5 +16,6 @@ MobileApp:
 
 Server:
 
-    Login(data <: MobileApp.LoginData):
+    # Here the datatype uses a datatype defined in MobileApp
+    LoginRequest(data <: MobileApp.LoginData):
         return MobileApp.LoginResponse

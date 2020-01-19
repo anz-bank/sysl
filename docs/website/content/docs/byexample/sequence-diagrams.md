@@ -4,68 +4,79 @@ title= "Sequence Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 6
+weight = 7
 topic = "Diagrams"
-Images = [
-  
-  "/assets/byexample/images/sequence-diagrams5.png",
-  
-]
-
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=TW9iaWxlQXBwOgogICAgTG9naW46CiAgICAgICAgU2VydmVyIDwtIExvZ2luUmVxdWVzdAogICAgIXR5cGUgTG9naW5EYXRhOgogICAgICAgIHVzZXJuYW1lIDw6IHN0cmluZwogICAgICAgIHBhc3N3b3JkIDw6IHN0cmluZwogICAgIXR5cGUgTG9naW5SZXNwb25zZToKICAgICAgICBtZXNzYWdlIDw6IHN0cmluZwpTZXJ2ZXI6CiAgICBMb2dpblJlcXVlc3QoZGF0YSA8OiBNb2JpbGVBcHAuTG9naW5EYXRhKToKICAgICAgICByZXR1cm4gTW9iaWxlQXBwLkxvZ2luUmVzcG9uc2UK&cmd=c3lzbCBzZCAtbyAiM19wcm9qZWN0LnN2ZyIgLXMgIk1vYmlsZUFwcCA8LSBMb2dpbiIgMV9wcm9qZWN0LnN5c2w="
 ID = "sequence-diagrams"
-Segs = [[
-  
-      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example will use a simple system and start using the sysl command to generate diagrams.</p>
-""", CodeForJs = """"""},
-
-      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">MobileApp</span><span class="p">:</span>
-    <span class="nx">Login</span><span class="p">:</span>
-        <span class="nx">Server</span> <span class="o">&lt;-</span> <span class="nx">Login</span>
-    <span class="p">!</span><span class="kd">type</span> <span class="nx">LoginData</span><span class="p">:</span>
-        <span class="nx">username</span> <span class="p">&lt;:</span> <span class="kt">string</span>
-        <span class="nx">password</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""", CodeForJs = """MobileApp:
+CodeWithoutComments = """MobileApp:
     Login:
-        Server <- Login
+        Server <- LoginRequest
     !type LoginData:
         username <: string
         password <: string
-"""},
+    !type LoginResponse:
+        message <: string
+Server:
+    LoginRequest(data <: MobileApp.LoginData):
+        return MobileApp.LoginResponse
+"""
+
+Segs = [[
+  
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example will use a simple system and start using the sysl command to generate diagrams.</p>
+""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">MobileApp</span><span class="p">:</span>
+    <span class="nx">Login</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
+        <span class="nx">Server</span> <span class="o">&lt;-</span> <span class="nx">LoginRequest</span></pre>""",DocsRendered= """<p>Here it is defined that this &ldquo;Login&rdquo; endpoint calls the server endpoint &ldquo;LoginRequest&rdquo;</p>
+""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="p">!</span><span class="kd">type</span> <span class="nx">LoginData</span><span class="p">:</span>
+        <span class="nx">username</span> <span class="p">&lt;:</span> <span class="kt">string</span>
+        <span class="nx">password</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="p">!</span><span class="kd">type</span> <span class="nx">LoginResponse</span><span class="p">:</span>
-        <span class="nx">message</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""", CodeForJs = """    !type LoginResponse:
-        message <: string
-"""},
+        <span class="nx">message</span> <span class="p">&lt;:</span> <span class="kt">string</span></pre>""",DocsRendered= """""",Image = ""},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">Server</span><span class="p">:</span></pre>""",DocsRendered= """""", CodeForJs = """Server:
-"""},
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">Server</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
 
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="nf">Login</span><span class="p">(</span><span class="nx">data</span> <span class="p">&lt;:</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginData</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginResponse</span></pre>""",DocsRendered= """""", CodeForJs = """    Login(data <: MobileApp.LoginData):
-        return MobileApp.LoginResponse
-"""},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">
+    <span class="nf">LoginRequest</span><span class="p">(</span><span class="nx">data</span> <span class="p">&lt;:</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginData</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nx">MobileApp</span><span class="p">.</span><span class="nx">LoginResponse</span></pre>""",DocsRendered= """<p>Here the datatype uses a datatype defined in MobileApp</p>
+""",Image = ""},
+
 
 ],
 [
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="nx">export</span> <span class="nx">SYSL_PLANTUML</span><span class="p">=</span><span class="nx">http</span><span class="p">:</span><span class="o">//</span><span class="nx">www</span><span class="p">.</span><span class="nx">plantuml</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">plantuml</span></pre>""",DocsRendered= """<p>First, make sure to set the environment variable SYSL_PLANTUML</p>
-""", CodeForJs = """"""},
+""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
-<span class="nx">sysl</span> <span class="nx">sd</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;project.png&#34;</span> <span class="o">-</span><span class="nx">s</span> <span class="s">&#34;MobileApp &lt;- Login&#34;</span> <span class="nx">project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """<p>Now run the sysl sd (sequence diagram) command</p>
-""", CodeForJs = """"""},
+<span class="nx">sysl</span> <span class="nx">sd</span> <span class="o">-</span><span class="nx">o</span> <span class="s">&#34;3_project.svg&#34;</span> <span class="o">-</span><span class="nx">s</span> <span class="s">&#34;MobileApp &lt;- Login&#34;</span> <span class="mi">1</span><span class="nx">_project</span><span class="p">.</span><span class="nx">sysl</span></pre>""",DocsRendered= """<p>Now run the sysl sd (sequence diagram) command</p>
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>-o</code> is the output file</p>
-""", CodeForJs = """"""},
+""",Image = ""},
 
-      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>-s</code> specifies a starting endpoint for the sequence diagram to initiate</p>
-""", CodeForJs = """"""},
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>`-s &ldquo;MobileApp &lt;- Login&rdquo; specifies this is the endpoint to start the sequence diagram at</p>
+""",Image = ""},
 
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>project.sysl</code> is the input sysl file</p>
-""", CodeForJs = """"""},
+""",Image = ""},
 
-      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>project.png:</p>
-""", CodeForJs = """"""},
+      {CodeEmpty= true,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>project.svg:</p>
+""",Image = ""},
+
+
+],
+[
+  
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/sequence-diagrams6.svg"},
+
 
 ],
 
