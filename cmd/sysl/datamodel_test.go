@@ -53,13 +53,17 @@ func TestDoConstructDataDiagrams(t *testing.T) {
 		project: "Project",
 		title:   "empdata",
 		expected: map[string]string{
-			"Relational-Model.png": filepath.Join(testDir, "relational-model-golden.puml"),
-			"Object-Model.png":     filepath.Join(testDir, "object-model-golden.puml"),
+			"Relational-Model.png":      filepath.Join(testDir, "relational-model-golden.puml"),
+			"Object-Model.png":          filepath.Join(testDir, "object-model-golden.puml"),
+			"Primitive-Alias-Model.png": filepath.Join(testDir, "primitive-alias-model-golden.puml"),
 		},
 	}
 	result, err := DoConstructDataDiagramsWithParams(args.root, "", args.title, args.output, args.project,
 		args.modules)
 	assert.Nil(t, err, "Generating the data diagrams failed")
+	//tmp := result["Primitive-Alias-Model.png"]
+	//assert.Nil(t, tmp, "")
+	//fmt.Println("s%", tmp)
 	comparePUML(t, args.expected, result)
 }
 

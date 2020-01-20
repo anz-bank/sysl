@@ -616,7 +616,7 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png",
 		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, main3)
-	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
+	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png", "/Primitive-Alias-Model.png")
 }
 
 func TestMain2WithDataSingleFile(t *testing.T) {
