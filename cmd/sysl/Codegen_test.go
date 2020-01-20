@@ -306,22 +306,22 @@ func TestValidatorDoValidate(t *testing.T) {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform2.sysl", "--grammar",
 				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile",
-				"--dep-path", "github.service.anz/anzx/bff/gen"}, isErrNil: true},
+				"--dep-path", "example.com/abc/asx/lmno"}, isErrNil: true},
 		"Grammar loading fail": {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform2.sysl", "--grammar",
 				filepath.Join(testDir, "go.sysl"), "--start", "goFile",
-				"--dep-path", "github.service.anz/anzx/bff/gen"}, isErrNil: false},
+				"--dep-path", "example.com/abc/asx/lmno"}, isErrNil: false},
 		"Transform loading fail": {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "tfm.sysl", "--grammar",
 				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile",
-				"--dep-path", "github.service.anz/anzx/bff/gen"}, isErrNil: false},
+				"--dep-path", "example.com/abc/asx/lmno"}, isErrNil: false},
 		"Has validation messages": {
 			args: []string{
 				"src", "codegen", "--validate-only", "--root-transform", testDir, "--transform", "transform1.sysl", "--grammar",
 				filepath.Join(testDir, "grammar.sysl"), "--start", "goFile",
-				"--dep-path", "github.service.anz/anzx/bff/gen"}, isErrNil: false},
+				"--dep-path", "example.com/abc/asx/lmno"}, isErrNil: false},
 	}
 
 	for name, tt := range cases {
