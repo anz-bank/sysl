@@ -61,9 +61,6 @@ func TestDoConstructDataDiagrams(t *testing.T) {
 	result, err := DoConstructDataDiagramsWithParams(args.root, "", args.title, args.output, args.project,
 		args.modules)
 	assert.Nil(t, err, "Generating the data diagrams failed")
-	//tmp := result["Primitive-Alias-Model.png"]
-	//assert.Nil(t, tmp, "")
-	//fmt.Println("s%", tmp)
 	comparePUML(t, args.expected, result)
 }
 
