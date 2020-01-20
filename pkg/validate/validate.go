@@ -70,7 +70,7 @@ func DoValidate(validateParams Params) error {
 	return nil
 }
 
-func (v *Validator) Validate(start string, depPath string, basepath string) {
+func (v *Validator) Validate(start, depPath, basepath string) {
 	v.validateEntryPoint(start)
 	v.validateDependencyPath(depPath)
 	v.validateBasePath(basepath)
@@ -92,10 +92,10 @@ func (v *Validator) validateDependencyPath(depPath string) {
 	if depPath == "" {
 		return
 	}
-
 	matchString := "^[[:alnum:]]+([.][[:alnum:]]+)*(/[[:alnum:]]+)*[/]?$"
+	p := regexp.MustCompile(matchString)
 
-	if match, err := regexp.MatchString(matchString, depPath); err != nil || !match {
+	if match, err := regexp.MatchString(p.String(), depPath); err != nil || !match {
 		v.messages["DepPath"] = append(v.messages["DepPath"],
 			*msg.NewMsg(msg.ErrDepPathInvalid, []string{depPath, matchString}))
 	}
@@ -107,8 +107,8 @@ func (v *Validator) validateBasePath(basepath string) {
 	}
 
 	matchString := "^/[[:alnum:]]+(/[[:alnum:]]+)*$"
-
-	if match, err := regexp.MatchString(matchString, basepath); err != nil || !match {
+	p := regexp.MustCompile(matchString)
+	if match, err := regexp.MatchString(p.String(), basepath); err != nil || !match {
 		v.messages["BasePath"] = append(v.messages["BasePath"],
 			*msg.NewMsg(msg.ErrBasePathInvalid, []string{basepath, matchString}))
 	}
