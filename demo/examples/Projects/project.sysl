@@ -4,7 +4,7 @@
 MobileApp:
     Login:
 
-        # Here we specify that this endpoint has a depencency that it calls internally. 
+        # Here we specify that this endpoint has a dependency that it calls internally. 
         Server <- Login
 
     !type LoginData:
