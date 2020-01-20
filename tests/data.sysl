@@ -53,3 +53,4 @@ PrimitiveAliasModel:
         foo <: string
   !alias uuid:
         int
+ 
