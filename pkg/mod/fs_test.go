@@ -31,7 +31,7 @@ func TestOpenLocalFile(t *testing.T) {
 func TestOpenRemoteFile(t *testing.T) {
 	t.Parallel()
 
-	SyslModules = "on"
+	SyslModules = true
 	filename := "github.com/anz-bank/sysl/tests/bananatree.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	fs := NewFs(memfs)
