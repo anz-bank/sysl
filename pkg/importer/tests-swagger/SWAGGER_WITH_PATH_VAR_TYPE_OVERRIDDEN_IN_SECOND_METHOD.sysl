@@ -6,21 +6,20 @@
 
 testapp "Sample API" [package="package_foo"]:
     @version = "1.0.0"
+    @basePath = "/v1"
     @host = "api.example.com"
     @description =:
         | API description in Markdown.
 
-    /v1:
+    /users/{id<:int}:
+        GET (metadata <: _param_metadata [~header, ~required, name="metadata"]):
+            | No description.
+            return ok
 
-        /users/{id<:int}:
-            GET (metadata <: _param_metadata [~header, ~required, name="metadata"]):
-                | No description.
-                return ok
-
-        /users/{id<:string}:
-            DELETE (metadata <: bool [~header, ~optional, name="metadata"]):
-                | No description.
-                return ok
+    /users/{id<:string}:
+        DELETE (metadata <: bool [~header, ~optional, name="metadata"]):
+            | No description.
+            return ok
 
     #---------------------------------------------------------------------------
     # definitions
