@@ -23,8 +23,12 @@ VERSION := $(or $(TAG),$(COMMIT)-$(BRANCH)-$(BUILD_DATE))
 
 LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE)
 
-all: test lint build coverage ## test, lint, build, coverage test run
+all: test lint build coverage examples ## test, lint, build, coverage test run
 
+TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
+
+examples: TUTORIALS
+	cd demo/examples/ && go run generate_website.go && cd ../../
 
 .PHONY: all deps install grammar antlr build lint test coverage clean
 lint: ## Run golangci-lint
