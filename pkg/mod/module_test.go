@@ -43,6 +43,7 @@ func TestGetByFilepathWithNilMods(t *testing.T) {
 func TestFind(t *testing.T) {
 	t.Parallel()
 
+	SyslModules = "on"
 	filename := "github.com/anz-bank/sysl/tests/bananatree.sysl"
 	mod, err := Find(filename)
 	assert.Nil(t, err)
