@@ -3011,6 +3011,10 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		path += syslExt
 	}
 
+	if strings.HasPrefix(path, "//") {
+		path = strings.TrimPrefix(path, "//")
+	}
+
 	id := importDef{
 		filename: path,
 	}
