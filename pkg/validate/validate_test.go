@@ -114,6 +114,29 @@ func TestValidatorIsCollectionType(t *testing.T) {
 	}
 }
 
+func TestValidatorValidateBasePath_Valid(t *testing.T) {
+	v := Validator{messages: map[string][]msg.Msg{}}
+
+	validBasePaths := []string{"/", "", "/level1", "/level1/level2"}
+
+	for _, basePath := range validBasePaths {
+		v.validateBasePath(basePath)
+		require.Zero(t, len(v.messages))
+	}
+}
+
+func TestValidatorValidateBasePath_Invalid(t *testing.T) {
+	v := Validator{messages: map[string][]msg.Msg{}}
+
+	invalidBasePaths := []string{"#", "//", "/level1/", "/#", "/level1/."}
+
+	for _, basePath := range invalidBasePaths {
+		v.validateBasePath(basePath)
+		require.Equal(t, 410, v.messages["BasePath"][0].MessageID)
+		delete(v.messages, "BasePath")
+	}
+}
+
 func TestValidatorValidateEntryPoint(t *testing.T) {
 	t.Parallel()
 
@@ -444,7 +467,7 @@ func TestValidatorValidate(t *testing.T) {
 	require.NotNil(t, grammar)
 
 	validator := NewValidator(grammar, transform, p)
-	validator.Validate("goFile")
+	validator.Validate("goFile", "")
 	actual := validator.GetMessages()
 	assert.Equal(t, map[string][]msg.Msg{}, actual, "Unexpected result")
 }

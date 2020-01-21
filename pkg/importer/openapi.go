@@ -3,13 +3,18 @@ package importer
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"net/url"
+	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/sirupsen/logrus"
 )
+
+const openapiv3DefinitionPrefix = "#/components/schemas/"
 
 func LoadOpenAPIText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
 	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(text))
@@ -23,9 +28,12 @@ func importOpenAPI(args OutputData,
 	swagger *openapi3.Swagger,
 	logger *logrus.Logger, basepath string) (out string, err error) {
 	l := &loader{
-		logger: logger,
-		spec:   swagger,
-		types:  TypeList{},
+		logger:        logger,
+		externalSpecs: make(map[string]*loader),
+		spec:          swagger,
+		types:         TypeList{},
+		mode:          args.Mode,
+		swaggerRoot:   args.SwaggerRoot,
 	}
 	l.initTypes()
 	endpoints := l.initEndpoints()
@@ -39,10 +47,27 @@ func importOpenAPI(args OutputData,
 }
 
 type loader struct {
-	logger       *logrus.Logger
-	spec         *openapi3.Swagger
-	types        TypeList
-	globalParams Parameters
+	logger        *logrus.Logger
+	externalSpecs map[string]*loader
+	spec          *openapi3.Swagger
+	types         TypeList
+	swaggerRoot   string
+	mode          string
+	globalParams  Parameters
+}
+
+func (l *loader) newLoaderWithExternalSpec(path string, swagger *openapi3.Swagger) {
+	l.externalSpecs[path] = &loader{
+		logger:        l.logger,
+		externalSpecs: make(map[string]*loader),
+		spec:          swagger,
+		types:         TypeList{},
+		mode:          l.mode,
+		swaggerRoot:   filepath.Dir(path),
+	}
+	l.externalSpecs[path].initTypes()
+	// external refs are usually found during initEndpoints, this is to find all external refs
+	l.externalSpecs[path].initEndpoints()
 }
 
 func (l *loader) initInfo(args OutputData) SyslInfo {
@@ -96,17 +121,76 @@ func (l *loader) initTypes() {
 }
 
 func (l *loader) typeFromRef(path string) Type {
-	path = strings.TrimPrefix(path, "#/components/schemas/")
-	if t, has := checkBuiltInTypes(path); has {
-		return t
+	// matches with external file remote reference
+	if regexp.MustCompile(`.(yaml|yml|json)#/`).Match([]byte(path)) {
+		if t := l.typeFromRemoteRef(path); t != nil {
+			if _, recorded := l.types.Find(t.Name()); !recorded {
+				l.types.Add(t)
+				l.types.Sort()
+			}
+			return t
+		}
+	} else {
+		path = strings.TrimPrefix(path, openapiv3DefinitionPrefix)
+		if t, has := checkBuiltInTypes(path); has {
+			return t
+		}
+		if t, ok := l.types.Find(path); ok {
+			return t
+		}
+		if schema, has := l.spec.Components.Schemas[path]; has {
+			return l.typeFromSchema(path, schema.Value)
+		}
 	}
-	if t, ok := l.types.Find(path); ok {
-		return t
-	}
-	if schema, has := l.spec.Components.Schemas[path]; has {
-		return l.typeFromSchema(path, schema.Value)
-	}
+
 	return nil
+}
+
+func (l *loader) typeFromRemoteRef(path string) Type {
+	cleaned := strings.Split(path, "#")
+	if len(cleaned) != 2 {
+		return nil
+	}
+
+	refPath, defPath := cleaned[0], openapiv3DefinitionPrefix+strings.TrimPrefix(cleaned[1], "/definitions/")
+	if !filepath.IsAbs(refPath) || strings.HasPrefix(refPath, l.swaggerRoot) {
+		var err error
+		refPath, err = filepath.Abs(filepath.Join(l.swaggerRoot, refPath))
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	if externalLoader, fileLoaded := l.externalSpecs[refPath]; fileLoaded {
+		return externalLoader.typeFromRef(defPath)
+	}
+
+	l.loadExternalSchema(refPath)
+	return l.externalSpecs[refPath].typeFromRef(defPath)
+}
+
+func (l *loader) loadExternalSchema(path string) {
+	l.newLoaderWithExternalSpec(path, l.getOpenapi3(path))
+}
+
+func (l *loader) getOpenapi3(path string) *openapi3.Swagger {
+	var swagger *openapi3.Swagger
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+	switch l.mode {
+	case ModeSwagger:
+		swagger, _, err = convertToOpenapiv3(data)
+	case ModeOpenAPI:
+		swagger, err = openapi3.NewSwaggerLoader().LoadSwaggerFromData(data)
+	default:
+		panic("unknown mode")
+	}
+	if err != nil {
+		panic(err)
+	}
+	return swagger
 }
 
 func (l *loader) typeFromSchemaRef(name string, ref *openapi3.SchemaRef) Type {

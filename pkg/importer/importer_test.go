@@ -3,7 +3,6 @@ package importer
 import (
 	"fmt"
 	"io/ioutil"
-	"path"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -18,6 +17,7 @@ type testConfig struct {
 	name          string
 	testDir       string
 	testExtension string
+	mode          string
 	fn            Func
 }
 
@@ -35,14 +35,21 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 			filename := strings.TrimSuffix(f.Name(), ext)
 			t.Run(fmt.Sprintf("%s - %s", cfg.name, filename), func(t *testing.T) {
 				t.Parallel()
-				input, err := ioutil.ReadFile(path.Join(cfg.testDir, filename+"."+cfg.testExtension))
+				swaggerFile := syslutil.MustAbsolute(t, filepath.Join(cfg.testDir, filename+"."+cfg.testExtension))
+				input, err := ioutil.ReadFile(swaggerFile)
 				require.NoError(t, err)
-				syslFile := path.Join(cfg.testDir, filename+".sysl")
+				syslFile := filepath.Join(cfg.testDir, filename+".sysl")
 				expected, err := ioutil.ReadFile(syslFile)
 				require.NoError(t, err)
 				expected = syslutil.HandleCRLF(expected)
 
-				result, err := cfg.fn(OutputData{AppName: "testapp", Package: "package_foo"}, string(input), logger)
+				outputData := OutputData{
+					AppName:     "testapp",
+					Package:     "package_foo",
+					SwaggerRoot: filepath.Dir(swaggerFile),
+					Mode:        cfg.mode,
+				}
+				result, err := cfg.fn(outputData, string(input), logger)
 				require.NoError(t, err)
 				require.Equal(t, string(expected), result)
 			})
@@ -55,6 +62,7 @@ func TestLoadSwaggerFromTestFiles(t *testing.T) {
 		name:          "TestLoadSwaggerFromTestFiles",
 		testDir:       "tests-swagger",
 		testExtension: "yaml",
+		mode:          ModeSwagger,
 		fn:            LoadSwaggerText,
 	})
 }
@@ -64,6 +72,7 @@ func TestLoadOpenApiFromTestFiles(t *testing.T) {
 		name:          "TestLoadOpenAPIFromTestFiles",
 		testDir:       "tests-openapi",
 		testExtension: "yaml",
+		mode:          ModeOpenAPI,
 		fn:            LoadOpenAPIText,
 	})
 }
@@ -73,6 +82,7 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 		name:          "TestLoadXSDFromTestFiles",
 		testDir:       "tests-xsd",
 		testExtension: "xsd",
+		mode:          ModeXSD,
 		fn:            LoadXSDText,
 	})
 }
@@ -82,6 +92,7 @@ func TestLoadGrammarFromTestFiles(t *testing.T) {
 		name:          "TestLoadGrammarFromTestFiles",
 		testDir:       "tests-grammar",
 		testExtension: "g",
+		mode:          ModeGrammar,
 		fn:            LoadGrammar,
 	})
 }
