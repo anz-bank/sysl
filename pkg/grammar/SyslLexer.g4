@@ -93,6 +93,7 @@ ABSTRACT            :
 TILDE               : '~';
 COMMA               : ',';
 EQ                  : '=';
+EXTERNAL_IMPORT     : '//';
 FORWARD_SLASH       : '/'
                     { ls(l).gotHTTPVerb = true; }
                     ;
@@ -385,4 +386,4 @@ E_NL  : '\r'? '\n'
       ;
 
 mode FILENAME;
-IMPORT_PATH         : (SUB_PATH_NAME | ('/' SUB_PATH_NAME))+ -> popMode;
+IMPORT_PATH         : (SUB_PATH_NAME | ('/' SUB_PATH_NAME) | (EXTERNAL_IMPORT SUB_PATH_NAME))+ -> popMode;
