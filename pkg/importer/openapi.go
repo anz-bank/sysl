@@ -40,7 +40,7 @@ func importOpenAPI(args OutputData,
 
 	result := &bytes.Buffer{}
 	w := newWriter(result, logger)
-	if err := w.Write(l.initInfo(args), l.types, basepath, endpoints...); err != nil {
+	if err := w.Write(l.initInfo(args, basepath), l.types, endpoints...); err != nil {
 		return "", err
 	}
 	return result.String(), nil
@@ -70,7 +70,7 @@ func (l *loader) newLoaderWithExternalSpec(path string, swagger *openapi3.Swagge
 	l.externalSpecs[path].initEndpoints()
 }
 
-func (l *loader) initInfo(args OutputData) SyslInfo {
+func (l *loader) initInfo(args OutputData, basepath string) SyslInfo {
 	info := SyslInfo{
 		OutputData:  args,
 		Title:       l.spec.Info.Title,
@@ -80,6 +80,7 @@ func (l *loader) initInfo(args OutputData) SyslInfo {
 	values := []string{
 		"version", l.spec.Info.Version,
 		"termsOfService", l.spec.Info.TermsOfService,
+		"basePath", basepath,
 	}
 	if l.spec.Info.License != nil {
 		values = append(values, "license", l.spec.Info.License.Name)

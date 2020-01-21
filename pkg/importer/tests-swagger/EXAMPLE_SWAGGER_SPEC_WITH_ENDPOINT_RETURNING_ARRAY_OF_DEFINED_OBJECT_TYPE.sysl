@@ -6,16 +6,15 @@
 
 testapp "Goat CRUD API" [package="package_foo"]:
     @version = "1.2.3"
+    @basePath = "/api/v1"
     @host = "goat.example.com"
     @description =:
         | No description.
 
-    /api/v1:
-
-        /goat/get-goats:
-            GET:
-                | Gotta get goats.
-                return ok <: sequence of Goat
+    /goat/get-goats:
+        GET:
+            | Gotta get goats.
+            return ok <: sequence of Goat
 
     #---------------------------------------------------------------------------
     # definitions
