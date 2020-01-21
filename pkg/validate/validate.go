@@ -14,6 +14,9 @@ import (
 	"github.com/spf13/afero"
 )
 
+var DepPathRegEx = regexp.MustCompile("^[[:alnum:]]+([.][[:alnum:]]+)*(/[[:alnum:]]+)*[/]?$")
+var BasePathRegEx = regexp.MustCompile("^/[[:alnum:]]+(/[[:alnum:]]+)*$")
+
 type Validator struct {
 	grammar     *sysl.Application
 	transform   *sysl.Application
@@ -92,12 +95,10 @@ func (v *Validator) validateDependencyPath(depPath string) {
 	if depPath == "" {
 		return
 	}
-	matchString := "^[[:alnum:]]+([.][[:alnum:]]+)*(/[[:alnum:]]+)*[/]?$"
-	p := regexp.MustCompile(matchString)
 
-	if match, err := regexp.MatchString(p.String(), depPath); err != nil || !match {
+	if match := DepPathRegEx.MatchString(depPath); !match {
 		v.messages["DepPath"] = append(v.messages["DepPath"],
-			*msg.NewMsg(msg.ErrDepPathInvalid, []string{depPath, matchString}))
+			*msg.NewMsg(msg.ErrDepPathInvalid, []string{depPath, DepPathRegEx.String()}))
 	}
 }
 
@@ -106,11 +107,9 @@ func (v *Validator) validateBasePath(basepath string) {
 		return
 	}
 
-	matchString := "^/[[:alnum:]]+(/[[:alnum:]]+)*$"
-	p := regexp.MustCompile(matchString)
-	if match, err := regexp.MatchString(p.String(), basepath); err != nil || !match {
+	if match := BasePathRegEx.MatchString(basepath); !match {
 		v.messages["BasePath"] = append(v.messages["BasePath"],
-			*msg.NewMsg(msg.ErrBasePathInvalid, []string{basepath, matchString}))
+			*msg.NewMsg(msg.ErrBasePathInvalid, []string{basepath, BasePathRegEx.String()}))
 	}
 }
 
