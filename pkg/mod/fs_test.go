@@ -31,13 +31,12 @@ func TestOpenLocalFile(t *testing.T) {
 func TestOpenRemoteFile(t *testing.T) {
 	t.Parallel()
 
-	SyslModules = true
-	filename := "github.com/anz-bank/sysl/tests/bananatree.sysl"
+	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	fs := NewFs(memfs)
 	f, err := fs.Open(filename)
 	assert.Nil(t, err)
-	assert.Equal(t, "bananatree.sysl", filepath.Base(f.Name()))
+	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
 }
 
 func TestOpenRemoteFileFailed(t *testing.T) {
