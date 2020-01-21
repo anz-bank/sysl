@@ -108,11 +108,10 @@ func (pc *projectConfiguration) configureProject(root, module string, fs afero.F
 		}
 	}
 
-	var projfs afero.Fs = syslutil.NewChrootFs(fs, pc.root)
+	pc.fs = syslutil.NewChrootFs(fs, pc.root)
 	if mod.SyslModules {
-		projfs = mod.NewFs(projfs)
+		pc.fs = mod.NewFs(pc.fs)
 	}
-	pc.fs = projfs
 
 	return nil
 }

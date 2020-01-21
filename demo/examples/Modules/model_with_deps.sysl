@@ -1,5 +1,5 @@
 import deps
-import github.com/ChloePlanet/testsyslmodule/bananatree
+import //github.com/ChloePlanet/testsyslmodule/bananatree
 
 ModelWithDeps [package="model"]:
   !type Response:
