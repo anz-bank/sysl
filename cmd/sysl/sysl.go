@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/parse"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -108,6 +109,10 @@ func (pc *projectConfiguration) configureProject(root, module string, fs afero.F
 	}
 
 	pc.fs = syslutil.NewChrootFs(fs, pc.root)
+	if mod.SyslModules {
+		pc.fs = mod.NewFs(pc.fs)
+	}
+
 	return nil
 }
 
