@@ -2,7 +2,7 @@
 export SYSL_PLANTUML=http://www.plantuml.com/plantuml
 
 # Now run the sysl sd (sequence diagram) command
-sysl ints -o project.png --project Project project.sysl
+sysl ints -o 3_project.svg --project Project 1_project.sysl
 
 # `-o` is the output file
 
@@ -10,4 +10,4 @@ sysl ints -o project.png --project Project project.sysl
 
 #  `project.sysl` is the input sysl file
 
-# project.png:
+# project.svg:

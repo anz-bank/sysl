@@ -8,19 +8,28 @@ import (
 	"github.com/ghodss/yaml"
 
 	"github.com/getkin/kin-openapi/openapi2"
+	"github.com/getkin/kin-openapi/openapi3"
 
 	"github.com/sirupsen/logrus"
 )
 
 func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
-	var swagger2 openapi2.Swagger
-	jsondata, err := yaml.YAMLToJSON([]byte(text))
+	openapiv3, basePath, err := convertToOpenapiv3([]byte(text))
 	if err != nil {
 		return "", err
 	}
+	return importOpenAPI(args, openapiv3, logger, basePath)
+}
+
+func convertToOpenapiv3(data []byte) (*openapi3.Swagger, string, error) {
+	var swagger2 openapi2.Swagger
+	jsondata, err := yaml.YAMLToJSON(data)
+	if err != nil {
+		return nil, "", err
+	}
 	err = json.Unmarshal(jsondata, &swagger2)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
 	if len(swagger2.Schemes) == 0 {
@@ -28,9 +37,10 @@ func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out s
 	}
 	openapiv3, err := openapi2conv.ToV3Swagger(&swagger2)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
-	return importOpenAPI(args, openapiv3, logger, swagger2.BasePath)
+
+	return openapiv3, swagger2.BasePath, nil
 }
 
 // nolint:gochecknoglobals

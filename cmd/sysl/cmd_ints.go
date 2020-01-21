@@ -57,8 +57,8 @@ type intsCmd struct {
 	CmdContextParamIntgen
 }
 
-func (p *intsCmd) Name() string            { return "integrations" }
-func (p *intsCmd) RequireSyslModule() bool { return true }
+func (p *intsCmd) Name() string       { return "integrations" }
+func (p *intsCmd) MaxSyslModule() int { return 1 }
 
 func (p *intsCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate integrations").Alias("ints")
@@ -79,7 +79,7 @@ func (p *intsCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *intsCmd) Execute(args ExecuteArgs) error {
-	result, err := GenerateIntegrations(&p.CmdContextParamIntgen, args.Module, args.Logger)
+	result, err := GenerateIntegrations(&p.CmdContextParamIntgen, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
 	}

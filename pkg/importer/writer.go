@@ -15,8 +15,10 @@ import (
 )
 
 type OutputData struct {
-	AppName string
-	Package string
+	AppName     string
+	Package     string
+	SwaggerRoot string
+	Mode        string
 }
 
 type SyslInfo struct {

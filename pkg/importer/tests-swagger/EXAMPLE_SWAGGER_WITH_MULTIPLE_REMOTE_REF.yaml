@@ -1,0 +1,38 @@
+swagger: "2.0"
+info:
+  title: Simple
+paths:
+  /test:
+    post:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: 'external-ref-test/EXTERNAL_REF.yaml#/definitions/AdvObj'
+      parameters:
+        - name: key
+          type: integer
+          required: false
+          in: header
+        - name: min_date
+          type: string
+          required: true
+          in: header
+          format: date
+        - name: createrequest
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/SimpleObj'
+        - name: createrequest2
+          required: true
+          in: body
+          schema:
+            $ref: 'external-ref-test/morefolder/EXTERNAL_REF_2.yaml#/definitions/AnotherObj'
+definitions:
+  SimpleObj:
+    type: object
+    properties:
+      name:
+        type: string
+
