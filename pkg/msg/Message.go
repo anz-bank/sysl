@@ -38,6 +38,7 @@ const (
 	ErrInvalidUnary            = 408
 	ErrRedefined               = 409
 	ErrBasePathInvalid         = 410
+	ErrDepPathInvalid          = 411
 
 	WarnValidatedWithWarn = 300
 	WarnValidationSkipped = 301
