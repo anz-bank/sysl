@@ -31,7 +31,7 @@ Segs = [[
     <span class="nx">Login</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
-        <span class="nx">Server</span> <span class="o">&lt;-</span> <span class="nx">Login</span></pre>""",DocsRendered= """<p>Here we specify that this endpoint has a depencency that it calls internally.</p>
+        <span class="nx">Server</span> <span class="o">&lt;-</span> <span class="nx">Login</span></pre>""",DocsRendered= """<p>Here we specify that this endpoint has a dependency that it calls internally.</p>
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">    <span class="p">!</span><span class="kd">type</span> <span class="nx">LoginData</span><span class="p">:</span>
