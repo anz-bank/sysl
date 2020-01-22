@@ -16,6 +16,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -595,6 +596,23 @@ func TestDuplicateImport(t *testing.T) {
 	res, err := parseAndCompareSysl(file1, file2, "")
 	if assert.NoError(t, err) {
 		assert.True(t, res, "%s and %s proto output diff", file1, file2)
+	}
+}
+
+func TestDuplicateImportWarning(t *testing.T) {
+	t.Parallel()
+
+	var buf bytes.Buffer
+	logrus.SetOutput(&buf)
+	_, err := NewParser().Parse("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	logrus.SetOutput(os.Stderr)
+
+	if assert.NoError(t, err) {
+		res := strings.Contains(
+			buf.String(),
+			"level=warning msg=\"Duplicate import: 'tests/simple_model.sysl' in file: 'tests/duplicate_import.sysl'\\n\"",
+		)
+		assert.True(t, res, "duplicate import not detected")
 	}
 }
 
