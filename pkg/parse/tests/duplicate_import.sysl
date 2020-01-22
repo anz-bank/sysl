@@ -1,0 +1,6 @@
+import simple_model
+import simple_model
+
+Model:
+    Endpoint:
+        return string
