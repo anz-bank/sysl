@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
 type AppElement struct {
