@@ -57,6 +57,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&intsCmd{},
 		&datamodelCmd{},
 		&databaseScriptCmd{},
+		&datamodelviewCmd{},
 		&modDatabaseScriptCmd{},
 		&codegenCmd{},
 		&sequenceDiagramCmd{},
