@@ -129,10 +129,30 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 			return nil, err
 		}
 
-		antlr.NewParseTreeWalker().Walk(listener, tree)
+		localListener := NewTreeShapeListener()
+		localListener.sc = sourceCtxHelper{source.filename}
+		localListener.base = filepath.Dir(filename)
+
+		walker := antlr.NewParseTreeWalker()
+		walker.Walk(localListener, tree)
+		walker.Walk(listener, tree)
+
 		if len(listener.imports) == 0 {
 			break
 		}
+
+		duplicateImportCheck := func(list []importDef) {
+			// assume that a file will have less than 256 imports
+			set := make(map[string]byte)
+			for _, value := range list {
+				if count := set[value.filename]; count == 1 {
+					logrus.Warnf("Duplicate import: '%s' in file: '%s'\n", value.filename, source.filename)
+				}
+				set[value.filename]++
+			}
+		}
+		duplicateImportCheck(localListener.imports)
+
 		imported[filename] = struct{}{}
 
 		for len(listener.imports) > 0 {
