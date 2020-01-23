@@ -1,0 +1,3 @@
+SimpleModel:
+    endpoint:
+        return string

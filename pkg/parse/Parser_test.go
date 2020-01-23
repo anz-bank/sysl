@@ -16,6 +16,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -173,6 +174,46 @@ func nullifyType(expr *sysl.Expr) {
 			nullifyType(stmt.GetLet().GetExpr())
 		}
 	}
+}
+
+func parseAndCompareSysl(
+	filename1, filename2, root string,
+) (bool, error) {
+	module1, err := parseComparable(filename1, root, true)
+	if err != nil {
+		return false, err
+	}
+
+	module2, err := parseComparable(filename2, root, true)
+	if err != nil {
+		return false, err
+	}
+
+	if proto.Equal(module1, module2) {
+		return true, nil
+	}
+
+	first := bytes.Buffer{}
+	second := bytes.Buffer{}
+	if err = pbutil.FTextPB(&first, module1); err != nil {
+		return false, err
+	}
+	if err = pbutil.FTextPB(&second, module2); err != nil {
+		return false, err
+	}
+	diff, err := difflib.GetUnifiedDiffString(difflib.UnifiedDiff{
+		A:        difflib.SplitLines(first.String()),
+		B:        difflib.SplitLines(second.String()),
+		FromFile: "First: ",
+		FromDate: "",
+		ToFile:   "Second: ",
+		ToDate:   "",
+		Context:  1,
+	})
+	if err != nil {
+		return false, err
+	}
+	return false, errors.New(diff)
 }
 
 func parseAndCompare(
@@ -545,6 +586,34 @@ func TestUndefinedRootAbsoluteImport(t *testing.T) {
 	parser.RestrictToLocalImport()
 	_, err := parser.Parse("absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
 	require.EqualError(t, err, "error importing: importing outside current directory is only allowed when root is defined")
+}
+
+func TestDuplicateImport(t *testing.T) {
+	t.Parallel()
+
+	file1 := "tests/duplicate_import.sysl"
+	file2 := "tests/duplicate_import_single.sysl"
+	res, err := parseAndCompareSysl(file1, file2, "")
+	if assert.NoError(t, err) {
+		assert.True(t, res, "%s and %s proto output diff", file1, file2)
+	}
+}
+
+func TestDuplicateImportWarning(t *testing.T) {
+	t.Parallel()
+
+	var buf bytes.Buffer
+	logrus.SetOutput(&buf)
+	_, err := NewParser().Parse("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	logrus.SetOutput(os.Stderr)
+
+	if assert.NoError(t, err) {
+		res := strings.Contains(
+			buf.String(),
+			"level=warning msg=\"Duplicate import: 'tests/simple_model.sysl' in file: 'tests/duplicate_import.sysl'\\n\"",
+		)
+		assert.True(t, res, "duplicate import not detected")
+	}
 }
 
 func TestInferExprTypeNonTransform(t *testing.T) {
