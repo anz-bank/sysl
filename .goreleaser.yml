@@ -6,24 +6,30 @@ before:
   hooks:
     - go mod tidy
 
-builds:
-  - binary: sysl
-    id: sysl
-    goos:
-      - darwin
-      - linux
-      - windows
-      - freebsd
-      - netbsd
-      - openbsd
-      - dragonfly
-    goarch:
-      - amd64
-      - 386
-      - arm
-      - arm64
-    goarm:
-      - 7
+build:
+  binary: sysl
+  id: sysl
+  goos:
+    - darwin
+    - linux
+    - windows
+    - freebsd
+    - netbsd
+    - openbsd
+    - dragonfly
+  goarch:
+    - amd64
+    - 386
+    - arm
+    - arm64
+  goarm:
+    - 7
+
+dockers:
+  - image_templates:
+      - "anzbank/{{.ProjectName}}:{{ .Tag }}"
+      - "anzbank/{{.ProjectName}}:v{{ .Major }}.{{ .Minor }}"
+      - "anzbank/{{.ProjectName}}:latest"
 
 archives:
 - id: "sysl"
