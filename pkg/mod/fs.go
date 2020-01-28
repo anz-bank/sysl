@@ -32,7 +32,7 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 		return nil, err
 	}
 
-	return syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
+	return afero.NewOsFs().Open(filepath.Join(mod.Dir, relpath))
 }
 
 func (fs *Fs) Create(name string) (afero.File, error) {
