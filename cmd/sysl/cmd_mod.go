@@ -29,7 +29,10 @@ func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 func (m *modCmd) Execute(args ExecuteArgs) error {
 	if m.subcommand == "init" {
 		// ignore folder creation error
-		args.Filesystem.Mkdir(syslRootMarker, 0755)
+		_err := args.Filesystem.Mkdir(syslRootMarker, 0755)
+		if _err != nil {
+			args.Logger.Warn(_err.Error())
+		}
 		err := os.Chdir(syslRootMarker)
 		if err != nil {
 			return err
