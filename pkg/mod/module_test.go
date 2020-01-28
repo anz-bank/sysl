@@ -20,16 +20,16 @@ func TestGetByFilename(t *testing.T) {
 	t.Parallel()
 
 	var testMods Modules
-	testMods.Add(&Module{Name: "modulepath"})
-	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath/filename"))
-	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename(".//modulepath/filename"))
+	testMods.Add(&Module{Name: "modulepath", Dir: "modulepath"})
+	assert.Equal(t, &Module{Name: "modulepath", Dir: "modulepath"}, testMods.GetByFilename("modulepath/filename"))
+	assert.Equal(t, &Module{Name: "modulepath", Dir: "modulepath"}, testMods.GetByFilename(".//modulepath/filename"))
 }
 
 func TestGetByFilepathWithoutValidMod(t *testing.T) {
 	t.Parallel()
 
 	var testMods Modules
-	testMods.Add(&Module{Name: "modulepath"})
+	testMods.Add(&Module{Name: "modulepath", Dir: "modulepath"})
 	assert.Nil(t, testMods.GetByFilename("another_modulepath/filename"))
 }
 
