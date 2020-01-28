@@ -2,10 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"strings"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )
+
+const syslModuleName = "syslmodules"
 
 type modCmd struct {
 	subcommand string
@@ -24,7 +28,17 @@ func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 func (m *modCmd) Execute(args ExecuteArgs) error {
 	if m.subcommand == "init" {
-		// setup go mod init
+		// ignore folder creation error
+		args.Filesystem.Mkdir(syslRootMarker, 0755)
+		err := os.Chdir(syslRootMarker)
+		if err != nil {
+			return err
+		}
+		out, err := exec.Command("go", "mod", "init", syslModuleName).CombinedOutput()
+		if err != nil {
+			return err
+		}
+		args.Logger.Debug(out)
 	}
 	return nil
 }

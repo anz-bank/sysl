@@ -13,8 +13,6 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const syslRootMarker = ".sysl"
-
 type cmdRunner struct {
 	commands map[string]Command
 
