@@ -24,7 +24,7 @@ func (m *Modules) GetByFilename(p string) *Module {
 	p = filepath.Clean(p)
 
 	for _, v := range *m {
-		if strings.HasPrefix(p, filepath.Clean(v.Name)) {
+		if hasPathPrefix(filepath.Clean(v.Name), p) {
 			return v
 		}
 	}
@@ -52,4 +52,18 @@ func Find(name string) (*Module, error) {
 		return nil, fmt.Errorf("error finding module of file %s", name)
 	}
 	return mod, nil
+}
+
+func hasPathPrefix(prefix, s string) bool {
+	switch {
+	default:
+		return false
+	case len(s) == len(prefix):
+		return s == prefix
+	case len(s) > len(prefix):
+		if prefix != "" && prefix[len(prefix)-1] == '/' {
+			return strings.HasPrefix(s, prefix)
+		}
+		return s[len(prefix)] == '/' && s[:len(prefix)] == prefix
+	}
 }
