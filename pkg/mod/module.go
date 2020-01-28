@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var SyslModules = os.Getenv("SYSL_MODULES") != ""
+var SyslModules = os.Getenv("SYSL_MODULES") != "off"
 
 type Module struct {
 	Name string
