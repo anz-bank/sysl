@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 var SyslModules = os.Getenv("SYSL_MODULES") != "off"
@@ -20,12 +19,10 @@ func (m *Modules) Add(v *Module) {
 	*m = append(*m, v)
 }
 
-func (m *Modules) GetByFilename(p string) *Module {
-	p = filepath.Clean(p)
-
-	for _, v := range *m {
-		if hasPathPrefix(filepath.Clean(v.Name), p) {
-			return v
+func (m *Modules) GetByFilename(filename string) *Module {
+	for _, mod := range *m {
+		if hasPathPrefix(mod.Name, filename) {
+			return mod
 		}
 	}
 
@@ -55,15 +52,12 @@ func Find(name string) (*Module, error) {
 }
 
 func hasPathPrefix(prefix, s string) bool {
-	switch {
-	default:
-		return false
-	case len(s) == len(prefix):
-		return s == prefix
-	case len(s) > len(prefix):
-		if prefix != "" && prefix[len(prefix)-1] == filepath.Separator {
-			return strings.HasPrefix(s, prefix)
-		}
+	prefix = filepath.Clean(prefix)
+	s = filepath.Clean(s)
+
+	if len(s) > len(prefix) {
 		return s[len(prefix)] == filepath.Separator && s[:len(prefix)] == prefix
 	}
+
+	return s == prefix
 }
