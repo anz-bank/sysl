@@ -10,7 +10,7 @@ import (
 func renderHTML(examples interface{}, wr io.Writer) error {
 	exampleTmpl := template.New("example")
 
-	_, err := exampleTmpl.Parse(mustReadFile("pkg/catalog/catalog.html"))
+	_, err := exampleTmpl.Parse(catalogTemplate)
 	if err != nil {
 		panic(err)
 	}

@@ -1,3 +1,6 @@
+package catalog
+
+const catalogTemplate = `
 <!DOCTYPE html>
 <html>
   <head>
@@ -31,4 +34,4 @@
       	{{ end }}
     </table>
   </body>
-</html>
+</html>`
