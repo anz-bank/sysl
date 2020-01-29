@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 
@@ -37,26 +36,11 @@ func (m *modCmd) Execute(args ExecuteArgs) error {
 }
 
 func syslModInit(args ExecuteArgs) error {
-	// ignore folder creation error
-	err := args.Filesystem.Mkdir(syslRootMarker, 0755)
-	if err != nil {
-		args.Logger.Debug(err.Error())
-	}
-
-	err = os.Chdir(syslRootMarker)
-	if err != nil {
-		return err
-	}
-
 	out, err := exec.Command("go", "mod", "init", syslModuleName).CombinedOutput()
 	if err != nil {
 		return err
 	}
 
 	args.Logger.Info(string(out))
-	err = os.Chdir("..")
-	if err != nil {
-		return err
-	}
 	return nil
 }

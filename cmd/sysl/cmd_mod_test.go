@@ -17,18 +17,17 @@ func TestSyslModInit(t *testing.T) {
 		DefaultAppName: "",
 	}
 
-	err := fs.RemoveAll(syslRootMarker)
+	fs.Remove("go.mod")
+	fs.Remove("go.sum")
+
+	err := syslModInit(execArgs)
 	assert.NoError(t, err)
 
-	err = syslModInit(execArgs)
-	assert.NoError(t, err)
-
-	// TODO: move this to Cleanup() in golang 1.14 (this test may pollute the cwd)
-	err = fs.RemoveAll(syslRootMarker)
-	assert.NoError(t, err)
+	fs.Remove("go.mod")
+	fs.Remove("go.sum")
 }
 
-func TestSyslModInitRootAlreadyExists(t *testing.T) {
+func TestSyslModInitAlreadyExists(t *testing.T) {
 	fs := afero.NewOsFs()
 	execArgs := ExecuteArgs{
 		Modules:        nil,
@@ -37,16 +36,15 @@ func TestSyslModInitRootAlreadyExists(t *testing.T) {
 		DefaultAppName: "",
 	}
 
-	err := fs.RemoveAll(syslRootMarker)
-	assert.NoError(t, err)
+	fs.Remove("go.mod")
+	fs.Remove("go.sum")
 
-	err = syslModInit(execArgs)
+	err := syslModInit(execArgs)
 	assert.NoError(t, err)
 
 	err = syslModInit(execArgs)
 	assert.Error(t, err)
 
-	// TODO: move this to Cleanup() in golang 1.14 (this test may pollute the cwd)
-	err = fs.RemoveAll(syslRootMarker)
-	assert.NoError(t, err)
+	fs.Remove("go.mod")
+	fs.Remove("go.sum")
 }
