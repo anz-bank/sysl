@@ -8,6 +8,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func removeFile(t *testing.T, fs afero.Fs, file string) {
+	exists, err := afero.Exists(fs, file)
+	assert.NoError(t, err)
+	if exists {
+		err = fs.Remove(file)
+		assert.NoError(t, err)
+	}
+}
+
 func TestSyslModInit(t *testing.T) {
 	fs := afero.NewOsFs()
 	execArgs := ExecuteArgs{
@@ -17,14 +26,14 @@ func TestSyslModInit(t *testing.T) {
 		DefaultAppName: "",
 	}
 
-	fs.Remove("go.mod")
-	fs.Remove("go.sum")
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 
 	err := syslModInit(execArgs)
 	assert.NoError(t, err)
 
-	fs.Remove("go.mod")
-	fs.Remove("go.sum")
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 }
 
 func TestSyslModInitAlreadyExists(t *testing.T) {
@@ -36,8 +45,8 @@ func TestSyslModInitAlreadyExists(t *testing.T) {
 		DefaultAppName: "",
 	}
 
-	fs.Remove("go.mod")
-	fs.Remove("go.sum")
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 
 	err := syslModInit(execArgs)
 	assert.NoError(t, err)
@@ -45,6 +54,6 @@ func TestSyslModInitAlreadyExists(t *testing.T) {
 	err = syslModInit(execArgs)
 	assert.Error(t, err)
 
-	fs.Remove("go.mod")
-	fs.Remove("go.sum")
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 }
