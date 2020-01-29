@@ -28,6 +28,12 @@ jobs:
         with:
           args: check
 
+      - name: Login to Docker Hub
+        uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
       - name: Release via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:

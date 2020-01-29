@@ -28,9 +28,9 @@ build:
 
 dockers:
   - image_templates:
-      - "anzbank/{{.ProjectName}}:{{ .Tag }}"
-      - "anzbank/{{.ProjectName}}:v{{ .Major }}.{{ .Minor }}"
-      - "anzbank/{{.ProjectName}}:latest"
+      - "docker.io/anzbank/sysl:{{ .Tag }}"
+      - "docker.io/anzbank/sysl:v{{ .Major }}.{{ .Minor }}"
+      - "docker.io/anzbank/sysl:latest"
 
 archives:
 - id: "sysl"
