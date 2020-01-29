@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -26,13 +27,11 @@ func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (m *modCmd) Execute(args ExecuteArgs) error {
-	if m.subcommand == "init" {
-		err := syslModInit(args)
-		if err != nil {
-			return err
-		}
+	switch m.subcommand {
+	case "init":
+		return syslModInit(args)
 	}
-	return nil
+	return errors.New("command not recognized")
 }
 
 func syslModInit(args ExecuteArgs) error {
