@@ -7,6 +7,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/eval"
 	sysl "github.com/anz-bank/sysl/pkg/proto_old"
+	"github.com/sirupsen/logrus"
 )
 
 type templated struct {
@@ -38,17 +39,19 @@ func (t *templated) Apply(mod *sysl.Module, appNames ...string) map[string]*sysl
 	s[t.view.Param[0].Name] = input.ToValue()
 
 	evalRes := t.eval(t.view, s)
+	logrus.Tracef("Apply evalRes: %s", evalRes.String())
 
 	fn := func(v *sysl.Value) (filename string, data string, err error) {
-		if m := v.GetMap(); m == nil {
+		valMap := v.GetMap().Items["apps"].GetSet().Value[0].GetMap().Items["app"].GetMap()
+		if valMap == nil {
 			return "", "", fmt.Errorf("incorrect return type")
 		}
-		val, ok := v.GetMap().Items["Filename"]
+		val, ok := valMap.Items["Filename"]
 		if !ok {
 			return "", "", fmt.Errorf("'Filename' not set")
 		}
 		filename = val.GetS()
-		val, ok = v.GetMap().Items["Data"]
+		val, ok = valMap.Items["Data"]
 		if !ok {
 			return "", "", fmt.Errorf("'Data' not set")
 		}
@@ -68,6 +71,7 @@ func (t *templated) Apply(mod *sysl.Module, appNames ...string) map[string]*sysl
 		result[fname] = eval.MakeValueString(data)
 	}
 	log.Printf("%+v", result)
+	logrus.Tracef("Apply result: %+v", result)
 	return result
 }
 

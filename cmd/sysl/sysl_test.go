@@ -898,13 +898,3 @@ func TestCodegenGrammarImport(t *testing.T) {
 		"-o", "out.sysl", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }
-
-func TestTemplating(t *testing.T) {
-	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	_, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "tmpl", "--root", "/Users/narays12/anzx/bff/codegen/model", "--root-template", "/Users/narays12/anzx/bff/codegen/transforms",
-		"--template", "svc_grpc.sysl", "--start", "start", "bff"}, fs, logger, main3)
-}
-
-// tmpl --root  ~/anzx/bff/codegen/model --root-template ~/anzx/bff/codegen/transforms --template svc_grpc.sysl --start start bff

@@ -2,11 +2,13 @@ package main
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/transforms"
+	"github.com/pkg/errors"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -55,6 +57,11 @@ func (p *templateCmd) Execute(args ExecuteArgs) error {
 	output := t.Apply(args.Module, p.appName...)
 
 	for filename, data := range output {
+		if _, err := os.Stat(p.outDir); os.IsNotExist(err) {
+			if err = os.Mkdir(p.outDir, 0755); err != nil {
+				return errors.Wrap(err, "Error creating output folder; check permission")
+			}
+		}
 		if err := ioutil.WriteFile(filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644); err != nil {
 			return err
 		}

@@ -1,0 +1,66 @@
+AuthorisationAPI [package="AuthorisationAPI", ~nowrap]:
+    @contact.email = "autorization@foo.com"
+    @contact.name = "Foo API Provider"
+    @version = "1.0.0"
+    @x-ibm-name = "authorisation"
+
+    ###################
+    ## MayI Endpoint ##
+    ###################
+    MayI (request <: MayIRequest):
+        return ok <: MayIResponse
+
+    #####################
+    ## ListMe Endpoint ##
+    #####################
+    ListMe (request <: ListMeRequest):
+        return ok <: ListMeResponse
+
+    !type MayIRequest:
+        user_id <: string:
+            @json_tag = "user_id"
+            @rpcId = "1"
+        operation <: Operation:
+            @json_tag = "operation"
+            @rpcId = "2"
+        account_id <: string:
+            @json_tag = "account_id"
+            @rpcId = "3"
+    
+    !type MayIResponse:
+        you_may <: bool:
+            @json_tag = "you_may"
+            @rpcId = "1"
+        reason <: string:
+            @json_tag = "reason"
+            @rpcId = "2"
+
+    !type ListMeRequest:
+        user_id <: string:
+            @json_tag = "user_id"
+            @rpcId = "1"
+        operation <: Operation:
+            @json_tag = "operation"
+            @rpcId = "2"
+
+    !type ListMeResponse:
+        permissions <: sequence of AccountPermissions:
+            @json_tag = "permissions"
+            @rpcId = "1"
+
+    
+    !type AccountPermissions:
+        @Description = "AccountPermissions contain a list of valid operations for the account"
+        account_id <: string:
+            @json_tag = "account_id"
+            @rpcId = "1"
+        permissions <: sequence of int:
+            @json_tag = "permissions"
+            @rpcId = "2"
+
+    enum Operation:
+        @Description = "Operation is the operation that a customer may want to perform on an account"
+        OPERATION_INVALID = 0
+        OPERATION_READ = 1
+        OPERATION_TRANSACT = 2
+        OPERATION_APPROVE = 3

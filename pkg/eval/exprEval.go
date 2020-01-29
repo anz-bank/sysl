@@ -28,6 +28,7 @@ func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) 
 				assign[ss.Let.Name] = res
 			}
 			logrus.Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
+			AddItemToValueMap(result, ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
 			logrus.Debugf("Evaluating %s", ss.Assign.Name)
 			res := Eval(ee, assign, ss.Assign.Expr)
@@ -324,6 +325,7 @@ func EvaluateApp(app *sysl.Application, view *sysl.View, s Scope) *sysl.Value {
 		logger:    logrus.StandardLogger(),
 	}
 	val, err := ee.eval(s, view.Expr)
+	logrus.Tracef("EvaluateApp val: %s", val.String())
 	if err != nil {
 		logrus.Panic(err.Error())
 	}
