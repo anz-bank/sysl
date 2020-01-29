@@ -23,6 +23,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+
       - name: Get dependencies
         run: make deps
         env:
