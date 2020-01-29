@@ -23,6 +23,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get dependencies
+        run: make deps
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test Darwin and Linux
+        run: make coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
+      - name: Test Windows
+        run: .\scripts\coverage-windows.bat
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
       - name: Validate goreleaser config
         uses: goreleaser/goreleaser-action@master
         with:
@@ -34,7 +51,7 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
 
-      - name: Release via goreleaser
+      - name: Release binaries and docker images via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
           args: release
