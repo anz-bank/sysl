@@ -21,6 +21,9 @@ representations over time.
 
 ## Installation
 
+With go get:
+
+`go get -u github.com/anz-bank/sysl/cmd/sysl`
 
 
 Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some
@@ -35,24 +38,7 @@ the following options to set up your environment:
 - [install PlantUML](http://plantuml.com/starting) locally and run on port
   8080 or you can refer to the [plantuml server guide](docs/plantUML_server.md)
 
-
 Test and lint the source code and your changes with
-
-
-Consider using [virtualenv](https://virtualenv.pypa.io/en/stable/) and
-[virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to
-isolate your development environment.
-
-For Java tests, install [Java 8][java-8-install] and
-[gradle](https://gradle.org/install/) and run
-
-```
-> gradle test -b test/java/build.gradle
-```
-
-If your corporate environment restricts access to `jcenter` our [environment
-guide](docs/environment_guide.md) might hold the answer for you. It also
-includes tips on using `virtualenv` with `gradle test`.
 
 We encourage contributions to this project! Please have a look at the
 [contributing guide](CONTRIBUTING.md) for more information.
@@ -60,10 +46,6 @@ We encourage contributions to this project! Please have a look at the
 If you need to create a release follow the [release
 documentation](docs/releasing.md).
 
-## Local Travis CI builds (experimental)
-
-`./run-travis.sh` runs a local Travis CI build. This is intended primarily to
-test Travis builds offline.
 
 ## Extending Sysl
 
@@ -85,6 +67,3 @@ diagrams, source code, views, integrations or other desired outputs.
 
 Sysl is currently targeted at early adopters. The current focus is to improve
 documentation and usability, especially error messages and warnings.
-
-
-[java-8-install]: https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html
