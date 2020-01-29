@@ -38,12 +38,12 @@ func (m *modCmd) Execute(args ExecuteArgs) error {
 
 func syslModInit(args ExecuteArgs) error {
 	// ignore folder creation error
-	_err := args.Filesystem.Mkdir(syslRootMarker, 0755)
-	if _err != nil {
-		args.Logger.Warn(_err.Error())
+	err := args.Filesystem.Mkdir(syslRootMarker, 0755)
+	if err != nil {
+		args.Logger.Debug(err.Error())
 	}
 
-	err := os.Chdir(syslRootMarker)
+	err = os.Chdir(syslRootMarker)
 	if err != nil {
 		return err
 	}
@@ -53,6 +53,10 @@ func syslModInit(args ExecuteArgs) error {
 		return err
 	}
 
-	args.Logger.Debug(out)
+	args.Logger.Info(string(out))
+	err = os.Chdir("..")
+	if err != nil {
+		return err
+	}
 	return nil
 }
