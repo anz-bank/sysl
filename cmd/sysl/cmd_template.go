@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -9,6 +8,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/transforms"
 	"github.com/pkg/errors"
+	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -62,7 +62,7 @@ func (p *templateCmd) Execute(args ExecuteArgs) error {
 				return errors.Wrap(err, "Error creating output folder; check permission")
 			}
 		}
-		if err := ioutil.WriteFile(filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644); err != nil {
+		if err := afero.WriteFile(tmplFs, filepath.Join(p.outDir, filename), []byte(data.GetS()), 0644); err != nil {
 			return err
 		}
 	}
