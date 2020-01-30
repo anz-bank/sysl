@@ -1,4 +1,4 @@
-Please **Create Draft Pull Request** when this PR is still work in progress.
+Please attach **WIP** tag when this PR is still work in progress.
 
 Fixes # .
 
