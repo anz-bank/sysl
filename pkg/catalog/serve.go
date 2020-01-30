@@ -19,6 +19,24 @@ import (
 	"google.golang.org/grpc"
 )
 
+var catalogFields = []string{
+	"team",
+	"team.slack",
+	"owner.name",
+	"owner.email",
+	"file.version",
+	"release.version",
+	"description",
+	"deploy.env1.url",
+	"deploy.sit1.url",
+	"deploy.sit2.url",
+	"deploy.qa.url",
+	"deploy.prod.url",
+	"repo.url",
+	"type",
+	"confluence.url",
+}
+
 // Server is a server for the catalog command which hosts an interactive web ui
 type Server struct {
 	Port   int
@@ -31,15 +49,11 @@ type Server struct {
 
 // service is the type which will be rendered on the home page of the html/json as a row
 type webService struct {
-	App         *sysl.Application `json:"-"`
-	Filename    string            `json:"filename"`
-	Team        string            `json:"team"`
-	Owner       string            `json:"owner"`
-	Email       string            `json:"email"`
-	URL         string            `json:"url"`
-	ServiceName string            `json:"servicename"`
-	Type        string            `json:"type"`
-	Link        string            `json:"link"`
+	App           *sysl.Application `json:"-"`
+	Fields        []string
+	Attrs         map[string]string
+	ServiceName   string `json:"servicename"`
+	SwaggerUILink string `json:"link"`
 }
 
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
@@ -83,18 +97,20 @@ func (c *Server) buildCatalog(m *sysl.Module) ([]webService, error) {
 		serviceName = strings.ReplaceAll(serviceName, "/", "")
 		serviceName = strings.ReplaceAll(serviceName, " ", "")
 		serviceName = strings.ToLower(serviceName)
+		var attr = make(map[string]string, 10)
+
+		for key, value := range atts {
+			attr[key] = value.GetS()
+		}
 
 		newService := webService{
-			App:         a,
-			Filename:    atts["proto"].GetS(),
-			URL:         atts["url"].GetS(),
-			ServiceName: serviceName,
-			Type:        atts["type"].GetS(),
-			Owner:       atts["owner"].GetS(),
-			Email:       atts["email"].GetS(),
-			Link:        "/" + serviceName,
+			App:           a,
+			Fields:        catalogFields,
+			Attrs:         attr,
+			ServiceName:   serviceName,
+			SwaggerUILink: "/" + serviceName,
 		}
-		switch newService.Type {
+		switch newService.Attrs["Type"] {
 		case "GRPC":
 			h, err = c.registerGrpcUI(newService)
 		case "REST":
@@ -104,8 +120,8 @@ func (c *Server) buildCatalog(m *sysl.Module) ([]webService, error) {
 			c.Log.Errorf(err.Error())
 			return nil, err
 		}
-		h = http.StripPrefix(newService.Link, h)
-		http.Handle(newService.Link+"/", h)
+		h = http.StripPrefix(newService.SwaggerUILink, h)
+		http.Handle(newService.SwaggerUILink+"/", h)
 		ser = append(ser, newService)
 	}
 	return ser, nil
@@ -114,7 +130,7 @@ func (c *Server) buildCatalog(m *sysl.Module) ([]webService, error) {
 // registerGrpcUI creates and returns a http handler for a grpcui server
 func (c *Server) registerGrpcUI(service webService) (http.Handler, error) {
 	ctx := context.Background()
-	cc, err := grpc.DialContext(ctx, service.URL, grpc.WithInsecure())
+	cc, err := grpc.DialContext(ctx, service.Attrs["deploy.prod.url"], grpc.WithInsecure())
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return nil, err
@@ -154,7 +170,7 @@ func (c *Server) registerGrpcUI(service webService) (http.Handler, error) {
 		c.Log.Errorf(err.Error())
 		return nil, err
 	}
-	h, err := standalone.HandlerViaReflection(ctx, cc, service.URL)
+	h, err := standalone.HandlerViaReflection(ctx, cc, service.SwaggerUILink)
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return nil, err
@@ -165,7 +181,7 @@ func (c *Server) registerGrpcUI(service webService) (http.Handler, error) {
 // registerSwaggerUI creates and returns a http handler for a SwaggerUI server
 func (c *Server) registerSwaggerUI(service webService) (http.Handler, error) {
 	basePath := "/"
-	swag := ServeCmd{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.Link}
+	swag := ServeCmd{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.SwaggerUILink}
 	swaggerExporter := exporter.MakeSwaggerExporter(service.App, nil)
 	err := swaggerExporter.GenerateSwagger()
 	if err != nil {

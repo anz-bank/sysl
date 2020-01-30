@@ -1,37 +1,37 @@
 package catalog
 
 const catalogTemplate = `
+{{$header := true}}
 <!DOCTYPE html>
 <html>
   <head>
     <title>Example</title>
   </head>
   <body>
-    <table>
-      	<tr>
-          <td>Service Name</td>
-          <td>Team</td>
-          <td>Owner</td>
-          <td>Email</td>
-          <td>Filename</td>
-          <td>URL</td>
-          <td>Type</td>
-          <td>Link</td>
+    <table border = "1">
+        <tr>
+        <td>Service Name</td>
+        {{ with . }}
+			  {{ range . }}
+        {{if $header}}
+        {{range .Fields }}
+        <td>{{.}}</td>
+        {{end}}
+        {{$header = false}}
+        <td>Link</td>
+        {{end}}
+        
     	</tr>
-      	{{ with . }}
-			{{ range . }}
-      			<tr>
-                  <td>{{.ServiceName}}</td>
-                  <td>{{.Team}}</td>
-                  <td>{{.Owner}}</td>
-                  <td>{{.Email}}</td>
-              		<td>{{.Filename }}</td>
-                  <td>{{.URL}}</td>
-                  <td>{{.Type}}</td>
-                  <td><a href=".{{.Link}}/">here</a></td>
-      			</tr>
+      <tr>
+      <td>{{.ServiceName}}</td>
+      {{$Attrs := .Attrs}}
+      {{range .Fields }}
+      <td>{{index $Attrs .}}</td>
+      {{end}}
+      <td> <a href="./{{.SwaggerUILink}}">{{.SwaggerUILink}}</a></td>
+      </tr>
 			{{ end }} 
-      	{{ end }}
+      {{ end }}
     </table>
   </body>
 </html>`
