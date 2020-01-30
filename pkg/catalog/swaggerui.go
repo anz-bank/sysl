@@ -22,7 +22,7 @@ type ServeCmd struct {
 	BasePath string `long:"base-path" description:"the base path to serve the spec and UI at"`
 	Path     string
 	Resource string
-	Flavor   string `short:"F" long:"flavor" description:"the flavor of docs, can be swagger or redoc" default:"redoc" choice:"redoc" choice:"swagger"`
+	Flavor   string `short:"F" long:"flavor" description:"the flavor of docs, can be swagger or redoc" default:"redoc" choice:"redoc,swagger"` //nolint: lll
 	DocURL   string `long:"doc-url" description:"override the url which takes a url query param to render the doc ui"`
 	NoOpen   bool   `long:"no-open" description:"when present won't open the the browser to show the url"`
 	NoUI     bool   `long:"no-ui" description:"when present, only the swagger spec will be served"`
@@ -101,8 +101,6 @@ func (s *ServeCmd) SwaggerUI(contents []byte) http.Handler {
 		}
 	}
 	fmt.Println(visit)
-
 	handler = handlers.CORS()(middleware.Spec(basePath, b, handler))
-
 	return handler
 }

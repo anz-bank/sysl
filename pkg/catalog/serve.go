@@ -19,8 +19,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-// CatalogServer is a server for the catalog command which hosts an interactive web ui
-type CatalogServer struct {
+// Server is a server for the catalog command which hosts an interactive web ui
+type Server struct {
 	Port   int
 	Host   string
 	Type   string
@@ -32,51 +32,48 @@ type CatalogServer struct {
 // service is the type which will be rendered on the home page of the html/json as a row
 type webService struct {
 	App         *sysl.Application `json:"-"`
-	Filename    string            `josn:"filename"`
-	Team        string            `josn:"team"`
-	Owner       string            `josn:"owner"`
-	Email       string            `josn:"email"`
-	URL         string            `josn:"url"`
-	ServiceName string            `josn:"servicename"`
-	Type        string            `josn:"type"`
-	Link        string            `josn:"link"`
+	Filename    string            `json:"filename"`
+	Team        string            `json:"team"`
+	Owner       string            `json:"owner"`
+	Email       string            `json:"email"`
+	URL         string            `json:"url"`
+	ServiceName string            `json:"servicename"`
+	Type        string            `json:"type"`
+	Link        string            `json:"link"`
 }
 
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
-func (c *CatalogServer) Serve() error {
-
+func (c *Server) Serve() error {
 	var contents bytes.Buffer
 	var err error
 
 	services, err := c.buildCatalog(c.Module)
-
 	switch c.Type {
 	case "json":
 		err = renderJSON(services, &contents)
 	case "html":
 		err = renderHTML(services, &contents)
 	}
-
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return err
 	}
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write(contents.Bytes())
+		_, err = w.Write(contents.Bytes())
+		if err != nil {
+			c.Log.Errorf(err.Error())
+			panic(err)
+		}
 	})
-
 	addr := c.Host + ":" + strconv.Itoa(c.Port)
 	fmt.Println(addr)
 	err = http.ListenAndServe(addr, nil)
-
 	c.Log.Errorf(err.Error())
 	return err
-
 }
 
 // buildCatalog unpacks a sysl modules and registers a http handler for the grpcui or swagger ui
-func (c *CatalogServer) buildCatalog(m *sysl.Module) ([]webService, error) {
+func (c *Server) buildCatalog(m *sysl.Module) ([]webService, error) {
 	var ser []webService
 	var h http.Handler
 	var err error
@@ -110,13 +107,12 @@ func (c *CatalogServer) buildCatalog(m *sysl.Module) ([]webService, error) {
 		h = http.StripPrefix(newService.Link, h)
 		http.Handle(newService.Link+"/", h)
 		ser = append(ser, newService)
-
 	}
 	return ser, nil
 }
 
 // registerGrpcUI creates and returns a http handler for a grpcui server
-func (c *CatalogServer) registerGrpcUI(service webService) (http.Handler, error) {
+func (c *Server) registerGrpcUI(service webService) (http.Handler, error) {
 	ctx := context.Background()
 	cc, err := grpc.DialContext(ctx, service.URL, grpc.WithInsecure())
 	if err != nil {
@@ -128,24 +124,46 @@ func (c *CatalogServer) registerGrpcUI(service webService) (http.Handler, error)
 		c.Log.Errorf(err.Error())
 		return nil, err
 	}
-	file, _ := c.Fs.Create("index.html")
-	file.Write(grpcui.WebFormContents("invoke", "metadata", methods))
-	file, _ = c.Fs.Create("grpc-web-form.js")
-	file.Write(grpcui.WebFormScript())
-	file, _ = c.Fs.Create("grpc-web-form.css")
-	file.Write(grpcui.WebFormSampleCSS())
+	file, err := c.Fs.Create("index.html")
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return nil, err
+	}
+	_, err = file.Write(grpcui.WebFormContents("invoke", "metadata", methods))
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return nil, err
+	}
+	file, err = c.Fs.Create("grpc-web-form.js")
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return nil, err
+	}
+	_, err = file.Write(grpcui.WebFormScript())
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return nil, err
+	}
+	file, err = c.Fs.Create("grpc-web-form.css")
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return nil, err
+	}
+	_, err = file.Write(grpcui.WebFormSampleCSS())
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return nil, err
+	}
 	h, err := standalone.HandlerViaReflection(ctx, cc, service.URL)
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return nil, err
-
 	}
-
 	return h, nil
 }
 
 // registerSwaggerUI creates and returns a http handler for a SwaggerUI server
-func (c *CatalogServer) registerSwaggerUI(service webService) (http.Handler, error) {
+func (c *Server) registerSwaggerUI(service webService) (http.Handler, error) {
 	basePath := "/"
 	swag := ServeCmd{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.Link}
 	swaggerExporter := exporter.MakeSwaggerExporter(service.App, nil)
@@ -158,8 +176,6 @@ func (c *CatalogServer) registerSwaggerUI(service webService) (http.Handler, err
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return nil, err
-
 	}
-	h := swag.SwaggerUI(output)
-	return h, nil
+	return swag.SwaggerUI(output), nil
 }
