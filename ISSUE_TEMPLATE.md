@@ -1,7 +1,18 @@
 Please **do not post any internal, closed source snippets** on this public issue tracker!
 
-### Expected behaviour
+### Description
 
-### Actual behaviour
+### Steps to Reproduce
+1. 
+2. 
+3. 
 
-### Steps to reproduce the behaviour
+**Expected behavior:**
+
+**Actual behavior:**
+
+### Your environments
+<pre>
+$ sysl version
+
+</pre>
