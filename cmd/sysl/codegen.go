@@ -10,7 +10,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/parser"
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/validate"
 	"github.com/pkg/errors"

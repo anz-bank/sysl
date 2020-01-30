@@ -273,6 +273,10 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 
 	params := MakeValueList()
 	for _, param := range e.Param {
+		if param.GetType() == nil {
+			log.Warnf("empty param defined in endpoint: %s", e.Name)
+			continue
+		}
 		AppendItemToValueList(params.GetList(), paramToValue(param))
 	}
 	AddItemToValueMap(m, "params", params)
@@ -289,9 +293,11 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 				retValues = strings.Split(s.Group.GetStmt()[0].GetRet().GetPayload(), " <: ")
 			} else {
 				log.Warnf("Unexpected statement %s found", s.Group.GetTitle())
+				retValues = []string{stmtToValue(s.Group.Stmt[0]).GetS()}
 			}
 		default:
 			AppendItemToValueList(stmtsList.GetList(), stmtToValue(stmt))
+			continue
 		}
 		if len(retValues) > 1 {
 			retTypes.GetMap().Items[retValues[0]] = MakeValueString(retValues[1])

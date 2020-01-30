@@ -953,6 +953,18 @@ func (s *BaseSyslParserListener) EnterExpr_statement_no_nl(ctx *Expr_statement_n
 // ExitExpr_statement_no_nl is called when production expr_statement_no_nl is exited.
 func (s *BaseSyslParserListener) ExitExpr_statement_no_nl(ctx *Expr_statement_no_nlContext) {}
 
+// EnterTemplate_expression is called when production template_expression is entered.
+func (s *BaseSyslParserListener) EnterTemplate_expression(ctx *Template_expressionContext) {}
+
+// ExitTemplate_expression is called when production template_expression is exited.
+func (s *BaseSyslParserListener) ExitTemplate_expression(ctx *Template_expressionContext) {}
+
+// EnterTemplate_statement is called when production template_statement is entered.
+func (s *BaseSyslParserListener) EnterTemplate_statement(ctx *Template_statementContext) {}
+
+// ExitTemplate_statement is called when production template_statement is exited.
+func (s *BaseSyslParserListener) ExitTemplate_statement(ctx *Template_statementContext) {}
+
 // EnterExpr_statement is called when production expr_statement is entered.
 func (s *BaseSyslParserListener) EnterExpr_statement(ctx *Expr_statementContext) {}
 
