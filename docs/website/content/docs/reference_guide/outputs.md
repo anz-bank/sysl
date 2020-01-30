@@ -20,6 +20,7 @@ toc: true
 | export  | Export sysl to Swagger/Open API specification |
 | codegen | Generate code with sysl transform models | 
 | datamodel| ... | 
+| version | Build information for sysl executable |
 
 
 ## Sysl examples
