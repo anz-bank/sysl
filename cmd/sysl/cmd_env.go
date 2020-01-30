@@ -27,7 +27,6 @@ func (c *envCmd) Execute(args ExecuteArgs) error {
 	for _, e := range strings.Fields(KnownEnv) {
 		v := os.Getenv(e)
 		fmt.Printf("%s=\"%s\"\n", e, v)
-
 	}
 
 	return nil
