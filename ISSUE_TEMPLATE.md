@@ -13,6 +13,6 @@ Please **do not post any internal, closed source snippets** on this public issue
 
 ### Your environments
 <pre>
-$ sysl version
+$ sysl info
 
 </pre>
