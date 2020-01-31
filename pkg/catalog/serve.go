@@ -1,7 +1,6 @@
 package catalog
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"strconv"
@@ -48,37 +47,49 @@ type Server struct {
 }
 
 // service is the type which will be rendered on the home page of the html/json as a row
-type webService struct {
+type WebService struct {
 	App           *sysl.Application `json:"-"`
-	Fields        []string
+	Fields        []string          `json:"-"`
 	Attrs         map[string]string
-	ServiceName   string `json:"servicename"`
-	SwaggerUILink string `json:"link"`
+	ServiceName   string
+	SwaggerUILink string
 }
 
-// Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
-func (c *Server) Serve() error {
-	var contents bytes.Buffer
-	var err error
-
-	services, err := c.buildCatalog(c.Module)
-	switch c.Type {
-	case "json":
-		err = renderJSON(services, &contents)
-	case "html":
-		err = renderHTML(services, &contents)
-	}
-	if err != nil {
-		c.Log.Errorf(err.Error())
-		return err
-	}
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err = w.Write(contents.Bytes())
+// ListHandlers registers handlers for both the homepage and json, if t is json the header will be set as json content type
+func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
+	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		switch t {
+		case "json":
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusCreated)
+		}
+		_, err := w.Write(contents)
 		if err != nil {
 			c.Log.Errorf(err.Error())
 			panic(err)
 		}
+
 	})
+
+}
+
+// Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
+func (c *Server) Serve() error {
+	var err error
+
+	services, err := c.BuildCatalog(c.Module)
+	json, err := renderJSON(services)
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return err
+	}
+	html, err := renderHTML(services)
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return err
+	}
+	c.ListHandlers(json, "json", "/json")
+	c.ListHandlers(html, "html", "/")
 	addr := c.Host + ":" + strconv.Itoa(c.Port)
 	fmt.Println(addr)
 	err = http.ListenAndServe(addr, nil)
@@ -86,9 +97,9 @@ func (c *Server) Serve() error {
 	return err
 }
 
-// buildCatalog unpacks a sysl modules and registers a http handler for the grpcui or swagger ui
-func (c *Server) buildCatalog(m *sysl.Module) ([]webService, error) {
-	var ser []webService
+// BuildCatalog unpacks a sysl modules and registers a http handler for the grpcui or swagger ui
+func (c *Server) BuildCatalog(m *sysl.Module) ([]WebService, error) {
+	var ser []WebService
 	var h http.Handler
 	var err error
 	for _, a := range m.GetApps() {
@@ -103,18 +114,18 @@ func (c *Server) buildCatalog(m *sysl.Module) ([]webService, error) {
 			attr[key] = value.GetS()
 		}
 
-		newService := webService{
+		newService := WebService{
 			App:           a,
 			Fields:        catalogFields,
 			Attrs:         attr,
 			ServiceName:   serviceName,
 			SwaggerUILink: "/" + serviceName,
 		}
-		switch newService.Attrs["Type"] {
+		switch newService.Attrs["type"] {
 		case "GRPC":
-			h, err = c.registerGrpcUI(newService)
+			h, err = c.GrpcUIHandler(newService)
 		case "REST":
-			h, err = c.registerSwaggerUI(newService)
+			h, err = c.SwaggerUIHandler(newService)
 		}
 		if err != nil {
 			c.Log.Errorf(err.Error())
@@ -127,8 +138,8 @@ func (c *Server) buildCatalog(m *sysl.Module) ([]webService, error) {
 	return ser, nil
 }
 
-// registerGrpcUI creates and returns a http handler for a grpcui server
-func (c *Server) registerGrpcUI(service webService) (http.Handler, error) {
+// GrpcUIHandler creates and returns a http handler for a grpcui server
+func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
 	cc, err := grpc.DialContext(ctx, service.Attrs["deploy.prod.url"], grpc.WithInsecure())
 	if err != nil {
@@ -178,8 +189,8 @@ func (c *Server) registerGrpcUI(service webService) (http.Handler, error) {
 	return h, nil
 }
 
-// registerSwaggerUI creates and returns a http handler for a SwaggerUI server
-func (c *Server) registerSwaggerUI(service webService) (http.Handler, error) {
+// SwaggerUIHandler creates and returns a http handler for a SwaggerUI server
+func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
 	basePath := "/"
 	swag := ServeCmd{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.SwaggerUILink}
 	swaggerExporter := exporter.MakeSwaggerExporter(service.App, nil)

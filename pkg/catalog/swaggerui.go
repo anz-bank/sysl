@@ -1,3 +1,6 @@
+// File adapted from https://github.com/go-swagger/go-swagger/blob/master/cmd/swagger/commands/serve.go
+// to be used within go and served an arbitrary endpoints (not just /docs)
+
 package catalog
 
 import (
@@ -31,7 +34,7 @@ type ServeCmd struct {
 	Host     string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
 }
 
-// Execute the serve command
+// SwaggerUI takes the contents of a swagger file and creates a handler for the interactive redoc
 func (s *ServeCmd) SwaggerUI(contents []byte) http.Handler {
 	if s.Flavor == "" {
 		s.Flavor = "redoc"
