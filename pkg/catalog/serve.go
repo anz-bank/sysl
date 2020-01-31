@@ -40,7 +40,6 @@ var catalogFields = []string{
 type Server struct {
 	Port   int
 	Host   string
-	Type   string
 	Fs     afero.Fs
 	Log    *logrus.Logger
 	Module *sysl.Module
@@ -55,11 +54,10 @@ type WebService struct {
 	SwaggerUILink string
 }
 
-// ListHandlers registers handlers for both the homepage and json, if t is json the header will be set as json content type
+// ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
 func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
 	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-		switch t {
-		case "json":
+		if t == "json" {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusCreated)
 		}
@@ -68,9 +66,7 @@ func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
 			c.Log.Errorf(err.Error())
 			panic(err)
 		}
-
 	})
-
 }
 
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
@@ -78,6 +74,10 @@ func (c *Server) Serve() error {
 	var err error
 
 	services, err := c.BuildCatalog(c.Module)
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return err
+	}
 	json, err := renderJSON(services)
 	if err != nil {
 		c.Log.Errorf(err.Error())
