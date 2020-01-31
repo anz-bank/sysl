@@ -6,8 +6,6 @@ import (
 )
 
 type catalogCmd struct {
-	output string
-	mode   string
 }
 
 func (p *catalogCmd) Name() string       { return "catalog" }
@@ -15,7 +13,6 @@ func (p *catalogCmd) MaxSyslModule() int { return 1 }
 
 func (p *catalogCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate ui catalog of applications and endpoints")
-	cmd.Flag("output", "output file name").Short('o').Default("-").StringVar(&p.output)
 	return cmd
 }
 
