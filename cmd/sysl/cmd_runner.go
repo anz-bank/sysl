@@ -65,7 +65,6 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&validateCmd{},
 		&exportCmd{},
 		&replCmd{},
-		&versionCmd{},
 	}
 	r.commands = map[string]Command{}
 
