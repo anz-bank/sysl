@@ -162,7 +162,7 @@ func TestREPL_DumpScope(t *testing.T) {
 	result := output.String()
 	require.Contains(t, result, "(dump scope)\n")
 	for k, v := range *scope {
-		require.Contains(t, result, fmt.Sprintf("%s:  %s", k, unaryString(v).GetS()))
+		require.Contains(t, result, fmt.Sprintf("%s:  %s", k, UnaryString(v).GetS()))
 	}
 }
 

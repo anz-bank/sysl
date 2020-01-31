@@ -359,7 +359,7 @@ transform: transform_arg?
     (E_ANGLE_OPEN transform_return_type E_ANGLE_CLOSE)?
     E_OPEN_PAREN transform_scope_var? E_COLON E_NL
       INDENT
-        (expr_stmt)+
+        (expr_stmt | template_statement)+
       DEDENT E_CLOSE_PAREN
       E_NL;
 
