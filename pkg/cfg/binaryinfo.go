@@ -5,8 +5,6 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
-
-	"github.com/sirupsen/logrus"
 )
 
 // Version   - Binary version
@@ -21,17 +19,16 @@ var (
 	BuildOS   = runtime.GOOS
 )
 
-//nolint:gochecknoinits
-func init() {
+func InitInfo() error {
 	info, err := latestGitReleaseInfo()
 	if err != nil {
-		logrus.Errorf("Get latest git release info error: %s\n", err.Error())
-		return
+		return err
 	}
 
 	Version = info[0]
 	GitCommit = info[1]
 	BuildDate = info[2]
+	return nil
 }
 
 func latestGitReleaseInfo() ([]string, error) {
