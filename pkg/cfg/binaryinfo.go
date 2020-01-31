@@ -1,6 +1,7 @@
 package cfg
 
 import (
+	"bytes"
 	"os/exec"
 	"runtime"
 	"strings"
@@ -33,20 +34,33 @@ func init() {
 	BuildDate = info[2]
 }
 
-//nolint:gosec
 func latestGitReleaseInfo() ([]string, error) {
-	tag, err := exec.Command("git", "describe", "--tags", "--abbrev=0", "--match=v[0-9]*").Output()
+	c1 := exec.Command("git", "describe", "--match=v[0-9]*", "--tags", "--abbrev=0")
+	c2 := exec.Command("xargs", "-I{}", "sh", "-c", "echo $1 $(git log -1 --pretty='%h %cd' --date=short {})", "sh", "{}")
+
+	var err error
+
+	c2.Stdin, err = c1.StdoutPipe()
 	if err != nil {
 		return nil, err
 	}
-	info := make([]string, 0)
-	info = append(info, string(tag[:len(tag)-1]))
+	var b bytes.Buffer
+	c2.Stdout = &b
 
-	out, err := exec.Command("git", "log", "-1", "--pretty=%h %cd", "--date=short", info[0]).Output()
+	err = c2.Start()
 	if err != nil {
 		return nil, err
 	}
-	s := strings.Split(string(out[:len(out)-1]), " ")
 
-	return append(info, s...), nil
+	err = c1.Run()
+	if err != nil {
+		return nil, err
+	}
+
+	err = c2.Wait()
+	if err != nil {
+		return nil, err
+	}
+
+	return strings.Fields(b.String()), nil
 }
