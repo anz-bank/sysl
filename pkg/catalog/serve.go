@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -38,14 +39,14 @@ var catalogFields = []string{
 
 // Server is a server for the catalog command which hosts an interactive web ui
 type Server struct {
-	Port   int
-	Host   string
-	Fs     afero.Fs
-	Log    *logrus.Logger
-	Module *sysl.Module
+	Port    int
+	Host    string
+	Fs      afero.Fs
+	Log     *logrus.Logger
+	Modules []*sysl.Module
 }
 
-// service is the type which will be rendered on the home page of the html/json as a row
+// WebService is the type which will be rendered on the home page of the html/json as a row
 type WebService struct {
 	App           *sysl.Application `json:"-"`
 	Fields        []string          `json:"-"`
@@ -72,13 +73,12 @@ func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
 	var err error
-
-	services, err := c.BuildCatalog(c.Module)
+	services, err := c.BuildCatalog()
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return err
 	}
-	json, err := renderJSON(services)
+	json, err := json.Marshal(services)
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return err
@@ -98,42 +98,44 @@ func (c *Server) Serve() error {
 }
 
 // BuildCatalog unpacks a sysl modules and registers a http handler for the grpcui or swagger ui
-func (c *Server) BuildCatalog(m *sysl.Module) ([]WebService, error) {
+func (c *Server) BuildCatalog() ([]WebService, error) {
 	var ser []WebService
 	var h http.Handler
 	var err error
-	for _, a := range m.GetApps() {
-		atts := a.GetAttrs()
-		serviceName := strings.Join(a.Name.GetPart(), ",")
-		serviceName = strings.ReplaceAll(serviceName, "/", "")
-		serviceName = strings.ReplaceAll(serviceName, " ", "")
-		serviceName = strings.ToLower(serviceName)
-		var attr = make(map[string]string, 10)
+	for _, m := range c.Modules {
+		for _, a := range m.GetApps() {
+			atts := a.GetAttrs()
+			serviceName := strings.Join(a.Name.GetPart(), ",")
+			serviceName = strings.ReplaceAll(serviceName, "/", "")
+			serviceName = strings.ReplaceAll(serviceName, " ", "")
+			serviceName = strings.ToLower(serviceName)
+			var attr = make(map[string]string, 10)
 
-		for key, value := range atts {
-			attr[key] = value.GetS()
-		}
+			for key, value := range atts {
+				attr[key] = value.GetS()
+			}
 
-		newService := WebService{
-			App:           a,
-			Fields:        catalogFields,
-			Attrs:         attr,
-			ServiceName:   serviceName,
-			SwaggerUILink: "/" + serviceName,
+			newService := WebService{
+				App:           a,
+				Fields:        catalogFields,
+				Attrs:         attr,
+				ServiceName:   serviceName,
+				SwaggerUILink: "/" + serviceName,
+			}
+			switch newService.Attrs["type"] {
+			case "GRPC":
+				h, err = c.GrpcUIHandler(newService)
+			case "REST":
+				h, err = c.SwaggerUIHandler(newService)
+			}
+			if err != nil {
+				c.Log.Errorf(err.Error())
+				return nil, err
+			}
+			h = http.StripPrefix(newService.SwaggerUILink, h)
+			http.Handle(newService.SwaggerUILink+"/", h)
+			ser = append(ser, newService)
 		}
-		switch newService.Attrs["type"] {
-		case "GRPC":
-			h, err = c.GrpcUIHandler(newService)
-		case "REST":
-			h, err = c.SwaggerUIHandler(newService)
-		}
-		if err != nil {
-			c.Log.Errorf(err.Error())
-			return nil, err
-		}
-		h = http.StripPrefix(newService.SwaggerUILink, h)
-		http.Handle(newService.SwaggerUILink+"/", h)
-		ser = append(ser, newService)
 	}
 	return ser, nil
 }

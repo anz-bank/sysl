@@ -2,7 +2,6 @@ package catalog
 
 import (
 	"bytes"
-	"encoding/json"
 	"html/template"
 )
 
@@ -15,12 +14,4 @@ func renderHTML(examples interface{}) ([]byte, error) {
 	}
 	err = exampleTmpl.Execute(&contents, examples)
 	return contents.Bytes(), err
-}
-
-func renderJSON(examples interface{}) ([]byte, error) {
-	j, err := json.Marshal(examples)
-	if err != nil {
-		return nil, err
-	}
-	return j, err
 }

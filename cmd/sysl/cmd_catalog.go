@@ -1,8 +1,6 @@
 package main
 
 import (
-	"strings"
-
 	"github.com/anz-bank/sysl/pkg/catalog"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -23,15 +21,12 @@ func (p *catalogCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 func (p *catalogCmd) Execute(args ExecuteArgs) error {
 	args.Logger.Debugf("catalog: %+v", *p)
-	p.output = strings.TrimSpace(p.output)
-	p.mode = strings.TrimSpace(p.mode)
 	catalogServer := catalog.Server{
-		Port:   8080,
-		Host:   "localhost",
-		Fs:     args.Filesystem,
-		Log:    args.Logger,
-		Module: args.Modules[0],
+		Port:    8080,
+		Host:    "localhost",
+		Fs:      args.Filesystem,
+		Log:     args.Logger,
+		Modules: args.Modules,
 	}
-
 	return catalogServer.Serve()
 }
