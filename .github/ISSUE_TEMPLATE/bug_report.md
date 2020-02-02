@@ -19,19 +19,15 @@ Please **do not post any internal, closed source snippets** on this public issue
 **Actual behavior:**
 
 * Debug&Crash Output
-<!--
-Full debug output can be obtained by running sysl with the flag `-v`.
--->
+<!-- Full debug output can be obtained by running sysl with the flag `-v`. -->
 
 
-### Your environments
+### Your Environments
 <!---
 Run `sysl info` to show the sysl binary info, and paste the result between the ``` marks below.
-
 If you are not running the latest version of sysl, please try upgrading because your issue may have already been fixed.
 -->
 ```sh
 $ sysl info
 ...
 ```
-
