@@ -1959,11 +1959,11 @@ func makeGetAttr(arg *sysl.Expr, name string, nullsafe, setof bool, ctx *sysl.So
 	return expr
 }
 
-// func makeLiteralString(val string, ctx *sysl.SourceContext) *sysl.Expr {
-// 	expr := makeExpr(ctx)
-// 	expr.Expr = &sysl.Expr_Literal{Literal: &sysl.Value{Value: &sysl.Value_S{S: val}}}
-// 	return expr
-// }
+func makeLiteralString(val string, ctx *sysl.SourceContext) *sysl.Expr {
+	expr := makeExpr(ctx)
+	expr.Expr = &sysl.Expr_Literal{Literal: &sysl.Value{Value: &sysl.Value_S{S: val}}}
+	return expr
+}
 
 func makeRelExpr(op sysl.Expr_RelExpr_Op, ctx *sysl.SourceContext) *sysl.Expr {
 	expr := makeExpr(ctx)
@@ -2761,100 +2761,100 @@ func (s *TreeShapeListener) ExitExpr_inject_stmt(ctx *parser.Expr_inject_stmtCon
 	tx.Stmt = append(tx.Stmt, stmt)
 }
 
-// // EnterTemplate_expression is called when production template_expression is entered.
-// func (s *TreeShapeListener) EnterTemplate_expression(ctx *parser.Template_expressionContext) {
-// }
+// EnterTemplate_expression is called when production template_expression is entered.
+func (s *TreeShapeListener) EnterTemplate_expression(ctx *parser.Template_expressionContext) {
+}
 
-// // ExitTemplate_expression is called when production template_expression is exited.
-// func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_expressionContext) {
-// 	var lhs, rhs *sysl.Expr
+// ExitTemplate_expression is called when production template_expression is exited.
+func (s *TreeShapeListener) ExitTemplate_expression(ctx *parser.Template_expressionContext) {
+	var lhs, rhs *sysl.Expr
 
-// 	sourceCtx := s.sc.Get(ctx.BaseParserRuleContext)
+	sourceCtx := s.sc.Get(ctx.BaseParserRuleContext)
 
-// 	if txt := ctx.TMPL_TEXT(); txt != nil {
-// 		text := strings.NewReplacer("{{", "{", "}}", "}").Replace(txt.GetText())
-// 		rhs = makeLiteralString(text, sourceCtx)
-// 	} else {
-// 		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr(), sourceCtx)
-// 	}
+	if txt := ctx.TMPL_TEXT(); txt != nil {
+		text := strings.NewReplacer("{{", "{", "}}", "}").Replace(txt.GetText())
+		rhs = makeLiteralString(text, sourceCtx)
+	} else {
+		rhs = makeUnaryExpr(sysl.Expr_UnExpr_STRING, s.popExpr(), sourceCtx)
+	}
 
-// 	if top := s.TopExpr(); top.GetTransform() == nil {
-// 		lhs = s.popExpr()
-// 	} else {
-// 		lhs = makeLiteralString("", nil)
-// 	}
-// 	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, sourceCtx))
-// }
+	if top := s.TopExpr(); top.GetTransform() == nil {
+		lhs = s.popExpr()
+	} else {
+		lhs = makeLiteralString("", nil)
+	}
+	s.PushExpr(makeBinaryExpr(sysl.Expr_BinExpr_ADD, lhs, rhs, sourceCtx))
+}
 
-// // EnterTemplate_statement is called when production template_statement is entered.
-// func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {
-// 	if len(ctx.AllTemplate_expression()) == 0 {
-// 		s.PushExpr(makeLiteralString("", s.sc.Get(ctx.BaseParserRuleContext)))
-// 	}
-// }
+// EnterTemplate_statement is called when production template_statement is entered.
+func (s *TreeShapeListener) EnterTemplate_statement(ctx *parser.Template_statementContext) {
+	if len(ctx.AllTemplate_expression()) == 0 {
+		s.PushExpr(makeLiteralString("", s.sc.Get(ctx.BaseParserRuleContext)))
+	}
+}
 
-// const TemplateImpliedResult = "__$"
-// const TemplateLogString = "__$Log"
+const TemplateImpliedResult = "__$"
+const TemplateLogString = "__$Log"
 
-// // ExitTemplate_statement is called when production template_statement is exited.
-// func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
-// 	statements := s.popExpr()
-// 	tx := s.TopExpr().GetTransform()
-// 	if tx == nil {
-// 		fmt.Printf("%v", s.TopExpr())
-// 		panic("ExitTemplate_statement: Unexpected expression!")
-// 	}
+// ExitTemplate_statement is called when production template_statement is exited.
+func (s *TreeShapeListener) ExitTemplate_statement(ctx *parser.Template_statementContext) {
+	statements := s.popExpr()
+	tx := s.TopExpr().GetTransform()
+	if tx == nil {
+		fmt.Printf("%v", s.TopExpr())
+		panic("ExitTemplate_statement: Unexpected expression!")
+	}
 
-// 	getRHS := func(expr *sysl.Expr) *sysl.Expr {
-// 		if out, ok := expr.Expr.(*sysl.Expr_Binexpr); ok {
-// 			return out.Binexpr.Rhs
-// 		}
-// 		return nil
-// 	}
-// 	rhs := statements
-// 	for {
-// 		if x := getRHS(rhs); x != nil {
-// 			rhs = x
-// 		} else {
-// 			break
-// 		}
-// 	}
-// 	wantNewLine := true
-// 	if e, ok := rhs.Expr.(*sysl.Expr_Literal); ok {
-// 		if strings.HasSuffix(e.Literal.GetS(), "\\") {
-// 			wantNewLine = false
-// 			e.Literal = &sysl.Value{
-// 				Value: &sysl.Value_S{
-// 					S: strings.TrimSuffix(e.Literal.GetS(), "\\"),
-// 				},
-// 			}
-// 		}
-// 	}
+	getRHS := func(expr *sysl.Expr) *sysl.Expr {
+		if out, ok := expr.Expr.(*sysl.Expr_Binexpr); ok {
+			return out.Binexpr.Rhs
+		}
+		return nil
+	}
+	rhs := statements
+	for {
+		if x := getRHS(rhs); x != nil {
+			rhs = x
+		} else {
+			break
+		}
+	}
+	wantNewLine := true
+	if e, ok := rhs.Expr.(*sysl.Expr_Literal); ok {
+		if strings.HasSuffix(e.Literal.GetS(), "\\") {
+			wantNewLine = false
+			e.Literal = &sysl.Value{
+				Value: &sysl.Value_S{
+					S: strings.TrimSuffix(e.Literal.GetS(), "\\"),
+				},
+			}
+		}
+	}
 
-// 	sc := s.sc.Get(ctx.BaseParserRuleContext)
-// 	if wantNewLine {
-// 		expr := makeLiteralString("\n", sc)
-// 		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, statements, expr, sc)
-// 	}
+	sc := s.sc.Get(ctx.BaseParserRuleContext)
+	if wantNewLine {
+		expr := makeLiteralString("\n", sc)
+		statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, statements, expr, sc)
+	}
 
-// 	resultName := TemplateImpliedResult
-// 	if ctx.TMPL_DEBUG() != nil {
-// 		resultName = TemplateLogString
-// 	}
-// 	output := makeExprName(resultName, sc)
-// 	output.Type = &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING}}
-// 	statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, output, statements, sc)
-// 	stmt := &sysl.Expr_Transform_Stmt{
-// 		Stmt: &sysl.Expr_Transform_Stmt_Let{
-// 			Let: &sysl.Expr_Transform_Stmt_Assign{
-// 				Name: resultName,
-// 				Expr: statements,
-// 			},
-// 		},
-// 	}
+	resultName := TemplateImpliedResult
+	if ctx.TMPL_DEBUG() != nil {
+		resultName = TemplateLogString
+	}
+	output := makeExprName(resultName, sc)
+	output.Type = &sysl.Type{Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING}}
+	statements = makeBinaryExpr(sysl.Expr_BinExpr_ADD, output, statements, sc)
+	stmt := &sysl.Expr_Transform_Stmt{
+		Stmt: &sysl.Expr_Transform_Stmt_Let{
+			Let: &sysl.Expr_Transform_Stmt_Assign{
+				Name: resultName,
+				Expr: statements,
+			},
+		},
+	}
 
-// 	tx.Stmt = append(tx.Stmt, stmt)
-// }
+	tx.Stmt = append(tx.Stmt, stmt)
+}
 
 // EnterTransform_return_type is called when production transform_return_type is entered.
 func (s *TreeShapeListener) EnterTransform_return_type(ctx *parser.Transform_return_typeContext) {
