@@ -170,7 +170,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 }
 
 // GrpcUIHandler creates and returns a http handler for a grpcui server
-func (c *Server) grpcGrpcUIHandler(service WebService) (http.Handler, error) {
+func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
 	cc, err := grpc.DialContext(ctx, service.Attrs["deploy.prod.url"], grpc.WithInsecure())
 	if err != nil {
