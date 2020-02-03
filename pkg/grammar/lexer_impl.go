@@ -152,7 +152,8 @@ func getNextToken(l *SyslLexer) antlr.Token {
 	// return NEWLINE
 	if ls.gotNewLine {
 		switch next.GetTokenType() {
-		case SyslLexerNEWLINE, SyslLexerNEWLINE_2, SyslLexerEMPTY_LINE, SyslLexerE_NL, SyslLexerE_EMPTY_LINE:
+		case SyslLexerNEWLINE, SyslLexerNEWLINE_2, SyslLexerEMPTY_LINE,
+			SyslLexerE_NL, SyslLexerE_EMPTY_LINE, SyslLexerTMPL_NL:
 			fallthrough
 		case SyslLexerINDENTED_COMMENT, SyslLexerEMPTY_COMMENT, SyslLexerE_INDENTED_COMMENT:
 			fallthrough
