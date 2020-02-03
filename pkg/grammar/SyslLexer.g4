@@ -320,6 +320,11 @@ E_RELOPS_FLATTEN       : 'flatten';
 E_RELOPS_FIRST         : 'first';
 E_FUNC          : 'autoinc' | 'str' | 'substr';
 
+fragment
+TEMPLATE_MAGIC  : '$';
+E_RAW_TEXT_END     : '{' TEMPLATE_MAGIC;
+E_RAW_TEXT_START    : TEMPLATE_MAGIC '}'? ->pushMode(TEMPLATE);
+
 E_STRING_DBL           : ["] (~["\\] | [\\][\\brntu'"])* ["];
 E_STRING_SINGLE        : ['] ~[']* ['];
 
@@ -387,3 +392,16 @@ E_NL  : '\r'? '\n'
 
 mode FILENAME;
 IMPORT_PATH         : (SUB_PATH_NAME | ('/' SUB_PATH_NAME) | (EXTERNAL_IMPORT SUB_PATH_NAME))+ -> popMode;
+
+mode TEMPLATE;
+TMPL_TEXT     : (~[!\r\n])(~[{\r\n]|'{{')* ->popMode;
+TMPL_DEBUG    : '!';
+TMPL_NL       : '\r'? '\n'
+              {
+                  ls := ls(l)
+                  ls.gotNewLine = true
+                  ls.gotHTTPVerb=false
+                  ls.spaces = 0
+                  ls.linenum++
+              } ->popMode
+              ;

@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/parse"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
@@ -21,7 +22,11 @@ func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) 
 		case *sysl.Expr_Transform_Stmt_Let:
 			logrus.Debugf("Evaluating var %s", ss.Let.Name)
 			res := Eval(ee, assign, ss.Let.Expr)
-			assign[ss.Let.Name] = res
+			if ss.Let.Name == parse.TemplateLogString {
+				fmt.Printf("%s", res.GetS())
+			} else {
+				assign[ss.Let.Name] = res
+			}
 			logrus.Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
 			logrus.Debugf("Evaluating %s", ss.Assign.Name)
@@ -29,6 +34,9 @@ func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) 
 			logrus.Tracef("Eval Result %s =:\n\t\t %v:\n", ss.Assign.Name, res)
 			AddItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
+		}
+		if text, has := assign[parse.TemplateImpliedResult]; has {
+			return text
 		}
 	}
 	return result
@@ -235,7 +243,15 @@ func isInternalMap(val *sysl.Value_Map) bool {
 func evalName(ee *exprEval, assign Scope, x *sysl.Expr_Name) *sysl.Value {
 	val, has := assign[x.Name]
 	if !has {
-		ee.LogEntry().Errorf("Key: %s does not exist in scope", x.Name)
+		switch x.Name {
+		case parse.TemplateImpliedResult:
+			val = MakeValueString("")
+			assign[x.Name] = val
+		case parse.TemplateLogString:
+			val = MakeValueString("")
+		default:
+			ee.LogEntry().Errorf("Key: %s does not exist in scope", x.Name)
+		}
 	}
 	return val
 }
@@ -315,6 +331,7 @@ func EvaluateApp(app *sysl.Application, view *sysl.View, s Scope) *sysl.Value {
 	}
 
 	val, err := ee.eval(s, view.Expr)
+	logrus.Tracef("EvaluateApp val: %s", val.String())
 	if err != nil {
 		logrus.Panic(err.Error())
 	}

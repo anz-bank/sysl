@@ -39,7 +39,7 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("disable-validator", "Disable validation on the transform grammar").
 		Default("false").BoolVar(&p.disableValidator)
 	cmd.Flag("debugger", "Enable the evaluation debugger on error").Default("false").BoolVar(&p.enableDebugger)
-	EnsureFlagsNonEmpty(cmd, "app-name", "basepath")
+	EnsureFlagsNonEmpty(cmd, "app-name", "basepath", "dep-path")
 	return cmd
 }
 

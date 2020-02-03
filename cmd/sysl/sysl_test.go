@@ -595,8 +595,7 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 	assert.Equal(t,
 		"'grammar' value passed is empty\n"+
 			"'start' value passed is empty\n"+
-			"'outdir' value passed is empty\n"+
-			"'dep-path' value passed is empty\n", hook.LastEntry().Message)
+			"'outdir' value passed is empty\n", hook.LastEntry().Message)
 	syslutil.AssertFsHasExactly(t, memFs)
 }
 
@@ -912,3 +911,14 @@ func TestCodegenGrammarImport(t *testing.T) {
 		"-o", "out.sysl", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }
+
+// func TestTemplating(t *testing.T) {
+// 	t.Parallel()
+// 	logger, _ := test.NewNullLogger()
+// 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+// 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
+//	    "--root-template", "../../demo/codegen",
+// 		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
+// 		"--outdir", "../../demo/codegen/AuthorisationAPI", "authorisation"}, fs, logger, main3)
+// 	syslutil.AssertFsHasExactly(t, memFs, "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto")
+// }
