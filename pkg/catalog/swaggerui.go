@@ -12,16 +12,23 @@ import (
 	"path"
 	"strconv"
 
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/go-openapi/spec"
 	"github.com/gorilla/handlers"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 
 	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
 
-// ServeCmd to serve a swagger spec with docs ui
-type ServeCmd struct {
+// Server to serve a swagger spec with docs ui
+type Server struct {
+	Fs      afero.Fs
+	Log     *logrus.Logger
+	Modules []*sysl.Module
+
 	BasePath string `long:"base-path" description:"the base path to serve the spec and UI at"`
 	Path     string
 	Resource string
@@ -35,7 +42,7 @@ type ServeCmd struct {
 }
 
 // SwaggerUI takes the contents of a swagger file and creates a handler for the interactive redoc
-func (s *ServeCmd) SwaggerUI(contents []byte) http.Handler {
+func (s *Server) SwaggerUI(contents []byte) http.Handler {
 	if s.Flavor == "" {
 		s.Flavor = "redoc"
 	}

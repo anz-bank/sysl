@@ -8,14 +8,12 @@ import (
 	"strings"
 
 	"github.com/fullstorydev/grpcui"
-	"github.com/sirupsen/logrus"
 
 	"net/http"
 
 	"github.com/anz-bank/sysl/pkg/exporter"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/fullstorydev/grpcui/standalone"
-	"github.com/spf13/afero"
 	"google.golang.org/grpc"
 )
 
@@ -38,13 +36,13 @@ var catalogFields = []string{
 }
 
 // Server is a server for the catalog command which hosts an interactive web ui
-type Server struct {
-	Port    int
-	Host    string
-	Fs      afero.Fs
-	Log     *logrus.Logger
-	Modules []*sysl.Module
-}
+// type Server struct {
+// 	Port    int
+// 	Host    string
+// 	Fs      afero.Fs
+// 	Log     *logrus.Logger
+// 	Modules []*sysl.Module
+// }
 
 // WebService is the type which will be rendered on the home page of the html/json as a row
 type WebService struct {
@@ -127,6 +125,8 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 				h, err = c.GrpcUIHandler(newService)
 			case "REST":
 				h, err = c.SwaggerUIHandler(newService)
+			default:
+				h, err = c.SwaggerUIHandler(newService)
 			}
 			if err != nil {
 				c.Log.Errorf(err.Error())
@@ -194,7 +194,7 @@ func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 // SwaggerUIHandler creates and returns a http handler for a SwaggerUI server
 func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
 	basePath := "/"
-	swag := ServeCmd{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.SwaggerUILink}
+	swag := Server{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.SwaggerUILink}
 	swaggerExporter := exporter.MakeSwaggerExporter(service.App, nil)
 	err := swaggerExporter.GenerateSwagger()
 	if err != nil {
