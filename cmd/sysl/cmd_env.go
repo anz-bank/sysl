@@ -19,8 +19,7 @@ func (c *envCmd) Name() string       { return "env" }
 func (c *envCmd) MaxSyslModule() int { return 0 }
 
 func (c *envCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(c.Name(), "Print sysl environment information.")
-	return cmd
+	return app.Command(c.Name(), "Print sysl environment information.")
 }
 
 func (c *envCmd) Execute(args ExecuteArgs) error {
