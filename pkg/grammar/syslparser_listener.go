@@ -473,6 +473,12 @@ type SyslParserListener interface {
 	// EnterExpr_statement_no_nl is called when entering the expr_statement_no_nl production.
 	EnterExpr_statement_no_nl(c *Expr_statement_no_nlContext)
 
+	// EnterTemplate_expression is called when entering the template_expression production.
+	EnterTemplate_expression(c *Template_expressionContext)
+
+	// EnterTemplate_statement is called when entering the template_statement production.
+	EnterTemplate_statement(c *Template_statementContext)
+
 	// EnterExpr_statement is called when entering the expr_statement production.
 	EnterExpr_statement(c *Expr_statementContext)
 
@@ -997,6 +1003,12 @@ type SyslParserListener interface {
 
 	// ExitExpr_statement_no_nl is called when exiting the expr_statement_no_nl production.
 	ExitExpr_statement_no_nl(c *Expr_statement_no_nlContext)
+
+	// ExitTemplate_expression is called when exiting the template_expression production.
+	ExitTemplate_expression(c *Template_expressionContext)
+
+	// ExitTemplate_statement is called when exiting the template_statement production.
+	ExitTemplate_statement(c *Template_statementContext)
 
 	// ExitExpr_statement is called when exiting the expr_statement production.
 	ExitExpr_statement(c *Expr_statementContext)

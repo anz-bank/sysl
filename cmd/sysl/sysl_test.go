@@ -618,7 +618,7 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png",
 		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, main3)
-	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
+	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png", "/Primitive-Alias-Model.png")
 }
 
 func TestMain2WithDataSingleFile(t *testing.T) {
@@ -911,3 +911,14 @@ func TestCodegenGrammarImport(t *testing.T) {
 		"-o", "out.sysl", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }
+
+// func TestTemplating(t *testing.T) {
+// 	t.Parallel()
+// 	logger, _ := test.NewNullLogger()
+// 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+// 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
+//	    "--root-template", "../../demo/codegen",
+// 		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
+// 		"--outdir", "../../demo/codegen/AuthorisationAPI", "authorisation"}, fs, logger, main3)
+// 	syslutil.AssertFsHasExactly(t, memFs, "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto")
+// }

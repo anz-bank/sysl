@@ -21,6 +21,7 @@ toc: true
 | codegen | Generate code with sysl transform models | 
 | datamodel| ... | 
 | info | Build information for sysl executable |
+| env | Sysl environment variables value |
 
 
 ## Sysl examples
