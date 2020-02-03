@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -111,14 +112,17 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 	var ser []WebService
 	var h http.Handler
 	var err error
+	var serviceCount int
 	for _, m := range c.Modules {
 		for i, a := range m.GetApps() {
+			serviceCount++
 			atts := a.GetAttrs()
-			serviceName := strings.Join(a.Name.GetPart(), ",")
-			serviceName = strings.ReplaceAll(serviceName, "/", "")
-			serviceName = strings.ReplaceAll(serviceName, " ", "")
-			serviceName = strings.ReplaceAll(serviceName, ",", "")
+			serviceName := strings.Join(a.Name.GetPart(), "")
+			var re = regexp.MustCompile(`(?m)\w*`)
+			serviceName = strings.Join(re.FindAllString(serviceName, -1), "")
 			serviceName = strings.ToLower(serviceName)
+			fmt.Println(serviceName)
+
 			var attr = make(map[string]string, 10)
 
 			for key, value := range atts {
@@ -130,7 +134,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 				Fields:        catalogFields,
 				Attrs:         attr,
 				ServiceName:   serviceName,
-				SwaggerUILink: "/" + serviceName + i,
+				SwaggerUILink: "/" + serviceName + string(serviceCount),
 			}
 			c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
 			switch strings.ToUpper(newService.Attrs["type"]) {
