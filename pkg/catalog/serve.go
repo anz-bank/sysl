@@ -65,6 +65,13 @@ type WebService struct {
 	SwaggerUILink string
 }
 
+func (c Server) String() string {
+	return "Server:" + c.BasePath + c.Path + string(c.Port)
+}
+func (c WebService) String() string {
+	return "WebService:" + c.ServiceName + c.SwaggerUILink
+}
+
 // ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
 func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
 	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
@@ -120,7 +127,8 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 			serviceName := strings.Join(a.Name.GetPart(), "")
 			var re = regexp.MustCompile(`(?m)\w*`)
 			serviceName = strings.Join(re.FindAllString(serviceName, -1), "")
-			serviceName = strings.ToLower(serviceName)
+			serviceName = strings.ToLower(serviceName) + strconv.Itoa(serviceCount)
+			// serviceName = strings.ReplaceAll(serviceName, " ", "")
 			fmt.Println(serviceName)
 
 			var attr = make(map[string]string, 10)
@@ -134,14 +142,19 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 				Fields:        catalogFields,
 				Attrs:         attr,
 				ServiceName:   serviceName,
-				SwaggerUILink: "/" + serviceName + string(serviceCount),
+				SwaggerUILink: "/" + serviceName,
 			}
 			c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
 			switch strings.ToUpper(newService.Attrs["type"]) {
 			case "GRPC":
 				h, err = c.GrpcUIHandler(newService)
 			case "REST":
+				c.Log.Info("Hello")
+				c.Log.Info(c)
+				c.Log.Info(newService)
 				h, err = c.SwaggerUIHandler(newService)
+				c.Log.Info("elvns")
+
 			}
 			if err != nil {
 				c.Log.Errorf(err.Error())
@@ -157,7 +170,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 }
 
 // GrpcUIHandler creates and returns a http handler for a grpcui server
-func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
+func (c *Server) grpcGrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
 	cc, err := grpc.DialContext(ctx, service.Attrs["deploy.prod.url"], grpc.WithInsecure())
 	if err != nil {
@@ -211,7 +224,7 @@ func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
 	basePath := "/"
 	swag := Server{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.SwaggerUILink}
-	swaggerExporter := exporter.MakeSwaggerExporter(service.App, nil)
+	swaggerExporter := exporter.MakeSwaggerExporter(service.App, c.Log)
 	err := swaggerExporter.GenerateSwagger()
 	if err != nil {
 		c.Log.Errorf(err.Error())

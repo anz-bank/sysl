@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/anz-bank/sysl/pkg/catalog"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -25,5 +26,6 @@ func (p *catalogCmd) Execute(args ExecuteArgs) error {
 		Log:     args.Logger,
 		Modules: args.Modules,
 	}
+	args.Logger.SetLevel(logrus.InfoLevel)
 	return catalogServer.Serve()
 }
