@@ -6,7 +6,7 @@ labels: enhancement
 
 Please **do not post any internal, closed source snippets** on this public issue tracker!
 
-### Current Sysl Info
+### Current Sysl Version
 <!---
 Run `sysl info` to show the sysl binary info, and paste the result between the ``` marks below.
 If you are not running the latest version of sysl, please try upgrading because your issue may have already been fixed.

@@ -24,10 +24,13 @@ Please **do not post any internal, closed source snippets** on this public issue
 
 ### Your Environments
 <!---
-Run `sysl info` to show the sysl binary info, and paste the result between the ``` marks below.
+Run `sysl info` and `sysl env` to show the sysl binary info and related envvars, and paste the result between the ``` marks below.
 If you are not running the latest version of sysl, please try upgrading because your issue may have already been fixed.
 -->
 ```sh
 $ sysl info
+...
+
+$ sysl env
 ...
 ```
