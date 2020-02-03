@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
-var SyslModules = os.Getenv("SYSL_MODULES") != ""
+var SyslModules = os.Getenv("SYSL_MODULES") != "off"
 
 type Module struct {
 	Name string
@@ -20,12 +19,10 @@ func (m *Modules) Add(v *Module) {
 	*m = append(*m, v)
 }
 
-func (m *Modules) GetByFilename(p string) *Module {
-	p = filepath.Clean(p)
-
-	for _, v := range *m {
-		if strings.HasPrefix(p, filepath.Clean(v.Name)) {
-			return v
+func (m *Modules) GetByFilename(filename string) *Module {
+	for _, mod := range *m {
+		if hasPathPrefix(mod.Name, filename) {
+			return mod
 		}
 	}
 
@@ -52,4 +49,15 @@ func Find(name string) (*Module, error) {
 		return nil, fmt.Errorf("error finding module of file %s", name)
 	}
 	return mod, nil
+}
+
+func hasPathPrefix(prefix, s string) bool {
+	prefix = filepath.Clean(prefix)
+	s = filepath.Clean(s)
+
+	if len(s) > len(prefix) {
+		return s[len(prefix)] == filepath.Separator && s[:len(prefix)] == prefix
+	}
+
+	return s == prefix
 }

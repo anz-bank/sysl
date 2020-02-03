@@ -6,16 +6,15 @@
 
 testapp "Goat CRUD API" [package="package_foo"]:
     @version = "1.2.3"
+    @basePath = "/api/v1"
     @host = "goat.example.com"
     @description =:
         | No description.
 
-    /api/v1:
-
-        /goat/delete-goat:
-            POST ?goat_id=string:
-                | Delete a goat.
-                return ok <: Acknowledgement
+    /goat/delete-goat:
+        POST ?goat_id=string:
+            | Delete a goat.
+            return ok <: Acknowledgement
 
     #---------------------------------------------------------------------------
     # definitions

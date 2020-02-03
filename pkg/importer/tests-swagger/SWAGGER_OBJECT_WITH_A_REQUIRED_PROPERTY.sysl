@@ -6,6 +6,7 @@
 
 testapp "Fruit API" [package="package_foo"]:
     @version = "1.0.0"
+    @basePath = "/fruit-basket"
     @description =:
         | No description.
 

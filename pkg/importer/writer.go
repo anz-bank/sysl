@@ -52,25 +52,16 @@ func newWriter(out io.Writer, logger *logrus.Logger) *writer {
 	}
 }
 
-func (w *writer) Write(info SyslInfo, types TypeList, endpointBasePath string, endpoints ...MethodEndpoints) error {
+func (w *writer) Write(info SyslInfo, types TypeList, endpoints ...MethodEndpoints) error {
 	if err := w.writeHeader(info); err != nil {
 		return err
 	}
 
-	if len(endpoints) == 0 {
-		endpointBasePath = ""
-	}
-	if endpointBasePath != "" {
-		w.writeLines(fmt.Sprintf("%s:", endpointBasePath), PushIndent, BlankLine)
-	}
 	for _, method := range endpoints {
 		for _, ep := range method.Endpoints {
 			w.writeEndpoint(method.Method, ep)
 			w.writeLines(BlankLine)
 		}
-	}
-	if endpointBasePath != "" {
-		w.writeLines(PopIndent)
 	}
 
 	w.writeDefinitions(types)

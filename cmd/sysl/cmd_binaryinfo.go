@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/anz-bank/sysl/pkg/cfg"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -18,12 +19,12 @@ func (p *infoCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *infoCmd) Execute(args ExecuteArgs) error {
-	fmt.Printf("Version    : %s\n", Version)
-	fmt.Printf("Commit ID  : %s\n", GitCommit)
-	fmt.Printf("Build date : %s\n", BuildDate)
+	fmt.Printf("Version    : %s\n", cfg.Version)
+	fmt.Printf("Commit ID  : %s\n", cfg.GitCommit)
+	fmt.Printf("Build date : %s\n", cfg.BuildDate)
 	fmt.Printf("GOOS       : %s\n", runtime.GOOS)
 	fmt.Printf("GOARCH     : %s\n", runtime.GOARCH)
 	fmt.Printf("Go Version : %s\n", runtime.Version())
-	fmt.Printf("Build OS   : %s\n", BuildOS)
+	fmt.Printf("Build OS   : %s\n", cfg.BuildOS)
 	return nil
 }

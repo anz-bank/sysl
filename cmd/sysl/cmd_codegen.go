@@ -33,12 +33,13 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 			" code will be generated only for the given app").Default("").StringVar(&p.appName)
 	cmd.Flag("start", "start rule for the grammar").Default(".").StringVar(&p.start)
 	cmd.Flag("outdir", "output directory").Default(".").StringVar(&p.outDir)
+	cmd.Flag("dep-path", "path passed to sysl transform").Default("").StringVar(&p.depPath)
 	cmd.Flag("basepath", "base path for ReST output").Default("").StringVar(&p.basePath)
 	cmd.Flag("validate-only", "Only Perform validation on the transform grammar").BoolVar(&p.validateOnly)
 	cmd.Flag("disable-validator", "Disable validation on the transform grammar").
 		Default("false").BoolVar(&p.disableValidator)
 	cmd.Flag("debugger", "Enable the evaluation debugger on error").Default("false").BoolVar(&p.enableDebugger)
-	EnsureFlagsNonEmpty(cmd, "app-name", "basepath")
+	EnsureFlagsNonEmpty(cmd, "app-name", "basepath", "dep-path")
 	return cmd
 }
 
@@ -49,6 +50,7 @@ func (p *codegenCmd) Execute(args ExecuteArgs) error {
 			Transform:     p.transform,
 			Grammar:       p.grammar,
 			Start:         p.start,
+			DepPath:       p.depPath,
 			BasePath:      p.basePath,
 			Filesystem:    args.Filesystem,
 			Logger:        args.Logger,

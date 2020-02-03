@@ -14,6 +14,9 @@ import (
 	"github.com/spf13/afero"
 )
 
+var depPathRegEx = regexp.MustCompile("^[[:alnum:]]+([.][[:alnum:]]+)*(/[[:alnum:]]+)*[/]?$")
+var basePathRegEx = regexp.MustCompile("^/[[:alnum:]]+(/[[:alnum:]]+)*$")
+
 type Validator struct {
 	grammar     *sysl.Application
 	transform   *sysl.Application
@@ -26,6 +29,7 @@ type Params struct {
 	RootTransform string
 	Transform     string
 	Grammar       string
+	DepPath       string
 	Start         string
 	BasePath      string
 	Filesystem    afero.Fs
@@ -35,6 +39,7 @@ type Params struct {
 func DoValidate(validateParams Params) error {
 	logrus.Debugf("root-transform: %s\n", validateParams.RootTransform)
 	logrus.Debugf("transform: %s\n", validateParams.Transform)
+	logrus.Debugf("dep-path: %s\n", validateParams.DepPath)
 	logrus.Debugf("grammar: %s\n", validateParams.Grammar)
 	logrus.Debugf("start: %s\n", validateParams.Start)
 	logrus.Debugf("basepath: %s\n", validateParams.BasePath)
@@ -55,7 +60,7 @@ func DoValidate(validateParams Params) error {
 	}
 
 	validator := NewValidator(grammar, transform, parser)
-	validator.Validate(validateParams.Start, validateParams.BasePath)
+	validator.Validate(validateParams.Start, validateParams.DepPath, validateParams.BasePath)
 	validator.LogMessages()
 
 	if len(validator.GetMessages()) > 0 {
@@ -68,8 +73,9 @@ func DoValidate(validateParams Params) error {
 	return nil
 }
 
-func (v *Validator) Validate(start, basepath string) {
+func (v *Validator) Validate(start, depPath, basepath string) {
 	v.validateEntryPoint(start)
+	v.validateDependencyPath(depPath)
 	v.validateBasePath(basepath)
 	v.validateFileName()
 	v.validateViews()
@@ -85,16 +91,25 @@ func (v *Validator) LogMessages() {
 	}
 }
 
+func (v *Validator) validateDependencyPath(depPath string) {
+	if depPath == "" {
+		return
+	}
+
+	if match := depPathRegEx.MatchString(depPath); !match {
+		v.messages["DepPath"] = append(v.messages["DepPath"],
+			*msg.NewMsg(msg.ErrDepPathInvalid, []string{depPath, depPathRegEx.String()}))
+	}
+}
+
 func (v *Validator) validateBasePath(basepath string) {
 	if basepath == "" || basepath == "/" {
 		return
 	}
 
-	matchString := "^/[[:alnum:]]+(/[[:alnum:]]+)*$"
-
-	if match, err := regexp.MatchString(matchString, basepath); err != nil || !match {
+	if match := basePathRegEx.MatchString(basepath); !match {
 		v.messages["BasePath"] = append(v.messages["BasePath"],
-			*msg.NewMsg(msg.ErrBasePathInvalid, []string{basepath, matchString}))
+			*msg.NewMsg(msg.ErrBasePathInvalid, []string{basepath, basePathRegEx.String()}))
 	}
 }
 

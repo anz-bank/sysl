@@ -84,7 +84,7 @@ func (g *Grammar) writeSysl() (string, error) {
 		return strings.Compare(a, b) < 0
 	})
 
-	if err := syslWriter.Write(info, g.types, ""); err != nil {
+	if err := syslWriter.Write(info, g.types); err != nil {
 		g.logger.Errorf("writing into buffer failed %s", err)
 		return "", err
 	}

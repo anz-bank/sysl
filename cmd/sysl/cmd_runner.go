@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -31,10 +30,6 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 			var appName string
 			var mods []*sysl.Module
 
-			if mod.SyslModules {
-				fs = mod.NewFs(fs)
-			}
-
 			if cmd.MaxSyslModule() > 0 {
 				for _, moduleName := range r.modules {
 					module, appName, err = LoadSyslModule(r.Root, moduleName, fs, logger)
@@ -44,6 +39,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 					mods = append(mods, module)
 				}
 			}
+
 			if len(mods) > cmd.MaxSyslModule() {
 				logger.Error("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
@@ -69,6 +65,8 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&validateCmd{},
 		&exportCmd{},
 		&replCmd{},
+		&envCmd{},
+		&templateCmd{},
 	}
 	r.commands = map[string]Command{}
 

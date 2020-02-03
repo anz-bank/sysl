@@ -34,7 +34,7 @@ func LoadXSDText(args OutputData, text string, logger *logrus.Logger) (out strin
 
 	result := &bytes.Buffer{}
 	w := newWriter(result, logger)
-	if err := w.Write(info, types, ""); err != nil {
+	if err := w.Write(info, types); err != nil {
 		return "", err
 	}
 

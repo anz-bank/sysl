@@ -166,29 +166,33 @@ func readGrammar(filename, grammarName, startRule string) (*parser.Grammar, erro
 	return parser.ParseEBNF(string(dat), grammarName, startRule), nil
 }
 
+/*
+params[0] - modelAppName
+params[1] - transformAppName
+params[2] - depPath
+params[3] - viewName
+params[4] - basePath
+*/
 // applyTranformToModel loads applies the transform to input model
-func applyTranformToModel(
-	modelName, transformAppName, viewName, basePath string,
-	model, transform *sysl.Module,
-) (*sysl.Value, error) {
-	modelApp, has := model.Apps[modelName]
+func applyTranformToModel(model, transform *sysl.Module, params ...string) (*sysl.Value, error) {
+	modelApp, has := model.Apps[params[0]]
 	if !has {
 		var apps []string
 		for k := range model.Apps {
 			apps = append(apps, k)
 		}
 		sort.Strings(apps)
-		return nil, errors.Errorf("app %s does not exist in model, available apps: [%s]", modelName, strings.Join(apps, ", "))
+		return nil, errors.Errorf("app %s does not exist in model, available apps: [%s]", params[0], strings.Join(apps, ", "))
 	}
-	view := transform.Apps[transformAppName].Views[viewName]
+	view := transform.Apps[params[1]].Views[params[3]]
 	if view == nil {
-		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", viewName, transformAppName)
+		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", params[3], params[1])
 	}
 	s := eval.Scope{}
 	s.AddApp("app", modelApp)
 	s.AddModule("module", model)
-	s["basePath"] = eval.MakeValueString(basePath)
-
+	s.AddString("depPath", params[2])
+	s["basePath"] = eval.MakeValueString(params[4])
 	var result *sysl.Value
 
 	if perTypeTransform(view.Param) {
@@ -202,10 +206,10 @@ func applyTranformToModel(
 			t := modelApp.Types[tName]
 			s["typeName"] = eval.MakeValueString(tName)
 			s["type"] = eval.TypeToValue(t)
-			eval.AppendItemToValueList(result.GetList(), eval.EvaluateView(transform, transformAppName, viewName, s))
+			eval.AppendItemToValueList(result.GetList(), eval.EvaluateView(transform, params[1], params[3], s))
 		}
 	} else {
-		result = eval.EvaluateView(transform, transformAppName, viewName, s)
+		result = eval.EvaluateView(transform, params[1], params[3], s)
 	}
 
 	return result, nil
@@ -252,9 +256,12 @@ func GenerateCode(
 	model *sysl.Module, modelAppName string,
 	fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
+	depPath := codegenParams.depPath
+	basePath := codegenParams.basePath
 
 	logger.Debugf("root-transform: %s\n", codegenParams.rootTransform)
 	logger.Debugf("transform: %s\n", codegenParams.transform)
+	logger.Debugf("dep-path: %s\n", codegenParams.depPath)
 	logger.Debugf("grammar: %s\n", codegenParams.grammar)
 	logger.Debugf("start: %s\n", codegenParams.start)
 	logger.Debugf("basePath: %s\n", codegenParams.basePath)
@@ -277,16 +284,18 @@ func GenerateCode(
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {
 			validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-			validator.Validate(codegenParams.start, codegenParams.basePath)
+			validator.Validate(codegenParams.start, codegenParams.depPath, codegenParams.basePath)
 			validator.LogMessages()
 		}
 	}
 
-	fileNames, err := applyTranformToModel(modelAppName, transformAppName, "filename", codegenParams.basePath, model, tx)
+	fileNames, err := applyTranformToModel(model, tx, modelAppName, transformAppName,
+		depPath, "filename", basePath)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(modelAppName, transformAppName, g.Start, codegenParams.basePath, model, tx)
+	result, err := applyTranformToModel(model, tx, modelAppName, transformAppName,
+		depPath, g.Start, basePath)
 	if err != nil {
 		return nil, err
 	}

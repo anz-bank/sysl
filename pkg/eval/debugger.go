@@ -147,7 +147,7 @@ func dumpScope(out io.Writer, scope Scope) {
 	sort.Strings(names)
 	lines := make([]string, 0, len(scope))
 	for _, k := range names {
-		l := fmt.Sprintf("  %s:  %s", k, unaryString(scope[k]).GetS())
+		l := fmt.Sprintf("  %s:  %s", k, UnaryString(scope[k]).GetS())
 		lines = append(lines, l)
 	}
 

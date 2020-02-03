@@ -443,6 +443,7 @@ func TestMain2WithGenerateCode(t *testing.T) {
 			"--grammar", filepath.Join(testDir, "test.gen.g"),
 			"--app-name", "Model",
 			"--start", "javaFile",
+			"--dep-path", "example.com/abc/asx/lmno/",
 			"model.sysl",
 		},
 		fs, logger, main3,
@@ -469,6 +470,7 @@ func TestMain2WithGenerateCodeReadOnlyFs(t *testing.T) {
 			"--grammar", filepath.Join(testDir, "test.gen.g"),
 			"--app-name", "Model",
 			"--start", "javaFile",
+			"--dep-path", "example.com/abc/asx/lmno/",
 			"model.sysl",
 		},
 		fs, logger, main3,
@@ -909,3 +911,14 @@ func TestCodegenGrammarImport(t *testing.T) {
 		"-o", "out.sysl", "-a", "go"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }
+
+// func TestTemplating(t *testing.T) {
+// 	t.Parallel()
+// 	logger, _ := test.NewNullLogger()
+// 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+// 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
+//	    "--root-template", "../../demo/codegen",
+// 		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
+// 		"--outdir", "../../demo/codegen/AuthorisationAPI", "authorisation"}, fs, logger, main3)
+// 	syslutil.AssertFsHasExactly(t, memFs, "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto")
+// }

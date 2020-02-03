@@ -1,7 +1,4 @@
 .dockerignore
-.travis.yml
-run-travis.sh
 pkg
 !pkg/sysl_js
-travis.Dockerfile
 **/node_modules
