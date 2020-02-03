@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cfg"
 	"github.com/anz-bank/sysl/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/parse"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -14,20 +15,6 @@ import (
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
-
-// Version   - Binary version
-// GitCommit - Commit SHA of the source code
-// BuildDate - Binary build date
-// BuildOS   - Operating System used to build binary
-//nolint:gochecknoglobals
-var (
-	Version   = "unspecified"
-	GitCommit = "unspecified"
-	BuildDate = "unspecified"
-	BuildOS   = "unspecified"
-)
-
-const debug string = "debug"
 
 type projectConfiguration struct {
 	module, root string
@@ -147,7 +134,11 @@ func findRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
-	syslCmd.Version(Version)
+	err := cfg.InitInfo()
+	if err != nil {
+		logrus.Errorf("Get latest git release info error: %s\n", err.Error())
+	}
+	syslCmd.Version(cfg.Version)
 	syslCmd.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 
 	(&debugTypeData{}).add(syslCmd)
@@ -173,7 +164,7 @@ type debugTypeData struct {
 //nolint:unparam
 func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
 	if d.verbose {
-		d.loglevel = debug
+		d.loglevel = cfg.LogLevel
 	}
 	// Default info
 	if level, has := syslutil.LogLevels[d.loglevel]; has {
