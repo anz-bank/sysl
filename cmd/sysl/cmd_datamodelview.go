@@ -65,16 +65,16 @@ func generateDataModelView(pclass ClassLabeler, outmap map[string]string, mod *s
 }
 
 // Process pure Sysl datamodel file produced by importer cmd
-type datamodelviewCmd struct {
+type datamodelViewCmd struct {
 	plantumlmixin
 	CmdContextParamDatagen
 }
 
-func (p *datamodelviewCmd) Name() string       { return "datamodelview" }
-func (p *datamodelviewCmd) MaxSyslModule() int { return 1 }
+func (p *datamodelViewCmd) Name() string       { return "datamodelview" }
+func (p *datamodelViewCmd) MaxSyslModule() int { return 1 }
 
-func (p *datamodelviewCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Generate data models").Alias("dataview")
+func (p *datamodelViewCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
+	cmd := app.Command(p.Name(), "Generate data models view").Alias("dataview")
 	cmd.Flag("class_format",
 		"Specify the format string for data diagram participants. "+
 			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",
@@ -94,7 +94,7 @@ func (p *datamodelviewCmd) Configure(app *kingpin.Application) *kingpin.CmdClaus
 	return cmd
 }
 
-func (p *datamodelviewCmd) Execute(args ExecuteArgs) error {
+func (p *datamodelViewCmd) Execute(args ExecuteArgs) error {
 	outmap, err := GenerateDataModelsView(&p.CmdContextParamDatagen, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
