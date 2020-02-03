@@ -916,7 +916,8 @@ func TestCodegenGrammarImport(t *testing.T) {
 // 	t.Parallel()
 // 	logger, _ := test.NewNullLogger()
 // 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-// 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI", "--root-template", "../../demo/codegen",
+// 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
+//	    "--root-template", "../../demo/codegen",
 // 		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
 // 		"--outdir", "../../demo/codegen/AuthorisationAPI", "authorisation"}, fs, logger, main3)
 // 	syslutil.AssertFsHasExactly(t, memFs, "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto")

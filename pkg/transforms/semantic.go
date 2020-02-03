@@ -4,8 +4,8 @@ import (
 	"sort"
 
 	"github.com/anz-bank/sysl/pkg/eval"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 type semantic struct {
