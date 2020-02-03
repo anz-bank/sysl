@@ -8,6 +8,15 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+// The sysl command consults environment variables for configuration.
+// If an environment variable is unset, the sysl command uses a sensible
+// default setting.
+// 	SYSL_PLANTUML
+// 		URL of PlantUML server. Sysl depends upon
+// 		[PlantUML](http://plantuml.com/) for diagram generation.
+// 	SYSL_MODULES
+// 		Whether the sysl modules is enabled.
+// 		Enable by default, set to "off" to disable sysl modules.
 const KnownEnv = `
 	SYSL_MODULES
 	SYSL_PLANTUML
