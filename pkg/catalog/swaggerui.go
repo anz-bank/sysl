@@ -12,34 +12,13 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/go-openapi/spec"
 	"github.com/gorilla/handlers"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
 
 	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
-
-// Server to serve a swagger spec with docs ui
-type Server struct {
-	Fs      afero.Fs
-	Log     *logrus.Logger
-	Modules []*sysl.Module
-
-	BasePath string `long:"base-path" description:"the base path to serve the spec and UI at"`
-	Path     string
-	Resource string
-	Flavor   string `short:"F" long:"flavor" description:"the flavor of docs, can be swagger or redoc" default:"redoc" choice:"redoc,swagger"` //nolint: lll
-	DocURL   string `long:"doc-url" description:"override the url which takes a url query param to render the doc ui"`
-	NoOpen   bool   `long:"no-open" description:"when present won't open the the browser to show the url"`
-	NoUI     bool   `long:"no-ui" description:"when present, only the swagger spec will be served"`
-	Flatten  bool   `long:"flatten" description:"when present, flatten the swagger spec before serving it"`
-	Port     int    `long:"port" short:"p" description:"the port to serve this site" env:"PORT"`
-	Host     string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
-}
 
 // SwaggerUI takes the contents of a swagger file and creates a handler for the interactive redoc
 func (s *Server) SwaggerUI(contents []byte) http.Handler {

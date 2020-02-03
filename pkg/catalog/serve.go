@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/fullstorydev/grpcui"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 
 	"net/http"
 
@@ -35,14 +37,23 @@ var catalogFields = []string{
 	"confluence.url",
 }
 
-// Server is a server for the catalog command which hosts an interactive web ui
-// type Server struct {
-// 	Port    int
-// 	Host    string
-// 	Fs      afero.Fs
-// 	Log     *logrus.Logger
-// 	Modules []*sysl.Module
-// }
+// Server to set context of catalog
+type Server struct {
+	Fs      afero.Fs
+	Log     *logrus.Logger
+	Modules []*sysl.Module
+
+	BasePath string `long:"base-path" description:"the base path to serve the spec and UI at"`
+	Path     string
+	Resource string
+	Flavor   string `short:"F" long:"flavor" description:"the flavor of docs, can be swagger or redoc" default:"redoc" choice:"redoc,swagger"` //nolint: lll
+	DocURL   string `long:"doc-url" description:"override the url which takes a url query param to render the doc ui"`
+	NoOpen   bool   `long:"no-open" description:"when present won't open the the browser to show the url"`
+	NoUI     bool   `long:"no-ui" description:"when present, only the swagger spec will be served"`
+	Flatten  bool   `long:"flatten" description:"when present, flatten the swagger spec before serving it"`
+	Port     int    `long:"port" short:"p" description:"the port to serve this site" env:"PORT"`
+	Host     string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
+}
 
 // WebService is the type which will be rendered on the home page of the html/json as a row
 type WebService struct {
@@ -101,40 +112,41 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 	var h http.Handler
 	var err error
 	for _, m := range c.Modules {
-		for _, a := range m.GetApps() {
+		for i, a := range m.GetApps() {
 			atts := a.GetAttrs()
 			serviceName := strings.Join(a.Name.GetPart(), ",")
 			serviceName = strings.ReplaceAll(serviceName, "/", "")
 			serviceName = strings.ReplaceAll(serviceName, " ", "")
+			serviceName = strings.ReplaceAll(serviceName, ",", "")
 			serviceName = strings.ToLower(serviceName)
 			var attr = make(map[string]string, 10)
 
 			for key, value := range atts {
 				attr[key] = value.GetS()
 			}
-
+			c.Log.Infof("eofn: %s", i)
 			newService := WebService{
 				App:           a,
 				Fields:        catalogFields,
 				Attrs:         attr,
 				ServiceName:   serviceName,
-				SwaggerUILink: "/" + serviceName,
+				SwaggerUILink: "/" + serviceName + i,
 			}
-			switch newService.Attrs["type"] {
+			c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
+			switch strings.ToUpper(newService.Attrs["type"]) {
 			case "GRPC":
 				h, err = c.GrpcUIHandler(newService)
 			case "REST":
 				h, err = c.SwaggerUIHandler(newService)
-			default:
-				h, err = c.SwaggerUIHandler(newService)
 			}
 			if err != nil {
 				c.Log.Errorf(err.Error())
-				return nil, err
 			}
 			h = http.StripPrefix(newService.SwaggerUILink, h)
 			http.Handle(newService.SwaggerUILink+"/", h)
+			c.Log.Errorf("newService.SwaggerUILink" + newService.SwaggerUILink + "/")
 			ser = append(ser, newService)
+			c.Log.Infof("Added %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
 		}
 	}
 	return ser, nil
