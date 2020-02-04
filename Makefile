@@ -57,7 +57,6 @@ build: ## Build sysl into the ./dist folder
 
 deps: ## Download the project dependencies with `go get`
 	go get -v -t -d ./...
-	go run ./scripts/binaryinfo
 
 .PHONY: release
 release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
