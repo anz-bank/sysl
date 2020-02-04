@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"path/filepath"
 	"testing"
 
@@ -15,7 +14,7 @@ import (
 func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	args := &dataArgs{
 		modules: "dataviewcmd.sysl",
-		output:  "%(epname).png",
+		output:  "%(appname).png",
 	}
 	argsData := []string{"sysl", "dataview", "-o", args.output, args.modules}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
@@ -31,10 +30,10 @@ func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	args := &dataArgs{
 		root:    testDir,
 		modules: "dataviewcmd.sysl",
-		output:  "%(epname).png",
+		output:  "%(appname).png",
 		title:   "testdata",
 		expected: map[string]string{
-			"Default.png": filepath.Join(testDir, "data-view-cmd.puml"),
+			"Test.png": filepath.Join(testDir, "data-view-cmd.puml"),
 		},
 	}
 
@@ -51,6 +50,5 @@ func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	}
 
 	assert.Nil(t, err, "Generating the data diagrams failed")
-	fmt.Printf("%s", result["Default.png"])
 	comparePUML(t, args.expected, result)
 }
