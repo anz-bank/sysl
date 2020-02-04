@@ -25,30 +25,12 @@ import (
 	"github.com/fullstorydev/grpcui/standalone"
 )
 
-var catalogFields = []string{
-	"team",
-	"team.slack",
-	"owner.name",
-	"owner.email",
-	"file.version",
-	"release.version",
-	"description",
-	"deploy.env1.url",
-	"deploy.sit1.url",
-	"deploy.sit2.url",
-	"deploy.qa.url",
-	"deploy.prod.url",
-	"repo.url",
-	"type",
-	"confluence.url",
-}
-
 // Server to set context of catalog
 type Server struct {
-	Fs      afero.Fs
-	Log     *logrus.Logger
-	Modules []*sysl.Module
-
+	Fs       afero.Fs
+	Log      *logrus.Logger
+	Modules  []*sysl.Module
+	Fields   []string
 	BasePath string `long:"base-path" description:"the base path to serve the spec and UI at"`
 	Path     string
 	Resource string
@@ -57,8 +39,8 @@ type Server struct {
 	NoOpen   bool   `long:"no-open" description:"when present won't open the the browser to show the url"`
 	NoUI     bool   `long:"no-ui" description:"when present, only the swagger spec will be served"`
 	Flatten  bool   `long:"flatten" description:"when present, flatten the swagger spec before serving it"`
-	Port     int    `long:"port" short:"p" description:"the port to serve this site" env:"PORT"`
-	Host     string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
+	// Port     string `long:"port" short:"p" description:"the port to serve this site" env:"PORT"`
+	Host string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
 }
 
 // WebService is the type which will be rendered on the home page of the html/json as a row
@@ -68,13 +50,6 @@ type WebService struct {
 	Attrs         map[string]string
 	ServiceName   string
 	SwaggerUILink string
-}
-
-func (c Server) String() string {
-	return "Server:" + c.BasePath + c.Path + string(c.Port)
-}
-func (c WebService) String() string {
-	return "WebService:" + c.ServiceName + c.SwaggerUILink
 }
 
 // ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
@@ -112,7 +87,7 @@ func (c *Server) Serve() error {
 	}
 	c.ListHandlers(json, "json", "/json")
 	c.ListHandlers(html, "html", "/")
-	addr := c.Host + ":" + strconv.Itoa(c.Port)
+	addr := c.Host
 	fmt.Println(addr)
 	err = http.ListenAndServe(addr, nil)
 	c.Log.Errorf(err.Error())
@@ -145,7 +120,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 				c.Log.Infof("eofn: %s", i)
 				newService := WebService{
 					App:           a,
-					Fields:        catalogFields,
+					Fields:        c.Fields,
 					Attrs:         attr,
 					ServiceName:   serviceName,
 					SwaggerUILink: "/" + serviceName,
@@ -240,8 +215,9 @@ func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 
 // SwaggerUIHandler creates and returns a http handler for a SwaggerUI server
 func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
-	basePath := "/"
-	swag := Server{BasePath: basePath, Port: c.Port, Path: "/", Resource: service.SwaggerUILink}
+	// basePath := "/"
+	// swag := Server{BasePath: basePath, Path: "/", Resource: service.SwaggerUILink}
+	c.Resource = service.SwaggerUILink
 	swaggerExporter := exporter.MakeSwaggerExporter(service.App, c.Log)
 	err := swaggerExporter.GenerateSwagger()
 	if err != nil {
@@ -253,5 +229,5 @@ func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
 		c.Log.Errorf(err.Error())
 		return nil, err
 	}
-	return swag.SwaggerUI(output), nil
+	return c.SwaggerUI(output), nil
 }

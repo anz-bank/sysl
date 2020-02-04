@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/url"
 	"path"
-	"strconv"
 
 	"github.com/go-openapi/spec"
 	"github.com/gorilla/handlers"
@@ -54,7 +53,7 @@ func (s *Server) SwaggerUI(contents []byte) http.Handler {
 		basePath = "/"
 	}
 
-	listener, err := net.Listen("tcp4", net.JoinHostPort(s.Host, strconv.Itoa(s.Port)))
+	listener, err := net.Listen("tcp4", s.Host)
 	if err != nil {
 		panic(err)
 	}
