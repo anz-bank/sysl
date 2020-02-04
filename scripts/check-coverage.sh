@@ -17,9 +17,13 @@ coverage_level() {
 }
 
 go test -coverprofile=$COVERAGE_FILE -covermode=atomic ./...
+EXIT_CODE=$(echo $?)
 
 COVERAGE_LEVEL="$(coverage_level)"
 if [ "$COVERAGE_LEVEL" -lt "$MIN_COVERAGE" ]; then
-    echo "Coverage ${COVERAGE_LEVEL}% < ${MIN_COVERAGE}% required"
-    exit 1
+    printf "\e[1;31m✘\e[0m Coverage %d%% < %d%% required\n" ${COVERAGE_LEVEL} ${MIN_COVERAGE}
+else
+    printf "\e[1;32m✔\e[0m Coverage %d%% >= %d%% required\n" ${COVERAGE_LEVEL} ${MIN_COVERAGE}
 fi
+
+exit $EXIT_CODE

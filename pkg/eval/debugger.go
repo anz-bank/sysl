@@ -183,7 +183,7 @@ func parseExpression(text string, app *sysl.Application, scope *Scope) string {
 
 	ee := exprEval{
 		txApp:     app,
-		exprStack: exprStack{},
+		exprStack: exprStack{[]*exprData{{e: &sysl.Expr{}}}},
 		logger:    logrus.StandardLogger(),
 		// needed so the eval doesnt os.Exit()
 		dbg: func(scope *Scope, app *sysl.Application, expr *sysl.Expr) error { return nil },
