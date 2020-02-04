@@ -124,48 +124,50 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 	var serviceCount int
 	for _, m := range c.Modules {
 		for i, a := range m.GetApps() {
-			serviceCount++
-			atts := a.GetAttrs()
-			serviceName := strings.Join(a.Name.GetPart(), "")
-			var re = regexp.MustCompile(`(?m)\w*`)
-			serviceName = strings.Join(re.FindAllString(serviceName, -1), "")
-			serviceName = strings.ToLower(serviceName) + strconv.Itoa(serviceCount)
-			// serviceName = strings.ReplaceAll(serviceName, " ", "")
-			fmt.Println(serviceName)
-
 			var attr = make(map[string]string, 10)
-
+			atts := a.GetAttrs()
 			for key, value := range atts {
 				attr[key] = value.GetS()
 			}
-			c.Log.Infof("eofn: %s", i)
-			newService := WebService{
-				App:           a,
-				Fields:        catalogFields,
-				Attrs:         attr,
-				ServiceName:   serviceName,
-				SwaggerUILink: "/" + serviceName,
-			}
-			c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
-			switch strings.ToUpper(newService.Attrs["type"]) {
-			case "GRPC":
-				h, err = c.GrpcUIHandler(newService)
-			case "REST":
-				c.Log.Info("Hello")
-				c.Log.Info(c)
-				c.Log.Info(newService)
-				h, err = c.SwaggerUIHandler(newService)
-				c.Log.Info("elvns")
+			_, ok := attr["type"]
+			if ok {
+				serviceCount++
+				serviceName := strings.Join(a.Name.GetPart(), "")
+				var re = regexp.MustCompile(`(?m)\w*`)
+				serviceName = strings.Join(re.FindAllString(serviceName, -1), "")
+				serviceName = strings.ToLower(serviceName) + strconv.Itoa(serviceCount)
+				// serviceName = strings.ReplaceAll(serviceName, " ", "")
+				fmt.Println(serviceName)
 
+				c.Log.Infof("eofn: %s", i)
+				newService := WebService{
+					App:           a,
+					Fields:        catalogFields,
+					Attrs:         attr,
+					ServiceName:   serviceName,
+					SwaggerUILink: "/" + serviceName,
+				}
+				c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
+				switch strings.ToUpper(newService.Attrs["type"]) {
+				case "GRPC":
+					h, err = c.GrpcUIHandler(newService)
+				case "REST":
+					c.Log.Info("Hello")
+					c.Log.Info(c)
+					c.Log.Info(newService)
+					h, err = c.SwaggerUIHandler(newService)
+					c.Log.Info("elvns")
+
+				}
+				if err != nil {
+					c.Log.Errorf(err.Error())
+				}
+				h = http.StripPrefix(newService.SwaggerUILink, h)
+				http.Handle(newService.SwaggerUILink+"/", h)
+				c.Log.Errorf("newService.SwaggerUILink" + newService.SwaggerUILink + "/")
+				ser = append(ser, newService)
+				c.Log.Infof("Added %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
 			}
-			if err != nil {
-				c.Log.Errorf(err.Error())
-			}
-			h = http.StripPrefix(newService.SwaggerUILink, h)
-			http.Handle(newService.SwaggerUILink+"/", h)
-			c.Log.Errorf("newService.SwaggerUILink" + newService.SwaggerUILink + "/")
-			ser = append(ser, newService)
-			c.Log.Infof("Added %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
 		}
 	}
 	return ser, nil
