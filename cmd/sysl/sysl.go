@@ -134,10 +134,6 @@ func findRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
-	err := cfg.InitInfo()
-	if err != nil {
-		logrus.Errorf("Get latest git release info error: %s\n", err.Error())
-	}
 	syslCmd.Version(cfg.Version)
 	syslCmd.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 
