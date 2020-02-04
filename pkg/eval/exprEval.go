@@ -20,25 +20,28 @@ func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) 
 	for _, s := range tform.Stmt {
 		switch ss := s.Stmt.(type) {
 		case *sysl.Expr_Transform_Stmt_Let:
-			logrus.Debugf("Evaluating var %s", ss.Let.Name)
+			ee.LogEntry().Debugf("Evaluating var %s", ss.Let.Name)
 			res := Eval(ee, assign, ss.Let.Expr)
 			if ss.Let.Name == parse.TemplateLogString {
 				fmt.Printf("%s", res.GetS())
 			} else {
 				assign[ss.Let.Name] = res
 			}
-			AddItemToValueMap(result, ss.Let.Name, res)
-			logrus.Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
+			ee.LogEntry().Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
-			logrus.Debugf("Evaluating %s", ss.Assign.Name)
+			ee.LogEntry().Debugf("Evaluating %s", ss.Assign.Name)
 			res := Eval(ee, assign, ss.Assign.Expr)
-			logrus.Tracef("Eval Result %s =:\n\t\t %v:\n", ss.Assign.Name, res)
+			ee.LogEntry().Tracef("Eval Result %s =:\n\t\t %v:\n", ss.Assign.Name, res)
 			AddItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
 	}
 	if text, has := assign[parse.TemplateImpliedResult]; has {
+		delete(assign, parse.TemplateImpliedResult)
 		return text
+	}
+	if len(result.GetMap().Items) == 0 {
+		ee.LogEntry().Warn("Eval result empty, did you use `let` incorrectly?")
 	}
 	return result
 }
