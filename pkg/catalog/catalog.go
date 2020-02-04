@@ -1,3 +1,6 @@
+// Package catalog takes a sysl module with attributes defined (catalogFields) and serves a webserver listing the applications and endpoints
+// It also uses GRPCUI and Redoc in order to generate an interactive page to interact with all the endpoints
+// GRPC currently uses server reflection TODO: Support gpcui directly from swagger files
 package catalog
 
 import (
