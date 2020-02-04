@@ -48,6 +48,7 @@ jobs:
         with:
           args: check
 
+      # GoReleaser requires Docker Hub access to push image
       - name: Login to Docker Hub
         uses: azure/docker-login@v1
         with:
@@ -57,6 +58,7 @@ jobs:
       - name: Set env
         run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
 
+      # GoReleaser release process is customized in `.goreleaser.yml` file
       - name: Release binaries and docker images via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:

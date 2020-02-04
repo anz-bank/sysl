@@ -1,5 +1,6 @@
 package main
 
+// Binary info variables are dynamically injected via the `-ldflags` flag with `go build`
 // Version   - Binary version
 // GitCommit - Commit SHA of the source code
 // BuildDate - Binary build date
