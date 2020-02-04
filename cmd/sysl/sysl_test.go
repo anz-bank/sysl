@@ -920,10 +920,12 @@ func TestTemplating(t *testing.T) {
 		"--root-template", "../../demo/codegen",
 		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
 		"--outdir", "../../demo/codegen/AuthorisationAPI/", "authorisation"}, fs, logger, main3)
-	syslutil.AssertFsHasExactly(t, memFs, "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto")
-	expected, err := ioutil.ReadFile("../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto")
+	outputFilename := "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto"
+	syslutil.AssertFsHasExactly(t, memFs, outputFilename)
+	expected, err := ioutil.ReadFile(outputFilename)
 	assert.NoError(t, err)
-	actual, err := afero.ReadFile(memFs, syslutil.MustAbsolute(t, "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto"))
+	expected = syslutil.HandleCRLF(expected)
+	actual, err := afero.ReadFile(memFs, syslutil.MustAbsolute(t, outputFilename))
 	assert.NoError(t, err)
 	assert.Equal(t, string(expected), string(actual))
 }
