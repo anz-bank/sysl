@@ -27,6 +27,7 @@ func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) 
 			} else {
 				assign[ss.Let.Name] = res
 			}
+			AddItemToValueMap(result, ss.Let.Name, res)
 			logrus.Tracef("Eval Result %s =: %v\n", ss.Let.Name, res)
 		case *sysl.Expr_Transform_Stmt_Assign_:
 			logrus.Debugf("Evaluating %s", ss.Assign.Name)
@@ -35,9 +36,9 @@ func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) 
 			AddItemToValueMap(result, ss.Assign.Name, res)
 			// TODO: case *sysl.Expr_Transform_Stmt_Inject:
 		}
-		if text, has := assign[parse.TemplateImpliedResult]; has {
-			return text
-		}
+	}
+	if text, has := assign[parse.TemplateImpliedResult]; has {
+		return text
 	}
 	return result
 }
