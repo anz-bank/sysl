@@ -20,6 +20,7 @@ go test -coverprofile=$COVERAGE_FILE -covermode=atomic ./...
 
 COVERAGE_LEVEL="$(coverage_level)"
 if [ "$COVERAGE_LEVEL" -lt "$MIN_COVERAGE" ]; then
-    echo "Coverage ${COVERAGE_LEVEL}% < ${MIN_COVERAGE}% required"
+    printf "\e[1;31m✘\e[0m Coverage %d%% < %d%% required\n" ${COVERAGE_LEVEL} ${MIN_COVERAGE}
     exit 1
 fi
+printf "\e[1;32m✔\e[0m Coverage %d%% >= %d%% required\n" ${COVERAGE_LEVEL} ${MIN_COVERAGE}
