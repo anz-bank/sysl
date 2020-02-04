@@ -9,15 +9,17 @@ import (
 	"strings"
 
 	"github.com/fullstorydev/grpcui"
+	"github.com/fullstorydev/grpcurl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 
 	"net/http"
 
 	"github.com/anz-bank/sysl/pkg/exporter"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/fullstorydev/grpcui/standalone"
-	"google.golang.org/grpc"
 )
 
 var catalogFields = []string{
@@ -172,7 +174,18 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 // GrpcUIHandler creates and returns a http handler for a grpcui server
 func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
-	cc, err := grpc.DialContext(ctx, service.Attrs["deploy.prod.url"], grpc.WithInsecure())
+
+	// Plaintext doesn't work for GRPC Server Reflection calls to Fabric
+	var creds credentials.TransportCredentials
+	var opts []grpc.DialOption
+	var err error
+	network := "tcp"
+	creds, err = grpcurl.ClientTransportCredentials(false, "", "", "")
+	if err != nil {
+		c.Log.Errorf(err.Error())
+		return nil, err
+	}
+	cc, err := grpcurl.BlockingDial(ctx, network, service.Attrs["deploy.prod.url"], creds, opts...)
 	if err != nil {
 		c.Log.Errorf(err.Error())
 		return nil, err
