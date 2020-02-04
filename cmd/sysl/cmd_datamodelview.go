@@ -34,19 +34,17 @@ func GenerateDataModelsView(datagenParams *CmdContextParamDatagen,
 func generateDataModelView(pclass ClassLabeler, outmap map[string]string, mod *sysl.Module, title, project,
 	outDir string) {
 	apps := mod.GetApps()
-	if apps != nil {
-		for key := range apps {
-			var stringBuilder strings.Builder
-			app := apps[key]
-			if app != nil {
-				dataParam := &DataModelParam{
-					mod:   mod,
-					app:   app,
-					title: title,
-				}
-				v := MakeDataModelView(pclass, dataParam.mod, &stringBuilder, dataParam.title, "")
-				outmap[outDir] = v.GenerateDataView(dataParam)
+	for key := range apps {
+		var stringBuilder strings.Builder
+		app := apps[key]
+		if app != nil {
+			dataParam := &DataModelParam{
+				mod:   mod,
+				app:   app,
+				title: title,
 			}
+			v := MakeDataModelView(pclass, dataParam.mod, &stringBuilder, dataParam.title, "")
+			outmap[outDir] = v.GenerateDataView(dataParam)
 		}
 	}
 }
