@@ -41,7 +41,7 @@ func GenerateDataModelsView(datagenParams *CmdContextParamDatagen,
 	return outmap, nil
 }
 
-// Process pure Sysl datamodel file produced by importer cmd
+// Process pure Sysl datamodel file produced by import cmd
 type datamodelViewCmd struct {
 	plantumlmixin
 	CmdContextParamDatagen
