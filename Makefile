@@ -34,8 +34,8 @@ examples: TUTORIALS
 lint: ## Run golangci-lint
 	golangci-lint run
 
-coverage: ## Verify the test coverage remains high
-	./scripts/check-coverage.sh 85
+coverage: ## Run tests and verify the test coverage remains high
+	./scripts/test-with-coverage.sh 85
 
 test: ## Run tests without coverage
 	rm -rf pkg/grammar/temp
