@@ -912,13 +912,20 @@ func TestCodegenGrammarImport(t *testing.T) {
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }
 
-// func TestTemplating(t *testing.T) {
-// 	t.Parallel()
-// 	logger, _ := test.NewNullLogger()
-// 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-// 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
-//	    "--root-template", "../../demo/codegen",
-// 		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
-// 		"--outdir", "../../demo/codegen/AuthorisationAPI", "authorisation"}, fs, logger, main3)
-// 	syslutil.AssertFsHasExactly(t, memFs, "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto")
-// }
+func TestTemplating(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
+		"--root-template", "../../demo/codegen",
+		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
+		"--outdir", "../../demo/codegen/AuthorisationAPI/", "authorisation"}, fs, logger, main3)
+	outputFilename := "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto"
+	syslutil.AssertFsHasExactly(t, memFs, outputFilename)
+	expected, err := ioutil.ReadFile(outputFilename)
+	assert.NoError(t, err)
+	expected = syslutil.HandleCRLF(expected)
+	actual, err := afero.ReadFile(memFs, syslutil.MustAbsolute(t, outputFilename))
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(actual))
+}
