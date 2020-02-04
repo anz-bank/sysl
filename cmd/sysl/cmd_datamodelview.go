@@ -41,11 +41,6 @@ func GenerateDataModelsView(datagenParams *CmdContextParamDatagen,
 	return outmap, nil
 }
 
-func generateDataModelView(pclass ClassLabeler, outmap map[string]string, mod *sysl.Module, title, project,
-	outDir string) {
-
-}
-
 // Process pure Sysl datamodel file produced by importer cmd
 type datamodelViewCmd struct {
 	plantumlmixin
@@ -65,7 +60,7 @@ func (p *datamodelViewCmd) Configure(app *kingpin.Application) *kingpin.CmdClaus
 	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
 
 	cmd.Flag("output",
-		"output file (default: %(epname).png)",
+		"output file (default: %(appname).png)",
 	).Default("%(appname).png").Short('o').StringVar(&p.output)
 
 	p.AddFlag(cmd)
