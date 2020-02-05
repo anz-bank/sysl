@@ -35,6 +35,7 @@ func (m *modCmd) Execute(args ExecuteArgs) error {
 }
 
 func syslModInit(args ExecuteArgs) error {
+	// makes the assumption that the CWD is not a go module since we hijack this command
 	out, err := exec.Command("go", "mod", "init", syslModuleName).CombinedOutput()
 	if err != nil {
 		return err

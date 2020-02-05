@@ -26,6 +26,7 @@ func TestSyslModInit(t *testing.T) {
 		DefaultAppName: "",
 	}
 
+	// assumes the test folder (cwd) is not a go module folder
 	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 
@@ -45,6 +46,7 @@ func TestSyslModInitAlreadyExists(t *testing.T) {
 		DefaultAppName: "",
 	}
 
+	// assumes the test folder (cwd) is not a go module folder
 	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 
