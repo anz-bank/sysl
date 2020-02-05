@@ -13,9 +13,17 @@ testapp "Simple" [package="package_foo"]:
             | No description.
             return ok
 
+    /test2:
+        POST (accountIDRequest <: accountID [mediatype="application/json", ~body]):
+            | No description.
+            return ok
+
     #---------------------------------------------------------------------------
     # definitions
 
     !type SimpleObj:
         name <: string?:
             @json_tag = "name"
+
+    !alias accountID:
+        string
