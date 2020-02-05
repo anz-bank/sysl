@@ -29,16 +29,15 @@ type Server struct {
 	Log      *logrus.Logger
 	Modules  []*sysl.Module
 	Fields   []string
-	BasePath string `long:"base-path" description:"the base path to serve the spec and UI at"`
+	BasePath string
 	Path     string
 	Resource string
-	Flavor   string `short:"F" long:"flavor" description:"the flavor of docs, can be swagger or redoc" default:"redoc" choice:"redoc,swagger"` //nolint: lll
-	DocURL   string `long:"doc-url" description:"override the url which takes a url query param to render the doc ui"`
-	NoOpen   bool   `long:"no-open" description:"when present won't open the the browser to show the url"`
-	NoUI     bool   `long:"no-ui" description:"when present, only the swagger spec will be served"`
-	Flatten  bool   `long:"flatten" description:"when present, flatten the swagger spec before serving it"`
-	Port     string `long:"port" short:"p" description:"the port to serve this site" env:"PORT"`
-	Host     string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
+	Flavor   string
+	DocURL   string
+	NoOpen   bool
+	NoUI     bool
+	Flatten  bool
+	Host     string
 }
 
 // WebService is the type which will be rendered on the home page of the html/json as a row

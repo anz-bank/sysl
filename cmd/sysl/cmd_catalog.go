@@ -47,7 +47,6 @@ func (p *catalogCmd) Execute(args ExecuteArgs) error {
 		Fs:      args.Filesystem,
 		Log:     args.Logger,
 		Modules: args.Modules,
-		Port:    ":8080",
 	}
 	args.Logger.SetLevel(logrus.InfoLevel)
 	err := catalogServer.Serve()
