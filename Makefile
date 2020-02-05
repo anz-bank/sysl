@@ -56,7 +56,6 @@ build: ## Build sysl into the ./dist folder
 	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
 
 deps: ## Download the project dependencies with `go get`
-	go get -v -t -d ./...
 	go mod tidy
 ifneq ("$(shell git status --porcelain)", "")
 	## GoReleaser has to make sure go.mod is up to date before release sysl binary. 
@@ -64,6 +63,7 @@ ifneq ("$(shell git status --porcelain)", "")
 	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff --staged)"
 	exit 1
 endif
+	go get -v -t -d ./...
 
 .PHONY: release
 release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
