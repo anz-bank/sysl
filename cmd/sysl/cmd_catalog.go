@@ -50,5 +50,7 @@ func (p *catalogCmd) Execute(args ExecuteArgs) error {
 		Port:    ":8080",
 	}
 	args.Logger.SetLevel(logrus.InfoLevel)
-	return catalogServer.Serve()
+	err := catalogServer.Serve()
+	args.Logger.Info(err)
+	return err
 }

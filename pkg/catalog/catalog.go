@@ -6,17 +6,14 @@ package catalog
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"regexp"
 	"strconv"
-	"strings"
 
 	"github.com/fullstorydev/grpcui"
 	"github.com/fullstorydev/grpcurl"
+	"github.com/jhump/protoreflect/desc"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 
 	"net/http"
 
@@ -62,7 +59,6 @@ func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
 		}
 		_, err := w.Write(contents)
 		if err != nil {
-			c.Log.Errorf(err.Error())
 			panic(err)
 		}
 	})
@@ -70,169 +66,150 @@ func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
 
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
-	var err error
 	services, err := c.BuildCatalog()
 	if err != nil {
-		c.Log.Errorf(err.Error())
 		return err
 	}
 	json, err := json.Marshal(services)
 	if err != nil {
-		c.Log.Errorf(err.Error())
 		return err
 	}
 	html, err := renderHTML(services)
 	if err != nil {
-		c.Log.Errorf(err.Error())
 		return err
 	}
 	c.ListHandlers(json, "json", "/json")
 	c.ListHandlers(html, "html", "/")
-	addr := c.Host
-	fmt.Println("owiuefghwoiefho", addr)
-	err = http.ListenAndServe(addr, nil)
-	c.Log.Errorf(err.Error())
+	err = http.ListenAndServe(c.Host, nil)
 	return err
+}
+
+func serviceType(app *sysl.Application) string {
+	if syslutil.HasPattern(app.GetAttrs(), "GRPC") {
+		return "GRPC"
+	} else if syslutil.HasPattern(app.GetAttrs(), "REST") {
+		return "REST"
+	}
+	return ""
 }
 
 // BuildCatalog unpacks a sysl modules and registers a http handler for the grpcui or swagger ui
 func (c *Server) BuildCatalog() ([]WebService, error) {
-	var ser []WebService
+	var catalog []WebService
 	var h http.Handler
-	var err error
 	var serviceCount int
-	var re = regexp.MustCompile(`(?m)\w*`)
-
+	var err error
 	for _, m := range c.Modules {
-		for i, a := range m.GetApps() {
-			var attr = make(map[string]string, 10)
+		for serviceName, a := range m.GetApps() {
 
-			atts := a.GetAttrs()
-			for key, value := range atts {
-				attr[key] = value.GetS()
+			if serviceMethod := serviceType(a); serviceMethod != "" {
+				serviceCount++
+				var attr = make(map[string]string, 10)
+
+				atts := a.GetAttrs()
+				for key, value := range atts {
+					attr[key] = value.GetS()
+				}
+
+				newService := WebService{
+					App:           a,
+					Fields:        c.Fields,
+					Attrs:         attr,
+					AppName:       serviceName,
+					SwaggerUILink: "/" + serviceName + strconv.Itoa(serviceCount),
+				}
+
+				switch serviceMethod {
+				case "GRPC":
+					h, err = c.GrpcUIHandler(newService)
+				case "REST":
+					h, err = c.SwaggerUIHandler(newService)
+				}
+				if err != nil {
+					return nil, err
+				}
+				h = http.StripPrefix(newService.SwaggerUILink, h)
+				http.Handle(newService.SwaggerUILink+"/", h)
+				catalog = append(catalog, newService)
+
+				c.Log.Infof("Added %s service: %s from %s",
+					newService.Attrs["type"],
+					newService.AppName,
+					newService.Attrs["deploy.prod.url"])
 			}
-
-			println(a.GetSourceContext().String())
-			serviceCount++
-			serviceName := strings.Join(a.Name.GetPart(), "")
-
-			serviceName = strings.Join(re.FindAllString(serviceName, -1), "")
-			serviceName = strings.ToLower(serviceName) + strconv.Itoa(serviceCount)
-
-			newService := WebService{
-				App:           a,
-				Fields:        c.Fields,
-				Attrs:         attr,
-				AppName:       i,
-				SwaggerUILink: "/" + serviceName,
-			}
-			c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.AppName, newService.Attrs["deploy.prod.url"])
-
-			if syslutil.HasPattern(a.GetAttrs(), "GRPC") {
-				h, err = c.GrpcUIHandler(newService)
-
-			} else if syslutil.HasPattern(a.GetAttrs(), "REST") {
-				h, err = c.SwaggerUIHandler(newService)
-			}
-			if err != nil {
-				c.Log.Errorf(err.Error())
-			}
-
-			h = http.StripPrefix(newService.SwaggerUILink, h)
-			http.Handle(newService.SwaggerUILink+"/", h)
-			fmt.Println("sidjfbsjkdfnsdjf" + newService.SwaggerUILink + "/")
-			c.Log.Errorf("newService.SwaggerUILink" + newService.SwaggerUILink + "/")
-
-			ser = append(ser, newService)
-			c.Log.Infof("Added %s service: %s from %s", newService.Attrs["type"], newService.AppName, newService.Attrs["deploy.prod.url"])
 		}
 	}
-	return ser, nil
+	return catalog, nil
 }
 
 // GrpcUIHandler creates and returns a http handler for a grpcui server
 func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
 
-	// Plaintext doesn't work for GRPC Server Reflection calls
-
-	var creds credentials.TransportCredentials
 	var opts []grpc.DialOption
-	var err error
 	network := "tcp"
-	creds, err = grpcurl.ClientTransportCredentials(false, "", "", "")
-	if err != nil {
 
-		c.Log.Errorf(err.Error())
+	creds, err := grpcurl.ClientTransportCredentials(false, "", "", "")
+	if err != nil {
 		return nil, err
 	}
 	cc, err := grpcurl.BlockingDial(ctx, network, service.Attrs["deploy.prod.url"], creds, opts...)
-
+	// If that failed, try an insecure dial
 	if err != nil {
-		c.Log.Errorf(err.Error())
 		cc, err = grpc.DialContext(ctx, service.Attrs["deploy.prod.url"], grpc.WithInsecure())
 		if err != nil {
-			c.Log.Errorf(err.Error())
 			return nil, err
 		}
 	}
 	methods, err := grpcui.AllMethodsViaReflection(ctx, cc)
 	if err != nil {
-		c.Log.Errorf(err.Error())
 		return nil, err
 	}
+	err = c.GrpcUIHTML(methods)
+	if err != nil {
+		return nil, err
+	}
+	return standalone.HandlerViaReflection(ctx, cc, service.SwaggerUILink)
+
+}
+
+// GrpcUIHTML Writes all the static files from grpcui to serve
+func (c *Server) GrpcUIHTML(methods []*desc.MethodDescriptor) error {
 	file, err := c.Fs.Create("index.html")
 	if err != nil {
-		c.Log.Errorf(err.Error())
-		return nil, err
+		return err
 	}
 	_, err = file.Write(grpcui.WebFormContents("invoke", "metadata", methods))
 	if err != nil {
-		c.Log.Errorf(err.Error())
-		return nil, err
+		return err
 	}
 	file, err = c.Fs.Create("grpc-web-form.js")
 	if err != nil {
-		c.Log.Errorf(err.Error())
-		return nil, err
+		return err
 	}
 	_, err = file.Write(grpcui.WebFormScript())
 	if err != nil {
-		c.Log.Errorf(err.Error())
-		return nil, err
+		return err
 	}
 	file, err = c.Fs.Create("grpc-web-form.css")
 	if err != nil {
-		c.Log.Errorf(err.Error())
-		return nil, err
+		return err
 	}
 	_, err = file.Write(grpcui.WebFormSampleCSS())
-	if err != nil {
-		c.Log.Errorf(err.Error())
-		return nil, err
-	}
-	h, err := standalone.HandlerViaReflection(ctx, cc, service.SwaggerUILink)
-	if err != nil {
-		c.Log.Errorf(err.Error())
-		return nil, err
-	}
-	return h, nil
+	return err
+
 }
 
 // SwaggerUIHandler creates and returns a http handler for a SwaggerUI server
 func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
-	// basePath := "/"
-	// swag := Server{BasePath: basePath, Path: "/", Resource: service.SwaggerUILink}
 	c.Resource = service.SwaggerUILink
 	swaggerExporter := exporter.MakeSwaggerExporter(service.App, c.Log)
 	err := swaggerExporter.GenerateSwagger()
 	if err != nil {
-		c.Log.Errorf(err.Error())
 		return nil, err
 	}
 	output, err := swaggerExporter.SerializeOutput("json")
 	if err != nil {
-		c.Log.Errorf(err.Error())
 		return nil, err
 	}
 	return c.SwaggerUI(output), nil
