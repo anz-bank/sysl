@@ -22,5 +22,5 @@ ModelWithDeps [package="model"]:
         Dep <- GET /moredep/{id}
         Dep2 <- GET /dep2/{id}
         Todos <- GET /todos/{id}
-        BananaTree <- GET /banana/{id}
+        Bananatree <- GET /banana/{id}
         return Response
