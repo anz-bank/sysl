@@ -147,7 +147,7 @@ func dumpScope(out io.Writer, scope Scope) {
 	sort.Strings(names)
 	lines := make([]string, 0, len(scope))
 	for _, k := range names {
-		l := fmt.Sprintf("  %s:  %s", k, unaryString(scope[k]).GetS())
+		l := fmt.Sprintf("  %s:  %s", k, UnaryString(scope[k]).GetS())
 		lines = append(lines, l)
 	}
 
@@ -183,7 +183,7 @@ func parseExpression(text string, app *sysl.Application, scope *Scope) string {
 
 	ee := exprEval{
 		txApp:     app,
-		exprStack: exprStack{},
+		exprStack: exprStack{[]*exprData{{e: &sysl.Expr{}}}},
 		logger:    logrus.StandardLogger(),
 		// needed so the eval doesnt os.Exit()
 		dbg: func(scope *Scope, app *sysl.Application, expr *sysl.Expr) error { return nil },

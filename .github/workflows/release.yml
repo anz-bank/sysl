@@ -23,14 +23,45 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+
+      - name: Get dependencies
+        run: make deps
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test Darwin and Linux
+        run: make coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
+      - name: Test Windows
+        run: .\scripts\coverage-windows.bat
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYSL_PLANTUML: http://www.plantuml.com/plantuml
+
       - name: Validate goreleaser config
         uses: goreleaser/goreleaser-action@master
         with:
           args: check
 
-      - name: Release via goreleaser
+      # GoReleaser requires Docker Hub access to push image
+      - name: Login to Docker Hub
+        uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: Set env
+        run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
+
+      # GoReleaser release process is customized in `.goreleaser.yml` file
+      - name: Release binaries and docker images via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
-          args: release
+          args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

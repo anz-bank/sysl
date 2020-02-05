@@ -6,24 +6,37 @@ before:
   hooks:
     - go mod tidy
 
-builds:
-  - binary: sysl
-    id: sysl
-    goos:
-      - darwin
-      - linux
-      - windows
-      - freebsd
-      - netbsd
-      - openbsd
-      - dragonfly
-    goarch:
-      - amd64
-      - 386
-      - arm
-      - arm64
-    goarm:
-      - 7
+build:
+  binary: sysl
+  id: sysl
+  main: ./cmd/sysl
+  ldflags:
+    - -s -w -X main.Version={{.Version}}
+    - -X main.GitCommit={{.ShortCommit}}
+    - -X main.BuildDate={{.Date}}
+    - -X main.BuildOS={{.Os}}/{{.Arch}}
+    - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
+  goos:
+    - darwin
+    - linux
+    - windows
+    - freebsd
+    - netbsd
+    - openbsd
+    - dragonfly
+  goarch:
+    - amd64
+    - 386
+    - arm
+    - arm64
+  goarm:
+    - 7
+
+dockers:
+  - image_templates:
+      - "docker.io/anzbank/sysl:{{ .Tag }}"
+      - "docker.io/anzbank/sysl:v{{ .Major }}.{{ .Minor }}"
+      - "docker.io/anzbank/sysl:latest"
 
 archives:
 - id: "sysl"
@@ -57,5 +70,7 @@ changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - typo
