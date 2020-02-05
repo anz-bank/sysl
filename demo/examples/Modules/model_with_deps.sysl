@@ -3,7 +3,7 @@ import deps
 # To import a sysl file from the subdirectory
 import moredeps/moredeps
 # To import a sysl file from external repo. Add // at the beginning of the path
-import //github.com/ChloePlanet/testsyslmodule/bananatree
+import //github.com/anz-bank/syslgen-examples/examples/todos
 # To import a swagger file from the same folder. com.foo.bar.app is the alias of the module
 import foreign_import_swagger.yaml as com.foo.bar.app ~swagger
 
@@ -19,5 +19,5 @@ ModelWithDeps [package="model"]:
         Dep <- GET /dep/{id}
         Dep <- GET /moredep/{id}
         Dep2 <- GET /dep2/{id}
-        Bananatree <- GET /banana/{id}
+        Todos <- GET /todos/{id}
         return Response
