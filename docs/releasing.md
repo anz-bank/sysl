@@ -1,9 +1,9 @@
 Releasing
 =========
 
-Releases are available on Sysl's [Github releases page](https://github.com/anz-bank/sysl/releases) and on various package registries (e.g. PyPI, BinTray).
+Releases are available on Sysl's [Github releases page](https://github.com/anz-bank/sysl/releases) and on package registries (e.g. Docker Hub).
 
-Releasing is automated via `pkg/scripts/release.sh`
+Releasing is automated via [GoReleaser](https://goreleaser.com/).
 
 A new release can be started with
 
