@@ -6,6 +6,7 @@ package catalog
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
 
 	"github.com/fullstorydev/grpcui"
@@ -49,20 +50,6 @@ type WebService struct {
 	SwaggerUILink string
 }
 
-// ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
-func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
-	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-		if t == "json" {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusCreated)
-		}
-		_, err := w.Write(contents)
-		if err != nil {
-			panic(err)
-		}
-	})
-}
-
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
 	services, err := c.BuildCatalog()
@@ -83,6 +70,20 @@ func (c *Server) Serve() error {
 	return err
 }
 
+// ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
+func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
+	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		if t == "json" {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusCreated)
+		}
+		_, err := w.Write(contents)
+		if err != nil {
+			panic(err)
+		}
+	})
+}
+
 func serviceType(app *sysl.Application) string {
 	if syslutil.HasPattern(app.GetAttrs(), "GRPC") {
 		return "GRPC"
@@ -97,11 +98,10 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 	var catalog []WebService
 	var h http.Handler
 	var serviceCount int
-	var err error
 	for _, m := range c.Modules {
 		for serviceName, a := range m.GetApps() {
-
 			if serviceMethod := serviceType(a); serviceMethod != "" {
+				var err error
 				serviceCount++
 				var attr = make(map[string]string, 10)
 
@@ -117,7 +117,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 					AppName:       serviceName,
 					SwaggerUILink: "/" + serviceName + strconv.Itoa(serviceCount),
 				}
-
+				catalog = append(catalog, newService)
 				switch serviceMethod {
 				case "GRPC":
 					h, err = c.GrpcUIHandler(newService)
@@ -125,11 +125,15 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 					h, err = c.SwaggerUIHandler(newService)
 				}
 				if err != nil {
-					return nil, err
+					c.Log.Infof("Added %s service: %s from %s failed: %s\n",
+						newService.Attrs["type"],
+						newService.AppName,
+						newService.Attrs["deploy.prod.url"],
+						err)
+					continue
 				}
 				h = http.StripPrefix(newService.SwaggerUILink, h)
 				http.Handle(newService.SwaggerUILink+"/", h)
-				catalog = append(catalog, newService)
 
 				c.Log.Infof("Added %s service: %s from %s",
 					newService.Attrs["type"],
@@ -137,6 +141,10 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 					newService.Attrs["deploy.prod.url"])
 			}
 		}
+	}
+	if len(catalog) == 0 {
+		return catalog, fmt.Errorf(`No services registered;
+						Make sure ~GRPC or ~REST are in the service definitions`)
 	}
 	return catalog, nil
 }
@@ -160,6 +168,7 @@ func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 			return nil, err
 		}
 	}
+	// TODO: Support .proto instead of just reflection
 	methods, err := grpcui.AllMethodsViaReflection(ctx, cc)
 	if err != nil {
 		return nil, err
