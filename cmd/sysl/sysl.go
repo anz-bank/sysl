@@ -16,19 +16,6 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-// Version   - Binary version
-// GitCommit - Commit SHA of the source code
-// BuildDate - Binary build date
-// BuildOS   - Operating System used to build binary
-//nolint:gochecknoglobals
-var (
-	Version   = "unspecified"
-	GitCommit = "unspecified"
-	BuildDate = "unspecified"
-	BuildOS   = "unspecified"
-)
-
-const debug string = "debug"
 const syslRootMarker = ".sysl"
 
 type projectConfiguration struct {

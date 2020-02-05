@@ -27,6 +27,7 @@ func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (m *modCmd) Execute(args ExecuteArgs) error {
+	//nolint:singleCaseSwitch
 	switch m.subcommand {
 	case "init":
 		return syslModInit(args)
