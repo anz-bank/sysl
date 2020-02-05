@@ -10,6 +10,12 @@ build:
   binary: sysl
   id: sysl
   main: ./cmd/sysl
+  ldflags:
+    - -s -w -X main.Version={{.Version}}
+    - -X main.GitCommit={{.ShortCommit}}
+    - -X main.BuildDate={{.Date}}
+    - -X main.BuildOS={{.Os}}/{{.Arch}}
+    - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
   goos:
     - darwin
     - linux
@@ -64,5 +70,7 @@ changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - typo
