@@ -52,6 +52,9 @@ func (s *Server) SwaggerUI(contents []byte) http.Handler {
 	if basePath == "" {
 		basePath = "/"
 	}
+	if s.Path == "" {
+		s.Path = "/"
+	}
 
 	listener, err := net.Listen("tcp4", s.Host)
 	if err != nil {
