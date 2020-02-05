@@ -5,7 +5,7 @@ import (
 
 	"gopkg.in/alecthomas/kingpin.v2"
 
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 )
 
@@ -42,16 +42,17 @@ func GenerateDataModelsView(datagenParams *CmdContextParamDatagen,
 }
 
 // Process pure Sysl datamodel file produced by import cmd
-type datamodelViewCmd struct {
+type reviewDatamodelCmd struct {
 	plantumlmixin
 	CmdContextParamDatagen
 }
 
-func (p *datamodelViewCmd) Name() string       { return "datamodelview" }
-func (p *datamodelViewCmd) MaxSyslModule() int { return 1 }
+func (p *reviewDatamodelCmd) Name() string       { return "reviewdatamodel" }
+func (p *reviewDatamodelCmd) MaxSyslModule() int { return 1 }
 
-func (p *datamodelViewCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Generate data models from pure sysl file").Alias("dataview")
+func (p *reviewDatamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
+	cmd := app.Command(p.Name(), "Generate data models for review from pure sysl file produced by command import")
+	cmd.Alias("reviewdata")
 	cmd.Flag("class_format",
 		"Specify the format string for data diagram participants. "+
 			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",
@@ -69,7 +70,7 @@ func (p *datamodelViewCmd) Configure(app *kingpin.Application) *kingpin.CmdClaus
 	return cmd
 }
 
-func (p *datamodelViewCmd) Execute(args ExecuteArgs) error {
+func (p *reviewDatamodelCmd) Execute(args ExecuteArgs) error {
 	outmap, err := GenerateDataModelsView(&p.CmdContextParamDatagen, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
