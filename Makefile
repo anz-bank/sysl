@@ -21,7 +21,7 @@ endif
 BUILD_DATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 VERSION := $(or $(TAG),$(COMMIT)-$(BRANCH)-$(BUILD_DATE))
 
-LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE)
+LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE) 
 
 all: test lint build coverage examples ## test, lint, build, coverage test run
 
@@ -53,7 +53,7 @@ $(PLATFORMS): build
 		./cmd/sysl
 
 build: ## Build sysl into the ./dist folder
-	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
+	go build -gcflags="-N -l"  -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
 
 deps: ## Download the project dependencies with `go get`
 	go get -v -t -d ./...

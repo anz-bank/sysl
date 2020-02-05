@@ -22,6 +22,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/exporter"
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/fullstorydev/grpcui/standalone"
 )
 
@@ -39,8 +40,8 @@ type Server struct {
 	NoOpen   bool   `long:"no-open" description:"when present won't open the the browser to show the url"`
 	NoUI     bool   `long:"no-ui" description:"when present, only the swagger spec will be served"`
 	Flatten  bool   `long:"flatten" description:"when present, flatten the swagger spec before serving it"`
-	// Port     string `long:"port" short:"p" description:"the port to serve this site" env:"PORT"`
-	Host string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
+	Port     string `long:"port" short:"p" description:"the port to serve this site" env:"PORT"`
+	Host     string `long:"host" description:"the interface to serve this site, defaults to 0.0.0.0" env:"HOST"`
 }
 
 // WebService is the type which will be rendered on the home page of the html/json as a row
@@ -48,7 +49,7 @@ type WebService struct {
 	App           *sysl.Application `json:"-"`
 	Fields        []string          `json:"-"`
 	Attrs         map[string]string
-	ServiceName   string
+	AppName       string
 	SwaggerUILink string
 }
 
@@ -88,7 +89,7 @@ func (c *Server) Serve() error {
 	c.ListHandlers(json, "json", "/json")
 	c.ListHandlers(html, "html", "/")
 	addr := c.Host
-	fmt.Println(addr)
+	fmt.Println("owiuefghwoiefho", addr)
 	err = http.ListenAndServe(addr, nil)
 	c.Log.Errorf(err.Error())
 	return err
@@ -100,52 +101,50 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 	var h http.Handler
 	var err error
 	var serviceCount int
+	var re = regexp.MustCompile(`(?m)\w*`)
+
 	for _, m := range c.Modules {
 		for i, a := range m.GetApps() {
 			var attr = make(map[string]string, 10)
+
 			atts := a.GetAttrs()
 			for key, value := range atts {
 				attr[key] = value.GetS()
 			}
-			_, ok := attr["type"]
-			if ok {
-				serviceCount++
-				serviceName := strings.Join(a.Name.GetPart(), "")
-				var re = regexp.MustCompile(`(?m)\w*`)
-				serviceName = strings.Join(re.FindAllString(serviceName, -1), "")
-				serviceName = strings.ToLower(serviceName) + strconv.Itoa(serviceCount)
-				// serviceName = strings.ReplaceAll(serviceName, " ", "")
-				fmt.Println(serviceName)
 
-				c.Log.Infof("eofn: %s", i)
-				newService := WebService{
-					App:           a,
-					Fields:        c.Fields,
-					Attrs:         attr,
-					ServiceName:   serviceName,
-					SwaggerUILink: "/" + serviceName,
-				}
-				c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
-				switch strings.ToUpper(newService.Attrs["type"]) {
-				case "GRPC":
-					h, err = c.GrpcUIHandler(newService)
-				case "REST":
-					c.Log.Info("Hello")
-					c.Log.Info(c)
-					c.Log.Info(newService)
-					h, err = c.SwaggerUIHandler(newService)
-					c.Log.Info("elvns")
+			println(a.GetSourceContext().String())
+			serviceCount++
+			serviceName := strings.Join(a.Name.GetPart(), "")
 
-				}
-				if err != nil {
-					c.Log.Errorf(err.Error())
-				}
-				h = http.StripPrefix(newService.SwaggerUILink, h)
-				http.Handle(newService.SwaggerUILink+"/", h)
-				c.Log.Errorf("newService.SwaggerUILink" + newService.SwaggerUILink + "/")
-				ser = append(ser, newService)
-				c.Log.Infof("Added %s service: %s from %s", newService.Attrs["type"], newService.ServiceName, newService.Attrs["deploy.prod.url"])
+			serviceName = strings.Join(re.FindAllString(serviceName, -1), "")
+			serviceName = strings.ToLower(serviceName) + strconv.Itoa(serviceCount)
+
+			newService := WebService{
+				App:           a,
+				Fields:        c.Fields,
+				Attrs:         attr,
+				AppName:       i,
+				SwaggerUILink: "/" + serviceName,
 			}
+			c.Log.Infof("Adding %s service: %s from %s", newService.Attrs["type"], newService.AppName, newService.Attrs["deploy.prod.url"])
+
+			if syslutil.HasPattern(a.GetAttrs(), "GRPC") {
+				h, err = c.GrpcUIHandler(newService)
+
+			} else if syslutil.HasPattern(a.GetAttrs(), "REST") {
+				h, err = c.SwaggerUIHandler(newService)
+			}
+			if err != nil {
+				c.Log.Errorf(err.Error())
+			}
+
+			h = http.StripPrefix(newService.SwaggerUILink, h)
+			http.Handle(newService.SwaggerUILink+"/", h)
+			fmt.Println("sidjfbsjkdfnsdjf" + newService.SwaggerUILink + "/")
+			c.Log.Errorf("newService.SwaggerUILink" + newService.SwaggerUILink + "/")
+
+			ser = append(ser, newService)
+			c.Log.Infof("Added %s service: %s from %s", newService.Attrs["type"], newService.AppName, newService.Attrs["deploy.prod.url"])
 		}
 	}
 	return ser, nil
@@ -155,20 +154,27 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
 
-	// Plaintext doesn't work for GRPC Server Reflection calls to Fabric
+	// Plaintext doesn't work for GRPC Server Reflection calls
+
 	var creds credentials.TransportCredentials
 	var opts []grpc.DialOption
 	var err error
 	network := "tcp"
 	creds, err = grpcurl.ClientTransportCredentials(false, "", "", "")
 	if err != nil {
+
 		c.Log.Errorf(err.Error())
 		return nil, err
 	}
 	cc, err := grpcurl.BlockingDial(ctx, network, service.Attrs["deploy.prod.url"], creds, opts...)
+
 	if err != nil {
 		c.Log.Errorf(err.Error())
-		return nil, err
+		cc, err = grpc.DialContext(ctx, service.Attrs["deploy.prod.url"], grpc.WithInsecure())
+		if err != nil {
+			c.Log.Errorf(err.Error())
+			return nil, err
+		}
 	}
 	methods, err := grpcui.AllMethodsViaReflection(ctx, cc)
 	if err != nil {

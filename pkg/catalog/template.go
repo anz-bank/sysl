@@ -10,7 +10,7 @@ const catalogTemplate = `
   <body>
     <table border = "1">
         <tr>
-        <td>Service Name</td>
+        <td>App Name</td>
         {{ with . }}
 			  {{ range . }}
         {{if $header}}
@@ -23,7 +23,7 @@ const catalogTemplate = `
         
     	</tr>
       <tr>
-      <td>{{.ServiceName}}</td>
+      <td>{{.AppName}}</td>
       {{$Attrs := .Attrs}}
       {{range .Fields }}
       <td>{{index $Attrs .}}</td>
