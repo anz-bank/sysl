@@ -1,0 +1,9 @@
+Moredep [package="moredep"]:
+  !type Moredep:
+    id <: int
+    title <: string
+
+  /moredeps:
+    /{id<:int}:
+      GET:
+        return Moredep
