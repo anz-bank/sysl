@@ -59,7 +59,7 @@ deps: ## Download the project dependencies with `go get`
 	go get -v -t -d ./...
 	go mod tidy
 ifneq ("$(shell git status --porcelain)", "")
-	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff)"
+	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff --staged)"
 	exit 1
 endif
 
