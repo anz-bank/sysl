@@ -13,7 +13,7 @@ import (
 
 func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	args := &dataArgs{
-		modules: "dataviewcmd.sysl",
+		modules: "datamodel/reviewdatamodelcmd.sysl",
 		output:  "%(appname).png",
 	}
 	argsData := []string{"sysl", "dataview", "-o", args.output, args.modules}
@@ -29,11 +29,11 @@ func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
 func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	args := &dataArgs{
 		root:    testDir,
-		modules: "dataviewcmd.sysl",
+		modules: "datamodel/reviewdatamodelcmd.sysl",
 		output:  "%(appname).png",
 		title:   "testdata",
 		expected: map[string]string{
-			"Test.png": filepath.Join(testDir, "data-view-cmd.puml"),
+			"Test.png": filepath.Join(testDir, "datamodel/review-data-model-cmd.puml"),
 		},
 	}
 
