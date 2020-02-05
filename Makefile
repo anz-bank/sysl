@@ -56,7 +56,12 @@ build: ## Build sysl into the ./dist folder
 	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
 
 deps: ## Download the project dependencies with `go get`
+	go mod tidy
 	go get -v -t -d ./...
+ifneq ("$(shell git status --porcelain)", "")
+	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git status --porcelain)" 
+	exit 1
+endif
 
 .PHONY: release
 release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
