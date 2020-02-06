@@ -11,10 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fullstorydev/grpcui"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/gorilla/mux"
-	"github.com/jhump/protoreflect/desc"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"google.golang.org/grpc"
@@ -81,7 +79,7 @@ func (c *Server) routes() {
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
 	c.Log.Info("serving")
-	log.Fatal(http.ListenAndServe(":8080", removeTrailingSlash(c)))
+	log.Fatal(http.ListenAndServe(":8080", c))
 	return nil
 }
 
@@ -135,13 +133,11 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 				}
 				switch serviceMethod {
 				case "GRPC":
-					h, _ := c.GrpcUIHandler(newService)
-					h = http.StripPrefix(newService.SwaggerUILink, h)
-					http.Handle(newService.SwaggerUILink+"/", h)
-					log.Fatal(http.ListenAndServe(":8080", nil))
+
+					newService.handler, err = newService.GrpcUIHandler()
 
 				case "REST":
-					newService.SwaggerUIHandler()
+					newService.handler, err = newService.SwaggerUIHandler()
 				}
 				if err != nil {
 					c.Log.Infof("Added %s service: %s from %s failed: %s\n",
@@ -167,7 +163,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 }
 
 // GrpcUIHandler creates and returns a http handler for a grpcui server
-func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
+func (service *WebService) GrpcUIHandler() (http.Handler, error) {
 	ctx := context.Background()
 
 	var opts []grpc.DialOption
@@ -185,43 +181,12 @@ func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 			return nil, err
 		}
 	}
-	// TODO: Support .proto instead of just reflection
-	methods, err := grpcui.AllMethodsViaReflection(ctx, cc)
+	h, err := standalone.HandlerViaReflection(ctx, cc, service.SwaggerUILink)
 	if err != nil {
 		return nil, err
 	}
-	err = c.GrpcUIHTML(methods)
-	if err != nil {
-		return nil, err
-	}
-	return standalone.HandlerViaReflection(ctx, cc, service.SwaggerUILink)
-
-}
-
-// GrpcUIHTML Writes all the static files from grpcui to serve
-func (c *Server) GrpcUIHTML(methods []*desc.MethodDescriptor) error {
-	file, err := c.Fs.Create("index.html")
-	if err != nil {
-		return err
-	}
-	_, err = file.Write(grpcui.WebFormContents("invoke", "metadata", methods))
-	if err != nil {
-		return err
-	}
-	file, err = c.Fs.Create("grpc-web-form.js")
-	if err != nil {
-		return err
-	}
-	_, err = file.Write(grpcui.WebFormScript())
-	if err != nil {
-		return err
-	}
-	file, err = c.Fs.Create("grpc-web-form.css")
-	if err != nil {
-		return err
-	}
-	_, err = file.Write(grpcui.WebFormSampleCSS())
-	return err
+	h = http.StripPrefix(service.SwaggerUILink, h)
+	return h, nil
 
 }
 
@@ -237,8 +202,7 @@ func (service *WebService) SwaggerUIHandler() (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	service.handler = service.SwaggerUI(output)
-	return service.handler, nil
+	return service.SwaggerUI(output), nil
 }
 
 // ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
