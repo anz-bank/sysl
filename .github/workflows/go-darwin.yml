@@ -40,11 +40,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
-      - name: Validate goreleaser config
-        uses: goreleaser/goreleaser-action@master
-        with:
-          args: check
-
       - name: Set env
         run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
 
@@ -55,7 +50,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install
+      # According to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
+      # macOS Catalina 10.15 supports 64-bit applications
+      - name: Install sysl
         run: cp ./dist/sysl_darwin_amd64/sysl $(GOPATH)/bin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
