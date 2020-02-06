@@ -1,0 +1,13 @@
+example "example.org"[~REST]:
+    @owner = "josh"
+    @email = "joshuacarpeggiani@gmail.com"
+    @version = "1.0"
+    @host = "example.org"
+    @url = 	 "example.org"
+    @type = "REST"
+    @description =:
+        | orighaoisgjaos asdogj asiof jaosdfjioasdfj a.
+
+    /anything:
+        GET:
+            | Returns request data, including method used.

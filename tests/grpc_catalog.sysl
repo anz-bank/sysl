@@ -1,0 +1,6 @@
+import rest_catalog
+
+Greeter[~GRPC]:
+    @deploy.prod.url = "localhost:501"
+    @owner = "foo"
+    @email = "foobar@gmail.com"

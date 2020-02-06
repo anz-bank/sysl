@@ -52,6 +52,14 @@ type WebService struct {
 
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
+	if err := c.RegisterModules(); err != nil {
+		return err
+	}
+	return http.ListenAndServe(c.Host, nil)
+}
+
+// RegisterModules registers all the module for the catalog
+func (c *Server) RegisterModules() error {
 	services, err := c.BuildCatalog()
 	if err != nil {
 		return err
@@ -66,8 +74,7 @@ func (c *Server) Serve() error {
 	}
 	c.ListHandlers(json, "json", "/json")
 	c.ListHandlers(html, "html", "/")
-	err = http.ListenAndServe(c.Host, nil)
-	return err
+	return nil
 }
 
 // ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
