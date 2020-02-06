@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/fullstorydev/grpcui"
 	"github.com/fullstorydev/grpcurl"
@@ -19,6 +20,8 @@ import (
 	"net/http"
 
 	"github.com/anz-bank/sysl/pkg/exporter"
+	"github.com/anz-bank/sysl/pkg/mod"
+	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/fullstorydev/grpcui/standalone"
@@ -52,11 +55,54 @@ type WebService struct {
 
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
-	if err := c.RegisterModules(); err != nil {
-		return err
-	}
+	// if err := c.RegisterModules(); err != nil {
+	// 	return err
+	// }
+	http.HandleFunc("/", EndpointCreation)
+
 	return http.ListenAndServe(c.Host, nil)
 }
+
+// EndpointCreation imports the sysl module in the url and makes a catalog for it
+func EndpointCreation(w http.ResponseWriter, r *http.Request) {
+	log := logrus.New()
+
+	this := afero.NewMemMapFs()
+	fs := mod.NewFs(this)
+	fs.Open("github.com/joshcarp/hellosysl/helloworld.sysl")
+	p := parse.NewParser()
+	m, err := p.Parse("github.com/joshcarp/hellosysl/helloworld.sysl", fs)
+	if err != nil {
+		panic(err)
+	}
+	log.SetLevel(logrus.InfoLevel)
+	catalogServer := Server{
+		Host:    "localhost:8080",
+		Fields:  strings.Split(catalogFields, ","),
+		Fs:      fs,
+		Log:     log,
+		Modules: []*sysl.Module{m},
+	}
+	fmt.Println("yes")
+	catalogServer.RegisterModules()
+
+}
+
+var catalogFields = `team,
+team.slack,
+owner.name,
+owner.email,
+file.version,
+release.version,
+description,
+deploy.env1.url,
+deploy.sit1.url,
+deploy.sit2.url,
+deploy.qa.url,
+deploy.prod.url,
+repo.url,
+type,
+confluence.url`
 
 // RegisterModules registers all the module for the catalog
 func (c *Server) RegisterModules() error {
@@ -73,7 +119,7 @@ func (c *Server) RegisterModules() error {
 		return err
 	}
 	c.ListHandlers(json, "json", "/json")
-	c.ListHandlers(html, "html", "/")
+	c.ListHandlers(html, "html", "/html")
 	return nil
 }
 

@@ -41,6 +41,7 @@ require (
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
 	github.com/jdkato/prose v1.1.1 // indirect
 	github.com/jhump/protoreflect v1.6.0
+	github.com/joshcarp/hellosysl v0.0.0-20200131030221-431e34a06516 // indirect
 	github.com/jstemmer/go-junit-report v0.9.1 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/magefile/mage v1.9.0 // indirect
