@@ -57,7 +57,8 @@ jobs:
           cp ./dist/sysl_darwin_amd64/sysl $PWD/bin
           ls
           echo "----"
-          ls bin
+          cd bin
+          ls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
