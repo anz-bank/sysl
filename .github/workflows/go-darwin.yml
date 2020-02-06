@@ -46,7 +46,7 @@ jobs:
       - name: Build binaries and docker images via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
-          args: release --snapshot --skip-publish --rm-dist --debug
+          args: release --snapshot --skip-publish --rm-dist --debug -f .github/workflows/.goreleaser-go-darwin.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
