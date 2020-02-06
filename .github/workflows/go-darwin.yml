@@ -53,7 +53,10 @@ jobs:
       # According to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
       # macOS Catalina 10.15 supports 64-bit applications
       - name: Install sysl
-        run: cp ./dist/sysl_darwin_amd64/sysl $GOPATH/bin
+        run: |
+          cp ./dist/sysl_darwin_amd64/sysl $GOPATH/bin
+          ls
+          ls $GOPATH/bin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOPATH: .
