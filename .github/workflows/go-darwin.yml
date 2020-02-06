@@ -1,4 +1,5 @@
 name: Go-Darwin
+
 on:
   push:
     branches:
@@ -6,54 +7,62 @@ on:
   pull_request:
     branches:
       - '*'
-jobs:
 
+jobs:
   build-and-test-darwin:
     name: Build Darwin and test
     runs-on: macOS-latest
     steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.13
-      id: go
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Unshallow
+        run: git fetch --prune --unshallow
 
-    - name: Get dependencies
-      run: make deps
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get dependencies
+        run: make deps
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Test
-      run: make coverage
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SYSL_PLANTUML: http://www.plantuml.com/plantuml
+      - name: Test
+        run: make coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
-    - name: Build
-      run: make build
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Validate goreleaser config
+        uses: goreleaser/goreleaser-action@master
+        with:
+          args: check
 
-    - name: Install
-      run: |
-        export GOBIN=$PWD/bin
-        mkdir $GOBIN
-        GIT_TAG="$(echo $GITHUB_REF | cut -d'/' -f3)"
-        ./scripts/build.sh install ${GIT_TAG:1} ${GITHUB_SHA} ${OSTYPE}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set env
+        run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
 
-    - name: Test installed
-      run: ./scripts/test-gosysl.sh
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GOPATH: .
-        SYSL_PLANTUML: http://www.plantuml.com/plantuml
+      - name: Build binaries and docker images via goreleaser
+        uses: goreleaser/goreleaser-action@master
+        with:
+          args: release --snapshot --skip-publish --rm-dist --debug
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install
+        run: cp ./dist/sysl_darwin_amd64/sysl $(GOPATH)/bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test installed
+        run: ./scripts/test-gosysl.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPATH: .
+          SYSL_PLANTUML: http://www.plantuml.com/plantuml
