@@ -22,6 +22,7 @@ require (
 	github.com/fullstorydev/grpcurl v1.4.0
 	github.com/getkin/kin-openapi v0.2.1-0.20191216082429-70fbea30aeb8
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-delve/delve v1.3.2
 	github.com/go-kit/kit v0.8.0
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/loads v0.19.3

@@ -5,13 +5,13 @@ package catalog
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
-	"strings"
 
 	"github.com/fullstorydev/grpcui"
 	"github.com/fullstorydev/grpcurl"
+	"github.com/gorilla/mux"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -20,19 +20,21 @@ import (
 	"net/http"
 
 	"github.com/anz-bank/sysl/pkg/exporter"
-	"github.com/anz-bank/sysl/pkg/mod"
-	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/fullstorydev/grpcui/standalone"
 )
 
 // Server to set context of catalog
+// Todo: Simplify this
 type Server struct {
-	Fs       afero.Fs
-	Log      *logrus.Logger
-	Modules  []*sysl.Module
-	Fields   []string
+	Fs       afero.Fs       // Required
+	Log      *logrus.Logger // Required
+	Modules  []*sysl.Module // Required
+	Fields   []string       // Required
+	Host     string         // Required
+	services []*WebService
+	router   *mux.Router
 	BasePath string
 	Path     string
 	Resource string
@@ -41,7 +43,11 @@ type Server struct {
 	NoOpen   bool
 	NoUI     bool
 	Flatten  bool
-	Host     string
+}
+
+func (s *Server) Setup() {
+	s.router = mux.NewRouter()
+	s.routes()
 }
 
 // WebService is the type which will be rendered on the home page of the html/json as a row
@@ -51,42 +57,60 @@ type WebService struct {
 	Attrs         map[string]string
 	AppName       string
 	SwaggerUILink string
+	handler       http.Handler
+}
+
+func (c *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL)
+	c.router.ServeHTTP(w, r)
+}
+
+func (c *Server) routes() {
+	services, err := c.BuildCatalog()
+	if err != nil {
+		c.Log.Info(err)
+	}
+	for _, service := range services {
+		c.Log.Infof("\n\nRegistering %s\n\n-----------------", service.SwaggerUILink)
+		c.router.Handle(service.SwaggerUILink, service.handler)
+		c.Log.Infof("\n\nHandled %s\n\n-----------------", service.SwaggerUILink)
+
+	}
+
 }
 
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
-	// if err := c.RegisterModules(); err != nil {
-	// 	return err
-	// }
-	http.HandleFunc("/", EndpointCreation)
-
-	return http.ListenAndServe(c.Host, nil)
+	c.Log.Info("serving")
+	// http.Handle("/", c)
+	log.Fatal(http.ListenAndServe(":8080", c))
+	return nil
 }
 
-// EndpointCreation imports the sysl module in the url and makes a catalog for it
-func EndpointCreation(w http.ResponseWriter, r *http.Request) {
-	log := logrus.New()
+// // EndpointCreation imports the sysl module in the url and makes a catalog for it
+// func EndpointCreation(w http.ResponseWriter, r *http.Request) {
+// 	log := logrus.New()
 
-	this := afero.NewMemMapFs()
-	fs := mod.NewFs(this)
-	fs.Open("github.com/joshcarp/hellosysl/helloworld.sysl")
-	p := parse.NewParser()
-	m, err := p.Parse("github.com/joshcarp/hellosysl/helloworld.sysl", fs)
-	if err != nil {
-		panic(err)
-	}
-	log.SetLevel(logrus.InfoLevel)
-	catalogServer := Server{
-		Host:    "localhost:8080",
-		Fields:  strings.Split(catalogFields, ","),
-		Fs:      fs,
-		Log:     log,
-		Modules: []*sysl.Module{m},
-	}
-	fmt.Println("yes")
-	catalogServer.RegisterModules()
+// 	this := afero.NewMemMapFs()
+// 	fs := mod.NewFs(this)
+// 	fs.Open("github.com/joshcarp/hellosysl/helloworld.sysl")
+// 	p := parse.NewParser()
+// 	m, err := p.Parse("github.com/joshcarp/hellosysl/helloworld.sysl", fs)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	log.SetLevel(logrus.InfoLevel)
+// 	catalogServer := Server{
+// 		Host:    "localhost:8080",
+// 		Fields:  strings.Split(catalogFields, ","),
+// 		Fs:      fs,
+// 		Log:     log,
+// 		Modules: []*sysl.Module{m},
+// 	}
+// 	fmt.Println("yes")
+// 	// catalogServer.RegisterModules()
 
-}
+// }
 
 var catalogFields = `team,
 team.slack,
@@ -105,37 +129,37 @@ type,
 confluence.url`
 
 // RegisterModules registers all the module for the catalog
-func (c *Server) RegisterModules() error {
-	services, err := c.BuildCatalog()
-	if err != nil {
-		return err
-	}
-	json, err := json.Marshal(services)
-	if err != nil {
-		return err
-	}
-	html, err := renderHTML(services)
-	if err != nil {
-		return err
-	}
-	c.ListHandlers(json, "json", "/json")
-	c.ListHandlers(html, "html", "/html")
-	return nil
-}
+// func (c *Server) RegisterModules() error {
+// 	services, err := c.BuildCatalog()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	json, err := json.Marshal(services)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	html, err := renderHTML(services)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	// c.ListHandlers(json, "json", "/json")
+// 	// c.ListHandlers(html, "html", "/html")
+// 	return nil
+// }
 
 // ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
-func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
-	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-		if t == "json" {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusCreated)
-		}
-		_, err := w.Write(contents)
-		if err != nil {
-			panic(err)
-		}
-	})
-}
+// func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
+// 	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+// 		if t == "json" {
+// 			w.Header().Set("Content-Type", "application/json")
+// 			w.WriteHeader(http.StatusCreated)
+// 		}
+// 		_, err := w.Write(contents)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 	})
+// }
 
 func serviceType(app *sysl.Application) string {
 	if syslutil.HasPattern(app.GetAttrs(), "GRPC") {
@@ -170,7 +194,6 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 					AppName:       serviceName,
 					SwaggerUILink: "/" + serviceName + strconv.Itoa(serviceCount),
 				}
-				catalog = append(catalog, newService)
 				switch serviceMethod {
 				case "GRPC":
 					h, err = c.GrpcUIHandler(newService)
@@ -185,13 +208,13 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 						err)
 					continue
 				}
-				h = http.StripPrefix(newService.SwaggerUILink, h)
-				http.Handle(newService.SwaggerUILink+"/", h)
-
+				// h = http.StripPrefix(newService.SwaggerUILink, h)
+				newService.handler = h
 				c.Log.Infof("Added %s service: %s from %s",
 					newService.Attrs["type"],
 					newService.AppName,
 					newService.Attrs["deploy.prod.url"])
+				catalog = append(catalog, newService)
 			}
 		}
 	}
@@ -203,6 +226,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 }
 
 // GrpcUIHandler creates and returns a http handler for a grpcui server
+// Todo: Move this to own file
 func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
 
@@ -262,6 +286,7 @@ func (c *Server) GrpcUIHTML(methods []*desc.MethodDescriptor) error {
 }
 
 // SwaggerUIHandler creates and returns a http handler for a SwaggerUI server
+// Todo: move this to its own file
 func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
 	c.Resource = service.SwaggerUILink
 	swaggerExporter := exporter.MakeSwaggerExporter(service.App, c.Log)
@@ -273,5 +298,8 @@ func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// c.BasePath = service.SwaggerUILink
+	log.Fatal(http.ListenAndServe(":8080", c.SwaggerUI(output)))
 	return c.SwaggerUI(output), nil
 }

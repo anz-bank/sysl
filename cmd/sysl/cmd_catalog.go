@@ -49,7 +49,7 @@ func (p *catalogCmd) Execute(args ExecuteArgs) error {
 		Modules: args.Modules,
 	}
 	args.Logger.SetLevel(logrus.InfoLevel)
-	err := catalogServer.Serve()
-	args.Logger.Info(err)
-	return err
+	catalogServer.Setup()
+	catalogServer.Serve()
+	return nil
 }
