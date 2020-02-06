@@ -4,32 +4,28 @@
 package catalog
 
 import (
+	"encoding/json"
 	"net/http"
 	"path"
 
-	"github.com/gorilla/handlers"
-
+	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/gorilla/handlers"
 )
 
 // SwaggerUI takes the contents of a swagger file and creates a handler for the interactive redoc
-func (s *Server) SwaggerUI(contents []byte) http.Handler {
-	if s.Flavor == "" {
-		s.Flavor = "redoc"
+func (service *WebService) SwaggerUI(contents []byte) http.Handler {
+	if service.SwaggerUILink == "" {
+		service.SwaggerUILink = "/"
 	}
-	if s.BasePath == "" {
-		s.BasePath = "/"
-	}
-	if s.Path == "" {
-		s.Path = "/"
-	}
-
-	handler := middleware.Redoc(middleware.RedocOpts{
-		BasePath: s.BasePath,
-		SpecURL:  path.Join("/", "swagger.json"),
-		Path:     s.Path,
-	}, nil)
-
-	handler = handlers.CORS()(middleware.Spec(s.BasePath, contents, handler))
+	specDoc, _ := loads.Analyzed(contents, "2.0")
+	b, _ := json.MarshalIndent(specDoc.Spec(), "", "  ")
+	handler := http.NotFoundHandler()
+	handler = middleware.Redoc(middleware.RedocOpts{
+		BasePath: service.SwaggerUILink,
+		SpecURL:  path.Join(service.SwaggerUILink, "swagger.json"), //"https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/master/swagger.json",
+		Path:     "/",
+	}, handler)
+	handler = handlers.CORS()(middleware.Spec(service.SwaggerUILink, b, handler))
 	return handler
 }

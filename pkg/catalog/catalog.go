@@ -7,7 +7,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path"
 	"strconv"
+	"strings"
 
 	"github.com/fullstorydev/grpcui"
 	"github.com/fullstorydev/grpcurl"
@@ -36,16 +38,12 @@ type Server struct {
 	services []*WebService
 	router   *mux.Router
 	BasePath string
-	Path     string
-	Resource string
-	Flavor   string
-	DocURL   string
-	NoOpen   bool
-	NoUI     bool
-	Flatten  bool
 }
 
 func (s *Server) Setup() {
+	if s.BasePath == "" {
+		s.BasePath = "/"
+	}
 	s.router = mux.NewRouter()
 	s.routes()
 }
@@ -57,6 +55,7 @@ type WebService struct {
 	Attrs         map[string]string
 	AppName       string
 	SwaggerUILink string
+	Log           *logrus.Logger // Required
 	handler       http.Handler
 }
 
@@ -70,11 +69,11 @@ func (c *Server) routes() {
 	if err != nil {
 		c.Log.Info(err)
 	}
-	for _, service := range services {
-		c.Log.Infof("\n\nRegistering %s\n\n-----------------", service.SwaggerUILink)
-		c.router.Handle(service.SwaggerUILink, service.handler)
-		c.Log.Infof("\n\nHandled %s\n\n-----------------", service.SwaggerUILink)
+	html, err := renderHTML(services)
 
+	c.router.HandleFunc("/", c.ListHandlers(html, "html", "/"))
+	for _, service := range services {
+		c.router.PathPrefix(service.SwaggerUILink).Handler(service.handler)
 	}
 
 }
@@ -82,35 +81,9 @@ func (c *Server) routes() {
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (c *Server) Serve() error {
 	c.Log.Info("serving")
-	// http.Handle("/", c)
-	log.Fatal(http.ListenAndServe(":8080", c))
+	log.Fatal(http.ListenAndServe(":8080", removeTrailingSlash(c)))
 	return nil
 }
-
-// // EndpointCreation imports the sysl module in the url and makes a catalog for it
-// func EndpointCreation(w http.ResponseWriter, r *http.Request) {
-// 	log := logrus.New()
-
-// 	this := afero.NewMemMapFs()
-// 	fs := mod.NewFs(this)
-// 	fs.Open("github.com/joshcarp/hellosysl/helloworld.sysl")
-// 	p := parse.NewParser()
-// 	m, err := p.Parse("github.com/joshcarp/hellosysl/helloworld.sysl", fs)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	log.SetLevel(logrus.InfoLevel)
-// 	catalogServer := Server{
-// 		Host:    "localhost:8080",
-// 		Fields:  strings.Split(catalogFields, ","),
-// 		Fs:      fs,
-// 		Log:     log,
-// 		Modules: []*sysl.Module{m},
-// 	}
-// 	fmt.Println("yes")
-// 	// catalogServer.RegisterModules()
-
-// }
 
 var catalogFields = `team,
 team.slack,
@@ -128,39 +101,6 @@ repo.url,
 type,
 confluence.url`
 
-// RegisterModules registers all the module for the catalog
-// func (c *Server) RegisterModules() error {
-// 	services, err := c.BuildCatalog()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	json, err := json.Marshal(services)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	html, err := renderHTML(services)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// c.ListHandlers(json, "json", "/json")
-// 	// c.ListHandlers(html, "html", "/html")
-// 	return nil
-// }
-
-// ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
-// func (c *Server) ListHandlers(contents []byte, t string, pattern string) {
-// 	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-// 		if t == "json" {
-// 			w.Header().Set("Content-Type", "application/json")
-// 			w.WriteHeader(http.StatusCreated)
-// 		}
-// 		_, err := w.Write(contents)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 	})
-// }
-
 func serviceType(app *sysl.Application) string {
 	if syslutil.HasPattern(app.GetAttrs(), "GRPC") {
 		return "GRPC"
@@ -173,7 +113,6 @@ func serviceType(app *sysl.Application) string {
 // BuildCatalog unpacks a sysl modules and registers a http handler for the grpcui or swagger ui
 func (c *Server) BuildCatalog() ([]WebService, error) {
 	var catalog []WebService
-	var h http.Handler
 	var serviceCount int
 	for _, m := range c.Modules {
 		for serviceName, a := range m.GetApps() {
@@ -186,19 +125,23 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 				for key, value := range atts {
 					attr[key] = value.GetS()
 				}
-
 				newService := WebService{
 					App:           a,
 					Fields:        c.Fields,
 					Attrs:         attr,
 					AppName:       serviceName,
-					SwaggerUILink: "/" + serviceName + strconv.Itoa(serviceCount),
+					Log:           c.Log,
+					SwaggerUILink: path.Join(c.BasePath, serviceName+strconv.Itoa(serviceCount)),
 				}
 				switch serviceMethod {
 				case "GRPC":
-					h, err = c.GrpcUIHandler(newService)
+					h, _ := c.GrpcUIHandler(newService)
+					h = http.StripPrefix(newService.SwaggerUILink, h)
+					http.Handle(newService.SwaggerUILink+"/", h)
+					log.Fatal(http.ListenAndServe(":8080", nil))
+
 				case "REST":
-					h, err = c.SwaggerUIHandler(newService)
+					newService.SwaggerUIHandler()
 				}
 				if err != nil {
 					c.Log.Infof("Added %s service: %s from %s failed: %s\n",
@@ -208,8 +151,6 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 						err)
 					continue
 				}
-				// h = http.StripPrefix(newService.SwaggerUILink, h)
-				newService.handler = h
 				c.Log.Infof("Added %s service: %s from %s",
 					newService.Attrs["type"],
 					newService.AppName,
@@ -220,13 +161,12 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 	}
 	if len(catalog) == 0 {
 		return catalog, fmt.Errorf(`No services registered;
-						Make sure ~GRPC or ~REST are in the service definitions`)
+                        Make sure ~GRPC or ~REST are in the service definitions`)
 	}
 	return catalog, nil
 }
 
 // GrpcUIHandler creates and returns a http handler for a grpcui server
-// Todo: Move this to own file
 func (c *Server) GrpcUIHandler(service WebService) (http.Handler, error) {
 	ctx := context.Background()
 
@@ -287,9 +227,8 @@ func (c *Server) GrpcUIHTML(methods []*desc.MethodDescriptor) error {
 
 // SwaggerUIHandler creates and returns a http handler for a SwaggerUI server
 // Todo: move this to its own file
-func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
-	c.Resource = service.SwaggerUILink
-	swaggerExporter := exporter.MakeSwaggerExporter(service.App, c.Log)
+func (service *WebService) SwaggerUIHandler() (http.Handler, error) {
+	swaggerExporter := exporter.MakeSwaggerExporter(service.App, service.Log)
 	err := swaggerExporter.GenerateSwagger()
 	if err != nil {
 		return nil, err
@@ -298,8 +237,29 @@ func (c *Server) SwaggerUIHandler(service WebService) (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
+	service.handler = service.SwaggerUI(output)
+	return service.handler, nil
+}
 
-	// c.BasePath = service.SwaggerUILink
-	log.Fatal(http.ListenAndServe(":8080", c.SwaggerUI(output)))
-	return c.SwaggerUI(output), nil
+// ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
+func (c *Server) ListHandlers(contents []byte, t string, pattern string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if t == "json" {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusCreated)
+		}
+		_, err := w.Write(contents)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
+func removeTrailingSlash(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			r.URL.Path = strings.TrimSuffix(r.URL.Path, "/")
+		}
+		next.ServeHTTP(w, r)
+	})
 }
