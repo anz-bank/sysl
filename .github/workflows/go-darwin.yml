@@ -56,10 +56,11 @@ jobs:
         run: cp ./dist/sysl_darwin_amd64/sysl $GOPATH/bin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPATH: .
 
       - name: Test installed
         run: ./scripts/test-gosysl.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # GOPATH: .
+          GOPATH: .
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
