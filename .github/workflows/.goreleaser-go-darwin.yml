@@ -28,6 +28,7 @@ archives:
   builds: ['sysl']
   format: tar.gz
   replacements:
+    darwin: macOS
     amd64: 64bit
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:

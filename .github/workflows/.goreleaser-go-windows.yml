@@ -17,7 +17,7 @@ build:
     - -X main.BuildOS={{.Os}}/{{.Arch}}
     - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
   goos:
-    - linux
+    - windows
   goarch:
     - amd64
   goarm:
@@ -27,8 +27,11 @@ archives:
 - id: "sysl"
   builds: ['sysl']
   format: tar.gz
+  format_overrides:
+    - goos: windows
+      format: zip
   replacements:
-    linux: Linux
+    windows: Windows
     amd64: 64bit
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:
