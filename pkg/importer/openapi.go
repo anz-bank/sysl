@@ -16,6 +16,8 @@ import (
 
 const openapiv3DefinitionPrefix = "#/components/schemas/"
 
+var re = regexp.MustCompile("^mediatype=.*$")
+
 func LoadOpenAPIText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
 	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(text))
 	if err != nil {
@@ -364,12 +366,16 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 		r := Response{Text: text}
 		if len(respType.Properties) > 0 {
 			if len(respType.Properties) == 1 && respType.Properties[0].Attributes[0] != "~header" {
-				if respType.Properties[0].Attributes[0] == "mediatype=\"application/json\"" {
+				if re.MatchString(respType.Properties[0].Attributes[0]) {
 					content.contentType = respType.Properties[0].Attributes[0]
 					content.name = text
 				}
 				r.Type = respType.Properties[0].Type
 			} else {
+				if re.MatchString(respType.Properties[0].Attributes[0]) {
+					content.contentType = respType.Properties[0].Attributes[0]
+					content.name = text
+				}
 				sortProperties(respType.Properties)
 				l.types.Add(respType)
 				r.Type = respType

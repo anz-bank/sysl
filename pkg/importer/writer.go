@@ -167,16 +167,22 @@ func buildQueryString(params []Param) string {
 
 func buildResponseContentString(contents []Content) string {
 	contentsString := ""
-	if len(contents) == 1 {
-		contentsString = " [" + contents[0].contentType + ", var=\"" + contents[0].name + "\"]"
-		return contentsString
+	if len(contents) == 0 {
+		return ""
 	}
+
 	contentsString = " ["
 	contents = removeContentDuplicates(contents)
 	for _, val := range contents {
-		contentsString = contentsString + "[" + val.contentType + ", var=\"" + val.name + "\"]"
+		if val.contentType == "" || val.name == "" {
+		} else {
+			contentsString = contentsString + "[" + val.contentType + ", var=\"" + val.name + "\"]"
+		}
 	}
 	contentsString = contentsString + "]"
+	if contentsString == " [, var=\"]" || contentsString == " []" {
+		return ""
+	}
 	return contentsString
 }
 
@@ -237,9 +243,12 @@ func buildPathString(path string, params []Param) string {
 }
 
 func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
+	responseContentType := ""
 	header := buildRequestHeadersString(endpoint.Params.HeaderParams())
 	body := buildRequestBodyString(endpoint.Params.BodyParams())
-	responseContentType := buildResponseContentString(endpoint.Contents)
+	if len(endpoint.Contents) != 0 {
+		responseContentType = buildResponseContentString(endpoint.Contents)
+	}
 	reqStr := ""
 	if len(header) > 0 && len(body) > 0 {
 		reqStr = fmt.Sprintf(" (%s)", strings.Join([]string{body, header}, ", "))
