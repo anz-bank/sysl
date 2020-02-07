@@ -166,12 +166,11 @@ func buildQueryString(params []Param) string {
 }
 
 func buildResponseContentString(contents []Content) string {
-	contentsString := ""
 	if len(contents) == 0 {
 		return ""
 	}
 
-	contentsString = " ["
+	contentsString := " ["
 	contents = removeContentDuplicates(contents)
 	for _, val := range contents {
 		if val.contentType == "" || val.name == "" {
@@ -180,7 +179,7 @@ func buildResponseContentString(contents []Content) string {
 		}
 	}
 	contentsString = contentsString + "]"
-	if contentsString == " [, var=\"]" || contentsString == " []" {
+	if contentsString == " []" {
 		return ""
 	}
 	return contentsString
@@ -260,7 +259,8 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 	desc := getDescription(endpoint.Description)
 
 	w.writeLines(fmt.Sprintf("%s:", pathStr), PushIndent,
-		fmt.Sprintf("%s%s%s%s:", method, reqStr, responseContentType, buildQueryString(endpoint.Params.QueryParams())), PushIndent)
+		fmt.Sprintf("%s%s%s%s:", method, reqStr, responseContentType,
+			buildQueryString(endpoint.Params.QueryParams())), PushIndent)
 	w.writeLines(buildDescriptionLines("| ", desc, CommentLineLength-w.ind.CurrentIndentLen())...)
 
 	if len(endpoint.Responses) > 0 {
