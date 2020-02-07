@@ -41,7 +41,7 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Set env
-        run: $Env:GOVERSION=(go version); echo $Env:GOVERSION
+        run: $Env:GOVERSION=(go version | %{($_ -split " ")[-2,-1] -join " "}); echo $Env:GOVERSION
 
       - name: Build sysl binary via goreleaser
         uses: goreleaser/goreleaser-action@master

@@ -15,7 +15,7 @@ build:
     - -X main.GitCommit={{.ShortCommit}}
     - -X main.BuildDate={{.Date}}
     - -X main.BuildOS={{.Os}}/{{.Arch}}
-    - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
+    # - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
   goos:
     - windows
   goarch:
