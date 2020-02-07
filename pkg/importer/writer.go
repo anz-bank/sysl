@@ -174,11 +174,12 @@ func buildResponseContentString(responses []Response) string {
 	responses = removeResponseDuplicates(responses)
 	for _, val := range responses {
 		if val.Content.contentType != "" && val.Content.name != "" {
-			contentsString = contentsString + "[" + val.Content.contentType[10:len(val.Content.contentType)-1] + "\", \"" + val.Content.name + "\"], "
+			contentsString = contentsString + "[" +
+				val.Content.contentType[10:len(val.Content.contentType)-1] + "\", \"" + val.Content.name + "\"], "
 		}
 	}
 	contentsString = contentsString[:len(contentsString)-2]
-	contentsString = contentsString + "]]"
+	contentsString += "]]"
 	if contentsString == " [responses]]" {
 		return ""
 	}
