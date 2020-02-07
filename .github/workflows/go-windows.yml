@@ -41,9 +41,9 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Set env
-        run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
+        run: FOR /F "tokens=*" %g IN ('go version') DO @SET GOVERSION=%g && echo %GOVERSION%
 
-      - name: Build binaries and docker images via goreleaser
+      - name: Build sysl binary via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
           args: release --snapshot --skip-publish --rm-dist --debug -f .github/workflows/.goreleaser-go-windows.yml
