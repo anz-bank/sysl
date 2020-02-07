@@ -41,7 +41,9 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Set env
-        run: FOR /F "tokens=*" %g IN ('go version') DO @SET GOVERSION=%g && echo %GOVERSION%
+        run: |
+          FOR /F "tokens=*" %g IN ('go version') DO @SET GOVERSION=%g
+          echo %GOVERSION%
 
       - name: Build sysl binary via goreleaser
         uses: goreleaser/goreleaser-action@master
