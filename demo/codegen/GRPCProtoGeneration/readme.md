@@ -13,6 +13,4 @@ grpc.sysl: has transform needed to generate .proto file
 
 hello.sysl: has the sysl that's compiled into .proto in the hello directory
 
-server: An implementaton of the hello server
-
-gen: Has the .proto and the pb.go files generated from sysl and protoc respectively
+hello: Has the .proto and the pb.go files generated from sysl and protoc respectively
