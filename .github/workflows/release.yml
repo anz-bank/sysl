@@ -31,14 +31,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Test Darwin and Linux
+      - name: Test
         run: make coverage
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SYSL_PLANTUML: http://www.plantuml.com/plantuml
-
-      - name: Test Windows
-        run: .\scripts\coverage-windows.bat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
@@ -46,7 +40,7 @@ jobs:
       - name: Validate goreleaser config
         uses: goreleaser/goreleaser-action@master
         with:
-          args: check
+          args: check -f .github/workflows/.goreleaser.yml
 
       # GoReleaser requires Docker Hub access to push image
       - name: Login to Docker Hub
