@@ -5,10 +5,15 @@ type Response struct {
 	Text string
 	Type Type
 }
+type Content struct {
+	name        string
+	contentType string
+}
 
 type Endpoint struct {
 	Path        string
 	Description string
+	Contents    []Content
 
 	Params Parameters
 
