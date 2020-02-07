@@ -165,32 +165,32 @@ func buildQueryString(params []Param) string {
 	return query
 }
 
-func buildResponseContentString(contents []Content) string {
-	if len(contents) == 0 {
+func buildResponseContentString(responses []Response) string {
+	if len(responses) == 0 {
 		return ""
 	}
 
-	contentsString := " ["
-	contents = removeContentDuplicates(contents)
-	for _, val := range contents {
-		if val.contentType == "" || val.name == "" {
-		} else {
-			contentsString = contentsString + "[" + val.contentType + ", var=\"" + val.name + "\"]"
+	contentsString := " [responses=["
+	responses = removeResponseDuplicates(responses)
+	for _, val := range responses {
+		if val.Content.contentType != "" && val.Content.name != "" {
+			contentsString = contentsString + "[" + val.Content.contentType[10:len(val.Content.contentType)-1] + "\", \"" + val.Content.name + "\"], "
 		}
 	}
-	contentsString = contentsString + "]"
-	if contentsString == " []" {
+	contentsString = contentsString[:len(contentsString)-2]
+	contentsString = contentsString + "]]"
+	if contentsString == " [responses=]" {
 		return ""
 	}
 	return contentsString
 }
 
-func removeContentDuplicates(contents []Content) []Content {
+func removeResponseDuplicates(responses []Response) []Response {
 	keys := make(map[Content]bool)
-	list := []Content{}
-	for _, entry := range contents {
-		if _, value := keys[entry]; !value {
-			keys[entry] = true
+	list := []Response{}
+	for _, entry := range responses {
+		if _, value := keys[entry.Content]; !value {
+			keys[entry.Content] = true
 			list = append(list, entry)
 		}
 	}
@@ -245,8 +245,8 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 	responseContentType := ""
 	header := buildRequestHeadersString(endpoint.Params.HeaderParams())
 	body := buildRequestBodyString(endpoint.Params.BodyParams())
-	if len(endpoint.Contents) != 0 {
-		responseContentType = buildResponseContentString(endpoint.Contents)
+	if len(endpoint.Responses) != 0 {
+		responseContentType = buildResponseContentString(endpoint.Responses)
 	}
 	reqStr := ""
 	if len(header) > 0 && len(body) > 0 {

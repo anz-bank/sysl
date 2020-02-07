@@ -2,8 +2,9 @@ package importer
 
 // Response is either going to be freetext or a type
 type Response struct {
-	Text string
-	Type Type
+	Text    string
+	Type    Type
+	Content Content
 }
 type Content struct {
 	name        string
@@ -13,11 +14,8 @@ type Content struct {
 type Endpoint struct {
 	Path        string
 	Description string
-	Contents    []Content
-
-	Params Parameters
-
-	Responses []Response
+	Params      Parameters
+	Responses   []Response
 }
 
 // nolint:gochecknoglobals

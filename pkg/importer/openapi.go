@@ -326,8 +326,6 @@ func (l *loader) initEndpoints() []MethodEndpoints {
 
 func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
 	var responses []Response
-	var content Content
-	var contents []Content
 	typePrefix := strings.NewReplacer(
 		"/", "_",
 		"{", "_",
@@ -367,8 +365,8 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 		if len(respType.Properties) > 0 {
 			if len(respType.Properties) == 1 && respType.Properties[0].Attributes[0] != "~header" {
 				if re.MatchString(respType.Properties[0].Attributes[0]) {
-					content.contentType = respType.Properties[0].Attributes[0]
-					content.name = text
+					r.Content.contentType = respType.Properties[0].Attributes[0]
+					r.Content.name = text
 				}
 				r.Type = respType.Properties[0].Type
 			} else {
@@ -378,13 +376,11 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 			}
 		}
 		responses = append(responses, r)
-		contents = append(contents, content)
 	}
 
 	res := Endpoint{
 		Path:        path,
 		Description: op.Description,
-		Contents:    contents,
 		Responses:   responses,
 		Params:      params.Extend(l.buildParams(op.Parameters)),
 	}
