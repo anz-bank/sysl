@@ -36,6 +36,7 @@ jobs:
 
       - name: Test
         run: make coverage
+        timeout-minutes: 3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
