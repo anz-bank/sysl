@@ -9,7 +9,7 @@ testapp "Simple" [package="package_foo"]:
         | No description.
 
     /test:
-        GET:
+        GET [responses=[["application/json", "ok"]]]:
             | No description.
             return ok <: SimpleObj
 

@@ -12,7 +12,7 @@ testapp "Goat CRUD API" [package="package_foo"]:
         | No description.
 
     /goat/delete-goat:
-        POST ?goat_id=string:
+        POST [responses=[["application/json", "ok"]]] ?goat_id=string:
             | Delete a goat.
             return ok <: Acknowledgement
 

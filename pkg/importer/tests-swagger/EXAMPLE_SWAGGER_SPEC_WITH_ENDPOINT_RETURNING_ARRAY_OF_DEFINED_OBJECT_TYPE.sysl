@@ -12,7 +12,7 @@ testapp "Goat CRUD API" [package="package_foo"]:
         | No description.
 
     /goat/get-goats:
-        GET:
+        GET [responses=[["application/json", "ok"]]]:
             | Gotta get goats.
             return ok <: sequence of Goat
 

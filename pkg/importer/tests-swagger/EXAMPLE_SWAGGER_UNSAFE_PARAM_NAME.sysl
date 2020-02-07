@@ -9,37 +9,37 @@ testapp "Unsafe Param Names" [package="package_foo"]:
         | No description.
 
     /contiguous_hyphens:
-        GET ?testSample=string:
+        GET [responses=[["application/json", "ok"]]] ?testSample=string:
             | contiguous hyphens
             return ok <: string
 
     /correct_name:
-        GET ?correctTestSample=string:
+        GET [responses=[["application/json", "ok"]]] ?correctTestSample=string:
             | correct param name
             return ok <: string
 
     /hyphens_in_weird_locations:
-        GET ?testSamPle=string:
+        GET [responses=[["application/json", "ok"]]] ?testSamPle=string:
             | hyphens in weird locations
             return ok <: string
 
     /spaces_and_hyphens_mixes:
-        GET ?teStsamPle=string:
+        GET [responses=[["application/json", "ok"]]] ?teStsamPle=string:
             | mixes of spaces and hyphens
             return ok <: string
 
     /with_a_hyphen:
-        GET ?testSample=string:
+        GET [responses=[["application/json", "ok"]]] ?testSample=string:
             | with a hyphen
             return ok <: string
 
     /with_a_space:
-        GET ?testsample=string:
+        GET [responses=[["application/json", "ok"]]] ?testsample=string:
             | with a space
             return ok <: string
 
     /with_multiple_spaces:
-        GET ?testsample=string:
+        GET [responses=[["application/json", "ok"]]] ?testsample=string:
             | with multiple spaces
             return ok <: string
 
