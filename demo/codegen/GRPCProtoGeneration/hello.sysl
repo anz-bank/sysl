@@ -1,0 +1,27 @@
+hello [package="hello", ~nowrap]:
+
+    MayI (request <: Request):
+        return ok <: Response
+
+    ListMe (request <: Request):
+        return ok <: Response
+
+    !type Request:
+        user_id <: string:
+            @json_tag = "user_id"
+            @rpcId = "1"
+        operation <: string:
+            @json_tag = "operation"
+            @rpcId = "2"
+        account_id <: string:
+            @json_tag = "account_id"
+            @rpcId = "3"
+    
+    !type Response:
+        you_may <: bool:
+            @json_tag = "you_may"
+            @rpcId = "1"
+        reason <: string:
+            @json_tag = "reason"
+            @rpcId = "2"
+
