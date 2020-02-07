@@ -53,7 +53,7 @@ jobs:
       # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
       # Windows Server 2019 supports 64-bit applications
       - name: Install sysl
-        run: md %cd%\bin; copy .\dist\sysl_windows_amd64\sysl.exe %cd%\bin\sysl.exe
+        run: md .\bin; copy .\dist\sysl_windows_amd64\sysl.exe .\bin\sysl.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,5 +61,4 @@ jobs:
         run: .\scripts\test-gosysl.bat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOPATH: .
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
