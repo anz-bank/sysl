@@ -35,14 +35,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test
-        run: .\scripts\coverage-windows.bat
+        run: .\scripts\test-with-coverage-windows.bat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Set env
         run: |
-          FOR /F "tokens=*" %g IN ('go version') DO @SET GOVERSION=%g
+          FOR /F "delims=" %i IN ('date /t') DO SET today=%i
+          echo %today%
+          FOR /F %i IN ('go version') DO SETX GOVERSION=%i
           echo %GOVERSION%
 
       - name: Build sysl binary via goreleaser
