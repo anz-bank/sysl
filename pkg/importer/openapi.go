@@ -372,10 +372,6 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 				}
 				r.Type = respType.Properties[0].Type
 			} else {
-				if re.MatchString(respType.Properties[0].Attributes[0]) {
-					content.contentType = respType.Properties[0].Attributes[0]
-					content.name = text
-				}
 				sortProperties(respType.Properties)
 				l.types.Add(respType)
 				r.Type = respType
