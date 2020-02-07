@@ -1,4 +1,5 @@
-// Package catalog takes a sysl module with attributes defined (catalogFields) and serves a webserver listing the applications and endpoints
+// Package catalog takes a sysl module with attributes defined (catalogFields)
+// and serves a webserver listing the applications and endpoints
 // It also uses GRPCUI and Redoc in order to generate an interactive page to interact with all the endpoints
 // GRPC currently uses server reflection TODO: Support gpcui directly from swagger files
 package catalog
@@ -9,7 +10,6 @@ import (
 	"log"
 	"path"
 	"strconv"
-	"strings"
 
 	"github.com/fullstorydev/grpcurl"
 	"github.com/gorilla/mux"
@@ -38,12 +38,12 @@ type Server struct {
 	BasePath string
 }
 
-func (s *Server) Setup() {
+func (s *Server) Setup() error {
 	if s.BasePath == "" {
 		s.BasePath = "/"
 	}
 	s.router = mux.NewRouter()
-	s.routes()
+	return s.routes()
 }
 
 // WebService is the type which will be rendered on the home page of the html/json as a row
@@ -57,47 +57,34 @@ type WebService struct {
 	handler       http.Handler
 }
 
-func (c *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.URL)
-	c.router.ServeHTTP(w, r)
+	s.router.ServeHTTP(w, r)
 }
 
-func (c *Server) routes() {
-	services, err := c.BuildCatalog()
+func (s *Server) routes() error {
+	var err error
+	s.services, err = s.BuildCatalog()
 	if err != nil {
-		c.Log.Info(err)
+		return err
 	}
-	html, err := renderHTML(services)
-
-	c.router.HandleFunc("/", c.ListHandlers(html, "html", "/"))
-	for _, service := range services {
-		c.router.PathPrefix(service.SwaggerUILink).Handler(service.handler)
+	html, err := renderHTML(s.services)
+	if err != nil {
+		return err
 	}
-
-}
-
-// Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
-func (c *Server) Serve() error {
-	c.Log.Info("serving")
-	log.Fatal(http.ListenAndServe(":8080", c))
+	s.router.HandleFunc("/", s.ListHandlers(html, "html", "/"))
+	for _, service := range s.services {
+		s.router.PathPrefix(service.SwaggerUILink).Handler(service.handler)
+	}
 	return nil
 }
 
-var catalogFields = `team,
-team.slack,
-owner.name,
-owner.email,
-file.version,
-release.version,
-description,
-deploy.env1.url,
-deploy.sit1.url,
-deploy.sit2.url,
-deploy.qa.url,
-deploy.prod.url,
-repo.url,
-type,
-confluence.url`
+// Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
+func (s *Server) Serve() error {
+	s.Log.Info("serving")
+	log.Fatal(http.ListenAndServe(":8080", s))
+	return nil
+}
 
 func serviceType(app *sysl.Application) string {
 	if syslutil.HasPattern(app.GetAttrs(), "GRPC") {
@@ -109,10 +96,10 @@ func serviceType(app *sysl.Application) string {
 }
 
 // BuildCatalog unpacks a sysl modules and registers a http handler for the grpcui or swagger ui
-func (c *Server) BuildCatalog() ([]WebService, error) {
-	var catalog []WebService
+func (s *Server) BuildCatalog() ([]*WebService, error) {
+	var catalog []*WebService
 	var serviceCount int
-	for _, m := range c.Modules {
+	for _, m := range s.Modules {
 		for serviceName, a := range m.GetApps() {
 			if serviceMethod := serviceType(a); serviceMethod != "" {
 				var err error
@@ -123,13 +110,13 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 				for key, value := range atts {
 					attr[key] = value.GetS()
 				}
-				newService := WebService{
+				newService := &WebService{
 					App:           a,
-					Fields:        c.Fields,
+					Fields:        s.Fields,
 					Attrs:         attr,
 					AppName:       serviceName,
-					Log:           c.Log,
-					SwaggerUILink: path.Join(c.BasePath, serviceName+strconv.Itoa(serviceCount)),
+					Log:           s.Log,
+					SwaggerUILink: path.Join(s.BasePath, serviceName+strconv.Itoa(serviceCount)),
 				}
 				switch serviceMethod {
 				case "GRPC":
@@ -140,14 +127,14 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 					newService.handler, err = newService.SwaggerUIHandler()
 				}
 				if err != nil {
-					c.Log.Infof("Added %s service: %s from %s failed: %s\n",
+					s.Log.Infof("Added %s service: %s from %s failed: %s\n",
 						newService.Attrs["type"],
 						newService.AppName,
 						newService.Attrs["deploy.prod.url"],
 						err)
 					continue
 				}
-				c.Log.Infof("Added %s service: %s from %s",
+				s.Log.Infof("Added %s service: %s from %s",
 					newService.Attrs["type"],
 					newService.AppName,
 					newService.Attrs["deploy.prod.url"])
@@ -156,8 +143,7 @@ func (c *Server) BuildCatalog() ([]WebService, error) {
 		}
 	}
 	if len(catalog) == 0 {
-		return catalog, fmt.Errorf(`No services registered;
-                        Make sure ~GRPC or ~REST are in the service definitions`)
+		return catalog, fmt.Errorf(`no services registered; Make sure ~GRPC or ~REST are in the service definitions`) //nolint:lll
 	}
 	return catalog, nil
 }
@@ -187,7 +173,6 @@ func (service *WebService) GrpcUIHandler() (http.Handler, error) {
 	}
 	h = http.StripPrefix(service.SwaggerUILink, h)
 	return h, nil
-
 }
 
 // SwaggerUIHandler creates and returns a http handler for a SwaggerUI server
@@ -202,11 +187,11 @@ func (service *WebService) SwaggerUIHandler() (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	return service.SwaggerUI(output), nil
+	return service.SwaggerUI(output)
 }
 
 // ListHandlers registers handlers for both the homepage, if t is json the header will be set as json content type
-func (c *Server) ListHandlers(contents []byte, t string, pattern string) http.HandlerFunc {
+func (s *Server) ListHandlers(contents []byte, t string, pattern string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if t == "json" {
 			w.Header().Set("Content-Type", "application/json")
@@ -217,13 +202,4 @@ func (c *Server) ListHandlers(contents []byte, t string, pattern string) http.Ha
 			panic(err)
 		}
 	}
-}
-
-func removeTrailingSlash(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			r.URL.Path = strings.TrimSuffix(r.URL.Path, "/")
-		}
-		next.ServeHTTP(w, r)
-	})
 }

@@ -14,18 +14,24 @@ import (
 )
 
 // SwaggerUI takes the contents of a swagger file and creates a handler for the interactive redoc
-func (service *WebService) SwaggerUI(contents []byte) http.Handler {
+func (service *WebService) SwaggerUI(contents []byte) (http.Handler, error) {
 	if service.SwaggerUILink == "" {
 		service.SwaggerUILink = "/"
 	}
-	specDoc, _ := loads.Analyzed(contents, "2.0")
-	b, _ := json.MarshalIndent(specDoc.Spec(), "", "  ")
+	specDoc, err := loads.Analyzed(contents, "2.0")
+	if err != nil {
+		return nil, err
+	}
+	b, err := json.MarshalIndent(specDoc.Spec(), "", "  ")
+	if err != nil {
+		return nil, err
+	}
 	handler := http.NotFoundHandler()
 	handler = middleware.Redoc(middleware.RedocOpts{
 		BasePath: service.SwaggerUILink,
-		SpecURL:  path.Join(service.SwaggerUILink, "swagger.json"), //"https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/master/swagger.json",
+		SpecURL:  path.Join(service.SwaggerUILink, "swagger.json"),
 		Path:     "/",
 	}, handler)
 	handler = handlers.CORS()(middleware.Spec(service.SwaggerUILink, b, handler))
-	return handler
+	return handler, nil
 }

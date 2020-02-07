@@ -37,5 +37,6 @@ func loadCatalogFromFile(filename string) error {
 		Log:     log,
 		Modules: []*sysl.Module{module},
 	}
-	return c.RegisterModules()
+
+	return c.Setup()
 }

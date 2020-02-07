@@ -35,7 +35,7 @@ func (p *catalogCmd) MaxSyslModule() int { return 1 }
 func (p *catalogCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate ui catalog of applications and endpoints")
 	cmd.Flag("host", "host to serve on").Default(":8080").Short('h').StringVar(&p.host)
-	cmd.Flag("fields", "fields to display on the UI, seperated by comma").Default(catalogFields).Short('f').StringVar(&p.fields)
+	cmd.Flag("fields", "fields to display on the UI, separated by comma").Default(catalogFields).Short('f').StringVar(&p.fields) //nolint:lll
 	return cmd
 }
 
@@ -49,7 +49,8 @@ func (p *catalogCmd) Execute(args ExecuteArgs) error {
 		Modules: args.Modules,
 	}
 	args.Logger.SetLevel(logrus.InfoLevel)
-	catalogServer.Setup()
-	catalogServer.Serve()
-	return nil
+	if err := catalogServer.Setup(); err != nil {
+		return err
+	}
+	return catalogServer.Serve()
 }
