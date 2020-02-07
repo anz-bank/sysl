@@ -918,7 +918,7 @@ func TestTemplating(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
 		"--root-template", "../../demo/codegen",
-		"--template", "grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
+		"--template", "AuthorisationAPI/grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
 		"--outdir", "../../demo/codegen/AuthorisationAPI/", "authorisation"}, fs, logger, main3)
 	outputFilename := "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto"
 	syslutil.AssertFsHasExactly(t, memFs, outputFilename)
