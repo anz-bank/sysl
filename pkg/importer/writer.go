@@ -179,7 +179,7 @@ func buildResponseContentString(responses []Response) string {
 	}
 	contentsString = contentsString[:len(contentsString)-2]
 	contentsString = contentsString + "]]"
-	if contentsString == " [responses=]" {
+	if contentsString == " [responses]]" {
 		return ""
 	}
 	return contentsString
