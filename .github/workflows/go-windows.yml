@@ -41,11 +41,7 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Set env
-        run: |
-          FOR /F "delims=" %i IN ('date /t') DO SET today=%i
-          echo %today%
-          FOR /F %i IN ('go version') DO SETX GOVERSION=%i
-          echo %GOVERSION%
+        run: $Env:GOVERSION=(go version); echo $Env:GOVERSION
 
       - name: Build sysl binary via goreleaser
         uses: goreleaser/goreleaser-action@master
