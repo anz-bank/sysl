@@ -4,7 +4,7 @@ title= "Integration Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 8
+weight = 9
 topic = "Diagrams"
 PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=SW50ZWdyYXRlZFN5c3RlbToKICAgIGludGVncmF0ZWRfZW5kcG9pbnRfMToKICAgICAgICBTeXN0ZW0xIDwtIGVuZHBvaW50CiAgICBpbnRlZ3JhdGVkX2VuZHBvaW50XzI6CiAgICAgICAgU3lzdGVtMiA8LSBlbmRwb2ludApTeXN0ZW0xOgogICAgZW5kcG9pbnQ6IC4uLgpTeXN0ZW0yOgogICAgZW5kcG9pbnQ6IC4uLgpQcm9qZWN0IFthcHBmbXQ9IiUoYXBwbmFtZSkiXToKICAgIF86CiAgICAgICAgSW50ZWdyYXRlZFN5c3RlbQogICAgICAgIFN5c3RlbTEKICAgICAgICBTeXN0ZW0yCg==&cmd=c3lzbCBpbnRzIC1vIDNfcHJvamVjdC5zdmcgLS1wcm9qZWN0IFByb2plY3QgMV9wcm9qZWN0LnN5c2w="
 ID = "integration-diagrams"
@@ -74,7 +74,7 @@ Segs = [[
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/integration-diagrams7.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/integration-diagrams8.svg"},
 
 
 ],

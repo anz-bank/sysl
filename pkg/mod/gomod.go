@@ -30,6 +30,7 @@ func goGetByFilepath(filename string) error {
 		if err == nil {
 			return nil
 		}
+		logrus.Debugf("go get %s error: %s\n", dir, err.Error())
 		dir = filepath.Dir(dir)
 	}
 
