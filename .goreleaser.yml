@@ -34,9 +34,9 @@ build:
 
 dockers:
   - image_templates:
-      - "docker.io/anzbank/sysl:{{ .Tag }}"
-      - "docker.io/anzbank/sysl:v{{ .Major }}.{{ .Minor }}"
       - "docker.io/anzbank/sysl:latest"
+      - "docker.io/anzbank/sysl:{{ .Version }}"
+      # - "docker.io/anzbank/sysl:{{ .Major }}.{{ .Minor }}"
 
 archives:
 - id: "sysl"
@@ -65,7 +65,7 @@ archives:
 checksum:
   name_template: '{{.ProjectName}}_{{.Version}}_checksums.txt'
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  name_template: "{{ .Version }}-next"
 changelog:
   sort: asc
   filters:

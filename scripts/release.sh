@@ -1,4 +1,5 @@
 #!/bin/bash
+# Deprecated. Use GoReleaser now.
 
 USAGE="Usage: release.sh <prepare|deploy> MAJOR.MINOR.PATCH"
 COMMAND=$1
