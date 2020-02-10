@@ -65,7 +65,6 @@ archives:
 checksum:
   name_template: '{{.ProjectName}}_{{.Version}}_checksums.txt'
 snapshot:
-  name_template: "{{ .Version }}-next"
 changelog:
   sort: asc
   filters:
