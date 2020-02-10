@@ -32,6 +32,23 @@ apps: <
             >
           >
         >
+        attrs: <
+          key: "responses"
+          value: <
+            a: <
+              elt: <
+                a: <
+                  elt: <
+                    s: "application/json"
+                  >
+                  elt: <
+                    s: "ok"
+                  >
+                >
+              >
+            >
+          >
+        >
         stmt: <
           ret: <
             payload: "ok <: SimpleObj"
