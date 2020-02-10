@@ -1,4 +1,4 @@
-package main
+package mod
 
 import (
 	"testing"
@@ -19,18 +19,13 @@ func removeFile(t *testing.T, fs afero.Fs, file string) {
 
 func TestSyslModInit(t *testing.T) {
 	fs := afero.NewOsFs()
-	execArgs := ExecuteArgs{
-		Modules:        nil,
-		Filesystem:     fs,
-		Logger:         logrus.StandardLogger(),
-		DefaultAppName: "",
-	}
+	logger := logrus.StandardLogger()
 
 	// assumes the test folder (cwd) is not a go module folder
 	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 
-	err := syslModInit(execArgs)
+	err := SyslModInit(logger)
 	assert.NoError(t, err)
 
 	removeFile(t, fs, "go.sum")
@@ -39,21 +34,16 @@ func TestSyslModInit(t *testing.T) {
 
 func TestSyslModInitAlreadyExists(t *testing.T) {
 	fs := afero.NewOsFs()
-	execArgs := ExecuteArgs{
-		Modules:        nil,
-		Filesystem:     fs,
-		Logger:         logrus.StandardLogger(),
-		DefaultAppName: "",
-	}
+	logger := logrus.StandardLogger()
 
 	// assumes the test folder (cwd) is not a go module folder
 	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 
-	err := syslModInit(execArgs)
+	err := SyslModInit(logger)
 	assert.NoError(t, err)
 
-	err = syslModInit(execArgs)
+	err = SyslModInit(logger)
 	assert.Error(t, err)
 
 	removeFile(t, fs, "go.sum")
