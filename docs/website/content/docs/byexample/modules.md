@@ -6,11 +6,12 @@ description= ""
 layout= "byexample"
 weight = 7
 topic = "Basics"
-PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=aW1wb3J0IGRlcHMKaW1wb3J0IG1vcmVkZXBzL21vcmVkZXBzCmltcG9ydCAvL2dpdGh1Yi5jb20vQ2hsb2VQbGFuZXQvdGVzdHN5c2xtb2R1bGUvYmFuYW5hdHJlZQppbXBvcnQgZm9yZWlnbl9pbXBvcnRfc3dhZ2dlci55YW1sIGFzIGNvbS5mb28uYmFyLmFwcCB+c3dhZ2dlcgpNb2RlbFdpdGhEZXBzIFtwYWNrYWdlPSJtb2RlbCJdOgogICF0eXBlIFJlc3BvbnNlOgogICAgdXNlcklkIDw6IGludAogICAgaWQgPDogaW50CiAgICB0aXRsZSA8OiBzdHJpbmcKICAvcmVzcG9uc2VzOgogICAgL3tpZDw6aW50fToKICAgICAgR0VUOgogICAgICAgIERlcCA8LSBHRVQgL2RlcC97aWR9CiAgICAgICAgRGVwIDwtIEdFVCAvbW9yZWRlcC97aWR9CiAgICAgICAgRGVwMiA8LSBHRVQgL2RlcDIve2lkfQogICAgICAgIEJhbmFuYXRyZWUgPC0gR0VUIC9iYW5hbmEve2lkfQogICAgICAgIHJldHVybiBSZXNwb25zZQo=&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=aW1wb3J0IGRlcHMKaW1wb3J0IG1vcmVkZXBzL21vcmVkZXBzCmltcG9ydCAvdGVzdHMvYmFuYW5hdHJlZQppbXBvcnQgLy9naXRodWIuY29tL2Fuei1iYW5rL3N5c2xnZW4tZXhhbXBsZXMvZXhhbXBsZXMvdG9kb3MKaW1wb3J0IGZvcmVpZ25faW1wb3J0X3N3YWdnZXIueWFtbCBhcyBjb20uZm9vLmJhci5hcHAgfnN3YWdnZXIKTW9kZWxXaXRoRGVwcyBbcGFja2FnZT0ibW9kZWwiXToKICAhdHlwZSBSZXNwb25zZToKICAgIHVzZXJJZCA8OiBpbnQKICAgIGlkIDw6IGludAogICAgdGl0bGUgPDogc3RyaW5nCiAgL3Jlc3BvbnNlczoKICAgIC97aWQ8OmludH06CiAgICAgIEdFVDoKICAgICAgICBEZXAgPC0gR0VUIC9kZXAve2lkfQogICAgICAgIERlcCA8LSBHRVQgL21vcmVkZXAve2lkfQogICAgICAgIERlcDIgPC0gR0VUIC9kZXAyL3tpZH0KICAgICAgICBUb2RvcyA8LSBHRVQgL3RvZG9zL3tpZH0KICAgICAgICBCYW5hbmF0cmVlIDwtIEdFVCAvYmFuYW5hL3tpZH0KICAgICAgICByZXR1cm4gUmVzcG9uc2UK&cmd="
 ID = "modules"
 CodeWithoutComments = """import deps
 import moredeps/moredeps
-import //github.com/ChloePlanet/testsyslmodule/bananatree
+import /tests/bananatree
+import //github.com/anz-bank/syslgen-examples/examples/todos
 import foreign_import_swagger.yaml as com.foo.bar.app ~swagger
 ModelWithDeps [package="model"]:
   !type Response:
@@ -23,6 +24,7 @@ ModelWithDeps [package="model"]:
         Dep <- GET /dep/{id}
         Dep <- GET /moredep/{id}
         Dep2 <- GET /dep2/{id}
+        Todos <- GET /todos/{id}
         Bananatree <- GET /banana/{id}
         return Response
 """
@@ -67,7 +69,11 @@ Segs = [[
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
-<span class="kn">import</span> <span class="o">//</span><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">ChloePlanet</span><span class="o">/</span><span class="nx">testsyslmodule</span><span class="o">/</span><span class="nx">bananatree</span></pre>""",DocsRendered= """<p>To import a sysl file from external repo. Add // at the beginning of the path</p>
+<span class="kn">import</span> <span class="o">/</span><span class="nx">tests</span><span class="o">/</span><span class="nx">bananatree</span></pre>""",DocsRendered= """<p>To import a sysl file via absolute path based on root</p>
+""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
+<span class="kn">import</span> <span class="o">//</span><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">anz</span><span class="o">-</span><span class="nx">bank</span><span class="o">/</span><span class="nx">syslgen</span><span class="o">-</span><span class="nx">examples</span><span class="o">/</span><span class="nx">examples</span><span class="o">/</span><span class="nx">todos</span></pre>""",DocsRendered= """<p>To import a sysl file from external repo. Add // at the beginning of the path</p>
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
@@ -86,6 +92,7 @@ Segs = [[
         <span class="nx">Dep</span> <span class="o">&lt;-</span> <span class="nx">GET</span> <span class="o">/</span><span class="nx">dep</span><span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
         <span class="nx">Dep</span> <span class="o">&lt;-</span> <span class="nx">GET</span> <span class="o">/</span><span class="nx">moredep</span><span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
         <span class="nx">Dep2</span> <span class="o">&lt;-</span> <span class="nx">GET</span> <span class="o">/</span><span class="nx">dep2</span><span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
+        <span class="nx">Todos</span> <span class="o">&lt;-</span> <span class="nx">GET</span> <span class="o">/</span><span class="nx">todos</span><span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
         <span class="nx">Bananatree</span> <span class="o">&lt;-</span> <span class="nx">GET</span> <span class="o">/</span><span class="nx">banana</span><span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
         <span class="k">return</span> <span class="nx">Response</span></pre>""",DocsRendered= """""",Image = ""},
 
