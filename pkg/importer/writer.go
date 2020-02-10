@@ -258,10 +258,10 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 
 	pathStr := buildPathString(endpoint.Path, endpoint.Params.PathParams())
 	desc := getDescription(endpoint.Description)
+	queryStr := buildQueryString(endpoint.Params.QueryParams())
 
 	w.writeLines(fmt.Sprintf("%s:", pathStr), PushIndent,
-		fmt.Sprintf("%s%s%s%s:", method, reqStr, responseContentType,
-			buildQueryString(endpoint.Params.QueryParams())), PushIndent)
+		fmt.Sprintf("%s%s%s%s:", method, reqStr, queryStr, responseContentType), PushIndent)
 	w.writeLines(buildDescriptionLines("| ", desc, CommentLineLength-w.ind.CurrentIndentLen())...)
 
 	if len(endpoint.Responses) > 0 {

@@ -9,37 +9,37 @@ testapp "Unsafe Param Names" [package="package_foo"]:
         | No description.
 
     /contiguous_hyphens:
-        GET [responses=[["application/json", "ok"]]] ?testSample=string:
+        GET ?testSample=string [responses=[["application/json", "ok"]]]:
             | contiguous hyphens
             return ok <: string
 
     /correct_name:
-        GET [responses=[["application/json", "ok"]]] ?correctTestSample=string:
+        GET ?correctTestSample=string [responses=[["application/json", "ok"]]]:
             | correct param name
             return ok <: string
 
     /hyphens_in_weird_locations:
-        GET [responses=[["application/json", "ok"]]] ?testSamPle=string:
+        GET ?testSamPle=string [responses=[["application/json", "ok"]]]:
             | hyphens in weird locations
             return ok <: string
 
     /spaces_and_hyphens_mixes:
-        GET [responses=[["application/json", "ok"]]] ?teStsamPle=string:
+        GET ?teStsamPle=string [responses=[["application/json", "ok"]]]:
             | mixes of spaces and hyphens
             return ok <: string
 
     /with_a_hyphen:
-        GET [responses=[["application/json", "ok"]]] ?testSample=string:
+        GET ?testSample=string [responses=[["application/json", "ok"]]]:
             | with a hyphen
             return ok <: string
 
     /with_a_space:
-        GET [responses=[["application/json", "ok"]]] ?testsample=string:
+        GET ?testsample=string [responses=[["application/json", "ok"]]]:
             | with a space
             return ok <: string
 
     /with_multiple_spaces:
-        GET [responses=[["application/json", "ok"]]] ?testsample=string:
+        GET ?testsample=string [responses=[["application/json", "ok"]]]:
             | with multiple spaces
             return ok <: string
 
