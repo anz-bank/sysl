@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Deprecated. Use GoReleaser now.
 set -e
 
 BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'`

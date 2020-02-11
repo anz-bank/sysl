@@ -183,31 +183,102 @@ See [assets/for-loop.sysl](assets/for-loop.sysl) for complete example.
 
 You can use `Loop`, `While`, `Until`, `Loop-N` as well (all case-insensitive).
 
+
 ### Imports
 To keep things modular, sysl allows you to import definitions created in other `.sysl` files.
 
-E.g. `server.sysl`
+#### Internal relative file
+
+You have `server.sysl`, `client.sysl` and `deps/deps.sysl`. `server.sysl` and `client.sysl` files are in the same directory. `deps.sysl` file in the subdirectory. You can import `server.sysl` and `deps.sysl` files in `client.sysl` as below:
+
+```sysl
+# client.sysl
+
+import server
+import deps/deps
+
+Client:
+  Login:
+    Server <- Login
+  Dep:
+  	Deps <- Dep
 ```
+
+```sysl
+# server.sysl
+
 Server:
   Login: ...
   Register: ...
 ```
 
-and you use `import` in `client.sysl`
+```sysl
+# deps.sysl
 
+Deps:
+	Dep: ...
 ```
-import server
+
+#### Internal absolute file
+
+If the imported are in the same project but outside of current folder, you must have at least a common root directory and `import /path/from/root`.
+
+All sysl commands accept `--root` argument. Run `sysl help` for more details.
+
+```sysl
+# <root-dir>/servers/server.sysl
+
+Server:
+  Login: ...
+  Register: ...
+```
+
+```sysl
+# <root-dir>/clients/client.sysl
+
+import /servers/server
 
 Client:
   Login:
     Server <- Login
 ```
 
-Above code assumes, server and client files are in the same directory. If they are in different directories, you must have atleast a common root directory and `import /path/from/root`.
+#### External file
 
-All sysl commands accept `--root` argument. Run `sysl -h` or `reljam -h` for more details.
+Sysl supports importing sysl files from the Internet by Sysl Modules, which based on Go Modules.
 
-#### Multiple Declarations
+The imported sysl repository needs to be initialised with a `go.mod` file(run `go mod init` under the repository working directory). There's no need to include go code in the repository. As long as there's a `go.mod` file, the repository will be treated as a sysl/go module.
+
+You should preface `//` your import path like `import //the/external/repo/filepath` to import external modules.
+
+```sysl
+# github.com/foo/bar/servers/server.sysl
+
+Server:
+  Login: ...
+  Register: ...
+```
+
+```sysl
+# github.com/your/repo/client.sysl
+
+import //github.com/foo/bar/servers/server
+
+Client:
+  Login:
+    Server <- Login
+```
+
+To disable Sysl Modules downloads external files, set environment variable `SYSL_MODULES=off`.
+
+#### Non-sysl file
+
+When you import sysl file, you can omit the `.sysl` file extension.
+
+To import a non-sysl file like swagger file, you can `import foreign_import_swagger.yaml as com.foo.bar.app ~swagger`.
+
+
+### Multiple Declarations
 Sysl allows you to define an application in multiple places. There is no redefinition error in sysl.
 
 ```

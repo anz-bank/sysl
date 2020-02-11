@@ -34,8 +34,8 @@ examples: TUTORIALS
 lint: ## Run golangci-lint
 	golangci-lint run
 
-coverage: ## Verify the test coverage remains high
-	./scripts/check-coverage.sh 85
+coverage: ## Run tests and verify the test coverage remains high
+	./scripts/test-with-coverage.sh 85
 
 test: ## Run tests without coverage
 	rm -rf pkg/grammar/temp
@@ -56,6 +56,13 @@ build: ## Build sysl into the ./dist folder
 	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
 
 deps: ## Download the project dependencies with `go get`
+	go mod tidy
+ifneq ("$(shell git status --porcelain)", "")
+	## GoReleaser has to make sure go.mod is up to date before release sysl binary. 
+	## Keep everyone remembering to update go.mod to avoid release failure.
+	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff)"
+	exit 1
+endif
 	go get -v -t -d ./...
 
 .PHONY: release
