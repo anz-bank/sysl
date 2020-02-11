@@ -66,6 +66,7 @@ checksum:
   name_template: '{{.ProjectName}}_{{.Version}}_checksums.txt'
 snapshot:
 changelog:
+  skip: true
   sort: asc
   filters:
     exclude:
