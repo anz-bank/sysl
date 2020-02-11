@@ -1,0 +1,30 @@
+name: Generate-Tag
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    name: Generate tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@master
+        with:
+          fetch-depth: '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Bump tag if commit message contains #major or #patch or #patch
+      - name: Bump version and push tag
+        uses: ChloePlanet/github-tag-action@master
+        env:
+          # An action in a workflow run can't trigger a new workflow run.
+          # When you use GITHUB_TOKEN in your actions, all of the interactions 
+          # with the repository are on behalf of the Github-actions bot. 
+          # The operations act by Github-actions bot cannot trigger a new workflow run.
+          # More details: https://help.github.com/en/actions/reference/events-that-trigger-workflows#about-workflow-events
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+          WITH_V: true
