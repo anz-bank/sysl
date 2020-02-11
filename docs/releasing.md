@@ -3,7 +3,7 @@ Releasing
 
 Releases are available on [Sysl's GitHub releases page](https://github.com/anz-bank/sysl/releases) and on package registries (e.g. [Docker Hub](https://hub.docker.com/u/anzbank)).
 &nbsp;
-Sysl is using [GitHub Actions](https://help.github.com/en/actions/getting-started-with-github-actions/about-github-actions) as continuous integration (CI) and continuous deployment (CD) tool.
+Sysl is using [GitHub Actions](https://help.github.com/en/actions/getting-started-with-github-actions/about-github-actions) as continuous integration (CI) and continuous deployment (CD) system.
 &nbsp;
 ### Steps to publish new release
 1. Anyone who wants to publish a new release has to create a pull request which needs approvement before is merged.
