@@ -6,6 +6,7 @@ package catalog
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"path"
@@ -73,6 +74,13 @@ func (s *Server) routes() error {
 		return err
 	}
 	s.router.HandleFunc("/", s.ListHandlers(html, "html", "/"))
+
+	jsonBytes, err := json.Marshal(s.services)
+	if err != nil {
+		return err
+	}
+	jsonHandler, err := s.ListHandlers()
+	s.router.HandleFunc("/json", s.ListHandlers(html, "json", "/json"))
 	for _, service := range s.services {
 		s.router.PathPrefix(service.SwaggerUILink).Handler(service.handler)
 	}
