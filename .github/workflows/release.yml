@@ -19,7 +19,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check out code
+      - name: Check out code into the Go module directory
         uses: actions/checkout@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -32,14 +32,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Test Darwin and Linux
+      - name: Test
         run: make coverage
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SYSL_PLANTUML: http://www.plantuml.com/plantuml
-
-      - name: Test Windows
-        run: .\scripts\coverage-windows.bat
+        timeout-minutes: 5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
@@ -47,7 +42,7 @@ jobs:
       - name: Validate goreleaser config
         uses: goreleaser/goreleaser-action@master
         with:
-          args: check
+          args: check -f .github/workflows/.goreleaser.yml
 
       # GoReleaser requires Docker Hub access to push image
       - name: Login to Docker Hub
@@ -63,6 +58,14 @@ jobs:
       - name: Release binaries and docker images via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
-          args: release --rm-dist
+          args: release --rm-dist --debug -f .github/workflows/.goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
+      # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets 
+      # and uncomment this step.
+      # - name: Release sysl_js
+      #   run: cd unsorted/sysl_js && NPM_AUTH_TOKEN=$ npm publish
+      #   env:
+      #     NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
