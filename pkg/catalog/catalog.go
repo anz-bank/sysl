@@ -90,7 +90,7 @@ func (s *Server) routes() error {
 // Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
 func (s *Server) Serve() error {
 	s.Log.Info("serving")
-	log.Fatal(http.ListenAndServe(":8080", s))
+	log.Fatal(http.ListenAndServe(s.Host, s))
 	return nil
 }
 
