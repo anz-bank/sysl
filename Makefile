@@ -60,7 +60,7 @@ deps: ## Download the project dependencies with `go get`
 ifneq ("$(shell git status --porcelain)", "")
 	## GoReleaser has to make sure go.mod is up to date before release sysl binary. 
 	## Keep everyone remembering to update go.mod to avoid release failure.
-	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff)"
+	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff --staged)"
 	exit 1
 endif
 	go get -v -t -d ./...
