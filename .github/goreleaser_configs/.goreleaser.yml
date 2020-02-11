@@ -34,9 +34,8 @@ build:
 
 dockers:
   - image_templates:
-      - "docker.io/anzbank/sysl:{{ .Tag }}"
-      - "docker.io/anzbank/sysl:v{{ .Major }}.{{ .Minor }}"
-      - "docker.io/anzbank/sysl:latest"
+    - "docker.io/anzbank/sysl:latest"
+    - "docker.io/anzbank/sysl:{{ .Version }}"
 
 archives:
 - id: "sysl"
