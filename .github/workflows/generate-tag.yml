@@ -17,7 +17,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Bump tag if commit message contains #major or #patch or #patch
+      # Generate tag if commit message contains #major or #patch or #patch
       - name: Bump version and push tag
         uses: ChloePlanet/github-tag-action@master
         env:
