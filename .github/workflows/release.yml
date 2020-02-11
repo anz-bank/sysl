@@ -1,3 +1,4 @@
+# See related documentation in https://github.com/anz-bank/sysl/blob/master/docs/releasing.md
 name: Release
 
 on:
