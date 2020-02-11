@@ -44,7 +44,7 @@ jobs:
       - name: Validate goreleaser config
         uses: goreleaser/goreleaser-action@master
         with:
-          args: check -f .github/workflows/.goreleaser.yml
+          args: check -f .github/goreleaser_configs/.goreleaser.yml
 
       # GoReleaser requires Docker Hub access to push image
       - name: Login to Docker Hub
@@ -60,7 +60,7 @@ jobs:
       - name: Release binaries and docker images via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
-          args: release --rm-dist --debug -f .github/workflows/.goreleaser.yml
+          args: release --rm-dist --debug -f .github/goreleaser_configs/.goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
