@@ -8,7 +8,7 @@ We, some of the ANZ open source developers, have recently set up what we conside
 * (Write) access control (Github organisation & teams)
 * One step build (GitHub Actions & GoReleaser)(`pip install pytest flake8 -e .` Pysysl)
 * One step test (go test)(`pytest` for pysysl)
-* Continuous integration (GitHub Actions)([Travis CI](https://travis-ci.org/anz-bank/sysl) for Linux and macOS, [Appveyor CI](https://ci.appveyor.com/project/anz-bank/sysl) for Windows previously)
+* Continuous integration (GitHub Actions)
 * Code reviews ([Github Code Reviews](https://github.com/features/code-review))
 * Code coverage ([Codecov.io](https://codecov.io/github/anz-bank/sysl/))
 * Automated release process (Tags trigger deployment from CI systems)
