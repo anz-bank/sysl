@@ -24,7 +24,7 @@
           <h4>{{ .Key }}<h4>
         </a>
         {{range .Pages}}
-        <a href="{{ .Permalink }}" style="text-decoration:none; font-size:17px; color:#3794de; ">{{ .Title }}</a><br>
+        <a href="{{.Permalink | relURL }}" style="text-decoration:none; font-size:17px; color:#3794de; ">{{ .Title }}</a><br>
 
 
 

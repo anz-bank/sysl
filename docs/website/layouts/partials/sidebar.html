@@ -13,13 +13,13 @@
   {{ range $pages}}
 
   <li>
-    <a href="{{.Permalink}}" {{if eq $currentPage.Permalink .Permalink }} class="active" {{end}}>{{.Title}}</a>
+    <a href="{{.Permalink | relURL }}" {{if eq $currentPage.Permalink .Permalink }} class="active" {{end}}>{{.Title}}</a>
   </li>
 
   {{ range where .Page.Pages ".File.Dir" $currentPage.File.Dir  }}
   <li>
     <ul>
-      <a href="{{.Permalink}}" {{if eq $currentPage.Permalink .Permalink }} class="active" {{end}}>
+      <a href="{{.Permalink | relURL }}" {{if eq $currentPage.Permalink .Permalink }} class="active" {{end}}>
         {{.Title}}
       </a>
     </ul>

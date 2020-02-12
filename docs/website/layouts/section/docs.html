@@ -16,7 +16,7 @@
       {{ range $pages}}
 
       <div class="col col-4 item">
-        <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
+        <h4><a href="{{ .Permalink | relURL }}">{{ .Title }}</a></h4>
         <p>{{ .Params.description }}</p>
       </div>
 

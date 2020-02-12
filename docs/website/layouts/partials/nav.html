@@ -11,7 +11,7 @@
 					<span class="entry-navigation__label">Previous</span>
 					<i class="ui-arrow-right"></i>
 					{{ with .NextInSection }}
-					<a href="{{ .Permalink }}" rel="next">{{ .Title }}</a>
+					<a href="{{.Permalink | relURL }}" rel="next">{{ .Title }}</a>
 					{{ end }}
 					{{ end }}
 					{{ end }}

@@ -23,7 +23,7 @@
 
         {{range .Pages}}
         <br>
-        <a href="{{ .Permalink }}" style="text-decoration:none">{{ .Title }}</a> <br />
+        <a href="{{.Permalink | relURL }}" style="text-decoration:none">{{ .Title }}</a> <br />
 
         {{end}}
 
@@ -34,7 +34,7 @@
       {{ range $pages}}
       <div class="col col-4 item">
 
-        <a href="{{ .Permalink }}" style="text-decoration:none">
+        <a href="{{.Permalink | relURL }}" style="text-decoration:none">
           <h4>{{ .Title }}</h4>
         </a>
         {{replace .TableOfContents `href="#` (printf `href="%s#` .Permalink) | safeHTML }}
