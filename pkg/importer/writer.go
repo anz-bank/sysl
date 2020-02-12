@@ -174,8 +174,8 @@ func buildResponseContentString(responses []Response) string {
 	responses = removeResponseDuplicates(responses)
 	for _, val := range responses {
 		if val.Content.contentType != "" && val.Content.name != "" {
-			contentsString = contentsString + "[" +
-				val.Content.contentType[10:len(val.Content.contentType)-1] + "\", \"" + val.Content.name + "\"], "
+			contentsString = fmt.Sprintf("%s[%s\", \"%s\"], ", contentsString,
+				val.Content.contentType[10:len(val.Content.contentType)-1], val.Content.name)
 		}
 	}
 	contentsString = contentsString[:len(contentsString)-2]
@@ -187,8 +187,8 @@ func buildResponseContentString(responses []Response) string {
 }
 
 func removeResponseDuplicates(responses []Response) []Response {
-	keys := make(map[Content]bool)
-	list := []Response{}
+	keys := make(map[content]bool)
+	list := make([]Response, len(responses))
 	for _, entry := range responses {
 		if _, value := keys[entry.Content]; !value {
 			keys[entry.Content] = true
@@ -243,13 +243,13 @@ func buildPathString(path string, params []Param) string {
 }
 
 func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
-	responseContentType := ""
+	var responseContentType string
+	var reqStr string
 	header := buildRequestHeadersString(endpoint.Params.HeaderParams())
 	body := buildRequestBodyString(endpoint.Params.BodyParams())
 	if len(endpoint.Responses) != 0 {
 		responseContentType = buildResponseContentString(endpoint.Responses)
 	}
-	reqStr := ""
 	if len(header) > 0 && len(body) > 0 {
 		reqStr = fmt.Sprintf(" (%s)", strings.Join([]string{body, header}, ", "))
 	} else if len(header) > 0 || len(body) > 0 {

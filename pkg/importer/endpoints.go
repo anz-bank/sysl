@@ -4,13 +4,14 @@ package importer
 type Response struct {
 	Text    string
 	Type    Type
-	Content Content
+	Content content
 }
-type Content struct {
+type content struct {
 	name        string
 	contentType string
 }
 
+// Endpoints consists of all the values necessary to make a sysl file
 type Endpoint struct {
 	Path        string
 	Description string
