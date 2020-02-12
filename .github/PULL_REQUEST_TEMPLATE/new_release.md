@@ -1,4 +1,4 @@
-Please make sure the PR commit message contains `#major`, `#minor` or `#patch` to generate respective semver version tag.
+Please make sure the PR commit message contains `#major`, `#minor` or `#patch` to generate respective SemVer formatted version tag.
 
 Changes proposed in this release:
 - 
