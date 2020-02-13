@@ -1,15 +1,18 @@
 package main
 
 import (
+	"path/filepath"
 	"testing"
 
+	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
 
 func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	args := &dataArgs{
-		modules: "datamodel/reviewdatamodelcmd.sysl",
+		modules: "reviewdatamodelcmd.sysl",
 		output:  "%(appname).png",
 	}
 	argsData := []string{"sysl", "reviewdata", "-o", args.output, args.modules}
@@ -22,15 +25,14 @@ func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	assert.Equal(t, selectedCommand, "reviewdatamodel")
 }
 
-/*
 func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	args := &dataArgs{
 		root:    testDir,
-		modules: "datamodel/reviewdatamodelcmd.sysl",
+		modules: "reviewdatamodelcmd.sysl",
 		output:  "%(appname).png",
 		title:   "testdata",
 		expected: map[string]string{
-			"Test.png": filepath.Join(testDir, "datamodel/review-data-model-cmd.puml"),
+			"Test.png": filepath.Join(testDir, "review-data-model-cmd.puml"),
 		},
 	}
 
@@ -49,4 +51,3 @@ func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	comparePUML(t, args.expected, result)
 }
-*/
