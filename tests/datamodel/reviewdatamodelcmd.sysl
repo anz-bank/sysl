@@ -48,4 +48,3 @@ Test:
             @json_tag = "feeType"
         feeAmount <: string:
             @json_tag = "feeAmount"
-            
