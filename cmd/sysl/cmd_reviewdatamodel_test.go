@@ -1,11 +1,8 @@
 package main
 
 import (
-	"path/filepath"
 	"testing"
 
-	"github.com/sirupsen/logrus/hooks/test"
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
@@ -25,6 +22,7 @@ func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	assert.Equal(t, selectedCommand, "reviewdatamodel")
 }
 
+/*
 func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	args := &dataArgs{
 		root:    testDir,
@@ -51,3 +49,4 @@ func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	comparePUML(t, args.expected, result)
 }
+*/
