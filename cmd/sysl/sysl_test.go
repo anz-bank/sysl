@@ -912,7 +912,6 @@ func TestCodegenGrammarImport(t *testing.T) {
 	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 }
 
-/*
 func TestTemplating(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
@@ -930,4 +929,3 @@ func TestTemplating(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, string(expected), string(actual))
 }
-*/
