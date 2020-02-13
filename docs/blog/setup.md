@@ -11,7 +11,7 @@ We, some of the ANZ open source developers, have recently set up what we conside
 * Continuous integration (GitHub Actions)
 * Code reviews ([Github Code Reviews](https://github.com/features/code-review))
 * Code coverage ([Codecov.io](https://codecov.io/github/anz-bank/sysl/))
-* Automated release process (Specified master branch commit message triggers tag generation. Generated tags trigger deployment from CI systems. See the [Releasing documentation](https://github.com/anz-bank/sysl/blob/master/docs/releasing.md) for more details)
+* Automated release process (Specified master branch commit message triggers tag generation and CHANGELOG generation. Generated tags trigger deployment from CI systems. See the [Releasing documentation](https://github.com/anz-bank/sysl/blob/master/docs/releasing.md) for more details)
 * Automated quality assurance (Pull requests are blocked until all checks pass)
 * Issue tracking ([Github Issue](https://github.com/anz-bank/sysl/issues) tracking with [template](https://github.com/anz-bank/sysl/tree/master/.github/ISSUE_TEMPLATE))
 * Project Management ([Github projects](https://github.com/anz-bank/sysl/projects))
@@ -33,7 +33,7 @@ Our original (upstream, parent) repository is owned by the Github organization [
  * Require status checks to pass before merging
    - Require passing tests and no linting warning (on GitHub Actions tests, GolangCI lint, deploy/netlify docs website)
    - Require stable or improved codecoverage
- * Require pull request reviews before publishing new release
+ * Require pull request reviews before publishing new version tag and release
 
 &nbsp;
 Happy coding and project setup!
