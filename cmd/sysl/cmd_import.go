@@ -65,7 +65,7 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 		imp = importer.LoadXSDText
 	case importer.ModeGrammar:
 		args.Logger.Infof("Using grammar importer\n")
-		imp = importer.LoadGrammar
+		//imp = importer.LoadGrammar
 	case importer.ModeOpenAPI:
 		args.Logger.Infof("Using OpenAPI importer\n")
 		imp = importer.LoadOpenAPIText
