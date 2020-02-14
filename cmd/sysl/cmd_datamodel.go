@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GenerateDataModels(datagenParams *CmdContextParamDatagen,
+func generateDataModelsWithProjectMannerModule(datagenParams *CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
 	outmap := make(map[string]string)
 
@@ -50,10 +50,10 @@ func GenerateDataModels(datagenParams *CmdContextParamDatagen,
 /**
  * It is added to help reviewing generated data model with sysl
  * file produced by command import. Generate data model diagrams using the following command:
- * sysl reviewdata --root=/Users/guest/data -t Test -o Test.png Test
- * sysl reviewdatamodel --root=/Users/guest/data -t Test -o Test.png Test.sysl
+ * sysl data      --root=/Users/guest/data -t Test -o Test.png Test
+ * sysl datamodel --root=/Users/guest/data -t Test -o Test.png Test.sysl
  */
-func GenerateDataModelsView(datagenParams *CmdContextParamDatagen,
+func generateDataModelsWithPureModule(datagenParams *CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
 	outmap := make(map[string]string)
 
@@ -66,9 +66,9 @@ func GenerateDataModelsView(datagenParams *CmdContextParamDatagen,
 	for appName := range apps {
 		app := apps[appName]
 		outputDir := datagenParams.output
-		if strings.Contains(outputDir, "%(appname)") {
+		if strings.Contains(outputDir, "%(epname)") {
 			of := MakeFormatParser(datagenParams.output)
-			outputDir = of.FmtOutput(appName, "", app.GetLongName(), app.GetAttrs())
+			outputDir = of.FmtOutput(appName, appName, app.GetLongName(), app.GetAttrs())
 		}
 		var stringBuilder strings.Builder
 		if app != nil {
@@ -108,6 +108,35 @@ func generateDataModel(pclass ClassLabeler, outmap map[string]string, mod *sysl.
 	}
 }
 
+func generateDataModels(datagenParams *CmdContextParamDatagen,
+	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
+	if !projectManner(model) {
+		// The sysl file is not project manner
+		return generateDataModelsWithPureModule(datagenParams, model, logger)
+	}
+	// Sysl file is project manner
+	return generateDataModelsWithProjectMannerModule(datagenParams, model, logger)
+}
+
+/**
+ * Check if sysl is project manner or not
+ */
+func projectManner(model *sysl.Module) bool {
+	var onlyApp *sysl.Application
+	apps := model.GetApps()
+	if len(apps) == 1 {
+		for _, app := range apps {
+			onlyApp = app
+		}
+	}
+
+	if onlyApp != nil && onlyApp.GetEndpoints() == nil {
+		return false
+	}
+
+	return true
+}
+
 type datamodelCmd struct {
 	plantumlmixin
 	CmdContextParamDatagen
@@ -138,38 +167,9 @@ func (p *datamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *datamodelCmd) Execute(args ExecuteArgs) error {
-	var model = args.Modules[0]
-	var outmap map[string]string
-	var err error
-	if !projectManner(model) {
-		// The sysl file is not project manner
-		outmap, err = GenerateDataModelsView(&p.CmdContextParamDatagen, model, args.Logger)
-	} else {
-		// Sysl file is project manner
-		outmap, err = GenerateDataModels(&p.CmdContextParamDatagen, model, args.Logger)
-	}
-
+	outmap, err := generateDataModels(&p.CmdContextParamDatagen, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
 	}
 	return p.GenerateFromMap(outmap, args.Filesystem)
-}
-
-/**
- * Check if sysl is project manner or not
- */
-func projectManner(model *sysl.Module) bool {
-	var onlyApp *sysl.Application
-	apps := model.GetApps()
-	if len(apps) == 1 {
-		for _, app := range apps {
-			onlyApp = app
-		}
-	}
-
-	if onlyApp != nil && onlyApp.GetEndpoints() == nil {
-		return false
-	}
-
-	return true
 }

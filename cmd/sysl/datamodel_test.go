@@ -29,7 +29,7 @@ func TestGenerateDataDiagFail(t *testing.T) {
 	require.Error(t, err)
 }
 
-func TestDoGenerateDataDiagrams(t *testing.T) {
+func TestDoGenerateDataDiagramsWithProjectMannerModuleCMD(t *testing.T) {
 	args := &dataArgs{
 		modules: "data.sysl",
 		output:  "%(epname).png",
@@ -45,7 +45,7 @@ func TestDoGenerateDataDiagrams(t *testing.T) {
 	assert.Equal(t, selectedCommand, "datamodel")
 }
 
-func TestDoConstructDataDiagrams(t *testing.T) {
+func TestDoConstructDataDiagramsWithProjectMannerModule(t *testing.T) {
 	args := &dataArgs{
 		root:    testDir,
 		modules: "data.sysl",
@@ -81,13 +81,13 @@ func DoConstructDataDiagramsWithParams(
 	if err != nil {
 		return nil, err
 	}
-	return GenerateDataModels(cmdContextParamDatagen, mod, logger)
+	return generateDataModels(cmdContextParamDatagen, mod, logger)
 }
 
-func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
+func TestDoGenerateDataDiagramsWithPureModuleCMD(t *testing.T) {
 	args := &dataArgs{
 		modules: "reviewdatamodelcmd.sysl",
-		output:  "%(appname).png",
+		output:  "%(epname).png",
 	}
 	argsData := []string{"sysl", "data", "-o", args.output, args.modules}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
@@ -99,11 +99,11 @@ func TestDoGenerateDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	assert.Equal(t, selectedCommand, "datamodel")
 }
 
-func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
+func TestDoConstructDataDiagramsWithPureModule(t *testing.T) {
 	args := &dataArgs{
 		root:    testDir,
 		modules: "reviewdatamodelcmd.sysl",
-		output:  "%(appname).png",
+		output:  "%(epname).png",
 		title:   "testdata",
 		expected: map[string]string{
 			"Test.png": filepath.Join(testDir, "review-data-model-cmd.puml"),
@@ -116,7 +116,7 @@ func TestDoConstructDataDiagramsWithDataModelViewCmd(t *testing.T) {
 	if err != nil {
 		result = nil
 	} else {
-		result, err = GenerateDataModelsView(&CmdContextParamDatagen{
+		result, err = generateDataModels(&CmdContextParamDatagen{
 			title:  args.title,
 			output: args.output,
 		}, mod, logger)
