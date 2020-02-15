@@ -1,7 +1,5 @@
 # Contributing
 
-By participating to this project, you agree to abide our [code of conduct](CODE_OF_CONDUCT.md).
-
 We want to make contributing to this project as easy and transparent as possible, whether it's:
 
 - Reporting a bug
