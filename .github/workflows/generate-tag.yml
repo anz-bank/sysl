@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  release:
+  generate-tag:
     name: Generate tag
     runs-on: ubuntu-latest
     steps:
