@@ -30,7 +30,7 @@ Download the pre-compiled binaries from the [releases page](https://github.com/a
 
 ## Go get it
 
-```bash
+```
 # make sure you've installed go in your computer at first
 $ go version
 
@@ -47,11 +47,11 @@ $ sysl help
 
 You can also use it within a [Docker container](https://hub.docker.com/r/anzbank/sysl). To do that, you’ll need to execute something more-or-less like the following:
 
-```bash
+```
 $ docker run --rm anzbank/sysl:latest help
 ```
 
-```bash
+```
 $ docker run --rm \
   -v $PWD:/go/src/github.com/anz-bank/sysl \
   -w /go/src/github.com/anz-bank/sysl \
@@ -67,7 +67,7 @@ Here you have two options:
 1. If you want to contribute to the project, please follow the steps on our [contributing guide](docs/CONTRIBUTING.md).
 2. If just want to build from source for whatever reason, follow the steps bellow:
 
-```bash
+```
 # clone it to create a local copy on your computer
 $ git clone https://github.com/anz-bank/sysl.git
 $ cd sysl
