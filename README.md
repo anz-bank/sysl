@@ -23,66 +23,9 @@ representations over time.
 
 [Sysl by Example](https://github.service.anz/pages/sysl/syslbyexample/docs/byexample/) is a hands-on introduction to Sysl using annotated examples.
 
-
 ## Installation
 
-Here are several approach to get start using Sysl:
-
-### Install the pre-compiled binary
-
-Download the pre-compiled binaries from the [releases page](https://github.com/anz-bank/sysl/releases) and copy to the desired location.
-
-### Go get it
-
-```bash
-# make sure you've installed go in your computer at first
-$ go version
-
-# go get it
-$ go get -u github.com/anz-bank/sysl/cmd/sysl
-
-# check it works
-$ sysl help
-```
-
-### Running with Docker
-
-You can also use it within a [Docker container](https://hub.docker.com/r/anzbank/sysl). To do that, you’ll need to execute something more-or-less like the following:
-
-```bash
-$ docker run --rm anzbank/sysl:latest help
-```
-
-```bash
-$ docker run --rm \
-  -v $PWD:/go/src/github.com/anz-bank/sysl \
-  -w /go/src/github.com/anz-bank/sysl \
-  anzbank/sysl:latest validate -v ./demo/examples/Modules/model_with_deps.sysl
-```
-We have used this [Dockerfile](Dockerfile) to create this image.
-
-
-### Compiling from source
-
-Here you have two options:
-
-1. If you want to contribute to the project, please follow the steps on our [contributing guide](docs/CONTRIBUTING.md).
-2. If just want to build from source for whatever reason, follow the steps bellow:
-
-```bash
-# clone it to create a local copy on your computer
-$ git clone https://github.com/anz-bank/sysl.git
-$ cd sysl
-
-# get dependencies using go modules (needs go 1.11+)
-$ go get ./...
-
-# build
-$ go build -o sysl ./cmd/sysl
-
-# check it works
-$ ./sysl help
-```
+There are several approaches to get start using Sysl. See the [installation page](https://sysl.io/docs/installation/) for details.
 
 ## Documentation
 
