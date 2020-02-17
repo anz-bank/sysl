@@ -1,17 +1,6 @@
 package importer
 
-import (
-	"bytes"
-	"fmt"
-	"sort"
-	"strings"
-
-	"github.com/anz-bank/sysl/pkg/syslutil"
-
-	"github.com/anz-bank/sysl/pkg/parser"
-	"github.com/sirupsen/logrus"
-)
-
+/* FIXME
 type grammarParam struct {
 	grammarInput string
 	grammarName  string
@@ -274,3 +263,4 @@ func (g *Grammar) linkTypes() {
 		linkType(&t, g.types, &cache)
 	}
 }
+*/

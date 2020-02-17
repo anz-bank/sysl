@@ -1,0 +1,13 @@
+grammar -> stmt+;
+stmt    -> COMMENT | prod;
+prod    -> IDENT ":" term+ ";";
+term    -> @:op="|"
+         > @+
+         > atom quant=("*" | "+" | "?")?;
+atom -> STRING | rule=IDENT | "(" term  ")";
+IDENT -> /{[A-Za-z_\.]\w*};
+STRING -> /{\'([^\']*)\'};
+COMMENT -> /{ //.*$
+            | (?s: /\* (?: [^*] | \*+[^*/] ) \*/ )
+            };
+.wrapRE -> /{[\s]*()[\s]*};
