@@ -47,7 +47,7 @@ jobs:
       - name: Build sysl binary via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
-          args: release --snapshot --skip-publish --rm-dist --debug -f .github/workflows/.goreleaser-go-windows.yml
+          args: release --snapshot --skip-publish --rm-dist --debug -f .github/goreleaser_configs/.goreleaser-go-windows.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
