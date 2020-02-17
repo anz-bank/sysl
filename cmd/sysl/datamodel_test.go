@@ -89,7 +89,7 @@ func TestDoGenerateDataDiagramsWithPureModuleCMD(t *testing.T) {
 		modules: "reviewdatamodelcmd.sysl",
 		output:  "%(epname).png",
 	}
-	argsData := []string{"sysl", "data", "-o", args.output, args.modules}
+	argsData := []string{"sysl", "data", "-d", "-o", args.output, args.modules}
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 
 	r := cmdRunner{}
@@ -119,6 +119,7 @@ func TestDoConstructDataDiagramsWithPureModule(t *testing.T) {
 		result, err = generateDataModels(&CmdContextParamDatagen{
 			title:  args.title,
 			output: args.output,
+			direct: true,
 		}, mod, logger)
 	}
 

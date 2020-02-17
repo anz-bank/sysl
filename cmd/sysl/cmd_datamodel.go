@@ -50,8 +50,8 @@ func generateDataModelsWithProjectMannerModule(datagenParams *CmdContextParamDat
 /**
  * It is added to help reviewing generated data model with sysl
  * file produced by command import. Generate data model diagrams using the following command:
- * sysl data      --root=/Users/guest/data -t Test -o Test.png Test
- * sysl datamodel --root=/Users/guest/data -t Test -o Test.png Test.sysl
+ * sysl data      -d --root=/Users/guest/data -t Test -o Test.png Test
+ * sysl datamodel -d --root=/Users/guest/data -t Test -o Test.png Test.sysl
  */
 func generateDataModelsWithPureModule(datagenParams *CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
@@ -110,31 +110,12 @@ func generateDataModel(pclass ClassLabeler, outmap map[string]string, mod *sysl.
 
 func generateDataModels(datagenParams *CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
-	if !projectManner(model) {
+	if datagenParams.direct {
 		// The sysl file is not project manner
 		return generateDataModelsWithPureModule(datagenParams, model, logger)
 	}
 	// Sysl file is project manner
 	return generateDataModelsWithProjectMannerModule(datagenParams, model, logger)
-}
-
-/**
- * Check if sysl is project manner or not
- */
-func projectManner(model *sysl.Module) bool {
-	var onlyApp *sysl.Application
-	apps := model.GetApps()
-	if len(apps) == 1 {
-		for _, app := range apps {
-			onlyApp = app
-		}
-	}
-
-	if onlyApp != nil && onlyApp.GetEndpoints() == nil {
-		return false
-	}
-
-	return true
 }
 
 type datamodelCmd struct {
@@ -152,14 +133,15 @@ func (p *datamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",
 	).Default("%(classname)").StringVar(&p.classFormat)
 
-	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
+	cmd.Flag("title", "Diagram title").Short('t').StringVar(&p.title)
 
 	p.AddFlag(cmd)
 
 	cmd.Flag("output",
-		"output file (default: %(epname).png)",
+		"Output file (default: %(epname).png)",
 	).Default("%(epname).png").Short('o').StringVar(&p.output)
-	cmd.Flag("project", "project pseudo-app to render").Short('j').StringVar(&p.project)
+	cmd.Flag("project", "Project pseudo-app to render").Short('j').StringVar(&p.project)
+	cmd.Flag("direct", "Process data model directly without project manner").Short('d').BoolVar(&p.direct)
 	cmd.Flag("filter", "Only generate diagrams whose names match a pattern").Short('f').StringVar(&p.filter)
 
 	EnsureFlagsNonEmpty(cmd)
