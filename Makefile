@@ -58,7 +58,7 @@ build: ## Build sysl into the ./dist folder
 deps: ## Download the project dependencies with `go get`
 	go mod tidy
 ifneq ("$(shell git status --porcelain)", "")
-	## GoReleaser has to make sure go.mod is up to date before release sysl binary. 
+	## GoReleaser has to make sure go.mod is up to date before release sysl binary.
 	## Keep everyone remembering to update go.mod to avoid release failure.
 	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff)"
 	exit 1
@@ -91,10 +91,10 @@ pkg/grammar/sysl_lexer.go: antlr
 	git apply pkg/grammar/antlr4-datarace-fix-lexer.go.diff
 
 
-grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go pkg/parser/grammar.pb.go ## Regenerate the grammars
+grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go pkg/ebnfparser/ebnf.go ## Regenerate the grammars
 
-pkg/parser/grammar.pb.go: pkg/parser/grammar.proto
-	protoc -I pkg/parser -I $(GOPATH)/src --go_out=pkg/parser grammar.proto
+pkg/ebnfparser/ebnf.go: pkg/ebnfparser/ebnf.wbnf
+	go generate ./pkg/ebnfparser
 
 pkg/sysl/sysl.pb.go: pkg/sysl/sysl.proto
 	protoc -I pkg/sysl -I $(GOPATH)/src --go_out=pkg/sysl/ sysl.proto
