@@ -16,7 +16,6 @@ func (m *modCmd) Name() string       { return "mod" }
 func (m *modCmd) MaxSyslModule() int { return 0 }
 
 func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	//opts := []string{"init"}
 	cmd := app.Command(m.Name(), "Configure sysl module system")
 	initCmd := cmd.Command("init", "sysl module init command")
 	initCmd.Arg("mod name", "Name of sysl module").Required().StringVar(&m.modName)
