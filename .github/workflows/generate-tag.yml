@@ -36,12 +36,12 @@ jobs:
           args: -u anz-bank -p sysl --output ${{ format('CHANGELOG/CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }} --header-label="${{ format('# CHANGELOG-{0}.{1}', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}" --since-tag=${{ steps.generate_tag.outputs.last_tag }} --no-unreleased
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Rewrite changelog for new patch version.
+      
       - name: Set since tag
         if: steps.generate_tag.outputs.tag_generated == 1 && steps.generate_tag.outputs.bump_ver == 'patch'
         run: echo ::set-env name=since_tag::$(git describe --tags --abbrev=0 ${{ format('v{0}.{1}.0^', steps.generate_tag.outputs.last_major, steps.generate_tag.outputs.last_minor) }})
 
+      # Rewrite changelog for new patch version.
       - name: Rewrite changelog
         if: env.since_tag != ''
         uses: docker://ferrarimarco/github-changelog-generator:latest
@@ -50,16 +50,13 @@ jobs:
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit files
+      - name: Create CHANGELOG generated PR
         if: steps.generate_tag.outputs.tag_generated == 1
-        run: |
-          git config --local user.email "syslbot@anz.com"
-          git config --local user.name "SyslBot"
-          git add .
-          git commit -m "docs: generate ${{ format('CHANGELOG/CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}" && echo ::set-env name=can_push::1 || echo "No changes to CHANGELOG"
-
-      - name: Push changes
-        if: env.can_push == 1
-        uses: ad-m/github-push-action@master
+        uses: peter-evans/create-pull-request@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ format('changelog/v{0}.{1}', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}
+          branch-suffix: short-commit-hash
+          base: master
+          commit-message: "docs: generate ${{ format('CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}"
+          title: "docs: generate ${{ format('CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}"
