@@ -1,25 +1,5 @@
 # CHANGELOG-0.5
 
-## [Unreleased](https://github.com/anz-bank/sysl/tree/HEAD)
-
-[Full Changelog](https://github.com/anz-bank/sysl/compare/v0.5.2...HEAD)
-
-**Closed issues:**
-
-- Update all GitHub Actions workflow files [\#572](https://github.com/anz-bank/sysl/issues/572)
-- Update release documentation [\#536](https://github.com/anz-bank/sysl/issues/536)
-- Alias bug [\#473](https://github.com/anz-bank/sysl/issues/473)
-- Better XSD import handling [\#369](https://github.com/anz-bank/sysl/issues/369)
-
-**Merged pull requests:**
-
-- Remove spurious logging [\#591](https://github.com/anz-bank/sysl/pull/591) ([camh-anz](https://github.com/camh-anz))
-- Fix the importer so the import mode is set in the nested loader [\#589](https://github.com/anz-bank/sysl/pull/589) ([anz-gordonj7](https://github.com/anz-gordonj7))
-- fix: remove misadded file [\#585](https://github.com/anz-bank/sysl/pull/585) ([ChloePlanet](https://github.com/ChloePlanet))
-- Update GRPC proto generation tutorial [\#577](https://github.com/anz-bank/sysl/pull/577) ([joshcarp](https://github.com/joshcarp))
-- Update CI workflows to use GoReleaser [\#573](https://github.com/anz-bank/sysl/pull/573) ([ChloePlanet](https://github.com/ChloePlanet))
-- update releasing.md [\#571](https://github.com/anz-bank/sysl/pull/571) ([ChloePlanet](https://github.com/ChloePlanet))
-
 ## [v0.5.2](https://github.com/anz-bank/sysl/tree/v0.5.2) (2020-02-06)
 
 [Full Changelog](https://github.com/anz-bank/sysl/compare/v0.5.1...v0.5.2)
