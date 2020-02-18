@@ -11,7 +11,7 @@ Sysl is using [GitHub Actions](https://help.github.com/en/actions/getting-starte
 	1. Generate and push the respective version tag according to the commit message
 	2. Auto-generate the related CHANGELOG
 	3. Commit and push CHANGELOG's changes to a new branch and create a PR to merge the CHANGELOG file
-	4. _The PR be can be auto-approved and auto-merged. But it isn't right now. The thought is letting others notice that there's a new release and maybe tidy the CHANGELOG if they want_
+	4. _The PR be can be auto-approved and auto-merged. But it isn't right now. The idea is to let others notice that there's a new release and maybe tidy the CHANGELOG if they want_
 	> Note: This action will not bump the tag if the HEAD commit has already been tagged. If two or more keywords are present, the highest-ranking one will take precedence. 
 	
 	> We follow [Semver](https://semver.org/) for versioning.
