@@ -7,7 +7,7 @@ Sysl is using [GitHub Actions](https://help.github.com/en/actions/getting-starte
 &nbsp;
 ### Steps to publish new release
 1. Anyone who wants to publish a new release has to create a pull request which needs approvement before is merged.
-2. A merged PR with commit message contains `#major`, `#minor` or `#patch` will trigger the [Generate-Tag workflow](https://github.com/anz-bank/sysl/blob/master/.github/workflows/generate-tag.yml) to generate and push the respective version tag. Then auto-generate the related CHANGELOG.
+2. A merged PR with commit message contains `#major`, `#minor` or `#patch` will trigger the [Generate-Tag workflow](https://github.com/anz-bank/sysl/blob/master/.github/workflows/generate-tag.yml) to generate and push the respective version tag. Afterwards, it will auto-generate the related CHANGELOG and create a PR for the changes.
 	> Note: This action will not bump the tag if the HEAD commit has already been tagged. If two or more keywords are present, the highest-ranking one will take precedence. 
 	
 	> We follow [Semver](https://semver.org/) for versioning.
