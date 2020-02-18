@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/mod"
@@ -10,23 +9,26 @@ import (
 )
 
 type modCmd struct {
-	subcommand string
+	modName string
 }
 
 func (m *modCmd) Name() string       { return "mod" }
 func (m *modCmd) MaxSyslModule() int { return 0 }
 
 func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	opts := []string{"init"}
+	//opts := []string{"init"}
 	cmd := app.Command(m.Name(), "Configure sysl module system")
-	cmd.Arg("command", fmt.Sprintf("commands: [%s]", strings.Join(opts, ","))).Required().EnumVar(&m.subcommand, opts...)
+	initCmd := cmd.Command("init", "sysl module init command")
+	initCmd.Arg("mod name", "Name of sysl module").Required().StringVar(&m.modName)
 
 	return cmd
 }
 
 func (m *modCmd) Execute(args ExecuteArgs) error {
-	if m.subcommand == "init" {
-		return mod.SyslModInit(args.Logger)
+	// subcommands are somewhat funky using the cmd_runner
+	subcommand := strings.Split(args.Command, " ")[1]
+	if subcommand == "init" {
+		return mod.SyslModInit(m.modName, args.Logger)
 	}
 
 	return errors.New("command not recognized")

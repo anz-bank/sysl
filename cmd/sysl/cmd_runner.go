@@ -21,8 +21,10 @@ type cmdRunner struct {
 }
 
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
-	if cmd, ok := r.commands[which]; ok {
-		if cmd.Name() == which {
+	// splitter to parse main command from subcommand
+	mainCommand := strings.Split(which, " ")[0]
+	if cmd, ok := r.commands[mainCommand]; ok {
+		if cmd.Name() == mainCommand {
 			var module *sysl.Module
 			var err error
 			var appName string
@@ -42,7 +44,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 				logger.Error("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 			}
-			return cmd.Execute(ExecuteArgs{Modules: mods, Filesystem: fs,
+			return cmd.Execute(ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
 				Logger: logger, DefaultAppName: appName})
 		}
 	}
