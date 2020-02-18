@@ -25,7 +25,7 @@ func TestSyslModInit(t *testing.T) {
 	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 
-	err := SyslModInit(logger)
+	err := SyslModInit("test", logger)
 	assert.NoError(t, err)
 
 	removeFile(t, fs, "go.sum")
@@ -40,10 +40,10 @@ func TestSyslModInitAlreadyExists(t *testing.T) {
 	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 
-	err := SyslModInit(logger)
+	err := SyslModInit("test", logger)
 	assert.NoError(t, err)
 
-	err = SyslModInit(logger)
+	err = SyslModInit("test", logger)
 	assert.Error(t, err)
 
 	removeFile(t, fs, "go.sum")
