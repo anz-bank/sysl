@@ -78,6 +78,7 @@ type CmdContextParamDatagen struct {
 	title       string
 	output      string
 	project     string
+	direct      bool
 	filter      string
 	classFormat string
 }
