@@ -1,8 +1,9 @@
 package mod
 
 import (
+	"context"
 	"fmt"
-	"os/exec"
+	"io/ioutil"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -13,11 +14,10 @@ import (
 // we hijack this command and use go.mod and possibly go.sum to determine
 // whether the current folder/project is a sysl module
 func SyslModInit(modName string, logger *logrus.Logger) error {
-	out, err := exec.Command("go", "mod", "init", modName).CombinedOutput()
+	err := runGo(context.Background(), ioutil.Discard, "mod", "init", modName)
 	if err != nil {
 		return errors.New(fmt.Sprintf("go mod init failed: %s", err.Error()))
 	}
 
-	logger.Info(string(out))
 	return nil
 }
