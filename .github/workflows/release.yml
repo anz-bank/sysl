@@ -10,7 +10,6 @@ jobs:
   release-sysl:
     name: Release Sysl
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
     steps:
       - name: Set up Go 1.13
         uses: actions/setup-go@v1
