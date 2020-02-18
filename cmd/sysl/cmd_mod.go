@@ -21,7 +21,7 @@ func (m *modCmd) MaxSyslModule() int { return 0 }
 func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(m.Name(), "provides access to operations on Sysl modules")
 	initCmd = cmd.Command("init", "initializes and writes a new go.mod to the current directory")
-	initCmd.Arg("name", "path of current sysl module").StringVar(&m.modName)
+	initCmd.Arg("name", "name of the sysl module").StringVar(&m.modName)
 
 	return cmd
 }
