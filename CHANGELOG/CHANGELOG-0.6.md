@@ -1,5 +1,13 @@
 # CHANGELOG-0.6
 
+## [v0.6.1](https://github.com/anz-bank/sysl/tree/v0.6.1) (2020-02-18)
+
+[Full Changelog](https://github.com/anz-bank/sysl/compare/v0.6.0...v0.6.1)
+
+**Merged pull requests:**
+
+- docs: generate CHANGELOG-0.6.md [\#616](https://github.com/anz-bank/sysl/pull/616) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v0.6.0](https://github.com/anz-bank/sysl/tree/v0.6.0) (2020-02-18)
 
 [Full Changelog](https://github.com/anz-bank/sysl/compare/v0.5.3...v0.6.0)
