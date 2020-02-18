@@ -60,6 +60,29 @@ Segs = [[
 ],
 [
   
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">swagger</span><span class="p">:</span> <span class="s">&#34;2.0&#34;</span>
+<span class="nx">info</span><span class="p">:</span>
+  <span class="nx">title</span><span class="p">:</span> <span class="nx">Simple</span>
+<span class="nx">paths</span><span class="p">:</span>
+  <span class="o">/</span><span class="nx">test</span><span class="p">:</span>
+    <span class="nx">get</span><span class="p">:</span>
+      <span class="nx">responses</span><span class="p">:</span>
+        <span class="mi">200</span><span class="p">:</span>
+          <span class="nx">description</span><span class="p">:</span> <span class="mi">200</span> <span class="nx">OK</span>
+          <span class="nx">schema</span><span class="p">:</span>
+            <span class="err">$</span><span class="nx">ref</span><span class="p">:</span> <span class="err">&#39;#</span><span class="o">/</span><span class="nx">definitions</span><span class="o">/</span><span class="nx">SimpleObj</span><span class="err">&#39;</span>
+<span class="nx">definitions</span><span class="p">:</span>
+  <span class="nx">SimpleObj</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma">    <span class="kd">type</span><span class="p">:</span> <span class="nx">object</span>
+    <span class="nx">properties</span><span class="p">:</span>
+      <span class="nx">name</span><span class="p">:</span>
+        <span class="kd">type</span><span class="p">:</span> <span class="kt">string</span></pre>""",DocsRendered= """""",Image = ""},
+
+
+],
+[
+  
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="kn">import</span> <span class="nx">deps</span></pre>""",DocsRendered= """<p>To import a sysl file from the same folder</p>
 """,Image = ""},

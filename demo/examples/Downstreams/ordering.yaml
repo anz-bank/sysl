@@ -1,0 +1,9 @@
+# This file specifies the order that the documentation is rendered in
+Code Generation:
+  - intro.md
+  - simple.sysl
+  - generate.sh
+  - implementation/methods.go
+  - implementation/gencallback.go
+  - main.go
+  - test.sh

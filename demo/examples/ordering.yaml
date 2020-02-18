@@ -11,13 +11,9 @@ Diagrams:
   - Data Model Diagrams
 Web protocols:
   - Rest and HTTP
+Code Generation:
+  - Code-Generation
+  - Downstreams
+  - Calling-Dependencies
 # TODO: The rest of these
 #   - grpc and proto
-# Sysl Transformation Language:
-#   - Code generation
-#   - Transformation scripts
-#   - views
-#   - 
-
-
-  

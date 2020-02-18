@@ -1,0 +1,45 @@
+# simple.sysl
+
+# Most of this is the same as the "Code-Generation" tutorial
+simple[package="simple"]:
+    @basePath = "simple"
+
+    # Wrap the types in sysl types
+    !type Stuff:
+        Content <: string:
+            @json_tag = "Content"  
+
+    # Endpoint that calls a dependency
+    /foobar:
+        GET:
+            # Call a downstream service with the call syntax
+            # Here we use {id} and this will show up in our request object
+            mydependency <- GET /todos/{id}
+
+            # Always make sure that the return statement is in the form `return <varname> <: <type>`
+            return ok <: mydependency.todosResponse
+
+# As this is a third party dependency, this sysl should be imported via the "sysl import" command
+mydependency[package="mydependency"]:
+    @version = "1.0"
+    @host = "jsonplaceholder.typicode.com"
+
+    !type todosResponse:
+        userId <: int:
+            @json_tag = "userId"
+        id <: int:
+            @json_tag = "id"
+        title <: string:
+            @json_tag = "title"
+        completed <: bool:
+            @json_tag = "completed"
+    # Here we specify our endpoint that lives at jsonplaceholder.typicode.com/todos as an example of a external service
+    /todos/{id<:int}:
+
+        # Here we specify that the "mediatype" (Content-Type) is "application/json" (see https://github.com/anz-bank/sysl/issues/545)
+        # and that the response is a "body" type
+        GET[mediatype="application/json", ~body]:
+            return ok <:  todosResponse
+
+
+    

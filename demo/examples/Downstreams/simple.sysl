@@ -1,0 +1,31 @@
+# simple.sysl
+
+# Define an application and specify the `package` attribute and the @basePath attribute
+simple[package="simple"]:
+    @basePath = "simple"
+
+    # Wrap the types in sysl types
+    !type Stuff:
+        Content <: string:
+            @json_tag = "Content"  
+
+
+    # First endpoint returns a Stuff type
+    /stuff:
+        GET:
+            return ok <: Stuff
+    # Second endpoint returns a Foo type
+    /foobar:
+        GET:
+            # Call a downstream service
+            downstream <- GET /Bar
+            return ok <: downstream.Foo
+
+# Definition of a downstream service
+downstream[package="downstream"]:
+    !type Foo:
+        Content <: int
+    /Bar:
+        GET:
+            return ok <: Foo
+    
