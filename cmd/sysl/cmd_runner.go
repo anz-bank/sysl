@@ -72,6 +72,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&envCmd{},
 		&templateCmd{},
 		&modCmd{},
+		&testRigCmd{},
 	}
 	r.commands = map[string]cmdutils.Command{}
 
