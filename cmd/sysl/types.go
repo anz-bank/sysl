@@ -90,6 +90,11 @@ type CmdDatabaseScriptParams struct {
 	dbType    string
 }
 
+type CmdContextParamTestRig struct {
+	varFileName string
+	appNames string
+}
+
 type ExecuteArgs struct {
 	Command        string
 	Modules        []*sysl.Module
