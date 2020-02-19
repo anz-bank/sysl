@@ -16,6 +16,8 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+const syslRootMarker = ".sysl"
+
 type projectConfiguration struct {
 	module, root string
 	rootIsFound  bool

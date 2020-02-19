@@ -91,6 +91,7 @@ type CmdDatabaseScriptParams struct {
 }
 
 type ExecuteArgs struct {
+	Command        string
 	Modules        []*sysl.Module
 	Filesystem     afero.Fs
 	Logger         *logrus.Logger
