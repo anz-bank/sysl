@@ -210,23 +210,28 @@ func (v *DataModelView) drawTuple(
 				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
 				relation = `0..*`
 			default:
-				path = attrType.GetTypeRef().GetRef().Path
-				collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, path[0])
-				relation = `1..1 `
+				if attrType.GetTypeRef() != nil {
+					path = attrType.GetTypeRef().GetRef().Path
+					collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, path[0])
+					relation = `1..1 `
+				}
 			}
-			v.stringBuilder.WriteString(collectionString)
-			if !isPrimitiveList {
-				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
-					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
-						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Entity,
-						Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Relationship,
-						Count:        relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Count + 1,
-					}
-				} else {
-					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
-						Entity:       v.UniqueVarForAppName(path[0]),
-						Relationship: relation,
-						Count:        1,
+
+			if path != nil {
+				v.stringBuilder.WriteString(collectionString)
+				if !isPrimitiveList {
+					if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
+						relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
+							Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Entity,
+							Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Relationship,
+							Count:        relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Count + 1,
+						}
+					} else {
+						relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
+							Entity:       v.UniqueVarForAppName(path[0]),
+							Relationship: relation,
+							Count:        1,
+						}
 					}
 				}
 			}
