@@ -19,8 +19,20 @@ func LoadXSDText(args OutputData, text string, logger *logrus.Logger) (out strin
 		return "", err
 	}
 
+
+
+
 	types := TypeList{}
 	for _, schema := range specs {
+		keys := make([]xml.Name, 0, len(schema.Types))
+		for key := range schema.Types {
+			keys = append(keys, key)
+		}
+		for _, name := range keys {
+			data := schema.Types[name]
+			fmt.Println(data)
+		}
+
 		schemaTypes := loadSchemaTypes(schema, logger)
 		types.Add(schemaTypes.Items()...)
 	}
