@@ -217,21 +217,22 @@ func (v *DataModelView) drawTuple(
 				}
 			}
 
-			if path != nil {
-				v.stringBuilder.WriteString(collectionString)
-				if !isPrimitiveList {
-					if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
-						relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
-							Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Entity,
-							Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Relationship,
-							Count:        relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Count + 1,
-						}
-					} else {
-						relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
-							Entity:       v.UniqueVarForAppName(path[0]),
-							Relationship: relation,
-							Count:        1,
-						}
+			if path == nil {
+				continue
+			}
+			v.stringBuilder.WriteString(collectionString)
+			if !isPrimitiveList {
+				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
+					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
+						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Entity,
+						Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Relationship,
+						Count:        relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Count + 1,
+					}
+				} else {
+					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
+						Entity:       v.UniqueVarForAppName(path[0]),
+						Relationship: relation,
+						Count:        1,
 					}
 				}
 			}
