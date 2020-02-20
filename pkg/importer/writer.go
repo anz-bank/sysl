@@ -170,17 +170,19 @@ func buildResponseContentString(responses []Response) string {
 		return ""
 	}
 
-	contentsString := " [responses=["
+	contentsString := " [response="
 	responses = removeResponseDuplicates(responses)
+	response := ""
 	for _, val := range responses {
 		if val.Content.contentType != "" && val.Content.name != "" {
-			contentsString = fmt.Sprintf("%s[%s\", \"%s\"], ", contentsString,
-				val.Content.contentType[10:len(val.Content.contentType)-1], val.Content.name)
+			if response == "" {
+				response = val.Content.contentType[11 : len(val.Content.contentType)-1]
+			}
+			// Conflict between multiple return types need to be handled when multiple encodings are allowed
 		}
 	}
-	contentsString = contentsString[:len(contentsString)-2]
-	contentsString += "]]"
-	if contentsString == " [responses]]" {
+	contentsString += "\"" + response + "\"" + "]"
+	if contentsString == " [response=\"\"]" {
 		return ""
 	}
 	return contentsString

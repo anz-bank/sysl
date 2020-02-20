@@ -33,20 +33,9 @@ apps: <
           >
         >
         attrs: <
-          key: "responses"
+          key: "response"
           value: <
-            a: <
-              elt: <
-                a: <
-                  elt: <
-                    s: "application/json"
-                  >
-                  elt: <
-                    s: "ok"
-                  >
-                >
-              >
-            >
+            s: "application/json"
           >
         >
         stmt: <

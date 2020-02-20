@@ -21,7 +21,7 @@ testapp "Simple" [package="package_foo"]:
         | facilisis massa, vitae feugiat felis dui ac ipsum.
 
     /test:
-        GET [responses=[["application/json", "ok"]]]:
+        GET [response="application/json"]:
             | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             | Vestibulum hendrerit velit sed ultrices ornare. Sed viverra
             | sagittis laoreet. Aliquam sodales sapien in nisl euismod, nec

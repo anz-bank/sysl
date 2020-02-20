@@ -9,7 +9,7 @@ testapp "Simple" [package="package_foo"]:
         | No description.
 
     /test:
-        POST (AdvObjRequest <: AdvObj [mediatype="application/json", ~body], key <: int [~header, ~optional, name="key"], min_date <: date [~header, ~required, name="min_date"]) [responses=[["application/json", "ok"]]]:
+        POST (AdvObjRequest <: AdvObj [mediatype="application/json", ~body], key <: int [~header, ~optional, name="key"], min_date <: date [~header, ~required, name="min_date"]) [response="application/json"]:
             | No description.
             return ok <: AdvObj
 
