@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/anz-bank/sysl/pkg/config"
 	"github.com/anz-bank/sysl/pkg/eval"
-	"github.com/anz-bank/sysl/pkg/setting"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/validate"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -45,8 +45,9 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *codegenCmd) Execute(args ExecuteArgs) error {
-	setting := setting.ReadCodeGenDefaultParamsSetting()
-	fmt.Println(setting)
+	config := config.ReadCodeGenDefaultParamsConfig()
+	p.grammar = config.Grammar
+	p.transform = config.Transform
 
 	if p.validateOnly {
 		return validate.DoValidate(validate.Params{
