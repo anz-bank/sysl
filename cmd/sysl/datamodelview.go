@@ -217,7 +217,6 @@ func (v *DataModelView) drawTuple(
 				collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, path[0])
 				relation = `1..1 `
 			}
-
 			v.stringBuilder.WriteString(collectionString)
 			if !isPrimitiveList {
 				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
