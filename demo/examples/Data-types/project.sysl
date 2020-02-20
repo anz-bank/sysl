@@ -1,17 +1,16 @@
-# Our first program will make a simple "Hello world" application with two endpoints
+# Our first program will make a simple "Hello world" application with two endpoints.
 
-# Specify an application called `HelloWorld`
+# Specify an application called `HelloWorld`.
 HelloWorld:
-    # Specify composite types with "!type" followed by type fields
+    # Specify composite types with "!type" followed by type fields.
     !type Request:
         userId <: int
         id <: int
         title <: string
         completed <: bool
-        # specify mandatory fields by using "?" at the end of the datatype 
+        # Specify optional fields by using "?" at the end of the data type.
         something <: string?
 
-    
     !type ErrorResponse:
         status <: string
     # Use the `!alias` keyword to alias to another identifier 
