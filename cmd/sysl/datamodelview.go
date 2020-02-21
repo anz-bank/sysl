@@ -209,13 +209,12 @@ func (v *DataModelView) drawTuple(
 				}
 				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
 				relation = `0..*`
-			default:
-				if attrType.GetTypeRef() == nil {
-					continue
-				}
+			case attrType.GetTypeRef() != nil:
 				path = attrType.GetTypeRef().GetRef().Path
 				collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, path[0])
 				relation = `1..1 `
+			default:
+				continue
 			}
 			v.stringBuilder.WriteString(collectionString)
 			if !isPrimitiveList {
