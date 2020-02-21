@@ -74,6 +74,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	if def.mode == "" {
 		def.mode = guessMode(def.filename)
 	}
+	od.Mode = def.mode
 
 	switch def.mode {
 	case "~sysl":

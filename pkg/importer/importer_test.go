@@ -87,6 +87,7 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 	})
 }
 
+/*
 func TestLoadGrammarFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadGrammarFromTestFiles",
@@ -96,3 +97,4 @@ func TestLoadGrammarFromTestFiles(t *testing.T) {
 		fn:            LoadGrammar,
 	})
 }
+*/

@@ -1,13 +1,6 @@
 package importer
 
-import (
-	"testing"
-
-	"github.com/stretchr/testify/require"
-
-	"github.com/anz-bank/sysl/pkg/parser"
-)
-
+/*
 func Test_SimpleChoiceConversion(t *testing.T) {
 	text := `
           s: a;
@@ -63,3 +56,4 @@ func Test_SimpleChoiceConversionComplicated(t *testing.T) {
 	require.Len(t, rp.types.Items(), 3)
 	require.EqualValues(t, []string{"__s_01", "__s_02", "a", "b", "c"}, rp.deps.ToSortedSlice())
 }
+*/
