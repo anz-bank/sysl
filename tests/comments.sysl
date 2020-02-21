@@ -1,0 +1,15 @@
+Foo:
+
+    # Comments on endpoint foo
+    /foo:
+
+        # POST endpoint foo
+        POST (newPost <: string [~body]):
+            return string
+        # GET endpoint foo
+        GET (newPost <: string):
+            return string
+
+    /bar: # Comments on endpoint bar
+    	GET (newBar <: string):
+            return string
