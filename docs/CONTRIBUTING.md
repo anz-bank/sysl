@@ -62,6 +62,8 @@ We use [Github Flow](https://guides.github.com/introduction/flow/index.html), so
 3. Git push and open a pull request against the master branch(attach **WIP** tag when the PR is still work in progress).
 4. Merge it after it's reviewed and approved!
 
+> The codebase structure refers to [this standard](https://github.com/golang-standards/project-layout)
+
 > Commit messages should be well formatted, and to make that "standardized", we are using Conventional Commits.
 You can follow the documentation on [their website](https://www.conventionalcommits.org).
 
