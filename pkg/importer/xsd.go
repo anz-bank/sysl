@@ -19,9 +19,6 @@ func LoadXSDText(args OutputData, text string, logger *logrus.Logger) (out strin
 		return "", err
 	}
 
-
-
-
 	types := TypeList{}
 	for _, schema := range specs {
 		keys := make([]xml.Name, 0, len(schema.Types))
@@ -91,6 +88,22 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 		data := schema.Types[name]
 		if name.Local == "_self" {
 			rootType := data.(*xsd.ComplexType)
+			if rootType.Elements == nil {
+				/**
+					Some xsd doesn't have element tag is around tag complexType or simpleType, so it can't get _self's elements
+					with parsing of aqwari.net/xml/xsd. For example:
+					<?xml version="1.0"?>
+					<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+						<xs:complexType name="User">
+				  			<xs:sequence>
+				    			<xs:element name="id" type="xs:string"/>
+				    			<xs:element name="name" type="xs:string"/>
+				  			</xs:sequence>
+						</xs:complexType>
+					</xs:schema>
+				*/
+				continue
+			}
 			data = rootType.Elements[0].Type
 			t := findType(data, &types)
 			if t == nil {
