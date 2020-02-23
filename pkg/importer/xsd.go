@@ -243,65 +243,19 @@ func makeXsdBuiltinType(from xsd.Builtin, knownTypes *TypeList) Type {
 /*
  * Sysl doesn't support extend syntax, so merges its all ansestor's elements to itself.
  */
-// func mergeAnsestorsElements(item xsd.Type) {
-// 	if item == nil {
-// 		return
-// 	}
-
-// 	switch concreteItem := item.(type) {
-// 	case *xsd.ComplexType:
-// 		parent := concreteItem.Base
-// 		if parent == nil || parent == xsd.AnyType {
-// 			return
-// 		}
-// 		for concreteParent, ok := parent.(*xsd.ComplexType); ok; {
-// 			concreteItem.Elements = append(concreteParent.Elements, concreteItem.Elements...)
-// 			parent = concreteParent.Base
-// 			if parent == nil || parent == xsd.AnyType {
-// 				return
-// 			}
-// 		}
-// 	case *xsd.SimpleType:
-
-// 	default:
-// 		return
-// 	}
-// }
-
-func getAllElements(item xsd.Type) []xsd.Element {
-	var els []xsd.Element
-	if item == nil {
+func getAllElements(current xsd.Type) []xsd.Element {
+	if current == nil {
 		return nil
 	}
 
-	switch concreteItem := item.(type) {
-	case *xsd.ComplexType:
-		parent := concreteItem.Base
+	if concreteCurrent, cok := current.(*xsd.ComplexType); cok {
+		parent := concreteCurrent.Base
 		if parent == nil || parent == xsd.AnyType {
-			els = append(els, concreteItem.Elements...)
-		} else {
-			concreteParent, ok := parent.(*xsd.ComplexType)
-			if ok {
-				els = append(els, concreteParent.Elements...)
-				parent = concreteParent.Base
-				if parent == nil || parent == xsd.AnyType {
-					els = append(els, concreteItem.Elements...)
-					break
-				} else {
-					concreteParent1, ok1 := parent.(*xsd.ComplexType)
-					if ok1 {
-						els = append(els, concreteParent1.Elements...)
-						parent = concreteParent1.Base
-						if parent == nil || parent == xsd.AnyType {
-							els = append(els, concreteItem.Elements...)
-							break
-						}
-					}
-				}
-			}
+			return concreteCurrent.Elements
+		} else if concreteParent, pok := parent.(*xsd.ComplexType); pok {
+			return append(getAllElements(concreteParent), concreteCurrent.Elements...)
 		}
-	default:
 	}
 
-	return els
+	return nil
 }
