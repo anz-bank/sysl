@@ -77,6 +77,7 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 
 	for _, name := range keys {
 		data := schema.Types[name]
+		// mergeAnsestorsElements(data)
 		if name.Local == "_self" {
 			rootType := data.(*xsd.ComplexType)
 			if rootType.Elements == nil {
@@ -174,13 +175,14 @@ func makeComplexType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus
 		name: from.Name.Local,
 	}
 
-	for _, child := range from.Elements {
+	for _, child := range getAllElements(from) {
 		c := createChildItem(child.Name, child.Type, false, child.Optional, child.Plural)
 		if c.SizeSpec == nil {
 			c.SizeSpec = makeSizeSpecFromAttrs(child.Attr)
 		}
 		item.Properties = append(item.Properties, c)
 	}
+
 	for _, child := range from.Attributes {
 		c := createChildItem(child.Name, child.Type, true, child.Optional, child.Plural)
 		if c.SizeSpec == nil {
@@ -236,4 +238,70 @@ func makeXsdBuiltinType(from xsd.Builtin, knownTypes *TypeList) Type {
 	}
 	t, _ := knownTypes.Find(typeStr)
 	return t
+}
+
+/*
+ * Sysl doesn't support extend syntax, so merges its all ansestor's elements to itself.
+ */
+// func mergeAnsestorsElements(item xsd.Type) {
+// 	if item == nil {
+// 		return
+// 	}
+
+// 	switch concreteItem := item.(type) {
+// 	case *xsd.ComplexType:
+// 		parent := concreteItem.Base
+// 		if parent == nil || parent == xsd.AnyType {
+// 			return
+// 		}
+// 		for concreteParent, ok := parent.(*xsd.ComplexType); ok; {
+// 			concreteItem.Elements = append(concreteParent.Elements, concreteItem.Elements...)
+// 			parent = concreteParent.Base
+// 			if parent == nil || parent == xsd.AnyType {
+// 				return
+// 			}
+// 		}
+// 	case *xsd.SimpleType:
+
+// 	default:
+// 		return
+// 	}
+// }
+
+func getAllElements(item xsd.Type) []xsd.Element {
+	var els []xsd.Element
+	if item == nil {
+		return nil
+	}
+
+	switch concreteItem := item.(type) {
+	case *xsd.ComplexType:
+		parent := concreteItem.Base
+		if parent == nil || parent == xsd.AnyType {
+			els = append(els, concreteItem.Elements...)
+		} else {
+			concreteParent, ok := parent.(*xsd.ComplexType)
+			if ok {
+				els = append(els, concreteParent.Elements...)
+				parent = concreteParent.Base
+				if parent == nil || parent == xsd.AnyType {
+					els = append(els, concreteItem.Elements...)
+					break
+				} else {
+					concreteParent1, ok1 := parent.(*xsd.ComplexType)
+					if ok1 {
+						els = append(els, concreteParent1.Elements...)
+						parent = concreteParent1.Base
+						if parent == nil || parent == xsd.AnyType {
+							els = append(els, concreteItem.Elements...)
+							break
+						}
+					}
+				}
+			}
+		}
+	default:
+	}
+
+	return els
 }
