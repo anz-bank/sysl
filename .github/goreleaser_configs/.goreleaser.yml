@@ -27,16 +27,13 @@ build:
   goarch:
     - amd64
     - 386
-    - arm
-    - arm64
   goarm:
     - 7
 
 dockers:
   - image_templates:
-      - "docker.io/anzbank/sysl:{{ .Tag }}"
-      - "docker.io/anzbank/sysl:v{{ .Major }}.{{ .Minor }}"
-      - "docker.io/anzbank/sysl:latest"
+    - "docker.io/anzbank/sysl:latest"
+    - "docker.io/anzbank/sysl:{{ .Version }}"
 
 archives:
 - id: "sysl"
@@ -48,8 +45,6 @@ archives:
   replacements:
     amd64: 64bit
     386: 32bit
-    arm: ARM
-    arm64: ARM64
     darwin: macOS
     linux: Linux
     windows: Windows
