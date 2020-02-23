@@ -77,7 +77,6 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 
 	for _, name := range keys {
 		data := schema.Types[name]
-		// mergeAnsestorsElements(data)
 		if name.Local == "_self" {
 			rootType := data.(*xsd.ComplexType)
 			if rootType.Elements == nil {
