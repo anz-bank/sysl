@@ -13,16 +13,19 @@ require (
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20200124162019-2d7f727a00b7
 	github.com/arr-ai/wbnf v0.12.1
+	github.com/cbroglie/mustache v1.0.1
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/dlclark/regexp2 v1.2.0 // indirect
 	github.com/getkin/kin-openapi v0.2.1-0.20191216082429-70fbea30aeb8
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-chi/chi v4.0.3+incompatible
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.6
 	github.com/go-openapi/swag v0.19.7
 	github.com/golang/protobuf v1.3.3
 	github.com/hashicorp/hcl v1.0.0
+	github.com/lib/pq v1.3.0
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/pkg/errors v0.9.1
