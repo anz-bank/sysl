@@ -1,15 +1,16 @@
 # Sysl
+Match your system implementation and design as consistent as possible
 
-[![GitHub Actions Go-Darwin status](https://github.com/anz-bank/sysl/workflows/Go-Darwin/badge.svg)](.)
-[![GitHub Actions Go-Linux status](https://github.com/anz-bank/sysl/workflows/Go-Linux/badge.svg)](.)
-[![GitHub Actions node-linux status](https://github.com/anz-bank/sysl/workflows/node-linux/badge.svg)](.)
-
-
-[![AppVeyor build](https://img.shields.io/appveyor/ci/anz-bank/sysl/master.svg?logo=appveyor)](https://ci.appveyor.com/project/anz-bank/sysl/branch/master)
+[![Latest Release](https://img.shields.io/github/v/release/anz-bank/sysl?color=%2300ADD8)](https://github.com/anz-bank/sysl/releases)
 [![Codecov](https://img.shields.io/codecov/c/github/anz-bank/sysl/master.svg)](https://codecov.io/gh/anz-bank/sysl/branch/master)
-[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/anz-bank/sysl)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fanz-bank%2Fsysl.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fanz-bank%2Fsysl?ref=badge_shield)
 
-Sysl (pronounced "sizzle") is a system specification language. Using Sysl, you
+[![GitHub Actions Release status](https://github.com/anz-bank/sysl/workflows/Release/badge.svg)](https://github.com/anz-bank/sysl/actions?query=workflow%3ARelease)
+[![GitHub Actions Go-Darwin status](https://github.com/anz-bank/sysl/workflows/Go-Darwin/badge.svg)](https://github.com/anz-bank/sysl/actions?query=workflow%3AGo-Darwin)
+[![GitHub Actions Go-Linux status](https://github.com/anz-bank/sysl/workflows/Go-Linux/badge.svg)](https://github.com/anz-bank/sysl/actions?query=workflow%3AGo-Linux)
+[![GitHub Actions Go-Windows status](https://github.com/anz-bank/sysl/workflows/Go-Windows/badge.svg)](https://github.com/anz-bank/sysl/actions?query=workflow%3AGo-Windows)
+
+Sysl (pronounced "sizzle") is a open source system specification language. Using Sysl, you
 can specify systems, endpoints, endpoint behaviour, data models and data
 transformations. The Sysl compiler automatically generates sequence diagrams,
 integrations, and other views. It also offers a range of code generation
@@ -19,51 +20,36 @@ The set of outputs is open-ended and allows for your own extensions. Sysl has
 been created with extensibility in mind and it will grow to support other
 representations over time.
 
+## Usage Examples
+
+[Sysl by Example](https://sysl.io/docs/byexample/) is a hands-on introduction to Sysl using annotated examples.
+
 ## Installation
 
-With go get:
+There are several approaches to get start using Sysl. See the [installation page](https://sysl.io/docs/installation/) for details.
 
-`go get -u github.com/anz-bank/sysl/cmd/sysl`
+## Documentation
 
+Documentation is hosted live at [https://sysl.io](https://sysl.io).
 
-Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some
-of the automated tests require a PlantUML dependency. Provide PlantUML access
-either via local installation or URL to remote service. Warning, for sensitive
-data the public service at www.plantuml.com is not suitable. You can use one of
-the following options to set up your environment:
-
-- execute `SYSL_PLANTUML=http://www.plantuml.com/plantuml`
-- add `export SYSL_PLANTUML=http://www.plantuml.com/plantuml` to your `.bashrc`
-  or similar
-- [install PlantUML](http://plantuml.com/starting) locally and run on port
-  8080 or you can refer to the [plantuml server guide](docs/plantUML_server.md)
-
-Test and lint the source code and your changes with
+## Contributing
 
 We encourage contributions to this project! Please have a look at the
-[contributing guide](CONTRIBUTING.md) for more information.
+[contributing guide](docs/CONTRIBUTING.md) for more information.
 
-If you need to create a release follow the [release
-documentation](docs/releasing.md).
+## Contributors
+
+This project exists thanks to [all the people who contribute](https://github.com/anz-bank/sysl/graphs/contributors).
+
+## Versioning
+
+We use [Semver](https://semver.org/) for versioning. For the versions available, see the [releases](https://github.com/anz-bank/sysl/releases) on this repository.
+
+## License
+
+[![License](https://img.shields.io/github/license/anz-bank/sysl)](https://github.com/anz-bank/sysl/blob/master/LICENSE)
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details
 
 
-## Extending Sysl
 
-In order to easily reuse and extend Sysl across systems, the Sysl compiler
-translates Sysl files into an intermediate representation expressed as protocol
-buffer messages. These protobuf messages can be consumed in your favorite
-programming language and transformed to your desired output. In this way you are
-creating your own Sysl exporter.
-
-Using the [protoc compiler](https://developers.google.com/protocol-buffers/) you
-can translate the definition file of the intermediate representation
-`pkg/proto/sysl.proto` into your preferred programming language in a one-off
-step or on every build. You can then easily consume Sysl models in your
-programming language of choice in a typesafe way without having to write a ton
-of mapping boilerplate. With that you can create your own tailored output
-diagrams, source code, views, integrations or other desired outputs.
-
-## Status
-
-Sysl is currently targeted at early adopters. The current focus is to improve
-documentation and usability, especially error messages and warnings.

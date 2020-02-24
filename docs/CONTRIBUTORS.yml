@@ -1,0 +1,55 @@
+# Individuals who have agreed to one of the CLAs and may contribute patches. The
+# AUTHORS file lists the copyright holders; this file lists people. For example,
+# ANZ employees are listed here but not in AUTHORS, because ANZ holds the
+# copyright.
+#
+# Individual: https://goo.gl/f6JjGu
+# Corporate:  https://goo.gl/Q3Fqsa
+#
+# Names should be added to this file as:
+#   - name: contributor's name
+#     email: contributor's email address
+#
+# Corporate contributors must supply a corporate email address.
+#
+# Contributors may appear multiple times if they have made contributions both as
+# individuals and as employees of one or more corporations. For each case, there
+# must be a corresponding CLA.
+
+contributors:
+- name: Marcelo Cantos
+  email: marcelo.cantos@anz.com
+- name: Oliver Lade
+  email: oliver.lade@anz.com
+- name: Jonathan Gordon
+  email: jonathan.gordon@anz.com
+- name: Julia Ogris
+  email: Julia.Ogris@anz.com
+- name: Sahejpreet Singh
+  email: sahejpreet.singh@anz.com
+- name: Sidhartha Priyadarshi
+  email: Sidhartha.Priyadarshi@anz.com
+- name: Sumit Narayan
+  email: SUMIT.NARAYAN@anz.com
+- name: Joshua Carpeggiani
+  email: Joshua.Carpeggiani@anz.com
+- name: Novan Allanadi
+  email: Novan.Allanadi@anz.com
+- name: Chloe Zhang
+  email: xian.zhang@anz.com
+- name: Kasun Fernando
+  email: kasun.fernando@anz.com
+- name: Ashwin Sajiv
+  email: ashwinsajiv.purushothamababu@anz.com
+- name: Eric Zhang
+  email: Xing.Zhang@anz.com
+- name: Jack Zheng
+  email: jack.zheng@anz.com
+- name: Guohua Li
+  email: guohua.li@anz.com
+- name: Victor Zhang
+  email: victor.zhang2@anz.com
+- name: Cam Hutchison
+  email: cameron.hutchison@anz.com
+- name: Reuben Fletcher-Costin
+  email: reuben.fletcher-costin@anz.com
