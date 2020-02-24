@@ -174,19 +174,29 @@ func (l *loader) loadExternalSchema(path string) {
 	l.newLoaderWithExternalSpec(path, l.getOpenapi3(path))
 }
 
+func guessYamlType(filename string, data []byte) string {
+	for _, check := range []string{ModeSwagger, ModeOpenAPI} {
+		if strings.Contains(string(data), check) {
+			return check
+		}
+	}
+
+	return "unknown"
+}
 func (l *loader) getOpenapi3(path string) *openapi3.Swagger {
 	var swagger *openapi3.Swagger
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	switch l.mode {
+	mode := guessYamlType(path, data)
+	switch mode {
 	case ModeSwagger:
 		swagger, _, err = convertToOpenapiv3(data)
 	case ModeOpenAPI:
 		swagger, err = openapi3.NewSwaggerLoader().LoadSwaggerFromData(data)
 	default:
-		panic("unknown mode")
+		panic("unknown mode: " + mode)
 	}
 	if err != nil {
 		panic(err)
@@ -213,11 +223,6 @@ func sortProperties(props FieldList) {
 func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 	if t, found := l.types.Find(name); found {
 		return t
-	}
-	if len(schema.Enum) == 0 {
-		if t, found := l.types.Find(mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, l.logger)); found {
-			return t
-		}
 	}
 	switch schema.Type {
 	case ObjectTypeName, "":
@@ -382,6 +387,10 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 	if op.RequestBody != nil {
 		for mediaType, content := range op.RequestBody.Value.Content {
 			t := l.typeFromSchemaRef("", content.Schema)
+			if _, ok := t.(*SyslBuiltIn); ok && content.Schema != nil && content.Schema.Ref != "" {
+				parts := strings.Split(content.Schema.Ref, "/")
+				t = l.types.AddAndRet(&Alias{name: parts[len(parts)-1], Target: t})
+			}
 			p := Param{
 				Field: Field{
 					Name:       t.Name() + "Request",

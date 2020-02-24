@@ -51,210 +51,58 @@ type aborter struct{}
 func (n *aborter) ExitNode() bool { return true }
 func (n *aborter) Abort() bool    { return true }
 
-const (
-	IdentCOMMENT = "COMMENT"
-	IdentIDENT   = "IDENT"
-	IdentSTRING  = "STRING"
-	IdentAtom    = "atom"
-	IdentOp      = "op"
-	IdentProd    = "prod"
-	IdentQuant   = "quant"
-	IdentRule    = "rule"
-	IdentStmt    = "stmt"
-	IdentTerm    = "term"
+var (
+	NodeExiter = &nodeExiter{}
+	Aborter    = &aborter{}
 )
 
-type WrapreNode struct{ ast.Node }
+type AtomNode struct{ ast.Node }
 
-func (c WrapreNode) String() string {
-	if c.Node == nil {
-		return ""
-	}
-	return c.Node.Scanner().String()
-}
-func WalkWrapreNode(node WrapreNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterWrapreNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
+func (c AtomNode) Choice() int { return ast.Choice(c.Node) }
 
-	if fn := ops.ExitWrapreNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
+func (c AtomNode) OneRule() *IdentNode {
+	if child := ast.First(c.Node, "rule"); child != nil {
+		return &IdentNode{child}
 	}
 	return nil
+}
+
+func (c AtomNode) OneString() *StringNode {
+	if child := ast.First(c.Node, "STRING"); child != nil {
+		return &StringNode{child}
+	}
+	return nil
+}
+
+func (c AtomNode) OneTerm() *TermNode {
+	if child := ast.First(c.Node, "term"); child != nil {
+		return &TermNode{child}
+	}
+	return nil
+}
+
+func (c AtomNode) OneToken() string {
+	if child := ast.First(c.Node, ""); child != nil {
+		return child.Scanner().String()
+	}
+	return ""
+}
+
+func (c AtomNode) AllToken() []string {
+	var out []string
+	for _, child := range ast.All(c.Node, "") {
+		out = append(out, child.Scanner().String())
+	}
+	return out
 }
 
 type CommentNode struct{ ast.Node }
 
-func (c CommentNode) String() string {
-	if c.Node == nil {
+func (c *CommentNode) String() string {
+	if c == nil || c.Node == nil {
 		return ""
 	}
 	return c.Node.Scanner().String()
-}
-func WalkCommentNode(node CommentNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterCommentNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-
-	if fn := ops.ExitCommentNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
-	}
-	return nil
-}
-
-type IdentNode struct{ ast.Node }
-
-func (c IdentNode) String() string {
-	if c.Node == nil {
-		return ""
-	}
-	return c.Node.Scanner().String()
-}
-func WalkIdentNode(node IdentNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterIdentNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-
-	if fn := ops.ExitIdentNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
-	}
-	return nil
-}
-
-type StringNode struct{ ast.Node }
-
-func (c StringNode) String() string {
-	if c.Node == nil {
-		return ""
-	}
-	return c.Node.Scanner().String()
-}
-func WalkStringNode(node StringNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterStringNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-
-	if fn := ops.ExitStringNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
-	}
-	return nil
-}
-
-type AtomNode struct{ ast.Node }
-
-func (c AtomNode) Choice() int {
-	return ast.Choice(c.Node)
-}
-
-func (c AtomNode) AllString() []StringNode {
-	var out []StringNode
-	for _, child := range ast.All(c.Node, "STRING") {
-		out = append(out, StringNode{child})
-	}
-	return out
-}
-
-func (c AtomNode) OneString() StringNode {
-	return StringNode{ast.First(c.Node, "STRING")}
-}
-
-func (c AtomNode) AllRule() []IdentNode {
-	var out []IdentNode
-	for _, child := range ast.All(c.Node, "rule") {
-		out = append(out, IdentNode{child})
-	}
-	return out
-}
-
-func (c AtomNode) OneRule() IdentNode {
-	return IdentNode{ast.First(c.Node, "rule")}
-}
-
-func (c AtomNode) AllTerm() []TermNode {
-	var out []TermNode
-	for _, child := range ast.All(c.Node, "term") {
-		out = append(out, TermNode{child})
-	}
-	return out
-}
-
-func (c AtomNode) OneTerm() TermNode {
-	return TermNode{ast.First(c.Node, "term")}
-}
-func WalkAtomNode(node AtomNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterAtomNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-
-	for _, child := range node.AllString() {
-		s := WalkStringNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-	for _, child := range node.AllTerm() {
-		s := WalkTermNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-	if fn := ops.ExitAtomNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
-	}
-	return nil
 }
 
 type GrammarNode struct{ ast.Node }
@@ -267,51 +115,22 @@ func (c GrammarNode) AllStmt() []StmtNode {
 	return out
 }
 
-func (c GrammarNode) OneStmt() StmtNode {
-	return StmtNode{ast.First(c.Node, "stmt")}
-}
-func WalkGrammarNode(node GrammarNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterGrammarNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
+type IdentNode struct{ ast.Node }
 
-	for _, child := range node.AllStmt() {
-		s := WalkStmtNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
+func (c *IdentNode) String() string {
+	if c == nil || c.Node == nil {
+		return ""
 	}
-	if fn := ops.ExitGrammarNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
-	}
-	return nil
+	return c.Node.Scanner().String()
 }
 
 type ProdNode struct{ ast.Node }
 
-func (c ProdNode) AllIdent() []IdentNode {
-	var out []IdentNode
-	for _, child := range ast.All(c.Node, "IDENT") {
-		out = append(out, IdentNode{child})
+func (c ProdNode) OneIdent() *IdentNode {
+	if child := ast.First(c.Node, "IDENT"); child != nil {
+		return &IdentNode{child}
 	}
-	return out
-}
-
-func (c ProdNode) OneIdent() IdentNode {
-	return IdentNode{ast.First(c.Node, "IDENT")}
+	return nil
 }
 
 func (c ProdNode) AllTerm() []TermNode {
@@ -322,154 +141,55 @@ func (c ProdNode) AllTerm() []TermNode {
 	return out
 }
 
-func (c ProdNode) OneTerm() TermNode {
-	return TermNode{ast.First(c.Node, "term")}
+func (c ProdNode) OneToken() string {
+	if child := ast.First(c.Node, ""); child != nil {
+		return child.Scanner().String()
+	}
+	return ""
 }
-func WalkProdNode(node ProdNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterProdNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
 
-	for _, child := range node.AllIdent() {
-		s := WalkIdentNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
+func (c ProdNode) AllToken() []string {
+	var out []string
+	for _, child := range ast.All(c.Node, "") {
+		out = append(out, child.Scanner().String())
 	}
-	for _, child := range node.AllTerm() {
-		s := WalkTermNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-	if fn := ops.ExitProdNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
-	}
-	return nil
+	return out
 }
 
 type StmtNode struct{ ast.Node }
 
-func (c StmtNode) Choice() int {
-	return ast.Choice(c.Node)
-}
+func (c StmtNode) Choice() int { return ast.Choice(c.Node) }
 
-func (c StmtNode) AllComment() []CommentNode {
-	var out []CommentNode
-	for _, child := range ast.All(c.Node, "COMMENT") {
-		out = append(out, CommentNode{child})
-	}
-	return out
-}
-
-func (c StmtNode) OneComment() CommentNode {
-	return CommentNode{ast.First(c.Node, "COMMENT")}
-}
-
-func (c StmtNode) AllProd() []ProdNode {
-	var out []ProdNode
-	for _, child := range ast.All(c.Node, "prod") {
-		out = append(out, ProdNode{child})
-	}
-	return out
-}
-
-func (c StmtNode) OneProd() ProdNode {
-	return ProdNode{ast.First(c.Node, "prod")}
-}
-func WalkStmtNode(node StmtNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterStmtNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-
-	for _, child := range node.AllComment() {
-		s := WalkCommentNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-	for _, child := range node.AllProd() {
-		s := WalkProdNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-	if fn := ops.ExitStmtNode; fn != nil {
-		if s := fn(node); s != nil && s.Abort() {
-			return s
-		}
+func (c StmtNode) OneComment() *CommentNode {
+	if child := ast.First(c.Node, "COMMENT"); child != nil {
+		return &CommentNode{child}
 	}
 	return nil
 }
 
+func (c StmtNode) OneProd() *ProdNode {
+	if child := ast.First(c.Node, "prod"); child != nil {
+		return &ProdNode{child}
+	}
+	return nil
+}
+
+type StringNode struct{ ast.Node }
+
+func (c *StringNode) String() string {
+	if c == nil || c.Node == nil {
+		return ""
+	}
+	return c.Node.Scanner().String()
+}
+
 type TermNode struct{ ast.Node }
 
-func (c TermNode) AllTerm() []TermNode {
-	var out []TermNode
-	for _, child := range ast.All(c.Node, "term") {
-		out = append(out, TermNode{child})
+func (c TermNode) OneAtom() *AtomNode {
+	if child := ast.First(c.Node, "atom"); child != nil {
+		return &AtomNode{child}
 	}
-	return out
-}
-
-func (c TermNode) OneTerm() TermNode {
-	return TermNode{ast.First(c.Node, "term")}
-}
-
-func (c TermNode) Choice() int {
-	return ast.Choice(c.Node)
-}
-
-func (c TermNode) AllAtom() []AtomNode {
-	var out []AtomNode
-	for _, child := range ast.All(c.Node, "atom") {
-		out = append(out, AtomNode{child})
-	}
-	return out
-}
-
-func (c TermNode) OneAtom() AtomNode {
-	return AtomNode{ast.First(c.Node, "atom")}
-}
-
-func (c TermNode) AllOp() []string {
-	var out []string
-	for _, child := range ast.All(c.Node, "op") {
-		out = append(out, ast.First(child, "").Scanner().String())
-	}
-	return out
+	return nil
 }
 
 func (c TermNode) OneOp() string {
@@ -479,53 +199,111 @@ func (c TermNode) OneOp() string {
 	return ""
 }
 
-func (c TermNode) AllQuant() []string {
-	var out []string
-	for _, child := range ast.All(c.Node, "quant") {
-		out = append(out, ast.First(child, "").Scanner().String())
+func (c TermNode) OneQuant() *TermQuantNode {
+	if child := ast.First(c.Node, "quant"); child != nil {
+		return &TermQuantNode{child}
+	}
+	return nil
+}
+
+func (c TermNode) AllTerm() []TermNode {
+	var out []TermNode
+	for _, child := range ast.All(c.Node, "term") {
+		out = append(out, TermNode{child})
 	}
 	return out
 }
 
-func (c TermNode) OneQuant() string {
-	if child := ast.First(c.Node, "quant"); child != nil {
-		return ast.First(child, "").Scanner().String()
+type TermQuantNode struct{ ast.Node }
+
+func (c TermQuantNode) Choice() int { return ast.Choice(c.Node) }
+
+func (c TermQuantNode) OneToken() string {
+	if child := ast.First(c.Node, ""); child != nil {
+		return child.Scanner().String()
 	}
 	return ""
 }
-func WalkTermNode(node TermNode, ops WalkerOps) Stopper {
-	if fn := ops.EnterTermNode; fn != nil {
-		s := fn(node)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
+
+type WrapReNode struct{ ast.Node }
+
+func (c *WrapReNode) String() string {
+	if c == nil || c.Node == nil {
+		return ""
+	}
+	return c.Node.Scanner().String()
+}
+
+type WalkerOps struct {
+	EnterAtomNode      func(AtomNode) Stopper
+	ExitAtomNode       func(AtomNode) Stopper
+	EnterCommentNode   func(CommentNode) Stopper
+	ExitCommentNode    func(CommentNode) Stopper
+	EnterGrammarNode   func(GrammarNode) Stopper
+	ExitGrammarNode    func(GrammarNode) Stopper
+	EnterIdentNode     func(IdentNode) Stopper
+	ExitIdentNode      func(IdentNode) Stopper
+	EnterProdNode      func(ProdNode) Stopper
+	ExitProdNode       func(ProdNode) Stopper
+	EnterStmtNode      func(StmtNode) Stopper
+	ExitStmtNode       func(StmtNode) Stopper
+	EnterStringNode    func(StringNode) Stopper
+	ExitStringNode     func(StringNode) Stopper
+	EnterTermNode      func(TermNode) Stopper
+	ExitTermNode       func(TermNode) Stopper
+	EnterTermQuantNode func(TermQuantNode) Stopper
+	ExitTermQuantNode  func(TermQuantNode) Stopper
+	EnterWrapReNode    func(WrapReNode) Stopper
+	ExitWrapReNode     func(WrapReNode) Stopper
+}
+
+func (w WalkerOps) Walk(tree GrammarNode) { w.WalkGrammarNode(tree) }
+func (w WalkerOps) WalkAtomNode(node AtomNode) Stopper {
+	if fn := w.EnterAtomNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneRule(); child != nil {
+		child := *child
+		if fn := w.EnterIdentNode; fn != nil {
+			if s := fn(child); s != nil {
+				if s.ExitNode() {
+					return nil
+				} else if s.Abort() {
+					return s
+				}
+			}
+		}
+	}
+	if child := node.OneString(); child != nil {
+		child := *child
+		if fn := w.EnterStringNode; fn != nil {
+			if s := fn(child); s != nil {
+				if s.ExitNode() {
+					return nil
+				} else if s.Abort() {
+					return s
+				}
+			}
+		}
+	}
+	if child := node.OneTerm(); child != nil {
+		child := *child
+		if s := w.WalkTermNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
 		}
 	}
 
-	for _, child := range node.AllTerm() {
-		s := WalkTermNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-	for _, child := range node.AllAtom() {
-		s := WalkAtomNode(child, ops)
-		switch {
-		case s == nil:
-		case s.ExitNode():
-			return nil
-		case s.Abort():
-			return s
-		}
-	}
-	if fn := ops.ExitTermNode; fn != nil {
+	if fn := w.ExitAtomNode; fn != nil {
 		if s := fn(node); s != nil && s.Abort() {
 			return s
 		}
@@ -533,28 +311,182 @@ func WalkTermNode(node TermNode, ops WalkerOps) Stopper {
 	return nil
 }
 
-type WalkerOps struct {
-	EnterWrapreNode  func(WrapreNode) Stopper
-	ExitWrapreNode   func(WrapreNode) Stopper
-	EnterCommentNode func(CommentNode) Stopper
-	ExitCommentNode  func(CommentNode) Stopper
-	EnterIdentNode   func(IdentNode) Stopper
-	ExitIdentNode    func(IdentNode) Stopper
-	EnterStringNode  func(StringNode) Stopper
-	ExitStringNode   func(StringNode) Stopper
-	EnterAtomNode    func(AtomNode) Stopper
-	ExitAtomNode     func(AtomNode) Stopper
-	EnterGrammarNode func(GrammarNode) Stopper
-	ExitGrammarNode  func(GrammarNode) Stopper
-	EnterProdNode    func(ProdNode) Stopper
-	ExitProdNode     func(ProdNode) Stopper
-	EnterStmtNode    func(StmtNode) Stopper
-	ExitStmtNode     func(StmtNode) Stopper
-	EnterTermNode    func(TermNode) Stopper
-	ExitTermNode     func(TermNode) Stopper
+func (w WalkerOps) WalkGrammarNode(node GrammarNode) Stopper {
+	if fn := w.EnterGrammarNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	for _, child := range node.AllStmt() {
+		if s := w.WalkStmtNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+
+	if fn := w.ExitGrammarNode; fn != nil {
+		if s := fn(node); s != nil && s.Abort() {
+			return s
+		}
+	}
+	return nil
 }
 
-func (w WalkerOps) Walk(tree GrammarNode)  { WalkGrammarNode(tree, w) }
+func (w WalkerOps) WalkProdNode(node ProdNode) Stopper {
+	if fn := w.EnterProdNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneIdent(); child != nil {
+		child := *child
+		if fn := w.EnterIdentNode; fn != nil {
+			if s := fn(child); s != nil {
+				if s.ExitNode() {
+					return nil
+				} else if s.Abort() {
+					return s
+				}
+			}
+		}
+	}
+	for _, child := range node.AllTerm() {
+		if s := w.WalkTermNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+
+	if fn := w.ExitProdNode; fn != nil {
+		if s := fn(node); s != nil && s.Abort() {
+			return s
+		}
+	}
+	return nil
+}
+
+func (w WalkerOps) WalkStmtNode(node StmtNode) Stopper {
+	if fn := w.EnterStmtNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneComment(); child != nil {
+		child := *child
+		if fn := w.EnterCommentNode; fn != nil {
+			if s := fn(child); s != nil {
+				if s.ExitNode() {
+					return nil
+				} else if s.Abort() {
+					return s
+				}
+			}
+		}
+	}
+	if child := node.OneProd(); child != nil {
+		child := *child
+		if s := w.WalkProdNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+
+	if fn := w.ExitStmtNode; fn != nil {
+		if s := fn(node); s != nil && s.Abort() {
+			return s
+		}
+	}
+	return nil
+}
+
+func (w WalkerOps) WalkTermNode(node TermNode) Stopper {
+	if fn := w.EnterTermNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneAtom(); child != nil {
+		child := *child
+		if s := w.WalkAtomNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneQuant(); child != nil {
+		child := *child
+		if s := w.WalkTermQuantNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	for _, child := range node.AllTerm() {
+		if s := w.WalkTermNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+
+	if fn := w.ExitTermNode; fn != nil {
+		if s := fn(node); s != nil && s.Abort() {
+			return s
+		}
+	}
+	return nil
+}
+
+func (w WalkerOps) WalkTermQuantNode(node TermQuantNode) Stopper {
+	if fn := w.EnterTermQuantNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+
+	if fn := w.ExitTermQuantNode; fn != nil {
+		if s := fn(node); s != nil && s.Abort() {
+			return s
+		}
+	}
+	return nil
+}
+
 func (c GrammarNode) GetAstNode() ast.Node { return c.Node }
 
 func NewGrammarNode(from ast.Node) GrammarNode { return GrammarNode{from} }
