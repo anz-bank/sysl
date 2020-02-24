@@ -78,6 +78,7 @@ type CmdContextParamDatagen struct {
 	title       string
 	output      string
 	project     string
+	direct      bool
 	filter      string
 	classFormat string
 }
@@ -90,6 +91,7 @@ type CmdDatabaseScriptParams struct {
 }
 
 type ExecuteArgs struct {
+	Command        string
 	Modules        []*sysl.Module
 	Filesystem     afero.Fs
 	Logger         *logrus.Logger

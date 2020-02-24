@@ -1,3 +1,4 @@
 *.pb.go     linguist-generated=true
 *           text=auto eol=lf
 go.sum      linguist-generated=true
+CHANGELOG/* linguist-generated=true
