@@ -22,9 +22,23 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/SimpleObj'
+  /test2:
+    post:
+      responses:
+        200:
+          description: 200 OK
+      parameters:
+        - name: accountid
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/accountID'
 definitions:
   SimpleObj:
     type: object
     properties:
       name:
         type: string
+
+  accountID:
+    type: string
