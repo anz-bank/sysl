@@ -13,7 +13,7 @@ Sysl is a CLI (Command Line Interface) that executes with the `sysl` command.
 ## Prerequisites
 
 - [Go 1.13](https://golang.org/doc/install)
-- There're extra prerequisites for several subcommands like `sysl sd`(sequence diagram generation):
+- There are extra prerequisites for several subcommands like `sysl sd`(sequence diagram generation):
 	- Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some of the automated tests require a PlantUML dependency. Provide PlantUML access either via local installation or URL to remote service. Warning, for sensitive data the public service at www.plantuml.com is not suitable. You can use one of the following options to set up your environment:
 		- execute `SYSL_PLANTUML=http://www.plantuml.com/plantuml`
 		- add `export SYSL_PLANTUML=http://www.plantuml.com/plantuml` to your `.bashrc`
@@ -64,7 +64,7 @@ We have used this [Dockerfile](Dockerfile) to create this image.
 
 Here you have two options:
 
-1. If you want to contribute to the project, please follow the steps on our [contributing guide](docs/CONTRIBUTING.md).
+1. If you want to contribute to the project, please follow the steps on our [contributing guide](https://github.com/anz-bank/sysl/blob/master/docs/CONTRIBUTING.md).
 2. If just want to build from source for whatever reason, follow the steps bellow:
 
 ```
@@ -75,9 +75,9 @@ $ cd sysl
 # get dependencies using go modules (needs go 1.11+)
 $ go get ./...
 
-# build
-$ go build -o sysl ./cmd/sysl
+# install
+$ go install ./cmd/sysl
 
 # check it works
-$ ./sysl help
+$ sysl help
 ```

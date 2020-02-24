@@ -20,7 +20,7 @@ We, some of the ANZ open source developers, have recently set up what we conside
 * Issue tracking ([Github Issue](https://github.com/anz-bank/sysl/issues) tracking with [template](https://github.com/anz-bank/sysl/tree/master/.github/ISSUE_TEMPLATE))
 * Project Management ([Github projects](https://github.com/anz-bank/sysl/projects))
 * Documentation in same repository as source code ([README](https://github.com/anz-bank/sysl/blob/master/README.md) and [docs/](https://github.com/anz-bank/sysl/blob/master/docs) as starting point)
-* Chat (Slack & <del>[Gitter](https://gitter.im/anz-bank/sysl)</del>)
+* Chat ([Slack](https://anzoss.slack.com/messages/sysl/) & <del>[Gitter](https://gitter.im/anz-bank/sysl)</del>)
 * Status dashboard ([Badges](https://github.com/anz-bank/sysl/blob/master/README.md))
 
 &nbsp;
