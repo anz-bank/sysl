@@ -22,7 +22,7 @@ representations over time.
 
 ## Usage Examples
 
-[Sysl by Example](https://github.service.anz/pages/sysl/syslbyexample/docs/byexample/) is a hands-on introduction to Sysl using annotated examples.
+[Sysl by Example](https://sysl.io/docs/byexample/) is a hands-on introduction to Sysl using annotated examples.
 
 ## Installation
 
