@@ -1,0 +1,11 @@
+grammar:
+    go.gen.g
+transform:
+    go.gen.sysl
+depPath:
+    depPath
+basePath:
+    basePath
+appName:
+    appName
+
