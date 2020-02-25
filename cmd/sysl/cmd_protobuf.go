@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -28,7 +30,7 @@ func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-func (p *protobuf) Execute(args ExecuteArgs) error {
+func (p *protobuf) Execute(args cmdutils.ExecuteArgs) error {
 	args.Logger.Debugf("Protobuf: %+v", *p)
 
 	p.output = strings.TrimSpace(p.output)

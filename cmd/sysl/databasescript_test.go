@@ -4,6 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/database"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -108,10 +110,10 @@ func TestDoConstructDatabaseScriptInvalidFile(t *testing.T) {
 func DoConstructDatabaseScriptWithParams(
 	filter, title, output, appNames, source string,
 ) ([]database.ScriptOutput, error) {
-	cmdDatabaseScript := &CmdDatabaseScriptParams{
-		title:     title,
-		outputDir: output,
-		appNames:  appNames,
+	cmdDatabaseScript := &cmdutils.CmdDatabaseScriptParams{
+		Title:     title,
+		OutputDir: output,
+		AppNames:  appNames,
 	}
 
 	logger, _ := test.NewNullLogger()
