@@ -81,7 +81,7 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 	}
 
 	composeMap := make(map[string]interface{})
-	composeMap["version"] = "3.7"
+	composeMap["version"] = "3.3"
 	composeMap["services"] = composeServices
 
 	data, err := yaml.Marshal(composeMap)

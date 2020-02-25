@@ -27,7 +27,6 @@ func initDb() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
 
 	time.Sleep(5 * time.Second)
 
@@ -47,6 +46,7 @@ func loadServices(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	defer db.Close()
 
 	serviceInterface := {{impl.name}}.{{impl.interface_factory}}()
 
