@@ -1,24 +1,29 @@
 package config
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"github.com/ghodss/yaml"
 )
 
-const CODEGEN_CONFIG_PATH = "/Users/ezhang/Projects/ANZx/codegen_config.yml"
-
-type CodeGenConfig struct {
-	Grammar   string
+type CmdContextParamCodegen struct {
 	Transform string
+	Grammar   string
+	DepPath   string
+	BasePath  string
+	AppName   string
 }
 
-func ReadCodeGenDefaultParamsConfig() CodeGenConfig {
-	data, _ := ioutil.ReadFile(CODEGEN_CONFIG_PATH)
-	str := string(data)
-	fmt.Println(str)
-	var config CodeGenConfig
-	yaml.Unmarshal(data, &config)
-	return config
+func ReadCodeGenFlags(configPath string) (CmdContextParamCodegen, error) {
+	var config CmdContextParamCodegen
+	data, ferr := ioutil.ReadFile(configPath)
+	if ferr != nil {
+		return config, ferr
+	}
+	yerr := yaml.Unmarshal(data, &config)
+	if yerr != nil {
+		return config, yerr
+	}
+
+	return config, nil
 }
