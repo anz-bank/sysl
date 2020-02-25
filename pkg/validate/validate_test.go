@@ -597,3 +597,12 @@ func TestValidatorValidateTfmReturn(t *testing.T) {
 		})
 	}
 }
+
+func TestCodeggenRequiredFlags(t *testing.T) {
+	t.Parallel()
+
+	assert.Nil(t, CodeggenRequiredFlags("configPath", "", ""))
+	assert.Nil(t, CodeggenRequiredFlags("", "grammar", "transform"))
+	assert.Error(t, CodeggenRequiredFlags("", "", ""))
+	assert.Error(t, CodeggenRequiredFlags("", "grammar", ""))
+}

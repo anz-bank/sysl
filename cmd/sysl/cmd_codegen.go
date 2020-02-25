@@ -53,6 +53,39 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *codegenCmd) Execute(args ExecuteArgs) error {
+	err := p.loadFlags()
+	if err != nil {
+		return err
+	}
+
+	if p.validateOnly {
+		return validate.DoValidate(validate.Params{
+			RootTransform: p.rootTransform,
+			Transform:     p.transform,
+			Grammar:       p.grammar,
+			Start:         p.start,
+			DepPath:       p.depPath,
+			BasePath:      p.basePath,
+			Filesystem:    args.Filesystem,
+			Logger:        args.Logger,
+		})
+	}
+	if p.appName == "" {
+		if len(args.Modules[0].Apps) > 1 {
+			args.Logger.Errorf("required argument --app-name value missing")
+			return fmt.Errorf("missing required argument")
+		}
+		p.appName = args.DefaultAppName
+	}
+	eval.EnableDebugger = p.enableDebugger
+	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Modules[0], p.appName, args.Filesystem, args.Logger)
+	if err != nil {
+		return err
+	}
+	return outputToFiles(output, syslutil.NewChrootFs(args.Filesystem, p.outDir))
+}
+
+func (p *codegenCmd) loadFlags() error {
 	err := validate.CodeggenRequiredFlags(p.config, p.grammar, p.transform)
 	if err != nil {
 		return err
@@ -69,32 +102,8 @@ func (p *codegenCmd) Execute(args ExecuteArgs) error {
 		p.depPath = syslutil.ResetVal(p.depPath, config.DepPath)
 		p.basePath = syslutil.ResetVal(p.basePath, config.BasePath)
 		p.appName = syslutil.ResetVal(p.appName, config.AppName)
+		p.start = syslutil.ResetVal(p.start, config.Start)
 	}
 
-	if p.validateOnly {
-		return validate.DoValidate(validate.Params{
-			RootTransform: p.rootTransform,
-			Transform:     p.transform,
-			Grammar:       p.grammar,
-			Start:         p.start,
-			DepPath:       p.depPath,
-			BasePath:      p.basePath,
-			Filesystem:    args.Filesystem,
-			Logger:        args.Logger,
-		})
-	}
-
-	if p.appName == "" {
-		if len(args.Modules[0].Apps) > 1 {
-			args.Logger.Errorf("required argument --app-name value missing")
-			return fmt.Errorf("missing required argument")
-		}
-		p.appName = args.DefaultAppName
-	}
-	eval.EnableDebugger = p.enableDebugger
-	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Modules[0], p.appName, args.Filesystem, args.Logger)
-	if err != nil {
-		return err
-	}
-	return outputToFiles(output, syslutil.NewChrootFs(args.Filesystem, p.outDir))
+	return nil
 }
