@@ -57,7 +57,7 @@ $ docker run --rm \
   -w /go/src/github.com/anz-bank/sysl \
   anzbank/sysl:latest validate -v ./demo/examples/Modules/model_with_deps.sysl
 ```
-We have used this [Dockerfile](Dockerfile) to create this image.
+We have used this [Dockerfile](https://github.com/anz-bank/sysl/blob/master/Dockerfile) to create this image.
 
 
 ## Compiling from source
