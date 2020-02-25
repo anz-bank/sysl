@@ -3,6 +3,8 @@ package main
 import (
 	"regexp"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
@@ -11,32 +13,32 @@ import (
 
 const endpointWildcard = ".. * <- *"
 
-func GenerateIntegrations(intgenParams *CmdContextParamIntgen,
+func GenerateIntegrations(intgenParams *cmdutils.CmdContextParamIntgen,
 	model *sysl.Module,
 	logger *logrus.Logger) (map[string]string, error) {
 	r := make(map[string]string)
 
-	logger.Debugf("project: %v\n", intgenParams.project)
-	logger.Debugf("clustered: %t\n", intgenParams.clustered)
-	logger.Debugf("exclude: %s\n", intgenParams.exclude)
-	logger.Debugf("epa: %t\n", intgenParams.epa)
-	logger.Debugf("title: %s\n", intgenParams.title)
-	logger.Debugf("filter: %s\n", intgenParams.filter)
-	logger.Debugf("output: %s\n", intgenParams.output)
+	logger.Debugf("project: %v\n", intgenParams.Project)
+	logger.Debugf("clustered: %t\n", intgenParams.Clustered)
+	logger.Debugf("exclude: %s\n", intgenParams.Exclude)
+	logger.Debugf("epa: %t\n", intgenParams.EPA)
+	logger.Debugf("title: %s\n", intgenParams.Title)
+	logger.Debugf("filter: %s\n", intgenParams.Filter)
+	logger.Debugf("output: %s\n", intgenParams.Output)
 
-	if len(intgenParams.exclude) == 0 && intgenParams.project != "" {
-		intgenParams.exclude = []string{intgenParams.project}
+	if len(intgenParams.Exclude) == 0 && intgenParams.Project != "" {
+		intgenParams.Exclude = []string{intgenParams.Project}
 	}
-	excludeStrSet := syslutil.MakeStrSet(intgenParams.exclude...)
+	excludeStrSet := syslutil.MakeStrSet(intgenParams.Exclude...)
 
 	// The "project" app that specifies the required view of the integration
-	app := model.GetApps()[intgenParams.project]
-	of := MakeFormatParser(intgenParams.output)
+	app := model.GetApps()[intgenParams.Project]
+	of := cmdutils.MakeFormatParser(intgenParams.Output)
 	// Iterate over each endpoint within the selected project
 	for epname, endpt := range app.GetEndpoints() {
-		outputDir := of.FmtOutput(intgenParams.project, epname, endpt.GetLongName(), endpt.GetAttrs())
-		if intgenParams.filter != "" {
-			re := regexp.MustCompile(intgenParams.filter)
+		outputDir := of.FmtOutput(intgenParams.Project, epname, endpt.GetLongName(), endpt.GetAttrs())
+		if intgenParams.Filter != "" {
+			re := regexp.MustCompile(intgenParams.Filter)
 			if !re.MatchString(outputDir) {
 				continue
 			}
@@ -45,7 +47,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen,
 		passthroughs := syslutil.MakeStrSetFromAttr("passthrough", endpt.GetAttrs())
 		b := makeBuilderfromStmt(model, endpt.GetStmt(), excludeStrSet.Union(excludes), passthroughs)
 		intsParam := &IntsParam{b.finalApps, b.seedAppsMap, b.depsOut, app, endpt}
-		args := &Args{intgenParams.title, intgenParams.project, intgenParams.clustered, intgenParams.epa}
+		args := &Args{intgenParams.Title, intgenParams.Project, intgenParams.Clustered, intgenParams.EPA}
 		r[outputDir] = GenerateView(args, intsParam, model)
 	}
 
@@ -54,7 +56,7 @@ func GenerateIntegrations(intgenParams *CmdContextParamIntgen,
 
 type intsCmd struct {
 	plantumlmixin
-	CmdContextParamIntgen
+	cmdutils.CmdContextParamIntgen
 }
 
 func (p *intsCmd) Name() string       { return "integrations" }
@@ -63,22 +65,22 @@ func (p *intsCmd) MaxSyslModule() int { return 1 }
 func (p *intsCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate integrations").Alias("ints")
 
-	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
+	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.Title)
 	p.AddFlag(cmd)
 	cmd.Flag("output",
-		"output file(default: %(epname).png)").Default("%(epname).png").Short('o').StringVar(&p.output)
-	cmd.Flag("project", "project pseudo-app to render").Short('j').StringVar(&p.project)
-	cmd.Flag("filter", "Only generate diagrams whose output paths match a pattern").StringVar(&p.filter)
-	cmd.Flag("exclude", "apps to exclude").Short('e').StringsVar(&p.exclude)
+		"output file(default: %(epname).png)").Default("%(epname).png").Short('o').StringVar(&p.Output)
+	cmd.Flag("project", "project pseudo-app to render").Short('j').StringVar(&p.Project)
+	cmd.Flag("filter", "Only generate diagrams whose output paths match a pattern").StringVar(&p.Filter)
+	cmd.Flag("exclude", "apps to exclude").Short('e').StringsVar(&p.Exclude)
 	cmd.Flag("clustered",
-		"group integration components into clusters").Short('c').Default("false").BoolVar(&p.clustered)
-	cmd.Flag("epa", "produce and EPA integration view").Default("false").BoolVar(&p.epa)
+		"group integration components into clusters").Short('c').Default("false").BoolVar(&p.Clustered)
+	cmd.Flag("epa", "produce and EPA integration view").Default("false").BoolVar(&p.EPA)
 
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
 
-func (p *intsCmd) Execute(args ExecuteArgs) error {
+func (p *intsCmd) Execute(args cmdutils.ExecuteArgs) error {
 	result, err := GenerateIntegrations(&p.CmdContextParamIntgen, args.Modules[0], args.Logger)
 	if err != nil {
 		return err

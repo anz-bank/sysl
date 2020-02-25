@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/exporter"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
@@ -80,7 +82,7 @@ func (p *exportCmd) writeSwaggerForApp(
 	return nil
 }
 
-func (p *exportCmd) Execute(args ExecuteArgs) error {
+func (p *exportCmd) Execute(args cmdutils.ExecuteArgs) error {
 	err := p.determineOperationMode(p.out)
 	if err != nil {
 		return err
@@ -88,7 +90,7 @@ func (p *exportCmd) Execute(args ExecuteArgs) error {
 
 	if strings.Contains(p.out, "%(appname)") {
 		for appName, syslApp := range args.Modules[0].GetApps() {
-			outputFileName := MakeFormatParser(p.out).LabelApp(appName, "", syslApp.GetAttrs())
+			outputFileName := cmdutils.MakeFormatParser(p.out).LabelApp(appName, "", syslApp.GetAttrs())
 			err := p.writeSwaggerForApp(args.Filesystem, outputFileName, syslApp, args.Logger)
 			if err != nil {
 				return err

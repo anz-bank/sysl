@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -28,13 +30,13 @@ func TestGenerateSequenceDiag(t *testing.T) {
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
-	l := &labeler{}
-	p := &sequenceDiagParam{}
+	l := &cmdutils.Labeler{}
+	p := &SequenceDiagParam{}
 	p.endpoints = []string{"WebFrontend <- RequestProfile"}
 	p.AppLabeler = l
 	p.EndpointLabeler = l
 	p.title = "Profile"
-	r, err := generateSequenceDiag(m, p, logger)
+	r, err := GenerateSequenceDiag(m, p, logger)
 
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -77,13 +79,13 @@ func TestGenerateSequenceDiag2(t *testing.T) {
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
-	l := &labeler{}
-	p := &sequenceDiagParam{}
+	l := &cmdutils.Labeler{}
+	p := &SequenceDiagParam{}
 	p.endpoints = []string{"WebFrontend <- RequestProfile"}
 	p.AppLabeler = l
 	p.EndpointLabeler = l
 	p.title = "Profile"
-	r, err := generateSequenceDiag(m, p, logger)
+	r, err := GenerateSequenceDiag(m, p, logger)
 
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -128,13 +130,13 @@ func TestGenerateSequenceDiagramsToFormatNameAttributes(t *testing.T) {
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
-	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
-	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
-	p := &sequenceDiagParam{}
+	al := cmdutils.MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
+	el := cmdutils.MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
+	p := &SequenceDiagParam{}
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al
 	p.EndpointLabeler = el
-	r, err := generateSequenceDiag(m, p, logger)
+	r, err := GenerateSequenceDiag(m, p, logger)
 	p.title = "Diagram"
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -183,13 +185,13 @@ func TestGenerateSequenceDiagramsToFormatComplexAttributes(t *testing.T) {
 	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
-	al := MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
-	el := MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
-	p := &sequenceDiagParam{}
+	al := cmdutils.MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
+	el := cmdutils.MakeFormatParser(`%(@status? <color green>%(epname)</color>|%(epname))`)
+	p := &SequenceDiagParam{}
 	p.endpoints = []string{"User <- Check Balance"}
 	p.AppLabeler = al
 	p.EndpointLabeler = el
-	r, err := generateSequenceDiag(m, p, logger)
+	r, err := GenerateSequenceDiag(m, p, logger)
 	p.title = "Diagram"
 	expected := `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -624,15 +626,15 @@ func DoConstructSequenceDiagramsWithParams(
 	if err != nil {
 		return nil, err
 	}
-	cmdContextParamSeqgen := &CmdContextParamSeqgen{
-		endpointFormat: endpointFormat,
-		appFormat:      appFormat,
-		title:          title,
-		output:         output,
-		endpointsFlag:  endpoints,
-		appsFlag:       apps,
-		blackboxes:     blackboxes,
-		group:          group,
+	cmdContextParamSeqgen := &cmdutils.CmdContextParamSeqgen{
+		EndpointFormat: endpointFormat,
+		AppFormat:      appFormat,
+		Title:          title,
+		Output:         output,
+		EndpointsFlag:  endpoints,
+		AppsFlag:       apps,
+		Blackboxes:     blackboxes,
+		Group:          group,
 	}
 	return DoConstructSequenceDiagrams(cmdContextParamSeqgen, mod, logger)
 }

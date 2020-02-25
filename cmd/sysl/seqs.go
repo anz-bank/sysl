@@ -6,32 +6,34 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 )
 
-type sequenceDiagParam struct {
-	AppLabeler
-	EndpointLabeler
+type SequenceDiagParam struct {
+	cmdutils.AppLabeler
+	cmdutils.EndpointLabeler
 	endpoints  []string
 	title      string
-	blackboxes map[string]*Upto
+	blackboxes map[string]*cmdutils.Upto
 	appName    string
 	group      string
 }
 
-func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam, logger *logrus.Logger) (string, error) {
-	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	v := MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName, p.group, logger)
-	e := MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
+func GenerateSequenceDiag(m *sysl.Module, p *SequenceDiagParam, logger *logrus.Logger) (string, error) {
+	w := cmdutils.MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
+	v := cmdutils.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName, p.group, logger)
+	e := cmdutils.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
 
 	if err := e.Accept(v); err != nil {
 		return "", err
 	}
 
 	const color = "#LightBlue"
-	for boxname, appset := range v.groupboxes {
+	for boxname, appset := range v.Groupboxes {
 		fmt.Fprintf(w, "box \"%s\" %s\n", boxname, color)
 		for key := range appset {
 			fmt.Fprintf(w, "\tparticipant %s\n", v.UniqueVarForAppName(key))
@@ -42,13 +44,13 @@ func generateSequenceDiag(m *sysl.Module, p *sequenceDiagParam, logger *logrus.L
 	return w.String(), nil
 }
 
-func constructFormatParser(former, latter string) *FormatParser {
+func ConstructFormatParser(former, latter string) *cmdutils.FormatParser {
 	fmtstr := former
 	if former == "" {
 		fmtstr = latter
 	}
 
-	return MakeFormatParser(escapeWordBoundary(fmtstr))
+	return cmdutils.MakeFormatParser(escapeWordBoundary(fmtstr))
 }
 
 func escapeWordBoundary(src string) string {
@@ -63,53 +65,53 @@ func escapeWordBoundary(src string) string {
 }
 
 func DoConstructSequenceDiagrams(
-	cmdContextParam *CmdContextParamSeqgen,
+	cmdContextParam *cmdutils.CmdContextParamSeqgen,
 	model *sysl.Module,
 	logger *logrus.Logger,
 ) (map[string]string, error) {
 	var blackboxes [][]string
 
-	logger.Debugf("endpoints: %v\n", cmdContextParam.endpointsFlag)
-	logger.Debugf("app: %v\n", cmdContextParam.appsFlag)
-	logger.Debugf("endpoint_format: %s\n", cmdContextParam.endpointFormat)
-	logger.Debugf("app_format: %s\n", cmdContextParam.appFormat)
-	logger.Debugf("title: %s\n", cmdContextParam.title)
-	logger.Debugf("output: %s\n", cmdContextParam.output)
+	logger.Debugf("endpoints: %v\n", cmdContextParam.EndpointsFlag)
+	logger.Debugf("app: %v\n", cmdContextParam.AppsFlag)
+	logger.Debugf("endpoint_format: %s\n", cmdContextParam.EndpointFormat)
+	logger.Debugf("app_format: %s\n", cmdContextParam.AppFormat)
+	logger.Debugf("title: %s\n", cmdContextParam.Title)
+	logger.Debugf("output: %s\n", cmdContextParam.Output)
 
-	if len(cmdContextParam.blackboxes) == 0 {
-		blackboxes = ParseBlackBoxesFromArgument(cmdContextParam.blackboxesFlag)
-		logger.Debugf("blackbox: %s\n", cmdContextParam.blackboxesFlag)
+	if len(cmdContextParam.Blackboxes) == 0 {
+		blackboxes = cmdutils.ParseBlackBoxesFromArgument(cmdContextParam.BlackboxesFlag)
+		logger.Debugf("blackbox: %s\n", cmdContextParam.BlackboxesFlag)
 	} else {
-		blackboxes = cmdContextParam.blackboxes
+		blackboxes = cmdContextParam.Blackboxes
 	}
 
 	result := make(map[string]string)
 
-	if strings.Contains(cmdContextParam.output, "%(epname)") {
+	if strings.Contains(cmdContextParam.Output, "%(epname)") {
 		if len(blackboxes) > 0 {
 			logger.Warnf("Ignoring blackboxes passed from command line")
 		}
-		spout := MakeFormatParser(cmdContextParam.output)
-		for _, appName := range cmdContextParam.appsFlag {
+		spout := cmdutils.MakeFormatParser(cmdContextParam.Output)
+		for _, appName := range cmdContextParam.AppsFlag {
 			app := model.Apps[appName]
-			bbs := TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
-			spseqtitle := constructFormatParser(app.GetAttrs()["seqtitle"].GetS(), cmdContextParam.title)
-			spep := constructFormatParser(app.GetAttrs()["epfmt"].GetS(), cmdContextParam.endpointFormat)
-			spapp := constructFormatParser(app.GetAttrs()["appfmt"].GetS(), cmdContextParam.appFormat)
+			bbs := cmdutils.TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
+			spseqtitle := ConstructFormatParser(app.GetAttrs()["seqtitle"].GetS(), cmdContextParam.Title)
+			spep := ConstructFormatParser(app.GetAttrs()["epfmt"].GetS(), cmdContextParam.EndpointFormat)
+			spapp := ConstructFormatParser(app.GetAttrs()["appfmt"].GetS(), cmdContextParam.AppFormat)
 			keys := []string{}
 			for k := range app.GetEndpoints() {
 				keys = append(keys, k)
 			}
 			sort.Strings(keys)
-			bbsAll := map[string]*Upto{}
-			TransformBlackboxesToUptos(bbsAll, bbs, BBApplication)
-			var sd *sequenceDiagParam
+			bbsAll := map[string]*cmdutils.Upto{}
+			cmdutils.TransformBlackboxesToUptos(bbsAll, bbs, cmdutils.BBApplication)
+			var sd *SequenceDiagParam
 			for _, k := range keys {
 				endpoint := app.GetEndpoints()[k]
 				epAttrs := endpoint.GetAttrs()
 				outputDir := spout.FmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
-				bbs2 := TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
-				varrefs := MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
+				bbs2 := cmdutils.TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
+				varrefs := cmdutils.MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
 				sdEndpoints := []string{}
 				for _, stmt := range endpoint.GetStmt() {
 					_, ok := stmt.Stmt.(*sysl.Statement_Call)
@@ -125,12 +127,12 @@ func DoConstructSequenceDiagrams(
 				}
 				groupAttr := epAttrs["groupby"].GetS()
 				if len(groupAttr) == 0 {
-					groupAttr = cmdContextParam.group
-				} else if len(cmdContextParam.group) > 0 {
+					groupAttr = cmdContextParam.Group
+				} else if len(cmdContextParam.Group) > 0 {
 					logger.Warnf("Ignoring groupby passed from command line")
 				}
-				TransformBlackboxesToUptos(bbsAll, bbs2, BBEndpointCollection)
-				sd = &sequenceDiagParam{
+				cmdutils.TransformBlackboxesToUptos(bbsAll, bbs2, cmdutils.BBEndpointCollection)
+				sd = &SequenceDiagParam{
 					endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
 					EndpointLabeler: spep,
@@ -139,7 +141,7 @@ func DoConstructSequenceDiagrams(
 					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
 					group:           groupAttr,
 				}
-				out, err := generateSequenceDiag(model, sd, logger)
+				out, err := GenerateSequenceDiag(model, sd, logger)
 				if err != nil {
 					return nil, err
 				}
@@ -149,37 +151,37 @@ func DoConstructSequenceDiagrams(
 				result[outputDir] = out
 			}
 			for bbKey, bbVal := range bbsAll {
-				if bbVal.VisitCount == 0 && bbVal.ValueType == BBApplication {
+				if bbVal.VisitCount == 0 && bbVal.ValueType == cmdutils.BBApplication {
 					logger.Warnf("blackbox '%s' not hit in app '%s'\n", bbKey, appName)
 				}
 			}
 		}
 	} else {
-		if len(cmdContextParam.endpointsFlag) == 0 {
+		if len(cmdContextParam.EndpointsFlag) == 0 {
 			return result, nil
 		}
-		spep := constructFormatParser("", cmdContextParam.endpointFormat)
-		spapp := constructFormatParser("", cmdContextParam.appFormat)
-		bbsAll := map[string]*Upto{}
-		TransformBlackboxesToUptos(bbsAll, blackboxes, BBCommandLine)
-		sd := &sequenceDiagParam{
-			endpoints:       cmdContextParam.endpointsFlag,
+		spep := ConstructFormatParser("", cmdContextParam.EndpointFormat)
+		spapp := ConstructFormatParser("", cmdContextParam.AppFormat)
+		bbsAll := map[string]*cmdutils.Upto{}
+		cmdutils.TransformBlackboxesToUptos(bbsAll, blackboxes, cmdutils.BBCommandLine)
+		sd := &SequenceDiagParam{
+			endpoints:       cmdContextParam.EndpointsFlag,
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
-			title:           cmdContextParam.title,
+			title:           cmdContextParam.Title,
 			blackboxes:      bbsAll,
-			group:           cmdContextParam.group,
+			group:           cmdContextParam.Group,
 		}
-		out, err := generateSequenceDiag(model, sd, logger)
+		out, err := GenerateSequenceDiag(model, sd, logger)
 		if err != nil {
 			return nil, err
 		}
 		for bbKey, bbVal := range bbsAll {
-			if bbVal.VisitCount == 0 && bbVal.ValueType == BBCommandLine {
+			if bbVal.VisitCount == 0 && bbVal.ValueType == cmdutils.BBCommandLine {
 				logger.Warnf("blackbox '%s' passed on commandline not hit\n", bbKey)
 			}
 		}
-		result[cmdContextParam.output] = out
+		result[cmdContextParam.Output] = out
 	}
 
 	return result, nil

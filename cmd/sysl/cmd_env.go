@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -31,7 +33,7 @@ func (c *envCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return app.Command(c.Name(), "Print sysl environment information.")
 }
 
-func (c *envCmd) Execute(args ExecuteArgs) error {
+func (c *envCmd) Execute(args cmdutils.ExecuteArgs) error {
 	for _, e := range strings.Fields(KnownEnv) {
 		v := os.Getenv(e)
 		fmt.Printf("%s=\"%s\"\n", e, v)

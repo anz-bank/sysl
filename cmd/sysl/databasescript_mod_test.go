@@ -4,6 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/database"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -155,10 +157,10 @@ func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
 func DoConstructModDatabaseScriptWithParams(
 	filter, title, outputDir, appNames, orgSource, newSource string,
 ) ([]database.ScriptOutput, error) {
-	cmdDatabaseScriptMod := &CmdDatabaseScriptParams{
-		title:     title,
-		outputDir: outputDir,
-		appNames:  appNames,
+	cmdDatabaseScriptMod := &cmdutils.CmdDatabaseScriptParams{
+		Title:     title,
+		OutputDir: outputDir,
+		AppNames:  appNames,
 	}
 
 	logger, _ := test.NewNullLogger()

@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	proto "github.com/anz-bank/sysl/pkg/sysl"
 )
 
@@ -15,18 +17,18 @@ const entityGreaterThanArrow = `) >>`
 const classString = `class`
 
 type DataModelParam struct {
-	ClassLabeler
-	mod     *proto.Module
-	app     *proto.Application
-	project string
-	title   string
+	cmdutils.ClassLabeler
+	Mod     *proto.Module
+	App     *proto.Application
+	Project string
+	Title   string
 }
 
 type DataModelView struct {
-	ClassLabeler
+	cmdutils.ClassLabeler
 	mod           *proto.Module
 	stringBuilder *strings.Builder
-	symbols       map[string]*_var
+	symbols       map[string]*cmdutils.Var
 	project       string
 	title         string
 }
@@ -44,7 +46,7 @@ type EntityViewParam struct {
 }
 
 func MakeDataModelView(
-	p ClassLabeler, mod *proto.Module, stringBuilder *strings.Builder,
+	p cmdutils.ClassLabeler, mod *proto.Module, stringBuilder *strings.Builder,
 	title, project string,
 ) *DataModelView {
 	return &DataModelView{
@@ -53,27 +55,27 @@ func MakeDataModelView(
 		stringBuilder: stringBuilder,
 		project:       project,
 		title:         title,
-		symbols:       make(map[string]*_var),
+		symbols:       make(map[string]*cmdutils.Var),
 	}
 }
 
 func (v *DataModelView) UniqueVarForAppName(appName string) string {
 	if s, ok := v.symbols[appName]; ok {
-		return s.alias
+		return s.Alias
 	}
 
 	i := len(v.symbols)
 	alias := fmt.Sprintf("_%d", i)
 	label := v.LabelClass(appName)
-	s := &_var{
-		agent: makeAgent(map[string]*proto.Attribute{}),
-		order: i,
-		label: label,
-		alias: alias,
+	s := &cmdutils.Var{
+		Agent: cmdutils.MakeAgent(map[string]*proto.Attribute{}),
+		Order: i,
+		Label: label,
+		Alias: alias,
 	}
 	v.symbols[appName] = s
 
-	return s.alias
+	return s.Alias
 }
 
 func (v *DataModelView) drawRelationship(relationshipMap map[string]map[string]RelationshipParam, viewType string) {
@@ -243,14 +245,14 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	var isRelation bool
 	relationshipMap := map[string]map[string]RelationshipParam{}
 	v.stringBuilder.WriteString("@startuml\n")
-	if dataParam.title != "" {
-		fmt.Fprintf(v.stringBuilder, "title %s\n", dataParam.title)
+	if dataParam.Title != "" {
+		fmt.Fprintf(v.stringBuilder, "title %s\n", dataParam.Title)
 	}
 	v.stringBuilder.WriteString(PumlHeader)
 
 	// sort and iterate over each entity type the selected application
 	// *Type_Tuple_ OR *Type_Relation_
-	typeMap := dataParam.app.GetTypes()
+	typeMap := dataParam.App.GetTypes()
 	entityNames := []string{}
 	for entityName := range typeMap {
 		entityNames = append(entityNames, entityName)

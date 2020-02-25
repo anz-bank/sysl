@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/eval"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -17,7 +19,7 @@ func (p *replCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-func (p *replCmd) Execute(args ExecuteArgs) error {
+func (p *replCmd) Execute(args cmdutils.ExecuteArgs) error {
 	s := &eval.Scope{}
 	repl := eval.NewREPL(os.Stdin, os.Stdout)
 	for {

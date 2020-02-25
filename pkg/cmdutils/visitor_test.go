@@ -1,13 +1,11 @@
-package main
+package cmdutils
 
 import (
-	"os"
 	"path/filepath"
 	"testing"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/golang/protobuf/jsonpb"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -185,16 +183,6 @@ func TestEndpointElementEndpointPanic(t *testing.T) {
 	assert.Panics(t, func() { e.endpoint(m) })
 }
 
-type mockEndpointLabeler struct {
-	mock.Mock
-}
-
-func (m *mockEndpointLabeler) LabelEndpoint(p *EndpointLabelerParam) string {
-	args := m.Called(p)
-
-	return args.String(0)
-}
-
 func TestEndpointElementEndpointLabel(t *testing.T) {
 	t.Parallel()
 
@@ -272,33 +260,11 @@ func TestStatementElementIsLastStmt(t *testing.T) {
 	assert.True(t, e.isLastStmt(0))
 }
 
-func readModule(p string) (*sysl.Module, error) {
-	m := &sysl.Module{}
-	f, err := os.Open(p)
-	if err != nil {
-		return nil, err
-	}
-	if err := jsonpb.Unmarshal(f, m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-type labeler struct{}
-
-func (l *labeler) LabelApp(appName, controls string, attrs map[string]*sysl.Attribute) string {
-	return appName
-}
-
-func (l *labeler) LabelEndpoint(p *EndpointLabelerParam) string {
-	return p.EndpointName
-}
-
 func TestSequenceDiagramVisitorVisit(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	l := &labeler{}
+	l := &Labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule(filepath.Join(testDir, "sequence_diagram_project.golden.json"))
 	require.NoError(t, err)
@@ -409,7 +375,7 @@ func TestVisitStatement(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	l := &labeler{}
+	l := &Labeler{}
 	w := MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
 	m, err := readModule(filepath.Join(testDir, "sequence_diagram_project.golden.json"))
 	require.NoError(t, err)
