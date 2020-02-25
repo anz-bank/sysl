@@ -102,7 +102,6 @@ func (p *codegenCmd) loadFlags() error {
 		p.depPath = syslutil.ResetVal(p.depPath, config.DepPath)
 		p.basePath = syslutil.ResetVal(p.basePath, config.BasePath)
 		p.appName = syslutil.ResetVal(p.appName, config.AppName)
-		p.start = syslutil.ResetVal(p.start, config.Start)
 	}
 
 	return nil
