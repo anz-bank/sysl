@@ -95,6 +95,11 @@ type CmdContextParamTestRig struct {
 	outputDir        string
 }
 
+type CmdContextParamTestRig struct {
+	templateFileName string
+	outputDir        string
+}
+
 type ExecuteArgs struct {
 	Command        string
 	Modules        []*sysl.Module
