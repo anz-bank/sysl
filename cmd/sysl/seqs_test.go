@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
 	"github.com/anz-bank/sysl/pkg/sequencediagram"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
@@ -30,7 +32,7 @@ func TestLoadAppReturnError(t *testing.T) {
 	}
 	_, fs := syslutil.WriteToMemOverlayFs(args.root)
 	logger, _ := test.NewNullLogger()
-	_, _, err := LoadSyslModule(args.root, args.models, fs, logger)
+	_, _, err := loader.LoadSyslModule(args.root, args.models, fs, logger)
 	assert.Error(t, err)
 }
 
@@ -42,7 +44,7 @@ func TestLoadApp(t *testing.T) {
 	}
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	logger, _ := test.NewNullLogger()
-	mod, name, err := LoadSyslModule(args.root, args.models, fs, logger)
+	mod, name, err := loader.LoadSyslModule(args.root, args.models, fs, logger)
 	require.NoError(t, err)
 	assert.NotNil(t, mod)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -407,7 +409,7 @@ func DoConstructSequenceDiagramsWithParams(
 	group string,
 ) (map[string]string, error) {
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	mod, _, err := loader.LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}
