@@ -1,0 +1,41 @@
+APIGateway:
+    @owner="client"
+    !type LoginResponse:
+        message <: string
+    Login:
+        Server <- Login
+        return ret <: APIGateway.LoginResponse
+DB:
+    @owner="server"
+    Query:
+        lookup data
+        return ret <: data
+    Save:
+        ...
+DBAAA:
+    @owner="server"
+    Query:
+        lookup data
+        return ret <: data
+    Save:
+        ...
+MobileApp:
+    @owner="client"
+    Login:
+        APIGateway <- Login
+Project:
+    @seqtitle="Diagram"
+    Seq:
+        MobileApp <- Login
+Server:
+    @owner="server"
+    !type LoginData:
+        password <: string
+        username <: string
+    !type LoginResponse:
+        message <: string
+    Login(data <: LoginData):
+        build query
+        DB <- Query
+        check result
+        return ret <: Server.LoginResponse
