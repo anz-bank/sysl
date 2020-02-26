@@ -4,6 +4,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
@@ -18,7 +20,7 @@ func TestVarManagerForComponent(t *testing.T) {
 		stringBuilder: &stringBuilder,
 		mod:           &sysl.Module{},
 		drawableApps:  map[string]struct{}{},
-		symbols:       map[string]*_var{},
+		symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
@@ -37,9 +39,9 @@ func TestVarManagerForComponentWithNameMap(t *testing.T) {
 		stringBuilder: &stringBuilder,
 		mod:           &sysl.Module{},
 		drawableApps:  map[string]struct{}{},
-		symbols: map[string]*_var{
+		symbols: map[string]*cmdutils.Var{
 			"appName": {
-				alias: "_1",
+				Alias: "_1",
 			},
 		},
 	}
@@ -62,9 +64,9 @@ func TestVarManagerForComponentWithExistingName(t *testing.T) {
 		stringBuilder: &stringBuilder,
 		mod:           &sysl.Module{},
 		drawableApps:  map[string]struct{}{},
-		symbols: map[string]*_var{
+		symbols: map[string]*cmdutils.Var{
 			"test": {
-				alias: "_1",
+				Alias: "_1",
 			},
 		},
 	}
@@ -93,7 +95,7 @@ func TestVarManagerForEPA(t *testing.T) {
 			},
 		},
 		drawableApps: map[string]struct{}{},
-		symbols:      map[string]*_var{},
+		symbols:      map[string]*cmdutils.Var{},
 	}
 
 	//When
@@ -124,9 +126,9 @@ func TestVarManagerForEPAWithExistingName(t *testing.T) {
 			},
 		},
 		drawableApps: map[string]struct{}{},
-		symbols: map[string]*_var{
+		symbols: map[string]*cmdutils.Var{
 			"a : b": {
-				alias: "_1",
+				Alias: "_1",
 			},
 		},
 	}
@@ -211,7 +213,7 @@ func TestBuildClusterForIntsView(t *testing.T) {
 		},
 		drawableApps: map[string]struct{}{},
 		topSymbols:   map[string]*_topVar{},
-		symbols:      map[string]*_var{},
+		symbols:      map[string]*cmdutils.Var{},
 	}
 	deps := []AppDependency{
 		{
@@ -250,7 +252,7 @@ func TestBuildClusterForComponentView(t *testing.T) {
 		mod:           &sysl.Module{},
 		drawableApps:  map[string]struct{}{},
 		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*_var{},
+		symbols:       map[string]*cmdutils.Var{},
 	}
 	apps := []string{"a :: A", "a :: A", "b :: B", "c :: C"}
 
@@ -308,7 +310,7 @@ func TestGenerateIntsView(t *testing.T) {
 		project:      "project",
 		drawableApps: map[string]struct{}{},
 		topSymbols:   map[string]*_topVar{},
-		symbols:      map[string]*_var{},
+		symbols:      map[string]*cmdutils.Var{},
 	}
 
 	v.generateIntsView(
@@ -383,7 +385,7 @@ func TestGenerateEPAView(t *testing.T) {
 		project:       "test",
 		drawableApps:  map[string]struct{}{},
 		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*_var{},
+		symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
@@ -451,7 +453,7 @@ func TestGenerateEPAViewEndpointPattern(t *testing.T) {
 		project:       "test",
 		drawableApps:  map[string]struct{}{},
 		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*_var{},
+		symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
@@ -518,7 +520,7 @@ func TestGenerateEPAViewSameApp(t *testing.T) {
 		project:       "test",
 		drawableApps:  map[string]struct{}{},
 		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*_var{},
+		symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
@@ -655,9 +657,9 @@ func TestDrawSystemView(t *testing.T) {
 		stringBuilder: &stringBuilder,
 		mod:           &sysl.Module{},
 		drawableApps:  map[string]struct{}{},
-		symbols: map[string]*_var{
+		symbols: map[string]*cmdutils.Var{
 			"test": {
-				alias: "_1",
+				Alias: "_1",
 			},
 		},
 	}

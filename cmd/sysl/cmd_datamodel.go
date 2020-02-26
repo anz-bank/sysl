@@ -5,44 +5,49 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/diagrams"
+	"github.com/anz-bank/sysl/pkg/sequencediagram"
+
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"gopkg.in/alecthomas/kingpin.v2"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 )
 
-func generateDataModelsWithProjectMannerModule(datagenParams *CmdContextParamDatagen,
+func generateDataModelsWithProjectMannerModule(datagenParams *cmdutils.CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
 	outmap := make(map[string]string)
 
-	logger.Debugf("project: %v\n", datagenParams.project)
-	logger.Debugf("title: %s\n", datagenParams.title)
-	logger.Debugf("filter: %s\n", datagenParams.filter)
-	logger.Debugf("output: %s\n", datagenParams.output)
+	logger.Debugf("project: %v\n", datagenParams.Project)
+	logger.Debugf("title: %s\n", datagenParams.Title)
+	logger.Debugf("filter: %s\n", datagenParams.Filter)
+	logger.Debugf("output: %s\n", datagenParams.Output)
 
-	spclass := constructFormatParser("", datagenParams.classFormat)
+	spclass := sequencediagram.ConstructFormatParser("", datagenParams.ClassFormat)
 
 	// The "project" app that specifies the data models to be built
 	var app *sysl.Application
 	var exists bool
-	if app, exists = model.GetApps()[datagenParams.project]; !exists {
+	if app, exists = model.GetApps()[datagenParams.Project]; !exists {
 		return nil, fmt.Errorf("project not found in sysl")
 	}
 
 	// Iterate over each endpoint within the selected project
 	for epname, endpt := range app.GetEndpoints() {
-		outputDir := datagenParams.output
+		outputDir := datagenParams.Output
 		if strings.Contains(outputDir, "%(epname)") {
-			of := MakeFormatParser(datagenParams.output)
-			outputDir = of.FmtOutput(datagenParams.project, epname, endpt.GetLongName(), endpt.GetAttrs())
+			of := cmdutils.MakeFormatParser(datagenParams.Output)
+			outputDir = of.FmtOutput(datagenParams.Project, epname, endpt.GetLongName(), endpt.GetAttrs())
 		}
-		if datagenParams.filter != "" {
-			re := regexp.MustCompile(datagenParams.filter)
+		if datagenParams.Filter != "" {
+			re := regexp.MustCompile(datagenParams.Filter)
 			if !re.MatchString(outputDir) {
 				continue
 			}
 		}
-		generateDataModel(spclass, outmap, model, endpt.GetStmt(), datagenParams.title, datagenParams.project, outputDir)
+		generateDataModel(spclass, outmap, model, endpt.GetStmt(), datagenParams.Title, datagenParams.Project, outputDir)
 	}
 	return outmap, nil
 }
@@ -53,31 +58,31 @@ func generateDataModelsWithProjectMannerModule(datagenParams *CmdContextParamDat
  * sysl data      -d --root=/Users/guest/data -t Test -o Test.png Test
  * sysl datamodel -d --root=/Users/guest/data -t Test -o Test.png Test.sysl
  */
-func generateDataModelsWithPureModule(datagenParams *CmdContextParamDatagen,
+func generateDataModelsWithPureModule(datagenParams *cmdutils.CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
 	outmap := make(map[string]string)
 
-	logger.Debugf("title: %s\n", datagenParams.title)
-	logger.Debugf("output: %s\n", datagenParams.output)
+	logger.Debugf("title: %s\n", datagenParams.Title)
+	logger.Debugf("output: %s\n", datagenParams.Output)
 
-	spclass := constructFormatParser("", datagenParams.classFormat)
+	spclass := sequencediagram.ConstructFormatParser("", datagenParams.ClassFormat)
 
 	apps := model.GetApps()
 	for appName := range apps {
 		app := apps[appName]
-		outputDir := datagenParams.output
+		outputDir := datagenParams.Output
 		if strings.Contains(outputDir, "%(epname)") {
-			of := MakeFormatParser(datagenParams.output)
+			of := cmdutils.MakeFormatParser(datagenParams.Output)
 			outputDir = of.FmtOutput(appName, appName, app.GetLongName(), app.GetAttrs())
 		}
 		var stringBuilder strings.Builder
 		if app != nil {
 			dataParam := &DataModelParam{
-				mod:   model,
-				app:   app,
-				title: datagenParams.title,
+				Mod:   model,
+				App:   app,
+				Title: datagenParams.Title,
 			}
-			v := MakeDataModelView(spclass, dataParam.mod, &stringBuilder, dataParam.title, "")
+			v := MakeDataModelView(spclass, dataParam.Mod, &stringBuilder, dataParam.Title, "")
 			outmap[outputDir] = v.GenerateDataView(dataParam)
 		}
 	}
@@ -85,7 +90,7 @@ func generateDataModelsWithPureModule(datagenParams *CmdContextParamDatagen,
 	return outmap, nil
 }
 
-func generateDataModel(pclass ClassLabeler, outmap map[string]string, mod *sysl.Module,
+func generateDataModel(pclass cmdutils.ClassLabeler, outmap map[string]string, mod *sysl.Module,
 	stmts []*sysl.Statement, title, project, outDir string) {
 	apps := mod.GetApps()
 
@@ -96,21 +101,21 @@ func generateDataModel(pclass ClassLabeler, outmap map[string]string, mod *sysl.
 			app := apps[a.Action.Action]
 			if app != nil {
 				dataParam := &DataModelParam{
-					mod:     mod,
-					app:     app,
-					title:   title,
-					project: project,
+					Mod:     mod,
+					App:     app,
+					Title:   title,
+					Project: project,
 				}
-				v := MakeDataModelView(pclass, dataParam.mod, &stringBuilder, dataParam.title, dataParam.project)
+				v := MakeDataModelView(pclass, dataParam.Mod, &stringBuilder, dataParam.Title, dataParam.Project)
 				outmap[outDir] = v.GenerateDataView(dataParam)
 			}
 		}
 	}
 }
 
-func generateDataModels(datagenParams *CmdContextParamDatagen,
+func generateDataModels(datagenParams *cmdutils.CmdContextParamDatagen,
 	model *sysl.Module, logger *logrus.Logger) (map[string]string, error) {
-	if datagenParams.direct {
+	if datagenParams.Direct {
 		// The sysl file is not project manner
 		return generateDataModelsWithPureModule(datagenParams, model, logger)
 	}
@@ -119,8 +124,8 @@ func generateDataModels(datagenParams *CmdContextParamDatagen,
 }
 
 type datamodelCmd struct {
-	plantumlmixin
-	CmdContextParamDatagen
+	diagrams.Plantumlmixin
+	cmdutils.CmdContextParamDatagen
 }
 
 func (p *datamodelCmd) Name() string       { return "datamodel" }
@@ -131,24 +136,24 @@ func (p *datamodelCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("class_format",
 		"Specify the format string for data diagram participants. "+
 			"May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))",
-	).Default("%(classname)").StringVar(&p.classFormat)
+	).Default("%(classname)").StringVar(&p.ClassFormat)
 
-	cmd.Flag("title", "Diagram title").Short('t').StringVar(&p.title)
+	cmd.Flag("title", "Diagram title").Short('t').StringVar(&p.Title)
 
 	p.AddFlag(cmd)
 
 	cmd.Flag("output",
 		"Output file (default: %(epname).png)",
-	).Default("%(epname).png").Short('o').StringVar(&p.output)
-	cmd.Flag("project", "Project pseudo-app to render").Short('j').StringVar(&p.project)
-	cmd.Flag("direct", "Process data model directly without project manner").Short('d').BoolVar(&p.direct)
-	cmd.Flag("filter", "Only generate diagrams whose names match a pattern").Short('f').StringVar(&p.filter)
+	).Default("%(epname).png").Short('o').StringVar(&p.Output)
+	cmd.Flag("project", "Project pseudo-app to render").Short('j').StringVar(&p.Project)
+	cmd.Flag("direct", "Process data model directly without project manner").Short('d').BoolVar(&p.Direct)
+	cmd.Flag("filter", "Only generate diagrams whose names match a pattern").Short('f').StringVar(&p.Filter)
 
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
 
-func (p *datamodelCmd) Execute(args ExecuteArgs) error {
+func (p *datamodelCmd) Execute(args cmdutils.ExecuteArgs) error {
 	outmap, err := generateDataModels(&p.CmdContextParamDatagen, args.Modules[0], args.Logger)
 	if err != nil {
 		return err

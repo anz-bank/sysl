@@ -1,4 +1,4 @@
-package main
+package cmdutils
 
 import (
 	"reflect"
@@ -200,7 +200,7 @@ func TestGetAppAttr(t *testing.T) {
 	}
 
 	// when
-	actual := getApplicationAttrs(m, "test")
+	actual := GetApplicationAttrs(m, "test")
 
 	// then
 	assert.Equal(t, attr, actual)
@@ -215,7 +215,7 @@ func TestGetAppAttrWhenAppNotExist(t *testing.T) {
 	}
 
 	// when
-	actual := getApplicationAttrs(m, "test")
+	actual := GetApplicationAttrs(m, "test")
 
 	// then
 	assert.Nil(t, actual)
@@ -232,7 +232,7 @@ func TestSortedISOCtrlSlice(t *testing.T) {
 	}
 
 	// when
-	actual := getSortedISOCtrlSlice(attrs)
+	actual := GetSortedISOCtrlSlice(attrs)
 
 	// then
 	assert.Equal(t, []string{"11", "12", "5"}, actual)
@@ -245,7 +245,7 @@ func TestSortedISOCtrlSliceEmpty(t *testing.T) {
 	attrs := make(map[string]*sysl.Attribute)
 
 	// when
-	actual := getSortedISOCtrlSlice(attrs)
+	actual := GetSortedISOCtrlSlice(attrs)
 
 	// then
 	assert.Equal(t, []string{}, actual)
@@ -262,7 +262,7 @@ func TestSortedISOCtrlStr(t *testing.T) {
 	}
 
 	// when
-	actual := getSortedISOCtrlStr(attrs)
+	actual := GetSortedISOCtrlStr(attrs)
 
 	// then
 	assert.Equal(t, "11, 12, 5", actual)
@@ -275,7 +275,7 @@ func TestSortedISOCtrlStrEmpty(t *testing.T) {
 	attrs := make(map[string]*sysl.Attribute)
 
 	// when
-	actual := getSortedISOCtrlStr(attrs)
+	actual := GetSortedISOCtrlStr(attrs)
 
 	// then
 	assert.Equal(t, "", actual)
@@ -309,7 +309,7 @@ func TestFormatArgs(t *testing.T) {
 	}
 
 	// when
-	actual := formatArgs(m, "test", "User")
+	actual := FormatArgs(m, "test", "User")
 
 	assert.Equal(t, "<color blue>test.User</color> <<color red>R, I</color>>", actual)
 }
@@ -337,7 +337,7 @@ func TestFormatArgsWithoutIsoInteg(t *testing.T) {
 	}
 
 	// when
-	actual := formatArgs(m, "test", "User")
+	actual := FormatArgs(m, "test", "User")
 
 	assert.Equal(t, "<color blue>test.User</color> <<color red>R, ?</color>>", actual)
 }
@@ -365,7 +365,7 @@ func TestFormatArgsWithoutIsoConf(t *testing.T) {
 	}
 
 	// when
-	actual := formatArgs(m, "test", "User")
+	actual := FormatArgs(m, "test", "User")
 
 	assert.Equal(t, "<color blue>test.User</color> <<color green>?, I</color>>", actual)
 }
@@ -387,7 +387,7 @@ func TestFormatArgsWithoutAttrs(t *testing.T) {
 	}
 
 	// when
-	actual := formatArgs(m, "test", "User")
+	actual := FormatArgs(m, "test", "User")
 
 	assert.Equal(t, "<color blue>test.User</color> <<color green>?, ?</color>>", actual)
 }
@@ -409,7 +409,7 @@ func TestFormatArgsWithoutParameterTypeName(t *testing.T) {
 	}
 
 	// when
-	actual := formatArgs(m, "test", "")
+	actual := FormatArgs(m, "test", "")
 
 	assert.Equal(t, "<color blue>test.</color> <<color green>?, ?</color>>", actual)
 }
@@ -431,7 +431,7 @@ func TestFormatArgsWithoutAppName(t *testing.T) {
 	}
 
 	// when
-	actual := formatArgs(m, "", "User")
+	actual := FormatArgs(m, "", "User")
 
 	assert.Equal(t, "<color blue>.User</color> <<color green>?, ?</color>>", actual)
 }
@@ -453,7 +453,7 @@ func TestFormatArgsWithoutAppNameAndParameterTypeName(t *testing.T) {
 	}
 
 	// when
-	actual := formatArgs(m, "", "")
+	actual := FormatArgs(m, "", "")
 
 	assert.Equal(t, "<color blue>.</color> <<color green>?, ?</color>>", actual)
 }
@@ -475,7 +475,7 @@ func TestFormatReturnParam(t *testing.T) {
 	}
 
 	// when
-	actual := formatReturnParam(m, "test.User")
+	actual := FormatReturnParam(m, "test.User")
 
 	assert.Equal(t, []string{"<color blue>test.User</color> <<color green>?, ?</color>>"}, actual)
 }
@@ -497,7 +497,7 @@ func TestFormatReturnParamSplit(t *testing.T) {
 	}
 
 	// when
-	actual := formatReturnParam(m, "test.User,profile<:test.User,Bool,set of test.User, one of {test.User,ab}")
+	actual := FormatReturnParam(m, "test.User,profile<:test.User,Bool,set of test.User, one of {test.User,ab}")
 
 	expected := []string{
 		"<color blue>test.User</color> <<color green>?, ?</color>>",
@@ -529,7 +529,7 @@ func TestGetReturnPayload(t *testing.T) {
 		},
 	}
 
-	actual := getReturnPayload(stmts)
+	actual := GetReturnPayload(stmts)
 
 	assert.Equal(t, "test", actual)
 }
@@ -564,7 +564,7 @@ func TestGetReturnPayloadWithAlt(t *testing.T) {
 		},
 	}
 
-	actual := getReturnPayload(stmts)
+	actual := GetReturnPayload(stmts)
 
 	assert.Equal(t, "test", actual)
 }
@@ -591,7 +591,7 @@ func TestGetReturnPayloadWithCond(t *testing.T) {
 		},
 	}
 
-	actual := getReturnPayload(stmts)
+	actual := GetReturnPayload(stmts)
 
 	assert.Equal(t, "test", actual)
 }
@@ -619,7 +619,7 @@ func TestGetReturnPayloadWithLoop(t *testing.T) {
 		},
 	}
 
-	actual := getReturnPayload(stmts)
+	actual := GetReturnPayload(stmts)
 
 	assert.Equal(t, "test", actual)
 }
@@ -646,7 +646,7 @@ func TestGetReturnPayloadWithLoopN(t *testing.T) {
 		},
 	}
 
-	actual := getReturnPayload(stmts)
+	actual := GetReturnPayload(stmts)
 
 	assert.Equal(t, "test", actual)
 }
@@ -673,7 +673,7 @@ func TestGetReturnPayloadWithForeach(t *testing.T) {
 		},
 	}
 
-	actual := getReturnPayload(stmts)
+	actual := GetReturnPayload(stmts)
 
 	assert.Equal(t, "test", actual)
 }
@@ -700,7 +700,7 @@ func TestGetReturnPayloadWithGroup(t *testing.T) {
 		},
 	}
 
-	actual := getReturnPayload(stmts)
+	actual := GetReturnPayload(stmts)
 
 	assert.Equal(t, "test", actual)
 }
@@ -749,7 +749,7 @@ func TestGetAndFmtParam(t *testing.T) {
 		},
 	}
 
-	actual := getAndFmtParam(m, p)
+	actual := GetAndFmtParam(m, p)
 
 	assert.Equal(t, []string{"<color blue>test.User</color> <<color red>R, I</color>>"}, actual)
 }
@@ -757,7 +757,7 @@ func TestGetAndFmtParam(t *testing.T) {
 func TestNormalizeEndpointName(t *testing.T) {
 	t.Parallel()
 
-	actual := normalizeEndpointName("a -> b")
+	actual := NormalizeEndpointName("a -> b")
 
 	assert.Equal(t, " ⬄ b", actual)
 }

@@ -4,6 +4,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/database"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -155,18 +159,18 @@ func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
 func DoConstructModDatabaseScriptWithParams(
 	filter, title, outputDir, appNames, orgSource, newSource string,
 ) ([]database.ScriptOutput, error) {
-	cmdDatabaseScriptMod := &CmdDatabaseScriptParams{
-		title:     title,
-		outputDir: outputDir,
-		appNames:  appNames,
+	cmdDatabaseScriptMod := &cmdutils.CmdDatabaseScriptParams{
+		Title:     title,
+		OutputDir: outputDir,
+		AppNames:  appNames,
 	}
 
 	logger, _ := test.NewNullLogger()
-	modelOld, _, err := LoadSyslModule("", orgSource, afero.NewOsFs(), logger)
+	modelOld, _, err := loader.LoadSyslModule("", orgSource, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}
-	modelNew, _, err := LoadSyslModule("", newSource, afero.NewOsFs(), logger)
+	modelNew, _, err := loader.LoadSyslModule("", newSource, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

@@ -5,26 +5,28 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/database"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-func GenerateDatabaseScripts(scriptParams *CmdDatabaseScriptParams, model *sysl.Module,
+func GenerateDatabaseScripts(scriptParams *cmdutils.CmdDatabaseScriptParams, model *sysl.Module,
 	logger *logrus.Logger) ([]database.ScriptOutput, error) {
-	logger.Debugf("Application names: %v\n", scriptParams.appNames)
-	logger.Debugf("title: %s\n", scriptParams.title)
-	logger.Debugf("outputDir: %s\n", scriptParams.outputDir)
-	logger.Debugf("db type: %s\n", scriptParams.dbType)
-	appNamesStr := strings.TrimSpace(scriptParams.appNames)
+	logger.Debugf("Application names: %v\n", scriptParams.AppNames)
+	logger.Debugf("title: %s\n", scriptParams.Title)
+	logger.Debugf("outputDir: %s\n", scriptParams.OutputDir)
+	logger.Debugf("db type: %s\n", scriptParams.DbType)
+	appNamesStr := strings.TrimSpace(scriptParams.AppNames)
 	if appNamesStr == "" {
 		logger.Error("no application name specified")
 		return nil, fmt.Errorf("no application names specified")
 	}
 	appNames := strings.Split(appNamesStr, database.Delimiter)
-	outputSlice := processSysl(model, appNames, scriptParams.outputDir, scriptParams.title,
-		scriptParams.dbType, logger)
+	outputSlice := processSysl(model, appNames, scriptParams.OutputDir, scriptParams.Title,
+		scriptParams.DbType, logger)
 	return outputSlice, nil
 }
 
@@ -46,7 +48,7 @@ func processSysl(mod *sysl.Module,
 }
 
 type databaseScriptCmd struct {
-	CmdDatabaseScriptParams
+	cmdutils.CmdDatabaseScriptParams
 }
 
 func (p *databaseScriptCmd) Name() string       { return "generate-db-scripts" }
@@ -55,15 +57,15 @@ func (p *databaseScriptCmd) MaxSyslModule() int { return 1 }
 func (p *databaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate db script").Alias("generatedbscripts")
 
-	cmd.Flag("title", "file title").Short('t').StringVar(&p.title)
-	cmd.Flag("output-dir", "output directory for generated file").Short('o').StringVar(&p.outputDir)
-	cmd.Flag("app-names", "application names to parse").Short('a').StringVar(&p.appNames)
-	cmd.Flag("db-type", "database type e.g postgres").Short('d').StringVar(&p.dbType)
+	cmd.Flag("title", "file title").Short('t').StringVar(&p.Title)
+	cmd.Flag("output-dir", "output directory for generated file").Short('o').StringVar(&p.OutputDir)
+	cmd.Flag("app-names", "application names to parse").Short('a').StringVar(&p.AppNames)
+	cmd.Flag("db-type", "database type e.g postgres").Short('d').StringVar(&p.DbType)
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
 
-func (p *databaseScriptCmd) Execute(args ExecuteArgs) error {
+func (p *databaseScriptCmd) Execute(args cmdutils.ExecuteArgs) error {
 	outputSlice, err := GenerateDatabaseScripts(&p.CmdDatabaseScriptParams, args.Modules[0], args.Logger)
 	if err != nil {
 		return err

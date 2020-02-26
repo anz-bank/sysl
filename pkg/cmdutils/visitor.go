@@ -1,4 +1,4 @@
-package main
+package cmdutils
 
 import (
 	"fmt"
@@ -17,10 +17,10 @@ type entry struct {
 }
 
 func makeEntry(s string) *entry {
-	match := endpointParserRE.FindStringSubmatch(s)
+	match := EndpointParserRE.FindStringSubmatch(s)
 	out := &entry{}
 
-	for i, name := range endpointParserRE.SubexpNames() {
+	for i, name := range EndpointParserRE.SubexpNames() {
 		if i > 0 && i <= len(match) {
 			switch name {
 			case "appname":
@@ -142,7 +142,7 @@ func (e *EndpointElement) label(
 	epp syslutil.StrSet,
 	isHuman, isHumanSender, needsInt bool,
 ) string {
-	label := normalizeEndpointName(e.endpointName)
+	label := NormalizeEndpointName(e.endpointName)
 
 	if e.stmt != nil && e.stmt.GetCall() != nil {
 		ptrns := func(a syslutil.StrSet, b syslutil.StrSet) string {
@@ -152,8 +152,8 @@ func (e *EndpointElement) label(
 			return ""
 		}(e.senderEndpointPatterns, epp)
 
-		isoctrl := getSortedISOCtrlStr(ep.Attrs)
-		epargs := getAndFmtParam(m, ep.Param)
+		isoctrl := GetSortedISOCtrlStr(ep.Attrs)
+		epargs := GetAndFmtParam(m, ep.Param)
 
 		str := func(t bool, v string) string {
 			if t {
@@ -199,10 +199,10 @@ type SequenceDiagramVisitor struct {
 	w          *SequenceDiagramWriter
 	m          *sysl.Module
 	visited    map[string]int
-	symbols    map[string]*_var
+	symbols    map[string]*Var
 	currentApp string
 	groupby    string
-	groupboxes map[string]syslutil.StrSet
+	Groupboxes map[string]syslutil.StrSet
 	logger     *logrus.Logger
 }
 
@@ -221,10 +221,10 @@ func MakeSequenceDiagramVisitor(
 		w:               w,
 		m:               m,
 		visited:         make(map[string]int),
-		symbols:         make(map[string]*_var),
+		symbols:         make(map[string]*Var),
 		currentApp:      appName,
 		groupby:         group,
-		groupboxes:      map[string]syslutil.StrSet{},
+		Groupboxes:      map[string]syslutil.StrSet{},
 		logger:          logger,
 	}
 }
@@ -249,23 +249,23 @@ func (v *SequenceDiagramVisitor) Visit(e Element) error {
 
 func (v *SequenceDiagramVisitor) UniqueVarForAppName(appName string) string {
 	if s, ok := v.symbols[appName]; ok {
-		return s.alias
+		return s.Alias
 	}
 
 	i := len(v.symbols)
 	alias := fmt.Sprintf("_%d", i)
-	attrs := getApplicationAttrs(v.m, appName)
-	controls := getSortedISOCtrlStr(attrs)
+	attrs := GetApplicationAttrs(v.m, appName)
+	controls := GetSortedISOCtrlStr(attrs)
 	label := v.LabelApp(appName, controls, attrs)
-	s := &_var{
-		agent: makeAgent(attrs),
-		order: i,
-		label: label,
-		alias: alias,
+	s := &Var{
+		Agent: MakeAgent(attrs),
+		Order: i,
+		Label: label,
+		Alias: alias,
 	}
 	v.symbols[appName] = s
 
-	return s.alias
+	return s.Alias
 }
 
 func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionElement) error {
@@ -307,15 +307,15 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 		}
 	}
 
-	s := make([]*_var, 0, len(v.symbols))
+	s := make([]*Var, 0, len(v.symbols))
 	for _, item := range v.symbols {
 		s = append(s, item)
 	}
 	sort.Slice(s, func(i, j int) bool {
-		if s[i].category == s[j].category {
-			return s[i].order < s[j].order
+		if s[i].Category == s[j].Category {
+			return s[i].Order < s[j].Order
 		}
-		return s[i].category < s[j].category
+		return s[i].Category < s[j].Category
 	})
 	for _, item := range s {
 		if _, err := v.w.WriteHead(item.String()); err != nil {
@@ -342,10 +342,10 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 
 	if len(v.groupby) > 0 {
 		if attr, exists := app.GetAttrs()[v.groupby]; exists {
-			if _, has := v.groupboxes[attr.GetS()]; !has {
-				v.groupboxes[attr.GetS()] = syslutil.MakeStrSet()
+			if _, has := v.Groupboxes[attr.GetS()]; !has {
+				v.Groupboxes[attr.GetS()] = syslutil.MakeStrSet()
 			}
-			v.groupboxes[attr.GetS()].Insert(e.appName)
+			v.Groupboxes[attr.GetS()].Insert(e.appName)
 		}
 	}
 
@@ -361,7 +361,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 		fmt.Fprintf(v.w, "%s->%s : %s%s\n", sender, agent, icon, label)
 	}
 
-	payload := strings.Join(formatReturnParam(v.m, getReturnPayload(endpoint.Stmt)), " | ")
+	payload := strings.Join(FormatReturnParam(v.m, GetReturnPayload(endpoint.Stmt)), " | ")
 
 	isCallingSelf := e.fromApp != nil && syslutil.GetAppName(e.fromApp) == e.appName
 
@@ -524,7 +524,7 @@ func (v *SequenceDiagramVisitor) visitAlt(e *StatementElement, i int, c *sysl.Al
 }
 
 func (v *SequenceDiagramVisitor) visitRet(e *StatementElement, c *sysl.Return) error {
-	rargs := formatReturnParam(v.m, c.GetPayload())
+	rargs := FormatReturnParam(v.m, c.GetPayload())
 	_, err := fmt.Fprintf(v.w, "%s<--%s : %s\n", e.sender(v), e.agent(v), strings.Join(rargs, " | "))
 	return err
 }
@@ -565,13 +565,13 @@ func (v *SequenceDiagramVisitor) visitGroupStmt(
 	return err
 }
 
-type agent struct {
-	category int
-	name     string
+type Agent struct {
+	Category int
+	Name     string
 }
 
 //nolint:gochecknoglobals
-var agents = map[string]agent{
+var agents = map[string]Agent{
 	"human":    {0, "actor"},
 	"ui":       {1, "boundary"},
 	"cron":     {2, "control"},
@@ -579,7 +579,7 @@ var agents = map[string]agent{
 	"external": {5, "control"},
 }
 
-func makeAgent(attrs map[string]*sysl.Attribute) agent {
+func MakeAgent(attrs map[string]*sysl.Attribute) Agent {
 	if patterns, ok := attrs["patterns"]; ok {
 		if x := patterns.GetA(); x != nil {
 			for _, y := range x.Elt {
@@ -590,16 +590,16 @@ func makeAgent(attrs map[string]*sysl.Attribute) agent {
 		}
 	}
 
-	return agent{3, "control"}
+	return Agent{3, "control"}
 }
 
-type _var struct {
-	agent
-	order int
-	label string
-	alias string
+type Var struct {
+	Agent
+	Order int
+	Label string
+	Alias string
 }
 
-func (s _var) String() string {
-	return fmt.Sprintf(`%s "%s" as %s`, s.name, s.label, s.alias)
+func (s Var) String() string {
+	return fmt.Sprintf(`%s "%s" as %s`, s.Name, s.Label, s.Alias)
 }

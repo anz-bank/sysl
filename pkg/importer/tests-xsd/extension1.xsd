@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="User">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="10"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Employee">
+    <xs:complexContent>
+    <xs:extension base="User">
+      <xs:sequence>
+        <xs:element name="grade" type="xs:string"/>
+        <xs:element name="address" type="xs:string"/>
+        <xs:element name="city" type="xs:string"/>
+        <xs:element name="country" type="xs:string"/>
+      </xs:sequence>
+    </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

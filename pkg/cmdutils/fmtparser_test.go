@@ -1,9 +1,9 @@
-package main
+package cmdutils
 
 import (
 	"testing"
 
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +13,7 @@ func TestMakeFormatParser(t *testing.T) {
 	fp := MakeFormatParser("%(appname)")
 
 	assert.NotNil(t, fp)
-	assert.Equal(t, "%(appname)", fp.self)
+	assert.Equal(t, "%(appname)", fp.Self)
 }
 
 func TestLabelEndpoint(t *testing.T) {
@@ -234,7 +234,7 @@ func TestMergeAttributesMap(t *testing.T) {
 	}
 
 	// When
-	mergeAttributesMap(valMap, seqtitleMap)
+	MergeAttributesMap(valMap, seqtitleMap)
 
 	// Then
 	assert.Equal(t, map[string]string{"appname": "Project", "@seqtitle": "Diagram"}, valMap)
