@@ -13,28 +13,28 @@ func TestLoadFlags(t *testing.T) {
 	cmd = codegenCmd{config: "../../pkg/config/tests/config.yml"}
 	err = cmd.loadFlags()
 	assert.Equal(t, nil, err)
-	assert.Equal(t, "go.gen.g", cmd.grammar)
-	assert.Equal(t, "go.gen.sysl", cmd.transform)
-	assert.Equal(t, "depPath", cmd.depPath)
-	assert.Equal(t, "basePath", cmd.basePath)
+	assert.Equal(t, "go.gen.g", cmd.Grammar)
+	assert.Equal(t, "go.gen.sysl", cmd.Transform)
+	assert.Equal(t, "depPath", cmd.DepPath)
+	assert.Equal(t, "basePath", cmd.BasePath)
 	assert.Equal(t, "appName", cmd.appName)
 
 	cmd = codegenCmd{}
-	cmd.grammar = "grammar"
-	cmd.transform = "transform"
+	cmd.Grammar = "grammar"
+	cmd.Transform = "transform"
 	err = cmd.loadFlags()
 	assert.Equal(t, nil, err)
-	assert.Equal(t, "grammar", cmd.grammar)
-	assert.Equal(t, "transform", cmd.transform)
-	assert.Equal(t, "", cmd.depPath)
-	assert.Equal(t, "", cmd.basePath)
+	assert.Equal(t, "grammar", cmd.Grammar)
+	assert.Equal(t, "transform", cmd.Transform)
+	assert.Equal(t, "", cmd.DepPath)
+	assert.Equal(t, "", cmd.BasePath)
 	assert.Equal(t, "", cmd.appName)
 
 	cmd = codegenCmd{}
 	assert.Error(t, cmd.loadFlags())
 
 	cmd = codegenCmd{}
-	cmd.grammar = "grammar"
+	cmd.Grammar = "grammar"
 	assert.Error(t, cmd.loadFlags())
 }
 

@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/anz-bank/sysl/pkg/parse"
@@ -493,14 +495,14 @@ func GenerateIntegrationsWithParams(
 	exclude []string,
 	clustered, epa bool,
 ) (map[string]string, error) {
-	cmdContextParamIntgen := &CmdContextParamIntgen{
-		title:     title,
-		output:    output,
-		project:   project,
-		filter:    filter,
-		exclude:   exclude,
-		clustered: clustered,
-		epa:       epa,
+	cmdContextParamIntgen := &cmdutils.CmdContextParamIntgen{
+		Title:     title,
+		Output:    output,
+		Project:   project,
+		Filter:    filter,
+		Exclude:   exclude,
+		Clustered: clustered,
+		EPA:       epa,
 	}
 
 	logger, _ := test.NewNullLogger()

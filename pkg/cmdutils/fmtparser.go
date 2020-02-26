@@ -1,26 +1,26 @@
-package main
+package cmdutils
 
 import (
 	"regexp"
 	"strings"
 
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
-	log "github.com/sirupsen/logrus"
+	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/sirupsen/logrus"
 )
 
 //nolint:gochecknoglobals
 var (
-	itemReDefault    = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|%\()`)
-	itemReStatement  = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|[|)]|%\()`)
-	itemReEnd        = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|\)|%\()`)
-	itemReVarStart   = regexp.MustCompile(`^%\(`)
-	itemReVar        = regexp.MustCompile(`^(@?\w+)`)
-	itemReCondOper   = regexp.MustCompile(`^[!=]=`)
-	itemReSearch     = regexp.MustCompile(`^~/([^/]+)/`)
-	itemReCondVal    = regexp.MustCompile(`^\'([\w ]+)\'`)
-	itemReStmtOper   = regexp.MustCompile(`^[=?]`)
-	itemReNoStmtOper = regexp.MustCompile(`^\|`)
-	itemReStmtEnd    = regexp.MustCompile(`^\)`)
+	ItemReDefault    = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|%\()`)
+	ItemReStatement  = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|[|)]|%\()`)
+	ItemReEnd        = regexp.MustCompile(`((?:[^%]|%[^(\n]|\n)*?)($|\)|%\()`)
+	ItemReVarStart   = regexp.MustCompile(`^%\(`)
+	ItemReVar        = regexp.MustCompile(`^(@?\w+)`)
+	ItemReCondOper   = regexp.MustCompile(`^[!=]=`)
+	ItemReSearch     = regexp.MustCompile(`^~/([^/]+)/`)
+	ItemReCondVal    = regexp.MustCompile(`^\'([\w ]+)\'`)
+	ItemReStmtOper   = regexp.MustCompile(`^[=?]`)
+	ItemReNoStmtOper = regexp.MustCompile(`^\|`)
+	ItemReStmtEnd    = regexp.MustCompile(`^\)`)
 )
 
 const (
@@ -30,16 +30,16 @@ const (
 )
 
 type FormatParser struct {
-	self   string
-	curPos int
-	stk    []string
-	result string
-	oper   string
+	Self   string
+	CurPos int
+	Stk    []string
+	Result string
+	Oper   string
 }
 
 func MakeFormatParser(fmtStr string) *FormatParser {
 	return &FormatParser{
-		self: fmtStr,
+		Self: fmtStr,
 	}
 }
 
@@ -53,7 +53,7 @@ func (fp *FormatParser) LabelEndpoint(p *EndpointLabelerParam) string {
 		"needs_int":    p.NeedsInt,
 		"controls":     p.Controls,
 	}
-	mergeAttributesMap(attrs, p.Attrs)
+	MergeAttributesMap(attrs, p.Attrs)
 
 	return fp.Parse(attrs)
 }
@@ -63,7 +63,7 @@ func (fp *FormatParser) LabelApp(appname, controls string, attrs map[string]*sys
 		"appname":  appname,
 		"controls": controls,
 	}
-	mergeAttributesMap(valMap, attrs)
+	MergeAttributesMap(valMap, attrs)
 
 	return fp.Parse(valMap)
 }
@@ -80,7 +80,7 @@ func (fp *FormatParser) FmtSeq(epname, eplongname string, attrs map[string]*sysl
 		"epname":     epname,
 		"eplongname": eplongname,
 	}
-	mergeAttributesMap(valMap, attrs)
+	MergeAttributesMap(valMap, attrs)
 
 	return fp.Parse(valMap)
 }
@@ -91,54 +91,54 @@ func (fp *FormatParser) FmtOutput(appname, epname, eplongname string, attrs map[
 		"epname":     epname,
 		"eplongname": eplongname,
 	}
-	mergeAttributesMap(valMap, attrs)
+	MergeAttributesMap(valMap, attrs)
 
 	return fp.Parse(valMap)
 }
 
 func (fp *FormatParser) Parse(attrs map[string]string) string {
-	log.Debugf("self: %s", fp.self)
-	log.Debugf("attrs: %v", attrs)
-	fp.expansions(itemReDefault, attrs)
-	formatted := strings.Replace(fp.result, "\n", "\\n", -1)
-	fp.clear()
-	log.Debugf("format string: %s", formatted)
+	logrus.Debugf("self: %s", fp.Self)
+	logrus.Debugf("attrs: %v", attrs)
+	fp.Expansions(ItemReDefault, attrs)
+	formatted := strings.Replace(fp.Result, "\n", "\\n", -1)
+	fp.Clear()
+	logrus.Debugf("format string: %s", formatted)
 
 	return formatted
 }
 
-func mergeAttributesMap(val map[string]string, attrs map[string]*sysl.Attribute) {
+func MergeAttributesMap(val map[string]string, attrs map[string]*sysl.Attribute) {
 	for k, v := range attrs {
 		val["@"+k] = v.GetS()
 	}
 }
 
-func (fp *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
+func (fp *FormatParser) Expansions(re *regexp.Regexp, attrs map[string]string) {
 	var result string
-	for fp.eat(re) {
-		prefix := fp.pop()
-		prefix = removePercentSymbol(prefix)
+	for fp.Eat(re) {
+		prefix := fp.Pop()
+		prefix = RemovePercentSymbol(prefix)
 		result += prefix
 
-		if fp.eat(itemReVarStart) {
+		if fp.Eat(ItemReVarStart) {
 			var yesStmt, noStmt, varName, value string
 			isYesStmt, isUseVal, isEqualOper, isSearched := false, true, false, false
-			if !fp.eat(itemReVar) {
+			if !fp.Eat(ItemReVar) {
 				panic("missing variable reference")
 			}
-			varName = fp.pop()
+			varName = fp.Pop()
 			value = attrs[varName]
 
 			// conditionals
-			if fp.eat(itemReCondOper) {
+			if fp.Eat(ItemReCondOper) {
 				isEqualOper = true
 				isUseVal = false
-				conOper := fp.oper
-				fp.oper = ""
-				if !fp.eat(itemReCondVal) {
+				conOper := fp.Oper
+				fp.Oper = ""
+				if !fp.Eat(ItemReCondVal) {
 					panic("missing conditional value")
 				}
-				conVal := fp.pop()
+				conVal := fp.Pop()
 				if conOper == "==" && value == conVal {
 					isYesStmt = true
 				}
@@ -147,33 +147,33 @@ func (fp *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 				}
 			}
 
-			if fp.eat(itemReSearch) {
+			if fp.Eat(ItemReSearch) {
 				isSearched = true
 				isUseVal = false
-				reWordBoundary := regexp.MustCompile(fp.pop())
+				reWordBoundary := regexp.MustCompile(fp.Pop())
 				if reWordBoundary.MatchString(value) {
 					isYesStmt = true
 				}
 			}
 
-			have := fp.eat(itemReStmtOper)
+			have := fp.Eat(ItemReStmtOper)
 			if have {
 				isUseVal = false
-				fp.expansions(itemReStatement, attrs)
-				yesStmt = fp.result
+				fp.Expansions(ItemReStatement, attrs)
+				yesStmt = fp.Result
 			}
-			haveNot := fp.eat(itemReNoStmtOper)
+			haveNot := fp.Eat(ItemReNoStmtOper)
 			if haveNot {
-				fp.expansions(itemReEnd, attrs)
-				noStmt = fp.result
+				fp.Expansions(ItemReEnd, attrs)
+				noStmt = fp.Result
 			}
-			if !fp.eat(itemReStmtEnd) {
+			if !fp.Eat(ItemReStmtEnd) {
 				panic("unclosed expansion")
 			}
 
 			if isUseVal {
 				result += value
-				fp.result = result
+				fp.Result = result
 				continue
 			}
 			if !isSearched && !isEqualOper && value != "" {
@@ -184,16 +184,16 @@ func (fp *FormatParser) expansions(re *regexp.Regexp, attrs map[string]string) {
 			} else {
 				result += noStmt
 			}
-			fp.result = result
+			fp.Result = result
 		} else {
-			fp.result = result
+			fp.Result = result
 			return
 		}
 	}
 }
 
-func (fp *FormatParser) eat(re *regexp.Regexp) bool {
-	matchStr := fp.self[fp.curPos:]
+func (fp *FormatParser) Eat(re *regexp.Regexp) bool {
+	matchStr := fp.Self[fp.CurPos:]
 	if matchStr == "" {
 		return false
 	}
@@ -206,44 +206,44 @@ func (fp *FormatParser) eat(re *regexp.Regexp) bool {
 
 	switch subSelfLen {
 	case MatchSymbol:
-		fp.curPos += len(subSelf[0])
-		fp.oper = subSelf[0]
+		fp.CurPos += len(subSelf[0])
+		fp.Oper = subSelf[0]
 	case MatchWord:
 		insertion := subSelf[0]
-		fp.stk = append(fp.stk, subSelf[1])
-		fp.curPos += len(insertion)
+		fp.Stk = append(fp.Stk, subSelf[1])
+		fp.CurPos += len(insertion)
 	case MatchLookahead:
 		insertion := subSelf[1]
-		fp.stk = append(fp.stk, insertion)
-		fp.curPos += len(insertion)
+		fp.Stk = append(fp.Stk, insertion)
+		fp.CurPos += len(insertion)
 	}
 
 	return subSelf != nil
 }
 
-func (fp *FormatParser) pop() string {
-	if fp.stk == nil {
+func (fp *FormatParser) Pop() string {
+	if fp.Stk == nil {
 		return ""
 	}
 
-	n := len(fp.stk)
+	n := len(fp.Stk)
 	if n == 0 {
 		return ""
 	}
-	popped := fp.stk[n-1]
-	fp.stk = fp.stk[:n-1]
+	popped := fp.Stk[n-1]
+	fp.Stk = fp.Stk[:n-1]
 
 	return popped
 }
 
-func (fp *FormatParser) clear() {
-	fp.result = ""
-	fp.curPos = 0
-	fp.stk = []string{}
-	fp.oper = ""
+func (fp *FormatParser) Clear() {
+	fp.Result = ""
+	fp.CurPos = 0
+	fp.Stk = []string{}
+	fp.Oper = ""
 }
 
-func removePercentSymbol(src string) string {
+func RemovePercentSymbol(src string) string {
 	substitute := string([]byte{1})
 	src = strings.Replace(src, "%%", substitute, -1)
 	src = strings.Replace(src, "%", "", -1)

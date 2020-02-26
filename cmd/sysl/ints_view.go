@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 )
@@ -53,7 +55,7 @@ type IntsDiagramVisitor struct {
 	mod           *sysl.Module
 	stringBuilder *strings.Builder
 	drawableApps  map[string]struct{}
-	symbols       map[string]*_var
+	symbols       map[string]*cmdutils.Var
 	topSymbols    map[string]*_topVar
 	project       string
 }
@@ -85,7 +87,7 @@ func MakeIntsDiagramVisitor(
 		mod:           mod,
 		stringBuilder: stringBuilder,
 		drawableApps:  drawableApps,
-		symbols:       map[string]*_var{},
+		symbols:       map[string]*cmdutils.Var{},
 		topSymbols:    map[string]*_topVar{},
 		project:       project,
 	}
@@ -96,18 +98,18 @@ func (v *IntsDiagramVisitor) VarManagerForComponent(appName string, nameMap map[
 		appName = key
 	}
 	if s, ok := v.symbols[appName]; ok {
-		return s.alias
+		return s.Alias
 	}
 
 	i := len(v.symbols)
 	alias := fmt.Sprintf("_%d", i)
-	fp := MakeFormatParser(v.mod.Apps[v.project].GetAttrs()["appfmt"].GetS())
-	attrs := getApplicationAttrs(v.mod, appName)
-	controls := getSortedISOCtrlStr(attrs)
+	fp := cmdutils.MakeFormatParser(v.mod.Apps[v.project].GetAttrs()["appfmt"].GetS())
+	attrs := cmdutils.GetApplicationAttrs(v.mod, appName)
+	controls := cmdutils.GetSortedISOCtrlStr(attrs)
 	label := fp.LabelApp(appName, controls, attrs)
-	s := &_var{
-		label: label,
-		alias: alias,
+	s := &cmdutils.Var{
+		Label: label,
+		Alias: alias,
 	}
 	v.symbols[appName] = s
 	if _, ok := v.drawableApps[appName]; ok {
@@ -115,7 +117,7 @@ func (v *IntsDiagramVisitor) VarManagerForComponent(appName string, nameMap map[
 	} else {
 		fmt.Fprintf(v.stringBuilder, "[%s] as %s\n", label, alias)
 	}
-	return s.alias
+	return s.Alias
 }
 
 func (v *IntsDiagramVisitor) VarManagerForTopState(appName string) string {
@@ -126,9 +128,9 @@ func (v *IntsDiagramVisitor) VarManagerForTopState(appName string) string {
 	i := len(v.topSymbols)
 	alias = fmt.Sprintf("_%d", i)
 
-	fp := MakeFormatParser(v.mod.Apps[v.project].GetAttrs()["appfmt"].GetS())
-	attrs := getApplicationAttrs(v.mod, appName)
-	controls := getSortedISOCtrlStr(attrs)
+	fp := cmdutils.MakeFormatParser(v.mod.Apps[v.project].GetAttrs()["appfmt"].GetS())
+	attrs := cmdutils.GetApplicationAttrs(v.mod, appName)
+	controls := cmdutils.GetSortedISOCtrlStr(attrs)
 	label = fp.LabelApp(appName, controls, attrs)
 	ts := &_topVar{
 		topLabel: label,
@@ -152,7 +154,7 @@ func (v *IntsDiagramVisitor) VarManagerForEPA(name string) string {
 	epName := strings.Split(name, " : ")[1]
 
 	if s, ok := v.symbols[name]; ok {
-		return s.alias
+		return s.Alias
 	}
 	i := len(v.symbols)
 	alias = fmt.Sprintf("_%d", i)
@@ -163,12 +165,12 @@ func (v *IntsDiagramVisitor) VarManagerForEPA(name string) string {
 		}
 	}
 	attrs["appname"] = epName
-	fp := MakeFormatParser(v.mod.Apps[v.project].GetAttrs()["appfmt"].GetS())
+	fp := cmdutils.MakeFormatParser(v.mod.Apps[v.project].GetAttrs()["appfmt"].GetS())
 	label = fp.Parse(attrs)
 
-	s := &_var{
-		label: label,
-		alias: alias,
+	s := &cmdutils.Var{
+		Label: label,
+		Alias: alias,
 	}
 	v.symbols[name] = s
 
@@ -177,7 +179,7 @@ func (v *IntsDiagramVisitor) VarManagerForEPA(name string) string {
 	} else {
 		fmt.Fprintf(v.stringBuilder, "  state \"%s\" as %s\n", label, alias)
 	}
-	return s.alias
+	return s.Alias
 }
 
 func (v *IntsDiagramVisitor) buildClusterForEPAView(deps []AppDependency, restrictBy string) {
@@ -313,7 +315,7 @@ func (v *IntsDiagramVisitor) generateEPAView(viewParams viewParams, params *Ints
 		if needsInt {
 			attrs["needs_int"] = strconv.FormatBool(needsInt)
 		}
-		fp := MakeFormatParser(params.app.Attrs["epfmt"].GetS())
+		fp := cmdutils.MakeFormatParser(params.app.Attrs["epfmt"].GetS())
 		label = fp.Parse(attrs)
 		flow := strings.Join([]string{appA, epB, appB, epB}, ".")
 		isPubSub := v.mod.Apps[appA].Endpoints[epA].GetIsPubsub()
@@ -498,7 +500,7 @@ func (v *IntsDiagramVisitor) generateIntsView(args *Args, viewParams viewParams,
 
 func GenerateView(args *Args, params *IntsParam, mod *sysl.Module) string {
 	var stringBuilder strings.Builder
-	var titleParser *FormatParser
+	var titleParser *cmdutils.FormatParser
 	v := MakeIntsDiagramVisitor(mod, &stringBuilder, params.drawableApps, args.project)
 	restrictBy := ""
 	if params.endpt.Attrs["restrict_by"] != nil {
@@ -519,7 +521,7 @@ func GenerateView(args *Args, params *IntsParam, mod *sysl.Module) string {
 	if appAttrs["title"].GetS() != "" {
 		title = appAttrs["title"].GetS()
 	}
-	titleParser = MakeFormatParser(title)
+	titleParser = cmdutils.MakeFormatParser(title)
 	diagramTitle := titleParser.Parse(attrs)
 
 	viewParams := &viewParams{

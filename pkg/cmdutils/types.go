@@ -1,4 +1,4 @@
-package main
+package cmdutils
 
 import (
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -43,51 +43,51 @@ type VarManager interface {
 }
 
 type CmdContextParamCodegen struct {
-	rootTransform    string
-	transform        string
-	grammar          string
-	start            string
-	depPath          string
-	basePath         string
-	disableValidator bool
+	RootTransform    string
+	Transform        string
+	Grammar          string
+	Start            string
+	DepPath          string
+	BasePath         string
+	DisableValidator bool
 }
 
 type CmdContextParamSeqgen struct {
-	endpointFormat string
-	appFormat      string
-	title          string
-	output         string
-	endpointsFlag  []string
-	appsFlag       []string
-	blackboxesFlag map[string]string
-	blackboxes     [][]string
-	group          string
+	EndpointFormat string
+	AppFormat      string
+	Title          string
+	Output         string
+	EndpointsFlag  []string
+	AppsFlag       []string
+	BlackboxesFlag map[string]string
+	Blackboxes     [][]string
+	Group          string
 }
 
 type CmdContextParamIntgen struct {
-	title     string
-	output    string
-	project   string
-	filter    string
-	exclude   []string
-	clustered bool
-	epa       bool
+	Title     string
+	Output    string
+	Project   string
+	Filter    string
+	Exclude   []string
+	Clustered bool
+	EPA       bool
 }
 
 type CmdContextParamDatagen struct {
-	title       string
-	output      string
-	project     string
-	direct      bool
-	filter      string
-	classFormat string
+	Title       string
+	Output      string
+	Project     string
+	Direct      bool
+	Filter      string
+	ClassFormat string
 }
 
 type CmdDatabaseScriptParams struct {
-	title     string
-	outputDir string
-	appNames  string
-	dbType    string
+	Title     string
+	OutputDir string
+	AppNames  string
+	DbType    string
 }
 
 type ExecuteArgs struct {

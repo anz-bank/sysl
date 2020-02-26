@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/mod"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -26,7 +28,7 @@ func (m *modCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-func (m *modCmd) Execute(args ExecuteArgs) error {
+func (m *modCmd) Execute(args cmdutils.ExecuteArgs) error {
 	// subcommands are somewhat funky using the cmd_runner
 	switch args.Command {
 	case initCmd.FullCommand():
