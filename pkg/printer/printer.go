@@ -30,16 +30,16 @@ func (p *Printer) PrintModule(mod *sysl.Module) {
 
 // PrintApplication prints applications:
 // App:
-func (p *Printer) PrintApplication(A *sysl.Application) {
-	fmt.Fprintf(p.Writer, "%s:\n", strings.Join(A.Name.GetPart(), ""))
-	for _, key := range alphabeticalAttributes(A.Attrs) {
-		p.PrintAttrs(key, A.Attrs[key])
+func (p *Printer) PrintApplication(a *sysl.Application) {
+	fmt.Fprintf(p.Writer, "%s:\n", strings.Join(a.Name.GetPart(), ""))
+	for _, key := range alphabeticalAttributes(a.Attrs) {
+		p.PrintAttrs(key, a.Attrs[key])
 	}
-	for _, key := range alphabeticalTypes(A.Types) {
-		p.PrintTypeDecl(key, A.Types[key])
+	for _, key := range alphabeticalTypes(a.Types) {
+		p.PrintTypeDecl(key, a.Types[key])
 	}
-	for _, key := range alphabeticalEndpoints(A.Endpoints) {
-		p.PrintEndpoint(A.Endpoints[key])
+	for _, key := range alphabeticalEndpoints(a.Endpoints) {
+		p.PrintEndpoint(a.Endpoints[key])
 	}
 }
 
@@ -57,19 +57,18 @@ func (p *Printer) PrintTypeDecl(key string, t *sysl.Type) {
 			fmt.Fprintf(p.Writer, "        %s <: %s\n", key, typeIdent)
 		}
 	}
-
 }
 
 // PrintEndpoint prints endpoints:
 // Endpoint:
-func (p *Printer) PrintEndpoint(E *sysl.Endpoint) {
-	fmt.Fprintf(p.Writer, "    %s", E.Name)
+func (p *Printer) PrintEndpoint(e *sysl.Endpoint) {
+	fmt.Fprintf(p.Writer, "    %s", e.Name)
 
-	if len(E.Param) != 0 {
-		p.PrintParam(E.Param)
+	if len(e.Param) != 0 {
+		p.PrintParam(e.Param)
 	}
 	fmt.Fprintf(p.Writer, ":\n")
-	for _, stmnt := range E.Stmt {
+	for _, stmnt := range e.Stmt {
 		p.PrintStatement(stmnt)
 	}
 }
@@ -92,46 +91,46 @@ func (p *Printer) PrintParam(params []*sysl.Param) {
 // return string
 // My <- call
 // lookup db
-func (p *Printer) PrintStatement(S *sysl.Statement) {
-	if call := S.GetCall(); call != nil {
+func (p *Printer) PrintStatement(s *sysl.Statement) {
+	if call := s.GetCall(); call != nil {
 		p.PrintCall(call)
 	}
-	if action := S.GetAction(); action != nil {
+	if action := s.GetAction(); action != nil {
 		p.PrintAction(action)
 	}
-	if ret := S.GetRet(); ret != nil {
+	if ret := s.GetRet(); ret != nil {
 		p.PrintReturn(ret)
 	}
 }
 
 // PrintReturn prints return statements:
 // return foo <: type
-func (p *Printer) PrintReturn(R *sysl.Return) {
-	fmt.Fprintf(p.Writer, "        return %s\n", R.Payload)
+func (p *Printer) PrintReturn(r *sysl.Return) {
+	fmt.Fprintf(p.Writer, "        return %s\n", r.Payload)
 }
 
 // PrintAction prints actions:
 // lookup data
-func (p *Printer) PrintAction(A *sysl.Action) {
-	fmt.Fprintf(p.Writer, "        %s\n", A.GetAction())
+func (p *Printer) PrintAction(a *sysl.Action) {
+	fmt.Fprintf(p.Writer, "        %s\n", a.GetAction())
 }
 
 // PrintAttrs prints Attributes:
 // @owner="server"
-func (p *Printer) PrintAttrs(key string, A *sysl.Attribute) {
-	fmt.Fprintf(p.Writer, "    @%s=\"%s\"\n", key, A.GetS())
+func (p *Printer) PrintAttrs(key string, a *sysl.Attribute) {
+	fmt.Fprintf(p.Writer, "    @%s=\"%s\"\n", key, a.GetS())
 }
 
 // ParamType prints:
 // foo(this <: <ParamType>):
-func (p *Printer) ParamType(P *sysl.Param) string {
-	if P.Type == nil {
+func (p *Printer) ParamType(param *sysl.Param) string {
+	if param.Type == nil {
 		return ""
 	}
-	if P.Type.GetTypeRef() == nil {
+	if param.Type.GetTypeRef() == nil {
 		return ""
 	}
-	return strings.Join(P.Type.GetTypeRef().Ref.Appname.Part, "")
+	return strings.Join(param.Type.GetTypeRef().Ref.Appname.Part, "")
 }
 
 // PrintCall prints:

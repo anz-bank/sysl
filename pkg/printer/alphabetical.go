@@ -12,7 +12,7 @@ import (
 
 func alphabeticalAttributes(m map[string]*sysl.Attribute) []string {
 	keys := make([]string, 0, len(m))
-	for k, _ := range m {
+	for k := range m {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
@@ -21,7 +21,7 @@ func alphabeticalAttributes(m map[string]*sysl.Attribute) []string {
 
 func alphabeticalApplications(m map[string]*sysl.Application) []string {
 	keys := make([]string, 0, len(m))
-	for k, _ := range m {
+	for k := range m {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
@@ -30,7 +30,7 @@ func alphabeticalApplications(m map[string]*sysl.Application) []string {
 
 func alphabeticalEndpoints(m map[string]*sysl.Endpoint) []string {
 	keys := make([]string, 0, len(m))
-	for k, _ := range m {
+	for k := range m {
 		if k != "" {
 			keys = append(keys, k)
 		}
@@ -41,7 +41,7 @@ func alphabeticalEndpoints(m map[string]*sysl.Endpoint) []string {
 
 func alphabeticalTypes(m map[string]*sysl.Type) []string {
 	keys := make([]string, 0, len(m))
-	for k, _ := range m {
+	for k := range m {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
