@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/anz-bank/sysl/pkg/diagrams"
+
 	"github.com/spf13/afero"
 
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -37,7 +39,7 @@ func (p *plantumlmixin) Value() string {
 
 func (p *plantumlmixin) GenerateFromMap(m map[string]string, fs afero.Fs) error {
 	for k, v := range m {
-		if err := OutputPlantuml(k, p.Value(), v, fs); err != nil {
+		if err := diagrams.OutputPlantuml(k, p.Value(), v, fs); err != nil {
 			return err
 		}
 	}
