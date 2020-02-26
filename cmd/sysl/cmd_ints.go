@@ -4,6 +4,7 @@ import (
 	"regexp"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/diagrams"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -55,7 +56,7 @@ func GenerateIntegrations(intgenParams *cmdutils.CmdContextParamIntgen,
 }
 
 type intsCmd struct {
-	plantumlmixin
+	diagrams.Plantumlmixin
 	cmdutils.CmdContextParamIntgen
 }
 

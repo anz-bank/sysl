@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/diagrams"
 	"github.com/anz-bank/sysl/pkg/sequencediagram"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
@@ -123,7 +124,7 @@ func generateDataModels(datagenParams *cmdutils.CmdContextParamDatagen,
 }
 
 type datamodelCmd struct {
-	plantumlmixin
+	diagrams.Plantumlmixin
 	cmdutils.CmdContextParamDatagen
 }
 
