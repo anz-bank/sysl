@@ -1,4 +1,4 @@
-package main
+package sequencediagram
 
 import (
 	"encoding/json"
@@ -7,26 +7,28 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 )
 
+const projDir = "../../"
+const testDir = projDir + "tests"
+
 type SequenceDiagParam struct {
 	cmdutils.AppLabeler
 	cmdutils.EndpointLabeler
-	endpoints  []string
-	title      string
-	blackboxes map[string]*cmdutils.Upto
-	appName    string
-	group      string
+	Endpoints  []string
+	Title      string
+	Blackboxes map[string]*cmdutils.Upto
+	AppName    string
+	Group      string
 }
 
 func GenerateSequenceDiag(m *sysl.Module, p *SequenceDiagParam, logger *logrus.Logger) (string, error) {
 	w := cmdutils.MakeSequenceDiagramWriter(true, "skinparam maxMessageSize 250")
-	v := cmdutils.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.appName, p.group, logger)
-	e := cmdutils.MakeEndpointCollectionElement(p.title, p.endpoints, p.blackboxes)
+	v := cmdutils.MakeSequenceDiagramVisitor(p.AppLabeler, p.EndpointLabeler, w, m, p.AppName, p.Group, logger)
+	e := cmdutils.MakeEndpointCollectionElement(p.Title, p.Endpoints, p.Blackboxes)
 
 	if err := e.Accept(v); err != nil {
 		return "", err
@@ -50,10 +52,10 @@ func ConstructFormatParser(former, latter string) *cmdutils.FormatParser {
 		fmtstr = latter
 	}
 
-	return cmdutils.MakeFormatParser(escapeWordBoundary(fmtstr))
+	return cmdutils.MakeFormatParser(EscapeWordBoundary(fmtstr))
 }
 
-func escapeWordBoundary(src string) string {
+func EscapeWordBoundary(src string) string {
 	result, err := json.Marshal(src)
 	syslutil.PanicOnError(err)
 	escapeStr := strings.Replace(string(result), `\u0008`, `\\b`, -1)
@@ -133,13 +135,13 @@ func DoConstructSequenceDiagrams(
 				}
 				cmdutils.TransformBlackboxesToUptos(bbsAll, bbs2, cmdutils.BBEndpointCollection)
 				sd = &SequenceDiagParam{
-					endpoints:       sdEndpoints,
+					Endpoints:       sdEndpoints,
 					AppLabeler:      spapp,
 					EndpointLabeler: spep,
-					title:           spseqtitle.FmtSeq(endpoint.GetName(), endpoint.GetLongName(), varrefs),
-					blackboxes:      bbsAll,
-					appName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
-					group:           groupAttr,
+					Title:           spseqtitle.FmtSeq(endpoint.GetName(), endpoint.GetLongName(), varrefs),
+					Blackboxes:      bbsAll,
+					AppName:         fmt.Sprintf("'%s :: %s'", appName, endpoint.GetName()),
+					Group:           groupAttr,
 				}
 				out, err := GenerateSequenceDiag(model, sd, logger)
 				if err != nil {
@@ -165,12 +167,12 @@ func DoConstructSequenceDiagrams(
 		bbsAll := map[string]*cmdutils.Upto{}
 		cmdutils.TransformBlackboxesToUptos(bbsAll, blackboxes, cmdutils.BBCommandLine)
 		sd := &SequenceDiagParam{
-			endpoints:       cmdContextParam.EndpointsFlag,
+			Endpoints:       cmdContextParam.EndpointsFlag,
 			AppLabeler:      spapp,
 			EndpointLabeler: spep,
-			title:           cmdContextParam.Title,
-			blackboxes:      bbsAll,
-			group:           cmdContextParam.Group,
+			Title:           cmdContextParam.Title,
+			Blackboxes:      bbsAll,
+			Group:           cmdContextParam.Group,
 		}
 		out, err := GenerateSequenceDiag(model, sd, logger)
 		if err != nil {

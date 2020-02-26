@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/sequencediagram"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -22,7 +24,7 @@ func generateDataModelsWithProjectMannerModule(datagenParams *cmdutils.CmdContex
 	logger.Debugf("filter: %s\n", datagenParams.Filter)
 	logger.Debugf("output: %s\n", datagenParams.Output)
 
-	spclass := ConstructFormatParser("", datagenParams.ClassFormat)
+	spclass := sequencediagram.ConstructFormatParser("", datagenParams.ClassFormat)
 
 	// The "project" app that specifies the data models to be built
 	var app *sysl.Application
@@ -62,7 +64,7 @@ func generateDataModelsWithPureModule(datagenParams *cmdutils.CmdContextParamDat
 	logger.Debugf("title: %s\n", datagenParams.Title)
 	logger.Debugf("output: %s\n", datagenParams.Output)
 
-	spclass := ConstructFormatParser("", datagenParams.ClassFormat)
+	spclass := sequencediagram.ConstructFormatParser("", datagenParams.ClassFormat)
 
 	apps := model.GetApps()
 	for appName := range apps {
