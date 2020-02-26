@@ -44,11 +44,13 @@ type VarManager interface {
 
 type CmdContextParamCodegen struct {
 	RootTransform    string
-	Transform        string
-	Grammar          string
+	Transform        string `yaml:"transform"`
+	Grammar          string `yaml:"grammar"`
 	Start            string
-	DepPath          string
-	BasePath         string
+	DepPath          string `yaml:"dep-path"`
+	BasePath         string `yaml:"basepath"`
+	AppName          string `yaml:"app-name"`
+	Config           string
 	DisableValidator bool
 }
 

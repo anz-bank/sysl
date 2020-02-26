@@ -10,14 +10,15 @@ import (
 func TestLoadFlags(t *testing.T) {
 	var cmd codegenCmd
 	var err error
-	cmd = codegenCmd{config: "../../pkg/config/tests/config.yml"}
+	cmd = codegenCmd{}
+	cmd.Config = "../../pkg/config/tests/config.yml"
 	err = cmd.loadFlags()
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "go.gen.g", cmd.Grammar)
 	assert.Equal(t, "go.gen.sysl", cmd.Transform)
 	assert.Equal(t, "depPath", cmd.DepPath)
 	assert.Equal(t, "basePath", cmd.BasePath)
-	assert.Equal(t, "appName", cmd.appName)
+	assert.Equal(t, "appName", cmd.AppName)
 
 	cmd = codegenCmd{}
 	cmd.Grammar = "grammar"
@@ -28,7 +29,7 @@ func TestLoadFlags(t *testing.T) {
 	assert.Equal(t, "transform", cmd.Transform)
 	assert.Equal(t, "", cmd.DepPath)
 	assert.Equal(t, "", cmd.BasePath)
-	assert.Equal(t, "", cmd.appName)
+	assert.Equal(t, "", cmd.AppName)
 
 	cmd = codegenCmd{}
 	assert.Error(t, cmd.loadFlags())

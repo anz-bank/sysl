@@ -2,10 +2,10 @@ grammar:
     go.gen.g
 transform:
     go.gen.sysl
-depPath:
+dep-path:
     depPath
-basePath:
+basepath:
     basePath
-appName:
+app-name:
     appName
 

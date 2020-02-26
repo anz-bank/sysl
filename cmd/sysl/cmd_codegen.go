@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/anz-bank/sysl/pkg/config"
-
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/codegen"
 
 	"github.com/anz-bank/sysl/pkg/eval"
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -16,10 +15,8 @@ import (
 type codegenCmd struct {
 	cmdutils.CmdContextParamCodegen
 	outDir         string
-	appName        string
 	validateOnly   bool
 	enableDebugger bool
-	config         string
 }
 
 func (p *codegenCmd) Name() string       { return "codegen" }
@@ -31,7 +28,7 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), desc).Alias("gen")
 
 	cmd.Flag("config",
-		"config file path to set flags, it can set all runtime flags in the config file").StringVar(&p.config)
+		"config file path to set flags, it can set all runtime flags in the config file").StringVar(&p.Config)
 	cmd.Flag("root-transform",
 		"sysl root directory for input transform file (default: .)").
 		Default(".").StringVar(&p.RootTransform)
@@ -41,7 +38,7 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("app-name",
 		"name of the sysl app defined in sysl model."+
 			" if there are multiple apps defined in sysl model,"+
-			" code will be generated only for the given app").Default("").StringVar(&p.appName)
+			" code will be generated only for the given app").Default("").StringVar(&p.AppName)
 	cmd.Flag("start", "start rule for the grammar").Default(".").StringVar(&p.Start)
 	cmd.Flag("outdir", "output directory").Default(".").StringVar(&p.outDir)
 	cmd.Flag("dep-path", "path passed to sysl transform").Default("").StringVar(&p.DepPath)
@@ -71,15 +68,15 @@ func (p *codegenCmd) Execute(args cmdutils.ExecuteArgs) error {
 			Logger:        args.Logger,
 		})
 	}
-	if p.appName == "" {
+	if p.AppName == "" {
 		if len(args.Modules[0].Apps) > 1 {
 			args.Logger.Errorf("required argument --app-name value missing")
 			return fmt.Errorf("missing required argument")
 		}
-		p.appName = args.DefaultAppName
+		p.AppName = args.DefaultAppName
 	}
 	eval.EnableDebugger = p.enableDebugger
-	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Modules[0], p.appName, args.Filesystem, args.Logger)
+	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Modules[0], p.AppName, args.Filesystem, args.Logger)
 	if err != nil {
 		return err
 	}
@@ -87,22 +84,22 @@ func (p *codegenCmd) Execute(args cmdutils.ExecuteArgs) error {
 }
 
 func (p *codegenCmd) loadFlags() error {
-	err := validate.CodeggenRequiredFlags(p.config, p.Grammar, p.Transform)
+	err := validate.CodeggenRequiredFlags(p.Config, p.Grammar, p.Transform)
 	if err != nil {
 		return err
 	}
 
-	if p.config != "" {
-		config, err := config.ReadCodeGenFlags(p.config)
+	if p.Config != "" {
+		config, err := codegen.ReadCodeGenFlags(p.Config)
 		if err != nil {
-			return fmt.Errorf("failed to read config file %s", p.config)
+			return fmt.Errorf("failed to read config file %s", p.Config)
 		}
 
 		p.Transform = syslutil.ResetVal(p.Transform, config.Transform)
 		p.Grammar = syslutil.ResetVal(p.Grammar, config.Grammar)
 		p.DepPath = syslutil.ResetVal(p.DepPath, config.DepPath)
 		p.BasePath = syslutil.ResetVal(p.BasePath, config.BasePath)
-		p.appName = syslutil.ResetVal(p.appName, config.AppName)
+		p.AppName = syslutil.ResetVal(p.AppName, config.AppName)
 	}
 
 	return nil
