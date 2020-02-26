@@ -12,6 +12,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const projDir = "../../"
+const testDir = projDir + "tests"
+
 type SequenceDiagParam struct {
 	cmdutils.AppLabeler
 	cmdutils.EndpointLabeler
