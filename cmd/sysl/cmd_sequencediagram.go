@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/sequencediagram"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -79,7 +80,7 @@ func (p *sequenceDiagramCmd) Execute(args cmdutils.ExecuteArgs) error {
 		Group:          p.group,
 	}
 
-	result, err := DoConstructSequenceDiagrams(sequenceParams, args.Modules[0], args.Logger)
+	result, err := sequencediagram.DoConstructSequenceDiagrams(sequenceParams, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
 	}
