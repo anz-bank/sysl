@@ -135,6 +135,12 @@ func findRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
+	flags, err := syslutil.PopulateCMDFlagsFromFile(args)
+	if err == nil && len(flags) > 0 {
+		// apply flags in file
+		args = flags
+	}
+
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 	syslCmd.Version(Version)
 	syslCmd.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)

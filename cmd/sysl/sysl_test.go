@@ -906,3 +906,19 @@ func TestTemplating(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, string(expected), string(actual))
 }
+
+func TestMain3(t *testing.T) {
+	logger, _ := test.NewNullLogger()
+	fs := afero.NewOsFs()
+
+	assert.Equal(t, nil, main3([]string{"sysl"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config.txt"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config_new.txt"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen", "--grammar=go.gen.g", "--transform=go.gen.sysl", "model.sysl"},
+		fs, logger))
+}
