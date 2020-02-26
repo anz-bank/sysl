@@ -2,12 +2,13 @@ package main
 
 import (
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/diagrams"
 	"github.com/anz-bank/sysl/pkg/sequencediagram"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type sequenceDiagramCmd struct {
-	plantumlmixin
+	diagrams.Plantumlmixin
 	endpointFormat string
 	appFormat      string
 	title          string
@@ -40,7 +41,7 @@ func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdCla
 
 	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
 
-	p.plantumlmixin.AddFlag(cmd)
+	p.Plantumlmixin.AddFlag(cmd)
 
 	cmd.Flag("output",
 		"output file (default: %(epname).png)",
