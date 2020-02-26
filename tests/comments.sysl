@@ -11,5 +11,5 @@ Foo:
             return string
 
     /bar: # Comments on endpoint bar
-    	GET (newBar <: string):
+        GET (newBar <: string):
             return string
