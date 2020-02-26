@@ -387,7 +387,7 @@ func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 /*
  * Validate command codeggen required flags. It should input config or grammar + transform.
  */
-func CodeggenRequiredFlags(config string, grammar string, transform string) error {
+func CodegenRequiredFlags(config string, grammar string, transform string) error {
 	if config == "" {
 		if grammar == "" {
 			return fmt.Errorf("required flag --grammar not provided, it can be specified in config file or individually")

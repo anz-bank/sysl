@@ -84,7 +84,7 @@ func (p *codegenCmd) Execute(args cmdutils.ExecuteArgs) error {
 }
 
 func (p *codegenCmd) loadFlags() error {
-	err := validate.CodeggenRequiredFlags(p.Config, p.Grammar, p.Transform)
+	err := validate.CodegenRequiredFlags(p.Config, p.Grammar, p.Transform)
 	if err != nil {
 		return err
 	}
