@@ -11,7 +11,7 @@ func TestLoadFlags(t *testing.T) {
 	var cmd codegenCmd
 	var err error
 	cmd = codegenCmd{}
-	cmd.Config = "../../pkg/config/tests/config.yml"
+	cmd.Config = "../../pkg/codegen/tests/config.yml"
 	err = cmd.loadFlags()
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "go.gen.g", cmd.Grammar)

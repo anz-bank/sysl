@@ -95,11 +95,11 @@ func (p *codegenCmd) loadFlags() error {
 			return fmt.Errorf("failed to read config file %s", p.Config)
 		}
 
-		p.Transform = syslutil.ResetVal(p.Transform, config.Transform)
-		p.Grammar = syslutil.ResetVal(p.Grammar, config.Grammar)
-		p.DepPath = syslutil.ResetVal(p.DepPath, config.DepPath)
-		p.BasePath = syslutil.ResetVal(p.BasePath, config.BasePath)
-		p.AppName = syslutil.ResetVal(p.AppName, config.AppName)
+		p.Transform = syslutil.GetNonEmpty(p.Transform, config.Transform)
+		p.Grammar = syslutil.GetNonEmpty(p.Grammar, config.Grammar)
+		p.DepPath = syslutil.GetNonEmpty(p.DepPath, config.DepPath)
+		p.BasePath = syslutil.GetNonEmpty(p.BasePath, config.BasePath)
+		p.AppName = syslutil.GetNonEmpty(p.AppName, config.AppName)
 	}
 
 	return nil
