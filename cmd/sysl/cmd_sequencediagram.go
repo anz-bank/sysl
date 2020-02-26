@@ -1,11 +1,14 @@
 package main
 
 import (
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/diagrams"
+	"github.com/anz-bank/sysl/pkg/sequencediagram"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type sequenceDiagramCmd struct {
-	plantumlmixin
+	diagrams.Plantumlmixin
 	endpointFormat string
 	appFormat      string
 	title          string
@@ -38,7 +41,7 @@ func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdCla
 
 	cmd.Flag("title", "diagram title").Short('t').StringVar(&p.title)
 
-	p.plantumlmixin.AddFlag(cmd)
+	p.Plantumlmixin.AddFlag(cmd)
 
 	cmd.Flag("output",
 		"output file (default: %(epname).png)",
@@ -66,19 +69,19 @@ func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdCla
 	return cmd
 }
 
-func (p *sequenceDiagramCmd) Execute(args ExecuteArgs) error {
-	sequenceParams := &CmdContextParamSeqgen{
-		endpointFormat: p.endpointFormat,
-		appFormat:      p.appFormat,
-		title:          p.title,
-		output:         p.output,
-		endpointsFlag:  p.endpointsFlag,
-		appsFlag:       p.appsFlag,
-		blackboxesFlag: p.blackboxesFlag,
-		group:          p.group,
+func (p *sequenceDiagramCmd) Execute(args cmdutils.ExecuteArgs) error {
+	sequenceParams := &cmdutils.CmdContextParamSeqgen{
+		EndpointFormat: p.endpointFormat,
+		AppFormat:      p.appFormat,
+		Title:          p.title,
+		Output:         p.output,
+		EndpointsFlag:  p.endpointsFlag,
+		AppsFlag:       p.appsFlag,
+		BlackboxesFlag: p.blackboxesFlag,
+		Group:          p.group,
 	}
 
-	result, err := DoConstructSequenceDiagrams(sequenceParams, args.Modules[0], args.Logger)
+	result, err := sequencediagram.DoConstructSequenceDiagrams(sequenceParams, args.Modules[0], args.Logger)
 	if err != nil {
 		return err
 	}

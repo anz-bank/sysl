@@ -2,14 +2,16 @@ package main
 
 import (
 	"io"
-	"io/ioutil"
 	"sort"
 	"strings"
+
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
+	"github.com/anz-bank/sysl/pkg/ebnfparser"
 
 	"github.com/anz-bank/sysl/pkg/eval"
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/parse"
-	"github.com/anz-bank/sysl/pkg/parser"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/validate"
@@ -24,146 +26,6 @@ type Node []interface{}
 type CodeGenOutput struct {
 	filename string
 	output   Node
-}
-
-func getKeyFromValueMap(v *sysl.Value, key string) *sysl.Value {
-	if m := v.GetMap(); m != nil {
-		return m.Items[key]
-	}
-	return nil
-}
-
-func processChoice(
-	g *parser.Grammar,
-	obj *sysl.Value,
-	choice *parser.Choice,
-	logger *logrus.Logger,
-) Node {
-	var result Node
-
-	for i, seq := range choice.Sequence {
-		seqResult := Node{}
-		fullScan := true
-		for _, term := range seq.Term {
-			switch x := term.Atom.Union.(type) {
-			// String tokens dont have quantifiers
-			case *parser.Atom_String_:
-				seqResult = append(seqResult, x.String_)
-			case *parser.Atom_Rulename:
-				var ruleResult interface{}
-
-				minc, maxc := parser.GetTermMinMaxCount(term)
-				v := getKeyFromValueMap(obj, x.Rulename.Name)
-
-				// raise error if required
-				//  i.e.  no quantifier or +
-				//        and missing from obj map
-				if minc > 0 && v == nil {
-					fullScan = false
-					break
-				}
-
-				// skip if rule has
-				//    quantifier == * or ?
-				//    and does not exist in obj map
-				if minc == 0 && v == nil {
-					continue
-				}
-
-				if maxc > 1 {
-					var valueList []*sysl.Value
-					switch vv := v.Value.(type) {
-					case *sysl.Value_List_:
-						valueList = vv.List.Value
-					case *sysl.Value_Set:
-						valueList = vv.Set.Value
-					default:
-						logger.Warnf("Expecting a collection type, got %T for rule %s", vv, x.Rulename.Name)
-						fullScan = false
-					}
-					ruleInstances := Node{}
-
-					for _, valueItem := range valueList {
-						// Drill down the rule
-						node := processRule(g, valueItem, x.Rulename.Name, logger)
-						// Check post-conditions
-						if len(node) == 0 {
-							fullScan = false
-							break
-						}
-						ruleInstances = append(ruleInstances, node)
-					}
-					ruleResult = ruleInstances
-				} else { // maxc == 1
-					// Drill down the rule
-					if v.GetList() != nil || v.GetSet() != nil {
-						logger.Warnf("Got List or Set instead of map")
-					}
-					node := processRule(g, v, x.Rulename.Name, logger)
-					// Check post-conditions
-					if len(node) == 0 {
-						logger.Warnf("could not process rule: ( %s )", x.Rulename.Name)
-						fullScan = false
-						break
-					}
-					if s, ok := node[0].(string); ok && len(node) == 1 {
-						ruleResult = s
-					} else {
-						ruleResult = node
-					}
-				}
-				seqResult = append(seqResult, ruleResult)
-			case *parser.Atom_Choices:
-				// minc, maxc := parser.GetMinMaxCount(term)
-				node := processChoice(g, obj, x.Choices, logger)
-				if len(node) == 0 {
-					logger.Warnf("could not process Choice\n")
-					fullScan = false
-					break
-				}
-				seqResult = append(seqResult, node)
-			default:
-				logger.Warningf("processChoice: choice %d : %T", i, x)
-				panic("Unexpected atom type")
-			}
-			if !fullScan {
-				break
-			}
-		}
-		if fullScan {
-			result = append(result, seqResult)
-		}
-	}
-	return result
-}
-
-func processRule(g *parser.Grammar, obj *sysl.Value, ruleName string, logger *logrus.Logger) Node {
-	var str string
-	if x := obj.GetMap(); x != nil {
-		for key := range x.Items {
-			str += key + ", "
-		}
-	}
-	// logrus.Debugf("processRule: %s, obj keys (%s)", ruleName, str)
-	rule := g.Rules[ruleName]
-	if rule == nil {
-		root := Node{}
-		if eval.IsCollectionType(obj) {
-			return nil
-		}
-		// Should we convert int and bools to string and return?
-		return append(root, obj.GetS())
-	}
-	root := processChoice(g, obj, rule.Choices, logger)
-	return root
-}
-
-func readGrammar(filename, grammarName, startRule string) (*parser.Grammar, error) {
-	dat, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	return parser.ParseEBNF(string(dat), grammarName, startRule), nil
 }
 
 /*
@@ -252,39 +114,39 @@ func Serialize(w io.Writer, delim string, node Node) error {
 // GenerateCode transform input sysl model to code in the target language described by
 // grammar and a sysl transform
 func GenerateCode(
-	codegenParams *CmdContextParamCodegen,
+	codegenParams *cmdutils.CmdContextParamCodegen,
 	model *sysl.Module, modelAppName string,
 	fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
-	depPath := codegenParams.depPath
-	basePath := codegenParams.basePath
+	depPath := codegenParams.DepPath
+	basePath := codegenParams.BasePath
 
-	logger.Debugf("root-transform: %s\n", codegenParams.rootTransform)
-	logger.Debugf("transform: %s\n", codegenParams.transform)
-	logger.Debugf("dep-path: %s\n", codegenParams.depPath)
-	logger.Debugf("grammar: %s\n", codegenParams.grammar)
-	logger.Debugf("start: %s\n", codegenParams.start)
-	logger.Debugf("basePath: %s\n", codegenParams.basePath)
+	logger.Debugf("root-transform: %s\n", codegenParams.RootTransform)
+	logger.Debugf("transform: %s\n", codegenParams.Transform)
+	logger.Debugf("dep-path: %s\n", codegenParams.DepPath)
+	logger.Debugf("grammar: %s\n", codegenParams.Grammar)
+	logger.Debugf("start: %s\n", codegenParams.Start)
+	logger.Debugf("basePath: %s\n", codegenParams.BasePath)
 
-	transformFs := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
+	transformFs := syslutil.NewChrootFs(fs, codegenParams.RootTransform)
 	tfmParser := parse.NewParser()
-	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.transform, transformFs, tfmParser)
+	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {
 		return nil, err
 	}
 
-	g, err := readGrammar(codegenParams.grammar, "gen", codegenParams.start)
+	g, err := ebnfparser.ReadGrammar(fs, codegenParams.Grammar, codegenParams.Start)
 	if err != nil {
 		return nil, err
 	}
 
-	if !codegenParams.disableValidator {
-		grammarSysl, err := validate.LoadGrammar(codegenParams.grammar, fs)
+	if !codegenParams.DisableValidator {
+		grammarSysl, err := validate.LoadGrammar(codegenParams.Grammar, fs)
 		if err != nil {
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {
 			validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-			validator.Validate(codegenParams.start, codegenParams.depPath, codegenParams.basePath)
+			validator.Validate(codegenParams.Start, codegenParams.DepPath, codegenParams.BasePath)
 			validator.LogMessages()
 		}
 	}
@@ -324,10 +186,13 @@ func GenerateCode(
 	return codeOutput, nil
 }
 
-func appendCodeOutput(g *parser.Grammar, v *sysl.Value,
+func appendCodeOutput(g *ebnfparser.EbnfGrammar, v *sysl.Value,
 	logger *logrus.Logger, codeOutput []*CodeGenOutput, filename string) []*CodeGenOutput {
-	r := processRule(g, v, g.Start, logger)
-	codeOutput = append(codeOutput, &CodeGenOutput{filename, r})
+	r, err := ebnfparser.GenerateOutput(g, v, logger)
+	if err != nil {
+		return nil
+	}
+	codeOutput = append(codeOutput, &CodeGenOutput{filename, Node{r}})
 	return codeOutput
 }
 

@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -46,7 +48,7 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-func (p *importCmd) Execute(args ExecuteArgs) error {
+func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	data, err := ioutil.ReadFile(p.filename)
 	if err != nil {
 		return err
@@ -65,7 +67,7 @@ func (p *importCmd) Execute(args ExecuteArgs) error {
 		imp = importer.LoadXSDText
 	case importer.ModeGrammar:
 		args.Logger.Infof("Using grammar importer\n")
-		imp = importer.LoadGrammar
+		//imp = importer.LoadGrammar
 	case importer.ModeOpenAPI:
 		args.Logger.Infof("Using OpenAPI importer\n")
 		imp = importer.LoadOpenAPIText
