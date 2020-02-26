@@ -1,4 +1,4 @@
-package main
+package diagrams
 
 import (
 	"os"
@@ -13,11 +13,11 @@ const (
 	PlantUMLDefault = "http://localhost:8080/plantuml"
 )
 
-type plantumlmixin struct {
+type Plantumlmixin struct {
 	value string
 }
 
-func (p *plantumlmixin) AddFlag(cmd *kingpin.CmdClause) {
+func (p *Plantumlmixin) AddFlag(cmd *kingpin.CmdClause) {
 	cmd.Flag("plantuml",
 		"base url of plantuml server (default: "+PlantUMLEnvVar+" or "+
 			PlantUMLDefault+" see "+
@@ -25,7 +25,7 @@ func (p *plantumlmixin) AddFlag(cmd *kingpin.CmdClause) {
 	).Short('p').StringVar(&p.value)
 }
 
-func (p *plantumlmixin) Value() string {
+func (p *Plantumlmixin) Value() string {
 	if p.value == "" {
 		p.value = os.Getenv(PlantUMLEnvVar)
 		if p.value == "" {
@@ -35,7 +35,7 @@ func (p *plantumlmixin) Value() string {
 	return p.value
 }
 
-func (p *plantumlmixin) GenerateFromMap(m map[string]string, fs afero.Fs) error {
+func (p *Plantumlmixin) GenerateFromMap(m map[string]string, fs afero.Fs) error {
 	for k, v := range m {
 		if err := OutputPlantuml(k, p.Value(), v, fs); err != nil {
 			return err
