@@ -91,13 +91,8 @@ type CmdDatabaseScriptParams struct {
 }
 
 type CmdContextParamTestRig struct {
-	templateFileName string
-	outputDir        string
-}
-
-type CmdContextParamTestRig struct {
-	templateFileName string
-	outputDir        string
+	TemplateFileName string
+	OutputDir        string
 }
 
 type ExecuteArgs struct {
