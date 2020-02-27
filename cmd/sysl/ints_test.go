@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"github.com/sirupsen/logrus/hooks/test"
@@ -506,7 +508,7 @@ func GenerateIntegrationsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	mod, _, err := loader.LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

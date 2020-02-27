@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -34,7 +36,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 
 			if cmd.MaxSyslModule() > 0 {
 				for _, moduleName := range r.modules {
-					module, appName, err = LoadSyslModule(r.Root, moduleName, fs, logger)
+					module, appName, err = loader.LoadSyslModule(r.Root, moduleName, fs, logger)
 					if err != nil {
 						return err
 					}
