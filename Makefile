@@ -75,14 +75,14 @@ clean: ## Clean temp and build files
 
 # Autogen rules
 ANTLR = java -jar pkg/antlr-4.7-complete.jar
-ANTLR_GO = $(ANTLR) -Dlanguage=Go -lib $(@D) $^
+ANTLR_GO = $(ANTLR) -Dlanguage=Go -lib $(@D) $<
 
 grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go ## Regenerate the grammars
 
-pkg/grammar/sysl_parser.go: pkg/grammar/SyslParser.g4
+pkg/grammar/sysl_parser.go: pkg/grammar/SyslParser.g4 pkg/grammar/SyslLexer.tokens
 	$(ANTLR_GO)
 
-pkg/grammar/sysl_lexer.go: pkg/grammar/SyslLexer.g4
+pkg/grammar/sysl_lexer.go pkg/grammar/SyslLexer.tokens &: pkg/grammar/SyslLexer.g4
 	$(ANTLR_GO)
 
 pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
