@@ -4,6 +4,7 @@ package parse // SyslParser
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -996,7 +997,11 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 	// s.endpointName is built along as we enter http_path/http_path_suffix/http_path_var_with_type
 	// commit this value to urlPrefixes
-	s.urlPrefixes.Push(s.endpointName)
+	endpoint, err := url.PathUnescape(s.endpointName)
+	if err != nil {
+		panic(err)
+	}
+	s.urlPrefixes.Push(endpoint)
 }
 
 // EnterRet_stmt is called when production ret_stmt is entered.
