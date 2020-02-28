@@ -822,6 +822,8 @@ var parserATN = []uint16{
 	1627, 1629, 1633, 1638, 1656, 1659, 1664, 1668, 1673, 1677, 1682, 1685,
 	1690,
 }
+var deserializer = antlr.NewATNDeserializer(nil)
+var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
 	"", "", "", "", "", "'!wrap'", "'!table'", "'!type'", "'!alias'", "'!union'",
@@ -900,6 +902,13 @@ var ruleNames = []string{
 	"abstract_view", "view", "alias", "app_decl", "application", "import_mode",
 	"import_stmt", "imports_decl", "sysl_file",
 }
+var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
+
+func init() {
+	for index, ds := range deserializedATN.DecisionToState {
+		decisionToDFA[index] = antlr.NewDFA(ds, index)
+	}
+}
 
 type SyslParser struct {
 	*antlr.BaseParser
@@ -907,13 +916,6 @@ type SyslParser struct {
 
 func NewSyslParser(input antlr.TokenStream) *SyslParser {
 	this := new(SyslParser)
-
-	deserializer := antlr.NewATNDeserializer(nil)
-	deserializedATN := deserializer.DeserializeFromUInt16(parserATN)
-	decisionToDFA := make([]*antlr.DFA, len(deserializedATN.DecisionToState))
-	for index, ds := range deserializedATN.DecisionToState {
-		decisionToDFA[index] = antlr.NewDFA(ds, index)
-	}
 
 	this.BaseParser = antlr.NewBaseParser(input)
 
