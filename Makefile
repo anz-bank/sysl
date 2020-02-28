@@ -81,11 +81,9 @@ grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go ## Regenerate the 
 
 pkg/grammar/sysl_parser.go: pkg/grammar/SyslParser.g4
 	$(ANTLR_GO)
-	git apply pkg/grammar/antlr4-datarace-fix-parser.go.diff
 
 pkg/grammar/sysl_lexer.go: pkg/grammar/SyslLexer.g4
 	$(ANTLR_GO)
-	git apply pkg/grammar/antlr4-datarace-fix-lexer.go.diff
 
 pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
 	protoc -I pkg/proto_old -I $(GOPATH)/src --go_out=pkg/proto_old/ sysl.proto

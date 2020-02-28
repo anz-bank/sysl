@@ -810,6 +810,9 @@ var serializedLexerAtn = []uint16{
 	3, 176, 24, 3, 179, 25, 3, 180, 26, 3, 181, 27, 3, 181, 28, 3, 185, 29,
 }
 
+var lexerDeserializer = antlr.NewATNDeserializer(nil)
+var lexerAtn = lexerDeserializer.DeserializeFromUInt16(serializedLexerAtn)
+
 var lexerChannelNames = []string{
 	"DEFAULT_TOKEN_CHANNEL", "HIDDEN",
 }
@@ -897,16 +900,17 @@ type SyslLexer struct {
 	// TODO: EOF string
 }
 
-func NewSyslLexer(input antlr.CharStream) *SyslLexer {
+var lexerDecisionToDFA = make([]*antlr.DFA, len(lexerAtn.DecisionToState))
 
-	l := new(SyslLexer)
-
-	lexerDeserializer := antlr.NewATNDeserializer(nil)
-	lexerAtn := lexerDeserializer.DeserializeFromUInt16(serializedLexerAtn)
-	lexerDecisionToDFA := make([]*antlr.DFA, len(lexerAtn.DecisionToState))
+func init() {
 	for index, ds := range lexerAtn.DecisionToState {
 		lexerDecisionToDFA[index] = antlr.NewDFA(ds, index)
 	}
+}
+
+func NewSyslLexer(input antlr.CharStream) *SyslLexer {
+
+	l := new(SyslLexer)
 
 	l.BaseLexer = antlr.NewBaseLexer(input)
 	l.Interpreter = antlr.NewLexerATNSimulator(l, lexerAtn, lexerDecisionToDFA, antlr.NewPredictionContextCache())
