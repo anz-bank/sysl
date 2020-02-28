@@ -226,11 +226,6 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 	if t, found := l.types.Find(name); found {
 		return t
 	}
-	if len(schema.Enum) == 0 {
-		if t, found := l.types.Find(mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, l.logger)); found {
-			return t
-		}
-	}
 	switch schema.Type {
 	case ObjectTypeName, "":
 		t := &StandardType{
@@ -398,6 +393,10 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 	if op.RequestBody != nil {
 		for mediaType, content := range op.RequestBody.Value.Content {
 			t := l.typeFromSchemaRef("", content.Schema)
+			if _, ok := t.(*SyslBuiltIn); ok && content.Schema != nil && content.Schema.Ref != "" {
+				parts := strings.Split(content.Schema.Ref, "/")
+				t = l.types.AddAndRet(&Alias{name: parts[len(parts)-1], Target: t})
+			}
 			p := Param{
 				Field: Field{
 					Name:       t.Name() + "Request",

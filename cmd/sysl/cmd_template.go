@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/transforms"
@@ -41,7 +43,7 @@ func (p *templateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-func (p *templateCmd) Execute(args ExecuteArgs) error {
+func (p *templateCmd) Execute(args cmdutils.ExecuteArgs) error {
 	tmplFs := syslutil.NewChrootFs(args.Filesystem, p.rootTemplate)
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(p.template, tmplFs, tfmParser)

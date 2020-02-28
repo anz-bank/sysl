@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/ebnfparser"
 
 	"github.com/anz-bank/sysl/pkg/eval"
@@ -112,39 +114,39 @@ func Serialize(w io.Writer, delim string, node Node) error {
 // GenerateCode transform input sysl model to code in the target language described by
 // grammar and a sysl transform
 func GenerateCode(
-	codegenParams *CmdContextParamCodegen,
+	codegenParams *cmdutils.CmdContextParamCodegen,
 	model *sysl.Module, modelAppName string,
 	fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
-	depPath := codegenParams.depPath
-	basePath := codegenParams.basePath
+	depPath := codegenParams.DepPath
+	basePath := codegenParams.BasePath
 
-	logger.Debugf("root-transform: %s\n", codegenParams.rootTransform)
-	logger.Debugf("transform: %s\n", codegenParams.transform)
-	logger.Debugf("dep-path: %s\n", codegenParams.depPath)
-	logger.Debugf("grammar: %s\n", codegenParams.grammar)
-	logger.Debugf("start: %s\n", codegenParams.start)
-	logger.Debugf("basePath: %s\n", codegenParams.basePath)
+	logger.Debugf("root-transform: %s\n", codegenParams.RootTransform)
+	logger.Debugf("transform: %s\n", codegenParams.Transform)
+	logger.Debugf("dep-path: %s\n", codegenParams.DepPath)
+	logger.Debugf("grammar: %s\n", codegenParams.Grammar)
+	logger.Debugf("start: %s\n", codegenParams.Start)
+	logger.Debugf("basePath: %s\n", codegenParams.BasePath)
 
-	transformFs := syslutil.NewChrootFs(fs, codegenParams.rootTransform)
+	transformFs := syslutil.NewChrootFs(fs, codegenParams.RootTransform)
 	tfmParser := parse.NewParser()
-	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.transform, transformFs, tfmParser)
+	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {
 		return nil, err
 	}
 
-	g, err := ebnfparser.ReadGrammar(fs, codegenParams.grammar, codegenParams.start)
+	g, err := ebnfparser.ReadGrammar(fs, codegenParams.Grammar, codegenParams.Start)
 	if err != nil {
 		return nil, err
 	}
 
-	if !codegenParams.disableValidator {
-		grammarSysl, err := validate.LoadGrammar(codegenParams.grammar, fs)
+	if !codegenParams.DisableValidator {
+		grammarSysl, err := validate.LoadGrammar(codegenParams.Grammar, fs)
 		if err != nil {
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {
 			validator := validate.NewValidator(grammarSysl, tx.GetApps()[transformAppName], tfmParser)
-			validator.Validate(codegenParams.start, codegenParams.depPath, codegenParams.basePath)
+			validator.Validate(codegenParams.Start, codegenParams.DepPath, codegenParams.BasePath)
 			validator.LogMessages()
 		}
 	}

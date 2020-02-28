@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -14,7 +15,7 @@ func (p *validateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-func (p *validateCmd) Execute(args ExecuteArgs) error {
+func (p *validateCmd) Execute(args cmdutils.ExecuteArgs) error {
 	// Nothing to do here, the runner loads the sysl file automatically. If we got here the file was successfully loaded
 	return nil
 }

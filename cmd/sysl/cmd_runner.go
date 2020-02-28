@@ -7,6 +7,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -14,7 +18,7 @@ import (
 )
 
 type cmdRunner struct {
-	commands map[string]Command
+	commands map[string]cmdutils.Command
 
 	Root    string
 	modules []string
@@ -32,7 +36,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 
 			if cmd.MaxSyslModule() > 0 {
 				for _, moduleName := range r.modules {
-					module, appName, err = LoadSyslModule(r.Root, moduleName, fs, logger)
+					module, appName, err = loader.LoadSyslModule(r.Root, moduleName, fs, logger)
 					if err != nil {
 						return err
 					}
@@ -44,7 +48,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 				logger.Error("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 			}
-			return cmd.Execute(ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
+			return cmd.Execute(cmdutils.ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
 				Logger: logger, DefaultAppName: appName})
 		}
 	}
@@ -52,7 +56,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 }
 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
-	commands := []Command{
+	commands := []cmdutils.Command{
 		&protobuf{},
 		&intsCmd{},
 		&datamodelCmd{},
@@ -69,7 +73,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&templateCmd{},
 		&modCmd{},
 	}
-	r.commands = map[string]Command{}
+	r.commands = map[string]cmdutils.Command{}
 
 	app.Flag("root",
 		"sysl root directory for input model file. If root is not found, the module directory becomes "+

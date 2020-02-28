@@ -4,6 +4,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/anz-bank/sysl/pkg/parse"
@@ -68,16 +72,16 @@ func DoConstructDataDiagramsWithParams(
 	rootModel, filter, title, output, project, modules string,
 ) (map[string]string, error) {
 	classFormat := "%(classname)"
-	cmdContextParamDatagen := &CmdContextParamDatagen{
-		filter:      filter,
-		title:       title,
-		output:      output,
-		project:     project,
-		classFormat: classFormat,
+	cmdContextParamDatagen := &cmdutils.CmdContextParamDatagen{
+		Filter:      filter,
+		Title:       title,
+		Output:      output,
+		Project:     project,
+		ClassFormat: classFormat,
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	mod, _, err := loader.LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}
@@ -112,14 +116,14 @@ func TestDoConstructDataDiagramsWithPureModule(t *testing.T) {
 
 	var result map[string]string
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(args.root, args.modules, afero.NewOsFs(), logger)
+	mod, _, err := loader.LoadSyslModule(args.root, args.modules, afero.NewOsFs(), logger)
 	if err != nil {
 		result = nil
 	} else {
-		result, err = generateDataModels(&CmdContextParamDatagen{
-			title:  args.title,
-			output: args.output,
-			direct: true,
+		result, err = generateDataModels(&cmdutils.CmdContextParamDatagen{
+			Title:  args.title,
+			Output: args.output,
+			Direct: true,
 		}, mod, logger)
 	}
 

@@ -80,7 +80,7 @@ func walk(terms []TermNode, val *sysl.Value, rules map[string][]TermNode, logger
 	}
 
 	for _, t := range terms {
-		WalkTermNode(t, w.WalkerOps)
+		w.WalkerOps.WalkTermNode(t)
 	}
 
 	return strings.TrimRight(strings.Join(w.out, " "), " "), w.err
@@ -109,28 +109,29 @@ func (w *walker) EnterTermNode(node TermNode) Stopper {
 			}
 		}
 		w.err = fmt.Errorf("none of the options were satisfied")
-		return &aborter{}
+		return Aborter
 	}
 	min := 1
 	max := 1
-	switch node.OneQuant() {
-	case "*":
-		min = 0
-		max = 0
-	case "?":
-		min = 0
-	case "+":
-		max = 0
+	if node.OneQuant() != nil {
+		switch node.OneQuant().OneToken() {
+		case "*":
+			min = 0
+			max = 0
+		case "?":
+			min = 0
+		case "+":
+			max = 0
+		}
 	}
-	_ = max
 
-	if atom := node.OneAtom(); atom.Node != nil {
+	if atom := node.OneAtom(); atom != nil {
 		if id := atom.OneRule().String(); id != "" {
 			obj := getValue(id, w.value)
 			if obj == nil {
 				if min == 1 {
 					w.err = fmt.Errorf("expected a '%s' but none found", id)
-					return &aborter{}
+					return Aborter
 				}
 				return nil
 			}
@@ -140,10 +141,10 @@ func (w *walker) EnterTermNode(node TermNode) Stopper {
 			vals := eval.GetValueSlice(obj)
 			if max == 1 && len(vals) > 1 {
 				w.err = fmt.Errorf("expected a single '%s' but %d found", id, len(vals))
-				return &aborter{}
+				return Aborter
 			} else if min == 1 && len(vals) == 0 {
 				w.err = fmt.Errorf("expected a '%s' but none found", id)
-				return &aborter{}
+				return Aborter
 			}
 			var fn func(string, *sysl.Value) error
 			if next := w.findRule(id); next != nil {
@@ -159,7 +160,7 @@ func (w *walker) EnterTermNode(node TermNode) Stopper {
 				err := fn(id, v)
 				w.err = err
 				if err != nil {
-					return &aborter{}
+					return Aborter
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-package main
+package cmdutils
 
 import (
 	"fmt"
@@ -12,13 +12,13 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	isoCtrlRE                = regexp.MustCompile("^iso_ctrl_(.*)_txt$")
-	returnTypeValueSpliterRE = regexp.MustCompile(`\s*<:\s*`)
-	typeSetOfRE              = regexp.MustCompile(`set\s+of\s+(.+)$`)
-	typeOneOfRE              = regexp.MustCompile(`one\s+of\s*{(.+)}$`)
-	typeListSpliterRE        = regexp.MustCompile(`\s*,\s*`)
-	endpointLabelReplaceRE   = regexp.MustCompile(`^.*? -> `)
-	endpointParserRE         = regexp.MustCompile(
+	IsoCtrlRE                = regexp.MustCompile("^iso_ctrl_(.*)_txt$")
+	ReturnTypeValueSpliterRE = regexp.MustCompile(`\s*<:\s*`)
+	TypeSetOfRE              = regexp.MustCompile(`set\s+of\s+(.+)$`)
+	TypeOneOfRE              = regexp.MustCompile(`one\s+of\s*{(.+)}$`)
+	TypeListSpliterRE        = regexp.MustCompile(`\s*,\s*`)
+	EndpointLabelReplaceRE   = regexp.MustCompile(`^.*? -> `)
+	EndpointParserRE         = regexp.MustCompile(
 		`(?P<appname>.*?)\s*<-\s*(?P<epname>.*?)(?:\s*\[upto\s+(?P<upto>.*)\])*$`)
 )
 
@@ -71,18 +71,18 @@ func TransformBlackboxesToUptos(m map[string]*Upto, bbs [][]string, uptoType Upt
 	}
 }
 
-func getApplicationAttrs(m *sysl.Module, appName string) map[string]*sysl.Attribute {
+func GetApplicationAttrs(m *sysl.Module, appName string) map[string]*sysl.Attribute {
 	if app, ok := m.Apps[appName]; ok {
 		return app.Attrs
 	}
 	return nil
 }
 
-func getSortedISOCtrlSlice(attrs map[string]*sysl.Attribute) []string {
+func GetSortedISOCtrlSlice(attrs map[string]*sysl.Attribute) []string {
 	s := make([]string, 0, len(attrs))
 
 	for k := range attrs {
-		match := isoCtrlRE.FindStringSubmatch(k)
+		match := IsoCtrlRE.FindStringSubmatch(k)
 		if len(match) > 1 {
 			s = append(s, match[1])
 		}
@@ -91,11 +91,11 @@ func getSortedISOCtrlSlice(attrs map[string]*sysl.Attribute) []string {
 	return s
 }
 
-func getSortedISOCtrlStr(attrs map[string]*sysl.Attribute) string {
-	return strings.Join(getSortedISOCtrlSlice(attrs), ", ")
+func GetSortedISOCtrlStr(attrs map[string]*sysl.Attribute) string {
+	return strings.Join(GetSortedISOCtrlSlice(attrs), ", ")
 }
 
-func formatArgs(s *sysl.Module, appName, parameterTypeName string) string {
+func FormatArgs(s *sysl.Module, appName, parameterTypeName string) string {
 	val := func(a *sysl.Attribute) string {
 		if s := a.GetS(); len(s) > 0 {
 			return strings.ToUpper(s[:1])
@@ -120,7 +120,7 @@ func formatArgs(s *sysl.Module, appName, parameterTypeName string) string {
 	return fmt.Sprintf("<color blue>%s.%s</color> <<color %s>%s, %s</color>>", appName, parameterTypeName, c, conf, integ)
 }
 
-func formatReturnParam(s *sysl.Module, payload string) []string {
+func FormatReturnParam(s *sysl.Module, payload string) []string {
 	// the original regex from python is `,(?![^{]*\})`
 	// however golang regex does not support negative look ahead
 	// that is the reason why I write this split function
@@ -152,17 +152,17 @@ func formatReturnParam(s *sysl.Module, payload string) []string {
 		for _, param := range paramSlice {
 			ptype := param
 
-			valueTypeSlice := returnTypeValueSpliterRE.Split(param, -1)
+			valueTypeSlice := ReturnTypeValueSpliterRE.Split(param, -1)
 			if len(valueTypeSlice) == 2 {
 				ptype = valueTypeSlice[1]
 			}
 
 			if _, ok := sysl.Type_Primitive_value[strings.ToUpper(ptype)]; !ok {
-				if m := typeSetOfRE.FindStringSubmatch(ptype); len(m) > 0 {
+				if m := TypeSetOfRE.FindStringSubmatch(ptype); len(m) > 0 {
 					ptype = m[1]
 				}
-				if m := typeOneOfRE.FindStringSubmatch(ptype); len(m) > 0 {
-					types = append(types, typeListSpliterRE.Split(m[1], -1)...)
+				if m := TypeOneOfRE.FindStringSubmatch(ptype); len(m) > 0 {
+					types = append(types, TypeListSpliterRE.Split(m[1], -1)...)
 				} else {
 					types = append(types, ptype)
 				}
@@ -175,7 +175,7 @@ func formatReturnParam(s *sysl.Module, payload string) []string {
 		if !strings.Contains(t, "...") && strings.Contains(t, ".") {
 			aps := strings.Split(t, ".")
 			if len(aps) > 1 {
-				rarg := formatArgs(s, aps[0], aps[1])
+				rarg := FormatArgs(s, aps[0], aps[1])
 				if len(rarg) > 0 {
 					rargs = append(rargs, rarg)
 				}
@@ -187,7 +187,7 @@ func formatReturnParam(s *sysl.Module, payload string) []string {
 	return rargs
 }
 
-func getReturnPayload(stmts []*sysl.Statement) string {
+func GetReturnPayload(stmts []*sysl.Statement) string {
 	for _, v := range stmts {
 		var subStmts []*sysl.Statement
 		switch stmt := v.Stmt.(type) {
@@ -197,7 +197,7 @@ func getReturnPayload(stmts []*sysl.Statement) string {
 			return stmt.Ret.GetPayload()
 		case *sysl.Statement_Alt:
 			for _, c := range stmt.Alt.Choice {
-				if p := getReturnPayload(c.Stmt); len(p) > 0 {
+				if p := GetReturnPayload(c.Stmt); len(p) > 0 {
 					return p
 				}
 			}
@@ -213,14 +213,14 @@ func getReturnPayload(stmts []*sysl.Statement) string {
 			subStmts = stmt.Group.Stmt
 		}
 
-		if p := getReturnPayload(subStmts); len(p) > 0 {
+		if p := GetReturnPayload(subStmts); len(p) > 0 {
 			return p
 		}
 	}
 	return ""
 }
 
-func getAndFmtParam(s *sysl.Module, params []*sysl.Param) []string {
+func GetAndFmtParam(s *sysl.Module, params []*sysl.Param) []string {
 	r := make([]string, 0, len(params))
 	for _, v := range params {
 		an := ""
@@ -232,7 +232,7 @@ func getAndFmtParam(s *sysl.Module, params []*sysl.Param) []string {
 			}
 		}
 
-		eparg := formatArgs(s, an, pn)
+		eparg := FormatArgs(s, an, pn)
 		if len(eparg) > 0 {
 			r = append(r, eparg)
 		}
@@ -240,6 +240,6 @@ func getAndFmtParam(s *sysl.Module, params []*sysl.Param) []string {
 	return r
 }
 
-func normalizeEndpointName(endpointName string) string {
-	return endpointLabelReplaceRE.ReplaceAllLiteralString(endpointName, " ⬄ ")
+func NormalizeEndpointName(endpointName string) string {
+	return EndpointLabelReplaceRE.ReplaceAllLiteralString(endpointName, " ⬄ ")
 }
