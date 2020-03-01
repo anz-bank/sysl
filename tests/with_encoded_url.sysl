@@ -1,0 +1,16 @@
+testapp "Simple" [package="package_foo"]:
+    /%ff%fftest%2Epdf:
+        GET:
+            return ok <: 200
+
+    /%FF%AFtests%25again:
+        GET:
+            return ok <: 200
+
+    /tests%5Eagain:
+        GET:
+            return ok <: 200
+
+    /tests%7Eagain:
+        GET:
+            return ok <: 200

@@ -1,0 +1,26 @@
+swagger: "2.0"
+info:
+  title: Simple
+paths:
+  /test.stuff:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/SimpleObj'
+  /deep/deeeeeep/test.stuff:
+    get:
+      responses:
+        200:
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/SimpleObj'
+definitions:
+  SimpleObj:
+
+    type: object
+    properties:
+      name:
+        type: string
+
