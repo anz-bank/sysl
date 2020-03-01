@@ -165,13 +165,13 @@ func dumpApp(out io.Writer, app *sysl.Application) {
 
 func parseExpression(text string, app *sysl.Application, scope *Scope) string {
 	errorListener := parse.SyslParserErrorListener{}
-	lexer := parser.NewSyslLexer(antlr.NewInputStream(text))
+	lexer := parser.NewThreadSafeSyslLexer(antlr.NewInputStream(text))
 	lexer.SetMode(parser.SyslLexerVIEW_TRANSFORM)
 	defer parser.DeleteLexerState(lexer)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	listener := parse.NewTreeShapeListener()
 
-	p := parser.NewSyslParser(stream)
+	p := parser.NewThreadSafeSyslParser(stream)
 	p.AddErrorListener(&errorListener)
 	p.BuildParseTrees = true
 
