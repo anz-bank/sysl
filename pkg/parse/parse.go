@@ -37,7 +37,7 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	errorListener := SyslParserErrorListener{}
 	lexer := parser.NewThreadSafeSyslLexer(input)
 	defer parser.DeleteLexerState(lexer)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
+	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 	p := parser.NewThreadSafeSyslParser(stream)
 	p.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))

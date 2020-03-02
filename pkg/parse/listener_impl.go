@@ -669,7 +669,7 @@ func fixFieldDefinitions(collection *sysl.Type) {
 			continue
 		}
 		if f.GetPrimitive() == sysl.Type_NO_Primitive {
-			type1 := typeRefForType(f)
+			type1 := typeRefForType(name, f)
 
 			if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
 				l := len(type1.Ref.Appname.Part)
@@ -684,7 +684,7 @@ func fixFieldDefinitions(collection *sysl.Type) {
 	}
 }
 
-func typeRefForType(f *sysl.Type) *sysl.ScopedRef {
+func typeRefForType(name string, f *sysl.Type) *sysl.ScopedRef {
 	var type1 *sysl.ScopedRef
 	switch t := f.GetType().(type) {
 	case *sysl.Type_TypeRef:
@@ -696,7 +696,7 @@ func typeRefForType(f *sysl.Type) *sysl.ScopedRef {
 	case *sysl.Type_List_:
 		type1 = t.List.GetType().GetTypeRef()
 	case *sysl.Type_NoType_:
-		continue
+		return nil
 	default:
 		panic("unhandled type:" + name)
 	}
