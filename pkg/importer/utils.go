@@ -1,6 +1,9 @@
 package importer
 
-import "strings"
+import (
+	"net/url"
+	"strings"
+)
 
 func getDescription(d string) string {
 	if d == "" {
@@ -66,4 +69,19 @@ func spaceSeparate(items ...string) string {
 		}
 	}
 	return strings.Join(t, " ")
+}
+
+func getSyslSafeEndpoint(endpoint string) string {
+	// url.PathEscape does not escape '.'
+	charsToKeep := map[string]string{
+		"2F": "/",
+		"7B": "{",
+		"7D": "}",
+	}
+	endpoint = url.PathEscape(endpoint)
+	endpoint = strings.ReplaceAll(endpoint, ".", "%"+"2E")
+	for hex, realChar := range charsToKeep {
+		endpoint = strings.ReplaceAll(endpoint, "%"+hex, realChar)
+	}
+	return endpoint
 }

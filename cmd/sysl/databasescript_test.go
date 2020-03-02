@@ -4,6 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"github.com/anz-bank/sysl/pkg/database"
@@ -117,7 +119,7 @@ func DoConstructDatabaseScriptWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule("", source, afero.NewOsFs(), logger)
+	mod, _, err := loader.LoadSyslModule("", source, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}

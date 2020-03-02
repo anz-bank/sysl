@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/anz-bank/sysl/pkg/parse"
@@ -851,13 +853,13 @@ func TestHandleProjectRoot(t *testing.T) {
 			fs := afero.NewMemMapFs()
 			syslutil.BuildFolderTest(t, fs, ts.structure.folders, ts.structure.files)
 
-			config := newProjectConfiguration()
-			err := config.configureProject(ts.root, ts.module, fs, logger)
+			config := loader.NewProjectConfiguration()
+			err := config.ConfigureProject(ts.root, ts.module, fs, logger)
 
-			require.Equal(t, ts.rootFound, config.rootIsFound)
+			require.Equal(t, ts.rootFound, config.RootIsFound)
 			require.NoError(t, err)
-			require.Equal(t, ts.expectedRoot, config.root)
-			require.Equal(t, ts.getExpectedModule(t), config.module)
+			require.Equal(t, ts.expectedRoot, config.Root)
+			require.Equal(t, ts.getExpectedModule(t), config.Module)
 		})
 	}
 }

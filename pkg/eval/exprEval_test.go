@@ -94,7 +94,8 @@ func TestScopeAddApp(t *testing.T) {
 
 	aliasAccounts := alias["Accounts"].GetMap().Items
 	assert.Equal(t, "set", aliasAccounts["type"].GetS())
-	assert.Equal(t, "Term", aliasAccounts["set"].GetS())
+	aliasSetType := aliasAccounts["set"].GetMap().Items
+	assert.Equal(t, "Term", aliasSetType["type_ref"].GetS())
 }
 
 func TestEvalIntegerMath(t *testing.T) {
