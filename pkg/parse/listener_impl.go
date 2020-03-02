@@ -1692,7 +1692,8 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 
 // EnterCollector_http_stmt is called when production collector_http_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_stmtContext) {
-	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " + ctx.Collector_http_stmt_suffix().GetText()
+	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " +
+		mustUnescape(ctx.Collector_http_stmt_suffix().GetText())
 
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Action{
