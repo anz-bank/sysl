@@ -77,6 +77,9 @@ func getSyslSafeEndpoint(endpoint string) string {
 		"2F": "/",
 		"7B": "{",
 		"7D": "}",
+		"3D": "=",
+		"3F": "?",
+		"26": "&",
 	}
 	endpoint = url.PathEscape(endpoint)
 	endpoint = strings.ReplaceAll(endpoint, ".", "%"+"2E")
