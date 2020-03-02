@@ -521,6 +521,14 @@ func TestValidatorLoadGrammarSuccess(t *testing.T) {
 	assert.Nil(t, err, "Unexpected result")
 }
 
+func TestValidatorEscapedEndpoints(t *testing.T) {
+	t.Parallel()
+
+	grammar, err := LoadGrammar(filepath.Join(testDir, "with_encoded_url.sysl"), afero.NewOsFs())
+	assert.NotNil(t, grammar, "Unexpected result")
+	assert.Nil(t, err, "Unexpected result")
+}
+
 func TestValidatorLoadGrammarError(t *testing.T) {
 	t.Parallel()
 

@@ -318,9 +318,18 @@ func (l *loader) initEndpoints() []MethodEndpoints {
 	var result []MethodEndpoints
 	for _, method := range methodDisplayOrder {
 		if eps, ok := epMap[method]; ok {
+			syslSafeEps := make([]Endpoint, 0, len(eps))
+			for _, e := range eps {
+				syslSafeEps = append(syslSafeEps, Endpoint{
+					Path:        getSyslSafeEndpoint(e.Path),
+					Description: e.Description,
+					Params:      e.Params,
+					Responses:   e.Responses,
+				})
+			}
 			result = append(result, MethodEndpoints{
 				Method:    method,
-				Endpoints: eps,
+				Endpoints: syslSafeEps,
 			})
 		}
 	}
