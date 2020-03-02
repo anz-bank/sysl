@@ -13,8 +13,8 @@ func TestReadCMDFlags(t *testing.T) {
 	assert.Equal(t, 4, len(flags))
 	assert.Equal(t, "--grammar=go.gen.g", flags[0])
 	assert.Equal(t, "--transform=go.gen.sysl", flags[1])
-	assert.Equal(t, "model.sysl", flags[2])
-	assert.Equal(t, "--app-name=Test", flags[3])
+	assert.Equal(t, "--app-name=Test POC", flags[2])
+	assert.Equal(t, "model.sysl", flags[3])
 }
 
 func TestPopulateCMDFlagsFromFile(t *testing.T) {
@@ -27,6 +27,6 @@ func TestPopulateCMDFlagsFromFile(t *testing.T) {
 	assert.Equal(t, "codegen", flags[1])
 	assert.Equal(t, "--grammar=go.gen.g", flags[2])
 	assert.Equal(t, "--transform=go.gen.sysl", flags[3])
-	assert.Equal(t, "model.sysl", flags[4])
-	assert.Equal(t, "--app-name=Test", flags[5])
+	assert.Equal(t, "--app-name=Test POC", flags[4])
+	assert.Equal(t, "model.sysl", flags[5])
 }

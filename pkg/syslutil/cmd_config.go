@@ -3,6 +3,7 @@ package syslutil
 import (
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"strings"
 )
 
@@ -12,8 +13,12 @@ func ReadCMDFlags(configPath string) ([]string, error) {
 	if ferr != nil {
 		return flags, ferr
 	}
-	str := string(data)
-	flags = strings.Fields(strings.TrimSpace(str))
+	re := regexp.MustCompile("(\\S+\"[^\"]+\")|\\S+")
+	flags = re.FindAllString(strings.TrimSpace(string(data)), -1)
+
+	for i, flag := range flags {
+		flags[i] = strings.ReplaceAll(flag, "\"", "")
+	}
 
 	return flags, nil
 }
