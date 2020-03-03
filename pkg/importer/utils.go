@@ -74,17 +74,17 @@ func spaceSeparate(items ...string) string {
 func getSyslSafeEndpoint(endpoint string) string {
 	// url.PathEscape does not escape '.'
 	charsToKeep := map[string]string{
-		"2F": "/",
-		"7B": "{",
-		"7D": "}",
-		"3D": "=",
-		"3F": "?",
-		"26": "&",
+		`%2F`: "/",
+		`%7B`: "{",
+		`%7D`: "}",
+		`%3D`: "=",
+		`%3F`: "?",
+		`%26`: "&",
 	}
 	endpoint = url.PathEscape(endpoint)
-	endpoint = strings.ReplaceAll(endpoint, ".", "%"+"2E")
+	endpoint = strings.ReplaceAll(endpoint, ".", `%2E`)
 	for hex, realChar := range charsToKeep {
-		endpoint = strings.ReplaceAll(endpoint, "%"+hex, realChar)
+		endpoint = strings.ReplaceAll(endpoint, hex, realChar)
 	}
 	return endpoint
 }
