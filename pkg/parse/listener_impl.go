@@ -1683,7 +1683,7 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: strings.TrimSpace(MustUnescape(ctx.Target_endpoint().GetText())),
+				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
 			},
 		},
 	})

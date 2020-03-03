@@ -153,5 +153,5 @@ func MustUnescape(endpoint string) string {
 	if err != nil {
 		panic(err)
 	}
-	return s
+	return strings.TrimSpace(s)
 }
