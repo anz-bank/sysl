@@ -11,4 +11,5 @@ testapp "Simple" [package="package_foo"]:
     # In this case, `%25` will be converted to `%`
     /tests%25again:
         GET:
+            . <- GET /test%2epdf
             return set of SimpleObj

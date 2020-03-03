@@ -136,7 +136,6 @@ func parseComparable(
 			}
 		}
 	}
-
 	return module, nil
 }
 
@@ -565,6 +564,12 @@ func TestAlias(t *testing.T) {
 	t.Parallel()
 
 	testParseAgainstGolden(t, "tests/alias_inline.sysl", "")
+}
+
+func TestEscapedEndpoints(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/endpoints.sysl", "")
 }
 
 func TestStrings(t *testing.T) {

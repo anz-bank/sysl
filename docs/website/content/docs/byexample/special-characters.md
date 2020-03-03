@@ -6,7 +6,7 @@ description= ""
 layout= "byexample"
 weight = 12
 topic = "Web protocols"
-PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=dGVzdGFwcCAiU2ltcGxlIiBbcGFja2FnZT0icGFja2FnZV9mb28iXToKICAgIC90ZXN0JTJlcGRmOgogICAgICAgIEdFVDoKICAgICAgICAgICAgcmV0dXJuIDIwMCA8OiBTaW1wbGVPYmoKICAgICAgICBERUxFVEU6CiAgICAgICAgICAgIHJldHVybiAyMDMKICAgIC90ZXN0cyUyNWFnYWluOgogICAgICAgIEdFVDoKICAgICAgICAgICAgcmV0dXJuIHNldCBvZiBTaW1wbGVPYmoK&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=dGVzdGFwcCAiU2ltcGxlIiBbcGFja2FnZT0icGFja2FnZV9mb28iXToKICAgIC90ZXN0JTJlcGRmOgogICAgICAgIEdFVDoKICAgICAgICAgICAgcmV0dXJuIDIwMCA8OiBTaW1wbGVPYmoKICAgICAgICBERUxFVEU6CiAgICAgICAgICAgIHJldHVybiAyMDMKICAgIC90ZXN0cyUyNWFnYWluOgogICAgICAgIEdFVDoKICAgICAgICAgICAgLiA8LSBHRVQgL3Rlc3QlMmVwZGYKICAgICAgICAgICAgcmV0dXJuIHNldCBvZiBTaW1wbGVPYmoK&cmd="
 ID = "special-characters"
 CodeWithoutComments = """testapp "Simple" [package="package_foo"]:
     /test%2epdf:
@@ -16,6 +16,7 @@ CodeWithoutComments = """testapp "Simple" [package="package_foo"]:
             return 203
     /tests%25again:
         GET:
+            . <- GET /test%2epdf
             return set of SimpleObj
 """
 
@@ -34,6 +35,7 @@ Segs = [[
       {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="o">/</span><span class="nx">tests</span><span class="o">%</span><span class="mi">25</span><span class="nx">again</span><span class="p">:</span>
         <span class="nx">GET</span><span class="p">:</span>
+            <span class="p">.</span> <span class="o">&lt;-</span> <span class="nx">GET</span> <span class="o">/</span><span class="nx">test</span><span class="o">%</span><span class="mi">2</span><span class="nx">epdf</span>
             <span class="k">return</span> <span class="nx">set</span> <span class="nx">of</span> <span class="nx">SimpleObj</span></pre>""",DocsRendered= """<p>In this case, <code>%25</code> will be converted to <code>%</code></p>
 """,Image = ""},
 
