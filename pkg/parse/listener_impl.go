@@ -4,7 +4,6 @@ package parse // SyslParser
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"path/filepath"
 	"strconv"
 	"strings"
