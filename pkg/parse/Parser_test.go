@@ -2,6 +2,7 @@ package parse
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"path"
@@ -136,7 +137,6 @@ func parseComparable(
 			}
 		}
 	}
-
 	return module, nil
 }
 
@@ -239,6 +239,7 @@ func parseAndCompare(
 	if err = pbutil.FTextPB(&actual, module); err != nil {
 		return false, err
 	}
+	fmt.Println(actual.String())
 	diff, err := difflib.GetUnifiedDiffString(difflib.UnifiedDiff{
 		A:        difflib.SplitLines(expected.String()),
 		B:        difflib.SplitLines(actual.String()),
@@ -565,6 +566,12 @@ func TestAlias(t *testing.T) {
 	t.Parallel()
 
 	testParseAgainstGolden(t, "tests/alias_inline.sysl", "")
+}
+
+func TestEscapedEndpoints(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/endpoints.sysl", "")
 }
 
 func TestStrings(t *testing.T) {

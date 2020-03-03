@@ -1,0 +1,27 @@
+My :: Server:
+    /serve%2ehtml:
+        GET:
+            return ok <: App.Response
+
+    /more/stuff%2eendpoint/{id <: string}:
+        POST:
+            return ok <: App.Response
+
+App:
+    /more/stuff%2eendpoint/{id <: string}:
+        POST:
+            . <- GET /serve%2ehtml
+            return ok <: Response
+
+    /serve%2ehtml:
+        GET:
+            My :: Server <- GET /serve%2ehtml [~https]
+            return ok <: Response
+
+    !type Response:
+        response <: string
+App:
+    .. * <- *:
+        POST /more/stuff%2eendpoint/{id} [id = "one"]
+        App <- GET /serve%2ehtml [id="doesn't matter"]
+        My :: Server <- GET /serve%2ehtml [id="doesn't matter"]
