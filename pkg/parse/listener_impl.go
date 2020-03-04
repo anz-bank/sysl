@@ -4,7 +4,6 @@ package parse // SyslParser
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -1002,11 +1001,7 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 	// s.endpointName is built along as we enter http_path/http_path_suffix/http_path_var_with_type
 	// commit this value to urlPrefixes
-	endpoint, err := url.PathUnescape(s.endpointName)
-	if err != nil {
-		panic(err)
-	}
-	s.urlPrefixes.Push(endpoint)
+	s.urlPrefixes.Push(MustUnescape(s.endpointName))
 }
 
 // EnterRet_stmt is called when production ret_stmt is entered.
@@ -1049,7 +1044,7 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: ctx.Target_endpoint().GetText(),
+				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
 			},
 		},
 	})
@@ -1693,7 +1688,7 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: strings.TrimSpace(ctx.Target_endpoint().GetText()),
+				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
 			},
 		},
 	})
@@ -1701,7 +1696,8 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 
 // EnterCollector_http_stmt is called when production collector_http_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_stmtContext) {
-	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " + ctx.Collector_http_stmt_suffix().GetText()
+	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " +
+		MustUnescape(ctx.Collector_http_stmt_suffix().GetText())
 
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Action{

@@ -1,0 +1,1 @@
+    --grammar=go.gen.g     --transform=go.gen.sysl          model.sysl          --app-name=Test
