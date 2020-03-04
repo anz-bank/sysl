@@ -4,7 +4,7 @@ title= "Data Model Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 10
+weight = 11
 topic = "Diagrams"
 PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=UHJvamVjdDoKICAgIFNlcnZlcjoKICAgICAgICBTZXJ2ZXIKICAgIEFwcDoKICAgICAgICBBcHAgClNlcnZlcjoKICAgICF0eXBlIGlkOgogICAgICAgIGlkIDw6IGludApBcHA6CiAgICAhdHlwZSBVc2VyOgogICAgICAgIGlkIDw6IFNlcnZlci5pZApBbm90aGVyT25lOgogICAgIXR5cGUgbmFtZToKICAgICAgICBmaXJzdE5hbWUgPDogc3RyaW5nCiAgICAgICAgbGFzdE5hbWUgPDogc3RyaW5nCg==&cmd=c3lzbCBkYXRhIC1vICIlKGVwbmFtZSkuc3ZnIiAtaiBQcm9qZWN0IDFfcHJvamVjdC5zeXNs"
 ID = "data-model-diagrams"
@@ -90,7 +90,7 @@ Segs = [[
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams9.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams10.svg"},
 
 
 ],
@@ -107,13 +107,13 @@ Segs = [[
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams9.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams10.svg"},
 
 
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams9.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/data-model-diagrams10.svg"},
 
 
 ],

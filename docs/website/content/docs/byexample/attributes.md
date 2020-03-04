@@ -6,9 +6,10 @@ description= ""
 layout= "byexample"
 weight = 6
 topic = "Basics"
-PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=Rm9vIFtwYWNrYWdlPSJjb20ubXljb21wYW55Il06CiAgICBCYXIobmV3UG9zdCA8OiBzdHJpbmcgW35ib2R5XSk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=Rm9vIFtwYWNrYWdlPSJjb20ubXljb21wYW55Il06CiAgICBAb3duZXI9ImphbmUuc21pdGhAY29tcGFueS5jb20iCiAgICBCYXIobmV3UG9zdCA8OiBzdHJpbmcgW35ib2R5XSk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
 ID = "attributes"
 CodeWithoutComments = """Foo [package="com.mycompany"]:
+    @owner="jane.smith@company.com"
     Bar(newPost <: string [~body]):
         return string
 """
@@ -16,10 +17,14 @@ CodeWithoutComments = """Foo [package="com.mycompany"]:
 Segs = [[
   
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
-<span class="nx">Foo</span> <span class="p">[</span><span class="kn">package</span><span class="p">=</span><span class="s">&#34;com.mycompany&#34;</span><span class="p">]:</span></pre>""",DocsRendered= """<p>Specify attributes of applications or endpoints in square brackets.</p>
+<span class="nx">Foo</span> <span class="p">[</span><span class="kn">package</span><span class="p">=</span><span class="s">&#34;com.mycompany&#34;</span><span class="p">]:</span></pre>""",DocsRendered= """<p>Attributes are additional bits of information which can be attached to applications and endpoints.Specify attributes of applications or endpoints in square brackets.</p>
 """,Image = ""},
 
-      {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma">
+      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma">
+    <span class="err">@</span><span class="nx">owner</span><span class="p">=</span><span class="s">&#34;jane.smith@company.com&#34;</span></pre>""",DocsRendered= """<p>Attributes can also be specified using the @ notation for a key value notation</p>
+""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""<pre class="chroma">
     <span class="nf">Bar</span><span class="p">(</span><span class="nx">newPost</span> <span class="p">&lt;:</span> <span class="kt">string</span> <span class="p">[</span><span class="err">~</span><span class="nx">body</span><span class="p">]):</span>
         <span class="k">return</span> <span class="kt">string</span></pre>""",DocsRendered= """<p>Attributes can also be tags specified with tilda notation</p>
 """,Image = ""},
