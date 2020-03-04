@@ -8,13 +8,12 @@ import (
 )
 
 func ReadCMDFlags(configPath string) ([]string, error) {
-	var flags []string
 	data, ferr := ioutil.ReadFile(configPath)
 	if ferr != nil {
-		return flags, ferr
+		return nil, ferr
 	}
-	re := regexp.MustCompile("(\\S+\"[^\"]+\")|\\S+")
-	flags = re.FindAllString(strings.TrimSpace(string(data)), -1)
+	re := regexp.MustCompile(`(\S+"[^"]+")|\S+`)
+	flags := re.FindAllString(strings.TrimSpace(string(data)), -1)
 
 	for i, flag := range flags {
 		flags[i] = strings.ReplaceAll(flag, "\"", "")
