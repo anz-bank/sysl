@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -62,7 +61,7 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 			return err
 		}
 
-		block := generateAppService(serviceName, serviceTmpl)
+		block := generateAppService(serviceName, serviceTmpl, outputDir)
 		composeServices[serviceName] = block
 		if appsWhoNeedDb[serviceName] {
 			block := generateDbService(serviceName)
@@ -79,7 +78,7 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 		return err
 	}
 
-	composeFile, err := os.Create(filepath.Join(outputDir, "docker-compose.yml"))
+	composeFile, err := os.Create("docker-compose.yml")
 	defer composeFile.Close()
 	if err != nil {
 		return err
@@ -111,9 +110,12 @@ func readTemplate(templateFileName string) (template.ServiceMap, error) {
 	return vars, nil
 }
 
-func generateAppService(serviceName string, serviceTmpl template.Service) map[string]interface{} {
+func generateAppService(serviceName string, serviceTmpl template.Service, outputDir string) map[string]interface{} {
+	build := make(map[string]interface{})
+	build["context"] = "."
+	build["dockerfile"] = filepath.Join(outputDir, serviceName, "Dockerfile")
 	block := make(map[string]interface{})
-	block["build"] = "./" + serviceName
+	block["build"] = build
 	block["ports"] = []string{fmt.Sprintf("%v:%v", serviceTmpl.Port, serviceTmpl.Port)}
 	return block
 }
@@ -122,6 +124,7 @@ func generateDbService(serviceName string) map[string]interface{} {
 	block := make(map[string]interface{})
 	block["image"] = "postgres:latest"
 	block["ports"] = []string{"5432:5432"}
+	// piece of magic to make Postgres execute our script on startup
 	block["volumes"] = []string{fmt.Sprintf("../gen/%v/%v.sql:/docker-entrypoint-initdb.d/%v.sql", serviceName, serviceName, serviceName)}
 	environemnt := make(map[string]string)
 	environemnt["POSTGRES_USER"] = "someuser"
@@ -131,18 +134,30 @@ func generateDbService(serviceName string) map[string]interface{} {
 	return block
 }
 
-func toGenericMap(service template.Service) (map[string]interface{}, error) {
-	data, err := json.Marshal(&service)
+func processTemplate(file *os.File, template string, data template.Service, outputDir string) error {
+	// mustache needs generic map
+	rawData, err := json.Marshal(&data)
 	if err != nil {
-		return nil, err
+		return err
 	}
+	var genericData map[string]interface{}
+	err = json.Unmarshal(rawData, &genericData)
+	if err != nil {
+		return err
+	}
+	genericData["outputDir"] = outputDir
 
-	var generic map[string]interface{}
-	err = json.Unmarshal(data, &generic)
+	renderedTemplate, err := mustache.Render(template, genericData)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return generic, nil
+	_, err = file.WriteString(renderedTemplate)
+	if err != nil {
+		return err
+	}
+	file.Sync()
+
+	return nil
 }
 
 func generateMain(serviceName string, service template.Service, outputDir string, needDb bool) error {
@@ -152,28 +167,12 @@ func generateMain(serviceName string, service template.Service, outputDir string
 		return err
 	}
 
-	genericMap, err := toGenericMap(service)
-	if err != nil {
-		return err
-	}
 	template := GetMainStub()
 	if needDb {
 		template = GetMainDbStub()
 	}
-	rendered, err := mustache.Render(template, genericMap)
-	if err != nil {
-		return err
-	}
 
-	n, err := output.WriteString(rendered)
-	if err != nil {
-		return err
-	}
-
-	log.Println("written", n, "bytes")
-	output.Sync()
-
-	return nil
+	return processTemplate(output, template, service, outputDir)
 }
 
 func generateDockerfile(serviceName string, service template.Service, outputDir string) error {
@@ -183,23 +182,7 @@ func generateDockerfile(serviceName string, service template.Service, outputDir 
 		return err
 	}
 
-	genericMap, err := toGenericMap(service)
-	if err != nil {
-		return err
-	}
+	template := GetDockerfileStub()
 
-	rendered, err := mustache.Render(GetDokerfileStub(), genericMap)
-	if err != nil {
-		return err
-	}
-
-	n, err := output.WriteString(rendered)
-	if err != nil {
-		return err
-	}
-
-	log.Println("written", n, "bytes")
-	output.Sync()
-
-	return nil
+	return processTemplate(output, template, service, outputDir)
 }
