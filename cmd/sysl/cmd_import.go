@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/parse"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"github.com/anz-bank/sysl/pkg/importer"
@@ -33,7 +35,7 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("input", "input filename").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
 		"name of the sysl app to define in sysl model.").Required().Short('a').StringVar(&p.AppName)
-	cmd.Flag("schema", "json schema to parse json file.").Short('s').StringVar(&p.Schema)
+	cmd.Flag("transform", "transform file.").Short('t').StringVar(&p.TransformFile)
 	cmd.Flag("package",
 		"name of the sysl package to define in sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
@@ -83,7 +85,13 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 		return err
 	}
 	p.SwaggerRoot = filepath.Dir(p.SwaggerRoot)
-	p.Filesystem = args.Filesystem
+	// read transform module *sysl.Module, string, error
+	// transform, _, terr := loader.LoadSyslModule(p.SwaggerRoot, p.TransformFile, args.Filesystem, args.Logger)
+	transform, terr := parse.NewParser().Parse(p.TransformFile, args.Filesystem)
+	if terr != nil {
+		return terr
+	}
+	p.Transform = transform
 	output, err := imp(p.OutputData, string(data), args.Logger)
 	if err != nil {
 		return err

@@ -9,19 +9,19 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/go-openapi/swag"
-	"github.com/spf13/afero"
 
 	"github.com/sirupsen/logrus"
 )
 
 type OutputData struct {
-	AppName     string
-	Package     string
-	SwaggerRoot string
-	Mode        string
-	Schema      string
-	Filesystem  afero.Fs
+	AppName       string
+	Package       string
+	SwaggerRoot   string
+	Mode          string
+	TransformFile string
+	Transform     *sysl.Module
 }
 
 type SyslInfo struct {
