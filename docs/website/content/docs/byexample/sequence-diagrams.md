@@ -4,7 +4,7 @@ title= "Sequence Diagrams"
 draft= false
 description= ""
 layout= "byexample"
-weight = 8
+weight = 9
 topic = "Diagrams"
 PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=TW9iaWxlQXBwOgogICAgTG9naW46CiAgICAgICAgU2VydmVyIDwtIExvZ2luUmVxdWVzdAogICAgIXR5cGUgTG9naW5EYXRhOgogICAgICAgIHVzZXJuYW1lIDw6IHN0cmluZwogICAgICAgIHBhc3N3b3JkIDw6IHN0cmluZwogICAgIXR5cGUgTG9naW5SZXNwb25zZToKICAgICAgICBtZXNzYWdlIDw6IHN0cmluZwpTZXJ2ZXI6CiAgICBMb2dpblJlcXVlc3QoZGF0YSA8OiBNb2JpbGVBcHAuTG9naW5EYXRhKToKICAgICAgICByZXR1cm4gTW9iaWxlQXBwLkxvZ2luUmVzcG9uc2UK&cmd=c3lzbCBzZCAtbyAiM19wcm9qZWN0LnN2ZyIgLXMgIk1vYmlsZUFwcCA8LSBMb2dpbiIgMV9wcm9qZWN0LnN5c2w="
 ID = "sequence-diagrams"
@@ -75,7 +75,7 @@ Segs = [[
 ],
 [
   
-      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/sequence-diagrams7.svg"},
+      {CodeEmpty= false,CodeLeading= false,CodeRun= false,CodeRendered="""""",DocsRendered= """""",Image = "/assets/byexample/images/sequence-diagrams8.svg"},
 
 
 ],
