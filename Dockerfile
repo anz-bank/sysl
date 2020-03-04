@@ -3,33 +3,29 @@
 # to a debian:buster-slim image and setting up the entrypoint.
 #
 # The produced image is published to https://hub.docker.com/r/anzbank/sysl
+#
+# To use this Docker file run the following command
+#    docker image build --build-arg sysl_tag=v0.7.1  -t my-sysl:0.7.1 .
 
 ARG go_ver=1.13
-ARG deb_ver=10.3-slim
+ARG alpine_ver=3.11
 
-FROM golang:${go_ver} as builder
+FROM golang:${go_ver}-alpine${alpine_ver} as builder
 
 ARG sysl_tag
 
 RUN test -n "${sysl_tag}" || ( echo Plese set sysl_tag build-arg && exit 1 )
 
-WORKDIR /sysl
+RUN apk --no-cache add git
 
-# COPY . .
+WORKDIR /sysl
 
 RUN git clone --branch ${sysl_tag} --single-branch --depth 1 https://github.com/anz-bank/sysl.git . && \
     go install ./cmd/sysl
 
-FROM debian:${deb_ver} as runner
+FROM alpine:${alpine_ver} as runner
 
-ARG DEBIAN_FRONTEND=noninteractive
-
-# Hack to fix ln problem when installing java headless
-RUN mkdir -p /usr/share/man/man1 ; \
-    apt-get update && \
-    apt-get install -y plantuml
-
-COPY --from=builder  /go/bin/sysl /
+COPY --from=builder /go/bin/sysl /
 
 WORKDIR /work
 
