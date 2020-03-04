@@ -1,4 +1,4 @@
-package test_rig
+package template
 
 import (
 	_ "github.com/lib/pq"

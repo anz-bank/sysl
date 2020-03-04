@@ -1,4 +1,4 @@
-package test_rig
+package template
 
 func GetMainStub() string {
 	return `package main

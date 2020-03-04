@@ -1,4 +1,4 @@
-package test_rig
+package template
 
 func GetDockerfileStub() string {
 	return `
