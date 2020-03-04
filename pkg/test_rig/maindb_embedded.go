@@ -5,7 +5,8 @@ import (
 )
 
 func GetMainDbStub() string {
-	return `package main
+	return `
+package main
 
 import (
 	"context"
