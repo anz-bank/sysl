@@ -3,13 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cfg"
-	"github.com/anz-bank/sysl/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/parse"
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -18,123 +15,15 @@ import (
 
 const syslRootMarker = ".sysl"
 
-type projectConfiguration struct {
-	module, root string
-	rootIsFound  bool
-	fs           afero.Fs
-}
-
-func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
-	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
-	projectConfig := newProjectConfiguration()
-	if err := projectConfig.configureProject(root, filename, fs, logger); err != nil {
-		return nil, "", err
-	}
-
-	modelParser := parse.NewParser()
-	if !projectConfig.rootIsFound {
-		modelParser.RestrictToLocalImport()
-	}
-	return parse.LoadAndGetDefaultApp(projectConfig.module, projectConfig.fs, modelParser)
-}
-
-func newProjectConfiguration() *projectConfiguration {
-	return &projectConfiguration{
-		root:        "",
-		module:      "",
-		rootIsFound: false,
-		fs:          nil,
-	}
-}
-
-func (pc *projectConfiguration) configureProject(root, module string, fs afero.Fs, logger *logrus.Logger) error {
-	rootIsDefined := root != ""
-
-	modulePath := module
-	if rootIsDefined {
-		modulePath = filepath.Join(root, module)
-	}
-
-	syslRootPath, err := findRootFromSyslModule(modulePath, fs)
-	if err != nil {
-		return err
-	}
-
-	rootMarkerExists := syslRootPath != ""
-
-	if rootIsDefined {
-		pc.rootIsFound = true
-		pc.root = root
-		pc.module = module
-		if rootMarkerExists {
-			logger.Warningf("%s found in %s but will use %s instead",
-				syslRootMarker, syslRootPath, pc.root)
-		} else {
-			logger.Warningf("%s is not defined but root flag is defined in %s",
-				syslRootMarker, pc.root)
-		}
-	} else {
-		if rootMarkerExists {
-			pc.root = syslRootPath
-
-			// module has to be relative to the root
-			absModulePath, err := filepath.Abs(module)
-			if err != nil {
-				return err
-			}
-			pc.module, err = filepath.Rel(pc.root, absModulePath)
-			if err != nil {
-				return err
-			}
-			pc.rootIsFound = true
-		} else {
-			// uses the module directory as the root, changing the module to be relative to the root
-			pc.root = filepath.Dir(module)
-			pc.module = filepath.Base(module)
-			pc.rootIsFound = false
-			logger.Warningf("root and %s are undefined, %s will be used instead",
-				syslRootMarker, pc.root)
-		}
-	}
-
-	pc.fs = syslutil.NewChrootFs(fs, pc.root)
-	if mod.SyslModules {
-		pc.fs = mod.NewFs(pc.fs)
-	}
-
-	return nil
-}
-
-func findRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
-	currentPath, err := filepath.Abs(modulePath)
-	if err != nil {
-		return "", err
-	}
-
-	systemRoot, err := filepath.Abs(string(os.PathSeparator))
-	if err != nil {
-		return "", err
-	}
-
-	// Keep walking up the directories to find nearest root marker
-	for {
-		currentPath = filepath.Dir(currentPath)
-		exists, err := afero.Exists(fs, filepath.Join(currentPath, syslRootMarker))
-		reachedRoot := currentPath == systemRoot || (err != nil && os.IsPermission(err))
-		switch {
-		case exists:
-			return currentPath, nil
-		case reachedRoot:
-			return "", nil
-		case err != nil:
-			return "", err
-		}
-	}
-}
-
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
+	flags, err := syslutil.PopulateCMDFlagsFromFile(args)
+	if err == nil && len(flags) > 0 {
+		// apply flags in file
+		args = flags
+	}
+
 	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
 	syslCmd.Version(Version)
 	syslCmd.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)

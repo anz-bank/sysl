@@ -1,6 +1,6 @@
-// Generated from sysl_js/SyslParser.g4 by ANTLR 4.7
+// Generated from SyslParser.g4 by ANTLR 4.7
 // jshint ignore: start
-var antlr4 = require('antlr4');
+var antlr4 = require('antlr4/index');
 
 // This class defines a complete listener for a parse tree produced by SyslParser.
 function SyslParserListener() {

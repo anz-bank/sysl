@@ -4,6 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"github.com/sirupsen/logrus/hooks/test"
@@ -79,7 +81,7 @@ func DoConstructDataDiagramsWithParams(
 	}
 
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
+	mod, _, err := loader.LoadSyslModule(rootModel, modules, afero.NewOsFs(), logger)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +116,7 @@ func TestDoConstructDataDiagramsWithPureModule(t *testing.T) {
 
 	var result map[string]string
 	logger, _ := test.NewNullLogger()
-	mod, _, err := LoadSyslModule(args.root, args.modules, afero.NewOsFs(), logger)
+	mod, _, err := loader.LoadSyslModule(args.root, args.modules, afero.NewOsFs(), logger)
 	if err != nil {
 		result = nil
 	} else {

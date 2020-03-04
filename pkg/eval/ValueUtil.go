@@ -158,6 +158,13 @@ func TypeToValue(t *sysl.Type) *sysl.Value {
 		AddItemToValueMap(seqMap, "type", MakeValueString(typeName))
 		AddItemToValueMap(seqMap, typeName, MakeValueString(typeDetail))
 		AddItemToValueMap(seqMap, "optional", MakeValueBool(false))
+	case *sysl.Type_Set:
+		setMap := MakeValueMap()
+		AddItemToValueMap(m, typeName, setMap)
+		typeName, typeDetail = syslutil.GetTypeDetail(t.GetSet())
+		AddItemToValueMap(setMap, "type", MakeValueString(typeName))
+		AddItemToValueMap(setMap, typeName, MakeValueString(typeDetail))
+		AddItemToValueMap(setMap, "optional", MakeValueBool(false))
 	}
 	return m
 }

@@ -1,0 +1,15 @@
+testapp "Simple" [package="package_foo"]:
+    # Endpoint names are unescaped now which means you can add URL encoded characters. This only works for endpoint names.
+    # In this case, `%2e` will be converted to `.`
+    /test%2epdf:
+        GET:
+            return 200 <: SimpleObj
+
+        DELETE:
+            return 203
+
+    # In this case, `%25` will be converted to `%`
+    /tests%25again:
+        GET:
+            . <- GET /test%2epdf
+            return set of SimpleObj

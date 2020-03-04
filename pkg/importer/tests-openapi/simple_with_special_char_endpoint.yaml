@@ -1,0 +1,34 @@
+"openapi": "3.0"
+info:
+  title: Simple
+paths:
+  /test.stuff:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+  /deep/deeeeeeep/test.stuff:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        name:
+          type: string
+    SimpleObj2:
+      type: object
+      properties:
+        name:
+          type: SimpleObj

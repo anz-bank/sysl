@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/loader"
+
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/anz-bank/sysl/pkg/parse"
@@ -851,13 +853,13 @@ func TestHandleProjectRoot(t *testing.T) {
 			fs := afero.NewMemMapFs()
 			syslutil.BuildFolderTest(t, fs, ts.structure.folders, ts.structure.files)
 
-			config := newProjectConfiguration()
-			err := config.configureProject(ts.root, ts.module, fs, logger)
+			config := loader.NewProjectConfiguration()
+			err := config.ConfigureProject(ts.root, ts.module, fs, logger)
 
-			require.Equal(t, ts.rootFound, config.rootIsFound)
+			require.Equal(t, ts.rootFound, config.RootIsFound)
 			require.NoError(t, err)
-			require.Equal(t, ts.expectedRoot, config.root)
-			require.Equal(t, ts.getExpectedModule(t), config.module)
+			require.Equal(t, ts.expectedRoot, config.Root)
+			require.Equal(t, ts.getExpectedModule(t), config.Module)
 		})
 	}
 }
@@ -905,4 +907,20 @@ func TestTemplating(t *testing.T) {
 	actual, err := afero.ReadFile(memFs, syslutil.MustAbsolute(t, outputFilename))
 	assert.NoError(t, err)
 	assert.Equal(t, string(expected), string(actual))
+}
+
+func TestMain3(t *testing.T) {
+	logger, _ := test.NewNullLogger()
+	fs := afero.NewOsFs()
+
+	assert.Equal(t, nil, main3([]string{"sysl"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config.txt"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config_new.txt"}, fs, logger))
+
+	assert.Error(t, main3([]string{"sysl", "codegen", "--grammar=go.gen.g", "--transform=go.gen.sysl", "model.sysl"},
+		fs, logger))
 }
