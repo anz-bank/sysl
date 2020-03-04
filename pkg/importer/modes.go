@@ -1,6 +1,7 @@
 package importer
 
 const (
+	ModeJSON    = "json"
 	ModeOpenAPI = "openapi"
 	ModeSwagger = "swagger"
 	ModeXSD     = "xsd"

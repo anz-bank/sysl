@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/go-openapi/swag"
+	"github.com/spf13/afero"
 
 	"github.com/sirupsen/logrus"
 )
@@ -19,6 +20,8 @@ type OutputData struct {
 	Package     string
 	SwaggerRoot string
 	Mode        string
+	Schema      string
+	Filesystem  afero.Fs
 }
 
 type SyslInfo struct {

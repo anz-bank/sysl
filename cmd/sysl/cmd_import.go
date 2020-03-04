@@ -33,6 +33,7 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("input", "input filename").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
 		"name of the sysl app to define in sysl model.").Required().Short('a').StringVar(&p.AppName)
+	cmd.Flag("schema", "json schema to parse json file.").Short('s').StringVar(&p.Schema)
 	cmd.Flag("package",
 		"name of the sysl package to define in sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
@@ -71,6 +72,9 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	case importer.ModeOpenAPI:
 		args.Logger.Infof("Using OpenAPI importer\n")
 		imp = importer.LoadOpenAPIText
+	case importer.ModeJSON:
+		args.Logger.Infof("Using json importer\n")
+		imp = importer.LoadJSONText
 	default:
 		args.Logger.Fatalf("Unsupported input format: %s\n", p.Mode)
 	}
@@ -79,6 +83,7 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 		return err
 	}
 	p.SwaggerRoot = filepath.Dir(p.SwaggerRoot)
+	p.Filesystem = args.Filesystem
 	output, err := imp(p.OutputData, string(data), args.Logger)
 	if err != nil {
 		return err
@@ -93,7 +98,7 @@ func guessYamlType(filename string, data []byte) string {
 		}
 	}
 
-	return "unknown"
+	return importer.ModeJSON
 }
 
 func guessFileType(filename string, data []byte) string {
