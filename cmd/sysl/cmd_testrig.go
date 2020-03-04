@@ -2,12 +2,13 @@ package main
 
 import (
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-	"github.com/anz-bank/sysl/pkg/test_rig"
+	"github.com/anz-bank/sysl/pkg/testrig"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type testRigCmd struct {
-	cmdutils.CmdContextParamTestRig
+	TemplateFileName *string
+	OutputDir        *string
 }
 
 func (p *testRigCmd) Name() string {
@@ -20,8 +21,8 @@ func (p *testRigCmd) MaxSyslModule() int {
 
 func (p *testRigCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate test rig")
-	cmd.Flag("template", "variables file name (json)").Required().StringVar(&p.TemplateFileName)
-	cmd.Flag("output-dir", "directory to put generated files").StringVar(&p.OutputDir)
+	p.TemplateFileName = cmd.Flag("template", "variables file name (json)").Required().ExistingFile()
+	p.OutputDir = cmd.Flag("output-dir", "directory to put generated files").Default(".").String()
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
@@ -32,7 +33,7 @@ func (p *testRigCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	err = test_rig.GenerateRig(p.TemplateFileName, p.OutputDir, args.Modules)
+	err = testrig.GenerateRig(*p.TemplateFileName, *p.OutputDir, args.Modules)
 	if err != nil {
 		return err
 	}

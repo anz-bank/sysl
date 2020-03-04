@@ -90,11 +90,6 @@ type CmdDatabaseScriptParams struct {
 	DbType    string
 }
 
-type CmdContextParamTestRig struct {
-	TemplateFileName string
-	OutputDir        string
-}
-
 type ExecuteArgs struct {
 	Command        string
 	Modules        []*sysl.Module

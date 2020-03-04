@@ -1,4 +1,5 @@
-package test_rig
+// Package testrig provides tools for generating standalone test environment for sysl generated services
+package testrig
 
 import (
 	"encoding/json"
@@ -9,21 +10,16 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/test_rig/template"
+	"github.com/anz-bank/sysl/pkg/testrig/template"
 
 	"github.com/cbroglie/mustache"
 	"github.com/ghodss/yaml"
 )
 
-func appNeedsDb(app *sysl.Application) bool {
-	patterns := app.GetAttrs()["patterns"]
-	if patterns == nil {
-		return false
-	} else {
-		return strings.Contains(patterns.String(), "DB")
-	}
-}
-
+// GenerateRig creates full set of files required to start up a test rig
+// for every service, it creates main.go (optionally with DB connection) and a dockerfile to containerize it
+// if the service contains DB tables, it creates sidecar postgres container and creates a schema there
+// finally, it creates docker-compose.yml at the point of all (likely your project's root) that joins all containerized services
 func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) error {
 	serviceMap, err := readTemplate(templateFile)
 	if err != nil {
@@ -91,6 +87,15 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 	composeFile.Sync()
 
 	return nil
+}
+
+func appNeedsDb(app *sysl.Application) bool {
+	patterns := app.GetAttrs()["patterns"]
+	if patterns == nil {
+		return false
+	} else {
+		return strings.Contains(patterns.String(), "DB")
+	}
 }
 
 func readTemplate(templateFileName string) (template.ServiceMap, error) {
@@ -167,12 +172,12 @@ func generateMain(serviceName string, service template.Service, outputDir string
 		return err
 	}
 
-	template := GetMainStub()
+	mainTemplate := template.GetMainStub()
 	if needDb {
-		template = GetMainDbStub()
+		mainTemplate = template.GetMainDbStub()
 	}
 
-	return processTemplate(output, template, service, outputDir)
+	return processTemplate(output, mainTemplate, service, outputDir)
 }
 
 func generateDockerfile(serviceName string, service template.Service, outputDir string) error {
@@ -182,7 +187,7 @@ func generateDockerfile(serviceName string, service template.Service, outputDir 
 		return err
 	}
 
-	template := GetDockerfileStub()
+	dockerTemplate := template.GetDockerfileStub()
 
-	return processTemplate(output, template, service, outputDir)
+	return processTemplate(output, dockerTemplate, service, outputDir)
 }
