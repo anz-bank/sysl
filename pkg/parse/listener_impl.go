@@ -669,21 +669,7 @@ func fixFieldDefinitions(collection *sysl.Type) {
 			continue
 		}
 		if f.GetPrimitive() == sysl.Type_NO_Primitive {
-			var type1 *sysl.ScopedRef
-			switch t := f.GetType().(type) {
-			case *sysl.Type_TypeRef:
-				type1 = t.TypeRef
-			case *sysl.Type_Sequence:
-				type1 = t.Sequence.GetTypeRef()
-			case *sysl.Type_Set:
-				type1 = t.Set.GetTypeRef()
-			case *sysl.Type_List_:
-				type1 = t.List.GetType().GetTypeRef()
-			case *sysl.Type_NoType_:
-				continue
-			default:
-				panic("unhandled type:" + name)
-			}
+			type1 := typeRefForType(name, f)
 
 			if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
 				l := len(type1.Ref.Appname.Part)
@@ -696,6 +682,25 @@ func fixFieldDefinitions(collection *sysl.Type) {
 			}
 		}
 	}
+}
+
+func typeRefForType(name string, f *sysl.Type) *sysl.ScopedRef {
+	var type1 *sysl.ScopedRef
+	switch t := f.GetType().(type) {
+	case *sysl.Type_TypeRef:
+		type1 = t.TypeRef
+	case *sysl.Type_Sequence:
+		type1 = t.Sequence.GetTypeRef()
+	case *sysl.Type_Set:
+		type1 = t.Set.GetTypeRef()
+	case *sysl.Type_List_:
+		type1 = t.List.GetType().GetTypeRef()
+	case *sysl.Type_NoType_:
+		return nil
+	default:
+		panic("unhandled type:" + name)
+	}
+	return type1
 }
 
 // ExitTable is called when production table is exited.
