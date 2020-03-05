@@ -114,11 +114,11 @@ func generateDbService(serviceName string) map[string]interface{} {
 	block["ports"] = []string{"5432:5432"}
 	// piece of magic to make Postgres execute our script on startup
 	block["volumes"] = []string{fmt.Sprintf("../gen/%v/%v.sql:/docker-entrypoint-initdb.d/%v.sql", serviceName, serviceName, serviceName)}
-	environemnt := make(map[string]string)
-	environemnt["POSTGRES_USER"] = "someuser"
-	environemnt["POSTGRES_PASSWORD"] = "somepassword"
-	environemnt["POSTGRES_DB"] = "somedb"
-	block["environment"] = environemnt
+	environment := make(map[string]string)
+	environment["POSTGRES_USER"] = "someuser"
+	environment["POSTGRES_PASSWORD"] = "somepassword"
+	environment["POSTGRES_DB"] = "somedb"
+	block["environment"] = environment
 	return block
 }
 
