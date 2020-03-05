@@ -18,8 +18,12 @@ endif
 
 BUILD_DATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 VERSION := $(or $(TAG),$(COMMIT)-$(BRANCH)-$(BUILD_DATE))
+GO_VERSION := $(shell go version)
+GO_BUILD_VERSION = $(word 3,$(GO_VERSION))
+GO_BUILD_ARCH = $(word 4,$(GO_VERSION))
 
-LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE)
+LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE) \
+	  -X main.GoVersion=$(GO_BUILD_VERSION) -X main.BuildOS=$(GO_BUILD_ARCH)
 
 all: test lint build coverage examples ## test, lint, build, coverage test run
 
