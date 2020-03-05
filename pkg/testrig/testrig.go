@@ -97,7 +97,7 @@ func readTemplate(templateFileName string) (template.ServiceMap, error) {
 		return nil, err
 	}
 	var vars template.ServiceMap
-	err = json.Unmarshal([]byte(byteValue), &vars)
+	err = json.Unmarshal(byteValue, &vars)
 	if err != nil {
 		return nil, err
 	}
