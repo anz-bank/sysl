@@ -1,4 +1,4 @@
-// Generated from pkg/grammar/SyslParser.g4 by ANTLR 4.7.
+// Code generated from pkg/grammar/SyslParser.g4 by ANTLR 4.8. DO NOT EDIT.
 
 package parser // SyslParser
 

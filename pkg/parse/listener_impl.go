@@ -669,21 +669,7 @@ func fixFieldDefinitions(collection *sysl.Type) {
 			continue
 		}
 		if f.GetPrimitive() == sysl.Type_NO_Primitive {
-			var type1 *sysl.ScopedRef
-			switch t := f.GetType().(type) {
-			case *sysl.Type_TypeRef:
-				type1 = t.TypeRef
-			case *sysl.Type_Sequence:
-				type1 = t.Sequence.GetTypeRef()
-			case *sysl.Type_Set:
-				type1 = t.Set.GetTypeRef()
-			case *sysl.Type_List_:
-				type1 = t.List.GetType().GetTypeRef()
-			case *sysl.Type_NoType_:
-				continue
-			default:
-				panic("unhandled type:" + name)
-			}
+			type1 := typeRefForType(name, f)
 
 			if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
 				l := len(type1.Ref.Appname.Part)
@@ -696,6 +682,25 @@ func fixFieldDefinitions(collection *sysl.Type) {
 			}
 		}
 	}
+}
+
+func typeRefForType(name string, f *sysl.Type) *sysl.ScopedRef {
+	var type1 *sysl.ScopedRef
+	switch t := f.GetType().(type) {
+	case *sysl.Type_TypeRef:
+		type1 = t.TypeRef
+	case *sysl.Type_Sequence:
+		type1 = t.Sequence.GetTypeRef()
+	case *sysl.Type_Set:
+		type1 = t.Set.GetTypeRef()
+	case *sysl.Type_List_:
+		type1 = t.List.GetType().GetTypeRef()
+	case *sysl.Type_NoType_:
+		return nil
+	default:
+		panic("unhandled type:" + name)
+	}
+	return type1
 }
 
 // ExitTable is called when production table is exited.
@@ -996,7 +1001,7 @@ func (s *TreeShapeListener) EnterHttp_path(ctx *parser.Http_pathContext) {
 func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 	// s.endpointName is built along as we enter http_path/http_path_suffix/http_path_var_with_type
 	// commit this value to urlPrefixes
-	s.urlPrefixes.Push(s.endpointName)
+	s.urlPrefixes.Push(MustUnescape(s.endpointName))
 }
 
 // EnterRet_stmt is called when production ret_stmt is entered.
@@ -1039,7 +1044,7 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: ctx.Target_endpoint().GetText(),
+				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
 			},
 		},
 	})
@@ -1683,7 +1688,7 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: strings.TrimSpace(ctx.Target_endpoint().GetText()),
+				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
 			},
 		},
 	})
@@ -1691,7 +1696,8 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 
 // EnterCollector_http_stmt is called when production collector_http_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_stmtContext) {
-	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " + ctx.Collector_http_stmt_suffix().GetText()
+	text := strings.TrimSpace(ctx.HTTP_VERBS().GetText()) + " " +
+		MustUnescape(ctx.Collector_http_stmt_suffix().GetText())
 
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Action{

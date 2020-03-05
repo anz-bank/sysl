@@ -1,0 +1,39 @@
+# Sysl reserves certain attributes for sequence diagram generation. 
+# Reserved attributes alter the appearance of generated sequence diagrams
+
+User [~human]:
+    # ~human specifies a user
+    Check Balance:
+        MobileApp <- Login
+        MobileApp <- Check Balance
+
+MobileApp [~ui]:
+    # ~ui specifies a user interface
+    Login:
+        Server <- Login
+    Check Balance:
+        Server <- Read User Balance
+
+OauthService[~external]:
+    # ~external specifies an external service
+    Oauth: ...
+
+Server:
+    Login:
+        do input validation
+        OauthService <- Oauth
+        DB <- Save
+        return success or failure
+
+    Read User Balance:
+        DB <- Load
+        return balance
+
+DB [~db]:
+    # ~db specifies a database
+    Save: ...
+    Load: ...
+
+Project [seqtitle="Diagram"]:
+    Seq:
+        User <- Check Balance

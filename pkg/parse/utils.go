@@ -2,6 +2,7 @@ package parse
 
 import (
 	"math"
+	"net/url"
 	"strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -144,4 +145,13 @@ func (p PathStack) Parts() []string {
 func (p *PathStack) update() string {
 	p.path = p.prefix + strings.Join(p.parts, p.sep)
 	return p.path
+}
+
+// MustUnescape will escape URL escaped characters.
+func MustUnescape(endpoint string) string {
+	s, err := url.PathUnescape(endpoint)
+	if err != nil {
+		panic(err)
+	}
+	return strings.TrimSpace(s)
 }
