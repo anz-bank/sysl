@@ -27,6 +27,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0
 	github.com/lib/pq v1.3.0
 	github.com/mailru/easyjson v0.7.0 // indirect
+	github.com/markbates/pkger v0.14.0
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0

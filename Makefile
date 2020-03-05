@@ -52,6 +52,17 @@ $(PLATFORMS): build
 build: ## Build sysl into the ./dist folder
 	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
 
+## This option is used for Sysl UI to bundle static files into the go binary. 
+## For more details on pkger, refer to https://github.com/markbates/pkger
+.PHONY: resources
+resources:
+	cd ui && npm run build
+	pkger
+	mv pkged.go pkg/catalog/pkged.go
+	## Replaces the package declaration 'main' with'catalog' due to bug in pkger
+	## Remove once https://github.com/markbates/pkger/pull/67 has been merged in
+	sed -i '' 's/main/catalog/' pkg/catalog/pkged.go
+
 deps: ## Download the project dependencies with `go get`
 	go mod tidy
 ifneq ("$(shell git status --porcelain)", "")
