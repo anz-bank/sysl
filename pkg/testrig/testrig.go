@@ -19,7 +19,8 @@ import (
 // GenerateRig creates full set of files required to start up a test rig
 // for every service, it creates main.go (optionally with DB connection) and a dockerfile to containerize it
 // if the service contains DB tables, it creates sidecar postgres container and creates a schema there
-// finally, it creates docker-compose.yml at the point of all (likely your project's root) that joins all containerized services
+// finally, it creates docker-compose.yml at the point of all (likely your project's root)
+// that joins all containerized services
 func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) error {
 	serviceMap, err := readTemplate(templateFile)
 	if err != nil {
@@ -119,7 +120,10 @@ func generateDbService(serviceName string) map[string]interface{} {
 	block["image"] = "postgres:latest"
 	block["ports"] = []string{"5432:5432"}
 	// piece of magic to make Postgres execute our script on startup
-	block["volumes"] = []string{fmt.Sprintf("../gen/%v/%v.sql:/docker-entrypoint-initdb.d/%v.sql", serviceName, serviceName, serviceName)}
+	block["volumes"] = []string{
+		fmt.Sprintf("../gen/%v/%v.sql:/docker-entrypoint-initdb.d/%v.sql",
+			serviceName, serviceName, serviceName),
+	}
 	environment := make(map[string]string)
 	environment["POSTGRES_USER"] = "someuser"
 	environment["POSTGRES_PASSWORD"] = "somepassword"

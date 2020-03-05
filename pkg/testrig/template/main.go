@@ -21,7 +21,6 @@ func LoadServices(ctx context.Context) error {
 
 	genCallbacks := {{impl.name}}.{{impl.callback_factory}}()
 
-	// serviceHandler := simple.NewServiceHandler(genCallbacks, &serviceInterface, mydependency.NewClient(http.DefaultClient, "http://jsonplaceholder.typicode.com"))
 	serviceHandler := {{name}}.NewServiceHandler(genCallbacks, &serviceInterface)
 
 	// Service Router

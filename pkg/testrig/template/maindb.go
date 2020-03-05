@@ -1,12 +1,7 @@
 package template
 
-import (
-	_ "github.com/lib/pq"
-)
-
 func GetMainDbStub() string {
-	return `
-package main
+	return `package main
 
 import (
 	"context"
@@ -53,7 +48,6 @@ func loadServices(ctx context.Context) error {
 
 	genCallbacks := {{impl.name}}.{{impl.callback_factory}}(db)
 
-	// serviceHandler := simple.NewServiceHandler(genCallbacks, &serviceInterface, mydependency.NewClient(http.DefaultClient, "http://jsonplaceholder.typicode.com"))
 	serviceHandler := {{name}}.NewServiceHandler(genCallbacks, &serviceInterface)
 
 	// Service Router
