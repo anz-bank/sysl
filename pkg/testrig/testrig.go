@@ -45,7 +45,10 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 	composeServices := make(map[string]interface{})
 
 	for serviceName, serviceTmpl := range serviceMap {
-		os.MkdirAll(filepath.Join(outputDir, serviceName), os.ModePerm)
+		err = os.MkdirAll(filepath.Join(outputDir, serviceName), os.ModePerm)
+		if err != nil {
+			return err
+		}
 
 		err = generateMain(serviceName, serviceTmpl, outputDir, appsWhoNeedDb[serviceName])
 		if err != nil {
@@ -88,7 +91,10 @@ func readTemplate(templateFileName string) (template.ServiceMap, error) {
 	}
 	defer templateFile.Close()
 
-	byteValue, _ := ioutil.ReadAll(templateFile)
+	byteValue, err := ioutil.ReadAll(templateFile)
+	if err != nil {
+		return nil, err
+	}
 	var vars template.ServiceMap
 	err = json.Unmarshal([]byte(byteValue), &vars)
 	if err != nil {
@@ -136,7 +142,10 @@ func generateCompose(file *os.File, composeServices map[string]interface{}) erro
 	if err != nil {
 		return err
 	}
-	file.Sync()
+	err = file.Sync()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -162,7 +171,10 @@ func processMustacheTemplate(file *os.File, template string, data template.Servi
 	if err != nil {
 		return err
 	}
-	file.Sync()
+	err = file.Sync()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -179,7 +191,12 @@ func generateMain(serviceName string, service template.Service, outputDir string
 		mainTemplate = template.GetMainDbStub()
 	}
 
-	return processMustacheTemplate(output, mainTemplate, service, outputDir)
+	err = processMustacheTemplate(output, mainTemplate, service, outputDir)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func generateDockerfile(serviceName string, service template.Service, outputDir string) error {
@@ -191,5 +208,10 @@ func generateDockerfile(serviceName string, service template.Service, outputDir 
 
 	dockerTemplate := template.GetDockerfileStub()
 
-	return processMustacheTemplate(output, dockerTemplate, service, outputDir)
+	err = processMustacheTemplate(output, dockerTemplate, service, outputDir)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

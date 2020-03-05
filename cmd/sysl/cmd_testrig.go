@@ -42,8 +42,7 @@ func (p *testRigCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *testRigCmd) Execute(args cmdutils.ExecuteArgs) error {
-	var err error
-	err = testrig.GenerateRig(*p.TemplateFileName, *p.OutputDir, args.Modules)
+	err := testrig.GenerateRig(*p.TemplateFileName, *p.OutputDir, args.Modules)
 	if err != nil {
 		return err
 	}
