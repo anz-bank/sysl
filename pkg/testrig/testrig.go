@@ -70,7 +70,7 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 	if err != nil {
 		return err
 	}
-	return generateCompose(composeFile, composeMap)
+	return generateCompose(composeFile, composeServices)
 }
 
 func appNeedsDb(app *sysl.Application) bool {
@@ -122,7 +122,8 @@ func generateDbService(serviceName string) map[string]interface{} {
 	return block
 }
 
-func generateCompose(file *os.File, data map[string]interface{}) error {
+func generateCompose(file *os.File, composeServices map[string]interface{}) error {
+	data := make(map[string]interface{})
 	data["version"] = "3.3"
 	data["services"] = composeServices
 
