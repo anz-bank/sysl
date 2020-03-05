@@ -46,18 +46,15 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 	composeServices := make(map[string]interface{})
 
 	for serviceName, serviceTmpl := range serviceMap {
-		err = os.MkdirAll(filepath.Join(outputDir, serviceName), os.ModePerm)
-		if err != nil {
+		if err := os.MkdirAll(filepath.Join(outputDir, serviceName), os.ModePerm); err != nil {
 			return err
 		}
 
-		err = generateMain(serviceName, serviceTmpl, outputDir, appsWhoNeedDb[serviceName])
-		if err != nil {
+		if err := generateMain(serviceName, serviceTmpl, outputDir, appsWhoNeedDb[serviceName]); err != nil {
 			return err
 		}
 
-		err = generateDockerfile(serviceName, serviceTmpl, outputDir)
-		if err != nil {
+		if err := generateDockerfile(serviceName, serviceTmpl, outputDir); err != nil {
 			return err
 		}
 
@@ -97,45 +94,42 @@ func readTemplate(templateFileName string) (template.ServiceMap, error) {
 		return nil, err
 	}
 	var vars template.ServiceMap
-	err = json.Unmarshal(byteValue, &vars)
-	if err != nil {
+	if err := json.Unmarshal(byteValue, &vars); err != nil {
 		return nil, err
 	}
-
 	return vars, nil
 }
 
 func generateAppService(serviceName string, serviceTmpl template.Service, outputDir string) map[string]interface{} {
-	build := make(map[string]interface{})
-	build["context"] = "."
-	build["dockerfile"] = filepath.Join(outputDir, serviceName, "Dockerfile")
-	block := make(map[string]interface{})
-	block["build"] = build
-	block["ports"] = []string{fmt.Sprintf("%v:%v", serviceTmpl.Port, serviceTmpl.Port)}
-	return block
+	return map[string]interface{}{
+		"build": map[string]interface{}{
+			"context":    ".",
+			"dockerfile": filepath.Join(outputDir, serviceName, "Dockerfile"),
+		},
+		"ports": []string{fmt.Sprintf("%v:%v", serviceTmpl.Port, serviceTmpl.Port)},
+	}
 }
 
 func generateDbService(serviceName string) map[string]interface{} {
-	block := make(map[string]interface{})
-	block["image"] = "postgres:latest"
-	block["ports"] = []string{"5432:5432"}
-	// piece of magic to make Postgres execute our script on startup
-	block["volumes"] = []string{
-		fmt.Sprintf("../gen/%v/%v.sql:/docker-entrypoint-initdb.d/%v.sql",
-			serviceName, serviceName, serviceName),
+	return map[string]interface{}{
+		"image": "postgres:latest",
+		"ports": []string{"5432:5432"},
+		"volumes": []string{
+			fmt.Sprintf("../gen/%v/%v.sql:/docker-entrypoint-initdb.d/%v.sql", serviceName, serviceName, serviceName),
+		},
+		"environment": map[string]string{
+			"POSTGRES_USER":     "someuser",
+			"POSTGRES_PASSWORD": "somepassword",
+			"POSTGRES_DB":       "somedb",
+		},
 	}
-	environment := make(map[string]string)
-	environment["POSTGRES_USER"] = "someuser"
-	environment["POSTGRES_PASSWORD"] = "somepassword"
-	environment["POSTGRES_DB"] = "somedb"
-	block["environment"] = environment
-	return block
 }
 
 func generateCompose(file *os.File, composeServices map[string]interface{}) error {
-	data := make(map[string]interface{})
-	data["version"] = "3.3"
-	data["services"] = composeServices
+	data := map[string]interface{}{
+		"version":  "3.3",
+		"services": composeServices,
+	}
 
 	dataRaw, err := yaml.Marshal(data)
 	if err != nil {

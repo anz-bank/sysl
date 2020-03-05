@@ -50,7 +50,6 @@ func loadServices(ctx context.Context) error {
 
 	serviceHandler := {{name}}.NewServiceHandler(genCallbacks, &serviceInterface)
 
-	// Service Router
 	serviceRouter := {{name}}.NewServiceRouter(genCallbacks, serviceHandler)
 	serviceRouter.WireRoutes(ctx, router)
 

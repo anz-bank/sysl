@@ -4,7 +4,7 @@ type Vars struct {
 	Service Service `json:"service"`
 }
 
-type ServiceMap = map[string]Service
+type ServiceMap map[string]Service
 
 type serviceBase struct {
 	Name string `json:"name"`

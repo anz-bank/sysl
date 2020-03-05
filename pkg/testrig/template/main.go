@@ -23,17 +23,15 @@ func LoadServices(ctx context.Context) error {
 
 	serviceHandler := {{name}}.NewServiceHandler(genCallbacks, &serviceInterface)
 
-	// Service Router
 	serviceRouter := {{name}}.NewServiceRouter(genCallbacks, serviceHandler)
 	serviceRouter.WireRoutes(ctx, router)
 
 	log.Println("starting {{name}} on :{{port}}")
-	log.Fatal(http.ListenAndServe(":{{port}}", router))
-	return nil
+	return http.ListenAndServe(":{{port}}", router)
 }
 
 func main() {
-	LoadServices(context.Background())
+	log.Fatal(LoadServices(context.Background()))
 }
 `
 }
