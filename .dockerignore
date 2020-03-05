@@ -1,6 +1,4 @@
 .dockerignore
-pkg
-!pkg/sysl_js
 **/node_modules
 /dist/
 /release/
