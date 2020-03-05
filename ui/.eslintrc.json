@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "airbnb", "prettier", "plugin:jest/recommended", "plugin:jest/style"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "prettier",
+        "jest"
+    ],
+    "rules": {
+        "react/jsx-wrap-multilines": 0,
+        "react/jsx-filename-extension": 0,
+        "react/prop-types": 0,
+        "react/destructuring-assignment": 0,
+        "max-len": [0, 120, 2],
+        "prettier/prettier": ["error", { "singleQuote": true }],
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": ["src"]
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+[
+  {
+    "Endpoints": [{ "Path": "GET /petshop", "Request": "GET /petshop", "Response": "GET /petshop" }],
+    "Attributes": { "package": "io.sysl.demo.petshop.api", "patterns": "" },
+    "Name": "PetShopApi",
+    "Path": "/rest/PetShopApi"
+  }
+]
