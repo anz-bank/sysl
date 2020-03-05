@@ -33,7 +33,7 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 		}
 	}
 	appsWhoNeedDb := make(map[string]bool)
-	for serviceName, _ := range serviceMap {
+	for serviceName := range serviceMap {
 		appsWhoNeedDb[serviceName] = false
 		if applications[serviceName] != nil {
 			if appNeedsDb(applications[serviceName]) {
@@ -65,37 +65,20 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 		}
 	}
 
-	composeMap := make(map[string]interface{})
-	composeMap["version"] = "3.3"
-	composeMap["services"] = composeServices
-
-	data, err := yaml.Marshal(composeMap)
-	if err != nil {
-		return err
-	}
-
 	composeFile, err := os.Create("docker-compose.yml")
 	defer composeFile.Close()
 	if err != nil {
 		return err
 	}
-
-	_, err = composeFile.Write(data)
-	if err != nil {
-		return err
-	}
-	composeFile.Sync()
-
-	return nil
+	return generateCompose(composeFile, composeMap)
 }
 
 func appNeedsDb(app *sysl.Application) bool {
 	patterns := app.GetAttrs()["patterns"]
 	if patterns == nil {
 		return false
-	} else {
-		return strings.Contains(patterns.String(), "DB")
 	}
+	return strings.Contains(patterns.String(), "DB")
 }
 
 func readTemplate(templateFileName string) (template.ServiceMap, error) {
@@ -139,7 +122,25 @@ func generateDbService(serviceName string) map[string]interface{} {
 	return block
 }
 
-func processTemplate(file *os.File, template string, data template.Service, outputDir string) error {
+func generateCompose(file *os.File, data map[string]interface{}) error {
+	data["version"] = "3.3"
+	data["services"] = composeServices
+
+	dataRaw, err := yaml.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	_, err = file.Write(dataRaw)
+	if err != nil {
+		return err
+	}
+	file.Sync()
+
+	return nil
+}
+
+func processMustacheTemplate(file *os.File, template string, data template.Service, outputDir string) error {
 	// mustache needs generic map
 	rawData, err := json.Marshal(&data)
 	if err != nil {
@@ -177,7 +178,7 @@ func generateMain(serviceName string, service template.Service, outputDir string
 		mainTemplate = template.GetMainDbStub()
 	}
 
-	return processTemplate(output, mainTemplate, service, outputDir)
+	return processMustacheTemplate(output, mainTemplate, service, outputDir)
 }
 
 func generateDockerfile(serviceName string, service template.Service, outputDir string) error {
@@ -189,5 +190,5 @@ func generateDockerfile(serviceName string, service template.Service, outputDir 
 
 	dockerTemplate := template.GetDockerfileStub()
 
-	return processTemplate(output, dockerTemplate, service, outputDir)
+	return processMustacheTemplate(output, dockerTemplate, service, outputDir)
 }

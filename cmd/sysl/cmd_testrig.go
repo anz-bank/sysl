@@ -29,19 +29,9 @@ func (p *testRigCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 func (p *testRigCmd) Execute(args cmdutils.ExecuteArgs) error {
 	var err error
-	err = refineCmd(p)
-	if err != nil {
-		return err
-	}
 	err = testrig.GenerateRig(*p.TemplateFileName, *p.OutputDir, args.Modules)
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func refineCmd(p *testRigCmd) error {
-	// vars file should exist
-
 	return nil
 }
