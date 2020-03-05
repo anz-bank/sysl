@@ -66,10 +66,10 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 	}
 
 	composeFile, err := os.Create("docker-compose.yml")
-	defer composeFile.Close()
 	if err != nil {
 		return err
 	}
+	defer composeFile.Close()
 	return generateCompose(composeFile, composeServices)
 }
 
@@ -83,10 +83,10 @@ func appNeedsDb(app *sysl.Application) bool {
 
 func readTemplate(templateFileName string) (template.ServiceMap, error) {
 	templateFile, err := os.Open(templateFileName)
-	defer templateFile.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer templateFile.Close()
 
 	byteValue, _ := ioutil.ReadAll(templateFile)
 	var vars template.ServiceMap
@@ -169,10 +169,10 @@ func processMustacheTemplate(file *os.File, template string, data template.Servi
 
 func generateMain(serviceName string, service template.Service, outputDir string, needDb bool) error {
 	output, err := os.Create(filepath.Join(outputDir, serviceName, "main.go"))
-	defer output.Close()
 	if err != nil {
 		return err
 	}
+	defer output.Close()
 
 	mainTemplate := template.GetMainStub()
 	if needDb {
@@ -184,10 +184,10 @@ func generateMain(serviceName string, service template.Service, outputDir string
 
 func generateDockerfile(serviceName string, service template.Service, outputDir string) error {
 	output, err := os.Create(filepath.Join(outputDir, serviceName, "Dockerfile"))
-	defer output.Close()
 	if err != nil {
 		return err
 	}
+	defer output.Close()
 
 	dockerTemplate := template.GetDockerfileStub()
 
