@@ -8,7 +8,7 @@ type ServiceMap = map[string]Service
 
 type serviceBase struct {
 	Name string `json:"name"`
-	Url  string `json:"url"`
+	URL  string `json:"url"`
 }
 
 type Service struct {
