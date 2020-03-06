@@ -9,7 +9,7 @@ ARG alpine_ver=3.11
 
 FROM golang:${go_ver}-alpine${alpine_ver} as builder
 
-RUN apk --no-cache add make
+RUN apk --no-cache add git make
 
 WORKDIR /sysl
 
