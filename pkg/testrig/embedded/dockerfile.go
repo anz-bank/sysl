@@ -1,4 +1,4 @@
-package template
+package embedded
 
 func GetDockerfileStub() string {
 	return `
@@ -16,7 +16,7 @@ RUN go mod download
 
 # main build
 COPY . ./
-RUN go build -o main {{outputDir}}/{{name}}/main.go
+RUN go build -o main {{.OutputDir}}/{{.Service.Name}}/main.go
 
 
 

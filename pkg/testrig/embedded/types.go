@@ -1,4 +1,4 @@
-package template
+package embedded
 
 type Vars struct {
 	Service Service `json:"service"`

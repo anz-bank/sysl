@@ -8,11 +8,11 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"text/template"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/testrig/template"
+	"github.com/anz-bank/sysl/pkg/testrig/embedded"
 
-	"github.com/cbroglie/mustache"
 	"github.com/ghodss/yaml"
 	"github.com/spf13/afero"
 )
@@ -23,7 +23,7 @@ import (
 // finally, it creates docker-compose.yml at the point of all (likely your project's root)
 // that joins all containerized services
 func GenerateRig(fs afero.Fs, templateFile string, outputDir string, modules []*sysl.Module) error {
-	serviceMap, err := readTemplate(fs, templateFile)
+	serviceMap, err := readUserData(fs, templateFile)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func appNeedsDb(app *sysl.Application) bool {
 	return strings.Contains(patterns.String(), "DB")
 }
 
-func readTemplate(fs afero.Fs, templateFileName string) (template.ServiceMap, error) {
+func readUserData(fs afero.Fs, templateFileName string) (embedded.ServiceMap, error) {
 	templateFile, err := fs.Open(templateFileName)
 	if err != nil {
 		return nil, err
@@ -89,14 +89,14 @@ func readTemplate(fs afero.Fs, templateFileName string) (template.ServiceMap, er
 	if err != nil {
 		return nil, err
 	}
-	var vars template.ServiceMap
+	var vars embedded.ServiceMap
 	if err := json.Unmarshal(byteValue, &vars); err != nil {
 		return nil, err
 	}
 	return vars, nil
 }
 
-func generateAppService(serviceName string, serviceTmpl template.Service, outputDir string) map[string]interface{} {
+func generateAppService(serviceName string, serviceTmpl embedded.Service, outputDir string) map[string]interface{} {
 	return map[string]interface{}{
 		"build": map[string]interface{}{
 			"context":    ".",
@@ -148,48 +148,37 @@ func generateCompose(fs afero.Fs, composeServices map[string]interface{}) error 
 	return nil
 }
 
-func processMustacheTemplate(file afero.File, template string, data template.Service, outputDir string) error {
-	// mustache needs generic map
-	rawData, err := json.Marshal(&data)
+func processTemplate(file afero.File, resource string, data embedded.Service, outputDir string) error {
+	tmpl, err := template.New("servicesData").Parse(resource)
 	if err != nil {
 		return err
 	}
-	var genericData map[string]interface{}
-	err = json.Unmarshal(rawData, &genericData)
-	if err != nil {
+	userData := struct {
+		OutputDir string
+		Service   embedded.Service
+	}{
+		OutputDir: outputDir,
+		Service:   data,
+	}
+	if err := tmpl.Execute(file, userData); err != nil {
 		return err
 	}
-	genericData["outputDir"] = outputDir
-
-	renderedTemplate, err := mustache.Render(template, genericData)
-	if err != nil {
-		return err
-	}
-	_, err = file.WriteString(renderedTemplate)
-	if err != nil {
-		return err
-	}
-	err = file.Sync()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return file.Sync()
 }
 
-func generateMain(fs afero.Fs, serviceName string, service template.Service, outputDir string, needDb bool) error {
+func generateMain(fs afero.Fs, serviceName string, service embedded.Service, outputDir string, needDb bool) error {
 	output, err := fs.Create(filepath.Join(outputDir, serviceName, "main.go"))
 	if err != nil {
 		return err
 	}
 	defer output.Close()
 
-	mainTemplate := template.GetMainStub()
+	mainTemplate := embedded.GetMainStub()
 	if needDb {
-		mainTemplate = template.GetMainDbStub()
+		mainTemplate = embedded.GetMainDbStub()
 	}
 
-	err = processMustacheTemplate(output, mainTemplate, service, outputDir)
+	err = processTemplate(output, mainTemplate, service, outputDir)
 	if err != nil {
 		return err
 	}
@@ -197,16 +186,16 @@ func generateMain(fs afero.Fs, serviceName string, service template.Service, out
 	return nil
 }
 
-func generateDockerfile(fs afero.Fs, serviceName string, service template.Service, outputDir string) error {
+func generateDockerfile(fs afero.Fs, serviceName string, service embedded.Service, outputDir string) error {
 	output, err := fs.Create(filepath.Join(outputDir, serviceName, "Dockerfile"))
 	if err != nil {
 		return err
 	}
 	defer output.Close()
 
-	dockerTemplate := template.GetDockerfileStub()
+	dockerTemplate := embedded.GetDockerfileStub()
 
-	err = processMustacheTemplate(output, dockerTemplate, service, outputDir)
+	err = processTemplate(output, dockerTemplate, service, outputDir)
 	if err != nil {
 		return err
 	}
