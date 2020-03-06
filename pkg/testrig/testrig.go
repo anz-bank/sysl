@@ -14,6 +14,7 @@ import (
 
 	"github.com/cbroglie/mustache"
 	"github.com/ghodss/yaml"
+	"github.com/spf13/afero"
 )
 
 // GenerateRig creates full set of files required to start up a test rig
@@ -21,8 +22,8 @@ import (
 // if the service contains DB tables, it creates sidecar postgres container and creates a schema there
 // finally, it creates docker-compose.yml at the point of all (likely your project's root)
 // that joins all containerized services
-func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) error {
-	serviceMap, err := readTemplate(templateFile)
+func GenerateRig(fs afero.Fs, templateFile string, outputDir string, modules []*sysl.Module) error {
+	serviceMap, err := readTemplate(fs, templateFile)
 	if err != nil {
 		return err
 	}
@@ -46,15 +47,15 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 	composeServices := make(map[string]interface{})
 
 	for serviceName, serviceTmpl := range serviceMap {
-		if err := os.MkdirAll(filepath.Join(outputDir, serviceName), os.ModePerm); err != nil {
+		if err := fs.MkdirAll(filepath.Join(outputDir, serviceName), os.ModePerm); err != nil {
 			return err
 		}
 
-		if err := generateMain(serviceName, serviceTmpl, outputDir, appsWhoNeedDb[serviceName]); err != nil {
+		if err := generateMain(fs, serviceName, serviceTmpl, outputDir, appsWhoNeedDb[serviceName]); err != nil {
 			return err
 		}
 
-		if err := generateDockerfile(serviceName, serviceTmpl, outputDir); err != nil {
+		if err := generateDockerfile(fs, serviceName, serviceTmpl, outputDir); err != nil {
 			return err
 		}
 
@@ -66,12 +67,7 @@ func GenerateRig(templateFile string, outputDir string, modules []*sysl.Module) 
 		}
 	}
 
-	composeFile, err := os.Create("docker-compose.yml")
-	if err != nil {
-		return err
-	}
-	defer composeFile.Close()
-	return generateCompose(composeFile, composeServices)
+	return generateCompose(fs, composeServices)
 }
 
 func appNeedsDb(app *sysl.Application) bool {
@@ -82,8 +78,8 @@ func appNeedsDb(app *sysl.Application) bool {
 	return strings.Contains(patterns.String(), "DB")
 }
 
-func readTemplate(templateFileName string) (template.ServiceMap, error) {
-	templateFile, err := os.Open(templateFileName)
+func readTemplate(fs afero.Fs, templateFileName string) (template.ServiceMap, error) {
+	templateFile, err := fs.Open(templateFileName)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +121,13 @@ func generateDbService(serviceName string) map[string]interface{} {
 	}
 }
 
-func generateCompose(file *os.File, composeServices map[string]interface{}) error {
+func generateCompose(fs afero.Fs, composeServices map[string]interface{}) error {
+	output, err := fs.Create("docker-compose.yml")
+	if err != nil {
+		return err
+	}
+	defer output.Close()
+
 	data := map[string]interface{}{
 		"version":  "3.3",
 		"services": composeServices,
@@ -136,19 +138,17 @@ func generateCompose(file *os.File, composeServices map[string]interface{}) erro
 		return err
 	}
 
-	_, err = file.Write(dataRaw)
-	if err != nil {
+	if _, err := output.Write(dataRaw); err != nil {
 		return err
 	}
-	err = file.Sync()
-	if err != nil {
+	if err := output.Sync(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func processMustacheTemplate(file *os.File, template string, data template.Service, outputDir string) error {
+func processMustacheTemplate(file afero.File, template string, data template.Service, outputDir string) error {
 	// mustache needs generic map
 	rawData, err := json.Marshal(&data)
 	if err != nil {
@@ -177,8 +177,8 @@ func processMustacheTemplate(file *os.File, template string, data template.Servi
 	return nil
 }
 
-func generateMain(serviceName string, service template.Service, outputDir string, needDb bool) error {
-	output, err := os.Create(filepath.Join(outputDir, serviceName, "main.go"))
+func generateMain(fs afero.Fs, serviceName string, service template.Service, outputDir string, needDb bool) error {
+	output, err := fs.Create(filepath.Join(outputDir, serviceName, "main.go"))
 	if err != nil {
 		return err
 	}
@@ -197,8 +197,8 @@ func generateMain(serviceName string, service template.Service, outputDir string
 	return nil
 }
 
-func generateDockerfile(serviceName string, service template.Service, outputDir string) error {
-	output, err := os.Create(filepath.Join(outputDir, serviceName, "Dockerfile"))
+func generateDockerfile(fs afero.Fs, serviceName string, service template.Service, outputDir string) error {
+	output, err := fs.Create(filepath.Join(outputDir, serviceName, "Dockerfile"))
 	if err != nil {
 		return err
 	}
