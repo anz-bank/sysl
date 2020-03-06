@@ -85,13 +85,14 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 		return err
 	}
 	p.SwaggerRoot = filepath.Dir(p.SwaggerRoot)
-	// read transform module *sysl.Module, string, error
-	// transform, _, terr := loader.LoadSyslModule(p.SwaggerRoot, p.TransformFile, args.Filesystem, args.Logger)
-	transform, terr := parse.NewParser().Parse(p.TransformFile, args.Filesystem)
-	if terr != nil {
-		return terr
+	// read transform module
+	if len(p.TransformFile) > 0 {
+		transform, terr := parse.NewParser().Parse(p.TransformFile, args.Filesystem)
+		if terr != nil {
+			return terr
+		}
+		p.Transform = transform
 	}
-	p.Transform = transform
 	output, err := imp(p.OutputData, string(data), args.Logger)
 	if err != nil {
 		return err
@@ -106,7 +107,15 @@ func guessYamlType(filename string, data []byte) string {
 		}
 	}
 
-	return importer.ModeJSON
+	// trim spaces in leading and trailing spaces
+	content := string(data)
+	content = strings.TrimSpace(content)
+	newData := []byte(content)
+	if len(newData) > 0 && (newData[0] == '{' || newData[0] == '[') {
+		return importer.ModeJSON
+	}
+
+	return "unknown"
 }
 
 func guessFileType(filename string, data []byte) string {
