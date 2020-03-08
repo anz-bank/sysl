@@ -121,6 +121,21 @@ func TestEvalIntegerMath(t *testing.T) {
 	assert.Equal(t, int64(0), out["out6"].GetI())
 }
 
+func TestEvalDatatype(t *testing.T) {
+	t.Parallel()
+
+	mod, err := parse.NewParser().Parse("eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir))
+	require.NoError(t, err)
+	require.NotNil(t, mod)
+	txApp := mod.Apps["TransformApp"]
+	viewName := "DataType"
+	s := Scope{}
+	s.AddString("t", "Checkbox")
+	out := Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr).GetMap().Items
+	obj := out["type"].GetS()
+	assert.Equal(t, "bool", obj)
+}
+
 func TestEvalCompare(t *testing.T) {
 	t.Parallel()
 

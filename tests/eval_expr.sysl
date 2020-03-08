@@ -108,6 +108,16 @@ TransformApp:
         else t.type_ref
     )
 
+  !view DataType(t <: string) -> string:
+    t -> (:
+      type = if t ==:
+         "Checkbox" => "bool" 
+         "Date/Time" => "date"
+         "Auto Number" => "int"
+         "Text(80)" => "string(80)"
+         else t
+    )
+
   !view Getters(fields <: set of app.Type) -> set of memberFunction:
     fields -> (field:
       access = "public"
