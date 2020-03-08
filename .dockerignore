@@ -1,6 +1,6 @@
 .dockerignore
 **/node_modules
 /dist/
-/release/
 /pkg/antlr*.jar
-/scrpts/generate/
+/release/
+/scripts/generate
