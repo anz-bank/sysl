@@ -1,0 +1,29 @@
+json_data_model:
+    !type model:
+        name <: string:
+            @json_tag = "name"    
+        properies <: set of property:
+            @json_tag = "fields"
+
+    !type property:
+        type <: string:
+            @json_tag = "type"
+        name <: string:
+            @json_tag = "name"
+    
+    #### JSON data type mapping
+    !view DataType(t <: string) -> string:
+        t -> (:
+            type = if t ==:
+                "Checkbox" => "bool" 
+                "Date/Time" => "date"
+                "Date" => "date"
+                "Auto Number" => "int"
+                "Text(40)" => "string(40)"
+                "Text(80)" => "string(80)"
+                "Text(200)" => "string(200)"
+                "Text(255)" => "string(255)"
+                "Number(3, 0)" => "int"
+                "Number(18, 0)" => "int"
+                else "string"
+        )
