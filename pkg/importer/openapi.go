@@ -39,7 +39,7 @@ func importOpenAPI(args OutputData,
 	endpoints := l.initEndpoints()
 
 	result := &bytes.Buffer{}
-	w := newWriter(result, logger)
+	w := NewWriter(result, logger)
 	if err := w.Write(l.initInfo(args, basepath), l.types, endpoints...); err != nil {
 		return "", err
 	}

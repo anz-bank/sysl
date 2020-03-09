@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/jsonimport"
 	"github.com/anz-bank/sysl/pkg/parse"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
@@ -76,7 +77,7 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 		imp = importer.LoadOpenAPIText
 	case importer.ModeJSON:
 		args.Logger.Infof("Using json importer\n")
-		imp = importer.LoadJSONText
+		imp = jsonimport.LoadJSONText
 	default:
 		args.Logger.Fatalf("Unsupported input format: %s\n", p.Mode)
 	}

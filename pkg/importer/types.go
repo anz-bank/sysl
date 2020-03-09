@@ -21,6 +21,8 @@ type StandardType struct {
 
 func (s *StandardType) Name() string { return s.name }
 
+func (s *StandardType) SetName(name string) { s.name = name }
+
 type Union struct {
 	name    string
 	Options FieldList
@@ -33,6 +35,8 @@ type SyslBuiltIn struct {
 }
 
 func (s *SyslBuiltIn) Name() string { return s.name }
+
+func (s *SyslBuiltIn) SetName(name string) { s.name = name }
 
 var StringAlias = &SyslBuiltIn{name: StringTypeName}
 

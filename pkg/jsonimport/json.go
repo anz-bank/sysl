@@ -1,4 +1,4 @@
-package importer
+package jsonimport
 
 import (
 	"bytes"
@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/eval"
+	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/yalp/jsonpath"
@@ -37,7 +39,7 @@ or
 }
 So it needs transform to do a mapping.
 */
-func LoadJSONText(args OutputData, jsonText string, logger *logrus.Logger) (string, error) {
+func LoadJSONText(args importer.OutputData, jsonText string, logger *logrus.Logger) (string, error) {
 	if len(jsonText) == 0 {
 		return "", fmt.Errorf("processed json file is empty")
 	}
@@ -48,7 +50,7 @@ func LoadJSONText(args OutputData, jsonText string, logger *logrus.Logger) (stri
 		return "", fmt.Errorf("it can have only one app in file %s", args.TransformFile)
 	}
 
-	types := TypeList{}
+	types := importer.TypeList{}
 	for _, app := range args.Transform.Apps {
 		mNameTag, pTags := getTypeMeta(app)
 		var data interface{}
@@ -65,13 +67,13 @@ func LoadJSONText(args OutputData, jsonText string, logger *logrus.Logger) (stri
 		}
 	}
 
-	info := SyslInfo{
+	info := importer.SyslInfo{
 		OutputData:  args,
 		Description: "",
 		Title:       "",
 	}
 	result := &bytes.Buffer{}
-	w := newWriter(result, logger)
+	w := importer.NewWriter(result, logger)
 	if err := w.Write(info, types); err != nil {
 		return "", err
 	}
@@ -81,14 +83,15 @@ func LoadJSONText(args OutputData, jsonText string, logger *logrus.Logger) (stri
 
 // Use JsonPath to get data in json file
 func loadModelTypes(modelNameTag string, data interface{},
-	logger *logrus.Logger) TypeList {
-	types := TypeList{}
+	logger *logrus.Logger) importer.TypeList {
+	types := importer.TypeList{}
 
 	mCount := 0
 	mPath := "$[" + strconv.Itoa(mCount) + "]"
 	mName, mErr := jsonpath.Read(data, mPath+"."+modelNameTag)
 	for ; mErr == nil; mName, mErr = jsonpath.Read(data, mPath+".name") {
-		model := StandardType{name: mName.(string)}
+		model := importer.StandardType{}
+		model.SetName(mName.(string))
 		types.Add(&model)
 		mCount++
 		mPath = "$[" + strconv.Itoa(mCount) + "]"
@@ -100,18 +103,19 @@ func loadModelTypes(modelNameTag string, data interface{},
 
 // Use JsonPath to get data in json file
 func buildModelTypesDetail(app *sysl.Application, modelNameTag string, propertyTags map[string]string, data interface{},
-	knownTypeList *TypeList, logger *logrus.Logger) {
+	knownTypeList *importer.TypeList, logger *logrus.Logger) {
 	mCount := 0
 	mPath := "$[" + strconv.Itoa(mCount) + "]"
 	mName, mErr := jsonpath.Read(data, mPath+"."+modelNameTag)
 	for ; mErr == nil; mName, mErr = jsonpath.Read(data, mPath+".name") {
 		modelType, existed := knownTypeList.Find(mName.(string))
 		if !existed {
+			logger.Warnf("found type %s which is not existing in json", mName.(string))
 			continue
 		}
 
 		switch model := modelType.(type) {
-		case *StandardType:
+		case *importer.StandardType:
 			fCount := 0
 			fPath := mPath + ".fields[" + strconv.Itoa(fCount) + "]"
 			for _, fsErr := jsonpath.Read(data, fPath); fsErr == nil; _, fsErr = jsonpath.Read(data, fPath) {
@@ -119,11 +123,10 @@ func buildModelTypesDetail(app *sysl.Application, modelNameTag string, propertyT
 				fieldType, ftErr := jsonpath.Read(data, fPath+"."+propertyTags["type"])
 				if fnErr == nil && ftErr == nil && fieldName != "" && fieldType != "" {
 					jsonType := makeJSONType(app, fieldType.(string), fPath, data, knownTypeList)
-					model.Properties = append(model.Properties, Field{Name: fieldName.(string),
+					model.Properties = append(model.Properties, importer.Field{Name: fieldName.(string),
 						Type: jsonType})
 				} else {
-					// logger.Errorf("can't process field %s", fPath+"."+propertyTags["name"])
-					fmt.Print(" ")
+					logger.Errorf("can't process field %s", fPath+"."+propertyTags["name"])
 				}
 
 				fCount++
@@ -149,19 +152,21 @@ func getTypeMeta(app *sysl.Application) (modelNameTag string, propertyTags map[s
 }
 
 func makeJSONType(app *sysl.Application, jsonDataType string, jsonPath string, data interface{},
-	knownTypeList *TypeList) Type {
+	knownTypeList *importer.TypeList) importer.Type {
 	if jsonDataType == "Foreign Key" {
 		// Some foreign key can't find model, if it can't find refrenced model, return default builtin type
 		dataType := makeJSONComplexType(jsonPath, data, knownTypeList)
 		if dataType == nil {
-			return &SyslBuiltIn{name: "string"}
+			syslBuiltInType := importer.SyslBuiltIn{}
+			syslBuiltInType.SetName("string")
+			return &syslBuiltInType
 		}
 		return dataType
 	}
 	return makeJSONBuiltinType(app, jsonDataType)
 }
 
-func makeJSONComplexType(jsonPath string, data interface{}, knownTypeList *TypeList) Type {
+func makeJSONComplexType(jsonPath string, data interface{}, knownTypeList *importer.TypeList) importer.Type {
 	obj, oErr := jsonpath.Read(data, jsonPath+".relatedObject")
 	_, fErr := jsonpath.Read(data, jsonPath+".referencedField")
 	if oErr == nil && fErr == nil {
@@ -174,46 +179,15 @@ func makeJSONComplexType(jsonPath string, data interface{}, knownTypeList *TypeL
 	return nil
 }
 
-func makeJSONBuiltinType(app *sysl.Application, jsonDataType string) Type {
-	// s := eval.Scope{}
-	// s.AddString("t", jsonDataType)
-	// out := eval.EvaluateView(app, "DataType", s)
-	// typeStr := out["type"].GetS()
+func makeJSONBuiltinType(app *sysl.Application, jsonDataType string) importer.Type {
+	s := eval.Scope{}
+	s.AddString("t", jsonDataType)
+	out := evaluateView(app, "DataType", s)
+	typeStr := out.GetMap().GetItems()["type"].GetS()
 
-	typeStr := ""
-
-	switch jsonDataType {
-	case "Checkbox":
-		typeStr = "bool"
-	case "Date/Time":
-		typeStr = "date"
-	case "Date":
-		typeStr = "date"
-	case "Formula (Number)":
-		typeStr = "string"
-	case "Text(40)":
-		typeStr = "string(40)"
-	case "Text(80)":
-		typeStr = "string(80)"
-	case "Text(200)":
-		typeStr = "string(200)"
-	case "Text(255)":
-		typeStr = "string(255)"
-	case "Text Area(255)":
-		typeStr = "string(255)"
-	case "Currency(16, 2)":
-		typeStr = "decimal"
-	case "Auto Number":
-		typeStr = "int"
-	case "Number(3, 0)":
-		typeStr = "int"
-	case "Number(18, 0)":
-		typeStr = "int"
-	default:
-		typeStr = "string"
-	}
-
-	return &SyslBuiltIn{name: typeStr}
+	syslBuiltInType := importer.SyslBuiltIn{}
+	syslBuiltInType.SetName(typeStr)
+	return &syslBuiltInType
 }
 
 // Check JSON root element is array or map/object
@@ -221,4 +195,13 @@ func isArray(json string) bool {
 	bytes := []byte(strings.TrimSpace(json))
 	array := (len(bytes) > 0 && bytes[0] == '[')
 	return array
+}
+
+func evaluateView(app *sysl.Application, viewName string, s eval.Scope) *sysl.Value {
+	view := app.Views[viewName]
+	if view.Expr.Type == nil {
+		view.Expr.Type = view.RetType
+	}
+
+	return eval.EvaluateApp(app, view, s)
 }
