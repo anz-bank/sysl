@@ -1,0 +1,29 @@
+Foo:
+    @version = "1.2.3"
+    @host = "goat.example.com"
+    @comment = 'oneline comment'
+    @description =:
+        | multi-line documentation comment
+        | use it for long comments
+
+    # Indented comment
+    /foo:
+
+        # POST endpoint foo
+        POST (newPost <: string [~body]):
+            return string
+        GET (newPost <: string):
+            | Get newPost
+            | ...
+            return string
+
+    /bar: # Indented comment
+        GET (newBar <: string):
+            | Get newBar
+            return string
+
+    #--------------------------------------------------------
+
+    !type Acknowledgement:
+        message <: string?:
+            @json_tag = "message"

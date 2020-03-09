@@ -4,6 +4,7 @@ Basics:
   - Projects
   - Control Flow
   - Attributes
+  - Reserved-Attributes
   - Modules
 Diagrams:
   - Sequence Diagrams
@@ -11,6 +12,7 @@ Diagrams:
   - Data Model Diagrams
 Web protocols:
   - Rest and HTTP
+  - Special Characters
 # TODO: The rest of these
 #   - grpc and proto
 # Sysl Transformation Language:

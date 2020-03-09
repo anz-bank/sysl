@@ -1,5 +1,3 @@
-PKGS := $(shell go list ./... | grep -v /vendor)
-
 BIN_DIR := $(GOPATH)/bin
 
 # Try to detect current branch if not provided from environment
@@ -38,7 +36,6 @@ coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 85
 
 test: ## Run tests without coverage
-	rm -rf pkg/grammar/temp
 	$(TESTEXE)
 
 BINARY := sysl
@@ -72,29 +69,19 @@ install: build ## Install the sysl binary into $(GOPATH)/bin
 	cp ./dist/sysl $(GOPATH)/bin
 
 clean: ## Clean temp and build files
-	rm -rf release dist pkg/grammar/temp
+	rm -rf release dist
 
 # Autogen rules
 ANTLR = java -jar pkg/antlr-4.7-complete.jar
-GRAMMARS = pkg/grammar/SyslParser.g4 \
-		   pkg/grammar/SyslLexer.g4
+ANTLR_GO = $(ANTLR) -Dlanguage=Go -lib $(@D) $<
 
-antlr: $(GRAMMARS)
-	$(ANTLR) -Dlanguage=Go -lib pkg/grammar -o pkg/grammar/temp $^
+grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go ## Regenerate the grammars
 
-pkg/grammar/sysl_parser.go: antlr
-	cp pkg/grammar/temp/pkg/grammar/sysl*parser*.go pkg/grammar
-	git apply pkg/grammar/antlr4-datarace-fix-parser.go.diff
+pkg/grammar/sysl_parser.go: pkg/grammar/SyslParser.g4 pkg/grammar/SyslLexer.tokens
+	$(ANTLR_GO)
 
-pkg/grammar/sysl_lexer.go: antlr
-	cp pkg/grammar/temp/pkg/grammar/sysl*lexer*.go pkg/grammar
-	git apply pkg/grammar/antlr4-datarace-fix-lexer.go.diff
-
-
-grammar: pkg/grammar/sysl_lexer.go pkg/grammar/sysl_parser.go pkg/parser/grammar.pb.go ## Regenerate the grammars
-
-pkg/parser/grammar.pb.go: pkg/parser/grammar.proto
-	protoc -I pkg/parser -I $(GOPATH)/src --go_out=pkg/parser grammar.proto
+pkg/grammar/sysl_lexer.go pkg/grammar/SyslLexer.tokens &: pkg/grammar/SyslLexer.g4
+	$(ANTLR_GO)
 
 pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
 	protoc -I pkg/proto_old -I $(GOPATH)/src --go_out=pkg/proto_old/ sysl.proto

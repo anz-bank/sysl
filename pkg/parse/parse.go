@@ -35,10 +35,10 @@ type Parser struct {
 
 func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
 	errorListener := SyslParserErrorListener{}
-	lexer := parser.NewSyslLexer(input)
+	lexer := parser.NewThreadSafeSyslLexer(input)
 	defer parser.DeleteLexerState(lexer)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	p := parser.NewSyslParser(stream)
+	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+	p := parser.NewThreadSafeSyslParser(stream)
 	p.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.AddErrorListener(&errorListener)

@@ -1,4 +1,4 @@
-// Generated from pkg/grammar/SyslParser.g4 by ANTLR 4.7.
+// Code generated from pkg/grammar/SyslParser.g4 by ANTLR 4.8. DO NOT EDIT.
 
 package parser // SyslParser
 
@@ -822,6 +822,8 @@ var parserATN = []uint16{
 	1627, 1629, 1633, 1638, 1656, 1659, 1664, 1668, 1673, 1677, 1682, 1685,
 	1690,
 }
+var deserializer = antlr.NewATNDeserializer(nil)
+var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
 	"", "", "", "", "", "'!wrap'", "'!table'", "'!type'", "'!alias'", "'!union'",
@@ -900,6 +902,13 @@ var ruleNames = []string{
 	"abstract_view", "view", "alias", "app_decl", "application", "import_mode",
 	"import_stmt", "imports_decl", "sysl_file",
 }
+var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
+
+func init() {
+	for index, ds := range deserializedATN.DecisionToState {
+		decisionToDFA[index] = antlr.NewDFA(ds, index)
+	}
+}
 
 type SyslParser struct {
 	*antlr.BaseParser
@@ -907,13 +916,6 @@ type SyslParser struct {
 
 func NewSyslParser(input antlr.TokenStream) *SyslParser {
 	this := new(SyslParser)
-
-	deserializer := antlr.NewATNDeserializer(nil)
-	deserializedATN := deserializer.DeserializeFromUInt16(parserATN)
-	decisionToDFA := make([]*antlr.DFA, len(deserializedATN.DecisionToState))
-	for index, ds := range deserializedATN.DecisionToState {
-		decisionToDFA[index] = antlr.NewDFA(ds, index)
-	}
 
 	this.BaseParser = antlr.NewBaseParser(input)
 
@@ -1615,14 +1617,16 @@ func (p *SyslParser) Name_str() (localctx IName_strContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(371)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(371)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserTEXT_LINE || _la == SyslParserName || _la == SyslParserE_Name) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserTEXT_LINE || _la == SyslParserName || _la == SyslParserE_Name) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 	return localctx
@@ -1769,14 +1773,16 @@ func (p *SyslParser) Reference() (localctx IReferenceContext) {
 	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		switch _alt {
 		case 1:
-			p.SetState(374)
-			_la = p.GetTokenStream().LA(1)
+			{
+				p.SetState(374)
+				_la = p.GetTokenStream().LA(1)
 
-			if !(_la == SyslParserDOT || _la == SyslParserE_DOT) {
-				p.GetErrorHandler().RecoverInline(p)
-			} else {
-				p.GetErrorHandler().ReportMatch(p)
-				p.Consume()
+				if !(_la == SyslParserDOT || _la == SyslParserE_DOT) {
+					p.GetErrorHandler().RecoverInline(p)
+				} else {
+					p.GetErrorHandler().ReportMatch(p)
+					p.Consume()
+				}
 			}
 			{
 				p.SetState(375)
@@ -5372,14 +5378,16 @@ func (p *SyslParser) Table() (localctx ITableContext) {
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
-	p.SetState(561)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(561)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserTABLE || _la == SyslParserTYPE) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserTABLE || _la == SyslParserTYPE) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 	{
 		p.SetState(562)
@@ -6519,14 +6527,16 @@ func (p *SyslParser) Table_refs() (localctx ITable_refsContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(624)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(624)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<SyslParserTABLE)|(1<<SyslParserTYPE)|(1<<SyslParserUNION))) != 0) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<SyslParserTABLE)|(1<<SyslParserTYPE)|(1<<SyslParserUNION))) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 	{
 		p.SetState(625)
@@ -9330,14 +9340,16 @@ func (p *SyslParser) For_stmt() (localctx IFor_stmtContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(780)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(780)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<SyslParserFOR_EACH)|(1<<SyslParserFOR)|(1<<SyslParserUNTIL)|(1<<SyslParserLOOP)|(1<<SyslParserALT)|(1<<SyslParserWHILE))) != 0) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<SyslParserFOR_EACH)|(1<<SyslParserFOR)|(1<<SyslParserUNTIL)|(1<<SyslParserLOOP)|(1<<SyslParserALT)|(1<<SyslParserWHILE))) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 	{
 		p.SetState(781)
@@ -9732,14 +9744,16 @@ func (p *SyslParser) One_of_case_label() (localctx IOne_of_case_labelContext) {
 	_la = p.GetTokenStream().LA(1)
 
 	for ok := true; ok; ok = (((_la-59)&-(0x1f+1)) == 0 && ((1<<uint((_la-59)))&((1<<(SyslParserQSTRING-59))|(1<<(SyslParserTEXT_LINE-59))|(1<<(SyslParserName-59)))) != 0) {
-		p.SetState(804)
-		_la = p.GetTokenStream().LA(1)
+		{
+			p.SetState(804)
+			_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-59)&-(0x1f+1)) == 0 && ((1<<uint((_la-59)))&((1<<(SyslParserQSTRING-59))|(1<<(SyslParserTEXT_LINE-59))|(1<<(SyslParserName-59)))) != 0) {
-			p.GetErrorHandler().RecoverInline(p)
-		} else {
-			p.GetErrorHandler().ReportMatch(p)
-			p.Consume()
+			if !(((_la-59)&-(0x1f+1)) == 0 && ((1<<uint((_la-59)))&((1<<(SyslParserQSTRING-59))|(1<<(SyslParserTEXT_LINE-59))|(1<<(SyslParserName-59)))) != 0) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
+			}
 		}
 
 		p.SetState(807)
@@ -14001,14 +14015,16 @@ func (p *SyslParser) Literal() (localctx ILiteralContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1047)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1047)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(((_la-117)&-(0x1f+1)) == 0 && ((1<<uint((_la-117)))&((1<<(SyslParserE_TRUE-117))|(1<<(SyslParserE_FALSE-117))|(1<<(SyslParserE_NULL-117))|(1<<(SyslParserE_STRING_DBL-117))|(1<<(SyslParserE_STRING_SINGLE-117))|(1<<(SyslParserE_DECIMAL-117))|(1<<(SyslParserE_DIGITS-117)))) != 0) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(((_la-117)&-(0x1f+1)) == 0 && ((1<<uint((_la-117)))&((1<<(SyslParserE_TRUE-117))|(1<<(SyslParserE_FALSE-117))|(1<<(SyslParserE_NULL-117))|(1<<(SyslParserE_STRING_DBL-117))|(1<<(SyslParserE_STRING_SINGLE-117))|(1<<(SyslParserE_DECIMAL-117))|(1<<(SyslParserE_DIGITS-117)))) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 	return localctx
@@ -14110,14 +14126,16 @@ func (p *SyslParser) Expr_table_of_op() (localctx IExpr_table_of_opContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1049)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1049)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserE_NULLSAFE_DOT || _la == SyslParserE_DOT) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserE_NULLSAFE_DOT || _la == SyslParserE_DOT) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 	p.SetState(1051)
 	p.GetErrorHandler().Sync(p)
@@ -14482,14 +14500,16 @@ func (p *SyslParser) Expr_func() (localctx IExpr_funcContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1065)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1065)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserNativeDataTypes || _la == SyslParserE_FUNC || _la == SyslParserE_Name) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserNativeDataTypes || _la == SyslParserE_FUNC || _la == SyslParserE_Name) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 	{
 		p.SetState(1066)
@@ -14621,14 +14641,16 @@ func (p *SyslParser) Rank_expr() (localctx IRank_exprContext) {
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == SyslParserE_ASC || _la == SyslParserE_DESC {
-		p.SetState(1073)
-		_la = p.GetTokenStream().LA(1)
+		{
+			p.SetState(1073)
+			_la = p.GetTokenStream().LA(1)
 
-		if !(_la == SyslParserE_ASC || _la == SyslParserE_DESC) {
-			p.GetErrorHandler().RecoverInline(p)
-		} else {
-			p.GetErrorHandler().ReportMatch(p)
-			p.Consume()
+			if !(_la == SyslParserE_ASC || _la == SyslParserE_DESC) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
+			}
 		}
 
 	}
@@ -15553,14 +15575,16 @@ func (p *SyslParser) E_single_arg_func() (localctx IE_single_arg_funcContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1122)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1122)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserE_RELOPS_WHERE || _la == SyslParserE_RELOPS_FLATTEN) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserE_RELOPS_WHERE || _la == SyslParserE_RELOPS_FLATTEN) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 	return localctx
@@ -16348,14 +16372,16 @@ func (p *SyslParser) Expr_navigate() (localctx IExpr_navigateContext) {
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == SyslParserE_SEQUENCE_OF || _la == SyslParserE_SET_OF {
-		p.SetState(1152)
-		_la = p.GetTokenStream().LA(1)
+		{
+			p.SetState(1152)
+			_la = p.GetTokenStream().LA(1)
 
-		if !(_la == SyslParserE_SEQUENCE_OF || _la == SyslParserE_SET_OF) {
-			p.GetErrorHandler().RecoverInline(p)
-		} else {
-			p.GetErrorHandler().ReportMatch(p)
-			p.Consume()
+			if !(_la == SyslParserE_SEQUENCE_OF || _la == SyslParserE_SET_OF) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
+			}
 		}
 
 	}
@@ -18038,14 +18064,16 @@ func (p *SyslParser) AtomT_name() (localctx IAtomT_nameContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1235)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1235)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserE_WHATEVER || _la == SyslParserE_Name || _la == SyslParserE_DOT) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserE_WHATEVER || _la == SyslParserE_Name || _la == SyslParserE_DOT) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 	return localctx
@@ -18969,14 +18997,16 @@ func (p *SyslParser) UnaryTerm() (localctx IUnaryTermContext) {
 	p.GetErrorHandler().Sync(p)
 
 	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 132, p.GetParserRuleContext()) == 1 {
-		p.SetState(1269)
-		_la = p.GetTokenStream().LA(1)
+		{
+			p.SetState(1269)
+			_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-96)&-(0x1f+1)) == 0 && ((1<<uint((_la-96)))&((1<<(SyslParserE_PLUS-96))|(1<<(SyslParserE_MINUS-96))|(1<<(SyslParserE_TILDE-96))|(1<<(SyslParserE_NOT-96)))) != 0) {
-			p.GetErrorHandler().RecoverInline(p)
-		} else {
-			p.GetErrorHandler().ReportMatch(p)
-			p.Consume()
+			if !(((_la-96)&-(0x1f+1)) == 0 && ((1<<uint((_la-96)))&((1<<(SyslParserE_PLUS-96))|(1<<(SyslParserE_MINUS-96))|(1<<(SyslParserE_TILDE-96))|(1<<(SyslParserE_NOT-96)))) != 0) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
+			}
 		}
 
 	}
@@ -19090,14 +19120,16 @@ func (p *SyslParser) TermT() (localctx ITermTContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1274)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1274)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(((_la-97)&-(0x1f+1)) == 0 && ((1<<uint((_la-97)))&((1<<(SyslParserE_DIVIDE-97))|(1<<(SyslParserE_MOD-97))|(1<<(SyslParserE_STAR-97)))) != 0) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(((_la-97)&-(0x1f+1)) == 0 && ((1<<uint((_la-97)))&((1<<(SyslParserE_DIVIDE-97))|(1<<(SyslParserE_MOD-97))|(1<<(SyslParserE_STAR-97)))) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 	{
 		p.SetState(1275)
@@ -19343,14 +19375,16 @@ func (p *SyslParser) BinexprT() (localctx IBinexprTContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1284)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1284)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserE_PLUS || _la == SyslParserE_MINUS) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserE_PLUS || _la == SyslParserE_MINUS) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 	{
 		p.SetState(1285)
@@ -19594,14 +19628,16 @@ func (p *SyslParser) E_compare_ops() (localctx IE_compare_opsContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(1294)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1294)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(((_la-78)&-(0x1f+1)) == 0 && ((1<<uint((_la-78)))&((1<<(SyslParserE_DOUBLE_EQ-78))|(1<<(SyslParserE_REL-78))|(1<<(SyslParserE_ANGLE_OPEN-78))|(1<<(SyslParserE_ANGLE_CLOSE-78)))) != 0) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(((_la-78)&-(0x1f+1)) == 0 && ((1<<uint((_la-78)))&((1<<(SyslParserE_DOUBLE_EQ-78))|(1<<(SyslParserE_REL-78))|(1<<(SyslParserE_ANGLE_OPEN-78))|(1<<(SyslParserE_ANGLE_CLOSE-78)))) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 	return localctx
@@ -19893,14 +19929,16 @@ func (p *SyslParser) Expr_bitand() (localctx IExpr_bitandContext) {
 
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
-			p.SetState(1306)
-			_la = p.GetTokenStream().LA(1)
+			{
+				p.SetState(1306)
+				_la = p.GetTokenStream().LA(1)
 
-			if !(_la == SyslParserE_AMP || _la == SyslParserE_AND) {
-				p.GetErrorHandler().RecoverInline(p)
-			} else {
-				p.GetErrorHandler().ReportMatch(p)
-				p.Consume()
+				if !(_la == SyslParserE_AMP || _la == SyslParserE_AND) {
+					p.GetErrorHandler().RecoverInline(p)
+				} else {
+					p.GetErrorHandler().ReportMatch(p)
+					p.Consume()
+				}
 			}
 			{
 				p.SetState(1307)
@@ -23201,14 +23239,16 @@ func (p *SyslParser) Template_statement() (localctx ITemplate_statementContext) 
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
-	p.SetState(1476)
-	_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(1476)
+		_la = p.GetTokenStream().LA(1)
 
-	if !(_la == SyslParserE_NL || _la == SyslParserTMPL_NL) {
-		p.GetErrorHandler().RecoverInline(p)
-	} else {
-		p.GetErrorHandler().ReportMatch(p)
-		p.Consume()
+		if !(_la == SyslParserE_NL || _la == SyslParserTMPL_NL) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 	return localctx
