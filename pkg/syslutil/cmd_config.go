@@ -7,21 +7,25 @@ import (
 	"strings"
 )
 
+//ReadCMDFlags reads command line flags from file specified by configPath.
 func ReadCMDFlags(configPath string) ([]string, error) {
 	data, ferr := ioutil.ReadFile(configPath)
 	if ferr != nil {
 		return nil, ferr
 	}
-	re := regexp.MustCompile(`(\S+"[^"]+")|\S+`)
+	// re := regexp.MustCompile(`(\S+"[^"]+")|\S+`)
+	re := regexp.MustCompile(`(-+[^=\s\n]+)?((=?"[^=\n"]+")|(=?[^=\s\n]+))?\s*`)
 	flags := re.FindAllString(strings.TrimSpace(string(data)), -1)
 
 	for i, flag := range flags {
-		flags[i] = strings.ReplaceAll(flag, "\"", "")
+		flags[i] = strings.TrimSpace(flag)
 	}
 
 	return flags, nil
 }
 
+//PopulateCMDFlagsFromFile reads command line flags from file specified by cmdArgs and this flag starts with @,
+//like `sysl codegen @file`.
 func PopulateCMDFlagsFromFile(cmdArgs []string) ([]string, error) {
 	if len(cmdArgs) < 3 {
 		return nil, fmt.Errorf("command arguments are not enough")

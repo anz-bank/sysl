@@ -15,7 +15,7 @@ func TestReadCMDFlags(t *testing.T) {
 	assert.Equal(t, 4, len(flags))
 	assert.Equal(t, "--grammar=go.gen.g", flags[0])
 	assert.Equal(t, "--transform=go.gen.sysl", flags[1])
-	assert.Equal(t, "--app-name=Test POC", flags[2])
+	assert.Equal(t, "--app-name=\"Test POC\"", flags[2])
 	assert.Equal(t, "model.sysl", flags[3])
 
 	flags, err = ReadCMDFlags("tests/config1.txt")
@@ -40,7 +40,7 @@ func TestPopulateCMDFlagsFromFile(t *testing.T) {
 	assert.Equal(t, "codegen", flags[1])
 	assert.Equal(t, "--grammar=go.gen.g", flags[2])
 	assert.Equal(t, "--transform=go.gen.sysl", flags[3])
-	assert.Equal(t, "--app-name=Test POC", flags[4])
+	assert.Equal(t, "--app-name=\"Test POC\"", flags[4])
 	assert.Equal(t, "model.sysl", flags[5])
 	///////////
 	cmdArgs = []string{"sysl", "codegen", "@tests/config1.txt"}
