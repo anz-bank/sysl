@@ -1,0 +1,9 @@
+foo:
+    !type fooType:
+        content <: string
+    fooEndpoint:
+        bar <- barEndpoint
+        return <: fooType
+bar:
+    barEndpoint:
+        ...

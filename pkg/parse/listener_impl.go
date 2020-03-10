@@ -1229,13 +1229,15 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 		if ctx.QSTRING() != nil {
 			str = withQuotesQString(str)
 		}
-		s.addToCurrentScope(&sysl.Statement{
-			Stmt: &sysl.Statement_Action{
-				Action: &sysl.Action{
-					Action: str,
+		if str != "..." {
+			s.addToCurrentScope(&sysl.Statement{
+				Stmt: &sysl.Statement_Action{
+					Action: &sysl.Action{
+						Action: str,
+					},
 				},
-			},
-		})
+			})
+		}
 		s.pendingDocString = false
 	} else {
 		s.pendingDocString = true

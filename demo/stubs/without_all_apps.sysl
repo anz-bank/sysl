@@ -1,0 +1,5 @@
+import foo/foo.sysl
+import bar/bar.sysl
+
+_:
+    ...
