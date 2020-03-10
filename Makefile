@@ -1,5 +1,3 @@
-PKGS := $(shell go list ./... | grep -v /vendor)
-
 BIN_DIR := $(GOPATH)/bin
 
 # Try to detect current branch if not provided from environment

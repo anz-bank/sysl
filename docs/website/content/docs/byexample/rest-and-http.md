@@ -4,7 +4,7 @@ title= "Rest and HTTP"
 draft= false
 description= ""
 layout= "byexample"
-weight = 11
+weight = 12
 topic = "Web protocols"
 PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=Rm9vOgogICAgL2VuZHBvaW50OgogICAgICAgIFBPU1QgKG5ld1Bvc3QgPDogc3RyaW5nIFt+Ym9keV0pOgogICAgICAgICAgICByZXR1cm4gc3RyaW5nCiAgICAgICAgR0VUIChuZXdQb3N0IDw6IHN0cmluZyk6CiAgICAgICAgICAgIHJldHVybiBzdHJpbmcK&cmd="
 ID = "rest-and-http"
