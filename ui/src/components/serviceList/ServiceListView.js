@@ -20,10 +20,10 @@ const getFullName = nameParts => {
 };
 
 const getAttribute = (row, key) => {
-  if (!("Attribute" in row && key in row.Attrs)) {
+  if (!("Attributes" in row && key in row.Attributes)) {
     return null;
   }
-  return row.Attrs[key];
+  return row.Attributes[key];
 };
 
 function desc(a, b, orderBy) {
@@ -247,7 +247,7 @@ function ServiceListView(props) {
                         {getAttribute(row, "description")}
                       </TableCell>
                       <TableCell align="right">
-                        {getAttribute(row, "type")}
+                        {row.Type}
                       </TableCell>
                       <TableCell align="right">
                         {getAttribute(row, "version")}

@@ -1,6 +1,8 @@
 GroceryStore [package="GroceryStore", ~rest]:
     @owner.name = "Eddard Stark"
-    @repoURL = "https://github.com/anz-bank/sysl"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
     @description =:
         | The Grocery Store API lets users browse the items available for purchase and lets users purchase their groceries.
     @version = "1.0.0"
@@ -60,6 +62,9 @@ GroceryStore [package="GroceryStore", ~rest]:
 Inventory[package="InventoryService", ~rest]:
     @version = "1.0.0"
     @owner.name = "Jon Snow"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
     /inventory:
         GET:
             | Returns a list of available items for purchase 
@@ -68,6 +73,9 @@ Inventory[package="InventoryService", ~rest]:
 Cart[package="InventoryService", ~rest]:
     @owner.name = "Sam Tarwell"
     @version = "1.0.0"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
     /cart:
         GET:
             | Returns a list of items in the specified cart
@@ -87,6 +95,9 @@ Cart[package="InventoryService", ~rest]:
 Payment[package="Payment", ~rest]:
     @owner.name = "Arya Stark"
     @version = "1.0.0"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
     !type PaymentInfo:
         credit_card_number <: string:
             @json_tag = "credit_card_number"
