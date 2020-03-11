@@ -5,12 +5,16 @@
 package catalog
 
 import (
+	"context"
 	"net/http"
 	"path"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/fullstorydev/grpcui/standalone"
+	"github.com/fullstorydev/grpcurl"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
 
 // APIDoc contains everything required to serve a view of a Sysl described application
@@ -18,7 +22,7 @@ type APIDoc struct {
 	name    string       // App name
 	spec    []byte       // JSON API Spec
 	handler http.Handler // Handler to serve docs
-	path    string
+	path    string       // URL Path where the API documentation will be served
 }
 
 func (a *APIDoc) GetHandler() http.Handler {
@@ -44,7 +48,7 @@ func (b APIDocBuilder) BuildAPIDoc() (*APIDoc, error) {
 		name: b.app.GetName().GetPart()[0],
 		path: makePath(serviceType(b.app), "/", b.app.GetName().GetPart()[0]),
 	}
-	doc, err := b.generateHandlers()
+	err := b.generateHandlers()
 
 	if err != nil {
 		b.log.Infof("Failed to add %s:  %s\n",
@@ -54,10 +58,10 @@ func (b APIDocBuilder) BuildAPIDoc() (*APIDoc, error) {
 	}
 
 	b.log.Infof("Added %s: ", b.app.GetName().GetPart()[0])
-	return doc, nil
+	return b.doc, nil
 }
 
-func (b APIDocBuilder) generateHandlers() (*APIDoc, error) {
+func (b APIDocBuilder) generateHandlers() error {
 	var err error
 	switch serviceType(b.app) {
 	case GRPC:
@@ -67,7 +71,44 @@ func (b APIDocBuilder) generateHandlers() (*APIDoc, error) {
 	default:
 		b.log.Debugf("Skipping '%s' as no API type has been tagged", b.app.GetName().GetPart()[0])
 	}
-	return b.doc, err
+	return err
+}
+
+// GrpcUIHandler creates and returns a http handler for a grpcui server
+func (b *APIDocBuilder) buildGrpcHandler() error {
+	ctx := context.Background()
+	dialURL := b.app.GetAttrs()["deploy.prod.url"].GetS()
+	cc, err := buildGrpcClientConnection(ctx, dialURL)
+	if err != nil {
+		b.log.Errorf("Failed to create a gRPC connection to %s", dialURL)
+	}
+	h, err := standalone.HandlerViaReflection(ctx, cc, dialURL)
+	if err != nil {
+		b.log.Infoln("Failed to generate handler via reflection.")
+		return err
+	}
+
+	noTrailingSlash := b.doc.path[:len(b.doc.path)-1]
+	b.doc.handler = http.StripPrefix(noTrailingSlash, h)
+	return nil
+}
+
+func buildGrpcClientConnection(ctx context.Context, dialURL string) (*grpc.ClientConn, error) {
+	var opts []grpc.DialOption
+	creds, err := grpcurl.ClientTransportCredentials(false, "", "", "")
+	if err != nil {
+		return nil, err
+	}
+	cc, err := grpcurl.BlockingDial(ctx, "tcp", dialURL, creds, opts...)
+
+	// If that failed, try an insecure dial
+	if err != nil {
+		cc, err = grpc.DialContext(ctx, dialURL, grpc.WithInsecure())
+		if err != nil {
+			return nil, err
+		}
+	}
+	return cc, nil
 }
 
 func makePath(serviceMethod string, basepath string, serviceName string) string {
