@@ -3,13 +3,13 @@ package main
 import (
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/catalog"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/ui"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-var catalogFields = `
+var uiFields = `
 team,
 team.slack,
 owner.name,
@@ -26,26 +26,26 @@ repo.url,
 docs.url,
 type`
 
-type catalogCmd struct {
+type uiCmd struct {
 	host   string
 	fields string
 	grpcui bool
 }
 
-func (p *catalogCmd) Name() string       { return "catalog" }
-func (p *catalogCmd) MaxSyslModule() int { return 1 }
+func (p *uiCmd) Name() string       { return "ui" }
+func (p *uiCmd) MaxSyslModule() int { return 1 }
 
-func (p *catalogCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Starts the Sysl UI which visually presents your applications.")
+func (p *uiCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
+	cmd := app.Command(p.Name(), "Starts the Sysl UI which displays a visual view of apps defined in Sysl.")
 	cmd.Flag("host", "host and port to serve on").Default(":8080").Short('h').StringVar(&p.host)
-	cmd.Flag("fields", "fields to display on the UI, separated by comma").Default(catalogFields).Short('f').StringVar(&p.fields) //nolint:lll
+	cmd.Flag("fields", "fields to display on the UI, separated by comma").Default(uiFields).Short('f').StringVar(&p.fields) //nolint:lll
 	cmd.Flag("grpcui", "enables the grpcUI handlers").BoolVar(&p.grpcui)
 	return cmd
 }
 
-func (p *catalogCmd) Execute(args cmdutils.ExecuteArgs) error {
-	args.Logger.Debugf("catalog: %+v", *p)
-	syslCatalog := catalog.SyslUI{
+func (p *uiCmd) Execute(args cmdutils.ExecuteArgs) error {
+	args.Logger.Debugf("ui: %+v", *p)
+	syslUI := ui.SyslUI{
 		Host:    p.host,
 		Fields:  strings.Split(p.fields, ","),
 		Fs:      args.Filesystem,
@@ -54,7 +54,7 @@ func (p *catalogCmd) Execute(args cmdutils.ExecuteArgs) error {
 		GRPCUI:  p.grpcui,
 	}
 	args.Logger.SetLevel(logrus.InfoLevel)
-	server, err := syslCatalog.GenerateServer()
+	server, err := syslUI.GenerateServer()
 	if err != nil {
 		return err
 	}

@@ -1,8 +1,8 @@
-// Package catalog takes a sysl module with attributes defined (catalogFields)
+// Package ui takes a sysl module with attributes defined (uiFields)
 // and serves a webserver listing the applications and endpoints
 // It also uses GRPCUI and Redoc in order to generate an interactive page to interact with all the endpoints
 // GRPC currently uses server reflection TODO: Support gpcui directly from swagger files
-package catalog
+package ui
 
 import (
 	"encoding/json"
@@ -19,9 +19,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
-// Server to set context of catalog
-// Todo: Simplify this
-
+// SyslUI holds the config options passed into the command
 type SyslUI struct {
 	Fs       afero.Fs       // Required
 	Log      *logrus.Logger // Required
@@ -130,7 +128,7 @@ func MakeServer(docHandlers map[string]*http.Handler, apiDocs []*APIDoc, service
 	}
 }
 
-// Serve Runs the command and runs a webserver on catalogURL of a list of endpoints in the sysl file
+// Serve starts up a webserver that documents the apps and endpoints documented in the sysl file
 func (s *Server) Serve() error {
 	s.log.Infof("Serving Sysl UI at : %s", s.host)
 	log.Fatal(http.ListenAndServe(s.host, s))

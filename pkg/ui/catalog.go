@@ -1,8 +1,8 @@
-// Package catalog takes a sysl module with attributes defined (catalogFields)
+// Package ui takes a sysl module with attributes defined (uiFields)
 // and serves a webserver listing the applications and endpoints
 // It also uses gRPC UI and Redoc in order to generate an interactive page to interact with all the endpoints
 // gRPC currently uses server reflection TODO: Support gpcui directly from proto files
-package catalog
+package ui
 
 import (
 	"context"

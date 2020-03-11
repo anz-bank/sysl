@@ -1,4 +1,4 @@
-package catalog
+package ui
 
 import (
 	"github.com/anz-bank/sysl/pkg/sysl"

@@ -1,4 +1,4 @@
-package catalog
+package ui
 
 import (
 	"testing"
@@ -11,7 +11,7 @@ import (
 
 const testDir = "../../tests/"
 
-var filenames = []string{"grpc_catalog.sysl", "rest_catalog.sysl"}
+var filenames = []string{"ui_grpc.sysl", "ui_rest.sysl"}
 var testAppNames = []string{"Greeter", "example"}
 var testAppAttrKeys = []string{"owner", "owner"}
 var testAppAttrVals = []string{"foo", "josh"}

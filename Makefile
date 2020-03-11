@@ -58,10 +58,10 @@ build: ## Build sysl into the ./dist folder
 resources:
 	cd ui && npm run build
 	pkger
-	mv pkged.go pkg/catalog/pkged.go
-	## Replaces the package declaration 'main' with'catalog' due to bug in pkger
+	mv pkged.go pkg/ui/pkged.go
+	## Replaces the package declaration 'main' with'ui' due to bug in pkger
 	## Remove once https://github.com/markbates/pkger/pull/67 has been merged in
-	sed -i '' 's/main/catalog/' pkg/catalog/pkged.go
+	sed -i '' 's/main/ui/' pkg/ui/pkged.go
 
 deps: ## Download the project dependencies with `go get`
 	go mod tidy

@@ -1,4 +1,4 @@
-package catalog
+package ui
 
 import (
 	"net/http"
@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/afero"
 )
 
-var catalogFields = `
+var uiFields = `
 team,
 team.slack,
 owner.name,
@@ -31,7 +31,7 @@ docs.url,
 type`
 
 func TestGenerateServer(t *testing.T) {
-	module, err := parse.NewParser().Parse("rest_catalog.sysl",
+	module, err := parse.NewParser().Parse("ui_rest.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), "../../tests/"))
 	if err != nil {
 		t.Errorf("Error parsing test modules %s", err)
@@ -39,15 +39,15 @@ func TestGenerateServer(t *testing.T) {
 
 	modules := []*sysl.Module{module}
 
-	syslCatalog := SyslUI{
+	syslUi := SyslUI{
 		Host:    "localhost:8080",
-		Fields:  strings.Split(catalogFields, ","),
+		Fields:  strings.Split(uiFields, ","),
 		Fs:      afero.NewOsFs(),
 		Log:     logrus.New(),
 		Modules: modules,
 	}
 
-	server, err := syslCatalog.GenerateServer()
+	server, err := syslUi.GenerateServer()
 	if err != nil {
 		t.Errorf("Error generating server %s", err)
 	}
@@ -65,15 +65,15 @@ func TestGenerateServer(t *testing.T) {
 func TestGenerateServerHandlesEmptyArray(t *testing.T) {
 	modules := []*sysl.Module{}
 
-	syslCatalog := SyslUI{
+	syslUi := SyslUI{
 		Host:    "localhost:8080",
-		Fields:  strings.Split(catalogFields, ","),
+		Fields:  strings.Split(uiFields, ","),
 		Fs:      afero.NewOsFs(),
 		Log:     logrus.New(),
 		Modules: modules,
 	}
 
-	_, err := syslCatalog.GenerateServer()
+	_, err := syslUi.GenerateServer()
 
 	if err == nil {
 		t.Error("Empty input array not caught")

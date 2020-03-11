@@ -1,4 +1,4 @@
-package catalog
+package ui
 
 import (
 	"testing"
@@ -7,13 +7,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var catalogTestFiles = []string{"grpc_catalog.sysl", "rest_catalog.sysl"}
-var catalogTestAppNames = []string{"Greeter", "example"}
-var catalogTestPaths = []string{"/grpc/Greeter/", "/rest/example"}
+var uiTestFiles = []string{"ui_grpc.sysl", "ui_rest.sysl"}
+var uiTestAppNames = []string{"Greeter", "example"}
+var uiTestPaths = []string{"/grpc/Greeter/", "/rest/example"}
 
 func TestMakeAPIDocBuilder(t *testing.T) {
 	var apps []*sysl.Application
-	for _, filename := range catalogTestFiles {
+	for _, filename := range uiTestFiles {
 		appImports, err := importAppsFromFile(filename)
 		if err != nil {
 			t.Error("Failed to import webservice file")
@@ -29,15 +29,15 @@ func TestMakeAPIDocBuilder(t *testing.T) {
 			t.Error("Failed to build API Doc")
 		}
 
-		if newDoc.name != catalogTestAppNames[index] {
-			t.Errorf("Incorrect AppName, expected:%s got:%s", catalogTestAppNames[index], newDoc.name)
+		if newDoc.name != uiTestAppNames[index] {
+			t.Errorf("Incorrect AppName, expected:%s got:%s", uiTestAppNames[index], newDoc.name)
 		}
 	}
 }
 
 func TestBuildAPIDoc(t *testing.T) {
 	var apps []*sysl.Application
-	for _, filename := range catalogTestFiles {
+	for _, filename := range uiTestFiles {
 		appImports, err := importAppsFromFile(filename)
 		if err != nil {
 			t.Error("Failed to import webservice file")
@@ -53,14 +53,14 @@ func TestBuildAPIDoc(t *testing.T) {
 			t.Error("Failed to build API Doc")
 		}
 
-		if newDoc.path != catalogTestPaths[index] {
-			t.Errorf("Incorrect path, expected:%s got:%s", catalogTestPaths[index], newDoc.path)
+		if newDoc.path != uiTestPaths[index] {
+			t.Errorf("Incorrect path, expected:%s got:%s", uiTestPaths[index], newDoc.path)
 		}
 	}
 }
 
 func TestBuildAPIDocWithInaccessibleGRPC(t *testing.T) {
-	app, err := importAppsFromFile(catalogTestFiles[0])
+	app, err := importAppsFromFile(uiTestFiles[0])
 	if err != nil {
 		t.Error("Failed to import webservice file")
 	}
