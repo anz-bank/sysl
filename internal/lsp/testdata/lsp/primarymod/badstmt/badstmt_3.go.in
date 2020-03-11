@@ -1,0 +1,9 @@
+package badstmt
+
+import (
+	"github.com/anz-bank/sysl/internal/lsp/foo"
+)
+
+func _() {
+	go foo. //@complete(" //", Foo, IntFoo, StructFoo)
+}
