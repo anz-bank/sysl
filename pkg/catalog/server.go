@@ -28,6 +28,7 @@ type SyslUI struct {
 	Modules  []*sysl.Module // Required
 	Fields   []string       // Required
 	Host     string         // Required
+	GRPCUI   bool
 	BasePath string
 }
 
@@ -66,7 +67,7 @@ func (s *SyslUI) buildAPIDocs(apps []*sysl.Application) []*APIDoc {
 			continue
 		}
 
-		b := MakeAPIDocBuilder(a, s.Log)
+		b := MakeAPIDocBuilder(a, s.Log, s.GRPCUI)
 		newDoc, err := b.BuildAPIDoc()
 		if err != nil {
 			s.Log.Errorf("Error importing %s", a.GetName().GetPart()[0])

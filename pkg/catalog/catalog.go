@@ -30,15 +30,17 @@ func (a *APIDoc) GetHandler() http.Handler {
 }
 
 type APIDocBuilder struct {
-	app *sysl.Application
-	doc *APIDoc
-	log *logrus.Logger
+	app    *sysl.Application
+	doc    *APIDoc
+	log    *logrus.Logger
+	grpcui bool
 }
 
-func MakeAPIDocBuilder(app *sysl.Application, log *logrus.Logger) *APIDocBuilder {
+func MakeAPIDocBuilder(app *sysl.Application, log *logrus.Logger, grpcui bool) *APIDocBuilder {
 	return &APIDocBuilder{
-		app: app,
-		log: log,
+		app:    app,
+		log:    log,
+		grpcui: grpcui,
 	}
 }
 
@@ -76,6 +78,10 @@ func (b APIDocBuilder) generateHandlers() error {
 
 // GrpcUIHandler creates and returns a http handler for a grpcui server
 func (b *APIDocBuilder) buildGrpcHandler() error {
+	if !b.grpcui {
+		b.log.Infoln("Skipping grpc handler")
+		return nil
+	}
 	ctx := context.Background()
 	dialURL := b.app.GetAttrs()["deploy.prod.url"].GetS()
 	cc, err := buildGrpcClientConnection(ctx, dialURL)

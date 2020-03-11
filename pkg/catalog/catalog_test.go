@@ -7,9 +7,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var catalogTestFiles = []string{"rest_catalog.sysl"}
-var catalogTestAppNames = []string{"example"}
-var catalogTestPaths = []string{"/rest/example"}
+var catalogTestFiles = []string{"grpc_catalog.sysl", "rest_catalog.sysl"}
+var catalogTestAppNames = []string{"Greeter", "example"}
+var catalogTestPaths = []string{"/grpc/Greeter/", "/rest/example"}
 
 func TestMakeAPIDocBuilder(t *testing.T) {
 	var apps []*sysl.Application
@@ -22,7 +22,7 @@ func TestMakeAPIDocBuilder(t *testing.T) {
 	}
 
 	for index, app := range apps {
-		builder := MakeAPIDocBuilder(app, logrus.New())
+		builder := MakeAPIDocBuilder(app, logrus.New(), false)
 		newDoc, err := builder.BuildAPIDoc()
 
 		if err != nil {
@@ -46,7 +46,7 @@ func TestBuildAPIDoc(t *testing.T) {
 	}
 
 	for index, app := range apps {
-		builder := MakeAPIDocBuilder(app, &logrus.Logger{})
+		builder := MakeAPIDocBuilder(app, &logrus.Logger{}, false)
 		newDoc, err := builder.BuildAPIDoc()
 
 		if err != nil {
@@ -54,7 +54,7 @@ func TestBuildAPIDoc(t *testing.T) {
 		}
 
 		if newDoc.path != catalogTestPaths[index] {
-			t.Errorf("Incorrect path, expected:%s got:%s", catalogTestAppNames[index], newDoc.name)
+			t.Errorf("Incorrect path, expected:%s got:%s", catalogTestPaths[index], newDoc.path)
 		}
 	}
 }

@@ -29,6 +29,7 @@ type`
 type catalogCmd struct {
 	host   string
 	fields string
+	grpcui bool
 }
 
 func (p *catalogCmd) Name() string       { return "catalog" }
@@ -38,6 +39,7 @@ func (p *catalogCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Starts the Sysl UI which visually presents your applications.")
 	cmd.Flag("host", "host and port to serve on").Default(":8080").Short('h').StringVar(&p.host)
 	cmd.Flag("fields", "fields to display on the UI, separated by comma").Default(catalogFields).Short('f').StringVar(&p.fields) //nolint:lll
+	cmd.Flag("grpcui", "enables the grpcUI handlers").BoolVar(&p.grpcui)
 	return cmd
 }
 
@@ -49,6 +51,7 @@ func (p *catalogCmd) Execute(args cmdutils.ExecuteArgs) error {
 		Fs:      args.Filesystem,
 		Log:     args.Logger,
 		Modules: args.Modules,
+		GRPCUI:  p.grpcui,
 	}
 	args.Logger.SetLevel(logrus.InfoLevel)
 	server, err := syslCatalog.GenerateServer()
