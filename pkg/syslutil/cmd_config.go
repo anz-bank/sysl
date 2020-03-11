@@ -13,12 +13,19 @@ func ReadCMDFlags(configPath string) ([]string, error) {
 	if ferr != nil {
 		return nil, ferr
 	}
-	// re := regexp.MustCompile(`(\S+"[^"]+")|\S+`)
-	re := regexp.MustCompile(`(-+[^=\s\n]+)?((=?"[^=\n"]+")|(=?[^=\s\n]+))?\s*`)
+
+	re := regexp.MustCompile(`(-+[^=\s\n]+)?((=?"[^=\n]+")|(=?[^=\s\n]+))?\s*`)
 	flags := re.FindAllString(strings.TrimSpace(string(data)), -1)
 
 	for i, flag := range flags {
-		flags[i] = strings.TrimSpace(flag)
+		newFlag := strings.TrimSpace(flag)
+		start := strings.Index(newFlag, "=")
+		if newFlag[start+1] == '"' && newFlag[len(newFlag)-1] == '"' {
+			// flag value matches pattern `=?"[^=\n"]+"`, it looks like --app-name="Test App"
+			flags[i] = flag[0:start+1] + flag[start+2:len(newFlag)-1]
+		} else {
+			flags[i] = newFlag
+		}
 	}
 
 	return flags, nil
