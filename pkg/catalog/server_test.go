@@ -56,10 +56,10 @@ func TestGenerateServer(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/rest/spec/example", nil)
 	w := httptest.NewRecorder()
 	server.handleRestSpec(w, req)
+	//nolint:bodyclose
 	if w.Result().StatusCode != 200 {
 		t.Errorf("Not returning 200")
 	}
-	w.Flush()
 }
 
 func TestGenerateServerHandlesEmptyArray(t *testing.T) {
