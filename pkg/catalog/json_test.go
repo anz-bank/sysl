@@ -20,7 +20,7 @@ func TestImport(t *testing.T) {
 	var apps []*sysl.Application
 
 	for _, filename := range filenames {
-		appImports, err := importWebserviceFromFile(filename)
+		appImports, err := importAppsFromFile(filename)
 		if err != nil {
 			t.Error("Failed to import webservice file")
 		}
@@ -43,7 +43,7 @@ func TestImport(t *testing.T) {
 	}
 }
 
-func importWebserviceFromFile(filename string) ([]*sysl.Application, error) {
+func importAppsFromFile(filename string) ([]*sysl.Application, error) {
 	var apps []*sysl.Application
 	module, err := parse.NewParser().Parse(filename,
 		syslutil.NewChrootFs(afero.NewOsFs(), testDir))

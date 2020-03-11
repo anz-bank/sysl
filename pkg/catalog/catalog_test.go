@@ -14,7 +14,7 @@ var catalogTestPaths = []string{"/grpc/Greeter/", "/rest/example"}
 func TestMakeAPIDocBuilder(t *testing.T) {
 	var apps []*sysl.Application
 	for _, filename := range catalogTestFiles {
-		appImports, err := importWebserviceFromFile(filename)
+		appImports, err := importAppsFromFile(filename)
 		if err != nil {
 			t.Error("Failed to import webservice file")
 		}
@@ -38,7 +38,7 @@ func TestMakeAPIDocBuilder(t *testing.T) {
 func TestBuildAPIDoc(t *testing.T) {
 	var apps []*sysl.Application
 	for _, filename := range catalogTestFiles {
-		appImports, err := importWebserviceFromFile(filename)
+		appImports, err := importAppsFromFile(filename)
 		if err != nil {
 			t.Error("Failed to import webservice file")
 		}
@@ -56,5 +56,18 @@ func TestBuildAPIDoc(t *testing.T) {
 		if newDoc.path != catalogTestPaths[index] {
 			t.Errorf("Incorrect path, expected:%s got:%s", catalogTestPaths[index], newDoc.path)
 		}
+	}
+}
+
+func TestBuildAPIDocWithInaccessibleGRPC(t *testing.T) {
+	app, err := importAppsFromFile(catalogTestFiles[0])
+	if err != nil {
+		t.Error("Failed to import webservice file")
+	}
+
+	builder := MakeAPIDocBuilder(app[0], &logrus.Logger{}, true)
+	_, err = builder.BuildAPIDoc()
+	if err == nil {
+		t.Errorf("Error not raised for nonexistent grpc URL")
 	}
 }

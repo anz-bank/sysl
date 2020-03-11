@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/fullstorydev/grpcui/standalone"
@@ -82,20 +83,23 @@ func (b *APIDocBuilder) buildGrpcHandler() error {
 		b.log.Infoln("Skipping grpc handler")
 		return nil
 	}
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*200)
+	defer cancel()
 	dialURL := b.app.GetAttrs()["deploy.prod.url"].GetS()
 	cc, err := buildGrpcClientConnection(ctx, dialURL)
 	if err != nil {
 		b.log.Errorf("Failed to create a gRPC connection to %s", dialURL)
+		return err
 	}
 	h, err := standalone.HandlerViaReflection(ctx, cc, dialURL)
 	if err != nil {
-		b.log.Infoln("Failed to generate handler via reflection.")
+		b.log.Errorf("Failed to generate handler via reflection.")
 		return err
 	}
 
 	noTrailingSlash := b.doc.path[:len(b.doc.path)-1]
 	b.doc.handler = http.StripPrefix(noTrailingSlash, h)
+
 	return nil
 }
 
