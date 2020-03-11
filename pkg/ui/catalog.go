@@ -26,10 +26,6 @@ type APIDoc struct {
 	path    string       // URL Path where the API documentation will be served
 }
 
-func (a *APIDoc) GetHandler() http.Handler {
-	return a.handler
-}
-
 type APIDocBuilder struct {
 	app    *sysl.Application
 	doc    *APIDoc
@@ -83,7 +79,7 @@ func (b *APIDocBuilder) buildGrpcHandler() error {
 		b.log.Infoln("Skipping grpc handler")
 		return nil
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*200)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*2000)
 	defer cancel()
 	dialURL := b.app.GetAttrs()["deploy.prod.url"].GetS()
 	cc, err := buildGrpcClientConnection(ctx, dialURL)
