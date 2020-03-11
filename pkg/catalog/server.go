@@ -148,8 +148,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) routes() error {
 	s.router.HandleFunc("/rest/spec/{service}", s.handleRestSpec)
-	s.router.PathPrefix("/grpc/{service}").HandlerFunc(s.handleGrpcService)
-	s.router.HandleFunc("/rest/{service}", s.handleRestService)
+	s.router.PathPrefix("/grpc/{service}").HandlerFunc(s.handleAPIDoc)
+	s.router.HandleFunc("/rest/{service}", s.handleAPIDoc)
 	s.router.HandleFunc("/data/services.json", s.handleJSONServices)
 	s.router.PathPrefix("/").Handler(s.spaHandler)
 
@@ -171,24 +171,13 @@ func (s *Server) handleRestSpec(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) handleRestService(w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleAPIDoc(w http.ResponseWriter, r *http.Request) {
 	serviceName := mux.Vars(r)["service"]
 	serviceHandler, ok := s.docHandlers[serviceName]
 	if !ok {
 		s.log.Error("Handler not found")
 		return
 	}
-	(*serviceHandler).ServeHTTP(w, r)
-}
-
-func (s *Server) handleGrpcService(w http.ResponseWriter, r *http.Request) {
-	serviceName := mux.Vars(r)["service"]
-	serviceHandler, ok := s.docHandlers[serviceName]
-	if !ok {
-		s.log.Error("Handler not found")
-		return
-	}
-
 	(*serviceHandler).ServeHTTP(w, r)
 }
 

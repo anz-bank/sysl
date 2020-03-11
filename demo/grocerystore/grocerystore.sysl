@@ -25,9 +25,6 @@ GroceryStore [package="GroceryStore", ~rest]:
         item_id <: string[~body]:
             @json_tag = "item_id"
             @rpcId = "2"
-        operation <: Operation:
-            @json_tag = "operation"
-            @rpcId = "3"
         cart_id <: string:
             @json_tag = "cart_id"
             @rpcId = "4"
@@ -54,7 +51,9 @@ GroceryStore [package="GroceryStore", ~rest]:
             return CartResponse
 
     /checkout:
-        POST: 
+        POST?payment_info=string: 
+            Payment <- POST /validate{payment_info}
+            Payment <- POST /pay
             | Checks out the specified cart
             return ok <: string
 
@@ -98,10 +97,9 @@ Payment[package="Payment", ~rest]:
             @rpcId = "2"
 
     /validate:
-        
-            POST?payment_info=string:
-                | Validates payment information
-                return 200
+        POST?payment_info=string:
+            | Validates payment information
+            return 200 <: string>
 
     /pay:
         POST:
