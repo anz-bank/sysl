@@ -28,7 +28,6 @@ func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path, err := filepath.Abs(r.URL.Path)
 	if err != nil {
 		// if we failed to get the absolute path respond with a 400 bad request
-		// and stop
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
