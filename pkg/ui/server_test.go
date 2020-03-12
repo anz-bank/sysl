@@ -79,3 +79,24 @@ func TestGenerateServerHandlesEmptyArray(t *testing.T) {
 		t.Error("Empty input array not caught")
 	}
 }
+
+// func TestServerSetupRuns(t *testing.T) {
+// 	modules := []*sysl.Module{}
+
+// 	syslUi := SyslUI{
+// 		Host:    "localhost:8080",
+// 		Fields:  strings.Split(uiFields, ","),
+// 		Fs:      afero.NewOsFs(),
+// 		Log:     logrus.New(),
+// 		Modules: modules,
+// 	}
+
+// 	server, err := syslUi.GenerateServer()
+
+// 	if err == nil {
+// 		t.Errorf("Error generating server %s", err)
+// 	}
+
+// 	err = server.Setup()
+
+// }

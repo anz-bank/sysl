@@ -7,7 +7,6 @@ package ui
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/gorilla/mux"
 	"github.com/markbates/pkger"
@@ -131,7 +130,12 @@ func MakeServer(docHandlers map[string]*http.Handler, apiDocs []*APIDoc, service
 // Serve starts up a webserver that documents the apps and endpoints documented in the sysl file
 func (s *Server) Serve() error {
 	s.log.Infof("Serving Sysl UI at : %s", s.host)
-	log.Fatal(http.ListenAndServe(s.host, s))
+	err := http.ListenAndServe(s.host, s)
+	if err != nil {
+		s.log.Fatal(err)
+		return err
+	}
+
 	return nil
 }
 
