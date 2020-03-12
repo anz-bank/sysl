@@ -12,8 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
-import { faSlack, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
+import { faSlack, faGithub, faConfluence } from "@fortawesome/free-brands-svg-icons";
 
 const getFullName = nameParts => {
   return nameParts;
@@ -54,16 +54,16 @@ function getSorting(order, orderBy) {
 
 const headCells = [
   { id: "name", numeric: false, disablePadding: false, label: "Service" },
-  { id: "prod", numeric: true, disablePadding: false, label: "Prod" },
-  { id: "owner", numeric: true, disablePadding: false, label: "Owner" },
+  { id: "type", numeric: true, disablePadding: false, label: "Type" },
   {
     id: "description",
     numeric: true,
     disablePadding: false,
     label: "Description"
   },
-  { id: "type", numeric: true, disablePadding: false, label: "Type" },
   { id: "version", numeric: true, disablePadding: false, label: "Version" },
+  { id: "owner", numeric: true, disablePadding: false, label: "Owner" }, 
+  { id: "env", numeric: true, disablePadding: false, label: "Environments" },
   { id: "link", numeric: true, disablePadding: false, label: "Link" }
 ];
 
@@ -234,28 +234,29 @@ function ServiceListView(props) {
                         {getFullName(row.Name)}
                       </TableCell>
                       <TableCell align="right">
+                        {row.Type}
+                      </TableCell>
+                      <TableCell align="right">
+                        {getAttribute(row, "description")}
+                      </TableCell>
+                      <TableCell align="right">
+                        {getAttribute(row, "version")}
+                      </TableCell>
+                      <TableCell align="right">
+                        {getAttribute(row, "owner.name")}
+                      </TableCell>
+                      <TableCell align="right">
                         <a href={window.location.origin + row.Path}>
                           <IconButton>
                             <FontAwesomeIcon icon={faCheckSquare} />
                           </IconButton>
                         </a>
                       </TableCell>
-                      <TableCell align="right">
-                        {getAttribute(row, "owner.name")}
-                      </TableCell>
-                      <TableCell align="right">
-                        {getAttribute(row, "description")}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.Type}
-                      </TableCell>
-                      <TableCell align="right">
-                        {getAttribute(row, "version")}
-                      </TableCell>
+
                       <TableCell align="right">
                         <a href={getAttribute(row, "docs.url")}>
                           <IconButton>
-                            <FontAwesomeIcon icon={faBook} />
+                            <FontAwesomeIcon icon={faConfluence} />
                           </IconButton>
                         </a>
                         <a href={getAttribute(row, "team.slack")}>
