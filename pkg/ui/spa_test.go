@@ -15,9 +15,7 @@ func TestSpaHandler(t *testing.T) {
 	handler := spaHandler{staticPath: "/ui/build", indexPath: "/ui/build/index.html"}
 	handler.ServeHTTP(w, req)
 	//nolint:bodyclose
-	if w.Result().StatusCode != 200 {
-		t.Errorf("Not returning 200")
-	}
+	assert.Equal(t, 200, w.Result().StatusCode, "expected to return 200")
 }
 
 func TestSpaHandlerNonExistent(t *testing.T) {
@@ -27,5 +25,5 @@ func TestSpaHandlerNonExistent(t *testing.T) {
 	handler := spaHandler{staticPath: "/ui/build", indexPath: "/ui/build/index.html"}
 	handler.ServeHTTP(w, req)
 	//nolint:bodyclose
-	assert.Equal(t, 500, w.Result().StatusCode, "expected status code to be equal")
+	assert.Equal(t, 500, w.Result().StatusCode, "expected status code to be 500")
 }
