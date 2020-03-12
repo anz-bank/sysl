@@ -17,6 +17,24 @@ import (
 type spaHandler struct {
 	staticPath string
 	indexPath  string
+	fileSystem fileSystem
+}
+
+// fileSystem abstracts away the filesystem implementation for better testing
+type fileSystem interface {
+	Stat(name string) (os.FileInfo, error)
+	Dir(name string) http.FileSystem
+}
+
+// pkgerFS implements the fileSystem interface and wraps calls to pkger
+type pkgerFS struct{}
+
+func (f pkgerFS) Stat(name string) (os.FileInfo, error) {
+	return pkger.Stat(name)
+}
+
+func (f pkgerFS) Dir(name string) http.FileSystem {
+	return pkger.Dir(name)
 }
 
 // ServeHTTP inspects the URL path to locate a file within the static dir
@@ -33,13 +51,13 @@ func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// prepend the path with the path to the static directory
-	path = filepath.FromSlash(filepath.Join(h.staticPath, path))
+	path = filepath.Join(h.staticPath, path)
 
 	// check whether a file exists at the given path
-	_, err = pkger.Stat(path)
+	_, err = h.fileSystem.Stat(path)
 	if os.IsNotExist(err) {
 		// file does not exist, serve index.html
-		http.FileServer(pkger.Dir(path)).ServeHTTP(w, r)
+		http.FileServer(h.fileSystem.Dir(h.indexPath)).ServeHTTP(w, r)
 		return
 	} else if err != nil {
 		// if we got an error (that wasn't that the file doesn't exist) stating the
@@ -49,5 +67,5 @@ func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// otherwise, use http.FileServer to serve the static dir
-	http.FileServer(pkger.Dir(h.staticPath)).ServeHTTP(w, r)
+	http.FileServer(h.fileSystem.Dir(h.staticPath)).ServeHTTP(w, r)
 }

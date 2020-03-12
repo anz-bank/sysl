@@ -118,7 +118,7 @@ type Server struct {
 func MakeServer(docHandlers map[string]*http.Handler, apiDocs []*APIDoc, serviceJSON []byte, log *logrus.Logger, host string) *Server {
 	return &Server{
 		docHandlers: docHandlers,
-		spaHandler:  spaHandler{staticPath: "/ui/build", indexPath: "/ui/build/index.html"},
+		spaHandler:  spaHandler{staticPath: "/ui/build", indexPath: "/ui/build/index.html", fileSystem: pkgerFS{}},
 		serviceJSON: serviceJSON,
 		apiDocs:     apiDocs,
 		router:      mux.NewRouter(),
