@@ -4,7 +4,7 @@ GroceryStore [package="GroceryStore", ~rest]:
     @repo.url = "https://github.com/anz-bank/sysl"
     @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
     @description =:
-        | The Grocery Store API lets users browse the items available for purchase and lets users purchase their groceries.
+        | The Grocery Store API lets users shop for groceries.
     @version = "1.0.0"
     !type InventoryResponse[json_map_key="item_id"]:
         item_id <: string:
@@ -54,7 +54,7 @@ GroceryStore [package="GroceryStore", ~rest]:
 
     /checkout:
         POST?payment_info=string: 
-            Payment <- POST /validate{payment_info}
+            Payment <- POST /validate
             Payment <- POST /pay
             | Checks out the specified cart
             return ok <: string
@@ -65,6 +65,9 @@ Inventory[package="InventoryService", ~rest]:
     @team.slack = "https://slack.com/intl/en-au/"
     @repo.url = "https://github.com/anz-bank/sysl"
     @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
+    @description =:
+        | The Inventory API gives information on items available for purchase.
+
     /inventory:
         GET:
             | Returns a list of available items for purchase 
@@ -76,6 +79,8 @@ Cart[package="InventoryService", ~rest]:
     @team.slack = "https://slack.com/intl/en-au/"
     @repo.url = "https://github.com/anz-bank/sysl"
     @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
+    @description =:
+        | The Cart API lets users add and remove items from their cart.
     /cart:
         GET:
             | Returns a list of items in the specified cart
@@ -98,6 +103,8 @@ Payment[package="Payment", ~rest]:
     @team.slack = "https://slack.com/intl/en-au/"
     @repo.url = "https://github.com/anz-bank/sysl"
     @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
+    @description =:
+        | The Payment API processes payments.
     !type PaymentInfo:
         credit_card_number <: string:
             @json_tag = "credit_card_number"
@@ -110,7 +117,7 @@ Payment[package="Payment", ~rest]:
     /validate:
         POST?payment_info=string:
             | Validates payment information
-            return 200 <: string>
+            return 200 <: string
 
     /pay:
         POST:
