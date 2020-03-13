@@ -386,12 +386,17 @@ alias: ALIAS name_str attribs_or_modifiers? COLON (
         | (INDENT annotation* (types | collection_type) DEDENT)
         );
 
+enumeration: Name COLON DIGITS;
+enum_stmts : INDENT (enumeration | WHATEVER)+ DEDENT;
+enum       : ENUM Name attribs_or_modifiers? COLON (WHATEVER | enum_stmts);
+
 app_decl
   locals [bool check]:
     INDENT  (
         alias
         | annotation
         | collector
+        | enum
         | event
         | facade
         | mixin

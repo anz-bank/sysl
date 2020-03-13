@@ -1,4 +1,4 @@
-// Code generated from pkg/grammar/SyslParser.g4 by ANTLR 4.8. DO NOT EDIT.
+// Generated from pkg/grammar/SyslParser.g4 by ANTLR 4.7.
 
 package parser // SyslParser
 
@@ -478,7 +478,8 @@ func (s *BaseSyslParserListener) EnterCollector_call_stmt(ctx *Collector_call_st
 func (s *BaseSyslParserListener) ExitCollector_call_stmt(ctx *Collector_call_stmtContext) {}
 
 // EnterCollector_http_stmt_part is called when production collector_http_stmt_part is entered.
-func (s *BaseSyslParserListener) EnterCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {}
+func (s *BaseSyslParserListener) EnterCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {
+}
 
 // ExitCollector_http_stmt_part is called when production collector_http_stmt_part is exited.
 func (s *BaseSyslParserListener) ExitCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {}
@@ -1048,6 +1049,24 @@ func (s *BaseSyslParserListener) EnterAlias(ctx *AliasContext) {}
 
 // ExitAlias is called when production alias is exited.
 func (s *BaseSyslParserListener) ExitAlias(ctx *AliasContext) {}
+
+// EnterEnumeration is called when production enumeration is entered.
+func (s *BaseSyslParserListener) EnterEnumeration(ctx *EnumerationContext) {}
+
+// ExitEnumeration is called when production enumeration is exited.
+func (s *BaseSyslParserListener) ExitEnumeration(ctx *EnumerationContext) {}
+
+// EnterEnum_stmts is called when production enum_stmts is entered.
+func (s *BaseSyslParserListener) EnterEnum_stmts(ctx *Enum_stmtsContext) {}
+
+// ExitEnum_stmts is called when production enum_stmts is exited.
+func (s *BaseSyslParserListener) ExitEnum_stmts(ctx *Enum_stmtsContext) {}
+
+// EnterEnum is called when production enum is entered.
+func (s *BaseSyslParserListener) EnterEnum(ctx *EnumContext) {}
+
+// ExitEnum is called when production enum is exited.
+func (s *BaseSyslParserListener) ExitEnum(ctx *EnumContext) {}
 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *BaseSyslParserListener) EnterApp_decl(ctx *App_declContext) {}

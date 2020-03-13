@@ -108,6 +108,31 @@ Notes about sysl syntax:
 * Refer to the newly defined type by its fully qualified name. e.g.
   `Server.LoginData`.
 
+#### Enumerations
+
+You can define an enumeration using the `!enum` syntax to give a name to an
+enumeration type and list the enumerated names and their values. For example:
+
+```
+Server:
+  Login (request <: Server.LoginData):
+    return Server.Code
+
+  !enum Code:
+    success: 1
+    invalid: 2
+    tooManyAttempts: 3
+
+  !type LoginData: ...
+```
+
+An enumeration is a type and can be referenced in the same way that other types
+are referenced else where in a sysl specification.
+
+NOTE: The syntax for enumerations will likely change from `name: value` to
+`name = value` in future. Limitations in the current parser prevent the second
+form from parsing.
+
 #### Data Types
 
 Sysl supports following data types out of the box.
