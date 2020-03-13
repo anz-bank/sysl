@@ -2,3 +2,4 @@ ignore:
   - pkg/sysl_js/SyslLexer.js
   - pkg/sysl_js/SyslParser.js
   - pkg/sysl_js/SyslParserListener.js
+  - pkg/ui/pkged.go
