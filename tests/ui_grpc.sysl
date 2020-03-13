@@ -1,0 +1,4 @@
+Greeter[~grpc]:
+    @deploy.prod.url = "localhost:501"
+    @owner = "foo"
+    @email = "foobar@gmail.com"

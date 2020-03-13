@@ -1,0 +1,125 @@
+GroceryStore [package="GroceryStore", ~rest]:
+    @owner.name = "Eddard Stark"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
+    @description =:
+        | The Grocery Store API lets users shop for groceries.
+    @version = "1.0.0"
+    !type InventoryResponse[json_map_key="item_id"]:
+        item_id <: string:
+            @json_tag = "item_id"
+        quantity <: int:
+            @json_tag = "quantity"
+
+    !type CartRequest:
+        item_id <: string:
+            @json_tag = "item_id"
+            @rpcId = "5"
+        cart_id <: string:
+            @json_tag = "cart_id"
+            @rpcId = "6"
+
+    !type CartResponse:
+        transaction_id <: string[~header]:
+            @json_tag = "transaction_id"
+            @rpcId = "1"
+        item_id <: string[~body]:
+            @json_tag = "item_id"
+            @rpcId = "2"
+        cart_id <: string:
+            @json_tag = "cart_id"
+            @rpcId = "4"
+
+    /inventory:
+        GET(fooid <: string [~header, ~required, name="FooID"]):
+            | Returns a list of items in the inventory
+            Inventory <- GET /inventory
+            return sequence of InventoryResponse
+
+
+    /cart:
+        GET:
+            | Adds the specified item to the cart
+            Cart <- GET /cart
+            return CartResponse
+        POST:
+            | Adds the specified item to the cart
+            Cart <- POST /cart
+            return CartResponse
+        DELETE:
+            | Removes the specified item from the cart
+            Cart <- DELETE /cart
+            return CartResponse
+
+    /checkout:
+        POST?payment_info=string: 
+            Payment <- POST /validate
+            Payment <- POST /pay
+            | Checks out the specified cart
+            return ok <: string
+
+Inventory[package="InventoryService", ~rest]:
+    @version = "1.0.0"
+    @owner.name = "Jon Snow"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
+    @description =:
+        | The Inventory API gives information on items available for purchase.
+
+    /inventory:
+        GET:
+            | Returns a list of available items for purchase 
+            return ok <: string
+
+Cart[package="InventoryService", ~rest]:
+    @owner.name = "Sam Tarwell"
+    @version = "1.0.0"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
+    @description =:
+        | The Cart API lets users add and remove items from their cart.
+    /cart:
+        GET:
+            | Returns a list of items in the specified cart
+            return ok <: string
+        POST:
+            | Updates the cart with the specified item
+            return ok <: string
+        DELETE:
+            | Removes the specified item from the cart
+            return ok <: string
+
+    /checkout:
+        POST:
+            | Checks out the specified cart
+            return ok <: string
+
+Payment[package="Payment", ~rest]:
+    @owner.name = "Arya Stark"
+    @version = "1.0.0"
+    @team.slack = "https://slack.com/intl/en-au/"
+    @repo.url = "https://github.com/anz-bank/sysl"
+    @docs.url = "https://en.wikipedia.org/wiki/Grocery_store"
+    @description =:
+        | The Payment API processes payments.
+    !type PaymentInfo:
+        credit_card_number <: string:
+            @json_tag = "credit_card_number"
+            @sensitive="true"
+            @rpcId = "1"
+        type <: string:
+            @json_tag = "type"
+            @rpcId = "2"
+
+    /validate:
+        POST?payment_info=string:
+            | Validates payment information
+            return 200 <: string
+
+    /pay:
+        POST:
+            | Processes a payment
+            return ok <: string
