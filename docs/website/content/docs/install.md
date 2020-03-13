@@ -92,3 +92,7 @@ $ go install ./cmd/sysl
 # check it works
 $ sysl help
 ```
+
+## VSCode Extension
+
+Sysl has a VSCode extension which provides syntax highlighting for `.sysl` files. Install it [here](https://marketplace.visualstudio.com/items?itemName=ANZ-BANK.vscode-sysl).
