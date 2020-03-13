@@ -15,7 +15,7 @@ import (
 	"github.com/gorilla/handlers"
 )
 
-// handleRESTUI creates and returns a http handler for a SwaggerUI server
+// buildRestHandler creates a http handler to serve up SwaggerUI docs
 func (b *APIDocBuilder) buildRestHandler(basepath string) error {
 	swaggerExporter := exporter.MakeSwaggerExporter(b.app, logrus.New())
 	err := swaggerExporter.GenerateSwagger()

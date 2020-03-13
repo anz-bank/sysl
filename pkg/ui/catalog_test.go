@@ -44,15 +44,12 @@ func TestBuildAPIDoc(t *testing.T) {
 		}
 		apps = append(apps, appImports...)
 	}
-
 	for index, app := range apps {
 		builder := MakeAPIDocBuilder(app, &logrus.Logger{}, false)
 		newDoc, err := builder.BuildAPIDoc()
-
 		if err != nil {
 			t.Error("Failed to build API Doc")
 		}
-
 		if newDoc.path != uiTestPaths[index] {
 			t.Errorf("Incorrect path, expected:%s got:%s", uiTestPaths[index], newDoc.path)
 		}

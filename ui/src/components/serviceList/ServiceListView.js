@@ -231,12 +231,11 @@ function ServiceListView(props) {
                         scope="row"
                         padding="none"
                       >
-                        {getFullName(row.Name)}
+                        {getFullName(row.Name)}{" "}
                       </TableCell>
+                      <TableCell align="right">{row.Type}</TableCell>
                       <TableCell align="right">
-                        {row.Type}
-                      </TableCell>
-                      <TableCell align="right">
+                        {" "}
                         {getAttribute(row, "description")}
                       </TableCell>
                       <TableCell align="right">

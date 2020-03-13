@@ -20,17 +20,12 @@ type WebService struct {
 // BuildWebService takes a sysl Application and returns a json-exportable representation of Sysl
 func BuildWebService(a *sysl.Application) (*WebService, error) {
 	// TODO: Ensure there are no duplicate service names.
-	serviceMethod := serviceType(a)
-	serviceName := a.GetName().GetPart()[0]
-	attributes := mapAttributes(a.GetAttrs())
-	endpoints := mapEndpoints(a.GetEndpoints())
-
 	newService := &WebService{
-		Name:       serviceName,
-		Attributes: attributes,
-		Endpoints:  endpoints,
-		Type:       serviceMethod,
-		Path:       makePath(serviceMethod, "/", serviceName),
+		Name:       a.GetName().GetPart()[0],
+		Attributes: mapAttributes(a.GetAttrs()),
+		Endpoints:  mapEndpoints(a.GetEndpoints()),
+		Type:       serviceType(a),
+		Path:       makePath(serviceType(a), "/", a.GetName().GetPart()[0]),
 	}
 	return newService, nil
 }
