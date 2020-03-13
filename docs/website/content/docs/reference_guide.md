@@ -1,9 +1,10 @@
 ---
-title: "Quick reference guide"
+title: "Quick Reference Guide"
 date: 2018-02-28T10:11:24+11:00
-description: ""
+description: "Look up any sysl concepts here"
 weight: 50
-bref: ""
+bref: "Look up any sysl concepts here"
+layout: "quickreference"
 toc: true
 ---
 
