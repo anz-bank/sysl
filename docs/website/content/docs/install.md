@@ -1,5 +1,5 @@
 ---
-title: "Installation"
+title: "Install"
 description: "Sysl can be installed on Windows, MacOS and Linux - follow this guide."
 date: 2018-02-27T15:51:27+11:00
 weight: 1
