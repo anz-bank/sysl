@@ -1,6 +1,6 @@
 
 
-all: sysl grpc server catalog
+all: sysl grpc server
 # Build sysl into GRPC
 sysl: *.sysl
 	sysl tmpl --template grpc.sysl --app-name hello --start start --outdir hello hello

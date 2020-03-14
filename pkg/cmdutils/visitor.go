@@ -482,8 +482,11 @@ func (v *SequenceDiagramVisitor) visitCall(e *StatementElement, i int, c *sysl.C
 }
 
 func (v *SequenceDiagramVisitor) visitAction(e *StatementElement, c *sysl.Action) error {
-	_, err := fmt.Fprintf(v.w, "%s -> %s : %s\n", e.agent(v), e.agent(v), c.GetAction())
-	return err
+	if action := c.GetAction(); action != "..." {
+		_, err := fmt.Fprintf(v.w, "%s -> %s : %s\n", e.agent(v), e.agent(v), c.GetAction())
+		return err
+	}
+	return nil
 }
 
 func (v *SequenceDiagramVisitor) visitCond(e *StatementElement, i int, c *sysl.Cond) error {
