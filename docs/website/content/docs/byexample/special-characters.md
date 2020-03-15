@@ -4,7 +4,7 @@ title= "Special Characters"
 draft= false
 description= ""
 layout= "byexample"
-weight = 12
+weight = 13
 topic = "Web protocols"
 PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=dGVzdGFwcCAiU2ltcGxlIiBbcGFja2FnZT0icGFja2FnZV9mb28iXToKICAgIC90ZXN0JTJlcGRmOgogICAgICAgIEdFVDoKICAgICAgICAgICAgcmV0dXJuIDIwMCA8OiBTaW1wbGVPYmoKICAgICAgICBERUxFVEU6CiAgICAgICAgICAgIHJldHVybiAyMDMKICAgIC90ZXN0cyUyNWFnYWluOgogICAgICAgIEdFVDoKICAgICAgICAgICAgLiA8LSBHRVQgL3Rlc3QlMmVwZGYKICAgICAgICAgICAgcmV0dXJuIHNldCBvZiBTaW1wbGVPYmoK&cmd="
 ID = "special-characters"
