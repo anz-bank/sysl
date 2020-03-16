@@ -7,21 +7,25 @@ package lsp
 import (
 	"context"
 
-	"github.com/anz-bank/sysl/internal/lsp/mod"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
 	"github.com/anz-bank/sysl/internal/lsp/source"
 )
 
 func (s *Server) hover(ctx context.Context, params *protocol.HoverParams) (*protocol.Hover, error) {
-	snapshot, fh, ok, err := s.beginFileRequest(params.TextDocument.URI, source.UnknownKind)
+	s.client.LogMessage(ctx, &protocol.LogMessageParams{Type: protocol.Log, Message: "hover"})
+
+	_, _, ok, err := s.beginFileRequest(params.TextDocument.URI, source.UnknownKind)
 	if !ok {
 		return nil, err
 	}
-	switch fh.Identity().Kind {
-	case source.Mod:
-		return mod.Hover(ctx, snapshot, fh, params.Position)
-	case source.Go:
-		return source.Hover(ctx, snapshot, fh, params.Position)
-	}
-	return nil, nil
+	return &protocol.Hover{
+		Contents: protocol.MarkupContent{
+			Kind:  protocol.PlainText,
+			Value: "lmao",
+		},
+		Range: protocol.Range{
+			Start: params.Position,
+			End:   params.Position,
+		},
+	}, nil
 }

@@ -10,7 +10,6 @@ import (
 	"sync"
 
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/mod"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
 	"github.com/anz-bank/sysl/internal/lsp/source"
 	"github.com/anz-bank/sysl/internal/span"
@@ -78,42 +77,36 @@ func (s *Server) cancelRequest(ctx context.Context, params *protocol.CancelParam
 	return nil
 }
 
-func (s *Server) codeLens(ctx context.Context, params *protocol.CodeLensParams) ([]protocol.CodeLens, error) {
-	snapshot, fh, ok, err := s.beginFileRequest(params.TextDocument.URI, source.Mod)
-	if !ok {
-		return nil, err
-	}
-	return mod.CodeLens(ctx, snapshot, fh.Identity().URI)
-}
-
 func (s *Server) nonstandardRequest(ctx context.Context, method string, params interface{}) (interface{}, error) {
-	paramMap := params.(map[string]interface{})
-	if method == "gopls/diagnoseFiles" {
-		for _, file := range paramMap["files"].([]interface{}) {
-			snapshot, fh, ok, err := s.beginFileRequest(protocol.DocumentURI(file.(string)), source.UnknownKind)
-			if !ok {
-				return nil, err
-			}
+	/*
+		paramMap := params.(map[string]interface{})
+		if method == "gopls/diagnoseFiles" {
+				for _, file := range paramMap["files"].([]interface{}) {
+					snapshot, fh, ok, err := s.beginFileRequest(protocol.DocumentURI(file.(string)), source.UnknownKind)
+					if !ok {
+						return nil, err
+					}
 
-			fileID, diagnostics, err := source.FileDiagnostics(ctx, snapshot, fh.Identity().URI)
-			if err != nil {
-				return nil, err
-			}
-			if err := s.client.PublishDiagnostics(ctx, &protocol.PublishDiagnosticsParams{
-				URI:         protocol.URIFromSpanURI(fh.Identity().URI),
-				Diagnostics: toProtocolDiagnostics(diagnostics),
-				Version:     fileID.Version,
-			}); err != nil {
-				return nil, err
-			}
+					fileID, diagnostics, err := source.FileDiagnostics(ctx, snapshot, fh.Identity().URI)
+					if err != nil {
+						return nil, err
+					}
+					if err := s.client.PublishDiagnostics(ctx, &protocol.PublishDiagnosticsParams{
+						URI:         protocol.URIFromSpanURI(fh.Identity().URI),
+						Diagnostics: toProtocolDiagnostics(diagnostics),
+						Version:     fileID.Version,
+					}); err != nil {
+						return nil, err
+					}
+				}
+				if err := s.client.PublishDiagnostics(ctx, &protocol.PublishDiagnosticsParams{
+					URI: "gopls://diagnostics-done",
+				}); err != nil {
+					return nil, err
+				}
+				return struct{}{}, nil
 		}
-		if err := s.client.PublishDiagnostics(ctx, &protocol.PublishDiagnosticsParams{
-			URI: "gopls://diagnostics-done",
-		}); err != nil {
-			return nil, err
-		}
-		return struct{}{}, nil
-	}
+	*/
 	return nil, notImplemented(method)
 }
 

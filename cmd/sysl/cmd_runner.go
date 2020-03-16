@@ -67,6 +67,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&sequenceDiagramCmd{},
 		&importCmd{},
 		&infoCmd{},
+		&lspCmd{},
 		&validateCmd{},
 		&exportCmd{},
 		&replCmd{},

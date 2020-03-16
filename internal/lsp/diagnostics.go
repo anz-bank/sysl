@@ -10,6 +10,11 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+
+	"github.com/anz-bank/sysl/internal/jsonrpc2"
+	parser "github.com/anz-bank/sysl/pkg/grammar"
+
 	"github.com/anz-bank/sysl/internal/lsp/mod"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
 	"github.com/anz-bank/sysl/internal/lsp/source"
@@ -37,6 +42,60 @@ func (s *Server) diagnoseSnapshot(snapshot source.Snapshot) {
 
 	reports := s.diagnose(ctx, snapshot, false)
 	s.publishReports(ctx, snapshot, reports)
+}
+
+func (s *Server) diagnoseRaw(input string, listener *SyslErrorListener) parser.ISysl_fileContext {
+	var chars = antlr.NewInputStream(input)
+	var lexer = parser.NewSyslLexer(chars)
+	var tokens = antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+	var parser = parser.NewSyslParser(tokens)
+
+	parser.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
+	parser.RemoveErrorListeners()
+	parser.BuildParseTrees = true
+	parser.AddErrorListener(listener)
+
+	// parse file here
+	return parser.Sysl_file()
+}
+
+func (s *Server) provideSyntaxDiagnostics(ctx context.Context, uri protocol.DocumentURI, version float64) error {
+	errListener := NewSyslErrorListener(ctx, s.client)
+
+	spanUri := uri.SpanURI()
+	if !spanUri.IsFile() {
+		return nil
+	}
+
+	// TODO: in the future support didChange (syntax checking)
+	//	text, err := s.changedText(ctx, uri, params.ContentChanges)
+	//	if err != nil {
+	//		return err
+	//	}
+
+	content, _, err := s.session.GetFile(spanUri).Read(ctx)
+	if err != nil {
+		return jsonrpc2.NewErrorf(jsonrpc2.CodeInternalError, "file not found (%v)", err)
+	}
+
+	// TODO: figure out a way to run this in a goroutine (not sure why it doesn't work)
+	s.diagnoseRaw(string(content), errListener)
+	// publish the errors
+	err = s.client.PublishDiagnostics(ctx, &protocol.PublishDiagnosticsParams{
+		Diagnostics: errListener.Errors,
+		URI:         uri,
+		Version:     version,
+	})
+
+	if err != nil {
+		//fmt.Println("publishReports failed")
+		if ctx.Err() == nil {
+			log.Error(ctx, "publishReports: failed to deliver diagnostic", err, telemetry.File.Tag(ctx))
+		}
+		return err
+	}
+
+	return nil
 }
 
 // diagnose is a helper function for running diagnostics with a given context.

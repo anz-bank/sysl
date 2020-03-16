@@ -8,20 +8,20 @@ import (
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
 )
 
-func (s *Server) CodeAction(ctx context.Context, params *protocol.CodeActionParams) ([]protocol.CodeAction, error) {
-	return s.codeAction(ctx, params)
+func (s *Server) CodeAction(context.Context, *protocol.CodeActionParams) ([]protocol.CodeAction, error) {
+	return nil, notImplemented("CodeAction")
 }
 
-func (s *Server) CodeLens(ctx context.Context, params *protocol.CodeLensParams) ([]protocol.CodeLens, error) {
-	return s.codeLens(ctx, params)
+func (s *Server) CodeLens(context.Context, *protocol.CodeLensParams) ([]protocol.CodeLens, error) {
+	return nil, notImplemented("CodeLens")
 }
 
 func (s *Server) ColorPresentation(context.Context, *protocol.ColorPresentationParams) ([]protocol.ColorPresentation, error) {
 	return nil, notImplemented("ColorPresentation")
 }
 
-func (s *Server) Completion(ctx context.Context, params *protocol.CompletionParams) (*protocol.CompletionList, error) {
-	return s.completion(ctx, params)
+func (s *Server) Completion(context.Context, *protocol.CompletionParams) (*protocol.CompletionList, error) {
+	return nil, notImplemented("Completion")
 }
 
 func (s *Server) Declaration(context.Context, *protocol.DeclarationParams) (protocol.Declaration, error) {
@@ -36,16 +36,16 @@ func (s *Server) DidChange(ctx context.Context, params *protocol.DidChangeTextDo
 	return s.didChange(ctx, params)
 }
 
-func (s *Server) DidChangeConfiguration(ctx context.Context, changed *protocol.DidChangeConfigurationParams) error {
-	return s.didChangeConfiguration(ctx, changed)
+func (s *Server) DidChangeConfiguration(context.Context, *protocol.DidChangeConfigurationParams) error {
+	return notImplemented("DidChangeConfiguration")
 }
 
-func (s *Server) DidChangeWatchedFiles(ctx context.Context, params *protocol.DidChangeWatchedFilesParams) error {
-	return s.didChangeWatchedFiles(ctx, params)
+func (s *Server) DidChangeWatchedFiles(context.Context, *protocol.DidChangeWatchedFilesParams) error {
+	return notImplemented("DidChangeWatchedFiles")
 }
 
-func (s *Server) DidChangeWorkspaceFolders(ctx context.Context, params *protocol.DidChangeWorkspaceFoldersParams) error {
-	return s.didChangeWorkspaceFolders(ctx, params)
+func (s *Server) DidChangeWorkspaceFolders(context.Context, *protocol.DidChangeWorkspaceFoldersParams) error {
+	return notImplemented("DidChangeWorkspaceFolders")
 }
 
 func (s *Server) DidClose(ctx context.Context, params *protocol.DidCloseTextDocumentParams) error {
@@ -64,16 +64,16 @@ func (s *Server) DocumentColor(context.Context, *protocol.DocumentColorParams) (
 	return nil, notImplemented("DocumentColor")
 }
 
-func (s *Server) DocumentHighlight(ctx context.Context, params *protocol.DocumentHighlightParams) ([]protocol.DocumentHighlight, error) {
-	return s.documentHighlight(ctx, params)
+func (s *Server) DocumentHighlight(context.Context, *protocol.DocumentHighlightParams) ([]protocol.DocumentHighlight, error) {
+	return nil, notImplemented("DocumentHighlight")
 }
 
-func (s *Server) DocumentLink(ctx context.Context, params *protocol.DocumentLinkParams) ([]protocol.DocumentLink, error) {
-	return s.documentLink(ctx, params)
+func (s *Server) DocumentLink(context.Context, *protocol.DocumentLinkParams) ([]protocol.DocumentLink, error) {
+	return nil, notImplemented("DocumentLink")
 }
 
-func (s *Server) DocumentSymbol(ctx context.Context, params *protocol.DocumentSymbolParams) ([]interface{}, error) {
-	return s.documentSymbol(ctx, params)
+func (s *Server) DocumentSymbol(context.Context, *protocol.DocumentSymbolParams) ([]interface{}, error) {
+	return nil, notImplemented("DocumentSymbol")
 }
 
 func (s *Server) ExecuteCommand(ctx context.Context, params *protocol.ExecuteCommandParams) (interface{}, error) {
@@ -84,20 +84,20 @@ func (s *Server) Exit(ctx context.Context) error {
 	return s.exit(ctx)
 }
 
-func (s *Server) FoldingRange(ctx context.Context, params *protocol.FoldingRangeParams) ([]protocol.FoldingRange, error) {
-	return s.foldingRange(ctx, params)
+func (s *Server) FoldingRange(context.Context, *protocol.FoldingRangeParams) ([]protocol.FoldingRange, error) {
+	return nil, notImplemented("FoldingRange")
 }
 
-func (s *Server) Formatting(ctx context.Context, params *protocol.DocumentFormattingParams) ([]protocol.TextEdit, error) {
-	return s.formatting(ctx, params)
+func (s *Server) Formatting(context.Context, *protocol.DocumentFormattingParams) ([]protocol.TextEdit, error) {
+	return nil, notImplemented("Formatting")
 }
 
 func (s *Server) Hover(ctx context.Context, params *protocol.HoverParams) (*protocol.Hover, error) {
 	return s.hover(ctx, params)
 }
 
-func (s *Server) Implementation(ctx context.Context, params *protocol.ImplementationParams) (protocol.Definition, error) {
-	return s.implementation(ctx, params)
+func (s *Server) Implementation(context.Context, *protocol.ImplementationParams) (protocol.Definition, error) {
+	return nil, notImplemented("Implementation")
 }
 
 func (s *Server) IncomingCalls(context.Context, *protocol.CallHierarchyIncomingCallsParams) ([]protocol.CallHierarchyIncomingCall, error) {
@@ -132,8 +132,8 @@ func (s *Server) PrepareCallHierarchy(context.Context, *protocol.CallHierarchyPr
 	return nil, notImplemented("PrepareCallHierarchy")
 }
 
-func (s *Server) PrepareRename(ctx context.Context, params *protocol.PrepareRenameParams) (*protocol.Range, error) {
-	return s.prepareRename(ctx, params)
+func (s *Server) PrepareRename(context.Context, *protocol.PrepareRenameParams) (*protocol.Range, error) {
+	return nil, notImplemented("PrepareRename")
 }
 
 func (s *Server) Progress(context.Context, *protocol.ProgressParams) error {
@@ -144,12 +144,12 @@ func (s *Server) RangeFormatting(context.Context, *protocol.DocumentRangeFormatt
 	return nil, notImplemented("RangeFormatting")
 }
 
-func (s *Server) References(ctx context.Context, params *protocol.ReferenceParams) ([]protocol.Location, error) {
-	return s.references(ctx, params)
+func (s *Server) References(context.Context, *protocol.ReferenceParams) ([]protocol.Location, error) {
+	return nil, notImplemented("References")
 }
 
-func (s *Server) Rename(ctx context.Context, params *protocol.RenameParams) (*protocol.WorkspaceEdit, error) {
-	return s.rename(ctx, params)
+func (s *Server) Rename(context.Context, *protocol.RenameParams) (*protocol.WorkspaceEdit, error) {
+	return nil, notImplemented("Rename")
 }
 
 func (s *Server) Resolve(context.Context, *protocol.CompletionItem) (*protocol.CompletionItem, error) {
@@ -188,16 +188,16 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return s.shutdown(ctx)
 }
 
-func (s *Server) SignatureHelp(ctx context.Context, params *protocol.SignatureHelpParams) (*protocol.SignatureHelp, error) {
-	return s.signatureHelp(ctx, params)
+func (s *Server) SignatureHelp(context.Context, *protocol.SignatureHelpParams) (*protocol.SignatureHelp, error) {
+	return nil, notImplemented("SignatureHelp")
 }
 
-func (s *Server) Symbol(ctx context.Context, params *protocol.WorkspaceSymbolParams) ([]protocol.SymbolInformation, error) {
-	return s.symbol(ctx, params)
+func (s *Server) Symbol(context.Context, *protocol.WorkspaceSymbolParams) ([]protocol.SymbolInformation, error) {
+	return nil, notImplemented("Symbol")
 }
 
-func (s *Server) TypeDefinition(ctx context.Context, params *protocol.TypeDefinitionParams) (protocol.Definition, error) {
-	return s.typeDefinition(ctx, params)
+func (s *Server) TypeDefinition(context.Context, *protocol.TypeDefinitionParams) (protocol.Definition, error) {
+	return nil, notImplemented("TypeDefinition")
 }
 
 func (s *Server) WillSave(context.Context, *protocol.WillSaveTextDocumentParams) error {

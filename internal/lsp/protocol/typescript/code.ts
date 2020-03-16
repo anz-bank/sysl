@@ -19,15 +19,15 @@
 import * as fs from 'fs';
 import * as ts from 'typescript';
 import * as u from './util';
-import {constName, getComments, goName, loc, strKind} from './util';
+import { constName, getComments, goName, loc, strKind } from './util';
 
 var program: ts.Program;
 
 function parse() {
   // this won't complain if some fnames don't exist
   program = ts.createProgram(
-      u.fnames,
-      {target: ts.ScriptTarget.ES2018, module: ts.ModuleKind.CommonJS});
+    u.fnames,
+    { target: ts.ScriptTarget.ES2018, module: ts.ModuleKind.CommonJS });
   program.getTypeChecker();  // finish type checking and assignment
 }
 
@@ -35,7 +35,7 @@ function parse() {
 let req = new Map<string, ts.NewExpression>();               // requests
 let not = new Map<string, ts.NewExpression>();               // notifications
 let ptypes = new Map<string, [ts.TypeNode, ts.TypeNode]>();  // req, resp types
-let receives = new Map<string, 'server'|'client'>();         // who receives it
+let receives = new Map<string, 'server' | 'client'>();         // who receives it
 let rpcTypes = new Set<string>();  // types seen in the rpcs
 
 function findRPCs(node: ts.Node) {
@@ -44,7 +44,7 @@ function findRPCs(node: ts.Node) {
   }
   if (!ts.isIdentifier(node.name)) {
     throw new Error(
-        `expected Identifier, got ${strKind(node.name)} at ${loc(node)}`)
+      `expected Identifier, got ${strKind(node.name)} at ${loc(node)}`)
   }
   let reqnot = req
   let v = node.name.getText()
@@ -53,7 +53,7 @@ function findRPCs(node: ts.Node) {
 
   if (!ts.isModuleBlock(node.body)) {
     throw new Error(
-        `expected ModuleBody got ${strKind(node.body)} at ${loc(node)}`)
+      `expected ModuleBody got ${strKind(node.body)} at ${loc(node)}`)
   }
   let x: ts.ModuleBlock = node.body
   // The story is to expect const method = 'textDocument/implementation'
@@ -103,7 +103,7 @@ function findRPCs(node: ts.Node) {
   if (rpc == '') throw new Error(`no name found at ${loc(x)}`);
   // remember the implied types
   const [a, b] = ptypes.get(rpc);
-  const add = function(n: ts.Node) {
+  const add = function (n: ts.Node) {
     rpcTypes.add(goName(n.getText()))
   };
   underlying(a, add);
@@ -130,8 +130,8 @@ function setReceives() {
   // it would be nice to have some independent check on this
   // (this logic fails if the server ever sends $/canceRequest
   //  or $/progress)
-  req.forEach((_, k) => {receives.set(k, 'server')});
-  not.forEach((_, k) => {receives.set(k, 'server')});
+  req.forEach((_, k) => { receives.set(k, 'server') });
+  not.forEach((_, k) => { receives.set(k, 'server') });
   receives.set('window/showMessage', 'client');
   receives.set('window/showMessageRequest', 'client');
   receives.set('window/logMessage', 'client');
@@ -166,22 +166,22 @@ interface Data {
 function newData(n: ts.Node, nm: string): Data {
   return {
     me: n, name: goName(nm),
-        generics: ts.createNodeArray<ts.TypeParameterDeclaration>(), as: ts.createNodeArray<ts.HeritageClause>(),
-        properties: ts.createNodeArray<ts.TypeElement>(), alias: undefined,
-        statements: ts.createNodeArray<ts.Statement>(),
-        enums: ts.createNodeArray<ts.EnumMember>(),
-        members: ts.createNodeArray<ts.PropertyDeclaration>(),
+    generics: ts.createNodeArray<ts.TypeParameterDeclaration>(), as: ts.createNodeArray<ts.HeritageClause>(),
+    properties: ts.createNodeArray<ts.TypeElement>(), alias: undefined,
+    statements: ts.createNodeArray<ts.Statement>(),
+    enums: ts.createNodeArray<ts.EnumMember>(),
+    members: ts.createNodeArray<ts.PropertyDeclaration>(),
   }
 }
 
 // for debugging, produce a skeleton description
 function strData(d: Data): string {
-  const f = function(na: ts.NodeArray<any>): number {
+  const f = function (na: ts.NodeArray<any>): number {
     return na.length
   };
   return `D(${d.name}) g;${f(d.generics)} a:${f(d.as)} p:${f(d.properties)} s:${
-      f(d.statements)} e:${f(d.enums)} m:${f(d.members)} ${
-      d.alias != undefined}`
+    f(d.statements)} e:${f(d.enums)} m:${f(d.members)} ${
+    d.alias != undefined}`
 }
 
 let data = new Map<string, Data>();            // parsed data types
@@ -192,16 +192,16 @@ let extraTypes = new Map<string, string[]>();  // to avoid struct params
 function genTypes(node: ts.Node) {
   // Ignore top-level items that can't produce output
   if (ts.isExpressionStatement(node) || ts.isFunctionDeclaration(node) ||
-      ts.isImportDeclaration(node) || ts.isVariableStatement(node) ||
-      ts.isExportDeclaration(node) || ts.isEmptyStatement(node) ||
-      node.kind == ts.SyntaxKind.EndOfFileToken) {
+    ts.isImportDeclaration(node) || ts.isVariableStatement(node) ||
+    ts.isExportDeclaration(node) || ts.isEmptyStatement(node) ||
+    node.kind == ts.SyntaxKind.EndOfFileToken) {
     return;
   }
   if (ts.isInterfaceDeclaration(node)) {
     const v: ts.InterfaceDeclaration = node;
     // need to check the members, many of which are disruptive
     let mems: ts.TypeElement[] = [];
-    const f = function(t: ts.TypeElement) {
+    const f = function (t: ts.TypeElement) {
       if (ts.isPropertySignature(t)) {
         mems.push(t);
       } else if (ts.isMethodSignature(t) || ts.isCallSignatureDeclaration(t)) {
@@ -216,7 +216,7 @@ function genTypes(node: ts.Node) {
     };
     v.members.forEach(f);
     if (mems.length == 0 && !v.heritageClauses &&
-        v.name.getText() != 'InitializedParams') {
+      v.name.getText() != 'InitializedParams') {
       return  // really? (Don't seem to need any of these)
     };
     // Found one we want
@@ -240,7 +240,7 @@ function genTypes(node: ts.Node) {
     // (at the top level)
     // Unfortunately this is false for TraceValues
     if (ts.isUnionTypeNode(v.type) &&
-        v.type.types.every((n: ts.TypeNode) => ts.isLiteralTypeNode(n))) {
+      v.type.types.every((n: ts.TypeNode) => ts.isLiteralTypeNode(n))) {
       if (x.name != 'TraceValues') return;
     }
     if (v.typeParameters) {
@@ -259,7 +259,7 @@ function genTypes(node: ts.Node) {
     const b: ts.ModuleBlock = v.body;
     var s: ts.Statement[] = [];
     // we don't want most of these
-    const fx = function(x: ts.Statement) {
+    const fx = function (x: ts.Statement) {
       if (ts.isFunctionDeclaration(x)) {
         return
       };
@@ -268,7 +268,7 @@ function genTypes(node: ts.Node) {
       };
       if (!ts.isVariableStatement(x))
         throw new Error(
-            `expected VariableStatment ${loc(x)} ${strKind(x)} ${x.getText()}`);
+          `expected VariableStatment ${loc(x)} ${strKind(x)} ${x.getText()}`);
       if (hasNewExpression(x)) {
         return
       };
@@ -294,7 +294,7 @@ function genTypes(node: ts.Node) {
     const v: ts.ClassDeclaration = node;
     var d: ts.PropertyDeclaration[] = [];
     // look harder at the PropertyDeclarations.
-    const wanted = function(c: ts.ClassElement): string {
+    const wanted = function (c: ts.ClassElement): string {
       if (ts.isConstructorDeclaration(c)) {
         return ''
       };
@@ -362,7 +362,7 @@ function dataMerge(a: Data, b: Data): Data {
       return a;
   }
   console.log(
-      `${strKind(a.me)} ${strKind(b.me)} ${a.name} ${loc(a.me)} ${loc(b.me)}`)
+    `${strKind(a.me)} ${strKind(b.me)} ${a.name} ${loc(a.me)} ${loc(b.me)}`)
   throw new Error(`Fix dataMerge for ${a.name}`)
 }
 
@@ -385,19 +385,19 @@ function checkOnce() {
 // helper function to find underlying types
 function underlying(n: ts.Node, f: (n: ts.Node) => void) {
   if (!n) return;
-  const ff = function(n: ts.Node) {
+  const ff = function (n: ts.Node) {
     underlying(n, f)
   };
   if (ts.isIdentifier(n)) {
     f(n)
   } else if (
-      n.kind == ts.SyntaxKind.StringKeyword ||
-      n.kind == ts.SyntaxKind.NumberKeyword ||
-      n.kind == ts.SyntaxKind.AnyKeyword ||
-      n.kind == ts.SyntaxKind.NullKeyword ||
-      n.kind == ts.SyntaxKind.BooleanKeyword ||
-      n.kind == ts.SyntaxKind.ObjectKeyword ||
-      n.kind == ts.SyntaxKind.VoidKeyword) {
+    n.kind == ts.SyntaxKind.StringKeyword ||
+    n.kind == ts.SyntaxKind.NumberKeyword ||
+    n.kind == ts.SyntaxKind.AnyKeyword ||
+    n.kind == ts.SyntaxKind.NullKeyword ||
+    n.kind == ts.SyntaxKind.BooleanKeyword ||
+    n.kind == ts.SyntaxKind.ObjectKeyword ||
+    n.kind == ts.SyntaxKind.VoidKeyword) {
     // nothing to do
   } else if (ts.isTypeReferenceNode(n)) {
     f(n.typeName)
@@ -418,8 +418,8 @@ function underlying(n: ts.Node, f: (n: ts.Node) => void) {
   } else if (ts.isParenthesizedTypeNode(n)) {
     underlying(n.type, f)
   } else if (
-      ts.isLiteralTypeNode(n) || ts.isVariableStatement(n) ||
-      ts.isTupleTypeNode(n)) {
+    ts.isLiteralTypeNode(n) || ts.isVariableStatement(n) ||
+    ts.isTupleTypeNode(n)) {
     // we only see these in moreTypes, but they are handled elsewhere
     return;
   } else if (ts.isEnumMember(n)) {
@@ -434,7 +434,7 @@ function underlying(n: ts.Node, f: (n: ts.Node) => void) {
 // Simplest way to the transitive closure is to stabilize the size of seenTypes
 // but it is slow
 function moreTypes() {
-  const extra = function(s: string) {
+  const extra = function (s: string) {
     if (!data.has(s)) throw new Error(`moreTypes needs ${s}`);
     seenTypes.set(s, data.get(s))
   };
@@ -451,17 +451,17 @@ function moreTypes() {
     old = seenTypes.size
 
     const m = new Map<string, Data>();
-    const add = function(n: ts.Node) {
+    const add = function (n: ts.Node) {
       const nm = goName(n.getText());
       if (seenTypes.has(nm) || m.has(nm)) return;
       // For generic parameters, this might set it to undefined
       m.set(nm, data.get(nm));
     };
     // expect all the heritage clauses have single Identifiers
-    const h = function(n: ts.Node) {
+    const h = function (n: ts.Node) {
       underlying(n, add);
     };
-    const f = function(x: ts.NodeArray<ts.Node>) {
+    const f = function (x: ts.NodeArray<ts.Node>) {
       x.forEach(h)
     };
     seenTypes.forEach((d: Data) => d && f(d.as))
@@ -490,11 +490,11 @@ function toGo(d: Data, nm: string) {
   } else if (d.enums.length > 0) {
     goEnum(d, nm);
   } else if (
-      d.properties.length > 0 || d.as.length > 0 || nm == 'InitializedParams') {
+    d.properties.length > 0 || d.as.length > 0 || nm == 'InitializedParams') {
     goInterface(d, nm);
   } else
     throw new Error(
-        `more cases in toGo ${nm} ${d.as.length} ${d.generics.length} `)
+      `more cases in toGo ${nm} ${d.as.length} ${d.generics.length} `)
 }
 
 // these fields need a *
@@ -508,7 +508,7 @@ function goInterface(d: Data, nm: string) {
   let ans = `type ${goName(nm)} struct {\n`;
 
   // generate the code for each member
-  const g = function(n: ts.TypeElement) {
+  const g = function (n: ts.TypeElement) {
     if (!ts.isPropertySignature(n))
       throw new Error(`expected PropertySignature got ${strKind(n)} `);
     ans = ans.concat(getComments(n));
@@ -527,7 +527,7 @@ function goInterface(d: Data, nm: string) {
   d.properties.forEach(g)
   // heritage clauses become embedded types
   // check they are all Identifiers
-  const f = function(n: ts.ExpressionWithTypeArguments) {
+  const f = function (n: ts.ExpressionWithTypeArguments) {
     if (!ts.isIdentifier(n.expression))
       throw new Error(`Interface ${nm} heritage ${strKind(n.expression)} `);
     ans = ans.concat(goName(n.expression.getText()), '\n')
@@ -550,7 +550,7 @@ function goModule(d: Data, nm: string) {
   // They are VariableStatements with x.declarationList having a single
   //   VariableDeclaration
   let isNumeric = false;
-  const f = function(n: ts.Statement, i: number) {
+  const f = function (n: ts.Statement, i: number) {
     if (!ts.isVariableStatement(n)) {
       throw new Error(` ${nm} ${i} expected VariableStatement,
       got ${strKind(n)}`);
@@ -577,7 +577,7 @@ function goModule(d: Data, nm: string) {
 // generate Go code for an enum. Both types and named constants
 function goEnum(d: Data, nm: string) {
   let isNumeric = false
-  const f = function(v: ts.EnumMember, j: number) {  // same as goModule
+  const f = function (v: ts.EnumMember, j: number) {  // same as goModule
     if (!v.initializer)
       throw new Error(`goEnum no initializer ${nm} ${j} ${v.name.getText()}`);
     isNumeric = strKind(v.initializer) == 'NumericLiteral';
@@ -598,7 +598,7 @@ function goTypeAlias(d: Data, nm: string) {
   if (d.as.length != 0 || d.generics.length != 0) {
     if (nm != 'ServerCapabilities')
       throw new Error(`${nm} has extra fields(${d.as.length},${
-          d.generics.length}) ${d.me.getText()}`);
+        d.generics.length}) ${d.me.getText()}`);
   }
   typesOut.push(getComments(d.me))
   // d.alias doesn't seem to have comments
@@ -748,7 +748,7 @@ function goIntersectionType(n: ts.IntersectionTypeNode, nm: string): string {
   if (nm == 'ServerCapabilities') return expandIntersection(n);
   let inner = '';
   n.types.forEach(
-      (t: ts.TypeNode) => {inner = inner.concat(goType(t, nm), '\n')});
+    (t: ts.TypeNode) => { inner = inner.concat(goType(t, nm), '\n') });
   return `struct{ \n${inner}} `
 }
 
@@ -757,7 +757,7 @@ function goIntersectionType(n: ts.IntersectionTypeNode, nm: string): string {
 // of them by name. The names that occur once can be output. The names
 // that occur more than once need to be combined.
 function expandIntersection(n: ts.IntersectionTypeNode): string {
-  const bad = function(n: ts.Node, s: string) {
+  const bad = function (n: ts.Node, s: string) {
     return new Error(`expandIntersection ${strKind(n)} ${s}`)
   };
   let props = new Map<string, ts.PropertySignature[]>();
@@ -791,11 +791,11 @@ function expandIntersection(n: ts.IntersectionTypeNode): string {
         if (!ts.isPropertySignature(b)) throw bad(b, 'D');
         ans = ans.concat(getComments(b));
         ans = ans.concat(
-            goName(b.name.getText()), ' ', goType(b.type, 'a'), u.JSON(b), '\n')
+          goName(b.name.getText()), ' ', goType(b.type, 'a'), u.JSON(b), '\n')
       } else if (a.type.kind == ts.SyntaxKind.ObjectKeyword) {
         ans = ans.concat(getComments(a))
         ans = ans.concat(
-            goName(a.name.getText()), ' ', 'interface{}', u.JSON(a), '\n')
+          goName(a.name.getText()), ' ', 'interface{}', u.JSON(a), '\n')
       } else {
         throw bad(a.type, `E ${a.getText()} in ${goName(k)} at ${loc(a)}`)
       }
@@ -809,7 +809,7 @@ function expandIntersection(n: ts.IntersectionTypeNode): string {
 function goTypeLiteral(n: ts.TypeLiteralNode, nm: string): string {
   let ans: string[] = [];  // in case we generate a new extra type
   let res = 'struct{\n'    // the actual answer usually
-  const g = function(nx: ts.TypeElement) {
+  const g = function (nx: ts.TypeElement) {
     // add the json, as in goInterface(). Strange inside union types.
     if (ts.isPropertySignature(nx)) {
       let json = u.JSON(nx);
@@ -956,7 +956,7 @@ function goReq(side: side, m: string) {
   let case1 = notNil;
   if (a != '') {
     if (extraTypes.has('Param' + nm)) a = 'Param' + nm
-      case1 = `var params ${a}
+    case1 = `var params ${a}
     if err := json.Unmarshal(*r.Params, &params); err != nil {
       sendParseError(ctx, r, err)
       return true
@@ -989,7 +989,7 @@ function goReq(side: side, m: string) {
     const returnType = indirect(b) ? `*${b}` : b;
     callBody = `var result ${returnType}
 			if err := s.Conn.Call(ctx, "${m}", ${
-        p2}, &result); err != nil {
+      p2}, &result); err != nil {
 				return nil, err
       }
       return result, nil
@@ -1017,7 +1017,7 @@ function methodName(m: string): string {
   if (seenNames.has(x)) {
     // Resolve, ResolveCodeLens, ResolveDocumentLink
     if (!x.startsWith('Resolve')) throw new Error(`expected Resolve, not ${x}`)
-      x += m[0].toUpperCase() + m.substring(1, i)
+    x += m[0].toUpperCase() + m.substring(1, i)
   }
   seenNames.add(x);
   return x;
@@ -1028,7 +1028,7 @@ function indirect(s: string): boolean {
   if (s == '' || s == 'void') return false;
   const skip = (x: string) => s.startsWith(x);
   if (skip('[]') || skip('interface') || skip('Declaration') ||
-      skip('Definition') || skip('DocumentSelector'))
+    skip('Definition') || skip('DocumentSelector'))
     return false;
   return true
 }
@@ -1068,7 +1068,7 @@ function output(side: side) {
     side.outputFile = `ts${side.name}.go`;
     side.fd = fs.openSync(side.outputFile, 'w');
   }
-  const f = function(s: string) {
+  const f = function (s: string) {
     fs.writeSync(side.fd, s);
     fs.writeSync(side.fd, '\n');
   };
@@ -1085,10 +1085,10 @@ function output(side: side) {
         `);
   const a = side.name[0].toUpperCase() + side.name.substring(1)
   f(`type ${a} interface {`);
-  side.methods.forEach((v) => {f(v)});
+  side.methods.forEach((v) => { f(v) });
   f('}\n');
   f(`func (h ${
-      side.name}Handler) Deliver(ctx context.Context, r *jsonrpc2.Request, delivered bool) bool {
+    side.name}Handler) Deliver(ctx context.Context, r *jsonrpc2.Request, delivered bool) bool {
             if delivered {
               return false
             }
@@ -1098,7 +1098,7 @@ function output(side: side) {
               return true
             }
             switch r.Method {`);
-  side.cases.forEach((v) => {f(v)});
+  side.cases.forEach((v) => { f(v) });
   f(`
         }
       }`);
@@ -1107,15 +1107,15 @@ function output(side: side) {
           *jsonrpc2.Conn
         }
         `);
-  side.calls.forEach((v) => {f(v)});
+  side.calls.forEach((v) => { f(v) });
 }
 
 // Handling of non-standard requests, so we can add gopls-specific calls.
 function nonstandardRequests() {
   server.methods.push(
-      'NonstandardRequest(ctx context.Context, method string, params interface{}) (interface{}, error)')
+    'NonstandardRequest(ctx context.Context, method string, params interface{}) (interface{}, error)')
   server.calls.push(
-      `func (s *serverDispatcher) NonstandardRequest(ctx context.Context, method string, params interface{}) (interface{}, error) {
+    `func (s *serverDispatcher) NonstandardRequest(ctx context.Context, method string, params interface{}) (interface{}, error) {
       var result interface{}
       if err := s.Conn.Call(ctx, method, params, &result); err != nil {
         return nil, err
@@ -1143,7 +1143,7 @@ function nonstandardRequests() {
 function main() {
   if (u.gitHash != u.git()) {
     throw new Error(
-        `git hash mismatch, wanted\n${u.gitHash} but source is at\n${u.git()}`);
+      `git hash mismatch, wanted\n${u.gitHash} but source is at\n${u.git()}`);
   }
   u.createOutputFiles()
   parse()
@@ -1170,11 +1170,13 @@ function main() {
   // 2. func (h *serverHandler) Deliver(...) { switch r.method }
   // 3. func (x *xDispatcher) Method(ctx, parm)
   not.forEach(  // notifications
-      (v, k) => {
-          receives.get(k) == 'client' ? goNot(client, k) : goNot(server, k)});
+    (v, k) => {
+      receives.get(k) == 'client' ? goNot(client, k) : goNot(server, k)
+    });
   req.forEach(  // requests
-      (v, k) => {
-          receives.get(k) == 'client' ? goReq(client, k) : goReq(server, k)});
+    (v, k) => {
+      receives.get(k) == 'client' ? goReq(client, k) : goReq(server, k)
+    });
   nonstandardRequests();
   // find all the types implied by seenTypes and rpcs to try to avoid
   // generating types that aren't used

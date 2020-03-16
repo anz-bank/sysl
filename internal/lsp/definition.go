@@ -12,6 +12,8 @@ import (
 )
 
 func (s *Server) definition(ctx context.Context, params *protocol.DefinitionParams) ([]protocol.Location, error) {
+	s.client.LogMessage(ctx, &protocol.LogMessageParams{Type: protocol.Log, Message: "definition"})
+
 	snapshot, fh, ok, err := s.beginFileRequest(params.TextDocument.URI, source.Go)
 	if !ok {
 		return nil, err
@@ -37,6 +39,7 @@ func (s *Server) definition(ctx context.Context, params *protocol.DefinitionPara
 	return locations, nil
 }
 
+/*
 func (s *Server) typeDefinition(ctx context.Context, params *protocol.TypeDefinitionParams) ([]protocol.Location, error) {
 	snapshot, fh, ok, err := s.beginFileRequest(params.TextDocument.URI, source.Go)
 	if !ok {
@@ -57,3 +60,4 @@ func (s *Server) typeDefinition(ctx context.Context, params *protocol.TypeDefini
 		},
 	}, nil
 }
+*/

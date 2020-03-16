@@ -5,19 +5,14 @@
 package lsp
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"os"
-	"path"
 
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/debug"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
 	"github.com/anz-bank/sysl/internal/lsp/source"
 	"github.com/anz-bank/sysl/internal/span"
-	"github.com/anz-bank/sysl/internal/telemetry/log"
-	errors "golang.org/x/xerrors"
 )
 
 func (s *Server) initialize(ctx context.Context, params *protocol.ParamInitialize) (*protocol.InitializeResult, error) {
@@ -34,75 +29,21 @@ func (s *Server) initialize(ctx context.Context, params *protocol.ParamInitializ
 	options := s.session.Options()
 	defer func() { s.session.SetOptions(options) }()
 
-	// TODO: Handle results here.
-	source.SetOptions(&options, params.InitializationOptions)
-	options.ForClientCapabilities(params.Capabilities)
+	// TODO
+	// client initialization options
+	//fmt.Println(params.InitializationOptions)
 
-	s.pendingFolders = params.WorkspaceFolders
-	if len(s.pendingFolders) == 0 {
-		if params.RootURI != "" {
-			s.pendingFolders = []protocol.WorkspaceFolder{{
-				URI:  string(params.RootURI),
-				Name: path.Base(params.RootURI.SpanURI().Filename()),
-			}}
-		} else {
-			// No folders and no root--we are in single file mode.
-			// TODO: https://golang.org/issue/34160.
-			return nil, errors.Errorf("gopls does not yet support editing a single file. Please open a directory.")
-		}
-	}
+	// client capabilities
+	//fmt.Println(params.Capabilities)
 
-	var codeActionProvider interface{} = true
-	if ca := params.Capabilities.TextDocument.CodeAction; len(ca.CodeActionLiteralSupport.CodeActionKind.ValueSet) > 0 {
-		// If the client has specified CodeActionLiteralSupport,
-		// send the code actions we support.
-		//
-		// Using CodeActionOptions is only valid if codeActionLiteralSupport is set.
-		codeActionProvider = &protocol.CodeActionOptions{
-			CodeActionKinds: s.getSupportedCodeActions(),
-		}
-	}
-	var renameOpts interface{} = true
-	if r := params.Capabilities.TextDocument.Rename; r.PrepareSupport {
-		renameOpts = protocol.RenameOptions{
-			PrepareProvider: r.PrepareSupport,
-		}
-	}
 	return &protocol.InitializeResult{
 		Capabilities: protocol.ServerCapabilities{
-			CodeActionProvider: codeActionProvider,
-			CompletionProvider: protocol.CompletionOptions{
-				TriggerCharacters: []string{"."},
-			},
-			DefinitionProvider:         true,
-			TypeDefinitionProvider:     true,
-			ImplementationProvider:     true,
-			DocumentFormattingProvider: true,
-			DocumentSymbolProvider:     true,
-			WorkspaceSymbolProvider:    true,
-			ExecuteCommandProvider: protocol.ExecuteCommandOptions{
-				Commands: options.SupportedCommands,
-			},
-			FoldingRangeProvider:      true,
-			HoverProvider:             true,
-			DocumentHighlightProvider: true,
-			DocumentLinkProvider:      protocol.DocumentLinkOptions{},
-			ReferencesProvider:        true,
-			RenameProvider:            renameOpts,
-			SignatureHelpProvider: protocol.SignatureHelpOptions{
-				TriggerCharacters: []string{"(", ","},
-			},
+			DefinitionProvider: true,
 			TextDocumentSync: &protocol.TextDocumentSyncOptions{
-				Change:    protocol.Incremental,
+				Change:    protocol.Full,
 				OpenClose: true,
 				Save: protocol.SaveOptions{
 					IncludeText: false,
-				},
-			},
-			Workspace: protocol.WorkspaceGn{
-				WorkspaceFolders: protocol.WorkspaceFoldersGn{
-					Supported:           true,
-					ChangeNotifications: "workspace/didChangeWorkspaceFolders",
 				},
 			},
 		},
@@ -117,49 +58,54 @@ func (s *Server) initialized(ctx context.Context, params *protocol.InitializedPa
 	options := s.session.Options()
 	defer func() { s.session.SetOptions(options) }()
 
-	var registrations []protocol.Registration
-	if options.ConfigurationSupported && options.DynamicConfigurationSupported {
-		registrations = append(registrations,
-			protocol.Registration{
-				ID:     "workspace/didChangeConfiguration",
-				Method: "workspace/didChangeConfiguration",
-			},
-			protocol.Registration{
-				ID:     "workspace/didChangeWorkspaceFolders",
-				Method: "workspace/didChangeWorkspaceFolders",
-			},
-		)
-	}
+	/*
+		var registrations []protocol.Registration
+		if options.ConfigurationSupported && options.DynamicConfigurationSupported {
+			registrations = append(registrations,
+				protocol.Registration{
+					ID:     "workspace/didChangeConfiguration",
+					Method: "workspace/didChangeConfiguration",
+				},
+				protocol.Registration{
+					ID:     "workspace/didChangeWorkspaceFolders",
+					Method: "workspace/didChangeWorkspaceFolders",
+				},
+			)
+		}
 
-	if options.DynamicWatchedFilesSupported {
-		registrations = append(registrations, protocol.Registration{
-			ID:     "workspace/didChangeWatchedFiles",
-			Method: "workspace/didChangeWatchedFiles",
-			RegisterOptions: protocol.DidChangeWatchedFilesRegistrationOptions{
-				Watchers: []protocol.FileSystemWatcher{{
-					GlobPattern: "**/*.go",
-					Kind:        float64(protocol.WatchChange + protocol.WatchDelete + protocol.WatchCreate),
-				}},
-			},
-		})
-	}
+		if options.DynamicWatchedFilesSupported {
+			registrations = append(registrations, protocol.Registration{
+				ID:     "workspace/didChangeWatchedFiles",
+				Method: "workspace/didChangeWatchedFiles",
+				RegisterOptions: protocol.DidChangeWatchedFilesRegistrationOptions{
+					Watchers: []protocol.FileSystemWatcher{{
+	*/
+	//					GlobPattern: "**/*.sysl",
+	/*
+						Kind:        float64(protocol.WatchChange + protocol.WatchDelete + protocol.WatchCreate),
+					}},
+				},
+			})
+		}
 
-	if len(registrations) > 0 {
-		s.client.RegisterCapability(ctx, &protocol.RegistrationParams{
-			Registrations: registrations,
-		})
-	}
+		if len(registrations) > 0 {
+			s.client.RegisterCapability(ctx, &protocol.RegistrationParams{
+				Registrations: registrations,
+			})
+		}
 
-	buf := &bytes.Buffer{}
-	debug.PrintVersionInfo(buf, true, debug.PlainText)
-	log.Print(ctx, buf.String())
+		buf := &bytes.Buffer{}
+		debug.PrintVersionInfo(buf, true, debug.PlainText)
+		log.Print(ctx, buf.String())
 
-	s.addFolders(ctx, s.pendingFolders)
-	s.pendingFolders = nil
+		s.addFolders(ctx, s.pendingFolders)
+		s.pendingFolders = nil
 
+	*/
 	return nil
 }
 
+/*
 func (s *Server) addFolders(ctx context.Context, folders []protocol.WorkspaceFolder) {
 	originalViews := len(s.session.Views())
 	viewErrors := make(map[span.URI]error)
@@ -184,6 +130,7 @@ func (s *Server) addFolders(ctx context.Context, folders []protocol.WorkspaceFol
 		})
 	}
 }
+*/
 
 func (s *Server) fetchConfig(ctx context.Context, name string, folder span.URI, o *source.Options) error {
 	if !s.session.Options().ConfigurationSupported {
