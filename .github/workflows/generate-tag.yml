@@ -33,7 +33,7 @@ jobs:
         if: steps.generate_tag.outputs.tag_generated == 1 && (steps.generate_tag.outputs.bump_ver == 'major' || steps.generate_tag.outputs.bump_ver == 'minor')
         uses: docker://ferrarimarco/github-changelog-generator:latest
         with:
-          args: -u anz-bank -p sysl --output ${{ format('CHANGELOG/CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }} --header-label="${{ format('# CHANGELOG-{0}.{1}', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}" --since-tag=${{ steps.generate_tag.outputs.last_tag }} --no-unreleased
+          args: -u anz-bank -p sysl --output ${{ format('CHANGELOG/CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }} --header-label="${{ format('# CHANGELOG-{0}.{1}', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}" --since-tag=${{ steps.generate_tag.outputs.last_tag }} --no-unreleased --max-issues 2
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -46,7 +46,7 @@ jobs:
         if: env.since_tag != ''
         uses: docker://ferrarimarco/github-changelog-generator:latest
         with:
-          args: -u anz-bank -p sysl --output ${{ format('CHANGELOG/CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }} --header-label="${{ format('# CHANGELOG-{0}.{1}', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}" --since-tag=${{ env.since_tag }} --no-unreleased
+          args: -u anz-bank -p sysl --output ${{ format('CHANGELOG/CHANGELOG-{0}.{1}.md', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }} --header-label="${{ format('# CHANGELOG-{0}.{1}', steps.generate_tag.outputs.major, steps.generate_tag.outputs.minor) }}" --since-tag=${{ env.since_tag }} --no-unreleased --max-issues 2
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
