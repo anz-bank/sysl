@@ -15,7 +15,7 @@ To view a list of available commands, run sysl with no arguments:
 
 This documentation refers to [v0.8.0](https://github.com/anz-bank/sysl/releases/tag/v0.8.0) of the sysl CLI tool.
 
-```
+```bash
 $ sysl
 usage: sysl [<flags>] <command> [<args> ...]
 
@@ -83,13 +83,14 @@ Commands:
     Starts the Sysl UI which displays a visual view of apps defined in Sysl.
 
   validate <MODULE>...
-    Validate the sysl file	
+    Validate the sysl file
 ```
 
 To get help for a specific command, pass `--help` into the subcommand to find out more about its usage.
 
 e.g:
-```
+
+```bash
 $ sysl import --help
 usage: sysl import --input=INPUT --app-name=APP-NAME [<flags>]
 

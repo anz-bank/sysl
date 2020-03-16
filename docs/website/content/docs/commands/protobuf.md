@@ -12,7 +12,7 @@ The `sysl protobuf` command is used to generate a proto representation of the Sy
 
 ## Usage
 
-```
+```bash
 usage: sysl protobuf [<flags>] <MODULE>
 ```
 
@@ -20,16 +20,17 @@ usage: sysl protobuf [<flags>] <MODULE>
 
 Optional flags:
 
-*  `    --help       `  Show context-sensitive help (also try --help-long and --help-man).
-*  `    --version    `  Show application version.
-*  `    --log="warn" `  log level: [info,warn,trace,off,debug]
-*  `-v, --verbose    `  enable verbose logging
-*  `    --root=ROOT  `  sysl root directory for input model file. If root is not found, the module directory becomes the
-*  `                 `  root, but the module can not import with absolute paths (or imports must be relative).
-*  `-o, --output="-" `  output file name
-*  `    --mode=textpb`  output mode: [textpb,json]
+- `--help` Show context-sensitive help (also try --help-long and --help-man).
+- `--version` Show application version.
+- `--log="warn"` log level: [info,warn,trace,off,debug]
+- `-v, --verbose` enable verbose logging
+- `--root=ROOT` sysl root directory for input model file. If root is not found, the module directory becomes the
+- `` root, but the module can not import with absolute paths (or imports must be relative).
+- `-o, --output="-"` output file name
+- `--mode=textpb` output mode: [textpb,json]
 
 ## Arguments
 
 Args:
-*  `<MODULE>`  Input sysl file that contains the system specifications. e.g `simple.sysl`. The `.sysl` filetype is optional.
+
+- `<MODULE>` Input sysl file that contains the system specifications. e.g `simple.sysl`. The `.sysl` filetype is optional.

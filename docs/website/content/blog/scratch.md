@@ -4,6 +4,7 @@ date: 2018-02-15T15:55:46+11:00
 draft: false
 author: Marcelo Cantos
 ---
+
 Often we have heard that software products were started when somebody scratched their own itch. And so it was with Marcelo and Sysl, here his story:
 
 Sysl was born as a reaction to the state of architecture as I saw it when I joined ANZ (Australia and New Zealand Banking Group Limited): a morass of documents, spreadsheets and Visio diagrams depicting different parts of the architecture elephant with wildly different representations across platforms and no unified formalism to allow the architecture of the system to be understood and analysed as a whole. Moreover, once complete such designs fossilised rapidly, since there was no formal tie-in between them and the code that was derived from them. Generating code from these designs was an entirely manual process. As a coder by trade (and passion), I saw that none of the extant GUI-focused tooling was doing anything to remedy this, and I even suspected that they were part of the problem, so I decided to experiment with a text-based formalism to describe a system I was designing at the time.

@@ -12,14 +12,16 @@ The `sysl env` command prints out the values of environment variables read by sy
 
 ## Usage
 
-```
+```bash
 usage: sysl env
 ```
 
 ## Output
 
 ### SYSL_MODULES
+
 `SYSL_MODULES` is a flag to indicate whether Sysl modules are enabled.
 
 ### SYSL_PLANTUML
+
 `SYSL_PLANTUML` is used to configure the address of the PlantUML server used for diagram generation

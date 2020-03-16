@@ -10,10 +10,9 @@ toc: true
 
 The `sysl info` command provides information about the sysl binary.
 
-
 ## Usage
 
-```
+```bash
 usage: sysl info
 ```
 
