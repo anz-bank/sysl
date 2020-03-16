@@ -50,6 +50,7 @@ WRAP                : '!wrap';
 TABLE               : '!table';
 TYPE                : '!type';
 ALIAS               : '!alias';
+ENUM                : '!enum';
 UNION               : '!union';
 VIEW                : '!view' { ls(l).gotView = true;};
 

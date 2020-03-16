@@ -33,9 +33,7 @@ func TestGenerateServer(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error parsing test modules %s", err)
 	}
-
 	modules := []*sysl.Module{module}
-
 	syslUI := SyslUI{
 		Host:    "localhost:8080",
 		Fields:  strings.Split(uiFields, ","),
@@ -53,14 +51,13 @@ func TestGenerateServer(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/rest/spec/example", nil)
 	w := httptest.NewRecorder()
 	server.handleRestSpec(w, req)
-	if w.Result().StatusCode != 200 {
-		t.Errorf("Not returning 200")
-	}
+	result := w.Result()
+	defer result.Body.Close()
+	assert.Equal(t, 200, result.StatusCode, "expected status code to be 200 but got %d", result.StatusCode)
 }
 
 func TestGenerateServerHandlesEmptyArray(t *testing.T) {
 	modules := []*sysl.Module{}
-
 	syslUI := SyslUI{
 		Host:    "localhost:8080",
 		Fields:  strings.Split(uiFields, ","),
@@ -69,9 +66,7 @@ func TestGenerateServerHandlesEmptyArray(t *testing.T) {
 		Modules: modules,
 	}
 
-	_, err := syslUI.GenerateServer()
-
-	if err == nil {
+	if _, err := syslUI.GenerateServer(); err == nil {
 		t.Error("Empty input array not caught")
 	}
 }
@@ -82,9 +77,7 @@ func TestServerSetupRuns(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error parsing test modules %s", err)
 	}
-
 	modules := []*sysl.Module{module}
-
 	syslUI := SyslUI{
 		Host:    "localhost:8080",
 		Fields:  strings.Split(uiFields, ","),
@@ -94,13 +87,10 @@ func TestServerSetupRuns(t *testing.T) {
 	}
 
 	server, err := syslUI.GenerateServer()
-
 	if err != nil {
 		t.Errorf("Error generating server %s", err)
 	}
-
-	err = server.Setup()
-	if err != nil {
+	if err = server.Setup(); err != nil {
 		t.Errorf("Error running Setup on server %s", err)
 	}
 
@@ -108,7 +98,9 @@ func TestServerSetupRuns(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/rest/spec/example", nil)
 	w := httptest.NewRecorder()
 	server.handleAPIDoc(w, req)
-	assert.Equal(t, 200, w.Result().StatusCode, "Expected return status code of 200")
+	result := w.Result()
+	defer result.Body.Close()
+	assert.Equal(t, 200, result.StatusCode, "Expected return status code of 200")
 }
 
 func TestHandleJSONServices(t *testing.T) {
@@ -117,9 +109,7 @@ func TestHandleJSONServices(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error parsing test modules %s", err)
 	}
-
 	modules := []*sysl.Module{module}
-
 	syslUI := SyslUI{
 		Host:    "localhost:8080",
 		Fields:  strings.Split(uiFields, ","),
@@ -127,15 +117,11 @@ func TestHandleJSONServices(t *testing.T) {
 		Log:     logrus.New(),
 		Modules: modules,
 	}
-
 	server, err := syslUI.GenerateServer()
-
 	if err != nil {
 		t.Errorf("Error generating server %s", err)
 	}
-
-	err = server.Setup()
-	if err != nil {
+	if err = server.Setup(); err != nil {
 		t.Errorf("Error running Setup on server %s", err)
 	}
 
@@ -143,7 +129,9 @@ func TestHandleJSONServices(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/data/services.json", nil)
 	w := httptest.NewRecorder()
 	server.handleJSONServices(w, req)
-	jsonResponse, err := simplejson.NewFromReader(w.Result().Body) //nolint:bodycloser
+	result := w.Result()
+	defer result.Body.Close()
+	jsonResponse, err := simplejson.NewFromReader(result.Body)
 	if err != nil {
 		t.Errorf("Error parsing JSON")
 	}
@@ -157,9 +145,7 @@ func TestServeHTTP(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error parsing test modules %s", err)
 	}
-
 	modules := []*sysl.Module{module}
-
 	syslUI := SyslUI{
 		Host:    "localhost:8080",
 		Fields:  strings.Split(uiFields, ","),
@@ -169,20 +155,18 @@ func TestServeHTTP(t *testing.T) {
 	}
 
 	server, err := syslUI.GenerateServer()
-
 	if err != nil {
 		t.Errorf("Error generating server %s", err)
 	}
-
-	err = server.Setup()
-	if err != nil {
+	if err := server.Setup(); err != nil {
 		t.Errorf("Error running Setup on server %s", err)
 	}
-
 	// Test we can handle rest spec
 	req := httptest.NewRequest(http.MethodGet, "/data/services.json", nil)
 	w := httptest.NewRecorder()
 	defer w.Result().Body.Close()
 	server.ServeHTTP(w, req)
-	assert.Equal(t, w.Result().StatusCode, 200)
+	result := w.Result()
+	defer result.Body.Close()
+	assert.Equal(t, 200, result.StatusCode, "expected status code to be 200 but got %d", result.StatusCode)
 }
