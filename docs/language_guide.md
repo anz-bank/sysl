@@ -378,7 +378,7 @@ To disable Sysl Modules downloads external files, set environment variable
 
 #### Non-sysl file
 
-When you import sysl file, you can omit the `.sysl` file extension.
+When you import a sysl file, you can omit the `.sysl` file extension.
 
 To import a non-sysl file like swagger file, you can `import
 foreign_import_swagger.yaml as com.foo.bar.app ~swagger`.
