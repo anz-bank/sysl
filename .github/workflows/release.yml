@@ -4,7 +4,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   release-sysl:
@@ -61,9 +61,8 @@ jobs:
           args: release --rm-dist --debug -f .github/goreleaser_configs/.goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
-      # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets 
+      # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets
       # and uncomment this step.
       # - name: Release sysl_js
       #   run: cd unsorted/sysl_js && NPM_AUTH_TOKEN=$ npm publish
