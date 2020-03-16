@@ -55,7 +55,7 @@ jobs:
 
       # GoReleaser release process is customized in `.goreleaser.yml` file
       - name: Release binaries and docker images via goreleaser
-        uses: goreleaser/goreleaser-action@@v1.3.1
+        uses: goreleaser/goreleaser-action@v1.3.1
         with:
           version: v0.126.0
           args: release --rm-dist --debug -f .github/goreleaser_configs/.goreleaser.yml
