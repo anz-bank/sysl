@@ -1,9 +1,0 @@
-package badstmt
-
-import (
-	"github.com/anz-bank/sysl/internal/lsp/foo"
-)
-
-func _() {
-	defer func() { foo. } //@complete(" }", Foo, IntFoo, StructFoo)
-}
