@@ -1,12 +1,11 @@
-package main
+package integrationdiagram
 
 import (
 	"strings"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,10 +16,10 @@ func TestVarManagerForComponent(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           &sysl.Module{},
-		drawableApps:  map[string]struct{}{},
-		symbols:       map[string]*cmdutils.Var{},
+		StringBuilder: &stringBuilder,
+		Mod:           &sysl.Module{},
+		DrawableApps:  map[string]struct{}{},
+		Symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
@@ -36,10 +35,10 @@ func TestVarManagerForComponentWithNameMap(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           &sysl.Module{},
-		drawableApps:  map[string]struct{}{},
-		symbols: map[string]*cmdutils.Var{
+		StringBuilder: &stringBuilder,
+		Mod:           &sysl.Module{},
+		DrawableApps:  map[string]struct{}{},
+		Symbols: map[string]*cmdutils.Var{
 			"appName": {
 				Alias: "_1",
 			},
@@ -61,10 +60,10 @@ func TestVarManagerForComponentWithExistingName(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           &sysl.Module{},
-		drawableApps:  map[string]struct{}{},
-		symbols: map[string]*cmdutils.Var{
+		StringBuilder: &stringBuilder,
+		Mod:           &sysl.Module{},
+		DrawableApps:  map[string]struct{}{},
+		Symbols: map[string]*cmdutils.Var{
 			"test": {
 				Alias: "_1",
 			},
@@ -84,8 +83,8 @@ func TestVarManagerForEPA(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod: &sysl.Module{
+		StringBuilder: &stringBuilder,
+		Mod: &sysl.Module{
 			Apps: map[string]*sysl.Application{
 				"a": {
 					Endpoints: map[string]*sysl.Endpoint{
@@ -94,8 +93,8 @@ func TestVarManagerForEPA(t *testing.T) {
 				},
 			},
 		},
-		drawableApps: map[string]struct{}{},
-		symbols:      map[string]*cmdutils.Var{},
+		DrawableApps: map[string]struct{}{},
+		Symbols:      map[string]*cmdutils.Var{},
 	}
 
 	//When
@@ -111,8 +110,8 @@ func TestVarManagerForEPAWithExistingName(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod: &sysl.Module{
+		StringBuilder: &stringBuilder,
+		Mod: &sysl.Module{
 			Apps: map[string]*sysl.Application{
 				"a": {
 					Endpoints: map[string]*sysl.Endpoint{
@@ -125,8 +124,8 @@ func TestVarManagerForEPAWithExistingName(t *testing.T) {
 				},
 			},
 		},
-		drawableApps: map[string]struct{}{},
-		symbols: map[string]*cmdutils.Var{
+		DrawableApps: map[string]struct{}{},
+		Symbols: map[string]*cmdutils.Var{
 			"a : b": {
 				Alias: "_1",
 			},
@@ -146,10 +145,10 @@ func TestVarManagerForTopState(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           &sysl.Module{},
-		drawableApps:  map[string]struct{}{},
-		topSymbols:    map[string]*_topVar{},
+		StringBuilder: &stringBuilder,
+		Mod:           &sysl.Module{},
+		DrawableApps:  map[string]struct{}{},
+		TopSymbols:    map[string]*_topVar{},
 	}
 
 	//When
@@ -165,12 +164,12 @@ func TestVarManagerForTopStateWithExistingName(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           &sysl.Module{},
-		drawableApps:  map[string]struct{}{},
-		topSymbols: map[string]*_topVar{
+		StringBuilder: &stringBuilder,
+		Mod:           &sysl.Module{},
+		DrawableApps:  map[string]struct{}{},
+		TopSymbols: map[string]*_topVar{
 			"a : b": {
-				topAlias: "_1",
+				TopAlias: "_1",
 			},
 		},
 	}
@@ -188,8 +187,8 @@ func TestBuildClusterForIntsView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod: &sysl.Module{
+		StringBuilder: &stringBuilder,
+		Mod: &sysl.Module{
 			Apps: map[string]*sysl.Application{
 				"a": {
 					Endpoints: map[string]*sysl.Endpoint{
@@ -211,9 +210,9 @@ func TestBuildClusterForIntsView(t *testing.T) {
 				},
 			},
 		},
-		drawableApps: map[string]struct{}{},
-		topSymbols:   map[string]*_topVar{},
-		symbols:      map[string]*cmdutils.Var{},
+		DrawableApps: map[string]struct{}{},
+		TopSymbols:   map[string]*_topVar{},
+		Symbols:      map[string]*cmdutils.Var{},
 	}
 	deps := []AppDependency{
 		{
@@ -229,7 +228,7 @@ func TestBuildClusterForIntsView(t *testing.T) {
 	}
 
 	//When
-	v.buildClusterForEPAView(deps, "")
+	v.BuildClusterForEPAView(deps, "")
 
 	//Then
 	assert.Equal(t, `state "" as X_0 {
@@ -239,7 +238,7 @@ func TestBuildClusterForIntsView(t *testing.T) {
 state "" as X_1 {
   state "" as _2
 }
-`, v.stringBuilder.String())
+`, v.StringBuilder.String())
 }
 
 func TestBuildClusterForComponentView(t *testing.T) {
@@ -248,22 +247,22 @@ func TestBuildClusterForComponentView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           &sysl.Module{},
-		drawableApps:  map[string]struct{}{},
-		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*cmdutils.Var{},
+		StringBuilder: &stringBuilder,
+		Mod:           &sysl.Module{},
+		DrawableApps:  map[string]struct{}{},
+		TopSymbols:    map[string]*_topVar{},
+		Symbols:       map[string]*cmdutils.Var{},
 	}
 	apps := []string{"a :: A", "a :: A", "b :: B", "c :: C"}
 
 	//When
-	v.buildClusterForIntsView(apps)
+	v.BuildClusterForIntsView(apps)
 
 	//Then
 	assert.Equal(t, `package "a" {
 [] as _0
 }
-`, v.stringBuilder.String())
+`, v.StringBuilder.String())
 }
 
 func TestGenerateIntsView(t *testing.T) {
@@ -271,8 +270,8 @@ func TestGenerateIntsView(t *testing.T) {
 
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod: &sysl.Module{
+		StringBuilder: &stringBuilder,
+		Mod: &sysl.Module{
 			Apps: map[string]*sysl.Application{
 				"a": {
 					Name: &sysl.AppName{Part: []string{"a"}},
@@ -307,23 +306,23 @@ func TestGenerateIntsView(t *testing.T) {
 				},
 			},
 		},
-		project:      "project",
-		drawableApps: map[string]struct{}{},
-		topSymbols:   map[string]*_topVar{},
-		symbols:      map[string]*cmdutils.Var{},
+		Project:      "project",
+		DrawableApps: map[string]struct{}{},
+		TopSymbols:   map[string]*_topVar{},
+		Symbols:      map[string]*cmdutils.Var{},
 	}
 
-	v.generateIntsView(
+	v.GenerateIntsView(
 		&Args{},
-		viewParams{},
+		ViewParams{},
 		&IntsParam{
-			integrations: []AppDependency{
+			Integrations: []AppDependency{
 				{
 					Self:   AppElement{Name: "a", Endpoint: "epa"},
 					Target: AppElement{Name: "b", Endpoint: "epb"},
 				},
 			},
-			apps: []string{"a", "b"},
+			Apps: []string{"a", "b"},
 		},
 	)
 
@@ -341,7 +340,7 @@ skinparam component {
 _0 --> _1 <<indirect>>
 [c] as _2
 _2 <|.. _1
-@enduml`, v.stringBuilder.String())
+@enduml`, v.StringBuilder.String())
 }
 
 func testEPAModule() *sysl.Module {
@@ -380,24 +379,24 @@ func TestGenerateEPAView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           testEPAModule(),
-		project:       "test",
-		drawableApps:  map[string]struct{}{},
-		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*cmdutils.Var{},
+		StringBuilder: &stringBuilder,
+		Mod:           testEPAModule(),
+		Project:       "test",
+		DrawableApps:  map[string]struct{}{},
+		TopSymbols:    map[string]*_topVar{},
+		Symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
-	v.generateEPAView(
-		viewParams{
-			diagramTitle:       "test",
-			highLightColor:     "blue",
-			arrowColor:         "red",
-			indirectArrowColor: "grey",
+	v.GenerateEPAView(
+		ViewParams{
+			DiagramTitle:       "test",
+			HighLightColor:     "blue",
+			ArrowColor:         "red",
+			IndirectArrowColor: "grey",
 		},
 		&IntsParam{
-			integrations: []AppDependency{
+			Integrations: []AppDependency{
 				{
 					Self:   AppElement{Name: "a", Endpoint: "epa"},
 					Target: AppElement{Name: "b", Endpoint: "epb"},
@@ -406,7 +405,7 @@ func TestGenerateEPAView(t *testing.T) {
 					},
 				},
 			},
-			app: &sysl.Application{},
+			App: &sysl.Application{},
 		},
 	)
 
@@ -433,7 +432,7 @@ state "test" as X_1 {
 }
 _0 -[#grey]-> _1
 _1 -[#black]> _2
-@enduml`, v.stringBuilder.String())
+@enduml`, v.StringBuilder.String())
 }
 
 func TestGenerateEPAViewEndpointPattern(t *testing.T) {
@@ -448,24 +447,24 @@ func TestGenerateEPAViewEndpointPattern(t *testing.T) {
 
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           mod,
-		project:       "test",
-		drawableApps:  map[string]struct{}{},
-		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*cmdutils.Var{},
+		StringBuilder: &stringBuilder,
+		Mod:           mod,
+		Project:       "test",
+		DrawableApps:  map[string]struct{}{},
+		TopSymbols:    map[string]*_topVar{},
+		Symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
-	v.generateEPAView(
-		viewParams{
-			diagramTitle:       "test",
-			highLightColor:     "blue",
-			arrowColor:         "red",
-			indirectArrowColor: "grey",
+	v.GenerateEPAView(
+		ViewParams{
+			DiagramTitle:       "test",
+			HighLightColor:     "blue",
+			ArrowColor:         "red",
+			IndirectArrowColor: "grey",
 		},
 		&IntsParam{
-			integrations: []AppDependency{
+			Integrations: []AppDependency{
 				{
 					Self:   AppElement{Name: "a", Endpoint: "epa"},
 					Target: AppElement{Name: "b", Endpoint: "epb"},
@@ -477,7 +476,7 @@ func TestGenerateEPAViewEndpointPattern(t *testing.T) {
 					},
 				},
 			},
-			app: &sysl.Application{},
+			App: &sysl.Application{},
 		},
 	)
 
@@ -504,7 +503,7 @@ state "test" as X_1 {
 }
 _0 -[#grey]-> _1
 _1 -[#black]> _2
-@enduml`, v.stringBuilder.String())
+@enduml`, v.StringBuilder.String())
 }
 
 func TestGenerateEPAViewSameApp(t *testing.T) {
@@ -515,24 +514,24 @@ func TestGenerateEPAViewSameApp(t *testing.T) {
 
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           mod,
-		project:       "test",
-		drawableApps:  map[string]struct{}{},
-		topSymbols:    map[string]*_topVar{},
-		symbols:       map[string]*cmdutils.Var{},
+		StringBuilder: &stringBuilder,
+		Mod:           mod,
+		Project:       "test",
+		DrawableApps:  map[string]struct{}{},
+		TopSymbols:    map[string]*_topVar{},
+		Symbols:       map[string]*cmdutils.Var{},
 	}
 
 	//When
-	v.generateEPAView(
-		viewParams{
-			diagramTitle:       "test",
-			highLightColor:     "blue",
-			arrowColor:         "red",
-			indirectArrowColor: "grey",
+	v.GenerateEPAView(
+		ViewParams{
+			DiagramTitle:       "test",
+			HighLightColor:     "blue",
+			ArrowColor:         "red",
+			IndirectArrowColor: "grey",
 		},
 		&IntsParam{
-			integrations: []AppDependency{
+			Integrations: []AppDependency{
 				{
 					Self:   AppElement{Name: "b", Endpoint: "epa"},
 					Target: AppElement{Name: "b", Endpoint: "epb"},
@@ -549,7 +548,7 @@ func TestGenerateEPAViewSameApp(t *testing.T) {
 					},
 				},
 			},
-			app: &sysl.Application{},
+			App: &sysl.Application{},
 		},
 	)
 
@@ -572,7 +571,7 @@ state "test" as X_0 {
   state "test" as _1
 }
 _0 -[#grey]-> _1
-@enduml`, v.stringBuilder.String())
+@enduml`, v.StringBuilder.String())
 }
 
 func TestGenerateView(t *testing.T) {
@@ -592,9 +591,9 @@ func TestGenerateView(t *testing.T) {
 		},
 	}
 	params := &IntsParam{
-		integrations: deps,
-		app:          &sysl.Application{},
-		endpt: &sysl.Endpoint{
+		Integrations: deps,
+		App:          &sysl.Application{},
+		Endpt: &sysl.Endpoint{
 			Attrs: map[string]*sysl.Attribute{
 				"epa": nil,
 			},
@@ -654,10 +653,10 @@ func TestDrawSystemView(t *testing.T) {
 	//Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
-		stringBuilder: &stringBuilder,
-		mod:           &sysl.Module{},
-		drawableApps:  map[string]struct{}{},
-		symbols: map[string]*cmdutils.Var{
+		StringBuilder: &stringBuilder,
+		Mod:           &sysl.Module{},
+		DrawableApps:  map[string]struct{}{},
+		Symbols: map[string]*cmdutils.Var{
 			"test": {
 				Alias: "_1",
 			},
@@ -676,25 +675,25 @@ func TestDrawSystemView(t *testing.T) {
 		},
 	}
 	params := &IntsParam{
-		integrations: deps,
-		app:          &sysl.Application{},
-		endpt: &sysl.Endpoint{
+		Integrations: deps,
+		App:          &sysl.Application{},
+		Endpt: &sysl.Endpoint{
 			Attrs: map[string]*sysl.Attribute{
 				"epa": nil,
 			},
 		},
 	}
-	viewParams := &viewParams{}
+	viewParams := &ViewParams{}
 	nameMap := map[string]string{}
 
 	//When
-	v.drawSystemView(*viewParams, params, nameMap)
+	v.DrawSystemView(*viewParams, params, nameMap)
 
 	//Then
 	assert.Equal(t, `[] as _1
 [] as _2
 _1 --> _2 <<indirect>>
-`, v.stringBuilder.String())
+`, v.StringBuilder.String())
 }
 
 func TestMakeIntsParam(t *testing.T) {
@@ -706,7 +705,7 @@ func TestMakeIntsParam(t *testing.T) {
 		&sysl.Application{}, &sysl.Endpoint{}}
 
 	assert.NotNil(t, p)
-	assert.Equal(t, "a", p.apps[0])
+	assert.Equal(t, "a", p.Apps[0])
 }
 
 func TestMakeArgs(t *testing.T) {
@@ -715,7 +714,7 @@ func TestMakeArgs(t *testing.T) {
 	a := &Args{"a", "p", true, true}
 
 	assert.NotNil(t, a)
-	assert.Equal(t, "a", a.title)
+	assert.Equal(t, "a", a.Title)
 }
 
 func TestStringInSlice(t *testing.T) {
@@ -723,5 +722,5 @@ func TestStringInSlice(t *testing.T) {
 
 	s := []string{"a", "b"}
 
-	assert.True(t, stringInSlice("a", s))
+	assert.True(t, StringInSlice("a", s))
 }

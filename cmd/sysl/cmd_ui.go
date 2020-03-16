@@ -36,7 +36,7 @@ func (p *uiCmd) Name() string       { return "ui" }
 func (p *uiCmd) MaxSyslModule() int { return 1 }
 
 func (p *uiCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Starts the Sysl UI which displays a visual view of apps defined in Sysl.")
+	cmd := app.Command(p.Name(), "Starts the Sysl UI which displays a visual view of Apps defined in Sysl.")
 	cmd.Flag("host", "host and port to serve on").Default(":8080").Short('h').StringVar(&p.host)
 	cmd.Flag("fields", "fields to display on the UI, separated by comma").Default(uiFields).Short('f').StringVar(&p.fields) //nolint:lll
 	cmd.Flag("grpcui", "enables the grpcUI handlers").BoolVar(&p.grpcui)

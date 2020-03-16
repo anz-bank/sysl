@@ -34,7 +34,7 @@ func (p *exportCmd) MaxSyslModule() int { return 1 }
 func (p *exportCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types: Swagger")
 	cmd.Flag("app-name", "name of the sysl app defined in sysl model."+
-		" if there are multiple apps defined in sysl model,"+
+		" if there are multiple Apps defined in sysl model,"+
 		" swagger will be generated only for the given app").Short('a').StringVar(&p.appName)
 	cmd.Flag("format", "format of export, supported options; swagger").Default("swagger").Short('f').StringVar(&p.mode)
 	cmd.Flag("output", "output filepath.format(yaml | json) (default: %(appname).yaml)").Default(

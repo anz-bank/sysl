@@ -4,6 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anz-bank/sysl/pkg/diagrams"
+
 	"github.com/anz-bank/sysl/pkg/loader"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
@@ -65,7 +67,7 @@ func TestDoConstructDataDiagramsWithProjectMannerModule(t *testing.T) {
 	result, err := DoConstructDataDiagramsWithParams(args.root, "", args.title, args.output, args.project,
 		args.modules)
 	assert.Nil(t, err, "Generating the data diagrams failed")
-	comparePUML(t, args.expected, result)
+	diagrams.ComparePUML(t, args.expected, result)
 }
 
 func DoConstructDataDiagramsWithParams(
@@ -128,5 +130,5 @@ func TestDoConstructDataDiagramsWithPureModule(t *testing.T) {
 	}
 
 	assert.Nil(t, err, "Generating the data diagrams failed")
-	comparePUML(t, args.expected, result)
+	diagrams.ComparePUML(t, args.expected, result)
 }

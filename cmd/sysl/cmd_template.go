@@ -34,7 +34,7 @@ func (p *templateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("template", "path to template file from the root transform directory").Required().StringVar(&p.template)
 	cmd.Flag("app-name",
 		"name of the sysl app defined in sysl model."+
-			" if there are multiple apps defined in sysl model,"+
+			" if there are multiple Apps defined in sysl model,"+
 			" code will be generated only for the given app").
 		Short('a').Default("").StringsVar(&p.appName)
 	cmd.Flag("start", "start rule for the template").Required().StringVar(&p.start)
