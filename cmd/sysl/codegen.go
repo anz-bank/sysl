@@ -36,7 +36,7 @@ params[3] - viewName
 params[4] - basePath
 */
 // applyTranformToModel loads applies the transform to input model
-func applyTranformToModel(model, transform *sysl.Module, params ...string) (*sysl.Value, error) {
+func applyTranformToModel(model, transform *sysl.Module, logger *logrus.Logger, params ...string) (*sysl.Value, error) {
 	modelApp, has := model.Apps[params[0]]
 	if !has {
 		var apps []string
@@ -51,8 +51,8 @@ func applyTranformToModel(model, transform *sysl.Module, params ...string) (*sys
 		return nil, errors.Errorf("Cannot execute missing view: %s, in app %s", params[3], params[1])
 	}
 	s := eval.Scope{}
-	s.AddApp("app", modelApp)
-	s.AddModule("module", model)
+	s.AddApp("app", modelApp, logger)
+	s.AddModule("module", model, logger)
 	s.AddString("depPath", params[2])
 	s["basePath"] = eval.MakeValueString(params[4])
 	var result *sysl.Value
@@ -153,12 +153,12 @@ func GenerateCode(
 		}
 	}
 
-	fileNames, err := applyTranformToModel(model, tx, modelAppName, transformAppName,
+	fileNames, err := applyTranformToModel(model, tx, logger, modelAppName, transformAppName,
 		depPath, "filename", basePath)
 	if err != nil {
 		return nil, err
 	}
-	result, err := applyTranformToModel(model, tx, modelAppName, transformAppName,
+	result, err := applyTranformToModel(model, tx, logger, modelAppName, transformAppName,
 		depPath, g.Start, basePath)
 	if err != nil {
 		return nil, err
