@@ -34,7 +34,7 @@ PetShopFacade [package="io.sysl.demo.petshop.facade"]:
         !table EmployeeTendsPet
 
 
-PetShopApi [package="io.sysl.demo.petshop.api"]:
+PetShopApi [package="io.sysl.demo.petshop.api", ~rest]:
     /petshop:
         GET:
             return PetShop
