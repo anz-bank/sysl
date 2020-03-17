@@ -1,4 +1,4 @@
-// Code generated from pkg/grammar/SyslParser.g4 by ANTLR 4.8. DO NOT EDIT.
+// Generated from pkg/grammar/SyslParser.g4 by ANTLR 4.7.
 
 package parser // SyslParser
 
@@ -520,6 +520,15 @@ type SyslParserListener interface {
 
 	// EnterAlias is called when entering the alias production.
 	EnterAlias(c *AliasContext)
+
+	// EnterEnumeration is called when entering the enumeration production.
+	EnterEnumeration(c *EnumerationContext)
+
+	// EnterEnum_stmts is called when entering the enum_stmts production.
+	EnterEnum_stmts(c *Enum_stmtsContext)
+
+	// EnterEnum is called when entering the enum production.
+	EnterEnum(c *EnumContext)
 
 	// EnterApp_decl is called when entering the app_decl production.
 	EnterApp_decl(c *App_declContext)
@@ -1051,6 +1060,15 @@ type SyslParserListener interface {
 
 	// ExitAlias is called when exiting the alias production.
 	ExitAlias(c *AliasContext)
+
+	// ExitEnumeration is called when exiting the enumeration production.
+	ExitEnumeration(c *EnumerationContext)
+
+	// ExitEnum_stmts is called when exiting the enum_stmts production.
+	ExitEnum_stmts(c *Enum_stmtsContext)
+
+	// ExitEnum is called when exiting the enum production.
+	ExitEnum(c *EnumContext)
 
 	// ExitApp_decl is called when exiting the app_decl production.
 	ExitApp_decl(c *App_declContext)

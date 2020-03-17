@@ -1,0 +1,81 @@
+apps: <
+  key: "app"
+  value: <
+    name: <
+      part: "app"
+    >
+    types: <
+      key: "enum3"
+      value: <
+        enum: <
+          items: <
+            key: "bar"
+            value: 2
+          >
+          items: <
+            key: "foo"
+            value: 1
+          >
+        >
+        source_context: <
+          file: "tests/enum.sysl"
+          start: <
+            line: 5
+            col: 4
+          >
+          end: <
+            line: 8
+            col: 4
+          >
+        >
+      >
+    >
+    types: <
+      key: "enum4"
+      value: <
+        enum: <
+          items: <
+            key: "baz"
+            value: 1
+          >
+        >
+        attrs: <
+          key: "attr"
+          value: <
+            s: "val"
+          >
+        >
+        attrs: <
+          key: "patterns"
+          value: <
+            a: <
+              elt: <
+                s: "pattern"
+              >
+            >
+          >
+        >
+        source_context: <
+          file: "tests/enum.sysl"
+          start: <
+            line: 8
+            col: 4
+          >
+          end: <
+            line: 10
+          >
+        >
+      >
+    >
+    source_context: <
+      file: "tests/enum.sysl"
+      start: <
+        line: 1
+        col: 1
+      >
+      end: <
+        line: 1
+      >
+    >
+  >
+>

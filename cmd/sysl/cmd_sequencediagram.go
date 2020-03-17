@@ -62,7 +62,7 @@ func (p *sequenceDiagramCmd) Configure(app *kingpin.Application) *kingpin.CmdCla
 			"repeat '-b App <- Endpoint=Some description' to set multiple blackboxes",
 	).Short('b').StringMapVar(&p.blackboxesFlag)
 
-	cmd.Flag("groupby", "Enter the groupby attribute (apps having "+
+	cmd.Flag("groupby", "Enter the groupby attribute (Apps having "+
 		"the same attribute value are grouped together in one box").Short('g').StringVar(&p.group)
 
 	EnsureFlagsNonEmpty(cmd)

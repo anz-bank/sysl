@@ -1,18 +1,17 @@
-Grammar musings
-===============
+# Grammar musings
 
 Thinking about language embeddings: Sysl's own grammar could be defined as a Sysl grammar. This implies that the only grammar requiring low-level coding is the grammar syntax itself, which would be relatively simple:
 
-* terminals (string literals `"Hi!"` and regexes `/REGEXP/`)¹
-* non-terminal rules ²
-* parenthetical groups ³
-* union: `|` ⁴
-* exclusion: `-` ⁵
-* quantifiers: `?` `*` `+`
-* lists, e.g.: `Arg:","` (shorthand for `Arg ("," Arg)*`) ⁶
-* An escaping mechanism to jump in and out of embedded languages, e.g.: `!{java: ... :}`
-* To declare a grammar `!grammar`
-* Special tokens: `INDENT`, `OUTDENT` maybe `WHITESPACE` ⁷
+- terminals (string literals `"Hi!"` and regexes `/REGEXP/`)¹
+- non-terminal rules ²
+- parenthetical groups ³
+- union: `|` ⁴
+- exclusion: `-` ⁵
+- quantifiers: `?` `*` `+`
+- lists, e.g.: `Arg:","` (shorthand for `Arg ("," Arg)*`) ⁶
+- An escaping mechanism to jump in and out of embedded languages, e.g.: `!{java: ... :}`
+- To declare a grammar `!grammar`
+- Special tokens: `INDENT`, `OUTDENT` maybe `WHITESPACE` ⁷
 
 There should be some kind of built-in support for implicitly skipping whitespace (an almost universal feature of programming languages (with the notable exceptions of XML and whitespace)) and indent/outdent to ease support for Python, YAML and Sysl itself.
 
@@ -37,7 +36,6 @@ The output would be a grammar protobuf, which is handed to a grammar interpreter
 
 ⁷ 	PYTHON_FUNC: "def" ID ":" INDENT BODY DEDENT
 ```
-
 
 ## Example: Java Grammar
 

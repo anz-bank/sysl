@@ -2,3 +2,4 @@
 *           text=auto eol=lf
 go.sum      linguist-generated=true
 CHANGELOG/* linguist-generated=true
+pkged.go     linguist-generated=true

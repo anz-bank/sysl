@@ -1,8 +1,8 @@
 ---
-title: "Installation"
+title: "Install"
 description: "Sysl can be installed on Windows, MacOS and Linux - follow this guide."
 date: 2018-02-27T15:51:27+11:00
-weight: 10
+weight: 1
 draft: false
 bref: "Sysl can be installed on Windows, MacOS and Linux - follow this guide"
 toc: true
@@ -13,12 +13,8 @@ Sysl is a CLI (Command Line Interface) that executes with the `sysl` command.
 ## Prerequisites
 
 - [Go 1.13](https://golang.org/doc/install)
-- There are extra prerequisites for several subcommands like `sysl sd`(sequence diagram generation):
-	- Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some of the automated tests require a PlantUML dependency. Provide PlantUML access either via local installation or URL to remote service. Warning, for sensitive data the public service at www.plantuml.com is not suitable. You can use one of the following options to set up your environment:
-		- execute `SYSL_PLANTUML=http://www.plantuml.com/plantuml`
-		- add `export SYSL_PLANTUML=http://www.plantuml.com/plantuml` to your `.bashrc`
-		  or similar
-		- [install PlantUML](http://plantuml.com/starting) locally or run a local instance of the [PlantUML server](https://hub.docker.com/r/plantuml/plantuml-server/) using the docker image and run on port 8080. Otherwise you can refer to the [plantuml server guide](docs/plantUML_server.md)
+- There are extra prerequisites for several subcommands like `sysl sd`(sequence diagram generation): - Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some of the automated tests require a PlantUML dependency. Provide PlantUML access either via local installation or URL to remote service. Warning, for sensitive data the public service at www.plantuml.com is not suitable. You can use one of the following options to set up your environment: - execute `SYSL_PLANTUML=http://www.plantuml.com/plantuml` - add `export SYSL_PLANTUML=http://www.plantuml.com/plantuml` to your `.bashrc`
+  or similar - [install PlantUML](http://plantuml.com/starting) locally or run a local instance of the [PlantUML server](https://hub.docker.com/r/plantuml/plantuml-server/) using the docker image and run on port 8080. Otherwise you can refer to the [plantuml server guide](docs/plantUML_server.md)
 
 ---
 
@@ -68,8 +64,8 @@ $ docker run --rm \
   -w /go/src/github.com/anz-bank/sysl \
   anzbank/sysl:latest validate -v ./demo/examples/Modules/model_with_deps.sysl
 ```
-We have used this [Dockerfile](https://github.com/anz-bank/sysl/blob/master/Dockerfile) to create this image.
 
+We have used this [Dockerfile](https://github.com/anz-bank/sysl/blob/master/Dockerfile) to create this image.
 
 ## Compiling from source
 
@@ -92,3 +88,7 @@ $ go install ./cmd/sysl
 # check it works
 $ sysl help
 ```
+
+## VSCode Extension
+
+Sysl has a VSCode extension which provides syntax highlighting for `.sysl` files. Install it [here](https://marketplace.visualstudio.com/items?itemName=ANZ-BANK.vscode-sysl).

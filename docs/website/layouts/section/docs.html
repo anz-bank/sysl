@@ -13,7 +13,7 @@
       <!-- only show pages where dir is the same as the _index.md -->
       {{ $pages := .Sections }}
       {{ $pages := union $pages (where .Site.RegularPages ".File.Dir" $parentDir )}}
-      {{ range $pages}}
+      {{ range $pages.ByWeight}}
 
       <div class="col col-4 item">
         <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>

@@ -44,7 +44,7 @@ func applyTranformToModel(model, transform *sysl.Module, params ...string) (*sys
 			apps = append(apps, k)
 		}
 		sort.Strings(apps)
-		return nil, errors.Errorf("app %s does not exist in model, available apps: [%s]", params[0], strings.Join(apps, ", "))
+		return nil, errors.Errorf("app %s does not exist in model, available Apps: [%s]", params[0], strings.Join(apps, ", "))
 	}
 	view := transform.Apps[params[1]].Views[params[3]]
 	if view == nil {
