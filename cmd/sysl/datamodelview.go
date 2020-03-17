@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/integrationdiagram"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	proto "github.com/anz-bank/sysl/pkg/sysl"
@@ -248,7 +250,7 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	if dataParam.Title != "" {
 		fmt.Fprintf(v.stringBuilder, "title %s\n", dataParam.Title)
 	}
-	v.stringBuilder.WriteString(PumlHeader)
+	v.stringBuilder.WriteString(integrationdiagram.PumlHeader)
 
 	// sort and iterate over each entity type the selected application
 	// *Type_Tuple_ OR *Type_Relation_

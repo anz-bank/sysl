@@ -10,8 +10,8 @@ We want to make contributing to this project as easy and transparent as possible
 - Becoming a maintainer
 
 ## We Develop with Github
-We use github to host code, to track issues and feature requests, as well as accept pull requests.
 
+We use github to host code, to track issues and feature requests, as well as accept pull requests.
 
 ## How to propose changes to the codebase
 
@@ -55,25 +55,26 @@ We use [Github Flow](https://guides.github.com/introduction/flow/index.html), so
 
 1. Fork the repo and create your branch from `master`.
 2. Git commit your changes
-	* If you've added code that should be tested, add tests.
-	* If you've added code that makes the documentation out-of-date, update the documentation.
-	* Ensure the test suite passes.
-	* Make sure your code lints.
+   - If you've added code that should be tested, add tests.
+   - If you've added code that makes the documentation out-of-date, update the documentation.
+   - Ensure the test suite passes.
+   - Make sure your code lints.
 3. Git push and open a pull request against the master branch(attach **WIP** tag when the PR is still work in progress).
 4. Merge it after it's reviewed and approved!
 
 > The codebase structure refers to [this standard](https://github.com/golang-standards/project-layout)
 
 > Commit messages should be well formatted, and to make that "standardized", we are using Conventional Commits.
-You can follow the documentation on [their website](https://www.conventionalcommits.org).
+> You can follow the documentation on [their website](https://www.conventionalcommits.org).
 
 ## How to report a bug or suggest a feature
+
 We use GitHub [issues](https://github.com/anz-bank/sysl/issues) to track public bugs and collect enhancement suggestions. Report a bug or suggest a feature by [opening a new issue](https://github.com/anz-bank/sysl/issues/new/choose). Choose the issue template you want and follow the hints; it's that easy!
 
 ## How to publish a new release
 
 Please follow the steps in the [releasing](releasing.md) documentaion.
 
-
 ## Any contributions you make will be under the Apache License 2.0
+
 In short, when you submit code changes, your submissions are understood to be under the same [Apache License 2.0](https://github.com/anz-bank/sysl/blob/master/LICENSE) that covers the project. Feel free to contact the maintainers if that's a concern.
