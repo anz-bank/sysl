@@ -1,38 +1,36 @@
-package main
+package datamodeldiagram
 
 import (
 	"fmt"
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/integrationdiagram"
-
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-
-	proto "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/integrationdiagram"
+	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
+const classString = `class`
 const relationArrow = `}--`
 const tupleArrow = `*--`
 const entityLessThanArrow = `<< (`
 const entityGreaterThanArrow = `) >>`
-const classString = `class`
 
 type DataModelParam struct {
 	cmdutils.ClassLabeler
-	Mod     *proto.Module
-	App     *proto.Application
+	Mod     *sysl.Module
+	App     *sysl.Application
 	Project string
 	Title   string
 }
 
 type DataModelView struct {
 	cmdutils.ClassLabeler
-	mod           *proto.Module
-	stringBuilder *strings.Builder
-	symbols       map[string]*cmdutils.Var
-	project       string
-	title         string
+	Mod           *sysl.Module
+	StringBuilder *strings.Builder
+	Symbols       map[string]*cmdutils.Var
+	Project       string
+	Title         string
 }
 
 type RelationshipParam struct {
@@ -42,45 +40,45 @@ type RelationshipParam struct {
 }
 
 type EntityViewParam struct {
-	entityColor  string
-	entityHeader string
-	entityName   string
+	EntityColor  string
+	EntityHeader string
+	EntityName   string
 }
 
 func MakeDataModelView(
-	p cmdutils.ClassLabeler, mod *proto.Module, stringBuilder *strings.Builder,
+	p cmdutils.ClassLabeler, mod *sysl.Module, stringBuilder *strings.Builder,
 	title, project string,
 ) *DataModelView {
 	return &DataModelView{
 		ClassLabeler:  p,
-		mod:           mod,
-		stringBuilder: stringBuilder,
-		project:       project,
-		title:         title,
-		symbols:       make(map[string]*cmdutils.Var),
+		Mod:           mod,
+		StringBuilder: stringBuilder,
+		Project:       project,
+		Title:         title,
+		Symbols:       make(map[string]*cmdutils.Var),
 	}
 }
 
 func (v *DataModelView) UniqueVarForAppName(appName string) string {
-	if s, ok := v.symbols[appName]; ok {
+	if s, ok := v.Symbols[appName]; ok {
 		return s.Alias
 	}
 
-	i := len(v.symbols)
+	i := len(v.Symbols)
 	alias := fmt.Sprintf("_%d", i)
 	label := v.LabelClass(appName)
 	s := &cmdutils.Var{
-		Agent: cmdutils.MakeAgent(map[string]*proto.Attribute{}),
+		Agent: cmdutils.MakeAgent(map[string]*sysl.Attribute{}),
 		Order: i,
 		Label: label,
 		Alias: alias,
 	}
-	v.symbols[appName] = s
+	v.Symbols[appName] = s
 
 	return s.Alias
 }
 
-func (v *DataModelView) drawRelationship(relationshipMap map[string]map[string]RelationshipParam, viewType string) {
+func (v *DataModelView) DrawRelationship(relationshipMap map[string]map[string]RelationshipParam, viewType string) {
 	relNames := []string{}
 	for relName := range relationshipMap {
 		relNames = append(relNames, relName)
@@ -94,22 +92,22 @@ func (v *DataModelView) drawRelationship(relationshipMap map[string]map[string]R
 		sort.Strings(childNames)
 		for _, childName := range childNames {
 			for cnt := relationshipMap[relName][childName].Count; cnt > 0; cnt-- {
-				v.stringBuilder.WriteString(fmt.Sprintf("%s %s \"%s\" %s\n", relName, viewType,
+				v.StringBuilder.WriteString(fmt.Sprintf("%s %s \"%s\" %s\n", relName, viewType,
 					relationshipMap[relName][childName].Relationship, relationshipMap[relName][childName].Entity))
 			}
 		}
 	}
 }
 
-func (v *DataModelView) drawRelation(
+func (v *DataModelView) DrawRelation(
 	viewParam EntityViewParam,
-	entity *proto.Type_Relation,
+	entity *sysl.Type_Relation,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
-	entityTokens := strings.Split(viewParam.entityName, ".")
+	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.entityName,
-		encEntity, entityLessThanArrow, viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
+		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
 
 	// sort and iterate over attributes
 	attrNames := []string{}
@@ -145,38 +143,38 @@ func (v *DataModelView) drawRelation(
 		} else {
 			s = fmt.Sprintf("+ %s : %s\n", attrName, strings.ToLower(attrType.GetPrimitive().String()))
 		}
-		v.stringBuilder.WriteString(s)
+		v.StringBuilder.WriteString(s)
 	}
-	v.stringBuilder.WriteString("}\n")
+	v.StringBuilder.WriteString("}\n")
 }
 
-func (v *DataModelView) drawPrimitive(
+func (v *DataModelView) DrawPrimitive(
 	viewParam EntityViewParam,
 	entity string,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
-	entityTokens := strings.Split(viewParam.entityName, ".")
+	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.entityName,
-		encEntity, entityLessThanArrow, viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
+		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
 
 	if _, exists := relationshipMap[encEntity]; !exists {
 		relationshipMap[encEntity] = map[string]RelationshipParam{}
 	}
 	// Add default property id for primitive types
-	v.stringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", "id", strings.ToLower(entity)))
-	v.stringBuilder.WriteString("}\n")
+	v.StringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", "id", strings.ToLower(entity)))
+	v.StringBuilder.WriteString("}\n")
 }
 
-func (v *DataModelView) drawTuple(
+func (v *DataModelView) DrawTuple(
 	viewParam EntityViewParam,
-	entity *proto.Type_Tuple,
+	entity *sysl.Type_Tuple,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
-	entityTokens := strings.Split(viewParam.entityName, ".")
+	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.stringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.entityName,
-		encEntity, entityLessThanArrow, viewParam.entityHeader, viewParam.entityColor, entityGreaterThanArrow))
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
+		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
 	var relation string
 	var collectionString string
 	var path []string
@@ -193,10 +191,10 @@ func (v *DataModelView) drawTuple(
 		if _, exists := relationshipMap[encEntity]; !exists {
 			relationshipMap[encEntity] = map[string]RelationshipParam{}
 		}
-		if attrType.GetPrimitive() == proto.Type_NO_Primitive {
+		if attrType.GetPrimitive() == sysl.Type_NO_Primitive {
 			switch {
 			case attrType.GetList() != nil:
-				if attrType.GetList().GetType().GetPrimitive() == proto.Type_NO_Primitive {
+				if attrType.GetList().GetType().GetPrimitive() == sysl.Type_NO_Primitive {
 					path = attrType.GetList().GetType().GetTypeRef().GetRef().Path
 				} else {
 					isPrimitiveList = true
@@ -205,7 +203,7 @@ func (v *DataModelView) drawTuple(
 				collectionString = fmt.Sprintf("+ %s : **List <%s>**\n", attrName, path[0])
 				relation = `0..*`
 			case attrType.GetSet() != nil:
-				if attrType.GetSet().GetPrimitive() == proto.Type_NO_Primitive {
+				if attrType.GetSet().GetPrimitive() == sysl.Type_NO_Primitive {
 					path = attrType.GetSet().GetTypeRef().GetRef().Path
 				} else {
 					isPrimitiveList = true
@@ -220,7 +218,7 @@ func (v *DataModelView) drawTuple(
 			default:
 				continue
 			}
-			v.stringBuilder.WriteString(collectionString)
+			v.StringBuilder.WriteString(collectionString)
 			if !isPrimitiveList {
 				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
 					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
@@ -237,20 +235,20 @@ func (v *DataModelView) drawTuple(
 				}
 			}
 		} else {
-			v.stringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", attrName, strings.ToLower(attrType.GetPrimitive().String())))
+			v.StringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", attrName, strings.ToLower(attrType.GetPrimitive().String())))
 		}
 	}
-	v.stringBuilder.WriteString("}\n")
+	v.StringBuilder.WriteString("}\n")
 }
 
 func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	var isRelation bool
 	relationshipMap := map[string]map[string]RelationshipParam{}
-	v.stringBuilder.WriteString("@startuml\n")
+	v.StringBuilder.WriteString("@startuml\n")
 	if dataParam.Title != "" {
-		fmt.Fprintf(v.stringBuilder, "title %s\n", dataParam.Title)
+		fmt.Fprintf(v.StringBuilder, "title %s\n", dataParam.Title)
 	}
-	v.stringBuilder.WriteString(integrationdiagram.PumlHeader)
+	v.StringBuilder.WriteString(integrationdiagram.PumlHeader)
 
 	// sort and iterate over each entity type the selected application
 	// *Type_Tuple_ OR *Type_Relation_
@@ -265,34 +263,34 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 		if relEntity := entityType.GetRelation(); relEntity != nil {
 			isRelation = true
 			viewParam := EntityViewParam{
-				entityColor:  `orchid`,
-				entityHeader: `D`,
-				entityName:   entityName,
+				EntityColor:  `orchid`,
+				EntityHeader: `D`,
+				EntityName:   entityName,
 			}
-			v.drawRelation(viewParam, relEntity, relationshipMap)
+			v.DrawRelation(viewParam, relEntity, relationshipMap)
 		} else if tupEntity := entityType.GetTuple(); tupEntity != nil {
 			isRelation = false
 			viewParam := EntityViewParam{
-				entityColor:  `orchid`,
-				entityHeader: `D`,
-				entityName:   entityName,
+				EntityColor:  `orchid`,
+				EntityHeader: `D`,
+				EntityName:   entityName,
 			}
-			v.drawTuple(viewParam, tupEntity, relationshipMap)
-		} else if pe := entityType.GetPrimitive(); pe != proto.Type_NO_Primitive && len(strings.TrimSpace(pe.String())) > 0 {
+			v.DrawTuple(viewParam, tupEntity, relationshipMap)
+		} else if pe := entityType.GetPrimitive(); pe != sysl.Type_NO_Primitive && len(strings.TrimSpace(pe.String())) > 0 {
 			isRelation = false
 			viewParam := EntityViewParam{
-				entityColor:  `orchid`,
-				entityHeader: `D`,
-				entityName:   entityName,
+				EntityColor:  `orchid`,
+				EntityHeader: `D`,
+				EntityName:   entityName,
 			}
-			v.drawPrimitive(viewParam, pe.String(), relationshipMap)
+			v.DrawPrimitive(viewParam, pe.String(), relationshipMap)
 		}
 	}
 	if isRelation {
-		v.drawRelationship(relationshipMap, relationArrow)
+		v.DrawRelationship(relationshipMap, relationArrow)
 	} else {
-		v.drawRelationship(relationshipMap, tupleArrow)
+		v.DrawRelationship(relationshipMap, tupleArrow)
 	}
-	v.stringBuilder.WriteString("@enduml\n")
-	return v.stringBuilder.String()
+	v.StringBuilder.WriteString("@enduml\n")
+	return v.StringBuilder.String()
 }
