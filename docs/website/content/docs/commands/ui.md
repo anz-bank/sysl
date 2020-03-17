@@ -27,10 +27,8 @@ Optional flags:
 - `--log="warn"` log level: [off,debug,info,warn,trace]
 - `-v, --verbose` enable verbose logging
 - `--root=ROOT` sysl root directory for input model file. If root is not found, the module directory becomes the
--                       root, but the module can not import with absolute paths (or imports must be relative).
+                       root, but the module can not import with absolute paths (or imports must be relative).
 - `-h, --host=":8080"` host and port to serve on
-- `-f, --fields="\nteam,\nteam.slack,\nowner.name,\nowner.email,\nfile.version,\nrelease.version,\ndescription,\ndeploy.env1.url,\ndeploy.sit1.url,\ndeploy.sit2.url,\ndeploy.* qa.url,\ndeploy.prod.url,\nrepo.url,\ndocs.url,\ntype"`
--                       fields to display on the UI, separated by comma
 - `--grpcui` enables the grpcUI handlers
 
 ## Arguments
