@@ -163,7 +163,7 @@ func (st *State) Servers() []Server {
 // A Client is an incoming connection from a remote client.
 type Client interface {
 	ID() string
-	Session() Session
+	//Session() Session
 	DebugAddress() string
 	Logfile() string
 	ServerID() string

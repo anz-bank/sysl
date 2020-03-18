@@ -17,13 +17,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"golang.org/x/sync/errgroup"
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
 	"github.com/anz-bank/sysl/internal/lsp"
-	"github.com/anz-bank/sysl/internal/lsp/cache"
 	"github.com/anz-bank/sysl/internal/lsp/debug"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/internal/lspimpl"
 	"github.com/anz-bank/sysl/internal/telemetry/log"
+	"golang.org/x/sync/errgroup"
 )
 
 // AutoNetwork is the pseudo network type used to signal that gopls should use
@@ -34,7 +34,6 @@ const AutoNetwork = "auto"
 // streams as a new LSP session, using a shared cache.
 type StreamServer struct {
 	withTelemetry bool
-	cache         *cache.Cache
 
 	// serverForTest may be set to a test fake for testing.
 	serverForTest protocol.Server
@@ -45,10 +44,9 @@ var clientIndex, serverIndex int64
 // NewStreamServer creates a StreamServer using the shared cache. If
 // withTelemetry is true, each session is instrumented with telemetry that
 // records RPC statistics.
-func NewStreamServer(cache *cache.Cache, withTelemetry bool) *StreamServer {
+func NewStreamServer(withTelemetry bool) *StreamServer {
 	s := &StreamServer{
 		withTelemetry: withTelemetry,
-		cache:         cache,
 	}
 	return s
 }
@@ -95,14 +93,16 @@ func (s debugServer) ClientID() string {
 type debugClient struct {
 	debugInstance
 	// session is the session serving this client.
-	session *cache.Session
+	//session *cache.Session
 	// serverID is this id of this server on the client.
 	serverID string
 }
 
+/*
 func (c debugClient) Session() debug.Session {
 	return cache.DebugSession{Session: c.session}
 }
+*/
 
 func (c debugClient) ServerID() string {
 	return c.serverID
@@ -115,12 +115,11 @@ func (s *StreamServer) ServeStream(ctx context.Context, stream jsonrpc2.Stream) 
 
 	conn := jsonrpc2.NewConn(stream)
 	client := protocol.ClientDispatcher(conn)
-	session := s.cache.NewSession(ctx)
 	dc := &debugClient{
 		debugInstance: debugInstance{
 			id: strconv.FormatInt(index, 10),
 		},
-		session: session,
+		//session: session,
 	}
 	if di := debug.GetInstance(ctx); di != nil {
 		di.State.AddClient(dc)
@@ -128,7 +127,7 @@ func (s *StreamServer) ServeStream(ctx context.Context, stream jsonrpc2.Stream) 
 	}
 	server := s.serverForTest
 	if server == nil {
-		server = lsp.NewServer(session, client)
+		server = lspimpl.NewServer(client)
 	}
 	// Clients may or may not send a shutdown message. Make sure the server is
 	// shut down.
@@ -412,7 +411,8 @@ func (h *handshaker) Deliver(ctx context.Context, r *jsonrpc2.Request, delivered
 		h.client.goplsPath = req.GoplsPath
 		resp := handshakeResponse{
 			ClientID:  h.client.id,
-			SessionID: cache.DebugSession{Session: h.client.session}.ID(),
+			SessionID: "0",
+			//SessionID: cache.DebugSession{Session: h.client.session}.ID(),
 			GoplsPath: h.goplsPath,
 		}
 		if di := debug.GetInstance(ctx); di != nil {

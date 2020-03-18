@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/cache"
 	"github.com/anz-bank/sysl/internal/lsp/lsprpc"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
@@ -41,7 +40,7 @@ func (p *lspCmd) Execute(args cmdutils.ExecuteArgs) error {
 		}
 	*/
 
-	var ss jsonrpc2.StreamServer = lsprpc.NewStreamServer(cache.New(ctx, nil), true)
+	var ss jsonrpc2.StreamServer = lsprpc.NewStreamServer(true)
 	stream := jsonrpc2.NewHeaderStream(os.Stdin, os.Stdout)
 	return ss.ServeStream(ctx, stream)
 }
