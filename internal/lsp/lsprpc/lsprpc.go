@@ -18,7 +18,6 @@ import (
 	"time"
 
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp"
 	"github.com/anz-bank/sysl/internal/lsp/debug"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
 	"github.com/anz-bank/sysl/internal/lspimpl"
@@ -354,12 +353,15 @@ func OverrideExitFuncsForTest() func() {
 	// Override functions that would shut down the test process
 	cleanup := func(lspExit, forwarderExit func(code int)) func() {
 		return func() {
-			lsp.ServerExitFunc = lspExit
+			// MODIFIED: SYSL_LSP
+			lspimpl.ServerExitFunc = lspExit
 			ForwarderExitFunc = forwarderExit
 		}
-	}(lsp.ServerExitFunc, ForwarderExitFunc)
+		// MODIFIED: SYSL_LSP
+	}(lspimpl.ServerExitFunc, ForwarderExitFunc)
 	// It is an error for a test to shutdown a server process.
-	lsp.ServerExitFunc = func(code int) {
+	// MODIFIED: SYSL_LSP
+	lspimpl.ServerExitFunc = func(code int) {
 		panic(fmt.Sprintf("LSP server exited with code %d", code))
 	}
 	// We don't want our forwarders to exit, but it's OK if they would have.
