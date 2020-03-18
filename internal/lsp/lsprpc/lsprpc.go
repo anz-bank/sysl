@@ -35,6 +35,9 @@ const AutoNetwork = "auto"
 type StreamServer struct {
 	withTelemetry bool
 
+	// MODIFIED: SYSL_LSP
+	//cache         *cache.Cache
+
 	// serverForTest may be set to a test fake for testing.
 	serverForTest protocol.Server
 }
@@ -44,9 +47,13 @@ var clientIndex, serverIndex int64
 // NewStreamServer creates a StreamServer using the shared cache. If
 // withTelemetry is true, each session is instrumented with telemetry that
 // records RPC statistics.
+// MODIFIED: SYSL_LSP
+//func NewStreamServer(cache *cache.Cache, withTelemetry bool) *StreamServer {
 func NewStreamServer(withTelemetry bool) *StreamServer {
 	s := &StreamServer{
 		withTelemetry: withTelemetry,
+		// MODIFIED: SYSL_LSP
+		//cache:         cache,
 	}
 	return s
 }
@@ -93,11 +100,13 @@ func (s debugServer) ClientID() string {
 type debugClient struct {
 	debugInstance
 	// session is the session serving this client.
+	// MODIFIED: SYSL_LSP
 	//session *cache.Session
 	// serverID is this id of this server on the client.
 	serverID string
 }
 
+// MODIFIED: SYSL_LSP
 /*
 func (c debugClient) Session() debug.Session {
 	return cache.DebugSession{Session: c.session}
@@ -119,6 +128,7 @@ func (s *StreamServer) ServeStream(ctx context.Context, stream jsonrpc2.Stream) 
 		debugInstance: debugInstance{
 			id: strconv.FormatInt(index, 10),
 		},
+		// MODIFIED: SYSL_LSP
 		//session: session,
 	}
 	if di := debug.GetInstance(ctx); di != nil {
@@ -127,6 +137,8 @@ func (s *StreamServer) ServeStream(ctx context.Context, stream jsonrpc2.Stream) 
 	}
 	server := s.serverForTest
 	if server == nil {
+		// MODIFIED: SYSL_LSP
+		//server = lsp.NewServer(session, client)
 		server = lspimpl.NewServer(client)
 	}
 	// Clients may or may not send a shutdown message. Make sure the server is
@@ -410,9 +422,10 @@ func (h *handshaker) Deliver(ctx context.Context, r *jsonrpc2.Request, delivered
 		h.client.serverID = req.ServerID
 		h.client.goplsPath = req.GoplsPath
 		resp := handshakeResponse{
-			ClientID:  h.client.id,
-			SessionID: "0",
+			ClientID: h.client.id,
+			// MODIFIED: SYSL_LSP
 			//SessionID: cache.DebugSession{Session: h.client.session}.ID(),
+			SessionID: "0",
 			GoplsPath: h.goplsPath,
 		}
 		if di := debug.GetInstance(ctx); di != nil {

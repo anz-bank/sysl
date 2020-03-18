@@ -41,6 +41,9 @@ func main() {
 }
 
 // replace "\\\n" with nothing before using
+// MODIFIED: SYSL_LSP
+//	"golang.org/x/tools/internal/lsp/protocol"
+//	"github.com/anz-bank/sysl/internal/lsp/protocol"
 var tmpl = `
 package lspimpl
 
@@ -123,8 +126,8 @@ func doUses() {
 	if err != nil {
 		log.Fatalf("%q:%v", *use, err)
 	}
+	// MODIFIED: SYSL_LSP
 	pkg := pkgs["lspimpl"] // CHECK
-	//pkg := pkgs["lsp"] // CHECK
 	files := pkg.Files
 	for fname, f := range files {
 		for _, d := range f.Decls {
