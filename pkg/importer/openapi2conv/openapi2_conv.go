@@ -676,9 +676,7 @@ func FromV3SecurityScheme(swagger *openapi3.Swagger, ref *openapi3.SecuritySchem
 			} else {
 				return nil, nil
 			}
-			for scope := range flow.Scopes {
-				result.Scopes = append(result.Scopes, scope)
-			}
+			result.Scopes = flow.Scopes
 		}
 	default:
 		return nil, fmt.Errorf("Unsupported security scheme type '%s'", securityScheme.Type)
