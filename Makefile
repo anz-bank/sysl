@@ -9,13 +9,6 @@ COMMIT=$(shell git rev-parse --short HEAD)
 # Tag on this commit
 TAG = $(shell git tag --points-at HEAD)
 
-
-ifneq ("$(shell which gotestsum)", "")
-	TESTEXE := gotestsum --
-else
-	TESTEXE := go test ./...
-endif
-
 BUILD_DATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 VERSION := $(or $(TAG),$(COMMIT)-$(BRANCH)-$(BUILD_DATE))
 
@@ -36,7 +29,7 @@ coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 85
 
 test: ## Run tests without coverage
-	$(TESTEXE)
+	go test ./...
 
 BINARY := sysl
 PLATFORMS := windows linux darwin
