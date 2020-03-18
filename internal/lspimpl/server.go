@@ -7,11 +7,11 @@ package lspimpl
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
-	"github.com/anz-bank/sysl/internal/span"
 )
 
 const concurrentAnalyses = 1
@@ -20,7 +20,7 @@ const concurrentAnalyses = 1
 // messages on on the supplied stream.
 func NewServer(client protocol.Client) *Server {
 	return &Server{
-		delivered:       make(map[span.URI]sentDiagnostics),
+		//delivered:       make(map[span.URI]sentDiagnostics),
 		client:          client,
 		diagnosticsSema: make(chan struct{}, concurrentAnalyses),
 	}
@@ -35,6 +35,20 @@ const (
 	serverShutDown
 )
 
+func (s serverState) String() string {
+	switch s {
+	case serverCreated:
+		return "created"
+	case serverInitializing:
+		return "initializing"
+	case serverInitialized:
+		return "initialized"
+	case serverShutDown:
+		return "shutDown"
+	}
+	return fmt.Sprintf("(unknown state: %d)", int(s))
+}
+
 // Server implements the protocol.Server interface.
 type Server struct {
 	client protocol.Client
@@ -43,7 +57,7 @@ type Server struct {
 	state   serverState
 
 	// changedFiles tracks files for which there has been a textDocument/didChange.
-	changedFiles map[span.URI]struct{}
+	//changedFiles map[span.URI]struct{}
 
 	// folders is only valid between initialize and initialized, and holds the
 	// set of folders to build views for when we are ready
@@ -51,7 +65,7 @@ type Server struct {
 
 	// delivered is a cache of the diagnostics that the server has sent.
 	deliveredMu sync.Mutex
-	delivered   map[span.URI]sentDiagnostics
+	//delivered   map[span.URI]sentDiagnostics
 
 	showedInitialError   bool
 	showedInitialErrorMu sync.Mutex
