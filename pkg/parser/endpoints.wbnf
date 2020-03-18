@@ -1,0 +1,22 @@
+endpoint -> (rest_endpoint | simple_endpoint | collector | event);
+
+simple_endpoint -> SHORTCUT | (endpoint_name=(APPLICATION_NAME) QSTRING? params? attribs? ":"
+                        (SHORTCUT | %!Indented(stmt)));
+
+rest_endpoint -> http_path attribs? ":" %!Indented(method_def | rest_endpoint);
+
+method_def -> method=(HTTP_VERBS) params? query_param? attribs? ":" %!Indented(stmt);
+
+params -> "(" (field | reference):"," ")";
+
+query_param -> "?" (ident=(NAME) "=" (NativeDataTypes| NAME | "{" NAME "}") optional="?"?):"&";
+
+field -> NAME array_size? "<:" (field_type | %!Indented(field)) QSTRING?;
+
+field_type -> collection_type | (type_spec optional="?"? attribs?) ;
+
+collector -> '.. * <- *' ":" (SHORTCUT | %!Indented(collector_stmts));
+
+collector_stmts ->  (
+                        call=(target=APPLICATION_NAME "<-" target_endpoint=NAME) | action=APPLICATION_NAME
+                    ) attribs;
