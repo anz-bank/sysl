@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/lsprpc"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lsprpc"
 )
 
 func main() {

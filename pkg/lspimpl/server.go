@@ -124,4 +124,4 @@ func notImplemented(method string) *jsonrpc2.Error {
 	return jsonrpc2.NewErrorf(jsonrpc2.CodeMethodNotFound, "method %q not yet implemented", method)
 }
 
-//go:generate ../lsp/helper/helper -d ../lsp/protocol/tsserver.go -o server_gen.go -u .
+//go:generate ../../internal/lsp/helper/helper -d ../../internal/lsp/protocol/tsserver.go -o server_gen.go -u .

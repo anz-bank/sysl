@@ -20,8 +20,8 @@ import (
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
 	"github.com/anz-bank/sysl/internal/lsp/debug"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
-	"github.com/anz-bank/sysl/internal/lspimpl"
 	"github.com/anz-bank/sysl/internal/telemetry/log"
+	"github.com/anz-bank/sysl/pkg/lspimpl"
 	"golang.org/x/sync/errgroup"
 )
 

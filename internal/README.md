@@ -1,6 +1,12 @@
 # Forked code from golang.org/x/tools/internal/
 
-## Forked on 2020/03/16 ??
+## Original gopls intentions
+
+From what I can see, the gopls implementation was originally written to support multiple workspaces connecting to a remote gopls instance as well as connecting locally. This is probably so multiple editors with a LSP client can connect to a single process. (NOT EXACTLY SURE IF THIS IS TRUE)
+
+The sysl lsp server will not contain this feature and each client will create a new instance of the sysl lsp server (at least for now)
+
+## Forked on 2020/03/12
 
 * This folder mostly contains forked lsp code from the gopls implementation.
 * Some code is modified. Code which is modified is prepended with a comment `// MODIFIED: SYSL_LSP`
@@ -21,11 +27,12 @@
 * internal/lsp: lsp frameworking code
 * internal/telemetry: seems to be telemetry code for prometheous or ocagent (used by the autogenerator)
 * internal/xcontext: extra functionality for the inbuilt context package (used by the autogenerator)
-* internal/lspimpl (non gopls code): this package is created to separate lsp framework code from the diagnostic code
+
+* pkg/lspimpl (non gopls code): this package is created to separate lsp framework code from the sysl diagnostic code
 
 ## Updating instructions
 
-1. Compile helper binary in internal/lsp/helper/ [cd internal/lsp/helper && go build .]
-2. Generate server_gen.go in internal/lspimpl/ [cd internal/lspimpl && go generate server.go]
-3. Compile sysllsp [make buildlsp] in project root
-
+1. Update the ts protocol files in go. Instructions in internal/lsp/protocol/typescript/README.md
+2. Compile helper binary in internal/lsp/helper/ [cd internal/lsp/helper && go build .]
+3. Generate server_gen.go in pkg/lspimpl/ [cd ../pkg/lspimpl && go generate server.go]
+4. Compile sysllsp [make buildlsp] in project root
