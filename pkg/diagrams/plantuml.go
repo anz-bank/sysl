@@ -1,7 +1,13 @@
 package diagrams
 
 import (
+	"io/ioutil"
 	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/alecthomas/assert"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/spf13/afero"
 
@@ -11,6 +17,7 @@ import (
 const (
 	PlantUMLEnvVar  = "SYSL_PLANTUML"
 	PlantUMLDefault = "http://localhost:8080/plantuml"
+	testDir         = "../../tests/"
 )
 
 type Plantumlmixin struct {
@@ -42,4 +49,20 @@ func (p *Plantumlmixin) GenerateFromMap(m map[string]string, fs afero.Fs) error 
 		}
 	}
 	return nil
+}
+
+func ComparePUML(t *testing.T, expected, actual map[string]string) {
+	for name, goldenFile := range expected {
+		golden, err := ioutil.ReadFile(goldenFile)
+		assert.Nil(t, err)
+		if string(golden) != actual[name] {
+			err := ioutil.WriteFile(filepath.Join(testDir, name+".puml"), []byte(actual[name]), 0777)
+			assert.Nil(t, err)
+		}
+		golden = syslutil.HandleCRLF(golden)
+		assert.Equal(t, string(golden), actual[name])
+	}
+
+	// Then
+	assert.Equal(t, len(expected), len(actual))
 }

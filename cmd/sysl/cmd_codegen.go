@@ -30,8 +30,8 @@ func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("transform", "path to transform file from the root transform directory").Required().StringVar(&p.Transform)
 	cmd.Flag("grammar", "path to grammar file").Required().StringVar(&p.Grammar)
 	cmd.Flag("app-name",
-		"name of the sysl app defined in sysl model."+
-			" if there are multiple apps defined in sysl model,"+
+		"name of the sysl App defined in the sysl model."+
+			" if there are multiple Apps defined in the sysl model,"+
 			" code will be generated only for the given app").Default("").StringVar(&p.appName)
 	cmd.Flag("start", "start rule for the grammar").Default(".").StringVar(&p.Start)
 	cmd.Flag("outdir", "output directory").Default(".").StringVar(&p.outDir)
