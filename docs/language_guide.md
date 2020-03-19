@@ -41,11 +41,11 @@ We will design this app as we move along.
 
 Notes about sysl syntax:
 
-* `:` and `...` have special meaning. `:` followed by an `indent` is used to
+- `:` and `...` have special meaning. `:` followed by an `indent` is used to
   create a parent-child relationship.
-  * All lines after `:` should be indented. The only exception to this rule is
+  - All lines after `:` should be indented. The only exception to this rule is
     when you want to use the shortcut `...`.
-  * The `...` (aka shortcut) means that we don't have enough details yet to
+  - The `...` (aka shortcut) means that we don't have enough details yet to
     describe how this endpoint behaves. Sysl allows you to take an iterative
     approach in documenting the behaviour. You add more as you know more.
 
@@ -67,10 +67,10 @@ Now, our `MobileApp` has three `endpoints` viz `Login`, `Search` and `Orders`.
 
 Notes about sysl syntax:
 
-* Again, `...` is used to show we don't have enough details yet about each
+- Again, `...` is used to show we don't have enough details yet about each
   endpoint.
-* All endpoints are indented. Use a `tab` or `spaces` to indent.
-* These endpoints can also be REST api's. See section on [Rest](#rest) below on
+- All endpoints are indented. Use a `tab` or `spaces` to indent.
+- These endpoints can also be REST api's. See section on [Rest](#rest) below on
   how to define rest api endpoints.
 
 Each endpoint should have statements that describe its behaviour. Before that
@@ -100,12 +100,12 @@ has an endpoint called `Login`. It also defines a new data type called
 
 Notes about sysl syntax:
 
-* `<:` is used to define the arguments to `Login` endpoint.
-* `!type` is used to define a new data type `LoginData`.
-  * Note the indent to create fields `username` and `password` of type `string`.
-  * See [Data Types](#data-types) to see what all the supported data types.
-* Data types (like `LoginData`) belong to the app under which it is defined.
-* Refer to the newly defined type by its fully qualified name. e.g.
+- `<:` is used to define the arguments to `Login` endpoint.
+- `!type` is used to define a new data type `LoginData`.
+  - Note the indent to create fields `username` and `password` of type `string`.
+  - See [Data Types](#data-types) to see what all the supported data types.
+- Data types (like `LoginData`) belong to the app under which it is defined.
+- Refer to the newly defined type by its fully qualified name. e.g.
   `Server.LoginData`.
 
 #### Enumerations
@@ -137,13 +137,13 @@ form from parsing.
 
 Sysl supports following data types out of the box.
 
-* int, int64, int32
-* float, decimal
-* string
-* bool
-* datetime, date
-* any
-* xml
+- int, int64, int32
+- float, decimal
+- string
+- bool
+- datetime, date
+- any
+- xml
 
 Now, we have two apps `MobileApp` and `Server`, but they do not interact with
 each other. Time to add some statements.
@@ -153,11 +153,11 @@ each other. Time to add some statements.
 Our `MobileApp` does not have any detail yet on how it behaves. Let's use sysl
 statements to describe behaviour. Sysl supports following types of statements:
 
-* [Text](#text)
-* [Call](#Call)
-* [Return](#return-response)
-* [Control Statements](#control-statements)
-* [Arguments](#arguments)
+- [Text](#text)
+- [Call](#Call)
+- [Return](#return-response)
+- [Control Statements](#control-statements)
+- [Arguments](#arguments)
 
 #### Text
 
@@ -222,8 +222,8 @@ types of diagrams using sysl.
 An endpoint can return response to the caller. Everything after `return` keyword
 till the end-of-line is considered response payload. You can have:
 
-* string - a description of what is returned, or
-* Sysl type - formal type to return to the caller
+- string - a description of what is returned, or
+- Sysl type - formal type to return to the caller
 
 Sequence diagram will render the response accordingly. In the previous example,
 `data` is a generic description of what `DB <- Query` returns. `Server.Response`
@@ -352,8 +352,7 @@ The imported sysl repository needs to be initialised with a `go.mod` file(run
 include go code in the repository. As long as there's a `go.mod` file, the
 repository will be treated as a sysl/go module.
 
-You should preface `//` your import path like `import
-//the/external/repo/filepath` to import external modules.
+You should preface `//` your import path like `import //the/external/repo/filepath` to import external modules.
 
 ```sysl
 # github.com/foo/bar/servers/server.sysl
@@ -378,10 +377,9 @@ To disable Sysl Modules downloads external files, set environment variable
 
 #### Non-sysl file
 
-When you import sysl file, you can omit the `.sysl` file extension.
+When you import a sysl file, you can omit the `.sysl` file extension.
 
-To import a non-sysl file like swagger file, you can `import
-foreign_import_swagger.yaml as com.foo.bar.app ~swagger`.
+To import a non-sysl file like swagger file, you can `import foreign_import_swagger.yaml as com.foo.bar.app ~swagger`.
 
 ### Multiple Declarations
 
@@ -416,9 +414,9 @@ Most of the changes to your system will be done as part of a well defined
 Once your design is complete, its time to get some output from Sysl. Sysl
 supports generating diagrams of following types:
 
-* Sequence Diagram
-* Integration Diagram
-* Data Diagram
+- Sequence Diagram
+- Integration Diagram
+- Data Diagram
 
 Sysl aims to generate code and documentation from only one source of truth i.e.
 `.sysl` files.
@@ -451,9 +449,9 @@ Let's breakdown the `sd` aka `sequence diagram` command:
 sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
 ```
 
-* `-o` specifies the output filename
-* `-s` specifies the start endpoint
-* `call.sysl` the source to start the analysis from
+- `-o` specifies the output filename
+- `-s` specifies the start endpoint
+- `call.sysl` the source to start the analysis from
 
 Sysl analyzes the starting endpoint and finds all the `call`s that this endpoint
 makes to other endpoints (including the ones to other applications). It finds
@@ -471,8 +469,7 @@ sequence diagram.
 
 Command:
 
-`sysl sd -o 'call-login-sequence.png' --epfmt '%(epname) %(args)' -s 'MobileApp
-<- Login' assets/call.sysl -v call-login-sequence.png` See
+`sysl sd -o 'call-login-sequence.png' --epfmt '%(epname) %(args)' -s 'MobileApp <- Login' assets/call.sysl -v call-login-sequence.png` See
 [assets/args.sysl](assets/args.sysl) for complete example.
 
 ![](assets/args-Seq.png)
@@ -515,10 +512,10 @@ CustomerOrderModel:
 
 In the above example:
 
-* `CustomerOrderModel` is a user-defined top-level app that contains definitions
+- `CustomerOrderModel` is a user-defined top-level app that contains definitions
   of various tables or types in your data model.
-* Customer.customer_id is a primary key.
-* CustomerOrder has a foreign key customer_id which refers to the primary key of
+- Customer.customer_id is a primary key.
+- CustomerOrder has a foreign key customer_id which refers to the primary key of
   Customer (i.e. customer_id).
 
 See [data.sysl](assets/data.sysl) for complete example for Relation model.
@@ -546,7 +543,7 @@ CustomerOrderModel:
 
 Note:
 
-* `set of Address` - Set is the only collection type
+- `set of Address` - Set is the only collection type
 
 See [data.sysl](assets/data.sysl) for complete example for Object model.
 
@@ -568,10 +565,10 @@ reljam model data ObjectModel
 
 where
 
-* `reljam`- Relational Java Model exporter
-* `model` - generate "model" code
-* `data` - input data.sysl file.
-* `Relational` or `ObjectModel` - name of the Data model to generate code for.
+- `reljam`- Relational Java Model exporter
+- `model` - generate "model" code
+- `data` - input data.sysl file.
+- `Relational` or `ObjectModel` - name of the Data model to generate code for.
 
 You should see a Java file generated for each type. See
 [Data Models](#data-model) for more details.
@@ -650,8 +647,8 @@ Server [status="modified"]:
 `.. * <- *` is the way to tell sysl to take an existing definition of the
 application and `merge` the attributes from:
 
-* endpoints
-* calls
+- endpoints
+- calls
 
 Then for diagrams related to Project-1, you can show this information in the
 diagrams which endpoints are getting reused and which ones are new. This
@@ -669,7 +666,7 @@ can be used by sysl plugins to extend the default functionality. The attributes
 are added inside square brackets `Application [...attributes]`. Sysl attributes
 are of two types: `Patterns` and `Key-Value` pairs:
 
-* Patterns
+- Patterns
 
   A pattern is `~` followed by a word that means something to you. E.g.
   `[~tag]`.
@@ -680,11 +677,10 @@ are of two types: `Patterns` and `Key-Value` pairs:
 
   In the above example, `rest` is a pattern.
 
-* Key-Value pair
+- Key-Value pair
 
   As the name suggests, you can associate some data with your application or an
   endpoint.
-
 
 ```
 Application [version="1.1"]:
@@ -704,14 +700,14 @@ BizApp [version="1.1", clients=["web", "daemon"]]:
 Sysl defines some internal attributes that you can use to customize the look of
 your diagrams.
 
-* Changing Application icons in Sequence Diagram
+- Changing Application icons in Sequence Diagram
 
   The default icon for the app is a `circle with an arrow`. You can change this
   icon to:
 
-  * human - `App [~human]:`
-  * database - `DataBase [~db]`
-  * External App - `IdentityProvider [~external]` - In an enterprise system, you
+  - human - `App [~human]:`
+  - database - `DataBase [~db]`
+  - External App - `IdentityProvider [~external]` - In an enterprise system, you
     might have some external third-party system that your app might interact
     with. Mark an app as `~external` and sysl will place that app at extreme
     right of a sequence diagram.
@@ -777,9 +773,9 @@ App "Descriptive Long Application name":
 
 Where:
 
-* appname - App
-* epname - Endpoint-1 or Endpoint-2
-* eplongname - "Descriptive Long name for Endpoint 1" or "Descriptive Long name
+- appname - App
+- epname - Endpoint-1 or Endpoint-2
+- eplongname - "Descriptive Long name for Endpoint 1" or "Descriptive Long name
   for Endpoint 2"
 
 You can also refer to the attributes that you added by using `[]` or the
@@ -790,26 +786,25 @@ Collector syntax.
 You can use your attributes in `epfmt` or `appfmt` arguments in the following
 ways:
 
-* `%(@attrib_name)` : use `@` to refer to `attrib_name`.
-* `%(@attrib_name? yes_stmt | no_stmt)`: use `?` to test for existence of value.
+- `%(@attrib_name)` : use `@` to refer to `attrib_name`.
+- `%(@attrib_name? yes_stmt | no_stmt)`: use `?` to test for existence of value.
   This is ternary operator, which allows you to to execute `yes_stmt` or
   `no_stmt` depending on the result.
-* `%(@attrib_name=='some_value'? yes_stmt | no_stmt)` : compare attrib's value
+- `%(@attrib_name=='some_value'? yes_stmt | no_stmt)` : compare attrib's value
   to some constant.
-* `%(@attrib_name=='some_value'? yes_stmt | @attrib_name=='some_other_value'? |
-  ...)` : nested checks.
+- `%(@attrib_name=='some_value'? yes_stmt | @attrib_name=='some_other_value'? | ...)` : nested checks.
 
 Now, `stmt` can be any of the following types:
 
-* plain-text: will be copied as-is to the output
-* `<color red>text or %(attrib_name)</color>`: use html like syntax to color the
+- plain-text: will be copied as-is to the output
+- `<color red>text or %(attrib_name)</color>`: use html like syntax to color the
   output.
 
 Example:
 
 ```html
-appfmt="%(@status?<color red>%(appname)</color>|%(appname))"
-epfmt="%(@status? <color green>%(epname)</color>|%(epname))"
+appfmt="%(@status?<color red>%(appname)</color>|%(appname))" epfmt="%(@status?
+<color green>%(epname)</color>|%(epname))"
 ```
 
 See [attribs.sysl](assets/attribs.sysl) for complete example. Notice how
@@ -826,9 +821,9 @@ code and diagrams from same `.sysl` code. See section on [Rest](#rest) below.
 
 Currently, Sysl generates Java code for the following
 
-* Sprint REST Controller
-* POJO classes for the types used in your api
-* Transformation Language to transform your data models e.g. from relational to
+- Sprint REST Controller
+- POJO classes for the types used in your api
+- Transformation Language to transform your data models e.g. from relational to
   object model (and vice-versa?)
 
 #### Rest
@@ -892,12 +887,11 @@ ATM:
 
 Here are few things to notice
 
-* `interface` attribute allows you to specify the name of the generated
+- `interface` attribute allows you to specify the name of the generated
   interface class. This interface has all the methods of your api.
-* Query parameters `start_date` and `end_date` (of type `string`) that you can
+- Query parameters `start_date` and `end_date` (of type `string`) that you can
   pass to `GET /accounts/{account_number}/transactions` endpoint.
-* `ATM <-GetBalance` makes a call to `AccountTransactionApi <- GET
-  /accounts/{account_number}`.
+- `ATM <-GetBalance` makes a call to `AccountTransactionApi <- GET /accounts/{account_number}`.
 
 See [api.sysl](assets/api.sysl) for complete example.
 
