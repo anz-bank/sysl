@@ -22,6 +22,7 @@ type DataModelParam struct {
 	App     *sysl.Application
 	Project string
 	Title   string
+	Epname  bool // If %(epname) is specified
 }
 
 type DataModelView struct {
@@ -59,7 +60,15 @@ func MakeDataModelView(
 	}
 }
 
-func (v *DataModelView) UniqueVarForAppName(appName string) string {
+func (v *DataModelView) UniqueVarForAppName(nameParts ...string) string {
+	// TODO: when DrawTuple actually separates Appname and TypeName fix this
+	withoutEmptyStrings := []string{}
+	for _, s := range nameParts {
+		if s != "" {
+			withoutEmptyStrings = append(withoutEmptyStrings, s)
+		}
+	}
+	appName := strings.Join(withoutEmptyStrings, ".")
 	if s, ok := v.Symbols[appName]; ok {
 		return s.Alias
 	}
@@ -171,14 +180,14 @@ func (v *DataModelView) DrawTuple(
 	entity *sysl.Type_Tuple,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
-	entityTokens := strings.Split(viewParam.EntityName, ".")
-	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
+	encEntity := v.UniqueVarForAppName(viewParam.EntityName)
 	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
 		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
+	var appName string
 	var relation string
 	var collectionString string
-	var path []string
 	var isPrimitiveList bool
+	var path = []string{}
 
 	// sort and iterate over attributes
 	attrNames := []string{}
@@ -187,7 +196,14 @@ func (v *DataModelView) DrawTuple(
 	}
 	sort.Strings(attrNames)
 	for _, attrName := range attrNames {
+		// If the first element before the dot isn't what we passed in, then it's referring to another app
+		if arr := strings.Split(attrName, "."); len(arr) <= 1 {
+			appName = strings.Split(viewParam.EntityName, ".")[0]
+		} else if arr[0] != appName {
+			appName = arr[0]
+		}
 		attrType := entity.AttrDefs[attrName]
+
 		if _, exists := relationshipMap[encEntity]; !exists {
 			relationshipMap[encEntity] = map[string]RelationshipParam{}
 		}
@@ -212,7 +228,14 @@ func (v *DataModelView) DrawTuple(
 				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
 				relation = `0..*`
 			case attrType.GetTypeRef() != nil:
-				path = attrType.GetTypeRef().GetRef().Path
+				arr := attrType.GetTypeRef().GetRef().Path
+				// If the array is larger than 1 then we don't neeed appName
+				// TODO: Fix this when appname and typename are parsed differently
+				if len(arr) > 1 {
+					appName = ""
+				}
+				path = append(path, strings.Join(arr, "."))
+
 				collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, path[0])
 				relation = `1..1 `
 			default:
@@ -220,15 +243,15 @@ func (v *DataModelView) DrawTuple(
 			}
 			v.StringBuilder.WriteString(collectionString)
 			if !isPrimitiveList {
-				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(path[0])]; mulRelation {
-					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
-						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Entity,
-						Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Relationship,
-						Count:        relationshipMap[encEntity][v.UniqueVarForAppName(path[0])].Count + 1,
+				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])]; mulRelation {
+					relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])] = RelationshipParam{
+						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])].Entity,
+						Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])].Relationship,
+						Count:        relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])].Count + 1,
 					}
 				} else {
-					relationshipMap[encEntity][v.UniqueVarForAppName(path[0])] = RelationshipParam{
-						Entity:       v.UniqueVarForAppName(path[0]),
+					relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])] = RelationshipParam{
+						Entity:       v.UniqueVarForAppName(appName, path[0]),
 						Relationship: relation,
 						Count:        1,
 					}
@@ -243,6 +266,7 @@ func (v *DataModelView) DrawTuple(
 
 func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	var isRelation bool
+	appName := strings.Join(dataParam.App.Name.Part, "")
 	relationshipMap := map[string]map[string]RelationshipParam{}
 	v.StringBuilder.WriteString("@startuml\n")
 	if dataParam.Title != "" {
@@ -252,13 +276,24 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 
 	// sort and iterate over each entity type the selected application
 	// *Type_Tuple_ OR *Type_Relation_
-	typeMap := dataParam.App.GetTypes()
+	typeMap := map[string]*sysl.Type{}
+
+	//typeMap := dataParam.App.GetTypes()
+	// TODO: Actually put The app/project name and the app in a struct so strings.split and join dont need to be used
 	entityNames := []string{}
-	for entityName := range typeMap {
-		entityNames = append(entityNames, entityName)
+	for _, app := range dataParam.Mod.Apps {
+		for entityName, entityValue := range app.GetTypes() {
+			entityName = strings.Join(app.Name.GetPart(), "") + "." + entityName
+			typeMap[entityName] = entityValue
+			entityNames = append(entityNames, entityName)
+		}
 	}
+
 	sort.Strings(entityNames)
 	for _, entityName := range entityNames {
+		if dataParam.Epname && strings.Split(entityName, ".")[0] != appName {
+			continue
+		}
 		entityType := typeMap[entityName]
 		if relEntity := entityType.GetRelation(); relEntity != nil {
 			isRelation = true
