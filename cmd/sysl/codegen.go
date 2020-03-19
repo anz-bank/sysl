@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/anz-bank/sysl/pkg/ebnfparser"
 
@@ -130,13 +131,21 @@ func GenerateCode(
 
 	addEssentialAttr(model)
 
-	transformFs := syslutil.NewChrootFs(fs, codegenParams.RootTransform)
+	var transformFs afero.Fs
+	transformFs = syslutil.NewChrootFs(fs, codegenParams.RootTransform)
+	if mod.SyslModules {
+		transformFs = mod.NewFs(transformFs)
+	}
+
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {
 		return nil, err
 	}
 
+	if mod.SyslModules {
+		fs = mod.NewFs(fs)
+	}
 	g, err := ebnfparser.ReadGrammar(fs, codegenParams.Grammar, codegenParams.Start)
 	if err != nil {
 		return nil, err
