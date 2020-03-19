@@ -9,20 +9,16 @@ package lsprpc
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	stdlog "log"
-	"net"
 	"os"
 	"strconv"
 	"sync/atomic"
-	"time"
 
 	"github.com/anz-bank/sysl/internal/jsonrpc2"
 	"github.com/anz-bank/sysl/internal/lsp/debug"
 	"github.com/anz-bank/sysl/internal/lsp/protocol"
 	"github.com/anz-bank/sysl/internal/telemetry/log"
 	"github.com/anz-bank/sysl/pkg/lspimpl"
-	"golang.org/x/sync/errgroup"
 )
 
 // AutoNetwork is the pseudo network type used to signal that gopls should use
@@ -161,6 +157,8 @@ func (s *StreamServer) ServeStream(ctx context.Context, stream jsonrpc2.Stream) 
 	return conn.Run(protocol.WithClient(ctx, client))
 }
 
+// MODIFIED: SYSL_LSP
+/*
 // A Forwarder is a jsonrpc2.StreamServer that handles an LSP stream by
 // forwarding it to a remote. This is used when the gopls process started by
 // the editor is in the `-remote` mode, which means it finds and connects to a
@@ -388,6 +386,7 @@ func (forwarderHandler) Deliver(ctx context.Context, r *jsonrpc2.Request, delive
 	}
 	return false
 }
+*/
 
 type handshaker struct {
 	jsonrpc2.EmptyHandler
