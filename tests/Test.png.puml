@@ -15,7 +15,7 @@ class "Test.account" as _0 << (D,orchid) >> {
 + acountTerminationDate : string
 + address : **address**
 + bsb : string
-+ fees : **address**
++ fees : **fees**
 + isOwned : string
 + partyID : string
 + productID : string
@@ -29,5 +29,5 @@ class "Test.fees" as _2 << (D,orchid) >> {
 + feeType : string
 }
 _0 *-- "1..1 " _1
-_0 *-- "1..1 " _1
+_0 *-- "1..1 " _2
 @enduml

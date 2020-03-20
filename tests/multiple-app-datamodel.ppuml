@@ -7,6 +7,7 @@
 
 class "App.User" as _0 << (D,orchid) >> {
 + beep : **Server.ftgyhb**
++ weuiyfgwihe : **AnotherApp.AnotherType**
 + whatever : int
 }
 class "Server.ftgyhb" as _1 << (D,orchid) >> {
