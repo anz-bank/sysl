@@ -40,8 +40,8 @@ table -> mode=("!table"|"!type") NAME attribs?  ":" COMMENT*
      %!Indented(COMMENT_NO_NL | table_row COMMENT_NO_NL?) {
         table_row -> (NAME array_size? "<:") type=(collection_type|type_spec) optional="?"? attribs? (":" annotations)?;
      };
-facade -> "!wrap" NAME attribs?  ":" COMMENT*
-     %!Indented(table | ("!table"|"!type"|"!union") APP_NAME inplace_table_def?) {
+facade -> "!wrap" NAME  ":" COMMENT*
+     %!Indented(("!table"|"!type"|"!union") NAME inplace_table_def?) {
             inplace_table_def -> ":"  %!Indented(NAME attribs?);
         };
 
