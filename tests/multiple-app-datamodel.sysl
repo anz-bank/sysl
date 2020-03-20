@@ -1,0 +1,12 @@
+# sysl data -o "%(epname).svg" -j Project 1_project.sysl
+Project:
+    _:
+        App
+        Server
+Server:
+    !type ftgyhb:
+        blah <: int
+App:
+    !type User:
+        whatever <: int
+        beep <: Server.ftgyhb

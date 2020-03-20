@@ -83,7 +83,6 @@ func TestDoConstructDataDiagramsWithPureModule(t *testing.T) {
 			Direct: true,
 		}, mod, logger)
 	}
-
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	diagrams.ComparePUML(t, args.Expected, result)
 }
