@@ -15,11 +15,11 @@ import  -> "import"  prefix=("//"|"/")? PATH ( "as"  reference)? ("~" mode=NAME)
 
 event  ->  "<->" NAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
-subscribe  ->  APPLICATION_NAME "->" NAME params? attribs? ":" COMMENT*
+subscribe  ->  APPNAME "->" NAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
 
 // -------------- Applications --------------- //
-application ->  APPLICATION_NAME QSTRING?
+application ->  APPNAME QSTRING?
         attribs? ":" COMMENT*  %!Indented(app_decl) EOL?;
 
 app_decl   -> annotation
@@ -85,8 +85,8 @@ PATH    -> /{[a-zA-Z0-9._-]+}:"/";
 DIGITS -> [1-9][0-9]*;
 TEXT -> [^(\r?\n)]+;
 TEXT_LINE -> /{\s* ( [^\s:(] [^(\r\n:]* [^\s\r\n(:] )};
-APPLICATION_NAME -> (pkg=@):"." > (app=@):"::" > APPLICATION_NAME_PART;
-APPLICATION_NAME_PART -> (/{[a-zA-Z_][-\w]*(?:[-\t\_]*\w+)*} | QSTRING)+;
+APPNAME -> (pkg=@):"." > (app=@):"::" > APPNAME_PART;
+APPNAME_PART -> (/{[a-zA-Z_][-\w]*(?:[-\t\_]*\w+)*} | QSTRING)+;
 PREDICATE -> [^\r\n:]+;
 SHORTCUT -> "...";
 HTTP_VERBS -> "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
@@ -94,7 +94,7 @@ NativeDataTypes -> "int32" | "int64" | "int" |
                 "float" | "string" | "datetime" | "date" |
                 "bool" | "decimal";
 
-reference ->  \s* pkg=(NAME:"::" ".")? APPLICATION_NAME;
+reference ->  \s* pkg=(NAME:"::" ".")? APPNAME;
 
 COMMENT_NO_NL -> "#" [^\n]*;
 COMMENT -> COMMENT_NO_NL "\n";
