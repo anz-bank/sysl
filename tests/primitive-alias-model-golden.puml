@@ -6,16 +6,16 @@ title empdata
 ''                                      ''
 ''''''''''''''''''''''''''''''''''''''''''
 
-class "Account" as _0 << (D,orchid) >> {
+class "PrimitiveAliasModel.Account" as _0 << (D,orchid) >> {
 + foo : string
 }
-class "User" as _1 << (D,orchid) >> {
+class "PrimitiveAliasModel.User" as _1 << (D,orchid) >> {
 + acc : **Account**
-+ id : **uuid**
++ id : **Account**
 }
-class "uuid" as _2 << (D,orchid) >> {
+class "PrimitiveAliasModel.uuid" as _2 << (D,orchid) >> {
 + id : int
 }
 _1 *-- "1..1 " _0
-_1 *-- "1..1 " _2
+_1 *-- "1..1 " _0
 @enduml
