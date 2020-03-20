@@ -44,6 +44,7 @@ type EntityViewParam struct {
 	EntityColor  string
 	EntityHeader string
 	EntityName   string
+	IgnoredTypes map[string]struct{}
 }
 
 func MakeDataModelView(
@@ -187,7 +188,6 @@ func (v *DataModelView) DrawTuple(
 	var relation string
 	var collectionString string
 	var isPrimitiveList bool
-	var path = []string{}
 
 	// sort and iterate over attributes
 	attrNames := []string{}
@@ -196,14 +196,14 @@ func (v *DataModelView) DrawTuple(
 	}
 	sort.Strings(attrNames)
 	for _, attrName := range attrNames {
-		// If the first element before the dot isn't what we passed in, then it's referring to another app
+		var path = []string{}
+		//If the first element before the dot isn't what we passed in, then it's referring to another app
 		if arr := strings.Split(attrName, "."); len(arr) <= 1 {
 			appName = strings.Split(viewParam.EntityName, ".")[0]
 		} else if arr[0] != appName {
 			appName = arr[0]
 		}
 		attrType := entity.AttrDefs[attrName]
-
 		if _, exists := relationshipMap[encEntity]; !exists {
 			relationshipMap[encEntity] = map[string]RelationshipParam{}
 		}
@@ -235,8 +235,12 @@ func (v *DataModelView) DrawTuple(
 					appName = ""
 				}
 				path = append(path, strings.Join(arr, "."))
-
 				collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, path[0])
+				fullName := strings.Join(attrType.GetTypeRef().GetRef().Path, ".")
+				if _, ok := viewParam.IgnoredTypes[fullName]; ok {
+					v.StringBuilder.WriteString(collectionString)
+					continue
+				}
 				relation = `1..1 `
 			default:
 				continue
@@ -277,15 +281,19 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	// sort and iterate over each entity type the selected application
 	// *Type_Tuple_ OR *Type_Relation_
 	typeMap := map[string]*sysl.Type{}
-
+	ignoredTypes := map[string]struct{}{}
 	//typeMap := dataParam.App.GetTypes()
 	// TODO: Actually put The app/project name and the app in a struct so strings.split and join dont need to be used
 	entityNames := []string{}
 	for _, app := range dataParam.Mod.Apps {
 		for entityName, entityValue := range app.GetTypes() {
 			entityName = strings.Join(app.Name.GetPart(), "") + "." + entityName
-			typeMap[entityName] = entityValue
-			entityNames = append(entityNames, entityName)
+			if entityValue.Type != nil {
+				typeMap[entityName] = entityValue
+				entityNames = append(entityNames, entityName)
+			} else {
+				ignoredTypes[entityName] = struct{}{}
+			}
 		}
 	}
 
@@ -309,6 +317,7 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 				EntityColor:  `orchid`,
 				EntityHeader: `D`,
 				EntityName:   entityName,
+				IgnoredTypes: ignoredTypes,
 			}
 			v.DrawTuple(viewParam, tupEntity, relationshipMap)
 		} else if pe := entityType.GetPrimitive(); pe != sysl.Type_NO_Primitive && len(strings.TrimSpace(pe.String())) > 0 {
