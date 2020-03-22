@@ -5,6 +5,6 @@ sysl data -o "%(epname).svg" -j Project 1_project.sysl
 
 
 ls
-#1_project.sysl 4_project.sh  App.svg Server.svg Bar.svg
+# 1_project.sysl 4_project.sh  App.svg Server.svg
 
-
+# App.svg and Server.svg separately:

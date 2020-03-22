@@ -1,0 +1,5 @@
+bar:
+    !type barType:
+        content <: string
+    barEndpoint:
+        return ok <: barType

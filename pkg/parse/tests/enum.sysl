@@ -1,0 +1,9 @@
+app:
+    !enum enum1: ...  # Not emitted in sysl pb ast
+    !enum enum2:  # Not emitted in sysl pb ast
+        ...
+    !enum enum3:
+        foo: 1
+        bar: 2
+    !enum enum4 [attr="val", ~pattern]:
+        baz: 1
