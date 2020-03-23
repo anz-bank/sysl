@@ -62,7 +62,7 @@ alias -> "!alias" NAME attribs?  ":" COMMENT*
 alias_line -> annotation* (collection_type | type_spec);
 union -> "!union" NAME attribs?  ":"
     ( SHORTCUT |
-         %!Indented(COMMENT | type_spec | annotation | SHORTCUT )
+         %!Indented(COMMENT_NO_NL | user_defined_type=NAME | annotation | SHORTCUT )
     );
 
 collection_type -> ("set"|"sequence") "of" type_spec;
