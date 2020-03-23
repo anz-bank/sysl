@@ -26,7 +26,7 @@ representations over time.
 
 ## Installation
 
-There are several approaches to get start using Sysl. See the [installation page](https://sysl.io/docs/installation/) for details.
+There are several approaches to get start using Sysl. See the [install page](https://sysl.io/docs/install/) for details.
 
 ## Documentation
 

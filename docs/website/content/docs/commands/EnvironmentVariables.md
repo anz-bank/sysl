@@ -14,7 +14,7 @@ Several commands require environment variables to be set before they are able to
 
 `export SYSL_PLANTUML=http://www.plantuml.com/plantuml`
 
-For more details, refer to [Installation](/docs/installation/)
+For more details, refer to [Install](/docs/install/)
 
 ### SYSL_MODULES
 
