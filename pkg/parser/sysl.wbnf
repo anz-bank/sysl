@@ -15,7 +15,7 @@ import  -> "import"  prefix=("//"|"/")? PATH ( "as"  reference)? ("~" mode=NAME)
 
 event  ->  "<->" NAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
-subscribe  ->  APPLICATION_NAME "->" NAME params? attribs? ":" COMMENT*
+subscribe  ->  APPNAME "->" NAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
 
 // -------------- Enums --------------- //
@@ -25,7 +25,7 @@ enum  -> "!enum" name=NAME attribs? ":" COMMENT* (SHORTCUT COMMENT_NO_NL*| %!Ind
 };
 
 // -------------- Applications --------------- //
-application ->  APPLICATION_NAME QSTRING?
+application ->  APPNAME QSTRING?
         attribs? ":" COMMENT*  %!Indented(app_decl) EOL?;
 
 app_decl   -> annotation
@@ -79,7 +79,7 @@ multi_line_docstring -> ":" %!Indented("|" TEXT);
 
 http_path_var_with_type -> "{" var=(NAME | DIGITS) "<:" type=(NativeDataTypes | NAME | reference) "}";
 
-http_path_part  ->  (NAME | DIGITS | ("%" [0-9a-fA-F]{2}))+ { .wrapRE -> /{()};};
+http_path_part  ->  (NAME | DIGITS | [-._~] | ("%" [0-9a-fA-F]{2}))+ { .wrapRE -> /{()};};
 http_path -> "/" ((http_path_part | http_path_var_with_type):"/")?;
 
 type_spec -> (NativeDataTypes | reference)
@@ -91,7 +91,8 @@ PATH    -> /{[a-zA-Z0-9._-]+}:"/";
 DIGITS -> [1-9][0-9]*;
 TEXT -> [^(\r?\n)]+;
 TEXT_LINE -> /{\s* ( [^\s:(] [^(\r\n:]* [^\s\r\n(:] )};
-APPLICATION_NAME -> (pkg=@):"." > (app=@):"::" > (NAME | QSTRING)+;
+APPNAME -> (pkg=@):"." > (app=@):"::" > APPNAME_PART;
+APPNAME_PART -> (/{[a-zA-Z_][-\w]*(?:[-\t\_]*\w+)*} | QSTRING)+;
 PREDICATE -> [^\r\n:]+;
 SHORTCUT -> "...";
 HTTP_VERBS -> "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
@@ -99,7 +100,7 @@ NativeDataTypes -> "int32" | "int64" | "int" |
                 "float" | "string" | "datetime" | "date" |
                 "bool" | "decimal";
 
-reference ->  \s* pkg=(NAME:"::" ".")? APPLICATION_NAME;
+reference ->  \s* pkg=(NAME:"::" ".")? APPNAME;
 
 COMMENT_NO_NL -> "#" [^\n]*;
 COMMENT -> COMMENT_NO_NL "\n";

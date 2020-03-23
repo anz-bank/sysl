@@ -3,6 +3,7 @@ Project:
     _:
         App
         Server
+        AnotherApp
 Server:
     !type ftgyhb:
         blah <: int
@@ -10,3 +11,7 @@ App:
     !type User:
         whatever <: int
         beep <: Server.ftgyhb
+        weuiyfgwihe <: AnotherApp.AnotherType
+AnotherApp:
+    !type AnotherType:
+        ...
