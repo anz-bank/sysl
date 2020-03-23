@@ -140,16 +140,13 @@ func GenerateCode(
 		return nil, err
 	}
 
-	if mod.SyslModules {
-		fs = mod.NewFs(fs)
-	}
-	g, err := ebnfparser.ReadGrammar(fs, codegenParams.Grammar, codegenParams.Start)
+	g, err := ebnfparser.ReadGrammar(transformFs, codegenParams.Grammar, codegenParams.Start)
 	if err != nil {
 		return nil, err
 	}
 
 	if !codegenParams.DisableValidator {
-		grammarSysl, err := validate.LoadGrammar(codegenParams.Grammar, fs)
+		grammarSysl, err := validate.LoadGrammar(codegenParams.Grammar, transformFs)
 		if err != nil {
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {

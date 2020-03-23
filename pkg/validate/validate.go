@@ -367,16 +367,13 @@ func loadTransform(transformFile string, fs afero.Fs, p *parse.Parser) (*sysl.Ap
 // eg: if grammarFile is ./foo/bar.g, this tries to load ./foo/bar.sysl
 func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 	tokens := strings.Split(grammarFile, string(os.PathSeparator))
-	rootGrammar := strings.Join(tokens[:len(tokens)-1], string(os.PathSeparator))
-	grammarFileName := tokens[len(tokens)-1]
 
-	tokens = strings.Split(grammarFileName, ".")
-	tokens[len(tokens)-1] = "sysl"
-	grammarSyslFile := strings.Join(tokens, ".")
+	grammarFilePieces := strings.Split(tokens[len(tokens)-1], ".")
+	grammarFilePieces[len(grammarFilePieces)-1] = "sysl"
+	tokens[len(tokens)-1] = strings.Join(grammarFilePieces, ".")
 	p := parse.NewParser()
 
-	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile,
-		syslutil.NewChrootFs(fs, rootGrammar), p)
+	grammar, name, err := parse.LoadAndGetDefaultApp(strings.Join(tokens, string(os.PathSeparator)), fs, p)
 	if err != nil {
 		return nil, err
 	}
