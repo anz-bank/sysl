@@ -1,0 +1,32 @@
+stmt -> (if_else
+            | for_stmt
+            | ret_stmt
+            | call_stmt
+            | one_of_stmt
+            | http_method_comment=(COMMENT_NO_NL)
+            | group_stmt
+            | text_stmt
+            | annotation
+        ) attribs?;
+
+if_else -> if_stmt else_stmt*;
+
+if_stmt -> "if" PREDICATE ":" %!Indented(stmt);
+
+else_stmt -> "else" PREDICATE? ":" %!Indented(stmt);
+
+for_stmt -> for_type=("alt" | "until" | "for each" | "for" | "loop" | "while") PREDICATE ":" %!Indented(stmt);
+
+one_of_stmt -> "one" "of" ":" %!Indented(one_of_cases);
+
+one_of_cases -> one_of_case_label=(QSTRING ":"| NAME ":" | TEXT_LINE ":" | ":")  %!Indented(stmt);
+
+call_stmt -> target=("." | NAME:"::") "<-" target_endpoint=(TEXT_LINE) call_args?;
+
+call_args -> "(" (arg=((NAME "<:" type_spec) | (QSTRING | NAME)+)):"," ")";
+
+ret_stmt -> "return" ret_val=(TEXT);
+
+group_stmt -> NAME ":" %!Indented(stmt);
+
+text_stmt -> doc_string=("|" [^\r\n]*) | QSTRING | TEXT ("<-" NAME)? | SHORTCUT;

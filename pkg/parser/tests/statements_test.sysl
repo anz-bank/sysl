@@ -1,0 +1,39 @@
+import endpoints_test.sysl
+
+PetShopStatementsTest:
+    /test:
+        GET:
+            PetShopApi <- GET /petshop
+            if value == one:
+                PetShopApi <- POST /petshop [~something]
+                do something
+            else if value == two:
+                . <- POST /test
+            else:
+                return ok
+        POST:
+            one of:
+                "test quoted string one of case":
+                    return ok
+                :
+                    just some random text
+                    @stuff = 42
+                    @string = "quoted string"
+                    @multi_line_docstring =:
+                        | line 1
+                        | line 2
+                        | line 3
+                    @array_of_strings = ["array", "of", "strings"]
+                    @empty_array = []
+                test:
+                    until some predicate:
+                        do something
+
+            test statement with attributes [~attr]
+
+        PUT:
+            group_stmt:
+                do more something
+                "all the text statement"
+                this is allowed <- in text statment
+                ...

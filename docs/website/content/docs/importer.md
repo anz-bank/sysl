@@ -10,7 +10,4 @@ toc: true
 
 ## Swagger importer
 
-
-
 ## XSD importer
-

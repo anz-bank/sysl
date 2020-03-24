@@ -1,0 +1,123 @@
+.import stmt.wbnf
+.import endpoints.wbnf
+.import views.wbnf
+
+// Sysl grammar
+
+sysl_file -> (import | EOL)* (application | EOL)+;
+
+
+// -------------- Imports --------------- //
+import  -> "import"  prefix=("//"|"/")? PATH ( "as"  reference)? ("~" mode=NAME)? ;
+
+
+// -------------- Events --------------- //
+
+event  ->  "<->" NAME params? attribs? ":" COMMENT*
+        ( SHORTCUT | %!Indented(stmt));
+subscribe  ->  APPNAME "->" NAME params? attribs? ":" COMMENT*
+        ( SHORTCUT | %!Indented(stmt));
+
+// -------------- Enums --------------- //
+
+enum  -> "!enum" name=NAME attribs? ":" COMMENT* (SHORTCUT COMMENT_NO_NL*| %!Indented(enumeration | COMMENT_NO_NL)) {
+        enumeration -> name=NAME ":" DIGITS COMMENT_NO_NL*;
+};
+
+// -------------- Applications --------------- //
+application ->  APPNAME QSTRING?
+        attribs? ":" COMMENT*  %!Indented(app_decl) EOL?;
+
+app_decl   -> annotation
+            | COMMENT_NO_NL
+            | SHORTCUT
+            | type_decl
+            | endpoint
+            | event
+            | subscribe
+            | view;
+
+
+// -------------- Types --------------- //
+
+type_decl -> table | facade | alias | union | enum;
+
+table -> mode=("!table"|"!type") NAME attribs?  ":" COMMENT*
+     (SHORTCUT | %!Indented(COMMENT_NO_NL | table_row COMMENT_NO_NL?)) {
+        table_row -> COMMENT_NO_NL
+                   | table_field
+                   | annotation
+                   | table
+                   | SHORTCUT;
+
+        table_field -> field optional="?"? attribs? (":" annotations)?;
+     };
+facade -> "!wrap" NAME  ":" COMMENT*
+     %!Indented(("!table"|"!type"|"!union") NAME inplace_table_def?) {
+            inplace_table_def -> ":"  %!Indented(NAME attribs?);
+        };
+
+alias -> "!alias" NAME attribs?  ":" COMMENT*
+        (%!Indented(alias_line) | alias_line);
+alias_line -> annotation* (collection_type | type_spec);
+union -> "!union" NAME attribs?  ":"
+    ( SHORTCUT |
+         %!Indented(COMMENT | type_spec | annotation | SHORTCUT )
+    );
+
+collection_type -> ("set"|"sequence") "of" type_spec;
+
+
+// -------------- Common Rules --------------- //
+attribs     ->  "[" @:"," "]"
+             > pattern=("~" NAME:"+")
+             | attr=(NAME "=" ( array_of_array | array_of_strings | QSTRING));
+array_of_strings -> "[" (QSTRING:",")? "]";
+array_of_array   -> "[" (array_of_strings:",")? "]";
+
+array_size -> "(" min=("0"|DIGITS) ".." max=DIGITS? ")";
+
+annotation -> "@" var_name=(NAME) "=" value=(QSTRING | array_of_strings | multi_line_docstring);
+
+annotations -> %!Indented(annotation);
+
+multi_line_docstring -> ":" %!Indented("|" TEXT);
+
+http_path_var_with_type -> "{" var=(NAME | DIGITS) "<:" type=(NativeDataTypes | NAME | reference) "}";
+
+http_path_part  ->  (NAME | DIGITS | [-._~] | ("%" [0-9a-fA-F]{2}))+ { .wrapRE -> /{()};};
+http_path -> "/" ((http_path_part | http_path_var_with_type):"/")?;
+
+type_spec -> (NativeDataTypes | reference)
+             SizeSpec=("(" \d+ (array=".."|sized=".")? \d* ")")?;
+
+// -------------- Tokens --------------- //
+NAME    -> [a-zA-Z_][-a-zA-Z0-9_]*;
+PATH    -> /{[a-zA-Z0-9._-]+}:"/";
+DIGITS -> [1-9][0-9]*;
+TEXT -> [^(\r?\n)]+;
+TEXT_LINE -> /{\s* ( [^\s:(] [^(\r\n:]* [^\s\r\n(:] )};
+APPNAME -> (pkg=@):"." > (app=@):"::" > APPNAME_PART;
+APPNAME_PART -> (/{[a-zA-Z_][-\w]*(?:[-\t\_]*\w+)*} | QSTRING)+;
+PREDICATE -> [^\r\n:]+;
+SHORTCUT -> "...";
+HTTP_VERBS -> "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
+NativeDataTypes -> "int32" | "int64" | "int" |
+                "float" | "string" | "datetime" | "date" |
+                "bool" | "decimal";
+
+reference ->  \s* pkg=(NAME:"::" ".")? APPNAME;
+
+COMMENT_NO_NL -> "#" [^\n]*;
+COMMENT -> COMMENT_NO_NL "\n";
+EOL     -> (COMMENT+ | [\_\t]*\n);
+QSTRING -> /{ " (?: \\. | [^\\"] )* "
+           | ' (?: \\. | [^\\'] )* '
+           };
+
+.wrapRE -> \n+ | \s+ | /{[\_]*()[\_]*};
+
+INDENT      -> %level="" \s+;
+INDENT_SEP  -> \n+ %level;
+
+.macro Indented(child) {\n+ level=INDENT child:INDENT_SEP}

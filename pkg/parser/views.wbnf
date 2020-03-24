@@ -1,0 +1,86 @@
+view -> "!view" NAME "(" view_params? ")"
+        ("->" retType=(collection_type|type_spec))?
+        (abstract="[~abstract]" | (attribs? ":" %!Indented(expr_block)));
+
+view_params -> (NAME "<:" (collection_type|type_spec)):",";
+
+expr_ret_type  -> collection=(("set" | "sequence") "of" type_spec?) | type_spec;
+
+expr_block  -> arg=expr? "->" ("<" expr_ret_type ">")? "(" scopevar=NAME? ":"
+        %!Indented(expr_stmt)  \s* ")" EOL;
+
+atom_dot_relop -> "." ( rank_func
+                        | agg_func
+                        | single_arg_func
+                        | any_func
+                        | count | single_or_null | snapshot
+                        | first_func
+                        | navigate
+                        | matching
+                      );
+
+atom  ->  expr_func
+       |  set=("{" expr:"," "}")
+       |  atoms=("[" expr:"," "]")
+       |  empty_tuple="{:}"
+       |  "(" expr ")"
+       |  literal=(
+                      decimal=/{[0-9]+[.][0-9]+} | digits=[0-9]+
+                    | quote=(single=/{['] [^']* [']} | double=/{["] ([^"\\] | [\\][\\brntu'"])* ["]})
+                    | literal=("null" | "true" | "false")
+                 )
+       |  implied_dot=(atom_dot_relop | navigate | matching | expr_table_of_op)
+       |  ident=(NAME | /{[a-zA-Z0-9_]+} | SHORTCUT | ".");
+
+
+
+expr  ->  @:op="??"
+       >  @:op=("but" "not")
+       >  @:op=("&&" | "||")
+       >  @:op=('|' | '&' | 'and' | '^' | 'xor')
+       >  @:op=('!'? 'in' | '!'? 'contains' | '!=' | '<=' | '>=' | "<" | ">" | "==")
+       >  @:op=(add="+" | sub="-")
+       >  @:op=(mul="*" | mod="%" | div="/")
+       >  @:op=(pow="**")
+       >  expr_if_else | (atom relop*) | (unaryop=("+" | "-" | "!" | "~") atom relop*);
+
+expr_if_else  ->  ("if" expr "?"? "then" expr "else" expr EOL);
+// |
+//                  ("if" lhs=(expr "==")? ":" EOL
+//                    \n+ level=INDENT cond_block=(expr:",") final=("else" expr) INDENT_SEP); */
+
+expr_table_of_op -> dot=("?."|".") /{table\s+of\s+}? ident=NAME;
+
+expr_func -> func=('autoinc' | 'str' | 'substr' | NativeDataTypes | NAME) "(" args=(expr:",")? ")";
+rank_expr -> (expr func=('asc' | 'desc')?):",";
+rank_func -> func="rank" ("<" type_spec ">")? "(" rank_expr "as" as=NAME ")";
+agg_func  -> func=('sum'|'min'|'max'|'average') "(" scopevar=(NAME ":")? args=expr:"," ")";
+first_func -> func="first" target=("null" | expr) "by" scopevar=(NAME ":")? rank_expr ")";
+single_arg_func  -> func=("where" | "flatten") "(" scopevar=(NAME ":")? expr ")";
+any_func  -> func="any" "(" expr ")";
+
+single_or_null -> 'singleOrNull' | 'single';
+snapshot       -> 'snapshot';
+count          -> 'count';
+
+navigate -> qn="?"? "->" ("set" "of" | "sequence" "of")? attr=("."? NAME) ("via" via=NAME)?;
+matching -> "!"? "~" squiggly_args=("[" NAME:"," "]")? ">" rhs=(expr_table_of_op | navigate | "(" expr ")" | NAME);
+
+relop  -> expr_table_of_op
+        | rank_func
+        | agg_func
+        | single_arg_func
+        | any_func
+        | count | single_or_null | snapshot
+        | first_func
+        | navigate
+        | matching;
+
+expr_stmt -> expr_table_assign | expr_assign | expr_dot_assign | COMMENT_NO_NL {
+    expr_dot_assign -> obj=NAME? "." field=NAME;
+    expr_assign   -> "let"? ident=NAME "=" (expr_block | expr);
+    expr_table_assign -> /{table\s+of\s+}? ident=NAME "=" (expr_block | expr);
+};
+
+// This rule is used as a temporary work around so the word "rank" is not considered a cutpoint
+//xxx_no_cutpoint -> "rank" | 'autoinc' | 'str' | 'substr' ;

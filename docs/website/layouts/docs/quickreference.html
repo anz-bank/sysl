@@ -1,0 +1,27 @@
+{{ define "title"}} {{ .Title}} {{end}}
+{{ define "header"}} {{ partial "header" .}} {{end}}
+{{ define "main"}}
+{{ $currentPage := . }}
+
+<div id="docs-main">
+  {{ partial "sidebar" . }}
+  <div id="kube-faq">
+    <div id="hero">
+      <h1>{{ .Title}} </h1>
+      <p class="hero-lead">{{ .Params.bref | safeHTML }}</p>
+
+    </div>
+    <aside>
+      <header>
+      <h2>Table of Contents</h2>
+      </header>
+      {{.TableOfContents}}
+  </aside>
+    {{ .Content}}
+  </div>
+</div>
+
+
+
+{{ end }}
+{{ define "footer"}} {{ partial "footer.html" .}} {{ end }}
