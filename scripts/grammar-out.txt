@@ -45,6 +45,7 @@
 ./tests/grammar.sysl success
 ./tests/passthrough_1.sysl success
 ./tests/multiple_file.gen.sysl fail
+./tests/table.sysl success
 ./tests/ditto1.sysl success
 ./tests/deps.sysl success
 ./tests/test.gen.sysl fail
@@ -159,7 +160,7 @@
 ./pkg/importer/tests-openapi/multiple-return-values.sysl success
 ./pkg/importer/tests-openapi/simple.sysl success
 ./pkg/parse/tests/if_else.sysl success
-./pkg/parse/tests/union.sysl fail
+./pkg/parse/tests/union.sysl success
 ./pkg/parse/tests/simple_model.sysl success
 ./pkg/parse/tests/mixin.sysl fail
 ./pkg/parse/tests/inplace_tuple.sysl fail
@@ -232,4 +233,4 @@
 ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl success
 ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl success
 ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl success
-Passes:192 Fails:42
+Passes:194 Fails:41
