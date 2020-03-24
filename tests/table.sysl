@@ -1,0 +1,10 @@
+Table:
+    !table table [~test]:
+        # comment test
+        field <: int
+        @annotation = "annotation"
+        !table inplace_table [~inpace_test]:
+            # more comment
+        !table inline_shortcut: ...
+
+    !table inline_shortcut_again: ...
