@@ -14,3 +14,4 @@ build
 **/coverage/
 coverage.txt
 .DS_Store
+.idea
