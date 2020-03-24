@@ -129,8 +129,6 @@ func GenerateCode(
 	logger.Debugf("start: %s\n", codegenParams.Start)
 	logger.Debugf("basePath: %s\n", codegenParams.BasePath)
 
-	addEssentialAttr(model)
-
 	var transformFs afero.Fs
 	transformFs = syslutil.NewChrootFs(fs, codegenParams.RootTransform)
 	if mod.SyslModules {
@@ -222,15 +220,4 @@ func outputToFiles(output []*CodeGenOutput, fs afero.Fs) error {
 		}
 	}
 	return nil
-}
-
-func addEssentialAttr(model *sysl.Module) {
-	for appName, app := range model.GetApps() {
-		if app.GetAttrs() == nil {
-			app.Attrs = map[string]*sysl.Attribute{}
-		}
-		if app.GetAttrs()["package"] == nil {
-			app.GetAttrs()["package"] = &sysl.Attribute{Attribute: &sysl.Attribute_S{S: appName}}
-		}
-	}
 }
