@@ -18,6 +18,12 @@ event  ->  "<->" NAME params? attribs? ":" COMMENT*
 subscribe  ->  APPNAME "->" NAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
 
+// -------------- Enums --------------- //
+
+enum  -> "!enum" name=NAME attribs? ":" COMMENT* (SHORTCUT COMMENT_NO_NL*| %!Indented(enumeration | COMMENT_NO_NL)) {
+        enumeration -> name=NAME ":" DIGITS COMMENT_NO_NL*;
+};
+
 // -------------- Applications --------------- //
 application ->  APPNAME QSTRING?
         attribs? ":" COMMENT*  %!Indented(app_decl) EOL?;
@@ -34,7 +40,7 @@ app_decl   -> annotation
 
 // -------------- Types --------------- //
 
-type_decl -> table | facade | alias | union;
+type_decl -> table | facade | alias | union | enum;
 
 table -> mode=("!table"|"!type") NAME attribs?  ":" COMMENT*
      %!Indented(COMMENT_NO_NL | table_row COMMENT_NO_NL?) {

@@ -3,7 +3,7 @@ stmt -> (if_else
             | ret_stmt
             | call_stmt
             | one_of_stmt
-            | http_method_comment=(COMMENT)
+            | http_method_comment=(COMMENT_NO_NL)
             | group_stmt
             | text_stmt
             | annotation
