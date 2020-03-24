@@ -58,8 +58,14 @@ facade -> "!wrap" NAME  ":" COMMENT*
         };
 
 alias -> "!alias" NAME attribs?  ":" COMMENT*
-        (%!Indented(alias_line) | alias_line);
-alias_line -> annotation* (collection_type | type_spec);
+        (indented_alias_def | inline_alias_def) {
+        inline_alias_def -> annotation* (collection_type | type_spec);
+
+        indented_alias_def -> (annotations INDENT_SEP | \n+ INDENT)
+                          (collection_type | type_spec)
+                          (INDENT_SEP annotation:INDENT_SEP)?;
+};
+
 union -> "!union" NAME attribs?  ":"
     ( SHORTCUT |
          %!Indented(COMMENT_NO_NL | user_defined_type=NAME | annotation | SHORTCUT )

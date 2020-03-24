@@ -169,7 +169,7 @@
 ./pkg/parse/tests/docstrings.sysl success
 ./pkg/parse/tests/with_spaces.sysl success
 ./pkg/parse/tests/rank.sysl success
-./pkg/parse/tests/alias.sysl fail
+./pkg/parse/tests/alias.sysl success
 ./pkg/parse/tests/matching.sysl fail
 ./pkg/parse/tests/test2.sysl success
 ./pkg/parse/tests/tableof.sysl success
@@ -233,4 +233,4 @@
 ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl success
 ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl success
 ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl success
-Passes:194 Fails:41
+Passes:195 Fails:40
