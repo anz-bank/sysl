@@ -1,7 +1,7 @@
 MobileApp:
     Login:
         Server <- LoginRequest
-        @link = "www.google.com"
+        @link = "https://www.google.com"
     !type LoginData:
         username <: string
         password <: string

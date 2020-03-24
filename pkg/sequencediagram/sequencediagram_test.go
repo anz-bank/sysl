@@ -86,7 +86,7 @@ control "MobileApp" as _0
 control "Server" as _1
 skinparam maxMessageSize 250
 title Profile
-== MobileApp <- [[www.google.com Login]] ==
+== MobileApp <- [[https://www.google.com Login]] ==
 [->_0 : Login
 activate _0
  _0->_1 : LoginRequest
@@ -127,7 +127,7 @@ control "MobileApp" as _0
 control "Server" as _1
 skinparam maxMessageSize 250
 title Profile
-== [[www.foofle.com MobileApp]] <- Login ==
+== [[https://www.foofle.com MobileApp]] <- Login ==
 [->_0 : Login
 activate _0
  _0->_1 : LoginRequest
@@ -168,7 +168,7 @@ control "MobileApp" as _0
 control "Server" as _1
 skinparam maxMessageSize 250
 title Profile
-== [[www.foofle.com MobileApp]] <- [[www.google.com Login]] ==
+== [[https://www.foofle.com MobileApp]] <- [[https://www.google.com Login]] ==
 [->_0 : Login
 activate _0
  _0->_1 : LoginRequest

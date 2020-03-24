@@ -1,8 +1,8 @@
 MobileApp:
-    @link = "www.foofle.com"
+    @link = "https://www.foofle.com"
     Login:
         Server <- LoginRequest
-        @link = "www.google.com"
+        @link = "https://www.google.com"
     !type LoginData:
         username <: string
         password <: string
