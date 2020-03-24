@@ -16,15 +16,15 @@
 ./demo/codegen/AuthorisationAPI/authorisation.sysl fail
 ./demo/examples/Rest-and-HTTP/1_project.sysl fail
 ./demo/examples/GRPC/grpc.sysl fail
-./demo/examples/Data-types/project.sysl fail
-./demo/examples/Projects/project.sysl fail
-./demo/examples/Sequence-Diagrams/1_project.sysl fail
+./demo/examples/Data-types/project.sysl success
+./demo/examples/Projects/project.sysl success
+./demo/examples/Sequence-Diagrams/1_project.sysl success
 ./demo/examples/Reserved-Attributes/1_project.sysl success
-./demo/examples/Hello-World/1_project.sysl fail
+./demo/examples/Hello-World/1_project.sysl success
 ./demo/examples/Attributes/1_project.sysl success
 ./demo/examples/Special-Characters/1_project.sysl success
 ./demo/examples/Integration-Diagrams/1_project.sysl success
-./demo/examples/Control-Flow/1_project.sysl fail
+./demo/examples/Control-Flow/1_project.sysl success
 ./demo/examples/Todos/todos.sysl fail
 ./demo/examples/Modules/moredeps/moredeps.sysl success
 ./demo/examples/Modules/deps.sysl success
@@ -197,7 +197,7 @@
 ./pkg/parse/tests/enum.sysl success
 ./pkg/parse/tests/math.sysl fail
 ./pkg/parse/tests/implied.sysl success
-./pkg/parse/tests/eventing.sysl fail
+./pkg/parse/tests/eventing.sysl success
 ./pkg/parse/tests/crash.sysl success
 ./pkg/parse/tests/test_rest_api.sysl fail
 ./pkg/parse/tests/project.sysl success
@@ -208,6 +208,7 @@
 ./pkg/parse/tests/args.sysl success
 ./pkg/parse/tests/rest_url_params.sysl success
 ./pkg/language/go/ast.sysl success
+./pkg/parser/tests/statements_test.sysl success
 ./pkg/exporter/test-data/EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_200_RESPONSE_DESCRIPTION_ONLY.sysl success
 ./pkg/exporter/test-data/EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_201_LOCATION_HEADER_RESPONSE.sysl success
 ./pkg/exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl success
@@ -231,4 +232,4 @@
 ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl success
 ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl success
 ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl success
-Passes:180 Fails:53
+Passes:187 Fails:47
