@@ -194,7 +194,7 @@
 ./pkg/parse/tests/petshop.sysl fail
 ./pkg/parse/tests/attribs.sysl success
 ./pkg/parse/tests/foreign_import_swagger.sysl success
-./pkg/parse/tests/enum.sysl fail
+./pkg/parse/tests/enum.sysl success
 ./pkg/parse/tests/math.sysl fail
 ./pkg/parse/tests/implied.sysl success
 ./pkg/parse/tests/eventing.sysl fail
@@ -231,4 +231,4 @@
 ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl success
 ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl success
 ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl success
-Passes:179 Fails:54
+Passes:180 Fails:53
