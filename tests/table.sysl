@@ -3,7 +3,7 @@ Table:
         # comment test
         field <: int
         @annotation = "annotation"
-        !table inplace_table [~inpace_test]:
+        !table inplace_table [~inplace_test]:
             ...
         !table inline_shortcut: ...
 

@@ -48,8 +48,8 @@ table -> mode=("!table"|"!type") NAME attribs?  ":" COMMENT*
                    | table_field
                    | annotation
                    | table
-                   | SHORTCUT
-                   | table;
+                   | SHORTCUT;
+
         table_field -> field optional="?"? attribs? (":" annotations)?;
      };
 facade -> "!wrap" NAME  ":" COMMENT*
