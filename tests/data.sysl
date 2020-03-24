@@ -1,10 +1,10 @@
 Project [seqtitle="DataModel"]:
-  Relational-Model:
-    RelModel
-  Object-Model:
-    ObjectModel
-  Primitive-Alias-Model:
-    PrimitiveAliasModel  
+    Relational-Model:
+        RelModel
+    Object-Model:
+        ObjectModel
+#    Primitive-Alias-Model:
+#        PrimitiveAliasModel
 
 RelModel:
     !table Employee:
@@ -33,24 +33,24 @@ RelModel:
         petId <: Pet.petId [~pk]
 
 ObjectModel:
-  !type Address:
-    line_1 <: string
-    city <: string
+    !type Address:
+        line_1 <: string
+        city <: string
 
-  !type Customer:
-    customer_id <: int
-    addresses <: set of Address
+    !type Customer:
+        customer_id <: int
+        addresses <: set of Address
 
-  !type Order:
-    order_id <: int
-    customer <: Customer
+    !type Order:
+        order_id <: int
+        customer <: Customer
 
-PrimitiveAliasModel:
-  !type User:
-        id <: uuid
-        acc <: Account
-  !type Account:
-        foo <: string
-  !alias uuid:
-        int
- 
+# TODO: Readd this test
+# PrimitiveAliasModel:
+#     !type User:
+#         id <: uuid
+#         acc <: Account
+#     !type Account:
+#         foo <: string
+#     !alias uuid:
+#         int
