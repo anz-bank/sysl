@@ -43,8 +43,14 @@ app_decl   -> annotation
 type_decl -> table | facade | alias | union | enum;
 
 table -> mode=("!table"|"!type") NAME attribs?  ":" COMMENT*
-     %!Indented(COMMENT_NO_NL | table_row COMMENT_NO_NL?) {
-        table_row -> (NAME array_size? "<:") type=(collection_type|type_spec) optional="?"? attribs? (":" annotations)?;
+     (SHORTCUT | %!Indented(COMMENT_NO_NL | table_row COMMENT_NO_NL?)) {
+        table_row -> COMMENT_NO_NL
+                   | table_field
+                   | annotation
+                   | table
+                   | SHORTCUT;
+
+        table_field -> field optional="?"? attribs? (":" annotations)?;
      };
 facade -> "!wrap" NAME  ":" COMMENT*
      %!Indented(("!table"|"!type"|"!union") NAME inplace_table_def?) {
