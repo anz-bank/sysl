@@ -103,7 +103,7 @@ NativeDataTypes -> "int32" | "int64" | "int" |
 reference ->  \s* pkg=(NAME:"::" ".")? APPNAME;
 
 COMMENT_NO_NL -> "#" [^\n]*;
-COMMENT -> COMMENT_NO_NL \n+;
+COMMENT -> COMMENT_NO_NL "\n";
 EOL     -> (COMMENT+ | [\_\t]*\n);
 QSTRING -> /{ " (?: \\. | [^\\"] )* "
            | ' (?: \\. | [^\\'] )* '
