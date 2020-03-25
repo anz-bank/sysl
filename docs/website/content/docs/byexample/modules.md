@@ -7,6 +7,7 @@ layout= "byexample"
 weight = 8
 topic = "Basics"
 PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=aW1wb3J0IGRlcHMKaW1wb3J0IG1vcmVkZXBzL21vcmVkZXBzCmltcG9ydCAvdGVzdHMvYmFuYW5hdHJlZQppbXBvcnQgLy9naXRodWIuY29tL2Fuei1iYW5rL3N5c2xnZW4tZXhhbXBsZXMvZXhhbXBsZXMvdG9kb3MKaW1wb3J0IGZvcmVpZ25faW1wb3J0X3N3YWdnZXIueWFtbCBhcyBjb20uZm9vLmJhci5hcHAgfnN3YWdnZXIKTW9kZWxXaXRoRGVwcyBbcGFja2FnZT0ibW9kZWwiXToKICAhdHlwZSBSZXNwb25zZToKICAgIHVzZXJJZCA8OiBpbnQKICAgIGlkIDw6IGludAogICAgdGl0bGUgPDogc3RyaW5nCiAgL3Jlc3BvbnNlczoKICAgIC97aWQ8OmludH06CiAgICAgIEdFVDoKICAgICAgICBEZXAgPC0gR0VUIC9kZXAve2lkfQogICAgICAgIERlcCA8LSBHRVQgL21vcmVkZXAve2lkfQogICAgICAgIERlcDIgPC0gR0VUIC9kZXAyL3tpZH0KICAgICAgICBUb2RvcyA8LSBHRVQgL3RvZG9zL3tpZH0KICAgICAgICBCYW5hbmF0cmVlIDwtIEdFVCAvYmFuYW5hL3tpZH0KICAgICAgICByZXR1cm4gUmVzcG9uc2UK&cmd="
+GitRepoURL = "https://github.com/anz-bank/sysl/tree/master/demo/examples/Modules"
 ID = "modules"
 CodeWithoutComments = """import deps
 import moredeps/moredeps
@@ -55,6 +56,29 @@ Segs = [[
     <span class="o">/</span><span class="p">{</span><span class="nx">id</span><span class="p">&lt;:</span><span class="kt">int</span><span class="p">}:</span>
       <span class="nx">GET</span><span class="p">:</span>
         <span class="k">return</span> <span class="nx">Dep2</span></pre>""",DocsRendered= """""",Image = ""},
+
+
+],
+[
+  
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">swagger</span><span class="p">:</span> <span class="s">&#34;2.0&#34;</span>
+<span class="nx">info</span><span class="p">:</span>
+  <span class="nx">title</span><span class="p">:</span> <span class="nx">Simple</span>
+<span class="nx">paths</span><span class="p">:</span>
+  <span class="o">/</span><span class="nx">test</span><span class="p">:</span>
+    <span class="nx">get</span><span class="p">:</span>
+      <span class="nx">responses</span><span class="p">:</span>
+        <span class="mi">200</span><span class="p">:</span>
+          <span class="nx">description</span><span class="p">:</span> <span class="mi">200</span> <span class="nx">OK</span>
+          <span class="nx">schema</span><span class="p">:</span>
+            <span class="err">$</span><span class="nx">ref</span><span class="p">:</span> <span class="err">&#39;#</span><span class="o">/</span><span class="nx">definitions</span><span class="o">/</span><span class="nx">SimpleObj</span><span class="err">&#39;</span>
+<span class="nx">definitions</span><span class="p">:</span>
+  <span class="nx">SimpleObj</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= false,CodeRun= true,CodeRendered="""<pre class="chroma">    <span class="kd">type</span><span class="p">:</span> <span class="nx">object</span>
+    <span class="nx">properties</span><span class="p">:</span>
+      <span class="nx">name</span><span class="p">:</span>
+        <span class="kd">type</span><span class="p">:</span> <span class="kt">string</span></pre>""",DocsRendered= """""",Image = ""},
 
 
 ],
