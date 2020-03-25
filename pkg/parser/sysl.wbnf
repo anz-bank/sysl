@@ -13,7 +13,7 @@ import  -> "import"  prefix=("//"|"/")? PATH ( "as"  reference)? ("~" mode=NAME)
 
 // -------------- Events --------------- //
 
-event  ->  "<->" NAME params? attribs? ":" COMMENT*
+event  ->  "<->" APPNAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
 subscribe  ->  APPNAME "->" NAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
