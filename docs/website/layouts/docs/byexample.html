@@ -55,7 +55,7 @@
           {{if .CodeRun}}
           {{if eq $copyButtonActive false}}
           <a href={{$PlaygroundURL}} target="_blank"><img title="Run code" src="/img/logo.png" class="run"></a>
-
+          <a href={{$GitRepoURL}} target="_blank"><img title="Git Repo" src="{{ "/img/github.png" | relURL }}" class="run"></a>
           <img title="Copy code" src="/img/clipboard.png" class="copy" />
 
           {{$copyButtonActive = true}}
