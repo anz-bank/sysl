@@ -8,3 +8,9 @@ Table:
         !table inline_shortcut: ...
 
     !table inline_shortcut_again: ...
+
+    !table multiple_field_attributes:
+        multiline_field <:
+            a <: string
+            b <: int
+            c <: reference

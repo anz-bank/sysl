@@ -92,7 +92,7 @@
 ./docs/website/static/assets/for-loop.sysl success
 ./docs/website/static/assets/api.sysl success
 ./docs/website/static/assets/events.sysl success
-./docs/website/static/assets/nested.sysl fail
+./docs/website/static/assets/nested.sysl success
 ./docs/website/static/assets/args.sysl success
 ./unsorted/examples/grammars/go/go.gen.sysl fail
 ./unsorted/examples/grammars/java/java.gen.sysl fail
@@ -169,7 +169,7 @@
 ./pkg/parse/tests/docstrings.sysl success
 ./pkg/parse/tests/with_spaces.sysl success
 ./pkg/parse/tests/rank.sysl success
-./pkg/parse/tests/alias.sysl success
+./pkg/parse/tests/alias.sysl fail
 ./pkg/parse/tests/matching.sysl fail
 ./pkg/parse/tests/test2.sysl success
 ./pkg/parse/tests/tableof.sysl success

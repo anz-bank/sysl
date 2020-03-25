@@ -106,7 +106,7 @@ NativeDataTypes -> "int32" | "int64" | "int" |
                 "float" | "string" | "datetime" | "date" |
                 "bool" | "decimal";
 
-reference ->  \s* pkg=(NAME:"::" ".")? APPNAME;
+reference ->  pkg=(NAME:"::" ".")? APPNAME;
 
 COMMENT_NO_NL -> "#" [^\n]*;
 COMMENT -> COMMENT_NO_NL "\n";
