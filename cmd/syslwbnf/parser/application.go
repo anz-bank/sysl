@@ -9,6 +9,9 @@ import (
 func buildApplication(node ApplicationNode) (string, *sysl.Application) {
 	app := &sysl.Application{}
 	app.Name = appName(*node.OneAppname())
+	app.Endpoints = map[string]*sysl.Endpoint{}
+	app.SourceContext = buildSourceContext(node.Node)
+	app.Types = map[string]*sysl.Type{}
 
 	if qs := node.OneQstring(); qs != nil {
 		app.LongName = qs.String()
@@ -16,6 +19,22 @@ func buildApplication(node ApplicationNode) (string, *sysl.Application) {
 	if attrs := node.OneAttribs(); attrs != nil {
 		app.Attrs = buildAttributes(*attrs)
 	}
+
+	WalkerOps{
+		EnterAnnotationNode: func(node AnnotationNode) Stopper {
+			return nil
+		},
+		EnterEndpointNode: func(node EndpointNode) Stopper {
+			ep := buildEndpoint(node)
+			app.Endpoints[ep.Name] = ep
+			return nil
+		},
+		EnterTypeDeclNode: func(node TypeDeclNode) Stopper {
+			name, t := buildType(node)
+			app.Types[name] = t
+			return NodeExiter
+		},
+	}.Walk(node)
 
 	return strings.Join(app.Name.Part, "::"), app
 }

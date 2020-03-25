@@ -512,10 +512,14 @@ func Grammar() parser.Parsers {
 					parser.Rule(`INDENT`)),
 				parser.Delim{Term: parser.Rule(`stmt`),
 					Sep: parser.Rule(`INDENT_SEP`)}}},
-		"http_path": parser.Seq{parser.S(`/`),
-			parser.Opt(parser.Delim{Term: parser.Oneof{parser.Rule(`http_path_part`),
-				parser.Rule(`http_path_var_with_type`)},
+		"http_path": parser.ScopedGrammar{Term: parser.Seq{parser.S(`/`),
+			parser.Opt(parser.Delim{Term: parser.Rule(`part`),
 				Sep: parser.S(`/`)})},
+			Grammar: parser.Grammar{".wrapRE": parser.Oneof{parser.RE(`\n+`),
+				parser.RE(`\s+`),
+				parser.RE(`[ ]*()[ ]*`)},
+				"part": parser.Oneof{parser.Rule(`http_path_part`),
+					parser.Rule(`http_path_var_with_type`)}}},
 		"http_path_part": parser.ScopedGrammar{Term: parser.Some(parser.Oneof{parser.Rule(`NAME`),
 			parser.Rule(`DIGITS`),
 			parser.RE(`[-._~]`),
@@ -3432,20 +3436,10 @@ func (c GroupStmtNode) AllToken() []string {
 type HttpPathNode struct{ ast.Node }
 
 func (HttpPathNode) isWalkableType() {}
-func (c HttpPathNode) Choice() int   { return ast.Choice(c.Node) }
-
-func (c HttpPathNode) AllHttpPathPart() []HttpPathPartNode {
+func (c HttpPathNode) AllPart() []HttpPathPartNode {
 	var out []HttpPathPartNode
-	for _, child := range ast.All(c.Node, "http_path_part") {
+	for _, child := range ast.All(c.Node, "part") {
 		out = append(out, HttpPathPartNode{child})
-	}
-	return out
-}
-
-func (c HttpPathNode) AllHttpPathVarWithType() []HttpPathVarWithTypeNode {
-	var out []HttpPathVarWithTypeNode
-	for _, child := range ast.All(c.Node, "http_path_var_with_type") {
-		out = append(out, HttpPathVarWithTypeNode{child})
 	}
 	return out
 }
@@ -3468,6 +3462,20 @@ func (c HttpPathPartNode) AllDigits() []DigitsNode {
 		out = append(out, DigitsNode{child})
 	}
 	return out
+}
+
+func (c HttpPathPartNode) OneHttpPathPart() *HttpPathPartNode {
+	if child := ast.First(c.Node, "http_path_part"); child != nil {
+		return &HttpPathPartNode{child}
+	}
+	return nil
+}
+
+func (c HttpPathPartNode) OneHttpPathVarWithType() *HttpPathVarWithTypeNode {
+	if child := ast.First(c.Node, "http_path_var_with_type"); child != nil {
+		return &HttpPathVarWithTypeNode{child}
+	}
+	return nil
 }
 
 func (c HttpPathPartNode) AllName() []NameNode {
@@ -10154,17 +10162,8 @@ func (w WalkerOps) WalkHttpPathNode(node HttpPathNode) Stopper {
 			}
 		}
 	}
-	for _, child := range node.AllHttpPathPart() {
+	for _, child := range node.AllPart() {
 		if s := w.WalkHttpPathPartNode(child); s != nil {
-			if s.ExitNode() {
-				return nil
-			} else if s.Abort() {
-				return s
-			}
-		}
-	}
-	for _, child := range node.AllHttpPathVarWithType() {
-		if s := w.WalkHttpPathVarWithTypeNode(child); s != nil {
 			if s.ExitNode() {
 				return nil
 			} else if s.Abort() {
@@ -10199,6 +10198,26 @@ func (w WalkerOps) WalkHttpPathPartNode(node HttpPathPartNode) Stopper {
 				} else if s.Abort() {
 					return s
 				}
+			}
+		}
+	}
+	if child := node.OneHttpPathPart(); child != nil {
+		child := *child
+		if s := w.WalkHttpPathPartNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneHttpPathVarWithType(); child != nil {
+		child := *child
+		if s := w.WalkHttpPathVarWithTypeNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
 			}
 		}
 	}
