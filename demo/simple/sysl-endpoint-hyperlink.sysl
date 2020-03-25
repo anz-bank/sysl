@@ -1,0 +1,12 @@
+MobileApp:
+    Login:
+        Server <- LoginRequest
+        @link = "https://www.google.com"
+    !type LoginData:
+        username <: string
+        password <: string
+    !type LoginResponse:
+        message <: string
+Server:
+    LoginRequest(data <: MobileApp.LoginData):
+        return MobileApp.LoginResponse
