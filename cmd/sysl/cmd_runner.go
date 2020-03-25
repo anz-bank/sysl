@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/anz-bank/sysl/pkg/parse"
 	"sort"
 	"strconv"
 	"strings"
@@ -20,8 +21,9 @@ import (
 type cmdRunner struct {
 	commands map[string]cmdutils.Command
 
-	Root    string
-	modules []string
+	Root       string
+	modules    []string
+	parserType parse.ParserType
 }
 
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
@@ -36,7 +38,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 
 			if cmd.MaxSyslModule() > 0 {
 				for _, moduleName := range r.modules {
-					module, appName, err = loader.LoadSyslModule(r.Root, moduleName, fs, logger)
+					module, appName, err = loader.LoadSyslModuleWithParserType(r.Root, moduleName, fs, logger, r.parserType)
 					if err != nil {
 						return err
 					}
@@ -49,7 +51,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 			}
 			return cmd.Execute(cmdutils.ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
-				Logger: logger, DefaultAppName: appName})
+				Logger: logger, DefaultAppName: appName, ParserType: r.parserType})
 		}
 	}
 	return nil
@@ -80,6 +82,11 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	app.Flag("root",
 		"sysl root directory for input model file. If root is not found, the module directory becomes "+
 			"the root, but the module can not import with absolute paths (or imports must be relative).").StringVar(&r.Root)
+
+	parserType := app.Flag("parser", fmt.Sprintf("parser to parse sysl files [%s,%s]", parse.Antlr, parse.Wbnf))
+	parserType.Default(parse.DefaultParserType)
+	parserType.Enum(parse.Antlr, parse.Wbnf)
+	parserType.StringVar(&r.parserType)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0

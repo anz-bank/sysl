@@ -1,6 +1,7 @@
 package cmdutils
 
 import (
+	"github.com/anz-bank/sysl/pkg/parse"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -96,6 +97,7 @@ type ExecuteArgs struct {
 	Filesystem     afero.Fs
 	Logger         *logrus.Logger
 	DefaultAppName string
+	ParserType     parse.ParserType
 }
 
 type Command interface {

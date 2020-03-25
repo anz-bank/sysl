@@ -32,6 +32,7 @@ type Params struct {
 	DepPath       string
 	Start         string
 	BasePath      string
+	ParserType    parse.ParserType
 	Filesystem    afero.Fs
 	Logger        *logrus.Logger
 }
@@ -43,13 +44,15 @@ func DoValidate(validateParams Params) error {
 	logrus.Debugf("grammar: %s\n", validateParams.Grammar)
 	logrus.Debugf("start: %s\n", validateParams.Start)
 	logrus.Debugf("basepath: %s\n", validateParams.BasePath)
+	logrus.Debugf("parser: %s\n", validateParams.ParserType)
 
-	grammar, err := LoadGrammar(validateParams.Grammar, validateParams.Filesystem)
+	grammar, err := LoadGrammarWithParserType(validateParams.Grammar, validateParams.Filesystem,
+		validateParams.ParserType)
 	if err != nil {
 		return err
 	}
 
-	parser := parse.NewParser()
+	parser := parse.NewParserWithParserType(validateParams.ParserType)
 	transform, err := loadTransform(
 		validateParams.Transform,
 		syslutil.NewChrootFs(validateParams.Filesystem, validateParams.RootTransform),
@@ -366,6 +369,10 @@ func loadTransform(transformFile string, fs afero.Fs, p *parse.Parser) (*sysl.Ap
 // LoadGrammar loads sysl conversion of given grammar.
 // eg: if grammarFile is ./foo/bar.g, this tries to load ./foo/bar.sysl
 func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
+	return LoadGrammarWithParserType(grammarFile, fs, parse.DefaultParserType)
+}
+
+func LoadGrammarWithParserType(grammarFile string, fs afero.Fs, parserType parse.ParserType) (*sysl.Application, error) {
 	tokens := strings.Split(grammarFile, string(os.PathSeparator))
 	rootGrammar := strings.Join(tokens[:len(tokens)-1], string(os.PathSeparator))
 	grammarFileName := tokens[len(tokens)-1]
@@ -373,7 +380,7 @@ func LoadGrammar(grammarFile string, fs afero.Fs) (*sysl.Application, error) {
 	tokens = strings.Split(grammarFileName, ".")
 	tokens[len(tokens)-1] = "sysl"
 	grammarSyslFile := strings.Join(tokens, ".")
-	p := parse.NewParser()
+	p := parse.NewParserWithParserType(parserType)
 
 	grammar, name, err := parse.LoadAndGetDefaultApp(grammarSyslFile,
 		syslutil.NewChrootFs(fs, rootGrammar), p)

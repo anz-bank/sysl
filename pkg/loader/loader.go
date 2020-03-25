@@ -22,13 +22,17 @@ type ProjectConfiguration struct {
 }
 
 func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
+	return LoadSyslModuleWithParserType(root, filename, fs, logger, parse.DefaultParserType)
+}
+
+func LoadSyslModuleWithParserType(root, filename string, fs afero.Fs, logger *logrus.Logger, parserType parse.ParserType) (*sysl.Module, string, error) {
 	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
 	projectConfig := NewProjectConfiguration()
 	if err := projectConfig.ConfigureProject(root, filename, fs, logger); err != nil {
 		return nil, "", err
 	}
 
-	modelParser := parse.NewParser()
+	modelParser := parse.NewParserWithParserType(parserType)
 	if !projectConfig.RootIsFound {
 		modelParser.RestrictToLocalImport()
 	}

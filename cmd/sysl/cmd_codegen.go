@@ -54,6 +54,7 @@ func (p *codegenCmd) Execute(args cmdutils.ExecuteArgs) error {
 			Start:         p.Start,
 			DepPath:       p.DepPath,
 			BasePath:      p.BasePath,
+			ParserType:    args.ParserType,
 			Filesystem:    args.Filesystem,
 			Logger:        args.Logger,
 		})
@@ -66,7 +67,7 @@ func (p *codegenCmd) Execute(args cmdutils.ExecuteArgs) error {
 		p.appName = args.DefaultAppName
 	}
 	eval.EnableDebugger = p.enableDebugger
-	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Modules[0], p.appName, args.Filesystem, args.Logger)
+	output, err := GenerateCode(&p.CmdContextParamCodegen, args.Modules[0], p.appName, args.Filesystem, args.Logger, args.ParserType)
 	if err != nil {
 		return err
 	}

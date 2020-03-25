@@ -117,7 +117,7 @@ func Serialize(w io.Writer, delim string, node Node) error {
 func GenerateCode(
 	codegenParams *cmdutils.CmdContextParamCodegen,
 	model *sysl.Module, modelAppName string,
-	fs afero.Fs, logger *logrus.Logger) ([]*CodeGenOutput, error) {
+	fs afero.Fs, logger *logrus.Logger, parserType parse.ParserType) ([]*CodeGenOutput, error) {
 	var codeOutput []*CodeGenOutput
 	depPath := codegenParams.DepPath
 	basePath := codegenParams.BasePath
@@ -134,7 +134,7 @@ func GenerateCode(
 	if mod.SyslModules {
 		transformFs = mod.NewFs(transformFs)
 	}
-	tfmParser := parse.NewParser()
+	tfmParser := parse.NewParserWithParserType(parserType)
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {
 		return nil, err
@@ -149,7 +149,7 @@ func GenerateCode(
 	}
 
 	if !codegenParams.DisableValidator {
-		grammarSysl, err := validate.LoadGrammar(codegenParams.Grammar, fs)
+		grammarSysl, err := validate.LoadGrammarWithParserType(codegenParams.Grammar, fs, parserType)
 		if err != nil {
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {

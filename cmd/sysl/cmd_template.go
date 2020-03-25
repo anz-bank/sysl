@@ -45,7 +45,7 @@ func (p *templateCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 func (p *templateCmd) Execute(args cmdutils.ExecuteArgs) error {
 	tmplFs := syslutil.NewChrootFs(args.Filesystem, p.rootTemplate)
-	tfmParser := parse.NewParser()
+	tfmParser := parse.NewParserWithParserType(args.ParserType)
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(p.template, tmplFs, tfmParser)
 	if err != nil {
 		return err

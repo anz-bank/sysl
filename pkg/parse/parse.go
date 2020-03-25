@@ -27,11 +27,18 @@ type TypeData struct {
 // Parser holds assign types and let(variable) definitions in hierarchical order, messages generated while parsing
 // and whether a root was found or not
 type Parser struct {
+	ParserType          ParserType
 	AssignTypes         map[string]TypeData
 	LetTypes            map[string]TypeData
 	Messages            map[string][]msg.Msg
 	allowAbsoluteImport bool
 }
+
+type ParserType = string
+
+const Antlr ParserType = "antlr"
+const Wbnf ParserType = "wbnf"
+const DefaultParserType = Antlr
 
 func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
 	errorListener := SyslParserErrorListener{}
@@ -106,13 +113,29 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	var apps = make(map[string]*sysl.Application) // the set of all applications from all files
 	var imports []importDef                       // the list of imports yet to be parsed
 
+	parserType := p.ParserType
+	if parserType == "" {
+		parserType = DefaultParserType
+	}
+
 	source := importDef{
 		filename: filename,
 	}
 
 	for {
 
-		newImports, err := parseAntlr(source, fs, apps)
+		var newImports []importDef
+		var err error
+
+		switch parserType {
+		case Antlr:
+			newImports, err = parseAntlr(source, fs, apps)
+		case Wbnf:
+			newImports, err = parseWbnf(source, fs, apps)
+		default:
+			return nil, Exitf(ParseError, fmt.Sprintf("invalid parser type: %s", parserType))
+		}
+
 		if err != nil {
 			return nil, err
 		}
@@ -689,6 +712,16 @@ func (p *Parser) GetMessages() map[string][]msg.Msg {
 
 func NewParser() *Parser {
 	return &Parser{
+		AssignTypes:         map[string]TypeData{},
+		LetTypes:            map[string]TypeData{},
+		Messages:            map[string][]msg.Msg{},
+		allowAbsoluteImport: true,
+	}
+}
+
+func NewParserWithParserType(parserType ParserType) *Parser {
+	return &Parser{
+		ParserType:          parserType,
 		AssignTypes:         map[string]TypeData{},
 		LetTypes:            map[string]TypeData{},
 		Messages:            map[string][]msg.Msg{},
