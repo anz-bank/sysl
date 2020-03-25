@@ -7,7 +7,9 @@ rest_endpoint -> http_path attribs? ":" %!Indented(method_def | rest_endpoint);
 
 method_def -> method=(HTTP_VERBS) params? query_param? attribs? ":" %!Indented(stmt);
 
-params -> "(" (field | reference):"," ")";
+params -> "(" (field | reference):"," ")" {
+    .wrapRE -> /{\s*()\s*};
+};
 
 query_param -> "?" (ident=(NAME) "=" (NativeDataTypes| NAME | "{" NAME "}") optional="?"?):"&";
 

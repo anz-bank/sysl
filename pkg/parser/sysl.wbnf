@@ -13,7 +13,7 @@ import  -> "import"  prefix=("//"|"/")? PATH ( "as"  reference)? ("~" mode=NAME)
 
 // -------------- Events --------------- //
 
-event  ->  "<->" NAME params? attribs? ":" COMMENT*
+event  ->  "<->" APPNAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
 subscribe  ->  APPNAME "->" NAME params? attribs? ":" COMMENT*
         ( SHORTCUT | %!Indented(stmt));
@@ -58,11 +58,17 @@ facade -> "!wrap" NAME  ":" COMMENT*
         };
 
 alias -> "!alias" NAME attribs?  ":" COMMENT*
-        (%!Indented(alias_line) | alias_line);
-alias_line -> annotation* (collection_type | type_spec);
+        (indented_alias_def | inline_alias_def) {
+        inline_alias_def -> annotation* (collection_type | type_spec);
+
+        indented_alias_def -> (annotations INDENT_SEP | \n+ INDENT)
+                          (collection_type | type_spec)
+                          (INDENT_SEP annotation:INDENT_SEP)?;
+};
+
 union -> "!union" NAME attribs?  ":"
     ( SHORTCUT |
-         %!Indented(COMMENT | type_spec | annotation | SHORTCUT )
+         %!Indented(COMMENT_NO_NL | user_defined_type=NAME | annotation | SHORTCUT )
     );
 
 collection_type -> ("set"|"sequence") "of" type_spec;
@@ -77,7 +83,7 @@ array_of_array   -> "[" (array_of_strings:",")? "]";
 
 array_size -> "(" min=("0"|DIGITS) ".." max=DIGITS? ")";
 
-annotation -> "@" var_name=(NAME) "=" value=(QSTRING | array_of_strings | multi_line_docstring);
+annotation -> "@" var_name=([a-zA-Z_][-\w.]*) "=" value=(QSTRING | array_of_strings | multi_line_docstring);
 
 annotations -> %!Indented(annotation);
 
@@ -106,7 +112,7 @@ NativeDataTypes -> "int32" | "int64" | "int" |
                 "float" | "string" | "datetime" | "date" |
                 "bool" | "decimal";
 
-reference ->  \s* pkg=(NAME:"::" ".")? APPNAME;
+reference ->  pkg=(NAME:"::" ".")? APPNAME;
 
 COMMENT_NO_NL -> "#" [^\n]*;
 COMMENT -> COMMENT_NO_NL "\n";

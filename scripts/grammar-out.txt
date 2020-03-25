@@ -1,6 +1,6 @@
 ./demo/bank/project.sysl success
 ./demo/bank/bank.sysl success
-./demo/grocerystore/grocerystore.sysl fail
+./demo/grocerystore/grocerystore.sysl success
 ./demo/simple/reljam-xsd.sysl success
 ./demo/simple/sysl-sd.sysl success
 ./demo/simple/example2.sysl success
@@ -75,13 +75,13 @@
 ./tests/multiple-app-datamodel.sysl success
 ./tests/ui_rest.sysl fail
 ./tests/integration_immediate_predecessors_test.sysl success
-./tests/test1.sysl fail
+./tests/test1.sysl success
 ./tests/comments.sysl fail
 ./tests/model.sysl success
 ./tests/blackbox.sysl success
 ./tests/reviewdatamodelcmd.sysl fail
 ./tests/args.sysl success
-./tests/ui_grpc.sysl fail
+./tests/ui_grpc.sysl success
 ./tests/groupby.sysl success
 ./docs/website/static/assets/if-else.sysl success
 ./docs/website/static/assets/data.sysl success
@@ -92,7 +92,7 @@
 ./docs/website/static/assets/for-loop.sysl success
 ./docs/website/static/assets/api.sysl success
 ./docs/website/static/assets/events.sysl success
-./docs/website/static/assets/nested.sysl fail
+./docs/website/static/assets/nested.sysl success
 ./docs/website/static/assets/args.sysl success
 ./unsorted/examples/grammars/go/go.gen.sysl fail
 ./unsorted/examples/grammars/java/java.gen.sysl fail
@@ -203,7 +203,7 @@
 ./pkg/parse/tests/test_rest_api.sysl success
 ./pkg/parse/tests/project.sysl success
 ./pkg/parse/tests/absolute_import.sysl success
-./pkg/parse/tests/test1.sysl fail
+./pkg/parse/tests/test1.sysl success
 ./pkg/parse/tests/for_loop.sysl success
 ./pkg/parse/tests/duplicate_import_single.sysl success
 ./pkg/parse/tests/args.sysl success
@@ -233,4 +233,4 @@
 ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl success
 ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl success
 ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl success
-Passes:194 Fails:41
+Passes:199 Fails:36
