@@ -102,43 +102,24 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 	}
 
 	imported := map[string]struct{}{}
-	listener := NewTreeShapeListener()
+
+	var apps = make(map[string]*sysl.Application) // the set of all applications from all files
+	var imports []importDef                       // the list of imports yet to be parsed
 
 	source := importDef{
 		filename: filename,
 	}
 
 	for {
-		filename := source.filename
-		logrus.Debugf("Parsing: " + filename)
 
-		fsinput, err := newFSFileStream(filename, fs)
-		if err != nil {
-			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
-		}
-
-		listener.sc = sourceCtxHelper{source.filename}
-		listener.base = filepath.Dir(filename)
-
-		input, err := importForeign(source, fsinput)
+		newImports, err := parseAntlr(source, fs, apps)
 		if err != nil {
 			return nil, err
 		}
 
-		tree, err := parseString(filename, input)
-		if err != nil {
-			return nil, err
-		}
+		imports = append(imports, newImports...)
 
-		localListener := NewTreeShapeListener()
-		localListener.sc = sourceCtxHelper{source.filename}
-		localListener.base = filepath.Dir(filename)
-
-		walker := antlr.NewParseTreeWalker()
-		walker.Walk(localListener, tree)
-		walker.Walk(listener, tree)
-
-		if len(listener.imports) == 0 {
+		if len(imports) == 0 {
 			break
 		}
 
@@ -152,13 +133,13 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 				set[value.filename]++
 			}
 		}
-		duplicateImportCheck(localListener.imports)
+		duplicateImportCheck(newImports)
 
-		imported[filename] = struct{}{}
+		imported[source.filename] = struct{}{}
 
-		for len(listener.imports) > 0 {
-			source = listener.imports[0]
-			listener.imports = listener.imports[1:]
+		for len(imports) > 0 {
+			source = imports[0]
+			imports = imports[1:]
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
 					return nil, Exitf(2,
@@ -173,8 +154,41 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		}
 	}
 
-	p.postProcess(listener.module)
-	return listener.module, nil
+	rootModule := &sysl.Module{Apps: apps}
+	p.postProcess(rootModule)
+	return rootModule, nil
+}
+
+// Parse the given source definition, modifying the app contents in the process.
+// Return the list of import definitions declared in the source but not parsed.
+func parseAntlr(source importDef, fs afero.Fs, apps map[string]*sysl.Application) ([]importDef, error) {
+	filename := source.filename
+	logrus.Debugf("Parsing: " + filename)
+
+	fsinput, err := newFSFileStream(filename, fs)
+	if err != nil {
+		return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+	}
+
+	listener := NewTreeShapeListener()
+	listener.module.Apps = apps
+	listener.sc = sourceCtxHelper{source.filename}
+	listener.base = filepath.Dir(filename)
+
+	input, err := importForeign(source, fsinput)
+	if err != nil {
+		return nil, err
+	}
+
+	tree, err := parseString(filename, input)
+	if err != nil {
+		return nil, err
+	}
+
+	walker := antlr.NewParseTreeWalker()
+	walker.Walk(listener, tree)
+
+	return listener.imports, nil
 }
 
 // apply attributes from src to dst statement and all of its
