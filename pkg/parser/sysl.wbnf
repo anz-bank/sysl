@@ -83,7 +83,7 @@ array_of_array   -> "[" (array_of_strings:",")? "]";
 
 array_size -> "(" min=("0"|DIGITS) ".." max=DIGITS? ")";
 
-annotation -> "@" var_name=(NAME) "=" value=(QSTRING | array_of_strings | multi_line_docstring);
+annotation -> "@" var_name=([a-zA-Z_][-\w.]*) "=" value=(QSTRING | array_of_strings | multi_line_docstring);
 
 annotations -> %!Indented(annotation);
 
