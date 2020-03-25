@@ -4,16 +4,19 @@
 ./demo/simple/reljam-xsd.sysl success
 ./demo/simple/sysl-sd.sysl success
 ./demo/simple/example2.sysl success
+./demo/simple/sysl-app-hyperlink.sysl success
 ./demo/simple/hello.sysl success
+./demo/simple/sysl-endpoint-hyperlink.sysl success
+./demo/simple/sysl-endpoint-app-hyperlink.sysl success
 ./demo/simple/reljam-model.sysl success
 ./demo/simple/reljam-facade.sysl success
 ./demo/simple/sysl-data.sysl success
 ./demo/simple/sysl-ints.sysl success
 ./demo/simple/sysl-sd2.sysl success
 ./demo/codegen/GRPCProtoGeneration/grpc.sysl fail
-./demo/codegen/GRPCProtoGeneration/hello.sysl fail
+./demo/codegen/GRPCProtoGeneration/hello.sysl success
 ./demo/codegen/AuthorisationAPI/grpc.sysl fail
-./demo/codegen/AuthorisationAPI/authorisation.sysl fail
+./demo/codegen/AuthorisationAPI/authorisation.sysl success
 ./demo/examples/Rest-and-HTTP/1_project.sysl fail
 ./demo/examples/GRPC/grpc.sysl fail
 ./demo/examples/Data-types/project.sysl success
@@ -79,7 +82,7 @@
 ./tests/comments.sysl fail
 ./tests/model.sysl success
 ./tests/blackbox.sysl success
-./tests/reviewdatamodelcmd.sysl fail
+./tests/reviewdatamodelcmd.sysl success
 ./tests/args.sysl success
 ./tests/ui_grpc.sysl success
 ./tests/groupby.sysl success
@@ -233,4 +236,4 @@
 ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl success
 ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl success
 ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl success
-Passes:199 Fails:36
+Passes:205 Fails:33
