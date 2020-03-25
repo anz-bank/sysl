@@ -142,7 +142,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 			imports = imports[1:]
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
-					return nil, Exitf(2,
+					return nil, Exitf(ParseError,
 						"error importing: importing outside current directory is only allowed when root is defined")
 				}
 				break
