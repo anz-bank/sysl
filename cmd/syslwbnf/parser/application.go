@@ -6,7 +6,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
-func buildApplication(node ApplicationNode) (string, *sysl.Application) {
+func (p *pscope) buildApplication(node ApplicationNode) (string, *sysl.Application) {
 	app := &sysl.Application{}
 	app.Name = appName(*node.OneAppname())
 	app.Endpoints = map[string]*sysl.Endpoint{}
@@ -17,7 +17,7 @@ func buildApplication(node ApplicationNode) (string, *sysl.Application) {
 		app.LongName = qs.String()
 	}
 	if attrs := node.OneAttribs(); attrs != nil {
-		app.Attrs = buildAttributes(*attrs)
+		app.Attrs = p.buildAttributes(*attrs)
 	}
 
 	WalkerOps{
@@ -25,12 +25,12 @@ func buildApplication(node ApplicationNode) (string, *sysl.Application) {
 			return nil
 		},
 		EnterEndpointNode: func(node EndpointNode) Stopper {
-			ep := buildEndpoint(node)
+			ep := p.buildEndpoint(node)
 			app.Endpoints[ep.Name] = ep
 			return nil
 		},
 		EnterTypeDeclNode: func(node TypeDeclNode) Stopper {
-			name, t := buildType(node)
+			name, t := p.buildType(node)
 			app.Types[name] = t
 			return NodeExiter
 		},

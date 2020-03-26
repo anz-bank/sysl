@@ -217,8 +217,9 @@ func Grammar() parser.Parsers {
 			parser.Eq(`target_endpoint`,
 				parser.Rule(`TEXT_LINE`)),
 			parser.Opt(parser.Rule(`call_args`))},
-		"collection_type": parser.Seq{parser.Oneof{parser.S(`set`),
-			parser.S(`sequence`)},
+		"collection_type": parser.Seq{parser.Eq(`col`,
+			parser.Oneof{parser.S(`set`),
+				parser.S(`sequence`)}),
 			parser.S(`of`),
 			parser.Rule(`type_spec`)},
 		"collector": parser.Seq{parser.CutPoint{parser.S(`.. * <- *`)},
@@ -783,12 +784,14 @@ func Grammar() parser.Parsers {
 			parser.Rule(`reference`)},
 			parser.Opt(parser.Eq(`SizeSpec`,
 				parser.Seq{parser.S(`(`),
-					parser.RE(`\d+`),
+					parser.Eq(`leading`,
+						parser.RE(`\d+`)),
 					parser.Opt(parser.Oneof{parser.Eq(`array`,
 						parser.S(`..`)),
 						parser.Eq(`sized`,
 							parser.S(`.`))}),
-					parser.RE(`\d*`),
+					parser.Eq(`trailing`,
+						parser.RE(`\d*`)),
 					parser.S(`)`)}))},
 		"union": parser.Seq{parser.S(`!union`),
 			parser.Rule(`NAME`),
@@ -1927,10 +1930,28 @@ func (c CallStmtTargetNode) OneToken() string {
 	return ""
 }
 
+type CollectionTypeColNode struct{ ast.Node }
+
+func (CollectionTypeColNode) isWalkableType() {}
+func (c CollectionTypeColNode) Choice() int   { return ast.Choice(c.Node) }
+
+func (c CollectionTypeColNode) OneToken() string {
+	if child := ast.First(c.Node, ""); child != nil {
+		return child.Scanner().String()
+	}
+	return ""
+}
+
 type CollectionTypeNode struct{ ast.Node }
 
 func (CollectionTypeNode) isWalkableType() {}
-func (c CollectionTypeNode) Choice() int   { return ast.Choice(c.Node) }
+
+func (c CollectionTypeNode) OneCol() *CollectionTypeColNode {
+	if child := ast.First(c.Node, "col"); child != nil {
+		return &CollectionTypeColNode{child}
+	}
+	return nil
+}
 
 func (c CollectionTypeNode) OneToken() string {
 	if child := ast.First(c.Node, ""); child != nil {
@@ -5268,6 +5289,13 @@ func (c TypeSpecSizeSpecNode) OneArray() string {
 	return ""
 }
 
+func (c TypeSpecSizeSpecNode) OneLeading() string {
+	if child := ast.First(c.Node, "leading"); child != nil {
+		return ast.First(child, "").Scanner().String()
+	}
+	return ""
+}
+
 func (c TypeSpecSizeSpecNode) OneSized() string {
 	if child := ast.First(c.Node, "sized"); child != nil {
 		return ast.First(child, "").Scanner().String()
@@ -5282,12 +5310,11 @@ func (c TypeSpecSizeSpecNode) OneToken() string {
 	return ""
 }
 
-func (c TypeSpecSizeSpecNode) AllToken() []string {
-	var out []string
-	for _, child := range ast.All(c.Node, "") {
-		out = append(out, child.Scanner().String())
+func (c TypeSpecSizeSpecNode) OneTrailing() string {
+	if child := ast.First(c.Node, "trailing"); child != nil {
+		return ast.First(child, "").Scanner().String()
 	}
-	return out
+	return ""
 }
 
 type UnionIndentSepNode struct{ ast.Node }
@@ -5594,6 +5621,8 @@ type WalkerOps struct {
 	ExitCallStmtNode                        func(CallStmtNode) Stopper
 	EnterCallStmtTargetNode                 func(CallStmtTargetNode) Stopper
 	ExitCallStmtTargetNode                  func(CallStmtTargetNode) Stopper
+	EnterCollectionTypeColNode              func(CollectionTypeColNode) Stopper
+	ExitCollectionTypeColNode               func(CollectionTypeColNode) Stopper
 	EnterCollectionTypeNode                 func(CollectionTypeNode) Stopper
 	ExitCollectionTypeNode                  func(CollectionTypeNode) Stopper
 	EnterCollectorCallStmtNode              func(CollectorCallStmtNode) Stopper
@@ -5961,6 +5990,9 @@ func (w WalkerOps) Walk(tree IsWalkableType) Stopper {
 
 	case CallStmtTargetNode:
 		return w.WalkCallStmtTargetNode(node)
+
+	case CollectionTypeColNode:
+		return w.WalkCollectionTypeColNode(node)
 
 	case CollectionTypeNode:
 		return w.WalkCollectionTypeNode(node)
@@ -7980,9 +8012,38 @@ func (w WalkerOps) WalkCallStmtTargetNode(node CallStmtTargetNode) Stopper {
 	return nil
 }
 
+func (w WalkerOps) WalkCollectionTypeColNode(node CollectionTypeColNode) Stopper {
+	if fn := w.EnterCollectionTypeColNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+
+	if fn := w.ExitCollectionTypeColNode; fn != nil {
+		if s := fn(node); s != nil && s.Abort() {
+			return s
+		}
+	}
+	return nil
+}
+
 func (w WalkerOps) WalkCollectionTypeNode(node CollectionTypeNode) Stopper {
 	if fn := w.EnterCollectionTypeNode; fn != nil {
 		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneCol(); child != nil {
+		child := *child
+		if s := w.WalkCollectionTypeColNode(child); s != nil {
 			if s.ExitNode() {
 				return nil
 			} else if s.Abort() {

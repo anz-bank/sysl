@@ -8,11 +8,11 @@ import (
 	"github.com/arr-ai/wbnf/ast"
 )
 
-func buildEndpoint(node EndpointNode) *sysl.Endpoint {
+func (p *pscope) buildEndpoint(node EndpointNode) *sysl.Endpoint {
 	if x := node.OneRestEndpoint(); x != nil {
-		return buildRestEndpoint(x, "")
+		return p.buildRestEndpoint(x, "")
 	} else if x := node.OneSimpleEndpoint(); x != nil {
-		return buildSimpleEndpoint(x, "")
+		return p.buildSimpleEndpoint(x, "")
 	} else if x := node.OneCollector(); x != nil {
 	} else if x := node.OneEvent(); x != nil {
 	}
@@ -31,11 +31,11 @@ func buildHttpPath(prefix string, node HttpPathNode) string {
 	return strings.Join(parts, "/")
 }
 
-func buildRestEndpoint(node *RestEndpointNode, pathPrefix string) *sysl.Endpoint {
+func (p *pscope) buildRestEndpoint(node *RestEndpointNode, pathPrefix string) *sysl.Endpoint {
 	ep := &sysl.Endpoint{}
 
 	if attrs := node.OneAttribs(); attrs != nil {
-		ep.Attrs = buildAttributes(*attrs)
+		ep.Attrs = p.buildAttributes(*attrs)
 	}
 
 	ep.RestParams = &sysl.Endpoint_RestParams{
@@ -48,11 +48,11 @@ func buildRestEndpoint(node *RestEndpointNode, pathPrefix string) *sysl.Endpoint
 	return ep
 }
 
-func buildSimpleEndpoint(node *SimpleEndpointNode, pathPrefix string) *sysl.Endpoint {
+func (p *pscope) buildSimpleEndpoint(node *SimpleEndpointNode, pathPrefix string) *sysl.Endpoint {
 	ep := &sysl.Endpoint{}
 
 	if attrs := node.OneAttribs(); attrs != nil {
-		ep.Attrs = buildAttributes(*attrs)
+		ep.Attrs = p.buildAttributes(*attrs)
 	}
 
 	if qs := node.OneQstring(); qs != nil {

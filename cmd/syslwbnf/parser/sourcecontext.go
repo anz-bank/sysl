@@ -11,11 +11,27 @@ func buildSourceContext(node ast.Node) *sysl.SourceContext {
 	if len(leafs) < 1 {
 		return &sysl.SourceContext{}
 	}
+
+	// FIXME
+	return &sysl.SourceContext{}
+
 	first := leafs[0].Scanner()
+	end := leafs[len(leafs)-1].Scanner()
+
+Loop:
+	for _, l := range leafs[1:] {
+		val := l.Scanner().String()
+		switch val {
+		case ":", "\n", "\r\n":
+			end = l.Scanner()
+			break Loop
+		}
+	}
 
 	return &sysl.SourceContext{
 		File:  first.Filename(),
 		Start: buildSourceContextLocation(first),
+		End:   buildSourceContextLocation(end),
 	}
 }
 
