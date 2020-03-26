@@ -22,7 +22,7 @@ Here are several approaches to get start using Sysl:
 
 ## Install the pre-compiled binary
 
-1. Download the pre-compiled binaries which match your OS, from the [releases page](https://github.com/anz-bank/sysl/releases)
+1. Download the pre-compiled binaries matching your OS from the [releases page](https://github.com/anz-bank/sysl/releases).
 
 2. Uncompress the archive and move the sysl binary to your desired path:
 
@@ -33,7 +33,7 @@ Here are several approaches to get start using Sysl:
       $ sysl help
       ```
 
-   2. under non-PATH location
+   2. under non-PATH location (with the binary in the current directory)
 
       ```bash
       # check it works
