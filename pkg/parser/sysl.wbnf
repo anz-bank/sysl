@@ -4,7 +4,8 @@
 
 // Sysl grammar
 
-sysl_file -> (import | EOL)* (application | EOL)+;
+sysl_file -> (import | EOL)* (application | EOL)+
+           | (import | EOL)+ (application | EOL)*;
 
 
 // -------------- Imports --------------- //

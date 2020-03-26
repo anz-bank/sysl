@@ -15,6 +15,7 @@ success ./demo/simple/sysl-ints.sysl
 success ./demo/simple/sysl-sd2.sysl
 success ./demo/codegen/GRPCProtoGeneration/hello.sysl
 success ./demo/codegen/AuthorisationAPI/authorisation.sysl
+success ./demo/examples/GRPC/grpc.sysl
 success ./demo/examples/Data-types/project.sysl
 success ./demo/examples/Projects/project.sysl
 success ./demo/examples/Sequence-Diagrams/1_project.sysl
@@ -207,7 +208,6 @@ success ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl
 fail    ./demo/codegen/GRPCProtoGeneration/grpc.sysl
 fail    ./demo/codegen/AuthorisationAPI/grpc.sysl
 fail    ./demo/examples/Rest-and-HTTP/1_project.sysl
-fail    ./demo/examples/GRPC/grpc.sysl
 fail    ./demo/examples/Todos/todos.sysl
 fail    ./demo/petshop/petshop.sysl
 fail    ./tests/eval_expr.sysl
@@ -236,4 +236,4 @@ fail    ./pkg/parse/tests/rest_api_query_params.sysl
 fail    ./pkg/parse/tests/funcs.sysl
 fail    ./pkg/parse/tests/petshop.sysl
 fail    ./pkg/parse/tests/math.sysl
-Passes:206 Fails:32
+Passes:207 Fails:31
