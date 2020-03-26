@@ -32,6 +32,7 @@ app_decl   -> annotation
             | COMMENT_NO_NL
             | SHORTCUT
             | type_decl
+            | facade
             | endpoint
             | event
             | subscribe
@@ -40,14 +41,14 @@ app_decl   -> annotation
 
 // -------------- Types --------------- //
 
-type_decl -> table | facade | alias | union | enum;
+type_decl -> table | alias | union | enum;
 
 table -> mode=("!table"|"!type") NAME attribs?  ":" COMMENT*
      %!Indented(COMMENT_NO_NL | table_row COMMENT_NO_NL?) {
         table_row -> (NAME array_size? "<:") type=(collection_type|type_spec) optional="?"? attribs? (":" annotations)?;
      };
 facade -> "!wrap" NAME  ":" COMMENT*
-     %!Indented(("!table"|"!type"|"!union") NAME inplace_table_def?) {
+     %!Indented(covering=(("!table"|"!type"|"!union") NAME inplace_table_def?)) {
             inplace_table_def -> ":"  %!Indented(NAME attribs?);
         };
 

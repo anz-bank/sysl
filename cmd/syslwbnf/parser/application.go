@@ -34,6 +34,14 @@ func (p *pscope) buildApplication(node ApplicationNode) (string, *sysl.Applicati
 			app.Types[name] = t
 			return NodeExiter
 		},
+		EnterFacadeNode: func(node FacadeNode) Stopper {
+			if app.Wrapped == nil {
+				app.Wrapped = p.buildFacade(node)
+			} else {
+				panic("only one facade supported per application")
+			}
+			return NodeExiter
+		},
 	}.Walk(node)
 
 	return strings.Join(app.Name.Part, "::"), app

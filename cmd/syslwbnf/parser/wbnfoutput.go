@@ -104,6 +104,7 @@ func Grammar() parser.Parsers {
 			parser.Rule(`COMMENT_NO_NL`),
 			parser.Rule(`SHORTCUT`),
 			parser.Rule(`type_decl`),
+			parser.Rule(`facade`),
 			parser.Rule(`endpoint`),
 			parser.Rule(`event`),
 			parser.Rule(`subscribe`),
@@ -450,11 +451,12 @@ func Grammar() parser.Parsers {
 			parser.Seq{parser.RE(`\n+`),
 				parser.Eq(`level`,
 					parser.Rule(`INDENT`)),
-				parser.Delim{Term: parser.Seq{parser.Oneof{parser.S(`!table`),
-					parser.S(`!type`),
-					parser.S(`!union`)},
-					parser.Rule(`NAME`),
-					parser.Opt(parser.Rule(`inplace_table_def`))},
+				parser.Delim{Term: parser.Eq(`covering`,
+					parser.Seq{parser.Oneof{parser.S(`!table`),
+						parser.S(`!type`),
+						parser.S(`!union`)},
+						parser.Rule(`NAME`),
+						parser.Opt(parser.Rule(`inplace_table_def`))}),
 					Sep: parser.Rule(`INDENT_SEP`)}}},
 			Grammar: parser.Grammar{".wrapRE": parser.Oneof{parser.RE(`\n+`),
 				parser.RE(`\s+`),
@@ -776,7 +778,6 @@ func Grammar() parser.Parsers {
 					parser.Rule(`NAME`)})},
 			parser.Rule(`SHORTCUT`)},
 		"type_decl": parser.Oneof{parser.Rule(`table`),
-			parser.Rule(`facade`),
 			parser.Rule(`alias`),
 			parser.Rule(`union`),
 			parser.Rule(`enum`)},
@@ -1158,6 +1159,13 @@ func (c AppDeclNode) OneEndpoint() *EndpointNode {
 func (c AppDeclNode) OneEvent() *EventNode {
 	if child := ast.First(c.Node, "event"); child != nil {
 		return &EventNode{child}
+	}
+	return nil
+}
+
+func (c AppDeclNode) OneFacade() *FacadeNode {
+	if child := ast.First(c.Node, "facade"); child != nil {
+		return &FacadeNode{child}
 	}
 	return nil
 }
@@ -3036,6 +3044,35 @@ func (c ExprUnaryopNode) OneToken() string {
 	return ""
 }
 
+type FacadeCoveringNode struct{ ast.Node }
+
+func (FacadeCoveringNode) isWalkableType() {}
+func (c FacadeCoveringNode) Choice() int   { return ast.Choice(c.Node) }
+
+func (c FacadeCoveringNode) AllInplaceTableDef() []FacadeInplaceTableDefNode {
+	var out []FacadeInplaceTableDefNode
+	for _, child := range ast.All(c.Node, "inplace_table_def") {
+		out = append(out, FacadeInplaceTableDefNode{child})
+	}
+	return out
+}
+
+func (c FacadeCoveringNode) AllName() []NameNode {
+	var out []NameNode
+	for _, child := range ast.All(c.Node, "NAME") {
+		out = append(out, NameNode{child})
+	}
+	return out
+}
+
+func (c FacadeCoveringNode) AllToken() []string {
+	var out []string
+	for _, child := range ast.All(c.Node, "") {
+		out = append(out, child.Scanner().String())
+	}
+	return out
+}
+
 type FacadeIndentSepNode struct{ ast.Node }
 
 func (FacadeIndentSepNode) isWalkableType() {}
@@ -3094,8 +3131,6 @@ func (c FacadeInplaceTableDefNode) OneToken() string {
 type FacadeNode struct{ ast.Node }
 
 func (FacadeNode) isWalkableType() {}
-func (c FacadeNode) Choice() int   { return ast.Choice(c.Node) }
-
 func (c FacadeNode) AllComment() []CommentNode {
 	var out []CommentNode
 	for _, child := range ast.All(c.Node, "COMMENT") {
@@ -3104,10 +3139,10 @@ func (c FacadeNode) AllComment() []CommentNode {
 	return out
 }
 
-func (c FacadeNode) AllInplaceTableDef() []FacadeInplaceTableDefNode {
-	var out []FacadeInplaceTableDefNode
-	for _, child := range ast.All(c.Node, "inplace_table_def") {
-		out = append(out, FacadeInplaceTableDefNode{child})
+func (c FacadeNode) AllCovering() []FacadeCoveringNode {
+	var out []FacadeCoveringNode
+	for _, child := range ast.All(c.Node, "covering") {
+		out = append(out, FacadeCoveringNode{child})
 	}
 	return out
 }
@@ -3124,13 +3159,6 @@ func (c FacadeNode) OneName() *NameNode {
 		return &NameNode{child}
 	}
 	return nil
-}
-func (c FacadeNode) AllName() []NameNode {
-	var out []NameNode
-	for _, child := range ast.All(c.Node, "NAME") {
-		out = append(out, NameNode{child})
-	}
-	return out
 }
 
 func (c FacadeNode) OneToken() string {
@@ -5230,13 +5258,6 @@ func (c TypeDeclNode) OneEnum() *EnumNode {
 	return nil
 }
 
-func (c TypeDeclNode) OneFacade() *FacadeNode {
-	if child := ast.First(c.Node, "facade"); child != nil {
-		return &FacadeNode{child}
-	}
-	return nil
-}
-
 func (c TypeDeclNode) OneTable() *TableNode {
 	if child := ast.First(c.Node, "table"); child != nil {
 		return &TableNode{child}
@@ -5699,6 +5720,8 @@ type WalkerOps struct {
 	ExitExprTableOfOpNode                   func(ExprTableOfOpNode) Stopper
 	EnterExprUnaryopNode                    func(ExprUnaryopNode) Stopper
 	ExitExprUnaryopNode                     func(ExprUnaryopNode) Stopper
+	EnterFacadeCoveringNode                 func(FacadeCoveringNode) Stopper
+	ExitFacadeCoveringNode                  func(FacadeCoveringNode) Stopper
 	EnterFacadeIndentSepNode                func(FacadeIndentSepNode) Stopper
 	ExitFacadeIndentSepNode                 func(FacadeIndentSepNode) Stopper
 	EnterFacadeInplaceTableDefIndentSepNode func(FacadeInplaceTableDefIndentSepNode) Stopper
@@ -6111,6 +6134,9 @@ func (w WalkerOps) Walk(tree IsWalkableType) Stopper {
 
 	case ExprUnaryopNode:
 		return w.WalkExprUnaryopNode(node)
+
+	case FacadeCoveringNode:
+		return w.WalkFacadeCoveringNode(node)
 
 	case FacadeIndentSepNode:
 		return w.WalkFacadeIndentSepNode(node)
@@ -6874,6 +6900,16 @@ func (w WalkerOps) WalkAppDeclNode(node AppDeclNode) Stopper {
 	if child := node.OneEvent(); child != nil {
 		child := *child
 		if s := w.WalkEventNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	if child := node.OneFacade(); child != nil {
+		child := *child
+		if s := w.WalkFacadeNode(child); s != nil {
 			if s.ExitNode() {
 				return nil
 			} else if s.Abort() {
@@ -9597,6 +9633,45 @@ func (w WalkerOps) WalkExprUnaryopNode(node ExprUnaryopNode) Stopper {
 	return nil
 }
 
+func (w WalkerOps) WalkFacadeCoveringNode(node FacadeCoveringNode) Stopper {
+	if fn := w.EnterFacadeCoveringNode; fn != nil {
+		if s := fn(node); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	for _, child := range node.AllInplaceTableDef() {
+		if s := w.WalkFacadeInplaceTableDefNode(child); s != nil {
+			if s.ExitNode() {
+				return nil
+			} else if s.Abort() {
+				return s
+			}
+		}
+	}
+	for _, child := range node.AllName() {
+		if fn := w.EnterNameNode; fn != nil {
+			if s := fn(child); s != nil {
+				if s.ExitNode() {
+					return nil
+				} else if s.Abort() {
+					return s
+				}
+			}
+		}
+	}
+
+	if fn := w.ExitFacadeCoveringNode; fn != nil {
+		if s := fn(node); s != nil && s.Abort() {
+			return s
+		}
+	}
+	return nil
+}
+
 func (w WalkerOps) WalkFacadeIndentSepNode(node FacadeIndentSepNode) Stopper {
 	if fn := w.EnterFacadeIndentSepNode; fn != nil {
 		if s := fn(node); s != nil {
@@ -9721,8 +9796,8 @@ func (w WalkerOps) WalkFacadeNode(node FacadeNode) Stopper {
 			}
 		}
 	}
-	for _, child := range node.AllInplaceTableDef() {
-		if s := w.WalkFacadeInplaceTableDefNode(child); s != nil {
+	for _, child := range node.AllCovering() {
+		if s := w.WalkFacadeCoveringNode(child); s != nil {
 			if s.ExitNode() {
 				return nil
 			} else if s.Abort() {
@@ -9740,7 +9815,8 @@ func (w WalkerOps) WalkFacadeNode(node FacadeNode) Stopper {
 			}
 		}
 	}
-	for _, child := range node.AllName() {
+	if child := node.OneName(); child != nil {
+		child := *child
 		if fn := w.EnterNameNode; fn != nil {
 			if s := fn(child); s != nil {
 				if s.ExitNode() {
@@ -12717,16 +12793,6 @@ func (w WalkerOps) WalkTypeDeclNode(node TypeDeclNode) Stopper {
 	if child := node.OneEnum(); child != nil {
 		child := *child
 		if s := w.WalkEnumNode(child); s != nil {
-			if s.ExitNode() {
-				return nil
-			} else if s.Abort() {
-				return s
-			}
-		}
-	}
-	if child := node.OneFacade(); child != nil {
-		child := *child
-		if s := w.WalkFacadeNode(child); s != nil {
 			if s.ExitNode() {
 				return nil
 			} else if s.Abort() {
