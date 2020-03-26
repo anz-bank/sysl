@@ -25,7 +25,7 @@ call_stmt -> target=("." | NAME:"::") "<-" target_endpoint=(TEXT_LINE) call_args
 
 call_args -> "(" (arg=((NAME "<:" type_spec) | (QSTRING | NAME)+)):"," ")";
 
-ret_stmt -> "return" ret_val=(TEXT);
+ret_stmt -> ("Return" | "return") ret_val=(TEXT);
 
 group_stmt -> NAME ":" %!Indented(stmt);
 

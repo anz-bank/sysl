@@ -58,7 +58,13 @@ func (p *pscope) buildSimpleEndpoint(node *SimpleEndpointNode, pathPrefix string
 	if qs := node.OneQstring(); qs != nil {
 		ep.LongName = qs.String()
 	}
-	ep.Name = node.OneEndpointName().String()
+	name := appName(*node.OneEndpointName())
+	ep.Name = name.Part[0] //fixme
+	ep.Stmt = []*sysl.Statement{}
+	ep.SourceContext = buildSourceContext(node.Node)
+	for _, stmt := range node.AllStmt() {
+		ep.Stmt = append(ep.Stmt, p.buildStatement(stmt))
+	}
 
 	return ep
 }

@@ -685,7 +685,8 @@ func Grammar() parser.Parsers {
 				parser.Delim{Term: parser.Oneof{parser.Rule(`method_def`),
 					parser.Rule(`rest_endpoint`)},
 					Sep: parser.Rule(`INDENT_SEP`)}}},
-		"ret_stmt": parser.Seq{parser.CutPoint{parser.S(`return`)},
+		"ret_stmt": parser.Seq{parser.Oneof{parser.CutPoint{parser.S(`Return`)},
+			parser.CutPoint{parser.S(`return`)}},
 			parser.Eq(`ret_val`,
 				parser.Rule(`TEXT`))},
 		"simple_endpoint": parser.Oneof{parser.Rule(`SHORTCUT`),
@@ -4603,6 +4604,7 @@ func (c RestEndpointNode) AllToken() []string {
 type RetStmtNode struct{ ast.Node }
 
 func (RetStmtNode) isWalkableType() {}
+func (c RetStmtNode) Choice() int   { return ast.Choice(c.Node) }
 
 func (c RetStmtNode) OneRetVal() *TextNode {
 	if child := ast.First(c.Node, "ret_val"); child != nil {
