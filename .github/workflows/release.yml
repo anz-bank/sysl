@@ -60,7 +60,7 @@ jobs:
           version: v0.126.0
           args: release --rm-dist --debug -f .github/goreleaser_configs/.goreleaser.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
       # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets 
