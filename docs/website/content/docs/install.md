@@ -22,7 +22,24 @@ Here are several approaches to get start using Sysl:
 
 ## Install the pre-compiled binary
 
-Download the pre-compiled binaries from the [releases page](https://github.com/anz-bank/sysl/releases) and copy to the desired location.
+1. Download the pre-compiled binaries which match your OS, from the [releases page](https://github.com/anz-bank/sysl/releases)
+
+2. Uncompress the archive and move the sysl binary to your desired path:
+
+   1. under PATH location
+
+      ```bash
+      # check it works
+      $ sysl help
+      ```
+
+   2. under non-PATH location
+
+      ```bash
+      # check it works
+      $ ./sysl help
+      ```
+
 
 ## Go get it
 
