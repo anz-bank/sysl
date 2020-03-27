@@ -1,0 +1,59 @@
+{
+    "host": "jsonplaceholder",
+    "package":  "jsonplaceholder",
+    "swagger": "2.0",
+    "info": {
+      "title": "jsonplaceholder",
+      "version": "1.0"
+    },
+    "paths": {
+        "/todos/{id}": {
+            "get": {
+              "parameters": [
+                {
+                  "format": "",
+                  "in": "path",
+                  "name": "id",
+                  "type": "integer"
+                }
+              ],
+                "consumes": [
+            "application/json"
+          ],
+          "description": "Returns request data, including method used.",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "todosResponse"
+              }
+            }
+          },
+          "summary": "Returns request data, including method used."
+        }
+      }
+    },
+    "definitions": {
+      "todosResponse": {
+        "format": "tuple",
+        "properties": {
+          "completed": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          }
+        },
+        "type": "object"
+      }
+    }
+}
