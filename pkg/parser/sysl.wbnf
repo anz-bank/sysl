@@ -25,6 +25,10 @@ enum  -> "!enum" name=NAME attribs? ":" COMMENT* (SHORTCUT COMMENT_NO_NL*| %!Ind
         enumeration -> name=NAME ":" DIGITS COMMENT_NO_NL*;
 };
 
+// -------------- Mixin --------------- //
+
+mixin -> "-|>" APPNAME;
+
 // -------------- Applications --------------- //
 application ->  APPNAME QSTRING?
         attribs? ":" COMMENT*  %!Indented(app_decl) EOL?;
@@ -36,7 +40,8 @@ app_decl   -> annotation
             | endpoint
             | event
             | subscribe
-            | view;
+            | view
+            | mixin;
 
 
 // -------------- Types --------------- //
