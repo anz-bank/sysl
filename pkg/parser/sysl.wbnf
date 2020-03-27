@@ -130,6 +130,7 @@ QSTRING -> /{ " (?: \\. | [^\\"] )* "
 .wrapRE -> /{(\n (?:[\_\t]+ \n)?)+} | \n+ | \s+ | /{[\_\t]*()[\_\t]*};
 
 INDENT      -> %level="" \s+;
-INDENT_SEP  -> /{(\n (?:[\_\t]+ \n)?)+} %level;
+INDENT_SEP  -> NEWLINE_WITH_COMMENT %level;
+NEWLINE_WITH_COMMENT -> /{(\n (?:[\_\t]+ \n)?)+}:([\_\t]* COMMENT_NO_NL);
 
-.macro Indented(child) {/{(\n (?:[\_\t]+ \n)?)+} level=INDENT child:INDENT_SEP}
+.macro Indented(child) { NEWLINE_WITH_COMMENT level=INDENT child:INDENT_SEP }

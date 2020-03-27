@@ -17,6 +17,7 @@ success ./demo/codegen/GRPCProtoGeneration/grpc.sysl
 success ./demo/codegen/GRPCProtoGeneration/hello.sysl
 success ./demo/codegen/AuthorisationAPI/grpc.sysl
 success ./demo/codegen/AuthorisationAPI/authorisation.sysl
+success ./demo/examples/Rest-and-HTTP/1_project.sysl
 success ./demo/examples/GRPC/grpc.sysl
 success ./demo/examples/Data-types/project.sysl
 success ./demo/examples/Projects/project.sysl
@@ -27,6 +28,7 @@ success ./demo/examples/Attributes/1_project.sysl
 success ./demo/examples/Special-Characters/1_project.sysl
 success ./demo/examples/Integration-Diagrams/1_project.sysl
 success ./demo/examples/Control-Flow/1_project.sysl
+success ./demo/examples/Todos/todos.sysl
 success ./demo/examples/Modules/moredeps/moredeps.sysl
 success ./demo/examples/Modules/deps.sysl
 success ./demo/examples/Modules/model_with_deps.sysl
@@ -227,8 +229,6 @@ success ./pkg/exporter/test-data/EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_DE
 success ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl
 success ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl
 success ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl
-fail    ./demo/examples/Rest-and-HTTP/1_project.sysl
-fail    ./demo/examples/Todos/todos.sysl
 fail    ./tests/comments.sysl
 fail    ./unsorted/lib/lang/json.sysl
 fail    ./unsorted/lib/lang/java.sysl
@@ -236,4 +236,4 @@ fail    ./unsorted/lib/base/grammar.sysl
 fail    ./pkg/database/db_scripts/invalid.sysl
 fail    ./pkg/parse/tests/inplace_tuple.sysl
 fail    ./pkg/parse/tests/endpoints.sysl
-Passes:229 Fails:9
+Passes:231 Fails:7
