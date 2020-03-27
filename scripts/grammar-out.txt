@@ -174,6 +174,7 @@ success ./pkg/parse/tests/pubsub_collector.sysl
 success ./pkg/parse/tests/ep_params.sysl
 success ./pkg/parse/tests/stmts.sysl
 success ./pkg/parse/tests/strings_expr.sysl
+success ./pkg/parse/tests/rest_api_query_params.sysl
 success ./pkg/parse/tests/collector.sysl
 success ./pkg/parse/tests/sequence_type.sysl
 success ./pkg/parse/tests/until_loop.sysl
@@ -235,5 +236,4 @@ fail    ./unsorted/lib/base/grammar.sysl
 fail    ./pkg/database/db_scripts/invalid.sysl
 fail    ./pkg/parse/tests/inplace_tuple.sysl
 fail    ./pkg/parse/tests/endpoints.sysl
-fail    ./pkg/parse/tests/rest_api_query_params.sysl
-Passes:228 Fails:10
+Passes:229 Fails:9
