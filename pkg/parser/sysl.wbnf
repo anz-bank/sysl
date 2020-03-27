@@ -108,10 +108,10 @@ APPNAME -> (pkg=@):"." > (app=@):"::" > APPNAME_PART;
 APPNAME_PART -> (/{[a-zA-Z_][-\w]*(?:[-\t\_]*\w+)*} | QSTRING)+;
 PREDICATE -> [^\r\n:]+;
 SHORTCUT -> "...";
-HTTP_VERBS -> "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
-NativeDataTypes -> "int32" | "int64" | "int" |
-                "float" | "string" | "datetime" | "date" |
-                "bool" | "decimal";
+HTTP_VERBS -> /{\b(GET | POST | DELETE | PUT | PATCH)\b};
+NativeDataTypes -> /{\b(int32 | int64 | int |
+                float | string | datetime | date |
+                bool | decimal)\b};
 
 reference ->  pkg=(NAME:"::" ".")? APPNAME;
 
