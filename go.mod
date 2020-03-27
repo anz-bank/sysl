@@ -22,7 +22,6 @@ require (
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/dlclark/regexp2 v1.2.0 // indirect
-	github.com/envoyproxy/protoc-gen-validate v0.3.0 // indirect
 	github.com/fullstorydev/grpcui v0.2.1
 	github.com/fullstorydev/grpcurl v1.5.0
 	github.com/getkin/kin-openapi v0.3.0
