@@ -9,11 +9,11 @@ stmt -> (if_else
             | annotation
         ) attribs?;
 
-if_else -> if_stmt else_stmt*;
+if_else -> if_stmt (\n+ %level else_stmt)*;
 
 if_stmt -> "if" PREDICATE ":" %!Indented(stmt);
 
-else_stmt -> "else" PREDICATE? ":" %!Indented(stmt);
+else_stmt -> "else" ("if"? PREDICATE)? ":" %!Indented(stmt);
 
 for_stmt -> for_type=("alt" | "until" | "for each" | "for" | "loop" | "while") PREDICATE ":" %!Indented(stmt);
 
