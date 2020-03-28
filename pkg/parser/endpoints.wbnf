@@ -1,7 +1,12 @@
 endpoint -> (rest_endpoint | simple_endpoint | collector | event);
 
-simple_endpoint -> SHORTCUT | (endpoint_name=(APPNAME) QSTRING? params? attribs? ":"
-                        (SHORTCUT | %!Indented(stmt)));
+simple_endpoint -> (
+                        endpoint_name=(APPNAME) QSTRING? params? attribs? ":"
+                        (
+                            SHORTCUT
+                            | %!Indented(annotation | stmt)
+                        )
+                   );
 
 rest_endpoint -> http_path attribs? ":" %!Indented(method_def | rest_endpoint);
 
