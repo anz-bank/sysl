@@ -4,71 +4,89 @@
 
 // Sysl grammar
 
-sysl_file -> (import | EOL)* (application | EOL)+;
+sysl_file -> (import | EOL)* (application | EOL)+
+           | (import | EOL)+ (application | EOL)*;
 
 
 // -------------- Imports --------------- //
-import  -> "import"  prefix=("//"|"/")? PATH ( "as"  reference)? ("~" mode=NAME)? ;
+import  -> "import"  prefix=("//"|"/")?
+            PATH ( "as"  reference)? ("~" mode=NAME)? COMMENT_NO_NL?;
 
 
 // -------------- Events --------------- //
 
-event  ->  "<->" APPNAME params? attribs? ":" COMMENT*
-        ( SHORTCUT | %!Indented(stmt));
-subscribe  ->  APPNAME "->" NAME params? attribs? ":" COMMENT*
-        ( SHORTCUT | %!Indented(stmt));
+event  ->  "<->" APPNAME params? attribs? ":"
+        ( WRAPPED_SHORTCUT | %!InlineCommentIndent(stmt));
+subscribe  ->  APPNAME "->" NAME params? attribs? ":"
+        ( WRAPPED_SHORTCUT | %!InlineCommentIndent(stmt));
 
 // -------------- Enums --------------- //
 
-enum  -> "!enum" name=NAME attribs? ":" COMMENT* (SHORTCUT COMMENT_NO_NL*| %!Indented(enumeration | COMMENT_NO_NL)) {
+enum  -> "!enum" name=NAME attribs? ":"
+         (WRAPPED_SHORTCUT| %!InlineCommentIndent(enumeration)) {
         enumeration -> name=NAME ":" DIGITS COMMENT_NO_NL*;
 };
 
+// -------------- Mixin --------------- //
+
+mixin -> "-|>" APPNAME;
+
 // -------------- Applications --------------- //
 application ->  APPNAME QSTRING?
-        attribs? ":" COMMENT*  %!Indented(app_decl) EOL?;
+        attribs? ":"  %!InlineCommentIndent(app_decl) EOL?;
 
 app_decl   -> annotation
             | COMMENT_NO_NL
-            | SHORTCUT
+            | WRAPPED_SHORTCUT
             | type_decl
             | endpoint
             | event
             | subscribe
-            | view;
+            | view
+            | mixin;
 
 
 // -------------- Types --------------- //
 
 type_decl -> table | facade | alias | union | enum;
 
-table -> mode=("!table"|"!type") NAME attribs?  ":" COMMENT*
-     (SHORTCUT | %!Indented(COMMENT_NO_NL | table_row COMMENT_NO_NL?)) {
-        table_row -> COMMENT_NO_NL
-                   | table_field
-                   | annotation
-                   | table
-                   | SHORTCUT;
+table -> mode=("!table"|"!type") NAME attribs?  ":"
+         (WRAPPED_SHORTCUT | %!InlineCommentIndent(table_row)) {
+         table_row -> table_field
+                    | annotation
+                    | table
+                    | SHORTCUT;
 
-        table_field -> field optional="?"? attribs? (":" annotations)?;
+         table_field -> field optional="?"? attribs? (":" annotations)?;
      };
-facade -> "!wrap" NAME  ":" COMMENT*
-     %!Indented(("!table"|"!type"|"!union") NAME inplace_table_def?) {
-            inplace_table_def -> ":"  %!Indented(NAME attribs?);
+
+facade -> "!wrap" NAME  ":"
+     %!InlineCommentIndent(("!table"|"!type"|"!union") NAME inplace_table_def?){
+            inplace_table_def -> ":"  %!InlineCommentIndent(NAME attribs?);
         };
 
-alias -> "!alias" NAME attribs?  ":" COMMENT*
-        (indented_alias_def | inline_alias_def) {
-        inline_alias_def -> annotation* (collection_type | type_spec);
+alias -> "!alias" NAME attribs?  ":"
+        (COMMENT_NO_NL? indented_alias_def | inline_alias_def) {
+        inline_alias_def -> (annotation COMMENT_NO_NL?)*
+                            (collection_type | type_spec) COMMENT_NO_NL?;
 
-        indented_alias_def -> (annotations INDENT_SEP | \n+ INDENT)
-                          (collection_type | type_spec)
-                          (INDENT_SEP annotation:INDENT_SEP)?;
+        indented_alias_def -> (
+                                annotations INDENT_SEP
+                                | NEWLINE_WITH_COMMENT+ INDENT
+                              )
+                              (collection_type | type_spec) COMMENT_NO_NL?
+                              (
+                                  INDENT_SEP
+                                    (
+                                        annotation COMMENT_NO_NL?
+                                        | COMMENT_NO_NL
+                                    ):INDENT_SEP
+                              )?;
 };
 
 union -> "!union" NAME attribs?  ":"
-    ( SHORTCUT |
-         %!Indented(COMMENT_NO_NL | user_defined_type=NAME | annotation | SHORTCUT )
+    (    WRAPPED_SHORTCUT
+         | %!InlineCommentIndent(user_defined_type=NAME | annotation | SHORTCUT)
     );
 
 collection_type -> ("set"|"sequence") "of" type_spec;
@@ -87,9 +105,9 @@ annotation -> "@" var_name=([a-zA-Z_][-\w.]*) "=" value=(QSTRING | array_of_stri
 
 annotations -> %!Indented(annotation);
 
-multi_line_docstring -> ":" %!Indented("|" TEXT);
+multi_line_docstring -> ":" %!InlineCommentIndent("|" TEXT);
 
-http_path_var_with_type -> "{" var=(NAME | DIGITS) "<:" type=(NativeDataTypes | NAME | reference) "}";
+http_path_var_with_type -> "{" var=(NAME | DIGITS) "<:" type=(NativeDataTypes | reference) "}";
 
 http_path_part  ->  (NAME | DIGITS | [-._~] | ("%" [0-9a-fA-F]{2}))+ { .wrapRE -> /{()};};
 http_path -> "/" ((http_path_part | http_path_var_with_type):"/")?;
@@ -101,29 +119,39 @@ type_spec -> (NativeDataTypes | reference)
 NAME    -> [a-zA-Z_][-a-zA-Z0-9_]*;
 PATH    -> /{[a-zA-Z0-9._-]+}:"/";
 DIGITS -> [1-9][0-9]*;
-TEXT -> [^(\r?\n)]+;
-TEXT_LINE -> /{\s* ( [^\s:(] [^(\r\n:]* [^\s\r\n(:] )};
+TEXT -> [^(\r?\n)#]+;
+TEXT_LINE -> /{\s* ( [^\s:(] [^(#\r\n:]* [^#\s\r\n(:] )};
 APPNAME -> (pkg=@):"." > (app=@):"::" > APPNAME_PART;
 APPNAME_PART -> (/{[a-zA-Z_][-\w]*(?:[-\t\_]*\w+)*} | QSTRING)+;
-PREDICATE -> [^\r\n:]+;
+PREDICATE -> [^(\r?\n):]+;
 SHORTCUT -> "...";
-HTTP_VERBS -> "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
-NativeDataTypes -> "int32" | "int64" | "int" |
-                "float" | "string" | "datetime" | "date" |
-                "bool" | "decimal";
+WRAPPED_SHORTCUT -> COMMENT* \n* SHORTCUT COMMENT_NO_NL?;
+HTTP_VERBS -> /{\b(GET | POST | DELETE | PUT | PATCH)\b};
+NativeDataTypes -> /{\b(int32 | int64 | int |
+                float | string | datetime | date |
+                bool | decimal)\b};
 
 reference ->  pkg=(NAME:"::" ".")? APPNAME;
 
 COMMENT_NO_NL -> "#" [^\n]*;
-COMMENT -> COMMENT_NO_NL "\n";
+COMMENT -> COMMENT_NO_NL /{\r?\n};
 EOL     -> (COMMENT+ | [\_\t]*\n);
 QSTRING -> /{ " (?: \\. | [^\\"] )* "
            | ' (?: \\. | [^\\'] )* '
            };
 
-.wrapRE -> /{(\n (?:[\_\t]+ \n)?)+} | \n+ | \s+ | /{[\_]*()[\_]*};
+.wrapRE -> /{(\n (?:[\_\t]+ \n)?)+} | \n+ | \s+ | /{[\_\t]*()[\_\t]*};
 
 INDENT      -> %level="" \s+;
-INDENT_SEP  -> /{(\n (?:[\_\t]+ \n)?)+} %level;
+INDENT_SEP  -> NEWLINE_WITH_COMMENT %level;
+NEWLINE_WITH_COMMENT ->
+            /{(\n (?:[\_\t]+ \n)?)+}:([\_\t]* COMMENT_NO_NL);
 
-.macro Indented(child) {/{(\n (?:[\_\t]+ \n)?)+} level=INDENT child:INDENT_SEP}
+.macro InlineCommentIndent(child) {
+    COMMENT_NO_NL? %!Indented(child)
+}
+
+.macro Indented(child) {
+    NEWLINE_WITH_COMMENT
+    level=INDENT (child COMMENT_NO_NL? | COMMENT_NO_NL):INDENT_SEP
+}
