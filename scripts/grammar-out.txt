@@ -79,6 +79,7 @@ success ./tests/multiple-app-datamodel.sysl
 success ./tests/ui_rest.sysl
 success ./tests/integration_immediate_predecessors_test.sysl
 success ./tests/test1.sysl
+success ./tests/comments.sysl
 success ./tests/model.sysl
 success ./tests/blackbox.sysl
 success ./tests/reviewdatamodelcmd.sysl
@@ -229,11 +230,10 @@ success ./pkg/exporter/test-data/EXAMPLE_SWAGGER_SPEC_WITH_ENDPOINT_PATH_WITH_DE
 success ./pkg/exporter/test-data/SWAGGER_ENSURE_HEADER_FIELDS_IN_INSERTION_ORDER.sysl
 success ./pkg/exporter/test-data/REST_ENDPOINT_DOT.sysl
 success ./pkg/exporter/test-data/SWAGGER_QUERY_PARAM_EXAMPLE.sysl
-fail    ./tests/comments.sysl
 fail    ./unsorted/lib/lang/json.sysl
 fail    ./unsorted/lib/lang/java.sysl
 fail    ./unsorted/lib/base/grammar.sysl
 fail    ./pkg/database/db_scripts/invalid.sysl
 fail    ./pkg/parse/tests/inplace_tuple.sysl
 fail    ./pkg/parse/tests/endpoints.sysl
-Passes:231 Fails:7
+Passes:232 Fails:6

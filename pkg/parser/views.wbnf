@@ -1,4 +1,4 @@
-view -> "!view" view_data=[^\n]* (%!Indented(view_block))?;
+view -> "!view" view_data=[^\n]* (%!InlineCommentIndent(view_block))?;
 
 view_block -> \s* [^\n]+;
 
