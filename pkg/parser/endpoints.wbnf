@@ -19,7 +19,11 @@ params -> "(" (COMMENT* (field | reference)):"," ")" {
 query_param -> "?" (ident=(NAME) "=" (NativeDataTypes| NAME | "{" NAME "}") optional="?"?):"&";
 
 field -> NAME array_size? "<:"
-         (field_type | %!InlineCommentIndent(field)) QSTRING? COMMENT_NO_NL?;
+         (
+             field_type
+             | %!InlineCommentIndent(field | unspecified_type=NAME)
+         )
+         QSTRING? COMMENT_NO_NL?;
 
 field_type -> collection_type | (type_spec optional="?"? attribs?) ;
 
