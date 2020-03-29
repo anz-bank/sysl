@@ -8,6 +8,8 @@ Project:
         Server
     App:
         App 
+    Relational-Model:
+        Relationships
 
 Server:
     !type id:
@@ -22,3 +24,11 @@ AnotherOne:
     !type name:
         firstName <: string
         lastName <: string
+
+Relationships:
+    !table Account:
+        ResourceID <: string [~pk]
+        AccountID <: string
+    !table Role:
+        RoleID <: int [~pk]
+        RoleName <: string

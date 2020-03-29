@@ -3034,6 +3034,42 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 	s.typemap = map[string]*sysl.Type{}
 }
 
+// EnterEnum is called when production enum is entered.
+func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
+	s.currentTypePath.Push(ctx.Name().GetText())
+	defer s.currentTypePath.Pop()
+
+	// Build a map of enumerations. If there are none (due to WHATEVER
+	// as the only content), don't add the enum type to the sysl AST.
+	stmts, ok := ctx.Enum_stmts().(*parser.Enum_stmtsContext)
+	if !ok {
+		return
+	}
+	items := map[string]int64{}
+	for _, enumeration := range stmts.AllEnumeration() {
+		e := enumeration.(*parser.EnumerationContext)
+		name := e.Name().GetText()
+		valstr := e.DIGITS().GetText()
+		if val, err := strconv.ParseInt(valstr, 10, 64); err == nil {
+			items[name] = val
+		}
+	}
+	if len(items) == 0 {
+		return
+	}
+
+	enumType := &sysl.Type{
+		Type: &sysl.Type_Enum_{
+			Enum: &sysl.Type_Enum{Items: items},
+		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+	}
+	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
+		enumType.Attrs = makeAttributeArray(attribs)
+	}
+	s.currentApp().Types[s.currentTypePath.Get()] = enumType
+}
+
 // EnterAlias is called when production alias is entered.
 func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	s.currentTypePath.Push(ctx.Name_str().GetText())
@@ -3068,7 +3104,7 @@ func (s *TreeShapeListener) ExitAlias(ctx *parser.AliasContext) {
 
 // EnterApp_decl is called when production app_decl is entered.
 func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
-	if s.currentApp().Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil) {
+	if s.currentApp().Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil || ctx.Enum(0) != nil) {
 		s.currentApp().Types = map[string]*sysl.Type{}
 	}
 	has_stmts := ctx.Simple_endpoint(0) != nil ||

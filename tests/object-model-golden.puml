@@ -6,15 +6,15 @@ title empdata
 ''                                      ''
 ''''''''''''''''''''''''''''''''''''''''''
 
-class "Address" as _0 << (D,orchid) >> {
+class "ObjectModel.Address" as _0 << (D,orchid) >> {
 + city : string
 + line_1 : string
 }
-class "Customer" as _1 << (D,orchid) >> {
+class "ObjectModel.Customer" as _1 << (D,orchid) >> {
 + addresses : **Set <Address>**
 + customer_id : int
 }
-class "Order" as _2 << (D,orchid) >> {
+class "ObjectModel.Order" as _2 << (D,orchid) >> {
 + customer : **Customer**
 + order_id : int
 }

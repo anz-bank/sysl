@@ -58,6 +58,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	commands := []cmdutils.Command{
 		&protobuf{},
+		&uiCmd{},
 		&intsCmd{},
 		&datamodelCmd{},
 		&databaseScriptCmd{},
@@ -72,6 +73,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&envCmd{},
 		&templateCmd{},
 		&modCmd{},
+		&testRigCmd{},
 	}
 	r.commands = map[string]cmdutils.Command{}
 

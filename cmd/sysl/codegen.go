@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/anz-bank/sysl/pkg/ebnfparser"
 
@@ -44,7 +45,7 @@ func applyTranformToModel(model, transform *sysl.Module, params ...string) (*sys
 			apps = append(apps, k)
 		}
 		sort.Strings(apps)
-		return nil, errors.Errorf("app %s does not exist in model, available apps: [%s]", params[0], strings.Join(apps, ", "))
+		return nil, errors.Errorf("app %s does not exist in model, available Apps: [%s]", params[0], strings.Join(apps, ", "))
 	}
 	view := transform.Apps[params[1]].Views[params[3]]
 	if view == nil {
@@ -128,13 +129,20 @@ func GenerateCode(
 	logger.Debugf("start: %s\n", codegenParams.Start)
 	logger.Debugf("basePath: %s\n", codegenParams.BasePath)
 
-	transformFs := syslutil.NewChrootFs(fs, codegenParams.RootTransform)
+	var transformFs afero.Fs
+	transformFs = syslutil.NewChrootFs(fs, codegenParams.RootTransform)
+	if mod.SyslModules {
+		transformFs = mod.NewFs(transformFs)
+	}
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {
 		return nil, err
 	}
 
+	if mod.SyslModules {
+		fs = mod.NewFs(fs)
+	}
 	g, err := ebnfparser.ReadGrammar(fs, codegenParams.Grammar, codegenParams.Start)
 	if err != nil {
 		return nil, err

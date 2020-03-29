@@ -584,6 +584,12 @@ func TestTypeAlias(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/alias.sysl")
 }
 
+func TestEnum(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/enum.sysl")
+}
+
 func TestUndefinedRootAbsoluteImport(t *testing.T) {
 	t.Parallel()
 

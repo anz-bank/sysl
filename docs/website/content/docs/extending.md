@@ -1,8 +1,10 @@
 ---
-title: "Extending"
+title: "Extend"
 date: 2020-02-17T15:51:27+11:00
+description: "Extend sysl to do anything!"
 weight: 70
 draft: false
+bref: "Extend sysl to do anything!"
 toc: true
 ---
 
