@@ -20,13 +20,13 @@ func (p *pscope) buildApplication(node ApplicationNode) (string, *sysl.Applicati
 		app.Attrs = p.buildAttributes(*attrs)
 	}
 
+	var epNodes []EndpointNode
 	WalkerOps{
 		EnterAnnotationNode: func(node AnnotationNode) Stopper {
 			return nil
 		},
 		EnterEndpointNode: func(node EndpointNode) Stopper {
-			ep := p.buildEndpoint(node)
-			app.Endpoints[ep.Name] = ep
+			epNodes = append(epNodes, node)
 			return nil
 		},
 		EnterTypeDeclNode: func(node TypeDeclNode) Stopper {
@@ -43,6 +43,7 @@ func (p *pscope) buildApplication(node ApplicationNode) (string, *sysl.Applicati
 			return NodeExiter
 		},
 	}.Walk(node)
+	app.Endpoints = p.buildEndpointMap(epNodes)
 
 	return strings.Join(app.Name.Part, "::"), app
 }

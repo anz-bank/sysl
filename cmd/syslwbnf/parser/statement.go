@@ -2,6 +2,7 @@ package parser
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
@@ -27,7 +28,25 @@ func (p *pscope) buildStatement(node StmtNode) *sysl.Statement {
 			}
 			call.Call.Target.Part = target
 		}
-		// todo call_args
+		if args := stmt.OneCallArgs(); args != nil {
+			for _, arg := range args.AllArg() {
+				if named := arg.OneNamed(); named != nil {
+					call.Call.Arg = append(call.Call.Arg, &sysl.Call_Arg{
+						Name: named.OneName().String(),
+					})
+				} else {
+					leafs := Leafs(arg.Node)
+					var parts []string
+					for _, l := range leafs {
+						parts = append(parts, l.Scanner().String())
+					}
+					// not sure if this is correct.
+					call.Call.Arg = append(call.Call.Arg, &sysl.Call_Arg{
+						Name: strings.Join(parts, " "),
+					})
+				}
+			}
+		}
 		res.Stmt = call
 	} else if stmt := node.OneOneOfStmt(); stmt != nil {
 

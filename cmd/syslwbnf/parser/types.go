@@ -72,30 +72,28 @@ func (p *pscope) buildTable(node TableNode) (string, *sysl.Type) {
 
 func (p *pscope) buildTypeSpec(node TypeSpecNode, dest *sysl.Type) {
 	if ndt := node.OneNativeDataTypes(); ndt != nil {
-		mappings := map[string]sysl.Type_Primitive{
-			"int32": sysl.Type_INT, "int64": sysl.Type_INT, "int": sysl.Type_INT,
-			"float": sysl.Type_FLOAT, "decimal": sysl.Type_DECIMAL, "bool": sysl.Type_BOOL,
-			"date": sysl.Type_DATE, "datetime": sysl.Type_DATETIME,
-			"string": sysl.Type_STRING,
-		}
-		pt := mappings[ndt.OneToken()]
-		dest.Type = &sysl.Type_Primitive_{Primitive: pt}
-		dest.Constraint = buildTypeConstraints(node.OneSizeSpec(), pt)
+		buildNativeDataType(ndt, node.OneSizeSpec(), dest)
 		dest.SourceContext = buildSourceContext(node.Node)
 	} else if ref := node.OneReference(); ref != nil {
-		scope := &sysl.Scope{}
-		if pkg := ref.OnePkg(); pkg != nil {
-			var path []string
-			for _, name := range ref.OnePkg().AllName() {
-				path = append(path, name.String())
-			}
-			scope.Appname = &sysl.AppName{Part: path}
+		p.buildReference(ref, dest)
+	}
+}
+
+func (p *pscope) buildReference(ref *ReferenceNode, dest *sysl.Type) {
+	scope := &sysl.Scope{}
+	if pkg := ref.OnePkg(); pkg != nil {
+		var path []string
+		for _, name := range ref.OnePkg().AllName() {
+			path = append(path, name.String())
 		}
-		scope.Path = appName(*ref.OneAppname()).Part
-		dest.Type = &sysl.Type_TypeRef{TypeRef: &sysl.ScopedRef{
+		scope.Appname = &sysl.AppName{Part: path}
+	}
+	scope.Path = appName(*ref.OneAppname()).Part
+	dest.Type = &sysl.Type_TypeRef{
+		TypeRef: &sysl.ScopedRef{
 			Context: nil,
 			Ref:     scope,
-		}}
+		},
 	}
 }
 
@@ -148,4 +146,21 @@ func buildTypeConstraints(node *TypeSpecSizeSpecNode, primitive sysl.Type_Primit
 	}
 
 	return c
+}
+
+func buildNativeDataType(ndt *NativeDataTypesNode, contraints *TypeSpecSizeSpecNode, dest *sysl.Type) {
+	if ndt != nil {
+		mappings := map[string]sysl.Type_Primitive{
+			"int32": sysl.Type_INT, "int64": sysl.Type_INT, "int": sysl.Type_INT,
+			"float": sysl.Type_FLOAT, "decimal": sysl.Type_DECIMAL, "bool": sysl.Type_BOOL,
+			"date": sysl.Type_DATE, "datetime": sysl.Type_DATETIME,
+			"string": sysl.Type_STRING,
+		}
+		pt := mappings[ndt.OneToken()]
+		dest.Type = &sysl.Type_Primitive_{Primitive: pt}
+		if contraints != nil {
+			dest.Constraint = buildTypeConstraints(contraints, pt)
+		}
+		dest.SourceContext = buildSourceContext(ndt.Node)
+	}
 }
