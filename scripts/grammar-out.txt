@@ -19,7 +19,7 @@ success ./demo/codegen/AuthorisationAPI/grpc.sysl
 success ./demo/codegen/AuthorisationAPI/authorisation.sysl
 success ./demo/examples/Rest-and-HTTP/1_project.sysl
 success ./demo/examples/GRPC/grpc.sysl
-success ./demo/examples/Data-types/project.sysl
+success ./demo/examples/Data-Types/project.sysl
 success ./demo/examples/Projects/project.sysl
 success ./demo/examples/Sequence-Diagrams/1_project.sysl
 success ./demo/examples/Reserved-Attributes/1_project.sysl
@@ -27,6 +27,8 @@ success ./demo/examples/Hello-World/1_project.sysl
 success ./demo/examples/Attributes/1_project.sysl
 success ./demo/examples/Special-Characters/1_project.sysl
 success ./demo/examples/Integration-Diagrams/1_project.sysl
+success ./demo/examples/Code-Generation/api/sysl/simple.sysl
+success ./demo/examples/Code-Generation/simple.sysl
 success ./demo/examples/Control-Flow/1_project.sysl
 success ./demo/examples/Todos/todos.sysl
 success ./demo/examples/Modules/moredeps/moredeps.sysl
@@ -162,6 +164,7 @@ success ./pkg/parse/tests/if_else.sysl
 success ./pkg/parse/tests/union.sysl
 success ./pkg/parse/tests/simple_model.sysl
 success ./pkg/parse/tests/mixin.sysl
+success ./pkg/parse/tests/inplace_tuple.sysl
 success ./pkg/parse/tests/duplicate.sysl
 success ./pkg/parse/tests/docstrings.sysl
 success ./pkg/parse/tests/with_spaces.sysl
@@ -234,6 +237,5 @@ fail    ./unsorted/lib/lang/json.sysl
 fail    ./unsorted/lib/lang/java.sysl
 fail    ./unsorted/lib/base/grammar.sysl
 fail    ./pkg/database/db_scripts/invalid.sysl
-fail    ./pkg/parse/tests/inplace_tuple.sysl
 fail    ./pkg/parse/tests/endpoints.sysl
-Passes:232 Fails:6
+Passes:235 Fails:5
