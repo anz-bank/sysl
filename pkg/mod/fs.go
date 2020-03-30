@@ -13,8 +13,8 @@ type Fs struct {
 	source afero.Fs
 }
 
-func NewFs(fs afero.Fs) *Fs {
-	return &Fs{source: fs}
+func NewFs(fs afero.Fs, root string) *Fs {
+	return &Fs{source: syslutil.NewChrootFs(fs, root)}
 }
 
 func (fs *Fs) Open(name string) (afero.File, error) {
@@ -23,16 +23,20 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 		return f, nil
 	}
 
-	mod, err := Find(name)
-	if err != nil {
-		return nil, err
-	}
-	relpath, err := filepath.Rel(mod.Name, name)
-	if err != nil {
-		return nil, err
+	if SyslModules {
+		mod, err := Find(name)
+		if err != nil {
+			return nil, err
+		}
+		relpath, err := filepath.Rel(mod.Name, name)
+		if err != nil {
+			return nil, err
+		}
+
+		return syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
 	}
 
-	return syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
+	return nil, err
 }
 
 func (fs *Fs) Create(name string) (afero.File, error) {

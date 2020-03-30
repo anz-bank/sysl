@@ -14,7 +14,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/parse"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/validate"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -129,11 +128,7 @@ func GenerateCode(
 	logger.Debugf("start: %s\n", codegenParams.Start)
 	logger.Debugf("basePath: %s\n", codegenParams.BasePath)
 
-	var transformFs afero.Fs
-	transformFs = syslutil.NewChrootFs(fs, codegenParams.RootTransform)
-	if mod.SyslModules {
-		transformFs = mod.NewFs(transformFs)
-	}
+	transformFs := mod.NewFs(fs, codegenParams.RootTransform)
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {
