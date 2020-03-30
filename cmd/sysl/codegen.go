@@ -132,7 +132,7 @@ func GenerateCode(
 	var transformFs afero.Fs
 	transformFs = syslutil.NewChrootFs(fs, codegenParams.RootTransform)
 	if mod.SyslModules {
-		transformFs = mod.NewFs(transformFs)
+		transformFs = mod.NewFs(transformFs, codegenParams.RootTransform)
 	}
 
 	tfmParser := parse.NewParser()
