@@ -17,7 +17,7 @@ func GenerateModDatabaseScripts(scriptParams *cmdutils.CmdDatabaseScriptParams, 
 	logger.Debugf("Application names: %v\n", scriptParams.AppNames)
 	logger.Debugf("title: %s\n", scriptParams.Title)
 	logger.Debugf("outputDir: %s\n", scriptParams.OutputDir)
-	logger.Debugf("db type: %s\n", scriptParams.DbType)
+	logger.Debugf("db type: %s\n", scriptParams.DBType)
 	appNamesStr := strings.TrimSpace(scriptParams.AppNames)
 	if appNamesStr == "" {
 		logger.Error("no application name specified")
@@ -26,7 +26,7 @@ func GenerateModDatabaseScripts(scriptParams *cmdutils.CmdDatabaseScriptParams, 
 	appNames := strings.Split(appNamesStr, database.Delimiter)
 	v := database.MakeDatabaseScriptView(scriptParams.Title, logger)
 	outputSlice := v.ProcessModSysls(modelOld.GetApps(), modelNew.GetApps(), appNames,
-		scriptParams.OutputDir, scriptParams.DbType)
+		scriptParams.OutputDir, scriptParams.DBType)
 	return outputSlice, nil
 }
 
@@ -43,7 +43,7 @@ func (p *modDatabaseScriptCmd) Configure(app *kingpin.Application) *kingpin.CmdC
 	cmd.Flag("title", "file title").Short('t').StringVar(&p.Title)
 	cmd.Flag("output-dir", "output directory").Short('o').StringVar(&p.OutputDir)
 	cmd.Flag("app-names", "application names to read").Short('a').StringVar(&p.AppNames)
-	cmd.Flag("db-type", "database type e.g postgres").Short('d').StringVar(&p.DbType)
+	cmd.Flag("db-type", "database type e.g postgres").Short('d').StringVar(&p.DBType)
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }

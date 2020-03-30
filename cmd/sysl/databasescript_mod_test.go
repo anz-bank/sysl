@@ -28,9 +28,9 @@ type scriptModArgs struct {
 
 func TestDoGenerateDataScriptMod(t *testing.T) {
 	args := &scriptModArgs{
-		orgSource: database.DbTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
-		newSource: database.DbTestDir + "db_scripts/dataForSqlScriptModifiedTwo.sysl",
-		outputDir: database.DbTestDir + "db_scripts/",
+		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
+		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModifiedTwo.sysl",
+		outputDir: database.DBTestDir + "db_scripts/",
 		appNames:  "RelModel,RelModelNew",
 		title:     "Petstore Schema",
 	}
@@ -51,8 +51,8 @@ func TestModDBScriptValidSyslFile(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 
 	main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
 		fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql")
 }
@@ -63,8 +63,8 @@ func TestModDBScriptInValidOrgSyslFile(t *testing.T) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
-		filepath.Join(database.DbTestDir, "db_scripts/invalid.sysl"),
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl"),
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
 		fs, logger, main3)
 	assert.Equal(t, 2, err)
 }
@@ -75,7 +75,7 @@ func TestModDBScriptOneModule(t *testing.T) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
 		fs, logger, main3)
 	assert.Equal(t, 1, err)
 }
@@ -86,9 +86,9 @@ func TestModDBScriptThreeModule(t *testing.T) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptModified.sysl"),
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl"),
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
 		fs, logger, main3)
 	assert.Equal(t, 1, err)
 }
@@ -99,8 +99,8 @@ func TestModDBScriptInValidNewSyslFile(t *testing.T) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
-		filepath.Join(database.DbTestDir, "db_scripts/invalid.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
+		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl")},
 		fs, logger, main3)
 	assert.Equal(t, 2, err)
 }
@@ -111,8 +111,8 @@ func TestModDBScriptNewAppSyslFile(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel,RelModelNew",
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
 		fs, logger, main3)
 	assert.Equal(t, 0, err)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql", "/RelModelNew.sql")
@@ -120,13 +120,13 @@ func TestModDBScriptNewAppSyslFile(t *testing.T) {
 
 func TestDoConstructDatabaseScriptMod(t *testing.T) {
 	args := &scriptModArgs{
-		orgSource: database.DbTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
-		newSource: database.DbTestDir + "db_scripts/dataForSqlScriptModified.sysl",
-		outputDir: database.DbTestDir + "db_scripts/",
+		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
+		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModified.sysl",
+		outputDir: database.DBTestDir + "db_scripts/",
 		appNames:  "RelModel",
 		title:     "Petstore Schema",
 		expected: map[string]string{
-			filepath.Join(database.DbTestDir, "db_scripts/RelModel.sql"): filepath.Join(database.DbTestDir,
+			filepath.Join(database.DBTestDir, "db_scripts/RelModel.sql"): filepath.Join(database.DBTestDir,
 				"db_scripts/postgres-modify-script-golden.sql"),
 		},
 	}
@@ -138,15 +138,15 @@ func TestDoConstructDatabaseScriptMod(t *testing.T) {
 
 func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
 	args := &scriptModArgs{
-		orgSource: database.DbTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
-		newSource: database.DbTestDir + "db_scripts/dataForSqlScriptModifiedTwoApps.sysl",
-		outputDir: database.DbTestDir + "db_scripts/",
+		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
+		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModifiedTwoApps.sysl",
+		outputDir: database.DBTestDir + "db_scripts/",
 		appNames:  "RelModel,RelModelNew",
 		title:     "Petstore Schema",
 		expected: map[string]string{
-			filepath.Join(database.DbTestDir, "db_scripts/RelModel.sql"): filepath.Join(database.DbTestDir,
+			filepath.Join(database.DBTestDir, "db_scripts/RelModel.sql"): filepath.Join(database.DBTestDir,
 				"/db_scripts/postgres-modify-script-golden.sql"),
-			filepath.Join(database.DbTestDir, "db_scripts/RelModelNew.sql"): filepath.Join(database.DbTestDir,
+			filepath.Join(database.DBTestDir, "db_scripts/RelModelNew.sql"): filepath.Join(database.DBTestDir,
 				"/db_scripts/postgres-modify-script-golden_second_app.sql"),
 		},
 	}
