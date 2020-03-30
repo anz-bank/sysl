@@ -5,6 +5,7 @@ import (
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -250,7 +251,7 @@ func stmtToValue(s *sysl.Statement) *sysl.Value {
 	return m
 }
 
-func endpointToValue(e *sysl.Endpoint) *sysl.Value {
+func endpointToValue(e *sysl.Endpoint, logger *logrus.Logger) *sysl.Value {
 	m := MakeValueMap()
 	AddItemToValueMap(m, "name", MakeValueString(e.Name))
 	AddItemToValueMap(m, "longname", MakeValueString(e.LongName))
@@ -309,6 +310,12 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 		if len(retValues) > 1 {
 			retTypes.GetMap().Items[retValues[0]] = MakeValueString(retValues[1])
 		} else if len(retValues) == 1 {
+			if logger != nil {
+				context := e.GetSourceContext()
+				logger.Warnf("Endpoint return type definition has '%s' only, and it is easy to go wrong. "+
+					"Please double check file %s from line %d to line %d",
+					retValues[0], context.GetFile(), context.GetStart().GetLine(), context.GetEnd().GetLine())
+			}
 			retTypes.GetMap().Items["payload"] = MakeValueString(retValues[0])
 		}
 	}
@@ -318,10 +325,10 @@ func endpointToValue(e *sysl.Endpoint) *sysl.Value {
 	return m
 }
 
-func endpointsToValueMap(endpoints map[string]*sysl.Endpoint) *sysl.Value {
+func endpointsToValueMap(endpoints map[string]*sysl.Endpoint, logger *logrus.Logger) *sysl.Value {
 	m := MakeValueMap()
 	for key, e := range endpoints {
-		AddItemToValueMap(m, key, endpointToValue(e))
+		AddItemToValueMap(m, key, endpointToValue(e, logger))
 	}
 	return m
 }
@@ -337,17 +344,17 @@ func (s Scope) AddString(name string, val string) {
 }
 
 // AddApp add sysl.App to scope
-func (s Scope) AddApp(name string, app *sysl.Application) {
-	s[name] = addAppToValueMap(app)
+func (s Scope) AddApp(name string, app *sysl.Application, logger *logrus.Logger) {
+	s[name] = addAppToValueMap(app, logger)
 }
 
 // AddModule add module <: sysl.Module to scope
-func (s Scope) AddModule(name string, module *sysl.Module) {
+func (s Scope) AddModule(name string, module *sysl.Module, logger *logrus.Logger) {
 	apps := MakeValueMap()
 	types := MakeValueMap()
 
 	for n, a := range module.GetApps() {
-		AddItemToValueMap(apps, n, addAppToValueMap(a))
+		AddItemToValueMap(apps, n, addAppToValueMap(a, logger))
 	}
 
 	m := MakeValueMap()
@@ -367,14 +374,14 @@ func (s Scope) ToValue() *sysl.Value {
 	}
 }
 
-func addAppToValueMap(app *sysl.Application) *sysl.Value {
+func addAppToValueMap(app *sysl.Application, logger *logrus.Logger) *sysl.Value {
 	m := MakeValueMap()
 	AddItemToValueMap(m, "name", MakeValueString(syslutil.GetAppName(app.Name)))
 	AddItemToValueMap(m, "attrs", attrsToValueMap(app.Attrs))
 	AddItemToValueMap(m, "types", typesToValueMap(app.Types))
 	AddItemToValueMap(m, "union", unionToValueMap(app.Types))
 	AddItemToValueMap(m, "alias", aliasToValueMap(app.Types))
-	AddItemToValueMap(m, "endpoints", endpointsToValueMap(app.Endpoints))
+	AddItemToValueMap(m, "endpoints", endpointsToValueMap(app.Endpoints, logger))
 
 	return m
 }

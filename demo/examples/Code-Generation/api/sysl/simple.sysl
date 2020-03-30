@@ -1,0 +1,23 @@
+import ../swagger2-spec/jsonplaceholder.json as jsonplaceholder ~swagger
+# simple.sysl
+
+# Define an application and specify the `package` attribute and the @basePath attribute
+jsonplaceholder:
+    @package = "jsonplaceholder"
+
+# Define an application and specify the `package` attribute and the @basePath attribute
+simple:
+    @package="simple"
+    # Wrap the types in sysl types
+    !type Welcome:
+        Content <: string
+    # First endpoint returns a Welcome type
+    /:
+        GET:
+            return ok <: Welcome
+    # Second endpoint returns a todosResponse type 
+    /foobar:
+        GET:
+            jsonplaceholder <- GET /todos/{id}
+            return ok <: jsonplaceholder.todosResponse
+
