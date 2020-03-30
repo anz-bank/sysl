@@ -41,7 +41,7 @@ func GenerateRig(fs afero.Fs, templateFile string, outputDir string, modules []*
 			return err
 		}
 
-		if err := generateMain(fs, serviceName, serviceTmpl, outputDir, appNeedsDb(applications[serviceName])); err != nil {
+		if err := generateMain(fs, serviceName, serviceTmpl, outputDir, appNeedsDB(applications[serviceName])); err != nil {
 			return err
 		}
 
@@ -50,9 +50,9 @@ func GenerateRig(fs afero.Fs, templateFile string, outputDir string, modules []*
 		}
 
 		var dependencies []string
-		if appNeedsDb(applications[serviceName]) {
+		if appNeedsDB(applications[serviceName]) {
 			dbServiceName := serviceName + "_db"
-			composeServices[dbServiceName] = generateDbService(serviceName)
+			composeServices[dbServiceName] = generateDBService(serviceName)
 			dependencies = []string{dbServiceName}
 		}
 		composeServices[serviceName] = generateAppService(&generateAppServiceInput{
@@ -66,7 +66,7 @@ func GenerateRig(fs afero.Fs, templateFile string, outputDir string, modules []*
 	return generateCompose(fs, composeServices)
 }
 
-func appNeedsDb(app *sysl.Application) bool {
+func appNeedsDB(app *sysl.Application) bool {
 	if app == nil {
 		return false
 	}
@@ -110,7 +110,7 @@ func generateAppService(input *generateAppServiceInput) map[string]interface{} {
 	}
 }
 
-func generateDbService(serviceName string) map[string]interface{} {
+func generateDBService(serviceName string) map[string]interface{} {
 	return map[string]interface{}{
 		"image": "postgres:latest",
 		"ports": []string{"5432:5432"},
@@ -166,7 +166,7 @@ func processTemplate(file afero.File, resource string, data ServiceVars, outputD
 	return file.Sync()
 }
 
-func generateMain(fs afero.Fs, serviceName string, serviceVars ServiceVars, outputDir string, needDb bool) error {
+func generateMain(fs afero.Fs, serviceName string, serviceVars ServiceVars, outputDir string, needDB bool) error {
 	output, err := fs.Create(filepath.Join(outputDir, serviceName, "main.go"))
 	if err != nil {
 		return err
@@ -174,8 +174,8 @@ func generateMain(fs afero.Fs, serviceName string, serviceVars ServiceVars, outp
 	defer output.Close()
 
 	mainTemplate := GetMainStub()
-	if needDb {
-		mainTemplate = GetMainDbStub()
+	if needDB {
+		mainTemplate = GetMainDBStub()
 	}
 
 	return processTemplate(output, mainTemplate, serviceVars, outputDir)
