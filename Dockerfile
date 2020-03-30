@@ -1,10 +1,26 @@
-# Goreleaser builds a docker image according to this Dockerfile by copying the sysl binary 
-# to a golang:1.13-alpine image and setting up the entrypoint.
+# Builds a docker image by building the sysl binary
+# on Go 1.13.8 (by default) using the current workspace and then copying the bianry
+# to a image and setting up the entrypoint.
 #
 # The produced image is published to https://hub.docker.com/r/anzbank/sysl
 
-FROM golang:1.13-alpine
+ARG go_ver=1.13.8
+ARG alpine_ver=3.11
 
-COPY sysl /
+FROM golang:${go_ver}-alpine${alpine_ver} as builder
+
+RUN apk --no-cache add git make
+
+WORKDIR /sysl
+
+COPY . .
+
+RUN make build
+
+FROM golang:${go_ver}-alpine${alpine_ver} as runner
+
+COPY --from=builder /sysl/dist/sysl /
 
 ENTRYPOINT ["/sysl"]
+
+CMD ["help"]
