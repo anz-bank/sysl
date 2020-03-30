@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"github.com/anz-bank/sysl/pkg/pbutil"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -40,12 +40,12 @@ func (p *protobuf) Execute(args cmdutils.ExecuteArgs) error {
 
 	if toJSON {
 		if p.output == "-" {
-			return pbutil.FJSONPB(args.Logger.Out, args.Modules[0])
+			return pbutil.FJSONPB(os.Stdout, args.Modules[0])
 		}
 		return pbutil.JSONPB(args.Modules[0], p.output, args.Filesystem)
 	}
 	if p.output == "-" {
-		return pbutil.FTextPB(logrus.StandardLogger().Out, args.Modules[0])
+		return pbutil.FTextPB(os.Stdout, args.Modules[0])
 	}
 	return pbutil.TextPB(args.Modules[0], p.output, args.Filesystem)
 }
