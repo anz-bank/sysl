@@ -96,7 +96,7 @@ func (pc *ProjectConfiguration) ConfigureProject(root, module string, fs afero.F
 
 	pc.Fs = syslutil.NewChrootFs(fs, pc.Root)
 	if mod.SyslModules {
-		pc.Fs = mod.NewFs(pc.Fs)
+		pc.Fs = mod.NewFs(pc.Fs, pc.Root)
 	}
 
 	return nil

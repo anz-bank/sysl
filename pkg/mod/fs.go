@@ -11,10 +11,11 @@ import (
 
 type Fs struct {
 	source afero.Fs
+	root   string
 }
 
-func NewFs(fs afero.Fs) *Fs {
-	return &Fs{source: fs}
+func NewFs(fs afero.Fs, root string) *Fs {
+	return &Fs{source: fs, root: root}
 }
 
 func (fs *Fs) Open(name string) (afero.File, error) {
@@ -23,6 +24,9 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 		return f, nil
 	}
 
+	// filepath.Join will strip path elements of ".", so if the root is "."
+	// it will still work as a go module path when prepended with "."
+	name = filepath.Join(fs.root, name)
 	mod, err := Find(name)
 	if err != nil {
 		return nil, err
@@ -53,6 +57,9 @@ func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, err
 		return f, nil
 	}
 
+	// filepath.Join will strip path elements of ".", so if the root is "."
+	// it will still work as a go module path when prepended with "."
+	name = filepath.Join(fs.root, name)
 	mod, err := Find(name)
 	if err != nil {
 		return nil, err
