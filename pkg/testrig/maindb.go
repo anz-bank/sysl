@@ -1,6 +1,6 @@
 package testrig
 
-func GetMainDbStub() string {
+func GetMainDBStub() string {
 	return `package main
 
 import (

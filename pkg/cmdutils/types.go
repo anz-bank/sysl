@@ -87,7 +87,7 @@ type CmdDatabaseScriptParams struct {
 	Title     string
 	OutputDir string
 	AppNames  string
-	DbType    string
+	DBType    string
 }
 
 type ExecuteArgs struct {

@@ -1,0 +1,16 @@
+Table:
+    !table table [~test]:
+        # comment test
+        field <: int
+        @annotation = "annotation"
+        !table inplace_table [~inplace_test]:
+            ...
+        !table inline_shortcut: ...
+
+    !table inline_shortcut_again: ...
+
+    !table multiple_field_attributes:
+        multiline_field <:
+            a <: string
+            b <: int
+            c <: reference
