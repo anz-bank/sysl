@@ -1,4 +1,6 @@
 .dockerignore
-pkg
-!pkg/sysl_js
 **/node_modules
+/dist/
+/pkg/antlr*.jar
+/release/
+/scripts/generate
