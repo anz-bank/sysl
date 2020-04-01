@@ -17,6 +17,14 @@ func TestNewFs(t *testing.T) {
 	assert.Equal(t, "ChrootFS", fs.source.Name())
 }
 
+func TestFsName(t *testing.T) {
+	t.Parallel()
+
+	_, backendFs := syslutil.WriteToMemOverlayFs("/")
+	fs := NewFs(backendFs, "")
+	assert.Equal(t, "ModSupportedFs", fs.Name())
+}
+
 func TestOpenLocalFile(t *testing.T) {
 	t.Parallel()
 
@@ -26,6 +34,17 @@ func TestOpenLocalFile(t *testing.T) {
 	f, err := fs.Open(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
+}
+
+func TestOpenLocalFileFailed(t *testing.T) {
+	t.Parallel()
+
+	filename := "wrong.sysl"
+	_, memfs := syslutil.WriteToMemOverlayFs("/")
+	fs := NewFs(memfs, "../../tests/")
+	f, err := fs.Open(filename)
+	assert.Nil(t, f)
+	assert.Equal(t, fmt.Sprintf("%s not found", filepath.Join("../../tests/", filename)), err.Error())
 }
 
 func TestOpenRemoteFile(t *testing.T) {
