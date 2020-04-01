@@ -28,7 +28,7 @@ type scriptArgs struct {
 
 func TestDoGenerateDataScript(t *testing.T) {
 	args := &scriptArgs{
-		source:    database.DbTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
+		source:    database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		outputDir: "",
 		title:     "Petstore Schema",
 		appNames:  "RelModel",
@@ -51,7 +51,7 @@ func TestCreateDBScriptValidSyslFile(t *testing.T) {
 
 	main2([]string{"sysl", "generatedbscripts", "-t", "PetStore",
 		"-o", "",
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		"-a", "RelModel"},
 		fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql")
@@ -63,7 +63,7 @@ func TestCreateDBScriptInValidSyslFile(t *testing.T) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatescript", "-t", "PetStore", "-o", "", "-a", "RelModel",
-		filepath.Join(database.DbTestDir, "db_scripts/invalid.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl")},
 		fs, logger, main3)
 	assert.Equal(t, 1, err)
 }
@@ -74,19 +74,19 @@ func TestCreateDBScriptNoAppSyslFile(t *testing.T) {
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatescript", "-t", "PetStore", "-o", "", "-a", "Proj123",
-		filepath.Join(database.DbTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
+		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
 		fs, logger, main3)
 	assert.Equal(t, 1, err)
 }
 
 func TestDoConstructDatabaseScript(t *testing.T) {
 	args := &scriptArgs{
-		source:    database.DbTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
-		outputDir: database.DbTestDir + "db_scripts/",
+		source:    database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
+		outputDir: database.DBTestDir + "db_scripts/",
 		title:     "Petstore Schema",
 		appNames:  "RelModel",
 		expected: map[string]string{
-			filepath.Join(database.DbTestDir, "db_scripts/RelModel.sql"): filepath.Join(database.DbTestDir,
+			filepath.Join(database.DBTestDir, "db_scripts/RelModel.sql"): filepath.Join(database.DBTestDir,
 				"db_scripts/postgres-create-script-golden.sql"),
 		},
 	}
@@ -98,8 +98,8 @@ func TestDoConstructDatabaseScript(t *testing.T) {
 
 func TestDoConstructDatabaseScriptInvalidFile(t *testing.T) {
 	args := &scriptArgs{
-		source:    database.DbTestDir + "db_scripts/invalid.sysl",
-		outputDir: database.DbTestDir + "db_scripts/",
+		source:    database.DBTestDir + "db_scripts/invalid.sysl",
+		outputDir: database.DBTestDir + "db_scripts/",
 		title:     "Petstore Schema",
 		appNames:  "RelModel",
 	}

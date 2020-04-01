@@ -42,7 +42,10 @@ func GenerateDataModelsWithProjectMannerModule(datagenParams *cmdutils.CmdContex
 				continue
 			}
 		}
-		GenerateDataModel(spclass, outmap, model, endpt.GetStmt(), datagenParams.Title, datagenParams.Project, outputDir)
+		// TODO: Fix the need to pass `epNameMode` into function
+		epNameMode := strings.Contains(datagenParams.Output, "%(epname)")
+		GenerateDataModel(spclass, outmap, model, endpt.GetStmt(), datagenParams.Title,
+			datagenParams.Project, outputDir, epNameMode)
 	}
 	return outmap, nil
 }
@@ -73,9 +76,10 @@ func GenerateDataModelsWithPureModule(datagenParams *cmdutils.CmdContextParamDat
 		var stringBuilder strings.Builder
 		if app != nil {
 			dataParam := &DataModelParam{
-				Mod:   model,
-				App:   app,
-				Title: datagenParams.Title,
+				Mod:    model,
+				App:    app,
+				Title:  datagenParams.Title,
+				Epname: strings.Contains(datagenParams.Output, "%(epname)"),
 			}
 			v := MakeDataModelView(spclass, dataParam.Mod, &stringBuilder, dataParam.Title, "")
 			outmap[outputDir] = v.GenerateDataView(dataParam)
@@ -86,7 +90,7 @@ func GenerateDataModelsWithPureModule(datagenParams *cmdutils.CmdContextParamDat
 }
 
 func GenerateDataModel(pclass cmdutils.ClassLabeler, outmap map[string]string, mod *sysl.Module,
-	stmts []*sysl.Statement, title, project, outDir string) {
+	stmts []*sysl.Statement, title, project, outDir string, epName bool) {
 	apps := mod.GetApps()
 
 	// Parse all the applications in the project
@@ -100,6 +104,7 @@ func GenerateDataModel(pclass cmdutils.ClassLabeler, outmap map[string]string, m
 					App:     app,
 					Title:   title,
 					Project: project,
+					Epname:  epName,
 				}
 				v := MakeDataModelView(pclass, dataParam.Mod, &stringBuilder, dataParam.Title, dataParam.Project)
 				outmap[outDir] = v.GenerateDataView(dataParam)

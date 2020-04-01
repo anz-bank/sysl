@@ -7,6 +7,7 @@ layout= "byexample"
 weight = 6
 topic = "Basics"
 PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=Rm9vIFtwYWNrYWdlPSJjb20ubXljb21wYW55Il06CiAgICBAb3duZXI9ImphbmUuc21pdGhAY29tcGFueS5jb20iCiAgICBCYXIobmV3UG9zdCA8OiBzdHJpbmcgW35ib2R5XSk6CiAgICAgICAgcmV0dXJuIHN0cmluZwo=&cmd="
+GitRepoURL = "https://github.com/anz-bank/sysl/tree/master/demo/examples/Attributes"
 ID = "attributes"
 CodeWithoutComments = """Foo [package="com.mycompany"]:
     @owner="jane.smith@company.com"
@@ -34,3 +35,5 @@ Segs = [[
 
 ]
 +++
+
+

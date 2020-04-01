@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -15,7 +16,6 @@ import (
 
 	"github.com/alecthomas/chroma"
 	"github.com/alecthomas/chroma/formatters/html"
-	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
 	"github.com/anz-bank/sysl/docs/website/byexample/syslchroma"
 	"github.com/russross/blackfriday"
@@ -33,6 +33,7 @@ const assetDir = syslRoot + "docs/website/static/assets/byexample/"
 const templates = syslRoot + "docs/website/byexample/templates"
 const cacheDir = "./.tmp/gobyexample-cache"
 const orderingfile = "ordering.yaml"
+const gitRepoExample = "https://github.com/anz-bank/sysl/tree/master/demo/examples"
 
 var imageFiles = []string{".svg"}
 
@@ -58,7 +59,7 @@ func findSyslCommand(input string) string {
 }
 
 func ensureDir(dir string) {
-	err := os.MkdirAll(dir, 0755)
+	err := os.MkdirAll(dir, 0777)
 	check(err)
 }
 
@@ -89,14 +90,11 @@ func cacheChroma(lex string, src string) string {
 	if cacheErr == nil {
 		return string(cacheBytes)
 	}
-	return chromaFormat(src)
+	return chromaFormat(src, lex)
 }
 
-func chromaFormat(code string) string {
+func chromaFormat(code string, lexerType string) string {
 	lexer := syslchroma.Sysl
-	if lexer == nil {
-		lexer = lexers.Fallback
-	}
 	lexer = chroma.Coalesce(lexer)
 
 	style := styles.Get("swapoff")
@@ -132,6 +130,8 @@ func whichLexer(path string) string {
 		return "sysl"
 	} else if strings.HasSuffix(path, ".sh") {
 		return "console"
+	} else if strings.HasSuffix(path, ".go") {
+		return "go"
 	}
 	return ""
 }
@@ -160,6 +160,7 @@ type Example struct {
 	CodeWithoutComments string
 	Cmd                 string
 	PlaygroundURL       string
+	GitRepoURL          string
 	Segs                [][]*Seg
 	PrevExample         *Example
 	NextExample         *Example
@@ -216,7 +217,7 @@ func parseSegs(sourcePath string) ([]*Seg, string) {
 }
 
 func parseAndRenderSegs(sourcePath string) ([]*Seg, string, string) {
-	lexer := whichLexer(sourcePath)
+	lexer := filepath.Ext(sourcePath)
 	segs, filecontent := parseSegs(sourcePath)
 	Code := ""
 	for _, seg := range segs {
@@ -224,7 +225,7 @@ func parseAndRenderSegs(sourcePath string) ([]*Seg, string, string) {
 			seg.DocsRendered = markdown(seg.Docs)
 		}
 		if seg.Code != "" {
-			seg.CodeRendered = cacheChroma(lexer, seg.Code)
+			seg.CodeRendered = cacheChroma(lexer[1:], seg.Code)
 
 			// adding the content to the js code for copying to the clipboard
 			if strings.HasSuffix(sourcePath, ".sysl") {
@@ -265,12 +266,13 @@ func parseExamples() []*Example {
 	weight := 0
 	err := os.RemoveAll(assetDir + "images")
 	check(err)
-	err = os.MkdirAll(assetDir+"images", 0755)
+	err = os.MkdirAll(assetDir+"images", 0777)
 	check(err)
 	for _, tutorial := range ordering {
 		for topic, val := range tutorial {
 			fmt.Println(topic)
 			for _, exampleName := range val {
+
 				fmt.Println("\t" + exampleName)
 				weight++
 				example := Example{Name: exampleName}
@@ -283,7 +285,23 @@ func parseExamples() []*Example {
 				example.Weight = weight + 1
 				example.Topic = topic
 				example.Segs = make([][]*Seg, 0)
-				sourcePaths := mustGlob(exampleID + "/*")
+				example.GitRepoURL = fmt.Sprintf("%s/%s", gitRepoExample, exampleName)
+				fmt.Println(example.GitRepoURL)
+				var sourcePaths []string
+				subOrderingFileName := path.Join(exampleID, orderingfile)
+
+				if _, err := os.Stat(subOrderingFileName); err == nil {
+					subOrdering := unmarshalYaml(subOrderingFileName)
+					fmt.Println()
+
+					for _, x := range subOrdering[0][topic] {
+						sourcePaths = append(sourcePaths, path.Join(exampleID, x))
+					}
+
+				} else {
+					sourcePaths = mustGlob(exampleID + "/*")
+
+				}
 				for _, sourcePath := range sourcePaths {
 					if ok, ext := isImageFile(sourcePath); ok {
 						destination := assetDir + "images/" + exampleID + strconv.Itoa(weight) + ext
@@ -298,14 +316,16 @@ func parseExamples() []*Example {
 						Segment[0] = &Seg{Image: imageName}
 						example.Segs = append(example.Segs, Segment)
 
-					} else if whichLexer(sourcePath) != "" {
+					} else if filepath.Ext(sourcePath) != "" {
 						sourceSegs, filecontents, codeWithoutComments := parseAndRenderSegs(sourcePath)
 
 						if filecontents != "" {
-							switch whichLexer(sourcePath) {
-							case "sysl":
+							switch filepath.Ext(sourcePath) {
+							case ".sysl":
 								example.CodeWithoutComments = codeWithoutComments
-							case "console":
+							case ".go":
+								example.CodeWithoutComments = codeWithoutComments
+							case ".console":
 								example.Cmd = findSyslCommand(filecontents)
 							}
 

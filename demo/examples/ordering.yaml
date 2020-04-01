@@ -1,19 +1,21 @@
 Basics:
-  - Hello World
-  - Data Types
+  - Hello-World
+  - Data-Types
   - Projects
-  - Control Flow
+  - Control-Flow
   - Attributes
   - Reserved-Attributes
   - Modules
   - Simplify Command Line
 Diagrams:
-  - Sequence Diagrams
-  - Integration Diagrams
-  - Data Model Diagrams
+  - Sequence-Diagrams
+  - Integration-Diagrams
+  - Data-Model-Diagrams
 Web protocols:
-  - Rest and HTTP
-  - Special Characters
+  - Rest-and-HTTP
+  - Special-Characters
+Code Generation:
+  - Code-Generation
 # TODO: The rest of these
 #   - grpc and proto
 # Sysl Transformation Language:
