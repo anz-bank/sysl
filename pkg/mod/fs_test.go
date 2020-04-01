@@ -2,6 +2,7 @@ package mod
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -14,7 +15,7 @@ func TestNewFs(t *testing.T) {
 
 	_, backendFs := syslutil.WriteToMemOverlayFs("/")
 	fs := NewFs(backendFs, "")
-	assert.Equal(t, "ChrootFS", fs.source.Name())
+	assert.Equal(t, "ChrootFS", fs.Fs.Name())
 }
 
 func TestFsName(t *testing.T) {
@@ -79,4 +80,26 @@ func TestOpenRemoteFileWithRoot(t *testing.T) {
 	f, err := fs.Open(path)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
+}
+
+func TestOpenFile(t *testing.T) {
+	t.Parallel()
+
+	filename := "deps.sysl"
+	_, memfs := syslutil.WriteToMemOverlayFs("/")
+	fs := NewFs(memfs, "../../tests/")
+	f, err := fs.OpenFile(filename, os.O_RDWR, 0600)
+	assert.Nil(t, err)
+	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
+}
+
+func TestOpenFileFailed(t *testing.T) {
+	t.Parallel()
+
+	filename := "wrong.sysl"
+	_, memfs := syslutil.WriteToMemOverlayFs("/")
+	fs := NewFs(memfs, "../../tests/")
+	f, err := fs.OpenFile(filename, os.O_RDWR, 0600)
+	assert.Nil(t, f)
+	assert.Equal(t, fmt.Sprintf("%s not found", filepath.Join("../../tests/", filename)), err.Error())
 }
