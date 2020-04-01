@@ -8,7 +8,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
@@ -94,10 +93,7 @@ func (pc *ProjectConfiguration) ConfigureProject(root, module string, fs afero.F
 		}
 	}
 
-	pc.Fs = syslutil.NewChrootFs(fs, pc.Root)
-	if mod.SyslModules {
-		pc.Fs = mod.NewFs(pc.Fs, pc.Root)
-	}
+	pc.Fs = mod.NewFs(fs, pc.Root)
 
 	return nil
 }
