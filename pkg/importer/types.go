@@ -124,7 +124,9 @@ func (t TypeList) Sort() {
 type FieldList []Field
 
 // nolint:gochecknoglobals
-var builtIns = []string{"int32", "int64", "int", "float", "string", "date", "bool", "decimal", "datetime", "xml"}
+var builtIns = []string{"int32", "int64", "int",
+	"float", "string", "date", "bool", "decimal",
+	"datetime", "xml", "bytes"}
 
 func IsBuiltIn(name string) bool {
 	for _, kw := range builtIns {

@@ -44,13 +44,13 @@ func convertToOpenapiv3(data []byte) (*openapi3.Swagger, string, error) {
 }
 
 // nolint:gochecknoglobals
-var swaggerFormats = []string{"int32", "int64", "float", "double", "date", "date-time", "byte"}
+var swaggerFormats = []string{"int32", "int64", "float", "double", "date", "date-time", "byte", "binary"}
 
 func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logger) string {
 	typeName = strings.ToLower(typeName)
 	format = strings.ToLower(format)
 	if format != "" && !contains(format, swaggerFormats) {
-		logger.Errorf("unknown format '%s' being used, ignoring...\n", format)
+		logger.Warnf("unknown format '%s' being used, ignoring...\n", format)
 		format = ""
 	}
 
@@ -60,6 +60,7 @@ func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logge
 			"date":      "date",
 			"date-time": "datetime",
 			"byte":      StringTypeName,
+			"binary":    "bytes",
 		},
 		"integer": {
 			"":      "int",
