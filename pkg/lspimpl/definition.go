@@ -7,12 +7,13 @@ package lspimpl
 import (
 	"context"
 
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
 )
 
 func (s *Server) definition(ctx context.Context, params *protocol.DefinitionParams) ([]protocol.Location, error) {
 	s.client.LogMessage(ctx, &protocol.LogMessageParams{Type: protocol.Log, Message: "definition"})
 
+	// TODO: reuse this to handle sysl code
 	/*
 		snapshot, fh, ok, err := s.beginFileRequest(params.TextDocument.URI, source.Go)
 		if !ok {
@@ -25,6 +26,7 @@ func (s *Server) definition(ctx context.Context, params *protocol.DefinitionPara
 	*/
 
 	var locations []protocol.Location
+	// TODO: reuse this to handle sysl code
 	/*
 		for _, ref := range ident.Declaration.MappedRange {
 			decRange, err := ref.Range()

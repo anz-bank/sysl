@@ -5,7 +5,7 @@ package lspimpl
 import (
 	"context"
 
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
 )
 
 func (s *Server) CodeAction(context.Context, *protocol.CodeActionParams) ([]protocol.CodeAction, error) {

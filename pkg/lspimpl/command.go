@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
 )
 
 func (s *Server) executeCommand(ctx context.Context, params *protocol.ExecuteCommandParams) (interface{}, error) {

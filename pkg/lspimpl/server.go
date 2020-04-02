@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/jsonrpc2"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
 )
 
 const concurrentAnalyses = 1
@@ -124,4 +124,4 @@ func notImplemented(method string) *jsonrpc2.Error {
 	return jsonrpc2.NewErrorf(jsonrpc2.CodeMethodNotFound, "method %q not yet implemented", method)
 }
 
-//go:generate ../../internal/lsp/helper/helper -d ../../internal/lsp/protocol/tsserver.go -o server_gen.go -u .
+//go:generate ../../lspframework/lsp/helper/helper -d ../../lspframework/lsp/protocol/tsserver.go -o server_gen.go -u .

@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/telemetry"
-	"github.com/anz-bank/sysl/internal/telemetry/trace"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/jsonrpc2"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/telemetry"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/telemetry/trace"
 )
 
 type telemetryHandler struct{}

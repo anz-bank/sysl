@@ -11,10 +11,10 @@ import (
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
-	"github.com/anz-bank/sysl/internal/jsonrpc2"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/jsonrpc2"
 
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
 )
 
 func (s *Server) diagnoseRaw(input string, listener *SyslErrorListener) parser.ISysl_fileContext {

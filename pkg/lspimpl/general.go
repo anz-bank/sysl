@@ -8,8 +8,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/jsonrpc2"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
 )
 
 func (s *Server) initialize(ctx context.Context, params *protocol.ParamInitialize) (*protocol.InitializeResult, error) {

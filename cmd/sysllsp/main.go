@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/anz-bank/sysl/internal/jsonrpc2"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/jsonrpc2"
 	"github.com/anz-bank/sysl/pkg/lspimpl/lsprpc"
 )
 
@@ -13,6 +13,7 @@ func main() {
 	// start the lsp debug server here
 	ctx := context.Background()
 
+	// TODO: reuse this to handle sysl code
 	/*
 		di := debug.GetInstance(ctx)
 		if di != nil {

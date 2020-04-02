@@ -7,12 +7,12 @@ package lspimpl
 import (
 	"context"
 
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
 )
 
 func (s *Server) hover(ctx context.Context, params *protocol.HoverParams) (*protocol.Hover, error) {
 	s.client.LogMessage(ctx, &protocol.LogMessageParams{Type: protocol.Log, Message: "hover"})
-
+	// TODO: reuse this to handle sysl code
 	/*
 		_, _, ok, err := s.beginFileRequest(params.TextDocument.URI, source.UnknownKind)
 		if !ok {

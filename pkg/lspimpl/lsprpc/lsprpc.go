@@ -14,11 +14,11 @@ import (
 	"strconv"
 	"sync/atomic"
 
-	"github.com/anz-bank/sysl/internal/jsonrpc2"
-	"github.com/anz-bank/sysl/internal/lsp/debug"
-	"github.com/anz-bank/sysl/internal/lsp/protocol"
-	"github.com/anz-bank/sysl/internal/telemetry/log"
 	"github.com/anz-bank/sysl/pkg/lspimpl"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/jsonrpc2"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/debug"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/lsp/protocol"
+	"github.com/anz-bank/sysl/pkg/lspimpl/lspframework/telemetry/log"
 )
 
 // AutoNetwork is the pseudo network type used to signal that gopls should use
