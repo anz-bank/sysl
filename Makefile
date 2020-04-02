@@ -28,12 +28,15 @@ TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 examples: TUTORIALS
 	cd demo/examples/ && go run generate_website.go && cd ../../
 
-.PHONY: all deps install grammar antlr build lint test coverage clean
+.PHONY: all deps install grammar antlr build lint test coverage clean check-tidy
 lint: ## Run golangci-lint
 	golangci-lint run
 
 coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 85
+
+check-tidy: ## Check go.mod and go.sum is tidy
+	go mod tidy && test -z "$$(git status --porcelain)"
 
 test: ## Run tests without coverage
 	$(TESTEXE)
