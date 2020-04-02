@@ -13,7 +13,17 @@ testapp "Simple" [package="package_foo"]:
             | No description.
             return ok <: SimpleObj
 
+    /test%2Bplus:
+        GET:
+            | No description.
+            return ok <: SimpleObj
+
     /test%2Estuff:
+        GET:
+            | No description.
+            return ok <: SimpleObj
+
+    /test%3Acolon:
         GET:
             | No description.
             return ok <: SimpleObj
