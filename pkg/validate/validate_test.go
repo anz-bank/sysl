@@ -273,11 +273,12 @@ func TestValidatorValidateViews(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir), p)
+	fs := syslutil.NewChrootFs(afero.NewOsFs(), testDir)
+	transform, err := loadTransform("transform1.sysl", fs, p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
+	grammar, err := LoadGrammar("grammar.sysl", fs)
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -359,11 +360,12 @@ func TestValidatorValidateViewsInnerTypes(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir), p)
+	fs := syslutil.NewChrootFs(afero.NewOsFs(), testDir)
+	transform, err := loadTransform("transform1.sysl", fs, p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
+	grammar, err := LoadGrammar("grammar.sysl", fs)
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -401,11 +403,12 @@ func TestValidatorValidateViewsChoiceTypes(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform1.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir), p)
+	fs := syslutil.NewChrootFs(afero.NewOsFs(), testDir)
+	transform, err := loadTransform("transform1.sysl", fs, p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
+	grammar, err := LoadGrammar("grammar.sysl", fs)
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -481,11 +484,12 @@ func TestValidatorValidate(t *testing.T) {
 	t.Parallel()
 
 	p := parse.NewParser()
-	transform, err := loadTransform("transform2.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir), p)
+	fs := syslutil.NewChrootFs(afero.NewOsFs(), testDir)
+	transform, err := loadTransform("transform2.sysl", fs, p)
 	require.NoError(t, err)
 	require.NotNil(t, transform)
 
-	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
+	grammar, err := LoadGrammar("grammar.sysl", fs)
 	require.NoError(t, err)
 	require.NotNil(t, grammar)
 
@@ -516,7 +520,7 @@ func TestValidatorLoadTransformError(t *testing.T) {
 func TestValidatorLoadGrammarSuccess(t *testing.T) {
 	t.Parallel()
 
-	grammar, err := LoadGrammar(filepath.Join(testDir, "grammar.sysl"), afero.NewOsFs())
+	grammar, err := LoadGrammar("grammar.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir))
 	assert.NotNil(t, grammar, "Unexpected result")
 	assert.Nil(t, err, "Unexpected result")
 }
@@ -602,6 +606,27 @@ func TestValidatorValidateTfmReturn(t *testing.T) {
 			validator.validateTfmReturn(input, view.GetExpr(), view.GetRetType())
 			actual := validator.GetMessages()
 			assert.Equal(t, expected, actual, "Unexpected result")
+		})
+	}
+}
+
+func TestChangeFileExtension(t *testing.T) {
+	cases := map[string]struct {
+		input     string
+		extension string
+		expected  string
+	}{
+		"simple":  {"filename.ext", "sysl", "filename.sysl"},
+		"path":    {"/tmp/filename.ext", "sysl", "/tmp/filename.sysl"},
+		"multi":   {"filename.foo.ext", "sysl", "filename.foo.sysl"},
+		"none":    {"filename", "sysl", "filename.sysl"},
+		"nonsysl": {"filename.old", "new", "filename.new"},
+	}
+	for name, test := range cases {
+		test := test
+		t.Run(name, func(t *testing.T) {
+			actual := changeFileExtension(test.input, test.extension)
+			assert.Equal(t, test.expected, actual)
 		})
 	}
 }

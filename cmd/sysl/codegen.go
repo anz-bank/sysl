@@ -14,7 +14,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/parse"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/validate"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -129,28 +128,20 @@ func GenerateCode(
 	logger.Debugf("start: %s\n", codegenParams.Start)
 	logger.Debugf("basePath: %s\n", codegenParams.BasePath)
 
-	var transformFs afero.Fs
-	transformFs = syslutil.NewChrootFs(fs, codegenParams.RootTransform)
-	if mod.SyslModules {
-		transformFs = mod.NewFs(transformFs)
-	}
-
+	transformFs := mod.NewFs(fs, codegenParams.RootTransform)
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {
 		return nil, err
 	}
 
-	if mod.SyslModules {
-		fs = mod.NewFs(fs)
-	}
-	g, err := ebnfparser.ReadGrammar(fs, codegenParams.Grammar, codegenParams.Start)
+	g, err := ebnfparser.ReadGrammar(transformFs, codegenParams.Grammar, codegenParams.Start)
 	if err != nil {
 		return nil, err
 	}
 
 	if !codegenParams.DisableValidator {
-		grammarSysl, err := validate.LoadGrammar(codegenParams.Grammar, fs)
+		grammarSysl, err := validate.LoadGrammar(codegenParams.Grammar, transformFs)
 		if err != nil {
 			msg.NewMsg(msg.WarnValidationSkipped, []string{err.Error()}).LogMsg()
 		} else {
