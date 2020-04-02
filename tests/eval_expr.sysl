@@ -146,8 +146,13 @@ TransformApp:
       )
       stringInNull    = "abc" in app.attrs.patterns
       stringInList    = "pqr" in ["abc", "def"]
+      stringInMap = "key1" in getMap("key")
+      stringInSet = "a" in {"a","b","c"}
+
       stringNotInNull = "abc" !in app.attrs.patterns
       stringNotInList = "pqr" !in ["abc", "def"]
+      stringNotInMap = "abc" !in getMap("key")
+      stringNotInSet = "d" !in {"a","b","c"}
     )
 
   !view TestDotScope(app <: sysl.App) -> int:
