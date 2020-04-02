@@ -280,8 +280,18 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 			allUptos.Insert(item)
 		}
 		allUptos.Insert(entry.upto)
-
-		fmt.Fprintf(v.w, "== %s <- %s ==\n", entry.appName, entry.endpointName)
+		appLink := v.m.Apps[entry.appName].Attrs["link"].GetS()
+		epLink := v.m.Apps[entry.appName].Endpoints[entry.endpointName].Attrs["link"].GetS()
+		switch {
+		case epLink != "" && appLink != "":
+			fmt.Fprintf(v.w, "== [[%s %s]] <- [[%s %s]] ==\n", appLink, entry.appName, epLink, entry.endpointName)
+		case epLink != "" && appLink == "":
+			fmt.Fprintf(v.w, "== %s <- [[%s %s]] ==\n", entry.appName, epLink, entry.endpointName)
+		case epLink == "" && appLink != "":
+			fmt.Fprintf(v.w, "== [[%s %s]] <- %s ==\n", appLink, entry.appName, entry.endpointName)
+		default:
+			fmt.Fprintf(v.w, "== %s <- %s ==\n", entry.appName, entry.endpointName)
+		}
 
 		visiting := fmt.Sprintf("%s <- %s", entry.appName, entry.endpointName)
 		delete(allUptos, visiting)

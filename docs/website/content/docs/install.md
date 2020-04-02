@@ -20,9 +20,35 @@ Sysl is a CLI (Command Line Interface) that executes with the `sysl` command.
 
 Here are several approaches to get start using Sysl:
 
+## Install with Homebrew
+
+If you have [homebrew](https://brew.sh/) installed, you can simply run the following commands in your terminal:
+
+```sh
+brew tap anz-bank/homebrew-sysl
+brew install anz-bank/homebrew-sysl/sysl
+```
+
 ## Install the pre-compiled binary
 
-Download the pre-compiled binaries from the [releases page](https://github.com/anz-bank/sysl/releases) and copy to the desired location.
+1. Download the pre-compiled binaries matching your OS from the [releases page](https://github.com/anz-bank/sysl/releases).
+
+2. Uncompress the archive and move the sysl binary to your desired path:
+
+   1. under PATH location
+
+      ```bash
+      # check it works
+      $ sysl help
+      ```
+
+   2. under non-PATH location (with the binary in the current directory)
+
+      ```bash
+      # check it works
+      $ ./sysl help
+      ```
+
 
 ## Go get it
 

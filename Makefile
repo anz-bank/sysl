@@ -55,7 +55,7 @@ build: ## Build sysl into the ./dist folder
 buildlsp: ## Build sysllsp into the ./dist folder
 	go build -o ./dist/sysllsp -ldflags="$(LDFLAGS)" -v ./cmd/sysllsp
 
-## This option is used for Sysl UI to bundle static files into the go binary. 
+## This option is used for Sysl UI to bundle static files into the go binary.
 ## For more details on pkger, refer to https://github.com/markbates/pkger
 .PHONY: resources
 resources:
@@ -69,7 +69,7 @@ resources:
 deps: ## Download the project dependencies with `go get`
 	go mod tidy
 ifneq ("$(shell git status --porcelain)", "")
-	## GoReleaser has to make sure go.mod is up to date before release sysl binary. 
+	## GoReleaser has to make sure go.mod is up to date before release sysl binary.
 	## Keep everyone remembering to update go.mod to avoid release failure.
 	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff)"
 	exit 1
@@ -106,3 +106,11 @@ proto: pkg/sysl/sysl.pb.go
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+test-grammar:
+	which wbnf || go install github.com/arr-ai/wbnf
+	./scripts/test-grammar-wbnf.sh . | diff ./scripts/grammar-out.txt -
+
+update-grammar-result:
+	which wbnf || go install github.com/arr-ai/wbnf
+	./scripts/test-grammar-wbnf.sh . > ./scripts/grammar-out.txt

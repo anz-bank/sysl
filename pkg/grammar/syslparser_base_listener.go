@@ -478,8 +478,7 @@ func (s *BaseSyslParserListener) EnterCollector_call_stmt(ctx *Collector_call_st
 func (s *BaseSyslParserListener) ExitCollector_call_stmt(ctx *Collector_call_stmtContext) {}
 
 // EnterCollector_http_stmt_part is called when production collector_http_stmt_part is entered.
-func (s *BaseSyslParserListener) EnterCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {
-}
+func (s *BaseSyslParserListener) EnterCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {}
 
 // ExitCollector_http_stmt_part is called when production collector_http_stmt_part is exited.
 func (s *BaseSyslParserListener) ExitCollector_http_stmt_part(ctx *Collector_http_stmt_partContext) {}
