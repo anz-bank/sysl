@@ -11,6 +11,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SimpleObj"
+  /test:colon:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+  /test+plus:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
   /deep/deeeeeeep/test.stuff:
     get:
       responses:
