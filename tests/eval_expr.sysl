@@ -32,13 +32,13 @@ TodoApp:
         return 404 <: NotFoundError
       else if error:
         return 500 <: ServerError
-      else:                   
+      else:
         return 200 <: todos
 
     POST (newTodo <: Todo [~body], accept <: string [~header]):
       if failed:
         return 500 <: ErrorResponse
-      else:                        
+      else:
         return 200 <: todo
 
     /{id<:int}:
@@ -144,8 +144,15 @@ TransformApp:
       Nil = . -> <some> (:
         out = .
       )
-      stringInNull = "abc" in app.attrs.patterns
-      stringInList = "pqr" in ["abc", "def"]
+      stringInNull    = "abc" in app.attrs.patterns
+      stringInList    = "pqr" in ["abc", "def"]
+      stringInMap = "key1" in getMap("key")
+      stringInSet = "a" in {"a","b","c"}
+
+      stringNotInNull = "abc" !in app.attrs.patterns
+      stringNotInList = "pqr" !in ["abc", "def"]
+      stringNotInMap = "abc" !in getMap("key")
+      stringNotInSet = "d" !in {"a","b","c"}
     )
 
   !view TestDotScope(app <: sysl.App) -> int:
