@@ -1,0 +1,21 @@
+# simple.sysl
+
+# Define an application and specify the `package` attribute and the @basePath attribute
+simple[package="simple"]:
+    @basePath = "/simple"
+
+    # Wrap the types in sysl types
+    !type Stuff:
+        Content <: string:
+            @json_tag = "Content"
+    !type Foo:
+        Content <: int
+
+    # First endpoint returns a Stuff type
+    /test:
+        GET[mediatype="application/json", ~body]:
+            return ok <: Stuff
+    # Second endpoint returns a Foo type 
+    /foobar:
+        GET:
+            return no <: Foo

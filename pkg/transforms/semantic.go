@@ -79,9 +79,9 @@ func createScope(view *sysl.View, mod *sysl.Module, app *sysl.Application) trans
 		_, detail := syslutil.GetTypeDetail(param.Type)
 		switch detail {
 		case "sysl.App", "sysl.Application":
-			res.scope.AddApp(param.Name, app)
+			res.scope.AddApp(param.Name, app, nil)
 		case "sysl.Module":
-			res.scope.AddModule(param.Name, mod)
+			res.scope.AddModule(param.Name, mod, nil)
 		case "sysl.Type":
 			tp.t = param.Name
 		case "STRING": // Assuming it must be the type name

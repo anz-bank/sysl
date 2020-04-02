@@ -2055,7 +2055,7 @@ func (s *TreeShapeListener) ExitExpr_table_of_op(ctx *parser.Expr_table_of_opCon
 func (s *TreeShapeListener) ExitFunc_arg(*parser.Func_argContext) {
 	arg := s.popExpr()
 	top := s.TopExpr()
-	var args *[]*sysl.Expr = nil
+	var args *[]*sysl.Expr
 	switch {
 	case top.GetRelexpr() != nil:
 		args = &top.GetRelexpr().Arg
@@ -2063,7 +2063,7 @@ func (s *TreeShapeListener) ExitFunc_arg(*parser.Func_argContext) {
 		args = &top.GetCall().Arg
 	}
 	syslutil.Assert(args != nil, "ExitFunc_arg: should not be here")
-	*args = append(*args, arg)
+	*args = append(*args, arg) // nolint:staticcheck
 }
 
 // EnterExpr_func is called when production expr_func is entered.

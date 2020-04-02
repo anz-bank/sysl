@@ -105,9 +105,9 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 test-grammar:
-	which wbnf || go install github.com/arr-ai/wbnf/cmd
+	which wbnf || go install github.com/arr-ai/wbnf
 	./scripts/test-grammar-wbnf.sh . | diff ./scripts/grammar-out.txt -
 
 update-grammar-result:
-	which wbnf || go install github.com/arr-ai/wbnf/cmd
+	which wbnf || go install github.com/arr-ai/wbnf
 	./scripts/test-grammar-wbnf.sh . > ./scripts/grammar-out.txt
