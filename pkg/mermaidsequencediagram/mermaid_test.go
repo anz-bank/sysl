@@ -73,7 +73,6 @@ sequenceDiagram
  Api->>+Database: QueryUser
  Database-->>-Api: User [~y, x="1"]
  Api-->>-WebFrontend: UserProfile
- ...->>WebFrontend: RequestProfile
  WebFrontend->>+WebFrontend: FooBar
  WebFrontend-->>...: Profile Page
 `
