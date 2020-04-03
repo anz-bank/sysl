@@ -241,10 +241,18 @@ func stringInSet(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
+func stringNotInSet(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(!(stringInSet(lhs, rhs).GetB()))
+}
+
 func stringInMapKey(lhs, rhs *sysl.Value) *sysl.Value {
 	str := lhs.GetS()
 	_, has := rhs.GetMap().Items[str]
 	return MakeValueBool(has)
+}
+
+func stringNotInMapKey(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(!(stringInMapKey(lhs, rhs).GetB()))
 }
 
 func intSet(list []*sysl.Value) map[int64]struct{} {
@@ -345,6 +353,10 @@ func stringInNull(lhs, rhs *sysl.Value) *sysl.Value {
 	return MakeValueBool(false)
 }
 
+func stringNotInNull(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(!(stringInNull(lhs, rhs).GetB()))
+}
+
 func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 	str := lhs.GetS()
 	for _, v := range rhs.GetList().Value {
@@ -353,6 +365,10 @@ func stringInList(lhs, rhs *sysl.Value) *sysl.Value {
 		}
 	}
 	return MakeValueBool(false)
+}
+
+func stringNotInList(lhs, rhs *sysl.Value) *sysl.Value {
+	return MakeValueBool(!(stringInList(lhs, rhs).GetB()))
 }
 
 func whereSet(ee *exprEval, assign Scope, list *sysl.Value, scopeVar string, rhs *sysl.Expr) *sysl.Value {

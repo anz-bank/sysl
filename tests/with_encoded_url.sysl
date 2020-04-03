@@ -14,3 +14,11 @@ testapp "Simple" [package="package_foo"]:
     /tests%7Eagain:
         GET:
             return ok <: 200
+
+    /tests%3Aagain:
+        GET:
+            return ok <: 200
+
+    /tests%2Bagain:
+        GET:
+            return ok <: 200
