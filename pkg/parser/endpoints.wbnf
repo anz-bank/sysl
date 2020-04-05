@@ -1,23 +1,34 @@
 endpoint -> (rest_endpoint | simple_endpoint | collector | event);
 
-simple_endpoint -> SHORTCUT | (endpoint_name=(APPNAME) QSTRING? params? attribs? ":"
-                        (SHORTCUT | %!Indented(stmt)));
+simple_endpoint -> endpoint_name=(APPNAME) QSTRING? params? attribs? ":"
+                   (
+                       WRAPPED_SHORTCUT
+                       | %!InlineCommentIndent(annotation | stmt)
+                   );
 
-rest_endpoint -> http_path attribs? ":" %!Indented(method_def | rest_endpoint);
+rest_endpoint -> http_path attribs? ":"
+                 %!InlineCommentIndent(method_def | rest_endpoint);
 
-method_def -> method=(HTTP_VERBS) params? query_param? attribs? ":" %!Indented(stmt);
+method_def -> method=(HTTP_VERBS) params? query_param? attribs? ":"
+              %!InlineCommentIndent(stmt);
 
-params -> "(" (field | reference):"," ")" {
+params -> "(" (COMMENT* (field | reference)):"," ")" {
     .wrapRE -> /{\s*()\s*};
 };
 
 query_param -> "?" (ident=(NAME) "=" (NativeDataTypes| NAME | "{" NAME "}") optional="?"?):"&";
 
-field -> NAME array_size? "<:" (field_type | %!Indented(field)) QSTRING?;
+field -> NAME array_size? "<:"
+         (
+             field_type
+             | %!InlineCommentIndent(field | unspecified_type=NAME)
+         )
+         QSTRING? COMMENT_NO_NL?;
 
 field_type -> collection_type | (type_spec optional="?"? attribs?) ;
 
-collector -> '.. * <- *' ":" (SHORTCUT | %!Indented(collector_stmt));
+collector -> '.. * <- *' ":"
+             (WRAPPED_SHORTCUT | %!InlineCommentIndent(collector_stmt));
 
 collector_stmt -> (
                     collector_http_stmt

@@ -30,7 +30,7 @@ type SyslUI struct {
 }
 
 func (s *SyslUI) GenerateServer() (*Server, error) {
-	pkger.Include("/ui/build")
+	pkger.Include("/ui/build") // nolint:staticcheck
 
 	if s.BasePath == "" {
 		s.BasePath = "/"

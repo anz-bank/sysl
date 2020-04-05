@@ -1,0 +1,8 @@
+# This file specifies the order that the documentation is rendered in
+Code Generation:
+  - intro.md
+  - api/sysl/simple.sysl
+  - generate.sh
+  - lspframework/server/server.go
+  - main.go
+  - test.sh

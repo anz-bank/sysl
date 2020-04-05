@@ -660,7 +660,7 @@ func (m *Attribute) GetSourceContext() *SourceContext {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
+// XXX_OneofWrappers is for the lspframework use of the proto package.
 func (*Attribute) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*Attribute_S)(nil),
@@ -1345,7 +1345,7 @@ func (m *Statement) GetSourceContext() *SourceContext {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
+// XXX_OneofWrappers is for the lspframework use of the proto package.
 func (*Statement) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*Statement_Action)(nil),
@@ -2123,7 +2123,7 @@ func (m *Type) GetSourceContext() *SourceContext {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
+// XXX_OneofWrappers is for the lspframework use of the proto package.
 func (*Type) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*Type_Primitive_)(nil),
@@ -3128,7 +3128,7 @@ func (m *Expr) GetSourceContext() *SourceContext {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
+// XXX_OneofWrappers is for the lspframework use of the proto package.
 func (*Expr) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*Expr_Name)(nil),
@@ -3485,7 +3485,7 @@ func (m *Expr_Transform_Stmt) GetInject() *Expr {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
+// XXX_OneofWrappers is for the lspframework use of the proto package.
 func (*Expr_Transform_Stmt) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*Expr_Transform_Stmt_Assign_)(nil),
@@ -4108,7 +4108,7 @@ func (m *Value) GetUuid() []byte {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
+// XXX_OneofWrappers is for the lspframework use of the proto package.
 func (*Value) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*Value_B)(nil),

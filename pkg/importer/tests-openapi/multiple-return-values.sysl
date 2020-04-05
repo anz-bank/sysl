@@ -28,5 +28,5 @@ testapp "Simple" [package="package_foo"]:
     !type _test_ok:
         SimpleObj <: SimpleObj [mediatype="application/json"]:
             @json_tag = "SimpleObj"
-        string_ <: string [mediatype="application/pdf"]:
-            @json_tag = "string"
+        bytes_ <: bytes [mediatype="application/pdf"]:
+            @json_tag = "bytes"

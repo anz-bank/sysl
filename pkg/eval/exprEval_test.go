@@ -230,6 +230,13 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	assert.Nil(t, out.GetMap().Items["Nil"])
 	assert.False(t, out.GetMap().Items["stringInNull"].GetB())
 	assert.False(t, out.GetMap().Items["stringInList"].GetB())
+	assert.False(t, out.GetMap().Items["stringInMap"].GetB())
+	assert.True(t, out.GetMap().Items["stringInSet"].GetB())
+
+	assert.True(t, out.GetMap().Items["stringNotInNull"].GetB())
+	assert.True(t, out.GetMap().Items["stringNotInList"].GetB())
+	assert.True(t, out.GetMap().Items["stringNotInMap"].GetB())
+	assert.True(t, out.GetMap().Items["stringNotInSet"].GetB())
 
 	packageMap := out.GetMap().Items["package"].GetMap().Items
 	assert.Equal(t, "com.example.gen", packageMap["packageName"].GetS())

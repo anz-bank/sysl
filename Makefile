@@ -21,7 +21,7 @@ VERSION := $(or $(TAG),$(COMMIT)-$(BRANCH)-$(BUILD_DATE))
 
 LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE)
 
-all: test lint build coverage examples ## test, lint, build, coverage test run
+all: test lint build buildlsp coverage examples ## test, lint, build, coverage test run
 
 TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 
@@ -51,6 +51,9 @@ $(PLATFORMS): build
 
 build: ## Build sysl into the ./dist folder
 	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
+
+buildlsp: ## Build sysllsp into the ./dist folder
+	go build -o ./dist/sysllsp -ldflags="$(LDFLAGS)" -v ./cmd/sysllsp
 
 ## This option is used for Sysl UI to bundle static files into the go binary.
 ## For more details on pkger, refer to https://github.com/markbates/pkger
@@ -105,9 +108,9 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 test-grammar:
-	which wbnf || go install github.com/arr-ai/wbnf/cmd
+	which wbnf || go install github.com/arr-ai/wbnf
 	./scripts/test-grammar-wbnf.sh . | diff ./scripts/grammar-out.txt -
 
 update-grammar-result:
-	which wbnf || go install github.com/arr-ai/wbnf/cmd
+	which wbnf || go install github.com/arr-ai/wbnf
 	./scripts/test-grammar-wbnf.sh . > ./scripts/grammar-out.txt
