@@ -15,7 +15,7 @@ type templated struct {
 
 func (t *templated) Apply(mod *sysl.Module, appNames ...string) map[string]*sysl.Value {
 	input := eval.Scope{}
-	input.AddModule("Module", mod, nil)
+	input.AddModule("Module", mod)
 
 	apps := eval.MakeValueList()
 	var aNames []string
@@ -29,7 +29,7 @@ func (t *templated) Apply(mod *sysl.Module, appNames ...string) map[string]*sysl
 	sort.Strings(aNames)
 	for _, app := range aNames {
 		s := eval.Scope{}
-		s.AddApp(app, mod.Apps[app], nil)
+		s.AddApp(app, mod.Apps[app])
 		eval.AppendItemToValueList(apps.GetList(), s[app])
 	}
 	input["Apps"] = apps
