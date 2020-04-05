@@ -483,3 +483,10 @@ func TestGetValueSlice_SameSet(t *testing.T) {
 	result := GetValueSlice(boolSet)
 	assert.Equal(t, &result[0], &boolSet.GetSet().Value[0])
 }
+
+func TestTypeToValue(t *testing.T) {
+	dataType := sysl.Type{}
+	val := TypeToValue(&dataType)
+	// assert.Equal(t, &result[0], &boolSet.GetSet().Value[0])
+	assert.Equal(t, "", val.GetMap().GetItems()["type"].GetS())
+}
