@@ -5,6 +5,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -437,8 +438,9 @@ func TestAddModule(t *testing.T) {
 		syslutil.NewChrootFs(afero.NewOsFs(), testDir))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
+	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddModule("module", mod)
+	s.AddModule("module", mod, logger)
 	module := s["module"].GetMap().Items
 	assert.Equal(t, "ModelWithDeps", module["apps"].GetMap().Items["ModelWithDeps"].GetMap().Items["name"].GetS())
 	assert.Equal(t, "Dep", module["apps"].GetMap().Items["Dep"].GetMap().Items["name"].GetS())
@@ -482,11 +484,4 @@ func TestGetValueSlice_SameSet(t *testing.T) {
 	boolSet.GetSet().Value = append(boolSet.GetSet().Value, MakeValueBool(true))
 	result := GetValueSlice(boolSet)
 	assert.Equal(t, &result[0], &boolSet.GetSet().Value[0])
-}
-
-func TestTypeToValue(t *testing.T) {
-	dataType := sysl.Type{}
-	val := TypeToValue(&dataType)
-	// assert.Equal(t, &result[0], &boolSet.GetSet().Value[0])
-	assert.Equal(t, "", val.GetMap().GetItems()["type"].GetS())
 }
