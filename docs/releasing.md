@@ -7,7 +7,7 @@ Sysl is using [GitHub Actions](https://help.github.com/en/actions/getting-starte
 
 ### Steps to publish new release
 
-1. Any merged PR on master will trigger the [Generate-Tag workflow](https://github.com/anz-bank/sysl/blob/master/.github/workflows/generate-tag.yml). It will generate and push the respective version tag according to the commit message. We follow [Semver](https://semver.org/) for versioning.
+1. Any merged PR on master will trigger the [Generate-Tag workflow](https://github.com/anz-bank/sysl/blob/master/.github/workflows/generate-tag.yml). It will generate and push the respective minor version tag. We follow [Semver](https://semver.org/) for versioning.
 
 2. The version tag push event then triggers the [Release workflow](https://github.com/anz-bank/sysl/blob/master/.github/workflows/release.yml) to publish release to [Sysl's GitHub releases page](https://github.com/anz-bank/sysl/releases) (with changelog) and [Docker Hub](https://hub.docker.com/r/anzbank/sysl).
 
