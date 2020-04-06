@@ -8,6 +8,8 @@ run:
     - pkg/importer/openapi2conv/openapi2_conv.go
     - pkg/importer/openapi2conv/openapi2_conv_test.go
     - pkg/ui/pkged.go
+  skip-dirs:
+    - pkg/lspimpl
 linters:
   disable-all: true
   enable:
