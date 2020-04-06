@@ -6,6 +6,9 @@ on:
     tags:
       - 'v*.*.*'
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   release-sysl:
     name: Release Sysl
@@ -15,9 +18,6 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.13
-        id: go
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@master
@@ -27,14 +27,11 @@ jobs:
 
       - name: Get dependencies
         run: make deps
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test
         run: make coverage
         timeout-minutes: 5
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Validate goreleaser config
