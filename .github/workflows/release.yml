@@ -43,24 +43,28 @@ jobs:
           version: v0.126.0
           args: check -f .github/goreleaser_configs/.goreleaser.yml
 
-      # GoReleaser requires Docker Hub access to push image
-      - name: Login to Docker Hub
-        uses: azure/docker-login@v1
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}
-
       - name: Set env
         run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
 
       # GoReleaser release process is customized in `.goreleaser.yml` file
-      - name: Release binaries and docker images via goreleaser
+      - name: Release binaries via goreleaser
         uses: goreleaser/goreleaser-action@v1.3.1
         with:
           version: v0.126.0
           args: release --rm-dist --debug -f .github/goreleaser_configs/.goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+          repository: docker.io/anzbank/sysl
+          tag_with_ref: true
+          add_git_labels: true
+          tags: latest
+          labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
 
       # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
       # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets 
