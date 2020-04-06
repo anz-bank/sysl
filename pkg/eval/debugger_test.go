@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/parse"
-	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -172,9 +171,8 @@ func TestREPL_CallView(t *testing.T) {
 	sysl, appname, err := parse.LoadAndGetDefaultApp(filename, afero.NewOsFs(), parse.NewParser())
 	require.NoError(t, err)
 
-	logger, _ := test.NewNullLogger()
 	scope := &Scope{}
-	scope.AddApp("app", sysl.Apps[appname], logger)
+	scope.AddApp("app", sysl.Apps[appname])
 	input := bytes.NewBufferString("l\nTfmFilenameInvalid2(app).foo\n")
 	output := bytes.Buffer{}
 
