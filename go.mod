@@ -27,7 +27,7 @@ require (
 	github.com/fullstorydev/grpcurl v1.5.0
 	github.com/getkin/kin-openapi v0.3.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-chi/chi v4.0.4+incompatible
+	github.com/go-chi/chi v4.1.0+incompatible
 	github.com/go-openapi/errors v0.19.4 // indirect
 	github.com/go-openapi/loads v0.19.5
 	github.com/go-openapi/runtime v0.19.12
@@ -40,6 +40,7 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/hashicorp/hcl v1.0.0
 	github.com/jhump/protoreflect v1.6.0 // indirect
+	github.com/joshcarp/mermaid-go v0.0.0-20200403052241-d6fecd5216de // indirect
 	github.com/markbates/pkger v0.15.0
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/pkg/errors v0.9.1
@@ -50,6 +51,7 @@ require (
 	github.com/spf13/afero v1.2.2
 	github.com/stretchr/testify v1.5.1
 	go.mongodb.org/mongo-driver v1.3.1 // indirect
+	golang.org/x/sys v0.0.0-20200406155108-e3b113bbe6a4 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 	google.golang.org/grpc v1.28.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
