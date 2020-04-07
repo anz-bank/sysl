@@ -124,3 +124,27 @@ jobs:
           npm test --prefix unsorted/sysl_js
         env:
           NPM_AUTH_TOKEN: "SOME-RANDOM-KEY"
+
+  build-docker:
+    name: Builds the sysl docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+          repository: docker.io/anzbank/sysl
+          tag_with_ref: true
+          add_git_labels: true
+          tags: latest
+          push: false
+          labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
