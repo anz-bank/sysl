@@ -25,9 +25,6 @@ jobs:
       - name: Unshallow
         run: git fetch --prune --unshallow
 
-      - name: Get dependencies
-        run: make deps
-
       - name: Test
         run: make coverage
         timeout-minutes: 3
@@ -80,9 +77,6 @@ jobs:
       # Needed for changelog generation by goreleaser
     - name: Unshallow
       run: git fetch --prune --unshallow
-
-    - name: Get dependencies
-      run: make deps
 
     - name: Test
       run: .\scripts\test-with-coverage-windows.bat
@@ -148,3 +142,23 @@ jobs:
           tags: latest
           push: false
           labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
+
+  check-tidy:
+    name: Check go mod tidy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Check go.mod and go.sum are tidy
+        run: make check-tidy
+
