@@ -11,7 +11,9 @@ Sysl is using [GitHub Actions](https://help.github.com/en/actions/getting-starte
 
 2. The version tag push event then triggers the [Release workflow](https://github.com/anz-bank/sysl/blob/master/.github/workflows/release.yml) to publish release to [Sysl's GitHub releases page](https://github.com/anz-bank/sysl/releases) (with changelog) and [Docker Hub](https://hub.docker.com/r/anzbank/sysl).
 
-   > Releasing is automated via [GoReleaser](https://goreleaser.com/). GoReleaser creates and deploys `sysl-X.Y.Z-Os-Arch.tar.gz` and `sysl-X.Y.Z-Windows-Arch.zip` to the [Sysl Github Release page](https://github.com/anz-bank/sysl/releases). It also pushes Sysl's Docker Images `anzbank/sysl:latest` and `anzbank/sysl:X.Y.Z` to [Docker Hub](https://hub.docker.com/r/anzbank/sysl). See [GoReleaser config file](https://github.com/anz-bank/sysl/blob/master/.github/workflows/.goreleaser.yml) for further details.
+   > Most of the release process is automated via [GoReleaser](https://goreleaser.com/). GoReleaser creates and deploys `sysl-X.Y.Z-Os-Arch.tar.gz` and `sysl-X.Y.Z-Windows-Arch.zip` to the [Sysl Github Release page](https://github.com/anz-bank/sysl/releases). It also updates [sysl-homebrew](https://github.com/anz-bank/homebrew-sysl) with the latest release. See [GoReleaser config file](https://github.com/anz-bank/sysl/blob/master/.github/workflows/.goreleaser.yml) for further details.
+
+   > The release workflow also pushes Sysl's Docker Images `anzbank/sysl:latest` and `anzbank/sysl:X.Y.Z` to [Docker Hub](https://hub.docker.com/r/anzbank/sysl).
 
 
 ### A tested example
