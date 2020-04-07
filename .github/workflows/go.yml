@@ -27,7 +27,6 @@ jobs:
 
       - name: Test
         run: make coverage
-        timeout-minutes: 3
         env:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
@@ -80,7 +79,6 @@ jobs:
 
     - name: Test
       run: .\scripts\test-with-coverage-windows.bat
-      timeout-minutes: 3
       env:
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
