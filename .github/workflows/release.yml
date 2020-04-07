@@ -25,10 +25,8 @@ jobs:
       - name: Unshallow
         run: git fetch --prune --unshallow
 
-      - name: Get dependencies
-        run: make deps
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check go.mod and go.sum are tidy
+        run: make check-tidy
 
       - name: Test
         run: make coverage
