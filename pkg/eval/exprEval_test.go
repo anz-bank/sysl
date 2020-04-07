@@ -54,9 +54,8 @@ func TestScopeAddApp(t *testing.T) {
 	mod, err := parse.NewParser().Parse("eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	app := s["app"].GetMap().Items
 	assert.Equal(t, modelAppName, app["name"].GetS())
 	types := app["types"].GetMap().Items
@@ -207,9 +206,8 @@ func TestEvalIfElseAlt(t *testing.T) {
 	assert.NotNil(t, txApp.Views[viewName])
 	assert.Len(t, txApp.Views[viewName].Param, 1)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	s["t"] = s["app"].GetMap().Items["types"].GetMap().Items["Request"].GetMap().Items["fields"].GetMap().Items["payload"]
 	out := Eval(newExprEval(txApp), s, txApp.Views[viewName].Expr)
 	assert.Equal(t, "String", out.GetMap().Items["out"].GetS())
@@ -225,9 +223,8 @@ func TestEvalGetAppAttributes(t *testing.T) {
 	mod, err := parse.NewParser().Parse("eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvaluateView(mod, "TransformApp", "GetAppAttributes", s)
 	assert.Equal(t, "com.example.gen", out.GetMap().Items["out"].GetS())
 	assert.Nil(t, out.GetMap().Items["Nil"])
@@ -288,9 +285,8 @@ func TestEvalNullCheckAppAttrs(t *testing.T) {
 	mod, err := parse.NewParser().Parse("eval_expr.sysl", syslutil.NewChrootFs(afero.NewOsFs(), testDir))
 	require.NoError(t, err)
 	require.NotNil(t, mod)
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvaluateView(mod, "TransformApp", "NullCheckAppAttrs", s)
 
 	assert.False(t, out.GetMap().Items["NotHasAttrName"].GetB())
@@ -306,9 +302,8 @@ func TestScopeAddRestApp(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[todoAppName], logger)
+	s.AddApp("app", mod.Apps[todoAppName])
 	app := s["app"].GetMap().Items
 	assert.Equal(t, todoAppName, app["name"].GetS())
 	endpoints := app["endpoints"].GetMap().Items
@@ -365,9 +360,8 @@ func TestEvalStringOps(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[todoAppName], logger)
+	s.AddApp("app", mod.Apps[todoAppName])
 	out := EvaluateView(mod, "TransformApp", "StringOps", s)
 	assert.NotNil(t, out.GetMap())
 	items := out.GetMap().Items
@@ -412,9 +406,8 @@ func TestIncorrectArgsToGoFunc(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[todoAppName], logger)
+	s.AddApp("app", mod.Apps[todoAppName])
 	out := EvaluateView(mod, "TransformApp", "IncorrectArgsToGoFunc", s)
 	assert.NotNil(t, out.GetMap())
 	items := out.GetMap().Items
@@ -433,9 +426,8 @@ func TestEvalFlatten(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[todoAppName], logger)
+	s.AddApp("app", mod.Apps[todoAppName])
 	out := EvaluateView(mod, "TransformApp", "Flatten", s)
 	assert.NotNil(t, out.GetMap().Items["names"].GetSet())
 	l := out.GetMap().Items["names"].GetSet().Value
@@ -465,9 +457,8 @@ func TestEvalWhere(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvaluateView(mod, "TransformApp", "Where", s)
 
 	numbers1 := out.GetMap().Items["greaterThanOne"].GetSet().Value
@@ -496,9 +487,8 @@ func TestEvalLinks(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvaluateView(mod, "TransformApp", "Links", s)
 	assert.NotNil(t, out.GetMap().Items["links"].GetSet())
 	l := out.GetMap().Items["links"].GetSet().Value
@@ -526,9 +516,8 @@ func TestDotScope(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvaluateView(mod, "TransformApp", "TestDotScope", s).GetMap().Items
 	assert.Len(t, out, 3)
 }
@@ -540,9 +529,8 @@ func TestListOfTypeNames(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mod)
 
-	logger, _ := test.NewNullLogger()
 	s := Scope{}
-	s.AddApp("app", mod.Apps[modelAppName], logger)
+	s.AddApp("app", mod.Apps[modelAppName])
 	out := EvaluateView(mod, "TransformApp", "ListOfTypeNames", s)
 	l := out.GetList()
 	assert.NotNil(t, l)

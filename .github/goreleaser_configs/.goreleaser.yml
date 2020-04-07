@@ -30,11 +30,6 @@ build:
   goarm:
     - 7
 
-dockers:
-  - image_templates:
-    - "docker.io/anzbank/sysl:latest"
-    - "docker.io/anzbank/sysl:{{ .Version }}"
-
 archives:
 - id: "sysl"
   builds: ['sysl']
