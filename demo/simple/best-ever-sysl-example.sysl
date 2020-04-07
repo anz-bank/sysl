@@ -1,0 +1,46 @@
+TheWorld:
+    WTFBro:
+        DoNothing
+    OhNoItsGoneWorldWide:
+        ChineseGovernment <- SecondResponse
+    WereFucked:
+        Actions <- Giveup
+BatEater:
+    EatBat:
+        Actions <- EatBat
+        if BatEater got Coronavirus:
+            Actions <- SpreadCoronavirus
+        else if sdsd:
+            norhinf
+        else:
+            go back to normal
+        return Coronavirus
+ChineseGovernment:
+    FirstResponse:
+        DenyEverything
+        loop until futhur notice:
+            Actions <- SilenceJournalists
+            Actions <- BuildHospitalsVeryQuickly
+        return Nothing
+    SecondResponse:
+        if Coronavirus still exists:
+            Lockdown
+        return Insult
+Actions:
+    SilenceJournalists:
+        ...
+    EatBat:
+        return Coronavirus
+    SpreadCoronavirus:
+        TheWorld <- WTFBro
+        ChineseGovernment <- FirstResponse
+        ChineseGovernment <- SecondResponse
+        TheWorld <- WereFucked
+        return Coronavirus
+    BuildHospitalsVeryQuickly:
+        HowdYouDoThat
+        return Hospital
+    Giveup:
+        PlayVideoGames
+        EatJunkFood
+        GameOver
