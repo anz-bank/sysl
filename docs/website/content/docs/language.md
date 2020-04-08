@@ -503,7 +503,7 @@ Above code assumes, server and client files are in the same directory. If they a
 All sysl commands accept `--root` argument. Run `sysl -h` or `reljam -h` for more details.
 
 
-#### Internal relative file
+### Internal relative file
 
 You have `server.sysl`, `client.sysl` and `deps/deps.sysl`. `server.sysl` and
 `client.sysl` files are in the same directory. `deps.sysl` file in the
@@ -538,7 +538,7 @@ Deps:
 	Dep: ...
 ```
 
-#### Internal absolute file
+### Internal absolute file
 
 If the imported are in the same project but outside of current folder, you must
 have at least a common root directory and `import /path/from/root`.
@@ -563,7 +563,7 @@ Client:
     Server <- Login
 ```
 
-#### External file
+### External file
 
 Sysl supports importing sysl files via the web using Sysl Modules, which are
 based on Go Modules.
@@ -596,11 +596,16 @@ Client:
 To disable Sysl Modules, set the environment variable
 `SYSL_MODULES=off`.
 
-#### Non-sysl file
+### Non-sysl file
 
 When you import a sysl file, you can omit the `.sysl` file extension.
 
 To import a non-sysl file like swagger file, you can `import foreign_import_swagger.yaml as com.foo.bar.app ~swagger`.
+
+Valid types include
+- ~sysl
+- ~swagger
+- ~openapi3
 
 ## Projects
 

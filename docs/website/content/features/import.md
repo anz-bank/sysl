@@ -24,3 +24,5 @@ This lets you convert a file into sysl, and work from there. This is suitable fo
 ## Reference the specification file in a Sysl file
 
 This lets you use Sysl whilst still working with specs defined in other languages, often supplied by vendors and other teams.
+
+For more details on how to import external sysl files, refer to [non-sysl-file](/docs/language/#non-sysl-file)
