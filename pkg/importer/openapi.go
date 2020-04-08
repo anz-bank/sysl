@@ -28,12 +28,13 @@ func importOpenAPI(args OutputData,
 	swagger *openapi3.Swagger,
 	logger *logrus.Logger, basepath string) (out string, err error) {
 	l := &loader{
-		logger:        logger,
-		externalSpecs: make(map[string]*loader),
-		spec:          swagger,
-		types:         TypeList{},
-		mode:          args.Mode,
-		swaggerRoot:   args.SwaggerRoot,
+		logger:           logger,
+		externalSpecs:    make(map[string]*loader),
+		spec:             swagger,
+		types:            TypeList{},
+		incompletedTypes: TypeList{},
+		mode:             args.Mode,
+		swaggerRoot:      args.SwaggerRoot,
 	}
 	l.initTypes()
 	endpoints := l.initEndpoints()
@@ -47,13 +48,14 @@ func importOpenAPI(args OutputData,
 }
 
 type loader struct {
-	logger        *logrus.Logger
-	externalSpecs map[string]*loader
-	spec          *openapi3.Swagger
-	types         TypeList
-	swaggerRoot   string
-	mode          string
-	globalParams  Parameters
+	logger           *logrus.Logger
+	externalSpecs    map[string]*loader
+	spec             *openapi3.Swagger
+	types            TypeList
+	incompletedTypes TypeList
+	swaggerRoot      string
+	mode             string
+	globalParams     Parameters
 }
 
 func (l *loader) newLoaderWithExternalSpec(path string, swagger *openapi3.Swagger) {
@@ -137,6 +139,10 @@ func (l *loader) typeFromRef(path string) Type {
 			return t
 		}
 		if t, ok := l.types.Find(path); ok {
+			return t
+		}
+		// add following check in incompleted type to support circular dependency
+		if t, ok := l.incompletedTypes.Find(path); ok {
 			return t
 		}
 		if schema, has := l.spec.Components.Schemas[path]; has {
@@ -230,6 +236,7 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 			name:       name,
 			Properties: FieldList{},
 		}
+		l.incompletedTypes.Add(t)
 		for pname, pschema := range schema.Properties {
 			var fieldType Type
 			if pschema.Value != nil && pschema.Value.Type == ArrayTypeName {
