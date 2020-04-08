@@ -141,7 +141,7 @@ func (l *loader) typeFromRef(path string) Type {
 		if t, ok := l.types.Find(path); ok {
 			return t
 		}
-		// add following check in incompleted type to support circular dependency, please refer samples tests-
+		// add following check in incompleted type to support circular dependency
 		if t, ok := l.incompletedTypes.Find(path); ok {
 			return t
 		}
