@@ -9,13 +9,17 @@ Paginate = 4
   github = "anz-bank"
 [[menu.main]]
     weight = 1
+    name = "Features"
+    url = "/features/"
+[[menu.main]]
+    weight = 2
     name = "Docs"
     url = "/docs/"
 [[menu.main]]
-    weight = 2
+    weight = 3
     name = "Blog"
     url = "/blog/"
 [[menu.main]]
-    weight = 3
+    weight = 4
     name = "FAQ"
     url = "/faq/"

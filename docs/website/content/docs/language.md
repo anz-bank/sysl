@@ -1,9 +1,10 @@
 ---
-title: "Quick Reference Guide"
+title: "Language Specification"
 date: 2018-02-28T10:11:24+11:00
 description: "Look up any sysl concepts here"
 weight: 50
 bref: "Look up any sysl concepts here"
+topic: "Language"
 layout: "quickreference"
 toc: true
 ---
