@@ -16,3 +16,9 @@ In order to update CSS, work with the unminified CSS in `static/css/` and change
 5. `npm install -g purify-css` (first time only)
 6. `purifycss static/css/*.css public/**/*.html public/*.html static/js/jquery-2.1.4.min.js static/js/kube.min.js -im -o static/css/styles.min.css`
 7. Revert `layouts/_default/baseof.html` to use `styles.min.css` again
+
+## Where should I put my docs?
+
+- Changes to the Sysl language should be updated in the [language spec](content/docs/language.md)
+- Changes to the CLI interface should be updated in the `commands` folder e.g [import](content/docs/commands/import.md)
+- New or modifications of features should be updated in `features` e.g [import](content/features/import.md)

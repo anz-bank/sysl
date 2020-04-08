@@ -19,9 +19,8 @@ There are two ways of using specifications defined in other formats.
 
 ## Import the specification directly into Sysl
 
-This lets you convert a file into sysl, and work from there. This is suitable for when you want to migrate to Sysl as the source of truth for your system specifications. When used with code generation, it offers higher levels of customization.
+This lets you convert a file into sysl, and work from there. This is suitable for when you want to migrate to Sysl as the source of truth for your system specifications. When used with code generation, it offers higher levels of customization. For more details refer to [import](/docs/commands/import)
 
-
-## Reference the specification file in a Sysl file.
+## Reference the specification file in a Sysl file
 
 This lets you use Sysl whilst still working with specs defined in other languages, often supplied by vendors and other teams.

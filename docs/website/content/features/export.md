@@ -11,6 +11,7 @@ toc: true
 
 Sysl can export files of various formats. Currently supported formats include
 
-- Swagger 2.0 (YAML/ JSON)
+- Swagger 2.0 (YAML/ JSON) [export](/docs/commands/export)
+- 
 
 For more information, refer to [export](/docs/commands/export)
