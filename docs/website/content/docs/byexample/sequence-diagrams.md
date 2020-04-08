@@ -27,7 +27,24 @@ Segs = [[
       {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In this example will use a simple system and start using the sysl command to generate diagrams.</p>
 """,Image = ""},
 
-      {CodeEmpty= false,CodeLeading= true,CodeRun= true,CodeRendered="""<pre class="chroma"><span class="nx">MobileApp</span><span class="p">:</span>
+      {CodeEmpty= true,CodeLeading= true,CodeRun= true,CodeRendered="""""",DocsRendered= """<p>Let&rsquo;s breakdown the <code>sd</code> aka <code>sequence diagram</code> command:</p>
+""",Image = ""},
+
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p><code>sysl sd -o 'call-login-sequence.png' -s 'MobileApp &lt;- Login' call.sysl</code></p>
+""",Image = ""},
+
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<ul>
+<li><code>-o</code> specifies the output filename- <code>-s</code> specifies the start endpoint- <code>call.sysl</code> the source to start the analysis from</li>
+</ul>
+""",Image = ""},
+
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>Sysl analyzes the starting endpoint and finds all the <code>call</code>s that this endpoint makes to other endpoints (including the ones to other applications). It finds all the transitive dependencies till there are none.</p>
+""",Image = ""},
+
+      {CodeEmpty= true,CodeLeading= true,CodeRun= false,CodeRendered="""""",DocsRendered= """<p>In the above diagram, <code>DB</code> is the last app in this flow. Sysl also captures the return data that each endpoint returns to its caller. See below for more details.</p>
+""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma"><span class="nx">MobileApp</span><span class="p">:</span>
     <span class="nx">Login</span><span class="p">:</span></pre>""",DocsRendered= """""",Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
