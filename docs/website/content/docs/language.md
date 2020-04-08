@@ -664,7 +664,7 @@ for your app. You can refer to these models in your app just like any other app.
 Relational Data model is the most common way of persisting data in a database.
 You can define your data model directly in sysl. `data.sysl`
 
-```java
+```
 CustomerOrderModel:
   !table Customer:
     customer_id <: int [~pk]
@@ -690,7 +690,7 @@ See [data.sysl](assets/data.sysl) for complete example for Relation model.
 
 Define a typical in-memory Object model of an application like so:
 
-```java
+```
 CustomerOrderModel:
   !type Address:
     line_1 <: string

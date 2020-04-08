@@ -11,13 +11,15 @@
       <p class="hero-lead">{{ .Params.bref | safeHTML }}</p>
 
     </div>
-    <aside>
+    <nav id="contents">
       <header>
-      <h2>Table of Contents</h2>
       </header>
-      {{.TableOfContents}}
-  </aside>
-    {{ .Content}}
+        {{.TableOfContents}}
+    </nav>
+  </div>
+    <div id="kube-component" class="content">
+      {{ .Content}}
+    </div>
   </div>
 </div>
 

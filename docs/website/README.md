@@ -5,6 +5,10 @@ This directory contains the source for the [sysl.io](https://sysl.io) website bu
 The website can be built with `hugo` which puts all content into the `public` directory.
 On every merge into `upstream` `master` the website gets updated with the Netflify-Hugo-Github integration (see `<repo>/netlify.tom`, [Netlify docs](https://gohugo.io/hosting-and-deployment/hosting-on-netlify/)).
 
+## Theme
+
+The theme used is [kube](http://kube7.imperavi.com/) with an example available [here](https://kube.elemnts.net/)
+
 ## Updating CSS
 
 In order to update CSS, work with the unminified CSS in `static/css/` and change `layouts/_default/baseof.html` to use these unminified files (commented out there). When done with the changes, minify the updated css and revert to using it:
