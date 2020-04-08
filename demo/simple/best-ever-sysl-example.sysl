@@ -2,45 +2,45 @@ TheWorld:
     WTFBro:
         DoNothing
     OhNoItsGoneWorldWide:
-        ChineseGovernment <- SecondResponse
-    WereFucked:
+        HouseLannister <- SecondResponse
+    WereScrewed:
         Actions <- Giveup
-BatEater:
-    EatBat:
-        Actions <- EatBat
-        if BatEater got Coronavirus:
-            Actions <- SpreadCoronavirus
+DragonEater:
+    EatDragon:
+        Actions <- EatDragon
+        if DragonEater got Firebreath:
+            Actions <- SpreadFirebreath
         else if sdsd:
             norhinf
         else:
             go back to normal
-        return Coronavirus
-ChineseGovernment:
+        return Firebreath
+HouseLannister:
     FirstResponse:
         DenyEverything
-        loop until futhur notice:
-            Actions <- SilenceJournalists
-            Actions <- BuildHospitalsVeryQuickly
+        loop until further notice:
+            Actions <- SilenceLittleBirds
+            Actions <- BuildTemplesVeryQuickly
         return Nothing
     SecondResponse:
-        if Coronavirus still exists:
+        if Firebreath still exists:
             Lockdown
         return Insult
 Actions:
-    SilenceJournalists:
+    SilenceLittleBirds:
         ...
-    EatBat:
-        return Coronavirus
-    SpreadCoronavirus:
+    EatDragon:
+        return Firebreath
+    SpreadFirebreath:
         TheWorld <- WTFBro
-        ChineseGovernment <- FirstResponse
-        ChineseGovernment <- SecondResponse
-        TheWorld <- WereFucked
-        return Coronavirus
-    BuildHospitalsVeryQuickly:
+        HouseLannister <- FirstResponse
+        HouseLannister <- SecondResponse
+        TheWorld <- WereScrewed
+        return Firebreath
+    BuildTemplesVeryQuickly:
         HowdYouDoThat
-        return Hospital
+        return Temple
     Giveup:
-        PlayVideoGames
-        EatJunkFood
+        LearnArchery
+        FeedTheWolves
         GameOver
