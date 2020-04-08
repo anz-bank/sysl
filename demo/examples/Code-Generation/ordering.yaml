@@ -3,6 +3,6 @@ Code Generation:
   - intro.md
   - api/sysl/simple.sysl
   - generate.sh
-  - lspframework/server/server.go
+  - internal/server/server.go
   - main.go
   - test.sh
