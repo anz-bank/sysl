@@ -141,12 +141,12 @@ QSTRING -> /{ " (?: \\. | [^\\"] )* "
            | ' (?: \\. | [^\\'] )* '
            };
 
-.wrapRE -> /{(\n (?:[\_\t]+ \n)?)+} | \n+ | \s+ | /{[\_\t]*()[\_\t]*};
+.wrapRE -> /{(\n (?:[\_\t]+ \n)*)+} | \n+ | \s+ | /{[\_\t]*()[\_\t]*};
 
 INDENT      -> %level="" \s+;
 INDENT_SEP  -> NEWLINE_WITH_COMMENT %level;
 NEWLINE_WITH_COMMENT ->
-            /{(\n (?:[\_\t]+ \n)?)+}:([\_\t]* COMMENT_NO_NL);
+            /{(\n (?:[\_\t]+ \n)*)+}:([\_\t]* COMMENT_NO_NL);
 
 .macro InlineCommentIndent(child) {
     COMMENT_NO_NL? %!Indented(child)
