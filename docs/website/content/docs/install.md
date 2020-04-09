@@ -24,7 +24,7 @@ Here are several approaches to get start using Sysl:
 
 If you have [homebrew](https://brew.sh/) installed, you can simply run the following commands in your terminal:
 
-```sh
+```
 brew tap anz-bank/homebrew-sysl
 brew install anz-bank/homebrew-sysl/sysl
 ```
@@ -37,14 +37,14 @@ brew install anz-bank/homebrew-sysl/sysl
 
    1. under PATH location
 
-      ```bash
+      ```
       # check it works
       $ sysl help
       ```
 
    2. under non-PATH location (with the binary in the current directory)
 
-      ```bash
+      ```
       # check it works
       $ ./sysl help
       ```
@@ -77,14 +77,14 @@ $ docker pull anzbank/sysl:latest
 
 For MacOS and Linux Users
 
-```bash
+```
 $ alias sysl="docker run --rm -it -v $HOME:$HOME -w $(pwd) anzbank/sysl:latest"
 $ sysl info
 ```
 
 Sysl can then be used from the same terminal window subsequently. Alternatively, it can also be added to the `.bashrc` or `.zshrc` file to add the `sysl` command permanently.
 
-```bash
+```
 $ docker run --rm \
   -v $PWD:/go/src/github.com/anz-bank/sysl \
   -w /go/src/github.com/anz-bank/sysl \
