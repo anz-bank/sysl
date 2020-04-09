@@ -28,12 +28,15 @@ TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 examples: TUTORIALS
 	cd demo/examples/ && go run generate_website.go && cd ../../
 
-.PHONY: all deps install grammar antlr build lint test coverage clean
+.PHONY: all install grammar antlr build lint test coverage clean check-tidy
 lint: ## Run golangci-lint
 	golangci-lint run
 
 coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 80
+
+check-tidy: ## Check go.mod and go.sum is tidy
+	go mod tidy && test -z "$$(git status --porcelain)"
 
 test: ## Run tests without coverage
 	$(TESTEXE)
@@ -65,16 +68,6 @@ resources:
 	## Replaces the package declaration 'main' with'ui' due to bug in pkger
 	## Remove once https://github.com/markbates/pkger/pull/67 has been merged in
 	sed -i '' 's/main/ui/' pkg/ui/pkged.go
-
-deps: ## Download the project dependencies with `go get`
-	go mod tidy
-ifneq ("$(shell git status --porcelain)", "")
-	## GoReleaser has to make sure go.mod is up to date before release sysl binary.
-	## Keep everyone remembering to update go.mod to avoid release failure.
-	echo "git is currently in a dirty state, please check in your pipeline what can be changing the following files:$(shell git diff)"
-	exit 1
-endif
-	go get -v -t -d ./...
 
 .PHONY: release
 release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
