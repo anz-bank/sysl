@@ -110,7 +110,7 @@ multi_line_docstring -> ":" %!InlineCommentIndent("|" TEXT);
 http_path_var_with_type -> "{" var=(NAME | DIGITS) "<:" type=(NativeDataTypes | reference) "}";
 
 http_path_part  ->  (NAME | DIGITS | [-._~] | ("%" [0-9a-fA-F]{2}))+ { .wrapRE -> /{()};};
-http_path -> "/" ((http_path_part | http_path_var_with_type):"/")?;
+http_path -> "/" ((http_path_part | http_path_var_with_type):"/",)?;
 
 type_spec -> (NativeDataTypes | reference)
              SizeSpec=("(" \d+ (array=".."|sized=".")? \d* ")")?;
