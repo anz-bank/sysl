@@ -43,4 +43,4 @@ collector_http_stmt -> rest_endpoint_call_part ("?" (param=NAME "=" type=(Native
 
 rest_endpoint_call_part -> method=HTTP_VERBS "/" (http_path_part | "{" http_path_part "}"):"/";
 
-collector_pubsub_call -> subscriber=APPNAME "<-" publisher=APPNAME "->" name=NAME;
+collector_pubsub_call -> subscriber=APPNAME "<-" publisher=APPNAME "->" name=TEXT_WITH_WHITESPACE;
