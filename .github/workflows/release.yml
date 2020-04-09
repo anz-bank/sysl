@@ -25,12 +25,11 @@ jobs:
       - name: Unshallow
         run: git fetch --prune --unshallow
 
-      - name: Get dependencies
-        run: make deps
+      - name: Check go.mod and go.sum are tidy
+        run: make check-tidy
 
       - name: Test
         run: make coverage
-        timeout-minutes: 5
         env:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
