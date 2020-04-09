@@ -1,5 +1,5 @@
 ---
-description: "Sysl /ˈsɪzəl/ is a System Specification Language"
+description: "Generate code from system specifications in Sysl /ˈsɪzəl/"
 title: "Sysl"
 draft: false
 ---
