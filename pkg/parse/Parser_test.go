@@ -590,6 +590,12 @@ func TestEnum(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/enum.sysl")
 }
 
+func TestOpenAPI3(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/openapi3.sysl")
+}
+
 func TestUndefinedRootAbsoluteImport(t *testing.T) {
 	t.Parallel()
 
