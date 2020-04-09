@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: User Preference
+paths:
+  /preference:
+    get:
+      responses:
+        "200":
+          description: This is a sample description
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Preferences"
+components:
+  schemas:
+    Preferences:
+      type: array
+      items:
+        required:
+          - userId
+          - preferenceName
+          - status
+        properties:
+          userId:
+            type: string
+            format: uuid
+          preferenceName:
+            type: string
+          preferenceValue:
+            type: string
+          status:
+            type: string
+            description: Preference Status
+            enum:
+              - test
+              - enabled
+              - disabled
+              - delete
