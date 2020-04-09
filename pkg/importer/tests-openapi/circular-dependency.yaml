@@ -35,3 +35,11 @@ components:
         name:
             type: string
       additionalProperties: false
+    Merchant1:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+     
