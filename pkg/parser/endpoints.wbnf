@@ -37,8 +37,10 @@ collector_stmt -> (
                     | action=APPNAME
                 ) attribs;
 
-collector_call_stmt -> target=APPNAME "<-" target_endpoint=APPNAME_PART;
+collector_call_stmt -> target=APPNAME "<-" target_endpoint=(rest_endpoint_call_part | APPNAME_PART);
 
-collector_http_stmt -> method=HTTP_VERBS "/" (http_path_part | "{" http_path_part "}"):"/" ("?" (param=NAME "=" type=(NativeDataTypes | NAME)):"&")?;
+collector_http_stmt -> rest_endpoint_call_part ("?" (param=NAME "=" type=(NativeDataTypes | NAME)):"&")?;
+
+rest_endpoint_call_part -> method=HTTP_VERBS "/" (http_path_part | "{" http_path_part "}"):"/";
 
 collector_pubsub_call -> subscriber=APPNAME "<-" publisher=APPNAME "->" name=NAME;
