@@ -1,0 +1,45 @@
+openapi: 3.0.1
+info:
+  title: simple
+  version: v0.1
+paths:
+  /api/v0.1/simple:
+    post:
+      tags:
+        - simple
+      requestBody:
+        description: 'Should contain foo'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merchant'
+      responses:
+        '200':
+          description: If the results include the requested details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Merchant'
+components:
+  schemas:
+    Merchant:
+      type: object
+      properties:
+        sub_responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Merchant'
+          nullable: true
+        id:
+            type: string
+        name:
+            type: string
+      additionalProperties: false
+    Merchant1:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+     
