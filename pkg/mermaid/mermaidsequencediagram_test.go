@@ -1,4 +1,4 @@
-package mermaidsequencediagram
+package mermaid
 
 import (
 	"testing"
