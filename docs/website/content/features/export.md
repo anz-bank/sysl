@@ -1,9 +1,9 @@
 ---
 title: "Export"
 date: 2018-02-28T10:11:24+11:00
-description: "Look up any sysl concepts here"
+description: "Convert sysl into other formats"
 weight: 20
-bref: "Look up any sysl concepts here"
+bref: "Convert sysl into other formats"
 topic: "Export"
 layout: "single"
 toc: true
@@ -12,6 +12,6 @@ toc: true
 Sysl can export files of various formats. Currently supported formats include
 
 - Swagger 2.0 (YAML/ JSON) [export](/docs/commands/export)
-- 
+- Protobuf [protobuf](/docs/commands/protobuf/)
 
 For more information, refer to [export](/docs/commands/export)

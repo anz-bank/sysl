@@ -14,7 +14,7 @@ Two format types are supported:
 | Flag      | Description                                              |
 | --------- | -------------------------------------------------------- |
 | json      | JSON Protocol Buffer files of the Sysl definitions         |
-| testpb    | Text based Protocol Buffer files of the Sysl definitions   |
+| textpb    | Text based Protocol Buffer files of the Sysl definitions   |
 
 Protocol buffers is a "language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler". It is a strongly typed binary format used as intermediate representations of Sysl definitions comparable to an abstract syntax tree. The strongly typed protocol buffers are supported in most major programming languages.
 
