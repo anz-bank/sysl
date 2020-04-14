@@ -24,7 +24,7 @@ subscribe  ->  APPNAME "->" APPNAME params? attribs? ":"
 
 enum  -> "!enum" name=NAME attribs? ":"
          (WRAPPED_SHORTCUT| %!InlineCommentIndent(enumeration)) {
-        enumeration -> name=NAME ":" DIGITS COMMENT_NO_NL*;
+        enumeration -> name=NAME (":" | "=") value=(DIGITS | "0") COMMENT_NO_NL*;
 };
 
 // -------------- Mixin --------------- //
