@@ -56,8 +56,15 @@ table -> mode=("!table"|"!type") NAME attribs?  ":"
                     | annotation
                     | table
                     | SHORTCUT;
-
-         table_field -> field optional="?"? attribs? (":" annotations)?;
+         
+         table_field -> field_with_default_value optional="?"? attribs? (":" annotations)?;
+         
+         field_with_default_value -> NAME array_size? field_number=("=" \d+)? "<:"
+                                    (
+                                        field_type
+                                        | %!InlineCommentIndent(field | unspecified_type=NAME)
+                                    )
+                                    QSTRING?;
      };
 
 facade -> "!wrap" NAME  ":"
