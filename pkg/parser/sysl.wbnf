@@ -55,6 +55,7 @@ table -> mode=("!table"|"!type") NAME attribs?  ":"
          table_row -> table_field
                     | annotation
                     | table
+                    | unspecified=TEXT_WITH_WHITESPACE
                     | SHORTCUT;
          
          table_field -> field_with_default_value optional="?"? attribs? (":" annotations)?;
