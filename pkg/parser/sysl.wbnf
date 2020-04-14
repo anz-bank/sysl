@@ -17,7 +17,7 @@ import  -> "import"  prefix=("//"|"/")?
 
 event  ->  "<->" APPNAME params? attribs? ":"
         ( WRAPPED_SHORTCUT | %!InlineCommentIndent(stmt));
-subscribe  ->  APPNAME "->" NAME params? attribs? ":"
+subscribe  ->  APPNAME "->" APPNAME params? attribs? ":"
         ( WRAPPED_SHORTCUT | %!InlineCommentIndent(stmt));
 
 // -------------- Enums --------------- //
