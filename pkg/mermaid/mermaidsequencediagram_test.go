@@ -9,8 +9,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-const previousapp = "..."
-
 func TestBadInputsToGenerateMermaidSequenceDiagram(t *testing.T) {
 	t.Parallel()
 	appname := "wrongname"
@@ -20,7 +18,7 @@ func TestBadInputsToGenerateMermaidSequenceDiagram(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname, previousapp, 1, true)
+	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
 	assert.NotNil(t, m)
 	assert.Empty(t, r)
 	assert.Error(t, err)
@@ -35,7 +33,7 @@ func TestGenerateMermaidSequenceDiagram(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname, previousapp, 1, true)
+	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
@@ -61,7 +59,7 @@ func TestGenerateMermaidSequenceDiagram2(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname, previousapp, 1, true)
+	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
@@ -88,7 +86,7 @@ func TestGenerateMermaidSequenceDiagram3(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname, previousapp, 1, true)
+	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
@@ -111,7 +109,7 @@ func TestGenerateMermaidSequenceDiagramWithIfElseLoopActionAndGroupStatements(t 
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname, previousapp, 1, true)
+	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
