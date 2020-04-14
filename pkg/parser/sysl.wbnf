@@ -141,7 +141,7 @@ QSTRING -> /{ " (?: \\. | [^\\"] )* "
            | ' (?: \\. | [^\\'] )* '
            };
 
-.wrapRE -> /{(\n (?:[\_\t]+ \n)*)+} | \n+ | \s+ | /{[\_\t]*()[\_\t]*};
+.wrapRE -> /{(\n (?:[\_\t]+ \n)*)+} | \n+ | \s+ | /{[\_\t]*(?i:())[\_\t]*};
 
 INDENT      -> %level="" \s+;
 INDENT_SEP  -> NEWLINE_WITH_COMMENT %level;
