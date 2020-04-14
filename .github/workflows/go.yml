@@ -56,11 +56,6 @@ jobs:
           GOPATH: .
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
-      - name: Upload coverage to Codecov
-        run: bash <(curl -s https://codecov.io/bash) -f ./coverage.txt
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   build-and-test-windows:
     name: Build Go and Test (Windows)
     runs-on: windows-latest
