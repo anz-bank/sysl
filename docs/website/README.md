@@ -5,6 +5,10 @@ This directory contains the source for the [sysl.io](https://sysl.io) website bu
 The website can be built with `hugo` which puts all content into the `public` directory.
 On every merge into `upstream` `master` the website gets updated with the Netflify-Hugo-Github integration (see `<repo>/netlify.tom`, [Netlify docs](https://gohugo.io/hosting-and-deployment/hosting-on-netlify/)).
 
+## Theme
+
+The theme used is [kube](http://kube7.imperavi.com/) with an example available [here](https://kube.elemnts.net/)
+
 ## Updating CSS
 
 In order to update CSS, work with the unminified CSS in `static/css/` and change `layouts/_default/baseof.html` to use these unminified files (commented out there). When done with the changes, minify the updated css and revert to using it:
@@ -16,3 +20,9 @@ In order to update CSS, work with the unminified CSS in `static/css/` and change
 5. `npm install -g purify-css` (first time only)
 6. `purifycss static/css/*.css public/**/*.html public/*.html static/js/jquery-2.1.4.min.js static/js/kube.min.js -im -o static/css/styles.min.css`
 7. Revert `layouts/_default/baseof.html` to use `styles.min.css` again
+
+## Where should I put my docs?
+
+- Changes to the Sysl language should be updated in the [language spec](content/docs/language.md)
+- Changes to the CLI interface should be updated in the `commands` folder e.g [import](content/docs/commands/import.md)
+- New or modifications of features should be updated in `features` e.g [import](content/features/import.md)

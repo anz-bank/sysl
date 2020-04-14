@@ -81,6 +81,8 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 		return input, nil
 	case "~swagger":
 		text, err = importer.LoadSwaggerText(od, input.GetText(0, input.Size()), logger)
+	case "~openapi3":
+		text, err = importer.LoadOpenAPIText(od, input.GetText(0, input.Size()), logger)
 	default:
 		return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format - (%s)\n", def.filename, def.mode))
 	}

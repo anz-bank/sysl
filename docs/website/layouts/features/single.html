@@ -11,15 +11,7 @@
       <p class="hero-lead">{{ .Params.bref | safeHTML }}</p>
 
     </div>
-    <nav id="contents">
-      <header>
-      </header>
-        {{.TableOfContents}}
-    </nav>
-  </div>
-    <div id="kube-component" class="content">
-      {{ .Content}}
-    </div>
+    {{ .Content}}
   </div>
 </div>
 
