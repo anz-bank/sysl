@@ -7,7 +7,14 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
+type integrationpair struct {
+	firstapp, secondapp string
+}
+
+var integrationpairs []integrationpair
+
 func GenerateMermaidIntegrationDiagram(m *sysl.Module, appname string) (string, error) {
+	integrationpairs = []integrationpair{}
 	return generateMermaidIntegrationDiagramHelper(m, appname, true)
 }
 
@@ -32,9 +39,12 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 	for _, statement := range statements {
 		switch c := statement.Stmt.(type) {
 		case *sysl.Statement_Call:
-			if appname != c.Call.Target.Part[0] {
-				result += fmt.Sprintf(" %s --> %s\n", appname, c.Call.Target.Part[0])
-				out, err := generateMermaidIntegrationDiagramHelper(m, c.Call.Target.Part[0], false)
+			nextapp := c.Call.Target.Part[0]
+			pair := integrationpair{firstapp: appname, secondapp: nextapp}
+			if !integrationpairscontain(integrationpairs, pair) {
+				integrationpairs = append(integrationpairs, pair)
+				result += fmt.Sprintf(" %s --> %s\n", appname, nextapp)
+				out, err := generateMermaidIntegrationDiagramHelper(m, nextapp, false)
 				if err != nil {
 					panic("Error in generating integration diagram; check if app name is correct")
 				}
@@ -59,6 +69,15 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 		}
 	}
 	return result
+}
+
+func integrationpairscontain(i []integrationpair, ip integrationpair) bool {
+	for _, a := range i {
+		if a == ip {
+			return true
+		}
+	}
+	return false
 }
 
 func validAppName(m *sysl.Module, appname string) error {

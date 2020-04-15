@@ -10,11 +10,17 @@ import (
 
 const projDir = "../../"
 
+type sequencepair struct {
+	firstapp, secondapp, endpoint string
+}
+
 var startElse = regexp.MustCompile("^else.*")
 var isElse = regexp.MustCompile("^else$")
 var isLoop = regexp.MustCompile("^loop.*")
+var sequencepairs []sequencepair
 
 func GenerateMermaidSequenceDiagram(m *sysl.Module, appname string, epname string) (string, error) {
+	sequencepairs = []sequencepair{}
 	return generateMermaidSequenceDiagramHelper(m, appname, epname, "...", 1, true)
 }
 
@@ -50,13 +56,17 @@ func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement
 		case *sysl.Statement_Call:
 			nextapp := c.Call.Target.Part[0]
 			nextep := c.Call.Endpoint
-			result += callStatement(appname, nextep, nextapp, indent)
-			previous := appname
-			out, err := generateMermaidSequenceDiagramHelper(m, nextapp, nextep, previous, indent, false)
-			if err != nil {
-				panic("Error in generating sequence diagram; check if app names or endpoints are correct")
+			pair := sequencepair{firstapp: appname, secondapp: nextep, endpoint: nextep}
+			if !sequencenpairscontain(sequencepairs, pair) {
+				sequencepairs = append(sequencepairs, pair)
+				result += callStatement(appname, nextep, nextapp, indent)
+				previous := appname
+				out, err := generateMermaidSequenceDiagramHelper(m, nextapp, nextep, previous, indent, false)
+				if err != nil {
+					panic("Error in generating sequence diagram; check if app names or endpoints are correct")
+				}
+				result += out
 			}
-			result += out
 		case *sysl.Statement_Ret:
 			retep := c.Ret.Payload
 			result += retStatement(appname, retep, previousapp, indent, thestart)
@@ -128,6 +138,15 @@ func actionStatement(appname string, action string, indent int) string {
 	var out = addIndent(indent)
 	out += fmt.Sprintf("%s->>%s: %s\n", appname, appname, action)
 	return out
+}
+
+func sequencenpairscontain(i []sequencepair, ip sequencepair) bool {
+	for _, a := range i {
+		if a == ip {
+			return true
+		}
+	}
+	return false
 }
 
 func addIndent(indent int) string {
