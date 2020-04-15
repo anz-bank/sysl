@@ -113,7 +113,7 @@ annotation -> "@" var_name=([a-zA-Z_][-\w.]*) "=" value=(QSTRING | array_of_stri
 
 annotations -> %!Indented(annotation);
 
-multi_line_docstring -> ":" %!InlineCommentIndent("|" TEXT);
+multi_line_docstring -> ":" %!InlineCommentIndent("|" TEXT?);
 
 http_path_var_with_type -> "{" var=(NAME | DIGITS) "<:" type=(NativeDataTypes | reference) "}";
 
