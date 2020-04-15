@@ -73,7 +73,7 @@ func TestOutputPlantumlWithSvg(t *testing.T) {
 func TestOutputPlantumlWithUml(t *testing.T) {
 	t.Parallel()
 
-	testOutputPlantuml(t, "/test.uml", "/test.puml")
+	testOutputPlantuml(t, "/test.puml", "/test.puml")
 }
 
 func TestEncode6bit(t *testing.T) {
