@@ -29,4 +29,4 @@ ret_stmt -> "return" ret_val=(TEXT);
 
 group_stmt -> NAME ":" %!InlineCommentIndent(stmt);
 
-text_stmt -> doc_string=("|" [^(\r?\n)]*) | QSTRING | TEXT ("<-" NAME)? | SHORTCUT;
+text_stmt -> doc_string=("|" [^\n]*) | QSTRING | TEXT ("<-" NAME)? | SHORTCUT;
