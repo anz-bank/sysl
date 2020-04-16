@@ -39,11 +39,11 @@ app_decl   -> annotation
             | COMMENT_NO_NL
             | WRAPPED_SHORTCUT
             | type_decl
-            | endpoint
             | event
             | subscribe
             | view
-            | mixin;
+            | mixin
+            | endpoint;
 
 
 // -------------- Types --------------- //

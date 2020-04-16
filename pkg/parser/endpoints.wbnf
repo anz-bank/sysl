@@ -1,10 +1,13 @@
-endpoint -> (rest_endpoint | simple_endpoint | collector | event);
+endpoint -> (rest_endpoint | collector | event | simple_endpoint);
 
-simple_endpoint -> endpoint_name=(APPNAME) QSTRING? params? attribs? ":"
-                   (
-                       WRAPPED_SHORTCUT
-                       | %!InlineCommentIndent(annotation | stmt)
-                   );
+simple_endpoint -> endpoint_name=(APPNAME) QSTRING? params? attribs? 
+                    (
+                        ":"
+                           (
+                               WRAPPED_SHORTCUT
+                               | %!InlineCommentIndent(annotation | stmt)
+                           )
+                    )?;
 
 rest_endpoint -> http_path attribs? ":"
                  %!InlineCommentIndent(method_def | rest_endpoint);
