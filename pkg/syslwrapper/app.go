@@ -28,7 +28,7 @@ type Parameter struct {
 }
 
 type Type struct {
-	Source     string // The full name of the app where the type is defined
+	Reference  string // The full name of the app where the type is defined
 	Type       string
 	Items      []*Type
 	Enum       map[string]int64
@@ -293,6 +293,7 @@ func (am *AppMapper) convertTypeToString(t *sysl.Type) *Type {
 	var items []*Type
 	var properties map[string]*Type
 	var enum map[string]int64
+	var ref string
 
 	if t == nil {
 		fmt.Printf("empty type")
@@ -314,6 +315,9 @@ func (am *AppMapper) convertTypeToString(t *sysl.Type) *Type {
 		simpleType = "map"
 		items = append(items, am.convertTypeToString(t.GetMap().Key))
 		items = append(items, am.convertTypeToString(t.GetMap().Value))
+	case *sysl.Type_TypeRef:
+		simpleType = "ref"
+		ref = t.GetRef().GetAppname().String() + ":" + t.GetTypeRef().GetRef().GetPath()
 	case *sysl.Type_Tuple_:
 		simpleType = "tuple"
 		properties = make(map[string]*Type, 15)
