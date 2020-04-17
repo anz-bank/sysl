@@ -1,0 +1,15 @@
+SampleRestApp:
+    # To specify a rest endpoint use / to let sysl know that you're using rest
+    /login/{CustomerID<:string}:
+            # Now use rest methods with the endpoint
+            POST (newPost <: string [~body]):
+                return string
+
+    /post:
+        # Now use rest methods with the endpoint
+        POST (newPost <: string [~body]):
+            return string
+
+        GET (newPost <: string) ?PostId=string:
+            return string
+
