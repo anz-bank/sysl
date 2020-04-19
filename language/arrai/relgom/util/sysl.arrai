@@ -1,0 +1,33 @@
+let attrs = \node
+    node('attrs') if 'attrs' <: (node => .@);
+
+let patterns = \node
+    let attrs = attrs(node);
+    (attrs('patterns')('a')('elt').a => .@item('s').s) if 'patterns' <: (attrs => .@);
+
+let isAutoinc  = \attrDef "autoinc" <: patterns(attrDef);
+let isPK       = \attrDef "pk" <: patterns(attrDef);
+let isOpt      = \attrDef "opt" <: (attrDef => .@) && attrDef("opt");
+let isRequired = \attrDef (isPK(attrDef) || !isOpt(attrDef)) && !isAutoinc(attrDef);
+
+(
+    :attrs,
+    :isAutoinc,
+    :isPK,
+    :isOpt,
+    :isRequired,
+    :patterns,
+
+    baseType: \model //.fn.fix(\baseType
+        \type
+            (
+                let path = type('typeRef')('ref')('path').a;
+                baseType(model('types')(path(0).s)('relation')('attrDefs')(path(1).s))
+            ) if 'typeRef' <: (type => .@) else type
+    ),
+
+    fkey: \type type('typeRef') if 'typeRef' <: (type => .@),
+
+    namedTypesInSourceOrder: \types
+        types => (name: .@, type: .@value) orderby [.type('sourceContext')('start')('line')],
+)

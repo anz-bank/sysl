@@ -1,0 +1,315 @@
+let sysl = //./util/sysl;
+let go = //./util/go;
+
+\config \model \modelName \tname \type
+
+let gotype = go.type(model);
+let fieldForAttrDef = go.fieldForAttrDef(model);
+
+let fieldInfo = \attrDef (
+    :attrDef,
+    exp:   go.export(attrDef.name),
+    unexp: go.unexport(attrDef.name),
+    fkey:  sysl.fkey(attrDef.type),
+);
+
+let relation = type('relation');
+let attr = sysl.namedTypesInSourceOrder(relation('attrDefs'));
+let pkattr = attr where sysl.isPK(.@item.type);
+let nonpkattr = attr where !sysl.isPK(.@item.type);
+let etname = go.export(tname);
+let untname = go.unexport(tname);
+
+let fkInfo =
+    let ambiguousFK =
+        attr
+            => . + (fi: fieldInfo(.@item))
+            where .fi.fkey
+            => (:.@, fpath: .fi.fkey("ref")("path").a >> .s)
+            nest |@| @
+            where .@ count > 1
+            => //.str.join(.fpath, ".");
+    \fi
+        let fpath = fi.fkey("ref")("path").a >> .s;
+        let relation = go.export(fpath(0));
+        let ambiguous = //.str.join(fpath, ".") <: ambiguousFK;
+        (
+            :fpath,
+            :relation,
+            :ambiguous,
+            deref:     '*' if !sysl.isRequired(fi.attrDef.type),
+        );
+
+$`
+${config.prelude}
+
+${$`
+    // ${untname}PK is the Key for ${etname}.
+    type ${untname}PK struct {
+        ${pkattr >> fieldForAttrDef(go.unexport, .)::\i}
+    }
+
+    func (k ${untname}PK) Hash(seed uintptr) uintptr {
+        ${pkattr >> $`seed = hash.Interface(k.${go.unexport(.name)}, seed)`::\i}
+        return seed
+    }
+
+    func (k ${untname}PK) Equal(i interface{}) bool {
+        if l, ok := i.(${untname}PK); ok {
+            return (k == l)
+        }
+        return false
+    }
+` if pkattr}
+
+// ${untname}Data is the internal representation of a tuple in the model.
+type ${untname}Data struct {
+    ${$`${untname}PK` if pkattr}
+    ${nonpkattr >> fieldForAttrDef(go.unexport, .)::\i}
+}
+
+// MarshalJSON implements json.Marshaler.
+func (d *${untname}Data) MarshalJSON() ([]byte, error) {
+    return json.Marshal(struct {
+        ${attr >> $`${fieldForAttrDef(go.export, .)} ``json:"${.name},omitempty"```::\i}
+    }{${attr >> $`${go.export(.name)}: d.${go.unexport(.name)}`::, }})
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (d *${untname}Data) UnmarshalJSON(data []byte) error {
+    var u struct {
+        ${attr >> $`${fieldForAttrDef(go.export, .)} ``json:"${.name},omitempty"```::\i}
+    }
+    if err := json.Unmarshal(data, &u); err != nil {
+        return err
+    }
+    *d = ${untname}Data{${
+        $`${untname}PK: ${untname}PK{${pkattr >> $`${go.unexport(.name)}: u.${go.export(.name)}`::, }}, `
+        if pkattr
+    }${nonpkattr >> $`${go.unexport(.name)}: u.${go.export(.name)}`::, }}
+    return nil
+}
+
+// ${etname} is the public representation tuple in the model.
+type ${etname} struct {
+    *${untname}Data
+    model ${modelName}
+}
+
+${attr >>
+    let fi = fieldInfo(.);
+    (
+        let fk = fkInfo(fi);
+        let exp2 = $`${fk.relation}${$`Via${fi.exp}` if fk.ambiguous}`;
+        $`
+        // ${exp2} gets the ${fk.fpath(0)} corresponding to the ${.name} attribute from t.
+        func (t ${etname}) ${exp2}() ${fk.relation} {
+            u, _ := t.model.Get${fk.relation}().Lookup(${fk.deref}t.${fi.unexp})
+            return u
+        }
+        `
+    ) if fi.fkey else $`
+        // ${fi.exp} gets the ${.name} attribute from the ${etname}.
+        func (t ${etname}) ${fi.exp}() ${gotype(.type)} {
+            return t.${fi.unexp}
+        }
+    `
+::}
+
+// ${etname}Builder builds an instance of ${etname} in the model.
+type ${etname}Builder struct {
+    ${untname}Data
+    model ${modelName}
+    mask  [1]uint64
+    apply func(t *${untname}Data) (frozen.Map, error)
+}
+
+${(attr where !sysl.isAutoinc(.@item.type)) >>> \i \.
+    let fi = fieldInfo(.);
+    (
+        let fk = fkInfo(fi);
+        let exp2 = $`${fk.relation}${$`For${fi.exp}` if fk.ambiguous}`;
+        $`
+        // With${exp2} sets the ${.name} attribute of the ${etname}Builder from t.
+        func (b *${etname}Builder) With${exp2}(t ${fk.relation}) *${etname}Builder {
+            relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << ${i}))
+            b.${fi.unexp} = ${'&' if !sysl.isRequired(.type)}t.${go.unexport(fk.fpath(1))}
+            return b
+        }
+        `
+    ) if fi.fkey else $`
+    // With${go.export(.name)} sets the ${.name} attribute of the ${etname}Builder.
+    func (b *${etname}Builder) With${go.export(.name)}(value ${go.param(sysl.baseType(model, .type))}) *${etname}Builder {
+        relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << ${i}))
+        b.${go.unexport(.name)} = ${'&' if !sysl.isRequired(.type)}value
+        return b
+    }
+    `
+::}
+
+${
+    let pkmask = attr where sysl.isPK(.@item.type) => 2 ^ .@ sum .;
+    let reqmask = attr where sysl.isRequired(.@item.type) => 2 ^ .@ sum .;
+    $`
+    var ${untname}StaticMetadata = &relgomlib.EntityTypeStaticMetadata{PKMask: []uint64{0x${pkmask:x}}, RequiredMask: []uint64{0x${reqmask:x}}}
+    `
+}
+${
+    $`
+    // Apply applies the built ${etname}.
+    func (b *${etname}Builder) Apply() (${modelName}, ${etname}, error) {
+        relgomlib.PanicIfRequiredFieldsNotSet(b.mask[:], ${untname}StaticMetadata.RequiredMask, "${
+            attr >> (.name if sysl.isRequired(.type))
+        ::,}")
+        set, err := b.apply(&b.${untname}Data)
+        if err != nil {
+            return ${modelName}{}, ${etname}{}, err
+        }
+        model := b.model.relations.With(${untname}Key, ${untname}RelationData{set})
+        return ${modelName}{model}, ${etname}{&b.${untname}Data, b.model}, nil
+    }
+    `
+}
+
+// ${untname}RelationData represents a set of ${etname}.
+type ${untname}RelationData struct {
+    set frozen.Map
+}
+
+// Count returns the number of tuples in d.
+func (d ${untname}RelationData) Count() int {
+    return d.set.Count()
+}
+
+// MarshalJSON implements json.Marshaler.
+func (d ${untname}RelationData) MarshalJSON() ([]byte, error) {
+    a := make([]*${untname}Data, 0, d.set.Count())
+    for i := d.set.Range(); i.Next(); {
+        a = append(a, i.Value().(*${untname}Data))
+    }
+    return json.Marshal(a)
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (d *${untname}RelationData) UnmarshalJSON(data []byte) error {
+    a := []*${untname}Data{}
+    if err := json.Unmarshal(data, &a); err != nil {
+        return err
+    }
+    set := frozen.NewMap()
+    ${
+        $`
+            for _, e := range a {
+                set = set.With(e.${untname}PK, e)
+            }`
+        if pkattr else
+        $`
+            for i, e := range a {
+                set = set.With(i, e)
+            }`
+    }
+    *d = ${untname}RelationData{set}
+    return nil
+}
+
+// ${etname}Relation represents a set of ${etname}.
+type ${etname}Relation struct {
+    ${untname}RelationData
+    model ${modelName}
+}
+
+${$`
+    // Insert creates a builder to insert a new ${etname}.
+    func (r ${etname}Relation) Insert() *${etname}Builder {
+        ${
+            let autoinc = attr where sysl.isAutoinc(.@item.type);
+            $`
+                model, id := r.model.newID()
+                return &${etname}Builder{model: model, apply: func(t *${untname}Data) (frozen.Map, error) {
+                    t.${untname}ID = int64(id)
+                    set := r.model.Get${etname}().set.With(t.${untname}PK, t)
+                    return set, nil
+                }}`
+            if autoinc else $`
+                return &${etname}Builder{model: r.model, apply: func(t *${untname}Data) (frozen.Map, error) {
+                    set := r.model.Get${etname}().set.With(t.${untname}PK, t)
+                    return set, nil
+                }}`
+        }
+    }
+
+    // Update creates a builder to update t in the model.
+    func (r ${etname}Relation) Update(t ${etname}) *${etname}Builder {
+        b := &${etname}Builder{${untname}Data: *t.${untname}Data, model: r.model, apply: func(t *${untname}Data) (frozen.Map, error) {
+            set := r.model.Get${etname}().set.With(t.${untname}PK, t)
+            return set, nil
+        }}
+        copy(b.mask[:], ${untname}StaticMetadata.PKMask)
+        return b
+    }
+
+    // Delete deletes t from the model.
+    func (r ${etname}Relation) Delete(t ${etname}) (${modelName}, error) {
+        set := r.model.Get${etname}().set.Without(frozen.NewSet(t.${untname}PK))
+        relations := r.model.relations.With(${untname}Key, ${untname}RelationData{set: set})
+        return ${modelName}{relations: relations}, nil
+    }
+
+    // Lookup searches ${etname} by primary key.
+    func (r ${etname}Relation) Lookup(${pkattr >> fieldForAttrDef(go.unexport, .)::,}) (${etname}, bool) {
+        if t, has := r.set.Get(${untname}PK{${pkattr >> $`${go.unexport(.name)}: ${go.unexport(.name)}`::, }}); has {
+            return ${etname}{${untname}Data: t.(*${untname}Data), model: r.model}, true
+        }
+        return ${etname}{}, false
+    }
+
+    // DeleteWhere deletes tuples matching ``where`` from r.
+    func (r ${etname}Relation) DeleteWhere(where func(t ${etname}) bool) (${modelName}, error) {
+        model := r.model
+        for i := r.Iterator(); i.MoveNext(); {
+            t := i.Current()
+            if where(t) {
+                var err error
+                if model, err = model.Get${etname}().Delete(t); err != nil {
+                    return ${modelName}{}, err
+                }
+            }
+        }
+        return model, nil
+    }
+` if pkattr}
+
+// Iterator returns an iterator over ${etname} tuples in r.
+func (r ${etname}Relation) Iterator() ${etname}Iterator {
+    return &${untname}Iterator{model: r.model, i: r.set.Range()}
+}
+
+// ${untname}Iterator provides for iteration over a set of ${untname}Iterator tuples.
+type ${etname}Iterator interface {
+    MoveNext() bool
+    Current() ${etname}
+}
+
+type ${untname}Iterator struct {
+    model ${modelName}
+    i     *frozen.MapIterator
+    t     *${etname}
+}
+
+// MoveNext implements seq.Setable.
+func (i *${untname}Iterator) MoveNext() bool {
+    if i.i.Next() {
+        i.t = &${etname}{${untname}Data: i.i.Value().(*${untname}Data), model: i.model}
+        return true
+    }
+    return false
+}
+
+// Current implements seq.Setable.
+func (i *${untname}Iterator) Current() ${etname} {
+    if i.t == nil {
+        panic("no current ${etname}")
+    }
+    return *i.t
+}
+`

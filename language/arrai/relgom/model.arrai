@@ -1,0 +1,61 @@
+let go = //./util/go;
+
+\config \model \modelName \namedTypes $`
+${config.prelude}
+
+const (
+    ${namedTypes >>> \i \. $`
+        ${go.unexport(.name)}Key ${$`int = iota` if !i}
+    `::\i}
+)
+
+type ${modelName} struct {
+    relations frozen.Map
+}
+
+// New${modelName} creates a new ${modelName}.
+func New${modelName}() ${modelName} {
+    return ${modelName}{frozen.NewMap(frozen.KV(relgomlib.ModelMetadataKey, relgomlib.ModelMetadata{}))}
+}
+
+${namedTypes >>> \i \.
+    let uname = go.unexport(.name); $`
+        // ${.name} returns the model's ${.name} relation.
+        func (m ${modelName}) Get${.name}() *${.name}Relation {
+            if relation, has := m.relations.Get(${uname}Key); has {
+                return &${.name}Relation{relation.(${uname}RelationData), m}
+            }
+            return &${.name}Relation{${uname}RelationData{}, m}
+        }
+
+    `
+::}
+
+// MarshalJSON implements json.Marshaler.
+func (m ${modelName}) MarshalJSON() ([]byte, error) {
+    b := relgomlib.NewRelationMapBuilder(m.relations)
+    ${namedTypes >>> \i \. $`
+        b.Set("${.name}", ${go.unexport(.name)}Key)`
+    ::\i}
+    return json.Marshal(b.Map())
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (m *${modelName}) UnmarshalJSON(data []byte) error {
+    e := relgomlib.NewRelationMapExtractor(m.relations)
+    ${namedTypes >>> \i \. $`
+        e.Set("${.name}", ${go.unexport(.name)}Key, &${go.unexport(.name)}RelationData{})`
+    ::\i}
+    relations, err := e.UnmarshalRelationDataJSON(data)
+    if err == nil {
+        m.relations = relations
+    }
+    return err
+}
+
+// newID returns a new id for the model
+func (m ${modelName}) newID() (${modelName}, uint64) {
+    relations, id := relgomlib.NewID(m.relations)
+    return ${modelName}{relations}, id
+}
+`

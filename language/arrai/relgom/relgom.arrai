@@ -1,0 +1,20 @@
+#!/usr/bin/env -S arrai run
+
+let go = //./util/go;
+let sysl = //./util/sysl;
+
+let modelName = //.os.args(1);
+let module = //.encoding.json.decode(//.os.stdin);
+let model = module('apps')(modelName);
+let prelude = go.prelude(//.str.lower(//.str.join(model('name')('part').a >> .s, "")));
+let namedTypes = sysl.namedTypesInSourceOrder(model('types'));
+
+let config = (:prelude);
+
+let modelSource = {modelName++".go": //./model(config, model, modelName, namedTypes)};
+
+let entitySources =
+    let entity = //./entity(config, model, modelName);
+    model('types') => (@: .@++".go", @value: entity(.@, .@value));
+
+//.archive.tar.tar(modelSource | entitySources)
