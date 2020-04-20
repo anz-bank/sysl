@@ -39,11 +39,11 @@ app_decl   -> annotation
             | COMMENT_NO_NL
             | WRAPPED_SHORTCUT
             | type_decl
-            | endpoint
             | event
             | subscribe
             | view
-            | mixin;
+            | mixin
+            | endpoint;
 
 
 // -------------- Types --------------- //
@@ -52,10 +52,11 @@ type_decl -> table | facade | alias | union | enum;
 
 table -> mode=("!table"|"!type") NAME attribs?  ":"
          (WRAPPED_SHORTCUT | %!InlineCommentIndent(table_row)) {
-         table_row -> table_field
+         table_row -> SHORTCUT
+                    | table_field
                     | annotation
                     | table
-                    | SHORTCUT;
+                    | unspecified=TEXT_WITH_WHITESPACE;
          
          table_field -> field_with_default_value optional="?"? attribs? (":" annotations)?;
          
@@ -112,7 +113,7 @@ annotation -> "@" var_name=([a-zA-Z_][-\w.]*) "=" value=(QSTRING | array_of_stri
 
 annotations -> %!Indented(annotation);
 
-multi_line_docstring -> ":" %!InlineCommentIndent("|" TEXT);
+multi_line_docstring -> ":" %!InlineCommentIndent("|" TEXT?);
 
 http_path_var_with_type -> "{" var=(NAME | DIGITS) "<:" type=(NativeDataTypes | reference) "}";
 
@@ -130,7 +131,16 @@ TEXT -> [^\n]+;
 TEXT_LINE -> /{\s* ( [^\s:(] [^(#\r\n:]* [^#\s\r\n(:] )};
 APPNAME -> (pkg=@):"." > (app=@):"::" > APPNAME_PART;
 APPNAME_PART -> (TEXT_WITH_WHITESPACE | QSTRING)+;
-TEXT_WITH_WHITESPACE -> /{[a-zA-Z_][-\w]*(?:[-\t\_]*\w+)*};
+TEXT_WITH_WHITESPACE -> [.a-zA-Z_]
+                        (
+                            ([>/\w]+):/{(\- [\<\&\+\t\_\w] | \< [\>\+\&\t\_\w] | [\>\+\&\t\_])*}
+                            | ([>/\w]+):/{(\- \w)*}
+                            | /{\- [\w \/]}
+                            | /{\< [\w\>]}
+                        )*
+                        {
+                            .wrapRE -> /{()[\_\t]*};
+                        };
 PREDICATE -> [^\n:]+;
 SHORTCUT -> "...";
 WRAPPED_SHORTCUT -> COMMENT* \n* SHORTCUT COMMENT_NO_NL?;

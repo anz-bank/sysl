@@ -156,6 +156,7 @@ success ./pkg/importer/tests-openapi/simple_with_special_char_endpoint.sysl
 success ./pkg/importer/tests-openapi/header-body-params.sysl
 success ./pkg/importer/tests-openapi/query-params.sysl
 success ./pkg/importer/tests-openapi/simple-array.sysl
+success ./pkg/importer/tests-openapi/circular-dependency.sysl
 success ./pkg/importer/tests-openapi/query-body-param.sysl
 success ./pkg/importer/tests-openapi/path-returns-typed-array.sysl
 success ./pkg/importer/tests-openapi/nested-types.sysl
@@ -189,6 +190,7 @@ success ./pkg/parse/tests/until_loop.sysl
 success ./pkg/parse/tests/oneof.sysl
 success ./pkg/parse/tests/funcs.sysl
 success ./pkg/parse/tests/test4.sysl
+success ./pkg/parse/tests/openapi3.sysl
 success ./pkg/parse/tests/duplicate_import.sysl
 success ./pkg/parse/tests/library.sysl
 success ./pkg/parse/tests/alias_inline.sysl
@@ -239,4 +241,4 @@ fail    ./unsorted/lib/lang/json.sysl
 fail    ./unsorted/lib/lang/java.sysl
 fail    ./unsorted/lib/base/grammar.sysl
 fail    ./pkg/database/db_scripts/invalid.sysl
-Passes:237 Fails:4
+Passes:239 Fails:4

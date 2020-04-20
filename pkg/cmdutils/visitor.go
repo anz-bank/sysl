@@ -350,6 +350,8 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 	isCronSender := e.senderPatterns.Contains("cron")
 	needsInt := !(isHuman || isHumanSender || isCronSender) && sender != agent
 
+	isHidden := endPointPatterns.Contains("hidden")
+
 	if len(v.groupby) > 0 {
 		if attr, exists := app.GetAttrs()[v.groupby]; exists {
 			if _, has := v.Groupboxes[attr.GetS()]; !has {
@@ -367,8 +369,9 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 			}
 			return ""
 		}(endPointPatterns)
-
-		fmt.Fprintf(v.w, "%s->%s : %s%s\n", sender, agent, icon, label)
+		if !isHidden {
+			fmt.Fprintf(v.w, "%s->%s : %s%s\n", sender, agent, icon, label)
+		}
 	}
 
 	payload := strings.Join(FormatReturnParam(v.m, GetReturnPayload(endpoint.Stmt)), " | ")
@@ -403,7 +406,9 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 				}
 			}
 			if len(payload) > 0 {
-				fmt.Fprintf(v.w, "%s<--%s : %s\n", sender, agent, payload)
+				if !isHidden {
+					fmt.Fprintf(v.w, "%s<--%s : %s\n", sender, agent, payload)
+				}
 				v.w.Deactivate(agent)
 			}
 		} else {

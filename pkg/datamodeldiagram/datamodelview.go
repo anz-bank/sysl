@@ -227,6 +227,15 @@ func (v *DataModelView) DrawTuple(
 				}
 				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
 				relation = `0..*`
+			case attrType.GetSequence() != nil:
+				if attrType.GetSequence().GetPrimitive() == sysl.Type_NO_Primitive {
+					path = attrType.GetSequence().GetTypeRef().GetRef().Path
+				} else {
+					isPrimitiveList = true
+					path = append(path, strings.ToLower(attrType.GetSequence().GetPrimitive().String()))
+				}
+				collectionString = fmt.Sprintf("+ %s : **Sequence <%s>**\n", attrName, path[0])
+				relation = `0..*`
 			case attrType.GetTypeRef() != nil:
 				arr := attrType.GetTypeRef().GetRef().Path
 				// If the array is larger than 1 then we don't neeed appName
