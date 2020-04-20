@@ -1,0 +1,11 @@
+App:
+    endpoint(req <: foo):
+        return <: foo
+    !type foo:
+        content <: sequence of bar
+    !type bar:
+        content <: sequence of string
+
+sequence[~ignore]:
+    _[~ignore]:
+        App
