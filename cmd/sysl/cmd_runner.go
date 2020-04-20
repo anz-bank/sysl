@@ -64,6 +64,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&databaseScriptCmd{},
 		&modDatabaseScriptCmd{},
 		&codegenCmd{},
+		&codegen2Cmd{},
 		&sequenceDiagramCmd{},
 		&importCmd{},
 		&infoCmd{},
