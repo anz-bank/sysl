@@ -41,8 +41,7 @@ func (e *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Respons
 			res.Schema.SchemaProps = spec.SchemaProps{}
 			res.Schema.ExtraProps = map[string]interface{}{}
 			hasStatusCode := regex.MatchString(retValues[0])
-			switch {
-			case len(retValues) > 1:
+			if len(retValues) > 1 {
 				status, err := strconv.Atoi(retValues[0])
 				if err != nil {
 					// log and ignore type
@@ -50,30 +49,43 @@ func (e *EndpointExporter) exportChildStmts(returnStatusMap map[int]spec.Respons
 					continue
 				}
 				res.ResponseProps.Description = http.StatusText(status)
-				if e.typeEx.isCompositeString(retValues[1]) {
-					str := strings.Split(retValues[1], " ")
-					res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + str[len(str)-1]
+				if retValues[1] == "Empty" {
+					e.log.Warnln("Skipping reference to Empty response")
+					res.Schema = nil
 				} else {
-					res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + retValues[1]
+					if e.typeEx.isCompositeString(retValues[1]) {
+						str := strings.Split(retValues[1], " ")
+						res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + str[len(str)-1]
+					} else {
+						res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + retValues[1]
+					}
 				}
 				returnStatusMap[status] = *res
-			case hasStatusCode:
-				status, err := strconv.Atoi(retValues[0])
-				if err != nil {
-					e.log.Warnf("Error converting return code %s", err)
-					continue
-				}
-				res.ResponseProps.Description = http.StatusText(status)
-				returnStatusMap[status] = *res
-			default:
-				res.ResponseProps.Description = http.StatusText(200)
-				if e.typeEx.isCompositeString(retValues[0]) {
-					str := strings.Split(retValues[0], " ")
-					res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + str[len(str)-1]
+			} else {
+				if hasStatusCode {
+					status, err := strconv.Atoi(retValues[0])
+					if err != nil {
+						e.log.Warnf("Error converting return code %s", err)
+						continue
+					}
+					res.ResponseProps.Description = http.StatusText(status)
+					res.Schema = nil
+					returnStatusMap[status] = *res
 				} else {
-					res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + retValues[0]
+					res.ResponseProps.Description = http.StatusText(200)
+					if retValues[0] == "Empty" {
+						e.log.Warnln("Skipping reference to Empty response")
+						res.Schema = nil
+					} else {
+						if e.typeEx.isCompositeString(retValues[0]) {
+							str := strings.Split(retValues[0], " ")
+							res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + str[len(str)-1]
+						} else {
+							res.ResponseProps.Schema.ExtraProps["$ref"] = "#/definitions/" + retValues[0]
+						}
+					}
+					returnStatusMap[200] = *res
 				}
-				returnStatusMap[200] = *res
 			}
 		}
 	}
