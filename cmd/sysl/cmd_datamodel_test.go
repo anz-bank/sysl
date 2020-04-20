@@ -165,13 +165,21 @@ func TestSequence(t *testing.T) {
 ''                                      ''
 ''''''''''''''''''''''''''''''''''''''''''
 
-class "App.bar" as _0 << (D,orchid) >> {
-+ content : **Sequence <string>**
+class "App.foo" as _0 << (D,orchid) >> {
++ content : **App2.bar**
 }
-class "App.foo" as _1 << (D,orchid) >> {
-+ content : **Sequence <bar>**
+class "App2.bar" as _1 << (D,orchid) >> {
++ content : **Sequence <bar2>**
 }
-_1 *-- "0..*" _0
+class "App2.bar2" as _2 << (D,orchid) >> {
++ content : **Sequence <App3.ifhu>**
+}
+class "App3.ifhu" as _3 << (D,orchid) >> {
++ content : string
+}
+_0 *-- "1..1 " _1
+_1 *-- "0..*" _2
+_2 *-- "0..*" _3
 @enduml
 
 `

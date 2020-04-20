@@ -232,7 +232,6 @@ func (v *DataModelView) DrawTuple(
 					path = attrType.GetSequence().GetTypeRef().GetRef().Path
 					if len(path) > 1 {
 						appName = path[0]
-
 					}
 				} else {
 					isPrimitiveList = true
