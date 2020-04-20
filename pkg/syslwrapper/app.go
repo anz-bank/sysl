@@ -237,7 +237,7 @@ func (am *AppMapper) resolveType(t *sysl.Type) *sysl.Type {
 		resolved.GetMap().Key = am.resolveType(t.GetMap().Key)
 		resolved.GetMap().Value = am.resolveType(t.GetMap().Value)
 	case *sysl.Type_TypeRef:
-		resolved, err = am.TypeFromRef(t)
+		resolved, err = am.MapType(t)
 	case *sysl.Type_Tuple_:
 		for key, value := range t.GetTuple().AttrDefs {
 			resolved.GetTuple().AttrDefs[key] = am.resolveType(value)
@@ -252,9 +252,8 @@ func (am *AppMapper) resolveType(t *sysl.Type) *sysl.Type {
 	return resolved
 }
 
-// Resolves type references
-// Type references within the same application don't have the appName, so it must be passed in
-func (am *AppMapper) TypeFromRef(t *sysl.Type) (*sysl.Type, error) {
+// MapType converts types from sysl.Type to Type
+func (am *AppMapper) MapType(t *sysl.Type) (*sysl.Type, error) {
 	// TypeRefs can have various formats.
 	// When a type defined in the same app is referenced
 	// 	- no context is provided
@@ -317,7 +316,7 @@ func (am *AppMapper) convertTypeToString(t *sysl.Type) *Type {
 		items = append(items, am.convertTypeToString(t.GetMap().Value))
 	case *sysl.Type_TypeRef:
 		simpleType = "ref"
-		ref = t.GetRef().GetAppname().String() + ":" + t.GetTypeRef().GetRef().GetPath()
+		//ref =  t.GetTypeRef().GetRef().GetAppname().String() + ":" + t.GetTypeRef().GetRef().GetPath()
 	case *sysl.Type_Tuple_:
 		simpleType = "tuple"
 		properties = make(map[string]*Type, 15)
@@ -331,6 +330,7 @@ func (am *AppMapper) convertTypeToString(t *sysl.Type) *Type {
 		Items:      items,
 		Properties: properties,
 		Enum:       enum,
+		Reference:  ref,
 	}
 }
 

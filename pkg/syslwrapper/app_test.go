@@ -57,9 +57,9 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 	typeIndex := mapper.IndexTypes()
 	mapper.resolveTypes()
 
-	expectedResult := makeTuple(map[string]*sysl.Type{
-		"query":   makePrimitive("int"),
-		"balance": makePrimitive("empty"),
+	expectedResult := MakeTuple(map[string]*sysl.Type{
+		"query":   MakePrimitive("int"),
+		"balance": MakePrimitive("empty"),
 	})
 
 	printStr, _ := json.MarshalIndent(mapper.Types, "", " ")
@@ -69,10 +69,10 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 }
 
 func TestResolveNonExistentType(t *testing.T) {
-	type1 := makeTypeRef("app1", []string{"login"}, "app2", []string{"nonexist"})
-	param1 := makeParam("Login", type1)
-	var app1 = makeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{"list": nil})
-	var app2 = makeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": nil})
+	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"nonexist"})
+	param1 := MakeParam("Login", type1)
+	var app1 = MakeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{"list": nil})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": nil})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -88,9 +88,9 @@ func TestResolveNonExistentType(t *testing.T) {
 	assert.Equal(t, nil, mapper.Types["app1:list"])
 }
 func TestResolveTypesNil(t *testing.T) {
-	type1 := makeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
-	var app1 = makeApp("app1", []*sysl.Param{}, map[string]*sysl.Type{"list": type1})
-	var app2 = makeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": nil})
+	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
+	var app1 = MakeApp("app1", []*sysl.Param{}, map[string]*sysl.Type{"list": type1})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": nil})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -106,11 +106,11 @@ func TestResolveTypesNil(t *testing.T) {
 	assert.Equal(t, &sysl.Type{}, typeIndex["app1:list"])
 }
 func TestResolveTypes(t *testing.T) {
-	type1 := makeList(makeTypeRef("app1", []string{"login"}, "app2", []string{"request"}))
-	type2 := makePrimitive("string")
-	param1 := makeParam("Login", type1)
-	var app1 = makeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{"list": type1})
-	var app2 = makeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	type1 := MakeList(MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"}))
+	type2 := MakePrimitive("string")
+	param1 := MakeParam("Login", type1)
+	var app1 = MakeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{"list": type1})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -123,15 +123,15 @@ func TestResolveTypes(t *testing.T) {
 	mapper.resolveTypes()
 
 	assert.Equal(t, type2, typeIndex["app2:request"])
-	assert.Equal(t, makeList(makePrimitive("string")), typeIndex["app1:list"])
+	assert.Equal(t, MakeList(MakePrimitive("string")), typeIndex["app1:list"])
 }
 
 func TestResolveTypeOneOf(t *testing.T) {
-	type1 := makeOneOf([]*sysl.Type{makeTypeRef("app1", []string{"login"}, "app2", []string{"request"})})
-	type2 := makePrimitive("string")
-	param1 := makeParam("Login", type1)
-	var app1 = makeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
-	var app2 = makeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	type1 := MakeOneOf([]*sysl.Type{MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"})})
+	type2 := MakePrimitive("string")
+	param1 := MakeParam("Login", type1)
+	var app1 = MakeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -144,16 +144,16 @@ func TestResolveTypeOneOf(t *testing.T) {
 
 	syslType := mapper.resolveType(type1)
 	assert.Equal(t, type2, typeIndex["app2"+":"+"request"])
-	assert.Equal(t, makeOneOf([]*sysl.Type{makePrimitive("string")}), type1)
-	assert.Equal(t, makeOneOf([]*sysl.Type{makePrimitive("string")}), syslType)
+	assert.Equal(t, MakeOneOf([]*sysl.Type{MakePrimitive("string")}), type1)
+	assert.Equal(t, MakeOneOf([]*sysl.Type{MakePrimitive("string")}), syslType)
 }
 
 func TestResolveTypeMap(t *testing.T) {
-	type1 := makeMap(makeTypeRef("app1", []string{"login"}, "app2", []string{"request"}), makePrimitive("string"))
-	type2 := makePrimitive("string")
-	param1 := makeParam("Login", type1)
-	var app1 = makeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
-	var app2 = makeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	type1 := MakeMap(MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"}), MakePrimitive("string"))
+	type2 := MakePrimitive("string")
+	param1 := MakeParam("Login", type1)
+	var app1 = MakeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -166,15 +166,15 @@ func TestResolveTypeMap(t *testing.T) {
 
 	syslType := mapper.resolveType(type1)
 	assert.Equal(t, type2, typeIndex["app2:request"])
-	assert.Equal(t, makeMap(makePrimitive("string"), makePrimitive("string")), type1)
-	assert.Equal(t, makeMap(makePrimitive("string"), makePrimitive("string")), syslType)
+	assert.Equal(t, MakeMap(MakePrimitive("string"), MakePrimitive("string")), type1)
+	assert.Equal(t, MakeMap(MakePrimitive("string"), MakePrimitive("string")), syslType)
 }
 func TestResolveTypeList(t *testing.T) {
-	type1 := makeList(makeTypeRef("app1", []string{"login"}, "app2", []string{"request"}))
-	type2 := makePrimitive("string")
-	param1 := makeParam("Login", type1)
-	var app1 = makeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
-	var app2 = makeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	type1 := MakeList(MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"}))
+	type2 := MakePrimitive("string")
+	param1 := MakeParam("Login", type1)
+	var app1 = MakeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -187,16 +187,16 @@ func TestResolveTypeList(t *testing.T) {
 
 	syslType := mapper.resolveType(type1)
 	assert.Equal(t, type2, typeIndex["app2"+"request"])
-	assert.Equal(t, makeList(makePrimitive("string")), type1)
-	assert.Equal(t, makeList(makePrimitive("string")), syslType)
+	assert.Equal(t, MakeList(MakePrimitive("string")), type1)
+	assert.Equal(t, MakeList(MakePrimitive("string")), syslType)
 }
 
 func TestResolveTypeTypeRef(t *testing.T) {
-	type1 := makeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
-	type2 := makePrimitive("string")
-	param1 := makeParam("Login", type1)
-	var app1 = makeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
-	var app2 = makeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
+	type2 := MakePrimitive("string")
+	param1 := MakeParam("Login", type1)
+	var app1 = MakeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -209,16 +209,16 @@ func TestResolveTypeTypeRef(t *testing.T) {
 
 	syslType := mapper.resolveType(type1)
 	assert.Equal(t, type2, typeIndex["app2:request"])
-	assert.Equal(t, makePrimitive("string"), syslType)
+	assert.Equal(t, MakePrimitive("string"), syslType)
 }
 
 func TestTypesFromRef(t *testing.T) {
-	type1 := makeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
-	type2 := makePrimitive("string")
-	param1 := makeParam("Login", type1)
-	param2 := makeParam("Auth", makePrimitive("string"))
-	var app1 = makeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
-	var app2 = makeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
+	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
+	type2 := MakePrimitive("string")
+	param1 := MakeParam("Login", type1)
+	param2 := MakeParam("Auth", MakePrimitive("string"))
+	var app1 = MakeApp("app1", []*sysl.Param{param1}, map[string]*sysl.Type{})
+	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app1": &app1,
@@ -228,7 +228,7 @@ func TestTypesFromRef(t *testing.T) {
 
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
-	syslType, err := mapper.TypeFromRef(mod.Apps["app1"].Endpoints["testEndpoint"].Param[0].Type)
+	syslType, err := mapper.MapType(mod.Apps["app1"].Endpoints["testEndpoint"].Param[0].Type)
 	if err != nil {
 		t.Error(err)
 	}
@@ -238,9 +238,9 @@ func TestTypesFromRef(t *testing.T) {
 }
 
 func TestTypeConversionPrimative(t *testing.T) {
-	type2 := makePrimitive("string")
-	param2 := makeParam("Auth", makePrimitive("string"))
-	var app2 = makeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
+	type2 := MakePrimitive("string")
+	param2 := MakeParam("Auth", MakePrimitive("string"))
+	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app2": &app2,
@@ -254,9 +254,9 @@ func TestTypeConversionPrimative(t *testing.T) {
 	}, convertedType1)
 }
 func TestTypeConversionList(t *testing.T) {
-	type2 := makeList(makePrimitive("string"))
-	param2 := makeParam("Auth", makePrimitive("string"))
-	var app2 = makeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
+	type2 := MakeList(MakePrimitive("string"))
+	param2 := MakeParam("Auth", MakePrimitive("string"))
+	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app2": &app2,
@@ -278,9 +278,9 @@ func TestTypeConversionList(t *testing.T) {
 }
 
 func TestTypeConversionMap(t *testing.T) {
-	type2 := makeMap(makePrimitive("string"), makePrimitive("string"))
-	param2 := makeParam("Auth", makePrimitive("string"))
-	var app2 = makeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
+	type2 := MakeMap(MakePrimitive("string"), MakePrimitive("string"))
+	param2 := MakeParam("Auth", MakePrimitive("string"))
+	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
 			"app2": &app2,
@@ -308,7 +308,7 @@ func TestTypeConversionEnum(t *testing.T) {
 		"orange": 2,
 	}
 	mapper := MakeAppMapper(&sysl.Module{})
-	typeToConvert := makeEnum(enumerate)
+	typeToConvert := MakeEnum(enumerate)
 	expectedResult := &Type{
 		Type: "enum",
 		Enum: enumerate,
@@ -321,7 +321,7 @@ func TestTypeConversionNoType(t *testing.T) {
 		Type: "notype",
 	}
 	mapper := MakeAppMapper(&sysl.Module{})
-	convertedType1 := mapper.convertTypeToString(makeNoType())
+	convertedType1 := mapper.convertTypeToString(MakeNoType())
 	assert.Equal(t, expectedResult, convertedType1)
 }
 

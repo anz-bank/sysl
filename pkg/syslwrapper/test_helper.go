@@ -6,7 +6,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
-func makeAppName(name string) *sysl.AppName {
+func MakeAppName(name string) *sysl.AppName {
 	return &sysl.AppName{
 		Part: strings.Split(name, " "),
 	}
@@ -15,16 +15,16 @@ func makeAppName(name string) *sysl.AppName {
 // Creates a type reference from one context to another.
 // contextApp is the name of the app where the typeref is used
 // refApp is the app where the
-func makeTypeRef(contextApp string, contextTypePath []string, refApp string, refTypePath []string) *sysl.Type {
+func MakeTypeRef(contextApp string, contextTypePath []string, refApp string, refTypePath []string) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_TypeRef{
 			TypeRef: &sysl.ScopedRef{
 				Context: &sysl.Scope{
-					Appname: makeAppName(contextApp),
+					Appname: MakeAppName(contextApp),
 					Path:    contextTypePath,
 				},
 				Ref: &sysl.Scope{
-					Appname: makeAppName(refApp),
+					Appname: MakeAppName(refApp),
 					Path:    refTypePath,
 				},
 			},
@@ -32,7 +32,7 @@ func makeTypeRef(contextApp string, contextTypePath []string, refApp string, ref
 	}
 }
 
-func makePrimitive(primType string) *sysl.Type {
+func MakePrimitive(primType string) *sysl.Type {
 	var resolvedType *sysl.Type
 	switch primType {
 	case "noprimitive":
@@ -123,7 +123,7 @@ func makePrimitive(primType string) *sysl.Type {
 	return resolvedType
 }
 
-func makeEnum(enum map[string]int64) *sysl.Type {
+func MakeEnum(enum map[string]int64) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_Enum_{
 			Enum: &sysl.Type_Enum{
@@ -133,7 +133,7 @@ func makeEnum(enum map[string]int64) *sysl.Type {
 	}
 }
 
-func makeTuple(tuple map[string]*sysl.Type) *sysl.Type {
+func MakeTuple(tuple map[string]*sysl.Type) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_Tuple_{
 			Tuple: &sysl.Type_Tuple{
@@ -143,7 +143,7 @@ func makeTuple(tuple map[string]*sysl.Type) *sysl.Type {
 	}
 }
 
-func makeList(listType *sysl.Type) *sysl.Type {
+func MakeList(listType *sysl.Type) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_List_{
 			List: &sysl.Type_List{
@@ -153,7 +153,7 @@ func makeList(listType *sysl.Type) *sysl.Type {
 	}
 }
 
-func makeMap(keyType *sysl.Type, valueType *sysl.Type) *sysl.Type {
+func MakeMap(keyType *sysl.Type, valueType *sysl.Type) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_Map_{
 			Map: &sysl.Type_Map{
@@ -164,7 +164,7 @@ func makeMap(keyType *sysl.Type, valueType *sysl.Type) *sysl.Type {
 	}
 }
 
-func makeOneOf(oneOfType []*sysl.Type) *sysl.Type {
+func MakeOneOf(oneOfType []*sysl.Type) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_OneOf_{
 			OneOf: &sysl.Type_OneOf{
@@ -176,7 +176,7 @@ func makeOneOf(oneOfType []*sysl.Type) *sysl.Type {
 
 //TODO Relatino, set, sequence, notype
 // This is complext. TODO
-func makeRelation(oneOfType []*sysl.Type) *sysl.Type {
+func MakeRelation(oneOfType []*sysl.Type) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_Relation_{
 			Relation: &sysl.Type_Relation{},
@@ -184,7 +184,7 @@ func makeRelation(oneOfType []*sysl.Type) *sysl.Type {
 	}
 }
 
-func makeSet(oneOfType []*sysl.Type) *sysl.Type {
+func MakeSet(oneOfType []*sysl.Type) *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_OneOf_{
 			OneOf: &sysl.Type_OneOf{
@@ -194,7 +194,7 @@ func makeSet(oneOfType []*sysl.Type) *sysl.Type {
 	}
 }
 
-func makeNoType() *sysl.Type {
+func MakeNoType() *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_NoType_{
 			NoType: &sysl.Type_NoType{},
@@ -202,7 +202,7 @@ func makeNoType() *sysl.Type {
 	}
 }
 
-func makeType(name string, value interface{}, t string) *sysl.Type {
+func MakeType(name string, value interface{}, t string) *sysl.Type {
 	var resolvedType *sysl.Type
 
 	switch t {
@@ -215,13 +215,13 @@ func makeType(name string, value interface{}, t string) *sysl.Type {
 	case "set":
 		resolvedType = &sysl.Type{
 			Type: &sysl.Type_Set{
-				Set: makeType("app", "", "int"),
+				Set: MakeType("app", "", "int"),
 			},
 		}
 	case "sequence":
 		resolvedType = &sysl.Type{
 			Type: &sysl.Type_Sequence{
-				Sequence: makeType("app", "", "int"),
+				Sequence: MakeType("app", "", "int"),
 			},
 		}
 	case "notype":
@@ -234,7 +234,7 @@ func makeType(name string, value interface{}, t string) *sysl.Type {
 	return resolvedType
 }
 
-func makeParam(name string, paramType *sysl.Type) *sysl.Param {
+func MakeParam(name string, paramType *sysl.Type) *sysl.Param {
 	var param = sysl.Param{
 		Name: name,
 		Type: paramType,
@@ -242,8 +242,8 @@ func makeParam(name string, paramType *sysl.Type) *sysl.Param {
 	return &param
 }
 
-func makeApp(name string, params []*sysl.Param, types map[string]*sysl.Type) sysl.Application {
-	var appName = makeAppName(name)
+func MakeApp(name string, params []*sysl.Param, types map[string]*sysl.Type) sysl.Application {
+	var appName = MakeAppName(name)
 
 	var ep = sysl.Endpoint{
 		Param: params,
