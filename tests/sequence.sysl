@@ -2,9 +2,15 @@ App:
     endpoint(req <: foo):
         return <: foo
     !type foo:
-        content <: sequence of bar
+        content <: App2.bar
+App2:
     !type bar:
-        content <: sequence of string
+        content <: sequence of bar2
+    !type bar2:
+        content <: sequence of App3.ifhu
+App3:
+    !type ifhu:
+        content <: string
 
 sequence[~ignore]:
     _[~ignore]:
