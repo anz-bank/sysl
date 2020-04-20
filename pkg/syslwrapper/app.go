@@ -107,7 +107,7 @@ func (am *AppMapper) mapAttributes(attributes map[string]*sysl.Attribute) map[st
 func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) map[string]*Type {
 	simpleTypes := make(map[string]*Type, 15)
 	for typeName, _ := range syslTypes {
-		simpleTypes[typeName] = am.convertTypeToString(am.Types[appName+":"+typeName])
+		simpleTypes[typeName] = am.MapType(am.Types[appName+":"+typeName])
 	}
 	return simpleTypes
 }
@@ -135,7 +135,7 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement) map[string]*Parameter {
 		if strings.Contains(stmt[i].GetRet().Payload, "<:") {
 			returnStatement := strings.Split(stmt[i].GetRet().Payload, " <: ")
 			returnRef := strings.Replace(returnStatement[1], ".", ":", 1)
-			returnType = am.convertTypeToString(am.Types[returnRef])
+			returnType = am.MapType(am.Types[returnRef])
 			returnName = returnStatement[0]
 
 		} else {
@@ -216,7 +216,7 @@ func (am *AppMapper) mapParams(p []*sysl.Param) map[string]*Parameter {
 func (am *AppMapper) resolveParamType(syslType *sysl.Type) *Type {
 	// Lookup type in Types
 	typeResolved := am.resolveType(syslType)
-	return am.convertTypeToString(typeResolved)
+	return am.MapType(typeResolved)
 }
 
 // Takes a sysl type and resolves all references recursively
@@ -237,7 +237,7 @@ func (am *AppMapper) resolveType(t *sysl.Type) *sysl.Type {
 		resolved.GetMap().Key = am.resolveType(t.GetMap().Key)
 		resolved.GetMap().Value = am.resolveType(t.GetMap().Value)
 	case *sysl.Type_TypeRef:
-		resolved, err = am.MapType(t)
+		resolved, err = am.MapSyslType(t)
 	case *sysl.Type_Tuple_:
 		for key, value := range t.GetTuple().AttrDefs {
 			resolved.GetTuple().AttrDefs[key] = am.resolveType(value)
@@ -252,8 +252,8 @@ func (am *AppMapper) resolveType(t *sysl.Type) *sysl.Type {
 	return resolved
 }
 
-// MapType converts types from sysl.Type to Type
-func (am *AppMapper) MapType(t *sysl.Type) (*sysl.Type, error) {
+// MapSyslType converts types from sysl.Type to Type
+func (am *AppMapper) MapSyslType(t *sysl.Type) (*sysl.Type, error) {
 	// TypeRefs can have various formats.
 	// When a type defined in the same app is referenced
 	// 	- no context is provided
@@ -287,7 +287,7 @@ func (am *AppMapper) MapType(t *sysl.Type) (*sysl.Type, error) {
 }
 
 // Converts sysl type to a string representatino of the type
-func (am *AppMapper) convertTypeToString(t *sysl.Type) *Type {
+func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	var simpleType string
 	var items []*Type
 	var properties map[string]*Type
@@ -309,19 +309,19 @@ func (am *AppMapper) convertTypeToString(t *sysl.Type) *Type {
 		enum = t.GetEnum().GetItems()
 	case *sysl.Type_List_:
 		simpleType = "list"
-		items = append(items, am.convertTypeToString(t.GetList().Type))
+		items = append(items, am.MapType(t.GetList().Type))
 	case *sysl.Type_Map_:
 		simpleType = "map"
-		items = append(items, am.convertTypeToString(t.GetMap().Key))
-		items = append(items, am.convertTypeToString(t.GetMap().Value))
+		items = append(items, am.MapType(t.GetMap().Key))
+		items = append(items, am.MapType(t.GetMap().Value))
 	case *sysl.Type_TypeRef:
 		simpleType = "ref"
-		//ref =  t.GetTypeRef().GetRef().GetAppname().String() + ":" + t.GetTypeRef().GetRef().GetPath()
+		ref = t.GetTypeRef().GetRef().GetAppname().String() + ":" + t.GetTypeRef().GetRef().GetPath()
 	case *sysl.Type_Tuple_:
 		simpleType = "tuple"
 		properties = make(map[string]*Type, 15)
 		for k, v := range t.GetTuple().AttrDefs {
-			properties[k] = am.convertTypeToString(v)
+			properties[k] = am.MapType(v)
 		}
 	}
 
