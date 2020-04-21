@@ -1,4 +1,4 @@
-package mermaid
+package sequencediagram
 
 import (
 	"testing"
@@ -11,14 +11,14 @@ import (
 
 func TestBadInputsToGenerateMermaidSequenceDiagram(t *testing.T) {
 	t.Parallel()
-	appname := "wrongname"
-	epname := "wrongep"
+	appName := "wrongName"
+	epName := "wrongEp"
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
-		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
+		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
+	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.Empty(t, r)
 	assert.Error(t, err)
@@ -26,14 +26,14 @@ func TestBadInputsToGenerateMermaidSequenceDiagram(t *testing.T) {
 
 func TestGenerateMermaidSequenceDiagram(t *testing.T) {
 	t.Parallel()
-	appname := "WebFrontend"
-	epname := "RequestProfile"
+	appName := "WebFrontend"
+	epName := "RequestProfile"
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
-		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
+		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
+	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
@@ -41,14 +41,14 @@ func TestGenerateMermaidSequenceDiagram(t *testing.T) {
 
 func TestGenerateMermaidSequenceDiagram2(t *testing.T) {
 	t.Parallel()
-	appname := "WebFrontend"
-	epname := "RequestProfile"
+	appName := "WebFrontend"
+	epName := "RequestProfile"
 	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
-		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
+		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
+	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
@@ -56,14 +56,14 @@ func TestGenerateMermaidSequenceDiagram2(t *testing.T) {
 
 func TestGenerateMermaidSequenceDiagram3(t *testing.T) {
 	t.Parallel()
-	appname := "MobileApp"
-	epname := "Login"
+	appName := "MobileApp"
+	epName := "Login"
 	m, err := parse.NewParser().Parse("demo/simple/sysl-app-hyperlink.sysl",
-		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
+		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
+	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
@@ -71,14 +71,14 @@ func TestGenerateMermaidSequenceDiagram3(t *testing.T) {
 
 func TestGenerateMermaidSequenceDiagramWithIfElseLoopActionAndGroupStatements(t *testing.T) {
 	t.Parallel()
-	appname := "DragonEater"
-	epname := "EatDragon"
+	appName := "DragonEater"
+	epName := "EatDragon"
 	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
-		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
+		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateMermaidSequenceDiagram(m, appname, epname)
+	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.Nil(t, err)
