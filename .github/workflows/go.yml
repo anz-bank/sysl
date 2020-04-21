@@ -160,3 +160,14 @@ jobs:
       - name: Check go.mod and go.sum are tidy
         run: make check-tidy
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Run golangci-lint 1.23.8
+        uses: actions-contrib/golangci-lint@v1
+        with:
+          golangci_lint_version: 1.23.8
