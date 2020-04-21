@@ -269,21 +269,39 @@ func (am *AppMapper) MapSyslType(t *sysl.Type) (*sysl.Type, error) {
 	if t == nil {
 		return nil, fmt.Errorf("invalid arguments")
 	}
-
-	ref := t.GetTypeRef().GetRef()
-	if ref.GetAppname() != nil {
-		appName = strings.Join(ref.Appname.Part, "")
-	}
-	typeName := strings.Join(ref.GetPath(), ".")
-	if len(ref.GetPath()) > 1 {
-		appName = ref.Path[0]
-		typeName = ref.Path[1]
-	}
+	appName, typeName := am.GetRefDetails(t)
 	resolvedType, ok := am.Types[appName+":"+typeName]
 	if !ok {
 		return nil, fmt.Errorf("unable to find type ref for %s", typeName)
 	}
 	return resolvedType, nil
+}
+
+// TypeRefs can have various formats.
+// When a type defined in the same app is referenced in a TYPE
+// 	- no appname is provided in the path
+// 	- the ref.path[0] element is the type name
+// When a type from another app is referenced in a parameter
+// 	- context is NOT provided
+//  - ref.appName is provided
+// 	- the ref.path[0] element is the type name
+// When a type from another app is referenced in a TYPE
+// 	- context is provided
+// 	- the ref.path[0] element is the application name
+func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName string) {
+	ref := t.GetTypeRef().GetRef()
+	if len(ref.GetPath()) > 1 {
+		appName = ref.Path[0]
+		typeName = ref.Path[1]
+	} else {
+		if ref.GetAppname() != nil {
+			appName = strings.Join(ref.Appname.Part, "")
+		} else {
+			appName = strings.Join(t.GetTypeRef().GetContext().Appname.Part, "")
+		}
+		typeName = strings.Join(ref.GetPath(), ".")
+	}
+	return appName, typeName
 }
 
 // Converts sysl type to a string representatino of the type
@@ -316,7 +334,8 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		items = append(items, am.MapType(t.GetMap().Value))
 	case *sysl.Type_TypeRef:
 		simpleType = "ref"
-		ref = t.GetTypeRef().GetRef().GetAppname().String() + ":" + t.GetTypeRef().GetRef().GetPath()
+		appName, typeName := am.GetRefDetails(t)
+		ref = appName + ":" + typeName
 	case *sysl.Type_Tuple_:
 		simpleType = "tuple"
 		properties = make(map[string]*Type, 15)
@@ -326,11 +345,11 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	}
 
 	return &Type{
+		Reference:  ref,
 		Type:       simpleType,
 		Items:      items,
 		Properties: properties,
 		Enum:       enum,
-		Reference:  ref,
 	}
 }
 

@@ -41,8 +41,6 @@ func TestMap(t *testing.T) {
 	mapper.resolveTypes()
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
-	printStr, _ := json.MarshalIndent(simpleApps, "", " ")
-	t.Log(string(printStr))
 	assert.Equal(t, "", simpleApps["Server"].Types["Response"].Properties["balance"].Type)
 	assert.Equal(t, "tuple", simpleApps["Server"].Types["Response"].Properties["query"].Type)
 	assert.Equal(t, "int", simpleApps["Server"].Types["Response"].Properties["query"].Properties["amount"].Type)
@@ -62,8 +60,6 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 		"balance": MakePrimitive("empty"),
 	})
 
-	printStr, _ := json.MarshalIndent(mapper.Types, "", " ")
-	t.Log(string(printStr))
 	assert.Equal(t, expectedResult.GetAttrs()["query"], typeIndex["Server:Response"].GetAttrs()["query"])
 	assert.Equal(t, expectedResult.GetAttrs()["balance"], typeIndex["Server:Response"].GetAttrs()["balance"])
 }
@@ -85,7 +81,7 @@ func TestMapTypeRef(t *testing.T) {
 
 	mappedType := mapper.MapType(type1)
 	assert.Equal(t, "ref", mappedType.Type)
-	assert.Equal(t, "app2.request", mappedType.Reference)
+	assert.Equal(t, "app2:request", mappedType.Reference)
 }
 func TestResolveNonExistentType(t *testing.T) {
 	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"nonexist"})
