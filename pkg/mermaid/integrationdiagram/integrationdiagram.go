@@ -9,14 +9,18 @@ import (
 
 const projectDir = "../../../"
 
+//Keeps track of the application pairs we visit during the recursion
 type integrationPair struct {
 	firstApp, secondApp string
 }
 
+//Accepts an application name as input and returns a string (and an error if any)
+//The resulting string is the mermaid code for the integration diagram for that application
 func GenerateIntegrationDiagram(m *sysl.Module, appName string) (string, error) {
 	return generateIntegrationDiagramHelper(m, appName, &[]integrationPair{}, true)
 }
 
+//This is a helper which has additional arguments which need not be entered by the user
 func generateIntegrationDiagramHelper(m *sysl.Module, appName string,
 	integrationPairs *[]integrationPair, theStart bool) (string, error) {
 	var result string
@@ -27,6 +31,7 @@ func generateIntegrationDiagramHelper(m *sysl.Module, appName string,
 		}
 	}
 	endPoints := m.Apps[appName].Endpoints
+	//For every endpoint, the statements are retrieved and we pass it to the printer to print appropriate mermaid code
 	for _, value := range endPoints {
 		statements := value.Stmt
 		result += printIntegrationDiagramStatements(m, statements, appName, integrationPairs)
@@ -34,6 +39,8 @@ func generateIntegrationDiagramHelper(m *sysl.Module, appName string,
 	return result, nil
 }
 
+//This function is where the printing takes place
+//Uses a switch statement to decide what to print and what recursion needs to be done
 func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statement,
 	appName string, integrationPairs *[]integrationPair) string {
 	var result string
@@ -72,6 +79,7 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 	return result
 }
 
+//Checks if the entered application name exists in the sysl module or not
 func isValidAppName(m *sysl.Module, appName string) error {
 	if _, ok := m.Apps[appName]; !ok {
 		return errors.New("invalid app name")
@@ -79,6 +87,7 @@ func isValidAppName(m *sysl.Module, appName string) error {
 	return nil
 }
 
+//Checks if the application couple have been already visited or not
 func integrationPairsContain(i []integrationPair, ip integrationPair) bool {
 	for _, a := range i {
 		if a == ip {
