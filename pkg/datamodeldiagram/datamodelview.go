@@ -217,7 +217,7 @@ func (v *DataModelView) DrawTuple(
 					path = append(path, strings.ToLower(attrType.GetList().GetType().GetPrimitive().String()))
 				}
 				collectionString = fmt.Sprintf("+ %s : **List <%s>**\n", attrName, path[0])
-				relation = `0..*`
+				relation = `0..*` //nolint:goconst
 			case attrType.GetSet() != nil:
 				if attrType.GetSet().GetPrimitive() == sysl.Type_NO_Primitive {
 					path = attrType.GetSet().GetTypeRef().GetRef().Path
@@ -226,7 +226,7 @@ func (v *DataModelView) DrawTuple(
 					path = append(path, strings.ToLower(attrType.GetSet().GetPrimitive().String()))
 				}
 				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
-				relation = `0..*`
+				relation = `0..*` //nolint:goconst
 			case attrType.GetSequence() != nil:
 				if attrType.GetSequence().GetPrimitive() == sysl.Type_NO_Primitive {
 					path = attrType.GetSequence().GetTypeRef().GetRef().Path
@@ -238,7 +238,7 @@ func (v *DataModelView) DrawTuple(
 					path = append(path, strings.ToLower(attrType.GetSequence().GetPrimitive().String()))
 				}
 				collectionString = fmt.Sprintf("+ %s : **Sequence <%s>**\n", attrName, strings.Join(path, "."))
-				relation = `0..*`
+				relation = `0..*` //nolint:goconst
 			case attrType.GetTypeRef() != nil:
 				arr := attrType.GetTypeRef().GetRef().Path
 				// If the array is larger than 1 then we don't neeed appName
