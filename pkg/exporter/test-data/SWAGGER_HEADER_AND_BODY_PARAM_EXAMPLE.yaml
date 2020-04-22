@@ -35,6 +35,5 @@ paths:
       responses:
         "200":
           description: OK
-          schema: {}
       summary: No description.
 swagger: "2.0"

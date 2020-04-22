@@ -11,6 +11,8 @@ toc: true
 The `sysl export` command is convert sysl files to other formats. All flags are optional if only a single App is defined in the input sysl file.
 Currently, the only supported format is OpenAPI 2.0 (formerly Swagger 2.0).
 
+Note: Types named `Empty` in Sysl are treated specially and are not exported.
+
 ## Usage
 
 ```bash

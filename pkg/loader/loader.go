@@ -58,39 +58,29 @@ func (pc *ProjectConfiguration) ConfigureProject(root, module string, fs afero.F
 
 	rootMarkerExists := syslRootPath != ""
 
-	if rootIsDefined {
+	switch {
+	case rootIsDefined:
 		pc.RootIsFound = true
 		pc.Root = root
 		pc.Module = module
-		if rootMarkerExists {
-			logger.Warningf("%s found in %s but will use %s instead",
-				syslRootMarker, syslRootPath, pc.Root)
-		} else {
-			logger.Warningf("%s is not defined but root flag is defined in %s",
-				syslRootMarker, pc.Root)
-		}
-	} else {
-		if rootMarkerExists {
-			pc.Root = syslRootPath
+	case rootMarkerExists:
+		pc.Root = syslRootPath
 
-			// module has to be relative to the root
-			absModulePath, err := filepath.Abs(module)
-			if err != nil {
-				return err
-			}
-			pc.Module, err = filepath.Rel(pc.Root, absModulePath)
-			if err != nil {
-				return err
-			}
-			pc.RootIsFound = true
-		} else {
-			// uses the module directory as the root, changing the module to be relative to the root
-			pc.Root = filepath.Dir(module)
-			pc.Module = filepath.Base(module)
-			pc.RootIsFound = false
-			logger.Warningf("root and %s are undefined, %s will be used instead",
-				syslRootMarker, pc.Root)
+		// module has to be relative to the root
+		absModulePath, err := filepath.Abs(module)
+		if err != nil {
+			return err
 		}
+		pc.Module, err = filepath.Rel(pc.Root, absModulePath)
+		if err != nil {
+			return err
+		}
+		pc.RootIsFound = true
+	default:
+		// uses the module directory as the root, changing the module to be relative to the root
+		pc.Root = filepath.Dir(module)
+		pc.Module = filepath.Base(module)
+		pc.RootIsFound = false
 	}
 
 	pc.Fs = mod.NewFs(fs, pc.Root)

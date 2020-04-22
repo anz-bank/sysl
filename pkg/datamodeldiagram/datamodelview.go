@@ -181,7 +181,7 @@ func (v *DataModelView) DrawTuple(
 	entity *sysl.Type_Tuple,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
-	encEntity := v.UniqueVarForAppName(viewParam.EntityName)
+	encEntity := v.UniqueVarForAppName(strings.Split(viewParam.EntityName, ".")...)
 	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
 		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
 	var appName string
@@ -217,7 +217,7 @@ func (v *DataModelView) DrawTuple(
 					path = append(path, strings.ToLower(attrType.GetList().GetType().GetPrimitive().String()))
 				}
 				collectionString = fmt.Sprintf("+ %s : **List <%s>**\n", attrName, path[0])
-				relation = `0..*`
+				relation = `0..*` //nolint:goconst
 			case attrType.GetSet() != nil:
 				if attrType.GetSet().GetPrimitive() == sysl.Type_NO_Primitive {
 					path = attrType.GetSet().GetTypeRef().GetRef().Path
@@ -226,16 +226,19 @@ func (v *DataModelView) DrawTuple(
 					path = append(path, strings.ToLower(attrType.GetSet().GetPrimitive().String()))
 				}
 				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
-				relation = `0..*`
+				relation = `0..*` //nolint:goconst
 			case attrType.GetSequence() != nil:
 				if attrType.GetSequence().GetPrimitive() == sysl.Type_NO_Primitive {
 					path = attrType.GetSequence().GetTypeRef().GetRef().Path
+					if len(path) > 1 {
+						appName = path[0]
+					}
 				} else {
 					isPrimitiveList = true
 					path = append(path, strings.ToLower(attrType.GetSequence().GetPrimitive().String()))
 				}
-				collectionString = fmt.Sprintf("+ %s : **Sequence <%s>**\n", attrName, path[0])
-				relation = `0..*`
+				collectionString = fmt.Sprintf("+ %s : **Sequence <%s>**\n", attrName, strings.Join(path, "."))
+				relation = `0..*` //nolint:goconst
 			case attrType.GetTypeRef() != nil:
 				arr := attrType.GetTypeRef().GetRef().Path
 				// If the array is larger than 1 then we don't neeed appName
@@ -256,15 +259,20 @@ func (v *DataModelView) DrawTuple(
 			}
 			v.StringBuilder.WriteString(collectionString)
 			if !isPrimitiveList {
-				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])]; mulRelation {
-					relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])] = RelationshipParam{
-						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])].Entity,
-						Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])].Relationship,
-						Count:        relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])].Count + 1,
+				typeName := path[0]
+				if len(path) > 1 {
+					appName = path[0]
+					typeName = path[1]
+				}
+				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)]; mulRelation {
+					relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)] = RelationshipParam{
+						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)].Entity,
+						Relationship: relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)].Relationship,
+						Count:        relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)].Count + 1,
 					}
 				} else {
-					relationshipMap[encEntity][v.UniqueVarForAppName(appName, path[0])] = RelationshipParam{
-						Entity:       v.UniqueVarForAppName(appName, path[0]),
+					relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)] = RelationshipParam{
+						Entity:       v.UniqueVarForAppName(appName, typeName),
 						Relationship: relation,
 						Count:        1,
 					}

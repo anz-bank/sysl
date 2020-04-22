@@ -34,6 +34,5 @@ paths:
       responses:
         "201":
           description: Created
-          schema: {}
       summary: Creates a goat.
 swagger: "2.0"
