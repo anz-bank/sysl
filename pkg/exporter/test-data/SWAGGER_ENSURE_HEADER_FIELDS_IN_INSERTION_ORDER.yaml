@@ -38,6 +38,5 @@ paths:
       responses:
         "200":
           description: OK
-          schema: {}
       summary: Create a foo.
 swagger: "2.0"

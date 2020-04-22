@@ -51,6 +51,10 @@ func (t *TypeExporter) populateTypes(syslTypes map[string]*proto.Type, swaggerTy
 			t.log.Warnf("Type matching failed %s", err)
 			return err
 		}
+		// Handles empty responses
+		if valueMap.Format == "" && valueMap.Type == "" {
+			continue
+		}
 		typeSchema.Format = valueMap.Format
 		typeSchema.Type = append(typeSchema.Type, valueMap.Type)
 		memberTypes := map[string]*proto.Type{}
@@ -84,6 +88,9 @@ func (t *TypeExporter) populateTypes(syslTypes map[string]*proto.Type, swaggerTy
 }
 
 func (t *TypeExporter) findSwaggerType(syslType *proto.Type) (protoType, error) {
+	if syslType.Type == nil {
+		return protoType{}, nil
+	}
 	switch s := syslType.Type.(type) {
 	case *proto.Type_Primitive_:
 		return protoType{
@@ -102,7 +109,7 @@ func (t *TypeExporter) findSwaggerType(syslType *proto.Type) (protoType, error) 
 		}
 		return protoType{Format: s.TypeRef.GetRef().GetAppname().Part[0], Type: "object"}, nil
 	default:
-		return protoType{}, fmt.Errorf("none of the Swagger Types match")
+		return protoType{}, fmt.Errorf("none of the Swagger Types match for %s", syslType.String())
 	}
 }
 

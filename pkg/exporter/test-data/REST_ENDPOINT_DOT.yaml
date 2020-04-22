@@ -21,7 +21,6 @@ paths:
       responses:
         "203":
           description: Non-Authoritative Information
-          schema: {}
       summary: No description.
     get:
       consumes:
