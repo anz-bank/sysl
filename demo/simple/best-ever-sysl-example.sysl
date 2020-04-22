@@ -1,0 +1,46 @@
+TheWorld:
+    WTFBro:
+        DoNothing
+    OhNoItsGoneWorldWide:
+        HouseLannister <- SecondResponse
+    WereScrewed:
+        Actions <- Giveup
+DragonEater:
+    EatDragon:
+        Actions <- EatDragon
+        if DragonEater got Firebreath:
+            Actions <- SpreadFirebreath
+        else if sdsd:
+            norhinf
+        else:
+            go back to normal
+        return Firebreath
+HouseLannister:
+    FirstResponse:
+        DenyEverything
+        loop until further notice:
+            Actions <- SilenceLittleBirds
+            Actions <- BuildTemplesVeryQuickly
+        return Nothing
+    SecondResponse:
+        if Firebreath still exists:
+            Lockdown
+        return Insult
+Actions:
+    SilenceLittleBirds:
+        ...
+    EatDragon:
+        return Firebreath
+    SpreadFirebreath:
+        TheWorld <- WTFBro
+        HouseLannister <- FirstResponse
+        HouseLannister <- SecondResponse
+        TheWorld <- WereScrewed
+        return Firebreath
+    BuildTemplesVeryQuickly:
+        HowdYouDoThat
+        return Temple
+    Giveup:
+        LearnArchery
+        FeedTheWolves
+        GameOver

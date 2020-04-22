@@ -8,36 +8,43 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 )
 
 func OutputPlantuml(output, plantuml, umlInput string, fs afero.Fs) error {
-	l := len(output)
-	mode := output[l-3:]
+	mode := path.Ext(output)
+	mode = strings.Replace(mode, ".", "", 1)
+	var encoded string
+	var out []byte
+	var err error
+	encoded, err = DeflateAndEncode([]byte(umlInput))
+	if err != nil {
+		return err
+	}
 
 	switch mode {
 	case "png", "svg":
-		encoded, err := DeflateAndEncode([]byte(umlInput))
-		if err != nil {
-			return err
-		}
 		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, encoded)
-		out, err := sendHTTPRequest(plantuml)
+		out, err = sendHTTPRequest(plantuml)
 		if err != nil {
 			return err
 		}
-		return errors.Wrapf(afero.WriteFile(fs, output, append(out, byte('\n')), os.ModePerm), "writing %q", output)
-
-	case "uml":
-		output := output[:l-3]
-		output += "puml"
-		return errors.Wrapf(afero.WriteFile(fs, output, []byte(umlInput), os.ModePerm), "writing %q", output)
-
+	case "html":
+		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, "svg", encoded)
+		out = []byte(fmt.Sprintf(`<img src="%s" alt="plantuml">`, plantuml))
+	case "link":
+		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, "svg", encoded)
+		out = []byte(plantuml)
+	case "puml", "uml", "plantuml":
+		out = []byte(umlInput)
 	default:
-		return fmt.Errorf("extension must be svg, png or uml, not %#v", mode)
+		return fmt.Errorf("extension must be .svg, .png, .uml, .puml, .plantuml, .html or .link, not %#v", mode)
 	}
+	return errors.Wrapf(afero.WriteFile(fs, output, append(out, byte('\n')), os.ModePerm), "writing %q", output)
 }
 
 func sendHTTPRequest(url string) ([]byte, error) {

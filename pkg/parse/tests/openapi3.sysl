@@ -1,0 +1,12 @@
+import preference.yaml as preference ~openapi3
+
+Simple "Simple Server" [package="simple"]:
+    @basePath = "simple"
+
+    /stuff:
+        GET:
+            return ok <: Stuff
+
+    !type Stuff:
+        innerStuff <: string:
+            @json_tag = "innerStuff"
