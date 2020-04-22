@@ -26,7 +26,7 @@ all: test lint build buildlsp coverage examples ## test, lint, build, coverage t
 TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 
 examples: TUTORIALS
-	cd demo/examples/ && go run generate_website.go && cd ../../
+	cd demo/examples/ && go run generate_website.go && cd ../../ && test -z "$$(git status --porcelain)"
 
 .PHONY: all install grammar antlr build lint test coverage clean check-tidy
 lint: ## Run golangci-lint
