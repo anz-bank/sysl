@@ -1,11 +1,12 @@
 package endpointanalysisdiagram
 
 import (
+	"testing"
+
 	"github.com/alecthomas/assert"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/spf13/afero"
-	"testing"
 )
 
 func TestGenerateMermaidIntegrationDiagram(t *testing.T) {
