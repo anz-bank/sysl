@@ -9,14 +9,18 @@ import (
 
 const projectDir = "../../../"
 
+//Keeps track of the statement-endpoint pairs we visit during execution
 type externalLink struct {
 	statement, endPoint string
 }
 
+//Accepts the sysl module and returns a string (and an error if any)
+//The resulting string is the mermaid code for the endpoint analysis for that application and endpoint
 func GenerateEndpointAnalysisDiagram(m *sysl.Module) (string, error) {
 	return generateEndpointAnalysisDiagram(m, &[]externalLink{}, true)
 }
 
+//This is a helper which has additional arguments which need not be entered by the user
 func generateEndpointAnalysisDiagram(m *sysl.Module, externalLinks *[]externalLink, theStart bool) (string, error) {
 	var result string
 	if theStart {
@@ -36,6 +40,7 @@ func generateEndpointAnalysisDiagram(m *sysl.Module, externalLinks *[]externalLi
 	return result, nil
 }
 
+//This function is used to print the mermaid code for different sysl statements
 func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statement,
 	endPoint string, externalLinks *[]externalLink) string {
 	var result string
@@ -69,6 +74,7 @@ func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statemen
 	return result
 }
 
+//Checks if the statement-endpoint group have been already visited or not
 func externalLinksContain(i []externalLink, ip externalLink) bool {
 	for _, a := range i {
 		if a == ip {
@@ -78,6 +84,8 @@ func externalLinksContain(i []externalLink, ip externalLink) bool {
 	return false
 }
 
+//Replaces certain characters in the string suitable for mermaid
+//TODO:Replace more characters if necessary
 func cleanString(temp string) string {
 	temp = strings.ReplaceAll(temp, " ", "")
 	temp = strings.ReplaceAll(temp, "{", "_")
