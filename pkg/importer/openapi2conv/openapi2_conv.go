@@ -252,7 +252,7 @@ func ToV3Response(response *openapi2.Response) (*openapi3.ResponseRef, error) {
 		}, nil
 	}
 	result := &openapi3.Response{
-		Description: response.Description,
+		Description: &response.Description,
 	}
 	if schemaRef := response.Schema; schemaRef != nil {
 		result.WithJSONSchemaRef(ToV3SchemaRef(schemaRef))
@@ -628,7 +628,7 @@ func FromV3Response(ref *openapi3.ResponseRef) (*openapi2.Response, error) {
 		return nil, nil
 	}
 	result := &openapi2.Response{
-		Description: response.Description,
+		Description: *response.Description,
 	}
 	if content := response.Content; content != nil {
 		if ct := content["application/json"]; ct != nil {
