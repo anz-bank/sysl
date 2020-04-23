@@ -114,6 +114,8 @@ github.com/fullstorydev/grpcurl v1.5.0 h1:IfN08voSku7YD7N28Kpcw5fZWq9ahQopEzTpWU
 github.com/fullstorydev/grpcurl v1.5.0/go.mod h1:fBzJMv8zhFPeNhr4OAc/97pYPQfvGDsEdNB36oNsnbs=
 github.com/getkin/kin-openapi v0.3.0 h1:xsQ4mA20YJDMgIHdHqMKZ66QUe6/hi+x6yLsTTz8xyQ=
 github.com/getkin/kin-openapi v0.3.0/go.mod h1:W8dhxZgpE84ciM+VIItFqkmZ4eHtuomrdIHtASQIqi0=
+github.com/getkin/kin-openapi v0.5.1 h1:eTe5fqly4FQTjSSMLekYckymPJHEJ4unOvY8c2hSYr4=
+github.com/getkin/kin-openapi v0.5.1/go.mod h1:zZQMFkVgRHCdhgb6ihCTIo9dyDZFvX0k/xAKqw1FhPw=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/globalsign/mgo v0.0.0-20180905125535-1ca0a4f7cbcb/go.mod h1:xkRDCp4j0OGD1HRkm4kmhM+pmpv3AKq5SU7GMg4oO/Q=

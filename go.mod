@@ -25,7 +25,7 @@ require (
 	github.com/dlclark/regexp2 v1.2.0 // indirect
 	github.com/fullstorydev/grpcui v0.2.1
 	github.com/fullstorydev/grpcurl v1.5.0
-	github.com/getkin/kin-openapi v0.3.0
+	github.com/getkin/kin-openapi v0.5.1
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi v4.0.4+incompatible
 	github.com/go-openapi/errors v0.19.4 // indirect
