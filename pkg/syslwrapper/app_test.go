@@ -1,4 +1,4 @@
-package syslutil
+package syslwrapper
 
 import (
 	"encoding/json"
@@ -17,6 +17,21 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	return mod, err
 }
 
+func TestMapUnresolvedRest(t *testing.T) {
+	mod, err := readSyslModule("./tests/types.sysl")
+	assert.NoError(t, err)
+	mapper := MakeAppMapper(mod)
+	mapper.IndexTypes()
+	simpleApps, err := mapper.Map()
+	assert.NoError(t, err)
+	printStr, _ := json.MarshalIndent(simpleApps, "", " ")
+	t.Log(string(printStr))
+	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["CustomerID"].Type.Type)
+	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["newPost"].Type.Type)
+	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Response["default"].Type.Type)
+	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /post"].Params["newPost"].Type.Type)
+	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["GET /post"].Params["PostId"].Type.Type)
+}
 func TestMapRest(t *testing.T) {
 	mod, err := readSyslModule("./tests/rest.sysl")
 	assert.NoError(t, err)

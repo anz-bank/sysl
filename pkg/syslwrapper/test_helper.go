@@ -1,4 +1,4 @@
-package syslutil
+package syslwrapper
 
 import (
 	"strings"

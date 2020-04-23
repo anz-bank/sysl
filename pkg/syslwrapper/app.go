@@ -1,4 +1,4 @@
-package syslutil
+package syslwrapper
 
 import (
 	"fmt"
@@ -16,23 +16,26 @@ type App struct {
 }
 
 type Endpoint struct {
-	Path       string
-	Params     map[string]*Parameter
-	Response   map[string]*Parameter
-	Downstream []string
+	Description string
+	Path        string
+	Params      map[string]*Parameter
+	Response    map[string]*Parameter
+	Downstream  []string
 }
 
 type Parameter struct {
-	Name string
-	Type *Type
+	Description string
+	Name        string
+	Type        *Type
 }
 
 type Type struct {
-	Reference  string // The full name of the app where the type is defined
-	Type       string
-	Items      []*Type
-	Enum       map[string]int64
-	Properties map[string]*Type
+	Description string
+	Reference   string // The full name of the app where the type is defined
+	Type        string
+	Items       []*Type
+	Enum        map[string]int64
+	Properties  map[string]*Type
 }
 
 type AppMapper struct {
@@ -140,7 +143,7 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement) map[string]*Parameter {
 
 		} else {
 			// If it's a primitive, we return it
-			returnName = "default"
+			returnName = "200"
 			returnType = &Type{
 				Type: stmt[i].GetRet().Payload,
 			}
@@ -215,8 +218,8 @@ func (am *AppMapper) mapParams(p []*sysl.Param) map[string]*Parameter {
 
 func (am *AppMapper) resolveParamType(syslType *sysl.Type) *Type {
 	// Lookup type in Types
-	typeResolved := am.resolveType(syslType)
-	return am.MapType(typeResolved)
+	//typeResolved := am.resolveType(syslType)
+	return am.MapType(syslType)
 }
 
 // Takes a sysl type and resolves all references recursively
