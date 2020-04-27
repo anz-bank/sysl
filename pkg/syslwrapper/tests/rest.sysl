@@ -7,7 +7,7 @@ SampleRestApp:
 
     /post:
         # Now use rest methods with the endpoint
-        POST (PostID <: PostID [~body]):
+        POST (PostID <: SampleRestApp.PostID [~body]):
             return Post
 
         GET (limit <: int) ?PostId=string:

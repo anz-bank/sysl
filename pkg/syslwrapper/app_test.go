@@ -17,6 +17,56 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	return mod, err
 }
 
+// GenerateTypeGraph takes in a simplified sysl type and resolves the sub type references
+func GenerateTypeGraph(simpleType *Type, name string, typeMap map[string]*Type, simpleTypes map[string]*Type) map[string]*Type {
+	if typeMap == nil {
+		typeMap = make(map[string]*Type)
+	}
+	typeMap[name] = simpleType
+	switch simpleType.Type {
+	case "bool", "int", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid":
+	case "ref":
+		return GenerateTypeGraph(simpleTypes[simpleType.Reference], simpleType.Reference, typeMap, simpleTypes)
+	case "list":
+		return GenerateTypeGraph(simpleTypes[simpleType.Reference], simpleType.Reference, typeMap, simpleTypes)
+	case "map":
+		return GenerateTypeGraph(simpleTypes[simpleType.Reference], simpleType.Reference, typeMap, simpleTypes)
+	case "tuple":
+		for propName, prop := range simpleType.Properties {
+			subGraph := GenerateTypeGraph(prop, propName, typeMap, simpleTypes)
+			for subType := range subGraph {
+				typeMap[subType] = subGraph[subType]
+			}
+		}
+	}
+	return typeMap
+}
+func TestExampleDatamodelDiagram(t *testing.T) {
+	mod, err := readSyslModule("./tests/rest.sysl")
+	assert.NoError(t, err)
+	mapper := MakeAppMapper(mod)
+	mapper.IndexTypes()
+	mapper.ConvertTypes()
+	simpleApps, err := mapper.Map()
+	assert.NoError(t, err)
+
+	// Iterate over each param and show each type
+	for _, app := range simpleApps {
+		for _, endpoint := range app.Endpoints {
+			for _, param := range endpoint.Params {
+				relevantTypes := GenerateTypeGraph(param.Type, param.Name, nil, mapper.SimpleTypes)
+				printStr, _ := json.MarshalIndent(relevantTypes, "", " ")
+				t.Log(string(printStr))
+
+			}
+			for _, response := range endpoint.Response {
+				relevantTypes := GenerateTypeGraph(response.Type, response.Name, nil, mapper.SimpleTypes)
+				printStr, _ := json.MarshalIndent(relevantTypes, "", " ")
+				t.Log(string(printStr))
+			}
+		}
+	}
+}
 func TestMapUnresolvedRest(t *testing.T) {
 	mod, err := readSyslModule("./tests/types.sysl")
 	assert.NoError(t, err)

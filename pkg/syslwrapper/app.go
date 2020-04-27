@@ -33,7 +33,7 @@ type Parameter struct {
 
 type Type struct {
 	Description string
-	Reference   string // The full name of the app where the type is defined
+	Reference   string // The full name of the app:typename
 	Type        string
 	Items       []*Type
 	Enum        map[string]int64
@@ -41,8 +41,9 @@ type Type struct {
 }
 
 type AppMapper struct {
-	Module *sysl.Module
-	Types  map[string]*sysl.Type // A map of all non reference sysl types
+	Module      *sysl.Module
+	Types       map[string]*sysl.Type // A map of all non reference sysl types
+	SimpleTypes map[string]*Type
 }
 
 // MakeAppMapper creates an appmapper
@@ -89,6 +90,15 @@ func (am *AppMapper) IndexTypes() map[string]*sysl.Type {
 	}
 	am.Types = typeIndex
 	return typeIndex
+}
+
+func (am *AppMapper) ConvertTypes() map[string]*Type {
+	simpleTypes := make(map[string]*Type)
+	for typeName, syslType := range am.Types {
+		simpleTypes[typeName] = am.MapType(syslType)
+	}
+	am.SimpleTypes = simpleTypes
+	return simpleTypes
 }
 
 // TODO: Resolve Parameters
