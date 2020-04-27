@@ -16,6 +16,7 @@ type App struct {
 }
 
 type Endpoint struct {
+	Summary     string
 	Description string
 	Path        string
 	Params      map[string]*Parameter
@@ -24,6 +25,7 @@ type Endpoint struct {
 }
 
 type Parameter struct {
+	In          string
 	Description string
 	Name        string
 	Type        *Type
@@ -119,15 +121,17 @@ func (am *AppMapper) mapEndpoints(appName string, ep map[string]*sysl.Endpoint) 
 	endpoints := make(map[string]*Endpoint, 15)
 	for key, value := range ep {
 		endpoints[key] = &Endpoint{
-			Path:     key,
-			Params:   am.mapAllParams(value),
-			Response: am.mapResponse(value.GetStmt()),
+			Summary:     am.getAttribute(value.GetAttrs(), "summary"),
+			Path:        key,
+			Params:      am.mapAllParams(value),
+			Response:    am.mapResponse(value.GetStmt(), appName),
+			Description: value.Docstring,
 		}
 	}
 	return endpoints
 }
 
-func (am *AppMapper) mapResponse(stmt []*sysl.Statement) map[string]*Parameter {
+func (am *AppMapper) mapResponse(stmt []*sysl.Statement, appName string) map[string]*Parameter {
 	responseTypes := make(map[string]*Parameter, 15)
 	for i := range stmt {
 		var returnType *Type
@@ -135,14 +139,32 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement) map[string]*Parameter {
 		if stmt[i].GetRet() == nil {
 			continue
 		}
+		// TODO: Handle return 200 <: sequence of Foo etc.
 		if strings.Contains(stmt[i].GetRet().Payload, "<:") {
 			returnStatement := strings.Split(stmt[i].GetRet().Payload, " <: ")
-			returnRef := strings.Replace(returnStatement[1], ".", ":", 1)
-			returnType = am.MapType(am.Types[returnRef])
 			returnName = returnStatement[0]
-
+			// Handle references to type in different app, e.g 200 <: Foobar.Error
+			if strings.Contains(returnStatement[1], ".") {
+				returnRef := strings.Replace(returnStatement[1], ".", ":", 1)
+				returnType = &Type{
+					Type:      "ref",
+					Reference: returnRef,
+				}
+			} else {
+				// Handle references to type in same app, e.g 200 <: Error
+				typeFound, ok := am.Types[appName+":"+returnStatement[1]]
+				if !ok {
+					// Type reference not found. Trying to convert primitive
+					returnType = am.MapType(typeFound)
+				} else {
+					returnType = &Type{
+						Type:      "ref",
+						Reference: appName + ":" + returnStatement[1],
+					}
+				}
+			}
 		} else {
-			// If it's a primitive, we return it
+			// If it's a primitive, e.g return string
 			returnName = "200"
 			returnType = &Type{
 				Type: stmt[i].GetRet().Payload,
@@ -182,10 +204,10 @@ func (am *AppMapper) mapURLParams(urlParams []*sysl.Endpoint_RestParams_QueryPar
 		return params
 	}
 	for _, urlParam := range urlParams {
-		fmt.Println(urlParam.GetName())
 		params[urlParam.GetName()] = &Parameter{
 			Name: urlParam.GetName(),
-			Type: am.resolveParamType(urlParam.GetType()),
+			Type: am.MapType(urlParam.GetType()),
+			In:   "path",
 		}
 	}
 	return params
@@ -196,10 +218,10 @@ func (am *AppMapper) mapQueryParams(queryParams []*sysl.Endpoint_RestParams_Quer
 		return params
 	}
 	for _, queryParam := range queryParams {
-		fmt.Println(queryParam.GetName())
 		params[queryParam.GetName()] = &Parameter{
 			Name: queryParam.GetName(),
-			Type: am.resolveParamType(queryParam.GetType()),
+			Type: am.MapType(queryParam.GetType()),
+			In:   "query",
 		}
 	}
 	return params
@@ -210,16 +232,40 @@ func (am *AppMapper) mapParams(p []*sysl.Param) map[string]*Parameter {
 	for _, param := range p {
 		params[param.GetName()] = &Parameter{
 			Name: param.GetName(),
-			Type: am.resolveParamType(param.GetType()),
+			Type: am.MapType(param.GetType()),
+			In:   ParamIn(param.Type.GetAttrs()),
 		}
 	}
 	return params
 }
 
-func (am *AppMapper) resolveParamType(syslType *sysl.Type) *Type {
-	// Lookup type in Types
-	//typeResolved := am.resolveType(syslType)
-	return am.MapType(syslType)
+func (am *AppMapper) getAttribute(attribute map[string]*sysl.Attribute, attributeName string) string {
+	attr, ok := attribute[attributeName]
+	if !ok {
+		return ""
+	}
+	return attr.GetS()
+}
+
+func ParamIn(attrs map[string]*sysl.Attribute) string {
+	if HasPattern(attrs, "body") {
+		return "body"
+	}
+	return "header"
+}
+
+func HasPattern(attrs map[string]*sysl.Attribute, pattern string) bool {
+	patterns, has := attrs["patterns"]
+	if has {
+		if x := patterns.GetA(); x != nil {
+			for _, y := range x.Elt {
+				if y.GetS() == pattern {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 // Takes a sysl type and resolves all references recursively
