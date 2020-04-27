@@ -7,9 +7,18 @@ SampleRestApp:
 
     /post:
         # Now use rest methods with the endpoint
-        POST (newPost <: string [~body]):
-            return string
+        POST (PostID <: PostID [~body]):
+            return Post
 
-        GET (newPost <: string) ?PostId=string:
+        GET (limit <: int) ?PostId=string:
             return string
+    
+    
+    !type Post:
+        description <: string
+        content <: string
+
+    !type PostID:
+        id <: int
+    
 
