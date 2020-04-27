@@ -1,3 +1,4 @@
+//nolint:lll
 package syslwrapper
 
 import (
@@ -10,40 +11,42 @@ import (
 // App is a simplified representation of an application in sysl
 type App struct {
 	Name       string
-	Attributes map[string]string
-	Endpoints  map[string]*Endpoint
-	Types      map[string]*Type
+	Attributes map[string]string    // Contains app level attributes. All attributes assumed to be strings.
+	Endpoints  map[string]*Endpoint // Contains all application endpoints
+	Types      map[string]*Type     // Contains all type definitions in the application, excluding types defined in Params and Responses
 }
 
+// Endpoint is a simplified representation of a Sysl endpoint
 type Endpoint struct {
-	Summary     string
-	Description string
-	Path        string
-	Params      map[string]*Parameter
-	Response    map[string]*Parameter
-	Downstream  []string
+	Summary     string                // Short human-readable description of what the endpoint does
+	Description string                // Longer description of what the endpoint does
+	Path        string                // Path
+	Params      map[string]*Parameter // Request parameters
+	Response    map[string]*Parameter // Response parameters
+	Downstream  []string              // TODO: Work out the dependency graph of each application. Store downstreams in this field.
 }
 
 type Parameter struct {
-	In          string
+	In          string // Valid values include {body, header, path, query}. Cookie not supported
 	Description string
 	Name        string
 	Type        *Type
 }
 
+// Type represents a simplified Sysl Type.
 type Type struct {
 	Description string
-	Reference   string // The full name of the app:typename
-	Type        string
-	Items       []*Type
-	Enum        map[string]int64
-	Properties  map[string]*Type
+	Reference   string           // Used to represent type references. In the format of app:typename.
+	Type        string           // Used to indicate the type. Can be one of {"bool", "int", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid", "ref", "list", "map", "enum", "tuple"}
+	Items       []*Type          // Used to represent map types, where the 0 index is the key type, and 1 index is the value type.
+	Enum        map[string]int64 // Used to represent enums
+	Properties  map[string]*Type // Used to represent tuple types.
 }
 
 type AppMapper struct {
 	Module      *sysl.Module
-	Types       map[string]*sysl.Type // A map of all non reference sysl types
-	SimpleTypes map[string]*Type
+	Types       map[string]*sysl.Type // A map of all sysl types. Key is in format "appname:typename".
+	SimpleTypes map[string]*Type      // A map of all simplified types. Key is in format "appname:typename".
 }
 
 // MakeAppMapper creates an appmapper
@@ -58,10 +61,7 @@ func MakeAppMapper(m *sysl.Module) *AppMapper {
 func (am *AppMapper) Map() (map[string]*App, error) {
 	var simpleApps = make(map[string]*App, 15)
 	for _, app := range am.Module.Apps {
-		simpleApp, err := am.BuildApplication(app)
-		if err != nil {
-			return nil, err
-		}
+		simpleApp := am.BuildApplication(app)
 		simpleApps[simpleApp.Name] = simpleApp
 	}
 	return simpleApps, nil
@@ -69,14 +69,14 @@ func (am *AppMapper) Map() (map[string]*App, error) {
 
 // BuildApplication returns a clean representation of a Sysl Application
 // which hides the complexities of the protobuf generated type.
-func (am *AppMapper) BuildApplication(a *sysl.Application) (*App, error) {
+func (am *AppMapper) BuildApplication(a *sysl.Application) *App {
 	cleanApp := &App{
 		Name:       strings.Join(a.GetName().GetPart(), " "),
 		Attributes: am.mapAttributes(a.GetAttrs()),
 		Endpoints:  am.mapEndpoints(strings.Join(a.GetName().GetPart(), " "), a.GetEndpoints()),
 		Types:      am.mapTypes(strings.Join(a.GetName().GetPart(), " "), a.GetTypes()),
 	}
-	return cleanApp, nil
+	return cleanApp
 }
 
 // Creates a map of all types
@@ -101,8 +101,6 @@ func (am *AppMapper) ConvertTypes() map[string]*Type {
 	return simpleTypes
 }
 
-// TODO: Resolve Parameters
-
 // Iterates over types and resolves typerefs
 func (am *AppMapper) resolveTypes() {
 	for key, value := range am.Types {
@@ -121,7 +119,7 @@ func (am *AppMapper) mapAttributes(attributes map[string]*sysl.Attribute) map[st
 
 func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) map[string]*Type {
 	simpleTypes := make(map[string]*Type, 15)
-	for typeName, _ := range syslTypes {
+	for typeName := range syslTypes {
 		simpleTypes[typeName] = am.MapType(am.Types[appName+":"+typeName])
 	}
 	return simpleTypes
@@ -131,7 +129,7 @@ func (am *AppMapper) mapEndpoints(appName string, ep map[string]*sysl.Endpoint) 
 	endpoints := make(map[string]*Endpoint, 15)
 	for key, value := range ep {
 		endpoints[key] = &Endpoint{
-			Summary:     am.getAttribute(value.GetAttrs(), "summary"),
+			Summary:     am.GetAttribute(value.GetAttrs(), "summary"),
 			Path:        key,
 			Params:      am.mapAllParams(value),
 			Response:    am.mapResponse(value.GetStmt(), appName),
@@ -179,7 +177,6 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement, appName string) map[str
 			returnType = &Type{
 				Type: stmt[i].GetRet().Payload,
 			}
-
 		}
 
 		responseTypes[returnName] = &Parameter{
@@ -249,7 +246,7 @@ func (am *AppMapper) mapParams(p []*sysl.Param) map[string]*Parameter {
 	return params
 }
 
-func (am *AppMapper) getAttribute(attribute map[string]*sysl.Attribute, attributeName string) string {
+func (am *AppMapper) GetAttribute(attribute map[string]*sysl.Attribute, attributeName string) string {
 	attr, ok := attribute[attributeName]
 	if !ok {
 		return ""
@@ -363,18 +360,13 @@ func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName strin
 	return appName, typeName
 }
 
-// Converts sysl type to a string representatino of the type
+// Converts sysl type to a string representation of the type
 func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	var simpleType string
 	var items []*Type
 	var properties map[string]*Type
 	var enum map[string]int64
 	var ref string
-
-	if t == nil {
-		fmt.Printf("empty type")
-		return &Type{}
-	}
 
 	switch t.Type.(type) {
 	case *sysl.Type_NoType_:

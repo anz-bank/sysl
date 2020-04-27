@@ -1,3 +1,4 @@
+//nolint:lll
 package syslwrapper
 
 import (
@@ -15,6 +16,14 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	mod, err := parse.NewParser().Parse(filename,
 		syslutil.NewChrootFs(afero.NewOsFs(), "."))
 	return mod, err
+}
+
+func prettyPrint(t *testing.T, v interface{}) {
+	json, err := json.MarshalIndent(v, "", " ")
+	if err != nil {
+		t.Log(t, err)
+	}
+	t.Log(t, json)
 }
 
 // GenerateTypeGraph takes in a simplified sysl type and resolves the sub type references
@@ -55,32 +64,14 @@ func TestExampleDatamodelDiagram(t *testing.T) {
 		for _, endpoint := range app.Endpoints {
 			for _, param := range endpoint.Params {
 				relevantTypes := GenerateTypeGraph(param.Type, param.Name, nil, mapper.SimpleTypes)
-				printStr, _ := json.MarshalIndent(relevantTypes, "", " ")
-				t.Log(string(printStr))
-
+				prettyPrint(t, relevantTypes)
 			}
 			for _, response := range endpoint.Response {
 				relevantTypes := GenerateTypeGraph(response.Type, response.Name, nil, mapper.SimpleTypes)
-				printStr, _ := json.MarshalIndent(relevantTypes, "", " ")
-				t.Log(string(printStr))
+				prettyPrint(t, relevantTypes)
 			}
 		}
 	}
-}
-func TestMapUnresolvedRest(t *testing.T) {
-	mod, err := readSyslModule("./tests/types.sysl")
-	assert.NoError(t, err)
-	mapper := MakeAppMapper(mod)
-	mapper.IndexTypes()
-	simpleApps, err := mapper.Map()
-	assert.NoError(t, err)
-	printStr, _ := json.MarshalIndent(simpleApps, "", " ")
-	t.Log(string(printStr))
-	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["CustomerID"].Type.Type)
-	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["newPost"].Type.Type)
-	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Response["default"].Type.Type)
-	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /post"].Params["newPost"].Type.Type)
-	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["GET /post"].Params["PostId"].Type.Type)
 }
 func TestMapRest(t *testing.T) {
 	mod, err := readSyslModule("./tests/rest.sysl")
@@ -90,12 +81,10 @@ func TestMapRest(t *testing.T) {
 	mapper.resolveTypes()
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
-	printStr, _ := json.MarshalIndent(simpleApps, "", " ")
-	t.Log(string(printStr))
+	prettyPrint(t, simpleApps)
 	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["CustomerID"].Type.Type)
 	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["newPost"].Type.Type)
-	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Response["default"].Type.Type)
-	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /post"].Params["newPost"].Type.Type)
+	assert.Equal(t, "ref", simpleApps["SampleRestApp"].Endpoints["POST /post"].Params["PostID"].Type.Type)
 	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["GET /post"].Params["PostId"].Type.Type)
 }
 func TestMap(t *testing.T) {
@@ -106,12 +95,12 @@ func TestMap(t *testing.T) {
 	mapper.resolveTypes()
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
+	prettyPrint(t, simpleApps)
 	assert.Equal(t, "", simpleApps["Server"].Types["Response"].Properties["balance"].Type)
 	assert.Equal(t, "tuple", simpleApps["Server"].Types["Response"].Properties["query"].Type)
 	assert.Equal(t, "int", simpleApps["Server"].Types["Response"].Properties["query"].Properties["amount"].Type)
-	assert.Equal(t, "tuple", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Type)
-	assert.Equal(t, "tuple", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Type)
-	assert.Equal(t, "string", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Properties["query"].Type)
+	assert.Equal(t, "ref", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Type)
+	assert.Equal(t, "Server:Request", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Reference)
 }
 func TestResolveTypesWithSyslFile(t *testing.T) {
 	mod, err := readSyslModule("./tests/types.sysl")
@@ -164,8 +153,9 @@ func TestResolveNonExistentType(t *testing.T) {
 	mapper.IndexTypes()
 
 	mapper.resolveTypes()
-	assert.Equal(t, nil, mapper.Types["app2:request"])
-	assert.Equal(t, nil, mapper.Types["app1:list"])
+
+	assert.Equal(t, nil, mapper.Types["app2:request"].GetType())
+	assert.Equal(t, nil, mapper.Types["app1:list"].GetType())
 }
 func TestResolveTypesNil(t *testing.T) {
 	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
@@ -181,9 +171,9 @@ func TestResolveTypesNil(t *testing.T) {
 	mapper := MakeAppMapper(mod)
 	typeIndex := mapper.IndexTypes()
 	mapper.resolveTypes()
-
-	assert.Equal(t, nil, typeIndex["app2:request"])
-	assert.Equal(t, &sysl.Type{}, typeIndex["app1:list"])
+	prettyPrint(t, typeIndex["app2:request"])
+	assert.Equal(t, nil, typeIndex["app2:request"].GetType())
+	assert.Equal(t, nil, typeIndex["app1:list"].GetType())
 }
 
 func TestResolveTypeOneOf(t *testing.T) {

@@ -174,25 +174,24 @@ func MakeOneOf(oneOfType []*sysl.Type) *sysl.Type {
 	}
 }
 
-//TODO Relatino, set, sequence, notype
-// This is complext. TODO
-func MakeRelation(oneOfType []*sysl.Type) *sysl.Type {
-	return &sysl.Type{
-		Type: &sysl.Type_Relation_{
-			Relation: &sysl.Type_Relation{},
-		},
-	}
-}
+//TODO relation, set, sequence, notype
+// func MakeRelation(oneOfType []*sysl.Type) *sysl.Type {
+// 	return &sysl.Type{
+// 		Type: &sysl.Type_Relation_{
+// 			Relation: &sysl.Type_Relation{},
+// 		},
+// 	}
+// }
 
-func MakeSet(oneOfType []*sysl.Type) *sysl.Type {
-	return &sysl.Type{
-		Type: &sysl.Type_OneOf_{
-			OneOf: &sysl.Type_OneOf{
-				Type: oneOfType,
-			},
-		},
-	}
-}
+// func MakeSet(oneOfType []*sysl.Type) *sysl.Type {
+// 	return &sysl.Type{
+// 		Type: &sysl.Type_OneOf_{
+// 			OneOf: &sysl.Type_OneOf{
+// 				Type: oneOfType,
+// 			},
+// 		},
+// 	}
+// }
 
 func MakeNoType() *sysl.Type {
 	return &sysl.Type{
