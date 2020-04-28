@@ -32,7 +32,7 @@ func generateEndpointAnalysisDiagram(m *sysl.Module, externalLinks *[]externalLi
 			statements := endPoint.Stmt
 			result += printEndpointAnalysisStatements(m, statements, cleanString(epName), externalLinks)
 		}
-		result += fmt.Sprintf(" end\n")
+		result += " end\n"
 	}
 	for _, eLink := range *externalLinks {
 		result += fmt.Sprintf(" %s-->%s\n", eLink.statement, eLink.endPoint)
