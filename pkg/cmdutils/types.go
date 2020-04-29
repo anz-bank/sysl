@@ -98,6 +98,10 @@ type ExecuteArgs struct {
 	DefaultAppName string
 }
 
+type DiagramCmd struct {
+	Value string
+}
+
 type Command interface {
 	Configure(*kingpin.Application) *kingpin.CmdClause
 	Execute(ExecuteArgs) error
