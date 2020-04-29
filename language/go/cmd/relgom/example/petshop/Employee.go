@@ -7,6 +7,7 @@ package petshopmodel
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/anz-bank/sysl/language/go/pkg/relgom/relgomlib"
@@ -42,25 +43,29 @@ type employeeData struct {
 // MarshalJSON implements json.Marshaler.
 func (d *employeeData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		EmployeeID int64      `json:"employeeId,omitempty"`
-		Name       *string    `json:"name,omitempty"`
-		Dob        *time.Time `json:"dob,omitempty"`
-		Error      int64      `json:"error,omitempty"`
-	}{EmployeeID: d.employeeID, Name: d.name, Dob: d.dob, Error: d.error})
+		EmployeeID int64                     `json:"employeeId,omitempty"`
+		Name       *string                   `json:"name,omitempty"`
+		Dob        *relgomlib.DateTimeString `json:"dob,omitempty"`
+		Error      int64                     `json:"error,omitempty"`
+	}{EmployeeID: d.employeeID, Name: d.name, Dob: relgomlib.NewDateTimeString(d.dob), Error: d.error})
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
 func (d *employeeData) UnmarshalJSON(data []byte) error {
 	var u struct {
-		EmployeeID int64      `json:"employeeId,omitempty"`
-		Name       *string    `json:"name,omitempty"`
-		Dob        *time.Time `json:"dob,omitempty"`
-		Error      int64      `json:"error,omitempty"`
+		EmployeeID int64                     `json:"employeeId,omitempty"`
+		Name       *string                   `json:"name,omitempty"`
+		Dob        *relgomlib.DateTimeString `json:"dob,omitempty"`
+		Error      int64                     `json:"error,omitempty"`
 	}
 	if err := json.Unmarshal(data, &u); err != nil {
 		return err
 	}
-	*d = employeeData{employeePK: employeePK{employeeID: u.EmployeeID}, name: u.Name, dob: u.Dob, error: u.Error}
+	unstageDob, err := u.Dob.Unstage()
+	if err != nil {
+		return fmt.Errorf("error unstaging %s.%s: %v", "Employee", "dob", err)
+	}
+	*d = employeeData{employeePK: employeePK{employeeID: u.EmployeeID}, name: u.Name, dob: unstageDob, error: u.Error}
 	return nil
 }
 

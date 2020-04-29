@@ -7,6 +7,7 @@ package petshopmodel
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/anz-bank/sysl/language/go/pkg/relgom/relgomlib"
@@ -44,29 +45,33 @@ type petData struct {
 // MarshalJSON implements json.Marshaler.
 func (d *petData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		PetID   int64      `json:"petId,omitempty"`
-		BreedID *int64     `json:"breedId,omitempty"`
-		Name    *string    `json:"name,omitempty"`
-		Dob     *time.Time `json:"dob,omitempty"`
-		NumLegs *int64     `json:"numLegs,omitempty"`
-		Desexed *bool      `json:"desexed,omitempty"`
-	}{PetID: d.petID, BreedID: d.breedID, Name: d.name, Dob: d.dob, NumLegs: d.numLegs, Desexed: d.desexed})
+		PetID   int64                     `json:"petId,omitempty"`
+		BreedID *int64                    `json:"breedId,omitempty"`
+		Name    *string                   `json:"name,omitempty"`
+		Dob     *relgomlib.DateTimeString `json:"dob,omitempty"`
+		NumLegs *int64                    `json:"numLegs,omitempty"`
+		Desexed *bool                     `json:"desexed,omitempty"`
+	}{PetID: d.petID, BreedID: d.breedID, Name: d.name, Dob: relgomlib.NewDateTimeString(d.dob), NumLegs: d.numLegs, Desexed: d.desexed})
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
 func (d *petData) UnmarshalJSON(data []byte) error {
 	var u struct {
-		PetID   int64      `json:"petId,omitempty"`
-		BreedID *int64     `json:"breedId,omitempty"`
-		Name    *string    `json:"name,omitempty"`
-		Dob     *time.Time `json:"dob,omitempty"`
-		NumLegs *int64     `json:"numLegs,omitempty"`
-		Desexed *bool      `json:"desexed,omitempty"`
+		PetID   int64                     `json:"petId,omitempty"`
+		BreedID *int64                    `json:"breedId,omitempty"`
+		Name    *string                   `json:"name,omitempty"`
+		Dob     *relgomlib.DateTimeString `json:"dob,omitempty"`
+		NumLegs *int64                    `json:"numLegs,omitempty"`
+		Desexed *bool                     `json:"desexed,omitempty"`
 	}
 	if err := json.Unmarshal(data, &u); err != nil {
 		return err
 	}
-	*d = petData{petPK: petPK{petID: u.PetID}, breedID: u.BreedID, name: u.Name, dob: u.Dob, numLegs: u.NumLegs, desexed: u.Desexed}
+	unstageDob, err := u.Dob.Unstage()
+	if err != nil {
+		return fmt.Errorf("error unstaging %s.%s: %v", "Pet", "dob", err)
+	}
+	*d = petData{petPK: petPK{petID: u.PetID}, breedID: u.BreedID, name: u.Name, dob: unstageDob, numLegs: u.NumLegs, desexed: u.Desexed}
 	return nil
 }
 
