@@ -36,10 +36,11 @@ type Parameter struct {
 // Type represents a simplified Sysl Type.
 type Type struct {
 	Description string
+	Optional    bool             // Used to represent if the type is optional
 	Reference   string           // Used to represent type references. In the format of app:typename.
 	Type        string           // Used to indicate the type. Can be one of {"bool", "int", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid", "ref", "list", "map", "enum", "tuple"}
 	Items       []*Type          // Used to represent map types, where the 0 index is the key type, and 1 index is the value type.
-	Enum        map[string]int64 // Used to represent enums
+	Enum        map[int64]string // Used to represent enums
 	Properties  map[string]*Type // Used to represent tuple types.
 }
 
@@ -310,17 +311,6 @@ func (am *AppMapper) resolveType(t *sysl.Type) *sysl.Type {
 
 // MapSyslType converts types from sysl.Type to Type
 func (am *AppMapper) MapSyslType(t *sysl.Type) (*sysl.Type, error) {
-	// TypeRefs can have various formats.
-	// When a type defined in the same app is referenced
-	// 	- no context is provided
-	// 	- the ref.path[0] element is the type name
-	// When a type from another app is referenced in a parameter
-	// 	- context is NOT provided
-	//  - ref.appName is provided
-	// 	- the ref.path[0] element is the type name
-	// When a type from another app is referenced
-	// 	- context is provided
-	// 	- the ref.path[0] element is the application name
 	var appName string
 	if t == nil {
 		return nil, fmt.Errorf("invalid arguments")
@@ -334,18 +324,25 @@ func (am *AppMapper) MapSyslType(t *sysl.Type) (*sysl.Type, error) {
 }
 
 // TypeRefs can have various formats.
-// When a type defined in the same app is referenced in a TYPE
+// Case 1: When a type defined in the same app is referenced in a TYPE
 // 	- no appname is provided in the path
 // 	- the ref.path[0] element is the type name
-// When a type from another app is referenced in a parameter
+// Case 2: When a type from another app is referenced in a TYPE
+// 	- context is provided
+// 	- the ref.path[0] element is the application name
+// Case 3: When a type from another app is referenced in a parameter
 // 	- context is NOT provided
 //  - ref.appName is provided
 // 	- the ref.path[0] element is the type name
-// When a type from another app is referenced in a TYPE
-// 	- context is provided
-// 	- the ref.path[0] element is the application name
+// Case 4: When a type from the same app is referenced in a parameter
+// 	- context is NOT provided
+//  - ref.appName is provided AND is the type name (This is crazy and needs to be fixed)
 func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName string) {
 	ref := t.GetTypeRef().GetRef()
+	if ref.GetPath() == nil {
+		typeName = strings.Join(ref.Appname.Part, "")
+		return appName, typeName
+	}
 	if len(ref.GetPath()) > 1 {
 		appName = ref.Path[0]
 		typeName = ref.Path[1]
@@ -365,7 +362,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	var simpleType string
 	var items []*Type
 	var properties map[string]*Type
-	var enum map[string]int64
+	var enum map[int64]string
 	var ref string
 
 	switch t.Type.(type) {
@@ -375,7 +372,13 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		simpleType = am.convertPrimitive(t.String())
 	case *sysl.Type_Enum_:
 		simpleType = "enum"
-		enum = t.GetEnum().GetItems()
+		enum = make(map[int64]string)
+		for str, index := range t.GetEnum().GetItems() {
+			enum[index] = str
+		}
+	case *sysl.Type_Sequence:
+		simpleType = "list"
+		items = append(items, am.MapType(t.GetSequence()))
 	case *sysl.Type_List_:
 		simpleType = "list"
 		items = append(items, am.MapType(t.GetList().Type))
@@ -393,10 +396,13 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		for k, v := range t.GetTuple().AttrDefs {
 			properties[k] = am.MapType(v)
 		}
+	default:
+		fmt.Println("Type not defined")
 	}
 
 	return &Type{
 		Reference:  ref,
+		Optional:   t.GetOpt(),
 		Type:       simpleType,
 		Items:      items,
 		Properties: properties,

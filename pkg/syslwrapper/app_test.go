@@ -353,18 +353,16 @@ func TestTypeConversionMap(t *testing.T) {
 }
 
 func TestTypeConversionEnum(t *testing.T) {
-	enumerate := map[string]int64{
-		"apple":  1,
-		"orange": 2,
+	enumerate := map[int64]string{
+		1: "apple",
+		2: "orange",
 	}
 	mapper := MakeAppMapper(&sysl.Module{})
 	typeToConvert := MakeEnum(enumerate)
-	expectedResult := &Type{
-		Type: "enum",
-		Enum: enumerate,
-	}
 	convertedType1 := mapper.MapType(typeToConvert)
-	assert.Equal(t, expectedResult, convertedType1)
+	assert.Equal(t, "enum", convertedType1.Type)
+	assert.Equal(t, "apple", convertedType1.Enum[1])
+	assert.Equal(t, "orange", convertedType1.Enum[2])
 }
 func TestTypeConversionNoType(t *testing.T) {
 	expectedResult := &Type{

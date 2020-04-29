@@ -123,11 +123,15 @@ func MakePrimitive(primType string) *sysl.Type {
 	return resolvedType
 }
 
-func MakeEnum(enum map[string]int64) *sysl.Type {
+func MakeEnum(enum map[int64]string) *sysl.Type {
+	swappedEnum := make(map[string]int64)
+	for index, str := range enum {
+		swappedEnum[str] = index
+	}
 	return &sysl.Type{
 		Type: &sysl.Type_Enum_{
 			Enum: &sysl.Type_Enum{
-				Items: enum,
+				Items: swappedEnum,
 			},
 		},
 	}
