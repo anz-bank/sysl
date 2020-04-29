@@ -16,6 +16,6 @@ Several commands require environment variables to be set before they are able to
 
 For more details, refer to [Install](/docs/install/)
 
-### SYSL_MODULES
+## SYSL_MODULES
 
 `export SYSL_MODULES=true` is a flag to indicate whether Sysl modules are enabled. By default, if this is not declared, Sysl modules are enabled.
