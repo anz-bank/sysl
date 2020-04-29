@@ -99,7 +99,9 @@ type ExecuteArgs struct {
 }
 
 type DiagramCmd struct {
-	Value string
+	IntegrationValue      string
+	SequenceValue         string
+	EndpointAnalysisValue bool
 }
 
 type Command interface {
