@@ -26,7 +26,6 @@ func TestPrinting(t *testing.T) {
 	assert.NoError(t, err)
 	var buf bytes.Buffer
 	pr := NewPrinter(&buf)
-	//pr := NewPrinter(os.Stdout)
 	pr.PrintModule(module)
 	if buf.String() != string(fileBytes) {
 		fmt.Println(buf.String())

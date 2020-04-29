@@ -27,7 +27,7 @@ func NewPrinter(buf io.Writer) *Printer {
 	return &Printer{Writer: buf}
 }
 
-// PrintModule Prints a whole module, calling
+// PrintModule Prints a whole module
 func (p *Printer) PrintModule(mod *sysl.Module) {
 	for _, key := range alphabeticalApplications(mod.Apps) {
 		p.PrintApplication(mod.Apps[key])
@@ -235,7 +235,7 @@ func (p *Printer) ParamType(param *sysl.Param) string {
 	if param.Type == nil {
 		return ""
 	}
-	// Ref.Appname.Part is the type name if the type is in the same package and the application name of where it's st
+	// Ref.Appname.Part is the type name if the type is in the same package and the application name of where it's at
 	// stored if its in another application and then Ref.Path is the type name
 	if a := param.Type.GetTypeRef(); a != nil {
 		ans := append(a.Ref.Appname.Part, a.Ref.Path...)

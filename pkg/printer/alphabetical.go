@@ -1,4 +1,4 @@
-// alphabetical.go are the functions to get a sorted list of keys from sysls map types
+// alphabetical.go contains functions which return a sorted list of keys from sysl map types
 // Unfortunately go doesn't allow generics and pointer types don't implement empty interfaces
 // so map[string]interface{} doesn't cut it
 
