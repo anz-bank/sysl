@@ -174,6 +174,9 @@ func (g *sourceGenerator) typeInfoForSyslType(t *sysl.Type) *typeInfo {
 	if (t.Opt || forceOptional) && !patterns.Contains("pk") {
 		ti.opt = true
 		ti.final = Star(ti.final)
+		if ti.staging != nil {
+			ti.staging = Star(ti.staging)
+		}
 	}
 	return &ti
 }

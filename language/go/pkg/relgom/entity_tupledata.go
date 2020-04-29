@@ -71,7 +71,9 @@ func (g *entityGenerator) unmarshalTupleDataJSONFunc() Decl {
 			stagings = append(stagings,
 				Init(u, "err")(ti.unstage(value)),
 				If(nil, Binary(I("err"), "!=", I("nil")),
-					Return(I("err")),
+					Return(Call(g.imported("fmt")("Errorf"),
+						String("error unstaging %s.%s: %v"), String(g.tname), String(nt.Name), I("err"),
+					)),
 				),
 			)
 			value = I(u)
