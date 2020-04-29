@@ -377,10 +377,10 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 			enum[index] = str
 		}
 	case *sysl.Type_Sequence:
-		simpleType = "list"
+		simpleType = "list" //nolint:goconst
 		items = append(items, am.MapType(t.GetSequence()))
 	case *sysl.Type_List_:
-		simpleType = "list"
+		simpleType = "list" //nolint:goconst
 		items = append(items, am.MapType(t.GetList().Type))
 	case *sysl.Type_Map_:
 		simpleType = "map"
