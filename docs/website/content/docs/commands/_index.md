@@ -13,7 +13,7 @@ Sysl has a number of subcommands which can perform various tasks with **.sysl** 
 
 To view a list of available commands, run sysl with no arguments:
 
-This documentation refers to [v0.8.0](https://github.com/anz-bank/sysl/releases/tag/v0.8.0) of the sysl CLI tool.
+This documentation refers to [v0.69.0](https://github.com/anz-bank/sysl/releases/tag/v0.69.0) of the sysl CLI tool.
 
 ```bash
 $ sysl
@@ -24,11 +24,10 @@ System Modelling Language Toolkit
 Optional flags:
       --help        Show context-sensitive help (also try --help-long and --help-man).
       --version     Show application version.
-      --log="warn"  log level: [warn,trace,off,debug,info]
+      --log="warn"  log level: [off,debug,info,warn,trace]
   -v, --verbose     enable verbose logging
-      --root=ROOT   sysl root directory for input model file. If root is not found, the module directory
-                    becomes the root, but the module can not import with absolute paths (or imports must be
-                    relative).
+      --root=ROOT   sysl root directory for input model file. If root is not found, the module directory becomes the root, but the module can not import with absolute paths (or imports
+                    must be relative).
 
 Commands:
   help [<command>...]
@@ -80,7 +79,7 @@ Commands:
     Generate test rig
 
   ui [<flags>] <MODULE>...
-    Starts the Sysl UI which displays a visual view of apps defined in Sysl.
+    Starts the Sysl UI which displays a visual view of Apps defined in the sysl model.
 
   validate <MODULE>...
     Validate the sysl file
@@ -103,11 +102,10 @@ Required flags:
 Optional flags:
       --help                  Show context-sensitive help (also try --help-long and --help-man).
       --version               Show application version.
-      --log="warn"            log level: [off,debug,info,warn,trace]
+      --log="warn"            log level: [warn,trace,off,debug,info]
   -v, --verbose               enable verbose logging
-      --root=ROOT             sysl root directory for input model file. If root is not found, the module
-                              directory becomes the root, but the module can not import with absolute paths (or
-                              imports must be relative).
+      --root=ROOT             sysl root directory for input model file. If root is not found, the module directory becomes the root, but the module can not import with absolute paths
+                              (or imports must be relative).
   -p, --package=PACKAGE       name of the sysl package to define in sysl model.
   -o, --output="output.sysl"  output filename
   -f, --format=auto           format of the input filename, options: [auto, grammar, openapi, swagger, xsd]
