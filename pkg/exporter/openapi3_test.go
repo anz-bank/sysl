@@ -22,7 +22,7 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 }
 
 func TestExportWithFile(t *testing.T) {
-	mod, err := readSyslModule("./test-data/petstore.sysl")
+	mod, err := readSyslModule("./test-data/openapi3/petstore.sysl")
 	assert.NoError(t, err)
 	mapper := syslwrapper.MakeAppMapper(mod)
 	mapper.IndexTypes()
