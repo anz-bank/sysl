@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/syslwrapper"
 
 	"github.com/anz-bank/sysl/pkg/exporter"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -23,20 +24,25 @@ type exportCmd struct {
 }
 
 const (
-	swaggerMode = "swagger"
-	jsonMode    = "json"
-	yamlMode    = "yaml"
+	swaggerMode  = "swagger"
+	openapi2Mode = "openapi2"
+	openapi3Mode = "openapi3"
+	jsonMode     = "json"
+	yamlMode     = "yaml"
 )
 
 func (p *exportCmd) Name() string       { return "export" }
 func (p *exportCmd) MaxSyslModule() int { return 1 }
 
 func (p *exportCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types: Swagger")
+	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types: Swagger,openapi2,openapi3")
 	cmd.Flag("app-name", "name of the sysl App defined in the sysl model."+
 		" if there are multiple Apps defined in the sysl model,"+
 		" swagger will be generated only for the given app").Short('a').StringVar(&p.appName)
-	cmd.Flag("format", "format of export, supported options; swagger").Default("swagger").Short('f').StringVar(&p.mode)
+	cmd.Flag(
+		"format",
+		"format of export, supported options; (swagger | openapi2 | openapi3)",
+	).Default("swagger").Short('f').StringVar(&p.mode)
 	cmd.Flag("output", "output filepath.format(yaml | json) (default: %(appname).yaml)").Default(
 		"%(appname).yaml").Short('o').StringVar(&p.out)
 	EnsureFlagsNonEmpty(cmd)
@@ -50,20 +56,44 @@ func (p *exportCmd) writeSwaggerForApp(
 	logger *logrus.Logger,
 ) error {
 	var output []byte
-	if p.mode == swaggerMode {
+	switch p.mode {
+	case openapi2Mode, swaggerMode:
 		swaggerExporter := exporter.MakeSwaggerExporter(syslApp, logger)
 		err := swaggerExporter.GenerateSwagger()
 		if err != nil {
-			logger.Warnf("Error generating swagger for the application %s", err)
+			logger.Warnf("Error generating Swagger/Openapi2 for the application %s", err)
 			return err
 		}
 		output, err = swaggerExporter.SerializeOutput(p.format)
 		if err != nil {
 			return err
 		}
-	} else {
+	case openapi3Mode:
+		mod := &sysl.Module{
+			Apps: map[string]*sysl.Application{
+				syslApp.Name.Part[0]: syslApp,
+			},
+		}
+		mapper := syslwrapper.MakeAppMapper(mod)
+		mapper.IndexTypes()
+		simpleApps, err := mapper.Map()
+		if err != nil {
+			return err
+		}
+		openapi3Exporter := exporter.MakeOpenAPI3Exporter(simpleApps, logger)
+		err = openapi3Exporter.Export()
+		if err != nil {
+			logger.Warnf("Error generating Openapi3 for the application %s", err)
+			return err
+		}
+		output, err = openapi3Exporter.SerializeOutput(syslApp.Name.Part[0], p.format)
+		if err != nil {
+			return err
+		}
+	default:
 		return fmt.Errorf("unsupported export format")
 	}
+
 	dir, err := filepath.Abs(filepath.Dir(filename))
 	if err != nil {
 		return err
