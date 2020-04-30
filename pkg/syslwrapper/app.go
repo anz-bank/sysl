@@ -216,7 +216,7 @@ func (am *AppMapper) mapSimpleReturnType(retName string, appName string) *Type {
 
 func isPrimitive(typeName string) bool {
 	switch typeName {
-	case "double", "int64", "float64", "string", "bool", "date", "datetime":
+	case "double", "int64", "float64", "string", "bool", "date", "datetime": //nolint:goconst
 		return true
 	default:
 		return false
