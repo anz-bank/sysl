@@ -174,7 +174,10 @@ jobs:
 
   build-examples:
     name: Build Examples
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Go 1.13
         uses: actions/setup-go@v1
