@@ -327,6 +327,74 @@ func TestTypeConversionList(t *testing.T) {
 	assert.Equal(t, expectedResult, convertedType1)
 }
 
+func TestMapReturnStatements(t *testing.T) {
+	type2 := MakeMap(MakePrimitive("string"), MakePrimitive("string"))
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	var mod = &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"app2": &app2,
+		},
+	}
+
+	mapper := MakeAppMapper(mod)
+	mapper.IndexTypes()
+	statements := []*sysl.Statement{
+		MakeReturnStatement("string"),
+		MakeReturnStatement("default <: string"),
+		MakeReturnStatement("401 <: request"),
+		MakeReturnStatement("404 <: sequence of request"),
+		MakeReturnStatement("500 <: sequence of app2.request"),
+	}
+	result := mapper.mapResponse(statements, "app2")
+	expectedResult := map[string]*Parameter{
+		"200": {
+			Name: "200",
+			Type: &Type{
+				Type: "string",
+			},
+		},
+		"default": {
+			Name: "default",
+			Type: &Type{
+				Type: "string",
+			},
+		},
+		"401": {
+			Name: "401",
+			Type: &Type{
+				Reference: "app2:request",
+				Type:      "ref",
+			},
+		},
+		"404": {
+			Name: "404",
+			Type: &Type{
+				Items: []*Type{
+					{
+						Type:      "ref",
+						Reference: "app2:request",
+					},
+				},
+				Type: "list",
+			},
+		},
+		"500": {
+			Name: "500",
+			Type: &Type{
+				Items: []*Type{
+					{
+						Type:      "ref",
+						Reference: "app2:request",
+					},
+				},
+				Type: "list",
+			},
+		},
+	}
+
+	assert.Equal(t, expectedResult, result)
+}
+
 func TestTypeConversionMap(t *testing.T) {
 	type2 := MakeMap(MakePrimitive("string"), MakePrimitive("string"))
 	param2 := MakeParam("Auth", MakePrimitive("string"))

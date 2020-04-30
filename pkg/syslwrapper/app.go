@@ -140,6 +140,7 @@ func (am *AppMapper) mapEndpoints(appName string, ep map[string]*sysl.Endpoint) 
 	return endpoints
 }
 
+// Parses return statements and builds response parameters
 func (am *AppMapper) mapResponse(stmt []*sysl.Statement, appName string) map[string]*Parameter {
 	responseTypes := make(map[string]*Parameter, 15)
 	for i := range stmt {
@@ -148,36 +149,15 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement, appName string) map[str
 		if stmt[i].GetRet() == nil {
 			continue
 		}
-		// TODO: Handle return 200 <: sequence of Foo etc.
+
 		if strings.Contains(stmt[i].GetRet().Payload, "<:") {
 			returnStatement := strings.Split(stmt[i].GetRet().Payload, " <: ")
 			returnName = returnStatement[0]
-			// Handle references to type in different app, e.g 200 <: Foobar.Error
-			if strings.Contains(returnStatement[1], ".") {
-				returnRef := strings.Replace(returnStatement[1], ".", ":", 1)
-				returnType = &Type{
-					Type:      "ref",
-					Reference: returnRef,
-				}
-			} else {
-				// Handle references to type in same app, e.g 200 <: Error
-				typeFound, ok := am.Types[appName+":"+returnStatement[1]]
-				if !ok {
-					// Type reference not found. Trying to convert primitive
-					returnType = am.MapType(typeFound)
-				} else {
-					returnType = &Type{
-						Type:      "ref",
-						Reference: appName + ":" + returnStatement[1],
-					}
-				}
-			}
+			returnType = am.mapReturnType(returnStatement[1], appName)
 		} else {
-			// If it's a primitive, e.g return string
+			returnType = am.mapReturnType(stmt[i].GetRet().Payload, appName)
+			// Default return name of 200
 			returnName = "200"
-			returnType = &Type{
-				Type: stmt[i].GetRet().Payload,
-			}
 		}
 
 		responseTypes[returnName] = &Parameter{
@@ -187,6 +167,60 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement, appName string) map[str
 	}
 
 	return responseTypes
+}
+
+// Checks if the return value is a complex type such as sequence of string
+func (am *AppMapper) mapReturnType(retValue string, appName string) *Type {
+	var returnType *Type
+	if strings.Contains(retValue, "sequence of ") {
+		listType := strings.Replace(retValue, "sequence of ", "", 1)
+		returnType = &Type{
+			Type: "list",
+			Items: []*Type{
+				am.mapSimpleReturnType(listType, appName),
+			},
+		}
+	} else {
+		returnType = am.mapSimpleReturnType(retValue, appName)
+	}
+	return returnType
+}
+
+// Parses return values such as Foobar.Error and Error or string
+func (am *AppMapper) mapSimpleReturnType(retName string, appName string) *Type {
+	var returnType *Type
+	if strings.Contains(retName, ".") {
+		returnRef := strings.Replace(retName, ".", ":", 1)
+		returnType = &Type{
+			Type:      "ref",
+			Reference: returnRef,
+		}
+	} else {
+		// Handle references to type in same app, e.g 200 <: Error
+		_, ok := am.Types[appName+":"+retName]
+		if ok {
+			returnType = &Type{
+				Type:      "ref",
+				Reference: appName + ":" + retName,
+			}
+		}
+		// Type reference not found. Trying to convert primitive
+		if isPrimitive(retName) {
+			returnType = &Type{
+				Type: retName,
+			}
+		}
+	}
+	return returnType
+}
+
+func isPrimitive(typeName string) bool {
+	switch typeName {
+	case "double", "int64", "float64", "string", "bool", "date", "datetime":
+		return true
+	default:
+		return false
+	}
 }
 
 func (am *AppMapper) mapAllParams(endpoint *sysl.Endpoint) map[string]*Parameter {
@@ -364,6 +398,10 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	var properties map[string]*Type
 	var enum map[int64]string
 	var ref string
+
+	if t == nil {
+		return &Type{}
+	}
 
 	switch t.Type.(type) {
 	case *sysl.Type_NoType_:

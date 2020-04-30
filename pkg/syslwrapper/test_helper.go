@@ -237,6 +237,16 @@ func MakeType(name string, value interface{}, t string) *sysl.Type {
 	return resolvedType
 }
 
+func MakeReturnStatement(payload string) *sysl.Statement {
+	return &sysl.Statement{
+		Stmt: &sysl.Statement_Ret{
+			Ret: &sysl.Return{
+				Payload: payload,
+			},
+		},
+	}
+}
+
 func MakeParam(name string, paramType *sysl.Type) *sysl.Param {
 	var param = sysl.Param{
 		Name: name,
