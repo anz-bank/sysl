@@ -220,7 +220,7 @@ message Type {
     SourceContext source_context = 99;
 
     enum Primitive {
-        NO_Primitive = 0;
+        NO_Primitive = 0; //NO_Primitive is an interface that can be used to evaluate whether a type is a primitive or not
         EMPTY       = 1;
         ANY         = 2;
         BOOL        = 3;

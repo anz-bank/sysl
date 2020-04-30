@@ -1,0 +1,27 @@
+MobileApp:
+    @package = "ApplicationPackage"
+    Login(input <: Server.Request):
+        Server <- Authenticate
+        return ok <: Server.Response
+
+Server:
+    @package = "ServerPackage"
+    !type Response:
+        query <: MegaDatabase.Money
+        balance <: MegaDatabase.Empty
+    !type Request:
+        query <: string
+
+    Authenticate(input <: Server.Request):
+        return ok <: Server.Response
+
+# This is an example of apps with types made up of different apps
+MegaDatabase:
+    # This was meant to be an example of how different applications can be in the same package
+    @package = "ServerPackage"
+    !type Empty[~empty]:
+        ...
+    !type Money:
+        amount <: int
+    !type AnotherEmpty:
+        ...
