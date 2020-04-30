@@ -1,0 +1,6 @@
+Server:
+    !type Foo:
+        foo <: sequence of Bar
+
+    !type Bar:
+        bar <: sequence of string
