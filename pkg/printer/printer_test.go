@@ -33,22 +33,29 @@ func TestPrinting(t *testing.T) {
 	assert.Equal(t, buf.String(), string(fileBytes))
 }
 
-
 func TestExample(t *testing.T) {
-
 	// Create Sysl sile in Memory file system
 	fs := afero.NewMemMapFs()
-	f, _ := fs.Create("/test.sysl")
-	f.Write([]byte(`
+	f, err := fs.Create("/test.sysl")
+	if err != nil {
+		panic(err)
+	}
+	_, err = f.Write([]byte(`
 Server[~yay]:
     !type Foo:
         foo <: sequence of string
 	Endpoint(req <: Foo):
 		return ok <: Foo
 `))
+	if err != nil {
+		panic(err)
+	}
 
 	// Load Module
-	module, _, _ := loader.LoadSyslModule("/", "test.sysl", fs,logrus.New())
+	module, _, err := loader.LoadSyslModule("/", "test.sysl", fs, logrus.New())
+	if err != nil {
+		panic(err)
+	}
 
 	// Make a New printer to os.Stdout (io.Writer) and PrintModule
 	NewPrinter(os.Stdout).PrintModule(module)

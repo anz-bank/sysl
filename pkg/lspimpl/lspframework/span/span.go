@@ -104,9 +104,9 @@ func comparePoint(a, b point) int {
 func (s Span) HasPosition() bool             { return s.v.Start.hasPosition() }
 func (s Span) HasOffset() bool               { return s.v.Start.hasOffset() }
 func (s Span) IsValid() bool                 { return s.v.Start.isValid() }
-func (s Span) IsPoint() bool { return s.v.Start == s.v.End }
-func (s Span) URI() URI      { return s.v.URI }
-func (s Span) Start() Point  { return Point{s.v.Start} }
+func (s Span) IsPoint() bool                 { return s.v.Start == s.v.End }
+func (s Span) URI() URI                      { return s.v.URI }
+func (s Span) Start() Point                  { return Point{s.v.Start} }
 func (s Span) End() Point                    { return Point{s.v.End} }
 func (s *Span) MarshalJSON() ([]byte, error) { return json.Marshal(&s.v) }
 func (s *Span) UnmarshalJSON(b []byte) error { return json.Unmarshal(b, &s.v) }

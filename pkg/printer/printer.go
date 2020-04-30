@@ -13,8 +13,9 @@ import (
 
 const (
 	APPLICATIONINDENT = 4
-	ENDPOINTINDENT = 8
-	MAXLINE = 80
+	ENDPOINTINDENT    = 8
+	MAXLINE           = 80
+	patterns          = "patterns"
 )
 
 // Printer prints sysl data structures out to source code
@@ -41,7 +42,7 @@ func (p *Printer) PrintApplication(a *sysl.Application) {
 	p.PrintPatterns(a.GetAttrs())
 	fmt.Fprint(p.Writer, ":\n")
 	for _, key := range alphabeticalAttributes(a.Attrs) {
-		if key == "patterns"{
+		if key == patterns {
 			continue
 		}
 		p.PrintAttrs(key, a.Attrs[key], APPLICATIONINDENT)
@@ -58,15 +59,15 @@ func (p *Printer) PrintApplication(a *sysl.Application) {
 // !type Foo:
 //     this <: string
 func (p *Printer) PrintTypeDecl(key string, t *sysl.Type) {
-	switch t.Type.(type) {
+	switch v := t.Type.(type) {
 	case *sysl.Type_Enum_:
 		fmt.Fprintf(p.Writer, "    !enum %s:\n", key)
 		for _, key := range alphabeticalAttributes(t.GetAttrs()) {
-			if key != "patterns"{
+			if key != patterns {
 				p.PrintAttrs(key, t.GetAttrs()[key], ENDPOINTINDENT)
 			}
 		}
-		enumFields := t.Type.(*sysl.Type_Enum_).Enum.Items
+		enumFields := v.Enum.Items
 		for _, key := range alphabeticalInts(enumFields) {
 			fmt.Fprintf(p.Writer, "        %s: %d\n", key, enumFields[key])
 		}
@@ -78,46 +79,44 @@ func (p *Printer) PrintTypeDecl(key string, t *sysl.Type) {
 
 		tuple := t.GetTuple()
 		for _, key := range alphabeticalAttributes(t.GetAttrs()) {
-			if key != "patterns"{
+			if key != patterns {
 				p.PrintAttrs(key, t.GetAttrs()[key], ENDPOINTINDENT)
 			}
 		}
-		if tuple == nil || tuple.AttrDefs == nil || len(tuple.AttrDefs) == 0{
+		if tuple == nil || tuple.AttrDefs == nil || len(tuple.AttrDefs) == 0 {
 			fmt.Fprintf(p.Writer, "        ...\n")
 			return
 		}
 		for _, key := range alphabeticalTypes(tuple.AttrDefs) {
 			typeClass, typeIdent := syslutil.GetTypeDetail(tuple.AttrDefs[key])
-			switch typeClass{
+			switch typeClass {
 			case "primitive":
 				typeIdent = strings.ToLower(typeIdent)
 			case "sequence":
-				if foo := tuple.AttrDefs[key].GetSequence(); foo != nil{
+				if foo := tuple.AttrDefs[key].GetSequence(); foo != nil {
 					typeClass, typeIdent = syslutil.GetTypeDetail(foo)
-					if typeClass == "primitive"{
+					if typeClass == "primitive" {
 						typeIdent = strings.ToLower(typeIdent)
 					}
 				}
-				typeIdent = "sequence of "+  typeIdent
+				typeIdent = "sequence of " + typeIdent
 			}
 			fmt.Fprintf(p.Writer, "        %s <: %s\n", key, typeIdent)
 		}
-
 	}
-
 }
 
 // Prints patterns in square brackets: [~foo, ~bar]
-func (p *Printer)PrintPatterns(attrs map[string]*sysl.Attribute){
-	if attrs == nil{
+func (p *Printer) PrintPatterns(attrs map[string]*sysl.Attribute) {
+	if attrs == nil {
 		return
 	}
-	patterns:= GetPatterns(attrs)
-	if len(patterns)>0{
+	patterns := GetPatterns(attrs)
+	if len(patterns) > 0 {
 		fmt.Fprint(p.Writer, "[")
-		for i, pattern := range patterns{
+		for i, pattern := range patterns {
 			fmt.Fprintf(p.Writer, "~%s", pattern)
-			if i != len(patterns)-1{
+			if i != len(patterns)-1 {
 				fmt.Fprintf(p.Writer, ", ")
 			}
 		}
@@ -125,9 +124,9 @@ func (p *Printer)PrintPatterns(attrs map[string]*sysl.Attribute){
 	}
 }
 
-func GetPatterns(attrs map[string]*sysl.Attribute)[]string{
+func GetPatterns(attrs map[string]*sysl.Attribute) []string {
 	var ret = []string{}
-	patterns, has := attrs["patterns"]
+	patterns, has := attrs[patterns]
 	if has {
 		if x := patterns.GetA(); x != nil {
 			for _, y := range x.Elt {
@@ -137,7 +136,6 @@ func GetPatterns(attrs map[string]*sysl.Attribute)[]string{
 	}
 	return ret
 }
-
 
 // PrintEndpoint prints endpoints:
 // Endpoint:
@@ -152,8 +150,8 @@ func (p *Printer) PrintEndpoint(e *sysl.Endpoint) {
 	if len(e.Stmt) == 0 {
 		fmt.Fprint(p.Writer, "        ...\n")
 	}
-	for key, attr := range e.Attrs{
-		if key == "patterns"{
+	for key, attr := range e.Attrs {
+		if key == patterns {
 			continue
 		}
 		p.PrintAttrs(key, attr, ENDPOINTINDENT)
@@ -210,21 +208,18 @@ func (p *Printer) PrintAction(a *sysl.Action) {
 func (p *Printer) PrintAttrs(key string, a *sysl.Attribute, indentNum int) {
 	multiLine := strings.Split(a.GetS(), "\n")
 	indent := strings.Repeat(" ", indentNum)
-	if len(multiLine)==1 && len (multiLine[0]) < MAXLINE{
-			fmt.Fprintf(p.Writer, "%s@%s = \"%s\"\n", indent, key, multiLine[0])
-			return
-
+	if len(multiLine) == 1 && len(multiLine[0]) < MAXLINE {
+		fmt.Fprintf(p.Writer, "%s@%s = \"%s\"\n", indent, key, multiLine[0])
+		return
 	}
-
 	fmt.Fprintf(p.Writer, "%s@%s =:\n", indent, key)
-	for _, line := range multiLine{
-		for i := 0; i < len(line); i = i + MAXLINE{
+	for _, line := range multiLine {
+		for i := 0; i < len(line); i += MAXLINE {
 			endindex := i + MAXLINE
 			if lineLen := len(line); endindex >= lineLen {
 				endindex = lineLen
 			}
 			fmt.Fprintf(p.Writer, "%s    |%s\n", indent, line[i:endindex])
-
 		}
 	}
 }
