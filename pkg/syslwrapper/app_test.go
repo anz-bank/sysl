@@ -78,7 +78,7 @@ func TestMapRest(t *testing.T) {
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
-	mapper.resolveTypes()
+	mapper.ResolveTypes()
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
 	prettyPrint(t, simpleApps)
@@ -92,7 +92,7 @@ func TestMap(t *testing.T) {
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
-	mapper.resolveTypes()
+	mapper.ResolveTypes()
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
 	prettyPrint(t, simpleApps)
@@ -107,7 +107,7 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	typeIndex := mapper.IndexTypes()
-	mapper.resolveTypes()
+	mapper.ResolveTypes()
 
 	expectedResult := MakeTuple(map[string]*sysl.Type{
 		"query":   MakePrimitive("int"),
@@ -152,7 +152,7 @@ func TestResolveNonExistentType(t *testing.T) {
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
 
-	mapper.resolveTypes()
+	mapper.ResolveTypes()
 
 	assert.Equal(t, nil, mapper.Types["app2:request"].GetType())
 	assert.Equal(t, nil, mapper.Types["app1:list"].GetType())
@@ -170,7 +170,7 @@ func TestResolveTypesNil(t *testing.T) {
 
 	mapper := MakeAppMapper(mod)
 	typeIndex := mapper.IndexTypes()
-	mapper.resolveTypes()
+	mapper.ResolveTypes()
 	prettyPrint(t, typeIndex["app2:request"])
 	assert.Equal(t, nil, typeIndex["app2:request"].GetType())
 	assert.Equal(t, nil, typeIndex["app1:list"].GetType())

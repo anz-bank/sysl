@@ -103,7 +103,7 @@ func (am *AppMapper) ConvertTypes() map[string]*Type {
 }
 
 // Iterates over types and resolves typerefs
-func (am *AppMapper) resolveTypes() {
+func (am *AppMapper) ResolveTypes() {
 	for key, value := range am.Types {
 		am.Types[key] = am.resolveType(value)
 	}
