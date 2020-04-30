@@ -49,7 +49,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 			}
 			return cmd.Execute(cmdutils.ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
-				Logger: logger, DefaultAppName: appName})
+				Logger: logger, DefaultAppName: appName, InputFiles: r.modules})
 		}
 	}
 	return nil
@@ -74,6 +74,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&templateCmd{},
 		&modCmd{},
 		&testRigCmd{},
+		&catalogCmd{},
 	}
 	r.commands = map[string]cmdutils.Command{}
 
