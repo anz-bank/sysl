@@ -1,0 +1,56 @@
+
+APIGateway[~this, ~that, ~foobar]:
+    @owner = "client"
+    !enum Code:
+        invalid: 2
+        success: 1
+        tooManyAttempts: 3
+    !type LoginResponse:
+        message <: Code
+    Login:
+        Server <- Login
+        return ret <: APIGateway.LoginResponse
+
+DB:
+    @owner = "server"
+    Query:
+        lookup data
+        return ret <: data
+    Save:
+        ...
+
+DBAAA:
+    @owner = "server"
+    Query:
+        lookup data
+        return ret <: data
+    Save:
+        ...
+
+MobileApp:
+    @owner = "client"
+    Login[~this, ~that, ~foobar]:
+        APIGateway <- Login
+
+Project:
+    @description =:
+        |this is another one this is a super long comment that should be split into the n
+        |ext line la dee dah
+    @seqtitle = "Diagram"
+    Seq:
+        @description = "endpoint comment"
+        MobileApp <- Login
+
+Server:
+    @owner = "server"
+    !type LoginData[~this, ~that, ~foobar]:
+        @description = "blah nah brah"
+        password <: sequence of string
+        username <: string
+    !type LoginResponse:
+        message <: string
+    Login(data <: LoginData)[~this, ~that, ~foobar]:
+        build query
+        DB <- Query
+        check result
+        return ret <: Server.LoginResponse
