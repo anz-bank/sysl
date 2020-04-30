@@ -7,74 +7,12 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
 
-func readSyslModule(filename string) (*sysl.Module, error) {
-	mod, err := parse.NewParser().Parse(filename,
-		syslutil.NewChrootFs(afero.NewOsFs(), "."))
-	return mod, err
-}
-
-func prettyPrint(t *testing.T, v interface{}) {
-	json, err := json.MarshalIndent(v, "", " ")
-	if err != nil {
-		t.Log(t, err)
-	}
-	t.Log(t, json)
-}
-
-// GenerateTypeGraph takes in a simplified sysl type and resolves the sub type references
-func GenerateTypeGraph(simpleType *Type, name string, typeMap map[string]*Type, simpleTypes map[string]*Type) map[string]*Type {
-	if typeMap == nil {
-		typeMap = make(map[string]*Type)
-	}
-	typeMap[name] = simpleType
-	switch simpleType.Type {
-	case "bool", "int", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid":
-	case "ref":
-		return GenerateTypeGraph(simpleTypes[simpleType.Reference], simpleType.Reference, typeMap, simpleTypes)
-	case "list":
-		return GenerateTypeGraph(simpleTypes[simpleType.Reference], simpleType.Reference, typeMap, simpleTypes)
-	case "map":
-		return GenerateTypeGraph(simpleTypes[simpleType.Reference], simpleType.Reference, typeMap, simpleTypes)
-	case "tuple":
-		for propName, prop := range simpleType.Properties {
-			subGraph := GenerateTypeGraph(prop, propName, typeMap, simpleTypes)
-			for subType := range subGraph {
-				typeMap[subType] = subGraph[subType]
-			}
-		}
-	}
-	return typeMap
-}
-func TestExampleDatamodelDiagram(t *testing.T) {
-	mod, err := readSyslModule("./tests/rest.sysl")
-	assert.NoError(t, err)
-	mapper := MakeAppMapper(mod)
-	mapper.IndexTypes()
-	mapper.ConvertTypes()
-	simpleApps, err := mapper.Map()
-	assert.NoError(t, err)
-
-	// Iterate over each param and show each type
-	for _, app := range simpleApps {
-		for _, endpoint := range app.Endpoints {
-			for _, param := range endpoint.Params {
-				relevantTypes := GenerateTypeGraph(param.Type, param.Name, nil, mapper.SimpleTypes)
-				prettyPrint(t, relevantTypes)
-			}
-			for _, response := range endpoint.Response {
-				relevantTypes := GenerateTypeGraph(response.Type, response.Name, nil, mapper.SimpleTypes)
-				prettyPrint(t, relevantTypes)
-			}
-		}
-	}
-}
 func TestMapRest(t *testing.T) {
-	mod, err := readSyslModule("./tests/rest.sysl")
+	mod, err := parse.NewParser().Parse("./tests/rest.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
@@ -88,7 +26,7 @@ func TestMapRest(t *testing.T) {
 	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["GET /post"].Params["PostId"].Type.Type)
 }
 func TestMap(t *testing.T) {
-	mod, err := readSyslModule("./tests/types.sysl")
+	mod, err := parse.NewParser().Parse("./tests/types.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
@@ -103,7 +41,7 @@ func TestMap(t *testing.T) {
 	assert.Equal(t, "Server:Request", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Reference)
 }
 func TestResolveTypesWithSyslFile(t *testing.T) {
-	mod, err := readSyslModule("./tests/types.sysl")
+	mod, err := parse.NewParser().Parse("./tests/types.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	typeIndex := mapper.IndexTypes()
@@ -445,4 +383,12 @@ func TestConvertPrimitive(t *testing.T) {
 	mapper := MakeAppMapper(&sysl.Module{})
 	result := mapper.convertPrimitive("Primitive:STRING Source Context")
 	assert.Equal(t, "string", result)
+}
+
+func prettyPrint(t *testing.T, v interface{}) {
+	json, err := json.MarshalIndent(v, "", " ")
+	if err != nil {
+		t.Log(t, err)
+	}
+	t.Log(t, json)
 }
