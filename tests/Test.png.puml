@@ -28,6 +28,4 @@ class "Test.fees" as _2 << (D,orchid) >> {
 + feeAmount : string
 + feeType : string
 }
-_0 *-- "1..1 " _1
-_0 *-- "1..1 " _2
 @enduml
