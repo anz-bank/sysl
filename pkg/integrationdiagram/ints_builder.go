@@ -113,7 +113,9 @@ func (b *IntsBuilder) IndirectCalls(sourceApp, epname string, t *sysl.Statement)
 	if syslutil.HasPattern(b.M.GetApps()[targetApp].GetAttrs(), "human") {
 		return
 	}
-	b.AddCall(sourceApp, epname, t)
+	if !syslutil.HasPattern(b.M.GetApps()[targetApp].Endpoints[call.Endpoint].GetAttrs(), "hidden") {
+		b.AddCall(sourceApp, epname, t)
+	}
 }
 
 func (b *IntsBuilder) MyCallers(sourceApp, epname string, t *sysl.Statement) {
@@ -128,7 +130,9 @@ func (b *IntsBuilder) MyCallers(sourceApp, epname string, t *sysl.Statement) {
 	if syslutil.HasPattern(b.M.GetApps()[targetApp].GetAttrs(), "human") {
 		return
 	}
-	b.AddCall(sourceApp, epname, t)
+	if !syslutil.HasPattern(b.M.GetApps()[targetApp].Endpoints[call.Endpoint].GetAttrs(), "hidden") {
+		b.AddCall(sourceApp, epname, t)
+	}
 	b.FinalApps = append(b.FinalApps, sourceApp)
 }
 
@@ -150,8 +154,9 @@ func (b *IntsBuilder) ProcessExcludeAndPassthrough(sourceApp, epname string, t *
 	if syslutil.HasPattern(b.M.GetApps()[targetApp].GetAttrs(), "human") {
 		return
 	}
-
-	b.AddCall(sourceApp, epname, t)
+	if !syslutil.HasPattern(b.M.GetApps()[targetApp].Endpoints[call.Endpoint].GetAttrs(), "hidden") {
+		b.AddCall(sourceApp, epname, t)
+	}
 	b.FinalApps = append(b.FinalApps, targetApp)
 	b.WalkPassthrough(targetApp, call.Endpoint)
 }
