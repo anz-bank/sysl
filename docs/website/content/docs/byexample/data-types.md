@@ -6,7 +6,7 @@ description= ""
 layout= "byexample"
 weight = 3
 topic = "Basics"
-PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=SGVsbG9Xb3JsZDoKICAgICF0eXBlIFJlcXVlc3Q6CiAgICAgICAgdXNlcklkIDw6IGludAogICAgICAgIGlkIDw6IGludAogICAgICAgIHRpdGxlIDw6IHN0cmluZwogICAgICAgIGNvbXBsZXRlZCA8OiBib29sCiAgICAgICAgc29tZXRoaW5nIDw6IHN0cmluZz8KICAgICF0eXBlIEVycm9yUmVzcG9uc2U6CiAgICAgICAgc3RhdHVzIDw6IHN0cmluZwogICAgIWFsaWFzIFJlcXVlc3RzOgogICAgICAgIHNlcXVlbmNlIG9mIFJlcXVlc3QKICAgIGVuZHBvaW50KGlucHV0IDw6IFJlcXVlc3QpOgogICAgICAgIHJldHVybiBSZXF1ZXN0cwo=&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=SGVsbG9Xb3JsZDoKICAgICF0eXBlIFJlcXVlc3Q6CiAgICAgICAgdXNlcklkIDw6IGludAogICAgICAgIGlkIDw6IGludAogICAgICAgIHRpdGxlIDw6IHN0cmluZwogICAgICAgIGNvbXBsZXRlZCA8OiBib29sCiAgICAgICAgZGF5IDw6IGRhdGUKICAgICAgICB0aW1lc3RhbXAgPDogZGF0ZXRpbWUKICAgICAgICBzb21ldGhpbmcgPDogc3RyaW5nPwogICAgIXR5cGUgRXJyb3JSZXNwb25zZToKICAgICAgICBzdGF0dXMgPDogc3RyaW5nCiAgICAhYWxpYXMgUmVxdWVzdHM6CiAgICAgICAgc2VxdWVuY2Ugb2YgUmVxdWVzdAogICAgZW5kcG9pbnQoaW5wdXQgPDogUmVxdWVzdCk6CiAgICAgICAgcmV0dXJuIFJlcXVlc3RzCg==&cmd="
 GitRepoURL = "https://github.com/anz-bank/sysl/tree/master/demo/examples/Data-Types"
 ID = "data-types"
 CodeWithoutComments = """HelloWorld:
@@ -15,6 +15,8 @@ CodeWithoutComments = """HelloWorld:
         id <: int
         title <: string
         completed <: bool
+        day <: date
+        timestamp <: datetime
         something <: string?
     !type ErrorResponse:
         status <: string
@@ -38,7 +40,9 @@ Segs = [[
         <span class="nx">userId</span> <span class="p">&lt;:</span> <span class="kt">int</span>
         <span class="nx">id</span> <span class="p">&lt;:</span> <span class="kt">int</span>
         <span class="nx">title</span> <span class="p">&lt;:</span> <span class="kt">string</span>
-        <span class="nx">completed</span> <span class="p">&lt;:</span> <span class="kt">bool</span></pre>""",DocsRendered= """<p>Specify composite types with &ldquo;!type&rdquo; followed by type fields.</p>
+        <span class="nx">completed</span> <span class="p">&lt;:</span> <span class="kt">bool</span>
+        <span class="nx">day</span> <span class="p">&lt;:</span> <span class="nx">date</span>
+        <span class="nx">timestamp</span> <span class="p">&lt;:</span> <span class="nx">datetime</span></pre>""",DocsRendered= """<p>Specify composite types with &ldquo;!type&rdquo; followed by type fields.</p>
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
