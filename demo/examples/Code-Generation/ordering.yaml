@@ -1,6 +1,6 @@
 # This file specifies the order that the documentation is rendered in
 Code Generation:
-  - intro.md
+  - Intro.md
   - api/sysl/simple.sysl
   - generate.sh
   - internal/server/server.go
