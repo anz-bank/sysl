@@ -271,10 +271,10 @@ func (v *DataModelView) DrawTuple(
 					appName = path[0]
 					typeName = path[1]
 				}
-				if viewParam.Types[appName+"."+typeName] == nil && viewParam.Types[typeName] == nil {
-					v.StringBuilder.WriteString(collectionString)
-					continue
-				}
+				//if viewParam.Types[appName+"."+typeName] == nil && viewParam.Types[typeName] == nil {
+				//	v.StringBuilder.WriteString(collectionString)
+				//	continue
+				//}
 				v.StringBuilder.WriteString(collectionString)
 				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)]; mulRelation {
 					relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)] = RelationshipParam{
