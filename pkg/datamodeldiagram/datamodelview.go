@@ -45,6 +45,7 @@ type EntityViewParam struct {
 	EntityHeader string
 	EntityName   string
 	IgnoredTypes map[string]struct{}
+	Types        map[string]*sysl.Type
 }
 
 func MakeDataModelView(
@@ -176,6 +177,7 @@ func (v *DataModelView) DrawPrimitive(
 	v.StringBuilder.WriteString("}\n")
 }
 
+//nolint: funlen
 func (v *DataModelView) DrawTuple(
 	viewParam EntityViewParam,
 	entity *sysl.Type_Tuple,
@@ -204,6 +206,7 @@ func (v *DataModelView) DrawTuple(
 			appName = arr[0]
 		}
 		attrType := entity.AttrDefs[attrName]
+
 		if _, exists := relationshipMap[encEntity]; !exists {
 			relationshipMap[encEntity] = map[string]RelationshipParam{}
 		}
@@ -237,7 +240,12 @@ func (v *DataModelView) DrawTuple(
 					isPrimitiveList = true
 					path = append(path, strings.ToLower(attrType.GetSequence().GetPrimitive().String()))
 				}
+				fullName := strings.Join(path, ".")
 				collectionString = fmt.Sprintf("+ %s : **Sequence <%s>**\n", attrName, strings.Join(path, "."))
+				if _, ok := viewParam.IgnoredTypes[fullName]; ok {
+					v.StringBuilder.WriteString(collectionString)
+					continue
+				}
 				relation = `0..*` //nolint:goconst
 			case attrType.GetTypeRef() != nil:
 				arr := attrType.GetTypeRef().GetRef().Path
@@ -257,13 +265,17 @@ func (v *DataModelView) DrawTuple(
 			default:
 				continue
 			}
-			v.StringBuilder.WriteString(collectionString)
 			if !isPrimitiveList {
 				typeName := path[0]
 				if len(path) > 1 {
 					appName = path[0]
 					typeName = path[1]
 				}
+				if viewParam.Types[appName+"."+typeName] == nil && viewParam.Types[typeName] == nil {
+					v.StringBuilder.WriteString(collectionString)
+					continue
+				}
+				v.StringBuilder.WriteString(collectionString)
 				if _, mulRelation := relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)]; mulRelation {
 					relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)] = RelationshipParam{
 						Entity:       relationshipMap[encEntity][v.UniqueVarForAppName(appName, typeName)].Entity,
@@ -326,6 +338,7 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 				EntityColor:  `orchid`,
 				EntityHeader: `D`,
 				EntityName:   entityName,
+				Types:        typeMap,
 			}
 			v.DrawRelation(viewParam, relEntity, relationshipMap)
 		} else if tupEntity := entityType.GetTuple(); tupEntity != nil {
@@ -335,6 +348,7 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 				EntityHeader: `D`,
 				EntityName:   entityName,
 				IgnoredTypes: ignoredTypes,
+				Types:        typeMap,
 			}
 			v.DrawTuple(viewParam, tupEntity, relationshipMap)
 		} else if pe := entityType.GetPrimitive(); pe != sysl.Type_NO_Primitive && len(strings.TrimSpace(pe.String())) > 0 {
@@ -343,6 +357,7 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 				EntityColor:  `orchid`,
 				EntityHeader: `D`,
 				EntityName:   entityName,
+				Types:        typeMap,
 			}
 			v.DrawPrimitive(viewParam, pe.String(), relationshipMap)
 		}
