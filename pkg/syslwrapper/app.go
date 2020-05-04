@@ -165,14 +165,14 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement, appName string) map[str
 			Type: returnType,
 		}
 	}
-
 	return responseTypes
 }
 
 // Checks if the return value is a complex type such as sequence of string
 func (am *AppMapper) mapReturnType(retValue string, appName string) *Type {
 	var returnType *Type
-	if strings.Contains(retValue, "sequence of ") {
+	switch {
+	case strings.Contains(retValue, "sequence of "):
 		listType := strings.Replace(retValue, "sequence of ", "", 1)
 		returnType = &Type{
 			Type: "list",
@@ -180,7 +180,15 @@ func (am *AppMapper) mapReturnType(retValue string, appName string) *Type {
 				am.mapSimpleReturnType(listType, appName),
 			},
 		}
-	} else {
+	case strings.Contains(retValue, "set of "):
+		listType := strings.Replace(retValue, "set of ", "", 1)
+		returnType = &Type{
+			Type: "set",
+			Items: []*Type{
+				am.mapSimpleReturnType(listType, appName),
+			},
+		}
+	default:
 		returnType = am.mapSimpleReturnType(retValue, appName)
 	}
 	return returnType
@@ -414,6 +422,9 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		for str, index := range t.GetEnum().GetItems() {
 			enum[index] = str
 		}
+	case *sysl.Type_Set:
+		simpleType = "set"
+		items = append(items, am.MapType(t.GetSet()))
 	case *sysl.Type_Sequence:
 		simpleType = "list" //nolint:goconst
 		items = append(items, am.MapType(t.GetSequence()))
@@ -435,7 +446,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 			properties[k] = am.MapType(v)
 		}
 	default:
-		fmt.Println("Type not defined")
+		fmt.Printf("Type not defined %s", t.Type)
 	}
 
 	return &Type{

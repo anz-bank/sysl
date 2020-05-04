@@ -187,15 +187,13 @@ func MakeOneOf(oneOfType []*sysl.Type) *sysl.Type {
 // 	}
 // }
 
-// func MakeSet(oneOfType []*sysl.Type) *sysl.Type {
-// 	return &sysl.Type{
-// 		Type: &sysl.Type_OneOf_{
-// 			OneOf: &sysl.Type_OneOf{
-// 				Type: oneOfType,
-// 			},
-// 		},
-// 	}
-// }
+func MakeSet(setType *sysl.Type) *sysl.Type {
+	return &sysl.Type{
+		Type: &sysl.Type_Set{
+			Set: setType,
+		},
+	}
+}
 
 func MakeNoType() *sysl.Type {
 	return &sysl.Type{

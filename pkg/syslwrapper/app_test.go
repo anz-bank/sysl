@@ -241,6 +241,29 @@ func TestTypeConversionPrimative(t *testing.T) {
 		Type: "string",
 	}, convertedType1)
 }
+
+func TestTypeConversionSet(t *testing.T) {
+	type2 := MakeSet(MakePrimitive("string"))
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	var mod = &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"app2": &app2,
+		},
+	}
+
+	expectedResult := &Type{
+		Type: "set",
+		Items: []*Type{
+			{
+				Type: "string",
+			},
+		},
+	}
+
+	mapper := MakeAppMapper(mod)
+	convertedType1 := mapper.MapType(type2)
+	assert.Equal(t, expectedResult, convertedType1)
+}
 func TestTypeConversionList(t *testing.T) {
 	type2 := MakeList(MakePrimitive("string"))
 	param2 := MakeParam("Auth", MakePrimitive("string"))
@@ -279,6 +302,7 @@ func TestMapReturnStatements(t *testing.T) {
 	statements := []*sysl.Statement{
 		MakeReturnStatement("string"),
 		MakeReturnStatement("default <: string"),
+		MakeReturnStatement("301 <: set of app2.request"),
 		MakeReturnStatement("401 <: request"),
 		MakeReturnStatement("404 <: sequence of request"),
 		MakeReturnStatement("500 <: sequence of app2.request"),
@@ -289,6 +313,18 @@ func TestMapReturnStatements(t *testing.T) {
 			Name: "200",
 			Type: &Type{
 				Type: "string",
+			},
+		},
+		"301": {
+			Name: "301",
+			Type: &Type{
+				Items: []*Type{
+					{
+						Type:      "ref",
+						Reference: "app2:request",
+					},
+				},
+				Type: "set",
 			},
 		},
 		"default": {
