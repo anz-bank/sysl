@@ -354,7 +354,7 @@ apps: <
                   >
                 >
                 ref: <
-                  path: "{queryTerms}"
+                  path: "queryTerms"
                 >
               >
               source_context: <
@@ -381,7 +381,7 @@ apps: <
                   >
                 >
                 ref: <
-                  path: "{pageSize}"
+                  path: "pageSize"
                 >
               >
               source_context: <
@@ -408,7 +408,7 @@ apps: <
                   >
                 >
                 ref: <
-                  path: "{startingRecord}"
+                  path: "startingRecord"
                 >
               >
               source_context: <

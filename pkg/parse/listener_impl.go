@@ -883,7 +883,9 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 
 	switch {
 	case ctx.Var_in_curly() != nil:
-		ref_path = append(ref_path, ctx.Var_in_curly().GetText())
+		cleanString := strings.Replace(ctx.Var_in_curly().GetText(), "{", "", 1)
+		cleanString = strings.Replace(cleanString, "}", "", 1)
+		ref_path = append(ref_path, cleanString)
 		type1 = &sysl.Type{
 			Type: &sysl.Type_TypeRef{
 				TypeRef: &sysl.ScopedRef{

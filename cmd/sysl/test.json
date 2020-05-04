@@ -1,0 +1,257 @@
+{
+ "GroceryStore": {
+  "Name": "GroceryStore",
+  "Attributes": {
+   "description": "The Grocery Store API lets users shop for groceries.",
+   "docs.url": "https://en.wikipedia.org/wiki/Grocery_store",
+   "owner.name": "Eddard Stark",
+   "package": "GroceryStore",
+   "patterns": "",
+   "repo.url": "https://github.com/anz-bank/sysl",
+   "team.slack": "https://slack.com/intl/en-au/",
+   "version": "1.0.0"
+  },
+  "Endpoints": {
+   "DELETE /cart": {
+    "Summary": "",
+    "Description": "Removes the specified item from the cart",
+    "Path": "DELETE /cart",
+    "Params": {},
+    "Response": {
+     "200": {
+      "In": "",
+      "Description": "",
+      "Name": "200",
+      "Type": {
+       "Description": "",
+       "Optional": false,
+       "Reference": "",
+       "Type": "CartResponse",
+       "Items": null,
+       "Enum": null,
+       "Properties": null
+      }
+     }
+    },
+    "Downstream": null
+   },
+   "GET /cart": {
+    "Summary": "",
+    "Description": "Adds the specified item to the cart",
+    "Path": "GET /cart",
+    "Params": {},
+    "Response": {
+     "200": {
+      "In": "",
+      "Description": "",
+      "Name": "200",
+      "Type": {
+       "Description": "",
+       "Optional": false,
+       "Reference": "",
+       "Type": "CartResponse",
+       "Items": null,
+       "Enum": null,
+       "Properties": null
+      }
+     }
+    },
+    "Downstream": null
+   },
+   "GET /inventory": {
+    "Summary": "",
+    "Description": "Returns a list of items in the inventory",
+    "Path": "GET /inventory",
+    "Params": {
+     "fooid": {
+      "In": "header",
+      "Description": "",
+      "Name": "fooid",
+      "Type": {
+       "Description": "",
+       "Optional": false,
+       "Reference": "",
+       "Type": "string",
+       "Items": null,
+       "Enum": null,
+       "Properties": null
+      }
+     }
+    },
+    "Response": {
+     "200": {
+      "In": "",
+      "Description": "",
+      "Name": "200",
+      "Type": {
+       "Description": "",
+       "Optional": false,
+       "Reference": "",
+       "Type": "sequence of InventoryResponse",
+       "Items": null,
+       "Enum": null,
+       "Properties": null
+      }
+     }
+    },
+    "Downstream": null
+   },
+   "POST /cart": {
+    "Summary": "",
+    "Description": "Adds the specified item to the cart",
+    "Path": "POST /cart",
+    "Params": {},
+    "Response": {
+     "200": {
+      "In": "",
+      "Description": "",
+      "Name": "200",
+      "Type": {
+       "Description": "",
+       "Optional": false,
+       "Reference": "",
+       "Type": "CartResponse",
+       "Items": null,
+       "Enum": null,
+       "Properties": null
+      }
+     }
+    },
+    "Downstream": null
+   },
+   "POST /checkout": {
+    "Summary": "",
+    "Description": "",
+    "Path": "POST /checkout",
+    "Params": {
+     "payment_info": {
+      "In": "query",
+      "Description": "",
+      "Name": "payment_info",
+      "Type": {
+       "Description": "",
+       "Optional": false,
+       "Reference": "",
+       "Type": "string",
+       "Items": null,
+       "Enum": null,
+       "Properties": null
+      }
+     }
+    },
+    "Response": {
+     "ok": {
+      "In": "",
+      "Description": "",
+      "Name": "ok",
+      "Type": {
+       "Description": "",
+       "Optional": false,
+       "Reference": "",
+       "Type": "",
+       "Items": null,
+       "Enum": null,
+       "Properties": null
+      }
+     }
+    },
+    "Downstream": null
+   }
+  },
+  "Types": {
+   "CartRequest": {
+    "Description": "",
+    "Optional": false,
+    "Reference": "",
+    "Type": "tuple",
+    "Items": null,
+    "Enum": null,
+    "Properties": {
+     "cart_id": {
+      "Description": "",
+      "Optional": false,
+      "Reference": "",
+      "Type": "string",
+      "Items": null,
+      "Enum": null,
+      "Properties": null
+     },
+     "item_id": {
+      "Description": "",
+      "Optional": false,
+      "Reference": "",
+      "Type": "string",
+      "Items": null,
+      "Enum": null,
+      "Properties": null
+     }
+    }
+   },
+   "CartResponse": {
+    "Description": "",
+    "Optional": false,
+    "Reference": "",
+    "Type": "tuple",
+    "Items": null,
+    "Enum": null,
+    "Properties": {
+     "cart_id": {
+      "Description": "",
+      "Optional": false,
+      "Reference": "",
+      "Type": "string",
+      "Items": null,
+      "Enum": null,
+      "Properties": null
+     },
+     "item_id": {
+      "Description": "",
+      "Optional": false,
+      "Reference": "",
+      "Type": "string",
+      "Items": null,
+      "Enum": null,
+      "Properties": null
+     },
+     "transaction_id": {
+      "Description": "",
+      "Optional": false,
+      "Reference": "",
+      "Type": "string",
+      "Items": null,
+      "Enum": null,
+      "Properties": null
+     }
+    }
+   },
+   "InventoryResponse": {
+    "Description": "",
+    "Optional": false,
+    "Reference": "",
+    "Type": "tuple",
+    "Items": null,
+    "Enum": null,
+    "Properties": {
+     "item_id": {
+      "Description": "",
+      "Optional": false,
+      "Reference": "",
+      "Type": "string",
+      "Items": null,
+      "Enum": null,
+      "Properties": null
+     },
+     "quantity": {
+      "Description": "",
+      "Optional": false,
+      "Reference": "",
+      "Type": "int",
+      "Items": null,
+      "Enum": null,
+      "Properties": null
+     }
+    }
+   }
+  }
+ }
+} 
