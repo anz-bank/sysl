@@ -96,8 +96,8 @@ func (am *AppMapper) IndexTypes() map[string]*sysl.Type {
 func (am *AppMapper) ConvertTypes() map[string]*Type {
 	simpleTypes := make(map[string]*Type)
 	for typeName, syslType := range am.Types {
-		if am.MapType(syslType) != nil {
-			simpleTypes[typeName] = am.MapType(syslType)
+		if simpleType := am.MapType(syslType); simpleType != nil {
+			simpleTypes[typeName] = simpleType
 		}
 	}
 	am.SimpleTypes = simpleTypes
@@ -123,8 +123,8 @@ func (am *AppMapper) mapAttributes(attributes map[string]*sysl.Attribute) map[st
 func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) map[string]*Type {
 	simpleTypes := make(map[string]*Type, 15)
 	for typeName := range syslTypes {
-		if am.MapType(am.Types[appName+":"+typeName]) != nil {
-			simpleTypes[typeName] = am.MapType(am.Types[appName+":"+typeName])
+		if simpleTypeFromLookup := am.MapType(am.Types[appName+":"+typeName]); simpleTypeFromLookup != nil {
+			simpleTypes[typeName] = simpleTypeFromLookup
 		}
 	}
 	return simpleTypes
