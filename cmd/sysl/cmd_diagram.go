@@ -42,15 +42,15 @@ func (p *diagramCmd) Execute(args cmdutils.ExecuteArgs) error {
 }
 
 func callDiagramGenerator(m *sysl.Module, p *diagramCmd) (string, error) {
-	if p.IntegrationDiagram == "" {
-		if p.SequenceDiagram != "" {
-			res := strings.Split(p.SequenceDiagram, "->")
-			return sequencediagram.GenerateSequenceDiagram(m, res[0], res[1])
-		} else if p.EndpointAnalysis {
-			return endpointanalysisdiagram.GenerateEndpointAnalysisDiagram(m)
-		}
-	} else {
+	switch {
+	case p.IntegrationDiagram != "":
 		return integrationdiagram.GenerateIntegrationDiagram(m, p.IntegrationDiagram)
+	case p.SequenceDiagram != "":
+		res := strings.Split(p.SequenceDiagram, "->")
+		return sequencediagram.GenerateSequenceDiagram(m, res[0], res[1])
+	case p.EndpointAnalysis:
+		return endpointanalysisdiagram.GenerateEndpointAnalysisDiagram(m)
+	default:
+		return "", errors.New("correct value has not been specified; please check help for more information")
 	}
-	return "", errors.New("correct value has not been specified; please check help for more information")
 }
