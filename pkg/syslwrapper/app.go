@@ -96,7 +96,9 @@ func (am *AppMapper) IndexTypes() map[string]*sysl.Type {
 func (am *AppMapper) ConvertTypes() map[string]*Type {
 	simpleTypes := make(map[string]*Type)
 	for typeName, syslType := range am.Types {
-		simpleTypes[typeName] = am.MapType(syslType)
+		if am.MapType(syslType) != nil {
+			simpleTypes[typeName] = am.MapType(syslType)
+		}
 	}
 	am.SimpleTypes = simpleTypes
 	return simpleTypes
@@ -121,7 +123,9 @@ func (am *AppMapper) mapAttributes(attributes map[string]*sysl.Attribute) map[st
 func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) map[string]*Type {
 	simpleTypes := make(map[string]*Type, 15)
 	for typeName := range syslTypes {
-		simpleTypes[typeName] = am.MapType(am.Types[appName+":"+typeName])
+		if am.MapType(am.Types[appName+":"+typeName]) != nil {
+			simpleTypes[typeName] = am.MapType(am.Types[appName+":"+typeName])
+		}
 	}
 	return simpleTypes
 }
@@ -408,7 +412,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	var ref string
 
 	if t == nil {
-		return &Type{}
+		return nil
 	}
 
 	switch t.Type.(type) {
@@ -443,6 +447,12 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		simpleType = "tuple"
 		properties = make(map[string]*Type, 15)
 		for k, v := range t.GetTuple().AttrDefs {
+			properties[k] = am.MapType(v)
+		}
+	case *sysl.Type_Relation_:
+		simpleType = "relation"
+		properties = make(map[string]*Type, 15)
+		for k, v := range t.GetRelation().AttrDefs {
 			properties[k] = am.MapType(v)
 		}
 	default:

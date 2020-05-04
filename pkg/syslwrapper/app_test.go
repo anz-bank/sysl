@@ -242,6 +242,34 @@ func TestTypeConversionPrimative(t *testing.T) {
 	}, convertedType1)
 }
 
+func TestTypeConversionRelation(t *testing.T) {
+	type2 := MakeRelation(map[string]*sysl.Type{
+		"id":   MakePrimitive("string"),
+		"name": MakePrimitive("string"),
+	}, "id", []string{})
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
+	var mod = &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"app2": &app2,
+		},
+	}
+
+	expectedResult := &Type{
+		Type: "relation",
+		Properties: map[string]*Type{
+			"id": {
+				Type: "string",
+			},
+			"name": {
+				Type: "string",
+			},
+		},
+	}
+
+	mapper := MakeAppMapper(mod)
+	convertedType1 := mapper.MapType(type2)
+	assert.Equal(t, expectedResult, convertedType1)
+}
 func TestTypeConversionSet(t *testing.T) {
 	type2 := MakeSet(MakePrimitive("string"))
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
@@ -426,5 +454,5 @@ func prettyPrint(t *testing.T, v interface{}) {
 	if err != nil {
 		t.Log(t, err)
 	}
-	t.Log(t, json)
+	t.Log(t, string(json))
 }
