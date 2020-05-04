@@ -12,9 +12,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-type diagramCmd struct {
-	cmdutils.DiagramCmd
-}
+type diagramCmd cmdutils.DiagramCmd
 
 func (p *diagramCmd) Name() string { return "diagram" }
 
@@ -22,12 +20,15 @@ func (p *diagramCmd) MaxSyslModule() int { return 1 }
 
 func (p *diagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate mermaid diagrams").Alias("md")
-	cmd.Flag("integrationdiagram", "To generate the integration"+
-		" diagram, specify the application name").Short('i').StringVar(&p.IntegrationValue)
-	cmd.Flag("sequencediagram", "To generate the sequence diagram, specify the "+
-		"application name and endpoint in this format app->endpoint").Short('s').StringVar(&p.SequenceValue)
-	cmd.Flag("endpointanalysis", "To generates the endpoint analysis diagram"+
-		" for the given sysl file, specify true followed by the flag").Short('e').BoolVar(&p.EndpointAnalysisValue)
+	cmd.Flag("integrationdiagram",
+		"Generate an integration diagram (Specify the application name)",
+	).Short('i').StringVar(&p.IntegrationDiagram)
+	cmd.Flag("sequencediagram",
+		"Generate a sequence diagram (Specify 'appname->endpoint')",
+	).Short('s').StringVar(&p.SequenceDiagram)
+	cmd.Flag("endpointanalysis", ""+
+		"Generate an EPA diagram (Specify 'true')",
+	).Short('e').BoolVar(&p.EndpointAnalysis)
 	return cmd
 }
 
@@ -41,15 +42,15 @@ func (p *diagramCmd) Execute(args cmdutils.ExecuteArgs) error {
 }
 
 func callDiagramGenerator(m *sysl.Module, p *diagramCmd) (string, error) {
-	if p.IntegrationValue == "" {
-		if p.SequenceValue != "" {
-			res := strings.Split(p.SequenceValue, "->")
+	if p.IntegrationDiagram == "" {
+		if p.SequenceDiagram != "" {
+			res := strings.Split(p.SequenceDiagram, "->")
 			return sequencediagram.GenerateSequenceDiagram(m, res[0], res[1])
-		} else if p.EndpointAnalysisValue {
+		} else if p.EndpointAnalysis {
 			return endpointanalysisdiagram.GenerateEndpointAnalysisDiagram(m)
 		}
 	} else {
-		return integrationdiagram.GenerateIntegrationDiagram(m, p.IntegrationValue)
+		return integrationdiagram.GenerateIntegrationDiagram(m, p.IntegrationDiagram)
 	}
 	return "", errors.New("correct value has not been specified; please check help for more information")
 }
