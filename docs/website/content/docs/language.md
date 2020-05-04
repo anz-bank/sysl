@@ -37,6 +37,49 @@ Notes about sysl syntax:
   - All lines after `:` should be indented. The only exception to this rule is when you want to use the shortcut `...`.
   - The `...` (aka shortcut) means that we don't have enough details yet to describe how this endpoint behaves. Sysl allows you to take an iterative approach in documenting the behaviour. You add more as you know more.
 
+### Application Names
+
+Application names can contain any lowercase or uppercase letter, number, underscore or hyphen.
+Application names must begin with either a letter or an underscore.
+
+Valid
+
+```
+  Mobile App:
+    Login: ...
+```
+
+Invalid
+
+```
+  Mobile App*:
+    Login: ...
+```
+
+#### Long Names
+
+Shorter application names are preferred to enable shorter expressions when specifying references to the app. Sysl allows the definition of a LongName using the following syntax
+
+```
+  Mobile App "My Awesome Mobile Application":
+    Endpoint: ...
+```
+
+#### Namespaces
+
+Application names can also be namespaced using two colons. This allows the formation of a hierarchical structure in Sysl, so that applications can be grouped.
+
+```
+  Payments :: CreditCard "Credit Card Payment Service":
+    Pay: ...
+```
+
+Namespaces can be nested arbitrarily deep.
+```
+  Payments :: CreditCard :: Validate "Credit Card Validator":
+    Pay: ...
+```
+
 ### Multiple Declarations
 
 Sysl allows you to define an application in multiple places. There is no
@@ -180,8 +223,66 @@ Run this in the same directory as `api.sysl`:
 reljam spring-rest-service api AccountTransactionApi
 ```
 
+### Parameter Types
 
-## Data Types
+Different types of parameters can be defined for an endpoint
+
+#### REST Endpoint Specific
+
+##### Path Parameters
+
+Path parameters can be defined using curly brackets in the path name.
+
+In the example above
+```
+AccountTransactionApi [package="io.sysl.account.api"]:
+    /accounts [interface="Accounts"]:
+        /{account_number<:int}:
+            GET:
+              BankDatabase <- GetAccount(account_number)
+```
+
+##### Query Parameters
+
+Query parameters can be defined in the method statement using a `?queryParamName=SomePrimitiveType`
+Multiple query parameters can be separated using the & character
+When a reference to a type must be made, curly brackets must surround the type reference
+
+`?myQueryParam={QueryParamType}`
+
+```
+Server:
+    /first:
+        GET ?depth=int&limit=int?&offset=int?:
+            return ok
+    /second :
+        GET ?tags={Tags}
+          return ok
+
+    !alias Tags:
+        sequence of string
+```
+
+#### Header and Body Parameters
+
+Header and body parameters can be defined using brackets (foo <: int)
+To create a body parameter, we use the pattern ~body e.g `(bodyParam <: int [~body])`
+To create a header parameter, we use the pattern ~header e.g `(bodyParam <: int [~header])`
+Larameters are separated by commas
+```
+Server:
+    /first:
+      GET (filter <: int, offset <: int, tags <: Tags)
+    /second:
+        GET (foo <: int [~body]) ?depth=int [~bar]:
+            ...
+
+    !alias Tags:
+        sequence of string
+```
+
+
+## Data-Types
 
 Sysl supports following data types out of the box.
 
@@ -191,8 +292,8 @@ int64
 float64
 string
 bool
-date.Date
-time.Time
+date
+datetime
 ```
 
 We can also define our own datatypes using the `!type` keyword within an application.
@@ -203,8 +304,25 @@ We can also define our own datatypes using the `!type` keyword within an applica
   type <: int
 ```
 
-Now, we have two apps `MobileApp` and `Server`, but they do not interact with each other.
+### Type-Names
 
+Type names follow the same rules as application names:
+Type names can contain any lowercase or uppercase letter, number, underscore or hyphen.
+Type names must begin with either a letter or an underscore.
+Type names MAY contain spaces (this may change in the future)
+
+### Optional Types
+
+We can define optional parameters and fields in sysl using a postfix `?`.
+
+The following example defines an optional token field in the type response
+
+```
+!type response:
+  data <: string
+  type <: int
+  token <: string?
+```
 
 ### Enumerations
 
@@ -234,19 +352,41 @@ form from parsing.
 
 ### Return response
 
-An endpoint can return response to the caller. Everything after `return` keyword till the end-of-line is considered response payload. You can have:
+An endpoint can return a response to the caller. Everything after `return` keyword till the end-of-line is considered response payload. 
 
-- string - a description of what is returned, or
-- Sysl type - formal type to return to the caller
+You can return:
+
+- A a primitive Sysl type
+  - e.g `return string`
+  - Can be one of any [primitive sysl type](#Data-Types)
+- A Sysl type - formal type to return to the caller
+  - e.g `return LoginData`
+- An expression of a Sysl Type
+  - e.g `return sequence of string`
+- A named return response
+  - e.g `return error <: string`
+  - e.g `return 200 <: OrderData`
+  - e.g `return 200 <: AnotherApp.OrderData`
+- An empty response
+  - e.g `return ok`
 
 ```
 MobileApp:
+  Name:
+    return string
   Login:
-    return string
+    return Server.LoginData
   Search:
-    return string
-  Order:
     return sequence of string
+  Order:
+    return UserPreference
+
+  !type UserPreference
+    Geography <: string
+
+Server:
+  !type LoginData
+    userID <: string
 ```
 
 

@@ -8,6 +8,8 @@ HelloWorld:
         id <: int
         title <: string
         completed <: bool
+        day <: date
+        timestamp <: datetime
         # Specify optional fields by using "?" at the end of the data type.
         something <: string?
 

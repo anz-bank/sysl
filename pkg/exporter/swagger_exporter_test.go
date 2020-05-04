@@ -15,7 +15,7 @@ import (
 func TestExportAll(t *testing.T) {
 	t.Parallel()
 	modelParser := parse.NewParser()
-	const syslTestDir = "test-data"
+	const syslTestDir = "test-data/openapi2/"
 	files, err := ioutil.ReadDir(syslTestDir)
 	require.NoError(t, err)
 
@@ -27,7 +27,7 @@ func TestExportAll(t *testing.T) {
 		if strings.EqualFold(parts[1], "sysl") {
 			t.Run(parts[0], func(t *testing.T) {
 				t.Parallel()
-				mod, _, err := parse.LoadAndGetDefaultApp("exporter/test-data/"+parts[0]+`.sysl`,
+				mod, _, err := parse.LoadAndGetDefaultApp("exporter/"+syslTestDir+parts[0]+`.sysl`,
 					syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
 				require.NoError(t, err)
 				if err != nil {
@@ -37,7 +37,7 @@ func TestExportAll(t *testing.T) {
 				require.NoError(t, swaggerExporter.GenerateSwagger())
 				out, err := swaggerExporter.SerializeOutput("yaml")
 				require.NoError(t, err)
-				yamlFileBytes, err := ioutil.ReadFile("../exporter/test-data/" + parts[0] + `.yaml`)
+				yamlFileBytes, err := ioutil.ReadFile("../exporter/" + syslTestDir + parts[0] + `.yaml`)
 				require.NoError(t, err)
 
 				yamlFileBytes = syslutil.HandleCRLF(yamlFileBytes)
