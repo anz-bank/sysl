@@ -26,7 +26,7 @@ all: test lint build buildlsp coverage examples ## test, lint, build, coverage t
 TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 
 examples: TUTORIALS
-	cd demo/examples/ && go run generate_website.go && cd ../../ && test -z "$$(git status --porcelain)"
+	cd demo/examples/ && go run generate_website.go && cd ../../  && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
 .PHONY: all install grammar antlr build lint test coverage clean check-tidy
 lint: ## Run golangci-lint
@@ -36,7 +36,7 @@ coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 80
 
 check-tidy: ## Check go.mod and go.sum is tidy
-	go mod tidy && test -z "$$(git status --porcelain)"
+	go mod tidy && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
 test: ## Run tests without coverage
 	$(TESTEXE)

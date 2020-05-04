@@ -288,18 +288,18 @@ func parseExamples() []*Example {
 				example.GitRepoURL = fmt.Sprintf("%s/%s", gitRepoExample, exampleName)
 				fmt.Println(example.GitRepoURL)
 				var sourcePaths []string
-				subOrderingFileName := path.Join(exampleID, orderingfile)
+				subOrderingFileName := path.Join(exampleName, orderingfile)
 
 				if _, err := os.Stat(subOrderingFileName); err == nil {
 					subOrdering := unmarshalYaml(subOrderingFileName)
 					fmt.Println()
 
 					for _, x := range subOrdering[0][topic] {
-						sourcePaths = append(sourcePaths, path.Join(exampleID, x))
+						sourcePaths = append(sourcePaths, path.Join(exampleName, x))
 					}
 
 				} else {
-					sourcePaths = mustGlob(exampleID + "/*")
+					sourcePaths = mustGlob(exampleName + "/*")
 
 				}
 				for _, sourcePath := range sourcePaths {
@@ -372,6 +372,7 @@ func isImageFile(filename string) (bool, string) {
 }
 
 func syslplaygroundLink(code, cmd string) string {
+	fmt.Println(code)
 	code = encode(code)
 	cmd = encode(cmd)
 	return fmt.Sprintf(syslPlaygroundURL+"?input=%s&cmd=%s", code, cmd)

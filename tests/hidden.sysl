@@ -1,3 +1,8 @@
+Project[appfmt="%(appname)"]:
+    _:
+        App
+        SecondApp
+        ThirdApp
 App:
     Endpoint1:
         SecondApp <- Endpoint3
@@ -5,3 +10,9 @@ SecondApp:
     # Any calls to Endpoint3 will be hidden in diagram generation, but whatever calls it contains will still exist
     Endpoint3[~hidden]:
         return whatever
+    Endpoint2:
+        ...
+ThirdApp:
+    Endpoint4:
+        SecondApp <- Endpoint2
+        App <- Endpoint1
