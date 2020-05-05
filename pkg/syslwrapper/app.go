@@ -96,7 +96,9 @@ func (am *AppMapper) IndexTypes() map[string]*sysl.Type {
 func (am *AppMapper) ConvertTypes() map[string]*Type {
 	simpleTypes := make(map[string]*Type)
 	for typeName, syslType := range am.Types {
-		simpleTypes[typeName] = am.MapType(syslType)
+		if simpleType := am.MapType(syslType); simpleType != nil {
+			simpleTypes[typeName] = simpleType
+		}
 	}
 	am.SimpleTypes = simpleTypes
 	return simpleTypes
@@ -121,7 +123,9 @@ func (am *AppMapper) mapAttributes(attributes map[string]*sysl.Attribute) map[st
 func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) map[string]*Type {
 	simpleTypes := make(map[string]*Type, 15)
 	for typeName := range syslTypes {
-		simpleTypes[typeName] = am.MapType(am.Types[appName+":"+typeName])
+		if simpleTypeFromLookup := am.MapType(am.Types[appName+":"+typeName]); simpleTypeFromLookup != nil {
+			simpleTypes[typeName] = simpleTypeFromLookup
+		}
 	}
 	return simpleTypes
 }
@@ -165,14 +169,14 @@ func (am *AppMapper) mapResponse(stmt []*sysl.Statement, appName string) map[str
 			Type: returnType,
 		}
 	}
-
 	return responseTypes
 }
 
 // Checks if the return value is a complex type such as sequence of string
 func (am *AppMapper) mapReturnType(retValue string, appName string) *Type {
 	var returnType *Type
-	if strings.Contains(retValue, "sequence of ") {
+	switch {
+	case strings.Contains(retValue, "sequence of "):
 		listType := strings.Replace(retValue, "sequence of ", "", 1)
 		returnType = &Type{
 			Type: "list",
@@ -180,7 +184,15 @@ func (am *AppMapper) mapReturnType(retValue string, appName string) *Type {
 				am.mapSimpleReturnType(listType, appName),
 			},
 		}
-	} else {
+	case strings.Contains(retValue, "set of "):
+		listType := strings.Replace(retValue, "set of ", "", 1)
+		returnType = &Type{
+			Type: "set",
+			Items: []*Type{
+				am.mapSimpleReturnType(listType, appName),
+			},
+		}
+	default:
 		returnType = am.mapSimpleReturnType(retValue, appName)
 	}
 	return returnType
@@ -400,7 +412,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	var ref string
 
 	if t == nil {
-		return &Type{}
+		return nil
 	}
 
 	switch t.Type.(type) {
@@ -414,6 +426,9 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		for str, index := range t.GetEnum().GetItems() {
 			enum[index] = str
 		}
+	case *sysl.Type_Set:
+		simpleType = "set"
+		items = append(items, am.MapType(t.GetSet()))
 	case *sysl.Type_Sequence:
 		simpleType = "list" //nolint:goconst
 		items = append(items, am.MapType(t.GetSequence()))
@@ -434,8 +449,14 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		for k, v := range t.GetTuple().AttrDefs {
 			properties[k] = am.MapType(v)
 		}
+	case *sysl.Type_Relation_:
+		simpleType = "relation"
+		properties = make(map[string]*Type, 15)
+		for k, v := range t.GetRelation().AttrDefs {
+			properties[k] = am.MapType(v)
+		}
 	default:
-		fmt.Println("Type not defined")
+		fmt.Printf("Type not defined %s", t.Type)
 	}
 
 	return &Type{

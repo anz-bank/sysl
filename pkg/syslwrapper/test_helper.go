@@ -179,23 +179,35 @@ func MakeOneOf(oneOfType []*sysl.Type) *sysl.Type {
 }
 
 //TODO relation, set, sequence, notype
-// func MakeRelation(oneOfType []*sysl.Type) *sysl.Type {
-// 	return &sysl.Type{
-// 		Type: &sysl.Type_Relation_{
-// 			Relation: &sysl.Type_Relation{},
-// 		},
-// 	}
-// }
+func MakeRelation(types map[string]*sysl.Type, primaryKey string, keys []string) *sysl.Type {
+	var relationKeys []*sysl.Type_Relation_Key
+	for _, val := range keys {
+		relationKeys = append(relationKeys, &sysl.Type_Relation_Key{
+			AttrName: []string{val},
+		})
+	}
+	relation := &sysl.Type{
+		Type: &sysl.Type_Relation_{
+			Relation: &sysl.Type_Relation{
+				AttrDefs: types,
+				PrimaryKey: &sysl.Type_Relation_Key{
+					AttrName: []string{primaryKey},
+				},
+				Key: relationKeys,
+			},
+		},
+	}
 
-// func MakeSet(oneOfType []*sysl.Type) *sysl.Type {
-// 	return &sysl.Type{
-// 		Type: &sysl.Type_OneOf_{
-// 			OneOf: &sysl.Type_OneOf{
-// 				Type: oneOfType,
-// 			},
-// 		},
-// 	}
-// }
+	return relation
+}
+
+func MakeSet(setType *sysl.Type) *sysl.Type {
+	return &sysl.Type{
+		Type: &sysl.Type_Set{
+			Set: setType,
+		},
+	}
+}
 
 func MakeNoType() *sysl.Type {
 	return &sysl.Type{
