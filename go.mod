@@ -12,24 +12,16 @@ require (
 	github.com/anz-bank/sysl-catalog v1.2.30
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
 	github.com/arr-ai/wbnf v0.13.0
-	github.com/bitly/go-simplejson v0.5.0
 	github.com/cornelk/hashmap v1.0.1
 	github.com/fatih/color v1.9.0 // indirect
-	github.com/fullstorydev/grpcui v0.2.1
-	github.com/fullstorydev/grpcurl v1.5.0
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi v4.0.4+incompatible
-	github.com/go-openapi/loads v0.19.5
-	github.com/go-openapi/runtime v0.19.12
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9
 	github.com/gohugoio/hugo v0.69.2
 	github.com/golang/protobuf v1.4.1
-	github.com/gorilla/handlers v1.4.2
-	github.com/gorilla/mux v1.7.4
 	github.com/hashicorp/hcl v1.0.0
-	github.com/markbates/pkger v0.15.0
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/pkg/errors v0.9.1
