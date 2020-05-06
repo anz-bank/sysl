@@ -21,18 +21,15 @@ type goModule struct {
 }
 
 func goGetByFilepath(filename string) error {
-	names := strings.Split(filename, "/")
-	if len(names) > 0 {
+	if names := strings.Split(filename, "/"); len(names) > 0 {
 		gogetPath := names[0]
 
-		for i := 1; i < len(names); i++ {
-			err := goGet(gogetPath)
+		for i := range names[1:] {
+			err := goGet(path.Join(names[:1+i]...))
 			if err == nil {
 				return nil
 			}
 			logrus.Debugf("go get %s error: %s\n", gogetPath, err.Error())
-
-			gogetPath = path.Join(gogetPath, names[i])
 		}
 	}
 

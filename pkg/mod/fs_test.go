@@ -33,8 +33,8 @@ func TestOpenLocalFile(t *testing.T) {
 
 	filename := "deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
-	fs := NewFs(memfs, "../../tests/")
-	f, err := fs.Open(filename)
+	mfs := NewFs(memfs, "../../tests/")
+	f, err := mfs.Open(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
 }
@@ -45,8 +45,8 @@ func TestOpenLocalFileFailed(t *testing.T) {
 
 	filename := "wrong.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
-	fs := NewFs(memfs, "../../tests/")
-	f, err := fs.Open(filename)
+	mfs := NewFs(memfs, "../../tests/")
+	f, err := mfs.Open(filename)
 	assert.Nil(t, f)
 	assert.Equal(t, fmt.Sprintf("%s not found", filename), err.Error())
 }
