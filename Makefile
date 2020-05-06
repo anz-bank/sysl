@@ -79,8 +79,8 @@ pkg/grammar/sysl_parser.go: pkg/grammar/SyslParser.g4 pkg/grammar/SyslLexer.toke
 pkg/grammar/sysl_lexer.go pkg/grammar/SyslLexer.tokens &: pkg/grammar/SyslLexer.g4
 	$(ANTLR_GO)
 
-pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
-	protoc -I pkg/proto_old -I $(GOPATH)/src --go_out=pkg/proto_old/ sysl.proto
+pkg/sysl/sysl.pb.go: pkg/sysl/sysl.proto
+	protoc -I pkg/sysl -I $(GOPATH)/src --go_out=pkg/sysl/ sysl.proto
 
 proto: pkg/sysl/sysl.pb.go
 
