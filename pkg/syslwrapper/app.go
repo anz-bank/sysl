@@ -36,12 +36,13 @@ type Parameter struct {
 // Type represents a simplified Sysl Type.
 type Type struct {
 	Description string
+	PrimaryKey  string           // Used to represent the primary key for type relation
 	Optional    bool             // Used to represent if the type is optional
 	Reference   string           // Used to represent type references. In the format of app:typename.
-	Type        string           // Used to indicate the type. Can be one of {"bool", "int", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid", "ref", "list", "map", "enum", "tuple"}
+	Type        string           // Used to indicate the type. Can be one of {"bool", "int", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid", "ref", "list", "map", "enum", "tuple", relation}
 	Items       []*Type          // Used to represent map types, where the 0 index is the key type, and 1 index is the value type.
 	Enum        map[int64]string // Used to represent enums
-	Properties  map[string]*Type // Used to represent tuple types.
+	Properties  map[string]*Type // Used to represent tuple and relation types.
 }
 
 type AppMapper struct {
@@ -405,11 +406,10 @@ func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName strin
 
 // Converts sysl type to a string representation of the type
 func (am *AppMapper) MapType(t *sysl.Type) *Type {
-	var simpleType string
+	var ref, primaryKey, simpleType string
 	var items []*Type
 	var properties map[string]*Type
 	var enum map[int64]string
-	var ref string
 
 	if t == nil {
 		return nil
@@ -455,6 +455,11 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		for k, v := range t.GetRelation().AttrDefs {
 			properties[k] = am.MapType(v)
 		}
+		if pk := t.GetRelation().GetPrimaryKey(); pk != nil {
+			if pk.GetAttrName() != nil && len(pk.GetAttrName()) > 0 {
+				primaryKey = pk.GetAttrName()[0]
+			}
+		}
 	default:
 		fmt.Printf("Type not defined %s", t.Type)
 	}
@@ -466,6 +471,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		Items:      items,
 		Properties: properties,
 		Enum:       enum,
+		PrimaryKey: primaryKey,
 	}
 }
 
