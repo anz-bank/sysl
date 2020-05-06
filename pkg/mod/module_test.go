@@ -46,21 +46,19 @@ func TestGetByFilepathWithNilMods(t *testing.T) {
 
 func TestFind(t *testing.T) {
 	fs := afero.NewOsFs()
-	_, err := fs.Create("go.mod")
-	assert.NoError(t, err)
-	defer removeFile(t, fs, "go.mod")
+	createGomodFile(t, fs)
+	defer removeGomodFile(t, fs)
 
 	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	mod, err := Find(filename)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "github.com/anz-bank/sysl", mod.Name)
 }
 
 func TestFindWithWrongPath(t *testing.T) {
 	fs := afero.NewOsFs()
-	_, err := fs.Create("go.mod")
-	assert.NoError(t, err)
-	defer removeFile(t, fs, "go.mod")
+	createGomodFile(t, fs)
+	defer removeGomodFile(t, fs)
 
 	wrongpath := "wrong_file_path/deps.sysl"
 	mod, err := Find(wrongpath)
