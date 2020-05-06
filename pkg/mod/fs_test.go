@@ -30,6 +30,9 @@ func TestFsName(t *testing.T) {
 func TestOpenLocalFile(t *testing.T) {
 	t.Parallel()
 
+	SyslModules = false
+	defer func() { SyslModules = true }()
+
 	filename := "deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	fs := NewFs(memfs, "../../tests/")
@@ -41,12 +44,15 @@ func TestOpenLocalFile(t *testing.T) {
 func TestOpenLocalFileFailed(t *testing.T) {
 	t.Parallel()
 
+	SyslModules = false
+	defer func() { SyslModules = true }()
+
 	filename := "wrong.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	fs := NewFs(memfs, "../../tests/")
 	f, err := fs.Open(filename)
 	assert.Nil(t, f)
-	assert.Equal(t, fmt.Sprintf("%s not found", filepath.Join("../../tests/", filename)), err.Error())
+	assert.Equal(t, fmt.Sprintf("%s not found", filename), err.Error())
 }
 
 func TestOpenRemoteFile(t *testing.T) {
@@ -55,6 +61,7 @@ func TestOpenRemoteFile(t *testing.T) {
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
+	defer removeFile(t, fs, "go.mod")
 
 	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
@@ -62,8 +69,6 @@ func TestOpenRemoteFile(t *testing.T) {
 	f, err := mfs.Open(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
-
-	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenRemoteFileFailed(t *testing.T) {
@@ -72,6 +77,7 @@ func TestOpenRemoteFileFailed(t *testing.T) {
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
+	defer removeFile(t, fs, "go.mod")
 
 	filename := "github.com/wrong/repo/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
@@ -79,8 +85,6 @@ func TestOpenRemoteFileFailed(t *testing.T) {
 	f, err := mfs.Open(filename)
 	assert.Nil(t, f)
 	assert.Equal(t, fmt.Sprintf("%s not found", filepath.FromSlash(filename)), err.Error())
-
-	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenRemoteFileWithRoot(t *testing.T) {
@@ -89,6 +93,7 @@ func TestOpenRemoteFileWithRoot(t *testing.T) {
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
+	defer removeFile(t, fs, "go.mod")
 
 	root := "github.com/anz-bank/sysl"
 	path := "demo/examples/Modules/deps.sysl"
@@ -97,17 +102,20 @@ func TestOpenRemoteFileWithRoot(t *testing.T) {
 	f, err := mfs.Open(path)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
-
-	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenFile(t *testing.T) {
 	t.Parallel()
 
+	fs := afero.NewOsFs()
+	_, err := fs.Create("go.mod")
+	assert.NoError(t, err)
+	defer removeFile(t, fs, "go.mod")
+
 	filename := "deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
-	fs := NewFs(memfs, "../../tests/")
-	f, err := fs.OpenFile(filename, os.O_RDWR, 0600)
+	mfs := NewFs(memfs, "../../tests/")
+	f, err := mfs.OpenFile(filename, os.O_RDWR, 0600)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
 }
@@ -115,10 +123,15 @@ func TestOpenFile(t *testing.T) {
 func TestOpenFileFailed(t *testing.T) {
 	t.Parallel()
 
+	fs := afero.NewOsFs()
+	_, err := fs.Create("go.mod")
+	assert.NoError(t, err)
+	defer removeFile(t, fs, "go.mod")
+
 	filename := "wrong.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
-	fs := NewFs(memfs, "../../tests/")
-	f, err := fs.OpenFile(filename, os.O_RDWR, 0600)
+	mfs := NewFs(memfs, "../../tests/")
+	f, err := mfs.OpenFile(filename, os.O_RDWR, 0600)
 	assert.Nil(t, f)
 	assert.Equal(t, fmt.Sprintf("%s not found", filepath.Join("../../tests/", filename)), err.Error())
 }

@@ -50,13 +50,12 @@ func TestFind(t *testing.T) {
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
+	defer removeFile(t, fs, "go.mod")
 
 	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	mod, err := Find(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "github.com/anz-bank/sysl", mod.Name)
-
-	removeFile(t, fs, "go.mod")
 }
 
 func TestFindWithWrongPath(t *testing.T) {
@@ -65,11 +64,10 @@ func TestFindWithWrongPath(t *testing.T) {
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
+	defer removeFile(t, fs, "go.mod")
 
 	wrongpath := "wrong_file_path/deps.sysl"
 	mod, err := Find(wrongpath)
 	assert.Equal(t, fmt.Sprintf("%s not found", wrongpath), err.Error())
 	assert.Nil(t, mod)
-
-	removeFile(t, fs, "go.mod")
 }

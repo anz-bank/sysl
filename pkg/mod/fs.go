@@ -1,6 +1,7 @@
 package mod
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -22,7 +23,7 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, err
+		return nil, fmt.Errorf("%s not found", name)
 	}
 
 	// filepath.Join will strip path elements of ".", so if the root is "."
@@ -45,7 +46,7 @@ func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, err
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, err
+		return nil, fmt.Errorf("%s not found", name)
 	}
 
 	// filepath.Join will strip path elements of ".", so if the root is "."
