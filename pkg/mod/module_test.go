@@ -47,25 +47,29 @@ func TestGetByFilepathWithNilMods(t *testing.T) {
 func TestFind(t *testing.T) {
 	t.Parallel()
 
+	fs := afero.NewOsFs()
+	_, err := fs.Create("go.mod")
+	assert.NoError(t, err)
+
 	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	mod, err := Find(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "github.com/anz-bank/sysl", mod.Name)
 
-	fs := afero.NewOsFs()
-	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 }
 
 func TestFindWithWrongPath(t *testing.T) {
 	t.Parallel()
 
+	fs := afero.NewOsFs()
+	_, err := fs.Create("go.mod")
+	assert.NoError(t, err)
+
 	wrongpath := "wrong_file_path/deps.sysl"
 	mod, err := Find(wrongpath)
 	assert.Equal(t, fmt.Sprintf("%s not found", wrongpath), err.Error())
 	assert.Nil(t, mod)
 
-	fs := afero.NewOsFs()
-	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 }

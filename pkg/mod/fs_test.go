@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -51,43 +52,52 @@ func TestOpenLocalFileFailed(t *testing.T) {
 func TestOpenRemoteFile(t *testing.T) {
 	t.Parallel()
 
+	fs := afero.NewOsFs()
+	_, err := fs.Create("go.mod")
+	assert.NoError(t, err)
+
 	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
-	fs := NewFs(memfs, "")
-	f, err := fs.Open(filename)
+	mfs := NewFs(memfs, "")
+	f, err := mfs.Open(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
 
-	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenRemoteFileFailed(t *testing.T) {
 	t.Parallel()
 
+	fs := afero.NewOsFs()
+	_, err := fs.Create("go.mod")
+	assert.NoError(t, err)
+
 	filename := "github.com/wrong/repo/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
-	fs := NewFs(memfs, "")
-	f, err := fs.Open(filename)
+	mfs := NewFs(memfs, "")
+	f, err := mfs.Open(filename)
 	assert.Nil(t, f)
 	assert.Equal(t, fmt.Sprintf("%s not found", filepath.FromSlash(filename)), err.Error())
 
-	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenRemoteFileWithRoot(t *testing.T) {
 	t.Parallel()
 
+	fs := afero.NewOsFs()
+	_, err := fs.Create("go.mod")
+	assert.NoError(t, err)
+
 	root := "github.com/anz-bank/sysl"
 	path := "demo/examples/Modules/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
-	fs := NewFs(memfs, root)
-	f, err := fs.Open(path)
+	mfs := NewFs(memfs, root)
+	f, err := mfs.Open(path)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
 
-	removeFile(t, fs, "go.sum")
 	removeFile(t, fs, "go.mod")
 }
 

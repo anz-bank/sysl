@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
+
+	"github.com/pkg/errors"
 )
 
 var SyslModules = os.Getenv("SYSL_MODULES") != "off"
@@ -30,13 +31,20 @@ func (m *Modules) GetByFilename(filename string) *Module {
 	return nil
 }
 
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 func Find(name string) (*Module, error) {
-	err := SyslModInit("")
-	if err != nil && !strings.HasSuffix(err.Error(), "go.mod already exists\n") {
-		return nil, err
+	if !fileExists("go.mod") {
+		return nil, errors.New("no go.mod file, run `go mod init` first")
 	}
 
-	err = goGetByFilepath(name)
+	err := goGetByFilepath(name)
 	if err != nil {
 		return nil, fmt.Errorf("%s not found", name)
 	}
