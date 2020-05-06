@@ -45,8 +45,6 @@ func TestGetByFilepathWithNilMods(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
-	t.Parallel()
-
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
@@ -59,8 +57,6 @@ func TestFind(t *testing.T) {
 }
 
 func TestFindWithWrongPath(t *testing.T) {
-	t.Parallel()
-
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)

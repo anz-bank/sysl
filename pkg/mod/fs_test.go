@@ -28,8 +28,6 @@ func TestFsName(t *testing.T) {
 }
 
 func TestOpenLocalFile(t *testing.T) {
-	t.Parallel()
-
 	SyslModules = false
 	defer func() { SyslModules = true }()
 
@@ -42,8 +40,6 @@ func TestOpenLocalFile(t *testing.T) {
 }
 
 func TestOpenLocalFileFailed(t *testing.T) {
-	t.Parallel()
-
 	SyslModules = false
 	defer func() { SyslModules = true }()
 
@@ -56,8 +52,6 @@ func TestOpenLocalFileFailed(t *testing.T) {
 }
 
 func TestOpenRemoteFile(t *testing.T) {
-	t.Parallel()
-
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
@@ -72,8 +66,6 @@ func TestOpenRemoteFile(t *testing.T) {
 }
 
 func TestOpenRemoteFileFailed(t *testing.T) {
-	t.Parallel()
-
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
@@ -88,8 +80,6 @@ func TestOpenRemoteFileFailed(t *testing.T) {
 }
 
 func TestOpenRemoteFileWithRoot(t *testing.T) {
-	t.Parallel()
-
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
@@ -105,8 +95,6 @@ func TestOpenRemoteFileWithRoot(t *testing.T) {
 }
 
 func TestOpenFile(t *testing.T) {
-	t.Parallel()
-
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
@@ -121,8 +109,6 @@ func TestOpenFile(t *testing.T) {
 }
 
 func TestOpenFileFailed(t *testing.T) {
-	t.Parallel()
-
 	fs := afero.NewOsFs()
 	_, err := fs.Create("go.mod")
 	assert.NoError(t, err)
