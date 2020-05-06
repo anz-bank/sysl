@@ -3,6 +3,7 @@ package mod
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -74,7 +75,7 @@ func TestOpenRemoteFileFailed(t *testing.T) {
 	mfs := NewFs(memfs, "")
 	f, err := mfs.Open(filename)
 	assert.Nil(t, f)
-	assert.Equal(t, fmt.Sprintf("%s not found", filepath.FromSlash(filename)), err.Error())
+	assert.Equal(t, fmt.Sprintf("%s not found", path.Clean(filename)), err.Error())
 }
 
 func TestOpenRemoteFileWithRoot(t *testing.T) {
@@ -114,7 +115,7 @@ func TestOpenFileFailed(t *testing.T) {
 	mfs := NewFs(memfs, "../../tests/")
 	f, err := mfs.OpenFile(filename, os.O_RDWR, 0600)
 	assert.Nil(t, f)
-	assert.Equal(t, fmt.Sprintf("%s not found", filepath.Join("../../tests/", filename)), err.Error())
+	assert.Equal(t, fmt.Sprintf("%s not found", path.Join("../../tests/", filename)), err.Error())
 }
 
 func removeGomodFile(t *testing.T, fs afero.Fs) {
