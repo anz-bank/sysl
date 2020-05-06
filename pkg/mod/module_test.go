@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -50,6 +51,10 @@ func TestFind(t *testing.T) {
 	mod, err := Find(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "github.com/anz-bank/sysl", mod.Name)
+
+	fs := afero.NewOsFs()
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 }
 
 func TestFindWithWrongPath(t *testing.T) {
@@ -59,4 +64,8 @@ func TestFindWithWrongPath(t *testing.T) {
 	mod, err := Find(wrongpath)
 	assert.Equal(t, fmt.Sprintf("%s not found", wrongpath), err.Error())
 	assert.Nil(t, mod)
+
+	fs := afero.NewOsFs()
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 }

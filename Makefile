@@ -30,7 +30,7 @@ examples: TUTORIALS
 
 .PHONY: all install grammar antlr build lint test coverage clean check-tidy
 lint: ## Run golangci-lint
-	golangci-lint run
+	golangci-lint run ./...
 
 coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 80

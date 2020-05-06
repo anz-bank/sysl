@@ -57,6 +57,9 @@ func TestOpenRemoteFile(t *testing.T) {
 	f, err := fs.Open(filename)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
+
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenRemoteFileFailed(t *testing.T) {
@@ -68,6 +71,9 @@ func TestOpenRemoteFileFailed(t *testing.T) {
 	f, err := fs.Open(filename)
 	assert.Nil(t, f)
 	assert.Equal(t, fmt.Sprintf("%s not found", filepath.FromSlash(filename)), err.Error())
+
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenRemoteFileWithRoot(t *testing.T) {
@@ -80,6 +86,9 @@ func TestOpenRemoteFileWithRoot(t *testing.T) {
 	f, err := fs.Open(path)
 	assert.Nil(t, err)
 	assert.Equal(t, "deps.sysl", filepath.Base(f.Name()))
+
+	removeFile(t, fs, "go.sum")
+	removeFile(t, fs, "go.mod")
 }
 
 func TestOpenFile(t *testing.T) {
