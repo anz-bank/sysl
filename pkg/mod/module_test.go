@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAdd(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
 	assert.Equal(t, 1, len(testMods))
@@ -17,8 +16,6 @@ func TestAdd(t *testing.T) {
 }
 
 func TestGetByFilename(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
 	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath/filename"))
@@ -29,31 +26,31 @@ func TestGetByFilename(t *testing.T) {
 }
 
 func TestGetByFilepathWithoutValidMod(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
 	assert.Nil(t, testMods.GetByFilename("another_modulepath/filename"))
 }
 
 func TestGetByFilepathWithNilMods(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	assert.Nil(t, testMods.GetByFilename("modulepath/filename"))
 }
 
 func TestFind(t *testing.T) {
-	t.Parallel()
+	fs := afero.NewOsFs()
+	createGomodFile(t, fs)
+	defer removeGomodFile(t, fs)
 
 	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
 	mod, err := Find(filename)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "github.com/anz-bank/sysl", mod.Name)
 }
 
 func TestFindWithWrongPath(t *testing.T) {
-	t.Parallel()
+	fs := afero.NewOsFs()
+	createGomodFile(t, fs)
+	defer removeGomodFile(t, fs)
 
 	wrongpath := "wrong_file_path/deps.sysl"
 	mod, err := Find(wrongpath)

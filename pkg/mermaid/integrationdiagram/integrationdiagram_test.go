@@ -31,7 +31,7 @@ func TestGenerateMermaidIntegrationDiagram(t *testing.T) {
 	r, err := GenerateIntegrationDiagram(m, "WebFrontend")
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidIntegrationDiagram2(t *testing.T) {
@@ -43,7 +43,7 @@ func TestGenerateMermaidIntegrationDiagram2(t *testing.T) {
 	r, err := GenerateIntegrationDiagram(m, "WebFrontend")
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidIntegrationDiagram3(t *testing.T) {
@@ -55,7 +55,7 @@ func TestGenerateMermaidIntegrationDiagram3(t *testing.T) {
 	r, err := GenerateIntegrationDiagram(m, "IntegratedSystem")
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidIntegrationDiagram4(t *testing.T) {
@@ -67,5 +67,5 @@ func TestGenerateMermaidIntegrationDiagram4(t *testing.T) {
 	r, err := GenerateIntegrationDiagram(m, "DragonEater")
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }

@@ -36,7 +36,7 @@ func TestGenerateMermaidSequenceDiagram(t *testing.T) {
 	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidSequenceDiagram2(t *testing.T) {
@@ -51,7 +51,7 @@ func TestGenerateMermaidSequenceDiagram2(t *testing.T) {
 	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidSequenceDiagram3(t *testing.T) {
@@ -66,7 +66,7 @@ func TestGenerateMermaidSequenceDiagram3(t *testing.T) {
 	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidSequenceDiagramWithIfElseLoopActionAndGroupStatements(t *testing.T) {
@@ -81,5 +81,5 @@ func TestGenerateMermaidSequenceDiagramWithIfElseLoopActionAndGroupStatements(t 
 	r, err := GenerateSequenceDiagram(m, appName, epName)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }

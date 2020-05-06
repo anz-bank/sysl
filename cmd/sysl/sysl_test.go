@@ -660,11 +660,11 @@ func TestSwaggerExportTargetDir(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	tmp1, err := ioutil.TempDir("", "tmp1")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	main2([]string{"sysl", "export", "-o", tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml", "-a", "testapp",
 		syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	_, err = ioutil.ReadFile(tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	os.RemoveAll(tmp1)
 }
 
@@ -672,11 +672,11 @@ func TestSwaggerExportJson(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	tmp2, err := ioutil.TempDir("", "tmp2")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	main2([]string{"sysl", "export", "-o", tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json",
 		"-a", "testapp", syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	_, err = ioutil.ReadFile(tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	os.RemoveAll(tmp2)
 }
 
@@ -696,7 +696,7 @@ func TestSwaggerAppExportNoDir(t *testing.T) {
 		syslDir + "exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	for _, file := range []string{"out/single.yaml", "out/multiple.yaml"} {
 		_, err := ioutil.ReadFile(file)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	}
 	os.RemoveAll("out")
 }
@@ -705,12 +705,12 @@ func TestSwaggerAppExportDirExists(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	tmp3, err := ioutil.TempDir("", "tmp3")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	main2([]string{"sysl", "export", "-o", tmp3 + "/%(appname).yaml",
 		syslDir + "exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	for _, file := range []string{tmp3 + "/single.yaml", tmp3 + "/multiple.yaml"} {
 		_, err := ioutil.ReadFile(file)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	}
 	os.RemoveAll(tmp3)
 }

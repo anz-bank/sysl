@@ -1,7 +1,9 @@
 package mod
 
 import (
+	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -22,12 +24,12 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, err
+		return nil, fmt.Errorf("%s not found", name)
 	}
 
-	// filepath.Join will strip path elements of ".", so if the root is "."
+	// path.Join will strip path elements of ".", so if the root is "."
 	// it will still work as a go module path when prepended with "."
-	name = filepath.Join(fs.root, name)
+	name = path.Join(fs.root, name)
 	mod, err := Find(name)
 	if err != nil {
 		return nil, err
@@ -45,12 +47,12 @@ func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, err
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, err
+		return nil, fmt.Errorf("%s not found", name)
 	}
 
-	// filepath.Join will strip path elements of ".", so if the root is "."
+	// path.Join will strip path elements of ".", so if the root is "."
 	// it will still work as a go module path when prepended with "."
-	name = filepath.Join(fs.root, name)
+	name = path.Join(fs.root, name)
 	mod, err := Find(name)
 	if err != nil {
 		return nil, err

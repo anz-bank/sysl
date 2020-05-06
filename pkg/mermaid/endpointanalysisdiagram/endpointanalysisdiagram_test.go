@@ -18,7 +18,7 @@ func TestGenerateMermaidIntegrationDiagram(t *testing.T) {
 	r, err := GenerateEndpointAnalysisDiagram(m)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidIntegrationDiagram1(t *testing.T) {
@@ -30,7 +30,7 @@ func TestGenerateMermaidIntegrationDiagram1(t *testing.T) {
 	r, err := GenerateEndpointAnalysisDiagram(m)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidIntegrationDiagram2(t *testing.T) {
@@ -42,7 +42,7 @@ func TestGenerateMermaidIntegrationDiagram2(t *testing.T) {
 	r, err := GenerateEndpointAnalysisDiagram(m)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGenerateMermaidIntegrationDiagram3(t *testing.T) {
@@ -54,5 +54,5 @@ func TestGenerateMermaidIntegrationDiagram3(t *testing.T) {
 	r, err := GenerateEndpointAnalysisDiagram(m)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }

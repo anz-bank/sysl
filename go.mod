@@ -8,7 +8,7 @@ require (
 	aqwari.net/xml v0.0.0-20190526204230-8dd125f7c15c
 	cloud.google.com/go v0.55.0 // indirect
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
-	github.com/alecthomas/chroma v0.7.1
+	github.com/alecthomas/chroma v0.7.2
 	github.com/alecthomas/colour v0.1.0 // indirect
 	github.com/alecthomas/repr v0.0.0-20181024024818-d37bc2a10ba1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
