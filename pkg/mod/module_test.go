@@ -9,8 +9,6 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
 	assert.Equal(t, 1, len(testMods))
@@ -18,8 +16,6 @@ func TestAdd(t *testing.T) {
 }
 
 func TestGetByFilename(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
 	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath/filename"))
@@ -30,16 +26,12 @@ func TestGetByFilename(t *testing.T) {
 }
 
 func TestGetByFilepathWithoutValidMod(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
 	assert.Nil(t, testMods.GetByFilename("another_modulepath/filename"))
 }
 
 func TestGetByFilepathWithNilMods(t *testing.T) {
-	t.Parallel()
-
 	var testMods Modules
 	assert.Nil(t, testMods.GetByFilename("modulepath/filename"))
 }

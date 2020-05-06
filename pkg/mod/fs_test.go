@@ -125,6 +125,7 @@ func removeGomodFile(t *testing.T, fs afero.Fs) {
 func createGomodFile(t *testing.T, fs afero.Fs) {
 	gomod, err := fs.Create("go.mod")
 	assert.NoError(t, err)
+	defer gomod.Close()
 	_, err = gomod.WriteString("module github.com/anz-bank/sysl/pkg/mod")
 	assert.NoError(t, err)
 	err = gomod.Sync()
