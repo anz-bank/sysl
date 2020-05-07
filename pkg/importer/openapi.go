@@ -361,7 +361,8 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 			name:       typePrefix + text,
 			Properties: FieldList{},
 		}
-		for mediaType, val := range resp.Value.Content {
+		respVal := l.findResponse(resp)
+		for mediaType, val := range respVal.Content {
 			t := l.typeFromSchemaRef("", val.Schema)
 			f := Field{
 				Name:       t.Name(),
@@ -370,7 +371,7 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 			}
 			respType.Properties = append(respType.Properties, f)
 		}
-		for name, header := range resp.Value.Headers {
+		for name, header := range respVal.Headers {
 			f := Field{
 				Name:       name,
 				Attributes: []string{"~header"},
@@ -434,6 +435,17 @@ func (l *loader) initGlobalParams() {
 		l.globalParams.items[name] = l.buildParam(param.Value)
 		l.globalParams.insertOrder = append(l.globalParams.insertOrder, name)
 	}
+}
+
+func (l *loader) findResponse(ref *openapi3.ResponseRef) *openapi3.Response {
+	if ref.Value != nil {
+		return ref.Value
+	}
+	refName := ref.Ref[strings.LastIndex(ref.Ref, "/"):]
+	if ref, ok := l.spec.Components.Responses[refName]; ok {
+		return l.findResponse(ref)
+	}
+	return &openapi3.Response{}
 }
 
 func (l *loader) buildParams(params openapi3.Parameters) Parameters {
