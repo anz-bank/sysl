@@ -63,8 +63,8 @@ func TestMapTypeRef(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -82,8 +82,8 @@ func TestResolveNonExistentType(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": nil})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -101,8 +101,8 @@ func TestResolveTypesNil(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": nil})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -122,8 +122,8 @@ func TestResolveTypeOneOf(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -144,8 +144,8 @@ func TestResolveTypeMap(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -165,8 +165,8 @@ func TestResolveTypeList(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -187,8 +187,8 @@ func TestResolveTypeTypeRef(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -209,8 +209,8 @@ func TestTypesFromRef(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 
@@ -231,7 +231,7 @@ func TestTypeConversionPrimative(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app2": &app2,
+			"app2": app2,
 		},
 	}
 
@@ -250,7 +250,7 @@ func TestTypeConversionRelation(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app2": &app2,
+			"app2": app2,
 		},
 	}
 
@@ -275,7 +275,7 @@ func TestTypeConversionSet(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app2": &app2,
+			"app2": app2,
 		},
 	}
 
@@ -298,7 +298,7 @@ func TestTypeConversionList(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app2": &app2,
+			"app2": app2,
 		},
 	}
 
@@ -321,7 +321,7 @@ func TestMapReturnStatements(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app2": &app2,
+			"app2": app2,
 		},
 	}
 
@@ -403,7 +403,7 @@ func TestTypeConversionMap(t *testing.T) {
 	var app2 = MakeApp("app2", []*sysl.Param{param2}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app2": &app2,
+			"app2": app2,
 		},
 	}
 

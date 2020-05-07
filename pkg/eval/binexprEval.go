@@ -132,7 +132,7 @@ func (op NegateBinExprStrategy) eval(ee *exprEval, assign Scope, binexpr *sysl.E
 		panic(errors.Errorf("Attempting to call Negate Strategy on a non == operator"))
 	}
 
-	negated := *binexpr
+	negated := *binexpr //nolint:govet
 	negated.Op = sysl.Expr_BinExpr_EQ
 	return unaryNeg(DefaultBinExprStrategy{}.eval(ee, assign, &negated))
 }
