@@ -358,6 +358,8 @@ func ToV3SecurityScheme(securityScheme *openapi2.SecurityScheme) (*openapi3.Secu
 			flows.AuthorizationCode = flow
 		case "password":
 			flows.Password = flow
+		case "application":
+			// do nothing, we dont handle security scheme anyway.
 		default:
 			return nil, fmt.Errorf("Unsupported flow '%s'", securityScheme.Flow)
 		}
