@@ -2,7 +2,7 @@
 info:
   title: Simple
 paths:
-  /test:
+  /test/:
     get:
       responses:
         200:
