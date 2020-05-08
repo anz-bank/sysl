@@ -25,7 +25,7 @@ func (p *codegenCmd) MaxSyslModule() int { return 1 }
 func (p *codegenCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate code").Alias("gen")
 	cmd.Flag("root-transform",
-		"sysl root directory for input transform file (default: .)").
+		"sysl root directory for input transform file (default: .). Support sysl modules and module@version").
 		Default(".").StringVar(&p.RootTransform)
 	cmd.Flag("transform", "path to transform file from the root transform directory").Required().StringVar(&p.Transform)
 	cmd.Flag("grammar", "path to grammar file").Required().StringVar(&p.Grammar)

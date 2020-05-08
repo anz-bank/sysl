@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
 
@@ -14,6 +15,7 @@ func fileExists(filename string, fs afero.Fs) bool {
 		return false
 	}
 	defer f.Close()
+	logrus.Debugf("opened file %s", f.Name())
 
 	_, err = f.Stat()
 	return err == nil

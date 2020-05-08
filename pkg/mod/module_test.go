@@ -18,22 +18,22 @@ func TestAdd(t *testing.T) {
 func TestGetByFilename(t *testing.T) {
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
-	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath/filename"))
-	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath/filename2"))
-	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename(".//modulepath/filename"))
-	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath"))
-	assert.Nil(t, testMods.GetByFilename("modulepath2/filename"))
+	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath/filename", ""))
+	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath/filename2", ""))
+	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename(".//modulepath/filename", ""))
+	assert.Equal(t, &Module{Name: "modulepath"}, testMods.GetByFilename("modulepath", ""))
+	assert.Nil(t, testMods.GetByFilename("modulepath2/filename", ""))
 }
 
 func TestGetByFilepathWithoutValidMod(t *testing.T) {
 	var testMods Modules
 	testMods.Add(&Module{Name: "modulepath"})
-	assert.Nil(t, testMods.GetByFilename("another_modulepath/filename"))
+	assert.Nil(t, testMods.GetByFilename("another_modulepath/filename", ""))
 }
 
 func TestGetByFilepathWithNilMods(t *testing.T) {
 	var testMods Modules
-	assert.Nil(t, testMods.GetByFilename("modulepath/filename"))
+	assert.Nil(t, testMods.GetByFilename("modulepath/filename", ""))
 }
 
 func TestFind(t *testing.T) {
@@ -42,7 +42,7 @@ func TestFind(t *testing.T) {
 	defer removeGomodFile(t, fs)
 
 	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
-	mod, err := Find(filename)
+	mod, err := Find(filename, "")
 	assert.NoError(t, err)
 	assert.Equal(t, "github.com/anz-bank/sysl", mod.Name)
 }
@@ -53,7 +53,7 @@ func TestFindWithWrongPath(t *testing.T) {
 	defer removeGomodFile(t, fs)
 
 	wrongpath := "wrong_file_path/deps.sysl"
-	mod, err := Find(wrongpath)
+	mod, err := Find(wrongpath, "")
 	assert.Equal(t, fmt.Sprintf("%s not found", wrongpath), err.Error())
 	assert.Nil(t, mod)
 }

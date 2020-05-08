@@ -242,6 +242,41 @@ func TestTypeConversionPrimative(t *testing.T) {
 	}, convertedType1)
 }
 
+func TestTypeConversionRelationNoPrimaryKey(t *testing.T) {
+	relation := &sysl.Type{
+		Type: &sysl.Type_Relation_{
+			Relation: &sysl.Type_Relation{
+				AttrDefs: map[string]*sysl.Type{
+					"id":   MakePrimitive("string"),
+					"name": MakePrimitive("string"),
+				},
+			},
+		},
+	}
+	var app2 = MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": relation})
+	var mod = &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"app2": app2,
+		},
+	}
+
+	expectedResult := &Type{
+		Type: "relation",
+		Properties: map[string]*Type{
+			"id": {
+				Type: "string",
+			},
+			"name": {
+				Type: "string",
+			},
+		},
+	}
+
+	mapper := MakeAppMapper(mod)
+	convertedType1 := mapper.MapType(relation)
+	assert.Equal(t, expectedResult, convertedType1)
+}
+
 func TestTypeConversionRelation(t *testing.T) {
 	type2 := MakeRelation(map[string]*sysl.Type{
 		"id":   MakePrimitive("string"),
@@ -255,7 +290,8 @@ func TestTypeConversionRelation(t *testing.T) {
 	}
 
 	expectedResult := &Type{
-		Type: "relation",
+		Type:       "relation",
+		PrimaryKey: "id",
 		Properties: map[string]*Type{
 			"id": {
 				Type: "string",
