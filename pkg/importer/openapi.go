@@ -412,11 +412,9 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 			} else if _, ok := t.(*Array); ok {
 				// Cant have a sequence/set in the sysl params, so convert to a type alias
 				// try to figure out the name of the param
-				if val := content.Schema.Value; val != nil && val.Type == "array" {
-					if val.Items.Ref != "" {
-						name := val.Items.Ref[strings.LastIndex(val.Items.Ref, "/")+1:]
-						t = l.types.AddAndRet(&Alias{name: name, Target: t})
-					}
+				if val := content.Schema.Value; val != nil && val.Type == "array" && val.Items.Ref != "" {
+					name := val.Items.Ref[strings.LastIndex(val.Items.Ref, "/")+1:]
+					t = l.types.AddAndRet(&Alias{name: name, Target: t})
 				}
 			}
 			p := Param{
