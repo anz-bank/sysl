@@ -57,7 +57,7 @@ func (p *catalogCmd) Execute(args cmdutils.ExecuteArgs) error {
 			handler.Update(args.Modules[0])
 			livereload.ForceRefresh()
 			fmt.Println("Done Regenerating")
-		}, path.Dir("args.InputFiles[0]"))
+		}, folderFromPath(args.ModulePaths)...)
 		fmt.Println("Serving on http://localhost" + p.port)
 
 		livereload.Initialize()
@@ -76,4 +76,12 @@ func (p *catalogCmd) Execute(args cmdutils.ExecuteArgs) error {
 		args.Modules[0])
 	project.SetOutputFs(args.Filesystem).ExecuteTemplateAndDiagrams()
 	return nil
+}
+
+func folderFromPath(files []string) []string {
+	var folders []string
+	for _, v := range files {
+		folders = append(folders, path.Dir(v))
+	}
+	return folders
 }

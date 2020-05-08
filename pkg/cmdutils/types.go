@@ -96,6 +96,7 @@ type ExecuteArgs struct {
 	Filesystem     afero.Fs
 	Logger         *logrus.Logger
 	DefaultAppName string
+	ModulePaths    []string
 }
 
 type DiagramCmd struct {

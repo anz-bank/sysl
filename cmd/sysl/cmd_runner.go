@@ -49,7 +49,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 			}
 			return cmd.Execute(cmdutils.ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
-				Logger: logger, DefaultAppName: appName})
+				Logger: logger, DefaultAppName: appName, ModulePaths: r.modules})
 		}
 	}
 	return nil
