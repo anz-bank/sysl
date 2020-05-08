@@ -16,16 +16,22 @@ import (
 )
 
 type goModule struct {
-	Path string
-	Dir  string
+	Path    string
+	Dir     string
+	Version string
 }
 
-func goGetByFilepath(filename string) error {
+func goGetByFilepath(filename, ver string) (err error) {
 	if names := strings.Split(filename, "/"); len(names) > 0 {
 		gogetPath := names[0]
 
 		for i := range names[1:] {
-			err := goGet(path.Join(names[:1+i]...))
+			if ver != "" {
+				err = goGet(path.Join(names[:1+i]...) + "@" + ver)
+			} else {
+				err = goGet(path.Join(names[:1+i]...))
+			}
+
 			if err == nil {
 				return nil
 			}
@@ -68,8 +74,9 @@ func (m *Modules) Load() error {
 		}
 
 		m.Add(&Module{
-			Name: goMod.Path,
-			Dir:  goMod.Dir,
+			Name:    goMod.Path,
+			Dir:     goMod.Dir,
+			Version: goMod.Version,
 		})
 	}
 
