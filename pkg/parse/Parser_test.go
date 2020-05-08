@@ -9,17 +9,19 @@ import (
 	"testing"
 
 	"github.com/pmezard/go-difflib/difflib"
+	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
 const mainTestDir = "../../tests/"
@@ -39,7 +41,7 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 	}
 
 	module := &sysl.Module{}
-	if err := proto.UnmarshalText(buf.String(), module); err != nil {
+	if err := prototext.Unmarshal(buf.Bytes(), module); err != nil {
 		return nil, errors.Wrapf(err, "Unmarshal proto: %s", filename)
 	}
 	return module, nil
@@ -217,7 +219,7 @@ func parseAndCompareSysl(
 
 func parseAndCompare(
 	filename, root, golden string,
-	goldenProto proto.Message,
+	goldenProto protoreflect.ProtoMessage,
 	retainOnError bool,
 	stripSourceContext bool,
 ) (bool, error) {

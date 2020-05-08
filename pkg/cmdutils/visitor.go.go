@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/mock"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/golang/protobuf/jsonpb"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func (m *mockEndpointLabeler) LabelEndpoint(p *EndpointLabelerParam) string {
@@ -21,7 +21,15 @@ func readModule(p string) (*sysl.Module, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := jsonpb.Unmarshal(f, m); err != nil {
+	stats, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	b := make([]byte, stats.Size())
+	if _, err = f.Read(b); err != nil {
+		return nil, err
+	}
+	if err := protojson.Unmarshal(b, m); err != nil {
 		return nil, err
 	}
 	return m, nil

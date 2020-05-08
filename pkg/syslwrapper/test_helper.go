@@ -267,7 +267,7 @@ func MakeParam(name string, paramType *sysl.Type) *sysl.Param {
 	return &param
 }
 
-func MakeApp(name string, params []*sysl.Param, types map[string]*sysl.Type) sysl.Application {
+func MakeApp(name string, params []*sysl.Param, types map[string]*sysl.Type) *sysl.Application {
 	var appName = MakeAppName(name)
 
 	var ep = sysl.Endpoint{
@@ -280,5 +280,5 @@ func MakeApp(name string, params []*sysl.Param, types map[string]*sysl.Type) sys
 		Endpoints: endpoints,
 		Types:     types,
 	}
-	return app
+	return &app
 }
