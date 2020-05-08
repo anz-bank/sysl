@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/golang/protobuf/jsonpb"
-	"github.com/golang/protobuf/proto"
 	"github.com/spf13/afero"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // JSONPB ...
-func JSONPB(m proto.Message, filename string, fs afero.Fs) error {
+func JSONPB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}
@@ -23,16 +24,21 @@ func JSONPB(m proto.Message, filename string, fs afero.Fs) error {
 }
 
 // FJSONPB ...
-func FJSONPB(w io.Writer, m proto.Message) error {
+func FJSONPB(w io.Writer, m protoreflect.ProtoMessage) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}
-	ma := jsonpb.Marshaler{Indent: " ", EmitDefaults: false}
-	return ma.Marshal(w, m)
+	ma := protojson.MarshalOptions{Multiline: true, Indent: " ", EmitUnpopulated: false}
+	mb, err := ma.Marshal(m)
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(mb)
+	return err
 }
 
 // TextPB ...
-func TextPB(m proto.Message, filename string, fs afero.Fs) error {
+func TextPB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 	if m == nil {
 		return fmt.Errorf("module is nil: %#v", filename)
 	}
@@ -46,9 +52,15 @@ func TextPB(m proto.Message, filename string, fs afero.Fs) error {
 }
 
 // FTextPB ...
-func FTextPB(w io.Writer, m proto.Message) error {
+func FTextPB(w io.Writer, m protoreflect.ProtoMessage) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}
-	return proto.MarshalText(w, m)
+	pt := prototext.MarshalOptions{Multiline: true, Indent: "  ", EmitUnknown: false}
+	mt, err := pt.Marshal(m)
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(mt)
+	return err
 }

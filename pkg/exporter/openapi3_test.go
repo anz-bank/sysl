@@ -65,8 +65,8 @@ func TestExport(t *testing.T) {
 	var app2 = syslwrapper.MakeApp("app2", []*sysl.Param{}, map[string]*sysl.Type{"request": type2})
 	var mod = &sysl.Module{
 		Apps: map[string]*sysl.Application{
-			"app1": &app1,
-			"app2": &app2,
+			"app1": app1,
+			"app2": app2,
 		},
 	}
 

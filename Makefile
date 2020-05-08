@@ -58,17 +58,6 @@ build: ## Build sysl into the ./dist folder
 buildlsp: ## Build sysllsp into the ./dist folder
 	go build -o ./dist/sysllsp -ldflags="$(LDFLAGS)" -v ./cmd/sysllsp
 
-## This option is used for Sysl UI to bundle static files into the go binary.
-## For more details on pkger, refer to https://github.com/markbates/pkger
-.PHONY: resources
-resources:
-	cd ui && npm run build
-	pkger
-	mv pkged.go pkg/ui/pkged.go
-	## Replaces the package declaration 'main' with'ui' due to bug in pkger
-	## Remove once https://github.com/markbates/pkger/pull/67 has been merged in
-	sed -i '' 's/main/ui/' pkg/ui/pkged.go
-
 .PHONY: release
 release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
 
@@ -90,8 +79,8 @@ pkg/grammar/sysl_parser.go: pkg/grammar/SyslParser.g4 pkg/grammar/SyslLexer.toke
 pkg/grammar/sysl_lexer.go pkg/grammar/SyslLexer.tokens &: pkg/grammar/SyslLexer.g4
 	$(ANTLR_GO)
 
-pkg/proto_old/sysl.pb.go: pkg/proto_old/sysl.proto
-	protoc -I pkg/proto_old -I $(GOPATH)/src --go_out=pkg/proto_old/ sysl.proto
+pkg/sysl/sysl.pb.go: pkg/sysl/sysl.proto
+	protoc -I pkg/sysl -I $(GOPATH)/src --go_out=pkg/sysl/ sysl.proto
 
 proto: pkg/sysl/sysl.pb.go
 

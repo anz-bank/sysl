@@ -9,9 +9,9 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/parse"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/proto"
 )
 
 func evalTransformStmts(ee *exprEval, assign Scope, tform *sysl.Expr_Transform) *sysl.Value {
