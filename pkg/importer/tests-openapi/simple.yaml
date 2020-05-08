@@ -2,7 +2,7 @@
 info:
   title: Simple
 paths:
-  /test:
+  /test/:
     get:
       responses:
         200:
@@ -11,6 +11,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SimpleObj"
+        500:
+          $ref: "#/components/responses/500Response"
 components:
   schemas:
     SimpleObj:
@@ -23,3 +25,8 @@ components:
       properties:
         name:
           type: SimpleObj
+  responses:
+    500Response:
+      description: Internal Server Error
+      schema:
+        $ref: "#/components/schemas/SimpleObj"
