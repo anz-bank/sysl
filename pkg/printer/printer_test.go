@@ -25,7 +25,7 @@ func TestPrinting(t *testing.T) {
 	fileBytes, err := afero.ReadFile(fs, "printer.sysl")
 	assert.NoError(t, err)
 	var buf bytes.Buffer
-	PrintModule(&buf, module)
+	Module(&buf, module)
 	if buf.String() != string(fileBytes) {
 		fmt.Println(buf.String())
 	}
@@ -56,6 +56,6 @@ Server[~yay]:
 		panic(err)
 	}
 
-	// Make a New printer to os.Stdout (io.Writer) and PrintModule
-	PrintModule(os.Stdout, module)
+	// Make a New printer to os.Stdout (io.Writer) and Module
+	Module(os.Stdout, module)
 }

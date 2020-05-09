@@ -4,11 +4,11 @@ package printer
 
 import (
 	"fmt"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"io"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 const (
@@ -22,59 +22,70 @@ func p(w io.Writer, I ...interface{}) {
 	fmt.Fprint(w, I...)
 }
 
-// PrintModule Prints a whole module
-func PrintModule(w io.Writer, mod *sysl.Module) {
+// Module Prints a whole module
+func Module(w io.Writer, mod *sysl.Module) {
 	for _, key := range alphabeticalApplications(mod.Apps) {
-		PrintApplication(w, mod.Apps[key])
+		Application(w, mod.Apps[key])
 	}
 }
 
-// PrintApplication prints applications:
+// Application prints applications:
 // App:
-func PrintApplication(w io.Writer, a *sysl.Application) {
+func Application(w io.Writer, a *sysl.Application) {
 	p(w, "\n", strings.Join(a.Name.GetPart(), ""))
-	PrintPatterns(w, a.GetAttrs())
+	Patterns(w, a.GetAttrs())
 	p(w, ":\n")
 	for _, key := range alphabeticalAttributes(a.Attrs) {
 		if key == patterns {
 			continue
 		}
-		PrintAttrs(w, key, a.Attrs[key], APPLICATIONINDENT)
+		Attrs(w, key, a.Attrs[key], APPLICATIONINDENT)
 	}
 	for _, key := range alphabeticalTypes(a.Types) {
-		PrintTypeDecl(w, key, a.Types[key])
+		TypeDecl(w, key, a.Types[key])
 	}
 	for _, key := range alphabeticalEndpoints(a.Endpoints) {
-		PrintEndpoint(w, a.Endpoints[key])
+		Endpoint(w, a.Endpoints[key])
 	}
 }
 
-// PrintTypeDecl prints Type decelerations:
+// TypeDecl prints Type decelerations:
 // !type Foo:
 //     this <: string
-func PrintTypeDecl(w io.Writer, key string, t *sysl.Type) {
+func TypeDecl(w io.Writer, key string, t *sysl.Type) {
+	switch t.Type.(type) {
+	case *sysl.Type_Enum_:
+		EnumDecl(w, key, t)
+		return
+	default:
+		NonEnumDecl(w, key, t)
+	}
+}
+
+func EnumDecl(w io.Writer, key string, t *sysl.Type) {
 	switch v := t.Type.(type) {
 	case *sysl.Type_Enum_:
 		p(w, "    !enum ", key, ":\n")
 		for _, key := range alphabeticalAttributes(t.GetAttrs()) {
 			if key != patterns {
-				PrintAttrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
+				Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
 			}
 		}
-		enumFields := v.Enum.Items
-		for _, key := range alphabeticalInts(enumFields) {
-			p(w, "        ", key, ": ", enumFields[key], "\n")
+		ef := v.Enum.Items
+		for _, key := range alphabeticalInts(ef) {
+			p(w, "        ", key, ": ", ef[key], "\n")
 		}
-		return
 	}
-	p(w, "    !type ", key)
-	PrintPatterns(w, t.GetAttrs())
-	p(w, ":\n")
+}
 
+func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
+	p(w, "    !type ", key)
+	Patterns(w, t.GetAttrs())
+	p(w, ":\n")
 	tuple := t.GetTuple()
 	for _, key := range alphabeticalAttributes(t.GetAttrs()) {
 		if key != patterns {
-			PrintAttrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
+			Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
 		}
 	}
 	if tuple == nil || tuple.AttrDefs == nil || len(tuple.AttrDefs) == 0 {
@@ -95,51 +106,54 @@ func PrintTypeDecl(w io.Writer, key string, t *sysl.Type) {
 			}
 			typeIdent = "sequence of " + typeIdent
 		}
-		p(w, "        ", key, " <: ", typeIdent)
+		p(w, "        ", key, " <: ", typeIdent, "\n")
 	}
-
 }
 
 // Prints patterns in square brackets: [~foo, ~bar]
-func PrintPatterns(w io.Writer, attrs map[string]*sysl.Attribute) {
+func Patterns(w io.Writer, attrs map[string]*sysl.Attribute) {
 	if attrs == nil {
 		return
 	}
 	patterns := GetPatterns(attrs)
-	if len(patterns) > 0 {
-		p(w, "[")
-		for i, pattern := range patterns {
-			p(w, "~", pattern)
-			if i != len(patterns)-1 {
-				p(w, ", ")
-			}
-		}
-		p(w, "]")
+	if len(patterns) == 0 {
+		return
 	}
+	p(w, "[")
+	for i, pattern := range patterns {
+		p(w, "~", pattern)
+		if i != len(patterns)-1 {
+			p(w, ", ")
+		}
+	}
+	p(w, "]")
 }
 
 func GetPatterns(attrs map[string]*sysl.Attribute) []string {
 	var ret = []string{}
 	patterns, has := attrs[patterns]
-	if has {
-		if x := patterns.GetA(); x != nil {
-			for _, y := range x.Elt {
-				ret = append(ret, y.GetS())
-			}
-		}
+	if !has {
+		return nil
+	}
+	x := patterns.GetA()
+	if x == nil {
+		return nil
+	}
+	for _, y := range x.Elt {
+		ret = append(ret, y.GetS())
 	}
 	return ret
 }
 
-// PrintEndpoint prints endpoints:
+// Endpoint prints endpoints:
 // Endpoint:
-func PrintEndpoint(w io.Writer, e *sysl.Endpoint) {
+func Endpoint(w io.Writer, e *sysl.Endpoint) {
 	p(w, "    ", e.Name)
 
 	if len(e.Param) != 0 {
-		PrintParam(w, e.Param)
+		Param(w, e.Param)
 	}
-	PrintPatterns(w, e.Attrs)
+	Patterns(w, e.Attrs)
 	p(w, ":\n")
 	if len(e.Stmt) == 0 {
 		p(w, "        ...\n")
@@ -148,19 +162,19 @@ func PrintEndpoint(w io.Writer, e *sysl.Endpoint) {
 		if key == patterns {
 			continue
 		}
-		PrintAttrs(w, key, attr, ENDPOINTINDENT)
+		Attrs(w, key, attr, ENDPOINTINDENT)
 	}
 	for _, stmnt := range e.Stmt {
-		PrintStatement(w, stmnt)
+		Statement(w, stmnt)
 	}
 }
 
-// PrintParam prints Parameters:
+// Param prints Parameters:
 // Endpoint(This <: ParamHere):
-func PrintParam(w io.Writer, params []*sysl.Param) {
+func Param(w io.Writer, params []*sysl.Param) {
 	p(w, "(")
 	for i, param := range params {
-		p(w, param.Name, " <: ", ParamType(param))
+		p(w, param.Name, " <: ", Type(param))
 		if i != len(params)-1 {
 			p(w, ",")
 		}
@@ -168,58 +182,58 @@ func PrintParam(w io.Writer, params []*sysl.Param) {
 	p(w, ")")
 }
 
-// PrintAttrs prints different statements:
+// Attrs prints different statements:
 // return string
 // My <- call
 // lookup db
-func PrintStatement(w io.Writer, s *sysl.Statement) {
+func Statement(w io.Writer, s *sysl.Statement) {
 	if call := s.GetCall(); call != nil {
-		PrintCall(w, call)
+		Call(w, call)
 	}
 	if action := s.GetAction(); action != nil {
-		PrintAction(w, action)
+		Action(w, action)
 	}
 	if ret := s.GetRet(); ret != nil {
-		PrintReturn(w, ret)
+		Return(w, ret)
 	}
 }
 
-// PrintReturn prints return statements:
+// Return prints return statements:
 // return foo <: type
-func PrintReturn(w io.Writer, r *sysl.Return) {
+func Return(w io.Writer, r *sysl.Return) {
 	p(w, "        return ", r.Payload, "\n")
 }
 
-// PrintAction prints actions:
+// Action prints actions:
 // lookup data
-func PrintAction(w io.Writer, a *sysl.Action) {
+func Action(w io.Writer, a *sysl.Action) {
 	p(w, "        ", a.GetAction(), "\n")
 }
 
-// PrintAttrs prints Attributes:
+// Attrs prints Attributes:
 // @owner="server"
-func PrintAttrs(w io.Writer, key string, a *sysl.Attribute, indentNum int) {
-	multiLine := strings.Split(a.GetS(), "\n")
+func Attrs(w io.Writer, key string, a *sysl.Attribute, indentNum int) {
+	lines := strings.Split(a.GetS(), "\n")
 	indent := strings.Repeat(" ", indentNum)
-	if len(multiLine) == 1 && len(multiLine[0]) < MAXLINE {
-		p(w, indent, "@", key, `="`, multiLine[0], `"`, "\n")
+	if len(lines) == 1 && len(lines[0]) < MAXLINE {
+		p(w, indent, "@", key, ` = "`, lines[0], `"`, "\n")
 		return
 	}
-	p(w, indent, "@", key, "=:\n")
-	for _, line := range multiLine {
+	p(w, indent, "@", key, " =:\n")
+	for _, line := range lines {
 		for i := 0; i < len(line); i += MAXLINE {
-			endindex := i + MAXLINE
-			if lineLen := len(line); endindex >= lineLen {
-				endindex = lineLen
+			endIndex := i + MAXLINE
+			if lineLen := len(line); endIndex >= lineLen {
+				endIndex = lineLen
 			}
-			p(w, indent, "    |", line[i:endindex], "\n")
+			p(w, indent, "    |", line[i:endIndex], "\n")
 		}
 	}
 }
 
-// ParamType prints:
-// foo(this <: <ParamType>):
-func ParamType(param *sysl.Param) string {
+// Type prints:
+// foo(this <: <Type>):
+func Type(param *sysl.Param) string {
 	if param.Type == nil {
 		return ""
 	}
@@ -232,10 +246,10 @@ func ParamType(param *sysl.Param) string {
 	return strings.Join(param.Type.GetTypeRef().Ref.Appname.Part, "")
 }
 
-// PrintCall prints:
+// Call prints:
 // AnApp <- AnEndpoint
-func PrintCall(w io.Writer, c *sysl.Call) {
+func Call(w io.Writer, c *sysl.Call) {
 	app := strings.Join(c.Target.GetPart(), "")
 	ep := c.GetEndpoint()
-	p(w, "        ", app, "<-", ep, "\n")
+	p(w, "        ", app, " <- ", ep, "\n")
 }
