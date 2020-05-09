@@ -18,73 +18,63 @@ const (
 	patterns          = "patterns"
 )
 
-// Printer prints sysl data structures out to source code
-type Printer struct {
-	io.Writer
-}
-
-// NewPrinter returns a printer that can be used to print out sysl source code from data structures
-func NewPrinter(buf io.Writer) *Printer {
-	return &Printer{Writer: buf}
-}
-
 // PrintModule Prints a whole module
-func (p *Printer) PrintModule(mod *sysl.Module) {
+func PrintModule(w io.Writer, mod *sysl.Module) {
 	for _, key := range alphabeticalApplications(mod.Apps) {
-		p.PrintApplication(mod.Apps[key])
+		PrintApplication(w, mod.Apps[key])
 	}
 }
 
 // PrintApplication prints applications:
 // App:
-func (p *Printer) PrintApplication(a *sysl.Application) {
-	fmt.Fprintf(p.Writer, "\n%s", strings.Join(a.Name.GetPart(), ""))
-	p.PrintPatterns(a.GetAttrs())
-	fmt.Fprint(p.Writer, ":\n")
+func PrintApplication(w io.Writer, a *sysl.Application) {
+	fmt.Fprintf(w, "\n%s", strings.Join(a.Name.GetPart(), ""))
+	PrintPatterns(w, a.GetAttrs())
+	fmt.Fprint(w, ":\n")
 	for _, key := range alphabeticalAttributes(a.Attrs) {
 		if key == patterns {
 			continue
 		}
-		p.PrintAttrs(key, a.Attrs[key], APPLICATIONINDENT)
+		PrintAttrs(w, key, a.Attrs[key], APPLICATIONINDENT)
 	}
 	for _, key := range alphabeticalTypes(a.Types) {
-		p.PrintTypeDecl(key, a.Types[key])
+		PrintTypeDecl(w, key, a.Types[key])
 	}
 	for _, key := range alphabeticalEndpoints(a.Endpoints) {
-		p.PrintEndpoint(a.Endpoints[key])
+		PrintEndpoint(w, a.Endpoints[key])
 	}
 }
 
 // PrintTypeDecl prints Type decelerations:
 // !type Foo:
 //     this <: string
-func (p *Printer) PrintTypeDecl(key string, t *sysl.Type) {
+func PrintTypeDecl(w io.Writer, key string, t *sysl.Type) {
 	switch v := t.Type.(type) {
 	case *sysl.Type_Enum_:
-		fmt.Fprintf(p.Writer, "    !enum %s:\n", key)
+		fmt.Fprintf(w, "    !enum %s:\n", key)
 		for _, key := range alphabeticalAttributes(t.GetAttrs()) {
 			if key != patterns {
-				p.PrintAttrs(key, t.GetAttrs()[key], ENDPOINTINDENT)
+				PrintAttrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
 			}
 		}
 		enumFields := v.Enum.Items
 		for _, key := range alphabeticalInts(enumFields) {
-			fmt.Fprintf(p.Writer, "        %s: %d\n", key, enumFields[key])
+			fmt.Fprintf(w, "        %s: %d\n", key, enumFields[key])
 		}
 
 	default:
-		fmt.Fprintf(p.Writer, "    !type %s", key)
-		p.PrintPatterns(t.GetAttrs())
-		fmt.Fprint(p.Writer, ":\n")
+		fmt.Fprintf(w, "    !type %s", key)
+		PrintPatterns(w, t.GetAttrs())
+		fmt.Fprint(w, ":\n")
 
 		tuple := t.GetTuple()
 		for _, key := range alphabeticalAttributes(t.GetAttrs()) {
 			if key != patterns {
-				p.PrintAttrs(key, t.GetAttrs()[key], ENDPOINTINDENT)
+				PrintAttrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
 			}
 		}
 		if tuple == nil || tuple.AttrDefs == nil || len(tuple.AttrDefs) == 0 {
-			fmt.Fprintf(p.Writer, "        ...\n")
+			fmt.Fprintf(w, "        ...\n")
 			return
 		}
 		for _, key := range alphabeticalTypes(tuple.AttrDefs) {
@@ -101,26 +91,26 @@ func (p *Printer) PrintTypeDecl(key string, t *sysl.Type) {
 				}
 				typeIdent = "sequence of " + typeIdent
 			}
-			fmt.Fprintf(p.Writer, "        %s <: %s\n", key, typeIdent)
+			fmt.Fprintf(w, "        %s <: %s\n", key, typeIdent)
 		}
 	}
 }
 
 // Prints patterns in square brackets: [~foo, ~bar]
-func (p *Printer) PrintPatterns(attrs map[string]*sysl.Attribute) {
+func PrintPatterns(w io.Writer, attrs map[string]*sysl.Attribute) {
 	if attrs == nil {
 		return
 	}
 	patterns := GetPatterns(attrs)
 	if len(patterns) > 0 {
-		fmt.Fprint(p.Writer, "[")
+		fmt.Fprint(w, "[")
 		for i, pattern := range patterns {
-			fmt.Fprintf(p.Writer, "~%s", pattern)
+			fmt.Fprintf(w, "~%s", pattern)
 			if i != len(patterns)-1 {
-				fmt.Fprintf(p.Writer, ", ")
+				fmt.Fprintf(w, ", ")
 			}
 		}
-		fmt.Fprint(p.Writer, "]")
+		fmt.Fprint(w, "]")
 	}
 }
 
@@ -139,94 +129,94 @@ func GetPatterns(attrs map[string]*sysl.Attribute) []string {
 
 // PrintEndpoint prints endpoints:
 // Endpoint:
-func (p *Printer) PrintEndpoint(e *sysl.Endpoint) {
-	fmt.Fprintf(p.Writer, "    %s", e.Name)
+func PrintEndpoint(w io.Writer, e *sysl.Endpoint) {
+	fmt.Fprintf(w, "    %s", e.Name)
 
 	if len(e.Param) != 0 {
-		p.PrintParam(e.Param)
+		PrintParam(w, e.Param)
 	}
-	p.PrintPatterns(e.Attrs)
-	fmt.Fprintf(p.Writer, ":\n")
+	PrintPatterns(w, e.Attrs)
+	fmt.Fprintf(w, ":\n")
 	if len(e.Stmt) == 0 {
-		fmt.Fprint(p.Writer, "        ...\n")
+		fmt.Fprint(w, "        ...\n")
 	}
 	for key, attr := range e.Attrs {
 		if key == patterns {
 			continue
 		}
-		p.PrintAttrs(key, attr, ENDPOINTINDENT)
+		PrintAttrs(w, key, attr, ENDPOINTINDENT)
 	}
 	for _, stmnt := range e.Stmt {
-		p.PrintStatement(stmnt)
+		PrintStatement(w, stmnt)
 	}
 }
 
 // PrintParam prints Parameters:
 // Endpoint(This <: ParamHere):
-func (p *Printer) PrintParam(params []*sysl.Param) {
+func PrintParam(w io.Writer, params []*sysl.Param) {
 	ans := "("
 	for i, param := range params {
-		ans += param.Name + " <: " + p.ParamType(param)
+		ans += param.Name + " <: " + ParamType(param)
 		if i != len(params)-1 {
 			ans += ","
 		}
 	}
 	ans += ")"
-	fmt.Fprint(p.Writer, ans)
+	fmt.Fprint(w, ans)
 }
 
 // PrintAttrs prints different statements:
 // return string
 // My <- call
 // lookup db
-func (p *Printer) PrintStatement(s *sysl.Statement) {
+func PrintStatement(w io.Writer, s *sysl.Statement) {
 	if call := s.GetCall(); call != nil {
-		p.PrintCall(call)
+		PrintCall(w, call)
 	}
 	if action := s.GetAction(); action != nil {
-		p.PrintAction(action)
+		PrintAction(w, action)
 	}
 	if ret := s.GetRet(); ret != nil {
-		p.PrintReturn(ret)
+		PrintReturn(w, ret)
 	}
 }
 
 // PrintReturn prints return statements:
 // return foo <: type
-func (p *Printer) PrintReturn(r *sysl.Return) {
-	fmt.Fprintf(p.Writer, "        return %s\n", r.Payload)
+func PrintReturn(w io.Writer, r *sysl.Return) {
+	fmt.Fprintf(w, "        return %s\n", r.Payload)
 }
 
 // PrintAction prints actions:
 // lookup data
-func (p *Printer) PrintAction(a *sysl.Action) {
-	fmt.Fprintf(p.Writer, "        %s\n", a.GetAction())
+func PrintAction(w io.Writer, a *sysl.Action) {
+	fmt.Fprintf(w, "        %s\n", a.GetAction())
 }
 
 // PrintAttrs prints Attributes:
 // @owner="server"
-func (p *Printer) PrintAttrs(key string, a *sysl.Attribute, indentNum int) {
+func PrintAttrs(w io.Writer, key string, a *sysl.Attribute, indentNum int) {
 	multiLine := strings.Split(a.GetS(), "\n")
 	indent := strings.Repeat(" ", indentNum)
 	if len(multiLine) == 1 && len(multiLine[0]) < MAXLINE {
-		fmt.Fprintf(p.Writer, "%s@%s = \"%s\"\n", indent, key, multiLine[0])
+		fmt.Fprintf(w, "%s@%s = \"%s\"\n", indent, key, multiLine[0])
 		return
 	}
-	fmt.Fprintf(p.Writer, "%s@%s =:\n", indent, key)
+	fmt.Fprintf(w, "%s@%s =:\n", indent, key)
 	for _, line := range multiLine {
 		for i := 0; i < len(line); i += MAXLINE {
 			endindex := i + MAXLINE
 			if lineLen := len(line); endindex >= lineLen {
 				endindex = lineLen
 			}
-			fmt.Fprintf(p.Writer, "%s    |%s\n", indent, line[i:endindex])
+			fmt.Fprintf(w, "%s    |%s\n", indent, line[i:endindex])
 		}
 	}
 }
 
 // ParamType prints:
 // foo(this <: <ParamType>):
-func (p *Printer) ParamType(param *sysl.Param) string {
+func ParamType(param *sysl.Param) string {
 	if param.Type == nil {
 		return ""
 	}
@@ -241,6 +231,6 @@ func (p *Printer) ParamType(param *sysl.Param) string {
 
 // PrintCall prints:
 // AnApp <- AnEndpoint
-func (p *Printer) PrintCall(c *sysl.Call) {
-	fmt.Fprintf(p.Writer, "        %s <- %s\n", strings.Join(c.Target.GetPart(), ""), c.GetEndpoint())
+func PrintCall(w io.Writer, c *sysl.Call) {
+	fmt.Fprintf(w, "        %s <- %s\n", strings.Join(c.Target.GetPart(), ""), c.GetEndpoint())
 }
