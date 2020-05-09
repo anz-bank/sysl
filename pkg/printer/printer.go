@@ -24,8 +24,8 @@ func p(w io.Writer, I ...interface{}) {
 
 // Module Prints a whole module
 func Module(w io.Writer, mod *sysl.Module) {
-	for _, key := range alphabeticalApplications(mod.Apps) {
-		Application(w, mod.Apps[key])
+	for _, key := range alphabeticalApplications(mod.GetApps()) {
+		Application(w, mod.GetApps()[key])
 	}
 }
 
@@ -35,17 +35,17 @@ func Application(w io.Writer, a *sysl.Application) {
 	p(w, "\n", strings.Join(a.Name.GetPart(), ""))
 	Patterns(w, a.GetAttrs())
 	p(w, ":\n")
-	for _, key := range alphabeticalAttributes(a.Attrs) {
+	for _, key := range alphabeticalAttributes(a.GetAttrs()) {
 		if key == patterns {
 			continue
 		}
-		Attrs(w, key, a.Attrs[key], APPLICATIONINDENT)
+		Attrs(w, key, a.GetAttrs()[key], APPLICATIONINDENT)
 	}
-	for _, key := range alphabeticalTypes(a.Types) {
-		TypeDecl(w, key, a.Types[key])
+	for _, key := range alphabeticalTypes(a.GetTypes()) {
+		TypeDecl(w, key, a.GetTypes()[key])
 	}
-	for _, key := range alphabeticalEndpoints(a.Endpoints) {
-		Endpoint(w, a.Endpoints[key])
+	for _, key := range alphabeticalEndpoints(a.GetEndpoints()) {
+		Endpoint(w, a.GetEndpoints()[key])
 	}
 }
 
@@ -56,25 +56,25 @@ func TypeDecl(w io.Writer, key string, t *sysl.Type) {
 	switch t.Type.(type) {
 	case *sysl.Type_Enum_:
 		EnumDecl(w, key, t)
-		return
 	default:
 		NonEnumDecl(w, key, t)
 	}
 }
 
 func EnumDecl(w io.Writer, key string, t *sysl.Type) {
-	switch v := t.Type.(type) {
-	case *sysl.Type_Enum_:
-		p(w, "    !enum ", key, ":\n")
-		for _, key := range alphabeticalAttributes(t.GetAttrs()) {
-			if key != patterns {
-				Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
-			}
+	v, ok := t.Type.(*sysl.Type_Enum_)
+	if !ok {
+		return
+	}
+	p(w, "    !enum ", key, ":\n")
+	for _, key := range alphabeticalAttributes(t.GetAttrs()) {
+		if key != patterns {
+			Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
 		}
-		ef := v.Enum.Items
-		for _, key := range alphabeticalInts(ef) {
-			p(w, "        ", key, ": ", ef[key], "\n")
-		}
+	}
+	ef := v.Enum.Items
+	for _, key := range alphabeticalInts(ef) {
+		p(w, "        ", key, ": ", ef[key], "\n")
 	}
 }
 
@@ -88,17 +88,17 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 			Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
 		}
 	}
-	if tuple == nil || tuple.AttrDefs == nil || len(tuple.AttrDefs) == 0 {
+	if tuple == nil || tuple.GetAttrDefs() == nil || len(tuple.GetAttrDefs()) == 0 {
 		p(w, "        ...\n")
 		return
 	}
-	for _, key := range alphabeticalTypes(tuple.AttrDefs) {
-		typeClass, typeIdent := syslutil.GetTypeDetail(tuple.AttrDefs[key])
+	for _, key := range alphabeticalTypes(tuple.GetAttrDefs()) {
+		typeClass, typeIdent := syslutil.GetTypeDetail(tuple.GetAttrDefs()[key])
 		switch typeClass {
 		case "primitive":
 			typeIdent = strings.ToLower(typeIdent)
 		case "sequence":
-			if foo := tuple.AttrDefs[key].GetSequence(); foo != nil {
+			if foo := tuple.GetAttrDefs()[key].GetSequence(); foo != nil {
 				typeClass, typeIdent = syslutil.GetTypeDetail(foo)
 				if typeClass == "primitive" {
 					typeIdent = strings.ToLower(typeIdent)
@@ -116,13 +116,14 @@ func Patterns(w io.Writer, attrs map[string]*sysl.Attribute) {
 		return
 	}
 	patterns := GetPatterns(attrs)
-	if len(patterns) == 0 {
+	numPatterns := len(patterns)
+	if numPatterns == 0 {
 		return
 	}
 	p(w, "[")
 	for i, pattern := range patterns {
 		p(w, "~", pattern)
-		if i != len(patterns)-1 {
+		if i != numPatterns-1 {
 			p(w, ", ")
 		}
 	}
@@ -130,7 +131,7 @@ func Patterns(w io.Writer, attrs map[string]*sysl.Attribute) {
 }
 
 func GetPatterns(attrs map[string]*sysl.Attribute) []string {
-	var ret = []string{}
+	var ret []string
 	patterns, has := attrs[patterns]
 	if !has {
 		return nil
@@ -139,7 +140,7 @@ func GetPatterns(attrs map[string]*sysl.Attribute) []string {
 	if x == nil {
 		return nil
 	}
-	for _, y := range x.Elt {
+	for _, y := range x.GetElt() {
 		ret = append(ret, y.GetS())
 	}
 	return ret
@@ -148,23 +149,22 @@ func GetPatterns(attrs map[string]*sysl.Attribute) []string {
 // Endpoint prints endpoints:
 // Endpoint:
 func Endpoint(w io.Writer, e *sysl.Endpoint) {
-	p(w, "    ", e.Name)
-
+	p(w, "    ", e.GetName())
 	if len(e.Param) != 0 {
-		Param(w, e.Param)
+		Param(w, e.GetParam())
 	}
-	Patterns(w, e.Attrs)
+	Patterns(w, e.GetAttrs())
 	p(w, ":\n")
-	if len(e.Stmt) == 0 {
+	if len(e.GetStmt()) == 0 {
 		p(w, "        ...\n")
 	}
-	for key, attr := range e.Attrs {
+	for key, attr := range e.GetAttrs() {
 		if key == patterns {
 			continue
 		}
 		Attrs(w, key, attr, ENDPOINTINDENT)
 	}
-	for _, stmnt := range e.Stmt {
+	for _, stmnt := range e.GetStmt() {
 		Statement(w, stmnt)
 	}
 }
@@ -174,7 +174,7 @@ func Endpoint(w io.Writer, e *sysl.Endpoint) {
 func Param(w io.Writer, params []*sysl.Param) {
 	p(w, "(")
 	for i, param := range params {
-		p(w, param.Name, " <: ", Type(param))
+		p(w, param.GetName(), " <: ", Type(param))
 		if i != len(params)-1 {
 			p(w, ",")
 		}
@@ -187,21 +187,20 @@ func Param(w io.Writer, params []*sysl.Param) {
 // My <- call
 // lookup db
 func Statement(w io.Writer, s *sysl.Statement) {
-	if call := s.GetCall(); call != nil {
-		Call(w, call)
-	}
-	if action := s.GetAction(); action != nil {
-		Action(w, action)
-	}
-	if ret := s.GetRet(); ret != nil {
-		Return(w, ret)
+	switch s.GetStmt().(type) {
+	case *sysl.Statement_Call:
+		Call(w, s.GetCall())
+	case *sysl.Statement_Action:
+		Action(w, s.GetAction())
+	case *sysl.Statement_Ret:
+		Return(w, s.GetRet())
 	}
 }
 
 // Return prints return statements:
 // return foo <: type
 func Return(w io.Writer, r *sysl.Return) {
-	p(w, "        return ", r.Payload, "\n")
+	p(w, "        return ", r.GetPayload(), "\n")
 }
 
 // Action prints actions:
@@ -221,9 +220,10 @@ func Attrs(w io.Writer, key string, a *sysl.Attribute, indentNum int) {
 	}
 	p(w, indent, "@", key, " =:\n")
 	for _, line := range lines {
-		for i := 0; i < len(line); i += MAXLINE {
+		lineLen := len(line)
+		for i := 0; i < lineLen; i += MAXLINE {
 			endIndex := i + MAXLINE
-			if lineLen := len(line); endIndex >= lineLen {
+			if endIndex >= lineLen {
 				endIndex = lineLen
 			}
 			p(w, indent, "    |", line[i:endIndex], "\n")
