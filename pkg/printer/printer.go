@@ -4,9 +4,10 @@ package printer
 
 import (
 	"fmt"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"io"
 	"strings"
+
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
@@ -18,8 +19,8 @@ const (
 	patterns          = "patterns"
 )
 
-func p(w io.Writer, I ...interface{}) {
-	fmt.Fprint(w, I...)
+func p(w io.Writer, i ...interface{}) {
+	fmt.Fprint(w, i...)
 }
 
 // Module Prints a whole module
