@@ -116,14 +116,13 @@ func Patterns(w io.Writer, attrs map[string]*sysl.Attribute) {
 		return
 	}
 	patterns := GetPatterns(attrs)
-	numPatterns := len(patterns)
-	if numPatterns == 0 {
+	if len(patterns) == 0 {
 		return
 	}
 	p(w, "[")
 	for i, pattern := range patterns {
 		p(w, "~", pattern)
-		if i != numPatterns-1 {
+		if i != len(patterns)-1 {
 			p(w, ", ")
 		}
 	}
