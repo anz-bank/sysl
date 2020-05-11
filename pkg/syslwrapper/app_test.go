@@ -56,6 +56,20 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 	assert.Equal(t, expectedResult.GetAttrs()["balance"], typeIndex["Server:Response"].GetAttrs()["balance"])
 }
 
+func TestMapPetStoreToSimpleTypes(t *testing.T) {
+	mod, err := parse.NewParser().Parse("../../demo/petshop/petshop.sysl", afero.NewOsFs())
+	assert.NoError(t, err)
+	mapper := MakeAppMapper(mod)
+	mapper.IndexTypes()
+	mapper.ConvertTypes()
+	expected := &Type{
+		Type:      "ref",
+		Reference: "PetShopModel:Breed",
+	}
+	assert.Equal(t, "relation", mapper.SimpleTypes["PetShopModel:Pet"].Type)
+	assert.Equal(t, expected, mapper.SimpleTypes["PetShopModel:Pet"].Properties["breedId"])
+}
+
 func TestMapTypeRef(t *testing.T) {
 	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
 	type2 := MakePrimitive("string")
