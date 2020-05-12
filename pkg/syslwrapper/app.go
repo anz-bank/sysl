@@ -453,7 +453,16 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		simpleType = "relation"
 		properties = make(map[string]*Type, 15)
 		for k, v := range t.GetRelation().AttrDefs {
-			properties[k] = am.MapType(v)
+			switch v.Type.(type) {
+			case *sysl.Type_TypeRef:
+				appName, typeName := convertTableRef(v)
+				properties[k] = &Type{
+					Type:      "ref",
+					Reference: appName + ":" + typeName,
+				}
+			default:
+				properties[k] = am.MapType(v)
+			}
 		}
 		if pk := t.GetRelation().GetPrimaryKey(); pk != nil {
 			if pk.GetAttrName() != nil && len(pk.GetAttrName()) > 0 {
@@ -473,6 +482,13 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		Enum:       enum,
 		PrimaryKey: primaryKey,
 	}
+}
+
+// Table refs must be handled differently as elements of the path are [TableName, Fieldname]
+func convertTableRef(tableRef *sysl.Type) (appName string, typeName string) {
+	appName = tableRef.GetTypeRef().GetContext().GetAppname().GetPart()[0]
+	typeName = tableRef.GetTypeRef().GetRef().GetPath()[0]
+	return appName, typeName
 }
 
 func (am *AppMapper) convertPrimitive(typeStr string) string {
