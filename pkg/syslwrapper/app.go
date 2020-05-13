@@ -36,7 +36,7 @@ type Parameter struct {
 // Type represents a simplified Sysl Type.
 type Type struct {
 	Description string
-	PrimaryKey  string           // Used to represent the primary key for type relation
+	PrimaryKey  string           // Used to represent the primary key for type relation and key for map types.
 	Optional    bool             // Used to represent if the type is optional
 	Reference   string           // Used to represent type references. In the format of app:typename.
 	Type        string           // Used to indicate the type. Can be one of {"bool", "int", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid", "ref", "list", "map", "enum", "tuple", relation}
@@ -436,6 +436,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		simpleType = "list" //nolint:goconst
 		items = append(items, am.MapType(t.GetList().Type))
 	case *sysl.Type_Map_:
+		// This type isn't currently used in Sysl. Tuples are used to represent Map Types instead, using a json_map_key attribute
 		simpleType = "map"
 		items = append(items, am.MapType(t.GetMap().Key))
 		items = append(items, am.MapType(t.GetMap().Value))
@@ -444,7 +445,14 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		appName, typeName := am.GetRefDetails(t)
 		ref = appName + ":" + typeName
 	case *sysl.Type_Tuple_:
-		simpleType = "tuple"
+		// Currently maps in Sysl are represented as Tuples due to limitations in the grammar.
+		// We need to check for the presence of a json_map_key attribute to distinguish between tuples and maps
+		if mapKey := t.GetAttrs()["json_map_key"]; mapKey != nil {
+			simpleType = "map"
+			primaryKey = mapKey.GetS()
+		} else {
+			simpleType = "tuple"
+		}
 		properties = make(map[string]*Type, 15)
 		for k, v := range t.GetTuple().AttrDefs {
 			properties[k] = am.MapType(v)

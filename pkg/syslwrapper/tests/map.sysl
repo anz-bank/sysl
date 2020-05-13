@@ -1,0 +1,11 @@
+MapType [package="io.sysl.demo.petshop.api", ~rest]:
+    !type InventoryResponse[json_map_key="item_id"]:
+            item_id <: string:
+                @json_tag = "item_id"
+            quantity <: int:
+                @json_tag = "quantity"
+            message <: Message
+
+    !type Message:
+        code <: int
+        description <: string
