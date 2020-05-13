@@ -56,6 +56,32 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 	assert.Equal(t, expectedResult.GetAttrs()["balance"], typeIndex["Server:Response"].GetAttrs()["balance"])
 }
 
+func TestConvertMapType(t *testing.T) {
+	mod, err := parse.NewParser().Parse("./tests/map.sysl", afero.NewOsFs())
+	assert.NoError(t, err)
+	mapper := MakeAppMapper(mod)
+	mapper.IndexTypes()
+	simpleTypes := mapper.ConvertTypes()
+
+	expectedResult := &Type{
+		Type: "map",
+		Properties: map[string]*Type{
+			"item_id": {
+				Type: "string",
+			},
+			"quantity": {
+				Type: "int",
+			},
+			"message": {
+				Type:      "ref",
+				Reference: "MapType:Message",
+			},
+		},
+		PrimaryKey: "item_id",
+	}
+
+	assert.Equal(t, expectedResult, simpleTypes["MapType:InventoryResponse"])
+}
 func TestMapPetStoreToSimpleTypes(t *testing.T) {
 	mod, err := parse.NewParser().Parse("../../demo/petshop/petshop.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
