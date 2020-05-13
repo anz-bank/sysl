@@ -5,8 +5,12 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -38,64 +42,17 @@ func testModule() *sysl.Module {
 	}
 }
 
-func testModuleJSONPB() string {
-	return `{
- "apps": {
-  "Test": {
-   "name": {
-    "part": [
-     "Test"
-    ]
-   },
-   "endpoints": {
-    "GetInfo": {
-     "name": "GetInfo",
-     "stmt": [
-      {
-       "action": {
-        "action": "Do something"
-       }
-      }
-     ]
-    }
-   }
-  }
- }
-}`
-}
-
-func testModuleTextPB() string {
-	return `apps: <
-  key: "Test"
-  value: <
-    name: <
-      part: "Test"
-    >
-    endpoints: <
-      key: "GetInfo"
-      value: <
-        name: "GetInfo"
-        stmt: <
-          action: <
-            action: "Do something"
-          >
-        >
-      >
-    >
-  >
->
-`
-}
-
 func TestJSONPB(t *testing.T) {
 	t.Parallel()
 
+	unmarshalled := &sysl.Module{}
 	fs := afero.NewMemMapFs()
 	filename := "out.pb.json"
 	require.NoError(t, JSONPB(testModule(), filename, fs))
 	output, err := afero.ReadFile(fs, filename)
 	require.NoError(t, err)
-	assert.Equal(t, testModuleJSONPB(), string(output))
+	require.NoError(t, protojson.Unmarshal(output, unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
 func TestJSONPBNilModule(t *testing.T) {
@@ -110,9 +67,11 @@ func TestJSONPBNilModule(t *testing.T) {
 func TestFJSONPB(t *testing.T) {
 	t.Parallel()
 
+	unmarshalled := &sysl.Module{}
 	var output bytes.Buffer
 	require.NoError(t, FJSONPB(&output, testModule()))
-	assert.Equal(t, testModuleJSONPB(), output.String())
+	require.NoError(t, protojson.Unmarshal(output.Bytes(), unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
 func TestFJSONPBNilModule(t *testing.T) {
@@ -126,12 +85,14 @@ func TestFJSONPBNilModule(t *testing.T) {
 func TestTextPB(t *testing.T) {
 	t.Parallel()
 
+	unmarshalled := &sysl.Module{}
 	fs := afero.NewMemMapFs()
 	filename := "/out.textpb"
 	require.NoError(t, TextPB(testModule(), filename, fs))
 	output, err := afero.ReadFile(fs, filename)
 	require.NoError(t, err)
-	assert.Equal(t, testModuleTextPB(), string(output))
+	require.NoError(t, prototext.Unmarshal(output, unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
 func TestTextPBNilModule(t *testing.T) {
@@ -146,9 +107,11 @@ func TestTextPBNilModule(t *testing.T) {
 func TestFTextPB(t *testing.T) {
 	t.Parallel()
 
+	unmarshalled := &sysl.Module{}
 	var output bytes.Buffer
 	require.NoError(t, FTextPB(&output, testModule()))
-	assert.Equal(t, testModuleTextPB(), output.String())
+	require.NoError(t, prototext.Unmarshal(output.Bytes(), unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
 func TestFTextPBNilModule(t *testing.T) {

@@ -1,4 +1,0 @@
-// .babelrc
-{
-    "presets": ["es2018", "react"]
-  }

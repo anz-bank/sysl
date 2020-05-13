@@ -32,7 +32,7 @@ func (m *modCmd) Execute(args cmdutils.ExecuteArgs) error {
 	// subcommands are somewhat funky using the cmd_runner
 	switch args.Command {
 	case initCmd.FullCommand():
-		return mod.SyslModInit(m.modName, args.Logger)
+		return mod.SyslModInit(m.modName)
 	default:
 		return errors.New("command not recognized")
 	}

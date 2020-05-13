@@ -1,21 +1,27 @@
 testapp "Simple" [package="package_foo"]:
-    /%ff%fftest%2Epdf:
-        GET:
-            return ok <: 200
+    # Support for non UTF-8 chars in endpoints is currently not available.
+    # /%FF%AFtestsagain:
+    #     GET:
+    #         return ok <: 200
 
-    /%FF%AFtests%25again:
-        GET:
-            return ok <: 200
-
-    /tests%5Eagain:
-        GET:
-            return ok <: 200
 
     /tests%7Eagain:
         GET:
             return ok <: 200
 
+    /tests%2Eagain:
+        GET:
+            return ok <: 200
+
+    /tests%25again:
+        GET:
+            return ok <: 200
+
     /tests%3Aagain:
+        GET:
+            return ok <: 200
+    
+    /tests%5Eagain:
         GET:
             return ok <: 200
 

@@ -8,19 +8,14 @@ testapp "Simple" [package="package_foo"]:
     @description =:
         | No description.
 
-    /test:
-        GET:
+    /simple:
+        PUT (DocumentRequest <: Document [mediatype="application/json", ~body]):
             | No description.
             return error
-            return ok <: SimpleObj
+            return ok
 
     #---------------------------------------------------------------------------
     # definitions
 
-    !type SimpleObj:
-        name <: string?:
-            @json_tag = "name"
-
-    !type SimpleObj2:
-        name <: SimpleObj?:
-            @json_tag = "name"
+    !alias Document:
+        sequence of string

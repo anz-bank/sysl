@@ -73,13 +73,13 @@ func TestHTML(t *testing.T) {
 	outmap, err := datamodeldiagram.GenerateDataModels(&p.CmdContextParamDatagen, m, logrus.New())
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	err = p.GenerateFromMap(outmap, fs)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	err = diagrams.OutputPlantuml(p.Output, plantuml, outmap["whatever.html"], fs)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	file, err := fs.Open(p.Output)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	html, err := ioutil.ReadAll(file)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	expected := fmt.Sprintf(
 		"<img src=\"%s/svg/UDgCaK5hmZ0OXk"+
 			"_v5UzwwHRNOgyYObd2sCN25iybwgS9T3K"+
@@ -112,13 +112,13 @@ func TestLinkOutput(t *testing.T) {
 	outmap, err := datamodeldiagram.GenerateDataModels(&p.CmdContextParamDatagen, m, logrus.New())
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	err = p.GenerateFromMap(outmap, fs)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	err = diagrams.OutputPlantuml(p.Output, plantuml, outmap["whatever.html"], fs)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	file, err := fs.Open(p.Output)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	link, err := ioutil.ReadAll(file)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	expected := fmt.Sprintf(
 		"%s/svg/UDgCaK5hmZ0OXk"+
 			"_v5UzwwHRNOgyYObd2sCN25iybwgS9T3K"+
@@ -151,13 +151,13 @@ func TestSequence(t *testing.T) {
 	outmap, err := datamodeldiagram.GenerateDataModels(&p.CmdContextParamDatagen, m, logrus.New())
 	assert.Nil(t, err, "Generating the data diagrams failed")
 	err = p.GenerateFromMap(outmap, fs)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	err = diagrams.OutputPlantuml(p.Output, plantuml, outmap["whatever.puml"], fs)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	file, err := fs.Open(p.Output)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	link, err := ioutil.ReadAll(file)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	expected := `@startuml
 ''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''

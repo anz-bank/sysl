@@ -8,8 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
-	"regexp"
+	"path"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -17,28 +16,34 @@ import (
 )
 
 type goModule struct {
-	Path string
-	Dir  string
+	Path    string
+	Dir     string
+	Version string
 }
 
-func goGetByFilepath(filename string) error {
-	dir := filepath.Dir(filename)
-	re := regexp.MustCompile(`^\.|\.\.|/$`)
+func goGetByFilepath(filename, ver string) (err error) {
+	if names := strings.Split(filename, "/"); len(names) > 0 {
+		gogetPath := names[0]
 
-	for !re.MatchString(dir) {
-		err := goGet(dir)
-		if err == nil {
-			return nil
+		for i := range names[1:] {
+			if ver != "" {
+				err = goGet(path.Join(names[:1+i]...) + "@" + ver)
+			} else {
+				err = goGet(path.Join(names[:1+i]...))
+			}
+
+			if err == nil {
+				return nil
+			}
+			logrus.Debugf("go get %s error: %s\n", gogetPath, err.Error())
 		}
-		logrus.Debugf("go get %s error: %s\n", dir, err.Error())
-		dir = filepath.Dir(dir)
 	}
 
-	return errors.New("No such module")
+	return errors.New("no such module")
 }
 
 func goGet(args ...string) error {
-	if err := runGo(context.Background(), logrus.StandardLogger().Out, append([]string{"get"}, args...)...); err != nil {
+	if err := runGo(context.Background(), logrus.StandardLogger().Out, append([]string{"get", "-u"}, args...)...); err != nil { // nolint:lll
 		return errors.Wrapf(err, "failed to get %q", args)
 	}
 	return nil
@@ -69,8 +74,9 @@ func (m *Modules) Load() error {
 		}
 
 		m.Add(&Module{
-			Name: goMod.Path,
-			Dir:  goMod.Dir,
+			Name:    goMod.Path,
+			Dir:     goMod.Dir,
+			Version: goMod.Version,
 		})
 	}
 

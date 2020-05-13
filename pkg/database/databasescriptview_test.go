@@ -16,7 +16,7 @@ func TestGenerateDatabaseScriptCreate(t *testing.T) {
 	modelParser := parse.NewParser()
 	mod, _, err := parse.LoadAndGetDefaultApp("database/db_scripts/dataForSqlScriptOrg.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	types := mod.GetApps()[testAppName].GetTypes()
 	v := MakeDatabaseScriptView(testTitle, logrus.StandardLogger())
 	outputStr := v.GenerateDatabaseScriptCreate(types, testDBType, testAppName)
@@ -28,10 +28,10 @@ func TestGenerateDatabaseScriptModify(t *testing.T) {
 	modelParser := parse.NewParser()
 	modOld, _, err := parse.LoadAndGetDefaultApp("database/db_scripts/dataForSqlScriptOrg.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	modNew, _, err := parse.LoadAndGetDefaultApp("database/db_scripts/dataForSqlScriptModified.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	appsOld := modOld.GetApps()
 	appsNew := modNew.GetApps()
 	appNames := strings.Split(testAppName, Delimiter)
@@ -48,10 +48,10 @@ func TestGenerateDatabaseScriptModifyTwoApps(t *testing.T) {
 	modelParser := parse.NewParser()
 	modOld, _, err := parse.LoadAndGetDefaultApp("database/db_scripts/dataForSqlScriptOrg.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	modNew, _, err := parse.LoadAndGetDefaultApp("database/db_scripts/dataForSqlScriptModifiedTwoApps.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), ".."), modelParser)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	appsOld := modOld.GetApps()
 	appsNew := modNew.GetApps()
 	appNames := strings.Split(testTwoAppNames, Delimiter)

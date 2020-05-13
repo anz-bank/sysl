@@ -18,7 +18,7 @@ func TestWrite(t *testing.T) {
 	n, err := w.Write([]byte("test\n"))
 
 	// then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 5, n)
 	assert.Zero(t, w.Ind)
 	assert.True(t, w.AtBeginOfLine)
@@ -34,7 +34,7 @@ func TestWriteWithoutln(t *testing.T) {
 	n, err := w.Write([]byte("test"))
 
 	// then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 4, n)
 	assert.Zero(t, w.Ind)
 	assert.False(t, w.AtBeginOfLine)
@@ -52,7 +52,7 @@ func TestWriteWithoutlnInNewLine(t *testing.T) {
 	n, err := w.Write([]byte("test"))
 
 	// then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 4, n)
 	assert.Equal(t, 5, w.Body.Len())
 	assert.Equal(t, 1, w.Ind)
@@ -71,7 +71,7 @@ func TestWriteMultiLines(t *testing.T) {
 	n, err := w.Write([]byte("line1\nline2"))
 
 	// then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 11, n)
 	assert.Equal(t, 13, w.Body.Len())
 	assert.Equal(t, 1, w.Ind)
@@ -88,7 +88,7 @@ func TestWriteString(t *testing.T) {
 	n, err := w.WriteString("test\n")
 
 	// then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 5, n)
 	assert.Zero(t, w.Ind)
 	assert.True(t, w.AtBeginOfLine)
@@ -104,7 +104,7 @@ func TestWriteByte(t *testing.T) {
 	err := w.WriteByte('a')
 
 	// then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 1, w.Body.Len())
 	assert.False(t, w.AtBeginOfLine)
 }
@@ -119,7 +119,7 @@ func TestWriteByteln(t *testing.T) {
 	err := w.WriteByte('\n')
 
 	// then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 1, w.Body.Len())
 	assert.True(t, w.AtBeginOfLine)
 }
@@ -285,7 +285,7 @@ func TestStringer(t *testing.T) {
 	s := w.String()
 
 	// Then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "@startuml\nhead\nbody\n@enduml\n", s)
 }
 
@@ -298,7 +298,7 @@ func TestStringerEmpty(t *testing.T) {
 	s := w.String()
 	expected := ""
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, expected, s)
 }
 
@@ -327,7 +327,7 @@ head
 body
 @enduml
 `
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, expected, s)
 }
 
@@ -346,7 +346,7 @@ func TestWriteTo(t *testing.T) {
 	n, err := w.WriteTo(&b)
 
 	// Then
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, int64(41), n)
 	assert.Equal(t, "@startuml\nhead\nproperties 1\nbody\n@enduml\n", b.String())
 }

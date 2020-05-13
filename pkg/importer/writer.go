@@ -219,7 +219,7 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 		reqStr = fmt.Sprintf(" (%s)", body+header)
 	}
 
-	pathStr := buildPathString(endpoint.Path, endpoint.Params.PathParams())
+	pathStr := strings.TrimSuffix(buildPathString(endpoint.Path, endpoint.Params.PathParams()), "/")
 	desc := getDescription(endpoint.Description)
 
 	w.writeLines(fmt.Sprintf("%s:", pathStr), PushIndent,

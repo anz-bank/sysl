@@ -1,0 +1,26 @@
+swagger: "2.0"
+info:
+  title: Simple
+paths:
+  /simple:
+    put:
+      parameters:
+      - name: document
+        in: body
+        description: Document to be linked
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/Document'
+      responses:
+        204:
+          description: Operation successful.
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorised
+
+definitions:
+  Document:
+    type: string
