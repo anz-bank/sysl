@@ -44,8 +44,10 @@ Project:
 Server:
     @owner = "server"
     !type LoginData[~this, ~that, ~foobar]:
+        @asdhsd = "skdjfnsdkj"
         @description = "blah nah brah"
-        password <: sequence of string
+        password <: sequence of string:
+            @json_tag = "pwd"
         username <: string
     !type LoginResponse:
         message <: string
