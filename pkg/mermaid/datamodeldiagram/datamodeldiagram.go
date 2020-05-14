@@ -84,7 +84,8 @@ func printProperties(properties map[string]*syslwrapper.Type, appType string, ex
 }
 
 //printMap prints appropriate mermaid code for values inside a map
-func printMap(properties map[string]*syslwrapper.Type, appType string, primaryKey string, externalLinks *[]externalLink) string {
+func printMap(properties map[string]*syslwrapper.Type,
+	appType string, primaryKey string, externalLinks *[]externalLink) string {
 	var result string
 	var type1, type2, name, name1, name2 string
 	name = appType

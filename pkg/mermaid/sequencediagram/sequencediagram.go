@@ -19,7 +19,7 @@ var startElse = regexp.MustCompile("^else.*")
 var isElse = regexp.MustCompile("^else$")
 var isLoop = regexp.MustCompile("^loop.*")
 
-//GenerateSequenceDiagram accepts an application name and an endpoint as inputs and returns a string (and an error if any)
+//GenerateSequenceDiagram accepts an application name and an endpoint as inputs and returns a string and an error
 //The resulting string is the mermaid code for the sequence diagram for that application and endpoint
 func GenerateSequenceDiagram(m *sysl.Module, appname string, epname string) (string, error) {
 	return generateSequenceDiagramHelper(m, appname, epname, "...", 1, &[]sequencePair{}, true)
