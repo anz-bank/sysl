@@ -8,7 +8,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
-//Keeps track of the application pairs and the associated endpoint we visit during the recursion
+//sequencePair keeps track of the application pairs and the associated endpoint we visit during the recursion
 type sequencePair struct {
 	firstApp, secondApp, endPoint string
 }
@@ -19,13 +19,13 @@ var startElse = regexp.MustCompile("^else.*")
 var isElse = regexp.MustCompile("^else$")
 var isLoop = regexp.MustCompile("^loop.*")
 
-//Accepts an application name and an endpoint as inputs and returns a string (and an error if any)
+//GenerateSequenceDiagram accepts an application name and an endpoint as inputs and returns a string (and an error if any)
 //The resulting string is the mermaid code for the sequence diagram for that application and endpoint
 func GenerateSequenceDiagram(m *sysl.Module, appname string, epname string) (string, error) {
 	return generateSequenceDiagramHelper(m, appname, epname, "...", 1, &[]sequencePair{}, true)
 }
 
-//This is a helper which has additional arguments which need not be entered by the user
+//generateSequenceDiagramHelper is a helper which has additional arguments which need not be entered by the user
 func generateSequenceDiagramHelper(m *sysl.Module, appName string, epName string,
 	previousApp string, indent int, sequencePairs *[]sequencePair, theStart bool) (string, error) {
 	var result string
@@ -41,7 +41,7 @@ func generateSequenceDiagramHelper(m *sysl.Module, appName string, epName string
 	return result, nil
 }
 
-//This function is where the printing takes place
+//printSequenceDiagramStatements is where the printing takes place
 //Uses a switch statement to decide what to print and what recursion needs to be done
 func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement, appName string,
 	previousApp string, indent int, sequencePairs *[]sequencePair, theStart bool) string {
@@ -111,7 +111,7 @@ func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement
 	return result
 }
 
-//Checks if the entered application name and endpoint exists in the sysl module or not
+//isValidAppNameAndEndpoint checks if the entered application name and endpoint exists in the sysl module or not
 func isValidAppNameAndEndpoint(m *sysl.Module, appName string, epName string) error {
 	if _, ok := m.Apps[appName]; !ok {
 		return errors.New("invalid app name")
@@ -122,12 +122,12 @@ func isValidAppNameAndEndpoint(m *sysl.Module, appName string, epName string) er
 	return nil
 }
 
-//Printer to print a call statement
+//callStatement is a printer to print a call statement
 func callStatement(appName string, epName string, nextApp string, indent int) string {
 	return fmt.Sprintf("%s%s->>+%s: %s\n", addIndent(indent), appName, nextApp, epName)
 }
 
-//Printer to print a return statement
+//retStatement is a printer to print a return statement
 func retStatement(appName string, epName string, previousApp string, indent int, theStart bool) string {
 	if theStart {
 		return fmt.Sprintf("%s%s-->>%s: %s\n", addIndent(indent), appName, previousApp, epName)
@@ -135,12 +135,12 @@ func retStatement(appName string, epName string, previousApp string, indent int,
 	return fmt.Sprintf("%s%s-->>-%s: %s\n", addIndent(indent), appName, previousApp, epName)
 }
 
-//Printer to print an action statement
+//actionStatement is a printer to print an action statement
 func actionStatement(appName string, action string, indent int) string {
 	return fmt.Sprintf("%s%s->>%s: %s\n", addIndent(indent), appName, appName, action)
 }
 
-//Adds indents based on the input
+//addIndent adds indents based on the input
 func addIndent(indent int) string {
 	var out string
 	for i := 0; i < indent; i++ {
@@ -149,7 +149,7 @@ func addIndent(indent int) string {
 	return out
 }
 
-//Checks if the application-endpoint group have been already visited or not
+// sequencePairsContain checks if the application-endpoint group have been already visited or not
 func sequencePairsContain(s []sequencePair, sp sequencePair) bool {
 	for _, a := range s {
 		if a == sp {
