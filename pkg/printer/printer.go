@@ -15,6 +15,7 @@ import (
 const (
 	APPLICATIONINDENT = 4
 	ENDPOINTINDENT    = 8
+	TYPEINDENT        = 12
 	MAXLINE           = 80
 	patterns          = "patterns"
 )
@@ -84,9 +85,10 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 	Patterns(w, t.GetAttrs())
 	p(w, ":\n")
 	tuple := t.GetTuple()
-	for _, key := range alphabeticalAttributes(t.GetAttrs()) {
+	attributes := t.GetAttrs()
+	for _, key := range alphabeticalAttributes(attributes) {
 		if key != patterns {
-			Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
+			Attrs(w, key, attributes[key], ENDPOINTINDENT)
 		}
 	}
 	if tuple == nil || tuple.GetAttrDefs() == nil || len(tuple.GetAttrDefs()) == 0 {
@@ -95,6 +97,7 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 	}
 	for _, key := range alphabeticalTypes(tuple.GetAttrDefs()) {
 		typeClass, typeIdent := syslutil.GetTypeDetail(tuple.GetAttrDefs()[key])
+		field := tuple.GetAttrDefs()[key]
 		switch typeClass {
 		case "primitive":
 			typeIdent = strings.ToLower(typeIdent)
@@ -107,7 +110,23 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 			}
 			typeIdent = "sequence of " + typeIdent
 		}
-		p(w, "        ", key, " <: ", typeIdent, "\n")
+		p(w, "        ", key, " <: ", typeIdent)
+		fieldAttrs := field.GetAttrs()
+		nl := true
+		for _, key := range alphabeticalAttributes(fieldAttrs) {
+			if key != patterns {
+				if attributes[key] != fieldAttrs[key] {
+					if nl {
+						p(w, ":\n")
+						nl = false
+					}
+					Attrs(w, key, fieldAttrs[key], TYPEINDENT)
+				}
+			}
+		}
+		if nl {
+			p(w, "\n")
+		}
 	}
 }
 
