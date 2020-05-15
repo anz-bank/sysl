@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/mermaid/datamodeldiagram"
 	"github.com/anz-bank/sysl/pkg/mermaid/endpointanalysisdiagram"
 	"github.com/anz-bank/sysl/pkg/mermaid/integrationdiagram"
 	"github.com/anz-bank/sysl/pkg/mermaid/sequencediagram"
@@ -26,9 +27,12 @@ func (p *diagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("sequencediagram",
 		"Generate a sequence diagram (Specify 'appname->endpoint')",
 	).Short('s').StringVar(&p.SequenceDiagram)
-	cmd.Flag("endpointanalysis", ""+
+	cmd.Flag("endpointanalysis",
 		"Generate an EPA diagram (Specify 'true')",
-	).Short('e').BoolVar(&p.EndpointAnalysis)
+	).Default("false").Short('e').BoolVar(&p.EndpointAnalysis)
+	cmd.Flag("datadiagram",
+		"Generate a Data model diagram (Specify 'true')",
+	).Default("false").Short('d').BoolVar(&p.DataDiagram)
 	return cmd
 }
 
@@ -50,6 +54,8 @@ func callDiagramGenerator(m *sysl.Module, p *diagramCmd) (string, error) {
 		return sequencediagram.GenerateSequenceDiagram(m, res[0], res[1])
 	case p.EndpointAnalysis:
 		return endpointanalysisdiagram.GenerateEndpointAnalysisDiagram(m)
+	case p.DataDiagram:
+		return datamodeldiagram.GenerateDataModelDiagram(m)
 	default:
 		return "", errors.New("correct value has not been specified; please check help for more information")
 	}
