@@ -73,7 +73,7 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 		case *sysl.Statement_Ret:
 			result += ""
 		default:
-			panic("Unrecognised statement type")
+			result += ""
 		}
 	}
 	return result

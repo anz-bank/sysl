@@ -2,8 +2,8 @@ package endpointanalysisdiagram
 
 import (
 	"fmt"
-	"strings"
 
+	"github.com/anz-bank/sysl/pkg/mermaid"
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
@@ -31,7 +31,7 @@ func generateEndpointAnalysisDiagramHelper(m *sysl.Module,
 		result += fmt.Sprintf(" subgraph %s\n", appName)
 		for epName, endPoint := range app.Endpoints {
 			statements := endPoint.Stmt
-			result += printEndpointAnalysisStatements(m, statements, cleanString(epName), externalLinks)
+			result += printEndpointAnalysisStatements(m, statements, mermaid.CleanString(epName), externalLinks)
 		}
 		result += " end\n"
 	}
@@ -48,9 +48,9 @@ func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statemen
 	for _, statement := range statements {
 		switch c := statement.Stmt.(type) {
 		case *sysl.Statement_Call:
-			appEndPoint := fmt.Sprintf("%s-%s", cleanString(c.Call.Target.Part[0]), cleanString(c.Call.Endpoint))
+			appEndPoint := fmt.Sprintf("%s-%s", mermaid.CleanString(c.Call.Target.Part[0]), mermaid.CleanString(c.Call.Endpoint))
 			result += fmt.Sprintf(" %s-->%s\n", endPoint, appEndPoint)
-			pair := externalLink{appEndPoint, cleanString(c.Call.Endpoint)}
+			pair := externalLink{appEndPoint, mermaid.CleanString(c.Call.Endpoint)}
 			if !externalLinksContain(*externalLinks, pair) {
 				*externalLinks = append(*externalLinks, pair)
 			}
@@ -65,11 +65,11 @@ func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statemen
 		case *sysl.Statement_Foreach:
 			result += printEndpointAnalysisStatements(m, c.Foreach.Stmt, endPoint, externalLinks)
 		case *sysl.Statement_Action:
-			result += fmt.Sprintf(" %s-->%s\n", endPoint, cleanString(c.Action.Action))
+			result += fmt.Sprintf(" %s-->%s\n", endPoint, mermaid.CleanString(c.Action.Action))
 		case *sysl.Statement_Ret:
-			result += fmt.Sprintf(" %s-->%s\n", endPoint, cleanString(c.Ret.Payload))
+			result += fmt.Sprintf(" %s-->%s\n", endPoint, mermaid.CleanString(c.Ret.Payload))
 		default:
-			panic("Unrecognised statement type")
+			result += ""
 		}
 	}
 	return result
@@ -83,18 +83,4 @@ func externalLinksContain(i []externalLink, ip externalLink) bool {
 		}
 	}
 	return false
-}
-
-//cleanString replaces certain characters in the string suitable for mermaid
-//TODO:Replace more characters if necessary
-func cleanString(temp string) string {
-	temp = strings.ReplaceAll(temp, " ", "")
-	temp = strings.ReplaceAll(temp, "{", "_")
-	temp = strings.ReplaceAll(temp, "}", "_")
-	temp = strings.ReplaceAll(temp, "[", "_")
-	temp = strings.ReplaceAll(temp, "]", "_")
-	temp = strings.ReplaceAll(temp, "\"", "")
-	temp = strings.ReplaceAll(temp, "~", "")
-	temp = strings.ReplaceAll(temp, ":", "")
-	return temp
 }

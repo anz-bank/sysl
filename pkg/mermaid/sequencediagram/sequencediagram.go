@@ -104,7 +104,7 @@ func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement
 			result += printSequenceDiagramStatements(m, c.LoopN.Stmt, appName, previousApp, indent+1, sequencePairs, theStart)
 			result += fmt.Sprintf("%send\n", addIndent(indent))
 		default:
-			panic("Unrecognised statement type")
+			result += ""
 		}
 		count++
 	}
