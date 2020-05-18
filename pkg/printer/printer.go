@@ -5,6 +5,8 @@ package printer
 import (
 	"fmt"
 	"io"
+	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -24,9 +26,19 @@ func p(w io.Writer, i ...interface{}) {
 	fmt.Fprint(w, i...)
 }
 
+func sortedKeys(m interface{}) []string {
+	keys := reflect.ValueOf(m).MapKeys()
+	ret := make([]string, 0, len(keys))
+	for _, v := range keys {
+		ret = append(ret, v.String())
+	}
+	sort.Strings(ret)
+	return ret
+}
+
 // Module Prints a whole module
 func Module(w io.Writer, mod *sysl.Module) {
-	for _, key := range alphabeticalApplications(mod.GetApps()) {
+	for _, key := range sortedKeys(mod.GetApps()) {
 		Application(w, mod.GetApps()[key])
 	}
 }
@@ -37,16 +49,16 @@ func Application(w io.Writer, a *sysl.Application) {
 	p(w, "\n", strings.Join(a.Name.GetPart(), ""))
 	Patterns(w, a.GetAttrs())
 	p(w, ":\n")
-	for _, key := range alphabeticalAttributes(a.GetAttrs()) {
+	for _, key := range sortedKeys(a.GetAttrs()) {
 		if key == patterns {
 			continue
 		}
 		Attrs(w, key, a.GetAttrs()[key], APPLICATIONINDENT)
 	}
-	for _, key := range alphabeticalTypes(a.GetTypes()) {
+	for _, key := range sortedKeys(a.GetTypes()) {
 		TypeDecl(w, key, a.GetTypes()[key])
 	}
-	for _, key := range alphabeticalEndpoints(a.GetEndpoints()) {
+	for _, key := range sortedKeys(a.GetEndpoints()) {
 		Endpoint(w, a.GetEndpoints()[key])
 	}
 }
@@ -69,13 +81,13 @@ func EnumDecl(w io.Writer, key string, t *sysl.Type) {
 		return
 	}
 	p(w, "    !enum ", key, ":\n")
-	for _, key := range alphabeticalAttributes(t.GetAttrs()) {
+	for _, key := range sortedKeys(t.GetAttrs()) {
 		if key != patterns {
 			Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
 		}
 	}
 	ef := v.Enum.Items
-	for _, key := range alphabeticalInts(ef) {
+	for _, key := range sortedKeys(ef) {
 		p(w, "        ", key, ": ", ef[key], "\n")
 	}
 }
@@ -86,7 +98,7 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 	p(w, ":\n")
 	tuple := t.GetTuple()
 	attributes := t.GetAttrs()
-	for _, key := range alphabeticalAttributes(attributes) {
+	for _, key := range sortedKeys(attributes) {
 		if key != patterns {
 			Attrs(w, key, attributes[key], ENDPOINTINDENT)
 		}
@@ -95,7 +107,7 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 		p(w, "        ...\n")
 		return
 	}
-	for _, key := range alphabeticalTypes(tuple.GetAttrDefs()) {
+	for _, key := range sortedKeys(tuple.GetAttrDefs()) {
 		typeClass, typeIdent := syslutil.GetTypeDetail(tuple.GetAttrDefs()[key])
 		field := tuple.GetAttrDefs()[key]
 		switch typeClass {
@@ -113,7 +125,7 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 		p(w, "        ", key, " <: ", typeIdent)
 		fieldAttrs := field.GetAttrs()
 		nl := true
-		for _, key := range alphabeticalAttributes(fieldAttrs) {
+		for _, key := range sortedKeys(fieldAttrs) {
 			if key != patterns {
 				if attributes[key] != fieldAttrs[key] {
 					if nl {
@@ -177,7 +189,8 @@ func Endpoint(w io.Writer, e *sysl.Endpoint) {
 	if len(e.GetStmt()) == 0 {
 		p(w, "        ...\n")
 	}
-	for key, attr := range e.GetAttrs() {
+	for _, key := range sortedKeys(e.GetAttrs()) {
+		attr := e.GetAttrs()[key]
 		if key == patterns {
 			continue
 		}
