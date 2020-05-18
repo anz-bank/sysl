@@ -17,6 +17,9 @@ import (
 const openapiv3DefinitionPrefix = "#/components/schemas/"
 
 func LoadOpenAPIText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
+	if strings.Contains(text, "swagger") {
+		return LoadSwaggerText(args, text, logger)
+	}
 	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(text))
 	if err != nil {
 		return "", err
