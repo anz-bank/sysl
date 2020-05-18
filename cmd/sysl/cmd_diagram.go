@@ -28,7 +28,7 @@ func (p *diagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		"Generate a sequence diagram (Specify 'appname->endpoint')",
 	).Short('s').StringVar(&p.SequenceDiagram)
 	cmd.Flag("endpointanalysis",
-		"Generate an EPA diagram (Specify 'true')",
+		"Generate an integration diagram with its endpoints (Specify 'true')",
 	).Default("false").Short('e').BoolVar(&p.EndpointAnalysis)
 	cmd.Flag("datadiagram",
 		"Generate a Data model diagram (Specify 'true')",

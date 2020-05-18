@@ -103,7 +103,7 @@ type DiagramCmd struct {
 	IntegrationDiagram string
 	SequenceDiagram    string
 	EndpointAnalysis   bool
-	DataDiagram		   bool
+	DataDiagram        bool
 }
 
 type Command interface {
