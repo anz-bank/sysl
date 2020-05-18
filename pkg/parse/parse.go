@@ -56,7 +56,7 @@ func guessMode(filename string) string {
 	case ".sysl":
 		return "~sysl"
 	case ".yaml", ".json":
-		return "~swagger"
+		return "~openapi"
 	default:
 		return ""
 	}
@@ -81,7 +81,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 		return input, nil
 	case "~swagger":
 		text, err = importer.LoadSwaggerText(od, input.GetText(0, input.Size()), logger)
-	case "~openapi3":
+	case "~openapi3", "~openapi":
 		text, err = importer.LoadOpenAPIText(od, input.GetText(0, input.Size()), logger)
 	default:
 		return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format - (%s)\n", def.filename, def.mode))
