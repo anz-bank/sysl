@@ -21,7 +21,6 @@ require (
 	github.com/gohugoio/hugo v0.71.0
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
-	github.com/joshcarp/sysl-printer v0.0.0-20200429020511-59daccf72b12 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/rickb777/date v1.12.4

@@ -122,12 +122,9 @@ github.com/anz-bank/sysl v0.8.0/go.mod h1:8xObVLjsOdMmAT9avuKCE/Aj+2hLxe/pn0dIZd
 github.com/anz-bank/sysl v0.60.0/go.mod h1:2pND3J4WkH9UMP4wZ8zkZ9XAc1TfJ8vrKDgGbOQWmNw=
 github.com/anz-bank/sysl v0.76.0/go.mod h1:gE+ZIrsOGIMGRpWhuFpV/outDLAjuxW9buHgR3B2qLg=
 github.com/anz-bank/sysl v0.88.0/go.mod h1:xItS1/FgoOxITJ7wjHb0c2E9JJuMPOvuzAo++VMV79w=
-github.com/anz-bank/sysl v0.90.0/go.mod h1:xItS1/FgoOxITJ7wjHb0c2E9JJuMPOvuzAo++VMV79w=
 github.com/anz-bank/sysl v0.92.0/go.mod h1:xItS1/FgoOxITJ7wjHb0c2E9JJuMPOvuzAo++VMV79w=
 github.com/anz-bank/sysl-catalog v1.2.30 h1:HxLxkSj9wK9Wia9LnaAKim0e8KwgXYcD0ZIC0JWNm5U=
 github.com/anz-bank/sysl-catalog v1.2.30/go.mod h1:ctu4d6a7J3WzvfaatkpANwYBTRsdS9kM3/+RxVJ/kZs=
-github.com/anz-bank/sysl-catalog v1.4.19 h1:LrA7+QC/7Gv1ByZFMlT8W0cvBhGfbT0HAtzDRDXqeCc=
-github.com/anz-bank/sysl-catalog v1.4.19/go.mod h1:QivtHRlCymLLZ0JeVB9oqfUWR84xLBOVqwuTvrdvpPM=
 github.com/anz-bank/sysl-catalog v1.4.20 h1:OjLAi1UfXeFvrW04iCA81qq6zNMIbllrcoP0kRW4UXc=
 github.com/anz-bank/sysl-catalog v1.4.20/go.mod h1:QeUCcG4RTf/065hLAt2btwXll+OcmMyaD/jYtSwFL6A=
 github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736 h1:zTsCdjeUtEFYnLxSEEHAhblYzpbVRUh1a4DH0jDNDoU=
@@ -499,7 +496,6 @@ github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22
 github.com/joshcarp/mermaid-go v0.0.0-20200403052241-d6fecd5216de h1:AXJoqU/VT/T/7TIoS0MXWgYZgldwlwpaOGIkIJQUIak=
 github.com/joshcarp/mermaid-go v0.0.0-20200403052241-d6fecd5216de/go.mod h1:R3TpgcBufh2U5kGlwV5sk7wCwfcl4IW+QOES0rlaGQ4=
 github.com/joshcarp/sysl-printer v0.0.0-20200417103907-e4ba6f372f32/go.mod h1:RynShTmcDDWXSS8gFQQ1MEXGnLEOqyOyqpZDcHHJzvQ=
-github.com/joshcarp/sysl-printer v0.0.0-20200429020511-59daccf72b12/go.mod h1:RynShTmcDDWXSS8gFQQ1MEXGnLEOqyOyqpZDcHHJzvQ=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=
 github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
