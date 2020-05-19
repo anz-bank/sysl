@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/spf13/afero"
+
 	"github.com/anz-bank/sysl/pkg/importer"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -15,7 +17,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
 )
 
 // TypeData contains referenced type and actual tuple of referenced type
@@ -93,6 +94,19 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 func (p *Parser) RestrictToLocalImport() {
 	// if root is not defined, only relative imports are allowed
 	p.allowAbsoluteImport = false
+}
+
+// ParseString parses a sysl definition in string form.
+func (p *Parser) ParseString(content string) (*sysl.Module, error) {
+	fs := afero.NewMemMapFs()
+	file, err := fs.Create("temp.sysl")
+	if err != nil {
+		return nil, err
+	}
+	if _, err := file.Write([]byte(content)); err != nil {
+		return nil, err
+	}
+	return p.Parse("temp.sysl", fs)
 }
 
 func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
