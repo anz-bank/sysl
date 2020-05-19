@@ -10,7 +10,7 @@ require (
 	github.com/alecthomas/chroma v0.7.3
 	github.com/antlr/antlr4 v0.0.0-20200503195918-621b933c7a7f
 	github.com/anz-bank/protoc-gen-sysl v0.0.4 // indirect
-	github.com/anz-bank/sysl-catalog v1.4.21
+	github.com/anz-bank/sysl-catalog v1.4.22
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
 	github.com/arr-ai/wbnf v0.13.0
 	github.com/buger/goterm v0.0.0-20200322175922-2f3e71b85129

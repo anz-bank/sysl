@@ -132,6 +132,8 @@ github.com/anz-bank/sysl-catalog v1.4.20 h1:OjLAi1UfXeFvrW04iCA81qq6zNMIbllrcoP0
 github.com/anz-bank/sysl-catalog v1.4.20/go.mod h1:QeUCcG4RTf/065hLAt2btwXll+OcmMyaD/jYtSwFL6A=
 github.com/anz-bank/sysl-catalog v1.4.21 h1:y+DNz6ZEUD+YqM26EH15TqqTnQwbddm9ge8eAeyRpAI=
 github.com/anz-bank/sysl-catalog v1.4.21/go.mod h1:+8OSM4jAg8wEpoaIiOFgCia9UGn6S6OVju/hiA7B38Q=
+github.com/anz-bank/sysl-catalog v1.4.22 h1:uSHZnmmTUoQ8Pa3w43zqq1DEiO6hP7VNA00fCd0pZeA=
+github.com/anz-bank/sysl-catalog v1.4.22/go.mod h1:ygwrUMDRRmzV7F86Z/9oj6I2XnFmQV9kMruLe+Na4a8=
 github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736 h1:zTsCdjeUtEFYnLxSEEHAhblYzpbVRUh1a4DH0jDNDoU=
 github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736/go.mod h1:Jvn9Prqi9lVOaDTTPaU84If2C8MUcB7gOKOtQWqD/Hc=
 github.com/apache/thrift v0.12.0/go.mod h1:cp2SuWMxlEZw2r+iP2GNCdIi4C1qmUzdZFSVb+bacwQ=
