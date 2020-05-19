@@ -793,3 +793,12 @@ func TestInferExprTypeTransform(t *testing.T) {
 		})
 	}
 }
+
+func TestParseSysl(t *testing.T) {
+	content := `
+App:
+	Endpoint:
+		...`
+	_, err := NewParser().ParseString(content)
+	assert.Nil(t, err)
+}
