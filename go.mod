@@ -12,6 +12,7 @@ require (
 	github.com/anz-bank/sysl-catalog v1.4.20
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
 	github.com/arr-ai/wbnf v0.13.0
+	github.com/buger/goterm v0.0.0-20200322175922-2f3e71b85129
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
