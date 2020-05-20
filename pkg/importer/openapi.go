@@ -123,11 +123,8 @@ func (l *loader) initTypes() {
 	for name, schema := range l.spec.Components.Schemas {
 		if _, has := l.types.Find(name); !has {
 			if v := schema.Value; v != nil {
-				switch v.Type {
-				case "object":
-					if len(v.Properties) == 0 {
-						continue // skip
-					}
+				if v.Type == ObjectTypeName && len(v.Properties) == 0 {
+					continue // skip
 				}
 			}
 			_ = l.typeFromSchema(name, schema.Value)
