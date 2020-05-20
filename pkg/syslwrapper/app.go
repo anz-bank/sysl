@@ -218,7 +218,7 @@ func (am *AppMapper) mapSimpleReturnType(retName string, appName string) *Type {
 			}
 		}
 		// Type reference not found. Trying to convert primitive
-		if isPrimitive(retName) {
+		if IsPrimitive(retName) {
 			returnType = &Type{
 				Type: retName,
 			}
@@ -227,7 +227,10 @@ func (am *AppMapper) mapSimpleReturnType(retName string, appName string) *Type {
 	return returnType
 }
 
-func isPrimitive(typeName string) bool {
+// IsPrimitive takes an input type string and returns true if the string is a builtin sysl primitive type.
+// This includes double, int64, float64, string, bool, date, datetime
+// Mostly used for parsing return statements
+func IsPrimitive(typeName string) bool {
 	switch typeName {
 	case "double", "int64", "float64", "string", "bool", "date", "datetime": //nolint:goconst
 		return true
