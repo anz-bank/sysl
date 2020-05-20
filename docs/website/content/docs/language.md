@@ -287,7 +287,7 @@ Server:
 Sysl supports following data types out of the box.
 
 ```
-double
+decimal
 int64
 float64
 string
