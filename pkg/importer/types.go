@@ -1,7 +1,6 @@
 package importer
 
 import (
-	"reflect"
 	"sort"
 	"strings"
 
@@ -162,23 +161,6 @@ func (t *TypeList) AddAndRet(item Type) Type {
 		t.types = append(t.types, item)
 	}
 	return item
-}
-
-func (t *TypeList) remove(items ...Type) {
-	checkfn := func(a, b Type) bool {
-		return a.Name() == b.Name() && reflect.TypeOf(a) == reflect.TypeOf(b)
-	}
-	for _, item := range items {
-		if last := t.types[len(t.types)-1]; checkfn(last, item) {
-			t.types = t.types[:len(t.types)-2]
-		} else {
-			for i, itemtype := range t.Items() {
-				if itemtype.Name() == item.Name() && reflect.TypeOf(itemtype) == reflect.TypeOf(item) {
-					t.types = append(t.types[:i], t.types[i+1:]...)
-				}
-			}
-		}
-	}
 }
 
 func checkBuiltInTypes(name string) (Type, bool) {
