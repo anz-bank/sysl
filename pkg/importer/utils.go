@@ -58,6 +58,14 @@ func getSyslTypeName(item Type) string {
 	if isExternalAlias(item) {
 		return "EXTERNAL_" + item.Name()
 	}
+	if !isBuiltInType(item) {
+		lower := strings.ToLower(item.Name())
+		for _, bi := range builtIns {
+			if strings.HasPrefix(lower, bi) {
+				return "_" + item.Name()
+			}
+		}
+	}
 	return item.Name()
 }
 

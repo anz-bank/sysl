@@ -158,7 +158,11 @@ func buildQueryString(params []Param) string {
 			if p.Optional {
 				optional = "?"
 			}
-			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), getSyslTypeName(p.Type), optional))
+			typeString := getSyslTypeName(p.Type)
+			if !IsBuiltIn(typeString) {
+				typeString = "{" + typeString + "}"
+			}
+			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), typeString, optional))
 		}
 		query = " ?" + strings.Join(parts, "&")
 	}
