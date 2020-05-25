@@ -69,3 +69,15 @@ func TestGenerateMermaidIntegrationDiagram4(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
 }
+
+func TestGenerateMermaidIntegrationDiagramWithoutApp(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
+	if err != nil {
+		t.Error(err)
+	}
+	r, err := GenerateIntegrationDiagram(m, "")
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+}
