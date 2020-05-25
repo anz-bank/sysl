@@ -10,6 +10,10 @@ import (
 
 //cause linter..
 const ref = "ref"
+const enum = "enum"
+const mapS = "map"
+const relation = "relation"
+const tuple = "tuple"
 
 //externalLink keeps track of the dependencies between two types
 type externalLink struct {
@@ -33,11 +37,11 @@ func generateDataModelDiagramHelper(simpleTypes map[string]*syslwrapper.Type,
 	for appType, value := range simpleTypes {
 		result += fmt.Sprintf(" class %s {\n", mermaid.CleanString(appType))
 		switch value.Type {
-		case "relation", "tuple":
+		case relation, tuple:
 			result += printProperties(value.Properties, appType, externalLinks)
-		case "enum":
+		case enum:
 			result += printEnum(value.Enum)
-		case "map":
+		case mapS:
 			result += printMap(value.Properties, appType, value.PrimaryKey, externalLinks)
 		default:
 			panic("Unrecognised type")
