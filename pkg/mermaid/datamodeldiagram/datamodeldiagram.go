@@ -44,7 +44,7 @@ func generateDataModelDiagramHelper(simpleTypes map[string]*syslwrapper.Type,
 		case mapS:
 			result += printMap(value.Properties, appType, value.PrimaryKey, externalLinks)
 		default:
-			panic("Unrecognised type")
+			result += ""
 		}
 		result += " }\n"
 	}
