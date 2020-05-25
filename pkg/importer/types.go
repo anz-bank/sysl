@@ -129,12 +129,7 @@ var builtIns = []string{"int32", "int64", "int",
 	"datetime", "xml", "bytes"}
 
 func IsBuiltIn(name string) bool {
-	for _, kw := range builtIns {
-		if name == kw {
-			return true
-		}
-	}
-	return false
+	return contains(name, builtIns)
 }
 
 func (t TypeList) Find(name string) (Type, bool) {
@@ -154,16 +149,22 @@ func (t TypeList) Find(name string) (Type, bool) {
 }
 
 func (t *TypeList) Add(item ...Type) {
-	t.types = append(t.types, item...)
+	for _, i := range item {
+		if i.Name() != "" {
+			t.types = append(t.types, i)
+		}
+	}
 }
 
 func (t *TypeList) AddAndRet(item Type) Type {
-	t.types = append(t.types, item)
+	if item.Name() != "" {
+		t.types = append(t.types, item)
+	}
 	return item
 }
 
 func checkBuiltInTypes(name string) (Type, bool) {
-	if contains(name, builtIns) {
+	if IsBuiltIn(name) {
 		return &SyslBuiltIn{name: name}, true
 	}
 	return &StandardType{}, false

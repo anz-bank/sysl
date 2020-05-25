@@ -17,6 +17,9 @@ import (
 const openapiv3DefinitionPrefix = "#/components/schemas/"
 
 func LoadOpenAPIText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
+	if strings.Contains(text, "swagger") {
+		return LoadSwaggerText(args, text, logger)
+	}
 	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(text))
 	if err != nil {
 		return "", err
@@ -119,6 +122,11 @@ func (l *loader) initTypes() {
 	}
 	for name, schema := range l.spec.Components.Schemas {
 		if _, has := l.types.Find(name); !has {
+			if v := schema.Value; v != nil {
+				if v.Type == ObjectTypeName && len(v.Properties) == 0 {
+					continue // skip
+				}
+			}
 			_ = l.typeFromSchema(name, schema.Value)
 		}
 	}
@@ -216,8 +224,10 @@ func (l *loader) typeFromSchemaRef(name string, ref *openapi3.SchemaRef) Type {
 	if ref == nil {
 		return nil
 	}
-	if t := l.typeFromRef(ref.Ref); t != nil {
-		return t
+	if ref.Ref != "" {
+		if t := l.typeFromRef(ref.Ref); t != nil {
+			return t
+		}
 	}
 	return l.typeFromSchema(name, ref.Value)
 }
@@ -345,6 +355,20 @@ func (l *loader) initEndpoints() []MethodEndpoints {
 	return result
 }
 
+func isSchemaDefinedObject(ref *openapi3.SchemaRef) bool {
+	if val := ref.Value; val != nil && ref.Ref == "" {
+		switch val.Type {
+		case ObjectTypeName:
+			return len(val.Properties) > 0
+		case ArrayTypeName:
+			return val.Items != nil
+		case StringTypeName:
+			return val.Format != ""
+		}
+	}
+	return true
+}
+
 func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
 	var responses []Response
 	typePrefix := strings.NewReplacer(
@@ -363,7 +387,14 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 		}
 		respVal := l.findResponse(resp)
 		for mediaType, val := range respVal.Content {
-			t := l.typeFromSchemaRef("", val.Schema)
+			var t Type
+			// try to not generate "EXTERNAL_" object types and use string instead
+			if isSchemaDefinedObject(val.Schema) {
+				t = l.typeFromSchemaRef("", val.Schema)
+			} else {
+				t = &Alias{name: typePrefix + statusCode, Target: StringAlias}
+				l.types.Add(t)
+			}
 			f := Field{
 				Name:       t.Name(),
 				Attributes: []string{fmt.Sprintf("mediatype=\"%s\"", mediaType)},
@@ -458,11 +489,20 @@ func (l *loader) findResponse(ref *openapi3.ResponseRef) *openapi3.Response {
 func (l *loader) buildParams(params openapi3.Parameters) Parameters {
 	out := Parameters{}
 	for _, param := range params {
+		var paramType Param
 		if param.Ref != "" {
-			out.Add(l.globalParams.items[strings.TrimPrefix(param.Ref, "#/components/parameters/")])
+			paramType = l.globalParams.items[strings.TrimPrefix(param.Ref, "#/components/parameters/")]
 		} else {
-			out.Add(l.buildParam(param.Value))
+			paramType = l.buildParam(param.Value)
 		}
+
+		// Cant have a sequence/set in the sysl params, so convert to a type alias
+		// try to figure out the name of the param
+		if a, ok := paramType.Type.(*Array); ok {
+			paramType.Type = &Alias{Target: a, name: a.Name()}
+		}
+
+		out.Add(paramType)
 	}
 	return out
 }
@@ -472,7 +512,7 @@ func (l *loader) buildParam(p *openapi3.Parameter) Param {
 	if hasToBeSyslSafe(p.In) {
 		name = convertToSyslSafe(name)
 	}
-	t := l.typeFromSchemaRef(fmt.Sprintf("_param_%s", p.Name), p.Schema)
+	t := l.typeFromSchemaRef(fmt.Sprintf("_param_%s", convertToSyslSafe(p.Name)), p.Schema)
 	return Param{
 		Field: Field{
 			Name:       name,
