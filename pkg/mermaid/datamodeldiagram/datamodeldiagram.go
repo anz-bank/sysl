@@ -45,7 +45,8 @@ func generateDataModelDiagramHelper(simpleTypes map[string]*syslwrapper.Type,
 		result += " }\n"
 	}
 	for _, eLink := range *externalLinks {
-		result += fmt.Sprintf(" %s <-- %s\n", eLink.firstType, eLink.secondType)
+		result += fmt.Sprintf(" %s <-- %s\n", mermaid.CleanString(eLink.firstType),
+			mermaid.CleanString(eLink.secondType))
 	}
 	return result, nil
 }
@@ -59,7 +60,7 @@ func printProperties(properties map[string]*syslwrapper.Type, appType string, ex
 		case "int", "bool", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid":
 			result += fmt.Sprintf("  %s %s\n", value.Type, mermaid.CleanString(typeName))
 		case ref:
-			pair := externalLink{mermaid.CleanString(appType), mermaid.CleanString(value.Reference)}
+			pair := externalLink{appType, value.Reference}
 			if !externalLinksContain(*externalLinks, pair) {
 				*externalLinks = append(*externalLinks, pair)
 			}
@@ -68,8 +69,8 @@ func printProperties(properties map[string]*syslwrapper.Type, appType string, ex
 		case "list", "set":
 			//TODO: check if list of lists is possible
 			if value.Items[0].Type == ref {
-				pair := externalLink{mermaid.CleanString(appType),
-					mermaid.CleanString(value.Items[0].Reference)}
+				pair := externalLink{appType,
+					value.Items[0].Reference}
 				if !externalLinksContain(*externalLinks, pair) {
 					*externalLinks = append(*externalLinks, pair)
 				}
