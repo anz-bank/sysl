@@ -57,7 +57,7 @@ func (s *ServiceRouter) WireRoutes(ctx context.Context, r chi.Router) {
 }
 
 // Config ...
-func (s *ServiceRouter) Config() interface{} {
+func (s *ServiceRouter) Config() validator.Validator {
 	return s.gc.Config()
 }
 
