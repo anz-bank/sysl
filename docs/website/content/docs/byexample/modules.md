@@ -6,13 +6,14 @@ description= ""
 layout= "byexample"
 weight = 8
 topic = "Basics"
-PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=aW1wb3J0IGRlcHMKaW1wb3J0IG1vcmVkZXBzL21vcmVkZXBzCmltcG9ydCAvdGVzdHMvYmFuYW5hdHJlZQppbXBvcnQgLy9naXRodWIuY29tL2Fuei1iYW5rL3N5c2xnZW4tZXhhbXBsZXMvZXhhbXBsZXMvdG9kb3MKaW1wb3J0IGZvcmVpZ25faW1wb3J0X3N3YWdnZXIueWFtbCBhcyBjb20uZm9vLmJhci5hcHAgfnN3YWdnZXIKTW9kZWxXaXRoRGVwcyBbcGFja2FnZT0ibW9kZWwiXToKICAhdHlwZSBSZXNwb25zZToKICAgIHVzZXJJZCA8OiBpbnQKICAgIGlkIDw6IGludAogICAgdGl0bGUgPDogc3RyaW5nCiAgL3Jlc3BvbnNlczoKICAgIC97aWQ8OmludH06CiAgICAgIEdFVDoKICAgICAgICBEZXAgPC0gR0VUIC9kZXAve2lkfQogICAgICAgIERlcCA8LSBHRVQgL21vcmVkZXAve2lkfQogICAgICAgIERlcDIgPC0gR0VUIC9kZXAyL3tpZH0KICAgICAgICBUb2RvcyA8LSBHRVQgL3RvZG9zL3tpZH0KICAgICAgICBCYW5hbmF0cmVlIDwtIEdFVCAvYmFuYW5hL3tpZH0KICAgICAgICByZXR1cm4gUmVzcG9uc2UK&cmd="
+PlaygroundURL = "http://anz-bank.github.io/sysl-playground/?input=aW1wb3J0IGRlcHMKaW1wb3J0IG1vcmVkZXBzL21vcmVkZXBzCmltcG9ydCAvdGVzdHMvYmFuYW5hdHJlZQppbXBvcnQgLy9naXRodWIuY29tL2Fuei1iYW5rL3N5c2xnZW4tZXhhbXBsZXMvZXhhbXBsZXMvdG9kb3MKaW1wb3J0IC8vZ2l0aHViLmNvbS9hbnotYmFuay9zeXNsZ2VuLWV4YW1wbGVzL2V4YW1wbGVzL3RvZG9zQHYwLjIuMAppbXBvcnQgZm9yZWlnbl9pbXBvcnRfc3dhZ2dlci55YW1sIGFzIGNvbS5mb28uYmFyLmFwcCB+c3dhZ2dlcgpNb2RlbFdpdGhEZXBzIFtwYWNrYWdlPSJtb2RlbCJdOgogICF0eXBlIFJlc3BvbnNlOgogICAgdXNlcklkIDw6IGludAogICAgaWQgPDogaW50CiAgICB0aXRsZSA8OiBzdHJpbmcKICAvcmVzcG9uc2VzOgogICAgL3tpZDw6aW50fToKICAgICAgR0VUOgogICAgICAgIERlcCA8LSBHRVQgL2RlcC97aWR9CiAgICAgICAgRGVwIDwtIEdFVCAvbW9yZWRlcC97aWR9CiAgICAgICAgRGVwMiA8LSBHRVQgL2RlcDIve2lkfQogICAgICAgIFRvZG9zIDwtIEdFVCAvdG9kb3Mve2lkfQogICAgICAgIEJhbmFuYXRyZWUgPC0gR0VUIC9iYW5hbmEve2lkfQogICAgICAgIHJldHVybiBSZXNwb25zZQo=&cmd="
 GitRepoURL = "https://github.com/anz-bank/sysl/tree/master/demo/examples/Modules"
 ID = "modules"
 CodeWithoutComments = """import deps
 import moredeps/moredeps
 import /tests/bananatree
 import //github.com/anz-bank/syslgen-examples/examples/todos
+import //github.com/anz-bank/syslgen-examples/examples/todos@v0.2.0
 import foreign_import_swagger.yaml as com.foo.bar.app ~swagger
 ModelWithDeps [package="model"]:
   !type Response:
@@ -98,6 +99,10 @@ Segs = [[
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
 <span class="kn">import</span> <span class="o">//</span><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">anz</span><span class="o">-</span><span class="nx">bank</span><span class="o">/</span><span class="nx">syslgen</span><span class="o">-</span><span class="nx">examples</span><span class="o">/</span><span class="nx">examples</span><span class="o">/</span><span class="nx">todos</span></pre>""",DocsRendered= """<p>To import a sysl file from external repo. Add // at the beginning of the path</p>
+""",Image = ""},
+
+      {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">
+<span class="kn">import</span> <span class="o">//</span><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">anz</span><span class="o">-</span><span class="nx">bank</span><span class="o">/</span><span class="nx">syslgen</span><span class="o">-</span><span class="nx">examples</span><span class="o">/</span><span class="nx">examples</span><span class="o">/</span><span class="nx">todos</span><span class="err">@</span><span class="nx">v0</span><span class="mf">.2.0</span></pre>""",DocsRendered= """<p>To import a sysl file from external repo with fixed version</p>
 """,Image = ""},
 
       {CodeEmpty= false,CodeLeading= true,CodeRun= false,CodeRendered="""<pre class="chroma">

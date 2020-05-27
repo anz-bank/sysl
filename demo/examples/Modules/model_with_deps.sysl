@@ -6,6 +6,8 @@ import moredeps/moredeps
 import /tests/bananatree
 # To import a sysl file from external repo. Add // at the beginning of the path
 import //github.com/anz-bank/syslgen-examples/examples/todos
+# To import a sysl file from external repo with fixed version
+import //github.com/anz-bank/syslgen-examples/examples/todos@v0.2.0
 # To import a swagger file from the same folder. com.foo.bar.app is the alias of the module
 import foreign_import_swagger.yaml as com.foo.bar.app ~swagger
 
