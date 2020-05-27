@@ -28,14 +28,16 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 		return nil, fmt.Errorf("%s not found", name)
 	}
 
-	// path.Join will strip path elements of ".", so if the root is "."
-	// it will still work as a go module path when prepended with "."
-	root, ver := extractVersion(fs.root)
-	name = path.Join(root, name)
+	name, ver, err := mergeRootAndPath(fs.root, name)
+	if err != nil {
+		return nil, err
+	}
+
 	mod, err := Find(name, ver)
 	if err != nil {
 		return nil, err
 	}
+
 	relpath, err := filepath.Rel(mod.Name, name)
 	if err != nil {
 		return nil, err
@@ -52,14 +54,16 @@ func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, err
 		return nil, fmt.Errorf("%s not found", name)
 	}
 
-	// path.Join will strip path elements of ".", so if the root is "."
-	// it will still work as a go module path when prepended with "."
-	root, ver := extractVersion(fs.root)
-	name = path.Join(root, name)
+	name, ver, err := mergeRootAndPath(fs.root, name)
+	if err != nil {
+		return nil, err
+	}
+
 	mod, err := Find(name, ver)
 	if err != nil {
 		return nil, err
 	}
+
 	relpath, err := filepath.Rel(mod.Name, name)
 	if err != nil {
 		return nil, err
@@ -72,7 +76,26 @@ func (fs *Fs) Name() string {
 	return "ModSupportedFs"
 }
 
-func extractVersion(path string) (newpath, ver string) {
+func mergeRootAndPath(root, name string) (string, string, error) {
+	// path.Join will strip path elements of ".", so if the root is "."
+	// it will still work as a go module path when prepended with "."
+	root, ver := ExtractVersion(root)
+	var nameVer string
+	name, nameVer = ExtractVersion(name)
+
+	if ver != "" && nameVer != "" && ver != nameVer {
+		return "", "", fmt.Errorf("root version %s does not equal to path version %s", ver, nameVer)
+	}
+
+	if nameVer != "" {
+		ver = nameVer
+	}
+
+	name = path.Join(root, name)
+	return name, ver, nil
+}
+
+func ExtractVersion(path string) (newpath, ver string) {
 	newpath = path
 	s := strings.Split(path, "@")
 	if len(s) > 1 {

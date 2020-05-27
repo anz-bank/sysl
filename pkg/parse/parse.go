@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/afero"
 
 	"github.com/anz-bank/sysl/pkg/importer"
+	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
@@ -53,8 +54,9 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 }
 
 func guessMode(filename string) string {
+	filename, _ = mod.ExtractVersion(filename)
 	switch filepath.Ext(filename) {
-	case ".sysl":
+	case syslExt:
 		return "~sysl"
 	case ".yaml", ".json":
 		return "~openapi"
@@ -110,8 +112,8 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 }
 
 func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
-	if !strings.HasSuffix(filename, ".sysl") {
-		filename += ".sysl"
+	if !strings.HasSuffix(filename, syslExt) {
+		filename += syslExt
 	}
 	if !fileExists(filename, fs) {
 		return nil, Exitf(ImportError, "input file does not exist: %#v", filename)
