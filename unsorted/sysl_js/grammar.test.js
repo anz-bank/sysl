@@ -22,7 +22,7 @@ describe('parse', function() {
     const prefix = "../../tests/";
     const files = fs.readdirSync(prefix)
     files.forEach(f => {
-      if (f.endsWith(".sysl") === true) {
+      if (f.endsWith(syslExt) === true) {
         listener.hasErrors = false;
         const filename = prefix + f;
         const text = fs.readFileSync(filename, "utf8");

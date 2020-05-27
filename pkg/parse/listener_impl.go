@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	parser "github.com/anz-bank/sysl/pkg/grammar"
+	"github.com/anz-bank/sysl/pkg/mod"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
@@ -3152,8 +3153,13 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		path = filepath.ToSlash(s.base) + "/" + path
 	}
 
-	if !strings.Contains(filepath.Base(path), ".") {
-		path += syslExt
+	name, ver := mod.ExtractVersion(path)
+	if !strings.Contains(filepath.Base(name), ".") {
+		name += syslExt
+		path = name
+		if ver != "" {
+			path = name + "@" + ver
+		}
 	}
 
 	if strings.HasPrefix(path, "//") {
