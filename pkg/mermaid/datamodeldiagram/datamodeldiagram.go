@@ -193,16 +193,7 @@ func printEnum(enum map[int64]string) string {
 	return result
 }
 
-//externalLinksContain checks if a connection between two data types exists or not
-func externalLinksContain(f []externalLink, s externalLink) bool {
-	for _, a := range f {
-		if a == s {
-			return true
-		}
-	}
-	return false
-}
-
+//getRelatedTypes finds all the types that are referred in a type
 func getRelatedTypes(appType string, externalLinks []externalLink, appTypes *[]string, elinks *[]externalLink) {
 	if !appTypesContain(*appTypes, appType) {
 		*appTypes = append(*appTypes, appType)
@@ -218,6 +209,17 @@ func getRelatedTypes(appType string, externalLinks []externalLink, appTypes *[]s
 	}
 }
 
+//externalLinksContain checks if a connection between two data types exists or not
+func externalLinksContain(f []externalLink, s externalLink) bool {
+	for _, a := range f {
+		if a == s {
+			return true
+		}
+	}
+	return false
+}
+
+//appTypesContain checks if an app is already present in the visited apps
 func appTypesContain(f []string, s string) bool {
 	for _, a := range f {
 		if a == s {
