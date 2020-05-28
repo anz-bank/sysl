@@ -55,7 +55,7 @@ func callDiagramGenerator(m *sysl.Module, p *diagramCmd) (string, error) {
 	case p.EndpointAnalysis:
 		return endpointanalysisdiagram.GenerateEndpointAnalysisDiagram(m)
 	case p.DataDiagram:
-		return datamodeldiagram.GenerateDataModelDiagram(m)
+		return datamodeldiagram.GenerateFullDiagram(m)
 	default:
 		return "", errors.New("correct value has not been specified; please check help for more information")
 	}

@@ -76,7 +76,7 @@ func TestGenerateMermaidIntegrationDiagramWithoutApp(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	r, err := GenerateIntegrationDiagram(m, "")
+	r, err := GenerateFullIntegrationDiagram(m)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
