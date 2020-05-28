@@ -914,7 +914,7 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 	}
 
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
-		Name: var_name,
+		Name: MustUnescape(var_name),
 		Type: type1,
 	}
 
@@ -962,7 +962,7 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 		}
 	}
 	rest_param := &sysl.Endpoint_RestParams_QueryParam{
-		Name: var_name,
+		Name: MustUnescape(var_name),
 		Type: type1,
 	}
 
@@ -1551,7 +1551,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 		for i := range s.rest_queryparams {
 			q := s.rest_queryparams[i]
 			qcopy := &sysl.Endpoint_RestParams_QueryParam{
-				Name: q.Name,
+				Name: MustUnescape(q.Name),
 				Type: &sysl.Type{
 					Type:          q.Type.Type,
 					SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
