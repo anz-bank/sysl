@@ -8,8 +8,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
-const projectDir = "../../../"
-
 //integrationPair keeps track of the application pairs we visit during the recursion
 type integrationPair struct {
 	firstApp, secondApp string

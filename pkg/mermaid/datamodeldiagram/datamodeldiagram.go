@@ -22,25 +22,26 @@ type externalLink struct {
 	firstType, secondType string
 }
 
-//GenerateFullDiagram accepts a sysl module and returns a string (and an error if any)
+//GenerateFullDataDiagram accepts a sysl module and returns a string (and an error if any)
 //The resulting string is the mermaid code for the data model for that module
-func GenerateFullDiagram(m *sysl.Module) (string, error) {
+func GenerateFullDataDiagram(m *sysl.Module) (string, error) {
 	mapper := syslwrapper.MakeAppMapper(m)
 	mapper.IndexTypes()
 	mapper.ConvertTypes()
-	return generateDataModelDiagramHelper(mapper.SimpleTypes, &[]externalLink{})
+	return generateFullDataDiagramHelper(mapper.SimpleTypes, &[]externalLink{})
 }
 
-//GenerateDiagramWithAppAndType generates the data model for a specific type
-func GenerateDiagramWithAppAndType(m *sysl.Module, appName string, typeName string) (string, error) {
+//GenerateDataDiagramWithAppAndType generates the data model for a specific type
+func GenerateDataDiagramWithAppAndType(m *sysl.Module, appName string, typeName string) (string, error) {
 	mapper := syslwrapper.MakeAppMapper(m)
 	mapper.IndexTypes()
 	mapper.ConvertTypes()
-	return generateDataModelDiagramWithAppAndTypeHelper(mapper.SimpleTypes, appName, typeName,
+	return generateDataDiagramWithAppAndTypeHelper(mapper.SimpleTypes, appName, typeName,
 		&[]externalLink{}, &[]string{}, &[]externalLink{})
 }
 
-func generateDataModelDiagramWithAppAndTypeHelper(simpleTypes map[string]*syslwrapper.Type, appName string,
+//generateDataDiagramWithAppAndTypeHelper is a helper which has additional arguments
+func generateDataDiagramWithAppAndTypeHelper(simpleTypes map[string]*syslwrapper.Type, appName string,
 	typeName string, externalLinks *[]externalLink, appTypes *[]string, eLinks *[]externalLink) (string, error) {
 	var result string
 	appType1 := fmt.Sprintf("%s:%s", appName, typeName)
@@ -80,8 +81,8 @@ func generateDataModelDiagramWithAppAndTypeHelper(simpleTypes map[string]*syslwr
 	return result, nil
 }
 
-//generateDataModelDiagramHelper is a helper which has additional arguments which need not be entered by the user
-func generateDataModelDiagramHelper(simpleTypes map[string]*syslwrapper.Type,
+//generateFullDataDiagramHelper is a helper which has additional arguments
+func generateFullDataDiagramHelper(simpleTypes map[string]*syslwrapper.Type,
 	externalLinks *[]externalLink) (string, error) {
 	var result string
 	result = mermaid.GeneratedHeader + "classDiagram\n"

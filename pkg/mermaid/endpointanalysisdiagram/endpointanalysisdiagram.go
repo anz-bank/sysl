@@ -7,8 +7,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
-const projectDir = "../../../"
-
 //externalLink keeps track of the statement-endpoint pairs we visit during execution
 type externalLink struct {
 	statement, endPoint string
