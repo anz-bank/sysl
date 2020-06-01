@@ -55,7 +55,7 @@ func generateDataDiagramWithAppAndTypeHelper(simpleTypes map[string]*syslwrapper
 		case mapS:
 			printMap(value.Properties, appType, value.PrimaryKey, externalLinks)
 		default:
-			panic("Unrecognised type")
+			result += ""
 		}
 	}
 	getRelatedTypes(appType1, *externalLinks, appTypes, eLinks)
