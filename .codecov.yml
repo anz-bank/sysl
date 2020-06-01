@@ -4,3 +4,14 @@ ignore:
   - pkg/sysl_js/SyslParserListener.js
   - pkg/ui/pkged.go
   - pkg/lspimpl/lspframework
+
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 2%
+    patch: off
+
+comment:
+  layout: "diff, flags, files"
