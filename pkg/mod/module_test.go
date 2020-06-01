@@ -41,7 +41,7 @@ func TestFind(t *testing.T) {
 	createGomodFile(t, fs)
 	defer removeGomodFile(t, fs)
 
-	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
+	filename := "github.com/anz-bank/sysl/tests/deps.sysl"
 	mod, err := Find(filename, "")
 	assert.NoError(t, err)
 	assert.Equal(t, "github.com/anz-bank/sysl", mod.Name)
