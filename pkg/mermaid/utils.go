@@ -15,5 +15,6 @@ func CleanString(temp string) string {
 	temp = strings.ReplaceAll(temp, "\"", "")
 	temp = strings.ReplaceAll(temp, "~", "")
 	temp = strings.ReplaceAll(temp, ":", "_")
+	temp = strings.ReplaceAll(temp, "<", "")
 	return temp
 }
