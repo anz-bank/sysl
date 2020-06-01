@@ -74,7 +74,6 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&templateCmd{},
 		&modCmd{},
 		&testRigCmd{},
-		&catalogCmd{},
 	}
 	r.commands = map[string]cmdutils.Command{}
 
