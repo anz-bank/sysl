@@ -57,7 +57,7 @@ func TestOpenRemoteFile(t *testing.T) {
 	createGomodFile(t, fs)
 	defer removeGomodFile(t, fs)
 
-	filename := "github.com/anz-bank/sysl/demo/examples/Modules/deps.sysl"
+	filename := "github.com/anz-bank/sysl/tests/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	mfs := NewFs(memfs, "")
 	f, err := mfs.Open(filename)
