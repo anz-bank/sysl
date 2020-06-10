@@ -18,7 +18,7 @@ require (
 	github.com/arr-ai/wbnf v0.13.0
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
-	github.com/getkin/kin-openapi v0.8.0
+	github.com/getkin/kin-openapi v0.9.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi v4.1.1+incompatible
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
