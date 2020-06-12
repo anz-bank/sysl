@@ -118,19 +118,30 @@ func (p *exportCmd) Execute(args cmdutils.ExecuteArgs) error {
 		return err
 	}
 
-	if strings.Contains(p.out, "%(appname)") {
-		for appName, syslApp := range args.Modules[0].GetApps() {
+	var writeCount int
+	for appName, syslApp := range args.Modules[0].GetApps() {
+		if appName == p.appName || p.appName == "" {
 			outputFileName := cmdutils.MakeFormatParser(p.out).LabelApp(appName, "", syslApp.GetAttrs())
+			if err := args.Filesystem.MkdirAll(filepath.Dir(outputFileName), os.ModePerm); err != nil {
+				return err
+			}
+			if p.appName == "" && outputFileName == p.out {
+				ext := filepath.Ext(outputFileName)
+				// convert out.yaml something like out.Fooapp.yaml
+				outputFileName = fmt.Sprintf("%s.%s%s", strings.TrimSuffix(outputFileName, ext), appName, ext)
+			}
+			args.Logger.Infof("Exporting app `%s` -> %s\n", appName, outputFileName)
 			err := p.writeSwaggerForApp(args.Filesystem, outputFileName, syslApp, args.Logger)
 			if err != nil {
 				return err
 			}
+			writeCount++
 		}
-		return nil
-	} else if syslApp, syslAppFound := args.Modules[0].GetApps()[p.appName]; syslAppFound {
-		return p.writeSwaggerForApp(args.Filesystem, p.out, syslApp, args.Logger)
 	}
-	return fmt.Errorf("app not found in the Sysl file")
+	if writeCount == 0 {
+		return fmt.Errorf("app not found in the Sysl file")
+	}
+	return nil
 }
 
 func (p *exportCmd) determineOperationMode(filename string) error {
