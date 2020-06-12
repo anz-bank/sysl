@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
+	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -37,6 +39,7 @@ type TreeShapeListener struct {
 	currentTypePath PathStack
 	viewName        string
 
+	linter                *linterRecords
 	fieldname             []string
 	urlPrefixes           PathStack
 	app_name              PathStack
@@ -44,6 +47,7 @@ type TreeShapeListener struct {
 	typemap               map[string]*sysl.Type
 	prevLineEmpty         bool
 	pendingDocString      bool
+	lintMode              bool
 	rest_attrs            []map[string]*sysl.Attribute
 	rest_queryparams      []*sysl.Endpoint_RestParams_QueryParam
 	rest_urlparams        []*sysl.Endpoint_RestParams_QueryParam
@@ -82,8 +86,245 @@ func NewTreeShapeListener() *TreeShapeListener {
 	}
 }
 
+func (s *TreeShapeListener) lint() {
+	s.lintMode = true
+	s.linter = newLinterRecords()
+}
+
 func (s *TreeShapeListener) currentApp() *sysl.Application {
 	return s.app
+}
+
+// linterRecords records any data that is required to do linting
+type linterRecords struct {
+	apps  map[string]*graph
+	calls *graph
+}
+
+type graph map[string]*graphData
+
+type graphData struct {
+	locations map[string]bool
+	rec       *graph
+}
+
+func newAppEndpointGraph() *graph {
+	rec := new(graph)
+	*rec = make(map[string]*graphData)
+	return rec
+}
+
+func newLocation(location string) map[string]bool {
+	loc := make(map[string]bool)
+	loc[location] = true
+	return loc
+}
+
+func (g *graph) recordApp(appName, location string) error {
+	if app, exists := (*g)[appName]; !exists {
+		(*g)[appName] = &graphData{newLocation(location), newAppEndpointGraph()}
+		return nil
+	} else if !app.locations[location] {
+		//TODO: find better way, to handle collector
+		app.locations[location] = true
+		return nil
+	}
+	return fmt.Errorf("recordApp: app already exists: %s %s", location, appName)
+}
+
+func (g *graph) recordEndpoint(appName, endpoint, location string) error {
+	if app, exists := (*g)[appName]; exists {
+		if e, exists := (*app.rec)[endpoint]; !exists {
+			(*app.rec)[endpoint] = &graphData{newLocation(location), nil}
+			return nil
+		} else if !e.locations[location] {
+			e.locations[location] = true
+			return nil
+		}
+		return fmt.Errorf("recordEndpoint: endpoint already exists: %s %s %s", location, appName, endpoint)
+	}
+	return fmt.Errorf("recordEndpoint: app does not exist: %s", appName)
+}
+
+func (g *graph) recordMethod(appName, endpoint, method, location string) error {
+	if app, exists := (*g)[appName]; exists {
+		if e, exists := (*app.rec)[endpoint]; exists {
+			if e.rec == nil {
+				e.rec = newAppEndpointGraph()
+			}
+			if _, exists := (*e.rec)[method]; !exists {
+				(*e.rec)[method] = &graphData{newLocation(location), nil}
+				return nil
+			}
+			return fmt.Errorf("recordMethod: method already exist: %s %s <- %s %s", location, appName, method, endpoint)
+		}
+	}
+	return fmt.Errorf("recordMethod: app does not exist: %s %s", location, appName)
+}
+
+func (g *graph) recordAsCall(appName, endpoint, method, location string) error {
+	g.recordApp(appName, "") //nolint:errcheck
+	if method == "" {
+		if err := g.recordEndpoint(appName, endpoint, location); err != nil {
+			return err
+		}
+		return nil
+	}
+	g.recordEndpoint(appName, endpoint, location) //nolint:errcheck
+	if err := g.recordMethod(appName, endpoint, method, location); err != nil {
+		app := (*g)[appName]
+		endpoints := (*app.rec)[endpoint]
+		methods := (*endpoints.rec)[method]
+		if methods.locations[location] {
+			// this isn't possible
+			return fmt.Errorf("recordAsCall: location already exists")
+		}
+		methods.locations[location] = true
+	}
+	return nil
+}
+
+func newLinterRecords() *linterRecords {
+	return &linterRecords{
+		make(map[string]*graph),
+		newAppEndpointGraph(),
+	}
+}
+
+func (s *TreeShapeListener) getApps() *graph {
+	appName := s.getFullAppName()
+	if apps, exists := s.linter.apps[strings.ToLower(appName)]; exists {
+		return apps
+	}
+	rec := newAppEndpointGraph()
+	s.linter.apps[strings.ToLower(appName)] = rec
+	return rec
+}
+
+func (s *TreeShapeListener) createLocation(lineNum, colNum int) string {
+	return fmt.Sprintf("%s:%d:%d", s.sc.filename, lineNum, colNum)
+}
+
+func (s *TreeShapeListener) recordApp(location string) {
+	if !s.lintMode {
+		return
+	}
+	appName := s.getFullAppName()
+	if err := s.getApps().recordApp(appName, location); err != nil {
+		logrus.Fatal(err)
+	}
+}
+
+func (s *TreeShapeListener) getFullAppName() string {
+	// handle subpackage
+	return strings.Join(s.currentApp().Name.Part, "::")
+}
+
+func (s *TreeShapeListener) recordEndpoint(endpoint, location string) {
+	if !s.lintMode {
+		return
+	}
+	appName := s.getFullAppName()
+	if err := s.getApps().recordEndpoint(appName, endpoint, location); err != nil {
+		logrus.Fatal(err)
+	}
+}
+
+func (s *TreeShapeListener) recordMethod(endpoint, method, location string) {
+	if !s.lintMode {
+		return
+	}
+
+	appName := s.getFullAppName()
+	s.getApps().recordEndpoint(appName, endpoint, location) //nolint:errcheck
+	if err := s.getApps().recordMethod(appName, endpoint, method, location); err != nil {
+		logrus.Warn(err)
+	}
+}
+
+func (s *TreeShapeListener) recordCall(appName, endpoint, method, location string) {
+	if !s.lintMode {
+		return
+	}
+	if err := s.linter.calls.recordAsCall(appName, endpoint, method, location); err != nil {
+		logrus.Warn(err)
+	}
+}
+
+func (s *TreeShapeListener) lintEndpoint() {
+	appNotExistLog := func(location, appName, call string) {
+		logrus.Warnf("lint %s: Application '%s' does not exist for call '%s'", location, appName, call)
+	}
+	lint := func(appName, endpoint, method, call string, locations map[string]bool) {
+		for location := range locations {
+			apps, exists := s.linter.apps[strings.ToLower(appName)]
+			if !exists {
+				appNotExistLog(location, appName, call)
+				continue
+			}
+			if app, exists := (*apps)[appName]; exists {
+				if endpoints, exists := (*app.rec)[endpoint]; exists {
+					// if method is empty string, it is linting simple endpoint
+					if method != "" {
+						if _, exists = (*endpoints.rec)[method]; exists {
+							continue
+						}
+						logrus.Warnf("lint %s: Method '%s' does not exist for call '%s'", location, method, call)
+						continue
+					}
+				}
+				logrus.Warnf("lint %s: Endpoint '%s' does not exist for call '%s'", location, endpoint, call)
+				continue
+			}
+			appNotExistLog(location, appName, call)
+		}
+	}
+
+	for appName, appData := range *s.linter.calls {
+		for endpoint, endpointData := range *appData.rec {
+			// if method maps == nil, it is not REST endpoint
+			if endpointData.rec == nil {
+				lint(
+					appName,
+					endpoint,
+					"",
+					fmt.Sprintf("%s <- %s", appName, endpoint),
+					endpointData.locations,
+				)
+				continue
+			}
+
+			for method, methodData := range *endpointData.rec {
+				lint(
+					appName,
+					endpoint,
+					method,
+					fmt.Sprintf("%s <- %s %s", appName, method, endpoint),
+					methodData.locations,
+				)
+			}
+		}
+	}
+}
+
+func (s *TreeShapeListener) lintAppDefs() {
+	for _, apps := range s.linter.apps {
+		if len(*apps) > 1 {
+			appDefs := make([]string, 0, len(*apps))
+			for a, data := range *apps {
+				locations := make([]string, 0, len(data.locations))
+				for location := range data.locations {
+					locations = append(locations, location)
+				}
+				appDefs = append(appDefs, fmt.Sprintf("%s:%s", a, strings.Join(locations, ", ")))
+			}
+			sort.Strings(appDefs)
+			logrus.Warnf(
+				"lint: case-sensitive redefinitions detected:\n%s",
+				strings.Join(appDefs, "\n"),
+			)
+		}
+	}
 }
 
 // EnterName_str is called when production name_str is entered.
@@ -1009,10 +1250,17 @@ func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 
 // EnterRet_stmt is called when production ret_stmt is entered.
 func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
+	payload := strings.Trim(ctx.TEXT().GetText(), " ")
+	if s.lintMode && !regexp.MustCompile(`<:`).MatchString(payload) {
+		logrus.Warnf(
+			"lint %s: 'return %s' not supported, use 'return ok <: %[2]s' instead",
+			s.createLocation(ctx.GetStart().GetStart(), ctx.GetStart().GetColumn()),
+			payload)
+	}
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Ret{
 			Ret: &sysl.Return{
-				Payload: strings.Trim(ctx.TEXT().GetText(), " "),
+				Payload: payload,
 			},
 		},
 	})
@@ -1039,18 +1287,35 @@ func (s *TreeShapeListener) EnterCall_arg(ctx *parser.Call_argContext) {
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
+	var name string
+	//FIXME: app target isn't recorded at all
 	appName := &sysl.AppName{}
 	if ctx.DOT_ARROW() != nil {
 		appName.Part = s.currentApp().Name.Part
+		name = s.getFullAppName()
+	} else {
+		//TODO: handle target with sub packages
+		name = ctx.Target().GetText()
+	}
+	endpoint := MustUnescape(ctx.Target_endpoint().GetText())
+	methodRe := regexp.MustCompile(`^[ \t]*(GET|POST|DELETE|PUT|PATCH)[ \t]*`)
+	location := s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	if methodRe.MatchString(endpoint) {
+		method := methodRe.FindString(endpoint)
+		urlPath := strings.TrimPrefix(endpoint, method)
+		s.recordCall(name, strings.TrimSpace(urlPath), strings.TrimSpace(method), location)
+	} else {
+		s.recordCall(name, strings.TrimSpace(endpoint), "", location)
 	}
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
+				Endpoint: endpoint,
 			},
 		},
 	})
+
 	if ctx.Call_args() != nil {
 		s.lastStatement().GetCall().Arg = []*sysl.Call_Arg{}
 	}
@@ -1503,6 +1768,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	url := s.urlPrefixes.Get()
 	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
 	s.endpointName = method + " " + url
+	s.recordMethod(url, method, s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()))
 	s.method_urlparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	if _, has := s.currentApp().Endpoints[s.endpointName]; !has {
 		s.currentApp().Endpoints[s.endpointName] = &sysl.Endpoint{
@@ -1608,6 +1874,10 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 		return
 	}
 	s.endpointName = ctx.Endpoint_name().GetText()
+	s.recordEndpoint(
+		s.endpointName,
+		s.createLocation(ctx.GetStart().GetStart(), ctx.GetStart().GetColumn()),
+	)
 	ep := s.currentApp().Endpoints[s.endpointName]
 
 	if ep == nil {
@@ -3132,7 +3402,7 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 		}
 		s.pushScope(s.currentApp())
 	}
-
+	s.recordApp(s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()))
 	s.rest_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	s.rest_queryparams_len = []int{0}
 	s.rest_attrs = []map[string]*sysl.Attribute{}

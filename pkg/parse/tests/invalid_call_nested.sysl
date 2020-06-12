@@ -1,0 +1,15 @@
+App:
+    /hi:
+        GET:
+            Call <- POST /hi/hello/yo
+            Call <- GET /hi/hello
+
+
+Call:
+    /hi:
+        /hello:
+            /yo:
+                GET:
+                    ...
+            GET:
+                ...

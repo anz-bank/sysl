@@ -1,0 +1,6 @@
+import invalid_call_endpoint.sysl
+
+Import:
+    /hi:
+        GET:
+            Call <- GET /hello

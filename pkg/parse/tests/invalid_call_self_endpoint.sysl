@@ -1,0 +1,4 @@
+App:
+    /hi:
+        GET:
+            . <- POST /hello
