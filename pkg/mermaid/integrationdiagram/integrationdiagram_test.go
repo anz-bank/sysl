@@ -89,7 +89,7 @@ func TestGenerateMermaidIntegrationDiagraMultipleApps(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	apps := [] string {"TheWorld", "DragonEater"}
+	apps := []string{"TheWorld", "DragonEater"}
 	r, err := GenerateMultipleAppIntegrationDiagram(m, apps)
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
