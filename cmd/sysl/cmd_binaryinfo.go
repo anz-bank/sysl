@@ -22,7 +22,7 @@ func (p *infoCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 func (p *infoCmd) Execute(args cmdutils.ExecuteArgs) error {
 	fmt.Printf("Build:\n")
 	fmt.Printf("  Version      : %s\n", Version)
-	fmt.Printf("  Git Commit   : %s\n", GitCommit)
+	fmt.Printf("  Git Commit   : %s\n", GitFullCommit)
 	fmt.Printf("  Date         : %s\n", BuildDate)
 	fmt.Printf("  Go Version   : %s\n", GoVersion)
 	fmt.Printf("  OS           : %s\n", BuildOS)
