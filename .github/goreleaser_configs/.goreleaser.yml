@@ -11,8 +11,9 @@ build:
   id: sysl
   main: ./cmd/sysl
   ldflags:
-    - -s -w -X main.Version={{.Version}}
+    - -s -w -X main.Version=v{{.Version}}
     - -X main.GitCommit={{.ShortCommit}}
+    - -X main.GitFullCommit={{.FullCommit}}
     - -X main.BuildDate={{.Date}}
     - -X main.BuildOS={{.Os}}/{{.Arch}}
     - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
