@@ -137,7 +137,7 @@ brews:
     #   head "https://github.com/some/package.git"
     #   ...
 
-    # Packages your package depends on.
+    # Packages your package depends on. 
     dependencies:
       - go
 
