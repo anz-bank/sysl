@@ -1,25 +1,12 @@
+include VersionReport
+
 BIN_DIR := $(GOPATH)/bin
-
-# Try to detect current branch if not provided from environment
-BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
-
-# Commit hash from git
-COMMIT=$(shell git rev-parse --short HEAD)
-
-# Tag on this commit
-TAG = $(shell git tag --points-at HEAD)
-
 
 ifneq ("$(shell which gotestsum)", "")
 	TESTEXE := gotestsum --
 else
 	TESTEXE := go test ./...
 endif
-
-BUILD_DATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
-VERSION := $(or $(TAG),$(COMMIT)-$(BRANCH)-$(BUILD_DATE))
-
-LDFLAGS = -X main.Version=$(VERSION) -X main.GitCommit=$(COMMIT) -X main.BuildDate=$(BUILD_DATE)
 
 all: test lint build buildlsp coverage examples ## test, lint, build, coverage test run
 
@@ -48,15 +35,15 @@ $(PLATFORMS): build
 	mkdir -p release
 	GOOS=$@ GOARCH=amd64 \
 		go build -o release/$(BINARY)-$(VERSION)-$@$(shell test $@ = windows && echo .exe) \
-		-ldflags="$(LDFLAGS)" \
+		-ldflags=$(LDFLAGS) \
 		-v \
 		./cmd/sysl
 
 build: ## Build sysl into the ./dist folder
-	go build -o ./dist/sysl -ldflags="$(LDFLAGS)" -v ./cmd/sysl
+	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp: ## Build sysllsp into the ./dist folder
-	go build -o ./dist/sysllsp -ldflags="$(LDFLAGS)" -v ./cmd/sysllsp
+	go build -o ./dist/sysllsp -ldflags=$(LDFLAGS) -v ./cmd/sysllsp
 
 .PHONY: release
 release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
