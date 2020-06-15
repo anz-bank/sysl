@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
@@ -26,9 +25,6 @@ func (p *infoCmd) Execute(args cmdutils.ExecuteArgs) error {
 	fmt.Printf("  Date         : %s\n", BuildDate)
 	fmt.Printf("  Go Version   : %s\n", GoVersion)
 	fmt.Printf("  OS           : %s\n", BuildOS)
-	fmt.Printf("Runtime:\n")
-	fmt.Printf("  GOOS/GOARCH  : %s/%s\n", runtime.GOOS, runtime.GOARCH)
-	fmt.Printf("  Go Version   : %s\n", runtime.Version())
 
 	return nil
 }
