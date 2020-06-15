@@ -1,6 +1,5 @@
-#### import version information report
 include VersionReport
-###
+
 BIN_DIR := $(GOPATH)/bin
 
 ifneq ("$(shell which gotestsum)", "")
