@@ -23,13 +23,11 @@ type goModule struct {
 
 func goGetByFilepath(filename, ver string) (err error) {
 	if names := strings.Split(filename, "/"); len(names) > 0 {
-		gogetPath := names[0]
-
 		for i := range names[1:] {
+
+			gogetPath = path.Join(names[:1+i]...)
 			if ver != "" {
-				gogetPath = path.Join(names[:1+i]...) + "@" + ver
-			} else {
-				gogetPath = path.Join(names[:1+i]...)
+				gogetPath = gogetPath + "@" + ver
 			}
 
 			err = goGet(gogetPath)
