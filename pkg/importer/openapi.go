@@ -210,31 +210,24 @@ func (l *OpenAPI3Importer) loadExternalSchema(path string) {
 	l.newLoaderWithExternalSpec(path, l.getOpenapi3(path))
 }
 
-func guessYamlType(filename string, data []byte) string {
-	for _, check := range []string{ModeSwagger, ModeOpenAPI} {
-		if strings.Contains(string(data), check) {
-			return check
-		}
-	}
-
-	return "unknown"
-}
-
-// Grabs openapi spec from given path
+// Grabs openapi or swagger spec from given path
 func (l *OpenAPI3Importer) getOpenapi3(path string) *openapi3.Swagger {
 	var swagger *openapi3.Swagger
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	mode := guessYamlType(path, data)
-	switch mode {
-	case ModeSwagger:
+	formats := []Format{OpenAPI3, Swagger}
+	format, err := GuessFileType(path, data, formats)
+	if err != nil {
+		panic(err)
+	}
+
+	switch format.Name {
+	case Swagger.Name:
 		swagger, _, err = convertToOpenAPI3(data)
-	case ModeOpenAPI:
+	case OpenAPI3.Name:
 		swagger, err = openapi3.NewSwaggerLoader().LoadSwaggerFromData(data)
-	default:
-		panic("unknown mode: " + mode)
 	}
 	if err != nil {
 		panic(err)
