@@ -245,7 +245,7 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 	switch schema.Type {
 	case ObjectTypeName, "":
 		t := &StandardType{
-			name:       name,
+			name:       getSyslSafeEndpoint(name),
 			Properties: FieldList{},
 		}
 		l.intermediateTypes.Add(t)
@@ -257,15 +257,15 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 				} else if atype := l.typeFromRef(pschema.Value.Items.Value.Type); atype != nil {
 					fieldType = &Array{Items: atype}
 				} else if pschema.Value.Items.Value.Type == ObjectTypeName {
-					atype := l.typeFromSchema(name+"_"+pname, pschema.Value.Items.Value)
+					atype := l.typeFromSchema(name+"_"+getSyslSafeEndpoint(pname), pschema.Value.Items.Value)
 					fieldType = &Array{Items: atype}
 				}
 			}
 			if fieldType == nil {
-				fieldType = l.typeFromSchemaRef(name+"_"+pname, pschema)
+				fieldType = l.typeFromSchemaRef(getSyslSafeEndpoint(name)+"_"+getSyslSafeEndpoint(pname), pschema)
 			}
 			f := Field{
-				Name: pname,
+				Name: getSyslSafeEndpoint(pname),
 				Type: fieldType,
 			}
 			if !contains(pname, schema.Required) {
