@@ -34,7 +34,9 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		"name of the sysl package to define in sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
 
-	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]", optsText)).String()
+	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]."+
+		"NOTE: This flag is deprecated. Please remove this from your scripts, as formats are now autodetected",
+		optsText)).String()
 
 	return cmd
 }
