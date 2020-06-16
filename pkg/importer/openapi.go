@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -38,12 +39,17 @@ type OpenAPI3Importer struct {
 	// It can help to support circular dependency, like type A has an array contains type A itself.
 	intermediateTypes TypeList
 	swaggerRoot       string
-	mode              string
 	globalParams      Parameters
 }
 
 func (l *OpenAPI3Importer) Load(input string) (string, error) {
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(input))
+	loader := openapi3.NewSwaggerLoader()
+	loader.IsExternalRefsAllowed = true
+	url, err := url.Parse(l.swaggerRoot)
+	if err != nil {
+		return "", err
+	}
+	swagger, err := loader.LoadSwaggerFromDataWithPath([]byte(input), url)
 	if err != nil {
 		return "", fmt.Errorf("error loading openapi3 file:%w", err)
 	}
@@ -169,6 +175,9 @@ func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 }
 
 // OpenAPI specs can references type definitions in other files.
+// Remote refs are of the format:
+//  #/components/schemas/Date
+//  ../resources/users.yaml
 func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
 	cleaned := strings.Split(remoteRef, "#")
 	if len(cleaned) != 2 {
@@ -193,7 +202,7 @@ func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
 }
 
 func (l *OpenAPI3Importer) loadExternalSchema(remoteRef string) {
-	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", l.swaggerRoot)
+	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", path.Dir(remoteRef))
 	l.externalSpecs[remoteRef].spec = l.getOpenapi3(remoteRef)
 	l.externalSpecs[remoteRef].convertTypes()
 	// external refs are usually found during initEndpoints, this is to find all external refs
