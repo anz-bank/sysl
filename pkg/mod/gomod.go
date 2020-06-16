@@ -27,11 +27,12 @@ func goGetByFilepath(filename, ver string) (err error) {
 
 		for i := range names[1:] {
 			if ver != "" {
-				err = goGet(path.Join(names[:1+i]...) + "@" + ver)
+				gogetPath = path.Join(names[:1+i]...) + "@" + ver
 			} else {
-				err = goGet(path.Join(names[:1+i]...))
+				gogetPath = path.Join(names[:1+i]...)
 			}
 
+			err = goGet(gogetPath)
 			if err == nil {
 				return nil
 			}
