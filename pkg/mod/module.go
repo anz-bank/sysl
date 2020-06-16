@@ -18,6 +18,8 @@ type Module struct {
 
 type Modules []*Module
 
+var modules Modules
+
 func (m *Modules) Add(v *Module) {
 	*m = append(*m, v)
 }
@@ -48,12 +50,16 @@ func Find(name string, ver string) (*Module, error) {
 		return nil, errors.New("no go.mod file, run `go mod init` first")
 	}
 
+	mod := modules.GetByFilename(name, ver)
+	if mod != nil {
+		return mod, nil
+	}
+
 	err := goGetByFilepath(name, ver)
 	if err != nil {
 		return nil, fmt.Errorf("%s not found", name)
 	}
 
-	var modules Modules
 	if err = modules.Load(); err != nil {
 		return nil, fmt.Errorf("error loading modules: %s", err.Error())
 	}
@@ -62,7 +68,7 @@ func Find(name string, ver string) (*Module, error) {
 		return nil, fmt.Errorf("modules list is empty")
 	}
 
-	mod := modules.GetByFilename(name, ver)
+	mod = modules.GetByFilename(name, ver)
 	if mod == nil {
 		return nil, fmt.Errorf("error finding module of file %s", name)
 	}
