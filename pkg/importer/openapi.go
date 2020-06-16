@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/url"
 	"path/filepath"
-	"regexp"
 	"sort"
 	"strings"
 
@@ -150,9 +149,10 @@ func (l *OpenAPI3Importer) convertTypes() {
 	l.types.Sort()
 }
 
+// handles importing of reference types.
 func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 	// matches with external file remote reference
-	if regexp.MustCompile(`.(yaml|yml|json)#/`).Match([]byte(path)) {
+	if isOpenAPIOrSwaggerExt(path) {
 		if t := l.typeFromRemoteRef(path); t != nil {
 			if _, recorded := l.types.Find(t.Name()); !recorded {
 				l.types.Add(t)
@@ -165,6 +165,7 @@ func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 		if t, has := checkBuiltInTypes(path); has {
 			return t
 		}
+		// Type already exists
 		if t, ok := l.types.Find(path); ok {
 			return t
 		}
@@ -172,6 +173,7 @@ func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 		if t, ok := l.intermediateTypes.Find(path); ok {
 			return t
 		}
+		// Convert from schema
 		if schema, has := l.spec.Components.Schemas[path]; has {
 			return l.typeFromSchema(path, schema.Value)
 		}
