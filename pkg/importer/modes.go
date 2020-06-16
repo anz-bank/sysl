@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"path"
 	"strings"
+
+	"github.com/ghodss/yaml"
 )
 
 const (
@@ -71,7 +73,20 @@ func GuessFileType(filename string, data []byte, validFormats []Format) (*Format
 		}
 	}
 
+	if len(matchesExt) == 1 {
+		return &matchesExt[0], nil
+	}
+
 	var matchesSignature []Format
+	// Convert to yaml so we only need to compare a single format
+	if ext == ".json" {
+		var err error
+		data, err = yaml.JSONToYAML(data)
+		if err != nil {
+			return nil, fmt.Errorf("error converting spec to yaml for: %s", filename)
+		}
+	}
+
 	for _, format := range matchesExt {
 		if strings.Contains(string(data), format.Signature) {
 			matchesSignature = append(matchesSignature, format)
@@ -83,5 +98,5 @@ func GuessFileType(filename string, data []byte, validFormats []Format) (*Format
 	}
 
 	// We return an error if the number of matches is less than 0 or greater than 1
-	return nil, fmt.Errorf("error converting json to yaml for: %s", filename)
+	return nil, fmt.Errorf("error detecting input file format for: %s", filename)
 }

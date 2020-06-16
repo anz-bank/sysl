@@ -64,7 +64,7 @@ func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
 	return l
 }
 
-// convertToOpenAPI3 takes an openapi2 spec and converts it to openapiv3
+// convertToOpenAPI3 takes a swagger spec and converts it to openapi3
 func convertToOpenAPI3(data []byte) (*openapi3.Swagger, string, error) {
 	var swagger2 openapi2.Swagger
 	jsondata, err := yaml.YAMLToJSON(data)
