@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -76,20 +77,6 @@ func (l *OpenAPI3Importer) WithAppName(appName string) Importer {
 func (l *OpenAPI3Importer) WithPackage(pkg string) Importer {
 	l.pkg = pkg
 	return l
-}
-
-func (l *OpenAPI3Importer) newLoaderWithExternalSpec(path string, swagger *openapi3.Swagger) {
-	l.externalSpecs[path] = &OpenAPI3Importer{
-		logger:        l.logger,
-		externalSpecs: make(map[string]*OpenAPI3Importer),
-		spec:          swagger,
-		types:         TypeList{},
-		mode:          l.mode,
-		swaggerRoot:   filepath.Dir(path),
-	}
-	l.externalSpecs[path].convertTypes()
-	// external refs are usually found during initEndpoints, this is to find all external refs
-	l.externalSpecs[path].convertEndpoints()
 }
 
 // basepath represents the Swagger basepath value
@@ -183,8 +170,8 @@ func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 }
 
 // OpenAPI specs can references type definitions in other files.
-func (l *OpenAPI3Importer) typeFromRemoteRef(path string) Type {
-	cleaned := strings.Split(path, "#")
+func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
+	cleaned := strings.Split(remoteRef, "#")
 	if len(cleaned) != 2 {
 		return nil
 	}
@@ -206,8 +193,12 @@ func (l *OpenAPI3Importer) typeFromRemoteRef(path string) Type {
 	return l.externalSpecs[refPath].typeFromRef(defPath)
 }
 
-func (l *OpenAPI3Importer) loadExternalSchema(path string) {
-	l.newLoaderWithExternalSpec(path, l.getOpenapi3(path))
+func (l *OpenAPI3Importer) loadExternalSchema(remoteRef string) {
+	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", path.Dir(remoteRef))
+	l.externalSpecs[remoteRef].spec = l.getOpenapi3(remoteRef)
+	l.externalSpecs[remoteRef].convertTypes()
+	// external refs are usually found during initEndpoints, this is to find all external refs
+	l.externalSpecs[remoteRef].convertEndpoints()
 }
 
 // Grabs openapi or swagger spec from given path

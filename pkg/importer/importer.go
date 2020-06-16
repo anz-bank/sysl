@@ -3,6 +3,7 @@ package importer
 import (
 	"fmt"
 	"path"
+	"path/filepath"
 
 	"github.com/sirupsen/logrus"
 )
@@ -26,13 +27,17 @@ func Factory(fileName string, file []byte, logger *logrus.Logger) (Importer, err
 	if err != nil {
 		return nil, err
 	}
+	specFileRoot, err := filepath.Abs(fileName)
+	if err != nil {
+		return nil, err
+	}
 	switch fileType.Name {
 	case Swagger.Name:
 		logger.Debugln("Detected OpenAPI2")
-		return MakeOpenAPI2Importer(logger, "", path.Dir(fileName)), nil
+		return MakeOpenAPI2Importer(logger, "", path.Dir(specFileRoot)), nil
 	case OpenAPI3.Name:
 		logger.Debugln("Detected OpenAPI3")
-		return MakeOpenAPI3Importer(logger, "", path.Dir(fileName)), nil
+		return MakeOpenAPI3Importer(logger, "", path.Dir(specFileRoot)), nil
 	case XSD.Name:
 		logger.Debugln("Detected XSD")
 		return MakeXSDImporter(logger), nil
