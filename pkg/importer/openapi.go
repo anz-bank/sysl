@@ -53,12 +53,12 @@ func (l *OpenAPI3Importer) Load(input string) (string, error) {
 }
 
 func (l *OpenAPI3Importer) Parse() (string, error) {
-	l.initTypes()
-	endpoints := l.initEndpoints()
+	l.convertTypes()
+	endpoints := l.convertEndpoints()
 
 	result := &bytes.Buffer{}
 	w := newWriter(result, l.logger)
-	if err := w.Write(l.initInfo(OutputData{
+	if err := w.Write(l.convertInfo(OutputData{
 		AppName: l.appName,
 		Package: l.pkg,
 	}, l.basePath), l.types, endpoints...); err != nil {
@@ -88,13 +88,13 @@ func (l *OpenAPI3Importer) newLoaderWithExternalSpec(path string, swagger *opena
 		mode:          l.mode,
 		swaggerRoot:   filepath.Dir(path),
 	}
-	l.externalSpecs[path].initTypes()
+	l.externalSpecs[path].convertTypes()
 	// external refs are usually found during initEndpoints, this is to find all external refs
-	l.externalSpecs[path].initEndpoints()
+	l.externalSpecs[path].convertEndpoints()
 }
 
 // basepath represents the Swagger basepath value
-func (l *OpenAPI3Importer) initInfo(args OutputData, basepath string) SyslInfo {
+func (l *OpenAPI3Importer) convertInfo(args OutputData, basepath string) SyslInfo {
 	info := SyslInfo{
 		OutputData:  args,
 		Title:       l.spec.Info.Title,
@@ -125,7 +125,7 @@ func (l *OpenAPI3Importer) initInfo(args OutputData, basepath string) SyslInfo {
 	return info
 }
 
-func (l *OpenAPI3Importer) initTypes() {
+func (l *OpenAPI3Importer) convertTypes() {
 	// First init the swagger -> sysl mappings
 	var swaggerToSyslMappings = map[string]string{
 		"boolean": "bool",
@@ -324,7 +324,7 @@ func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) 
 	}
 }
 
-func (l *OpenAPI3Importer) initEndpoints() []MethodEndpoints {
+func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
 	epMap := map[string][]Endpoint{}
 
 	l.initGlobalParams()
