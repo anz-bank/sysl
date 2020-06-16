@@ -1,4 +1,4 @@
-
+swagger: "2.0"
 basePath: /api/v1
 
 host: goat.example.com
