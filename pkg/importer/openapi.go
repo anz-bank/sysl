@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
-	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -194,7 +193,7 @@ func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
 }
 
 func (l *OpenAPI3Importer) loadExternalSchema(remoteRef string) {
-	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", path.Dir(remoteRef))
+	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", l.swaggerRoot)
 	l.externalSpecs[remoteRef].spec = l.getOpenapi3(remoteRef)
 	l.externalSpecs[remoteRef].convertTypes()
 	// external refs are usually found during initEndpoints, this is to find all external refs
