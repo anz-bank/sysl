@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/url"
 	"path/filepath"
-	"regexp"
 	"sort"
 	"strings"
 
@@ -135,7 +134,7 @@ func (l *loader) convertTypes() {
 
 func (l *loader) typeFromRef(path string) Type {
 	// matches with external file remote reference
-	if regexp.MustCompile(`.(yaml|yml|json)#/`).Match([]byte(path)) {
+	if isOpenAPIOrSwaggerExt(path) {
 		if t := l.typeFromRemoteRef(path); t != nil {
 			if _, recorded := l.types.Find(t.Name()); !recorded {
 				l.types.Add(t)
