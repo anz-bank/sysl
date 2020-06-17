@@ -356,6 +356,9 @@ func (l *loader) initEndpoints() []MethodEndpoints {
 }
 
 func isSchemaDefinedObject(ref *openapi3.SchemaRef) bool {
+	if ref == nil {
+		return false
+	}
 	if val := ref.Value; val != nil && ref.Ref == "" {
 		switch val.Type {
 		case ObjectTypeName:
