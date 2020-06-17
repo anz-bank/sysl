@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
-	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -194,10 +193,7 @@ func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
 func (l *OpenAPI3Importer) parseRef(ref string) (refPath string, defPath string) {
 	refPath, defPath = splitRef(ref)
 	defPath = toOpenAPI3Ref(defPath)
-	// If the filepath is not absolute, we need to append the swaggerRoot
-	if !filepath.IsAbs(refPath) {
-		refPath = filepath.Join(path.Dir(l.swaggerRoot), refPath)
-	}
+	refPath = filepath.Join(filepath.Dir(l.swaggerRoot), refPath)
 	return refPath, defPath
 }
 
