@@ -175,24 +175,8 @@ func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 }
 
 // OpenAPI specs can references type definitions in other files.
-// Remote refs are of the format:
-//  #/components/schemas/Date
-//  ../resources/users.yaml
 func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
-	cleaned := strings.Split(remoteRef, "#")
-	if len(cleaned) != 2 {
-		return nil
-	}
-
-	refPath, defPath := cleaned[0], openapiv3DefinitionPrefix+strings.TrimPrefix(cleaned[1], "/definitions/")
-	if !filepath.IsAbs(refPath) || strings.HasPrefix(refPath, l.swaggerRoot) {
-		var err error
-		refPath, err = filepath.Abs(filepath.Join(l.swaggerRoot, refPath))
-		if err != nil {
-			panic(err)
-		}
-	}
-
+	refPath, defPath := l.parseRef(remoteRef)
 	if externalLoader, fileLoaded := l.externalSpecs[refPath]; fileLoaded {
 		return externalLoader.typeFromRef(defPath)
 	}
@@ -201,16 +185,47 @@ func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
 	return l.externalSpecs[refPath].typeFromRef(defPath)
 }
 
+// parseRef breaks a reference string into a referencepath and a definitionpath
+// It also converts swagger refs to openapi3 refs
+// Remote refs are of the format:
+//  #/components/schemas/Date
+//  ../resources/users.yaml
+// resources/users.yaml#/components/schemas/Date
+func (l *OpenAPI3Importer) parseRef(ref string) (refPath string, defPath string) {
+	refPath, defPath = splitRef(ref)
+	defPath = toOpenAPI3Ref(defPath)
+	// If the filepath is not absolute, we need to append the swaggerRoot
+	if !filepath.IsAbs(refPath) {
+		refPath = filepath.Join(path.Dir(l.swaggerRoot), refPath)
+	}
+	return refPath, defPath
+}
+
+func splitRef(ref string) (string, string) {
+	cleaned := strings.Split(ref, "#")
+	if len(cleaned) != 2 {
+		return "", ""
+	}
+	return cleaned[0], "#" + cleaned[1]
+}
+
+func toOpenAPI3Ref(ref string) string {
+	if strings.HasPrefix(ref, "#/definitions/") {
+		ref = strings.Replace(ref, "#/definitions/", "#/components/schemas/", 1)
+	}
+	return ref
+}
+
 func (l *OpenAPI3Importer) loadExternalSchema(remoteRef string) {
-	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", path.Dir(remoteRef))
-	l.externalSpecs[remoteRef].spec = l.getOpenapi3(remoteRef)
+	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", remoteRef)
+	l.externalSpecs[remoteRef].spec = l.externalSpecs[remoteRef].getExternalSpec(remoteRef)
 	l.externalSpecs[remoteRef].convertTypes()
 	// external refs are usually found during initEndpoints, this is to find all external refs
 	l.externalSpecs[remoteRef].convertEndpoints()
 }
 
 // Grabs openapi or swagger spec from given path
-func (l *OpenAPI3Importer) getOpenapi3(path string) *openapi3.Swagger {
+func (l *OpenAPI3Importer) getExternalSpec(path string) *openapi3.Swagger {
 	var swagger *openapi3.Swagger
 	data, err := ioutil.ReadFile(path)
 	if err != nil {

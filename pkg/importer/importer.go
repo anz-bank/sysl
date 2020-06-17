@@ -2,8 +2,6 @@ package importer
 
 import (
 	"fmt"
-	"path"
-	"path/filepath"
 
 	"github.com/sirupsen/logrus"
 )
@@ -21,23 +19,19 @@ var Formats = []Format{
 	XSD,
 }
 
-// Factory takes in a fileName and a file and returns an importer from the detected file type
-func Factory(fileName string, file []byte, logger *logrus.Logger) (Importer, error) {
-	fileType, err := GuessFileType(fileName, file, Formats)
-	if err != nil {
-		return nil, err
-	}
-	specFileRoot, err := filepath.Abs(fileName)
+// Factory takes in an absolute filePath and a file and returns an importer from the detected file type
+func Factory(filePath string, file []byte, logger *logrus.Logger) (Importer, error) {
+	fileType, err := GuessFileType(filePath, file, Formats)
 	if err != nil {
 		return nil, err
 	}
 	switch fileType.Name {
 	case Swagger.Name:
 		logger.Debugln("Detected OpenAPI2")
-		return MakeOpenAPI2Importer(logger, "", path.Dir(specFileRoot)), nil
+		return MakeOpenAPI2Importer(logger, "", filePath), nil
 	case OpenAPI3.Name:
 		logger.Debugln("Detected OpenAPI3")
-		return MakeOpenAPI3Importer(logger, "", path.Dir(specFileRoot)), nil
+		return MakeOpenAPI3Importer(logger, "", filePath), nil
 	case XSD.Name:
 		logger.Debugln("Detected XSD")
 		return MakeXSDImporter(logger), nil
