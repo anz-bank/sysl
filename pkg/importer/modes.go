@@ -8,16 +8,6 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-const (
-	ModeOpenAPI3 = "openapi3"
-	ModeOpenAPI2 = "openapi2"
-	ModeOpenAPI  = "openapi"
-	ModeSwagger  = "swagger"
-	ModeXSD      = "xsd"
-	ModeGrammar  = "grammar"
-	ModeAuto     = "auto"
-)
-
 type Format struct {
 	Name      string
 	Signature string
