@@ -71,6 +71,14 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 	}
 }
 
+func TestLoadSwaggerJSONFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadSwaggerFromTestFiles",
+		testDir:       "tests-swagger",
+		testExtension: ".json",
+	})
+}
+
 func TestLoadSwaggerFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadSwaggerFromTestFiles",
