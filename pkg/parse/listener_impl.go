@@ -545,7 +545,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	s.fieldname = append(s.fieldname, fieldName)
 	type1, has := s.typemap[fieldName]
 	if has {
-		logrus.Warnf("%s) %s.%s defined multiple times",
+		logrus.Warnf("%s) %s.%s defined multiple times, merging field definitions",
 			s.sc.filename, s.currentTypePath.Get(), fieldName)
 	} else {
 		type1 = &sysl.Type{}
@@ -625,6 +625,15 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	s.typemap = map[string]*sysl.Type{}
 
 	types := s.currentApp().Types
+	if existing, ok := types[s.currentTypePath.Get()]; ok {
+		switch e := existing.Type.(type) {
+		case *sysl.Type_Relation_:
+			s.typemap = e.Relation.AttrDefs
+		case *sysl.Type_Tuple_:
+			s.typemap = e.Tuple.AttrDefs
+		default:
+		}
+	}
 	if ctx.TABLE() != nil {
 		if types[s.currentTypePath.Get()].GetRelation().GetAttrDefs() != nil {
 			panic("not implemented yet")

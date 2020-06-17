@@ -1,0 +1,11 @@
+Test:
+    !type Foo:
+        x <: string:
+            @json_tag = "hello"
+            @anothertag = "bar"
+        y <: int
+
+
+    !type Foo:
+        x <: string:
+            @anothertag = "bar"
