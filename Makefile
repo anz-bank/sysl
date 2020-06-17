@@ -48,8 +48,8 @@ buildlsp: ## Build sysllsp into the ./dist folder
 .PHONY: release
 release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
 
-install: build ## Install the sysl binary into $(GOPATH)/bin
-	cp ./dist/sysl $(GOPATH)/bin
+install: build
+	go install ./cmd/sysl
 
 clean: ## Clean temp and build files
 	rm -rf release dist
