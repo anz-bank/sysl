@@ -37,7 +37,7 @@ archives:
   replacements:
     amd64: 64bit
     386: 32bit
-    darwin: macOS
+    darwin: Darwin
     linux: Linux
     windows: Windows
     openbsd: OpenBSD
