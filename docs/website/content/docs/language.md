@@ -311,6 +311,10 @@ Type names can contain any lowercase or uppercase letter, number, underscore or 
 Type names must begin with either a letter or an underscore.
 Type names MAY contain spaces (this may change in the future)
 
+#### Special Characters
+
+If special characters such as ':' or '.' are needed in a type or endpoint name, this can be expressed in Sysl by using their URL encoded equivalent instead. For an example, refer to [Special Characters](https://sysl.io/docs/byexample/special-characters/). [Url Encoder](https://www.urlencoder.org/)
+
 ### Optional Types
 
 We can define optional parameters and fields in sysl using a postfix `?`.

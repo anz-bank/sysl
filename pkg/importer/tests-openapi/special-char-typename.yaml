@@ -10,23 +10,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SimpleObj"
+                $ref: "#/components/schemas/SimpleObj:WithColon"
         500:
           $ref: "#/components/responses/500Response"
 components:
   schemas:
-    SimpleObj:
+    SimpleObj:WithColon:
       type: object
       properties:
         name:
+          type: string
+        namewith:colon:
           type: string
     SimpleObj2:
       type: object
       properties:
         name:
-          type: SimpleObj
+          type: SimpleObj:WithColon
   responses:
     500Response:
       description: Internal Server Error
       schema:
-        $ref: "#/components/schemas/SimpleObj"
+        $ref: "#/components/schemas/SimpleObj:WithColon"
