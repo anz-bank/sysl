@@ -154,6 +154,7 @@ func (l *OpenAPI3Importer) convertTypes() {
 	l.types.Sort()
 }
 
+// handles importing of reference types.
 func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 	// matches with external file remote reference
 	if isOpenAPIOrSwaggerExt(path) {
@@ -184,21 +185,9 @@ func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 	return nil
 }
 
-func (l *OpenAPI3Importer) typeFromRemoteRef(path string) Type {
-	cleaned := strings.Split(path, "#")
-	if len(cleaned) != 2 {
-		return nil
-	}
-
-	refPath, defPath := cleaned[0], openapiv3DefinitionPrefix+strings.TrimPrefix(cleaned[1], "/definitions/")
-	if !filepath.IsAbs(refPath) || strings.HasPrefix(refPath, l.swaggerRoot) {
-		var err error
-		refPath, err = filepath.Abs(filepath.Join(l.swaggerRoot, refPath))
-		if err != nil {
-			panic(err)
-		}
-	}
-
+// OpenAPI specs can references type definitions in other files.
+func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
+	refPath, defPath := l.parseRef(remoteRef)
 	if externalLoader, fileLoaded := l.externalSpecs[refPath]; fileLoaded {
 		return externalLoader.typeFromRef(defPath)
 	}
@@ -207,33 +196,60 @@ func (l *OpenAPI3Importer) typeFromRemoteRef(path string) Type {
 	return l.externalSpecs[refPath].typeFromRef(defPath)
 }
 
-func (l *OpenAPI3Importer) loadExternalSchema(path string) {
-	l.newLoaderWithExternalSpec(path, l.getOpenapi3(path))
+// parseRef breaks a reference string into a referencepath and a definitionpath
+// It also converts swagger refs to openapi3 refs
+// Remote refs are of the format:
+//  #/components/schemas/Date
+//  ../resources/users.yaml
+// resources/users.yaml#/components/schemas/Date
+func (l *OpenAPI3Importer) parseRef(ref string) (refPath string, defPath string) {
+	refPath, defPath = splitRef(ref)
+	defPath = toOpenAPI3Ref(defPath)
+	refPath = filepath.Join(filepath.Dir(l.swaggerRoot), refPath)
+	return refPath, defPath
 }
 
-func guessYamlType(filename string, data []byte) string {
-	for _, check := range []string{ModeSwagger, ModeOpenAPI} {
-		if strings.Contains(string(data), check) {
-			return check
-		}
+func splitRef(ref string) (string, string) {
+	cleaned := strings.Split(ref, "#")
+	if len(cleaned) != 2 {
+		return "", ""
 	}
-
-	return "unknown"
+	return cleaned[0], "#" + cleaned[1]
 }
-func (l *OpenAPI3Importer) getOpenapi3(path string) *openapi3.Swagger {
+
+func toOpenAPI3Ref(ref string) string {
+	if strings.HasPrefix(ref, "#/definitions/") {
+		ref = strings.Replace(ref, "#/definitions/", "#/components/schemas/", 1)
+	}
+	return ref
+}
+
+func (l *OpenAPI3Importer) loadExternalSchema(remoteRef string) {
+	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", remoteRef)
+	l.externalSpecs[remoteRef].spec = l.externalSpecs[remoteRef].getExternalSpec(remoteRef)
+	l.externalSpecs[remoteRef].convertTypes()
+	// external refs are usually found during initEndpoints, this is to find all external refs
+	l.externalSpecs[remoteRef].convertEndpoints()
+}
+
+// Grabs openapi or swagger spec from given path
+func (l *OpenAPI3Importer) getExternalSpec(path string) *openapi3.Swagger {
 	var swagger *openapi3.Swagger
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	mode := guessYamlType(path, data)
-	switch mode {
-	case ModeSwagger:
+	formats := []Format{OpenAPI3, Swagger}
+	format, err := GuessFileType(path, data, formats)
+	if err != nil {
+		panic(err)
+	}
+
+	switch format.Name {
+	case Swagger.Name:
 		swagger, _, err = convertToOpenapiv3(data)
-	case ModeOpenAPI:
+	case OpenAPI3.Name:
 		swagger, err = openapi3.NewSwaggerLoader().LoadSwaggerFromData(data)
-	default:
-		panic("unknown mode: " + mode)
 	}
 	if err != nil {
 		panic(err)
