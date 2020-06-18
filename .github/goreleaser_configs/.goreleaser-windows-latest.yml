@@ -32,7 +32,6 @@ archives:
       format: zip
   replacements:
     windows: windows
-    amd64: 64bit
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:
     - README.md

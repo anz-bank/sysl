@@ -35,8 +35,6 @@ archives:
     - goos: windows
       format: zip
   replacements:
-    amd64: 64bit
-    386: 32bit
     darwin: darwin
     linux: linux
     windows: windows
