@@ -83,19 +83,6 @@ func (l *OpenAPI3Importer) WithPackage(pkg string) Importer {
 	return l
 }
 
-func (l *OpenAPI3Importer) newLoaderWithExternalSpec(path string, swagger *openapi3.Swagger) {
-	l.externalSpecs[path] = &OpenAPI3Importer{
-		logger:        l.logger,
-		externalSpecs: make(map[string]*OpenAPI3Importer),
-		spec:          swagger,
-		types:         TypeList{},
-		swaggerRoot:   filepath.Dir(path),
-	}
-	l.externalSpecs[path].convertTypes()
-	// external refs are usually found during initEndpoints, this is to find all external refs
-	l.externalSpecs[path].convertEndpoints()
-}
-
 // basepath represents the Swagger basepath value.
 // This is a swagger only field that isn't relevant to openapi3
 func (l *OpenAPI3Importer) convertInfo(args OutputData, basepath string) SyslInfo {
