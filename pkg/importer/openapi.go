@@ -247,7 +247,7 @@ func (l *OpenAPI3Importer) getExternalSpec(path string) *openapi3.Swagger {
 
 	switch format.Name {
 	case Swagger.Name:
-		swagger, _, err = convertToOpenapiv3(data)
+		swagger, _, err = convertToOpenAPI3(data)
 	case OpenAPI3.Name:
 		swagger, err = openapi3.NewSwaggerLoader().LoadSwaggerFromData(data)
 	}

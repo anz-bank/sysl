@@ -15,7 +15,7 @@ import (
 )
 
 func LoadSwaggerText(args OutputData, oas2spec string, logger *logrus.Logger) (out string, err error) {
-	oas3spec, basePath, err := convertToOpenapiv3([]byte(oas2spec))
+	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec))
 	if err != nil {
 		return "", err
 	}
@@ -42,7 +42,7 @@ type OpenAPI2Importer struct {
 }
 
 func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
-	oas3spec, basePath, err := convertToOpenapiv3([]byte(oas2spec))
+	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec))
 	if err != nil {
 		return "", fmt.Errorf("error converting openapi 2:%w", err)
 	}
@@ -64,7 +64,8 @@ func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
 	return l
 }
 
-func convertToOpenapiv3(data []byte) (*openapi3.Swagger, string, error) {
+// convertToOpenAPI3 takes a swagger spec and converts it to openapi3
+func convertToOpenAPI3(data []byte) (*openapi3.Swagger, string, error) {
 	var swagger2 openapi2.Swagger
 	jsondata, err := yaml.YAMLToJSON(data)
 	if err != nil {
