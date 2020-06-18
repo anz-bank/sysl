@@ -23,7 +23,8 @@ Prerequisites:
 
 - `make`
 - [Go 1.13+](https://golang.org/doc/install)
-- [golangci-lint](https://github.com/golangci/golangci-lint)
+- `GOPATH` env var set (this is used by the make install command)
+- [golangci-lint 1.23.8+](https://github.com/golangci/golangci-lint)
 
 Clone `sysl` to create a local copy on your computer:
 
