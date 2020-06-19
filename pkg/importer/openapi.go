@@ -273,26 +273,26 @@ func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) 
 			Properties: FieldList{},
 		}
 		l.intermediateTypes.Add(t)
-		for pname, pschema := range schema.Properties {
+		for propName, propSchema := range schema.Properties {
 			var fieldType Type
-			if pschema.Value != nil && pschema.Value.Type == ArrayTypeName {
-				if atype := l.typeFromRef(pschema.Value.Items.Ref); atype != nil {
-					fieldType = &Array{Items: atype}
-				} else if atype := l.typeFromRef(pschema.Value.Items.Value.Type); atype != nil {
-					fieldType = &Array{Items: atype}
-				} else if pschema.Value.Items.Value.Type == ObjectTypeName {
-					atype := l.typeFromSchema(name+"_"+getSyslSafeName(pname), pschema.Value.Items.Value)
-					fieldType = &Array{Items: atype}
+			if propSchema.Value != nil && propSchema.Value.Type == ArrayTypeName {
+				if arrayRef := l.typeFromRef(propSchema.Value.Items.Ref); arrayRef != nil {
+					fieldType = &Array{Items: arrayRef}
+				} else if arrayItemType := l.typeFromRef(propSchema.Value.Items.Value.Type); arrayItemType != nil {
+					fieldType = &Array{Items: arrayItemType}
+				} else if propSchema.Value.Items.Value.Type == ObjectTypeName {
+					arrayObj := l.typeFromSchema(name+"_"+getSyslSafeName(propName), propSchema.Value.Items.Value)
+					fieldType = &Array{Items: arrayObj}
 				}
 			}
 			if fieldType == nil {
-				fieldType = l.typeFromSchemaRef(getSyslSafeName(name)+"_"+getSyslSafeName(pname), pschema)
+				fieldType = l.typeFromSchemaRef(getSyslSafeName(name)+"_"+getSyslSafeName(propName), propSchema)
 			}
 			f := Field{
-				Name: getSyslSafeName(pname),
+				Name: getSyslSafeName(propName),
 				Type: fieldType,
 			}
-			if !contains(pname, schema.Required) {
+			if !contains(propName, schema.Required) {
 				f.Optional = true
 			}
 			t.Properties = append(t.Properties, f)
