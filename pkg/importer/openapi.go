@@ -406,9 +406,9 @@ func isSchemaDefinedObject(ref *openapi3.SchemaRef) bool {
 
 func (l *OpenAPI3Importer) convertEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
 	var responses []Response
-	typePrefix := getSyslSafeName(cleanEndpointPath(path) + "_"
+	typePrefix := getSyslSafeName(cleanEndpointPath(path)) + "_"
 	for statusCode, resp := range op.Responses {
-		text := "error"
+		text := statusCode
 		if statusCode[0] == '2' {
 			text = "ok"
 		}

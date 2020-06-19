@@ -1,6 +1,7 @@
 package importer
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/sirupsen/logrus"
@@ -110,4 +111,73 @@ components:
 	result, err := importer.Load(spec)
 	assert.NoError(t, err)
 	t.Log(result)
+}
+
+func TestLoadOpenAPI3MultipleErrorResponsesWithHeaders(t *testing.T) {
+	spec := `openapi: "3.0"
+info:
+  title: Simple
+paths:
+  /testSomeEndpoint:
+    get:
+      responses:
+        "200":
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Result"
+        "404":
+          description: "404 Not Found"
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: "application/json"
+            request-id:
+              schema:
+                type: string
+                example: "12345678-1234-1234-1234-123456789012"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Error"
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: "application/json"
+            request-id:
+              schema:
+                type: string
+                example: "12345678-1234-1234-1234-123456789012"
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    Result:
+      type: object
+      properties:
+        result:
+          type: string
+`
+	logger := logrus.New()
+	basePath := ""
+	imp := MakeOpenAPI3Importer(logger, basePath, "")
+	result, err := imp.Load(spec)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(result, "!type _testSomeEndpoint_404:"))
+	assert.True(t, strings.Contains(result, "!type _testSomeEndpoint_500:"))
 }
