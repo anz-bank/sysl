@@ -551,32 +551,3 @@ func (l *OpenAPI3Importer) buildParam(p *openapi3.Parameter) Param {
 		In: p.In,
 	}
 }
-
-func hasToBeSyslSafe(in string) bool {
-	return strings.ToLower(in) == "query"
-}
-
-func convertToSyslSafe(name string) string {
-	if !strings.ContainsAny(name, "- ") {
-		return name
-	}
-
-	syslSafe := strings.Builder{}
-	toUppercase := false
-	for i := 0; i < len(name); i++ {
-		switch name[i] {
-		case '-':
-			toUppercase = true
-		case ' ':
-			continue
-		default:
-			if toUppercase {
-				syslSafe.WriteString(strings.ToUpper(string(name[i])))
-				toUppercase = false
-			} else {
-				syslSafe.WriteByte(name[i])
-			}
-		}
-	}
-	return syslSafe.String()
-}
