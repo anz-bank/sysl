@@ -115,6 +115,14 @@ func hasToBeSyslSafe(in string) bool {
 	return strings.ToLower(in) == "query"
 }
 
+func cleanEndpointPath(path string) string {
+	return strings.NewReplacer(
+		"/", "_",
+		"{", "_",
+		"}", "_",
+		"-", "_").Replace(path)
+}
+
 func convertToSyslSafe(name string) string {
 	if !strings.ContainsAny(name, "- ") {
 		return name
