@@ -94,11 +94,6 @@ components:
       properties:
         name:
           type: string
-    SimpleObj2:
-      type: object
-      properties:
-        name:
-          type: SimpleObj
   responses:
     500Response:
       description: Internal Server Error
@@ -110,7 +105,7 @@ components:
 	importer := MakeOpenAPI3Importer(logger, basePath, "")
 	result, err := importer.Load(spec)
 	assert.NoError(t, err)
-	t.Log(result)
+	assert.True(t, strings.Contains(result, "!type _testSomeEndpoint%3ASpecialChars_500:"))
 }
 
 func TestLoadOpenAPI3MultipleErrorResponsesWithHeaders(t *testing.T) {
