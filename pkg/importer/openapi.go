@@ -268,49 +268,9 @@ func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) 
 	}
 	switch schema.Type {
 	case ObjectTypeName, "":
-		t := &StandardType{
-			name:       getSyslSafeName(name),
-			Properties: FieldList{},
-		}
-		l.intermediateTypes.Add(t)
-		for propName, propSchema := range schema.Properties {
-			var fieldType Type
-			if propSchema.Value != nil && propSchema.Value.Type == ArrayTypeName {
-				if arrayRef := l.typeFromRef(propSchema.Value.Items.Ref); arrayRef != nil {
-					fieldType = &Array{Items: arrayRef}
-				} else if arrayItemType := l.typeFromRef(propSchema.Value.Items.Value.Type); arrayItemType != nil {
-					fieldType = &Array{Items: arrayItemType}
-				} else if propSchema.Value.Items.Value.Type == ObjectTypeName {
-					arrayObj := l.typeFromSchema(name+"_"+getSyslSafeName(propName), propSchema.Value.Items.Value)
-					fieldType = &Array{Items: arrayObj}
-				}
-			}
-			if fieldType == nil {
-				fieldType = l.typeFromSchemaRef(getSyslSafeName(name)+"_"+getSyslSafeName(propName), propSchema)
-			}
-			f := Field{
-				Name: getSyslSafeName(propName),
-				Type: fieldType,
-			}
-			if !contains(propName, schema.Required) {
-				f.Optional = true
-			}
-			t.Properties = append(t.Properties, f)
-		}
-		sortProperties(t.Properties)
-		if len(t.Properties) == 0 {
-			return l.types.AddAndRet(NewStringAlias(name))
-		}
-		return l.types.AddAndRet(t)
+		return l.typeFromObject(name, schema)
 	case ArrayTypeName:
-		t := &Array{
-			name:  name,
-			Items: l.typeFromSchemaRef(name+"_obj", schema.Items),
-		}
-		if name != "" {
-			return l.types.AddAndRet(t)
-		}
-		return t
+		return l.typeFromArray(name, schema)
 	default:
 		if len(schema.Enum) > 0 {
 			return l.types.AddAndRet(&Enum{name: name})
@@ -326,6 +286,54 @@ func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) 
 		l.logger.Warnf("unknown schema.Type: %s", schema.Type)
 		return l.types.AddAndRet(NewStringAlias(name))
 	}
+}
+
+func (l *OpenAPI3Importer) typeFromObject(name string, schema *openapi3.Schema) Type {
+	t := &StandardType{
+		name:       getSyslSafeName(name),
+		Properties: FieldList{},
+	}
+	l.intermediateTypes.Add(t)
+	for propName, propSchema := range schema.Properties {
+		var fieldType Type
+		if propSchema.Value != nil && propSchema.Value.Type == ArrayTypeName {
+			if arrayRef := l.typeFromRef(propSchema.Value.Items.Ref); arrayRef != nil {
+				fieldType = &Array{Items: arrayRef}
+			} else if arrayItemType := l.typeFromRef(propSchema.Value.Items.Value.Type); arrayItemType != nil {
+				fieldType = &Array{Items: arrayItemType}
+			} else if propSchema.Value.Items.Value.Type == ObjectTypeName {
+				arrayObj := l.typeFromSchema(name+"_"+getSyslSafeName(propName), propSchema.Value.Items.Value)
+				fieldType = &Array{Items: arrayObj}
+			}
+		}
+		if fieldType == nil {
+			fieldType = l.typeFromSchemaRef(getSyslSafeName(name)+"_"+getSyslSafeName(propName), propSchema)
+		}
+		f := Field{
+			Name: getSyslSafeName(propName),
+			Type: fieldType,
+		}
+		if !contains(propName, schema.Required) {
+			f.Optional = true
+		}
+		t.Properties = append(t.Properties, f)
+	}
+	sortProperties(t.Properties)
+	if len(t.Properties) == 0 {
+		return l.types.AddAndRet(NewStringAlias(name))
+	}
+	return l.types.AddAndRet(t)
+}
+
+func (l *OpenAPI3Importer) typeFromArray(name string, schema *openapi3.Schema) Type {
+	t := &Array{
+		name:  name,
+		Items: l.typeFromSchemaRef(name+"_obj", schema.Items),
+	}
+	if name != "" {
+		return l.types.AddAndRet(t)
+	}
+	return t
 }
 
 func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
