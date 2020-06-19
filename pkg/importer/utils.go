@@ -84,7 +84,9 @@ func isOpenAPIOrSwaggerExt(path string) bool {
 	return regexp.MustCompile(`.(yaml|yml|json)#/`).Match([]byte(path))
 }
 
-func getSyslSafeEndpoint(endpoint string) string {
+// getSyslSafeName escapes special characters
+// returns a string with URL encoded replacements
+func getSyslSafeName(endpoint string) string {
 	// url.PathEscape does not escape '. :'
 	charsToKeep := map[string]string{
 		`%2F`: "/",
