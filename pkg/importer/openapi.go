@@ -331,7 +331,7 @@ func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) 
 func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
 	epMap := map[string][]Endpoint{}
 
-	l.initGlobalParams()
+	l.convertGlobalParams()
 
 	for path, item := range l.spec.Paths {
 		ops := map[string]*openapi3.Operation{
@@ -346,7 +346,7 @@ func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
 
 		for method, op := range ops {
 			if op != nil {
-				epMap[method] = append(epMap[method], l.initEndpoint(path, op, params))
+				epMap[method] = append(epMap[method], l.convertEndpoint(path, op, params))
 			}
 		}
 	}
@@ -396,7 +396,7 @@ func isSchemaDefinedObject(ref *openapi3.SchemaRef) bool {
 	return true
 }
 
-func (l *OpenAPI3Importer) initEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
+func (l *OpenAPI3Importer) convertEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
 	var responses []Response
 	typePrefix := strings.NewReplacer(
 		"/", "_",
@@ -491,7 +491,7 @@ func (l *OpenAPI3Importer) initEndpoint(path string, op *openapi3.Operation, par
 	return res
 }
 
-func (l *OpenAPI3Importer) initGlobalParams() {
+func (l *OpenAPI3Importer) convertGlobalParams() {
 	l.globalParams = Parameters{
 		items:       map[string]Param{},
 		insertOrder: []string{},
