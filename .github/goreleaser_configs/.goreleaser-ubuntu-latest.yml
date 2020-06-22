@@ -28,8 +28,7 @@ archives:
   builds: ['sysl']
   format: tar.gz
   replacements:
-    linux: Linux
-    amd64: 64bit
+    linux: linux
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:
     - README.md

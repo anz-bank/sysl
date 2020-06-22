@@ -31,8 +31,7 @@ archives:
     - goos: windows
       format: zip
   replacements:
-    windows: Windows
-    amd64: 64bit
+    windows: windows
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:
     - README.md
