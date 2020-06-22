@@ -28,7 +28,7 @@ func OutputPlantuml(output, plantuml, umlInput string, fs afero.Fs) error {
 
 	switch mode {
 	case "png", "svg":
-		plantuml = fmt.Sprintf("%s/%s/%s", plantuml, mode, encoded)
+		plantuml = fmt.Sprintf("%s/%s/~1%s", plantuml, mode, encoded)
 		out, err = sendHTTPRequest(plantuml)
 		if err != nil {
 			return err
