@@ -592,6 +592,12 @@ func TestEnum(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/enum.sysl")
 }
 
+func TestMergeAttrs(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/merge_attrs.sysl")
+}
+
 func TestOpenAPI3(t *testing.T) {
 	t.Parallel()
 
