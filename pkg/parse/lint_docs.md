@@ -15,7 +15,7 @@ Currently, the linter can detect the following things:
 ## Return Statement Lint
 
 For this feature, it is easier to lint during parsing. A simple regex match in
-the `EnterRet_stmt` function is done to check if it uses the `ok <: some_type`
+the `EnterRet_stmt` function is done to ensure it uses the `ok <: some_type`
 format.
 
 ## Case-sensitive Applications Redefinition
