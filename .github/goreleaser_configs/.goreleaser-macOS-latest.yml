@@ -28,8 +28,7 @@ archives:
   builds: ['sysl']
   format: tar.gz
   replacements:
-    darwin: Darwin
-    amd64: 64bit
+    darwin: darwin
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:
     - README.md

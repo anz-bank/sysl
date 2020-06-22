@@ -2,6 +2,7 @@ package importer
 
 import (
 	"net/url"
+	"regexp"
 	"strings"
 )
 
@@ -77,6 +78,10 @@ func spaceSeparate(items ...string) string {
 		}
 	}
 	return strings.Join(t, " ")
+}
+
+func isOpenAPIOrSwaggerExt(path string) bool {
+	return regexp.MustCompile(`.(yaml|yml|json)#/`).Match([]byte(path))
 }
 
 func getSyslSafeEndpoint(endpoint string) string {

@@ -35,15 +35,13 @@ archives:
     - goos: windows
       format: zip
   replacements:
-    amd64: 64bit
-    386: 32bit
-    darwin: macOS
-    linux: Linux
-    windows: Windows
-    openbsd: OpenBSD
-    netbsd: NetBSD
-    freebsd: FreeBSD
-    dragonfly: DragonFlyBSD
+    darwin: darwin
+    linux: linux
+    windows: windows
+    openbsd: openBSD
+    netbsd: netBSD
+    freebsd: freeBSD
+    dragonfly: dragonFlyBSD
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:
     - README.md
