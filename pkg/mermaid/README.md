@@ -44,4 +44,4 @@ The data-model diagram generator uses the sysl wrapper library to simplify the p
 **Enhancements/Future works**
 
 - Enhancement on this would be to add a logger to detect if there are any nil references for bad inputs.
-- Escape special characters instead of replacing them in mermaid code. (Issue on mermaid)
+- Escape special characters instead of replacing them in mermaid code. (https://github.com/mermaid-js/mermaid/issues/170)
