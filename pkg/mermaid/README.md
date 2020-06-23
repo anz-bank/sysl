@@ -28,7 +28,7 @@ Integration diagrams can be generated via three different functions.
 
 **Endpoint Analysis Diagram** (https://github.com/anz-bank/sysl/pull/803)
 
-Endpoint analysis diagram generator is an extension of integration diagram generator, but it adds the concept of subgraph from mermaid in order to display the endpoints of each of the applications in the generated diagram.
+The endpoint analysis diagram generator is an extension of integration diagram generator, but it adds the concept of a subgraph from mermaid in order to display the endpoints of each of the applications in the generated diagram.
 
 **Data-model Diagram** (https://github.com/anz-bank/sysl/pull/838)
 
