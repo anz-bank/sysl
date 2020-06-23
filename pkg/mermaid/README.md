@@ -10,7 +10,7 @@ Generating diagram using PlantUML requires making HTTP requests to the PlantUML 
 
 **Summary**
 
-Mermaid diagram generator offers users to generate diagrams similar to that of what PlantUML diagram generator offers. The four diagrams that can be generated are sequence diagram, integration diagram, endpoint analysis diagram and data model diagram. The sysl modules generated from parsing a sysl file contains all the information to generated a mermaid file by iterating through maps and prints the appropriate mermaid code. The data model diagram generator makes use of the sysl wrapper that simplifies the sysl modules to maps for easy access of types defined.
+Mermaid diagram generator offers users a way to generate diagrams similar to that of what PlantUML diagram generator offers. The four types of diagrams that can be generated are *sequence diagrams*, *integration diagrams*, *endpoint analysis diagrams* and *data model diagrams*. The sysl modules produced from parsing a sysl file contains all the information to generate a mermaid file. The mermaid diagram generator iterates through and prints the appropriate mermaid code. The data model diagram generator makes use of the sysl wrapper that simplifies the sysl modules to maps of simplified types for easy access to defined types.
 
 **Detailed Design**
 
