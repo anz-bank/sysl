@@ -24,7 +24,7 @@ Integration diagrams can be generated via three different functions.
 
 - `GenerateFullIntegrationDiagram` takes in the sysl module, iterates through all its applications and stores all the calls that each of the applications makes to other applications and generates and stores the appropriate mermaid output for that relationship.
 - `GenerateIntegrationDiagram` takes in an application and does a similar process, but finds all the relationships for that application only.
-- GenerateMultipleAppIntegrationDiagram takes in a list of applications and follows the same process.
+- `GenerateMultipleAppIntegrationDiagram` takes in a list of applications and follows the same process.
 
 **Endpoint Analysis Diagram** (https://github.com/anz-bank/sysl/pull/803)
 
