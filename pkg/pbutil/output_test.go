@@ -145,7 +145,7 @@ func TestPB(t *testing.T) {
 
 	unmarshalled := &sysl.Module{}
 	fs := afero.NewMemMapFs()
-	filename := "/out.textpb"
+	filename := "/out.pb"
 	require.NoError(t, PB(testModule(), filename, fs))
 	output, err := afero.ReadFile(fs, filename)
 	require.NoError(t, err)
@@ -157,7 +157,7 @@ func TestPBNilModule(t *testing.T) {
 	t.Parallel()
 
 	fs := afero.NewMemMapFs()
-	filename := "/out.textpb"
+	filename := "/out.pb"
 	require.Error(t, PB(nil, filename, fs))
 	syslutil.AssertFsHasExactly(t, fs)
 }
