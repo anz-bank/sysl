@@ -6,7 +6,7 @@
 
 **Background**
 
-Generating diagram using PlantUML requires making HTTP requests to the PlantUML server. In order to support systems generating several diagrams at once, it is not advisable to rely on an external service which could also affect performance and reliability.
+Generating diagram using PlantUML requires making HTTP requests to the PlantUML server. In order to support systems generating several diagrams at once, it is not advisable to rely on an external service which could also affect performance and reliability. This issue also impedes our ability to integrate diagram generation as a part of CI.
 
 **Summary**
 
