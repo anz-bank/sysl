@@ -68,7 +68,7 @@ another graph which contains REST methods (GET, POST, etc). However, only REST
 endpoints contain the REST methods graph, if the `rec` field of endpoints is nil,
 the endpoint is a simple endpoint.
 
-`locations` field is defined as a `map[string]bool` because the same data can
+The `locations` field is defined as a `map[string]bool` because the same data can
 be defined in multiple locations (e.g. endpoint calls `App <- Endpoint`).
 
 The `apps` field in `linterRecords` contains all the defined endpoints for each
