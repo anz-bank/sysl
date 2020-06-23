@@ -2,7 +2,7 @@
 
 Linting happens during parsing of the abstract syntax tree. The linter itself
 is a part of the `TreeShapeListener` struct in the `linter` field. The `linter`
-field's job is to collect data that are required to do its linting operation.
+field's job is to collect data that is required to do its linting operation.
 The linting operation can happen during walking the abstract syntax tree or
 after that process. This depends on what the linter is detecting.
 
