@@ -16,7 +16,7 @@ Mermaid diagram generator offers users a way to generate diagrams similar to tha
 
 **Sequence Diagram** (https://github.com/anz-bank/sysl/pull/756)
 
-GenerateSequenceDiagram function takes in a sysl module, an app name and an endpoint as input and returns a string that contains the mermaid code for the sequence diagram. The sysl statements for that app and endpoint is retrieved and iterated through in the function printSequenceDiagramStatements. If the statement is a group or a condition, this function is recursively called. If the statement is a call to another application and endpoint, the function GenerateSequenceDiagram is called recursively and the appropriate mermaid code is generated and stored. For returns, actions and loops, the appropriate mermaid code is generated and stored.
+GenerateSequenceDiagram function takes in a sysl module, an app name and an endpoint as input and returns a string that contains the mermaid code for the sequence diagram. The sysl statements for that app and endpoint is retrieved and iterated through in the function printSequenceDiagramStatements. If the statement is a group or a condition, this function is recursively called. If the statement is a call to another application and endpoint, the function GenerateSequenceDiagram is called recursively and the appropriate mermaid code is generated and stored. For returns, actions and loops, the appropriate mermaid output is generated and stored.
 
 **Integration Diagram** (https://github.com/anz-bank/sysl/pull/787)
 
