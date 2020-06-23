@@ -65,7 +65,7 @@ application definitions stored in the `locations` field and the endpoints in the
 `rec` field. The endpoints `rec` field is another `graph` whose keys are the
 name of the endpoints and the corresponding `*graphData` contains locations and
 another graph which contains REST methods (GET, POST, etc). However, only REST
-endpoints contain REST methods graph, if the `rec` field of endpoints is nil,
+endpoints contain the REST methods graph, if the `rec` field of endpoints is nil,
 the endpoint is a simple endpoint.
 
 `locations` field is defined as a `map[string]bool` because the same data can
