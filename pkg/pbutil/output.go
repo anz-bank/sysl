@@ -66,7 +66,7 @@ func FTextPB(w io.Writer, m protoreflect.ProtoMessage) error {
 	return err
 }
 
-// GeneratePBBinaryMessage2File generates bianry message to the file specified by `filename`.
+// GeneratePBBinaryMessage2File generates binary message to the file specified by `filename`.
 func GeneratePBBinaryMessage2File(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 	if m == nil {
 		return fmt.Errorf("module is nil: %#v", filename)
