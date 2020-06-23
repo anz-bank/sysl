@@ -121,3 +121,43 @@ func TestFTextPBNilModule(t *testing.T) {
 	require.Error(t, FTextPB(&output, nil))
 	assert.Equal(t, "", output.String())
 }
+
+func TestFPB(t *testing.T) {
+	t.Parallel()
+
+	unmarshalled := &sysl.Module{}
+	var output bytes.Buffer
+	require.NoError(t, FPB(&output, testModule()))
+	require.NoError(t, proto.Unmarshal(output.Bytes(), unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
+}
+
+func TestFPBNilModule(t *testing.T) {
+	t.Parallel()
+
+	var output bytes.Buffer
+	require.Error(t, FPB(&output, nil))
+	assert.Equal(t, "", output.String())
+}
+
+func TestPB(t *testing.T) {
+	t.Parallel()
+
+	unmarshalled := &sysl.Module{}
+	fs := afero.NewMemMapFs()
+	filename := "/out.textpb"
+	require.NoError(t, PB(testModule(), filename, fs))
+	output, err := afero.ReadFile(fs, filename)
+	require.NoError(t, err)
+	require.NoError(t, proto.Unmarshal(output, unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
+}
+
+func TestPBNilModule(t *testing.T) {
+	t.Parallel()
+
+	fs := afero.NewMemMapFs()
+	filename := "/out.textpb"
+	require.Error(t, PB(nil, filename, fs))
+	syslutil.AssertFsHasExactly(t, fs)
+}
