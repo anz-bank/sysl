@@ -66,7 +66,8 @@ func FTextPB(w io.Writer, m protoreflect.ProtoMessage) error {
 	return err
 }
 
-func PB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
+// GeneratePBBinaryMessage2File generates bianry message to the file specified by `filename`.
+func GeneratePBBinaryMessage2File(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 	if m == nil {
 		return fmt.Errorf("module is nil: %#v", filename)
 	}
@@ -76,10 +77,11 @@ func PB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 		return err
 	}
 	defer f.Close()
-	return FPB(f, m)
+	return GeneratePBBinaryMessage(f, m)
 }
 
-func FPB(w io.Writer, m protoreflect.ProtoMessage) error {
+// GeneratePBBinaryMessage generates binary message to IO writer specified by `w`.
+func GeneratePBBinaryMessage(w io.Writer, m protoreflect.ProtoMessage) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}

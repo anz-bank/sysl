@@ -54,7 +54,7 @@ func (p *protobuf) Execute(args cmdutils.ExecuteArgs) error {
 
 	// output format is binary
 	if p.output == "-" {
-		return pbutil.FPB(os.Stdout, args.Modules[0])
+		return pbutil.GeneratePBBinaryMessage(os.Stdout, args.Modules[0])
 	}
-	return pbutil.PB(args.Modules[0], p.output, args.Filesystem)
+	return pbutil.GeneratePBBinaryMessage2File(args.Modules[0], p.output, args.Filesystem)
 }
