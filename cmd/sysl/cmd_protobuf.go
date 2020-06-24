@@ -20,9 +20,9 @@ func (p *protobuf) Name() string       { return "protobuf" }
 func (p *protobuf) MaxSyslModule() int { return 1 }
 
 func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Generate textpb/json").Alias("pb")
+	cmd := app.Command(p.Name(), "Generate textpb/json/binary").Alias("pb")
 	cmd.Flag("output", "output file name").Short('o').Default("-").StringVar(&p.output)
-	opts := []string{"textpb", "json"}
+	opts := []string{"textpb", "json", "pb"}
 	cmd.Flag("mode", fmt.Sprintf("output mode: [%s]", strings.Join(opts, ","))).
 		Default(opts[0]).
 		EnumVar(&p.mode, opts...)
@@ -44,8 +44,17 @@ func (p *protobuf) Execute(args cmdutils.ExecuteArgs) error {
 		}
 		return pbutil.JSONPB(args.Modules[0], p.output, args.Filesystem)
 	}
-	if p.output == "-" {
-		return pbutil.FTextPB(os.Stdout, args.Modules[0])
+
+	if p.mode == "" || p.mode == "textpb" {
+		if p.output == "-" {
+			return pbutil.FTextPB(os.Stdout, args.Modules[0])
+		}
+		return pbutil.TextPB(args.Modules[0], p.output, args.Filesystem)
 	}
-	return pbutil.TextPB(args.Modules[0], p.output, args.Filesystem)
+
+	// output format is binary
+	if p.output == "-" {
+		return pbutil.GeneratePBBinaryMessage(os.Stdout, args.Modules[0])
+	}
+	return pbutil.GeneratePBBinaryMessageFile(args.Modules[0], p.output, args.Filesystem)
 }
