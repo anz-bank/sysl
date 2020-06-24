@@ -122,7 +122,7 @@ func TestFTextPBNilModule(t *testing.T) {
 	assert.Equal(t, "", output.String())
 }
 
-func TestFPB(t *testing.T) {
+func TestGeneratePBBinaryMessage(t *testing.T) {
 	t.Parallel()
 
 	unmarshalled := &sysl.Module{}
@@ -132,7 +132,7 @@ func TestFPB(t *testing.T) {
 	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
-func TestFPBNilModule(t *testing.T) {
+func TestGeneratePBBinaryMessageNilModule(t *testing.T) {
 	t.Parallel()
 
 	var output bytes.Buffer
