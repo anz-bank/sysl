@@ -140,24 +140,24 @@ func TestFPBNilModule(t *testing.T) {
 	assert.Equal(t, "", output.String())
 }
 
-func TestPB(t *testing.T) {
+func TestGeneratePBBinaryMessageFile(t *testing.T) {
 	t.Parallel()
 
 	unmarshalled := &sysl.Module{}
 	fs := afero.NewMemMapFs()
 	filename := "/out.pb"
-	require.NoError(t, GeneratePBBinaryMessage2File(testModule(), filename, fs))
+	require.NoError(t, GeneratePBBinaryMessageFile(testModule(), filename, fs))
 	output, err := afero.ReadFile(fs, filename)
 	require.NoError(t, err)
 	require.NoError(t, proto.Unmarshal(output, unmarshalled))
 	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
-func TestPBNilModule(t *testing.T) {
+func TestGeneratePBBinaryMessageFileNilModule(t *testing.T) {
 	t.Parallel()
 
 	fs := afero.NewMemMapFs()
 	filename := "/out.pb"
-	require.Error(t, GeneratePBBinaryMessage2File(nil, filename, fs))
+	require.Error(t, GeneratePBBinaryMessageFile(nil, filename, fs))
 	syslutil.AssertFsHasExactly(t, fs)
 }

@@ -56,5 +56,5 @@ func (p *protobuf) Execute(args cmdutils.ExecuteArgs) error {
 	if p.output == "-" {
 		return pbutil.GeneratePBBinaryMessage(os.Stdout, args.Modules[0])
 	}
-	return pbutil.GeneratePBBinaryMessage2File(args.Modules[0], p.output, args.Filesystem)
+	return pbutil.GeneratePBBinaryMessageFile(args.Modules[0], p.output, args.Filesystem)
 }
