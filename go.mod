@@ -16,31 +16,33 @@ require (
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
 	github.com/arr-ai/hash v0.5.0 // indirect
 	github.com/arr-ai/wbnf v0.13.0
+	github.com/chromedp/cdproto v0.0.0-20200608134039-8a80cdaf865c // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-chi/chi v4.1.1+incompatible
+	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
+	github.com/joshcarp/mermaid-go v0.0.0-20200403052241-d6fecd5216de
 	github.com/kr/pretty v0.2.0 // indirect
-	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/prometheus/client_golang v0.9.3 // indirect
 	github.com/rickb777/date v1.12.4
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.6.0
-	github.com/spf13/afero v1.2.2
+	github.com/spf13/afero v1.3.0
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.5.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/pretty v1.0.1 // indirect
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
-	golang.org/x/sys v0.0.0-20200515095857-1151b9dac4a9 // indirect
+	golang.org/x/sys v0.0.0-20200622214017-ed371f2e16b4 // indirect
+	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 	google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24 // indirect
 	google.golang.org/grpc v1.28.0
