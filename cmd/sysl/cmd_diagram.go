@@ -26,7 +26,7 @@ func (p *diagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		"Generate an integration diagram (Optional- specify --app)",
 	).Default("false").Short('i').BoolVar(&p.IntegrationDiagram)
 	cmd.Flag("sequence",
-		"Generate a sequence diagram (Specify --appname and --endpoint)",
+		"Generate a sequence diagram (Specify --app and --endpoint)",
 	).Default("false").Short('s').BoolVar(&p.SequenceDiagram)
 	cmd.Flag("endpointanalysis",
 		"Generate an integration diagram with its endpoints (Optional- specify --app)",
