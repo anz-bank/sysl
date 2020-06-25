@@ -299,11 +299,7 @@ func TestGenerateIntsView(t *testing.T) {
 				"c": {
 					Name: &sysl.AppName{Part: []string{"c"}},
 				},
-				"project": {
-					Attrs: map[string]*sysl.Attribute{
-						"appfmt": {Attribute: &sysl.Attribute_S{S: "%(appname)"}},
-					},
-				},
+				"project": {},
 			},
 		},
 		Project:      "project",

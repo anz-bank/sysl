@@ -11,7 +11,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
-const AppfmtDefault = "**%(appname)**"
+const AppfmtDefault = "%(appname)"
 const ArrowColorNone = "none"
 const PumlHeader = `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -101,11 +101,7 @@ func (v *IntsDiagramVisitor) VarManagerForComponent(appName string, nameMap map[
 		return s.Alias
 	}
 
-	appfmt := v.Mod.Apps[v.Project].GetAttrs()["appfmt"].GetS()
-	if appfmt == "" {
-		appfmt = AppfmtDefault
-	}
-	fp := cmdutils.MakeFormatParser(appfmt)
+	fp := cmdutils.MakeFormatParser(getAppfmtAttrOrDefault(v.Mod.Apps[v.Project]))
 	attrs := cmdutils.GetApplicationAttrs(v.Mod, appName)
 	controls := cmdutils.GetSortedISOCtrlStr(attrs)
 
@@ -133,7 +129,7 @@ func (v *IntsDiagramVisitor) VarManagerForTopState(appName string) string {
 	i := len(v.TopSymbols)
 	alias = fmt.Sprintf("_%d", i)
 
-	fp := cmdutils.MakeFormatParser(v.Mod.Apps[v.Project].GetAttrs()["appfmt"].GetS())
+	fp := cmdutils.MakeFormatParser(getAppfmtAttrOrDefault(v.Mod.Apps[v.Project]))
 	attrs := cmdutils.GetApplicationAttrs(v.Mod, appName)
 	controls := cmdutils.GetSortedISOCtrlStr(attrs)
 	label = fp.LabelApp(appName, controls, attrs)
@@ -170,7 +166,7 @@ func (v *IntsDiagramVisitor) VarManagerForEPA(name string) string {
 		}
 	}
 	attrs["appname"] = epName
-	fp := cmdutils.MakeFormatParser(v.Mod.Apps[v.Project].GetAttrs()["appfmt"].GetS())
+	fp := cmdutils.MakeFormatParser(getAppfmtAttrOrDefault(v.Mod.Apps[v.Project]))
 	label = fp.Parse(attrs)
 
 	s := &cmdutils.Var{
@@ -552,4 +548,13 @@ func StringInSlice(a string, list []string) bool {
 		}
 	}
 	return false
+}
+
+// getAppfmtAttrOrDefault returns the appfmt attribute value of project if specified or its default.
+func getAppfmtAttrOrDefault(project *sysl.Application) string {
+	a := project.GetAttrs()["appfmt"].GetS()
+	if a != "" {
+		return a
+	}
+	return AppfmtDefault
 }
