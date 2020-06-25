@@ -268,45 +268,7 @@ func TestBuildClusterForComponentView(t *testing.T) {
 func TestGenerateIntsView(t *testing.T) {
 	t.Parallel()
 
-	var stringBuilder strings.Builder
-	v := &IntsDiagramVisitor{
-		StringBuilder: &stringBuilder,
-		Mod: &sysl.Module{
-			Apps: map[string]*sysl.Application{
-				"a": {
-					Name: &sysl.AppName{Part: []string{"a"}},
-					Endpoints: map[string]*sysl.Endpoint{
-						"epa": {
-							Attrs: map[string]*sysl.Attribute{
-								"test": nil,
-							},
-						},
-					},
-				},
-				"b": {
-					Name: &sysl.AppName{Part: []string{"b"}},
-					Endpoints: map[string]*sysl.Endpoint{
-						"epb": {
-							Attrs: map[string]*sysl.Attribute{
-								"test": nil,
-							},
-						},
-					},
-					Mixin2: []*sysl.Application{
-						{Name: &sysl.AppName{Part: []string{"c"}}},
-					},
-				},
-				"c": {
-					Name: &sysl.AppName{Part: []string{"c"}},
-				},
-				"project": {},
-			},
-		},
-		Project:      "project",
-		DrawableApps: map[string]struct{}{},
-		TopSymbols:   map[string]*_topVar{},
-		Symbols:      map[string]*cmdutils.Var{},
-	}
+	v := makeIntDiagramVisitor()
 
 	v.GenerateIntsView(
 		&Args{},
@@ -335,6 +297,43 @@ skinparam component {
 [b] as _1
 _0 --> _1 <<indirect>>
 [c] as _2
+_2 <|.. _1
+@enduml`, v.StringBuilder.String())
+}
+
+func TestGenerateIntsViewWithCustomAppfmt(t *testing.T) {
+	t.Parallel()
+
+	v := makeIntDiagramVisitor()
+	v.Mod.Apps["project"].Attrs["appfmt"] = &sysl.Attribute{Attribute: &sysl.Attribute_S{S: "**%(appname)**"}}
+
+	v.GenerateIntsView(
+		&Args{},
+		ViewParams{},
+		&IntsParam{
+			Integrations: []AppDependency{
+				{
+					Self:   AppElement{Name: "a", Endpoint: "epa"},
+					Target: AppElement{Name: "b", Endpoint: "epb"},
+				},
+			},
+			Apps: []string{"a", "b"},
+		},
+	)
+
+	//Then
+	assert.Equal(t, `@startuml
+hide stereotype
+scale max 16384 height
+skinparam component {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+[**a**] as _0
+[**b**] as _1
+_0 --> _1 <<indirect>>
+[**c**] as _2
 _2 <|.. _1
 @enduml`, v.StringBuilder.String())
 }
@@ -719,4 +718,47 @@ func TestStringInSlice(t *testing.T) {
 	s := []string{"a", "b"}
 
 	assert.True(t, StringInSlice("a", s))
+}
+
+// makeIntDiagramVisitor returns a populated IntsDiagramVisitor for testing diagram generation.
+func makeIntDiagramVisitor() *IntsDiagramVisitor {
+	var stringBuilder strings.Builder
+	return &IntsDiagramVisitor{
+		StringBuilder: &stringBuilder,
+		Mod: &sysl.Module{
+			Apps: map[string]*sysl.Application{
+				"a": {
+					Name: &sysl.AppName{Part: []string{"a"}},
+					Endpoints: map[string]*sysl.Endpoint{
+						"epa": {
+							Attrs: map[string]*sysl.Attribute{
+								"test": nil,
+							},
+						},
+					},
+				},
+				"b": {
+					Name: &sysl.AppName{Part: []string{"b"}},
+					Endpoints: map[string]*sysl.Endpoint{
+						"epb": {
+							Attrs: map[string]*sysl.Attribute{
+								"test": nil,
+							},
+						},
+					},
+					Mixin2: []*sysl.Application{
+						{Name: &sysl.AppName{Part: []string{"c"}}},
+					},
+				},
+				"c": {
+					Name: &sysl.AppName{Part: []string{"c"}},
+				},
+				"project": {},
+			},
+		},
+		Project:      "project",
+		DrawableApps: map[string]struct{}{},
+		TopSymbols:   map[string]*_topVar{},
+		Symbols:      map[string]*cmdutils.Var{},
+	}
 }
