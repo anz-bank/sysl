@@ -11,6 +11,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
+const AppfmtDefault = "**%(appname)**"
 const ArrowColorNone = "none"
 const PumlHeader = `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
@@ -100,12 +101,17 @@ func (v *IntsDiagramVisitor) VarManagerForComponent(appName string, nameMap map[
 		return s.Alias
 	}
 
-	i := len(v.Symbols)
-	alias := fmt.Sprintf("_%d", i)
-	fp := cmdutils.MakeFormatParser(v.Mod.Apps[v.Project].GetAttrs()["appfmt"].GetS())
+	appfmt := v.Mod.Apps[v.Project].GetAttrs()["appfmt"].GetS()
+	if appfmt == "" {
+		appfmt = AppfmtDefault
+	}
+	fp := cmdutils.MakeFormatParser(appfmt)
 	attrs := cmdutils.GetApplicationAttrs(v.Mod, appName)
 	controls := cmdutils.GetSortedISOCtrlStr(attrs)
+
 	label := fp.LabelApp(appName, controls, attrs)
+	i := len(v.Symbols)
+	alias := fmt.Sprintf("_%d", i)
 	s := &cmdutils.Var{
 		Label: label,
 		Alias: alias,
