@@ -25,13 +25,15 @@ func generateEndpointAnalysisDiagramHelper(m *sysl.Module,
 	if theStart {
 		result = mermaid.GeneratedHeader + "graph TD\n"
 	}
+	count := 1
 	for appName, app := range m.Apps {
-		result += fmt.Sprintf(" subgraph %s\n", appName)
+		result += fmt.Sprintf(" subgraph %d[\"%s\"]\n", count, appName)
 		for epName, endPoint := range app.Endpoints {
 			statements := endPoint.Stmt
 			result += printEndpointAnalysisStatements(m, statements, mermaid.CleanString(epName), externalLinks)
 		}
 		result += " end\n"
+		count++
 	}
 	for _, eLink := range *externalLinks {
 		result += fmt.Sprintf(" %s-->%s\n", eLink.statement, eLink.endPoint)
