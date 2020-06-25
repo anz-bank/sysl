@@ -32,7 +32,7 @@ func (p *diagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		"Generate an integration diagram with its endpoints (Optional- specify --app)",
 	).Default("false").Short('p').BoolVar(&p.EndpointAnalysis)
 	cmd.Flag("data", "Generate a Data model diagram").Default("false").Short('d').BoolVar(&p.DataDiagram)
-	cmd.Flag("app", "Application").Short('a').StringVar(&p.AppName)
+	cmd.Flag("app", "Optional flag to specify specific application").Short('a').StringVar(&p.AppName)
 	cmd.Flag("endpoint", "Endpoint").Short('e').StringVar(&p.Endpoint)
 	cmd.Flag("output",
 		"Output file (Default: diagram.svg)",
