@@ -33,7 +33,7 @@ func (p *diagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	).Default("false").Short('p').BoolVar(&p.EndpointAnalysis)
 	cmd.Flag("data", "Generate a Data model diagram").Default("false").Short('d').BoolVar(&p.DataDiagram)
 	cmd.Flag("app", "Optional flag to specify specific application").Short('a').StringVar(&p.AppName)
-	cmd.Flag("endpoint", "Endpoint").Short('e').StringVar(&p.Endpoint)
+	cmd.Flag("endpoint", "Optional flag to specify endpoint").Short('e').StringVar(&p.Endpoint)
 	cmd.Flag("output",
 		"Output file (Default: diagram.svg)",
 	).Default("diagram.svg").Short('o').StringVar(&p.Output)
