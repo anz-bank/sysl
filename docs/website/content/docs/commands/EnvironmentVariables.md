@@ -12,10 +12,11 @@ Several commands require environment variables to be set before they are able to
 
 ## SYSL_PLANTUML
 
-`export SYSL_PLANTUML=http://www.plantuml.com/plantuml`
+`SYSL_PLANTUML` is a flag to indicate the PlantUML server address. By default, it is `http://www.plantuml.com/plantuml`.
 
 For more details, refer to [Install](/docs/install/)
 
 ## SYSL_MODULES
 
-`export SYSL_MODULES=true` is a flag to indicate whether Sysl modules are enabled. By default, if this is not declared, Sysl modules are enabled.
+`SYSL_MODULES` is a flag to indicate whether Sysl modules are enabled. By default, if this is not declared, Sysl modules are enabled.
+To disable Sysl Modules, set the environment variable `SYSL_MODULES=off`.

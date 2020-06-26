@@ -33,7 +33,7 @@ Optional flags:
 - `--app_format="%(appname)"`Specify the format string for sequence diagram participants. May include %%(appname)
   and %%(@foo) for attribute foo (default: %(appname))
 - `-t, --title=TITLE`diagram title
-- `-p, --plantuml=PLANTUML`base url of plantuml server (default: SYSL_PLANTUML or http://localhost:8080/plantuml
+- `-p, --plantuml=PLANTUML`base url of plantuml server (default: SYSL_PLANTUML or http://www.plantuml.com/plantuml
   see http://plantuml.com/server.html#install for more info)
 - `-o, --output="%(epname).png"`output file (default: %(epname).png)
 - `-s, --endpoint=ENDPOINT ...`Include endpoint in sequence diagram

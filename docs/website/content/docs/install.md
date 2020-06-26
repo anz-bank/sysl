@@ -13,8 +13,7 @@ Sysl is a CLI (Command Line Interface) that executes with the `sysl` command.
 ## Prerequisites
 
 - [Go 1.13](https://golang.org/doc/install)
-- There are extra prerequisites for several subcommands like `sysl sd`(sequence diagram generation): - Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some of the automated tests require a PlantUML dependency. Provide PlantUML access either via local installation or URL to remote service. Warning, for sensitive data the public service at www.plantuml.com is not suitable. You can use one of the following options to set up your environment: - execute `SYSL_PLANTUML=http://www.plantuml.com/plantuml` - add `export SYSL_PLANTUML=http://www.plantuml.com/plantuml` to your `.bashrc`
-  or similar - [install PlantUML](http://plantuml.com/starting) locally or run a local instance of the [PlantUML server](https://hub.docker.com/r/plantuml/plantuml-server/) using the docker image and run on port 8080. Otherwise you can refer to the [plantuml server guide](docs/plantUML_server.md)
+- There are extra prerequisites for several subcommands like `sysl sd`(sequence diagram generation): - Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation. Some of the automated tests require a PlantUML dependency. Provide PlantUML access either via local installation or URL to remote service. Warning, for sensitive data the public service at www.plantuml.com is not suitable. You can [install PlantUML](http://plantuml.com/starting) locally or run a local instance of the [PlantUML server](https://hub.docker.com/r/plantuml/plantuml-server/) using the docker image and run on port 8080. Otherwise you can refer to the [plantuml server guide](docs/plantUML_server.md)
 
 ---
 

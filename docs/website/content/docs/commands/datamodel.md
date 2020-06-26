@@ -30,7 +30,7 @@ Optional flags:
 - `--class_format="%(classname)"`
 - ` Specify the format string for data diagram participants. May include %%(appname) and %%(@foo) for attribute foo (default: %(classname))
 - `-t, --title=TITLE` Diagram title
-- `-p, --plantuml=PLANTUML` base url of plantuml server (default: SYSL_PLANTUML or http://localhost:8080/plantuml see http://plantuml.com/server.html#install for more info)
+- `-p, --plantuml=PLANTUML` base url of plantuml server (default: SYSL_PLANTUML or http://www.plantuml.com/plantuml see http://plantuml.com/server.html#install for more info)
 - `-o, --output="%(epname).png"` Output file (default: %(epname).png)
 - `-j, --project=PROJECT` Project pseudo-app to render
 - `-d, --direct` Process data model directly without project manner

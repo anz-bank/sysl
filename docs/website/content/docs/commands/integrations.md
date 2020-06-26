@@ -34,7 +34,7 @@ Optional flags:
 - `` becomes the root, but the module can not import with absolute paths (or imports must
 - `` be relative).
 - `-t, --title=TITLE` diagram title
-- `-p, --plantuml=PLANTUML` base url of plantuml server (default: SYSL_PLANTUML or http://localhost:8080/plantuml
+- `-p, --plantuml=PLANTUML` base url of plantuml server (default: SYSL_PLANTUML or http://www.plantuml.com/plantuml
 - `` see http://plantuml.com/server.html#install for more info)
 - `-o, --output="%(epname).png"` output file(default: %(epname).png)
 - `-j, --project=PROJECT` project pseudo-app to render
