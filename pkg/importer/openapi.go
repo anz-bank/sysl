@@ -268,49 +268,9 @@ func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) 
 	}
 	switch schema.Type {
 	case ObjectTypeName, "":
-		t := &StandardType{
-			name:       getSyslSafeEndpoint(name),
-			Properties: FieldList{},
-		}
-		l.intermediateTypes.Add(t)
-		for pname, pschema := range schema.Properties {
-			var fieldType Type
-			if pschema.Value != nil && pschema.Value.Type == ArrayTypeName {
-				if atype := l.typeFromRef(pschema.Value.Items.Ref); atype != nil {
-					fieldType = &Array{Items: atype}
-				} else if atype := l.typeFromRef(pschema.Value.Items.Value.Type); atype != nil {
-					fieldType = &Array{Items: atype}
-				} else if pschema.Value.Items.Value.Type == ObjectTypeName {
-					atype := l.typeFromSchema(name+"_"+getSyslSafeEndpoint(pname), pschema.Value.Items.Value)
-					fieldType = &Array{Items: atype}
-				}
-			}
-			if fieldType == nil {
-				fieldType = l.typeFromSchemaRef(getSyslSafeEndpoint(name)+"_"+getSyslSafeEndpoint(pname), pschema)
-			}
-			f := Field{
-				Name: getSyslSafeEndpoint(pname),
-				Type: fieldType,
-			}
-			if !contains(pname, schema.Required) {
-				f.Optional = true
-			}
-			t.Properties = append(t.Properties, f)
-		}
-		sortProperties(t.Properties)
-		if len(t.Properties) == 0 {
-			return l.types.AddAndRet(NewStringAlias(name))
-		}
-		return l.types.AddAndRet(t)
+		return l.typeFromObject(name, schema)
 	case ArrayTypeName:
-		t := &Array{
-			name:  name,
-			Items: l.typeFromSchemaRef(name+"_obj", schema.Items),
-		}
-		if name != "" {
-			return l.types.AddAndRet(t)
-		}
-		return t
+		return l.typeFromArray(name, schema)
 	default:
 		if len(schema.Enum) > 0 {
 			return l.types.AddAndRet(&Enum{name: name})
@@ -328,10 +288,58 @@ func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) 
 	}
 }
 
+func (l *OpenAPI3Importer) typeFromObject(name string, schema *openapi3.Schema) Type {
+	t := &StandardType{
+		name:       getSyslSafeName(name),
+		Properties: FieldList{},
+	}
+	l.intermediateTypes.Add(t)
+	for propName, propSchema := range schema.Properties {
+		var fieldType Type
+		if propSchema.Value != nil && propSchema.Value.Type == ArrayTypeName {
+			if arrayRef := l.typeFromRef(propSchema.Value.Items.Ref); arrayRef != nil {
+				fieldType = &Array{Items: arrayRef}
+			} else if arrayItemType := l.typeFromRef(propSchema.Value.Items.Value.Type); arrayItemType != nil {
+				fieldType = &Array{Items: arrayItemType}
+			} else if propSchema.Value.Items.Value.Type == ObjectTypeName {
+				arrayObj := l.typeFromSchema(name+"_"+getSyslSafeName(propName), propSchema.Value.Items.Value)
+				fieldType = &Array{Items: arrayObj}
+			}
+		}
+		if fieldType == nil {
+			fieldType = l.typeFromSchemaRef(getSyslSafeName(name)+"_"+getSyslSafeName(propName), propSchema)
+		}
+		f := Field{
+			Name: getSyslSafeName(propName),
+			Type: fieldType,
+		}
+		if !contains(propName, schema.Required) {
+			f.Optional = true
+		}
+		t.Properties = append(t.Properties, f)
+	}
+	sortProperties(t.Properties)
+	if len(t.Properties) == 0 {
+		return l.types.AddAndRet(NewStringAlias(name))
+	}
+	return l.types.AddAndRet(t)
+}
+
+func (l *OpenAPI3Importer) typeFromArray(name string, schema *openapi3.Schema) Type {
+	t := &Array{
+		name:  name,
+		Items: l.typeFromSchemaRef(name+"_obj", schema.Items),
+	}
+	if name != "" {
+		return l.types.AddAndRet(t)
+	}
+	return t
+}
+
 func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
 	epMap := map[string][]Endpoint{}
 
-	l.initGlobalParams()
+	l.convertGlobalParams()
 
 	for path, item := range l.spec.Paths {
 		ops := map[string]*openapi3.Operation{
@@ -346,7 +354,7 @@ func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
 
 		for method, op := range ops {
 			if op != nil {
-				epMap[method] = append(epMap[method], l.initEndpoint(path, op, params))
+				epMap[method] = append(epMap[method], l.convertEndpoint(path, op, params))
 			}
 		}
 	}
@@ -364,7 +372,7 @@ func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
 			syslSafeEps := make([]Endpoint, 0, len(eps))
 			for _, e := range eps {
 				syslSafeEps = append(syslSafeEps, Endpoint{
-					Path:        getSyslSafeEndpoint(e.Path),
+					Path:        getSyslSafeName(e.Path),
 					Description: e.Description,
 					Params:      e.Params,
 					Responses:   e.Responses,
@@ -396,15 +404,11 @@ func isSchemaDefinedObject(ref *openapi3.SchemaRef) bool {
 	return true
 }
 
-func (l *OpenAPI3Importer) initEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
+func (l *OpenAPI3Importer) convertEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
 	var responses []Response
-	typePrefix := strings.NewReplacer(
-		"/", "_",
-		"{", "_",
-		"}", "_",
-		"-", "_").Replace(path) + "_"
+	typePrefix := getSyslSafeName(cleanEndpointPath(path)) + "_"
 	for statusCode, resp := range op.Responses {
-		text := "error"
+		text := statusCode
 		if statusCode[0] == '2' {
 			text = "ok"
 		}
@@ -491,7 +495,7 @@ func (l *OpenAPI3Importer) initEndpoint(path string, op *openapi3.Operation, par
 	return res
 }
 
-func (l *OpenAPI3Importer) initGlobalParams() {
+func (l *OpenAPI3Importer) convertGlobalParams() {
 	l.globalParams = Parameters{
 		items:       map[string]Param{},
 		insertOrder: []string{},
@@ -550,33 +554,4 @@ func (l *OpenAPI3Importer) buildParam(p *openapi3.Parameter) Param {
 		},
 		In: p.In,
 	}
-}
-
-func hasToBeSyslSafe(in string) bool {
-	return strings.ToLower(in) == "query"
-}
-
-func convertToSyslSafe(name string) string {
-	if !strings.ContainsAny(name, "- ") {
-		return name
-	}
-
-	syslSafe := strings.Builder{}
-	toUppercase := false
-	for i := 0; i < len(name); i++ {
-		switch name[i] {
-		case '-':
-			toUppercase = true
-		case ' ':
-			continue
-		default:
-			if toUppercase {
-				syslSafe.WriteString(strings.ToUpper(string(name[i])))
-				toUppercase = false
-			} else {
-				syslSafe.WriteByte(name[i])
-			}
-		}
-	}
-	return syslSafe.String()
 }
