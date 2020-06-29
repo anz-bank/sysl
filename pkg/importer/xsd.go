@@ -12,33 +12,61 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func LoadXSDText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
+func MakeXSDImporter(logger *logrus.Logger) *XSDImporter {
+	return &XSDImporter{
+		logger: logger,
+	}
+}
+
+type XSDImporter struct {
+	appName string
+	pkg     string
+	types   TypeList
+	logger  *logrus.Logger
+}
+
+func (i *XSDImporter) Load(input string) (string, error) {
 	xsd.StandardSchema = [][]byte{} // Ignore all the standard schemas,
-	specs, err := xsd.Parse([]byte(text))
+	specs, err := xsd.Parse([]byte(input))
 	if err != nil {
 		return "", err
 	}
 
-	types := TypeList{}
+	i.types = TypeList{}
 	for _, schema := range specs {
-		schemaTypes := loadSchemaTypes(schema, logger)
-		types.Add(schemaTypes.Items()...)
+		schemaTypes := loadSchemaTypes(schema, i.logger)
+		i.types.Add(schemaTypes.Items()...)
 	}
-	types.Sort()
+	i.types.Sort()
 
 	info := SyslInfo{
-		OutputData:  args,
+		OutputData: OutputData{
+			AppName: i.appName,
+			Package: i.pkg,
+		},
 		Description: "",
 		Title:       "",
 	}
 
 	result := &bytes.Buffer{}
-	w := newWriter(result, logger)
-	if err := w.Write(info, types); err != nil {
+	w := newWriter(result, i.logger)
+	if err := w.Write(info, i.types); err != nil {
 		return "", err
 	}
 
 	return result.String(), nil
+}
+
+// Set the AppName of the imported app
+func (i *XSDImporter) WithAppName(appName string) Importer {
+	i.appName = appName
+	return i
+}
+
+// Set the package attribute of the imported app
+func (i *XSDImporter) WithPackage(pkg string) Importer {
+	i.pkg = pkg
+	return i
 }
 
 func makeNamespacedType(name xml.Name, target Type) Type {

@@ -2,26 +2,70 @@ package importer
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/importer/openapi2conv"
 	"github.com/ghodss/yaml"
 
 	"github.com/getkin/kin-openapi/openapi2"
+	"github.com/getkin/kin-openapi/openapi2conv"
 	"github.com/getkin/kin-openapi/openapi3"
 
 	"github.com/sirupsen/logrus"
 )
 
-func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
-	openapiv3, basePath, err := convertToOpenapiv3([]byte(text))
+func LoadSwaggerText(args OutputData, oas2spec string, logger *logrus.Logger) (out string, err error) {
+	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec))
 	if err != nil {
 		return "", err
 	}
-	return importOpenAPI(args, openapiv3, logger, basePath)
+	importer := MakeOpenAPI3Importer(logger, basePath, "")
+	importer.WithAppName(args.AppName).WithPackage(args.Package)
+	importer.spec = oas3spec
+	return importer.Parse()
 }
 
-func convertToOpenapiv3(data []byte) (*openapi3.Swagger, string, error) {
+func MakeOpenAPI2Importer(logger *logrus.Logger, basePath string, filePath string) *OpenAPI2Importer {
+	return &OpenAPI2Importer{OpenAPI3Importer: &OpenAPI3Importer{
+		logger:            logger,
+		externalSpecs:     make(map[string]*OpenAPI3Importer),
+		types:             TypeList{},
+		intermediateTypes: TypeList{},
+		basePath:          basePath,
+		swaggerRoot:       filePath,
+	}}
+}
+
+type OpenAPI2Importer struct {
+	openAPI2Spec string
+	*OpenAPI3Importer
+}
+
+func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
+	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec))
+	if err != nil {
+		return "", fmt.Errorf("error converting openapi 2:%w", err)
+	}
+	l.openAPI2Spec = oas2spec
+	l.basePath = basePath
+	l.spec = oas3spec
+	return l.Parse()
+}
+
+// Set the AppName of the imported app
+func (l *OpenAPI2Importer) WithAppName(appName string) Importer {
+	l.appName = appName
+	return l
+}
+
+// Set the package attribute of the imported app
+func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
+	l.pkg = pkg
+	return l
+}
+
+// convertToOpenAPI3 takes a swagger spec and converts it to openapi3
+func convertToOpenAPI3(data []byte) (*openapi3.Swagger, string, error) {
 	var swagger2 openapi2.Swagger
 	jsondata, err := yaml.YAMLToJSON(data)
 	if err != nil {

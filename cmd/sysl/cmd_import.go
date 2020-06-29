@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/sirupsen/logrus"
 
 	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/spf13/afero"
@@ -24,11 +26,7 @@ func (p *importCmd) Name() string       { return "import" }
 func (p *importCmd) MaxSyslModule() int { return 0 }
 
 func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	opts := []string{importer.ModeGrammar, importer.ModeSwagger, importer.ModeXSD, importer.ModeOpenAPI}
-	sort.Strings(opts)
-	optsText := strings.Join(opts, ", ")
-	opts = append(opts, importer.ModeAuto)
-
+	optsText := buildOptionsText(importer.Formats)
 	cmd := app.Command(p.Name(), "Import foreign type to sysl. Supported types: ["+optsText+"]")
 	cmd.Flag("input", "input filename").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
@@ -36,15 +34,10 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("package",
 		"name of the sysl package to define in sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
+	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]."+
+		"NOTE: This flag is deprecated. Please remove this from your scripts, as formats are now autodetected",
+		optsText)).String()
 
-	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s, %s]", importer.ModeAuto, optsText)).
-		Short('f').
-		Default(importer.ModeAuto).
-		HintOptions(opts...).
-		EnumVar(&p.Mode, opts...)
-	//TODO: clean this up, remove p.mode
-
-	EnsureFlagsNonEmpty(cmd, "package")
 	return cmd
 }
 
@@ -54,58 +47,29 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 		return err
 	}
 
-	if p.Mode == "auto" {
-		p.Mode = guessFileType(p.filename, data)
-	}
-	var imp importer.Func
-	switch p.Mode {
-	case importer.ModeSwagger:
-		args.Logger.Infof("Using swagger importer\n")
-		imp = importer.LoadSwaggerText
-	case importer.ModeXSD:
-		args.Logger.Infof("Using xsd importer\n")
-		imp = importer.LoadXSDText
-	case importer.ModeGrammar:
-		args.Logger.Infof("Using grammar importer\n")
-		//imp = importer.LoadGrammar
-	case importer.ModeOpenAPI:
-		args.Logger.Infof("Using OpenAPI importer\n")
-		imp = importer.LoadOpenAPIText
-	default:
-		args.Logger.Fatalf("Unsupported input format: %s\n", p.Mode)
-	}
-	p.SwaggerRoot, err = filepath.Abs(p.filename)
+	var imp importer.Importer
+	inputFilePath, err := filepath.Abs(p.filename)
 	if err != nil {
 		return err
 	}
-	p.SwaggerRoot = filepath.Dir(p.SwaggerRoot)
-	output, err := imp(p.OutputData, string(data), args.Logger)
+	imp, err = importer.Factory(inputFilePath, data, logrus.New())
 	if err != nil {
 		return err
 	}
-	return afero.WriteFile(args.Filesystem, p.outfile, []byte(output), 0644)
-}
-
-func guessYamlType(filename string, data []byte) string {
-	for _, check := range []string{importer.ModeSwagger, importer.ModeOpenAPI} {
-		if strings.Contains(string(data), check) {
-			return check
-		}
+	imp.WithAppName(p.AppName).WithPackage(p.Package)
+	output, err := imp.Load(string(data))
+	if err != nil {
+		return err
 	}
 
-	return "unknown"
+	return afero.WriteFile(args.Filesystem, p.outfile, []byte(output), os.ModePerm)
 }
 
-func guessFileType(filename string, data []byte) string {
-	parts := strings.Split(filename, ".")
-	switch ext := parts[len(parts)-1]; ext {
-	case "xml", "xsd":
-		return importer.ModeXSD
-	case "yaml", "yml", "json":
-		return guessYamlType(filename, data)
-	case "g":
-		return importer.ModeGrammar
-	default:
-		return ext
+func buildOptionsText(opts []importer.Format) string {
+	var optionsText []string
+	for _, format := range opts {
+		optionsText = append(optionsText, format.Name)
 	}
+	sort.Strings(optionsText)
+	return strings.Join(optionsText, ", ")
 }

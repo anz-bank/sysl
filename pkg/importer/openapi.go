@@ -15,68 +15,77 @@ import (
 
 const openapiv3DefinitionPrefix = "#/components/schemas/"
 
-func LoadOpenAPIText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
-	if strings.Contains(text, "swagger") {
-		return LoadSwaggerText(args, text, logger)
-	}
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(text))
-	if err != nil {
-		return "", err
-	}
-	return importOpenAPI(args, swagger, logger, "")
-}
-
-func importOpenAPI(args OutputData,
-	swagger *openapi3.Swagger,
-	logger *logrus.Logger, basepath string) (out string, err error) {
-	l := &loader{
+func MakeOpenAPI3Importer(logger *logrus.Logger, basePath string, filePath string) *OpenAPI3Importer {
+	return &OpenAPI3Importer{
 		logger:            logger,
-		externalSpecs:     make(map[string]*loader),
-		spec:              swagger,
+		externalSpecs:     make(map[string]*OpenAPI3Importer),
 		types:             TypeList{},
 		intermediateTypes: TypeList{},
-		mode:              args.Mode,
-		swaggerRoot:       args.SwaggerRoot,
+		basePath:          basePath,
+		swaggerRoot:       filePath,
 	}
-	l.convertTypes()
-	endpoints := l.convertEndpoints()
-
-	result := &bytes.Buffer{}
-	w := newWriter(result, logger)
-	if err := w.Write(l.convertInfo(args, basepath), l.types, endpoints...); err != nil {
-		return "", err
-	}
-	return result.String(), nil
 }
 
-type loader struct {
+type OpenAPI3Importer struct {
+	appName       string
+	pkg           string
+	basePath      string // Used for Swagger2.0 files which have a basePath field
 	logger        *logrus.Logger
-	externalSpecs map[string]*loader
+	externalSpecs map[string]*OpenAPI3Importer
 	spec          *openapi3.Swagger
 	types         TypeList
 	// intermediateTypes is a temporary list which places the type is in parsing process still.
 	// It can help to support circular dependency, like type A has an array contains type A itself.
 	intermediateTypes TypeList
 	swaggerRoot       string
-	mode              string
 	globalParams      Parameters
 }
 
-func (l *loader) newLoaderWithExternalSpec(path string, swagger *openapi3.Swagger) {
-	l.externalSpecs[path] = &loader{
-		logger:        l.logger,
-		externalSpecs: make(map[string]*loader),
-		spec:          swagger,
-		types:         TypeList{},
-		mode:          l.mode,
-		swaggerRoot:   filepath.Dir(path),
+func (l *OpenAPI3Importer) Load(input string) (string, error) {
+	loader := openapi3.NewSwaggerLoader()
+	loader.IsExternalRefsAllowed = true
+	url, err := url.Parse(l.swaggerRoot)
+	if err != nil {
+		return "", err
 	}
-	l.externalSpecs[path].convertTypes()
-	// external refs are usually found during initEndpoints, this is to find all external refs
-	l.externalSpecs[path].convertEndpoints()
+	swagger, err := loader.LoadSwaggerFromDataWithPath([]byte(input), url)
+	if err != nil {
+		return "", fmt.Errorf("error loading openapi3 file:%w", err)
+	}
+	l.spec = swagger
+	return l.Parse()
 }
 
-func (l *loader) convertInfo(args OutputData, basepath string) SyslInfo {
+func (l *OpenAPI3Importer) Parse() (string, error) {
+	l.convertTypes()
+	endpoints := l.convertEndpoints()
+
+	result := &bytes.Buffer{}
+	w := newWriter(result, l.logger)
+	if err := w.Write(l.convertInfo(OutputData{
+		AppName: l.appName,
+		Package: l.pkg,
+	}, l.basePath), l.types, endpoints...); err != nil {
+		return "", err
+	}
+	return result.String(), nil
+}
+
+// Set the AppName of the imported app
+func (l *OpenAPI3Importer) WithAppName(appName string) Importer {
+	l.appName = appName
+	return l
+}
+
+// Set the package attribute of the imported app
+func (l *OpenAPI3Importer) WithPackage(pkg string) Importer {
+	l.pkg = pkg
+	return l
+}
+
+// basepath represents the Swagger basepath value.
+// This is a swagger only field that isn't relevant to openapi3
+func (l *OpenAPI3Importer) convertInfo(args OutputData, basepath string) SyslInfo {
 	info := SyslInfo{
 		OutputData:  args,
 		Title:       l.spec.Info.Title,
@@ -107,7 +116,7 @@ func (l *loader) convertInfo(args OutputData, basepath string) SyslInfo {
 	return info
 }
 
-func (l *loader) convertTypes() {
+func (l *OpenAPI3Importer) convertTypes() {
 	// First init the swagger -> sysl mappings
 	var swaggerToSyslMappings = map[string]string{
 		"boolean": "bool",
@@ -132,7 +141,8 @@ func (l *loader) convertTypes() {
 	l.types.Sort()
 }
 
-func (l *loader) typeFromRef(path string) Type {
+// handles importing of reference types.
+func (l *OpenAPI3Importer) typeFromRef(path string) Type {
 	// matches with external file remote reference
 	if isOpenAPIOrSwaggerExt(path) {
 		if t := l.typeFromRemoteRef(path); t != nil {
@@ -162,21 +172,9 @@ func (l *loader) typeFromRef(path string) Type {
 	return nil
 }
 
-func (l *loader) typeFromRemoteRef(path string) Type {
-	cleaned := strings.Split(path, "#")
-	if len(cleaned) != 2 {
-		return nil
-	}
-
-	refPath, defPath := cleaned[0], openapiv3DefinitionPrefix+strings.TrimPrefix(cleaned[1], "/definitions/")
-	if !filepath.IsAbs(refPath) || strings.HasPrefix(refPath, l.swaggerRoot) {
-		var err error
-		refPath, err = filepath.Abs(filepath.Join(l.swaggerRoot, refPath))
-		if err != nil {
-			panic(err)
-		}
-	}
-
+// OpenAPI specs can references type definitions in other files.
+func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
+	refPath, defPath := l.parseRef(remoteRef)
 	if externalLoader, fileLoaded := l.externalSpecs[refPath]; fileLoaded {
 		return externalLoader.typeFromRef(defPath)
 	}
@@ -185,33 +183,60 @@ func (l *loader) typeFromRemoteRef(path string) Type {
 	return l.externalSpecs[refPath].typeFromRef(defPath)
 }
 
-func (l *loader) loadExternalSchema(path string) {
-	l.newLoaderWithExternalSpec(path, l.getOpenapi3(path))
+// parseRef breaks a reference string into a referencepath and a definitionpath
+// It also converts swagger refs to openapi3 refs
+// Remote refs are of the format:
+//  #/components/schemas/Date
+//  ../resources/users.yaml
+// resources/users.yaml#/components/schemas/Date
+func (l *OpenAPI3Importer) parseRef(ref string) (refPath string, defPath string) {
+	refPath, defPath = splitRef(ref)
+	defPath = toOpenAPI3Ref(defPath)
+	refPath = filepath.Join(filepath.Dir(l.swaggerRoot), refPath)
+	return refPath, defPath
 }
 
-func guessYamlType(filename string, data []byte) string {
-	for _, check := range []string{ModeSwagger, ModeOpenAPI} {
-		if strings.Contains(string(data), check) {
-			return check
-		}
+func splitRef(ref string) (string, string) {
+	cleaned := strings.Split(ref, "#")
+	if len(cleaned) != 2 {
+		return "", ""
 	}
-
-	return "unknown"
+	return cleaned[0], "#" + cleaned[1]
 }
-func (l *loader) getOpenapi3(path string) *openapi3.Swagger {
+
+func toOpenAPI3Ref(ref string) string {
+	if strings.HasPrefix(ref, "#/definitions/") {
+		ref = strings.Replace(ref, "#/definitions/", "#/components/schemas/", 1)
+	}
+	return ref
+}
+
+func (l *OpenAPI3Importer) loadExternalSchema(remoteRef string) {
+	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", remoteRef)
+	l.externalSpecs[remoteRef].spec = l.externalSpecs[remoteRef].getExternalSpec(remoteRef)
+	l.externalSpecs[remoteRef].convertTypes()
+	// external refs are usually found during initEndpoints, this is to find all external refs
+	l.externalSpecs[remoteRef].convertEndpoints()
+}
+
+// Grabs openapi or swagger spec from given path
+func (l *OpenAPI3Importer) getExternalSpec(path string) *openapi3.Swagger {
 	var swagger *openapi3.Swagger
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	mode := guessYamlType(path, data)
-	switch mode {
-	case ModeSwagger:
-		swagger, _, err = convertToOpenapiv3(data)
-	case ModeOpenAPI:
+	formats := []Format{OpenAPI3, Swagger}
+	format, err := GuessFileType(path, data, formats)
+	if err != nil {
+		panic(err)
+	}
+
+	switch format.Name {
+	case Swagger.Name:
+		swagger, _, err = convertToOpenAPI3(data)
+	case OpenAPI3.Name:
 		swagger, err = openapi3.NewSwaggerLoader().LoadSwaggerFromData(data)
-	default:
-		panic("unknown mode: " + mode)
 	}
 	if err != nil {
 		panic(err)
@@ -219,7 +244,7 @@ func (l *loader) getOpenapi3(path string) *openapi3.Swagger {
 	return swagger
 }
 
-func (l *loader) typeFromSchemaRef(name string, ref *openapi3.SchemaRef) Type {
+func (l *OpenAPI3Importer) typeFromSchemaRef(name string, ref *openapi3.SchemaRef) Type {
 	if ref == nil {
 		return nil
 	}
@@ -237,7 +262,7 @@ func sortProperties(props FieldList) {
 	})
 }
 
-func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
+func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) Type {
 	if t, found := l.types.Find(name); found {
 		return t
 	}
@@ -303,7 +328,7 @@ func (l *loader) typeFromSchema(name string, schema *openapi3.Schema) Type {
 	}
 }
 
-func (l *loader) convertEndpoints() []MethodEndpoints {
+func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
 	epMap := map[string][]Endpoint{}
 
 	l.initGlobalParams()
@@ -371,7 +396,7 @@ func isSchemaDefinedObject(ref *openapi3.SchemaRef) bool {
 	return true
 }
 
-func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
+func (l *OpenAPI3Importer) initEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
 	var responses []Response
 	typePrefix := strings.NewReplacer(
 		"/", "_",
@@ -466,7 +491,7 @@ func (l *loader) initEndpoint(path string, op *openapi3.Operation, params Parame
 	return res
 }
 
-func (l *loader) initGlobalParams() {
+func (l *OpenAPI3Importer) initGlobalParams() {
 	l.globalParams = Parameters{
 		items:       map[string]Param{},
 		insertOrder: []string{},
@@ -477,7 +502,7 @@ func (l *loader) initGlobalParams() {
 	}
 }
 
-func (l *loader) findResponse(ref *openapi3.ResponseRef) *openapi3.Response {
+func (l *OpenAPI3Importer) findResponse(ref *openapi3.ResponseRef) *openapi3.Response {
 	if ref.Value != nil {
 		return ref.Value
 	}
@@ -488,7 +513,7 @@ func (l *loader) findResponse(ref *openapi3.ResponseRef) *openapi3.Response {
 	return &openapi3.Response{}
 }
 
-func (l *loader) buildParams(params openapi3.Parameters) Parameters {
+func (l *OpenAPI3Importer) buildParams(params openapi3.Parameters) Parameters {
 	out := Parameters{}
 	for _, param := range params {
 		var paramType Param
@@ -509,7 +534,7 @@ func (l *loader) buildParams(params openapi3.Parameters) Parameters {
 	return out
 }
 
-func (l *loader) buildParam(p *openapi3.Parameter) Param {
+func (l *OpenAPI3Importer) buildParam(p *openapi3.Parameter) Param {
 	name := p.Name
 	if hasToBeSyslSafe(p.In) {
 		name = convertToSyslSafe(name)
