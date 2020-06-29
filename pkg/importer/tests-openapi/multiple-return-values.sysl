@@ -11,7 +11,11 @@ testapp "Simple" [package="package_foo"]:
     /test:
         GET:
             | No description.
-            return error
+            return 400
+            return 401
+            return 500
+            return 503
+            return 504
             return ok <: _test_ok
 
     #---------------------------------------------------------------------------
