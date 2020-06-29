@@ -18,6 +18,11 @@ func GenerateEndpointAnalysisDiagram(m *sysl.Module) (string, error) {
 	return generateEndpointAnalysisDiagramHelper(m, &[]externalLink{}, true)
 }
 
+//Similar to the above, but accepts a list of applications and returns a diagram specific to those
+func GenerateMultipleAppEndpointAnalysisDiagram(m *sysl.Module, appNames []string) (string, error) {
+	return generateMultipleAppEndpointAnalysisDiagramHelper(m, appNames, &[]externalLink{}, true)
+}
+
 //generateEndpointAnalysisDiagram is a helper which has additional arguments which need not be entered by the user
 func generateEndpointAnalysisDiagramHelper(m *sysl.Module,
 	externalLinks *[]externalLink, theStart bool) (string, error) {
@@ -29,6 +34,29 @@ func generateEndpointAnalysisDiagramHelper(m *sysl.Module,
 	for appName, app := range m.Apps {
 		result += fmt.Sprintf(" subgraph %d[\"%s\"]\n", count, appName)
 		for epName, endPoint := range app.Endpoints {
+			statements := endPoint.Stmt
+			result += printEndpointAnalysisStatements(m, statements, mermaid.CleanString(epName), externalLinks)
+		}
+		result += " end\n"
+		count++
+	}
+	for _, eLink := range *externalLinks {
+		result += fmt.Sprintf(" %s --> %s\n", eLink.statement, eLink.endPoint)
+	}
+	return result, nil
+}
+
+func generateMultipleAppEndpointAnalysisDiagramHelper(m *sysl.Module, appNames []string,
+	externalLinks *[]externalLink, theStart bool) (string, error) {
+	var result string
+	if theStart {
+		result = mermaid.GeneratedHeader + "graph TD\n"
+	}
+	count := 1
+	for _, appName := range appNames {
+		result += fmt.Sprintf(" subgraph %d[\"%s\"]\n", count, appName)
+		endPoints := m.Apps[appName].Endpoints
+		for epName, endPoint := range endPoints {
 			statements := endPoint.Stmt
 			result += printEndpointAnalysisStatements(m, statements, mermaid.CleanString(epName), externalLinks)
 		}

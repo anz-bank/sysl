@@ -136,6 +136,6 @@ func integrationPairsContain(i []integrationPair, ip integrationPair) bool {
 	return false
 }
 
-func cleanAppName (s string) string {
+func cleanAppName(s string) string {
 	return strings.ReplaceAll(s, " ", "_")
 }
