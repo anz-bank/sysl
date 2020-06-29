@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/anz-bank/sysl/pkg/mermaid"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -35,7 +36,7 @@ func generateSequenceDiagramHelper(m *sysl.Module, appName string, epName string
 		if err := isValidAppNameAndEndpoint(m, appName, epName); err != nil {
 			return "", err
 		}
-		result += fmt.Sprintf(" %s->>%s: %s\n", previousApp, appName, epName)
+		result += fmt.Sprintf(" %s ->> %s: %s\n", previousApp, cleanAppName(appName), epName)
 	}
 	statements := m.Apps[appName].Endpoints[epName].GetStmt()
 	result += printSequenceDiagramStatements(m, statements, appName, previousApp, indent, sequencePairs, theStart)
@@ -125,20 +126,24 @@ func isValidAppNameAndEndpoint(m *sysl.Module, appName string, epName string) er
 
 //callStatement is a printer to print a call statement
 func callStatement(appName string, epName string, nextApp string, indent int) string {
-	return fmt.Sprintf("%s%s->>+%s: %s\n", addIndent(indent), appName, nextApp, epName)
+	return fmt.Sprintf("%s%s ->>+ %s: %s\n", addIndent(indent),
+		cleanAppName(appName), cleanAppName(nextApp), epName)
 }
 
 //retStatement is a printer to print a return statement
 func retStatement(appName string, epName string, previousApp string, indent int, theStart bool) string {
 	if theStart {
-		return fmt.Sprintf("%s%s-->>%s: %s\n", addIndent(indent), appName, previousApp, epName)
+		return fmt.Sprintf("%s%s -->> %s: %s\n", addIndent(indent),
+			cleanAppName(appName), cleanAppName(previousApp), epName)
 	}
-	return fmt.Sprintf("%s%s-->>-%s: %s\n", addIndent(indent), appName, previousApp, epName)
+	return fmt.Sprintf("%s%s -->>- %s: %s\n", addIndent(indent),
+		cleanAppName(appName), cleanAppName(previousApp), epName)
 }
 
 //actionStatement is a printer to print an action statement
 func actionStatement(appName string, action string, indent int) string {
-	return fmt.Sprintf("%s%s->>%s: %s\n", addIndent(indent), appName, appName, action)
+	return fmt.Sprintf("%s%s ->> %s: %s\n", addIndent(indent),
+		cleanAppName(appName), cleanAppName(appName), action)
 }
 
 //addIndent adds indents based on the input
@@ -158,4 +163,8 @@ func sequencePairsContain(s []sequencePair, sp sequencePair) bool {
 		}
 	}
 	return false
+}
+
+func cleanAppName(s string) string {
+	return strings.ReplaceAll(s, "-", "_")
 }

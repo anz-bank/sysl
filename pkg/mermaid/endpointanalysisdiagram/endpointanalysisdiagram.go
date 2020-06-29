@@ -36,7 +36,7 @@ func generateEndpointAnalysisDiagramHelper(m *sysl.Module,
 		count++
 	}
 	for _, eLink := range *externalLinks {
-		result += fmt.Sprintf(" %s-->%s\n", eLink.statement, eLink.endPoint)
+		result += fmt.Sprintf(" %s --> %s\n", eLink.statement, eLink.endPoint)
 	}
 	return result, nil
 }
@@ -49,7 +49,7 @@ func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statemen
 		switch c := statement.Stmt.(type) {
 		case *sysl.Statement_Call:
 			appEndPoint := fmt.Sprintf("%s-%s", mermaid.CleanString(c.Call.Target.Part[0]), mermaid.CleanString(c.Call.Endpoint))
-			result += fmt.Sprintf("  %s-->%s\n", endPoint, appEndPoint)
+			result += fmt.Sprintf("  %s --> %s\n", endPoint, appEndPoint)
 			pair := externalLink{appEndPoint, mermaid.CleanString(c.Call.Endpoint)}
 			if !externalLinksContain(*externalLinks, pair) {
 				*externalLinks = append(*externalLinks, pair)
@@ -65,9 +65,9 @@ func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statemen
 		case *sysl.Statement_Foreach:
 			result += printEndpointAnalysisStatements(m, c.Foreach.Stmt, endPoint, externalLinks)
 		case *sysl.Statement_Action:
-			result += fmt.Sprintf("  %s-->%s\n", endPoint, mermaid.CleanString(c.Action.Action))
+			result += fmt.Sprintf("  %s --> %s\n", endPoint, mermaid.CleanString(c.Action.Action))
 		case *sysl.Statement_Ret:
-			result += fmt.Sprintf("  %s-->%s\n", endPoint, mermaid.CleanString(c.Ret.Payload))
+			result += fmt.Sprintf("  %s --> %s\n", endPoint, mermaid.CleanString(c.Ret.Payload))
 		default:
 			result += ""
 		}
