@@ -166,8 +166,9 @@ func (v *DataModelView) DrawPrimitive(
 ) {
 	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s) %s%s {\n", classString, viewParam.EntityName,
-		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, strings.ToLower(entity), entityGreaterThanArrow))
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s) %s%s {\n",
+		classString, viewParam.EntityName, encEntity,
+		entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, strings.ToLower(entity), entityGreaterThanArrow))
 
 	if _, exists := relationshipMap[encEntity]; !exists {
 		relationshipMap[encEntity] = map[string]RelationshipParam{}
