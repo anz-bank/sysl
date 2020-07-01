@@ -42,7 +42,7 @@ components:
       type: object
       properties:
         name:
-          type: SimpleObj
+          type: SimpleObj123
   responses:
     500Response:
       description: Internal Server Error

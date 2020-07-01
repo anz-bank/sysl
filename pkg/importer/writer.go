@@ -313,6 +313,7 @@ func (w *writer) writeDefinition(t *StandardType) {
 func (w *writer) writeExternalAlias(item Type) {
 	aliasType := "string"
 	aliasName := getSyslTypeName(item)
+	attrs := ""
 	switch t := item.(type) {
 	case *StandardType:
 		if len(t.Properties) > 0 {
@@ -320,13 +321,14 @@ func (w *writer) writeExternalAlias(item Type) {
 		}
 	case *ExternalAlias:
 		aliasType = getSyslTypeName(t.Target)
+		attrs = appendAttributesString(" ", t.Attrs)
 	case *Alias:
 		aliasType = getSyslTypeName(t.Target)
 	case *Array:
 		aliasType = getSyslTypeName(item)
 		aliasName = t.name
 	}
-	w.writeLines(fmt.Sprintf("!alias %s:", aliasName),
+	w.writeLines(fmt.Sprintf("!alias %s%s:", aliasName, attrs),
 		PushIndent, aliasType, PopIndent)
 }
 

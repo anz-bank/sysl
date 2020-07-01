@@ -316,6 +316,7 @@ func (l *OpenAPI3Importer) typeFromObject(name string, schema *openapi3.Schema) 
 		if !contains(propName, schema.Required) {
 			f.Optional = true
 		}
+
 		t.Properties = append(t.Properties, f)
 	}
 	sortProperties(t.Properties)
