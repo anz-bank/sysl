@@ -31,7 +31,7 @@ func (m *Modules) Len() int {
 func (m *Modules) GetByFilename(filename, ver string) *Module {
 	for i, mod := range *m {
 		if hasPathPrefix(mod.Name, filename) {
-			if i != 0 && ver != "" && mod.Version != ver {
+			if i != 0 && ver != "" && ver != "master" && mod.Version != ver {
 				continue
 			}
 			return mod

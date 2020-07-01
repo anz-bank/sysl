@@ -37,7 +37,7 @@ var Grammar = Format{
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasDocument
 var OpenAPI3 = Format{
 	Name:      "openapi3",
-	Signature: `openapi: "3`,
+	Signature: `openapi:`,
 	FileExt:   []string{".yaml", ".json", ".yml"},
 }
 
@@ -45,7 +45,7 @@ var OpenAPI3 = Format{
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#swaggerObject
 var Swagger = Format{
 	Name:      "swagger",
-	Signature: `swagger: "2.0"`,
+	Signature: `swagger:`,
 	FileExt:   []string{".yaml", ".json", ".yml"},
 }
 
