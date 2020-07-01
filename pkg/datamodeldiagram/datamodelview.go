@@ -13,8 +13,8 @@ import (
 const classString = `class`
 const relationArrow = `}--`
 const tupleArrow = `*--`
-const entityLessThanArrow = `<< (`
-const entityGreaterThanArrow = `) >>`
+const entityLessThanArrow = `<< `
+const entityGreaterThanArrow = ` >>`
 
 type DataModelParam struct {
 	cmdutils.ClassLabeler
@@ -117,7 +117,7 @@ func (v *DataModelView) DrawRelation(
 ) {
 	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s)%s {\n", classString, viewParam.EntityName,
 		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
 
 	// sort and iterate over attributes
@@ -166,14 +166,12 @@ func (v *DataModelView) DrawPrimitive(
 ) {
 	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
-		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s)%s%s {\n", classString, viewParam.EntityName,
+		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, strings.ToLower(entity), entityGreaterThanArrow))
 
 	if _, exists := relationshipMap[encEntity]; !exists {
 		relationshipMap[encEntity] = map[string]RelationshipParam{}
 	}
-	// Add default property id for primitive types
-	v.StringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", "id", strings.ToLower(entity)))
 	v.StringBuilder.WriteString("}\n")
 }
 
@@ -184,7 +182,7 @@ func (v *DataModelView) DrawTuple(
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
 	encEntity := v.UniqueVarForAppName(strings.Split(viewParam.EntityName, ".")...)
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s)%s {\n", classString, viewParam.EntityName,
 		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
 	var appName string
 	var relation string
