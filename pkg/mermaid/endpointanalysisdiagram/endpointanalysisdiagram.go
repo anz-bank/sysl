@@ -18,7 +18,7 @@ func GenerateEndpointAnalysisDiagram(m *sysl.Module) (string, error) {
 	return generateEndpointAnalysisDiagramHelper(m, &[]externalLink{}, true)
 }
 
-//Similar to the above, but accepts a list of applications and returns a diagram specific to those
+//Similar to the above, but accepts a slice of application names and returns a diagram only including applications specified
 func GenerateMultipleAppEndpointAnalysisDiagram(m *sysl.Module, appNames []string) (string, error) {
 	return generateMultipleAppEndpointAnalysisDiagramHelper(m, appNames, &[]externalLink{}, true)
 }
