@@ -1,224 +1,224 @@
-apps: <
+apps: {
   key: "Client"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Client"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "OnClick"
-      value: <
+      value: {
         name: "OnClick"
-        param: <
+        param: {
           name: "arg1"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "type1"
-                >
-              >
-            >
-          >
-        >
-        param: <
+                }
+              }
+            }
+          }
+        }
+        param: {
           name: "arg2"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "type2"
-                >
-              >
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+                }
+              }
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "Server"
-            >
+            }
             endpoint: "Endpoint"
-            arg: <
+            arg: {
               name: "id"
-            >
-          >
-          attrs: <
+            }
+          }
+          attrs: {
             key: "patterns"
-            value: <
-              a: <
-                elt: <
+            value: {
+              a: {
+                elt: {
                   s: "https"
-                >
-                elt: <
+                }
+                elt: {
                   s: "soap"
-                >
-              >
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+                }
+              }
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "Server"
-            >
+            }
             endpoint: "PUT /foo/"
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "Server"
-            >
+            }
             endpoint: "PUT /foo"
-            arg: <
+            arg: {
               name: "bar"
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "Server"
-            >
+            }
             endpoint: "PUT /foo"
-            arg: <
+            arg: {
               name: "bar <: String"
-            >
-          >
-        >
-        source_context: <
+            }
+          }
+        }
+        source_context: {
           file: "tests/args.sysl"
-          start: <
+          start: {
             line: 12
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 17
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/args.sysl"
-      start: <
+      start: {
         line: 11
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 11
-      >
-    >
-  >
->
-apps: <
+      }
+    }
+  }
+}
+apps: {
   key: "Server"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Server"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "Endpoint"
-      value: <
+      value: {
         name: "Endpoint"
-        stmt: <
-          action: <
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-        source_context: <
+          }
+        }
+        source_context: {
           file: "tests/args.sysl"
-          start: <
+          start: {
             line: 2
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 5
             col: 4
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "PUT /foo"
-      value: <
+      value: {
         name: "PUT /foo"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: PUT
           path: "/foo"
-        >
-        source_context: <
+        }
+        source_context: {
           file: "tests/args.sysl"
-          start: <
+          start: {
             line: 6
             col: 8
-          >
-          end: <
+          }
+          end: {
             line: 8
             col: 8
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "PUT /foo/"
-      value: <
+      value: {
         name: "PUT /foo/"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: PUT
           path: "/foo/"
-        >
-        source_context: <
+        }
+        source_context: {
           file: "tests/args.sysl"
-          start: <
+          start: {
             line: 9
             col: 12
-          >
-          end: <
+          }
+          end: {
             line: 11
             col: 6
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/args.sysl"
-      start: <
+      start: {
         line: 1
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 1
-      >
-    >
-  >
->
+      }
+    }
+  }
+}

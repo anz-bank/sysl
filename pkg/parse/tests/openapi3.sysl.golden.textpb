@@ -1,352 +1,352 @@
-apps: <
+apps: {
   key: "Simple"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Simple"
-    >
+    }
     long_name: "Simple Server"
-    attrs: <
+    attrs: {
       key: "basePath"
-      value: <
+      value: {
         s: "simple"
-      >
-    >
-    attrs: <
+      }
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "simple"
-      >
-    >
-    endpoints: <
+      }
+    }
+    endpoints: {
       key: "GET /stuff"
-      value: <
+      value: {
         name: "GET /stuff"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          ret: <
+              }
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "ok <: Stuff"
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/stuff"
-        >
-        source_context: <
+        }
+        source_context: {
           file: "tests/openapi3.sysl"
-          start: <
+          start: {
             line: 7
             col: 8
-          >
-          end: <
+          }
+          end: {
             line: 10
             col: 4
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+      }
+    }
+    types: {
       key: "Stuff"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "innerStuff"
-            value: <
+            value: {
               primitive: STRING
-              attrs: <
+              attrs: {
                 key: "json_tag"
-                value: <
+                value: {
                   s: "innerStuff"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/openapi3.sysl"
-                start: <
+                start: {
                   line: 12
                   col: 22
-                >
-                end: <
+                }
+                end: {
                   line: 13
-                >
-              >
-            >
-          >
-        >
-        source_context: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/openapi3.sysl"
-          start: <
+          start: {
             line: 10
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 13
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/openapi3.sysl"
-      start: <
+      start: {
         line: 3
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 3
         col: 40
-      >
-    >
-  >
->
-apps: <
+      }
+    }
+  }
+}
+apps: {
   key: "preference"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "preference"
-    >
+    }
     long_name: "User Preference"
-    attrs: <
+    attrs: {
       key: "description"
-      value: <
-        s: "No description."
-      >
-    >
-    attrs: <
+      value: {
+        s: "No description.\n"
+      }
+    }
+    attrs: {
       key: "version"
-      value: <
+      value: {
         s: "1.0.0"
-      >
-    >
-    endpoints: <
+      }
+    }
+    endpoints: {
       key: "GET /preference"
-      value: <
+      value: {
         name: "GET /preference"
         docstring: "No description."
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          ret: <
+              }
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "ok <: sequence of Preferences_obj"
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/preference"
-        >
-        source_context: <
+        }
+        source_context: {
           file: "tests/preference.yaml"
-          start: <
+          start: {
             line: 13
             col: 8
-          >
-          end: <
+          }
+          end: {
             line: 20
             col: 4
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+      }
+    }
+    types: {
       key: "Preferences"
-      value: <
-        sequence: <
-          type_ref: <
-            context: <
-              appname: <
+      value: {
+        sequence: {
+          type_ref: {
+            context: {
+              appname: {
                 part: "preference"
-              >
+              }
               path: "Preferences"
-            >
-            ref: <
+            }
+            ref: {
               path: "Preferences_obj"
-            >
-          >
-          source_context: <
+            }
+          }
+          source_context: {
             file: "tests/preference.yaml"
-            start: <
+            start: {
               line: 33
               col: 4
-            >
-            end: <
+            }
+            end: {
               line: 35
-            >
-          >
-        >
-        source_context: <
+            }
+          }
+        }
+        source_context: {
           file: "tests/preference.yaml"
-          start: <
+          start: {
             line: 33
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 35
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+      }
+    }
+    types: {
       key: "Preferences_obj"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "preferenceName"
-            value: <
+            value: {
               primitive: STRING
-              attrs: <
+              attrs: {
                 key: "json_tag"
-                value: <
+                value: {
                   s: "preferenceName"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/preference.yaml"
-                start: <
+                start: {
                   line: 22
                   col: 26
-                >
-                end: <
+                }
+                end: {
                   line: 23
                   col: 8
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "preferenceValue"
-            value: <
+            value: {
               primitive: STRING
-              attrs: <
+              attrs: {
                 key: "json_tag"
-                value: <
+                value: {
                   s: "preferenceValue"
-                >
-              >
+                }
+              }
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/preference.yaml"
-                start: <
+                start: {
                   line: 24
                   col: 27
-                >
-                end: <
+                }
+                end: {
                   line: 25
                   col: 8
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "status"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "preference"
-                  >
+                  }
                   path: "Preferences_obj"
-                >
-                ref: <
+                }
+                ref: {
                   path: "Preferences_obj_status"
-                >
-              >
-              attrs: <
+                }
+              }
+              attrs: {
                 key: "json_tag"
-                value: <
+                value: {
                   s: "status"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/preference.yaml"
-                start: <
+                start: {
                   line: 26
                   col: 18
-                >
-                end: <
+                }
+                end: {
                   line: 27
                   col: 8
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "userId"
-            value: <
+            value: {
               primitive: STRING
-              attrs: <
+              attrs: {
                 key: "json_tag"
-                value: <
+                value: {
                   s: "userId"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/preference.yaml"
-                start: <
+                start: {
                   line: 28
                   col: 18
-                >
-                end: <
+                }
+                end: {
                   line: 30
                   col: 4
-                >
-              >
-            >
-          >
-        >
-        source_context: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/preference.yaml"
-          start: <
+          start: {
             line: 20
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 30
             col: 4
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+      }
+    }
+    types: {
       key: "Preferences_obj_status"
-      value: <
+      value: {
         primitive: STRING
-        source_context: <
+        source_context: {
           file: "tests/preference.yaml"
-          start: <
+          start: {
             line: 30
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 33
             col: 4
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/preference.yaml"
-      start: <
+      start: {
         line: 7
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 7
         col: 11
-      >
-    >
-  >
->
+      }
+    }
+  }
+}

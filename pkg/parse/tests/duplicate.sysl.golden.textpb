@@ -1,145 +1,207 @@
-apps {
+apps: {
   key: "App"
-  value {
-    name {
+  value: {
+    name: {
       part: "App"
     }
-    attrs {
+    attrs: {
       key: "iso_ctrl_118_txt"
-      value {
+      value: {
         s: ""
       }
     }
-    endpoints {
+    endpoints: {
       key: "Foo"
-      value {
+      value: {
         name: "Foo"
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "text statement"
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "Server"
             }
             endpoint: "GET /first"
           }
         }
-        stmt {
-          ret {
+        stmt: {
+          ret: {
             payload: "ok"
+          }
+        }
+        source_context: {
+          file: "tests/duplicate.sysl"
+          start: {
+            line: 10
+            col: 4
+          }
+          end: {
+            line: 14
+            col: 6
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "endpoint"
-      value {
+      value: {
         name: "endpoint"
-        attrs {
+        attrs: {
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: {
+            a: {
+              elt: {
                 s: "foo"
               }
-              elt {
+              elt: {
                 s: "foo"
               }
-              elt {
+              elt: {
                 s: "bar"
               }
             }
           }
         }
-        attrs {
+        attrs: {
           key: "version"
-          value {
+          value: {
             s: "1.1"
           }
         }
+        source_context: {
+          file: "tests/duplicate.sysl"
+          start: {
+            line: 6
+            col: 4
+          }
+          end: {
+            line: 6
+            col: 21
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/duplicate.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
       }
     }
   }
 }
-apps {
+apps: {
   key: "FooApp"
-  value {
-    name {
+  value: {
+    name: {
       part: "FooApp"
     }
-    attrs {
+    attrs: {
       key: "patterns"
-      value {
-        a {
-          elt {
+      value: {
+        a: {
+          elt: {
             s: "foo"
           }
-          elt {
+          elt: {
             s: "foo"
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "..."
-      value {
+      value: {
         name: "..."
+      }
+    }
+    source_context: {
+      file: "tests/duplicate.sysl"
+      start: {
+        line: 27
+        col: 1
+      }
+      end: {
+        line: 27
+        col: 12
       }
     }
   }
 }
-apps {
+apps: {
   key: "Server"
-  value {
-    name {
+  value: {
+    name: {
       part: "Server"
     }
-    endpoints {
+    endpoints: {
       key: "GET /first"
-      value {
+      value: {
         name: "GET /first"
-        attrs {
+        attrs: {
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: {
+            a: {
+              elt: {
                 s: "rest"
               }
-              elt {
+              elt: {
                 s: "rest"
               }
             }
           }
         }
-        stmt {
-          ret {
+        param: {}
+        param: {}
+        stmt: {
+          ret: {
             payload: "200 ok"
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "App"
             }
             endpoint: "endpoint"
           }
         }
-        stmt {
-          ret {
+        stmt: {
+          ret: {
             payload: "200 ok"
           }
         }
-        rest_params {
+        rest_params: {
           method: GET
           path: "/first"
         }
-        param {
+        source_context: {
+          file: "tests/duplicate.sysl"
+          start: {
+            line: 20
+            col: 8
+          }
+          end: {
+            line: 24
+            col: 6
+          }
         }
-        param {
-        }
+      }
+    }
+    source_context: {
+      file: "tests/duplicate.sysl"
+      start: {
+        line: 14
+        col: 1
+      }
+      end: {
+        line: 14
       }
     }
   }

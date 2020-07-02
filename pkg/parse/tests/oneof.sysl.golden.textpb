@@ -1,46 +1,46 @@
-apps {
+apps: {
   key: "OtherApp"
-  value {
-    name {
+  value: {
+    name: {
       part: "OtherApp"
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint"
-      value {
+      value: {
         name: "Endpoint"
-        stmt {
-          alt {
-            choice {
+        stmt: {
+          alt: {
+            choice: {
               cond: "requested_state = submitted"
-              stmt {
-                call {
-                  target {
+              stmt: {
+                call: {
+                  target: {
                     part: "SomeApp"
                   }
                   endpoint: "EP1"
                 }
               }
             }
-            choice {
+            choice: {
               cond: "requested_state = unsubmitted"
-              stmt {
-                call {
-                  target {
+              stmt: {
+                call: {
+                  target: {
                     part: "SomeApp"
                   }
                   endpoint: "EP2"
                 }
               }
             }
-            choice {
+            choice: {
               cond: "requested_state = referred"
-              stmt {
-                call {
-                  target {
+              stmt: {
+                call: {
+                  target: {
                     part: "SomeApp"
                   }
                   endpoint: "EP3"
-                  arg {
+                  arg: {
                     name: "\"referred\""
                   }
                 }
@@ -48,62 +48,136 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/oneof.sysl"
+          start: {
+            line: 7
+            col: 4
+          }
+          end: {
+            line: 16
+            col: 4
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint with no label"
-      value {
+      value: {
         name: "Endpoint with no label"
-        stmt {
-          alt {
-            choice {
-              stmt {
-                action {
+        stmt: {
+          alt: {
+            choice: {
+              stmt: {
+                action: {
                   action: "statement 1"
                 }
               }
             }
-            choice {
-              stmt {
-                action {
+            choice: {
+              stmt: {
+                action: {
                   action: "statement 2"
                 }
               }
             }
           }
         }
+        source_context: {
+          file: "tests/oneof.sysl"
+          start: {
+            line: 16
+            col: 4
+          }
+          end: {
+            line: 22
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/oneof.sysl"
+      start: {
+        line: 6
+        col: 1
+      }
+      end: {
+        line: 6
       }
     }
   }
 }
-apps {
+apps: {
   key: "SomeApp"
-  value {
-    name {
+  value: {
+    name: {
       part: "SomeApp"
     }
-    endpoints {
+    endpoints: {
       key: "EP1"
-      value {
+      value: {
         name: "EP1"
+        source_context: {
+          file: "tests/oneof.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 2
+            col: 9
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "EP2"
-      value {
+      value: {
         name: "EP2"
+        source_context: {
+          file: "tests/oneof.sysl"
+          start: {
+            line: 3
+            col: 4
+          }
+          end: {
+            line: 3
+            col: 9
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "EP3"
-      value {
+      value: {
         name: "EP3"
-        param {
+        param: {
           name: "status"
-          type {
+          type: {
             primitive: STRING
           }
         }
+        source_context: {
+          file: "tests/oneof.sysl"
+          start: {
+            line: 4
+            col: 4
+          }
+          end: {
+            line: 4
+            col: 28
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/oneof.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
       }
     }
   }
