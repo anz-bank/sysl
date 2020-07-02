@@ -1,642 +1,911 @@
-apps: <
+apps: {
   key: "A_B"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "A_B"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "C_D"
-      value: <
+      value: {
         name: "C_D"
-        stmt: <
-          call: <
-            target: <
+        stmt: {
+          call: {
+            target: {
               part: "anz_com"
-            >
+            }
             endpoint: "homepage"
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "Test - App"
-            >
+            }
             endpoint: "Test - Endpoint"
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 67
+            col: 4
+          }
+          end: {
+            line: 70
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "DDD"
-      value: <
+      value: {
         name: "DDD"
-        stmt: <
-          cond: <
+        stmt: {
+          cond: {
             test: "some condition is true"
-            stmt: <
-              action: <
+            stmt: {
+              action: {
                 action: "Test - App -> eventName"
-              >
-            >
-            stmt: <
-              call: <
-                target: <
+              }
+            }
+            stmt: {
+              call: {
+                target: {
                   part: "Test - App"
-                >
+                }
                 endpoint: "Endpoint2"
-              >
-            >
-            stmt: <
-              cond: <
+              }
+            }
+            stmt: {
+              cond: {
                 test: "result not ok"
-                stmt: <
-                  ret: <
+                stmt: {
+                  ret: {
                     payload: "not ok1"
-                  >
-                >
-              >
-            >
-            stmt: <
-              group: <
+                  }
+                }
+              }
+            }
+            stmt: {
+              group: {
                 title: "else"
-                stmt: <
-                  ret: <
+                stmt: {
+                  ret: {
                     payload: "ok"
-                  >
-                >
-              >
-            >
-          >
-        >
-        stmt: <
-          group: <
+                  }
+                }
+              }
+            }
+          }
+        }
+        stmt: {
+          group: {
             title: "else some other condition"
-            stmt: <
-              action: <
+            stmt: {
+              action: {
                 action: "top level else_statment"
-              >
-            >
-            stmt: <
-              cond: <
+              }
+            }
+            stmt: {
+              cond: {
                 test: "\"some constraint\""
-                stmt: <
-                  ret: <
+                stmt: {
+                  ret: {
                     payload: "ok"
-                  >
-                >
-              >
-            >
-            stmt: <
-              group: <
+                  }
+                }
+              }
+            }
+            stmt: {
+              group: {
                 title: "Else"
-                stmt: <
-                  ret: <
+                stmt: {
+                  ret: {
                     payload: "not ok"
-                  >
-                >
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+                  }
+                }
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "do some more stuff"
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 70
+            col: 4
+          }
+          end: {
+            line: 87
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "EEE"
-      value: <
+      value: {
         name: "EEE"
-        stmt: <
-          action: <
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 87
+            col: 4
+          }
+          end: {
+            line: 90
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "Send document to customer"
-      value: <
+      value: {
         name: "Send document to customer"
-      >
-    >
-  >
->
-apps: <
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 90
+            col: 4
+          }
+          end: {
+            line: 90
+            col: 31
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test1.sysl"
+      start: {
+        line: 66
+        col: 1
+      }
+      end: {
+        line: 66
+      }
+    }
+  }
+}
+apps: {
   key: "External :: App"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "External"
       part: "App"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "Endpoint"
-      value: <
+      value: {
         name: "Endpoint"
-        stmt: <
-          action: <
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 48
+            col: 4
+          }
+          end: {
+            line: 51
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "Request"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "id"
-            value: <
+            value: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/test1.sysl"
-                start: <
+                start: {
                   line: 52
                   col: 14
-                >
-                end: <
+                }
+                end: {
                   line: 52
                   col: 14
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "val"
-            value: <
+            value: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/test1.sysl"
-                start: <
+                start: {
                   line: 53
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 53
                   col: 15
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 51
+            col: 4
+          }
+          end: {
+            line: 54
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "Response"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "val"
-            value: <
+            value: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/test1.sysl"
-                start: <
+                start: {
                   line: 55
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 55
                   col: 15
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 54
+            col: 4
+          }
+          end: {
+            line: 57
+            col: 11
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test1.sysl"
+      start: {
+        line: 47
+        col: 1
+      }
+      end: {
+        line: 47
+        col: 12
+      }
+    }
+  }
+}
+apps: {
   key: "My Todo App"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "My Todo App"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "patterns"
-      value: <
-        a: <
-          elt: <
+      value: {
+        a: {
+          elt: {
             s: "webapp"
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "Add Note"
-      value: <
+      value: {
         name: "Add Note"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "somepattern"
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 58
+            col: 4
+          }
+          end: {
+            line: 58
+            col: 29
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test1.sysl"
+      start: {
+        line: 57
+        col: 1
+      }
+      end: {
+        line: 57
+        col: 20
+      }
+    }
+  }
+}
+apps: {
   key: "Rest Service"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Rest Service"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "GET /foo"
-      value: <
+      value: {
         name: "GET /foo"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/foo"
-        >
-      >
-    >
-  >
->
-apps: <
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 94
+            col: 8
+          }
+          end: {
+            line: 96
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test1.sysl"
+      start: {
+        line: 92
+        col: 1
+      }
+      end: {
+        line: 92
+      }
+    }
+  }
+}
+apps: {
   key: "SomeApp"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "SomeApp"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "app_desc"
-      value: <
+      value: {
         s: "this comment belongs to the app defined 'above'"
-      >
-    >
-    attrs: <
+      }
+    }
+    attrs: {
       key: "array"
-      value: <
-        a: <
-          elt: <
+      value: {
+        a: {
+          elt: {
             s: "one"
-          >
-          elt: <
+          }
+          elt: {
             s: "two"
-          >
-        >
-      >
-    >
-    attrs: <
+          }
+        }
+      }
+    }
+    attrs: {
       key: "array_of_arrays"
-      value: <
-        a: <
-          elt: <
-            a: <
-              elt: <
+      value: {
+        a: {
+          elt: {
+            a: {
+              elt: {
                 s: "one"
-              >
-              elt: <
+              }
+              elt: {
                 s: "two"
-              >
-            >
-          >
-        >
-      >
-    >
-    attrs: <
+              }
+            }
+          }
+        }
+      }
+    }
+    attrs: {
       key: "comment"
-      value: <
+      value: {
         s: ""
-      >
-    >
-    attrs: <
+      }
+    }
+    attrs: {
       key: "comment.second"
-      value: <
+      value: {
         s: ""
-      >
-    >
-    attrs: <
+      }
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: ""
-      >
-    >
-    attrs: <
+      }
+    }
+    attrs: {
       key: "version"
-      value: <
+      value: {
         s: "1.1.1"
-      >
-    >
-    endpoints: <
+      }
+    }
+    endpoints: {
       key: "Endpoint"
-      value: <
+      value: {
         name: "Endpoint"
-        stmt: <
-          action: <
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 9
+            col: 4
+          }
+          end: {
+            line: 12
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "Event"
-      value: <
+      value: {
         name: "Event"
         is_pubsub: true
-        param: <
+        param: {
           name: "App.member"
-          type: <
-            no_type: <
-            >
-          >
-        >
-        param: <
+          type: {
+            no_type: {}
+          }
+        }
+        param: {
           name: "request"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "SomeApp"
-                >
+                }
                 path: "SomeType"
-              >
-            >
-          >
-        >
-        stmt: <
-          ret: <
+              }
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "\"customer details\""
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 6
+            col: 4
+          }
+          end: {
+            line: 9
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "FooEndpoint"
-      value: <
+      value: {
         name: "FooEndpoint"
-        stmt: <
-          call: <
-            target: <
+        stmt: {
+          call: {
+            target: {
               part: "Test - App"
-            >
+            }
             endpoint: "Test - Endpoint"
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 12
+            col: 4
+          }
+          end: {
+            line: 16
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "Test - App -> eventName"
-      value: <
+      value: {
         name: "Test - App -> eventName"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "mq"
-              >
-            >
-          >
-        >
-        source: <
+              }
+            }
+          }
+        }
+        source: {
           part: "Test - App"
-        >
-        stmt: <
-          action: <
+        }
+        stmt: {
+          action: {
             action: "\"\""
-          >
-        >
-        stmt: <
-          action: <
+          }
+        }
+        stmt: {
+          action: {
             action: "''"
-          >
-        >
-        stmt: <
-          action: <
+          }
+        }
+        stmt: {
+          action: {
             action: "'asdf'"
-          >
-        >
-        stmt: <
-          action: <
+          }
+        }
+        stmt: {
+          action: {
             action: "\"quoted statement: use special chars here like ?? :: etc\""
-          >
-        >
-        stmt: <
-          action: <
+          }
+        }
+        stmt: {
+          action: {
             action: "\"test: single quotes 'above'\""
-          >
-        >
-        stmt: <
-          action: <
+          }
+        }
+        stmt: {
+          action: {
             action: "do something"
-          >
-        >
-        stmt: <
-          action: <
+          }
+        }
+        stmt: {
+          action: {
             action: "| Some multiline comments that you can use for documentation. This is last line."
-          >
-        >
-        stmt: <
-          action: <
+          }
+        }
+        stmt: {
+          action: {
             action: "handle event eventName"
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 16
+            col: 4
+          }
+          end: {
+            line: 28
+            col: 10
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test1.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 92
+      }
+    }
+  }
+}
+apps: {
   key: "Test - App"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Test - App"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "Endpoint2"
-      value: <
+      value: {
         name: "Endpoint2"
-        attrs: <
+        attrs: {
           key: "ep_desc"
-          value: <
+          value: {
             s: "this comment belongs to the Endpoint2 defined above"
-          >
-        >
-        param: <
+          }
+        }
+        param: {
           name: "request"
-          type: <
-            set: <
-              type_ref: <
-                ref: <
-                  appname: <
+          type: {
+            set: {
+              type_ref: {
+                ref: {
+                  appname: {
                     part: "SomeApp"
-                  >
+                  }
                   path: "SomeType"
-                >
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+                }
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "| Single line statement"
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "Test - App"
-            >
+            }
             endpoint: "eventName"
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 39
+            col: 4
+          }
+          end: {
+            line: 44
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "Test - Endpoint"
-      value: <
+      value: {
         name: "Test - Endpoint"
-        param: <
+        param: {
           name: "request"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "SomeApp"
-                >
+                }
                 path: "SomeType"
-              >
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+              }
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "External"
               part: "App"
-            >
+            }
             endpoint: "Endpoint"
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "Rest Service"
-            >
+            }
             endpoint: "GET /foo"
-          >
-        >
-        stmt: <
-          cond: <
+          }
+        }
+        stmt: {
+          cond: {
             test: "value == one"
-            stmt: <
-              action: <
+            stmt: {
+              action: {
                 action: "do something"
-              >
-            >
-          >
-        >
-        stmt: <
-          group: <
+              }
+            }
+          }
+        }
+        stmt: {
+          group: {
             title: "else if value == two"
-            stmt: <
-              action: <
+            stmt: {
+              action: {
                 action: "do something else"
-              >
-            >
-          >
-        >
-        stmt: <
-          group: <
+              }
+            }
+          }
+        }
+        stmt: {
+          group: {
             title: "else"
-            stmt: <
-              ret: <
+            stmt: {
+              ret: {
                 payload: "ok"
-              >
-            >
-          >
-        >
-      >
-    >
-    endpoints: <
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 29
+            col: 4
+          }
+          end: {
+            line: 39
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "another event"
-      value: <
+      value: {
         name: "another event"
         is_pubsub: true
-      >
-    >
-    endpoints: <
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 45
+            col: 4
+          }
+          end: {
+            line: 45
+            col: 23
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "eventName"
-      value: <
+      value: {
         name: "eventName"
         is_pubsub: true
-        param: <
+        param: {
           name: "in"
-          type: <
+          type: {
             primitive: STRING
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "SomeApp"
-            >
+            }
             endpoint: "Test - App -> eventName"
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test1.sysl"
+      start: {
+        line: 28
+        col: 1
+      }
+      end: {
+        line: 28
+      }
+    }
+  }
+}
+apps: {
   key: "anz_com"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "anz_com"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "homepage"
-      value: <
+      value: {
         name: "homepage"
-      >
-    >
-    types: <
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 61
+            col: 4
+          }
+          end: {
+            line: 61
+            col: 14
+          }
+        }
+      }
+    }
+    types: {
       key: "Response"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "val"
-            value: <
+            value: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/test1.sysl"
-                start: <
+                start: {
                   line: 64
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 64
                   col: 15
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test1.sysl"
+          start: {
+            line: 63
+            col: 4
+          }
+          end: {
+            line: 66
+            col: 3
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test1.sysl"
+      start: {
+        line: 60
+        col: 1
+      }
+      end: {
+        line: 60
+      }
+    }
+  }
+}

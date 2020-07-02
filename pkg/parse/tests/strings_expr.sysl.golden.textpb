@@ -1,243 +1,261 @@
-apps: <
+apps: {
   key: "TransformApp"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "TransformApp"
-    >
+    }
     long_name: "The \"App\""
-    attrs: <
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "io.sysl.demo.petshop.views"
-      >
-    >
-    views: <
+      }
+    }
+    views: {
       key: "NoArgTransform"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number1"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        param: <
+          }
+        }
+        param: {
           name: "foo"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Some"
-                >
+                }
                 path: "Type"
-              >
-            >
-          >
-        >
-        ret_type: <
-          type_ref: <
-            ref: <
-              appname: <
+              }
+            }
+          }
+        }
+        ret_type: {
+          type_ref: {
+            ref: {
+              appname: {
                 part: "Model"
-              >
+              }
               path: "Type"
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "."
-              source_context: <
+              source_context: {
                 file: "tests/strings_expr.sysl"
-                start: <
+                start: {
                   line: 3
                   col: 4
-                >
-                end: <
+                }
+                end: {
                   line: 13
                   col: 5
-                >
-              >
-            >
+                }
+              }
+            }
             scopevar: "scopeVar"
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     s: "abc"
-                  >
-                  source_context: <
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
                     file: "tests/strings_expr.sysl"
-                    start: <
+                    start: {
                       line: 4
                       col: 6
-                    >
-                    end: <
+                    }
+                    end: {
                       line: 4
                       col: 12
-                    >
+                    }
                     text: "out = \"abc\""
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "out1"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     s: "'abc'"
-                  >
-                  source_context: <
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
                     file: "tests/strings_expr.sysl"
-                    start: <
+                    start: {
                       line: 5
                       col: 6
-                    >
-                    end: <
+                    }
+                    end: {
                       line: 5
                       col: 13
-                    >
+                    }
                     text: "out1 = \"'abc'\""
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "out2"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     s: "\"On\nMultiple\nLines\""
-                  >
-                  source_context: <
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
                     file: "tests/strings_expr.sysl"
-                    start: <
+                    start: {
                       line: 6
                       col: 6
-                    >
-                    end: <
+                    }
+                    end: {
                       line: 6
                       col: 13
-                    >
+                    }
                     text: "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "out3"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     s: "\"abc\""
-                  >
-                  source_context: <
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
                     file: "tests/strings_expr.sysl"
-                    start: <
+                    start: {
                       line: 8
                       col: 6
-                    >
-                    end: <
+                    }
+                    end: {
                       line: 8
                       col: 13
-                    >
+                    }
                     text: "out3 = '\"abc\"'"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "out4"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     s: "abc"
-                  >
-                  source_context: <
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
                     file: "tests/strings_expr.sysl"
-                    start: <
+                    start: {
                       line: 9
                       col: 6
-                    >
-                    end: <
+                    }
+                    end: {
                       line: 9
                       col: 13
-                    >
+                    }
                     text: "out4 = 'abc'"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "out5"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     s: "\"abc\\ndef\""
-                  >
-                  source_context: <
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
                     file: "tests/strings_expr.sysl"
-                    start: <
+                    start: {
                       line: 12
                       col: 6
-                    >
-                    end: <
+                    }
+                    end: {
                       line: 12
                       col: 13
-                    >
+                    }
                     text: "out5 = '\"abc\\ndef\"'"
-                  >
-                >
-              >
-            >
-          >
-          source_context: <
+                  }
+                }
+              }
+            }
+          }
+          source_context: {
             file: "tests/strings_expr.sysl"
-            start: <
+            start: {
               line: 3
               col: 4
-            >
-            end: <
+            }
+            end: {
               line: 13
               col: 5
-            >
-          >
-        >
-        attrs: <
+            }
+          }
+        }
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "partial"
-              >
-            >
-          >
-        >
-        source_context: <
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/strings_expr.sysl"
-          start: <
+          start: {
             line: 2
             col: 2
-          >
-          end: <
+          }
+          end: {
             line: 14
-          >
+          }
           text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
-        >
-      >
-    >
-    source_context: <
+        }
+      }
+    }
+    source_context: {
       file: "tests/strings_expr.sysl"
-      start: <
+      start: {
         line: 1
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 1
         col: 64
-      >
-    >
-  >
->
+      }
+    }
+  }
+}

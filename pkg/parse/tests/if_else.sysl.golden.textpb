@@ -1,76 +1,76 @@
-apps {
+apps: {
   key: "Test - App"
-  value {
-    name {
+  value: {
+    name: {
       part: "Test - App"
     }
-    endpoints {
+    endpoints: {
       key: "Test - Endpoint"
-      value {
+      value: {
         name: "Test - Endpoint"
-        stmt {
-          cond {
+        stmt: {
+          cond: {
             test: "value == one"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "do something"
               }
             }
           }
         }
-        stmt {
-          group {
+        stmt: {
+          group: {
             title: "else if value == two"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "do something else"
               }
             }
           }
         }
-        stmt {
-          group {
+        stmt: {
+          group: {
             title: "else"
-            stmt {
-              ret {
+            stmt: {
+              ret: {
                 payload: "ok"
               }
             }
           }
         }
-        stmt {
-          group {
+        stmt: {
+          group: {
             title: "alt condition one"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "handle one"
               }
             }
           }
         }
-        stmt {
-          group {
+        stmt: {
+          group: {
             title: "alt condition two"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "check more details"
               }
             }
-            stmt {
-              group {
+            stmt: {
+              group: {
                 title: "alt condition three"
-                stmt {
-                  action {
+                stmt: {
+                  action: {
                     action: "handle three"
                   }
                 }
               }
             }
-            stmt {
-              group {
+            stmt: {
+              group: {
                 title: "alt condition four"
-                stmt {
-                  action {
+                stmt: {
+                  action: {
                     action: "handle four"
                   }
                 }
@@ -78,6 +78,26 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/if_else.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 18
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/if_else.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
       }
     }
   }

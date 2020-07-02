@@ -1,139 +1,198 @@
-apps {
+apps: {
   key: "Car Models"
-  value {
-    name {
+  value: {
+    name: {
       part: "Car Models"
     }
-    endpoints {
+    endpoints: {
       key: "Get All Makes"
-      value {
+      value: {
         name: "Get All Makes"
-        param {
+        param: {
           name: "year"
-          type {
-            no_type {
-            }
+          type: {
+            no_type: {}
+          }
+        }
+        source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+            line: 3
+            col: 4
+          }
+          end: {
+            line: 3
+            col: 26
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Get All Models"
-      value {
+      value: {
         name: "Get All Models"
-        param {
+        param: {
           name: "year"
-          type {
-            no_type {
-            }
+          type: {
+            no_type: {}
           }
         }
-        param {
+        param: {
           name: "make"
-          type {
-            no_type {
-            }
+          type: {
+            no_type: {}
+          }
+        }
+        source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+            line: 4
+            col: 4
+          }
+          end: {
+            line: 4
+            col: 33
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Get All Series"
-      value {
+      value: {
         name: "Get All Series"
-        param {
+        param: {
           name: "year"
-          type {
-            no_type {
-            }
+          type: {
+            no_type: {}
           }
         }
-        param {
+        param: {
           name: "make"
-          type {
-            no_type {
-            }
+          type: {
+            no_type: {}
           }
         }
-        param {
+        param: {
           name: "model"
-          type {
-            no_type {
-            }
+          type: {
+            no_type: {}
+          }
+        }
+        source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+            line: 5
+            col: 4
+          }
+          end: {
+            line: 5
+            col: 40
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Get All Years"
-      value {
+      value: {
         name: "Get All Years"
+        source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 2
+            col: 19
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/for_loop.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
       }
     }
   }
 }
-apps {
+apps: {
   key: "Other App"
-  value {
-    name {
+  value: {
+    name: {
       part: "Other App"
     }
-    endpoints {
+    endpoints: {
       key: "FOO"
-      value {
+      value: {
         name: "FOO"
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "Car Models"
             }
             endpoint: "Get All Years"
           }
         }
-        stmt {
-          group {
+        stmt: {
+          group: {
             title: "for all series"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "evaluate series pricing"
               }
             }
-            stmt {
-              cond {
+            stmt: {
+              cond: {
                 test: "has pricing"
-                stmt {
-                  action {
+                stmt: {
+                  action: {
                     action: "select series"
                   }
                 }
               }
             }
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "dump pricing information"
               }
             }
           }
         }
+        source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+            line: 8
+            col: 4
+          }
+          end: {
+            line: 15
+            col: 4
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Profit"
-      value {
+      value: {
         name: "Profit"
-        stmt {
-          foreach {
+        stmt: {
+          foreach: {
             collection: "year"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "calculate profit"
               }
             }
-            stmt {
-              group {
+            stmt: {
+              group: {
                 title: "Loop \"n times\""
-                stmt {
-                  action {
+                stmt: {
+                  action: {
                     action: "run simulation"
                   }
                 }
@@ -141,23 +200,54 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+            line: 15
+            col: 4
+          }
+          end: {
+            line: 20
+            col: 4
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "WhileTest"
-      value {
+      value: {
         name: "WhileTest"
-        stmt {
-          loop {
+        stmt: {
+          loop: {
             mode: WHILE
             criterion: "condition not true"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "\"wait for 5 secs\""
               }
             }
           }
         }
+        source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+            line: 20
+            col: 4
+          }
+          end: {
+            line: 23
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/for_loop.sysl"
+      start: {
+        line: 7
+        col: 1
+      }
+      end: {
+        line: 7
       }
     }
   }
