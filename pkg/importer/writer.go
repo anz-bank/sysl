@@ -321,12 +321,15 @@ func (w *writer) writeExternalAlias(item Type) {
 		}
 	case *ExternalAlias:
 		aliasType = getSyslTypeName(t.Target)
-		attrs = appendAttributesString(" ", t.Attrs)
+		attrs = appendAttributesString("", t.Attrs)
 	case *Alias:
 		aliasType = getSyslTypeName(t.Target)
+		attrs = appendAttributesString("", t.Attrs)
 	case *Array:
 		aliasType = getSyslTypeName(item)
 		aliasName = t.name
+	case *Enum:
+		attrs = appendAttributesString("", t.Attrs)
 	}
 	w.writeLines(fmt.Sprintf("!alias %s%s:", aliasName, attrs),
 		PushIndent, aliasType, PopIndent)

@@ -40,6 +40,7 @@ var StringAlias = &SyslBuiltIn{name: StringTypeName}
 type Alias struct {
 	name   string
 	Target Type
+	Attrs  []string
 }
 
 func (s *Alias) Name() string { return s.name }
@@ -82,7 +83,8 @@ type Array struct {
 func (s *Array) Name() string { return s.name }
 
 type Enum struct {
-	name string
+	name  string
+	Attrs []string
 }
 
 func (s *Enum) Name() string { return s.name }

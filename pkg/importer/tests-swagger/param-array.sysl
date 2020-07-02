@@ -9,7 +9,7 @@ testapp "Simple" [package="package_foo"]:
         | No description.
 
     /simple:
-        PUT (DocumentRequest <: Document [mediatype="application/json", ~body]):
+        PUT (DocumentRequest <: DocumentRequest [mediatype="application/json", ~body]):
             | No description.
             return 400
             return 401
@@ -19,4 +19,7 @@ testapp "Simple" [package="package_foo"]:
     # definitions
 
     !alias Document:
-        sequence of string
+        string
+
+    !alias DocumentRequest:
+        sequence of Document

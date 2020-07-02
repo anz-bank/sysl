@@ -2,7 +2,6 @@ package importer
 
 import (
 	"net/url"
-	"regexp"
 	"strings"
 )
 
@@ -80,10 +79,6 @@ func spaceSeparate(items ...string) string {
 	return strings.Join(t, " ")
 }
 
-func isOpenAPIOrSwaggerExt(path string) bool {
-	return regexp.MustCompile(`.(yaml|yml|json)#/`).Match([]byte(path))
-}
-
 // getSyslSafeName escapes special characters
 // returns a string with URL encoded replacements
 func getSyslSafeName(endpoint string) string {
@@ -109,10 +104,6 @@ func getSyslSafeName(endpoint string) string {
 		endpoint = strings.ReplaceAll(endpoint, hex, realChar)
 	}
 	return endpoint
-}
-
-func hasToBeSyslSafe(in string) bool {
-	return strings.ToLower(in) == "query"
 }
 
 func cleanEndpointPath(path string) string {
