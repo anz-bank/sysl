@@ -33,8 +33,7 @@ func TestDrawPrimitive(t *testing.T) {
 	v.DrawPrimitive(viewParam, "INT", relationshipMap)
 	actual := v.StringBuilder.String()
 
-	expected := "class \"uuid\" as _0 << (D,orchid) >> {\n" +
-		"+ id : int\n}\n"
+	expected := "class \"uuid\" as _0 << (D,orchid) int >> {\n" + "}\n"
 	assert.EqualValues(t, expected, actual, nil)
 	clMock.AssertExpectations(t)
 }
