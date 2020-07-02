@@ -310,7 +310,7 @@ func (l *OpenAPI3Importer) typeFromObject(name string, schema *openapi3.Schema) 
 			fieldType = l.typeFromSchemaRef(getSyslSafeName(name)+"_"+getSyslSafeName(propName), propSchema)
 		}
 		f := Field{
-			Name: getSyslSafeName(propName),
+			Name: propName,
 			Type: fieldType,
 		}
 		if !contains(propName, schema.Required) {
