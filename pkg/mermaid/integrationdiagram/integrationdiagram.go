@@ -3,6 +3,7 @@ package integrationdiagram
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/anz-bank/sysl/pkg/mermaid"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -88,7 +89,8 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 			pair := integrationPair{appName, nextApp}
 			if !integrationPairsContain(*integrationPairs, pair) {
 				*integrationPairs = append(*integrationPairs, pair)
-				result += fmt.Sprintf(" %s --> %s\n", appName, nextApp)
+				result += fmt.Sprintf(" %s[\"%s\"] --> %s[\"%s\"]\n",
+					cleanAppName(appName), appName, cleanAppName(nextApp), nextApp)
 				out, err := generateIntegrationDiagramHelper(m, nextApp, integrationPairs, false)
 				if err != nil {
 					panic("Error in generating integration diagram; check if app name is correct")
@@ -132,4 +134,8 @@ func integrationPairsContain(i []integrationPair, ip integrationPair) bool {
 		}
 	}
 	return false
+}
+
+func cleanAppName(s string) string {
+	return strings.ReplaceAll(s, " ", "_")
 }
