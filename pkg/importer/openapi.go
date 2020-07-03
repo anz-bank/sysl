@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"net/url"
+	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 
@@ -29,8 +31,9 @@ func NewOpenAPILoader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoade
 	loader.LoadSwaggerFromURIFunc = func(
 		loader *openapi3.SwaggerLoader, url *url.URL) (swagger *openapi3.Swagger, err error) {
 		if url.Host == "" && url.Scheme == "" {
+
 			logger.Infof("Loading openapi ref: %s", url.String())
-			data, err := afero.ReadFile(fs, url.Path)
+			data, err := afero.ReadFile(fs, pathFromURL(url))
 			if err != nil {
 				return nil, err
 			}
@@ -463,4 +466,24 @@ func (o *openapiv3) fieldForMediaType(mediatype string, schema *openapi3.SchemaR
 		field.Attributes = append(field.Attributes, fmt.Sprintf(`mediatype="%s"`, mediatype))
 	}
 	return field
+}
+
+func pathToURL(filename string) (*url.URL, error) {
+	if runtime.GOOS == "windows" {
+		// Windows pathing doesnt work well with the openapi3 package, so we need to fudge the URL for refs to work
+		u, err := url.Parse("file:///" + filepath.ToSlash(filename))
+		if err != nil {
+			return nil, err
+		}
+		u.Scheme = ""
+		return u, nil
+	}
+	return url.Parse(filename)
+}
+
+func pathFromURL(u *url.URL) string {
+	if runtime.GOOS == "windows" {
+		return filepath.FromSlash(u.Path[1:])
+	}
+	return u.Path
 }

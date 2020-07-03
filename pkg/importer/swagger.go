@@ -36,7 +36,7 @@ type OpenAPI2Importer struct {
 }
 
 func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
-	u, err := url.Parse(l.filepath)
+	u, err := pathToURL(l.filepath)
 	if err != nil {
 		return "", err
 	}
