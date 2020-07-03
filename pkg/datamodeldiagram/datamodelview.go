@@ -44,6 +44,7 @@ type EntityViewParam struct {
 	EntityColor  string
 	EntityHeader string
 	EntityName   string
+	EntityAlias  string
 	IgnoredTypes map[string]struct{}
 	Types        map[string]*sysl.Type
 }
@@ -182,9 +183,23 @@ func (v *DataModelView) DrawTuple(
 	entity *sysl.Type_Tuple,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
+	var alias, typeName string
+	if viewParam.EntityAlias == "" {
+		alias = viewParam.EntityName
+	} else {
+		alias = viewParam.EntityAlias
+		// add space for better formatting and allow empty space when alias == ""
+		typeName = " "+viewParam.EntityName
+	}
 	encEntity := v.UniqueVarForAppName(strings.Split(viewParam.EntityName, ".")...)
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s)%s {\n", classString, viewParam.EntityName,
-		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
+	v.StringBuilder.WriteString(
+		fmt.Sprintf(
+			"%s \"%s\" as %s %s(%s,%s)%s%s {\n",
+			classString, alias,
+			encEntity, entityLessThanArrow, viewParam.EntityHeader,
+			viewParam.EntityColor, typeName, entityGreaterThanArrow,
+		),
+	)
 	var appName string
 	var relation string
 	var collectionString string
