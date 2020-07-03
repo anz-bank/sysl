@@ -1,19 +1,19 @@
-apps {
+apps: {
   key: "Some App"
-  value {
-    name {
+  value: {
+    name: {
       part: "Some App"
     }
-    endpoints {
+    endpoints: {
       key: "EP1"
-      value {
+      value: {
         name: "EP1"
-        param {
+        param: {
           name: "p1"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "My"
                   part: "Sample"
                   part: "Todo App"
@@ -24,18 +24,29 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/ep_params.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 2
+            col: 54
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "EP2"
-      value {
+      value: {
         name: "EP2"
-        param {
+        param: {
           name: "p1"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "My"
                   part: "Sample"
                   part: "Todo App"
@@ -45,18 +56,29 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/ep_params.sysl"
+          start: {
+            line: 3
+            col: 4
+          }
+          end: {
+            line: 3
+            col: 51
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "EP3"
-      value {
+      value: {
         name: "EP3"
-        param {
+        param: {
           name: "p2"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Sample"
                   part: "Todo App"
                 }
@@ -65,18 +87,29 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/ep_params.sysl"
+          start: {
+            line: 4
+            col: 4
+          }
+          end: {
+            line: 4
+            col: 43
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "EP4"
-      value {
+      value: {
         name: "EP4"
-        param {
+        param: {
           name: "p3"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Todo App"
                 }
                 path: "id"
@@ -84,37 +117,59 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/ep_params.sysl"
+          start: {
+            line: 5
+            col: 4
+          }
+          end: {
+            line: 5
+            col: 30
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "EP5"
-      value {
+      value: {
         name: "EP5"
-        param {
+        param: {
           name: "p4"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "id"
                 }
               }
             }
           }
         }
+        source_context: {
+          file: "tests/ep_params.sysl"
+          start: {
+            line: 6
+            col: 4
+          }
+          end: {
+            line: 6
+            col: 20
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "EP6"
-      value {
+      value: {
         name: "EP6"
-        param {
+        param: {
           name: "p4"
-          type {
-            set {
-              type_ref {
-                ref {
-                  appname {
+          type: {
+            set: {
+              type_ref: {
+                ref: {
+                  appname: {
                     part: "id"
                   }
                 }
@@ -122,6 +177,27 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/ep_params.sysl"
+          start: {
+            line: 7
+            col: 4
+          }
+          end: {
+            line: 7
+            col: 27
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/ep_params.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
       }
     }
   }

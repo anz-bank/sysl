@@ -1,239 +1,656 @@
-apps {
+apps: {
   key: "TransformationTest"
-  value {
-    name {
+  value: {
+    name: {
       part: "TransformationTest"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.test.views"
       }
     }
-    views {
+    views: {
       key: "TestNavigate"
-      value {
-        param {
+      value: {
+        param: {
           name: "number"
-          type {
+          type: {
             primitive: INT
           }
         }
-        ret_type {
+        ret_type: {
           primitive: INT
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "number"
+              source_context: {
+                file: "tests/navigate.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 3
+                  col: 4
+                }
+              }
             }
             scopevar: "."
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out1"
-                expr {
-                  navigate {
-                    arg {
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 4
+                          col: 17
+                        }
+                        end: {
+                          line: 4
+                          col: 20
+                        }
+                      }
                     }
                     attr: "foo"
+                  }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 4
+                      col: 6
+                    }
+                    end: {
+                      line: 4
+                      col: 20
+                    }
+                    text: "let out1 = -> foo"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out2"
-                expr {
-                  navigate {
-                    arg {
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 5
+                          col: 17
+                        }
+                        end: {
+                          line: 5
+                          col: 17
+                        }
+                      }
                     }
                     attr: "foo"
+                  }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 5
+                      col: 6
+                    }
+                    end: {
+                      line: 5
+                      col: 24
+                    }
+                    text: "let out2 = abc -> foo"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out2a"
-                expr {
-                  navigate {
-                    arg {
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 6
+                          col: 18
+                        }
+                        end: {
+                          line: 6
+                          col: 18
+                        }
+                      }
                     }
                     attr: "foo"
                     nullsafe: true
                   }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 6
+                      col: 6
+                    }
+                    end: {
+                      line: 6
+                      col: 26
+                    }
+                    text: "let out2a = abc ?-> foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out2b"
-                expr {
-                  get_attr {
-                    arg {
-                      navigate {
-                        arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      navigate: {
+                        arg: {
                           name: "abc"
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 7
+                              col: 18
+                            }
+                            end: {
+                              line: 7
+                              col: 18
+                            }
+                          }
                         }
                         attr: "foo"
+                      }
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 7
+                          col: 22
+                        }
+                        end: {
+                          line: 7
+                          col: 25
+                        }
                       }
                     }
                     attr: "bar"
                   }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 7
+                      col: 6
+                    }
+                    end: {
+                      line: 7
+                      col: 29
+                    }
+                    text: "let out2b = abc -> foo.bar"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out3"
-                expr {
-                  navigate {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  navigate: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 8
+                              col: 17
+                            }
+                            end: {
+                              line: 8
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
+                      }
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 8
+                          col: 17
+                        }
+                        end: {
+                          line: 8
+                          col: 18
+                        }
                       }
                     }
                     attr: "foo"
                   }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 8
+                      col: 6
+                    }
+                    end: {
+                      line: 8
+                      col: 25
+                    }
+                    text: "let out3 = .abc -> foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out4"
-                expr {
-                  navigate {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  navigate: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 9
+                              col: 17
+                            }
+                            end: {
+                              line: 9
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
+                      }
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 9
+                          col: 17
+                        }
+                        end: {
+                          line: 9
+                          col: 18
+                        }
                       }
                     }
                     attr: ".foo"
                   }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 26
+                    }
+                    text: "let out4 = .abc -> .foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out5"
-                expr {
-                  navigate {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  navigate: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 10
+                              col: 17
+                            }
+                            end: {
+                              line: 10
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
+                      }
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 10
+                          col: 17
+                        }
+                        end: {
+                          line: 10
+                          col: 18
+                        }
                       }
                     }
                     attr: ".foo"
                     setof: true
                   }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 33
+                    }
+                    text: "let out5 = .abc -> set of .foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out6"
-                expr {
-                  navigate {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  navigate: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 11
+                              col: 17
+                            }
+                            end: {
+                              line: 11
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
+                      }
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 11
+                          col: 17
+                        }
+                        end: {
+                          line: 11
+                          col: 18
+                        }
                       }
                     }
                     attr: "foo"
                     setof: true
                   }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 32
+                    }
+                    text: "let out6 = .abc -> set of foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out7"
-                expr {
-                  navigate {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  navigate: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 12
+                              col: 17
+                            }
+                            end: {
+                              line: 12
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
+                      }
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 12
+                          col: 17
+                        }
+                        end: {
+                          line: 12
+                          col: 18
+                        }
                       }
                     }
                     attr: "foo"
                     setof: true
                     via: "bar"
                   }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 12
+                      col: 40
+                    }
+                    text: "let out7 = .abc -> set of foo via bar"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out8"
-                expr {
-                  relexpr {
+                expr: {
+                  relexpr: {
                     op: SNAPSHOT
-                    target {
-                      binexpr {
+                    target: {
+                      binexpr: {
                         op: WHERE
-                        lhs {
-                          navigate {
-                            arg {
-                              get_attr {
-                                arg {
+                        lhs: {
+                          navigate: {
+                            arg: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/navigate.sysl"
+                                    start: {
+                                      line: 13
+                                      col: 17
+                                    }
+                                    end: {
+                                      line: 13
+                                      col: 18
+                                    }
+                                  }
                                 }
                                 attr: "abc"
+                              }
+                              source_context: {
+                                file: "tests/navigate.sysl"
+                                start: {
+                                  line: 13
+                                  col: 17
+                                }
+                                end: {
+                                  line: 13
+                                  col: 18
+                                }
                               }
                             }
                             attr: "foo"
                             setof: true
                             via: "bar"
                           }
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 13
+                              col: 22
+                            }
+                            end: {
+                              line: 13
+                              col: 40
+                            }
+                          }
                         }
-                        rhs {
-                          binexpr {
+                        rhs: {
+                          binexpr: {
                             op: EQ
-                            lhs {
-                              get_attr {
-                                arg {
+                            lhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/navigate.sysl"
+                                    start: {
+                                      line: 13
+                                      col: 50
+                                    }
+                                    end: {
+                                      line: 13
+                                      col: 51
+                                    }
+                                  }
                                 }
                                 attr: "a"
                               }
+                              source_context: {
+                                file: "tests/navigate.sysl"
+                                start: {
+                                  line: 13
+                                  col: 50
+                                }
+                                end: {
+                                  line: 13
+                                  col: 51
+                                }
+                              }
                             }
-                            rhs {
-                              literal {
+                            rhs: {
+                              literal: {
                                 b: true
                               }
-                              type {
+                              type: {
                                 primitive: BOOL
                               }
+                              source_context: {
+                                file: "tests/navigate.sysl"
+                                start: {
+                                  line: 13
+                                  col: 56
+                                }
+                                end: {
+                                  line: 13
+                                  col: 56
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/navigate.sysl"
+                            start: {
+                              line: 13
+                              col: 50
+                            }
+                            end: {
+                              line: 13
+                              col: 56
                             }
                           }
                         }
                         scopevar: "."
                       }
+                      source_context: {
+                        file: "tests/navigate.sysl"
+                        start: {
+                          line: 13
+                          col: 44
+                        }
+                        end: {
+                          line: 13
+                          col: 44
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/navigate.sysl"
+                    start: {
+                      line: 13
+                      col: 6
+                    }
+                    end: {
+                      line: 13
+                      col: 62
+                    }
+                    text: "let out8 = .abc -> set of foo via bar where(.a == true) snapshot"
                   }
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/navigate.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 14
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/navigate.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 15
+          }
+          text: "!view TestNavigate(number <: int) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/navigate.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }

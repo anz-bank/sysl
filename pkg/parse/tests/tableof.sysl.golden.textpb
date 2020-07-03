@@ -1,168 +1,450 @@
-apps {
+apps: {
   key: "TransformationTest"
-  value {
-    name {
+  value: {
+    name: {
       part: "TransformationTest"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.test.views"
       }
     }
-    views {
+    views: {
       key: "TestTableOf"
-      value {
-        param {
+      value: {
+        param: {
           name: "number"
-          type {
+          type: {
             primitive: INT
           }
         }
-        ret_type {
+        ret_type: {
           primitive: INT
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "number"
+              source_context: {
+                file: "tests/tableof.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 3
+                  col: 4
+                }
+              }
             }
             scopevar: "."
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out1"
-                expr {
-                  get_attr {
-                    arg {
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/tableof.sysl"
+                        start: {
+                          line: 5
+                          col: 17
+                        }
+                        end: {
+                          line: 5
+                          col: 27
+                        }
+                      }
                     }
                     attr: "abc"
                     setof: true
                   }
+                  source_context: {
+                    file: "tests/tableof.sysl"
+                    start: {
+                      line: 5
+                      col: 6
+                    }
+                    end: {
+                      line: 5
+                      col: 27
+                    }
+                    text: "let out1 = .table of abc"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out2"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/tableof.sysl"
+                            start: {
+                              line: 6
+                              col: 17
+                            }
+                            end: {
+                              line: 6
+                              col: 27
+                            }
+                          }
                         }
                         attr: "abc"
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/tableof.sysl"
+                        start: {
+                          line: 6
+                          col: 17
+                        }
+                        end: {
+                          line: 6
+                          col: 27
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/tableof.sysl"
+                    start: {
+                      line: 6
+                      col: 6
+                    }
+                    end: {
+                      line: 6
+                      col: 31
+                    }
+                    text: "let out2 = .table of abc.def"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out3"
-                expr {
-                  get_attr {
-                    arg {
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "input"
+                      source_context: {
+                        file: "tests/tableof.sysl"
+                        start: {
+                          line: 8
+                          col: 17
+                        }
+                        end: {
+                          line: 8
+                          col: 17
+                        }
+                      }
                     }
                     attr: "abc"
                     setof: true
                   }
+                  source_context: {
+                    file: "tests/tableof.sysl"
+                    start: {
+                      line: 8
+                      col: 6
+                    }
+                    end: {
+                      line: 8
+                      col: 33
+                    }
+                    text: "let out3 = input .table of abc"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out4"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "input"
+                          source_context: {
+                            file: "tests/tableof.sysl"
+                            start: {
+                              line: 9
+                              col: 17
+                            }
+                            end: {
+                              line: 9
+                              col: 17
+                            }
+                          }
                         }
                         attr: "abc"
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/tableof.sysl"
+                        start: {
+                          line: 9
+                          col: 23
+                        }
+                        end: {
+                          line: 9
+                          col: 33
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/tableof.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 37
+                    }
+                    text: "let out4 = input .table of abc.def"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out4a"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "input"
+                          source_context: {
+                            file: "tests/tableof.sysl"
+                            start: {
+                              line: 10
+                              col: 18
+                            }
+                            end: {
+                              line: 10
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/tableof.sysl"
+                        start: {
+                          line: 10
+                          col: 23
+                        }
+                        end: {
+                          line: 10
+                          col: 33
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/tableof.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 37
+                    }
+                    text: "let out4a = input.table of abc.def"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out5"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
-                          get_attr {
-                            arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "input"
+                              source_context: {
+                                file: "tests/tableof.sysl"
+                                start: {
+                                  line: 11
+                                  col: 17
+                                }
+                                end: {
+                                  line: 11
+                                  col: 17
+                                }
+                              }
                             }
                             attr: "foo"
+                          }
+                          source_context: {
+                            file: "tests/tableof.sysl"
+                            start: {
+                              line: 11
+                              col: 22
+                            }
+                            end: {
+                              line: 11
+                              col: 23
+                            }
                           }
                         }
                         attr: "abc"
                         setof: true
+                      }
+                      source_context: {
+                        file: "tests/tableof.sysl"
+                        start: {
+                          line: 11
+                          col: 27
+                        }
+                        end: {
+                          line: 11
+                          col: 37
+                        }
                       }
                     }
                     attr: "def"
                   }
+                  source_context: {
+                    file: "tests/tableof.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 41
+                    }
+                    text: "let out5 = input.foo .table of abc.def"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out6"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
-                          get_attr {
-                            arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/tableof.sysl"
+                                start: {
+                                  line: 12
+                                  col: 17
+                                }
+                                end: {
+                                  line: 12
+                                  col: 18
+                                }
+                              }
                             }
                             attr: "foo"
+                          }
+                          source_context: {
+                            file: "tests/tableof.sysl"
+                            start: {
+                              line: 12
+                              col: 17
+                            }
+                            end: {
+                              line: 12
+                              col: 18
+                            }
                           }
                         }
                         attr: "abc"
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/tableof.sysl"
+                        start: {
+                          line: 12
+                          col: 22
+                        }
+                        end: {
+                          line: 12
+                          col: 32
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/tableof.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 12
+                      col: 36
+                    }
+                    text: "let out6 = .foo .table of abc.def"
                   }
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/tableof.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 13
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/tableof.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 14
+          }
+          text: "!view TestTableOf(number <: int) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/tableof.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }

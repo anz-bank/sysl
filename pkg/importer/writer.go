@@ -292,7 +292,7 @@ func (w *writer) writeDefinition(t *StandardType) {
 		}
 		suffix = appendAttributesString(suffix, prop.Attributes)
 
-		name := prop.Name
+		name := getSyslSafeName(prop.Name)
 		if IsBuiltIn(name) {
 			name += "_"
 		}

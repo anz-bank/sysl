@@ -164,7 +164,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		return
 	}
 	s.prevLineEmpty = false
-	attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += str
+	attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += str + "\n"
 }
 
 // EnterTypes is called when production types is entered.

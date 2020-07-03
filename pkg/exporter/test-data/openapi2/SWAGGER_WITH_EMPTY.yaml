@@ -1,5 +1,6 @@
 info:
-  description: foo
+  description: |
+    foo
   title: foo
   version: 0.0.0
 paths:

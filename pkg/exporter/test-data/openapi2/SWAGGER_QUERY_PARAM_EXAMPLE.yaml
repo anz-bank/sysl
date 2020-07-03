@@ -1,5 +1,6 @@
 info:
-  description: No description.
+  description: |
+    No description.
   title: Simple
   version: 0.0.0
 paths:

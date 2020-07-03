@@ -1,50 +1,92 @@
-apps {
+apps: {
   key: "Desktop"
-  value {
-    name {
+  value: {
+    name: {
       part: "Desktop"
     }
-    endpoints {
+    endpoints: {
       key: "Customer"
-      value {
+      value: {
         name: "Customer"
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "call foo"
+          }
+        }
+        source_context: {
+          file: "tests/crash.sysl"
+          start: {
+            line: 3
+            col: 4
+          }
+          end: {
+            line: 6
+            col: 4
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint"
-      value {
+      value: {
         name: "Endpoint"
-        attrs {
+        attrs: {
           key: "patterns"
-          value {
-            a {
-              elt {
+          value: {
+            a: {
+              elt: {
                 s: "button"
               }
             }
           }
         }
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "call foo"
+          }
+        }
+        source_context: {
+          file: "tests/crash.sysl"
+          start: {
+            line: 9
+            col: 4
+          }
+          end: {
+            line: 12
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Financial"
-      value {
+      value: {
         name: "Financial"
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "..."
           }
         }
+        source_context: {
+          file: "tests/crash.sysl"
+          start: {
+            line: 6
+            col: 4
+          }
+          end: {
+            line: 9
+            col: 4
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/crash.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
       }
     }
   }

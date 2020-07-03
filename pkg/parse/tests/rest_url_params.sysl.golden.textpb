@@ -1,138 +1,138 @@
-apps: <
+apps: {
   key: "Server"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Server"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "GET /{id1}/{id2}/{aid3}/{id4}/{bid5}"
-      value: <
+      value: {
         name: "GET /{id1}/{id2}/{aid3}/{id4}/{bid5}"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/{id1}/{id2}/{aid3}/{id4}/{bid5}"
-          url_param: <
+          url_param: {
             name: "id1"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/rest_url_params.sysl"
-                start: <
+                start: {
                   line: 2
                   col: 5
-                >
-                end: <
+                }
+                end: {
                   line: 2
                   col: 14
-                >
-              >
-            >
-          >
-          url_param: <
+                }
+              }
+            }
+          }
+          url_param: {
             name: "id2"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/rest_url_params.sysl"
-                start: <
+                start: {
                   line: 3
                   col: 9
-                >
-                end: <
+                }
+                end: {
                   line: 3
                   col: 18
-                >
-              >
-            >
-          >
-          url_param: <
+                }
+              }
+            }
+          }
+          url_param: {
             name: "aid3"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/rest_url_params.sysl"
-                start: <
+                start: {
                   line: 4
                   col: 13
-                >
-                end: <
+                }
+                end: {
                   line: 4
                   col: 23
-                >
-              >
-            >
-          >
-          url_param: <
+                }
+              }
+            }
+          }
+          url_param: {
             name: "id4"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/rest_url_params.sysl"
-                start: <
+                start: {
                   line: 5
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 5
                   col: 26
-                >
-              >
-            >
-          >
-          url_param: <
+                }
+              }
+            }
+          }
+          url_param: {
             name: "bid5"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/rest_url_params.sysl"
-                start: <
+                start: {
                   line: 6
                   col: 21
-                >
-                end: <
+                }
+                end: {
                   line: 6
                   col: 31
-                >
-              >
-            >
-          >
-        >
-        source_context: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/rest_url_params.sysl"
-          start: <
+          start: {
             line: 7
             col: 24
-          >
-          end: <
+          }
+          end: {
             line: 9
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/rest_url_params.sysl"
-      start: <
+      start: {
         line: 1
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 1
-      >
-    >
-  >
->
+      }
+    }
+  }
+}

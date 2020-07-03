@@ -1,30 +1,30 @@
-apps {
+apps: {
   key: "Calculator"
-  value {
-    name {
+  value: {
+    name: {
       part: "Calculator"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.demo.petshop.views"
       }
     }
-    views {
+    views: {
       key: "NoArgTransform"
-      value {
-        param {
+      value: {
+        param: {
           name: "number1"
-          type {
+          type: {
             primitive: INT
           }
         }
-        param {
+        param: {
           name: "foo"
-          type {
-            type_ref {
-              ref {
-                appname {
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Some"
                 }
                 path: "Type"
@@ -32,1002 +32,3229 @@ apps {
             }
           }
         }
-        ret_type {
-          type_ref {
-            ref {
-              appname {
+        ret_type: {
+          type_ref: {
+            ref: {
+              appname: {
                 part: "Model"
               }
               path: "Type"
             }
           }
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "."
+              source_context: {
+                file: "tests/math.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 41
+                  col: 5
+                }
+              }
             }
             scopevar: "scopeVar"
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "out"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: SUB
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: ADD
-                        lhs {
+                        lhs: {
                           name: "number"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 4
+                              col: 12
+                            }
+                            end: {
+                              line: 4
+                              col: 12
+                            }
+                          }
                         }
-                        rhs {
-                          literal {
+                        rhs: {
+                          literal: {
                             i: 1
                           }
+                          type: {
+                            primitive: INT
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 4
+                              col: 21
+                            }
+                            end: {
+                              line: 4
+                              col: 21
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 4
+                          col: 19
+                        }
+                        end: {
+                          line: 4
+                          col: 21
                         }
                       }
                     }
-                    rhs {
+                    rhs: {
                       name: "scopeVar"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 4
+                          col: 25
+                        }
+                        end: {
+                          line: 4
+                          col: 25
+                        }
+                      }
                     }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 4
+                      col: 6
+                    }
+                    end: {
+                      line: 4
+                      col: 25
+                    }
+                    text: "out = number + 1 - scopeVar"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "out"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: POW
-                    lhs {
-                      literal {
+                    lhs: {
+                      literal: {
                         i: 2
                       }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 5
+                          col: 12
+                        }
+                        end: {
+                          line: 5
+                          col: 12
+                        }
+                      }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: POW
-                        lhs {
-                          literal {
+                        lhs: {
+                          literal: {
                             i: 3
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 5
+                              col: 17
+                            }
+                            end: {
+                              line: 5
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
-                          literal {
+                        rhs: {
+                          literal: {
                             i: 4
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 5
+                              col: 22
+                            }
+                            end: {
+                              line: 5
+                              col: 22
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 5
+                          col: 17
+                        }
+                        end: {
+                          line: 5
+                          col: 22
                         }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 5
+                      col: 6
+                    }
+                    end: {
+                      line: 5
+                      col: 22
+                    }
+                    text: "out = 2 ** 3 ** 4"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "out"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: SUB
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: POW
-                        lhs {
-                          literal {
+                        lhs: {
+                          literal: {
                             i: 2
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 6
+                              col: 12
+                            }
+                            end: {
+                              line: 6
+                              col: 12
+                            }
+                          }
                         }
-                        rhs {
-                          binexpr {
+                        rhs: {
+                          binexpr: {
                             op: POW
-                            lhs {
-                              literal {
+                            lhs: {
+                              literal: {
                                 i: 3
                               }
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 6
+                                  col: 17
+                                }
+                                end: {
+                                  line: 6
+                                  col: 17
+                                }
+                              }
                             }
-                            rhs {
-                              unexpr {
+                            rhs: {
+                              unexpr: {
                                 op: NEG
-                                arg {
-                                  literal {
+                                arg: {
+                                  literal: {
                                     i: 4
+                                  }
+                                  source_context: {
+                                    file: "tests/math.sysl"
+                                    start: {
+                                      line: 6
+                                      col: 23
+                                    }
+                                    end: {
+                                      line: 6
+                                      col: 23
+                                    }
                                   }
                                 }
                               }
-                            }
-                          }
-                        }
-                      }
-                    }
-                    rhs {
-                      literal {
-                        i: 10
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_not"
-                expr {
-                  unexpr {
-                    op: NOT
-                    arg {
-                      name: "foo"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_nota"
-                expr {
-                  unexpr {
-                    op: INV
-                    arg {
-                      name: "foo"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_notb"
-                expr {
-                  unexpr {
-                    op: NEG
-                    arg {
-                      name: "foo"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_notc"
-                expr {
-                  unexpr {
-                    op: POS
-                    arg {
-                      name: "foo"
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_but_not"
-                expr {
-                  binexpr {
-                    op: BUTNOT
-                    lhs {
-                      binexpr {
-                        op: BUTNOT
-                        lhs {
-                          binexpr {
-                            op: OR
-                            lhs {
-                              name: "a"
-                            }
-                            rhs {
-                              name: "b"
-                            }
-                          }
-                        }
-                        rhs {
-                          binexpr {
-                            op: OR
-                            lhs {
-                              name: "c"
-                            }
-                            rhs {
-                              name: "d"
-                            }
-                          }
-                        }
-                      }
-                    }
-                    rhs {
-                      binexpr {
-                        op: OR
-                        lhs {
-                          name: "e"
-                        }
-                        rhs {
-                          name: "f"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_or"
-                expr {
-                  binexpr {
-                    op: OR
-                    lhs {
-                      binexpr {
-                        op: OR
-                        lhs {
-                          binexpr {
-                            op: OR
-                            lhs {
-                              name: "a"
-                            }
-                            rhs {
-                              binexpr {
-                                op: AND
-                                lhs {
-                                  name: "b"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 6
+                                  col: 22
                                 }
-                                rhs {
-                                  name: "c"
+                                end: {
+                                  line: 6
+                                  col: 23
                                 }
                               }
                             }
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 6
+                              col: 17
+                            }
+                            end: {
+                              line: 6
+                              col: 23
+                            }
+                          }
                         }
-                        rhs {
-                          binexpr {
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 6
+                          col: 12
+                        }
+                        end: {
+                          line: 6
+                          col: 23
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
+                        i: 10
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 6
+                          col: 27
+                        }
+                        end: {
+                          line: 6
+                          col: 27
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 6
+                      col: 6
+                    }
+                    end: {
+                      line: 6
+                      col: 27
+                    }
+                    text: "out = 2 ** 3 ** -4 - 10"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "expr_not"
+                expr: {
+                  unexpr: {
+                    op: NOT
+                    arg: {
+                      name: "foo"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 7
+                          col: 18
+                        }
+                        end: {
+                          line: 7
+                          col: 18
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 7
+                      col: 6
+                    }
+                    end: {
+                      line: 7
+                      col: 18
+                    }
+                    text: "expr_not = !foo"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "expr_nota"
+                expr: {
+                  unexpr: {
+                    op: INV
+                    arg: {
+                      name: "foo"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 8
+                          col: 19
+                        }
+                        end: {
+                          line: 8
+                          col: 19
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 8
+                      col: 6
+                    }
+                    end: {
+                      line: 8
+                      col: 19
+                    }
+                    text: "expr_nota = ~foo"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "expr_notb"
+                expr: {
+                  unexpr: {
+                    op: NEG
+                    arg: {
+                      name: "foo"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 9
+                          col: 19
+                        }
+                        end: {
+                          line: 9
+                          col: 19
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 19
+                    }
+                    text: "expr_notb = -foo"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "expr_notc"
+                expr: {
+                  unexpr: {
+                    op: POS
+                    arg: {
+                      name: "foo"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 10
+                          col: 19
+                        }
+                        end: {
+                          line: 10
+                          col: 19
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 19
+                    }
+                    text: "expr_notc = +foo"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "expr_but_not"
+                expr: {
+                  binexpr: {
+                    op: BUTNOT
+                    lhs: {
+                      binexpr: {
+                        op: BUTNOT
+                        lhs: {
+                          binexpr: {
+                            op: OR
+                            lhs: {
+                              name: "a"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 11
+                                  col: 21
+                                }
+                                end: {
+                                  line: 11
+                                  col: 21
+                                }
+                              }
+                            }
+                            rhs: {
+                              name: "b"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 11
+                                  col: 26
+                                }
+                                end: {
+                                  line: 11
+                                  col: 26
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 11
+                              col: 21
+                            }
+                            end: {
+                              line: 11
+                              col: 26
+                            }
+                          }
+                        }
+                        rhs: {
+                          binexpr: {
+                            op: OR
+                            lhs: {
+                              name: "c"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 11
+                                  col: 36
+                                }
+                                end: {
+                                  line: 11
+                                  col: 36
+                                }
+                              }
+                            }
+                            rhs: {
+                              name: "d"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 11
+                                  col: 41
+                                }
+                                end: {
+                                  line: 11
+                                  col: 41
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 11
+                              col: 36
+                            }
+                            end: {
+                              line: 11
+                              col: 41
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 11
+                          col: 21
+                        }
+                        end: {
+                          line: 11
+                          col: 56
+                        }
+                      }
+                    }
+                    rhs: {
+                      binexpr: {
+                        op: OR
+                        lhs: {
+                          name: "e"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 11
+                              col: 51
+                            }
+                            end: {
+                              line: 11
+                              col: 51
+                            }
+                          }
+                        }
+                        rhs: {
+                          name: "f"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 11
+                              col: 56
+                            }
+                            end: {
+                              line: 11
+                              col: 56
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 11
+                          col: 51
+                        }
+                        end: {
+                          line: 11
+                          col: 56
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 56
+                    }
+                    text: "expr_but_not = a || b but not c || d but not e || f"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "expr_or"
+                expr: {
+                  binexpr: {
+                    op: OR
+                    lhs: {
+                      binexpr: {
+                        op: OR
+                        lhs: {
+                          binexpr: {
+                            op: OR
+                            lhs: {
+                              name: "a"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 12
+                                  col: 16
+                                }
+                                end: {
+                                  line: 12
+                                  col: 16
+                                }
+                              }
+                            }
+                            rhs: {
+                              binexpr: {
+                                op: AND
+                                lhs: {
+                                  name: "b"
+                                  source_context: {
+                                    file: "tests/math.sysl"
+                                    start: {
+                                      line: 12
+                                      col: 21
+                                    }
+                                    end: {
+                                      line: 12
+                                      col: 21
+                                    }
+                                  }
+                                }
+                                rhs: {
+                                  name: "c"
+                                  source_context: {
+                                    file: "tests/math.sysl"
+                                    start: {
+                                      line: 12
+                                      col: 26
+                                    }
+                                    end: {
+                                      line: 12
+                                      col: 26
+                                    }
+                                  }
+                                }
+                              }
+                              type: {
+                                no_type: {}
+                              }
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 12
+                                  col: 21
+                                }
+                                end: {
+                                  line: 12
+                                  col: 26
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 12
+                              col: 16
+                            }
+                            end: {
+                              line: 12
+                              col: 41
+                            }
+                          }
+                        }
+                        rhs: {
+                          binexpr: {
                             op: AND
-                            lhs {
+                            lhs: {
                               name: "d"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 12
+                                  col: 31
+                                }
+                                end: {
+                                  line: 12
+                                  col: 31
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "e"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 12
+                                  col: 36
+                                }
+                                end: {
+                                  line: 12
+                                  col: 36
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 12
+                              col: 31
+                            }
+                            end: {
+                              line: 12
+                              col: 36
                             }
                           }
                         }
                       }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 12
+                          col: 16
+                        }
+                        end: {
+                          line: 12
+                          col: 41
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "f"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 12
+                          col: 41
+                        }
+                        end: {
+                          line: 12
+                          col: 41
+                        }
+                      }
                     }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 12
+                      col: 41
+                    }
+                    text: "expr_or = a || b && c || d && e || f"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_and"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: AND
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: AND
-                        lhs {
-                          binexpr {
+                        lhs: {
+                          binexpr: {
                             op: BITXOR
-                            lhs {
+                            lhs: {
                               name: "a"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 13
+                                  col: 17
+                                }
+                                end: {
+                                  line: 13
+                                  col: 17
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "b"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 13
+                                  col: 21
+                                }
+                                end: {
+                                  line: 13
+                                  col: 21
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 13
+                              col: 17
+                            }
+                            end: {
+                              line: 13
+                              col: 21
                             }
                           }
                         }
-                        rhs {
-                          binexpr {
+                        rhs: {
+                          binexpr: {
                             op: BITXOR
-                            lhs {
+                            lhs: {
                               name: "c"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 13
+                                  col: 26
+                                }
+                                end: {
+                                  line: 13
+                                  col: 26
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "d"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 13
+                                  col: 30
+                                }
+                                end: {
+                                  line: 13
+                                  col: 30
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 13
+                              col: 26
+                            }
+                            end: {
+                              line: 13
+                              col: 30
                             }
                           }
                         }
                       }
-                    }
-                    rhs {
-                      binexpr {
-                        op: BITXOR
-                        lhs {
-                          name: "e"
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 13
+                          col: 17
                         }
-                        rhs {
+                        end: {
+                          line: 13
+                          col: 39
+                        }
+                      }
+                    }
+                    rhs: {
+                      binexpr: {
+                        op: BITXOR
+                        lhs: {
+                          name: "e"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 13
+                              col: 35
+                            }
+                            end: {
+                              line: 13
+                              col: 35
+                            }
+                          }
+                        }
+                        rhs: {
                           name: "f"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 13
+                              col: 39
+                            }
+                            end: {
+                              line: 13
+                              col: 39
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 13
+                          col: 35
+                        }
+                        end: {
+                          line: 13
+                          col: 39
                         }
                       }
                     }
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 13
+                      col: 6
+                    }
+                    end: {
+                      line: 13
+                      col: 39
+                    }
+                    text: "expr_and = a ^ b && c ^ d && e ^ f"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_bitor"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: BITOR
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: BITOR
-                        lhs {
-                          binexpr {
+                        lhs: {
+                          binexpr: {
                             op: BITXOR
-                            lhs {
+                            lhs: {
                               name: "a"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 14
+                                  col: 19
+                                }
+                                end: {
+                                  line: 14
+                                  col: 19
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "b"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 14
+                                  col: 23
+                                }
+                                end: {
+                                  line: 14
+                                  col: 23
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 14
+                              col: 19
+                            }
+                            end: {
+                              line: 14
+                              col: 23
                             }
                           }
                         }
-                        rhs {
-                          binexpr {
+                        rhs: {
+                          binexpr: {
                             op: BITXOR
-                            lhs {
+                            lhs: {
                               name: "c"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 14
+                                  col: 28
+                                }
+                                end: {
+                                  line: 14
+                                  col: 28
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "d"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 14
+                                  col: 32
+                                }
+                                end: {
+                                  line: 14
+                                  col: 32
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 14
+                              col: 28
+                            }
+                            end: {
+                              line: 14
+                              col: 32
                             }
                           }
                         }
                       }
-                    }
-                    rhs {
-                      binexpr {
-                        op: BITXOR
-                        lhs {
-                          name: "e"
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 14
+                          col: 19
                         }
-                        rhs {
+                        end: {
+                          line: 14
+                          col: 41
+                        }
+                      }
+                    }
+                    rhs: {
+                      binexpr: {
+                        op: BITXOR
+                        lhs: {
+                          name: "e"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 14
+                              col: 37
+                            }
+                            end: {
+                              line: 14
+                              col: 37
+                            }
+                          }
+                        }
+                        rhs: {
                           name: "f"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 14
+                              col: 41
+                            }
+                            end: {
+                              line: 14
+                              col: 41
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 14
+                          col: 37
+                        }
+                        end: {
+                          line: 14
+                          col: 41
                         }
                       }
                     }
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 14
+                      col: 6
+                    }
+                    end: {
+                      line: 14
+                      col: 41
+                    }
+                    text: "expr_bitor = a ^ b or c ^ d or e ^ f"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_bitor"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: BITOR
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: BITOR
-                        lhs {
-                          binexpr {
+                        lhs: {
+                          binexpr: {
                             op: BITXOR
-                            lhs {
+                            lhs: {
                               name: "a"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 15
+                                  col: 19
+                                }
+                                end: {
+                                  line: 15
+                                  col: 19
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "b"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 15
+                                  col: 23
+                                }
+                                end: {
+                                  line: 15
+                                  col: 23
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 15
+                              col: 19
+                            }
+                            end: {
+                              line: 15
+                              col: 23
                             }
                           }
                         }
-                        rhs {
-                          binexpr {
+                        rhs: {
+                          binexpr: {
                             op: BITXOR
-                            lhs {
+                            lhs: {
                               name: "c"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 15
+                                  col: 27
+                                }
+                                end: {
+                                  line: 15
+                                  col: 27
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "d"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 15
+                                  col: 31
+                                }
+                                end: {
+                                  line: 15
+                                  col: 31
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 15
+                              col: 27
+                            }
+                            end: {
+                              line: 15
+                              col: 31
                             }
                           }
                         }
                       }
-                    }
-                    rhs {
-                      binexpr {
-                        op: BITXOR
-                        lhs {
-                          name: "e"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 15
+                          col: 19
                         }
-                        rhs {
+                        end: {
+                          line: 15
+                          col: 39
+                        }
+                      }
+                    }
+                    rhs: {
+                      binexpr: {
+                        op: BITXOR
+                        lhs: {
+                          name: "e"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 15
+                              col: 35
+                            }
+                            end: {
+                              line: 15
+                              col: 35
+                            }
+                          }
+                        }
+                        rhs: {
                           name: "f"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 15
+                              col: 39
+                            }
+                            end: {
+                              line: 15
+                              col: 39
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 15
+                          col: 35
+                        }
+                        end: {
+                          line: 15
+                          col: 39
                         }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 15
+                      col: 6
+                    }
+                    end: {
+                      line: 15
+                      col: 39
+                    }
+                    text: "expr_bitor = a ^ b | c ^ d | e ^ f"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_bit_xor"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: BITXOR
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: BITXOR
-                        lhs {
-                          binexpr {
+                        lhs: {
+                          binexpr: {
                             op: BITAND
-                            lhs {
+                            lhs: {
                               name: "a"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 16
+                                  col: 21
+                                }
+                                end: {
+                                  line: 16
+                                  col: 21
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "b"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 16
+                                  col: 25
+                                }
+                                end: {
+                                  line: 16
+                                  col: 25
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 16
+                              col: 21
+                            }
+                            end: {
+                              line: 16
+                              col: 25
                             }
                           }
                         }
-                        rhs {
-                          binexpr {
+                        rhs: {
+                          binexpr: {
                             op: BITAND
-                            lhs {
+                            lhs: {
                               name: "c"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 16
+                                  col: 29
+                                }
+                                end: {
+                                  line: 16
+                                  col: 29
+                                }
+                              }
                             }
-                            rhs {
+                            rhs: {
                               name: "d"
+                              source_context: {
+                                file: "tests/math.sysl"
+                                start: {
+                                  line: 16
+                                  col: 33
+                                }
+                                end: {
+                                  line: 16
+                                  col: 33
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 16
+                              col: 29
+                            }
+                            end: {
+                              line: 16
+                              col: 33
                             }
                           }
                         }
                       }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 16
+                          col: 21
+                        }
+                        end: {
+                          line: 16
+                          col: 41
+                        }
+                      }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: BITAND
-                        lhs {
+                        lhs: {
                           name: "e"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 16
+                              col: 37
+                            }
+                            end: {
+                              line: 16
+                              col: 37
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "f"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 16
+                              col: 41
+                            }
+                            end: {
+                              line: 16
+                              col: 41
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 16
+                          col: 37
+                        }
+                        end: {
+                          line: 16
+                          col: 41
                         }
                       }
                     }
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 16
+                      col: 6
+                    }
+                    end: {
+                      line: 16
+                      col: 41
+                    }
+                    text: "expr_bit_xor = a & b ^ c & d ^ e & f"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: LE
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: ADD
-                        lhs {
+                        lhs: {
                           name: "a"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 17
+                              col: 17
+                            }
+                            end: {
+                              line: 17
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "b"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 17
+                              col: 21
+                            }
+                            end: {
+                              line: 17
+                              col: 21
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 17
+                          col: 19
+                        }
+                        end: {
+                          line: 17
+                          col: 21
                         }
                       }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: SUB
-                        lhs {
+                        lhs: {
                           name: "c"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 17
+                              col: 26
+                            }
+                            end: {
+                              line: 17
+                              col: 26
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "d"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 17
+                              col: 30
+                            }
+                            end: {
+                              line: 17
+                              col: 30
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 17
+                          col: 28
+                        }
+                        end: {
+                          line: 17
+                          col: 30
                         }
                       }
                     }
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 17
+                      col: 6
+                    }
+                    end: {
+                      line: 17
+                      col: 30
+                    }
+                    text: "expr_rel = a + b <= c - d"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: GE
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: MUL
-                        lhs {
+                        lhs: {
                           name: "a"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 18
+                              col: 17
+                            }
+                            end: {
+                              line: 18
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "b"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 18
+                              col: 21
+                            }
+                            end: {
+                              line: 18
+                              col: 21
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 18
+                          col: 19
+                        }
+                        end: {
+                          line: 18
+                          col: 21
                         }
                       }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: DIV
-                        lhs {
+                        lhs: {
                           name: "c"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 18
+                              col: 26
+                            }
+                            end: {
+                              line: 18
+                              col: 26
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "d"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 18
+                              col: 30
+                            }
+                            end: {
+                              line: 18
+                              col: 30
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 18
+                          col: 28
+                        }
+                        end: {
+                          line: 18
+                          col: 30
                         }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 18
+                      col: 6
+                    }
+                    end: {
+                      line: 18
+                      col: 30
+                    }
+                    text: "expr_rel = a * b >= c / d"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: GT
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: POW
-                        lhs {
+                        lhs: {
                           name: "a"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 19
+                              col: 17
+                            }
+                            end: {
+                              line: 19
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "b"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 19
+                              col: 22
+                            }
+                            end: {
+                              line: 19
+                              col: 22
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 19
+                          col: 17
+                        }
+                        end: {
+                          line: 19
+                          col: 22
                         }
                       }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: POW
-                        lhs {
+                        lhs: {
                           name: "c"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 19
+                              col: 26
+                            }
+                            end: {
+                              line: 19
+                              col: 26
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "d"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 19
+                              col: 31
+                            }
+                            end: {
+                              line: 19
+                              col: 31
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 19
+                          col: 26
+                        }
+                        end: {
+                          line: 19
+                          col: 31
                         }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 19
+                      col: 6
+                    }
+                    end: {
+                      line: 19
+                      col: 31
+                    }
+                    text: "expr_rel = a ** b > c ** d"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: LT
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: POW
-                        lhs {
+                        lhs: {
                           name: "a"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 20
+                              col: 17
+                            }
+                            end: {
+                              line: 20
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "b"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 20
+                              col: 22
+                            }
+                            end: {
+                              line: 20
+                              col: 22
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 20
+                          col: 17
+                        }
+                        end: {
+                          line: 20
+                          col: 22
                         }
                       }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: POW
-                        lhs {
+                        lhs: {
                           name: "c"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 20
+                              col: 26
+                            }
+                            end: {
+                              line: 20
+                              col: 26
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "d"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 20
+                              col: 31
+                            }
+                            end: {
+                              line: 20
+                              col: 31
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 20
+                          col: 26
+                        }
+                        end: {
+                          line: 20
+                          col: 31
                         }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 20
+                      col: 6
+                    }
+                    end: {
+                      line: 20
+                      col: 31
+                    }
+                    text: "expr_rel = a ** b < c ** d"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: NE
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: ADD
-                        lhs {
+                        lhs: {
                           name: "a"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 21
+                              col: 17
+                            }
+                            end: {
+                              line: 21
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "b"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 21
+                              col: 21
+                            }
+                            end: {
+                              line: 21
+                              col: 21
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 21
+                          col: 19
+                        }
+                        end: {
+                          line: 21
+                          col: 21
                         }
                       }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: ADD
-                        lhs {
+                        lhs: {
                           name: "c"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 21
+                              col: 26
+                            }
+                            end: {
+                              line: 21
+                              col: 26
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "d"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 21
+                              col: 30
+                            }
+                            end: {
+                              line: 21
+                              col: 30
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 21
+                          col: 28
+                        }
+                        end: {
+                          line: 21
+                          col: 30
                         }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 21
+                      col: 6
+                    }
+                    end: {
+                      line: 21
+                      col: 30
+                    }
+                    text: "expr_rel = a + b != c + d"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: EQ
-                    lhs {
-                      binexpr {
+                    lhs: {
+                      binexpr: {
                         op: ADD
-                        lhs {
+                        lhs: {
                           name: "a"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 22
+                              col: 17
+                            }
+                            end: {
+                              line: 22
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "b"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 22
+                              col: 21
+                            }
+                            end: {
+                              line: 22
+                              col: 21
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 22
+                          col: 19
+                        }
+                        end: {
+                          line: 22
+                          col: 21
                         }
                       }
                     }
-                    rhs {
-                      binexpr {
+                    rhs: {
+                      binexpr: {
                         op: ADD
-                        lhs {
+                        lhs: {
                           name: "c"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 22
+                              col: 26
+                            }
+                            end: {
+                              line: 22
+                              col: 26
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "d"
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 22
+                              col: 30
+                            }
+                            end: {
+                              line: 22
+                              col: 30
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 22
+                          col: 28
+                        }
+                        end: {
+                          line: 22
+                          col: 30
                         }
                       }
                     }
                   }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_rel"
-                expr {
-                  binexpr {
-                    op: IN
-                    lhs {
-                      name: "a"
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 22
+                      col: 6
                     }
-                    rhs {
-                      name: "d"
+                    end: {
+                      line: 22
+                      col: 30
                     }
+                    text: "expr_rel = a + b == c + d"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
+                    op: IN
+                    lhs: {
+                      name: "a"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 23
+                          col: 17
+                        }
+                        end: {
+                          line: 23
+                          col: 17
+                        }
+                      }
+                    }
+                    rhs: {
+                      name: "d"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 23
+                          col: 22
+                        }
+                        end: {
+                          line: 23
+                          col: 22
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 23
+                      col: 6
+                    }
+                    end: {
+                      line: 23
+                      col: 22
+                    }
+                    text: "expr_rel = a in d"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "expr_rel"
+                expr: {
+                  binexpr: {
                     op: NOT_IN
-                    lhs {
+                    lhs: {
                       name: "a"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 24
+                          col: 17
+                        }
+                        end: {
+                          line: 24
+                          col: 17
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "d"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 24
+                          col: 23
+                        }
+                        end: {
+                          line: 24
+                          col: 23
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 24
+                      col: 6
+                    }
+                    end: {
+                      line: 24
+                      col: 23
+                    }
+                    text: "expr_rel = a !in d"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: NOT_CONTAINS
-                    lhs {
+                    lhs: {
                       name: "a"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 25
+                          col: 17
+                        }
+                        end: {
+                          line: 25
+                          col: 17
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "d"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 25
+                          col: 29
+                        }
+                        end: {
+                          line: 25
+                          col: 29
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 25
+                      col: 6
+                    }
+                    end: {
+                      line: 25
+                      col: 29
+                    }
+                    text: "expr_rel = a !contains d"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_rel"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: CONTAINS
-                    lhs {
+                    lhs: {
                       name: "a"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 26
+                          col: 17
+                        }
+                        end: {
+                          line: 26
+                          col: 17
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "d"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 26
+                          col: 28
+                        }
+                        end: {
+                          line: 26
+                          col: 28
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 26
+                      col: 6
+                    }
+                    end: {
+                      line: 26
+                      col: 28
+                    }
+                    text: "expr_rel = a contains d"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_set1"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: IN
-                    lhs {
+                    lhs: {
                       name: "a"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 27
+                          col: 18
+                        }
+                        end: {
+                          line: 27
+                          col: 18
+                        }
+                      }
                     }
-                    rhs {
-                      set {
-                        expr {
-                          literal {
+                    rhs: {
+                      set: {
+                        expr: {
+                          literal: {
                             s: "abc"
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 27
+                              col: 24
+                            }
+                            end: {
+                              line: 27
+                              col: 24
+                            }
+                          }
                         }
-                        expr {
-                          literal {
+                        expr: {
+                          literal: {
                             s: "def"
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 27
+                              col: 31
+                            }
+                            end: {
+                              line: 27
+                              col: 31
+                            }
+                          }
                         }
                       }
-                      type {
-                        set {
+                      type: {
+                        set: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 27
+                          col: 23
+                        }
+                        end: {
+                          line: 27
+                          col: 36
                         }
                       }
                     }
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 27
+                      col: 6
+                    }
+                    end: {
+                      line: 27
+                      col: 36
+                    }
+                    text: "expr_set1 = a in {\"abc\", \"def\"}"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_set2"
-                expr {
-                  set {
-                    expr {
-                      literal {
+                expr: {
+                  set: {
+                    expr: {
+                      literal: {
                         s: "abc"
                       }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 28
+                          col: 19
+                        }
+                        end: {
+                          line: 28
+                          col: 19
+                        }
+                      }
                     }
-                    expr {
-                      literal {
+                    expr: {
+                      literal: {
                         s: "def"
                       }
-                    }
-                  }
-                  type {
-                    set {
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_set3"
-                expr {
-                  set {
-                    expr {
-                      type {
-                        tuple {
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 28
+                          col: 26
+                        }
+                        end: {
+                          line: 28
+                          col: 26
                         }
                       }
-                      tuple {
-                      }
                     }
                   }
-                  type {
-                    set {
-                      tuple {
-                      }
+                  type: {
+                    set: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 28
+                      col: 6
                     }
+                    end: {
+                      line: 28
+                      col: 31
+                    }
+                    text: "expr_set2 = {\"abc\", \"def\"}"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
+                name: "expr_set3"
+                expr: {
+                  set: {
+                    expr: {
+                      tuple: {}
+                      type: {
+                        tuple: {}
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 29
+                          col: 19
+                        }
+                        end: {
+                          line: 29
+                          col: 19
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    set: {
+                      tuple: {}
+                    }
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 29
+                      col: 6
+                    }
+                    end: {
+                      line: 29
+                      col: 22
+                    }
+                    text: "expr_set3 = {{:}}"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "expr_set4"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: "someFunc"
-                    arg {
-                      list {
-                        expr {
-                          literal {
+                    arg: {
+                      list: {
+                        expr: {
+                          literal: {
                             s: "1"
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 30
+                              col: 28
+                            }
+                            end: {
+                              line: 30
+                              col: 28
+                            }
+                          }
                         }
-                        expr {
-                          literal {
+                        expr: {
+                          literal: {
                             s: "2"
                           }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 30
+                              col: 32
+                            }
+                            end: {
+                              line: 30
+                              col: 32
+                            }
+                          }
                         }
-                        expr {
-                          literal {
+                        expr: {
+                          literal: {
                             s: "abc"
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 30
+                              col: 36
+                            }
+                            end: {
+                              line: 30
+                              col: 36
+                            }
                           }
                         }
                       }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 30
+                          col: 27
+                        }
+                        end: {
+                          line: 30
+                          col: 41
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 30
+                      col: 6
+                    }
+                    end: {
+                      line: 30
+                      col: 42
+                    }
+                    text: "expr_set4 = someFunc([\"1\",\"2\",\"abc\"])"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_set4"
-                expr {
-                  set {
-                    expr {
-                      literal {
+                expr: {
+                  set: {
+                    expr: {
+                      literal: {
                         i: 1
                       }
-                    }
-                    expr {
-                      literal {
-                        i: 2
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 31
+                          col: 19
+                        }
+                        end: {
+                          line: 31
+                          col: 19
+                        }
                       }
                     }
-                    expr {
-                      literal {
+                    expr: {
+                      literal: {
+                        i: 2
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 31
+                          col: 21
+                        }
+                        end: {
+                          line: 31
+                          col: 21
+                        }
+                      }
+                    }
+                    expr: {
+                      literal: {
                         s: "abc"
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 31
+                          col: 23
+                        }
+                        end: {
+                          line: 31
+                          col: 23
+                        }
                       }
                     }
                   }
-                  type {
-                    set {
+                  type: {
+                    set: {}
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 31
+                      col: 6
                     }
+                    end: {
+                      line: 31
+                      col: 28
+                    }
+                    text: "expr_set4 = {1,2,\"abc\"}"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_list1"
-                expr {
-                  list {
-                    expr {
-                      literal {
+                expr: {
+                  list: {
+                    expr: {
+                      literal: {
                         i: 1
                       }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 32
+                          col: 20
+                        }
+                        end: {
+                          line: 32
+                          col: 20
+                        }
+                      }
                     }
-                    expr {
-                      literal {
+                    expr: {
+                      literal: {
                         i: 2
                       }
-                    }
-                    expr {
-                      literal {
-                        s: "abc"
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 32
+                          col: 22
+                        }
+                        end: {
+                          line: 32
+                          col: 22
+                        }
                       }
                     }
+                    expr: {
+                      literal: {
+                        s: "abc"
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 32
+                          col: 24
+                        }
+                        end: {
+                          line: 32
+                          col: 24
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 32
+                      col: 6
+                    }
+                    end: {
+                      line: 32
+                      col: 29
+                    }
+                    text: "expr_list1 = [1,2,\"abc\"]"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "expr_list2"
-                expr {
-                  list {
-                    expr {
-                      literal {
+                expr: {
+                  list: {
+                    expr: {
+                      literal: {
                         s: "1"
                       }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 33
+                          col: 20
+                        }
+                        end: {
+                          line: 33
+                          col: 20
+                        }
+                      }
                     }
-                    expr {
-                      literal {
+                    expr: {
+                      literal: {
                         s: "2"
                       }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 33
+                          col: 24
+                        }
+                        end: {
+                          line: 33
+                          col: 24
+                        }
+                      }
                     }
-                    expr {
-                      literal {
+                    expr: {
+                      literal: {
                         s: "abc"
                       }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "expr_list3"
-                expr {
-                  call {
-                    func: "someFunc"
-                    arg {
-                      list {
-                        expr {
-                          literal {
-                            s: "1"
-                          }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 33
+                          col: 28
                         }
-                        expr {
-                          literal {
-                            s: "2"
-                          }
-                        }
-                        expr {
-                          literal {
-                            s: "abc"
-                          }
+                        end: {
+                          line: 33
+                          col: 28
                         }
                       }
                     }
                   }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "literal1"
-                expr {
-                  literal {
-                    b: false
+                  type: {
+                    primitive: STRING
                   }
-                  type {
-                    primitive: BOOL
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "literal2"
-                expr {
-                  literal {
-                    b: true
-                  }
-                  type {
-                    primitive: BOOL
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 33
+                      col: 6
+                    }
+                    end: {
+                      line: 33
+                      col: 33
+                    }
+                    text: "expr_list2 = [\"1\",\"2\",\"abc\"]"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "literal3"
-                expr {
-                  literal {
-                    null {
+            stmt: {
+              assign: {
+                name: "expr_list3"
+                expr: {
+                  call: {
+                    func: "someFunc"
+                    arg: {
+                      list: {
+                        expr: {
+                          literal: {
+                            s: "1"
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 34
+                              col: 29
+                            }
+                            end: {
+                              line: 34
+                              col: 29
+                            }
+                          }
+                        }
+                        expr: {
+                          literal: {
+                            s: "2"
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 34
+                              col: 33
+                            }
+                            end: {
+                              line: 34
+                              col: 33
+                            }
+                          }
+                        }
+                        expr: {
+                          literal: {
+                            s: "abc"
+                          }
+                          source_context: {
+                            file: "tests/math.sysl"
+                            start: {
+                              line: 34
+                              col: 37
+                            }
+                            end: {
+                              line: 34
+                              col: 37
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/math.sysl"
+                        start: {
+                          line: 34
+                          col: 28
+                        }
+                        end: {
+                          line: 34
+                          col: 42
+                        }
+                      }
                     }
                   }
-                  type {
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 34
+                      col: 6
+                    }
+                    end: {
+                      line: 34
+                      col: 43
+                    }
+                    text: "expr_list3 = someFunc([\"1\",\"2\",\"abc\"])"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "literal1"
+                expr: {
+                  literal: {
+                    b: false
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 35
+                      col: 6
+                    }
+                    end: {
+                      line: 35
+                      col: 17
+                    }
+                    text: "literal1 = false"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "literal2"
+                expr: {
+                  literal: {
+                    b: true
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 36
+                      col: 6
+                    }
+                    end: {
+                      line: 36
+                      col: 17
+                    }
+                    text: "literal2 = true"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "literal3"
+                expr: {
+                  literal: {
+                    null: {}
+                  }
+                  type: {
                     primitive: EMPTY
                   }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 37
+                      col: 6
+                    }
+                    end: {
+                      line: 37
+                      col: 17
+                    }
+                    text: "literal3 = null"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "literal4"
-                expr {
-                  literal {
+                expr: {
+                  literal: {
                     s: "abc"
                   }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "literal5"
-                expr {
-                  literal {
-                    i: 123
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 38
+                      col: 6
+                    }
+                    end: {
+                      line: 38
+                      col: 17
+                    }
+                    text: "literal4 = \"abc\""
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
+                name: "literal5"
+                expr: {
+                  literal: {
+                    i: 123
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 39
+                      col: 6
+                    }
+                    end: {
+                      line: 39
+                      col: 17
+                    }
+                    text: "literal5 = 123"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "literal6"
-                expr {
-                  literal {
+                expr: {
+                  literal: {
                     decimal: "123.45"
+                  }
+                  type: {
+                    primitive: DECIMAL
+                  }
+                  source_context: {
+                    file: "tests/math.sysl"
+                    start: {
+                      line: 40
+                      col: 6
+                    }
+                    end: {
+                      line: 40
+                      col: 17
+                    }
+                    text: "literal6 = 123.45"
                   }
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/math.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 41
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/math.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 43
+          }
+          text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/math.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }
