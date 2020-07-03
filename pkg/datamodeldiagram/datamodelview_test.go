@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslwrapper"
 	"github.com/stretchr/testify/mock"
 
 	"github.com/stretchr/testify/assert"
@@ -56,6 +57,9 @@ func TestDrawPrimitive(t *testing.T) {
 
 func TestDrawTuple(t *testing.T) {
 	t.Parallel()
+	tuple := syslwrapper.MakeTuple(
+		map[string]*sysl.Type{"attr1": syslwrapper.MakePrimitive("string")},
+	).Type.(*sysl.Type_Tuple_).Tuple
 	assertDraw(t,
 		`class "aliasName" as _0 << (D,orchid) typeName >> {
 + attr1 : string
@@ -70,14 +74,7 @@ func TestDrawTuple(t *testing.T) {
 					EntityName:   "typeName",
 					EntityAlias:  "aliasName",
 				},
-				&sysl.Type_Tuple{
-					AttrDefs: map[string]*sysl.Type{
-						"attr1": {
-							Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING},
-						},
-					},
-				},
-				relationshipMap,
+				tuple, relationshipMap,
 			)
 		},
 	)
@@ -96,16 +93,8 @@ func TestDrawTuple(t *testing.T) {
 					EntityName:   "typeName",
 					EntityAlias:  "",
 				},
-				&sysl.Type_Tuple{
-					AttrDefs: map[string]*sysl.Type{
-						"attr1": {
-							Type: &sysl.Type_Primitive_{Primitive: sysl.Type_STRING},
-						},
-					},
-				},
-				relationshipMap,
+				tuple, relationshipMap,
 			)
 		},
 	)
 }
-

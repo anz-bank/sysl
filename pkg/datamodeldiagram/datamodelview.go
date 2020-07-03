@@ -189,9 +189,14 @@ func (v *DataModelView) DrawTuple(
 	} else {
 		alias = viewParam.EntityAlias
 		// add space for better formatting and allow empty space when alias == ""
-		typeName = " "+viewParam.EntityName
+		typeName = " " + viewParam.EntityName
 	}
 	encEntity := v.UniqueVarForAppName(strings.Split(viewParam.EntityName, ".")...)
+
+	// this will create a class header, with alias it will look like the following:
+	// class "AliasName" as _0 << (D,orchid) TypeName >> {
+	// Without the alias:
+	// class "TypeName" as _0 << (D,orchid) >> {
 	v.StringBuilder.WriteString(
 		fmt.Sprintf(
 			"%s \"%s\" as %s %s(%s,%s)%s%s {\n",
