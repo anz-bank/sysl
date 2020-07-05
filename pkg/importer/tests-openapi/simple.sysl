@@ -11,7 +11,7 @@ testapp "Simple" [package="package_foo"]:
     /test:
         GET:
             | No description.
-            return 500
+            return error
             return ok <: SimpleObj
 
     #---------------------------------------------------------------------------

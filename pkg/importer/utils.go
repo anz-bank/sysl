@@ -84,9 +84,7 @@ func isOpenAPIOrSwaggerExt(path string) bool {
 	return regexp.MustCompile(`.(yaml|yml|json)#/`).Match([]byte(path))
 }
 
-// getSyslSafeName escapes special characters
-// returns a string with URL encoded replacements
-func getSyslSafeName(endpoint string) string {
+func getSyslSafeEndpoint(endpoint string) string {
 	// url.PathEscape does not escape '. :'
 	charsToKeep := map[string]string{
 		`%2F`: "/",
@@ -109,41 +107,4 @@ func getSyslSafeName(endpoint string) string {
 		endpoint = strings.ReplaceAll(endpoint, hex, realChar)
 	}
 	return endpoint
-}
-
-func hasToBeSyslSafe(in string) bool {
-	return strings.ToLower(in) == "query"
-}
-
-func cleanEndpointPath(path string) string {
-	return strings.NewReplacer(
-		"/", "_",
-		"{", "_",
-		"}", "_",
-		"-", "_").Replace(path)
-}
-
-func convertToSyslSafe(name string) string {
-	if !strings.ContainsAny(name, "- ") {
-		return name
-	}
-
-	syslSafe := strings.Builder{}
-	toUppercase := false
-	for i := 0; i < len(name); i++ {
-		switch name[i] {
-		case '-':
-			toUppercase = true
-		case ' ':
-			continue
-		default:
-			if toUppercase {
-				syslSafe.WriteString(strings.ToUpper(string(name[i])))
-				toUppercase = false
-			} else {
-				syslSafe.WriteByte(name[i])
-			}
-		}
-	}
-	return syslSafe.String()
 }
