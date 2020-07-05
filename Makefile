@@ -1,4 +1,4 @@
-include VersionReport
+include VersionReport.mk
 
 BIN_DIR := $(GOPATH)/bin
 
