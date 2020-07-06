@@ -1,144 +1,154 @@
-apps {
+apps: {
   key: "App"
-  value {
-    name {
+  value: {
+    name: {
       part: "App"
     }
-    endpoints {
+    endpoints: {
       key: ".. * <- *"
-      value {
+      value: {
         name: ".. * <- *"
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "Endpoint_One"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "one"
             }
           }
         }
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "Endpoint_Two"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "two"
             }
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
             }
             endpoint: "Endpoint_One"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "three"
             }
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
             }
             endpoint: "Endpoint_Two"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "four"
             }
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
             }
             endpoint: "Endpoint_Two"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "final"
             }
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
             }
             endpoint: "Endpoint_Three"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "final"
             }
           }
         }
+        source_context: {
+          file: "tests/collector.sysl"
+          start: {
+            line: 30
+            col: 4
+          }
+          end: {
+            line: 37
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint_One"
-      value {
+      value: {
         name: "Endpoint_One"
-        attrs {
+        attrs: {
           key: "id"
-          value {
+          value: {
             s: "one"
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
             }
             endpoint: "Endpoint_One"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "three"
             }
           }
         }
-        stmt {
-          cond {
+        stmt: {
+          cond: {
             test: "result not ok"
-            stmt {
-              call {
-                target {
+            stmt: {
+              call: {
+                target: {
                   part: "My"
                   part: "Server"
                 }
                 endpoint: "Endpoint_Two"
               }
-              attrs {
+              attrs: {
                 key: "id"
-                value {
+                value: {
                   s: "final"
                 }
               }
-              attrs {
+              attrs: {
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: {
+                  a: {
+                    elt: {
                       s: "https"
                     }
                   }
@@ -147,96 +157,107 @@ apps {
             }
           }
         }
-        stmt {
-          group {
+        stmt: {
+          group: {
             title: "loop"
-            stmt {
-              call {
-                target {
+            stmt: {
+              call: {
+                target: {
                   part: "My"
                   part: "Server"
                 }
                 endpoint: "Endpoint_Two"
               }
-              attrs {
+              attrs: {
                 key: "id"
-                value {
+                value: {
                   s: "final"
                 }
               }
-              attrs {
+              attrs: {
                 key: "patterns"
-                value {
-                  a {
-                    elt {
+                value: {
+                  a: {
+                    elt: {
                       s: "https"
                     }
                   }
                 }
               }
             }
+          }
+        }
+        source_context: {
+          file: "tests/collector.sysl"
+          start: {
+            line: 13
+            col: 4
+          }
+          end: {
+            line: 21
+            col: 4
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint_Two"
-      value {
+      value: {
         name: "Endpoint_Two"
-        attrs {
+        attrs: {
           key: "id"
-          value {
+          value: {
             s: "two"
           }
         }
-        stmt {
-          call {
-            target {
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
             }
             endpoint: "Endpoint_Two"
           }
-          attrs {
+          attrs: {
             key: "id"
-            value {
+            value: {
               s: "final"
             }
           }
-          attrs {
+          attrs: {
             key: "patterns"
-            value {
-              a {
-                elt {
+            value: {
+              a: {
+                elt: {
                   s: "https"
                 }
               }
             }
           }
         }
-        stmt {
-          alt {
-            choice {
+        stmt: {
+          alt: {
+            choice: {
               cond: "condition = one"
-              stmt {
-                call {
-                  target {
+              stmt: {
+                call: {
+                  target: {
                     part: "My"
                     part: "Server"
                   }
                   endpoint: "Endpoint_Three"
                 }
-                attrs {
+                attrs: {
                   key: "id"
-                  value {
+                  value: {
                     s: "final"
                   }
                 }
-                attrs {
+                attrs: {
                   key: "patterns"
-                  value {
-                    a {
-                      elt {
+                  value: {
+                    a: {
+                      elt: {
                         s: "https"
                       }
                     }
@@ -244,27 +265,27 @@ apps {
                 }
               }
             }
-            choice {
+            choice: {
               cond: "condition two"
-              stmt {
-                call {
-                  target {
+              stmt: {
+                call: {
+                  target: {
                     part: "My"
                     part: "Server"
                   }
                   endpoint: "Endpoint_Three"
                 }
-                attrs {
+                attrs: {
                   key: "id"
-                  value {
+                  value: {
                     s: "final"
                   }
                 }
-                attrs {
+                attrs: {
                   key: "patterns"
-                  value {
-                    a {
-                      elt {
+                  value: {
+                    a: {
+                      elt: {
                         s: "https"
                       }
                     }
@@ -272,60 +293,125 @@ apps {
                 }
               }
             }
+          }
+        }
+        source_context: {
+          file: "tests/collector.sysl"
+          start: {
+            line: 21
+            col: 4
+          }
+          end: {
+            line: 29
+            col: 3
           }
         }
       }
     }
+    source_context: {
+      file: "tests/collector.sysl"
+      start: {
+        line: 29
+        col: 1
+      }
+      end: {
+        line: 29
+      }
+    }
   }
 }
-apps {
+apps: {
   key: "My :: Server"
-  value {
-    name {
+  value: {
+    name: {
       part: "My"
       part: "Server"
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint_One"
-      value {
+      value: {
         name: "Endpoint_One"
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "process request"
           }
         }
-        stmt {
-          cond {
+        stmt: {
+          cond: {
             test: "result ok"
-            stmt {
-              action {
+            stmt: {
+              action: {
                 action: "do further processing"
               }
             }
           }
         }
+        source_context: {
+          file: "tests/collector.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 7
+            col: 4
+          }
+        }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint_Three"
-      value {
+      value: {
         name: "Endpoint_Three"
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "process request"
+          }
+        }
+        source_context: {
+          file: "tests/collector.sysl"
+          start: {
+            line: 10
+            col: 4
+          }
+          end: {
+            line: 12
+            col: 3
           }
         }
       }
     }
-    endpoints {
+    endpoints: {
       key: "Endpoint_Two"
-      value {
+      value: {
         name: "Endpoint_Two"
-        stmt {
-          action {
+        stmt: {
+          action: {
             action: "process request"
           }
         }
+        source_context: {
+          file: "tests/collector.sysl"
+          start: {
+            line: 7
+            col: 4
+          }
+          end: {
+            line: 10
+            col: 4
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/collector.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 6
       }
     }
   }

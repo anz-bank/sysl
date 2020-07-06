@@ -1,351 +1,976 @@
-apps {
+apps: {
   key: "TransformationTest"
-  value {
-    name {
+  value: {
+    name: {
       part: "TransformationTest"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.test.views"
       }
     }
-    views {
+    views: {
       key: "TestRank"
-      value {
-        param {
+      value: {
+        param: {
           name: "number"
-          type {
+          type: {
             primitive: INT
           }
         }
-        ret_type {
+        ret_type: {
           primitive: INT
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "number"
+              source_context: {
+                file: "tests/rank.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 3
+                  col: 4
+                }
+              }
             }
             scopevar: "."
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out1"
-                expr {
-                  relexpr {
+                expr: {
+                  relexpr: {
                     op: RANK
-                    target {
+                    target: {
                       name: "."
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 4
+                          col: 17
+                        }
+                        end: {
+                          line: 4
+                          col: 34
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 4
+                          col: 24
+                        }
+                        end: {
+                          line: 4
+                          col: 24
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 4
+                          col: 24
+                        }
+                        end: {
+                          line: 4
+                          col: 24
+                        }
+                      }
                     }
                     scopevar: "."
                     descending: false
                     attr_name: "foo"
                   }
-                  type {
-                    set {
+                  type: {
+                    set: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 4
+                      col: 6
                     }
+                    end: {
+                      line: 4
+                      col: 34
+                    }
+                    text: "let out1 = . rank(abc as foo)"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out2"
-                expr {
-                  relexpr {
+                expr: {
+                  relexpr: {
                     op: RANK
-                    target {
-                      get_attr {
-                        arg {
+                    target: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 5
+                              col: 17
+                            }
+                            end: {
+                              line: 5
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 5
+                          col: 17
+                        }
+                        end: {
+                          line: 5
+                          col: 18
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 5
+                          col: 27
+                        }
+                        end: {
+                          line: 5
+                          col: 27
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 5
+                          col: 27
+                        }
+                        end: {
+                          line: 5
+                          col: 27
+                        }
+                      }
                     }
                     scopevar: "."
                     descending: false
                     attr_name: "foo"
                   }
-                  type {
-                    set {
+                  type: {
+                    set: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 5
+                      col: 6
                     }
+                    end: {
+                      line: 5
+                      col: 37
+                    }
+                    text: "let out2 = .abc rank(abc as foo)"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out3"
-                expr {
-                  relexpr {
+                expr: {
+                  relexpr: {
                     op: RANK
-                    target {
-                      get_attr {
-                        arg {
+                    target: {
+                      get_attr: {
+                        arg: {
                           name: "input"
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 6
+                              col: 17
+                            }
+                            end: {
+                              line: 6
+                              col: 17
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 6
+                          col: 22
+                        }
+                        end: {
+                          line: 6
+                          col: 23
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 6
+                          col: 32
+                        }
+                        end: {
+                          line: 6
+                          col: 32
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 6
+                          col: 32
+                        }
+                        end: {
+                          line: 6
+                          col: 32
+                        }
+                      }
                     }
                     scopevar: "."
                     descending: false
                     attr_name: "foo"
                   }
-                  type {
-                    set {
+                  type: {
+                    set: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 6
+                      col: 6
                     }
+                    end: {
+                      line: 6
+                      col: 42
+                    }
+                    text: "let out3 = input.abc rank(abc as foo)"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out4"
-                expr {
-                  relexpr {
+                expr: {
+                  relexpr: {
                     op: RANK
-                    target {
-                      literal {
+                    target: {
+                      literal: {
                         i: 1
                       }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 7
+                          col: 17
+                        }
+                        end: {
+                          line: 7
+                          col: 17
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 7
+                          col: 24
+                        }
+                        end: {
+                          line: 7
+                          col: 24
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 7
+                          col: 24
+                        }
+                        end: {
+                          line: 7
+                          col: 24
+                        }
+                      }
                     }
                     scopevar: "."
                     descending: false
                     attr_name: "foo"
                   }
-                  type {
-                    set {
+                  type: {
+                    set: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 7
+                      col: 6
                     }
+                    end: {
+                      line: 7
+                      col: 34
+                    }
+                    text: "let out4 = 1 rank(abc as foo)"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out5"
-                expr {
-                  relexpr {
+                expr: {
+                  relexpr: {
                     op: RANK
-                    target {
+                    target: {
                       name: "foo"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 8
+                          col: 17
+                        }
+                        end: {
+                          line: 8
+                          col: 17
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 8
+                          col: 26
+                        }
+                        end: {
+                          line: 8
+                          col: 26
+                        }
+                      }
                     }
-                    arg {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 8
+                          col: 26
+                        }
+                        end: {
+                          line: 8
+                          col: 26
+                        }
+                      }
                     }
                     scopevar: "."
                     descending: false
                     attr_name: "foo"
                   }
-                  type {
-                    set {
+                  type: {
+                    set: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 8
+                      col: 6
                     }
+                    end: {
+                      line: 8
+                      col: 36
+                    }
+                    text: "let out5 = foo rank(abc as foo)"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out6"
-                expr {
-                  get_attr {
-                    arg {
-                      relexpr {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      relexpr: {
                         op: RANK
-                        target {
+                        target: {
                           name: "foo"
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 9
+                              col: 17
+                            }
+                            end: {
+                              line: 9
+                              col: 17
+                            }
+                          }
                         }
-                        arg {
+                        arg: {
                           name: "abc"
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 9
+                              col: 26
+                            }
+                            end: {
+                              line: 9
+                              col: 26
+                            }
+                          }
                         }
-                        arg {
+                        arg: {
                           name: "abc"
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 9
+                              col: 26
+                            }
+                            end: {
+                              line: 9
+                              col: 26
+                            }
+                          }
                         }
                         scopevar: "."
                         descending: false
                         attr_name: "foo"
                       }
-                      type {
-                        set {
+                      type: {
+                        set: {}
+                      }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 9
+                          col: 21
+                        }
+                        end: {
+                          line: 9
+                          col: 36
                         }
                       }
                     }
                     attr: "bar"
                   }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 39
+                    }
+                    text: "let out6 = foo rank(abc as foo) .bar"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out7"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      relexpr {
+                    lhs: {
+                      relexpr: {
                         op: RANK
-                        target {
+                        target: {
                           name: "foo"
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 10
+                              col: 17
+                            }
+                            end: {
+                              line: 10
+                              col: 17
+                            }
+                          }
                         }
-                        arg {
+                        arg: {
                           name: "abc"
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 10
+                              col: 26
+                            }
+                            end: {
+                              line: 10
+                              col: 26
+                            }
+                          }
                         }
-                        arg {
+                        arg: {
                           name: "abc"
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 10
+                              col: 26
+                            }
+                            end: {
+                              line: 10
+                              col: 26
+                            }
+                          }
                         }
                         scopevar: "."
                         descending: false
                         attr_name: "foo"
                       }
-                      type {
-                        set {
+                      type: {
+                        set: {}
+                      }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 10
+                          col: 21
+                        }
+                        end: {
+                          line: 10
+                          col: 36
                         }
                       }
                     }
-                    rhs {
+                    rhs: {
                       name: "bar"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 10
+                          col: 41
+                        }
+                        end: {
+                          line: 10
+                          col: 41
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 41
+                    }
+                    text: "let out7 = foo rank(abc as foo) ~> bar"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out8"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      relexpr {
+                    lhs: {
+                      relexpr: {
                         op: RANK
-                        target {
-                          get_attr {
-                            arg {
+                        target: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/rank.sysl"
+                                start: {
+                                  line: 11
+                                  col: 17
+                                }
+                                end: {
+                                  line: 11
+                                  col: 27
+                                }
+                              }
                             }
                             attr: "Pet"
                             setof: true
                           }
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 11
+                              col: 17
+                            }
+                            end: {
+                              line: 11
+                              col: 27
+                            }
+                          }
                         }
-                        arg {
-                          get_attr {
-                            arg {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/rank.sysl"
+                                start: {
+                                  line: 11
+                                  col: 36
+                                }
+                                end: {
+                                  line: 11
+                                  col: 37
+                                }
+                              }
                             }
                             attr: "numLegs"
                           }
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 11
+                              col: 36
+                            }
+                            end: {
+                              line: 11
+                              col: 37
+                            }
+                          }
                         }
-                        arg {
-                          get_attr {
-                            arg {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/rank.sysl"
+                                start: {
+                                  line: 11
+                                  col: 36
+                                }
+                                end: {
+                                  line: 11
+                                  col: 37
+                                }
+                              }
                             }
                             attr: "numLegs"
+                          }
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 11
+                              col: 36
+                            }
+                            end: {
+                              line: 11
+                              col: 37
+                            }
                           }
                         }
                         scopevar: "."
                         descending: false
                         attr_name: "legRank"
                       }
-                      type {
-                        set {
+                      type: {
+                        set: {}
+                      }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 11
+                          col: 31
+                        }
+                        end: {
+                          line: 11
+                          col: 55
                         }
                       }
                     }
-                    rhs {
+                    rhs: {
                       name: "bar"
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 11
+                          col: 60
+                        }
+                        end: {
+                          line: 11
+                          col: 60
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 60
+                    }
+                    text: "let out8 = .table of Pet rank(.numLegs as legRank) ~> bar"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out9"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      relexpr {
+                    lhs: {
+                      relexpr: {
                         op: RANK
-                        target {
-                          get_attr {
-                            arg {
+                        target: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/rank.sysl"
+                                start: {
+                                  line: 12
+                                  col: 17
+                                }
+                                end: {
+                                  line: 12
+                                  col: 27
+                                }
+                              }
                             }
                             attr: "Pet"
                             setof: true
                           }
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 12
+                              col: 17
+                            }
+                            end: {
+                              line: 12
+                              col: 27
+                            }
+                          }
                         }
-                        arg {
-                          get_attr {
-                            arg {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/rank.sysl"
+                                start: {
+                                  line: 12
+                                  col: 36
+                                }
+                                end: {
+                                  line: 12
+                                  col: 37
+                                }
+                              }
                             }
                             attr: "numLegs"
                           }
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 12
+                              col: 36
+                            }
+                            end: {
+                              line: 12
+                              col: 37
+                            }
+                          }
                         }
-                        arg {
-                          get_attr {
-                            arg {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/rank.sysl"
+                                start: {
+                                  line: 12
+                                  col: 36
+                                }
+                                end: {
+                                  line: 12
+                                  col: 37
+                                }
+                              }
                             }
                             attr: "numLegs"
+                          }
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 12
+                              col: 36
+                            }
+                            end: {
+                              line: 12
+                              col: 37
+                            }
                           }
                         }
                         scopevar: "."
                         descending: false
                         attr_name: "legRank"
                       }
-                      type {
-                        set {
+                      type: {
+                        set: {}
+                      }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 12
+                          col: 31
+                        }
+                        end: {
+                          line: 12
+                          col: 55
                         }
                       }
                     }
-                    rhs {
-                      get_attr {
-                        arg {
+                    rhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/rank.sysl"
+                            start: {
+                              line: 12
+                              col: 60
+                            }
+                            end: {
+                              line: 12
+                              col: 70
+                            }
+                          }
                         }
                         attr: "Bar"
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/rank.sysl"
+                        start: {
+                          line: 12
+                          col: 60
+                        }
+                        end: {
+                          line: 12
+                          col: 70
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/rank.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 12
+                      col: 70
+                    }
+                    text: "let out9 = .table of Pet rank(.numLegs as legRank) ~> .table of Bar"
                   }
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/rank.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 13
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/rank.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 14
+          }
+          text: "!view TestRank(number <: int) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/rank.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }

@@ -5,7 +5,7 @@ go 1.13
 replace github.com/spf13/afero => github.com/anz-bank/afero v1.2.3
 
 require (
-	aqwari.net/xml v0.0.0-20200323224746-73105c9af915
+	aqwari.net/xml v0.0.0-20200619145941-6c62842e69c1
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/alecthomas/chroma v0.7.3
 	github.com/alecthomas/colour v0.1.0 // indirect

@@ -1,204 +1,204 @@
-apps: <
+apps: {
   key: "Server"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Server"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "patterns"
-      value: <
-        a: <
-          elt: <
+      value: {
+        a: {
+          elt: {
             s: "rest"
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "GET /{id}"
-      value: <
+      value: {
         name: "GET /{id}"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/{id}"
-          query_param: <
+          query_param: {
             name: "depth"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/bad_order.sysl"
-                start: <
+                start: {
                   line: 3
                   col: 13
-                >
-                end: <
+                }
+                end: {
                   line: 3
                   col: 19
-                >
-              >
-            >
-          >
-          query_param: <
+                }
+              }
+            }
+          }
+          query_param: {
             name: "limit"
-            type: <
+            type: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/bad_order.sysl"
-                start: <
+                start: {
                   line: 3
                   col: 23
-                >
-                end: <
+                }
+                end: {
                   line: 3
                   col: 32
-                >
-              >
-            >
-          >
-          query_param: <
+                }
+              }
+            }
+          }
+          query_param: {
             name: "offset"
-            type: <
+            type: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/bad_order.sysl"
-                start: <
+                start: {
                   line: 3
                   col: 34
-                >
-                end: <
+                }
+                end: {
                   line: 3
                   col: 44
-                >
-              >
-            >
-          >
-          url_param: <
+                }
+              }
+            }
+          }
+          url_param: {
             name: "id"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/bad_order.sysl"
-                start: <
+                start: {
                   line: 2
                   col: 5
-                >
-                end: <
+                }
+                end: {
                   line: 2
                   col: 13
-                >
-              >
-            >
-          >
-        >
-        source_context: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/bad_order.sysl"
-          start: <
+          start: {
             line: 3
             col: 8
-          >
-          end: <
+          }
+          end: {
             line: 6
             col: 8
-          >
-        >
-      >
-    >
-    endpoints: <
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "POST /{id}/third/{a-bc}"
-      value: <
+      value: {
         name: "POST /{id}/third/{a-bc}"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          action: <
+              }
+            }
+          }
+        }
+        stmt: {
+          action: {
             action: "..."
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: POST
           path: "/{id}/third/{a-bc}"
-          url_param: <
+          url_param: {
             name: "id"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/bad_order.sysl"
-                start: <
+                start: {
                   line: 2
                   col: 5
-                >
-                end: <
+                }
+                end: {
                   line: 2
                   col: 13
-                >
-              >
-            >
-          >
-          url_param: <
+                }
+              }
+            }
+          }
+          url_param: {
             name: "a-bc"
-            type: <
+            type: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/bad_order.sysl"
-                start: <
+                start: {
                   line: 6
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 6
                   col: 25
-                >
-              >
-            >
-          >
-        >
-        source_context: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/bad_order.sysl"
-          start: <
+          start: {
             line: 7
             col: 12
-          >
-          end: <
+          }
+          end: {
             line: 9
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/bad_order.sysl"
-      start: <
+      start: {
         line: 1
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 1
         col: 13
-      >
-    >
-  >
->
+      }
+    }
+  }
+}

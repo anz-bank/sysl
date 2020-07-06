@@ -21,13 +21,13 @@ testapp "Simple" [package="package_foo"]:
         name <: string?:
             @json_tag = "name"
         namewith%3Acolon <: string?:
-            @json_tag = "namewith%3Acolon"
+            @json_tag = "namewith:colon"
 
     !type SimpleObj%3AWithColon:
         name <: string?:
             @json_tag = "name"
         namewith%3Acolon <: string?:
-            @json_tag = "namewith%3Acolon"
+            @json_tag = "namewith:colon"
 
     !type SimpleObj2:
         name <: SimpleObj%3AWithColon?:
@@ -37,4 +37,4 @@ testapp "Simple" [package="package_foo"]:
         name <: string?:
             @json_tag = "name"
         namewith%3Acolon <: string?:
-            @json_tag = "namewith%3Acolon"
+            @json_tag = "namewith:colon"

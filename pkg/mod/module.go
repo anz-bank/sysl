@@ -24,10 +24,14 @@ func (m *Modules) Add(v *Module) {
 	*m = append(*m, v)
 }
 
+func (m *Modules) Len() int {
+	return len(*m)
+}
+
 func (m *Modules) GetByFilename(filename, ver string) *Module {
-	for _, mod := range *m {
+	for i, mod := range *m {
 		if hasPathPrefix(mod.Name, filename) {
-			if ver != "" && mod.Version != ver {
+			if i != 0 && ver != "" && ver != "master" && mod.Version != ver {
 				continue
 			}
 			return mod
@@ -48,6 +52,12 @@ func fileExists(filename string) bool {
 func Find(name string, ver string) (*Module, error) {
 	if !fileExists("go.mod") {
 		return nil, errors.New("no go.mod file, run `go mod init` first")
+	}
+
+	if modules.Len() == 0 {
+		if err := modules.Load(); err != nil {
+			return nil, fmt.Errorf("error loading modules: %s", err.Error())
+		}
 	}
 
 	mod := modules.GetByFilename(name, ver)

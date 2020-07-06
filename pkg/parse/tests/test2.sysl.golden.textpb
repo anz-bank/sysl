@@ -1,315 +1,399 @@
-apps: <
+apps: {
   key: "Request"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Request"
-    >
-    types: <
+    }
+    types: {
       key: "Input"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "field1"
-            value: <
+            value: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 22
                   col: 18
-                >
-                end: <
+                }
+                end: {
                   line: 22
                   col: 18
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test2.sysl"
+          start: {
+            line: 21
+            col: 4
+          }
+          end: {
+            line: 24
+            col: 8
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test2.sysl"
+      start: {
+        line: 20
+        col: 1
+      }
+      end: {
+        line: 20
+      }
+    }
+  }
+}
+apps: {
   key: "Response"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Response"
-    >
-    types: <
+    }
+    types: {
       key: "Output"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "field1"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "Response"
-                  >
+                  }
                   path: "Output"
-                >
-                ref: <
+                }
+                ref: {
                   path: "Request"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 26
                   col: 18
-                >
-                end: <
+                }
+                end: {
                   line: 26
                   col: 18
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test2.sysl"
+          start: {
+            line: 25
+            col: 4
+          }
+          end: {
+            line: 27
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test2.sysl"
+      start: {
+        line: 24
+        col: 1
+      }
+      end: {
+        line: 24
+      }
+    }
+  }
+}
+apps: {
   key: "Tuple Model"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Tuple Model"
-    >
-    types: <
+    }
+    types: {
       key: "Foo"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "id"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "description"
-                value: <
+                value: {
                   s: "some description"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 4
                   col: 14
-                >
-                end: <
+                }
+                end: {
                   line: 4
                   col: 14
-                >
-              >
-            >
-          >
-        >
-        attrs: <
+                }
+              }
+            }
+          }
+        }
+        attrs: {
           key: "description"
-          value: <
+          value: {
             s: "some description"
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+        source_context: {
+          file: "tests/test2.sysl"
+          start: {
+            line: 3
+            col: 4
+          }
+          end: {
+            line: 6
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "PersonName"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "first_name"
-            value: <
+            value: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 16
                   col: 22
-                >
-                end: <
+                }
+                end: {
                   line: 16
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "last_name"
-            value: <
+            value: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 18
                   col: 21
-                >
-                end: <
+                }
+                end: {
                   line: 18
                   col: 21
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "middle_name"
-            value: <
-              list: <
-                type: <
+            value: {
+              list: {
+                type: {
                   primitive: STRING
-                  source_context: <
+                  source_context: {
                     file: "tests/test2.sysl"
-                    start: <
+                    start: {
                       line: 17
                       col: 29
-                    >
-                    end: <
+                    }
+                    end: {
                       line: 17
                       col: 29
-                    >
-                  >
-                >
-              >
-            >
-          >
-          attr_defs: <
+                    }
+                  }
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "title"
-            value: <
+            value: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 15
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 15
                   col: 17
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/test2.sysl"
+          start: {
+            line: 14
+            col: 4
+          }
+          end: {
+            line: 20
+            col: 7
+          }
+        }
+      }
+    }
+    types: {
       key: "TableName"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "fieldname"
-            value: <
+            value: {
               primitive: STRING
-              attrs: <
+              attrs: {
                 key: "description"
-                value: <
-                  s: "Multi-line annotation statement"
-                >
-              >
-              source_context: <
+                value: {
+                  s: "Multi-line annotation\n statement\n"
+                }
+              }
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 10
                   col: 21
-                >
-                end: <
+                }
+                end: {
                   line: 10
                   col: 21
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "fieldname2"
-            value: <
-              set: <
+            value: {
+              set: {
                 primitive: STRING
-                source_context: <
+                source_context: {
                   file: "tests/test2.sysl"
-                  start: <
+                  start: {
                     line: 11
                     col: 22
-                  >
-                  end: <
+                  }
+                  end: {
                     line: 11
                     col: 29
-                  >
-                >
-              >
-              attrs: <
+                  }
+                }
+              }
+              attrs: {
                 key: "description"
-                value: <
-                  s: "Multi-line annotation statement"
-                >
-              >
-              source_context: <
+                value: {
+                  s: "Multi-line annotation\n statement\n"
+                }
+              }
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 11
                   col: 22
-                >
-                end: <
+                }
+                end: {
                   line: 11
                   col: 29
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "ids"
-            value: <
-              set: <
-                type_ref: <
-                  context: <
-                    appname: <
+            value: {
+              set: {
+                type_ref: {
+                  context: {
+                    appname: {
                       part: "Tuple Model"
-                    >
+                    }
                     path: "TableName"
-                  >
-                  ref: <
+                  }
+                  ref: {
                     path: "Foo"
-                  >
-                >
-                source_context: <
+                  }
+                }
+                source_context: {
                   file: "tests/test2.sysl"
-                  start: <
+                  start: {
                     line: 12
                     col: 15
-                  >
-                  end: <
+                  }
+                  end: {
                     line: 12
                     col: 22
-                  >
-                >
-              >
-              attrs: <
+                  }
+                }
+              }
+              attrs: {
                 key: "description"
-                value: <
-                  s: "Multi-line annotation statement"
-                >
-              >
-              source_context: <
+                value: {
+                  s: "Multi-line annotation\n statement\n"
+                }
+              }
+              source_context: {
                 file: "tests/test2.sysl"
-                start: <
+                start: {
                   line: 12
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 12
                   col: 22
-                >
-              >
-            >
-          >
-        >
-        attrs: <
+                }
+              }
+            }
+          }
+        }
+        attrs: {
           key: "description"
-          value: <
-            s: "Multi-line annotation statement"
-          >
-        >
-      >
-    >
-  >
->
+          value: {
+            s: "Multi-line annotation\n statement\n"
+          }
+        }
+        source_context: {
+          file: "tests/test2.sysl"
+          start: {
+            line: 7
+            col: 4
+          }
+          end: {
+            line: 14
+            col: 4
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/test2.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+      }
+    }
+  }
+}

@@ -1,272 +1,495 @@
-apps: <
+apps: {
   key: "API"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "API"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "Service Call"
-      value: <
+      value: {
         name: "Service Call"
-      >
-    >
-    types: <
+        source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+            line: 16
+            col: 4
+          }
+          end: {
+            line: 16
+            col: 18
+          }
+        }
+      }
+    }
+    types: {
       key: "UberUser"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "user"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "API"
-                  >
+                  }
                   path: "UberUser"
-                >
-                ref: <
+                }
+                ref: {
                   path: "User"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/mixin.sysl"
-                start: <
+                start: {
                   line: 19
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 19
                   col: 16
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+            line: 18
+            col: 4
+          }
+          end: {
+            line: 20
+          }
+        }
+      }
+    }
+    types: {
       key: "User"
-      value: <
-        relation: <
-          attr_defs: <
+      value: {
+        relation: {
+          attr_defs: {
             key: "id"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "description"
-                value: <
+                value: {
                   s: "some description"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/mixin.sysl"
-                start: <
+                start: {
                   line: 4
                   col: 14
-                >
-                end: <
+                }
+                end: {
                   line: 4
                   col: 14
-                >
-              >
-            >
-          >
-        >
-        attrs: <
+                }
+              }
+            }
+          }
+        }
+        attrs: {
           key: "description"
-          value: <
+          value: {
             s: "some description"
-          >
-        >
-        attrs: <
+          }
+        }
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "foo"
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+            line: 3
+            col: 4
+          }
+          end: {
+            line: 6
+            col: 12
+          }
+        }
+      }
+    }
+    views: {
       key: "FooTransform"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
+          }
+        }
+        ret_type: {
           primitive: INT
-        >
-        expr: <
-          transform: <
-            arg: <
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "number"
-            >
+              source_context: {
+                file: "tests/mixin.sysl"
+                start: {
+                  line: 8
+                  col: 4
+                }
+                end: {
+                  line: 8
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/mixin.sysl"
+                        start: {
+                          line: 9
+                          col: 12
+                        }
+                        end: {
+                          line: 9
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         i: 1
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    mixin2: <
-      name: <
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/mixin.sysl"
+                        start: {
+                          line: 9
+                          col: 21
+                        }
+                        end: {
+                          line: 9
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/mixin.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 21
+                    }
+                    text: "out = number + 1"
+                  }
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/mixin.sysl"
+            start: {
+              line: 8
+              col: 4
+            }
+            end: {
+              line: 10
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+            line: 7
+            col: 2
+          }
+          end: {
+            line: 12
+            col: 3
+          }
+          text: "!view FooTransform(number <: int) -> int:"
+        }
+      }
+    }
+    mixin2: {
+      name: {
         part: "Relational Model"
-      >
-    >
-    mixin2: <
-      name: <
+      }
+    }
+    mixin2: {
+      name: {
         part: "TransformApp"
-      >
-    >
-  >
->
-apps: <
+      }
+    }
+    source_context: {
+      file: "tests/mixin.sysl"
+      start: {
+        line: 12
+        col: 1
+      }
+      end: {
+        line: 12
+      }
+    }
+  }
+}
+apps: {
   key: "Relational Model"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "Relational Model"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "patterns"
-      value: <
-        a: <
-          elt: <
+      value: {
+        a: {
+          elt: {
             s: "abstract"
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+      }
+    }
+    types: {
       key: "User"
-      value: <
-        relation: <
-          attr_defs: <
+      value: {
+        relation: {
+          attr_defs: {
             key: "id"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "description"
-                value: <
+                value: {
                   s: "some description"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/mixin.sysl"
-                start: <
+                start: {
                   line: 4
                   col: 14
-                >
-                end: <
+                }
+                end: {
                   line: 4
                   col: 14
-                >
-              >
-            >
-          >
-        >
-        attrs: <
+                }
+              }
+            }
+          }
+        }
+        attrs: {
           key: "description"
-          value: <
+          value: {
             s: "some description"
-          >
-        >
-        attrs: <
+          }
+        }
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "foo"
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+            line: 3
+            col: 4
+          }
+          end: {
+            line: 6
+            col: 12
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/mixin.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 27
+      }
+    }
+  }
+}
+apps: {
   key: "TransformApp"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "TransformApp"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "com.foo.example"
-      >
-    >
-    attrs: <
+      }
+    }
+    attrs: {
       key: "patterns"
-      value: <
-        a: <
-          elt: <
+      value: {
+        a: {
+          elt: {
             s: "abstract"
-          >
-        >
-      >
-    >
-    views: <
+          }
+        }
+      }
+    }
+    views: {
       key: "FooTransform"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
+          }
+        }
+        ret_type: {
           primitive: INT
-        >
-        expr: <
-          transform: <
-            arg: <
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "number"
-            >
+              source_context: {
+                file: "tests/mixin.sysl"
+                start: {
+                  line: 8
+                  col: 4
+                }
+                end: {
+                  line: 8
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/mixin.sysl"
+                        start: {
+                          line: 9
+                          col: 12
+                        }
+                        end: {
+                          line: 9
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         i: 1
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/mixin.sysl"
+                        start: {
+                          line: 9
+                          col: 21
+                        }
+                        end: {
+                          line: 9
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/mixin.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 21
+                    }
+                    text: "out = number + 1"
+                  }
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/mixin.sysl"
+            start: {
+              line: 8
+              col: 4
+            }
+            end: {
+              line: 10
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+            line: 7
+            col: 2
+          }
+          end: {
+            line: 12
+            col: 3
+          }
+          text: "!view FooTransform(number <: int) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/mixin.sysl"
+      start: {
+        line: 6
+        col: 1
+      }
+      end: {
+        line: 6
+        col: 49
+      }
+    }
+  }
+}

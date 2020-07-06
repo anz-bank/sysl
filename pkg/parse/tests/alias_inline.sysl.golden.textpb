@@ -1,14 +1,35 @@
-apps: <
- key: "Model"
- value: <
-   name: <
-     part: "Model"
-   >
-   types: <
-     key: "FooBar"
-     value: <
-       primitive: STRING
-     >
-   >
- >
->
+apps: {
+  key: "Model"
+  value: {
+    name: {
+      part: "Model"
+    }
+    types: {
+      key: "FooBar"
+      value: {
+        primitive: STRING
+        source_context: {
+          file: "tests/alias_inline.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 2
+            col: 20
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/alias_inline.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+      }
+    }
+  }
+}

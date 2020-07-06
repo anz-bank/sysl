@@ -1,917 +1,2903 @@
-apps {
+apps: {
   key: "TransformationTest"
-  value {
-    name {
+  value: {
+    name: {
       part: "TransformationTest"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.test.views"
       }
     }
-    views {
+    views: {
       key: "TestStatements"
-      value {
-        param {
+      value: {
+        param: {
           name: "number"
-          type {
+          type: {
             primitive: INT
           }
         }
-        ret_type {
+        ret_type: {
           primitive: INT
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "number"
+              source_context: {
+                file: "tests/stmts.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 3
+                  col: 4
+                }
+              }
             }
             scopevar: "."
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abcdef"
-                expr {
-                  get_attr {
-                    arg {
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 4
+                          col: 6
+                        }
+                        end: {
+                          line: 4
+                          col: 6
+                        }
+                      }
                     }
                     attr: "abcdef"
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 4
+                      col: 6
+                    }
+                    end: {
+                      line: 4
+                      col: 6
+                    }
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc"
-                expr {
-                  get_attr {
-                    arg {
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 5
+                          col: 6
+                        }
+                        end: {
+                          line: 5
+                          col: 6
+                        }
+                      }
                     }
                     attr: "abc"
                   }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 5
+                      col: 6
+                    }
+                    end: {
+                      line: 5
+                      col: 6
+                    }
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abcdef"
-                expr {
-                  get_attr {
-                    arg {
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "name"
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 6
+                          col: 6
+                        }
+                        end: {
+                          line: 6
+                          col: 6
+                        }
+                      }
                     }
                     attr: "abcdef"
                   }
-                }
-              }
-            }
-            stmt {
-              let {
-                name: "out"
-                expr {
-                  binexpr {
-                    op: ADD
-                    lhs {
-                      get_attr {
-                        arg {
-                          name: "."
-                        }
-                        attr: "a"
-                      }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 6
+                      col: 6
                     }
-                    rhs {
-                      literal {
-                        i: 2
-                      }
+                    end: {
+                      line: 6
+                      col: 6
                     }
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              let: {
+                name: "out"
+                expr: {
+                  binexpr: {
+                    op: ADD
+                    lhs: {
+                      get_attr: {
+                        arg: {
+                          name: "."
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 7
+                              col: 16
+                            }
+                            end: {
+                              line: 7
+                              col: 17
+                            }
+                          }
+                        }
+                        attr: "a"
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 7
+                          col: 16
+                        }
+                        end: {
+                          line: 7
+                          col: 17
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
+                        i: 2
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 7
+                          col: 21
+                        }
+                        end: {
+                          line: 7
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 7
+                      col: 6
+                    }
+                    end: {
+                      line: 7
+                      col: 21
+                    }
+                    text: "let out = .a + 2"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "abc"
-                expr {
+                expr: {
                   name: "number"
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 8
+                      col: 21
+                    }
+                    end: {
+                      line: 8
+                      col: 21
+                    }
+                  }
                 }
                 table: true
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "foo1"
-                expr {
-                  ifelse {
-                    cond {
-                      binexpr {
+                expr: {
+                  ifelse: {
+                    cond: {
+                      binexpr: {
                         op: NE
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "bar"
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 9
+                                  col: 17
+                                }
+                                end: {
+                                  line: 9
+                                  col: 17
+                                }
+                              }
                             }
                             attr: "baz"
                           }
-                        }
-                        rhs {
-                          literal {
-                            null {
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 9
+                              col: 20
+                            }
+                            end: {
+                              line: 9
+                              col: 21
                             }
                           }
-                          type {
+                        }
+                        rhs: {
+                          literal: {
+                            null: {}
+                          }
+                          type: {
                             primitive: EMPTY
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 9
+                              col: 28
+                            }
+                            end: {
+                              line: 9
+                              col: 28
+                            }
                           }
                         }
                       }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 9
+                          col: 17
+                        }
+                        end: {
+                          line: 9
+                          col: 28
+                        }
+                      }
                     }
-                    if_true {
-                      literal {
+                    if_true: {
+                      literal: {
                         s: "Y"
                       }
-                    }
-                    if_false {
-                      literal {
-                        s: "N"
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 9
+                          col: 39
+                        }
+                        end: {
+                          line: 9
+                          col: 39
+                        }
                       }
                     }
+                    if_false: {
+                      literal: {
+                        s: "N"
+                      }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 9
+                          col: 48
+                        }
+                        end: {
+                          line: 9
+                          col: 48
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 48
+                    }
+                    text: "foo1 = if (bar.baz != null) then \"Y\" else \"N\""
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "foo2"
-                expr {
-                  ifelse {
-                    cond {
-                      get_attr {
-                        arg {
+                expr: {
+                  ifelse: {
+                    cond: {
+                      get_attr: {
+                        arg: {
                           name: "bar"
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 10
+                              col: 16
+                            }
+                            end: {
+                              line: 10
+                              col: 16
+                            }
+                          }
                         }
                         attr: "baz"
                       }
-                    }
-                    if_true {
-                      literal {
-                        s: "Y"
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 10
+                          col: 19
+                        }
+                        end: {
+                          line: 10
+                          col: 20
+                        }
                       }
                     }
-                    if_false {
-                      literal {
+                    if_true: {
+                      literal: {
+                        s: "Y"
+                      }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 10
+                          col: 30
+                        }
+                        end: {
+                          line: 10
+                          col: 30
+                        }
+                      }
+                    }
+                    if_false: {
+                      literal: {
                         s: "N"
+                      }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 10
+                          col: 39
+                        }
+                        end: {
+                          line: 10
+                          col: 39
+                        }
                       }
                     }
                     nullsafe: true
                   }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 39
+                    }
+                    text: "foo2 = if bar.baz? then \"Y\" else \"N\""
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "foo3"
-                expr {
-                  ifelse {
-                    cond {
-                      binexpr {
+                expr: {
+                  ifelse: {
+                    cond: {
+                      binexpr: {
                         op: EQ
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "bar"
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 11
+                                  col: 16
+                                }
+                                end: {
+                                  line: 11
+                                  col: 16
+                                }
+                              }
                             }
                             attr: "id"
                           }
-                        }
-                        rhs {
-                          literal {
-                            null {
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 11
+                              col: 19
+                            }
+                            end: {
+                              line: 11
+                              col: 20
                             }
                           }
-                          type {
+                        }
+                        rhs: {
+                          literal: {
+                            null: {}
+                          }
+                          type: {
+                            primitive: EMPTY
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 11
+                              col: 26
+                            }
+                            end: {
+                              line: 11
+                              col: 26
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 11
+                          col: 16
+                        }
+                        end: {
+                          line: 11
+                          col: 26
+                        }
+                      }
+                    }
+                    if_true: {
+                      literal: {
+                        null: {}
+                      }
+                      type: {
+                        primitive: EMPTY
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 11
+                          col: 36
+                        }
+                        end: {
+                          line: 11
+                          col: 36
+                        }
+                      }
+                    }
+                    if_false: {
+                      call: {
+                        func: "transform"
+                        arg: {
+                          get_attr: {
+                            arg: {
+                              name: "bar"
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 11
+                                  col: 56
+                                }
+                                end: {
+                                  line: 11
+                                  col: 56
+                                }
+                              }
+                            }
+                            attr: "id"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 11
+                              col: 59
+                            }
+                            end: {
+                              line: 11
+                              col: 60
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 11
+                          col: 46
+                        }
+                        end: {
+                          line: 11
+                          col: 62
+                        }
+                        text: "transform(bar.id)"
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 62
+                    }
+                    text: "foo3 = if bar.id == null then null else transform(bar.id)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "foo4"
+                expr: {
+                  ifelse: {
+                    cond: {
+                      call: {
+                        func: "bool"
+                        arg: {
+                          binexpr: {
+                            op: EQ
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 13
+                                      col: 8
+                                    }
+                                    end: {
+                                      line: 13
+                                      col: 9
+                                    }
+                                  }
+                                }
+                                attr: "a1"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 13
+                                  col: 8
+                                }
+                                end: {
+                                  line: 13
+                                  col: 9
+                                }
+                              }
+                            }
+                            rhs: {
+                              literal: {
+                                b: true
+                              }
+                              type: {
+                                primitive: BOOL
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 13
+                                  col: 15
+                                }
+                                end: {
+                                  line: 13
+                                  col: 15
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 13
+                              col: 8
+                            }
+                            end: {
+                              line: 13
+                              col: 15
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 12
+                          col: 15
+                        }
+                        end: {
+                          line: 16
+                          col: 6
+                        }
+                      }
+                    }
+                    if_true: {
+                      binexpr: {
+                        op: ADD
+                        lhs: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 13
+                                  col: 23
+                                }
+                                end: {
+                                  line: 13
+                                  col: 24
+                                }
+                              }
+                            }
+                            attr: "aa"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 13
+                              col: 23
+                            }
+                            end: {
+                              line: 13
+                              col: 24
+                            }
+                          }
+                        }
+                        rhs: {
+                          get_attr: {
+                            arg: {
+                              literal: {
+                                i: 3
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 13
+                                  col: 29
+                                }
+                                end: {
+                                  line: 13
+                                  col: 29
+                                }
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 13
+                              col: 31
+                            }
+                            end: {
+                              line: 13
+                              col: 32
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 13
+                          col: 27
+                        }
+                        end: {
+                          line: 13
+                          col: 32
+                        }
+                      }
+                    }
+                    if_false: {
+                      ifelse: {
+                        cond: {
+                          call: {
+                            func: "bool"
+                            arg: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 14
+                                      col: 8
+                                    }
+                                    end: {
+                                      line: 14
+                                      col: 9
+                                    }
+                                  }
+                                }
+                                attr: "a2"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 14
+                                  col: 8
+                                }
+                                end: {
+                                  line: 14
+                                  col: 9
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 14
+                              col: 8
+                            }
+                            end: {
+                              line: 14
+                              col: 9
+                            }
+                          }
+                        }
+                        if_true: {
+                          ifelse: {
+                            cond: {
+                              call: {
+                                func: "bool"
+                                arg: {
+                                  get_attr: {
+                                    arg: {
+                                      name: "."
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 15
+                                          col: 10
+                                        }
+                                        end: {
+                                          line: 15
+                                          col: 11
+                                        }
+                                      }
+                                    }
+                                    attr: "bar"
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 15
+                                      col: 10
+                                    }
+                                    end: {
+                                      line: 15
+                                      col: 11
+                                    }
+                                  }
+                                }
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 14
+                                  col: 17
+                                }
+                                end: {
+                                  line: 16
+                                  col: 6
+                                }
+                              }
+                            }
+                            if_true: {
+                              binexpr: {
+                                op: ADD
+                                lhs: {
+                                  get_attr: {
+                                    arg: {
+                                      name: "."
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 15
+                                          col: 18
+                                        }
+                                        end: {
+                                          line: 15
+                                          col: 19
+                                        }
+                                      }
+                                    }
+                                    attr: "a3"
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 15
+                                      col: 18
+                                    }
+                                    end: {
+                                      line: 15
+                                      col: 19
+                                    }
+                                  }
+                                }
+                                rhs: {
+                                  literal: {
+                                    i: 4
+                                  }
+                                  type: {
+                                    primitive: INT
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 15
+                                      col: 24
+                                    }
+                                    end: {
+                                      line: 15
+                                      col: 24
+                                    }
+                                  }
+                                }
+                              }
+                              type: {
+                                primitive: INT
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 15
+                                  col: 22
+                                }
+                                end: {
+                                  line: 15
+                                  col: 24
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            primitive: INT
+                          }
+                        }
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 16
+                      col: 6
+                    }
+                    text: "foo4 = if:\n        .a1 == true => .aa + 3 .pqr\n        .a2 => if:\n          .bar => .a3 + 4\n      foo5 = if:\n        .a1 == 2 => .aa + 2 .pqr\n        .a1 == 3 => .aa + 3 .pqr\n      foo6 = if .a1 ==:\n        2 => .aa + 2 .pqr\n        3 => .aa + 3 .pqr\n      foo7 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        4 => if:\n          .aa == \"b\" => .bb\n          else null\n        else null\n      foo8 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        else if .a1 ==:\n          2, 3 => .aa + 3 .pqr\n          else null\n      funccall(\"arg\").*\n    )\n"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "foo5"
+                expr: {
+                  ifelse: {
+                    cond: {
+                      call: {
+                        func: "bool"
+                        arg: {
+                          binexpr: {
+                            op: EQ
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 17
+                                      col: 8
+                                    }
+                                    end: {
+                                      line: 17
+                                      col: 9
+                                    }
+                                  }
+                                }
+                                attr: "a1"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 17
+                                  col: 8
+                                }
+                                end: {
+                                  line: 17
+                                  col: 9
+                                }
+                              }
+                            }
+                            rhs: {
+                              literal: {
+                                i: 2
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 17
+                                  col: 15
+                                }
+                                end: {
+                                  line: 17
+                                  col: 15
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 17
+                              col: 8
+                            }
+                            end: {
+                              line: 17
+                              col: 15
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 16
+                          col: 15
+                        }
+                        end: {
+                          line: 19
+                          col: 6
+                        }
+                      }
+                    }
+                    if_true: {
+                      binexpr: {
+                        op: ADD
+                        lhs: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 17
+                                  col: 20
+                                }
+                                end: {
+                                  line: 17
+                                  col: 21
+                                }
+                              }
+                            }
+                            attr: "aa"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 17
+                              col: 20
+                            }
+                            end: {
+                              line: 17
+                              col: 21
+                            }
+                          }
+                        }
+                        rhs: {
+                          get_attr: {
+                            arg: {
+                              literal: {
+                                i: 2
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 17
+                                  col: 26
+                                }
+                                end: {
+                                  line: 17
+                                  col: 26
+                                }
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 17
+                              col: 28
+                            }
+                            end: {
+                              line: 17
+                              col: 29
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 17
+                          col: 24
+                        }
+                        end: {
+                          line: 17
+                          col: 29
+                        }
+                      }
+                    }
+                    if_false: {
+                      ifelse: {
+                        cond: {
+                          call: {
+                            func: "bool"
+                            arg: {
+                              binexpr: {
+                                op: EQ
+                                lhs: {
+                                  get_attr: {
+                                    arg: {
+                                      name: "."
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 18
+                                          col: 8
+                                        }
+                                        end: {
+                                          line: 18
+                                          col: 9
+                                        }
+                                      }
+                                    }
+                                    attr: "a1"
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 18
+                                      col: 8
+                                    }
+                                    end: {
+                                      line: 18
+                                      col: 9
+                                    }
+                                  }
+                                }
+                                rhs: {
+                                  literal: {
+                                    i: 3
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 18
+                                      col: 15
+                                    }
+                                    end: {
+                                      line: 18
+                                      col: 15
+                                    }
+                                  }
+                                }
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 18
+                                  col: 8
+                                }
+                                end: {
+                                  line: 18
+                                  col: 15
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 18
+                              col: 8
+                            }
+                            end: {
+                              line: 18
+                              col: 15
+                            }
+                          }
+                        }
+                        if_true: {
+                          binexpr: {
+                            op: ADD
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 18
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 18
+                                      col: 21
+                                    }
+                                  }
+                                }
+                                attr: "aa"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 18
+                                  col: 20
+                                }
+                                end: {
+                                  line: 18
+                                  col: 21
+                                }
+                              }
+                            }
+                            rhs: {
+                              get_attr: {
+                                arg: {
+                                  literal: {
+                                    i: 3
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 18
+                                      col: 26
+                                    }
+                                    end: {
+                                      line: 18
+                                      col: 26
+                                    }
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 18
+                                  col: 28
+                                }
+                                end: {
+                                  line: 18
+                                  col: 29
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 18
+                              col: 24
+                            }
+                            end: {
+                              line: 18
+                              col: 29
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 16
+                      col: 6
+                    }
+                    end: {
+                      line: 19
+                      col: 6
+                    }
+                    text: "foo5 = if:\n        .a1 == 2 => .aa + 2 .pqr\n        .a1 == 3 => .aa + 3 .pqr\n      foo6 = if .a1 ==:\n        2 => .aa + 2 .pqr\n        3 => .aa + 3 .pqr\n      foo7 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        4 => if:\n          .aa == \"b\" => .bb\n          else null\n        else null\n      foo8 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        else if .a1 ==:\n          2, 3 => .aa + 3 .pqr\n          else null\n      funccall(\"arg\").*\n    )\n"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "foo6"
+                expr: {
+                  ifelse: {
+                    cond: {
+                      binexpr: {
+                        op: EQ
+                        lhs: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 19
+                                  col: 16
+                                }
+                                end: {
+                                  line: 19
+                                  col: 17
+                                }
+                              }
+                            }
+                            attr: "a1"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 19
+                              col: 16
+                            }
+                            end: {
+                              line: 19
+                              col: 17
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
+                            i: 2
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 20
+                              col: 8
+                            }
+                            end: {
+                              line: 20
+                              col: 8
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 19
+                          col: 16
+                        }
+                        end: {
+                          line: 19
+                          col: 20
+                        }
+                      }
+                    }
+                    if_true: {
+                      binexpr: {
+                        op: ADD
+                        lhs: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 20
+                                  col: 13
+                                }
+                                end: {
+                                  line: 20
+                                  col: 14
+                                }
+                              }
+                            }
+                            attr: "aa"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 20
+                              col: 13
+                            }
+                            end: {
+                              line: 20
+                              col: 14
+                            }
+                          }
+                        }
+                        rhs: {
+                          get_attr: {
+                            arg: {
+                              literal: {
+                                i: 2
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 20
+                                  col: 19
+                                }
+                                end: {
+                                  line: 20
+                                  col: 19
+                                }
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 20
+                              col: 21
+                            }
+                            end: {
+                              line: 20
+                              col: 22
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 20
+                          col: 17
+                        }
+                        end: {
+                          line: 20
+                          col: 22
+                        }
+                      }
+                    }
+                    if_false: {
+                      ifelse: {
+                        cond: {
+                          binexpr: {
+                            op: EQ
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 19
+                                      col: 16
+                                    }
+                                    end: {
+                                      line: 19
+                                      col: 17
+                                    }
+                                  }
+                                }
+                                attr: "a1"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 19
+                                  col: 16
+                                }
+                                end: {
+                                  line: 19
+                                  col: 17
+                                }
+                              }
+                            }
+                            rhs: {
+                              literal: {
+                                i: 3
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 21
+                                  col: 8
+                                }
+                                end: {
+                                  line: 21
+                                  col: 8
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 21
+                              col: 8
+                            }
+                            end: {
+                              line: 21
+                              col: 8
+                            }
+                          }
+                        }
+                        if_true: {
+                          binexpr: {
+                            op: ADD
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 21
+                                      col: 13
+                                    }
+                                    end: {
+                                      line: 21
+                                      col: 14
+                                    }
+                                  }
+                                }
+                                attr: "aa"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 21
+                                  col: 13
+                                }
+                                end: {
+                                  line: 21
+                                  col: 14
+                                }
+                              }
+                            }
+                            rhs: {
+                              get_attr: {
+                                arg: {
+                                  literal: {
+                                    i: 3
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 21
+                                      col: 19
+                                    }
+                                    end: {
+                                      line: 21
+                                      col: 19
+                                    }
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 21
+                                  col: 21
+                                }
+                                end: {
+                                  line: 21
+                                  col: 22
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 21
+                              col: 17
+                            }
+                            end: {
+                              line: 21
+                              col: 22
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 19
+                      col: 6
+                    }
+                    end: {
+                      line: 22
+                      col: 6
+                    }
+                    text: "foo6 = if .a1 ==:\n        2 => .aa + 2 .pqr\n        3 => .aa + 3 .pqr\n      foo7 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        4 => if:\n          .aa == \"b\" => .bb\n          else null\n        else null\n      foo8 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        else if .a1 ==:\n          2, 3 => .aa + 3 .pqr\n          else null\n      funccall(\"arg\").*\n    )\n"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "foo7"
+                expr: {
+                  ifelse: {
+                    cond: {
+                      binexpr: {
+                        op: EQ
+                        lhs: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 22
+                                  col: 16
+                                }
+                                end: {
+                                  line: 22
+                                  col: 17
+                                }
+                              }
+                            }
+                            attr: "a1"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 22
+                              col: 16
+                            }
+                            end: {
+                              line: 22
+                              col: 17
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
+                            i: 2
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 23
+                              col: 8
+                            }
+                            end: {
+                              line: 23
+                              col: 8
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 22
+                          col: 16
+                        }
+                        end: {
+                          line: 22
+                          col: 20
+                        }
+                      }
+                    }
+                    if_true: {
+                      binexpr: {
+                        op: ADD
+                        lhs: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 23
+                                  col: 16
+                                }
+                                end: {
+                                  line: 23
+                                  col: 17
+                                }
+                              }
+                            }
+                            attr: "aa"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 23
+                              col: 16
+                            }
+                            end: {
+                              line: 23
+                              col: 17
+                            }
+                          }
+                        }
+                        rhs: {
+                          get_attr: {
+                            arg: {
+                              literal: {
+                                i: 3
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 23
+                                  col: 22
+                                }
+                                end: {
+                                  line: 23
+                                  col: 22
+                                }
+                              }
+                            }
+                            attr: "pqr"
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 23
+                              col: 24
+                            }
+                            end: {
+                              line: 23
+                              col: 25
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 23
+                          col: 20
+                        }
+                        end: {
+                          line: 23
+                          col: 25
+                        }
+                      }
+                    }
+                    if_false: {
+                      ifelse: {
+                        cond: {
+                          binexpr: {
+                            op: EQ
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 22
+                                      col: 16
+                                    }
+                                    end: {
+                                      line: 22
+                                      col: 17
+                                    }
+                                  }
+                                }
+                                attr: "a1"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 22
+                                  col: 16
+                                }
+                                end: {
+                                  line: 22
+                                  col: 17
+                                }
+                              }
+                            }
+                            rhs: {
+                              literal: {
+                                i: 3
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 23
+                                  col: 11
+                                }
+                                end: {
+                                  line: 23
+                                  col: 11
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 23
+                              col: 11
+                            }
+                            end: {
+                              line: 23
+                              col: 11
+                            }
+                          }
+                        }
+                        if_true: {
+                          binexpr: {
+                            op: ADD
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 23
+                                      col: 16
+                                    }
+                                    end: {
+                                      line: 23
+                                      col: 17
+                                    }
+                                  }
+                                }
+                                attr: "aa"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 23
+                                  col: 16
+                                }
+                                end: {
+                                  line: 23
+                                  col: 17
+                                }
+                              }
+                            }
+                            rhs: {
+                              get_attr: {
+                                arg: {
+                                  literal: {
+                                    i: 3
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 23
+                                      col: 22
+                                    }
+                                    end: {
+                                      line: 23
+                                      col: 22
+                                    }
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 23
+                                  col: 24
+                                }
+                                end: {
+                                  line: 23
+                                  col: 25
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 23
+                              col: 20
+                            }
+                            end: {
+                              line: 23
+                              col: 25
+                            }
+                          }
+                        }
+                        if_false: {
+                          ifelse: {
+                            cond: {
+                              binexpr: {
+                                op: EQ
+                                lhs: {
+                                  get_attr: {
+                                    arg: {
+                                      name: "."
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 22
+                                          col: 16
+                                        }
+                                        end: {
+                                          line: 22
+                                          col: 17
+                                        }
+                                      }
+                                    }
+                                    attr: "a1"
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 22
+                                      col: 16
+                                    }
+                                    end: {
+                                      line: 22
+                                      col: 17
+                                    }
+                                  }
+                                }
+                                rhs: {
+                                  literal: {
+                                    i: 4
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 24
+                                      col: 8
+                                    }
+                                    end: {
+                                      line: 24
+                                      col: 8
+                                    }
+                                  }
+                                }
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 24
+                                  col: 8
+                                }
+                                end: {
+                                  line: 24
+                                  col: 8
+                                }
+                              }
+                            }
+                            if_true: {
+                              ifelse: {
+                                cond: {
+                                  call: {
+                                    func: "bool"
+                                    arg: {
+                                      binexpr: {
+                                        op: EQ
+                                        lhs: {
+                                          get_attr: {
+                                            arg: {
+                                              name: "."
+                                              source_context: {
+                                                file: "tests/stmts.sysl"
+                                                start: {
+                                                  line: 25
+                                                  col: 10
+                                                }
+                                                end: {
+                                                  line: 25
+                                                  col: 11
+                                                }
+                                              }
+                                            }
+                                            attr: "aa"
+                                          }
+                                          source_context: {
+                                            file: "tests/stmts.sysl"
+                                            start: {
+                                              line: 25
+                                              col: 10
+                                            }
+                                            end: {
+                                              line: 25
+                                              col: 11
+                                            }
+                                          }
+                                        }
+                                        rhs: {
+                                          literal: {
+                                            s: "b"
+                                          }
+                                          source_context: {
+                                            file: "tests/stmts.sysl"
+                                            start: {
+                                              line: 25
+                                              col: 17
+                                            }
+                                            end: {
+                                              line: 25
+                                              col: 17
+                                            }
+                                          }
+                                        }
+                                      }
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 25
+                                          col: 10
+                                        }
+                                        end: {
+                                          line: 25
+                                          col: 17
+                                        }
+                                      }
+                                    }
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 24
+                                      col: 15
+                                    }
+                                    end: {
+                                      line: 27
+                                      col: 8
+                                    }
+                                  }
+                                }
+                                if_true: {
+                                  get_attr: {
+                                    arg: {
+                                      name: "."
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 25
+                                          col: 24
+                                        }
+                                        end: {
+                                          line: 25
+                                          col: 25
+                                        }
+                                      }
+                                    }
+                                    attr: "bb"
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 25
+                                      col: 24
+                                    }
+                                    end: {
+                                      line: 25
+                                      col: 25
+                                    }
+                                  }
+                                }
+                                if_false: {
+                                  literal: {
+                                    null: {}
+                                  }
+                                  type: {
+                                    primitive: EMPTY
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 26
+                                      col: 15
+                                    }
+                                    end: {
+                                      line: 26
+                                      col: 15
+                                    }
+                                  }
+                                }
+                              }
+                              type: {
+                                primitive: EMPTY
+                              }
+                            }
+                            if_false: {
+                              literal: {
+                                null: {}
+                              }
+                              type: {
+                                primitive: EMPTY
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 27
+                                  col: 13
+                                }
+                                end: {
+                                  line: 27
+                                  col: 13
+                                }
+                              }
+                            }
+                          }
+                          type: {
                             primitive: EMPTY
                           }
                         }
                       }
-                    }
-                    if_true {
-                      literal {
-                        null {
-                        }
-                      }
-                      type {
+                      type: {
                         primitive: EMPTY
                       }
                     }
-                    if_false {
-                      call {
-                        func: "transform"
-                        arg {
-                          get_attr {
-                            arg {
-                              name: "bar"
-                            }
-                            attr: "id"
-                          }
-                        }
-                      }
+                  }
+                  type: {
+                    primitive: EMPTY
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 22
+                      col: 6
                     }
+                    end: {
+                      line: 28
+                      col: 6
+                    }
+                    text: "foo7 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        4 => if:\n          .aa == \"b\" => .bb\n          else null\n        else null\n      foo8 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        else if .a1 ==:\n          2, 3 => .aa + 3 .pqr\n          else null\n      funccall(\"arg\").*\n    )\n"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "foo4"
-                expr {
-                  ifelse {
-                    cond {
-                      call {
-                        func: "bool"
-                        arg {
-                          binexpr {
-                            op: EQ
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "a1"
-                              }
-                            }
-                            rhs {
-                              literal {
-                                b: true
-                              }
-                              type {
-                                primitive: BOOL
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                    if_true {
-                      binexpr {
-                        op: ADD
-                        lhs {
-                          get_attr {
-                            arg {
-                              name: "."
-                            }
-                            attr: "aa"
-                          }
-                        }
-                        rhs {
-                          get_attr {
-                            arg {
-                              literal {
-                                i: 3
-                              }
-                            }
-                            attr: "pqr"
-                          }
-                        }
-                      }
-                    }
-                    if_false {
-                      ifelse {
-                        cond {
-                          call {
-                            func: "bool"
-                            arg {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "a2"
-                              }
-                            }
-                          }
-                        }
-                        if_true {
-                          ifelse {
-                            cond {
-                              call {
-                                func: "bool"
-                                arg {
-                                  get_attr {
-                                    arg {
-                                      name: "."
-                                    }
-                                    attr: "bar"
-                                  }
-                                }
-                              }
-                            }
-                            if_true {
-                              binexpr {
-                                op: ADD
-                                lhs {
-                                  get_attr {
-                                    arg {
-                                      name: "."
-                                    }
-                                    attr: "a3"
-                                  }
-                                }
-                                rhs {
-                                  literal {
-                                    i: 4
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "foo5"
-                expr {
-                  ifelse {
-                    cond {
-                      call {
-                        func: "bool"
-                        arg {
-                          binexpr {
-                            op: EQ
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "a1"
-                              }
-                            }
-                            rhs {
-                              literal {
-                                i: 2
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                    if_true {
-                      binexpr {
-                        op: ADD
-                        lhs {
-                          get_attr {
-                            arg {
-                              name: "."
-                            }
-                            attr: "aa"
-                          }
-                        }
-                        rhs {
-                          get_attr {
-                            arg {
-                              literal {
-                                i: 2
-                              }
-                            }
-                            attr: "pqr"
-                          }
-                        }
-                      }
-                    }
-                    if_false {
-                      ifelse {
-                        cond {
-                          call {
-                            func: "bool"
-                            arg {
-                              binexpr {
-                                op: EQ
-                                lhs {
-                                  get_attr {
-                                    arg {
-                                      name: "."
-                                    }
-                                    attr: "a1"
-                                  }
-                                }
-                                rhs {
-                                  literal {
-                                    i: 3
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                        if_true {
-                          binexpr {
-                            op: ADD
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "aa"
-                              }
-                            }
-                            rhs {
-                              get_attr {
-                                arg {
-                                  literal {
-                                    i: 3
-                                  }
-                                }
-                                attr: "pqr"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "foo6"
-                expr {
-                  ifelse {
-                    cond {
-                      binexpr {
+            stmt: {
+              assign: {
+                name: "foo8"
+                expr: {
+                  ifelse: {
+                    cond: {
+                      binexpr: {
                         op: EQ
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 28
+                                  col: 16
+                                }
+                                end: {
+                                  line: 28
+                                  col: 17
+                                }
+                              }
                             }
                             attr: "a1"
                           }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 28
+                              col: 16
+                            }
+                            end: {
+                              line: 28
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
-                          literal {
+                        rhs: {
+                          literal: {
                             i: 2
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 29
+                              col: 8
+                            }
+                            end: {
+                              line: 29
+                              col: 8
+                            }
                           }
                         }
                       }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 28
+                          col: 16
+                        }
+                        end: {
+                          line: 28
+                          col: 20
+                        }
+                      }
                     }
-                    if_true {
-                      binexpr {
+                    if_true: {
+                      binexpr: {
                         op: ADD
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 29
+                                  col: 16
+                                }
+                                end: {
+                                  line: 29
+                                  col: 17
+                                }
+                              }
                             }
                             attr: "aa"
                           }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 29
+                              col: 16
+                            }
+                            end: {
+                              line: 29
+                              col: 17
+                            }
+                          }
                         }
-                        rhs {
-                          get_attr {
-                            arg {
-                              literal {
-                                i: 2
+                        rhs: {
+                          get_attr: {
+                            arg: {
+                              literal: {
+                                i: 3
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 29
+                                  col: 22
+                                }
+                                end: {
+                                  line: 29
+                                  col: 22
+                                }
                               }
                             }
                             attr: "pqr"
                           }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 29
+                              col: 24
+                            }
+                            end: {
+                              line: 29
+                              col: 25
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/stmts.sysl"
+                        start: {
+                          line: 29
+                          col: 20
+                        }
+                        end: {
+                          line: 29
+                          col: 25
                         }
                       }
                     }
-                    if_false {
-                      ifelse {
-                        cond {
-                          binexpr {
+                    if_false: {
+                      ifelse: {
+                        cond: {
+                          binexpr: {
                             op: EQ
-                            lhs {
-                              get_attr {
-                                arg {
+                            lhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
-                                }
-                                attr: "a1"
-                              }
-                            }
-                            rhs {
-                              literal {
-                                i: 3
-                              }
-                            }
-                          }
-                        }
-                        if_true {
-                          binexpr {
-                            op: ADD
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "aa"
-                              }
-                            }
-                            rhs {
-                              get_attr {
-                                arg {
-                                  literal {
-                                    i: 3
-                                  }
-                                }
-                                attr: "pqr"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "foo7"
-                expr {
-                  ifelse {
-                    cond {
-                      binexpr {
-                        op: EQ
-                        lhs {
-                          get_attr {
-                            arg {
-                              name: "."
-                            }
-                            attr: "a1"
-                          }
-                        }
-                        rhs {
-                          literal {
-                            i: 2
-                          }
-                        }
-                      }
-                    }
-                    if_true {
-                      binexpr {
-                        op: ADD
-                        lhs {
-                          get_attr {
-                            arg {
-                              name: "."
-                            }
-                            attr: "aa"
-                          }
-                        }
-                        rhs {
-                          get_attr {
-                            arg {
-                              literal {
-                                i: 3
-                              }
-                            }
-                            attr: "pqr"
-                          }
-                        }
-                      }
-                    }
-                    if_false {
-                      ifelse {
-                        cond {
-                          binexpr {
-                            op: EQ
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "a1"
-                              }
-                            }
-                            rhs {
-                              literal {
-                                i: 3
-                              }
-                            }
-                          }
-                        }
-                        if_true {
-                          binexpr {
-                            op: ADD
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "aa"
-                              }
-                            }
-                            rhs {
-                              get_attr {
-                                arg {
-                                  literal {
-                                    i: 3
-                                  }
-                                }
-                                attr: "pqr"
-                              }
-                            }
-                          }
-                        }
-                        if_false {
-                          ifelse {
-                            cond {
-                              binexpr {
-                                op: EQ
-                                lhs {
-                                  get_attr {
-                                    arg {
-                                      name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 28
+                                      col: 16
                                     }
-                                    attr: "a1"
+                                    end: {
+                                      line: 28
+                                      col: 17
+                                    }
                                   }
                                 }
-                                rhs {
-                                  literal {
-                                    i: 4
-                                  }
+                                attr: "a1"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 28
+                                  col: 16
+                                }
+                                end: {
+                                  line: 28
+                                  col: 17
                                 }
                               }
                             }
-                            if_true {
-                              ifelse {
-                                cond {
-                                  call {
-                                    func: "bool"
-                                    arg {
-                                      binexpr {
-                                        op: EQ
-                                        lhs {
-                                          get_attr {
-                                            arg {
-                                              name: "."
-                                            }
-                                            attr: "aa"
-                                          }
+                            rhs: {
+                              literal: {
+                                i: 3
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 29
+                                  col: 11
+                                }
+                                end: {
+                                  line: 29
+                                  col: 11
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 29
+                              col: 11
+                            }
+                            end: {
+                              line: 29
+                              col: 11
+                            }
+                          }
+                        }
+                        if_true: {
+                          binexpr: {
+                            op: ADD
+                            lhs: {
+                              get_attr: {
+                                arg: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 29
+                                      col: 16
+                                    }
+                                    end: {
+                                      line: 29
+                                      col: 17
+                                    }
+                                  }
+                                }
+                                attr: "aa"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 29
+                                  col: 16
+                                }
+                                end: {
+                                  line: 29
+                                  col: 17
+                                }
+                              }
+                            }
+                            rhs: {
+                              get_attr: {
+                                arg: {
+                                  literal: {
+                                    i: 3
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 29
+                                      col: 22
+                                    }
+                                    end: {
+                                      line: 29
+                                      col: 22
+                                    }
+                                  }
+                                }
+                                attr: "pqr"
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 29
+                                  col: 24
+                                }
+                                end: {
+                                  line: 29
+                                  col: 25
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/stmts.sysl"
+                            start: {
+                              line: 29
+                              col: 20
+                            }
+                            end: {
+                              line: 29
+                              col: 25
+                            }
+                          }
+                        }
+                        if_false: {
+                          ifelse: {
+                            cond: {
+                              binexpr: {
+                                op: EQ
+                                lhs: {
+                                  get_attr: {
+                                    arg: {
+                                      name: "."
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 30
+                                          col: 16
                                         }
-                                        rhs {
-                                          literal {
-                                            s: "b"
-                                          }
+                                        end: {
+                                          line: 30
+                                          col: 17
                                         }
                                       }
                                     }
-                                  }
-                                }
-                                if_true {
-                                  get_attr {
-                                    arg {
-                                      name: "."
-                                    }
-                                    attr: "bb"
-                                  }
-                                }
-                                if_false {
-                                  literal {
-                                    null {
-                                    }
-                                  }
-                                  type {
-                                    primitive: EMPTY
-                                  }
-                                }
-                              }
-                            }
-                            if_false {
-                              literal {
-                                null {
-                                }
-                              }
-                              type {
-                                primitive: EMPTY
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "foo8"
-                expr {
-                  ifelse {
-                    cond {
-                      binexpr {
-                        op: EQ
-                        lhs {
-                          get_attr {
-                            arg {
-                              name: "."
-                            }
-                            attr: "a1"
-                          }
-                        }
-                        rhs {
-                          literal {
-                            i: 2
-                          }
-                        }
-                      }
-                    }
-                    if_true {
-                      binexpr {
-                        op: ADD
-                        lhs {
-                          get_attr {
-                            arg {
-                              name: "."
-                            }
-                            attr: "aa"
-                          }
-                        }
-                        rhs {
-                          get_attr {
-                            arg {
-                              literal {
-                                i: 3
-                              }
-                            }
-                            attr: "pqr"
-                          }
-                        }
-                      }
-                    }
-                    if_false {
-                      ifelse {
-                        cond {
-                          binexpr {
-                            op: EQ
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "a1"
-                              }
-                            }
-                            rhs {
-                              literal {
-                                i: 3
-                              }
-                            }
-                          }
-                        }
-                        if_true {
-                          binexpr {
-                            op: ADD
-                            lhs {
-                              get_attr {
-                                arg {
-                                  name: "."
-                                }
-                                attr: "aa"
-                              }
-                            }
-                            rhs {
-                              get_attr {
-                                arg {
-                                  literal {
-                                    i: 3
-                                  }
-                                }
-                                attr: "pqr"
-                              }
-                            }
-                          }
-                        }
-                        if_false {
-                          ifelse {
-                            cond {
-                              binexpr {
-                                op: EQ
-                                lhs {
-                                  get_attr {
-                                    arg {
-                                      name: "."
-                                    }
                                     attr: "a1"
                                   }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 30
+                                      col: 16
+                                    }
+                                    end: {
+                                      line: 30
+                                      col: 17
+                                    }
+                                  }
                                 }
-                                rhs {
-                                  literal {
+                                rhs: {
+                                  literal: {
                                     i: 2
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 31
+                                      col: 10
+                                    }
+                                    end: {
+                                      line: 31
+                                      col: 10
+                                    }
                                   }
                                 }
                               }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 30
+                                  col: 16
+                                }
+                                end: {
+                                  line: 30
+                                  col: 20
+                                }
+                              }
                             }
-                            if_true {
-                              binexpr {
+                            if_true: {
+                              binexpr: {
                                 op: ADD
-                                lhs {
-                                  get_attr {
-                                    arg {
+                                lhs: {
+                                  get_attr: {
+                                    arg: {
                                       name: "."
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 31
+                                          col: 18
+                                        }
+                                        end: {
+                                          line: 31
+                                          col: 19
+                                        }
+                                      }
                                     }
                                     attr: "aa"
                                   }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 31
+                                      col: 18
+                                    }
+                                    end: {
+                                      line: 31
+                                      col: 19
+                                    }
+                                  }
                                 }
-                                rhs {
-                                  get_attr {
-                                    arg {
-                                      literal {
+                                rhs: {
+                                  get_attr: {
+                                    arg: {
+                                      literal: {
                                         i: 3
+                                      }
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 31
+                                          col: 24
+                                        }
+                                        end: {
+                                          line: 31
+                                          col: 24
+                                        }
                                       }
                                     }
                                     attr: "pqr"
                                   }
-                                }
-                              }
-                            }
-                            if_false {
-                              ifelse {
-                                cond {
-                                  binexpr {
-                                    op: EQ
-                                    lhs {
-                                      get_attr {
-                                        arg {
-                                          name: "."
-                                        }
-                                        attr: "a1"
-                                      }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 31
+                                      col: 26
                                     }
-                                    rhs {
-                                      literal {
-                                        i: 3
-                                      }
+                                    end: {
+                                      line: 31
+                                      col: 27
                                     }
                                   }
                                 }
-                                if_true {
-                                  binexpr {
-                                    op: ADD
-                                    lhs {
-                                      get_attr {
-                                        arg {
+                              }
+                              type: {
+                                no_type: {}
+                              }
+                              source_context: {
+                                file: "tests/stmts.sysl"
+                                start: {
+                                  line: 31
+                                  col: 22
+                                }
+                                end: {
+                                  line: 31
+                                  col: 27
+                                }
+                              }
+                            }
+                            if_false: {
+                              ifelse: {
+                                cond: {
+                                  binexpr: {
+                                    op: EQ
+                                    lhs: {
+                                      get_attr: {
+                                        arg: {
                                           name: "."
+                                          source_context: {
+                                            file: "tests/stmts.sysl"
+                                            start: {
+                                              line: 30
+                                              col: 16
+                                            }
+                                            end: {
+                                              line: 30
+                                              col: 17
+                                            }
+                                          }
+                                        }
+                                        attr: "a1"
+                                      }
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 30
+                                          col: 16
+                                        }
+                                        end: {
+                                          line: 30
+                                          col: 17
+                                        }
+                                      }
+                                    }
+                                    rhs: {
+                                      literal: {
+                                        i: 3
+                                      }
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 31
+                                          col: 13
+                                        }
+                                        end: {
+                                          line: 31
+                                          col: 13
+                                        }
+                                      }
+                                    }
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 31
+                                      col: 13
+                                    }
+                                    end: {
+                                      line: 31
+                                      col: 13
+                                    }
+                                  }
+                                }
+                                if_true: {
+                                  binexpr: {
+                                    op: ADD
+                                    lhs: {
+                                      get_attr: {
+                                        arg: {
+                                          name: "."
+                                          source_context: {
+                                            file: "tests/stmts.sysl"
+                                            start: {
+                                              line: 31
+                                              col: 18
+                                            }
+                                            end: {
+                                              line: 31
+                                              col: 19
+                                            }
+                                          }
                                         }
                                         attr: "aa"
                                       }
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 31
+                                          col: 18
+                                        }
+                                        end: {
+                                          line: 31
+                                          col: 19
+                                        }
+                                      }
                                     }
-                                    rhs {
-                                      get_attr {
-                                        arg {
-                                          literal {
+                                    rhs: {
+                                      get_attr: {
+                                        arg: {
+                                          literal: {
                                             i: 3
+                                          }
+                                          source_context: {
+                                            file: "tests/stmts.sysl"
+                                            start: {
+                                              line: 31
+                                              col: 24
+                                            }
+                                            end: {
+                                              line: 31
+                                              col: 24
+                                            }
                                           }
                                         }
                                         attr: "pqr"
                                       }
+                                      source_context: {
+                                        file: "tests/stmts.sysl"
+                                        start: {
+                                          line: 31
+                                          col: 26
+                                        }
+                                        end: {
+                                          line: 31
+                                          col: 27
+                                        }
+                                      }
+                                    }
+                                  }
+                                  type: {
+                                    no_type: {}
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 31
+                                      col: 22
+                                    }
+                                    end: {
+                                      line: 31
+                                      col: 27
                                     }
                                   }
                                 }
-                                if_false {
-                                  literal {
-                                    null {
-                                    }
+                                if_false: {
+                                  literal: {
+                                    null: {}
                                   }
-                                  type {
+                                  type: {
                                     primitive: EMPTY
+                                  }
+                                  source_context: {
+                                    file: "tests/stmts.sysl"
+                                    start: {
+                                      line: 32
+                                      col: 15
+                                    }
+                                    end: {
+                                      line: 32
+                                      col: 15
+                                    }
                                   }
                                 }
                               }
+                              type: {
+                                primitive: EMPTY
+                              }
                             }
                           }
+                          type: {
+                            primitive: EMPTY
+                          }
                         }
+                      }
+                      type: {
+                        primitive: EMPTY
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: EMPTY
+                  }
+                  source_context: {
+                    file: "tests/stmts.sysl"
+                    start: {
+                      line: 28
+                      col: 6
+                    }
+                    end: {
+                      line: 33
+                      col: 6
+                    }
+                    text: "foo8 = if .a1 ==:\n        2, 3 => .aa + 3 .pqr\n        else if .a1 ==:\n          2, 3 => .aa + 3 .pqr\n          else null\n      funccall(\"arg\").*\n    )\n"
+                  }
+                }
+              }
+            }
+            stmt: {
+              inject: {
+                call: {
+                  func: "funccall"
+                  arg: {
+                    literal: {
+                      s: "arg"
+                    }
+                    source_context: {
+                      file: "tests/stmts.sysl"
+                      start: {
+                        line: 33
+                        col: 15
+                      }
+                      end: {
+                        line: 33
+                        col: 15
+                      }
+                    }
+                  }
+                  arg: {
+                    name: "out"
+                    source_context: {
+                      file: "tests/stmts.sysl"
+                      start: {
+                        line: 33
+                        col: 6
+                      }
+                      end: {
+                        line: 33
+                        col: 23
                       }
                     }
                   }
                 }
-              }
-            }
-            stmt {
-              inject {
-                call {
-                  func: "funccall"
-                  arg {
-                    literal {
-                      s: "arg"
-                    }
+                source_context: {
+                  file: "tests/stmts.sysl"
+                  start: {
+                    line: 33
+                    col: 6
                   }
-                  arg {
-                    name: "out"
+                  end: {
+                    line: 33
+                    col: 20
                   }
+                  text: "funccall(\"arg\")"
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/stmts.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 34
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/stmts.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 35
+          }
+          text: "!view TestStatements(number <: int) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/stmts.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }

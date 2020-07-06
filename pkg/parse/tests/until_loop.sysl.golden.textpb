@@ -1,20 +1,20 @@
-apps {
+apps: {
   key: "Client"
-  value {
-    name {
+  value: {
+    name: {
       part: "Client"
     }
-    endpoints {
+    endpoints: {
       key: "On Click"
-      value {
+      value: {
         name: "On Click"
-        stmt {
-          loop {
+        stmt: {
+          loop: {
             mode: UNTIL
             criterion: "have requests"
-            stmt {
-              call {
-                target {
+            stmt: {
+              call: {
+                target: {
                   part: "Server"
                 }
                 endpoint: "Process Payload"
@@ -22,20 +22,61 @@ apps {
             }
           }
         }
+        source_context: {
+          file: "tests/until_loop.sysl"
+          start: {
+            line: 5
+            col: 4
+          }
+          end: {
+            line: 9
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/until_loop.sysl"
+      start: {
+        line: 4
+        col: 1
+      }
+      end: {
+        line: 4
       }
     }
   }
 }
-apps {
+apps: {
   key: "Server"
-  value {
-    name {
+  value: {
+    name: {
       part: "Server"
     }
-    endpoints {
+    endpoints: {
       key: "Process Payload"
-      value {
+      value: {
         name: "Process Payload"
+        source_context: {
+          file: "tests/until_loop.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 2
+            col: 21
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/until_loop.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
       }
     }
   }

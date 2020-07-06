@@ -53,44 +53,41 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	return tree, nil
 }
 
-func guessMode(filename string) string {
-	filename, _ = mod.ExtractVersion(filename)
-	switch filepath.Ext(filename) {
-	case syslExt:
-		return "~sysl"
-	case ".yaml", ".json":
-		return "~openapi"
+func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
+	logger := logrus.StandardLogger()
+	fileName, _ := mod.ExtractVersion(def.filename)
+	file := input.GetText(0, input.Size())
+	fileType, err := detectFileType(fileName, []byte(file))
+	if err != nil {
+		return nil, err
+	}
+
+	switch fileType.Name {
+	case importer.SYSL.Name:
+		return input, nil
+	case importer.OpenAPI3.Name, importer.Swagger.Name:
+		imp, err := importer.Factory(fileName, []byte(file), logger)
+		imp.WithAppName(def.appname).WithPackage(def.pkg)
+		if err != nil {
+			return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
+		}
+		output, err := imp.Load(file)
+		if err != nil {
+			return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
+		}
+		return antlr.NewInputStream(output), nil
 	default:
-		return ""
+		return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
 	}
 }
 
-func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
-	od := importer.OutputData{
-		AppName: def.appname,
-		Package: def.pkg,
+func detectFileType(fileName string, file []byte) (*importer.Format, error) {
+	var ParserFormats = []importer.Format{
+		importer.OpenAPI3,
+		importer.Swagger,
+		importer.SYSL,
 	}
-	var text string
-	var err error
-	logger := logrus.StandardLogger()
-
-	if def.mode == "" {
-		def.mode = guessMode(def.filename)
-	}
-	od.Mode = def.mode
-
-	switch def.mode {
-	case "~sysl":
-		return input, nil
-	case "~swagger":
-		text, err = importer.LoadSwaggerText(od, input.GetText(0, input.Size()), logger)
-	case "~openapi3", "~openapi":
-		text, err = importer.LoadOpenAPIText(od, input.GetText(0, input.Size()), logger)
-	default:
-		return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format - (%s)\n", def.filename, def.mode))
-	}
-
-	return antlr.NewInputStream(text), err
+	return importer.GuessFileType(fileName, file, ParserFormats)
 }
 
 func (p *Parser) RestrictToLocalImport() {
