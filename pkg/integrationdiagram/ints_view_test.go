@@ -231,12 +231,12 @@ func TestBuildClusterForIntsView(t *testing.T) {
 	v.BuildClusterForEPAView(deps, "")
 
 	//Then
-	assert.Equal(t, `state "" as X_0 {
-  state "" as _0
-  state "" as _1
+	assert.Equal(t, `state "a" as X_0 {
+  state "epa" as _0
+  state "epb client" as _1
 }
-state "" as X_1 {
-  state "" as _2
+state "b" as X_1 {
+  state "epb" as _2
 }
 `, v.StringBuilder.String())
 }
@@ -260,7 +260,7 @@ func TestBuildClusterForComponentView(t *testing.T) {
 
 	//Then
 	assert.Equal(t, `package "a" {
-[] as _0
+[A] as _0
 }
 `, v.StringBuilder.String())
 }
@@ -268,50 +268,10 @@ func TestBuildClusterForComponentView(t *testing.T) {
 func TestGenerateIntsView(t *testing.T) {
 	t.Parallel()
 
-	var stringBuilder strings.Builder
-	v := &IntsDiagramVisitor{
-		StringBuilder: &stringBuilder,
-		Mod: &sysl.Module{
-			Apps: map[string]*sysl.Application{
-				"a": {
-					Name: &sysl.AppName{Part: []string{"a"}},
-					Endpoints: map[string]*sysl.Endpoint{
-						"epa": {
-							Attrs: map[string]*sysl.Attribute{
-								"test": nil,
-							},
-						},
-					},
-				},
-				"b": {
-					Name: &sysl.AppName{Part: []string{"b"}},
-					Endpoints: map[string]*sysl.Endpoint{
-						"epb": {
-							Attrs: map[string]*sysl.Attribute{
-								"test": nil,
-							},
-						},
-					},
-					Mixin2: []*sysl.Application{
-						{Name: &sysl.AppName{Part: []string{"c"}}},
-					},
-				},
-				"c": {
-					Name: &sysl.AppName{Part: []string{"c"}},
-				},
-				"project": {
-					Attrs: map[string]*sysl.Attribute{
-						"appfmt": {Attribute: &sysl.Attribute_S{S: "%(appname)"}},
-					},
-				},
-			},
-		},
-		Project:      "project",
-		DrawableApps: map[string]struct{}{},
-		TopSymbols:   map[string]*_topVar{},
-		Symbols:      map[string]*cmdutils.Var{},
-	}
+	//Given
+	v := makeIntDiagramVisitor()
 
+	//When
 	v.GenerateIntsView(
 		&Args{},
 		ViewParams{},
@@ -339,6 +299,44 @@ skinparam component {
 [b] as _1
 _0 --> _1 <<indirect>>
 [c] as _2
+_2 <|.. _1
+@enduml`, v.StringBuilder.String())
+}
+
+func TestGenerateIntsViewWithCustomAppfmt(t *testing.T) {
+	t.Parallel()
+
+	//Given
+	v := makeIntDiagramVisitorWithAppfmt("**%(appname)**")
+
+	//When
+	v.GenerateIntsView(
+		&Args{},
+		ViewParams{},
+		&IntsParam{
+			Integrations: []AppDependency{
+				{
+					Self:   AppElement{Name: "a", Endpoint: "epa"},
+					Target: AppElement{Name: "b", Endpoint: "epb"},
+				},
+			},
+			Apps: []string{"a", "b"},
+		},
+	)
+
+	//Then
+	assert.Equal(t, `@startuml
+hide stereotype
+scale max 16384 height
+skinparam component {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+[**a**] as _0
+[**b**] as _1
+_0 --> _1 <<indirect>>
+[**c**] as _2
 _2 <|.. _1
 @enduml`, v.StringBuilder.String())
 }
@@ -641,8 +639,8 @@ skinparam component {
   BorderColor Black
   ArrowColor Crimson
 }
-[] as _0
-[] as _1
+[a] as _0
+[b] as _1
 _0 --> _1 <<indirect>>
 @enduml`, result)
 }
@@ -690,8 +688,8 @@ func TestDrawSystemView(t *testing.T) {
 	v.DrawSystemView(*viewParams, params, nameMap)
 
 	//Then
-	assert.Equal(t, `[] as _1
-[] as _2
+	assert.Equal(t, `[a] as _1
+[b] as _2
 _1 --> _2 <<indirect>>
 `, v.StringBuilder.String())
 }
@@ -723,4 +721,61 @@ func TestStringInSlice(t *testing.T) {
 	s := []string{"a", "b"}
 
 	assert.True(t, StringInSlice("a", s))
+}
+
+// makeIntDiagramVisitor returns a populated IntsDiagramVisitor for testing diagram generation.
+// The project does not have an appfmt attribute specified.
+func makeIntDiagramVisitor() *IntsDiagramVisitor {
+	return makeIntDiagramVisitorWithAppfmt("")
+}
+
+// makeIntDiagramVisitor returns a populated IntsDiagramVisitor for testing diagram generation.
+// If provided, appfmt is set as the project's appfmt attribute.
+func makeIntDiagramVisitorWithAppfmt(appfmt string) *IntsDiagramVisitor {
+	var stringBuilder strings.Builder
+	v := &IntsDiagramVisitor{
+		StringBuilder: &stringBuilder,
+		Mod: &sysl.Module{
+			Apps: map[string]*sysl.Application{
+				"a": {
+					Name: &sysl.AppName{Part: []string{"a"}},
+					Endpoints: map[string]*sysl.Endpoint{
+						"epa": {
+							Attrs: map[string]*sysl.Attribute{
+								"test": nil,
+							},
+						},
+					},
+				},
+				"b": {
+					Name: &sysl.AppName{Part: []string{"b"}},
+					Endpoints: map[string]*sysl.Endpoint{
+						"epb": {
+							Attrs: map[string]*sysl.Attribute{
+								"test": nil,
+							},
+						},
+					},
+					Mixin2: []*sysl.Application{
+						{Name: &sysl.AppName{Part: []string{"c"}}},
+					},
+				},
+				"c": {
+					Name: &sysl.AppName{Part: []string{"c"}},
+				},
+				"project": {},
+			},
+		},
+		Project:      "project",
+		DrawableApps: map[string]struct{}{},
+		TopSymbols:   map[string]*_topVar{},
+		Symbols:      map[string]*cmdutils.Var{},
+	}
+
+	if appfmt != "" {
+		v.Mod.Apps["project"].Attrs = map[string]*sysl.Attribute{
+			"appfmt": {Attribute: &sysl.Attribute_S{S: "**%(appname)**"}},
+		}
+	}
+	return v
 }

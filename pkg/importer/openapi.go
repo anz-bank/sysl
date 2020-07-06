@@ -390,7 +390,7 @@ func (o *openapiv3) buildEndpoint(path string, item *openapi3.PathItem) []Method
 		}
 		typePrefix := convertToSyslSafe(cleanEndpointPath(path)) + "_"
 		for statusCode, resp := range op.Responses {
-			text := statusCode
+			text := "error"
 			if statusCode[0] == '2' {
 				text = "ok"
 			}
