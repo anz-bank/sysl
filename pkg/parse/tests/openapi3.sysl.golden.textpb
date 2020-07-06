@@ -179,22 +179,22 @@ apps: {
           source_context: {
             file: "tests/preference.yaml"
             start: {
-              line: 33
+              line: 30
               col: 4
             }
             end: {
-              line: 35
+              line: 32
             }
           }
         }
         source_context: {
           file: "tests/preference.yaml"
           start: {
-            line: 33
+            line: 30
             col: 4
           }
           end: {
-            line: 35
+            line: 32
           }
         }
       }
@@ -253,17 +253,7 @@ apps: {
           attr_defs: {
             key: "status"
             value: {
-              type_ref: {
-                context: {
-                  appname: {
-                    part: "preference"
-                  }
-                  path: "Preferences_obj"
-                }
-                ref: {
-                  path: "Preferences_obj_status"
-                }
-              }
+              primitive: STRING
               attrs: {
                 key: "json_tag"
                 value: {
@@ -315,23 +305,6 @@ apps: {
           }
           end: {
             line: 30
-            col: 4
-          }
-        }
-      }
-    }
-    types: {
-      key: "Preferences_obj_status"
-      value: {
-        primitive: STRING
-        source_context: {
-          file: "tests/preference.yaml"
-          start: {
-            line: 30
-            col: 4
-          }
-          end: {
-            line: 33
             col: 4
           }
         }

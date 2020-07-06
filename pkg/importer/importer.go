@@ -3,6 +3,8 @@ package importer
 import (
 	"fmt"
 
+	"github.com/spf13/afero"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -36,7 +38,7 @@ func Factory(filePath string, file []byte, logger *logrus.Logger) (Importer, err
 		return MakeOpenAPI2Importer(logger, "", filePath), nil
 	case OpenAPI3.Name:
 		logger.Debugln("Detected OpenAPI3")
-		return MakeOpenAPI3Importer(logger, "", filePath), nil
+		return NewOpenAPIV3Importer(logger, afero.NewOsFs()), nil
 	case XSD.Name:
 		logger.Debugln("Detected XSD")
 		return MakeXSDImporter(logger), nil

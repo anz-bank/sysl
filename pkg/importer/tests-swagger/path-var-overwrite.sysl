@@ -12,7 +12,7 @@ testapp "Sample API" [package="package_foo"]:
         | API description in Markdown.
 
     /users/{id<:int}:
-        GET (metadata <: _param_metadata [~header, ~required, name="metadata"]):
+        GET (metadata <: string [~header, ~required, name="metadata"]):
             | No description.
             return ok
 
@@ -23,6 +23,3 @@ testapp "Sample API" [package="package_foo"]:
 
     #---------------------------------------------------------------------------
     # definitions
-
-    !alias _param_metadata:
-        string

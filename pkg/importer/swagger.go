@@ -3,7 +3,10 @@ package importer
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strings"
+
+	"github.com/spf13/afero"
 
 	"github.com/ghodss/yaml"
 
@@ -14,42 +17,36 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func LoadSwaggerText(args OutputData, oas2spec string, logger *logrus.Logger) (out string, err error) {
-	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec))
-	if err != nil {
-		return "", err
-	}
-	importer := MakeOpenAPI3Importer(logger, basePath, "")
-	importer.WithAppName(args.AppName).WithPackage(args.Package)
-	importer.spec = oas3spec
-	return importer.Parse()
-}
-
 func MakeOpenAPI2Importer(logger *logrus.Logger, basePath string, filePath string) *OpenAPI2Importer {
-	return &OpenAPI2Importer{OpenAPI3Importer: &OpenAPI3Importer{
-		logger:            logger,
-		externalSpecs:     make(map[string]*OpenAPI3Importer),
-		types:             TypeList{},
-		intermediateTypes: TypeList{},
-		basePath:          basePath,
-		swaggerRoot:       filePath,
-	}}
+	return &OpenAPI2Importer{openapiv3: &openapiv3{
+		appName:  "",
+		pkg:      "",
+		basePath: basePath,
+		logger:   logger,
+		fs:       afero.NewOsFs(),
+		types:    TypeList{},
+	},
+		filepath: filePath}
 }
 
 type OpenAPI2Importer struct {
 	openAPI2Spec string
-	*OpenAPI3Importer
+	filepath     string
+	*openapiv3
 }
 
 func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
-	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec))
+	u, err := pathToURL(l.filepath)
+	if err != nil {
+		return "", err
+	}
+	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec), u, NewOpenAPILoader(l.logger, l.fs))
 	if err != nil {
 		return "", fmt.Errorf("error converting openapi 2:%w", err)
 	}
 	l.openAPI2Spec = oas2spec
 	l.basePath = basePath
-	l.spec = oas3spec
-	return l.Parse()
+	return l.convertSpec(oas3spec, basePath)
 }
 
 // Set the AppName of the imported app
@@ -65,7 +62,7 @@ func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
 }
 
 // convertToOpenAPI3 takes a swagger spec and converts it to openapi3
-func convertToOpenAPI3(data []byte) (*openapi3.Swagger, string, error) {
+func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader) (*openapi3.Swagger, string, error) {
 	var swagger2 openapi2.Swagger
 	jsondata, err := yaml.YAMLToJSON(data)
 	if err != nil {
@@ -80,6 +77,23 @@ func convertToOpenAPI3(data []byte) (*openapi3.Swagger, string, error) {
 		swagger2.Schemes = []string{"https"}
 	}
 	openapiv3, err := openapi2conv.ToV3Swagger(&swagger2)
+	if err != nil {
+		return nil, "", err
+	}
+	// openapi2conv doesnt handle external references correctly so to avoid that we need to serialise the converted
+	// v3 doc back to text and manually replace #/components/* references (easier to do it via text instead of walking
+	// the whole object tree again
+	if oa3text, err := json.Marshal(openapiv3); err == nil {
+		replacer := strings.NewReplacer(
+			"#/definitions/", "#/components/schemas/",
+			"#/responses/", "#/components/responses/",
+			"#/parameters/", "#/components/parameters/",
+		)
+		oa3replaced := replacer.Replace(string(oa3text))
+		_ = json.Unmarshal([]byte(oa3replaced), &openapiv3) //nolint: errcheck // we dont care about the error here
+	}
+
+	err = loader.ResolveRefsIn(openapiv3, uri)
 	if err != nil {
 		return nil, "", err
 	}

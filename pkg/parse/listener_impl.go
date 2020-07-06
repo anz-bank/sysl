@@ -3097,6 +3097,9 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 		type1.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 	if ctx.Annotation(0) != nil {
+		if type1.Attrs == nil {
+			type1.Attrs = map[string]*sysl.Attribute{}
+		}
 		s.pushScope(type1)
 	}
 	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)

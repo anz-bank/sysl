@@ -11,37 +11,40 @@ testapp "Unsafe Param Names" [package="package_foo"]:
     /contiguous_hyphens:
         GET ?testSample=string:
             | contiguous hyphens
-            return ok <: string
+            return ok <: unsafe
 
     /correct_name:
         GET ?correctTestSample=string:
             | correct param name
-            return ok <: string
+            return ok <: unsafe
 
     /hyphens_in_weird_locations:
         GET ?testSamPle=string:
             | hyphens in weird locations
-            return ok <: string
+            return ok <: unsafe
 
     /spaces_and_hyphens_mixes:
         GET ?teStsamPle=string:
             | mixes of spaces and hyphens
-            return ok <: string
+            return ok <: unsafe
 
     /with_a_hyphen:
         GET ?testSample=string:
             | with a hyphen
-            return ok <: string
+            return ok <: unsafe
 
     /with_a_space:
         GET ?testsample=string:
             | with a space
-            return ok <: string
+            return ok <: unsafe
 
     /with_multiple_spaces:
         GET ?testsample=string:
             | with multiple spaces
-            return ok <: string
+            return ok <: unsafe
 
     #---------------------------------------------------------------------------
     # definitions
+
+    !alias unsafe:
+        string

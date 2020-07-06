@@ -3,105 +3,150 @@ package importer
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
-const openapiv3DefinitionPrefix = "#/components/schemas/"
+type openapiv3 struct {
+	appName  string
+	pkg      string
+	basePath string // Used for Swagger2.0 files which have a basePath field
+	logger   *logrus.Logger
+	fs       afero.Fs
+	types    TypeList
 
-func MakeOpenAPI3Importer(logger *logrus.Logger, basePath string, filePath string) *OpenAPI3Importer {
-	return &OpenAPI3Importer{
-		logger:            logger,
-		externalSpecs:     make(map[string]*OpenAPI3Importer),
-		types:             TypeList{},
-		intermediateTypes: TypeList{},
-		basePath:          basePath,
-		swaggerRoot:       filePath,
-	}
+	nameStack []string
 }
 
-type OpenAPI3Importer struct {
-	appName       string
-	pkg           string
-	basePath      string // Used for Swagger2.0 files which have a basePath field
-	logger        *logrus.Logger
-	externalSpecs map[string]*OpenAPI3Importer
-	spec          *openapi3.Swagger
-	types         TypeList
-	// intermediateTypes is a temporary list which places the type is in parsing process still.
-	// It can help to support circular dependency, like type A has an array contains type A itself.
-	intermediateTypes TypeList
-	swaggerRoot       string
-	globalParams      Parameters
-}
-
-func (l *OpenAPI3Importer) Load(input string) (string, error) {
+func NewOpenAPILoader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoader {
 	loader := openapi3.NewSwaggerLoader()
 	loader.IsExternalRefsAllowed = true
-	url, err := url.Parse(l.swaggerRoot)
-	if err != nil {
-		return "", err
+	loader.LoadSwaggerFromURIFunc = func(
+		loader *openapi3.SwaggerLoader, url *url.URL) (swagger *openapi3.Swagger, err error) {
+		if url.Host == "" && url.Scheme == "" {
+			logger.Infof("Loading openapi ref: %s", url.String())
+			data, err := afero.ReadFile(fs, pathFromURL(url))
+			if err != nil {
+				return nil, err
+			}
+			if strings.Contains(string(data), "swagger:") {
+				swagger, _, err = convertToOpenAPI3(data, url, loader)
+			} else {
+				swagger, err = loader.LoadSwaggerFromDataWithPath(data, url)
+			}
+
+			if err != nil {
+				return nil, err
+			}
+			return swagger, loader.ResolveRefsIn(swagger, url)
+		}
+		return nil, fmt.Errorf("unable to load openapi URI: %s", url.String())
 	}
-	swagger, err := loader.LoadSwaggerFromDataWithPath([]byte(input), url)
-	if err != nil {
-		return "", fmt.Errorf("error loading openapi3 file:%w", err)
-	}
-	l.spec = swagger
-	return l.Parse()
+	return loader
 }
 
-func (l *OpenAPI3Importer) Parse() (string, error) {
-	l.convertTypes()
-	endpoints := l.convertEndpoints()
+func NewOpenAPIV3Importer(logger *logrus.Logger, fs afero.Fs) Importer {
+	return &openapiv3{
+		logger: logger,
+		fs:     fs,
+	}
+}
 
+func (o *openapiv3) WithAppName(appName string) Importer {
+	o.appName = appName
+	return o
+}
+
+func (o *openapiv3) WithPackage(packageName string) Importer {
+	o.pkg = packageName
+	return o
+}
+
+func (o *openapiv3) Load(file string) (string, error) {
+	loader := NewOpenAPILoader(o.logger, o.fs)
+	spec, err := loader.LoadSwaggerFromFile(file)
+	if err != nil {
+		spec, _ = loader.LoadSwaggerFromData([]byte(file)) // nolint: errcheck
+	}
+	return o.convertSpec(spec, "")
+}
+
+func (o *openapiv3) pushName(n string) func() {
+	o.nameStack = append(o.nameStack, n)
+	return func() {
+		o.popName()
+	}
+}
+func (o *openapiv3) popName() { o.nameStack = o.nameStack[:len(o.nameStack)-1] }
+
+func (o *openapiv3) convertSpec(spec *openapi3.Swagger, basepath string) (string, error) {
+	o.types = TypeList{}
+	for name, ref := range spec.Components.Schemas {
+		if _, found := o.types.Find(name); !found {
+			if ref.Value == nil {
+				o.types.Add(NewStringAlias(name))
+			} else {
+				o.types.Add(o.loadTypeSchema(name, ref.Value))
+			}
+		}
+	}
+
+	endpoints := make(map[string][]Endpoint, len(methodDisplayOrder))
+	for _, k := range methodDisplayOrder {
+		endpoints[k] = nil
+	}
+
+	for path, ep := range spec.Paths {
+		meps := o.buildEndpoint(path, ep)
+		for _, mep := range meps {
+			endpoints[mep.Method] = append(endpoints[mep.Method], mep.Endpoints...)
+		}
+	}
+	o.types.Sort()
+	meps := make([]MethodEndpoints, 0, len(methodDisplayOrder))
+	for _, k := range methodDisplayOrder {
+		me := MethodEndpoints{
+			Method:    k,
+			Endpoints: endpoints[k],
+		}
+		sort.Slice(me.Endpoints, func(i, j int) bool {
+			return strings.Compare(me.Endpoints[i].Path, me.Endpoints[j].Path) < 0
+		})
+		meps = append(meps, me)
+	}
 	result := &bytes.Buffer{}
-	w := newWriter(result, l.logger)
-	if err := w.Write(l.convertInfo(OutputData{
-		AppName: l.appName,
-		Package: l.pkg,
-	}, l.basePath), l.types, endpoints...); err != nil {
-		return "", err
-	}
-	return result.String(), nil
+	err := newWriter(result, o.logger).Write(o.buildSyslInfo(spec, o.basePath), o.types, meps...)
+
+	return result.String(), err
 }
 
-// Set the AppName of the imported app
-func (l *OpenAPI3Importer) WithAppName(appName string) Importer {
-	l.appName = appName
-	return l
-}
-
-// Set the package attribute of the imported app
-func (l *OpenAPI3Importer) WithPackage(pkg string) Importer {
-	l.pkg = pkg
-	return l
-}
-
-// basepath represents the Swagger basepath value.
-// This is a swagger only field that isn't relevant to openapi3
-func (l *OpenAPI3Importer) convertInfo(args OutputData, basepath string) SyslInfo {
+func (o *openapiv3) buildSyslInfo(spec *openapi3.Swagger, basepath string) SyslInfo {
 	info := SyslInfo{
-		OutputData:  args,
-		Title:       l.spec.Info.Title,
-		Description: l.spec.Info.Description,
+		OutputData: OutputData{
+			AppName: o.appName,
+			Package: o.pkg,
+		},
+		Title:       spec.Info.Title,
+		Description: spec.Info.Description,
 		OtherFields: []string{},
 	}
 	values := []string{
-		"version", l.spec.Info.Version,
-		"termsOfService", l.spec.Info.TermsOfService,
+		"version", spec.Info.Version,
+		"termsOfService", spec.Info.TermsOfService,
 		"basePath", basepath,
 	}
-	if l.spec.Info.License != nil {
-		values = append(values, "license", l.spec.Info.License.Name)
+	if spec.Info.License != nil {
+		values = append(values, "license", spec.Info.License.Name)
 	}
-	if len(l.spec.Servers) > 0 {
-		u, err := url.Parse(l.spec.Servers[0].URL)
+	if len(spec.Servers) > 0 {
+		u, err := url.Parse(spec.Servers[0].URL)
 		if err == nil {
 			values = append(values, "host", u.Hostname())
 		}
@@ -116,145 +161,7 @@ func (l *OpenAPI3Importer) convertInfo(args OutputData, basepath string) SyslInf
 	return info
 }
 
-func (l *OpenAPI3Importer) convertTypes() {
-	// First init the swagger -> sysl mappings
-	var swaggerToSyslMappings = map[string]string{
-		"boolean": "bool",
-		"date":    "date",
-	}
-	for swaggerName, syslName := range swaggerToSyslMappings {
-		l.types.Add(&ImportedBuiltInAlias{
-			name:   swaggerName,
-			Target: &SyslBuiltIn{syslName},
-		})
-	}
-	for name, schema := range l.spec.Components.Schemas {
-		if _, has := l.types.Find(name); !has {
-			if v := schema.Value; v != nil {
-				if v.Type == ObjectTypeName && len(v.Properties) == 0 {
-					continue // skip
-				}
-			}
-			_ = l.typeFromSchema(name, schema.Value)
-		}
-	}
-	l.types.Sort()
-}
-
-// handles importing of reference types.
-func (l *OpenAPI3Importer) typeFromRef(path string) Type {
-	// matches with external file remote reference
-	if isOpenAPIOrSwaggerExt(path) {
-		if t := l.typeFromRemoteRef(path); t != nil {
-			if _, recorded := l.types.Find(t.Name()); !recorded {
-				l.types.Add(t)
-				l.types.Sort()
-			}
-			return t
-		}
-	} else {
-		path = strings.TrimPrefix(path, openapiv3DefinitionPrefix)
-		if t, has := checkBuiltInTypes(path); has {
-			return t
-		}
-		if t, ok := l.types.Find(path); ok {
-			return t
-		}
-		// add following check in incompleted type to support circular dependency
-		if t, ok := l.intermediateTypes.Find(path); ok {
-			return t
-		}
-		if schema, has := l.spec.Components.Schemas[path]; has {
-			return l.typeFromSchema(path, schema.Value)
-		}
-	}
-
-	return nil
-}
-
-// OpenAPI specs can references type definitions in other files.
-func (l *OpenAPI3Importer) typeFromRemoteRef(remoteRef string) Type {
-	refPath, defPath := l.parseRef(remoteRef)
-	if externalLoader, fileLoaded := l.externalSpecs[refPath]; fileLoaded {
-		return externalLoader.typeFromRef(defPath)
-	}
-
-	l.loadExternalSchema(refPath)
-	return l.externalSpecs[refPath].typeFromRef(defPath)
-}
-
-// parseRef breaks a reference string into a referencepath and a definitionpath
-// It also converts swagger refs to openapi3 refs
-// Remote refs are of the format:
-//  #/components/schemas/Date
-//  ../resources/users.yaml
-// resources/users.yaml#/components/schemas/Date
-func (l *OpenAPI3Importer) parseRef(ref string) (refPath string, defPath string) {
-	refPath, defPath = splitRef(ref)
-	defPath = toOpenAPI3Ref(defPath)
-	refPath = filepath.Join(filepath.Dir(l.swaggerRoot), refPath)
-	return refPath, defPath
-}
-
-func splitRef(ref string) (string, string) {
-	cleaned := strings.Split(ref, "#")
-	if len(cleaned) != 2 {
-		return "", ""
-	}
-	return cleaned[0], "#" + cleaned[1]
-}
-
-func toOpenAPI3Ref(ref string) string {
-	if strings.HasPrefix(ref, "#/definitions/") {
-		ref = strings.Replace(ref, "#/definitions/", "#/components/schemas/", 1)
-	}
-	return ref
-}
-
-func (l *OpenAPI3Importer) loadExternalSchema(remoteRef string) {
-	l.externalSpecs[remoteRef] = MakeOpenAPI3Importer(l.logger, "", remoteRef)
-	l.externalSpecs[remoteRef].spec = l.externalSpecs[remoteRef].getExternalSpec(remoteRef)
-	l.externalSpecs[remoteRef].convertTypes()
-	// external refs are usually found during initEndpoints, this is to find all external refs
-	l.externalSpecs[remoteRef].convertEndpoints()
-}
-
-// Grabs openapi or swagger spec from given path
-func (l *OpenAPI3Importer) getExternalSpec(path string) *openapi3.Swagger {
-	var swagger *openapi3.Swagger
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		panic(err)
-	}
-	formats := []Format{OpenAPI3, Swagger}
-	format, err := GuessFileType(path, data, formats)
-	if err != nil {
-		panic(err)
-	}
-
-	switch format.Name {
-	case Swagger.Name:
-		swagger, _, err = convertToOpenAPI3(data)
-	case OpenAPI3.Name:
-		swagger, err = openapi3.NewSwaggerLoader().LoadSwaggerFromData(data)
-	}
-	if err != nil {
-		panic(err)
-	}
-	return swagger
-}
-
-func (l *OpenAPI3Importer) typeFromSchemaRef(name string, ref *openapi3.SchemaRef) Type {
-	if ref == nil {
-		return nil
-	}
-	if ref.Ref != "" {
-		if t := l.typeFromRef(ref.Ref); t != nil {
-			return t
-		}
-	}
-	return l.typeFromSchema(name, ref.Value)
-}
+const openapiv3DefinitionPrefix = "#/components/schemas/"
 
 func sortProperties(props FieldList) {
 	sort.SliceStable(props, func(i, j int) bool {
@@ -262,321 +169,320 @@ func sortProperties(props FieldList) {
 	})
 }
 
-func (l *OpenAPI3Importer) typeFromSchema(name string, schema *openapi3.Schema) Type {
-	if t, found := l.types.Find(name); found {
-		return t
+func attrsForArray(schema *openapi3.Schema) []string {
+	var attrs []string
+	for name, fn := range map[string]func() string{
+		"min": func() string { return fmt.Sprint(schema.MinItems) },
+		"max": func() string {
+			if schema.MaxItems != nil {
+				return fmt.Sprint(*schema.MaxItems)
+			}
+			return ""
+		},
+	} {
+		if val := fn(); val != "" {
+			attrs = append(attrs, fmt.Sprintf(`%s="%s"`, name, val))
+		}
 	}
+	return attrs
+}
+
+func attrsForString(schema *openapi3.Schema) []string {
+	var attrs []string
+	for name, fn := range map[string]func() string{
+		"min": func() string { return fmt.Sprint(schema.MinLength) },
+		"max": func() string {
+			if schema.MaxLength != nil {
+				return fmt.Sprint(*schema.MaxLength)
+			}
+			return ""
+		},
+		"regex": func() string { return schema.Pattern },
+	} {
+		if val := fn(); val != "" {
+			attrs = append(attrs, fmt.Sprintf(`%s="%s"`, name, val))
+		}
+	}
+	return attrs
+}
+
+func getAttrs(schema *openapi3.Schema) []string {
 	switch schema.Type {
-	case ObjectTypeName, "":
-		t := &StandardType{
-			name:       getSyslSafeEndpoint(name),
-			Properties: FieldList{},
-		}
-		l.intermediateTypes.Add(t)
-		for pname, pschema := range schema.Properties {
-			var fieldType Type
-			if pschema.Value != nil && pschema.Value.Type == ArrayTypeName {
-				if atype := l.typeFromRef(pschema.Value.Items.Ref); atype != nil {
-					fieldType = &Array{Items: atype}
-				} else if atype := l.typeFromRef(pschema.Value.Items.Value.Type); atype != nil {
-					fieldType = &Array{Items: atype}
-				} else if pschema.Value.Items.Value.Type == ObjectTypeName {
-					atype := l.typeFromSchema(name+"_"+getSyslSafeEndpoint(pname), pschema.Value.Items.Value)
-					fieldType = &Array{Items: atype}
-				}
-			}
-			if fieldType == nil {
-				fieldType = l.typeFromSchemaRef(getSyslSafeEndpoint(name)+"_"+getSyslSafeEndpoint(pname), pschema)
-			}
-			f := Field{
-				Name: pname,
-				Type: fieldType,
-			}
-			if !contains(pname, schema.Required) {
-				f.Optional = true
-			}
-			t.Properties = append(t.Properties, f)
-		}
-		sortProperties(t.Properties)
-		if len(t.Properties) == 0 {
-			return l.types.AddAndRet(NewStringAlias(name))
-		}
-		return l.types.AddAndRet(t)
 	case ArrayTypeName:
-		t := &Array{
-			name:  name,
-			Items: l.typeFromSchemaRef(name+"_obj", schema.Items),
-		}
-		if name != "" {
-			return l.types.AddAndRet(t)
-		}
-		return t
+		return attrsForArray(schema)
+	case ObjectTypeName:
+	case StringTypeName:
+		return attrsForString(schema)
+	case "integer", "int":
+	}
+	return nil
+}
+
+func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
+	if idx := strings.Index(ref.Ref, openapiv3DefinitionPrefix); idx >= 0 {
+		return getSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv3DefinitionPrefix))
+	}
+	switch ref.Value.Type {
+	case ArrayTypeName:
+		return typeNameFromSchemaRef(ref.Value.Items)
+	case ObjectTypeName, "":
+		return ObjectTypeName
+	case "boolean":
+		return "bool"
+	case StringTypeName, "integer", "number":
+		return mapSwaggerTypeAndFormatToType(ref.Value.Type, ref.Value.Format, logrus.StandardLogger())
 	default:
-		if len(schema.Enum) > 0 {
-			return l.types.AddAndRet(&Enum{name: name})
-		}
-		baseType := mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, l.logger)
-		if t, found := l.types.Find(baseType); found {
-			return t
-		}
-		if s, has := l.spec.Components.Schemas[schema.Type]; has {
-			return l.typeFromSchemaRef(schema.Type, s)
-		}
-
-		l.logger.Warnf("unknown schema.Type: %s", schema.Type)
-		return l.types.AddAndRet(NewStringAlias(name))
+		return getSyslSafeName(ref.Value.Type)
 	}
 }
 
-func (l *OpenAPI3Importer) convertEndpoints() []MethodEndpoints {
-	epMap := map[string][]Endpoint{}
-
-	l.initGlobalParams()
-
-	for path, item := range l.spec.Paths {
-		ops := map[string]*openapi3.Operation{
-			"GET":    item.Get,
-			"PUT":    item.Put,
-			"POST":   item.Post,
-			"DELETE": item.Delete,
-			"PATCH":  item.Patch,
-		}
-
-		params := l.buildParams(item.Parameters)
-
-		for method, op := range ops {
-			if op != nil {
-				epMap[method] = append(epMap[method], l.initEndpoint(path, op, params))
-			}
-		}
-	}
-
-	for key := range epMap {
-		key := key
-		sort.SliceStable(epMap[key], func(i, j int) bool {
-			return strings.Compare(epMap[key][i].Path, epMap[key][j].Path) < 0
-		})
-	}
-
-	var result []MethodEndpoints
-	for _, method := range methodDisplayOrder {
-		if eps, ok := epMap[method]; ok {
-			syslSafeEps := make([]Endpoint, 0, len(eps))
-			for _, e := range eps {
-				syslSafeEps = append(syslSafeEps, Endpoint{
-					Path:        getSyslSafeEndpoint(e.Path),
-					Description: e.Description,
-					Params:      e.Params,
-					Responses:   e.Responses,
-				})
-			}
-			result = append(result, MethodEndpoints{
-				Method:    method,
-				Endpoints: syslSafeEps,
-			})
-		}
-	}
-	return result
+func nameOnlyType(name string) Type {
+	return &SyslBuiltIn{name: name}
 }
 
-func isSchemaDefinedObject(ref *openapi3.SchemaRef) bool {
-	if ref == nil {
-		return false
+func (o *openapiv3) typeAliasForSchema(ref *openapi3.SchemaRef) Type {
+	name := typeNameFromSchemaRef(ref)
+	t, found := o.types.Find(name)
+	if !found {
+		t = nameOnlyType(name)
 	}
-	if val := ref.Value; val != nil && ref.Ref == "" {
-		switch val.Type {
-		case ObjectTypeName:
-			return len(val.Properties) > 0
-		case ArrayTypeName:
-			return val.Items != nil
-		case StringTypeName:
-			return val.Format != ""
-		}
+	if name == ObjectTypeName {
+		t = nameOnlyType(strings.Join(o.nameStack, "_"))
 	}
-	return true
+
+	if _, ok := t.(*Array); !ok && ref.Value.Type == "array" {
+		return &Array{Items: t}
+	}
+	return t
 }
 
-func (l *OpenAPI3Importer) initEndpoint(path string, op *openapi3.Operation, params Parameters) Endpoint {
-	var responses []Response
-	typePrefix := strings.NewReplacer(
-		"/", "_",
-		"{", "_",
-		"}", "_",
-		"-", "_").Replace(path) + "_"
-	for statusCode, resp := range op.Responses {
-		text := "error"
-		if statusCode[0] == '2' {
-			text = "ok"
+func makeSizeSpec(min uint64, max *uint64) *sizeSpec {
+	switch {
+	case min > 0 && max != nil:
+		return &sizeSpec{
+			Min:     int(min),
+			Max:     int(*max),
+			MaxType: MaxSpecified,
 		}
-		respType := &StandardType{
-			name:       typePrefix + text,
-			Properties: FieldList{},
+	case min > 0:
+		return &sizeSpec{
+			Min:     int(min),
+			MaxType: OpenEnded,
 		}
-		respVal := l.findResponse(resp)
-		for mediaType, val := range respVal.Content {
-			var t Type
-			// try to not generate "EXTERNAL_" object types and use string instead
-			if isSchemaDefinedObject(val.Schema) {
-				t = l.typeFromSchemaRef("", val.Schema)
-			} else {
-				t = &Alias{name: typePrefix + statusCode, Target: StringAlias}
-				l.types.Add(t)
-			}
-			f := Field{
-				Name:       t.Name(),
-				Attributes: []string{fmt.Sprintf("mediatype=\"%s\"", mediaType)},
-				Type:       t,
-			}
-			respType.Properties = append(respType.Properties, f)
+	}
+	return nil
+}
+
+func (o *openapiv3) buildField(name string, prop *openapi3.SchemaRef) Field {
+	f := Field{Name: name}
+	typeName := typeNameFromSchemaRef(prop)
+	defer o.pushName(name)()
+	f.Type = o.typeAliasForSchema(prop)
+	isArray := prop.Value.Type == ArrayTypeName
+	if isArray {
+		f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
+	}
+	if typeName == ObjectTypeName {
+		if isArray {
+			prop = prop.Value.Items
 		}
-		for name, header := range respVal.Headers {
-			f := Field{
-				Name:       name,
-				Attributes: []string{"~header"},
-				Type:       l.typeFromSchemaRef("", header.Value.Schema),
-			}
-			if f.Type == nil {
-				f.Type = StringAlias
-			}
-			respType.Properties = append(respType.Properties, f)
+		t := o.loadTypeSchema(strings.Join(o.nameStack, "_"), prop.Value)
+		o.types.Add(t)
+		if isArray && prop.Ref == "" {
+			f.Type = &Array{Items: t}
+		} else {
+			f.Type = t
+		}
+	} else if typeName == StringTypeName {
+		f.SizeSpec = makeSizeSpec(prop.Value.MinLength, prop.Value.MaxLength)
+		f.Attributes = attrsForStrings(prop.Value)
+	}
+	return f
+}
+
+func attrsForStrings(schema *openapi3.Schema) []string {
+	var attrs []string
+	if r := schema.Pattern; r != "" {
+		attrs = append(attrs, fmt.Sprintf(`regex="%s"`, r))
+	}
+	if e := schema.Enum; len(e) != 0 && false { // remove the `&& false` when enum_values are added
+		var vals []string
+		for _, opt := range e {
+			vals = append(vals, fmt.Sprintf(`"%s"`, opt))
+		}
+		sort.Strings(vals)
+		attrs = append(attrs, fmt.Sprintf(`enum_values=[%s]`, strings.Join(vals, ", ")))
+	}
+	return attrs
+}
+
+func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
+	name = getSyslSafeName(name)
+	defer o.pushName(name)()
+	switch schema.Type {
+	case "array":
+		var items Type
+		if childName := typeNameFromSchemaRef(schema.Items); childName == ObjectTypeName {
+			defer o.pushName("obj")()
+			items = o.loadTypeSchema(name+"_obj", schema.Items.Value)
+			o.types.Add(items)
+		} else {
+			items = o.typeAliasForSchema(schema.Items)
+		}
+		return &Array{name: name, Items: items, Attrs: getAttrs(schema)}
+	case ObjectTypeName, "":
+		obj := &StandardType{
+			name:       name,
+			Properties: nil,
+			Attributes: getAttrs(schema),
 		}
 
-		r := Response{Text: text}
-		if len(respType.Properties) > 0 {
-			if len(respType.Properties) == 1 && respType.Properties[0].Attributes[0] != "~header" {
-				r.Type = respType.Properties[0].Type
-			} else {
-				sortProperties(respType.Properties)
-				l.types.Add(respType)
-				r.Type = respType
-			}
+		for fname, prop := range schema.Properties {
+			f := o.buildField(fname, prop)
+			f.Optional = !contains(fname, schema.Required)
+			obj.Properties = append(obj.Properties, f)
 		}
-		responses = append(responses, r)
+		if len(obj.Properties) == 0 {
+			return NewStringAlias(name)
+		}
+		sortProperties(obj.Properties)
+		return obj
+	default:
+		if schema.Type == "string" && schema.Enum != nil {
+			return &Enum{name: name, Attrs: attrsForStrings(schema)}
+		}
+		if t, ok := checkBuiltInTypes(mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, o.logger)); ok {
+			return &Alias{name: name, Target: t}
+		}
+		o.logger.Warnf("unknown scheme type: %s", schema.Type)
+		return NewStringAlias(name)
+	}
+}
+
+func (o *openapiv3) buildEndpoint(path string, item *openapi3.PathItem) []MethodEndpoints {
+	var res []MethodEndpoints
+	ops := map[string]*openapi3.Operation{
+		"GET":    item.Get,
+		"PUT":    item.Put,
+		"POST":   item.Post,
+		"DELETE": item.Delete,
+		"PATCH":  item.Patch,
 	}
 
-	res := Endpoint{
-		Path:        path,
-		Description: op.Description,
-		Responses:   responses,
-		Params:      params.Extend(l.buildParams(op.Parameters)),
-	}
-
-	if op.RequestBody != nil {
-		for mediaType, content := range op.RequestBody.Value.Content {
-			t := l.typeFromSchemaRef("", content.Schema)
-			if _, ok := t.(*SyslBuiltIn); ok && content.Schema != nil && content.Schema.Ref != "" {
-				parts := strings.Split(content.Schema.Ref, "/")
-				t = l.types.AddAndRet(&Alias{name: parts[len(parts)-1], Target: t})
-			} else if _, ok := t.(*Array); ok {
-				// Cant have a sequence/set in the sysl params, so convert to a type alias
-				// try to figure out the name of the param
-				if val := content.Schema.Value; val != nil && val.Type == "array" && val.Items.Ref != "" {
-					name := val.Items.Ref[strings.LastIndex(val.Items.Ref, "/")+1:]
-					t = l.types.AddAndRet(&Alias{name: name, Target: t})
+	commonParams := o.buildParams(item.Parameters)
+	for method, op := range ops {
+		if op == nil {
+			continue
+		}
+		me := MethodEndpoints{Method: method}
+		ep := Endpoint{
+			Path:        getSyslSafeName(path),
+			Description: op.Description,
+			Params:      commonParams.Extend(o.buildParams(op.Parameters)),
+			Responses:   nil,
+		}
+		if req := op.RequestBody; req != nil {
+			for mediaType, obj := range req.Value.Content {
+				param := Param{In: "body"}
+				param.Field = o.fieldForMediaType(mediaType, obj.Schema, "Request")
+				ep.Params.Add(param)
+			}
+		}
+		typePrefix := convertToSyslSafe(cleanEndpointPath(path)) + "_"
+		for statusCode, resp := range op.Responses {
+			text := "error"
+			if statusCode[0] == '2' {
+				text = "ok"
+			}
+			respType := &StandardType{
+				name:       typePrefix + text,
+				Properties: FieldList{},
+			}
+			for mediaType, val := range resp.Value.Content {
+				f := o.fieldForMediaType(mediaType, val.Schema, "")
+				respType.Properties = append(respType.Properties, f)
+			}
+			for name := range resp.Value.Headers {
+				f := Field{
+					Name:       name,
+					Attributes: []string{"~header"},
+				}
+				if f.Type == nil {
+					f.Type = StringAlias
+				}
+				respType.Properties = append(respType.Properties, f)
+			}
+			r := Response{Text: text}
+			if len(respType.Properties) > 0 {
+				if len(respType.Properties) == 1 && respType.Properties[0].Attributes[0] != "~header" {
+					r.Type = respType.Properties[0].Type
+				} else {
+					sortProperties(respType.Properties)
+					o.types.Add(respType)
+					r.Type = respType
 				}
 			}
-			p := Param{
-				Field: Field{
-					Name:       t.Name() + "Request",
-					Type:       t,
-					Optional:   !op.RequestBody.Value.Required,
-					Attributes: []string{fmt.Sprintf("mediatype=\"%s\"", mediaType)},
-					SizeSpec:   nil,
-				},
-				In: "body",
-			}
-			res.Params.Add(p)
+			ep.Responses = append(ep.Responses, r)
 		}
+
+		me.Endpoints = append(me.Endpoints, ep)
+		res = append(res, me)
 	}
 	return res
 }
 
-func (l *OpenAPI3Importer) initGlobalParams() {
-	l.globalParams = Parameters{
-		items:       map[string]Param{},
-		insertOrder: []string{},
-	}
-	for name, param := range l.spec.Components.Parameters {
-		l.globalParams.items[name] = l.buildParam(param.Value)
-		l.globalParams.insertOrder = append(l.globalParams.insertOrder, name)
-	}
-}
-
-func (l *OpenAPI3Importer) findResponse(ref *openapi3.ResponseRef) *openapi3.Response {
-	if ref.Value != nil {
-		return ref.Value
-	}
-	refName := ref.Ref[strings.LastIndex(ref.Ref, "/"):]
-	if ref, ok := l.spec.Components.Responses[refName]; ok {
-		return l.findResponse(ref)
-	}
-	return &openapi3.Response{}
-}
-
-func (l *OpenAPI3Importer) buildParams(params openapi3.Parameters) Parameters {
-	out := Parameters{}
-	for _, param := range params {
-		var paramType Param
-		if param.Ref != "" {
-			paramType = l.globalParams.items[strings.TrimPrefix(param.Ref, "#/components/parameters/")]
-		} else {
-			paramType = l.buildParam(param.Value)
+func (o *openapiv3) buildParams(params openapi3.Parameters) Parameters {
+	var out Parameters
+	for _, item := range params {
+		name := item.Value.Name
+		if item.Value.In == "query" {
+			name = convertToSyslSafe(name)
 		}
-
-		// Cant have a sequence/set in the sysl params, so convert to a type alias
-		// try to figure out the name of the param
-		if a, ok := paramType.Type.(*Array); ok {
-			paramType.Type = &Alias{Target: a, name: a.Name()}
+		p := Param{
+			Field: o.buildField(name, item.Value.Schema),
+			In:    item.Value.In,
 		}
-
-		out.Add(paramType)
+		// Avoid putting sequences into the params
+		if a, ok := p.Field.Type.(*Array); ok {
+			p.Field.Type = o.types.AddAndRet(&Alias{name: item.Value.Name, Target: a})
+		}
+		p.Optional = !item.Value.Required
+		out.Add(p)
 	}
 	return out
 }
 
-func (l *OpenAPI3Importer) buildParam(p *openapi3.Parameter) Param {
-	name := p.Name
-	if hasToBeSyslSafe(p.In) {
-		name = convertToSyslSafe(name)
+func (o *openapiv3) fieldForMediaType(mediatype string, schema *openapi3.SchemaRef, typeSuffix string) Field {
+	tname := typeNameFromSchemaRef(schema)
+	field := o.buildField(tname+typeSuffix, schema)
+	if _, found := o.types.Find(tname); !found {
+		o.types.Add(o.loadTypeSchema(tname, schema.Value))
 	}
-	t := l.typeFromSchemaRef(fmt.Sprintf("_param_%s", convertToSyslSafe(p.Name)), p.Schema)
-	return Param{
-		Field: Field{
-			Name:       name,
-			Type:       t,
-			Optional:   !p.Required,
-			Attributes: nil,
-			SizeSpec:   nil,
-		},
-		In: p.In,
+	if a, ok := field.Type.(*Array); ok && typeSuffix == "Request" {
+		field.Type = o.types.AddAndRet(&Alias{name: field.Name, Target: a})
 	}
+	if mediatype != "" {
+		field.Attributes = append(field.Attributes, fmt.Sprintf(`mediatype="%s"`, mediatype))
+	}
+	return field
 }
 
-func hasToBeSyslSafe(in string) bool {
-	return strings.ToLower(in) == "query"
-}
-
-func convertToSyslSafe(name string) string {
-	if !strings.ContainsAny(name, "- ") {
-		return name
-	}
-
-	syslSafe := strings.Builder{}
-	toUppercase := false
-	for i := 0; i < len(name); i++ {
-		switch name[i] {
-		case '-':
-			toUppercase = true
-		case ' ':
-			continue
-		default:
-			if toUppercase {
-				syslSafe.WriteString(strings.ToUpper(string(name[i])))
-				toUppercase = false
-			} else {
-				syslSafe.WriteByte(name[i])
-			}
+func pathToURL(filename string) (*url.URL, error) {
+	if runtime.GOOS == "windows" {
+		// Windows pathing doesnt work well with the openapi3 package, so we need to fudge the URL for refs to work
+		u, err := url.Parse("file:///" + filepath.ToSlash(filename))
+		if err != nil {
+			return nil, err
 		}
+		u.Scheme = ""
+		return u, nil
 	}
-	return syslSafe.String()
+	return url.Parse(filename)
+}
+
+func pathFromURL(u *url.URL) string {
+	if runtime.GOOS == "windows" {
+		return filepath.FromSlash(u.Path[1:])
+	}
+	return u.Path
 }
