@@ -1,2525 +1,4679 @@
-apps: <
+apps: {
   key: "PetShopApi"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "PetShopApi"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "io.sysl.demo.petshop.api"
-      >
-    >
-    endpoints: <
+      }
+    }
+    endpoints: {
       key: "GET /petshop"
-      value: <
+      value: {
         name: "GET /petshop"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          ret: <
+              }
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "PetShop"
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/petshop"
-        >
-      >
-    >
-    types: <
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 39
+            col: 8
+          }
+          end: {
+            line: 42
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "Breed"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "avgLifespan"
-            value: <
+            value: {
               primitive: DECIMAL
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 56
                   col: 23
-                >
-                end: <
+                }
+                end: {
                   line: 56
                   col: 30
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "index"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "patterns"
-                value: <
-                  a: <
-                    elt: <
+                value: {
+                  a: {
+                    elt: {
                       s: "xml_attribute"
-                    >
-                  >
-                >
-              >
-              source_context: <
+                    }
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 57
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 57
                   col: 36
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "name"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 53
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 53
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "pets"
-            value: <
-              set: <
-                type_ref: <
-                  context: <
-                    appname: <
+            value: {
+              set: {
+                type_ref: {
+                  context: {
+                    appname: {
                       part: "PetShopApi"
-                    >
+                    }
                     path: "Breed"
-                  >
-                  ref: <
+                  }
+                  ref: {
                     path: "Pet"
-                  >
-                >
-                source_context: <
+                  }
+                }
+                source_context: {
                   file: "tests/petshop.sysl"
-                  start: <
+                  start: {
                     line: 55
                     col: 16
-                  >
-                  end: <
+                  }
+                  end: {
                     line: 55
                     col: 23
-                  >
-                >
-              >
-              source_context: <
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 55
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 55
                   col: 23
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "species"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 54
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 54
                   col: 25
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 52
+            col: 4
+          }
+          end: {
+            line: 59
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "Employee"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "dob"
-            value: <
+            value: {
               primitive: DATE
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 49
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 49
                   col: 19
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "index"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "patterns"
-                value: <
-                  a: <
-                    elt: <
+                value: {
+                  a: {
+                    elt: {
                       s: "xml_attribute"
-                    >
-                  >
-                >
-              >
-              source_context: <
+                    }
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 50
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 50
                   col: 36
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "name"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 48
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 48
                   col: 22
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 47
+            col: 4
+          }
+          end: {
+            line: 52
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "Pet"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "dob"
-            value: <
+            value: {
               primitive: DATE
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 61
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 61
                   col: 19
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "legRank"
-            value: <
+            value: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 63
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 63
                   col: 19
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "name"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 60
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 60
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "numLegs"
-            value: <
+            value: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 62
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 62
                   col: 22
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 59
+            col: 4
+          }
+          end: {
+            line: 66
+            col: 17
+          }
+        }
+      }
+    }
+    types: {
       key: "PetShop"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "breeds"
-            value: <
-              set: <
-                type_ref: <
-                  context: <
-                    appname: <
+            value: {
+              set: {
+                type_ref: {
+                  context: {
+                    appname: {
                       part: "PetShopApi"
-                    >
+                    }
                     path: "PetShop"
-                  >
-                  ref: <
+                  }
+                  ref: {
                     path: "Breed"
-                  >
-                >
-                source_context: <
+                  }
+                }
+                source_context: {
                   file: "tests/petshop.sysl"
-                  start: <
+                  start: {
                     line: 44
                     col: 18
-                  >
-                  end: <
+                  }
+                  end: {
                     line: 44
                     col: 25
-                  >
-                >
-              >
-              source_context: <
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 44
                   col: 18
-                >
-                end: <
+                }
+                end: {
                   line: 44
                   col: 25
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "employees"
-            value: <
-              set: <
-                type_ref: <
-                  context: <
-                    appname: <
+            value: {
+              set: {
+                type_ref: {
+                  context: {
+                    appname: {
                       part: "PetShopApi"
-                    >
+                    }
                     path: "PetShop"
-                  >
-                  ref: <
+                  }
+                  ref: {
                     path: "Employee"
-                  >
-                >
-                source_context: <
+                  }
+                }
+                source_context: {
                   file: "tests/petshop.sysl"
-                  start: <
+                  start: {
                     line: 43
                     col: 21
-                  >
-                  end: <
+                  }
+                  end: {
                     line: 43
                     col: 28
-                  >
-                >
-              >
-              source_context: <
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 43
                   col: 21
-                >
-                end: <
+                }
+                end: {
                   line: 43
                   col: 28
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "numLegs"
-            value: <
+            value: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 45
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 45
                   col: 22
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 42
+            col: 4
+          }
+          end: {
+            line: 47
+            col: 4
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/petshop.sysl"
+      start: {
+        line: 37
+        col: 1
+      }
+      end: {
+        line: 37
+        col: 46
+      }
+    }
+  }
+}
+apps: {
   key: "PetShopApiToModel"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "PetShopApiToModel"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "io.sysl.demo.petshop.views"
-      >
-    >
-    types: <
+      }
+    }
+    types: {
       key: "AnonType_0__"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "breed"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "PetShopApiToModel"
-                  >
+                  }
                   path: "AnonType_0__"
-                >
-                ref: <
-                  appname: <
+                }
+                ref: {
+                  appname: {
                     part: "PetShopModel"
-                  >
+                  }
                   path: "Breed"
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "pets"
-            value: <
-              set: <
-                type_ref: <
-                  context: <
-                    appname: <
+            value: {
+              set: {
+                type_ref: {
+                  context: {
+                    appname: {
                       part: "PetShopApiToModel"
-                    >
+                    }
                     path: "AnonType_0__"
-                  >
-                  ref: <
-                    appname: <
+                  }
+                  ref: {
+                    appname: {
                       part: "PetShopModel"
-                    >
+                    }
                     path: "Pet"
-                  >
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    views: {
       key: "apiToModel"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "petshop"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "PetShopApi"
-                >
+                }
                 path: "PetShop"
-              >
-            >
-          >
-        >
-        ret_type: <
-          type_ref: <
-            context: <
-              appname: <
+              }
+            }
+          }
+        }
+        ret_type: {
+          type_ref: {
+            context: {
+              appname: {
                 part: "PetShopApiToModel"
-              >
-            >
-            ref: <
-              appname: <
+              }
+            }
+            ref: {
+              appname: {
                 part: "PetShopModel"
-              >
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+              }
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "petshop"
-            >
+              source_context: {
+                file: "tests/petshop.sysl"
+                start: {
+                  line: 126
+                  col: 8
+                }
+                end: {
+                  line: 126
+                  col: 8
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              let: <
+            stmt: {
+              let: {
                 name: "_breedsAndPets"
-                expr: <
-                  transform: <
-                    arg: <
-                      get_attr: <
-                        arg: <
+                expr: {
+                  transform: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 127
+                              col: 33
+                            }
+                            end: {
+                              line: 127
+                              col: 34
+                            }
+                          }
+                        }
                         attr: "breeds"
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 127
+                          col: 33
+                        }
+                        end: {
+                          line: 127
+                          col: 34
+                        }
+                      }
+                    }
                     scopevar: "."
-                    stmt: <
-                      let: <
+                    stmt: {
+                      let: {
                         name: "breedId"
-                        expr: <
-                          call: <
+                        expr: {
+                          call: {
                             func: "autoinc"
-                          >
-                        >
-                      >
-                    >
-                    stmt: <
-                      assign: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 128
+                              col: 16
+                            }
+                            end: {
+                              line: 128
+                              col: 38
+                            }
+                            text: "let breedId = autoinc()"
+                          }
+                        }
+                      }
+                    }
+                    stmt: {
+                      assign: {
                         name: "breed"
-                        expr: <
-                          transform: <
-                            arg: <
+                        expr: {
+                          transform: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 130
+                                  col: 24
+                                }
+                                end: {
+                                  line: 134
+                                  col: 17
+                                }
+                              }
+                            }
                             scopevar: "."
-                            stmt: <
-                              assign: <
+                            stmt: {
+                              assign: {
                                 name: "breedId"
-                                expr: <
+                                expr: {
                                   name: "breedId"
-                                >
-                              >
-                            >
-                            stmt: <
-                              assign: <
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 131
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 131
+                                      col: 30
+                                    }
+                                    text: "breedId = breedId"
+                                  }
+                                }
+                              }
+                            }
+                            stmt: {
+                              assign: {
                                 name: "species"
-                                expr: <
-                                  get_attr: <
-                                    arg: <
+                                expr: {
+                                  get_attr: {
+                                    arg: {
                                       name: "."
-                                    >
+                                      source_context: {
+                                        file: "tests/petshop.sysl"
+                                        start: {
+                                          line: 132
+                                          col: 30
+                                        }
+                                        end: {
+                                          line: 132
+                                          col: 31
+                                        }
+                                      }
+                                    }
                                     attr: "species"
-                                  >
-                                >
-                              >
-                            >
-                            stmt: <
-                              assign: <
+                                  }
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 132
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 132
+                                      col: 31
+                                    }
+                                    text: "species = .species"
+                                  }
+                                }
+                              }
+                            }
+                            stmt: {
+                              assign: {
                                 name: "breedName"
-                                expr: <
-                                  get_attr: <
-                                    arg: <
+                                expr: {
+                                  get_attr: {
+                                    arg: {
                                       name: "."
-                                    >
+                                      source_context: {
+                                        file: "tests/petshop.sysl"
+                                        start: {
+                                          line: 133
+                                          col: 32
+                                        }
+                                        end: {
+                                          line: 133
+                                          col: 33
+                                        }
+                                      }
+                                    }
                                     attr: "name"
-                                  >
-                                >
-                              >
-                            >
-                          >
-                          type: <
-                            type_ref: <
-                              context: <
-                                appname: <
+                                  }
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 133
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 133
+                                      col: 33
+                                    }
+                                    text: "breedName = .name"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            type_ref: {
+                              context: {
+                                appname: {
                                   part: "PetShopApiToModel"
-                                >
-                              >
-                              ref: <
-                                appname: <
+                                }
+                              }
+                              ref: {
+                                appname: {
                                   part: "PetShopModel"
-                                >
+                                }
                                 path: "Breed"
-                              >
-                            >
-                          >
-                        >
-                      >
-                    >
-                    stmt: <
-                      assign: <
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 130
+                              col: 16
+                            }
+                            end: {
+                              line: 134
+                              col: 17
+                            }
+                            text: "breed = -> <PetShopModel.Breed>(:\n                    breedId = breedId\n                    species = .species\n                    breedName = .name\n                )\n"
+                          }
+                        }
+                      }
+                    }
+                    stmt: {
+                      assign: {
                         name: "pets"
-                        expr: <
-                          transform: <
-                            arg: <
-                              get_attr: <
-                                arg: <
+                        expr: {
+                          transform: {
+                            arg: {
+                              get_attr: {
+                                arg: {
                                   name: "."
-                                >
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 136
+                                      col: 23
+                                    }
+                                    end: {
+                                      line: 136
+                                      col: 24
+                                    }
+                                  }
+                                }
                                 attr: "pets"
-                              >
-                            >
+                              }
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 136
+                                  col: 23
+                                }
+                                end: {
+                                  line: 136
+                                  col: 24
+                                }
+                              }
+                            }
                             scopevar: "."
-                            stmt: <
-                              assign: <
+                            stmt: {
+                              assign: {
                                 name: "petId"
-                                expr: <
-                                  call: <
+                                expr: {
+                                  call: {
                                     func: "autoinc"
-                                  >
-                                >
-                              >
-                            >
-                            stmt: <
-                              assign: <
+                                  }
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 137
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 137
+                                      col: 36
+                                    }
+                                    text: "petId = autoinc()"
+                                  }
+                                }
+                              }
+                            }
+                            stmt: {
+                              assign: {
                                 name: "breedId"
-                                expr: <
+                                expr: {
                                   name: "breedId"
-                                >
-                              >
-                            >
-                            stmt: <
-                              assign: <
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 138
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 138
+                                      col: 30
+                                    }
+                                    text: "breedId = breedId"
+                                  }
+                                }
+                              }
+                            }
+                            stmt: {
+                              assign: {
                                 name: "name"
-                                expr: <
-                                  get_attr: <
-                                    arg: <
+                                expr: {
+                                  get_attr: {
+                                    arg: {
                                       name: "."
-                                    >
+                                      source_context: {
+                                        file: "tests/petshop.sysl"
+                                        start: {
+                                          line: 139
+                                          col: 20
+                                        }
+                                        end: {
+                                          line: 139
+                                          col: 20
+                                        }
+                                      }
+                                    }
                                     attr: "name"
-                                  >
-                                >
-                              >
-                            >
-                            stmt: <
-                              assign: <
+                                  }
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 139
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 139
+                                      col: 20
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                            stmt: {
+                              assign: {
                                 name: "dob"
-                                expr: <
-                                  get_attr: <
-                                    arg: <
+                                expr: {
+                                  get_attr: {
+                                    arg: {
                                       name: "."
-                                    >
+                                      source_context: {
+                                        file: "tests/petshop.sysl"
+                                        start: {
+                                          line: 140
+                                          col: 20
+                                        }
+                                        end: {
+                                          line: 140
+                                          col: 20
+                                        }
+                                      }
+                                    }
                                     attr: "dob"
-                                  >
-                                >
-                              >
-                            >
-                          >
-                          type: <
-                            set: <
-                              type_ref: <
-                                context: <
-                                  appname: <
+                                  }
+                                  source_context: {
+                                    file: "tests/petshop.sysl"
+                                    start: {
+                                      line: 140
+                                      col: 20
+                                    }
+                                    end: {
+                                      line: 140
+                                      col: 20
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            set: {
+                              type_ref: {
+                                context: {
+                                  appname: {
                                     part: "PetShopApiToModel"
-                                  >
-                                >
-                                ref: <
-                                  appname: <
+                                  }
+                                }
+                                ref: {
+                                  appname: {
                                     part: "PetShopModel"
-                                  >
+                                  }
                                   path: "Pet"
-                                >
-                              >
-                            >
-                          >
-                        >
-                      >
-                    >
-                  >
-                  type: <
-                    set: <
-                      type_ref: <
-                        context: <
-                          appname: <
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 136
+                              col: 16
+                            }
+                            end: {
+                              line: 141
+                              col: 17
+                            }
+                            text: "pets = .pets -> <set of PetShopModel.Pet>(:\n                    petId = autoinc()\n                    breedId = breedId\n                    .name\n                    .dob\n                )\n"
+                          }
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    set: {
+                      type_ref: {
+                        context: {
+                          appname: {
                             part: "PetShopApiToModel"
-                          >
-                        >
-                        ref: <
-                          appname: <
+                          }
+                        }
+                        ref: {
+                          appname: {
                             part: "PetShopApiToModel"
-                          >
+                          }
                           path: "AnonType_0__"
-                        >
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 127
+                      col: 12
+                    }
+                    end: {
+                      line: 142
+                      col: 13
+                    }
+                    text: "let _breedsAndPets = .breeds -> <set of>(:\n                let breedId = autoinc()\n\n                breed = -> <PetShopModel.Breed>(:\n                    breedId = breedId\n                    species = .species\n                    breedName = .name\n                )\n\n                pets = .pets -> <set of PetShopModel.Pet>(:\n                    petId = autoinc()\n                    breedId = breedId\n                    .name\n                    .dob\n                )\n            )\n"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "breedsAndPets"
-                expr: <
-                  relexpr: <
+                expr: {
+                  relexpr: {
                     op: SNAPSHOT
-                    target: <
+                    target: {
                       name: "_breedsAndPets"
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 144
+                          col: 32
+                        }
+                        end: {
+                          line: 144
+                          col: 32
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 144
+                      col: 12
+                    }
+                    end: {
+                      line: 144
+                      col: 47
+                    }
+                    text: "let breedsAndPets = _breedsAndPets snapshot"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "minId1"
-                expr: <
-                  relexpr: <
+                expr: {
+                  relexpr: {
                     op: MAX
-                    target: <
+                    target: {
                       name: "breedsAndPets"
-                    >
-                    arg: <
-                      get_attr: <
-                        arg: <
-                          get_attr: <
-                            arg: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 146
+                          col: 25
+                        }
+                        end: {
+                          line: 146
+                          col: 25
+                        }
+                      }
+                    }
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 146
+                                  col: 43
+                                }
+                                end: {
+                                  line: 146
+                                  col: 44
+                                }
+                              }
+                            }
                             attr: "breed"
-                          >
-                        >
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 146
+                              col: 43
+                            }
+                            end: {
+                              line: 146
+                              col: 44
+                            }
+                          }
+                        }
                         attr: "breedId"
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 146
+                          col: 49
+                        }
+                        end: {
+                          line: 146
+                          col: 50
+                        }
+                      }
+                    }
                     scopevar: "."
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 146
+                      col: 12
+                    }
+                    end: {
+                      line: 146
+                      col: 57
+                    }
+                    text: "let minId1 = breedsAndPets max(.breed.breedId)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "minId2"
-                expr: <
-                  relexpr: <
+                expr: {
+                  relexpr: {
                     op: MAX
-                    target: <
+                    target: {
                       name: "breedsAndPets"
-                    >
-                    arg: <
-                      get_attr: <
-                        arg: <
-                          get_attr: <
-                            arg: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 147
+                          col: 25
+                        }
+                        end: {
+                          line: 147
+                          col: 25
+                        }
+                      }
+                    }
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 147
+                                  col: 43
+                                }
+                                end: {
+                                  line: 147
+                                  col: 44
+                                }
+                              }
+                            }
                             attr: "breed"
-                          >
-                        >
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 147
+                              col: 43
+                            }
+                            end: {
+                              line: 147
+                              col: 44
+                            }
+                          }
+                        }
                         attr: "breedId"
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 147
+                          col: 49
+                        }
+                        end: {
+                          line: 147
+                          col: 50
+                        }
+                      }
+                    }
                     scopevar: "."
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 147
+                      col: 12
+                    }
+                    end: {
+                      line: 147
+                      col: 57
+                    }
+                    text: "let minId2 = breedsAndPets max(.breed.breedId)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "lee"
-                expr: <
-                  transform: <
-                    arg: <
-                      set: <
-                        expr: <
-                          tuple: <
-                          >
-                          type: <
-                            tuple: <
-                            >
-                          >
-                        >
-                      >
-                      type: <
-                        set: <
-                          tuple: <
-                          >
-                        >
-                      >
-                    >
+                expr: {
+                  transform: {
+                    arg: {
+                      set: {
+                        expr: {
+                          tuple: {}
+                          type: {
+                            tuple: {}
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 149
+                              col: 23
+                            }
+                            end: {
+                              line: 149
+                              col: 23
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        set: {
+                          tuple: {}
+                        }
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 149
+                          col: 22
+                        }
+                        end: {
+                          line: 149
+                          col: 26
+                        }
+                      }
+                    }
                     scopevar: "."
-                    stmt: <
-                      assign: <
+                    stmt: {
+                      assign: {
                         name: "name"
-                        expr: <
-                          literal: <
+                        expr: {
+                          literal: {
                             s: "Bruce"
-                          >
-                        >
-                      >
-                    >
-                  >
-                  type: <
-                    set: <
-                      type_ref: <
-                        context: <
-                          appname: <
+                          }
+                          type: {
+                            primitive: STRING
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 150
+                              col: 16
+                            }
+                            end: {
+                              line: 150
+                              col: 23
+                            }
+                            text: "name = \"Bruce\""
+                          }
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    set: {
+                      type_ref: {
+                        context: {
+                          appname: {
                             part: "PetShopApiToModel"
-                          >
-                        >
-                        ref: <
-                          appname: <
+                          }
+                        }
+                        ref: {
+                          appname: {
                             part: "PetShopModel"
-                          >
+                          }
                           path: "Employee"
-                        >
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 149
+                      col: 12
+                    }
+                    end: {
+                      line: 151
+                      col: 13
+                    }
+                    text: "let lee = {{:}} -> <set of PetShopModel.Employee>(:\n                name = \"Bruce\"\n            )\n"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "leeless"
-                expr: <
-                  unexpr: <
+                expr: {
+                  unexpr: {
                     op: NOT
-                    arg: <
+                    arg: {
                       name: "lee"
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 153
+                          col: 27
+                        }
+                        end: {
+                          line: 153
+                          col: 27
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 153
+                      col: 12
+                    }
+                    end: {
+                      line: 153
+                      col: 27
+                    }
+                    text: "let leeless = !lee"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "decimal1"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     decimal: "1.2"
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  type: {
+                    primitive: DECIMAL
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 155
+                      col: 12
+                    }
+                    end: {
+                      line: 155
+                      col: 27
+                    }
+                    text: "let decimal1 = 1.2"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "decimal2"
-                expr: <
-                  literal: <
+                expr: {
+                  literal: {
                     decimal: "2.3"
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  type: {
+                    primitive: DECIMAL
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 156
+                      col: 12
+                    }
+                    end: {
+                      line: 156
+                      col: 27
+                    }
+                    text: "let decimal2 = 2.3"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "decimal3"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
-                      unexpr: <
+                    lhs: {
+                      unexpr: {
                         op: POS
-                        arg: <
+                        arg: {
                           name: "decimal1"
-                        >
-                      >
-                    >
-                    rhs: <
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 157
+                              col: 28
+                            }
+                            end: {
+                              line: 157
+                              col: 28
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 157
+                          col: 27
+                        }
+                        end: {
+                          line: 157
+                          col: 28
+                        }
+                      }
+                    }
+                    rhs: {
                       name: "decimal2"
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 157
+                          col: 39
+                        }
+                        end: {
+                          line: 157
+                          col: 39
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 157
+                      col: 12
+                    }
+                    end: {
+                      line: 157
+                      col: 39
+                    }
+                    text: "let decimal3 = +decimal1 + decimal2"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "one_third"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: DIV
-                    lhs: <
-                      literal: <
+                    lhs: {
+                      literal: {
                         decimal: "1.0"
-                      >
-                    >
-                    rhs: <
-                      literal: <
+                      }
+                      type: {
+                        primitive: DECIMAL
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 159
+                          col: 28
+                        }
+                        end: {
+                          line: 159
+                          col: 28
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         decimal: "3.0"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                      }
+                      type: {
+                        primitive: DECIMAL
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 159
+                          col: 34
+                        }
+                        end: {
+                          line: 159
+                          col: 34
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: DECIMAL
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 159
+                      col: 12
+                    }
+                    end: {
+                      line: 159
+                      col: 34
+                    }
+                    text: "let one_third = 1.0 / 3.0"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "one_ninth"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: POW
-                    lhs: <
+                    lhs: {
                       name: "one_third"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 160
+                          col: 28
+                        }
+                        end: {
+                          line: 160
+                          col: 28
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         i: 2
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 160
+                          col: 41
+                        }
+                        end: {
+                          line: 160
+                          col: 41
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 160
+                      col: 12
+                    }
+                    end: {
+                      line: 160
+                      col: 41
+                    }
+                    text: "let one_ninth = one_third ** 2"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "bruce_lee"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
-                      get_attr: <
-                        arg: <
-                          unexpr: <
+                    lhs: {
+                      get_attr: {
+                        arg: {
+                          unexpr: {
                             op: SINGLE_OR_NULL
-                            arg: <
+                            arg: {
                               name: "lee"
-                            >
-                          >
-                        >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 164
+                                  col: 28
+                                }
+                                end: {
+                                  line: 164
+                                  col: 28
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 164
+                              col: 32
+                            }
+                            end: {
+                              line: 164
+                              col: 32
+                            }
+                          }
+                        }
                         attr: "name"
                         nullsafe: true
-                      >
-                    >
-                    rhs: <
-                      call: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 164
+                          col: 44
+                        }
+                        end: {
+                          line: 164
+                          col: 46
+                        }
+                      }
+                    }
+                    rhs: {
+                      call: {
                         func: "substr"
-                        arg: <
-                          literal: <
+                        arg: {
+                          literal: {
                             s: " Leek"
-                          >
-                        >
-                        arg: <
-                          literal: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 164
+                              col: 60
+                            }
+                            end: {
+                              line: 164
+                              col: 60
+                            }
+                          }
+                        }
+                        arg: {
+                          literal: {
                             i: 0
-                          >
-                        >
-                        arg: <
-                          literal: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 164
+                              col: 69
+                            }
+                            end: {
+                              line: 164
+                              col: 69
+                            }
+                          }
+                        }
+                        arg: {
+                          literal: {
                             i: 4
-                          >
-                        >
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 164
+                              col: 72
+                            }
+                            end: {
+                              line: 164
+                              col: 72
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 164
+                          col: 53
+                        }
+                        end: {
+                          line: 164
+                          col: 73
+                        }
+                        text: "substr(\" Leek\", 0, 4)"
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 164
+                      col: 12
+                    }
+                    end: {
+                      line: 164
+                      col: 73
+                    }
+                    text: "let bruce_lee = lee singleOrNull?.name + substr(\" Leek\", 0, 4)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "Employee"
-                expr: <
-                  transform: <
-                    arg: <
-                      get_attr: <
-                        arg: <
+                expr: {
+                  transform: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 166
+                              col: 32
+                            }
+                            end: {
+                              line: 166
+                              col: 33
+                            }
+                          }
+                        }
                         attr: "employees"
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 166
+                          col: 32
+                        }
+                        end: {
+                          line: 166
+                          col: 33
+                        }
+                      }
+                    }
                     scopevar: "."
-                    stmt: <
-                      assign: <
+                    stmt: {
+                      assign: {
                         name: "employeeId"
-                        expr: <
-                          call: <
+                        expr: {
+                          call: {
                             func: "autoinc"
-                          >
-                        >
-                      >
-                    >
-                    stmt: <
-                      assign: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 167
+                              col: 16
+                            }
+                            end: {
+                              line: 167
+                              col: 37
+                            }
+                            text: "employeeId = autoinc()"
+                          }
+                        }
+                      }
+                    }
+                    stmt: {
+                      assign: {
                         name: "name"
-                        expr: <
-                          get_attr: <
-                            arg: <
+                        expr: {
+                          get_attr: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 168
+                                  col: 16
+                                }
+                                end: {
+                                  line: 168
+                                  col: 16
+                                }
+                              }
+                            }
                             attr: "name"
-                          >
-                        >
-                      >
-                    >
-                    stmt: <
-                      assign: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 168
+                              col: 16
+                            }
+                            end: {
+                              line: 168
+                              col: 16
+                            }
+                          }
+                        }
+                      }
+                    }
+                    stmt: {
+                      assign: {
                         name: "dob"
-                        expr: <
-                          get_attr: <
-                            arg: <
+                        expr: {
+                          get_attr: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 169
+                                  col: 16
+                                }
+                                end: {
+                                  line: 169
+                                  col: 16
+                                }
+                              }
+                            }
                             attr: "dob"
-                          >
-                        >
-                      >
-                    >
-                    stmt: <
-                      assign: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 169
+                              col: 16
+                            }
+                            end: {
+                              line: 169
+                              col: 16
+                            }
+                          }
+                        }
+                      }
+                    }
+                    stmt: {
+                      assign: {
                         name: "error"
-                        expr: <
-                          binexpr: <
+                        expr: {
+                          binexpr: {
                             op: SUB
-                            lhs: <
+                            lhs: {
                               name: "minId2"
-                            >
-                            rhs: <
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 170
+                                  col: 24
+                                }
+                                end: {
+                                  line: 170
+                                  col: 24
+                                }
+                              }
+                            }
+                            rhs: {
                               name: "minId1"
-                            >
-                          >
-                        >
-                      >
-                    >
-                  >
-                  type: <
-                    set: <
-                      type_ref: <
-                        context: <
-                          appname: <
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 170
+                                  col: 33
+                                }
+                                end: {
+                                  line: 170
+                                  col: 33
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            no_type: {}
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 170
+                              col: 16
+                            }
+                            end: {
+                              line: 170
+                              col: 33
+                            }
+                            text: "error = minId2 - minId1"
+                          }
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    set: {
+                      type_ref: {
+                        context: {
+                          appname: {
                             part: "PetShopApiToModel"
-                          >
-                        >
-                        ref: <
-                          appname: <
+                          }
+                        }
+                        ref: {
+                          appname: {
                             part: "PetShopModel"
-                          >
+                          }
                           path: "Employee"
-                        >
-                      >
-                    >
-                  >
-                >
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 166
+                      col: 32
+                    }
+                    end: {
+                      line: 171
+                      col: 13
+                    }
+                  }
+                }
                 table: true
-              >
-            >
-            stmt: <
-              assign: <
+              }
+            }
+            stmt: {
+              assign: {
                 name: "Breed"
-                expr: <
-                  navigate: <
-                    arg: <
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "breedsAndPets"
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 172
+                          col: 29
+                        }
+                        end: {
+                          line: 172
+                          col: 29
+                        }
+                      }
+                    }
                     attr: ".breed"
                     setof: true
-                  >
-                >
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 172
+                      col: 43
+                    }
+                    end: {
+                      line: 172
+                      col: 54
+                    }
+                  }
+                }
                 table: true
-              >
-            >
-            stmt: <
-              assign: <
+              }
+            }
+            stmt: {
+              assign: {
                 name: "Pet"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: FLATTEN
-                    lhs: <
+                    lhs: {
                       name: "breedsAndPets"
-                    >
-                    rhs: <
-                      get_attr: <
-                        arg: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 173
+                          col: 27
+                        }
+                        end: {
+                          line: 173
+                          col: 27
+                        }
+                      }
+                    }
+                    rhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 173
+                              col: 49
+                            }
+                            end: {
+                              line: 173
+                              col: 50
+                            }
+                          }
+                        }
                         attr: "pets"
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 173
+                          col: 49
+                        }
+                        end: {
+                          line: 173
+                          col: 50
+                        }
+                      }
+                    }
                     scopevar: "."
-                  >
-                >
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 173
+                      col: 41
+                    }
+                    end: {
+                      line: 173
+                      col: 41
+                    }
+                  }
+                }
                 table: true
-              >
-            >
-          >
-          type: <
-            type_ref: <
-              context: <
-                appname: <
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "PetShopApiToModel"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "PetShopModel"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/petshop.sysl"
+            start: {
+              line: 126
+              col: 8
+            }
+            end: {
+              line: 174
+              col: 9
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 125
+            col: 4
+          }
+          end: {
+            line: 175
+          }
+          text: "!view apiToModel(petshop <: PetShopApi.PetShop):"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/petshop.sysl"
+      start: {
+        line: 124
+        col: 1
+      }
+      end: {
+        line: 124
+        col: 55
+      }
+    }
+  }
+}
+apps: {
   key: "PetShopFacade"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "PetShopFacade"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "io.sysl.demo.petshop.facade"
-      >
-    >
-    wrapped: <
-      name: <
+      }
+    }
+    wrapped: {
+      name: {
         part: "PetShopModel"
-      >
-      types: <
+      }
+      types: {
         key: "Breed"
-        value: <
-        >
-      >
-      types: <
+        value: {}
+      }
+      types: {
         key: "Employee"
-        value: <
-        >
-      >
-      types: <
+        value: {}
+      }
+      types: {
         key: "EmployeeTendsPet"
-        value: <
-        >
-      >
-      types: <
+        value: {}
+      }
+      types: {
         key: "Pet"
-        value: <
-        >
-      >
-    >
-  >
->
-apps: <
+        value: {}
+      }
+    }
+    source_context: {
+      file: "tests/petshop.sysl"
+      start: {
+        line: 29
+        col: 1
+      }
+      end: {
+        line: 29
+        col: 52
+      }
+    }
+  }
+}
+apps: {
   key: "PetShopModel"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "PetShopModel"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "io.sysl.demo.petshop.model"
-      >
-    >
-    types: <
+      }
+    }
+    types: {
       key: "Breed"
-      value: <
-        relation: <
-          attr_defs: <
+      value: {
+        relation: {
+          attr_defs: {
             key: "avgLifespan"
-            value: <
+            value: {
               primitive: DECIMAL
-              constraint: <
-                length: <
+              constraint: {
+                length: {
                   max: 14
-                >
+                }
                 precision: 14
                 scale: 2
-              >
+              }
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 13
                   col: 23
-                >
-                end: <
+                }
+                end: {
                   line: 13
                   col: 36
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "avgWeight"
-            value: <
+            value: {
               primitive: DECIMAL
-              constraint: <
-                length: <
+              constraint: {
+                length: {
                   max: 14
-                >
-              >
+                }
+              }
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 14
                   col: 21
-                >
-                end: <
+                }
+                end: {
                   line: 14
                   col: 32
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "breedId"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "patterns"
-                value: <
-                  a: <
-                    elt: <
+                value: {
+                  a: {
+                    elt: {
                       s: "pk"
-                    >
-                    elt: <
+                    }
+                    elt: {
                       s: "autoinc"
-                    >
-                  >
-                >
-              >
-              source_context: <
+                    }
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 9
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 9
                   col: 37
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "breedName"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 10
                   col: 21
-                >
-                end: <
+                }
+                end: {
                   line: 10
                   col: 27
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "legRank"
-            value: <
+            value: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 15
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 15
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "numLegs"
-            value: <
+            value: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 12
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 12
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "species"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 11
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 11
                   col: 25
-                >
-              >
-            >
-          >
-          primary_key: <
+                }
+              }
+            }
+          }
+          primary_key: {
             attr_name: "breedId"
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 8
+            col: 4
+          }
+          end: {
+            line: 17
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "Employee"
-      value: <
-        relation: <
-          attr_defs: <
+      value: {
+        relation: {
+          attr_defs: {
             key: "dob"
-            value: <
+            value: {
               primitive: DATE
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 5
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 5
                   col: 19
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "employeeId"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "patterns"
-                value: <
-                  a: <
-                    elt: <
+                value: {
+                  a: {
+                    elt: {
                       s: "pk"
-                    >
-                    elt: <
+                    }
+                    elt: {
                       s: "autoinc"
-                    >
-                  >
-                >
-              >
-              source_context: <
+                    }
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 3
                   col: 22
-                >
-                end: <
+                }
+                end: {
                   line: 3
                   col: 40
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "error"
-            value: <
+            value: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 6
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 6
                   col: 17
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "name"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 4
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 4
                   col: 22
-                >
-              >
-            >
-          >
-          primary_key: <
+                }
+              }
+            }
+          }
+          primary_key: {
             attr_name: "employeeId"
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 2
+            col: 4
+          }
+          end: {
+            line: 8
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "EmployeeTendsPet"
-      value: <
-        relation: <
-          attr_defs: <
+      value: {
+        relation: {
+          attr_defs: {
             key: "employeeId"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "PetShopModel"
-                  >
+                  }
                   path: "EmployeeTendsPet"
-                >
-                ref: <
+                }
+                ref: {
                   path: "Employee"
                   path: "employeeId"
-                >
-              >
-              attrs: <
+                }
+              }
+              attrs: {
                 key: "patterns"
-                value: <
-                  a: <
-                    elt: <
+                value: {
+                  a: {
+                    elt: {
                       s: "pk"
-                    >
-                  >
-                >
-              >
-              source_context: <
+                    }
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 25
                   col: 22
-                >
-                end: <
+                }
+                end: {
                   line: 25
                   col: 46
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "petId"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "PetShopModel"
-                  >
+                  }
                   path: "EmployeeTendsPet"
-                >
-                ref: <
+                }
+                ref: {
                   path: "Pet"
                   path: "petId"
-                >
-              >
-              attrs: <
+                }
+              }
+              attrs: {
                 key: "patterns"
-                value: <
-                  a: <
-                    elt: <
+                value: {
+                  a: {
+                    elt: {
                       s: "pk"
-                    >
-                  >
-                >
-              >
-              source_context: <
+                    }
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 26
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 26
                   col: 31
-                >
-              >
-            >
-          >
-          primary_key: <
+                }
+              }
+            }
+          }
+          primary_key: {
             attr_name: "employeeId"
             attr_name: "petId"
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 24
+            col: 4
+          }
+          end: {
+            line: 29
+            col: 13
+          }
+        }
+      }
+    }
+    types: {
       key: "Pet"
-      value: <
-        relation: <
-          attr_defs: <
+      value: {
+        relation: {
+          attr_defs: {
             key: "breedId"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "PetShopModel"
-                  >
+                  }
                   path: "Pet"
-                >
-                ref: <
+                }
+                ref: {
                   path: "Breed"
                   path: "breedId"
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 19
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 19
                   col: 25
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "dob"
-            value: <
+            value: {
               primitive: DATE
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 21
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 21
                   col: 19
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "name"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 20
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 20
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "numLegs"
-            value: <
+            value: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 22
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 22
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "petId"
-            value: <
+            value: {
               primitive: INT
-              attrs: <
+              attrs: {
                 key: "patterns"
-                value: <
-                  a: <
-                    elt: <
+                value: {
+                  a: {
+                    elt: {
                       s: "pk"
-                    >
-                    elt: <
+                    }
+                    elt: {
                       s: "autoinc"
-                    >
-                  >
-                >
-              >
-              source_context: <
+                    }
+                  }
+                }
+              }
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 18
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 18
                   col: 35
-                >
-              >
-            >
-          >
-          primary_key: <
+                }
+              }
+            }
+          }
+          primary_key: {
             attr_name: "petId"
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 17
+            col: 4
+          }
+          end: {
+            line: 24
+            col: 4
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/petshop.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 50
+      }
+    }
+  }
+}
+apps: {
   key: "PetShopModelToApi"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "PetShopModelToApi"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "io.sysl.demo.petshop.views"
-      >
-    >
-    types: <
+      }
+    }
+    types: {
       key: "PetRankedByLeg"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "breedId"
-            value: <
+            value: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 117
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 117
                   col: 19
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "dob"
-            value: <
+            value: {
               primitive: DATE
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 119
                   col: 15
-                >
-                end: <
+                }
+                end: {
                   line: 119
                   col: 19
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "legRank"
-            value: <
+            value: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 121
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 121
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "name"
-            value: <
+            value: {
               primitive: STRING
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 118
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 118
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "numLegs"
-            value: <
+            value: {
               primitive: INT
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 120
                   col: 19
-                >
-                end: <
+                }
+                end: {
                   line: 120
                   col: 22
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "petId"
-            value: <
+            value: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/petshop.sysl"
-                start: <
+                start: {
                   line: 116
                   col: 17
-                >
-                end: <
+                }
+                end: {
                   line: 116
                   col: 17
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 115
+            col: 4
+          }
+          end: {
+            line: 124
+            col: 17
+          }
+        }
+      }
+    }
+    views: {
       key: "breedToApi"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "breed"
-          type: <
-            set: <
-              type_ref: <
-                ref: <
-                  appname: <
+          type: {
+            set: {
+              type_ref: {
+                ref: {
+                  appname: {
                     part: "PetShopModel"
-                  >
+                  }
                   path: "Breed"
-                >
-              >
-            >
-          >
-        >
-        param: <
+                }
+              }
+            }
+          }
+        }
+        param: {
           name: "pet"
-          type: <
-            set: <
-              type_ref: <
-                ref: <
-                  appname: <
+          type: {
+            set: {
+              type_ref: {
+                ref: {
+                  appname: {
                     part: "PetShopModelToApi"
-                  >
+                  }
                   path: "PetRankedByLeg"
-                >
-              >
-            >
-          >
-        >
-        ret_type: <
-          set: <
-            type_ref: <
-              context: <
-                appname: <
+                }
+              }
+            }
+          }
+        }
+        ret_type: {
+          set: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "PetShopModelToApi"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "PetShopApi"
-                >
+                }
                 path: "Breed"
-              >
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+              }
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "breed"
-            >
+              source_context: {
+                file: "tests/petshop.sysl"
+                start: {
+                  line: 97
+                  col: 8
+                }
+                end: {
+                  line: 97
+                  col: 8
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "name"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 98
+                          col: 19
+                        }
+                        end: {
+                          line: 98
+                          col: 20
+                        }
+                      }
+                    }
                     attr: "breedName"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 98
+                      col: 12
+                    }
+                    end: {
+                      line: 98
+                      col: 20
+                    }
+                    text: "name = .breedName"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "species"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 99
+                          col: 12
+                        }
+                        end: {
+                          line: 99
+                          col: 12
+                        }
+                      }
+                    }
                     attr: "species"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 99
+                      col: 12
+                    }
+                    end: {
+                      line: 99
+                      col: 12
+                    }
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "pets"
-                expr: <
-                  call: <
+                expr: {
+                  call: {
                     func: "petToApi"
-                    arg: <
-                      binexpr: <
+                    arg: {
+                      binexpr: {
                         op: TO_MATCHING
-                        lhs: <
-                          navigate: <
-                            arg: <
+                        lhs: {
+                          navigate: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 100
+                                  col: 28
+                                }
+                                end: {
+                                  line: 100
+                                  col: 38
+                                }
+                              }
+                            }
                             attr: "Pet"
                             setof: true
-                          >
-                        >
-                        rhs: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 100
+                              col: 28
+                            }
+                            end: {
+                              line: 100
+                              col: 38
+                            }
+                          }
+                        }
+                        rhs: {
                           name: "pet"
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 100
+                              col: 52
+                            }
+                            end: {
+                              line: 100
+                              col: 52
+                            }
+                          }
+                        }
                         attr_name: "petId"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 100
+                          col: 42
+                        }
+                        end: {
+                          line: 100
+                          col: 52
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 100
+                      col: 12
+                    }
+                    end: {
+                      line: 100
+                      col: 55
+                    }
+                    text: "pets = petToApi(-> set of Pet ~[petId]> pet)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "avgLifespan"
-                expr: <
-                  unexpr: <
+                expr: {
+                  unexpr: {
                     op: NEG
-                    arg: <
-                      literal: <
+                    arg: {
+                      literal: {
                         decimal: "1.0"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                      }
+                      type: {
+                        primitive: DECIMAL
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 101
+                          col: 27
+                        }
+                        end: {
+                          line: 101
+                          col: 27
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 101
+                      col: 12
+                    }
+                    end: {
+                      line: 101
+                      col: 27
+                    }
+                    text: "avgLifespan = -1.0"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "index"
-                expr: <
-                  call: <
+                expr: {
+                  call: {
                     func: "autoinc"
-                    arg: <
-                      literal: <
+                    arg: {
+                      literal: {
                         s: "Breed"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            set: <
-              type_ref: <
-                context: <
-                  appname: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 102
+                          col: 28
+                        }
+                        end: {
+                          line: 102
+                          col: 28
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 102
+                      col: 12
+                    }
+                    end: {
+                      line: 102
+                      col: 35
+                    }
+                    text: "index = autoinc(\"Breed\")"
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            set: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "PetShopModelToApi"
-                  >
-                >
-                ref: <
-                  appname: <
+                  }
+                }
+                ref: {
+                  appname: {
                     part: "PetShopApi"
-                  >
+                  }
                   path: "Breed"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/petshop.sysl"
+            start: {
+              line: 97
+              col: 8
+            }
+            end: {
+              line: 103
+              col: 9
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 96
+            col: 4
+          }
+          end: {
+            line: 105
+            col: 4
+          }
+          text: "!view breedToApi(breed <: set of PetShopModel.Breed, pet <: set of PetShopModelToApi.PetRankedByLeg):"
+        }
+      }
+    }
+    views: {
       key: "employeeToApi"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "employee"
-          type: <
-            set: <
-              type_ref: <
-                ref: <
-                  appname: <
+          type: {
+            set: {
+              type_ref: {
+                ref: {
+                  appname: {
                     part: "PetShopModel"
-                  >
+                  }
                   path: "Employee"
-                >
-              >
-            >
-          >
-        >
-        ret_type: <
-          set: <
-            type_ref: <
-              context: <
-                appname: <
+                }
+              }
+            }
+          }
+        }
+        ret_type: {
+          set: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "PetShopModelToApi"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "PetShopApi"
-                >
+                }
                 path: "Employee"
-              >
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+              }
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "employee"
-            >
+              source_context: {
+                file: "tests/petshop.sysl"
+                start: {
+                  line: 90
+                  col: 8
+                }
+                end: {
+                  line: 90
+                  col: 8
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "name"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 91
+                          col: 12
+                        }
+                        end: {
+                          line: 91
+                          col: 12
+                        }
+                      }
+                    }
                     attr: "name"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 91
+                      col: 12
+                    }
+                    end: {
+                      line: 91
+                      col: 12
+                    }
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "dob"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 92
+                          col: 12
+                        }
+                        end: {
+                          line: 92
+                          col: 12
+                        }
+                      }
+                    }
                     attr: "dob"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 92
+                      col: 12
+                    }
+                    end: {
+                      line: 92
+                      col: 12
+                    }
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "index"
-                expr: <
-                  call: <
+                expr: {
+                  call: {
                     func: "autoinc"
-                    arg: <
-                      literal: <
+                    arg: {
+                      literal: {
                         s: "Employee"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            set: <
-              type_ref: <
-                context: <
-                  appname: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 93
+                          col: 28
+                        }
+                        end: {
+                          line: 93
+                          col: 28
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 93
+                      col: 12
+                    }
+                    end: {
+                      line: 93
+                      col: 38
+                    }
+                    text: "index = autoinc(\"Employee\")"
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            set: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "PetShopModelToApi"
-                  >
-                >
-                ref: <
-                  appname: <
+                  }
+                }
+                ref: {
+                  appname: {
                     part: "PetShopApi"
-                  >
+                  }
                   path: "Employee"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/petshop.sysl"
+            start: {
+              line: 90
+              col: 8
+            }
+            end: {
+              line: 94
+              col: 9
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 89
+            col: 4
+          }
+          end: {
+            line: 96
+            col: 4
+          }
+          text: "!view employeeToApi(employee <: set of PetShopModel.Employee):"
+        }
+      }
+    }
+    views: {
       key: "fibonacci"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "n"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
+          }
+        }
+        ret_type: {
           primitive: INT
-        >
-        attrs: <
+        }
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "abstract"
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 113
+            col: 4
+          }
+          end: {
+            line: 113
+            col: 37
+          }
+          text: "!view fibonacci(n <: int) -> int [~abstract]"
+        }
+      }
+    }
+    views: {
       key: "modelToApi"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "petshop"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "PetShopModel"
-                >
-              >
-            >
-          >
-        >
-        ret_type: <
-          type_ref: <
-            context: <
-              appname: <
+                }
+              }
+            }
+          }
+        }
+        ret_type: {
+          type_ref: {
+            context: {
+              appname: {
                 part: "PetShopModelToApi"
-              >
-            >
-            ref: <
-              appname: <
+              }
+            }
+            ref: {
+              appname: {
                 part: "PetShopApi"
-              >
+              }
               path: "PetShop"
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "petshop"
-            >
+              source_context: {
+                file: "tests/petshop.sysl"
+                start: {
+                  line: 68
+                  col: 8
+                }
+                end: {
+                  line: 68
+                  col: 8
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              let: <
+            stmt: {
+              let: {
                 name: "rankedPets"
-                expr: <
-                  relexpr: <
+                expr: {
+                  relexpr: {
                     op: RANK
-                    target: <
-                      get_attr: <
-                        arg: <
+                    target: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 69
+                              col: 29
+                            }
+                            end: {
+                              line: 69
+                              col: 39
+                            }
+                          }
+                        }
                         attr: "Pet"
                         setof: true
-                      >
-                    >
-                    arg: <
-                      get_attr: <
-                        arg: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 69
+                          col: 29
+                        }
+                        end: {
+                          line: 69
+                          col: 39
+                        }
+                      }
+                    }
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 69
+                              col: 82
+                            }
+                            end: {
+                              line: 69
+                              col: 83
+                            }
+                          }
+                        }
                         attr: "numLegs"
-                      >
-                    >
-                    arg: <
-                      get_attr: <
-                        arg: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 69
+                          col: 82
+                        }
+                        end: {
+                          line: 69
+                          col: 83
+                        }
+                      }
+                    }
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 69
+                              col: 82
+                            }
+                            end: {
+                              line: 69
+                              col: 83
+                            }
+                          }
+                        }
                         attr: "numLegs"
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 69
+                          col: 82
+                        }
+                        end: {
+                          line: 69
+                          col: 83
+                        }
+                      }
+                    }
                     scopevar: "."
                     descending: false
                     attr_name: "legRank"
-                  >
-                  type: <
-                    set: <
-                      type_ref: <
-                        ref: <
-                          appname: <
+                  }
+                  type: {
+                    set: {
+                      type_ref: {
+                        ref: {
+                          appname: {
                             part: "PetShopModelToApi"
-                          >
+                          }
                           path: "PetRankedByLeg"
-                        >
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 69
+                      col: 12
+                    }
+                    end: {
+                      line: 69
+                      col: 101
+                    }
+                    text: "let rankedPets = .table of Pet rank<PetShopModelToApi.PetRankedByLeg>(.numLegs as legRank)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "employees"
-                expr: <
-                  call: <
+                expr: {
+                  call: {
                     func: "employeeToApi"
-                    arg: <
-                      get_attr: <
-                        arg: <
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 71
+                              col: 38
+                            }
+                            end: {
+                              line: 71
+                              col: 48
+                            }
+                          }
+                        }
                         attr: "Employee"
                         setof: true
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 71
+                          col: 38
+                        }
+                        end: {
+                          line: 71
+                          col: 48
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 71
+                      col: 12
+                    }
+                    end: {
+                      line: 71
+                      col: 56
+                    }
+                    text: "employees = employeeToApi(.table of Employee)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "breeds"
-                expr: <
-                  call: <
+                expr: {
+                  call: {
                     func: "breedToApi"
-                    arg: <
-                      get_attr: <
-                        arg: <
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 72
+                              col: 32
+                            }
+                            end: {
+                              line: 72
+                              col: 42
+                            }
+                          }
+                        }
                         attr: "Breed"
                         setof: true
-                      >
-                    >
-                    arg: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 72
+                          col: 32
+                        }
+                        end: {
+                          line: 72
+                          col: 42
+                        }
+                      }
+                    }
+                    arg: {
                       name: "rankedPets"
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 72
+                          col: 49
+                        }
+                        end: {
+                          line: 72
+                          col: 49
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 72
+                      col: 12
+                    }
+                    end: {
+                      line: 72
+                      col: 59
+                    }
+                    text: "breeds = breedToApi(.table of Breed, rankedPets)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "numLegs"
-                expr: <
-                  relexpr: <
+                expr: {
+                  relexpr: {
                     op: SUM
-                    target: <
-                      get_attr: <
-                        arg: <
+                    target: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 73
+                              col: 22
+                            }
+                            end: {
+                              line: 73
+                              col: 32
+                            }
+                          }
+                        }
                         attr: "Pet"
                         setof: true
-                      >
-                    >
-                    arg: <
-                      binexpr: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 73
+                          col: 22
+                        }
+                        end: {
+                          line: 73
+                          col: 32
+                        }
+                      }
+                    }
+                    arg: {
+                      binexpr: {
                         op: COALESCE
-                        lhs: <
-                          get_attr: <
-                            arg: <
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 73
+                                  col: 40
+                                }
+                                end: {
+                                  line: 73
+                                  col: 41
+                                }
+                              }
+                            }
                             attr: "numLegs"
-                          >
-                        >
-                        rhs: <
-                          literal: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 73
+                              col: 40
+                            }
+                            end: {
+                              line: 73
+                              col: 41
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
                             i: 0
-                          >
-                        >
-                      >
-                    >
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 73
+                              col: 52
+                            }
+                            end: {
+                              line: 73
+                              col: 52
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 73
+                          col: 40
+                        }
+                        end: {
+                          line: 73
+                          col: 52
+                        }
+                      }
+                    }
                     scopevar: "."
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 73
+                      col: 12
+                    }
+                    end: {
+                      line: 73
+                      col: 53
+                    }
+                    text: "numLegs = .table of Pet sum(.numLegs ?? 0)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "m"
-                expr: <
-                  relexpr: <
+                expr: {
+                  relexpr: {
                     op: MIN
-                    target: <
-                      get_attr: <
-                        arg: <
+                    target: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 75
+                              col: 20
+                            }
+                            end: {
+                              line: 75
+                              col: 30
+                            }
+                          }
+                        }
                         attr: "Pet"
                         setof: true
-                      >
-                    >
-                    arg: <
-                      binexpr: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 75
+                          col: 20
+                        }
+                        end: {
+                          line: 75
+                          col: 30
+                        }
+                      }
+                    }
+                    arg: {
+                      binexpr: {
                         op: COALESCE
-                        lhs: <
-                          get_attr: <
-                            arg: <
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 75
+                                  col: 38
+                                }
+                                end: {
+                                  line: 75
+                                  col: 39
+                                }
+                              }
+                            }
                             attr: "numLegs"
-                          >
-                        >
-                        rhs: <
-                          literal: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 75
+                              col: 38
+                            }
+                            end: {
+                              line: 75
+                              col: 39
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
                             i: 0
-                          >
-                        >
-                      >
-                    >
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 75
+                              col: 50
+                            }
+                            end: {
+                              line: 75
+                              col: 50
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 75
+                          col: 38
+                        }
+                        end: {
+                          line: 75
+                          col: 50
+                        }
+                      }
+                    }
                     scopevar: "."
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 75
+                      col: 12
+                    }
+                    end: {
+                      line: 75
+                      col: 51
+                    }
+                    text: "let m = .table of Pet min(.numLegs ?? 0)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "a"
-                expr: <
-                  relexpr: <
+                expr: {
+                  relexpr: {
                     op: AVERAGE
-                    target: <
-                      get_attr: <
-                        arg: <
+                    target: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 76
+                              col: 20
+                            }
+                            end: {
+                              line: 76
+                              col: 30
+                            }
+                          }
+                        }
                         attr: "Pet"
                         setof: true
-                      >
-                    >
-                    arg: <
-                      binexpr: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 76
+                          col: 20
+                        }
+                        end: {
+                          line: 76
+                          col: 30
+                        }
+                      }
+                    }
+                    arg: {
+                      binexpr: {
                         op: COALESCE
-                        lhs: <
-                          get_attr: <
-                            arg: <
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/petshop.sysl"
+                                start: {
+                                  line: 76
+                                  col: 42
+                                }
+                                end: {
+                                  line: 76
+                                  col: 43
+                                }
+                              }
+                            }
                             attr: "numLegs"
-                          >
-                        >
-                        rhs: <
-                          literal: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 76
+                              col: 42
+                            }
+                            end: {
+                              line: 76
+                              col: 43
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
                             i: 0
-                          >
-                        >
-                      >
-                    >
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 76
+                              col: 54
+                            }
+                            end: {
+                              line: 76
+                              col: 54
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 76
+                          col: 42
+                        }
+                        end: {
+                          line: 76
+                          col: 54
+                        }
+                      }
+                    }
                     scopevar: "."
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 76
+                      col: 12
+                    }
+                    end: {
+                      line: 76
+                      col: 55
+                    }
+                    text: "let a = .table of Pet average(.numLegs ?? 0)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "pp"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 79
+                          col: 21
+                        }
+                        end: {
+                          line: 79
+                          col: 31
+                        }
+                      }
+                    }
                     attr: "Pet"
                     setof: true
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 79
+                      col: 12
+                    }
+                    end: {
+                      line: 79
+                      col: 31
+                    }
+                    text: "let pp = .table of Pet"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "bb"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs: <
+                    lhs: {
                       name: "pp"
-                    >
-                    rhs: <
-                      get_attr: <
-                        arg: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 80
+                          col: 21
+                        }
+                        end: {
+                          line: 80
+                          col: 21
+                        }
+                      }
+                    }
+                    rhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 80
+                              col: 27
+                            }
+                            end: {
+                              line: 80
+                              col: 37
+                            }
+                          }
+                        }
                         attr: "Breed"
                         setof: true
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 80
+                          col: 27
+                        }
+                        end: {
+                          line: 80
+                          col: 37
+                        }
+                      }
+                    }
                     attr_name: "*"
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 80
+                      col: 12
+                    }
+                    end: {
+                      line: 80
+                      col: 37
+                    }
+                    text: "let bb = pp ~> .table of Breed"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "yy"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: TO_NOT_MATCHING
-                    lhs: <
+                    lhs: {
                       name: "pp"
-                    >
-                    rhs: <
-                      get_attr: <
-                        arg: <
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 81
+                          col: 21
+                        }
+                        end: {
+                          line: 81
+                          col: 21
+                        }
+                      }
+                    }
+                    rhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 81
+                              col: 28
+                            }
+                            end: {
+                              line: 81
+                              col: 38
+                            }
+                          }
+                        }
                         attr: "Breed"
                         setof: true
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 81
+                          col: 28
+                        }
+                        end: {
+                          line: 81
+                          col: 38
+                        }
+                      }
+                    }
                     attr_name: "*"
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 81
+                      col: 12
+                    }
+                    end: {
+                      line: 81
+                      col: 38
+                    }
+                    text: "let yy = pp !~> .table of Breed"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "p"
-                expr: <
-                  unexpr: <
+                expr: {
+                  unexpr: {
                     op: SINGLE_OR_NULL
-                    arg: <
-                      call: <
+                    arg: {
+                      call: {
                         func: ".any"
-                        arg: <
+                        arg: {
                           name: "pp"
-                        >
-                        arg: <
-                          literal: <
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 83
+                              col: 20
+                            }
+                            end: {
+                              line: 83
+                              col: 20
+                            }
+                          }
+                        }
+                        arg: {
+                          literal: {
                             i: 1
-                          >
-                        >
-                      >
-                    >
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                          }
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 83
+                              col: 27
+                            }
+                            end: {
+                              line: 83
+                              col: 27
+                            }
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 83
+                          col: 23
+                        }
+                        end: {
+                          line: 83
+                          col: 28
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 83
+                      col: 12
+                    }
+                    end: {
+                      line: 83
+                      col: 30
+                    }
+                    text: "let p = pp any(1) singleOrNull"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "b"
-                expr: <
-                  navigate: <
-                    arg: <
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "p"
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 84
+                          col: 20
+                        }
+                        end: {
+                          line: 84
+                          col: 20
+                        }
+                      }
+                    }
                     attr: "Breed"
-                  >
-                >
-              >
-            >
-            stmt: <
-              let: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 84
+                      col: 12
+                    }
+                    end: {
+                      line: 84
+                      col: 25
+                    }
+                    text: "let b = p -> Breed"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
                 name: "pp2"
-                expr: <
-                  navigate: <
-                    arg: <
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "b"
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 85
+                          col: 22
+                        }
+                        end: {
+                          line: 85
+                          col: 22
+                        }
+                      }
+                    }
                     attr: "Pet"
                     nullsafe: true
                     setof: true
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            type_ref: <
-              context: <
-                appname: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 85
+                      col: 12
+                    }
+                    end: {
+                      line: 85
+                      col: 35
+                    }
+                    text: "let pp2 = b ?-> set of Pet"
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "PetShopModelToApi"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "PetShopApi"
-                >
+                }
                 path: "PetShop"
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+              }
+            }
+          }
+          source_context: {
+            file: "tests/petshop.sysl"
+            start: {
+              line: 68
+              col: 8
+            }
+            end: {
+              line: 87
+              col: 9
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 67
+            col: 4
+          }
+          end: {
+            line: 89
+            col: 4
+          }
+          text: "!view modelToApi(petshop <: PetShopModel):"
+        }
+      }
+    }
+    views: {
       key: "petToApi"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "pet"
-          type: <
-            set: <
-              type_ref: <
-                ref: <
-                  appname: <
+          type: {
+            set: {
+              type_ref: {
+                ref: {
+                  appname: {
                     part: "PetShopModelToApi"
-                  >
+                  }
                   path: "PetRankedByLeg"
-                >
-              >
-            >
-          >
-        >
-        ret_type: <
-          set: <
-            type_ref: <
-              context: <
-                appname: <
+                }
+              }
+            }
+          }
+        }
+        ret_type: {
+          set: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "PetShopModelToApi"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "PetShopApi"
-                >
+                }
                 path: "Pet"
-              >
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+              }
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "pet"
-            >
+              source_context: {
+                file: "tests/petshop.sysl"
+                start: {
+                  line: 106
+                  col: 8
+                }
+                end: {
+                  line: 106
+                  col: 8
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "name"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 107
+                          col: 12
+                        }
+                        end: {
+                          line: 107
+                          col: 12
+                        }
+                      }
+                    }
                     attr: "name"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 107
+                      col: 12
+                    }
+                    end: {
+                      line: 107
+                      col: 12
+                    }
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "dob"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 108
+                          col: 12
+                        }
+                        end: {
+                          line: 108
+                          col: 12
+                        }
+                      }
+                    }
                     attr: "dob"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 108
+                      col: 12
+                    }
+                    end: {
+                      line: 108
+                      col: 12
+                    }
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "numLegs"
-                expr: <
-                  get_attr: <
-                    arg: <
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
-                    >
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 109
+                          col: 12
+                        }
+                        end: {
+                          line: 109
+                          col: 12
+                        }
+                      }
+                    }
                     attr: "numLegs"
-                  >
-                >
-              >
-            >
-            stmt: <
-              assign: <
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 109
+                      col: 12
+                    }
+                    end: {
+                      line: 109
+                      col: 12
+                    }
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
                 name: "legRank"
-                expr: <
-                  call: <
+                expr: {
+                  call: {
                     func: "fibonacci"
-                    arg: <
-                      get_attr: <
-                        arg: <
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/petshop.sysl"
+                            start: {
+                              line: 110
+                              col: 32
+                            }
+                            end: {
+                              line: 110
+                              col: 33
+                            }
+                          }
+                        }
                         attr: "legRank"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            set: <
-              type_ref: <
-                context: <
-                  appname: <
+                      }
+                      source_context: {
+                        file: "tests/petshop.sysl"
+                        start: {
+                          line: 110
+                          col: 32
+                        }
+                        end: {
+                          line: 110
+                          col: 33
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/petshop.sysl"
+                    start: {
+                      line: 110
+                      col: 12
+                    }
+                    end: {
+                      line: 110
+                      col: 40
+                    }
+                    text: "legRank = fibonacci(.legRank)"
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            set: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "PetShopModelToApi"
-                  >
-                >
-                ref: <
-                  appname: <
+                  }
+                }
+                ref: {
+                  appname: {
                     part: "PetShopApi"
-                  >
+                  }
                   path: "Pet"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/petshop.sysl"
+            start: {
+              line: 106
+              col: 8
+            }
+            end: {
+              line: 111
+              col: 9
+            }
+          }
+        }
+        source_context: {
+          file: "tests/petshop.sysl"
+          start: {
+            line: 105
+            col: 4
+          }
+          end: {
+            line: 113
+            col: 4
+          }
+          text: "!view petToApi(pet <: set of PetShopModelToApi.PetRankedByLeg):"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/petshop.sysl"
+      start: {
+        line: 66
+        col: 1
+      }
+      end: {
+        line: 66
+        col: 55
+      }
+    }
+  }
+}

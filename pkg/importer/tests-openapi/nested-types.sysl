@@ -21,38 +21,29 @@ testapp "Fruit API" [package="package_foo"]:
             @json_tag = "veggies"
 
     !type Details:
-        month <: Details_month?:
+        month <: string?:
             @json_tag = "month"
         monthlyTotal <: int?:
             @json_tag = "monthlyTotal"
         transDet <: sequence of string?:
             @json_tag = "transDet"
 
-    !alias Details_month:
-        string
-
     !type Fruit:
         details <: sequence of Details?:
             @json_tag = "details"
-        entity <: Fruit_entity?:
+        entity <: string?:
             @json_tag = "entity"
         id <: string?:
             @json_tag = "id"
         name <: string?:
             @json_tag = "name"
-
-    !alias Fruit_entity:
-        string
 
     !type Veggies:
         details <: sequence of Details?:
             @json_tag = "details"
-        entity <: Veggies_entity?:
+        entity <: string?:
             @json_tag = "entity"
         id <: string?:
             @json_tag = "id"
         name <: string?:
             @json_tag = "name"
-
-    !alias Veggies_entity:
-        string

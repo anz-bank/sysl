@@ -13,8 +13,8 @@ import (
 const classString = `class`
 const relationArrow = `}--`
 const tupleArrow = `*--`
-const entityLessThanArrow = `<< (`
-const entityGreaterThanArrow = `) >>`
+const entityLessThanArrow = `<< `
+const entityGreaterThanArrow = ` >>`
 
 type DataModelParam struct {
 	cmdutils.ClassLabeler
@@ -44,6 +44,7 @@ type EntityViewParam struct {
 	EntityColor  string
 	EntityHeader string
 	EntityName   string
+	EntityAlias  string
 	IgnoredTypes map[string]struct{}
 	Types        map[string]*sysl.Type
 }
@@ -117,7 +118,7 @@ func (v *DataModelView) DrawRelation(
 ) {
 	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s)%s {\n", classString, viewParam.EntityName,
 		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
 
 	// sort and iterate over attributes
@@ -166,14 +167,13 @@ func (v *DataModelView) DrawPrimitive(
 ) {
 	entityTokens := strings.Split(viewParam.EntityName, ".")
 	encEntity := v.UniqueVarForAppName(entityTokens[len(entityTokens)-1])
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
-		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
+	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s(%s,%s) %s%s {\n",
+		classString, viewParam.EntityName, encEntity,
+		entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, strings.ToLower(entity), entityGreaterThanArrow))
 
 	if _, exists := relationshipMap[encEntity]; !exists {
 		relationshipMap[encEntity] = map[string]RelationshipParam{}
 	}
-	// Add default property id for primitive types
-	v.StringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", "id", strings.ToLower(entity)))
 	v.StringBuilder.WriteString("}\n")
 }
 
@@ -183,9 +183,28 @@ func (v *DataModelView) DrawTuple(
 	entity *sysl.Type_Tuple,
 	relationshipMap map[string]map[string]RelationshipParam,
 ) {
+	var alias, typeName string
+	if viewParam.EntityAlias == "" {
+		alias = viewParam.EntityName
+	} else {
+		alias = viewParam.EntityAlias
+		// add space for better formatting and allow empty space when alias == ""
+		typeName = " " + viewParam.EntityName
+	}
 	encEntity := v.UniqueVarForAppName(strings.Split(viewParam.EntityName, ".")...)
-	v.StringBuilder.WriteString(fmt.Sprintf("%s \"%s\" as %s %s%s,%s%s {\n", classString, viewParam.EntityName,
-		encEntity, entityLessThanArrow, viewParam.EntityHeader, viewParam.EntityColor, entityGreaterThanArrow))
+
+	// this will create a class header, with alias it will look like the following:
+	// class "AliasName" as _0 << (D,orchid) TypeName >> {
+	// Without the alias:
+	// class "TypeName" as _0 << (D,orchid) >> {
+	v.StringBuilder.WriteString(
+		fmt.Sprintf(
+			"%s \"%s\" as %s %s(%s,%s)%s%s {\n",
+			classString, alias,
+			encEntity, entityLessThanArrow, viewParam.EntityHeader,
+			viewParam.EntityColor, typeName, entityGreaterThanArrow,
+		),
+	)
 	var appName string
 	var relation string
 	var collectionString string

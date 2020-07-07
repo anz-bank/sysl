@@ -1,5 +1,5 @@
-aqwari.net/xml v0.0.0-20200323224746-73105c9af915 h1:XE0WxBil+QakNGN1kP3jzCNGPQ2hKvPIXxwB6wkKN1c=
-aqwari.net/xml v0.0.0-20200323224746-73105c9af915/go.mod h1:NIqcJ5inc6DJNSGCVEYGd3vohE6xF4fhUKHSl5bItVE=
+aqwari.net/xml v0.0.0-20200619145941-6c62842e69c1 h1:MRcR/WbipbMIH7HY4ARtkZn79QV0N2lS5smQeVfGTsI=
+aqwari.net/xml v0.0.0-20200619145941-6c62842e69c1/go.mod h1:NIqcJ5inc6DJNSGCVEYGd3vohE6xF4fhUKHSl5bItVE=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=

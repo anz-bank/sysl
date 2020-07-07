@@ -1,4 +1,4 @@
-include VersionReport
+include VersionReport.mk
 
 BIN_DIR := $(GOPATH)/bin
 
@@ -15,9 +15,12 @@ TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 examples: TUTORIALS
 	cd demo/examples/ && go run generate_website.go && cd ../../  && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-.PHONY: all install grammar antlr build lint test coverage clean check-tidy
+.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden
 lint: ## Run golangci-lint
 	golangci-lint run ./...
+
+golden: ## Updates golden test files in pkg/parse. TODO: Extend to work for all golden files
+	go test ./pkg/parse ./pkg/exporter -update
 
 coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 80

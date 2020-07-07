@@ -1,512 +1,1564 @@
-apps {
+apps: {
   key: "TransformationTest"
-  value {
-    name {
+  value: {
+    name: {
       part: "TransformationTest"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.test.views"
       }
     }
-    views {
+    views: {
       key: "TestMatching"
-      value {
-        param {
+      value: {
+        param: {
           name: "number"
-          type {
+          type: {
             primitive: INT
           }
         }
-        ret_type {
+        ret_type: {
           primitive: INT
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "number"
+              source_context: {
+                file: "tests/matching.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 3
+                  col: 4
+                }
+              }
             }
             scopevar: "."
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out"
-                expr {
-                  unexpr {
+                expr: {
+                  unexpr: {
                     op: INV
-                    arg {
-                      binexpr {
+                    arg: {
+                      binexpr: {
                         op: TO_MATCHING
-                        lhs {
+                        lhs: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 4
+                              col: 17
+                            }
+                            end: {
+                              line: 4
+                              col: 20
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "foo1"
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 4
+                              col: 20
+                            }
+                            end: {
+                              line: 4
+                              col: 20
+                            }
+                          }
                         }
                         attr_name: "*"
                       }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 4
+                          col: 17
+                        }
+                        end: {
+                          line: 4
+                          col: 20
+                        }
+                      }
                     }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 4
+                      col: 6
+                    }
+                    end: {
+                      line: 4
+                      col: 20
+                    }
+                    text: "let out = ~~> foo1"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out1"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
+                    lhs: {
                       name: "."
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 5
+                          col: 17
+                        }
+                        end: {
+                          line: 5
+                          col: 22
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "foo1"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 5
+                          col: 22
+                        }
+                        end: {
+                          line: 5
+                          col: 22
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 5
+                      col: 6
+                    }
+                    end: {
+                      line: 5
+                      col: 22
+                    }
+                    text: "let out1 = . ~> foo1"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out2"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
+                    lhs: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 6
+                          col: 17
+                        }
+                        end: {
+                          line: 6
+                          col: 17
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "foo1"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 6
+                          col: 24
+                        }
+                        end: {
+                          line: 6
+                          col: 24
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 6
+                      col: 6
+                    }
+                    end: {
+                      line: 6
+                      col: 24
+                    }
+                    text: "let out2 = abc ~> foo1"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out3"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      get_attr {
-                        arg {
+                    lhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 7
+                              col: 17
+                            }
+                            end: {
+                              line: 7
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 7
+                          col: 17
+                        }
+                        end: {
+                          line: 7
+                          col: 18
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "foo1"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 7
+                          col: 25
+                        }
+                        end: {
+                          line: 7
+                          col: 25
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 7
+                      col: 6
+                    }
+                    end: {
+                      line: 7
+                      col: 25
+                    }
+                    text: "let out3 = .abc ~> foo1"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out4"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      get_attr {
-                        arg {
+                    lhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 8
+                              col: 17
+                            }
+                            end: {
+                              line: 8
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 8
+                          col: 17
+                        }
+                        end: {
+                          line: 8
+                          col: 18
+                        }
+                      }
                     }
-                    rhs {
-                      get_attr {
-                        arg {
+                    rhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 8
+                              col: 25
+                            }
+                            end: {
+                              line: 8
+                              col: 26
+                            }
+                          }
                         }
                         attr: "def"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 8
+                          col: 25
+                        }
+                        end: {
+                          line: 8
+                          col: 26
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 8
+                      col: 6
+                    }
+                    end: {
+                      line: 8
+                      col: 26
+                    }
+                    text: "let out4 = .abc ~> .def"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out5"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      get_attr {
-                        arg {
+                    lhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 9
+                              col: 17
+                            }
+                            end: {
+                              line: 9
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 9
+                          col: 17
+                        }
+                        end: {
+                          line: 9
+                          col: 18
+                        }
+                      }
                     }
-                    rhs {
-                      get_attr {
-                        arg {
+                    rhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 9
+                              col: 25
+                            }
+                            end: {
+                              line: 9
+                              col: 35
+                            }
+                          }
                         }
                         attr: "abc"
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 9
+                          col: 25
+                        }
+                        end: {
+                          line: 9
+                          col: 35
+                        }
+                      }
                     }
                     attr_name: "*"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 35
+                    }
+                    text: "let out5 = .abc ~> .table of abc"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out6"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      get_attr {
-                        arg {
+                    lhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 10
+                              col: 17
+                            }
+                            end: {
+                              line: 10
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 10
+                          col: 17
+                        }
+                        end: {
+                          line: 10
+                          col: 18
+                        }
+                      }
                     }
-                    rhs {
-                      navigate {
-                        arg {
+                    rhs: {
+                      navigate: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 10
+                              col: 25
+                            }
+                            end: {
+                              line: 10
+                              col: 28
+                            }
+                          }
                         }
                         attr: "foo"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 10
+                          col: 25
+                        }
+                        end: {
+                          line: 10
+                          col: 28
+                        }
+                      }
                     }
                     attr_name: "*"
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 28
+                    }
+                    text: "let out6 = .abc ~> -> foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out7"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      get_attr {
-                        arg {
+                    lhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 11
+                              col: 17
+                            }
+                            end: {
+                              line: 11
+                              col: 18
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 11
+                          col: 17
+                        }
+                        end: {
+                          line: 11
+                          col: 18
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "foo"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 11
+                          col: 30
+                        }
+                        end: {
+                          line: 11
+                          col: 30
+                        }
+                      }
                     }
                     attr_name: "abc"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 30
+                    }
+                    text: "let out7 = .abc ~[abc]> foo"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out7a"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
-                      get_attr {
-                        arg {
+                    lhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 12
+                              col: 18
+                            }
+                            end: {
+                              line: 12
+                              col: 19
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 12
+                          col: 18
+                        }
+                        end: {
+                          line: 12
+                          col: 19
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "foo"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 12
+                          col: 35
+                        }
+                        end: {
+                          line: 12
+                          col: 35
+                        }
+                      }
                     }
                     attr_name: "abc"
                     attr_name: "def"
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 12
+                      col: 35
+                    }
+                    text: "let out7a = .abc ~[abc,def]> foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out7b"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_NOT_MATCHING
-                    lhs {
-                      get_attr {
-                        arg {
+                    lhs: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 13
+                              col: 18
+                            }
+                            end: {
+                              line: 13
+                              col: 19
+                            }
+                          }
                         }
                         attr: "abc"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 13
+                          col: 18
+                        }
+                        end: {
+                          line: 13
+                          col: 19
+                        }
+                      }
                     }
-                    rhs {
+                    rhs: {
                       name: "foo"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 13
+                          col: 36
+                        }
+                        end: {
+                          line: 13
+                          col: 36
+                        }
+                      }
                     }
                     attr_name: "abc"
                     attr_name: "def"
                   }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 13
+                      col: 6
+                    }
+                    end: {
+                      line: 13
+                      col: 36
+                    }
+                    text: "let out7b = .abc !~[abc,def]> foo"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out8"
-                expr {
-                  get_attr {
-                    arg {
-                      binexpr {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      binexpr: {
                         op: TO_NOT_MATCHING
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 14
+                                  col: 17
+                                }
+                                end: {
+                                  line: 14
+                                  col: 18
+                                }
+                              }
                             }
                             attr: "abc"
                           }
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 14
+                              col: 17
+                            }
+                            end: {
+                              line: 14
+                              col: 18
+                            }
+                          }
                         }
-                        rhs {
+                        rhs: {
                           name: "foo"
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 14
+                              col: 35
+                            }
+                            end: {
+                              line: 14
+                              col: 35
+                            }
+                          }
                         }
                         attr_name: "abc"
                         attr_name: "def"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 14
+                          col: 22
+                        }
+                        end: {
+                          line: 14
+                          col: 35
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 14
+                      col: 6
+                    }
+                    end: {
+                      line: 14
+                      col: 39
+                    }
+                    text: "let out8 = .abc !~[abc,def]> foo.def"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out8b"
-                expr {
-                  get_attr {
-                    arg {
-                      binexpr {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      binexpr: {
                         op: TO_NOT_MATCHING
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 15
+                                  col: 18
+                                }
+                                end: {
+                                  line: 15
+                                  col: 19
+                                }
+                              }
                             }
                             attr: "abc"
                           }
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 15
+                              col: 18
+                            }
+                            end: {
+                              line: 15
+                              col: 19
+                            }
+                          }
                         }
-                        rhs {
-                          get_attr {
-                            arg {
+                        rhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 15
+                                  col: 36
+                                }
+                                end: {
+                                  line: 15
+                                  col: 37
+                                }
+                              }
                             }
                             attr: "foo"
                           }
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 15
+                              col: 36
+                            }
+                            end: {
+                              line: 15
+                              col: 37
+                            }
+                          }
                         }
                         attr_name: "abc"
                         attr_name: "def"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 15
+                          col: 23
+                        }
+                        end: {
+                          line: 15
+                          col: 37
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 15
+                      col: 6
+                    }
+                    end: {
+                      line: 15
+                      col: 41
+                    }
+                    text: "let out8b = .abc !~[abc,def]> .foo.def"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out9"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: WHERE
-                    lhs {
-                      get_attr {
-                        arg {
-                          binexpr {
+                    lhs: {
+                      get_attr: {
+                        arg: {
+                          binexpr: {
                             op: TO_NOT_MATCHING
-                            lhs {
-                              get_attr {
-                                arg {
+                            lhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/matching.sysl"
+                                    start: {
+                                      line: 16
+                                      col: 17
+                                    }
+                                    end: {
+                                      line: 16
+                                      col: 18
+                                    }
+                                  }
                                 }
                                 attr: "abc"
                               }
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 16
+                                  col: 17
+                                }
+                                end: {
+                                  line: 16
+                                  col: 18
+                                }
+                              }
                             }
-                            rhs {
-                              get_attr {
-                                arg {
+                            rhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/matching.sysl"
+                                    start: {
+                                      line: 16
+                                      col: 35
+                                    }
+                                    end: {
+                                      line: 16
+                                      col: 36
+                                    }
+                                  }
                                 }
                                 attr: "foo"
+                              }
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 16
+                                  col: 35
+                                }
+                                end: {
+                                  line: 16
+                                  col: 36
+                                }
                               }
                             }
                             attr_name: "abc"
                             attr_name: "def"
                           }
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 16
+                              col: 22
+                            }
+                            end: {
+                              line: 16
+                              col: 36
+                            }
+                          }
                         }
                         attr: "def"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 16
+                          col: 39
+                        }
+                        end: {
+                          line: 16
+                          col: 40
+                        }
+                      }
                     }
-                    rhs {
-                      literal {
+                    rhs: {
+                      literal: {
                         b: true
                       }
-                      type {
+                      type: {
                         primitive: BOOL
+                      }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 16
+                          col: 50
+                        }
+                        end: {
+                          line: 16
+                          col: 50
+                        }
                       }
                     }
                     scopevar: "."
                   }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 16
+                      col: 6
+                    }
+                    end: {
+                      line: 16
+                      col: 54
+                    }
+                    text: "let out9 = .abc !~[abc,def]> .foo.def where(true)"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out9"
-                expr {
-                  unexpr {
+                expr: {
+                  unexpr: {
                     op: SINGLE
-                    arg {
-                      get_attr {
-                        arg {
-                          binexpr {
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          binexpr: {
                             op: TO_NOT_MATCHING
-                            lhs {
-                              get_attr {
-                                arg {
+                            lhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/matching.sysl"
+                                    start: {
+                                      line: 17
+                                      col: 17
+                                    }
+                                    end: {
+                                      line: 17
+                                      col: 18
+                                    }
+                                  }
                                 }
                                 attr: "abc"
                               }
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 17
+                                  col: 17
+                                }
+                                end: {
+                                  line: 17
+                                  col: 18
+                                }
+                              }
                             }
-                            rhs {
-                              get_attr {
-                                arg {
+                            rhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/matching.sysl"
+                                    start: {
+                                      line: 17
+                                      col: 35
+                                    }
+                                    end: {
+                                      line: 17
+                                      col: 36
+                                    }
+                                  }
                                 }
                                 attr: "foo"
+                              }
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 17
+                                  col: 35
+                                }
+                                end: {
+                                  line: 17
+                                  col: 36
+                                }
                               }
                             }
                             attr_name: "abc"
                             attr_name: "def"
                           }
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 17
+                              col: 22
+                            }
+                            end: {
+                              line: 17
+                              col: 36
+                            }
+                          }
                         }
                         attr: "def"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 17
+                          col: 39
+                        }
+                        end: {
+                          line: 17
+                          col: 40
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 17
+                      col: 6
+                    }
+                    end: {
+                      line: 17
+                      col: 44
+                    }
+                    text: "let out9 = .abc !~[abc,def]> .foo.def single"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out9"
-                expr {
-                  unexpr {
+                expr: {
+                  unexpr: {
                     op: SINGLE_OR_NULL
-                    arg {
-                      get_attr {
-                        arg {
-                          binexpr {
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          binexpr: {
                             op: TO_NOT_MATCHING
-                            lhs {
-                              get_attr {
-                                arg {
+                            lhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/matching.sysl"
+                                    start: {
+                                      line: 18
+                                      col: 17
+                                    }
+                                    end: {
+                                      line: 18
+                                      col: 18
+                                    }
+                                  }
                                 }
                                 attr: "abc"
                               }
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 18
+                                  col: 17
+                                }
+                                end: {
+                                  line: 18
+                                  col: 18
+                                }
+                              }
                             }
-                            rhs {
-                              get_attr {
-                                arg {
+                            rhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/matching.sysl"
+                                    start: {
+                                      line: 18
+                                      col: 35
+                                    }
+                                    end: {
+                                      line: 18
+                                      col: 36
+                                    }
+                                  }
                                 }
                                 attr: "foo"
+                              }
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 18
+                                  col: 35
+                                }
+                                end: {
+                                  line: 18
+                                  col: 36
+                                }
                               }
                             }
                             attr_name: "abc"
                             attr_name: "def"
                           }
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 18
+                              col: 22
+                            }
+                            end: {
+                              line: 18
+                              col: 36
+                            }
+                          }
                         }
                         attr: "def"
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 18
+                          col: 39
+                        }
+                        end: {
+                          line: 18
+                          col: 40
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 18
+                      col: 6
+                    }
+                    end: {
+                      line: 18
+                      col: 44
+                    }
+                    text: "let out9 = .abc !~[abc,def]> .foo.def singleOrNull"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out10"
-                expr {
-                  ifelse {
-                    cond {
-                      call {
+                expr: {
+                  ifelse: {
+                    cond: {
+                      call: {
                         func: "bool"
-                        arg {
-                          binexpr {
+                        arg: {
+                          binexpr: {
                             op: EQ
-                            lhs {
+                            lhs: {
                               name: "a"
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 20
+                                  col: 8
+                                }
+                                end: {
+                                  line: 20
+                                  col: 8
+                                }
+                              }
                             }
-                            rhs {
-                              literal {
+                            rhs: {
+                              literal: {
                                 b: true
                               }
-                              type {
+                              type: {
                                 primitive: BOOL
                               }
+                              source_context: {
+                                file: "tests/matching.sysl"
+                                start: {
+                                  line: 20
+                                  col: 13
+                                }
+                                end: {
+                                  line: 20
+                                  col: 13
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 20
+                              col: 8
+                            }
+                            end: {
+                              line: 20
+                              col: 13
                             }
                           }
                         }
                       }
-                    }
-                    if_true {
-                      binexpr {
-                        op: TO_MATCHING
-                        lhs {
-                          name: "."
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 19
+                          col: 20
                         }
-                        rhs {
+                        end: {
+                          line: 21
+                          col: 6
+                        }
+                      }
+                    }
+                    if_true: {
+                      binexpr: {
+                        op: TO_MATCHING
+                        lhs: {
+                          name: "."
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 20
+                              col: 21
+                            }
+                            end: {
+                              line: 20
+                              col: 26
+                            }
+                          }
+                        }
+                        rhs: {
                           name: "foo"
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 20
+                              col: 26
+                            }
+                            end: {
+                              line: 20
+                              col: 26
+                            }
+                          }
                         }
                         attr_name: "*"
                       }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 20
+                          col: 23
+                        }
+                        end: {
+                          line: 20
+                          col: 26
+                        }
+                      }
                     }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 19
+                      col: 6
+                    }
+                    end: {
+                      line: 21
+                      col: 6
+                    }
+                    text: "let out10 = if:\n        a == true => . ~> foo\n      let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)\n    )\n"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out11"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: TO_MATCHING
-                    lhs {
+                    lhs: {
                       name: "rankedSecurityDetailsSet"
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 21
+                          col: 18
+                        }
+                        end: {
+                          line: 21
+                          col: 18
+                        }
+                      }
                     }
-                    rhs {
-                      get_attr {
-                        arg {
+                    rhs: {
+                      get_attr: {
+                        arg: {
                           name: "input"
+                          source_context: {
+                            file: "tests/matching.sysl"
+                            start: {
+                              line: 21
+                              col: 66
+                            }
+                            end: {
+                              line: 21
+                              col: 66
+                            }
+                          }
                         }
                         attr: "SecurityDetails"
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/matching.sysl"
+                        start: {
+                          line: 21
+                          col: 71
+                        }
+                        end: {
+                          line: 21
+                          col: 81
+                        }
+                      }
                     }
                     attr_name: "securityDetailsId"
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/matching.sysl"
+                    start: {
+                      line: 21
+                      col: 6
+                    }
+                    end: {
+                      line: 21
+                      col: 96
+                    }
+                    text: "let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)"
                   }
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/matching.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 22
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/matching.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 23
+          }
+          text: "!view TestMatching(number <: int) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/matching.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }
