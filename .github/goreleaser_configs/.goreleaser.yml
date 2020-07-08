@@ -136,8 +136,7 @@ brews:
     #   ...
 
     # Packages your package depends on.
-    dependencies:
-      - go
+    # dependencies:
 
     # Packages that conflict with your package.
     # conflicts:
