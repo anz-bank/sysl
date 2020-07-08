@@ -589,6 +589,12 @@ func TestOpenAPI3(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/openapi3.sysl")
 }
 
+func TestAttrScope(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/attr_scope.sysl")
+}
+
 func TestUndefinedRootAbsoluteImport(t *testing.T) {
 	t.Parallel()
 
