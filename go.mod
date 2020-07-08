@@ -13,6 +13,7 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20200503195918-621b933c7a7f
+	github.com/anz-bank/mermaid-go v0.0.0-20200708033517-0cb9fa897e0c
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
 	github.com/arr-ai/hash v0.5.0 // indirect
 	github.com/arr-ai/wbnf v0.13.0
@@ -27,7 +28,6 @@ require (
 	github.com/go-openapi/swag v0.19.9
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
-	github.com/joshcarp/mermaid-go v0.0.0-20200403052241-d6fecd5216de
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
@@ -37,7 +37,7 @@ require (
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/afero v1.3.0
 	github.com/stretchr/objx v0.2.0 // indirect
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/pretty v1.0.1 // indirect
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
