@@ -8,7 +8,7 @@ This package contains experimental [arr.ai](https://github.com/arr-ai/arrai) cod
 
 ## Usage
 
-To keep things simple and consistent, all scripts currently work with the same `model.sysl` spec.
+To keep things simple and consistent, all scripts currently work with the same `model.sysl` spec. This spec will evolve over time to contain the full range of Sysl features and patterns to stress test the scripts.
 
 To run the arr.ai scripts, install arr.ai and execute `arrai run [file]`. For example:
 
