@@ -1,46 +1,71 @@
-Â
-Source·
+‰
+Sourceþ
 
 Source"
 patterns:
-"db*0
-Read(
-Read:B
-xš
+"db*J
+Select@
+Select:B
+x <: CustomerJ
+idš
 
-model.sysl2H
-FooAš
+model.sysl	2u
+Customeriš
 
-model.sysl$
-"
-xš
+model.syslL
+#
+idš
 
-model.syslš
+model.sysl
+%
+nameš
+
+model.syslš
 
 model.sysl
-d
-A_
+Ù
+AÓ
 
-A*?
-Fetch6
-Fetch:
+A*~
+Fetchu
+Fetch:
 
-SourceReadš
+SourceSelect"
+req:B
+ok <: FetchResponseJ
+reqJ
+
+FetchRequestš
 
-model.sysl	š
+model.sysl
+2W
+FetchRequestGš
 
-model.sysld
-B_
+model.sysl*
+(
+user_idš
+
+model.sysl2Z
+FetchResponseIš
+
+model.sysl,
+*
+	user_nameš
+
+model.syslš
+
+model.sysl		f
+Ba
 
-B*?
-Fetch6
-Fetch:
+B*A
+Fetch8
+Fetch:
 
-SourceReadš
+SourceSelectš
 
-model.syslš
+model.syslš
 
-model.syslñ
+model.syslñ
 Cë
 
 C*=
@@ -49,13 +74,13 @@ model.syslñ
 
 AFetchš
 
-model.sysl*=
+model.sysl*=
 FetchB3
 FetchB:
 
 BFetchš
 
-model.sysl*M
+model.sysl*M
 FetchD
 Fetch:
 
@@ -63,22 +88,41 @@ model.sysl*M
 
 CFetchBš
 
-model.syslš
+model.sysl#š
 
-model.syslp
-Dk
+model.syslâ
+DÜ
 
-D*K
-FetchB
-Fetch:
+D*ˆ
+Fetch
+Fetch:
 
-AFetch:
+AFetch"
+req:
 
-CFetchš
+CFetch:B
+ok <: FetchResponseJ
+reqJ
+
+FetchRequestš
 
-model.sysl š
+model.sysl$)2V
+FetchRequestFš
 
-model.syslb
+model.sysl),)
+'
+userIdš
+
+model.sysl**2Y
+FetchResponseHš
+
+model.sysl,/+
+)
+userNameš
+
+model.sysl--š
+
+model.sysl##b
 ClientX
 
 Client*3
@@ -87,6 +131,6 @@ model.syslb
 
 DFetchš
 
-model.sysl!#š
+model.sysl02š
 
-model.sysl  
+model.sysl//

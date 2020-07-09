@@ -1,17 +1,26 @@
 Source[~db]:
-    !type Foo:
-        x <: int
+    !type Customer:
+        id <: int
+        name <: string
+        foo <: int
 
-    Read:
-        return x
+    Select(id <: int):
+        return x <: Customer
 
 A:
-    Fetch:
-        Source <- Read
+    Fetch(req <: FetchRequest):
+        Source <- Select(req)
+        return ok <: FetchResponse
+
+    !type FetchRequest:
+        user_id <: int
+
+    !type FetchResponse:
+        user_name <: string
 
 B:
     Fetch:
-        Source <- Read
+        Source <- Select
 
 C:
     FetchA:
@@ -25,9 +34,16 @@ C:
         . <- FetchB
 
 D:
-    Fetch:
-        A <- Fetch
+    Fetch(req <: FetchRequest):
+        A <- Fetch(req)
         C <- Fetch
+        return ok <: FetchResponse
+
+    !type FetchRequest:
+        userId <: int
+
+    !type FetchResponse:
+        userName <: string
 
 Client:
     Do:

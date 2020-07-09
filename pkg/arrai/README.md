@@ -50,6 +50,12 @@ To speed up the edit/refresh cycle, install the [Save and Run](https://github.co
             "cmd": "echo; arrai run ${file}",
             "useShortcut": false,
             "silent": false
+        },
+        {
+            "match": "\\.sysl$",
+            "cmd": "sysl validate ${file}",
+            "useShortcut": false,
+            "silent": false
         }
     ]
 }
