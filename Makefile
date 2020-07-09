@@ -20,7 +20,7 @@ lint: ## Run golangci-lint
 	golangci-lint run ./...
 
 golden: ## Updates golden test files in pkg/parse. TODO: Extend to work for all golden files
-	go test ./pkg/parse ./pkg/exporter -update
+	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
 
 coverage: ## Run tests and verify the test coverage remains high
 	./scripts/test-with-coverage.sh 80
