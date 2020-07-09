@@ -16,6 +16,10 @@ To run the arr.ai scripts, install arr.ai and execute `arrai run [file]`. For ex
 $ arrai run pkg/arrai/integration_diagram.arrai
 ```
 
+Each script has an accompanying Markdown file describing the logic and output.
+
+<!-- TODO(ladeo): Generate these Markdown files from the arr.ai sources. -->
+
 ## Development
 
 Many of the scripts will start by importing `model.sysl` (assuming it's in the current working directory) like so:
