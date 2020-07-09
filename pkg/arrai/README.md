@@ -13,7 +13,7 @@ To keep things simple and consistent, all scripts currently work with the same `
 To run the arr.ai scripts, install arr.ai and execute `arrai run [file]`. For example:
 
 ```bash
-$ arrai run pkg/arrai/integration_diagram.arrai
+$ arrai run integration_diagram.arrai
 ```
 
 Each script has an accompanying Markdown file describing the logic and output.
@@ -38,18 +38,18 @@ $ sysl pb --mode=pb -o model.pb model.sysl
 
 ### Environment
 
-To develop additional arr.ai scripts, you're encouraged to use Visual Studio Code with the arrai extension.
+To develop additional arr.ai scripts, you're encouraged to use Visual Studio Code with the `arrai` extension.
 
-To speed up the edit/refresh cycle, install the "Save and Run" extension and configure it with:
+To speed up the edit/refresh cycle, install the [Save and Run](https://github.com/wk-j/vscode-save-and-run) extension and configure it with:
 
 ```json
 "saveAndRun": {
     "commands": [
         {
-        "match": "\\.arrai$",
-        "cmd": "echo; arrai run ${file}",
-        "useShortcut": false,
-        "silent": false
+            "match": "\\.arrai$",
+            "cmd": "echo; arrai run ${file}",
+            "useShortcut": false,
+            "silent": false
         }
     ]
 }
