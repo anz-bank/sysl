@@ -9,7 +9,9 @@ Source[~db]:
 
 A:
     Fetch(req <: FetchRequest):
+        # TODO: Construct Source.Select.id from req.
         Source <- Select(req)
+        # TODO: Construct FetchResponse from response.
         return ok <: FetchResponse
 
     !type FetchRequest:
@@ -35,8 +37,10 @@ C:
 
 D:
     Fetch(req <: FetchRequest):
+        # TODO: Construct A.FetchRequest from req.
         A <- Fetch(req)
         C <- Fetch
+        # TODO: Construct FetchResponse from response.
         return ok <: FetchResponse
 
     !type FetchRequest:
@@ -46,5 +50,11 @@ D:
         userName <: string
 
 Client:
-    Do:
+    ProfileScreen:
+        # TODO: Construct D.FetchRequest from context.
         D <- Fetch
+        # TODO: Construct Profile from response.
+        return ok <: Profile
+
+    !type Profile:
+        displayName <: string
