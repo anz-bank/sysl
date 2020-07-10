@@ -1,0 +1,13 @@
+openapi: "3.0"
+info:
+  title: Simple
+components:
+  schemas:
+    Postcode:
+      type: object
+      properties:
+        name:
+          type: string
+          min: 4
+          max: 4
+          pattern: \d{4}
