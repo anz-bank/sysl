@@ -209,6 +209,14 @@ func MakeSet(setType *sysl.Type) *sysl.Type {
 	}
 }
 
+func MakeSequence(seqType *sysl.Type) *sysl.Type {
+	return &sysl.Type{
+		Type: &sysl.Type_Sequence{
+			Sequence: seqType,
+		},
+	}
+}
+
 func MakeNoType() *sysl.Type {
 	return &sysl.Type{
 		Type: &sysl.Type_NoType_{
