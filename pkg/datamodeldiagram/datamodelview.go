@@ -308,6 +308,8 @@ func (v *DataModelView) DrawTuple(
 						Count:        1,
 					}
 				}
+			} else {
+				v.StringBuilder.WriteString(collectionString)
 			}
 		} else {
 			v.StringBuilder.WriteString(fmt.Sprintf("+ %s : %s\n", attrName, strings.ToLower(attrType.GetPrimitive().String())))
