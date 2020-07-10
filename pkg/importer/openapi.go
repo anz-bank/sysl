@@ -303,7 +303,7 @@ func (o *openapiv3) buildField(name string, prop *openapi3.SchemaRef) Field {
 func attrsForStrings(schema *openapi3.Schema) []string {
 	var attrs []string
 	if r := schema.Pattern; r != "" {
-		attrs = append(attrs, fmt.Sprintf(`regex="%s"`, r))
+		attrs = append(attrs, fmt.Sprintf(`regex="%s"`, getSyslSafeName(r)))
 	}
 	if e := schema.Enum; len(e) != 0 && false { // remove the `&& false` when enum_values are added
 		var vals []string
