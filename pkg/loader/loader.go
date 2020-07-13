@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -28,6 +29,21 @@ func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (
 	}
 
 	modelParser := parse.NewParser()
+	if !projectConfig.RootIsFound {
+		modelParser.RestrictToLocalImport()
+	}
+	return parse.LoadAndGetDefaultApp(projectConfig.Module, projectConfig.Fs, modelParser)
+}
+
+func LoadSyslModuleWithFlags(root, filename string, fs afero.Fs,
+	logger *logrus.Logger, flags importer.Flags) (*sysl.Module, string, error) {
+	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
+	projectConfig := NewProjectConfiguration()
+	if err := projectConfig.ConfigureProject(root, filename, fs, logger); err != nil {
+		return nil, "", err
+	}
+
+	modelParser := parse.NewParser().WithImporterFlags(flags)
 	if !projectConfig.RootIsFound {
 		modelParser.RestrictToLocalImport()
 	}

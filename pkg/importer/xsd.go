@@ -69,6 +69,10 @@ func (i *XSDImporter) WithPackage(pkg string) Importer {
 	return i
 }
 
+func (i *XSDImporter) WithFlags(flags Flags) Importer {
+	return i
+}
+
 func makeNamespacedType(name xml.Name, target Type) Type {
 	return &ImportedBuiltInAlias{
 		name:   fmt.Sprintf("%s:%s", name.Space, name.Local),

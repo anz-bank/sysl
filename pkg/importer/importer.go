@@ -17,6 +17,16 @@ type Importer interface {
 	WithAppName(appName string) Importer
 	// WithPackage allows the exported Sysl package attribute to be specified
 	WithPackage(packageName string) Importer
+	// WithFlags allows a set of feature flags to be passed to the importer.
+	WithFlags(flags Flags) Importer
+}
+
+// Flags are used to pass in feature flags into the importer.
+// They are used to allow breaking changes to be introduced without impacting existing users.
+// They are intended to be short-lived and are expected to be removed when
+// corresponding changes in dependent repos have been made.
+type Flags struct {
+	MultipleErrorResponses bool // MultipleErrorResponses is used to toggle on the generation of multiple error responses
 }
 
 var Formats = []Format{

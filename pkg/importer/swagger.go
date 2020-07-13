@@ -61,6 +61,11 @@ func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
 	return l
 }
 
+func (l *OpenAPI2Importer) WithFlags(flags Flags) Importer {
+	l.flags = flags
+	return l
+}
+
 // convertToOpenAPI3 takes a swagger spec and converts it to openapi3
 func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader) (*openapi3.Swagger, string, error) {
 	var swagger2 openapi2.Swagger

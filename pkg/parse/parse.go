@@ -32,6 +32,7 @@ type Parser struct {
 	AssignTypes         map[string]TypeData
 	LetTypes            map[string]TypeData
 	Messages            map[string][]msg.Msg
+	importerFlags       importer.Flags
 	allowAbsoluteImport bool
 }
 
@@ -53,7 +54,7 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	return tree, nil
 }
 
-func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
+func importForeign(def importDef, input antlr.CharStream, flags importer.Flags) (antlr.CharStream, error) {
 	logger := logrus.StandardLogger()
 	fileName, _ := mod.ExtractVersion(def.filename)
 	file := input.GetText(0, input.Size())
@@ -67,7 +68,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 		return input, nil
 	case importer.OpenAPI3.Name, importer.Swagger.Name:
 		imp, err := importer.Factory(fileName, []byte(file), logger)
-		imp.WithAppName(def.appname).WithPackage(def.pkg)
+		imp.WithAppName(def.appname).WithPackage(def.pkg).WithFlags(flags)
 		if err != nil {
 			return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
 		}
@@ -88,6 +89,12 @@ func detectFileType(fileName string, file []byte) (*importer.Format, error) {
 		importer.SYSL,
 	}
 	return importer.GuessFileType(fileName, file, ParserFormats)
+}
+
+// WithImporterFlags sets the feature flags for the importers
+func (p *Parser) WithImporterFlags(flags importer.Flags) *Parser {
+	p.importerFlags = flags
+	return p
 }
 
 func (p *Parser) RestrictToLocalImport() {
@@ -135,7 +142,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		listener.sc = sourceCtxHelper{source.filename}
 		listener.base = filepath.Dir(filename)
 
-		input, err := importForeign(source, fsinput)
+		input, err := importForeign(source, fsinput, p.importerFlags)
 		if err != nil {
 			return nil, err
 		}
@@ -693,6 +700,7 @@ func NewParser() *Parser {
 		AssignTypes:         map[string]TypeData{},
 		LetTypes:            map[string]TypeData{},
 		Messages:            map[string][]msg.Msg{},
+		importerFlags:       importer.Flags{},
 		allowAbsoluteImport: true,
 	}
 }

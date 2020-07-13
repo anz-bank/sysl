@@ -15,6 +15,7 @@ import (
 )
 
 type openapiv3 struct {
+	flags    Flags // Toggles importer features on or off
 	appName  string
 	pkg      string
 	basePath string // Used for Swagger2.0 files which have a basePath field
@@ -66,6 +67,11 @@ func (o *openapiv3) WithAppName(appName string) Importer {
 
 func (o *openapiv3) WithPackage(packageName string) Importer {
 	o.pkg = packageName
+	return o
+}
+
+func (o *openapiv3) WithFlags(flags Flags) Importer {
+	o.flags = flags
 	return o
 }
 
