@@ -32,7 +32,7 @@ func NewOpenAPILoader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoade
 	loader.LoadSwaggerFromURIFunc = func(
 		loader *openapi3.SwaggerLoader, url *url.URL) (swagger *openapi3.Swagger, err error) {
 		if url.Host == "" && url.Scheme == "" {
-			logger.Infof("Loading openapi ref: %s", url.String())
+			logger.Debugf("Loading openapi ref: %s", url.String())
 			data, err := afero.ReadFile(fs, pathFromURL(url))
 			if err != nil {
 				return nil, err
@@ -394,14 +394,20 @@ func (o *openapiv3) buildEndpoint(path string, item *openapi3.PathItem) []Method
 				ep.Params.Add(param)
 			}
 		}
-		typePrefix := convertToSyslSafe(cleanEndpointPath(path)) + "_"
+		typePrefix := getSyslSafeName(convertToSyslSafe(cleanEndpointPath(path))) + "_"
 		for statusCode, resp := range op.Responses {
 			text := "error"
 			if statusCode[0] == '2' {
 				text = "ok"
 			}
+			var respName string
+			if o.flags.MultipleErrorResponses {
+				respName = typePrefix + text + statusCode
+			} else {
+				respName = typePrefix + text
+			}
 			respType := &StandardType{
-				name:       typePrefix + text,
+				name:       respName,
 				Properties: FieldList{},
 			}
 			for mediaType, val := range resp.Value.Content {
