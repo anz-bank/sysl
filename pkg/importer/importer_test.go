@@ -28,6 +28,7 @@ type testConfig struct {
 	name          string
 	testDir       string
 	testExtension string
+	flags         Flags
 }
 
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
@@ -52,7 +53,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				imp, err := Factory(absFilePath, input, logger)
 				require.NoError(t, err)
-				imp.WithAppName("testapp").WithPackage("package_foo")
+				imp.WithAppName("testapp").WithPackage("package_foo").WithFlags(cfg.flags)
 				result, err := imp.Load(string(input))
 				require.NoError(t, err)
 				if *update {
@@ -92,6 +93,15 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 		name:          "TestLoadXSDFromTestFiles",
 		testDir:       "tests-xsd",
 		testExtension: ".xsd",
+	})
+}
+
+func TestImportWithFlags(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestImportWithFlags",
+		testDir:       "tests-flags",
+		testExtension: ".yaml",
+		flags:         Flags{MultipleErrorResponses: true},
 	})
 }
 
