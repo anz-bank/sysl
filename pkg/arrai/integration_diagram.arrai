@@ -1,0 +1,23 @@
+# Generates the PlantUML for an integration diagram of model.sysl.
+
+let sysl = //encoding.proto.decode(//encoding.proto.proto, //os.file('sysl.pb'));
+let model = //encoding.proto.decode(sysl, 'Module' , //os.file('model.pb'));
+
+# Transforms a module to an adjacency list of applications.
+let toAdj = \m m.apps >>> \k \a 
+    //seq.join('', 
+        # Names of targets of call statements of endpoints of app.
+        (a.endpoints >> \e e.stmt >> \s s.@item.call?.target.part.@item.@item : '') 
+        orderby .@value >> .@value
+    ) where .@item != k && .@item count;
+
+# Transforms an adjacency list of applications to a PlantUML integration diagram.
+let toInt = \adj 
+$`@startuml
+${
+    (adj >>> \k \v $`${v >> $`[${k}] --> [${.}]`::\n}`)
+    orderby .@ >> .@value
+::\n}
+@enduml`;
+
+toInt(toAdj(model))
