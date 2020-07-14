@@ -16,7 +16,7 @@ testapp "Simple" [package="package_foo"]:
             return error <: FatalErrorResponse
             return error <: _test_error400
             return error <: _test_error401
-            return ok <: _test_ok200
+            return ok <: SimpleObj
 
     #---------------------------------------------------------------------------
     # definitions
@@ -42,15 +42,11 @@ testapp "Simple" [package="package_foo"]:
             @json_tag = "ErrorResponse"
         content-type <: string [~header]:
             @json_tag = "content-type"
+        trace-id <: string [~header]:
+            @json_tag = "trace-id"
 
     !type _test_error401:
         ErrorResponse <: ErrorResponse [mediatype="application/json"]:
             @json_tag = "ErrorResponse"
         content-type <: string [~header]:
             @json_tag = "content-type"
-
-    !type _test_ok200:
-        ErrorResponse <: ErrorResponse [mediatype="application/json"]:
-            @json_tag = "ErrorResponse"
-        bytes_ <: bytes [mediatype="application/pdf"]:
-            @json_tag = "bytes"

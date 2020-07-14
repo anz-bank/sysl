@@ -9,18 +9,17 @@ paths:
         200:
           description: "200 OK"
           content:
-            application/pdf:
-              schema:
-                type: string
-                format: binary
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/SimpleObj"
         400:
           description: Bad request
           headers: 
             content-type:
               $ref: "#/components/headers/content-type"
+            trace-id:
+              schema:
+                type: string
           content:
             application/json:
               schema:

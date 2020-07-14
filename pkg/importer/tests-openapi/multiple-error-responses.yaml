@@ -1,0 +1,79 @@
+openapi: "3.0.1"
+info:
+  title: Simple
+  version: "1.0"
+paths:
+  /test:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+        400:
+          description: Bad request
+          headers: 
+            content-type:
+              $ref: "#/components/headers/content-type"
+            trace-id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        401:
+          description: Authentication error
+          headers: 
+            content-type:
+              $ref: "#/components/headers/content-type"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FatalErrorResponse"
+        504:
+          description: Gatewaytimeout error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FatalErrorResponse"
+components:
+  headers:
+    content-type:
+      schema:
+        type: string
+        example: application/json
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        description: 
+          type: string
+        code: 
+          type: integer
+    FatalErrorResponse:
+      type: object
+      properties:
+        description: 
+          type: string
+        code: 
+          type: integer
+    SimpleObj:
+      type: object
+      properties:
+        name:
+          type: string
