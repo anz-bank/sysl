@@ -28,3 +28,23 @@ testapp "Simple" [package="package_foo"]:
     /tests%2Bagain:
         GET:
             return ok <: 200
+
+    /rest?method=flickr:
+        GET:
+            return ok <: 200
+
+    /rest?method=flickr&action=flickr:        
+        GET:
+            return ok <: 200
+
+    /rest?method=flickr%2Ephotos%2Esearch:        
+        GET:
+            return ok <: 200
+
+    /rest?method=flickr%2Ephotos%2Esearch&action=flickr%2Ephotos%2Esearch:        
+        GET:
+            return ok <: 200
+
+    /rest?method=flickr%2Ephotos%2Esearch&action=flickr:        
+        GET:
+            return ok <: 200
