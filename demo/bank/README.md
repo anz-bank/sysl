@@ -14,6 +14,12 @@ sysl data --output data.png --project "Bank :: Data Views" ./project.sysl
 sysl ints --output ints.png --project "Bank :: Integrations" ./project.sysl
 ```
 
+## Endpoint analysis diagram
+
+```bash
+sysl ints --epa --output epa.png --project "Bank :: Integrations" ./project.sysl
+```
+
 ## Sequence diagram
 
 For the ATM withdrawal endpoint:
