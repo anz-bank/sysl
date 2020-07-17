@@ -6,11 +6,29 @@ field's job is to collect data that is required to do its linting operation.
 The linting operation can happen during walking the abstract syntax tree or
 after that process. This depends on what the linter is detecting.
 
-Currently, the linter can detect the following things:
+Table of Contents:
+- [Linter Design](#linter-design)
+  - [Linter Format](#linter-format)
+  - [Return Statement Lint](#return-statement-lint)
+  - [Case-sensitive Applications Redefinition](#case-sensitive-applications-redefinition)
+  - [Call Statement Linting](#call-statement-linting)
+  - [Additional Notes](#additional-notes)
 
-1. [Checks if return statements are not in the form of `return ok <: some_type`.](#return-statement-lint)
-2. [Checks if there are case-sensitive application definitions e.g. `App` and `app`.](#case-sensitive-applications-redefinition)
-3. [Checks if a call statement calls to an existing application, endpoint, and method.](#call-statement-linting)
+## Linter Format
+The format of the linter message is the following:
+```
+lint path/to/file:lineNumber:colNumber: linter message
+```
+
+But there are linter messages that involve multiple locations.
+For that messages, the format is the following:
+```
+lint: linter message:
+path/to/file1:lineNumber:colNumber
+path/to/file2:lineNumber:colNumber
+path/to/file3:lineNumber:colNumber
+...
+```
 
 ## Return Statement Lint
 
@@ -82,3 +100,11 @@ The linting implementation for this feature can be found in the function
 `*TreeShapeListener.lintEndpoint`. The implementation just checks that all the
 calls in the `calls` field exist in the `apps` field. It checks that
 applications, endpoints, and methods (for REST endpoints) are defined.
+
+## Additional Notes
+
+The `recordApp`, `recordEndpoint`, and `recordMethod` functions
+of the struct `*graph` return errors when a key already exists
+(or doesn't exist) in the graph. The errors are meant to just
+catch implementation mistakes and it should not happen, unless
+there's a bug.

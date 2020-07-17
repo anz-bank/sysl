@@ -265,17 +265,9 @@ func checkCalls(mod *sysl.Module, appname string, epname string, dst *sysl.State
 	case *sysl.Statement_Call:
 		app := syslutil.GetApp(s.Call.Target, mod)
 		if app == nil {
-			//TODO: delete this? this removes non-existent app call lint
-			// logrus.Warnf("%s::%s calls non-existent App: %s",
-			// 	appname, epname, s.Call.Target.Part)
 			return false
 		}
 		_, valid := app.Endpoints[s.Call.Endpoint]
-		//TODO: delete this? this removes non-existent endpoint call lint
-		// if !valid {
-		// logrus.Warnf("%s::%s calls non-existent App <- Endpoint (%s <- %s)",
-		// 	appname, epname, s.Call.Target.Part, s.Call.Endpoint)
-		// }
 		return valid
 	case *sysl.Statement_Action:
 		return true

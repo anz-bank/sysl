@@ -653,7 +653,7 @@ func TestCaseSensitiveRedefinitionImport(t *testing.T) {
 func TestReturnLint(t *testing.T) {
 	assertLintLogs(t,
 		"tests/lint_return.sysl",
-		`lint tests/lint_return.sysl:41:12: 'return some_type' not supported, use 'return ok <: some_type' instead`,
+		`lint tests/lint_return.sysl:5:12: 'return some_type' not supported, use 'return ok <: some_type' instead`,
 	)
 }
 

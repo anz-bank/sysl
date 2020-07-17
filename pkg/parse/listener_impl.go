@@ -1025,11 +1025,8 @@ func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 // EnterRet_stmt is called when production ret_stmt is entered.
 func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
 	payload := strings.Trim(ctx.TEXT().GetText(), " ")
-	if s.lintMode && !regexp.MustCompile(`<:`).MatchString(payload) {
-		logrus.Warnf(
-			"lint %s: 'return %s' not supported, use 'return ok <: %[2]s' instead",
-			s.createLocation(ctx.GetStart().GetStart(), ctx.GetStart().GetColumn()),
-			payload)
+	if s.lintMode {
+		s.lintRetStmt(payload, ctx)
 	}
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Ret{

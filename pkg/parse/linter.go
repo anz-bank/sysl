@@ -2,9 +2,11 @@ package parse
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 
+	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/sirupsen/logrus"
 )
 
@@ -182,7 +184,7 @@ func (s *TreeShapeListener) lintEndpoint() {
 			}
 			if app, exists := (*apps)[appName]; exists {
 				if endpoints, exists := (*app.rec)[endpoint]; exists {
-					// if method is empty string, it is linting simple endpoint
+					// if method is empty string, it is linting simple endpoint, not REST endpoint
 					if method != "" {
 						if _, exists = (*endpoints.rec)[method]; exists {
 							continue
@@ -242,5 +244,17 @@ func (s *TreeShapeListener) lintAppDefs() {
 				strings.Join(appDefs, "\n"),
 			)
 		}
+	}
+}
+
+func (s *TreeShapeListener) lintRetStmt(payload string, ctx *parser.Ret_stmtContext) {
+	if !regexp.MustCompile(`<:`).MatchString(payload) {
+		if regexp.MustCompile(`(ok|error|[1-5][0-9][0-9])`).MatchString(payload) {
+			return
+		}
+		logrus.Warnf(
+			"lint %s: 'return %s' not supported, use 'return ok <: %[2]s' instead",
+			s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+			payload)
 	}
 }
