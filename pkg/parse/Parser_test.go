@@ -3,6 +3,7 @@ package parse
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -616,8 +617,6 @@ func TestDuplicateImport(t *testing.T) {
 }
 
 func TestDuplicateImportWarning(t *testing.T) {
-	t.Parallel()
-
 	var buf bytes.Buffer
 	logrus.SetOutput(&buf)
 	_, err := NewParser().Parse("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
@@ -630,6 +629,88 @@ func TestDuplicateImportWarning(t *testing.T) {
 		)
 		assert.True(t, res, "duplicate import not detected")
 	}
+}
+
+func TestCaseSensitiveRedefinition(t *testing.T) {
+	assertLintLogs(t,
+		"tests/case_sensitive_redefinition.sysl",
+		`lint: case-sensitive redefinitions detected:\n`+
+			`ApP:tests/case_sensitive_redefinition.sysl:5:4\n`+
+			`App:tests/case_sensitive_redefinition.sysl:2:4\n`+
+			`aPP:tests/case_sensitive_redefinition.sysl:8:4`,
+	)
+}
+
+func TestCaseSensitiveRedefinitionImport(t *testing.T) {
+	assertLintLogs(t,
+		"tests/case_sensitive_redef_import1.sysl",
+		`lint: case-sensitive redefinitions detected:\n`+
+			`Sensitive:tests/case_sensitive_redef_import1.sysl:3:4\n`+
+			`sEnsitive:tests/case_sensitive_redef_import2.sysl:2:4`,
+	)
+}
+
+func TestReturnLint(t *testing.T) {
+	assertLintLogs(t,
+		"tests/lint_return.sysl",
+		`lint tests/lint_return.sysl:5:12: 'return some_type' not supported, use 'return ok <: some_type' instead`,
+	)
+}
+
+func TestEndpointDoesNotExistLint(t *testing.T) {
+	assertLintLogs(t,
+		"tests/invalid_call_endpoint.sysl",
+		`lint tests/invalid_call_endpoint.sysl:4:12: Endpoint '/hello' does not exist for call 'Call <- GET /hello'`)
+	assertLintLogs(t,
+		"tests/invalid_call_endpoint_import.sysl",
+		`lint tests/invalid_call_endpoint_import.sysl:6:12: Endpoint '/hello' does not exist for call 'Call <- GET /hello'`)
+	assertLintLogs(t,
+		"tests/invalid_call_self_endpoint.sysl",
+		`lint tests/invalid_call_self_endpoint.sysl:4:12: Endpoint '/hello' does not exist for call 'App <- POST /hello'`,
+	)
+	assertLintLogs(t,
+		"tests/invalid_call_simple_endpoint.sysl",
+		`lint tests/invalid_call_simple_endpoint.sysl:3:8: Endpoint 'Endpoint' does not exist for call 'Call <- Endpoint'`,
+	)
+}
+
+func TestMethodDoesNotExistLint(t *testing.T) {
+	assertLintLogs(t,
+		"tests/invalid_call_method.sysl",
+		`lint tests/invalid_call_method.sysl:4:12: Method 'POST' does not exist for call 'Call <- POST /hello'`)
+	assertLintLogs(t,
+		"tests/invalid_call_method_import.sysl",
+		`lint tests/invalid_call_method_import.sysl:6:12: Method 'POST' does not exist for call 'Call <- POST /hello'`,
+	)
+	assertLintLogs(t,
+		"tests/invalid_call_nested.sysl",
+		`lint tests/invalid_call_nested.sysl:4:12: Method 'POST' does not exist for call 'Call <- POST /hi/hello/yo'`,
+	)
+	assertLintLogs(t,
+		"tests/invalid_call_self_method.sysl",
+		`lint tests/invalid_call_self_method.sysl:4:12: Method 'POST' does not exist for call 'App <- POST /hi'`,
+	)
+}
+
+func TestAppDoesNotExistLint(t *testing.T) {
+	assertLintLogs(t,
+		"tests/invalid_call_app.sysl",
+		`lint tests/invalid_call_app.sysl:4:12: Application 'Call' does not exist for call 'Call <- GET /hello'`,
+	)
+	assertLintLogs(t,
+		"tests/invalid_call_simple_app.sysl",
+		`lint tests/invalid_call_simple_app.sysl:3:8: Application 'Call' does not exist for call 'Call <- End'`,
+	)
+}
+
+func assertLintLogs(t *testing.T, file, logMsg string) {
+	var buf bytes.Buffer
+	//FIXME: using logrus global logger makes it impossible to parallelize log tests
+	logrus.SetOutput(&buf)
+	_, err := NewParser().Parse(file, syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	require.NoError(t, err)
+	logrus.SetOutput(os.Stderr)
+	assert.Contains(t, buf.String(), fmt.Sprintf("level=warning msg=\"%s\"", logMsg))
 }
 
 func TestInferExprTypeNonTransform(t *testing.T) {

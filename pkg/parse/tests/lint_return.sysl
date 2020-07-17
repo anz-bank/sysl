@@ -1,0 +1,13 @@
+App:
+    /test:
+        GET:
+            # linter warning
+            return some_type
+        POST:
+            # valid ones
+            return ok
+            return error
+            return 200
+            return 200 <: sequence of some_type
+            return 404 <: some_type
+            return ok <: some_type

@@ -1,0 +1,6 @@
+import invalid_call_method.sysl
+
+Import:
+    /hi:
+        GET:
+            Call <- POST /hello

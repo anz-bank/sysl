@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -37,6 +38,7 @@ type TreeShapeListener struct {
 	currentTypePath PathStack
 	viewName        string
 
+	linter                *linterRecords
 	fieldname             []string
 	urlPrefixes           PathStack
 	app_name              PathStack
@@ -44,6 +46,7 @@ type TreeShapeListener struct {
 	typemap               map[string]*sysl.Type
 	prevLineEmpty         bool
 	pendingDocString      bool
+	lintMode              bool
 	rest_attrs            []map[string]*sysl.Attribute
 	rest_queryparams      []*sysl.Endpoint_RestParams_QueryParam
 	rest_urlparams        []*sysl.Endpoint_RestParams_QueryParam
@@ -1021,10 +1024,14 @@ func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 
 // EnterRet_stmt is called when production ret_stmt is entered.
 func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
+	payload := strings.Trim(ctx.TEXT().GetText(), " ")
+	if s.lintMode {
+		s.lintRetStmt(payload, ctx)
+	}
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Ret{
 			Ret: &sysl.Return{
-				Payload: strings.Trim(ctx.TEXT().GetText(), " "),
+				Payload: payload,
 			},
 		},
 	})
@@ -1051,18 +1058,35 @@ func (s *TreeShapeListener) EnterCall_arg(ctx *parser.Call_argContext) {
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
+	var name string
+	//FIXME: app target isn't recorded at all
 	appName := &sysl.AppName{}
 	if ctx.DOT_ARROW() != nil {
 		appName.Part = s.currentApp().Name.Part
+		name = s.getFullAppName()
+	} else {
+		//TODO: handle target with sub packages
+		name = ctx.Target().GetText()
+	}
+	endpoint := MustUnescape(ctx.Target_endpoint().GetText())
+	methodRe := regexp.MustCompile(`^[ \t]*(GET|POST|DELETE|PUT|PATCH)[ \t]*`)
+	location := s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	if methodRe.MatchString(endpoint) {
+		method := methodRe.FindString(endpoint)
+		urlPath := strings.TrimPrefix(endpoint, method)
+		s.recordCall(name, strings.TrimSpace(urlPath), strings.TrimSpace(method), location)
+	} else {
+		s.recordCall(name, strings.TrimSpace(endpoint), "", location)
 	}
 	s.addToCurrentScope(&sysl.Statement{
 		Stmt: &sysl.Statement_Call{
 			Call: &sysl.Call{
 				Target:   appName,
-				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
+				Endpoint: endpoint,
 			},
 		},
 	})
+
 	if ctx.Call_args() != nil {
 		s.lastStatement().GetCall().Arg = []*sysl.Call_Arg{}
 	}
@@ -1515,6 +1539,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	url := s.urlPrefixes.Get()
 	method := strings.TrimSpace(ctx.HTTP_VERBS().GetText())
 	s.endpointName = method + " " + url
+	s.recordMethod(url, method, s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()))
 	s.method_urlparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	if _, has := s.currentApp().Endpoints[s.endpointName]; !has {
 		s.currentApp().Endpoints[s.endpointName] = &sysl.Endpoint{
@@ -1620,6 +1645,10 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 		return
 	}
 	s.endpointName = ctx.Endpoint_name().GetText()
+	s.recordEndpoint(
+		s.endpointName,
+		s.createLocation(ctx.GetStart().GetStart(), ctx.GetStart().GetColumn()),
+	)
 	ep := s.currentApp().Endpoints[s.endpointName]
 
 	if ep == nil {
@@ -3147,7 +3176,7 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 		}
 		s.pushScope(s.currentApp())
 	}
-
+	s.recordApp(s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()))
 	s.rest_queryparams = []*sysl.Endpoint_RestParams_QueryParam{}
 	s.rest_queryparams_len = []int{0}
 	s.rest_attrs = []map[string]*sysl.Attribute{}
