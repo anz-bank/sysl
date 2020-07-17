@@ -29,7 +29,6 @@ BankModel [package="io.sysl.bank.model"]:
         customer_id <: Customer.customer_id
         account_number <: Account.account_number
 
-
 BankFacade [package="io.sysl.bank.facade"]:
     !wrap BankModel:
         !table Branch
