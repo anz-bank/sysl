@@ -2,26 +2,67 @@ package importer
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/url"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/importer/openapi2conv"
+	"github.com/spf13/afero"
+
 	"github.com/ghodss/yaml"
 
 	"github.com/getkin/kin-openapi/openapi2"
+	"github.com/getkin/kin-openapi/openapi2conv"
 	"github.com/getkin/kin-openapi/openapi3"
 
 	"github.com/sirupsen/logrus"
 )
 
-func LoadSwaggerText(args OutputData, text string, logger *logrus.Logger) (out string, err error) {
-	openapiv3, basePath, err := convertToOpenapiv3([]byte(text))
+func MakeOpenAPI2Importer(logger *logrus.Logger, basePath string, filePath string) *OpenAPI2Importer {
+	return &OpenAPI2Importer{openapiv3: &openapiv3{
+		appName:  "",
+		pkg:      "",
+		basePath: basePath,
+		logger:   logger,
+		fs:       afero.NewOsFs(),
+		types:    TypeList{},
+	},
+		filepath: filePath}
+}
+
+type OpenAPI2Importer struct {
+	openAPI2Spec string
+	filepath     string
+	*openapiv3
+}
+
+func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
+	u, err := pathToURL(l.filepath)
 	if err != nil {
 		return "", err
 	}
-	return importOpenAPI(args, openapiv3, logger, basePath)
+	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec), u, NewOpenAPILoader(l.logger, l.fs))
+	if err != nil {
+		return "", fmt.Errorf("error converting openapi 2:%w", err)
+	}
+	l.openAPI2Spec = oas2spec
+	l.basePath = basePath
+	return l.convertSpec(oas3spec, basePath)
 }
 
-func convertToOpenapiv3(data []byte) (*openapi3.Swagger, string, error) {
+// Set the AppName of the imported app
+func (l *OpenAPI2Importer) WithAppName(appName string) Importer {
+	l.appName = appName
+	return l
+}
+
+// Set the package attribute of the imported app
+func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
+	l.pkg = pkg
+	return l
+}
+
+// convertToOpenAPI3 takes a swagger spec and converts it to openapi3
+func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader) (*openapi3.Swagger, string, error) {
 	var swagger2 openapi2.Swagger
 	jsondata, err := yaml.YAMLToJSON(data)
 	if err != nil {
@@ -36,6 +77,23 @@ func convertToOpenapiv3(data []byte) (*openapi3.Swagger, string, error) {
 		swagger2.Schemes = []string{"https"}
 	}
 	openapiv3, err := openapi2conv.ToV3Swagger(&swagger2)
+	if err != nil {
+		return nil, "", err
+	}
+	// openapi2conv doesnt handle external references correctly so to avoid that we need to serialise the converted
+	// v3 doc back to text and manually replace #/components/* references (easier to do it via text instead of walking
+	// the whole object tree again
+	if oa3text, err := json.Marshal(openapiv3); err == nil {
+		replacer := strings.NewReplacer(
+			"#/definitions/", "#/components/schemas/",
+			"#/responses/", "#/components/responses/",
+			"#/parameters/", "#/components/parameters/",
+		)
+		oa3replaced := replacer.Replace(string(oa3text))
+		_ = json.Unmarshal([]byte(oa3replaced), &openapiv3) //nolint: errcheck // we dont care about the error here
+	}
+
+	err = loader.ResolveRefsIn(openapiv3, uri)
 	if err != nil {
 		return nil, "", err
 	}

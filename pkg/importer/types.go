@@ -40,6 +40,7 @@ var StringAlias = &SyslBuiltIn{name: StringTypeName}
 type Alias struct {
 	name   string
 	Target Type
+	Attrs  []string
 }
 
 func (s *Alias) Name() string { return s.name }
@@ -47,6 +48,7 @@ func (s *Alias) Name() string { return s.name }
 type ExternalAlias struct {
 	name   string
 	Target Type
+	Attrs  []string
 }
 
 const (
@@ -55,10 +57,11 @@ const (
 	ArrayTypeName  = "array"
 )
 
-func NewStringAlias(name string) Type {
+func NewStringAlias(name string, attrs ...string) Type {
 	return &ExternalAlias{
 		name:   name,
 		Target: StringAlias,
+		Attrs:  attrs,
 	}
 }
 
@@ -74,12 +77,14 @@ func (s *ImportedBuiltInAlias) Name() string { return s.name }
 type Array struct {
 	name  string
 	Items Type
+	Attrs []string
 }
 
 func (s *Array) Name() string { return s.name }
 
 type Enum struct {
-	name string
+	name  string
+	Attrs []string
 }
 
 func (s *Enum) Name() string { return s.name }

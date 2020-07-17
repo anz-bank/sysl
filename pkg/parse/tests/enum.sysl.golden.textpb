@@ -1,81 +1,81 @@
-apps: <
+apps: {
   key: "app"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "app"
-    >
-    types: <
+    }
+    types: {
       key: "enum3"
-      value: <
-        enum: <
-          items: <
+      value: {
+        enum: {
+          items: {
             key: "bar"
             value: 2
-          >
-          items: <
+          }
+          items: {
             key: "foo"
             value: 1
-          >
-        >
-        source_context: <
+          }
+        }
+        source_context: {
           file: "tests/enum.sysl"
-          start: <
+          start: {
             line: 5
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 8
             col: 4
-          >
-        >
-      >
-    >
-    types: <
+          }
+        }
+      }
+    }
+    types: {
       key: "enum4"
-      value: <
-        enum: <
-          items: <
+      value: {
+        enum: {
+          items: {
             key: "baz"
             value: 1
-          >
-        >
-        attrs: <
+          }
+        }
+        attrs: {
           key: "attr"
-          value: <
+          value: {
             s: "val"
-          >
-        >
-        attrs: <
+          }
+        }
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "pattern"
-              >
-            >
-          >
-        >
-        source_context: <
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/enum.sysl"
-          start: <
+          start: {
             line: 8
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 10
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/enum.sysl"
-      start: <
+      start: {
         line: 1
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 1
-      >
-    >
-  >
->
+      }
+    }
+  }
+}

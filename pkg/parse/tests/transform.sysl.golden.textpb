@@ -1,781 +1,1672 @@
-apps: <
+apps: {
   key: "TransformApp"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "TransformApp"
-    >
-    attrs: <
+    }
+    attrs: {
       key: "package"
-      value: <
+      value: {
         s: "io.sysl.demo.petshop.views"
-      >
-    >
-    types: <
+      }
+    }
+    types: {
       key: "AnonType_0__"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "breed"
-            value: <
-              type_ref: <
-                context: <
-                  appname: <
+            value: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "TransformApp"
-                  >
+                  }
                   path: "AnonType_0__"
-                >
-                ref: <
-                  appname: <
+                }
+                ref: {
+                  appname: {
                     part: "PetShopModel"
-                  >
+                  }
                   path: "Breed"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    types: {
       key: "FooType"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "amount"
-            value: <
+            value: {
               primitive: DECIMAL
-              constraint: <
-                length: <
+              constraint: {
+                length: {
                   max: 14
-                >
-              >
-              source_context: <
+                }
+              }
+              source_context: {
                 file: "tests/transform.sysl"
-                start: <
+                start: {
                   line: 59
                   col: 16
-                >
-                end: <
+                }
+                end: {
                   line: 59
                   col: 26
-                >
-              >
-            >
-          >
-          attr_defs: <
+                }
+              }
+            }
+          }
+          attr_defs: {
             key: "id"
-            value: <
+            value: {
               primitive: INT
-              source_context: <
+              source_context: {
                 file: "tests/transform.sysl"
-                start: <
+                start: {
                   line: 58
                   col: 12
-                >
-                end: <
+                }
+                end: {
                   line: 58
                   col: 12
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 57
+            col: 2
+          }
+          end: {
+            line: 60
+          }
+        }
+      }
+    }
+    views: {
       key: "NoArgTransform"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number1"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        param: <
+          }
+        }
+        param: {
           name: "foo"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Some"
-                >
+                }
                 path: "Type"
-              >
-            >
-          >
-        >
-        ret_type: <
-          type_ref: <
-            ref: <
-              appname: <
+              }
+            }
+          }
+        }
+        ret_type: {
+          type_ref: {
+            ref: {
+              appname: {
                 part: "Model"
-              >
+              }
               path: "Type"
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "."
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 5
+                  col: 5
+                }
+              }
+            }
             scopevar: "scopeVar"
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: SUB
-                    lhs: <
-                      binexpr: <
+                    lhs: {
+                      binexpr: {
                         op: ADD
-                        lhs: <
+                        lhs: {
                           name: "number"
-                        >
-                        rhs: <
-                          literal: <
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 4
+                              col: 12
+                            }
+                            end: {
+                              line: 4
+                              col: 12
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
                             i: 1
-                          >
-                        >
-                      >
-                    >
-                    rhs: <
+                          }
+                          type: {
+                            primitive: INT
+                          }
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 4
+                              col: 21
+                            }
+                            end: {
+                              line: 4
+                              col: 21
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 4
+                          col: 19
+                        }
+                        end: {
+                          line: 4
+                          col: 21
+                        }
+                      }
+                    }
+                    rhs: {
                       name: "scopeVar"
-                    >
-                  >
-                >
-              >
-            >
-          >
-        >
-        attrs: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 4
+                          col: 25
+                        }
+                        end: {
+                          line: 4
+                          col: 25
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 4
+                      col: 6
+                    }
+                    end: {
+                      line: 4
+                      col: 25
+                    }
+                    text: "out = number + 1 - scopeVar"
+                  }
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 5
+              col: 5
+            }
+          }
+        }
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "partial"
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 7
+            col: 2
+          }
+          text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
+        }
+      }
+    }
+    views: {
       key: "WithArgTransform"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
+          }
+        }
+        ret_type: {
           primitive: INT
-        >
-        expr: <
-          transform: <
-            arg: <
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 8
+                  col: 4
+                }
+                end: {
+                  line: 8
+                  col: 4
+                }
+              }
+            }
             scopevar: "scopeVar"
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: SUB
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 9
+                          col: 12
+                        }
+                        end: {
+                          line: 9
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         i: 1
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-        >
-        attrs: <
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 9
+                          col: 21
+                        }
+                        end: {
+                          line: 9
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 21
+                    }
+                    text: "out = number - 1"
+                  }
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 8
+              col: 4
+            }
+            end: {
+              line: 10
+              col: 5
+            }
+          }
+        }
+        attrs: {
           key: "abc"
-          value: <
+          value: {
             s: "foo"
-          >
-        >
-      >
-    >
-    views: <
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 7
+            col: 2
+          }
+          end: {
+            line: 12
+            col: 2
+          }
+          text: "!view WithArgTransform(number <: int ) -> int [abc=\"foo\"]:"
+        }
+      }
+    }
+    views: {
       key: "nestedTransformWithAnonymousType"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
-          type_ref: <
-            ref: <
-              appname: <
+          }
+        }
+        ret_type: {
+          type_ref: {
+            ref: {
+              appname: {
                 part: "Some1"
-              >
+              }
               path: "Type"
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 48
+                  col: 4
+                }
+                end: {
+                  line: 48
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              let: <
+            stmt: {
+              let: {
                 name: "_breedsAndPets"
-                expr: <
-                  transform: <
-                    arg: <
-                      get_attr: <
-                        arg: <
+                expr: {
+                  transform: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
-                        >
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 49
+                              col: 27
+                            }
+                            end: {
+                              line: 49
+                              col: 28
+                            }
+                          }
+                        }
                         attr: "breeds"
-                      >
-                    >
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 49
+                          col: 27
+                        }
+                        end: {
+                          line: 49
+                          col: 28
+                        }
+                      }
+                    }
                     scopevar: "."
-                    stmt: <
-                      let: <
+                    stmt: {
+                      let: {
                         name: "breedId"
-                        expr: <
-                          call: <
+                        expr: {
+                          call: {
                             func: "autoinc"
-                          >
-                        >
-                      >
-                    >
-                    stmt: <
-                      assign: <
+                          }
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 50
+                              col: 8
+                            }
+                            end: {
+                              line: 50
+                              col: 30
+                            }
+                            text: "let breedId = autoinc()"
+                          }
+                        }
+                      }
+                    }
+                    stmt: {
+                      assign: {
                         name: "breed"
-                        expr: <
-                          transform: <
-                            arg: <
+                        expr: {
+                          transform: {
+                            arg: {
                               name: "."
-                            >
+                              source_context: {
+                                file: "tests/transform.sysl"
+                                start: {
+                                  line: 51
+                                  col: 16
+                                }
+                                end: {
+                                  line: 53
+                                  col: 9
+                                }
+                              }
+                            }
                             scopevar: "."
-                            stmt: <
-                              assign: <
+                            stmt: {
+                              assign: {
                                 name: "breedName"
-                                expr: <
-                                  get_attr: <
-                                    arg: <
+                                expr: {
+                                  get_attr: {
+                                    arg: {
                                       name: "."
-                                    >
+                                      source_context: {
+                                        file: "tests/transform.sysl"
+                                        start: {
+                                          line: 52
+                                          col: 24
+                                        }
+                                        end: {
+                                          line: 52
+                                          col: 25
+                                        }
+                                      }
+                                    }
                                     attr: "name"
-                                  >
-                                >
-                              >
-                            >
-                          >
-                          type: <
-                            type_ref: <
-                              context: <
-                                appname: <
+                                  }
+                                  source_context: {
+                                    file: "tests/transform.sysl"
+                                    start: {
+                                      line: 52
+                                      col: 12
+                                    }
+                                    end: {
+                                      line: 52
+                                      col: 25
+                                    }
+                                    text: "breedName = .name"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          type: {
+                            type_ref: {
+                              context: {
+                                appname: {
                                   part: "TransformApp"
-                                >
-                              >
-                              ref: <
-                                appname: <
+                                }
+                              }
+                              ref: {
+                                appname: {
                                   part: "PetShopModel"
-                                >
+                                }
                                 path: "Breed"
-                              >
-                            >
-                          >
-                        >
-                      >
-                    >
-                  >
-                  type: <
-                    set: <
-                      type_ref: <
-                        context: <
-                          appname: <
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 51
+                              col: 8
+                            }
+                            end: {
+                              line: 53
+                              col: 9
+                            }
+                            text: "breed = -> <PetShopModel.Breed>(:\n            breedName = .name\n        )\n"
+                          }
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    set: {
+                      type_ref: {
+                        context: {
+                          appname: {
                             part: "TransformApp"
-                          >
-                        >
-                        ref: <
-                          appname: <
+                          }
+                        }
+                        ref: {
+                          appname: {
                             part: "TransformApp"
-                          >
+                          }
                           path: "AnonType_0__"
-                        >
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            type_ref: <
-              context: <
-                appname: <
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 49
+                      col: 6
+                    }
+                    end: {
+                      line: 54
+                      col: 7
+                    }
+                    text: "let _breedsAndPets = .breeds -> <set of>(:\n        let breedId = autoinc()\n        breed = -> <PetShopModel.Breed>(:\n            breedName = .name\n        )\n      )\n"
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "TransformApp"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "Some"
-                >
+                }
                 path: "Type"
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 48
+              col: 4
+            }
+            end: {
+              line: 55
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 47
+            col: 2
+          }
+          end: {
+            line: 57
+            col: 2
+          }
+          text: "!view nestedTransformWithAnonymousType(number <: int ) -> Some1.Type:"
+        }
+      }
+    }
+    views: {
       key: "noReturnType"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
-          type_ref: <
-            context: <
-              appname: <
+          }
+        }
+        ret_type: {
+          type_ref: {
+            context: {
+              appname: {
                 part: "TransformApp"
-              >
-            >
-            ref: <
-              appname: <
+              }
+            }
+            ref: {
+              appname: {
                 part: "Some"
-              >
+              }
               path: "Type"
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 43
+                  col: 4
+                }
+                end: {
+                  line: 43
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 44
+                          col: 12
+                        }
+                        end: {
+                          line: 44
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         s: "foo"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            type_ref: <
-              context: <
-                appname: <
+                      }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 44
+                          col: 21
+                        }
+                        end: {
+                          line: 44
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 44
+                      col: 6
+                    }
+                    end: {
+                      line: 44
+                      col: 21
+                    }
+                    text: "out = number + \"foo\""
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "TransformApp"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "Some"
-                >
+                }
                 path: "Type"
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 43
+              col: 4
+            }
+            end: {
+              line: 45
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 42
+            col: 2
+          }
+          end: {
+            line: 47
+            col: 2
+          }
+          text: "!view noReturnType(number <: int ):"
+        }
+      }
+    }
+    views: {
       key: "noScopeVar"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
+          }
+        }
+        ret_type: {
           primitive: INT
-        >
-        expr: <
-          transform: <
-            arg: <
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 13
+                  col: 4
+                }
+                end: {
+                  line: 13
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
-                      binexpr: <
+                    lhs: {
+                      binexpr: {
                         op: MUL
-                        lhs: <
+                        lhs: {
                           name: "number"
-                        >
-                        rhs: <
-                          literal: <
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 14
+                              col: 12
+                            }
+                            end: {
+                              line: 14
+                              col: 12
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
                             decimal: "1.5"
-                          >
-                        >
-                      >
-                    >
-                    rhs: <
-                      literal: <
+                          }
+                          type: {
+                            primitive: DECIMAL
+                          }
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 14
+                              col: 21
+                            }
+                            end: {
+                              line: 14
+                              col: 21
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        primitive: DECIMAL
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 14
+                          col: 19
+                        }
+                        end: {
+                          line: 14
+                          col: 21
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         i: 2
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 14
+                          col: 27
+                        }
+                        end: {
+                          line: 14
+                          col: 27
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 14
+                      col: 6
+                    }
+                    end: {
+                      line: 14
+                      col: 27
+                    }
+                    text: "out = number * 1.5 + 2"
+                  }
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 13
+              col: 4
+            }
+            end: {
+              line: 15
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 12
+            col: 2
+          }
+          end: {
+            line: 17
+            col: 2
+          }
+          text: "!view noScopeVar(number <: int ) -> int:"
+        }
+      }
+    }
+    views: {
       key: "withAnonymousSetOfReturnType"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
+          }
+        }
+        ret_type: {
           primitive: INT
-        >
-        expr: <
-          transform: <
-            arg: <
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 18
+                  col: 3
+                }
+                end: {
+                  line: 18
+                  col: 3
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: POW
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      binexpr: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 19
+                          col: 11
+                        }
+                        end: {
+                          line: 19
+                          col: 11
+                        }
+                      }
+                    }
+                    rhs: {
+                      binexpr: {
                         op: POW
-                        lhs: <
-                          literal: <
+                        lhs: {
+                          literal: {
                             i: 2
-                          >
-                        >
-                        rhs: <
-                          literal: <
+                          }
+                          type: {
+                            primitive: INT
+                          }
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 19
+                              col: 21
+                            }
+                            end: {
+                              line: 19
+                              col: 21
+                            }
+                          }
+                        }
+                        rhs: {
+                          literal: {
                             i: 3
-                          >
-                        >
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                          }
+                          type: {
+                            primitive: INT
+                          }
+                          source_context: {
+                            file: "tests/transform.sysl"
+                            start: {
+                              line: 19
+                              col: 26
+                            }
+                            end: {
+                              line: 19
+                              col: 26
+                            }
+                          }
+                        }
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 19
+                          col: 21
+                        }
+                        end: {
+                          line: 19
+                          col: 26
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 19
+                      col: 5
+                    }
+                    end: {
+                      line: 19
+                      col: 26
+                    }
+                    text: "out = number ** 2 ** 3"
+                  }
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 18
+              col: 3
+            }
+            end: {
+              line: 20
+              col: 4
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 17
+            col: 2
+          }
+          end: {
+            line: 22
+            col: 2
+          }
+          text: "!view withAnonymousSetOfReturnType(number <: int ) -> int:"
+        }
+      }
+    }
+    views: {
       key: "withSetOfReturnType"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
-          set: <
-            type_ref: <
-              ref: <
-                appname: <
+          }
+        }
+        ret_type: {
+          set: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Some1"
-                >
+                }
                 path: "Type"
-              >
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+              }
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 23
+                  col: 4
+                }
+                end: {
+                  line: 23
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: DIV
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 24
+                          col: 12
+                        }
+                        end: {
+                          line: 24
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
                       name: "number"
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            set: <
-              type_ref: <
-                context: <
-                  appname: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 24
+                          col: 21
+                        }
+                        end: {
+                          line: 24
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    no_type: {}
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 24
+                      col: 6
+                    }
+                    end: {
+                      line: 24
+                      col: 21
+                    }
+                    text: "out = number / number"
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            set: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "TransformApp"
-                  >
-                >
-                ref: <
-                  appname: <
+                  }
+                }
+                ref: {
+                  appname: {
                     part: "Some"
-                  >
+                  }
                   path: "Type"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 23
+              col: 4
+            }
+            end: {
+              line: 25
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 22
+            col: 2
+          }
+          end: {
+            line: 27
+            col: 2
+          }
+          text: "!view withSetOfReturnType(number <: int ) -> set of Some1.Type:"
+        }
+      }
+    }
+    views: {
       key: "withSomeReturnType"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
+          type: {
             primitive: INT
-          >
-        >
-        ret_type: <
-          type_ref: <
-            ref: <
-              appname: <
+          }
+        }
+        ret_type: {
+          type_ref: {
+            ref: {
+              appname: {
                 part: "Some1"
-              >
+              }
               path: "Type"
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 28
+                  col: 4
+                }
+                end: {
+                  line: 28
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 29
+                          col: 12
+                        }
+                        end: {
+                          line: 29
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         s: "foo"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            type_ref: <
-              context: <
-                appname: <
+                      }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 29
+                          col: 21
+                        }
+                        end: {
+                          line: 29
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 29
+                      col: 6
+                    }
+                    end: {
+                      line: 29
+                      col: 21
+                    }
+                    text: "out = number + \"foo\""
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "TransformApp"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "Some"
-                >
+                }
                 path: "Type"
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 28
+              col: 4
+            }
+            end: {
+              line: 30
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 27
+            col: 2
+          }
+          end: {
+            line: 32
+            col: 2
+          }
+          text: "!view withSomeReturnType(number <: int ) -> Some1.Type:"
+        }
+      }
+    }
+    views: {
       key: "withSomeReturnType2"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "number"
-          type: <
-            type_ref: <
-              ref: <
-                appname: <
+          type: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Sometype"
-                >
-              >
-            >
-          >
-        >
-        ret_type: <
-          set: <
-            type_ref: <
-              ref: <
-                appname: <
+                }
+              }
+            }
+          }
+        }
+        ret_type: {
+          set: {
+            type_ref: {
+              ref: {
+                appname: {
                   part: "Sometype"
-                >
-              >
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+                }
+              }
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 33
+                  col: 4
+                }
+                end: {
+                  line: 33
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 34
+                          col: 12
+                        }
+                        end: {
+                          line: 34
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         s: "foo"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            type_ref: <
-              context: <
-                appname: <
+                      }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 34
+                          col: 21
+                        }
+                        end: {
+                          line: 34
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 34
+                      col: 6
+                    }
+                    end: {
+                      line: 34
+                      col: 21
+                    }
+                    text: "out = number + \"foo\""
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "TransformApp"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "Sometype"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    views: <
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 33
+              col: 4
+            }
+            end: {
+              line: 35
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 32
+            col: 2
+          }
+          end: {
+            line: 37
+            col: 2
+          }
+          text: "!view withSomeReturnType2(number <: Sometype ) -> set of Sometype:"
+        }
+      }
+    }
+    views: {
       key: "withSomeReturnType3"
-      value: <
-        param: <
+      value: {
+        param: {
           name: "foo"
-          type: <
-            set: <
-              type_ref: <
-                ref: <
-                  appname: <
+          type: {
+            set: {
+              type_ref: {
+                ref: {
+                  appname: {
                     part: "Model"
-                  >
+                  }
                   path: "SomeType"
-                >
-              >
-            >
-          >
-        >
-        ret_type: <
-          set: <
-            type_ref: <
-              context: <
-                appname: <
+                }
+              }
+            }
+          }
+        }
+        ret_type: {
+          set: {
+            type_ref: {
+              context: {
+                appname: {
                   part: "TransformApp"
-                >
-              >
-              ref: <
-                appname: <
+                }
+              }
+              ref: {
+                appname: {
                   part: "Some"
-                >
+                }
                 path: "Type"
-              >
-            >
-          >
-        >
-        expr: <
-          transform: <
-            arg: <
+              }
+            }
+          }
+        }
+        expr: {
+          transform: {
+            arg: {
               name: "argName"
-            >
+              source_context: {
+                file: "tests/transform.sysl"
+                start: {
+                  line: 38
+                  col: 4
+                }
+                end: {
+                  line: 38
+                  col: 4
+                }
+              }
+            }
             scopevar: "."
-            stmt: <
-              assign: <
+            stmt: {
+              assign: {
                 name: "out"
-                expr: <
-                  binexpr: <
+                expr: {
+                  binexpr: {
                     op: ADD
-                    lhs: <
+                    lhs: {
                       name: "number"
-                    >
-                    rhs: <
-                      literal: <
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 39
+                          col: 12
+                        }
+                        end: {
+                          line: 39
+                          col: 12
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
                         s: "foo"
-                      >
-                    >
-                  >
-                >
-              >
-            >
-          >
-          type: <
-            set: <
-              type_ref: <
-                context: <
-                  appname: <
+                      }
+                      type: {
+                        primitive: STRING
+                      }
+                      source_context: {
+                        file: "tests/transform.sysl"
+                        start: {
+                          line: 39
+                          col: 21
+                        }
+                        end: {
+                          line: 39
+                          col: 21
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: STRING
+                  }
+                  source_context: {
+                    file: "tests/transform.sysl"
+                    start: {
+                      line: 39
+                      col: 6
+                    }
+                    end: {
+                      line: 39
+                      col: 21
+                    }
+                    text: "out = number + \"foo\""
+                  }
+                }
+              }
+            }
+          }
+          type: {
+            set: {
+              type_ref: {
+                context: {
+                  appname: {
                     part: "TransformApp"
-                  >
-                >
-                ref: <
-                  appname: <
+                  }
+                }
+                ref: {
+                  appname: {
                     part: "Some"
-                  >
+                  }
                   path: "Type"
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
+                }
+              }
+            }
+          }
+          source_context: {
+            file: "tests/transform.sysl"
+            start: {
+              line: 38
+              col: 4
+            }
+            end: {
+              line: 40
+              col: 5
+            }
+          }
+        }
+        source_context: {
+          file: "tests/transform.sysl"
+          start: {
+            line: 37
+            col: 2
+          }
+          end: {
+            line: 42
+            col: 2
+          }
+          text: "!view withSomeReturnType3(foo <: set of Model.SomeType ):"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/transform.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 49
+      }
+    }
+  }
+}

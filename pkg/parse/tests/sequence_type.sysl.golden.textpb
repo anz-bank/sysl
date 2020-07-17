@@ -1,70 +1,70 @@
-apps: <
+apps: {
   key: "SequenceType"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "SequenceType"
-    >
-    types: <
+    }
+    types: {
       key: "A"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "x"
-            value: <
-              sequence: <
+            value: {
+              sequence: {
                 primitive: INT
-                source_context: <
+                source_context: {
                   file: "tests/sequence_type.sysl"
-                  start: <
+                  start: {
                     line: 4
                     col: 13
-                  >
-                  end: <
+                  }
+                  end: {
                     line: 5
-                  >
-                >
-              >
-              attrs: <
+                  }
+                }
+              }
+              attrs: {
                 key: "comment"
-                value: <
+                value: {
                   s: "array of int"
-                >
-              >
+                }
+              }
               opt: true
-              source_context: <
+              source_context: {
                 file: "tests/sequence_type.sysl"
-                start: <
+                start: {
                   line: 4
                   col: 13
-                >
-                end: <
+                }
+                end: {
                   line: 5
-                >
-              >
-            >
-          >
-        >
-        source_context: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
           file: "tests/sequence_type.sysl"
-          start: <
+          start: {
             line: 2
             col: 4
-          >
-          end: <
+          }
+          end: {
             line: 5
-          >
-        >
-      >
-    >
-    source_context: <
+          }
+        }
+      }
+    }
+    source_context: {
       file: "tests/sequence_type.sysl"
-      start: <
+      start: {
         line: 1
         col: 1
-      >
-      end: <
+      }
+      end: {
         line: 1
-      >
-    >
-  >
->
+      }
+    }
+  }
+}

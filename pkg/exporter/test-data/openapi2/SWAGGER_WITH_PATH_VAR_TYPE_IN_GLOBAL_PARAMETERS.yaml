@@ -1,6 +1,7 @@
 host: api.example.com
 info:
-  description: API description in Markdown.
+  description: |
+    API description in Markdown.
   title: Sample API
   version: 1.0.0
 paths:

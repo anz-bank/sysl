@@ -38,6 +38,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SimpleObj"
+  /withHeaders:andSpecialChars:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+        404:
+          description: "Not Found"
+          headers:
+            content-type:
+              type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     SimpleObj:
@@ -50,3 +68,10 @@ components:
       properties:
         name:
           type: SimpleObj
+    Error:
+      type: object
+      properties:
+        description:
+          type: string
+        code:
+          type: int

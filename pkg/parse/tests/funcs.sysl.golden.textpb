@@ -1,415 +1,1211 @@
-apps {
+apps: {
   key: "TransformationTest"
-  value {
-    name {
+  value: {
+    name: {
       part: "TransformationTest"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.test.views"
       }
     }
-    views {
+    views: {
       key: "TestInbuiltFuncs"
-      value {
-        param {
+      value: {
+        param: {
           name: "number"
-          type {
+          type: {
             primitive: INT
           }
         }
-        ret_type {
+        ret_type: {
           primitive: INT
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "number"
+              source_context: {
+                file: "tests/funcs.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 3
+                  col: 4
+                }
+              }
             }
             scopevar: "."
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "AppOrderId2"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: "int"
-                    arg {
-                      get_attr {
-                        arg {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 4
+                              col: 24
+                            }
+                            end: {
+                              line: 4
+                              col: 25
+                            }
+                          }
                         }
                         attr: "orderId"
                       }
-                    }
-                    arg {
-                      literal {
-                        null {
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 4
+                          col: 24
+                        }
+                        end: {
+                          line: 4
+                          col: 25
                         }
                       }
-                      type {
+                    }
+                    arg: {
+                      literal: {
+                        null: {}
+                      }
+                      type: {
                         primitive: EMPTY
                       }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
-                name: "out"
-                expr {
-                  call {
-                    func: "autoinc"
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
-                name: "out"
-                expr {
-                  call {
-                    func: ".any"
-                    arg {
-                      name: "foo"
-                    }
-                    arg {
-                      literal {
-                        i: 1
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 4
+                          col: 34
+                        }
+                        end: {
+                          line: 4
+                          col: 34
+                        }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 4
+                      col: 6
+                    }
+                    end: {
+                      line: 4
+                      col: 38
+                    }
+                    text: "AppOrderId2 = int(.orderId, null)"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out"
-                expr {
-                  relexpr {
-                    op: MAX
-                    target {
-                      name: "foo"
+                expr: {
+                  call: {
+                    func: "autoinc"
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 5
+                      col: 6
                     }
-                    arg {
-                      get_attr {
-                        arg {
+                    end: {
+                      line: 5
+                      col: 24
+                    }
+                    text: "let out = autoinc()"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
+                name: "out"
+                expr: {
+                  call: {
+                    func: ".any"
+                    arg: {
+                      name: "foo"
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 6
+                          col: 16
+                        }
+                        end: {
+                          line: 6
+                          col: 16
+                        }
+                      }
+                    }
+                    arg: {
+                      literal: {
+                        i: 1
+                      }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 6
+                          col: 24
+                        }
+                        end: {
+                          line: 6
+                          col: 24
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 6
+                      col: 6
+                    }
+                    end: {
+                      line: 6
+                      col: 25
+                    }
+                    text: "let out = foo any(1)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
+                name: "out"
+                expr: {
+                  relexpr: {
+                    op: MAX
+                    target: {
+                      name: "foo"
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 7
+                          col: 16
+                        }
+                        end: {
+                          line: 7
+                          col: 16
+                        }
+                      }
+                    }
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 7
+                              col: 24
+                            }
+                            end: {
+                              line: 7
+                              col: 25
+                            }
+                          }
                         }
                         attr: "bar"
                       }
-                    }
-                    scopevar: "."
-                  }
-                }
-              }
-            }
-            stmt {
-              let {
-                name: "out"
-                expr {
-                  relexpr {
-                    op: MAX
-                    target {
-                      name: "foo"
-                    }
-                    arg {
-                      get_attr {
-                        arg {
-                          name: "bar"
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 7
+                          col: 24
                         }
-                        attr: "baz"
+                        end: {
+                          line: 7
+                          col: 25
+                        }
                       }
                     }
                     scopevar: "."
                   }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 7
+                      col: 6
+                    }
+                    end: {
+                      line: 7
+                      col: 28
+                    }
+                    text: "let out = foo max(.bar)"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out"
-                expr {
-                  relexpr {
+                expr: {
+                  relexpr: {
                     op: MAX
-                    target {
-                      binexpr {
-                        op: WHERE
-                        lhs {
-                          name: "foo"
+                    target: {
+                      name: "foo"
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 8
+                          col: 16
                         }
-                        rhs {
-                          binexpr {
+                        end: {
+                          line: 8
+                          col: 16
+                        }
+                      }
+                    }
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          name: "bar"
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 8
+                              col: 24
+                            }
+                            end: {
+                              line: 8
+                              col: 24
+                            }
+                          }
+                        }
+                        attr: "baz"
+                      }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 8
+                          col: 27
+                        }
+                        end: {
+                          line: 8
+                          col: 28
+                        }
+                      }
+                    }
+                    scopevar: "."
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 8
+                      col: 6
+                    }
+                    end: {
+                      line: 8
+                      col: 31
+                    }
+                    text: "let out = foo max(bar.baz)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              let: {
+                name: "out"
+                expr: {
+                  relexpr: {
+                    op: MAX
+                    target: {
+                      binexpr: {
+                        op: WHERE
+                        lhs: {
+                          name: "foo"
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 9
+                              col: 16
+                            }
+                            end: {
+                              line: 9
+                              col: 16
+                            }
+                          }
+                        }
+                        rhs: {
+                          binexpr: {
                             op: GT
-                            lhs {
-                              get_attr {
-                                arg {
+                            lhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/funcs.sysl"
+                                    start: {
+                                      line: 9
+                                      col: 26
+                                    }
+                                    end: {
+                                      line: 9
+                                      col: 27
+                                    }
+                                  }
                                 }
                                 attr: "x"
                               }
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 9
+                                  col: 26
+                                }
+                                end: {
+                                  line: 9
+                                  col: 27
+                                }
+                              }
                             }
-                            rhs {
-                              literal {
+                            rhs: {
+                              literal: {
                                 i: 0
                               }
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 9
+                                  col: 31
+                                }
+                                end: {
+                                  line: 9
+                                  col: 31
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 9
+                              col: 26
+                            }
+                            end: {
+                              line: 9
+                              col: 31
                             }
                           }
                         }
                         scopevar: "."
                       }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 9
+                          col: 20
+                        }
+                        end: {
+                          line: 9
+                          col: 20
+                        }
+                      }
                     }
-                    arg {
-                      get_attr {
-                        arg {
-                          get_attr {
-                            arg {
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 9
+                                  col: 38
+                                }
+                                end: {
+                                  line: 9
+                                  col: 39
+                                }
+                              }
                             }
                             attr: "bar"
                           }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 9
+                              col: 38
+                            }
+                            end: {
+                              line: 9
+                              col: 39
+                            }
+                          }
                         }
                         attr: "baz"
+                      }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 9
+                          col: 42
+                        }
+                        end: {
+                          line: 9
+                          col: 43
+                        }
                       }
                     }
                     scopevar: "."
                   }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 46
+                    }
+                    text: "let out = foo where(.x > 0) max(.bar.baz)"
+                  }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: ".count"
-                    arg {
-                      binexpr {
+                    arg: {
+                      binexpr: {
                         op: WHERE
-                        lhs {
+                        lhs: {
                           name: "foo"
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 10
+                              col: 16
+                            }
+                            end: {
+                              line: 10
+                              col: 16
+                            }
+                          }
                         }
-                        rhs {
-                          binexpr {
+                        rhs: {
+                          binexpr: {
                             op: GT
-                            lhs {
-                              get_attr {
-                                arg {
+                            lhs: {
+                              get_attr: {
+                                arg: {
                                   name: "."
+                                  source_context: {
+                                    file: "tests/funcs.sysl"
+                                    start: {
+                                      line: 10
+                                      col: 26
+                                    }
+                                    end: {
+                                      line: 10
+                                      col: 27
+                                    }
+                                  }
                                 }
                                 attr: "x"
                               }
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 10
+                                  col: 26
+                                }
+                                end: {
+                                  line: 10
+                                  col: 27
+                                }
+                              }
                             }
-                            rhs {
-                              literal {
+                            rhs: {
+                              literal: {
                                 i: 0
                               }
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 10
+                                  col: 31
+                                }
+                                end: {
+                                  line: 10
+                                  col: 31
+                                }
+                              }
+                            }
+                          }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 10
+                              col: 26
+                            }
+                            end: {
+                              line: 10
+                              col: 31
                             }
                           }
                         }
                         scopevar: "."
                       }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 10
+                          col: 20
+                        }
+                        end: {
+                          line: 10
+                          col: 20
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 34
+                    }
+                    text: "let out = foo where(.x > 0) count"
                   }
                 }
               }
             }
-            stmt {
-              let {
+            stmt: {
+              let: {
                 name: "out"
-                expr {
-                  unexpr {
+                expr: {
+                  unexpr: {
                     op: SINGLE
-                    arg {
-                      relexpr {
+                    arg: {
+                      relexpr: {
                         op: FIRST_BY
-                        target {
-                          navigate {
-                            arg {
+                        target: {
+                          navigate: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 11
+                                  col: 16
+                                }
+                                end: {
+                                  line: 11
+                                  col: 26
+                                }
+                              }
                             }
                             attr: "fo"
                             setof: true
                           }
-                        }
-                        arg {
-                          literal {
-                            i: 1
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 11
+                              col: 16
+                            }
+                            end: {
+                              line: 11
+                              col: 26
+                            }
                           }
                         }
-                        arg {
-                          get_attr {
-                            arg {
+                        arg: {
+                          literal: {
+                            i: 1
+                          }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 11
+                              col: 35
+                            }
+                            end: {
+                              line: 11
+                              col: 35
+                            }
+                          }
+                        }
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 11
+                                  col: 41
+                                }
+                                end: {
+                                  line: 11
+                                  col: 42
+                                }
+                              }
                             }
                             attr: "id"
                           }
-                        }
-                        arg {
-                          literal {
-                            i: 1
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 11
+                              col: 41
+                            }
+                            end: {
+                              line: 11
+                              col: 42
+                            }
                           }
                         }
-                        arg {
-                          get_attr {
-                            arg {
+                        arg: {
+                          literal: {
+                            i: 1
+                          }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 11
+                              col: 35
+                            }
+                            end: {
+                              line: 11
+                              col: 35
+                            }
+                          }
+                        }
+                        arg: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 11
+                                  col: 41
+                                }
+                                end: {
+                                  line: 11
+                                  col: 42
+                                }
+                              }
                             }
                             attr: "id"
+                          }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 11
+                              col: 41
+                            }
+                            end: {
+                              line: 11
+                              col: 42
+                            }
                           }
                         }
                         scopevar: "."
                         descending: false
                       }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 11
+                          col: 29
+                        }
+                        end: {
+                          line: 11
+                          col: 44
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 46
+                    }
+                    text: "let out = -> set of fo first 1 by (.id) single"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "AppDate"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: "to_date"
-                    arg {
-                      binexpr {
+                    arg: {
+                      binexpr: {
                         op: COALESCE
-                        lhs {
-                          get_attr {
-                            arg {
+                        lhs: {
+                          get_attr: {
+                            arg: {
                               name: "."
+                              source_context: {
+                                file: "tests/funcs.sysl"
+                                start: {
+                                  line: 12
+                                  col: 24
+                                }
+                                end: {
+                                  line: 12
+                                  col: 25
+                                }
+                              }
                             }
                             attr: "createdDate"
                           }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 12
+                              col: 24
+                            }
+                            end: {
+                              line: 12
+                              col: 25
+                            }
+                          }
                         }
-                        rhs {
-                          call {
+                        rhs: {
+                          call: {
                             func: "now"
                           }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 12
+                              col: 40
+                            }
+                            end: {
+                              line: 12
+                              col: 44
+                            }
+                            text: "now()"
+                          }
+                        }
+                      }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 12
+                          col: 24
+                        }
+                        end: {
+                          line: 12
+                          col: 44
                         }
                       }
                     }
                   }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 12
+                      col: 45
+                    }
+                    text: "AppDate = to_date(.createdDate ?? now())"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "AppOrderId"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: "str"
-                    arg {
-                      get_attr {
-                        arg {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 13
+                              col: 23
+                            }
+                            end: {
+                              line: 13
+                              col: 24
+                            }
+                          }
                         }
                         attr: "orderId"
                       }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 13
+                          col: 23
+                        }
+                        end: {
+                          line: 13
+                          col: 24
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 13
+                      col: 6
+                    }
+                    end: {
+                      line: 13
+                      col: 31
+                    }
+                    text: "AppOrderId = str(.orderId)"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "foo"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: "bar"
-                    arg {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 14
+                          col: 16
+                        }
+                        end: {
+                          line: 14
+                          col: 16
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 14
+                      col: 6
+                    }
+                    end: {
+                      line: 14
+                      col: 17
+                    }
+                    text: "foo = bar(.)"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "foo"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: "concat"
-                    arg {
-                      list {
-                        expr {
-                          literal {
+                    arg: {
+                      list: {
+                        expr: {
+                          literal: {
                             i: 1
                           }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 15
+                              col: 20
+                            }
+                            end: {
+                              line: 15
+                              col: 20
+                            }
+                          }
                         }
-                        expr {
-                          literal {
+                        expr: {
+                          literal: {
                             i: 2
+                          }
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 15
+                              col: 22
+                            }
+                            end: {
+                              line: 15
+                              col: 22
+                            }
                           }
                         }
                       }
-                    }
-                    arg {
-                      literal {
-                        i: 3
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 15
+                          col: 19
+                        }
+                        end: {
+                          line: 15
+                          col: 23
+                        }
                       }
                     }
+                    arg: {
+                      literal: {
+                        i: 3
+                      }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 15
+                          col: 26
+                        }
+                        end: {
+                          line: 15
+                          col: 26
+                        }
+                      }
+                    }
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 15
+                      col: 6
+                    }
+                    end: {
+                      line: 15
+                      col: 27
+                    }
+                    text: "foo = concat([1,2], 3)"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "foo"
-                expr {
-                  call {
+                expr: {
+                  call: {
                     func: "regsub"
-                    arg {
-                      literal {
+                    arg: {
+                      literal: {
                         s: "\\D+"
                       }
-                    }
-                    arg {
-                      literal {
-                        s: ""
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 16
+                          col: 19
+                        }
+                        end: {
+                          line: 16
+                          col: 19
+                        }
                       }
                     }
-                    arg {
-                      get_attr {
-                        arg {
+                    arg: {
+                      literal: {
+                        s: ""
+                      }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 16
+                          col: 27
+                        }
+                        end: {
+                          line: 16
+                          col: 27
+                        }
+                      }
+                    }
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/funcs.sysl"
+                            start: {
+                              line: 16
+                              col: 31
+                            }
+                            end: {
+                              line: 16
+                              col: 32
+                            }
+                          }
                         }
                         attr: "a"
                       }
+                      source_context: {
+                        file: "tests/funcs.sysl"
+                        start: {
+                          line: 16
+                          col: 31
+                        }
+                        end: {
+                          line: 16
+                          col: 32
+                        }
+                      }
                     }
+                  }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 16
+                      col: 6
+                    }
+                    end: {
+                      line: 16
+                      col: 33
+                    }
+                    text: "foo = regsub(\"\\\\D+\", \"\", .a)"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "foo"
-                expr {
-                  literal {
+                expr: {
+                  literal: {
                     s: "\r\n"
                   }
+                  source_context: {
+                    file: "tests/funcs.sysl"
+                    start: {
+                      line: 17
+                      col: 6
+                    }
+                    end: {
+                      line: 17
+                      col: 12
+                    }
+                    text: "foo = \"\\r\\n\""
+                  }
                 }
               }
             }
-            stmt {
-              inject {
-                call {
+            stmt: {
+              inject: {
+                call: {
                   func: "withAnonymousSetOfReturnType"
-                  arg {
-                    literal {
+                  arg: {
+                    literal: {
                       i: 10
                     }
+                    source_context: {
+                      file: "tests/funcs.sysl"
+                      start: {
+                        line: 18
+                        col: 35
+                      }
+                      end: {
+                        line: 18
+                        col: 35
+                      }
+                    }
                   }
-                  arg {
+                  arg: {
                     name: "out"
+                    source_context: {
+                      file: "tests/funcs.sysl"
+                      start: {
+                        line: 18
+                        col: 6
+                      }
+                      end: {
+                        line: 18
+                        col: 40
+                      }
+                    }
                   }
+                }
+                source_context: {
+                  file: "tests/funcs.sysl"
+                  start: {
+                    line: 18
+                    col: 6
+                  }
+                  end: {
+                    line: 18
+                    col: 37
+                  }
+                  text: "withAnonymousSetOfReturnType(10)"
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/funcs.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 19
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/funcs.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 20
+          }
+          text: "!view TestInbuiltFuncs(number <: int) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/funcs.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }

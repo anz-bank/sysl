@@ -1,0 +1,7 @@
+App:
+    !type scope:
+        @scope1 = "scope1"
+        x <: string:
+            @scope1 = "scope2"
+        y <: string:
+            @scope2 = "scope2"
