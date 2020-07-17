@@ -2,7 +2,7 @@ import bank
 
 Bank :: Integrations [title="%(epname)", appfmt="%(@gaf22?//%(@gaf22)//\n|%(needs_fc?<color red>(missing FC%)</color>\n))**%(appname)**", highlight_color="aqua", indirect_arrow_color="silver"]:
 
-    APIs [page="Bank CSP Overview", exclude=["COD"]]:
+    APIs [page="Bank CSP Overview"]:
         BankDatabase
         CustomerApi
         AccountTransactionApi
@@ -12,8 +12,6 @@ Bank :: Data Views:
 
     AccountTransactionApi [page="Bank ISD"]:
         AccountTransactionApi
-
-
 
 Bank :: Sequences [seqtitle="%(epname): %(eplongname)%(@title_suffix? (%(title_suffix)%))", appfmt="%(DONOTWANT?%(@gaf22?//%(@gaf22)//\n))**%(appname)**", epfmt="%(@gaf22?//«%(@gaf22)»//**%(patterns? %(patterns~/\btba|tbd\b/?<color red>%(patterns)</color>|<color green>%(patterns)</color>)| <color red>pattern?</color>)**\n)%(epname)%(args?\n(%(args)%))"]:
 
