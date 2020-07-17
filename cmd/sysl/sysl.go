@@ -24,7 +24,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 		args = flags
 	}
 
-	syslCmd := kingpin.New("sysl", "System Modelling Language Toolkit")
+	syslCmd := kingpin.New("sysl", "System Specification Language Toolkit")
 	syslCmd.Version(fmt.Sprintf("sysl %s %s", Version, BuildOS))
 	syslCmd.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 
