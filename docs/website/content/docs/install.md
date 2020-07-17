@@ -29,6 +29,12 @@ brew tap anz-bank/homebrew-sysl
 brew install anz-bank/homebrew-sysl/sysl
 ```
 
+Note: Sysl requires Go 1.13+ to be installed. If you don't have it installed, run
+
+```
+brew install go
+```
+
 ## Install the pre-compiled binary
 
 1. Download the pre-compiled binaries matching your OS from the [releases page](https://github.com/anz-bank/sysl/releases).
