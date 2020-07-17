@@ -121,3 +121,43 @@ func TestFTextPBNilModule(t *testing.T) {
 	require.Error(t, FTextPB(&output, nil))
 	assert.Equal(t, "", output.String())
 }
+
+func TestGeneratePBBinaryMessage(t *testing.T) {
+	t.Parallel()
+
+	unmarshalled := &sysl.Module{}
+	var output bytes.Buffer
+	require.NoError(t, GeneratePBBinaryMessage(&output, testModule()))
+	require.NoError(t, proto.Unmarshal(output.Bytes(), unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
+}
+
+func TestGeneratePBBinaryMessageNilModule(t *testing.T) {
+	t.Parallel()
+
+	var output bytes.Buffer
+	require.Error(t, GeneratePBBinaryMessage(&output, nil))
+	assert.Equal(t, "", output.String())
+}
+
+func TestGeneratePBBinaryMessageFile(t *testing.T) {
+	t.Parallel()
+
+	unmarshalled := &sysl.Module{}
+	fs := afero.NewMemMapFs()
+	filename := "/out.pb"
+	require.NoError(t, GeneratePBBinaryMessageFile(testModule(), filename, fs))
+	output, err := afero.ReadFile(fs, filename)
+	require.NoError(t, err)
+	require.NoError(t, proto.Unmarshal(output, unmarshalled))
+	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
+}
+
+func TestGeneratePBBinaryMessageFileNilModule(t *testing.T) {
+	t.Parallel()
+
+	fs := afero.NewMemMapFs()
+	filename := "/out.pb"
+	require.Error(t, GeneratePBBinaryMessageFile(nil, filename, fs))
+	syslutil.AssertFsHasExactly(t, fs)
+}

@@ -1,79 +1,79 @@
-apps:  {
-  key:  "Test"
-  value:  {
-    name:  {
-      part:  "Test"
+apps: {
+  key: "Test"
+  value: {
+    name: {
+      part: "Test"
     }
-    types:  {
-      key:  "Foo"
-      value:  {
-        tuple:  {
-          attr_defs:  {
-            key:  "x"
-            value:  {
-              primitive:  STRING
-              attrs:  {
-                key:  "anothertag"
-                value:  {
-                  s:  "bar"
+    types: {
+      key: "Foo"
+      value: {
+        tuple: {
+          attr_defs: {
+            key: "x"
+            value: {
+              primitive: STRING
+              attrs: {
+                key: "anothertag"
+                value: {
+                  s: "bar"
                 }
               }
-              attrs:  {
-                key:  "json_tag"
-                value:  {
-                  s:  "hello"
+              attrs: {
+                key: "json_tag"
+                value: {
+                  s: "hello"
                 }
               }
-              source_context:  {
-                file:  "tests/merge_attrs.sysl"
-                start:  {
-                  line:  11
-                  col:  13
+              source_context: {
+                file: "tests/merge_attrs.sysl"
+                start: {
+                  line: 11
+                  col: 13
                 }
-                end:  {
-                  line:  12
+                end: {
+                  line: 12
                 }
               }
             }
           }
-          attr_defs:  {
-            key:  "y"
-            value:  {
-              primitive:  INT
-              source_context:  {
-                file:  "tests/merge_attrs.sysl"
-                start:  {
-                  line:  6
-                  col:  13
+          attr_defs: {
+            key: "y"
+            value: {
+              primitive: INT
+              source_context: {
+                file: "tests/merge_attrs.sysl"
+                start: {
+                  line: 6
+                  col: 13
                 }
-                end:  {
-                  line:  6
-                  col:  13
+                end: {
+                  line: 6
+                  col: 13
                 }
               }
             }
           }
         }
-        source_context:  {
-          file:  "tests/merge_attrs.sysl"
-          start:  {
-            line:  9
-            col:  4
+        source_context: {
+          file: "tests/merge_attrs.sysl"
+          start: {
+            line: 9
+            col: 4
           }
-          end:  {
-            line:  12
+          end: {
+            line: 12
           }
         }
       }
     }
-    source_context:  {
-      file:  "tests/merge_attrs.sysl"
-      start:  {
-        line:  1
-        col:  1
+    source_context: {
+      file: "tests/merge_attrs.sysl"
+      start: {
+        line: 1
+        col: 1
       }
-      end:  {
-        line:  1
+      end: {
+        line: 1
       }
     }
   }

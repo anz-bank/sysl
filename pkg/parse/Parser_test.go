@@ -2,8 +2,10 @@ package parse
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -24,6 +26,15 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 )
+
+var (
+	update = flag.Bool("update", false, "Update golden test files")
+)
+
+func TestMain(m *testing.M) {
+	flag.Parse()
+	os.Exit(m.Run())
+}
 
 const mainTestDir = "../../tests/"
 
@@ -114,15 +125,6 @@ func parseComparable(
 		return nil, err
 	}
 
-	for _, app := range module.Apps {
-		for _, t := range app.Views {
-			for _, stmt := range t.GetExpr().GetTransform().GetStmt() {
-				nullifyType(stmt.GetAssign().GetExpr())
-				nullifyType(stmt.GetLet().GetExpr())
-			}
-		}
-	}
-
 	if stripSourceContext {
 		// remove stuff that does not match legacy.
 		for _, app := range module.Apps {
@@ -140,42 +142,6 @@ func parseComparable(
 		}
 	}
 	return module, nil
-}
-
-func nullifyType(expr *sysl.Expr) {
-	if expr == nil {
-		return
-	}
-
-	switch t := expr.Expr.(type) {
-	case *sysl.Expr_Literal:
-		switch t.Literal.Value.(type) {
-		case *sysl.Value_Null_, *sysl.Value_B:
-			return
-		}
-		expr.Type = nil
-	case *sysl.Expr_List_:
-		nullifyType(t.List.Expr[0])
-		expr.Type = nil
-	case *sysl.Expr_Ifelse:
-		nullifyType(t.Ifelse.GetIfTrue())
-		nullifyType(t.Ifelse.GetIfFalse())
-		expr.Type = nil
-	case *sysl.Expr_Binexpr:
-		nullifyType(t.Binexpr.GetLhs())
-		if t.Binexpr.GetOp().String() != "WHERE" {
-			nullifyType(t.Binexpr.GetRhs())
-		}
-		expr.Type = nil
-	case *sysl.Expr_Unexpr:
-		nullifyType(expr.GetUnexpr().GetArg())
-		expr.Type = nil
-	case *sysl.Expr_Transform_:
-		for _, stmt := range t.Transform.GetStmt() {
-			nullifyType(stmt.GetAssign().GetExpr())
-			nullifyType(stmt.GetLet().GetExpr())
-		}
-	}
 }
 
 func parseAndCompareSysl(
@@ -264,6 +230,25 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 	goldenFilename += ".golden.textpb"
 	golden := path.Join(root, goldenFilename)
 
+	if *update {
+		updated := bytes.Buffer{}
+		if !strings.HasSuffix(filename, syslExt) {
+			filename += syslExt
+		}
+		// update test files
+		mod, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), "."))
+		if err != nil {
+			return false, err
+		}
+		if err = pbutil.FTextPB(&updated, mod); err != nil {
+			return false, err
+		}
+		err = ioutil.WriteFile(goldenFilename, updated.Bytes(), 0644)
+		if err != nil {
+			return false, err
+		}
+	}
+
 	goldenModule, err := readSyslModule(golden)
 	if err != nil {
 		return false, err
@@ -272,7 +257,7 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 }
 
 func testParseAgainstGolden(t *testing.T, filename, root string) {
-	equal, err := parseAndCompareWithGolden(filename, root, true)
+	equal, err := parseAndCompareWithGolden(filename, root, false)
 	if assert.NoError(t, err) {
 		assert.True(t, equal, "%#v %#v", root, filename)
 	}
@@ -458,7 +443,7 @@ func TestForeignImports(t *testing.T) {
 func TestRootArgAndRelational(t *testing.T) {
 	t.Parallel()
 
-	testParseAgainstGolden(t, "school.sysl", "tests")
+	testParseAgainstGolden(t, "tests/school.sysl", "")
 }
 
 func TestSequenceType(t *testing.T) {
@@ -603,6 +588,12 @@ func TestOpenAPI3(t *testing.T) {
 	t.Parallel()
 
 	testParseAgainstGoldenWithSourceContext(t, "tests/openapi3.sysl")
+}
+
+func TestAttrScope(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/attr_scope.sysl")
 }
 
 func TestUndefinedRootAbsoluteImport(t *testing.T) {

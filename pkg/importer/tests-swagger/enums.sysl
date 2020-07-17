@@ -15,11 +15,8 @@ testapp "foo" [package="package_foo"]:
     !type Attachment:
         data <: string:
             @json_tag = "data"
-        type <: Attachment_type:
+        type <: string:
             @json_tag = "type"
-
-    !alias Attachment_type:
-        string
 
     !type FieldUsingAnEnum:
         account_bank <: string?:

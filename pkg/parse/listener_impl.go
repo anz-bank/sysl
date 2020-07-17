@@ -167,7 +167,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		return
 	}
 	s.prevLineEmpty = false
-	attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += str
+	attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += str + "\n"
 }
 
 // EnterTypes is called when production types is entered.
@@ -768,7 +768,10 @@ func (s *TreeShapeListener) applyAnnotations(
 			if f.Attrs == nil {
 				f.Attrs = map[string]*sysl.Attribute{}
 			}
-			f.Attrs[varname] = attr
+			// if varname is already in lower scope, it shouldn't replace the value
+			if _, exists := f.Attrs[varname]; !exists {
+				f.Attrs[varname] = attr
+			}
 		}
 	}
 }
@@ -3129,6 +3132,9 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 		type1.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 	if ctx.Annotation(0) != nil {
+		if type1.Attrs == nil {
+			type1.Attrs = map[string]*sysl.Attribute{}
+		}
 		s.pushScope(type1)
 	}
 	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)

@@ -57,3 +57,16 @@ func TestGenerateMermaidIntegrationDiagram3(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
 }
+
+func TestGenerateMermaidIntegrationDiagram4(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	if err != nil {
+		t.Error(err)
+	}
+	apps := []string{"TheWorld", "DragonEater"}
+	r, err := GenerateMultipleAppEndpointAnalysisDiagram(m, apps)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+}

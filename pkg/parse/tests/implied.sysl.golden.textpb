@@ -1,451 +1,1298 @@
-apps {
+apps: {
   key: "TransformationTest"
-  value {
-    name {
+  value: {
+    name: {
       part: "TransformationTest"
     }
-    attrs {
+    attrs: {
       key: "package"
-      value {
+      value: {
         s: "io.sysl.test.views"
       }
     }
-    views {
+    views: {
       key: "impliedTest"
-      value {
-        param {
+      value: {
+        param: {
           name: "number"
-          type {
+          type: {
             primitive: INT
           }
         }
-        ret_type {
+        ret_type: {
           primitive: INT
         }
-        expr {
-          transform {
-            arg {
+        expr: {
+          transform: {
+            arg: {
               name: "number"
+              source_context: {
+                file: "tests/implied.sysl"
+                start: {
+                  line: 3
+                  col: 4
+                }
+                end: {
+                  line: 3
+                  col: 4
+                }
+              }
             }
             scopevar: "."
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc2"
-                expr {
-                  binexpr {
+                expr: {
+                  binexpr: {
                     op: MUL
-                    lhs {
-                    }
-                    rhs {
-                      literal {
-                        i: 2
+                    lhs: {
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 4
+                          col: 13
+                        }
+                        end: {
+                          line: 4
+                          col: 13
+                        }
                       }
                     }
+                    rhs: {
+                      literal: {
+                        i: 2
+                      }
+                      type: {
+                        primitive: INT
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 4
+                          col: 19
+                        }
+                        end: {
+                          line: 4
+                          col: 19
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: INT
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 4
+                      col: 6
+                    }
+                    end: {
+                      line: 4
+                      col: 19
+                    }
+                    text: "abc2 = ... * 2"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc3a"
-                expr {
-                  get_attr {
-                    arg {
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 5
+                          col: 14
+                        }
+                        end: {
+                          line: 5
+                          col: 16
+                        }
+                      }
                     }
                     attr: "abc"
                     nullsafe: true
                   }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc3b1"
-                expr {
-                  navigate {
-                    arg {
-                      name: "."
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 5
+                      col: 6
                     }
-                    attr: "abc"
+                    end: {
+                      line: 5
+                      col: 16
+                    }
+                    text: "abc3a = ?.abc"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "abc3b2"
-                expr {
-                  navigate {
-                    arg {
+            stmt: {
+              assign: {
+                name: "abc3b1"
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 6
+                          col: 15
+                        }
+                        end: {
+                          line: 6
+                          col: 18
+                        }
+                      }
+                    }
+                    attr: "abc"
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 6
+                      col: 6
+                    }
+                    end: {
+                      line: 6
+                      col: 18
+                    }
+                    text: "abc3b1 = -> abc"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc3b2"
+                expr: {
+                  navigate: {
+                    arg: {
+                      name: "."
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 7
+                          col: 15
+                        }
+                        end: {
+                          line: 7
+                          col: 33
+                        }
+                      }
                     }
                     attr: "abc"
                     setof: true
                     via: "foo"
                   }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 7
+                      col: 6
+                    }
+                    end: {
+                      line: 7
+                      col: 33
+                    }
+                    text: "abc3b2 = -> set of abc via foo"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc3b3"
-                expr {
-                  navigate {
-                    arg {
+                expr: {
+                  navigate: {
+                    arg: {
                       name: "."
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 8
+                          col: 15
+                        }
+                        end: {
+                          line: 8
+                          col: 34
+                        }
+                      }
                     }
                     attr: ".abc"
                     setof: true
                     via: "foo"
                   }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc3c"
-                expr {
-                  unexpr {
-                    op: INV
-                    arg {
-                      binexpr {
-                        op: TO_MATCHING
-                        lhs {
-                          name: "."
-                        }
-                        rhs {
-                          name: "abc"
-                        }
-                        attr_name: "*"
-                      }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 8
+                      col: 6
                     }
+                    end: {
+                      line: 8
+                      col: 34
+                    }
+                    text: "abc3b3 = -> set of .abc via foo"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "abc3c1"
-                expr {
-                  unexpr {
+            stmt: {
+              assign: {
+                name: "abc3c"
+                expr: {
+                  unexpr: {
                     op: INV
-                    arg {
-                      binexpr {
+                    arg: {
+                      binexpr: {
                         op: TO_MATCHING
-                        lhs {
+                        lhs: {
                           name: "."
-                        }
-                        rhs {
-                          get_attr {
-                            arg {
-                              name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 9
+                              col: 15
                             }
-                            attr: "abc"
+                            end: {
+                              line: 9
+                              col: 18
+                            }
+                          }
+                        }
+                        rhs: {
+                          name: "abc"
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 9
+                              col: 18
+                            }
+                            end: {
+                              line: 9
+                              col: 18
+                            }
                           }
                         }
                         attr_name: "*"
                       }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 9
+                          col: 15
+                        }
+                        end: {
+                          line: 9
+                          col: 18
+                        }
+                      }
                     }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 9
+                      col: 6
+                    }
+                    end: {
+                      line: 9
+                      col: 18
+                    }
+                    text: "abc3c = ~~> abc"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "abc3d"
-                expr {
-                  unexpr {
+            stmt: {
+              assign: {
+                name: "abc3c1"
+                expr: {
+                  unexpr: {
                     op: INV
-                    arg {
-                      binexpr {
+                    arg: {
+                      binexpr: {
                         op: TO_MATCHING
-                        lhs {
+                        lhs: {
                           name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 10
+                              col: 16
+                            }
+                            end: {
+                              line: 10
+                              col: 20
+                            }
+                          }
                         }
-                        rhs {
-                          name: "abc"
-                        }
-                        attr_name: "abc"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc3e"
-                expr {
-                  unexpr {
-                    op: INV
-                    arg {
-                      binexpr {
-                        op: TO_NOT_MATCHING
-                        lhs {
-                          name: "."
-                        }
-                        rhs {
-                          name: "abc"
-                        }
-                        attr_name: "abc"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc3f"
-                expr {
-                  unexpr {
-                    op: INV
-                    arg {
-                      binexpr {
-                        op: TO_MATCHING
-                        lhs {
-                          name: "."
-                        }
-                        rhs {
-                          name: "abc"
-                        }
-                        attr_name: "abc"
-                        attr_name: "def"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc3g"
-                expr {
-                  unexpr {
-                    op: INV
-                    arg {
-                      binexpr {
-                        op: TO_NOT_MATCHING
-                        lhs {
-                          name: "."
-                        }
-                        rhs {
-                          name: "abc"
-                        }
-                        attr_name: "abc"
-                        attr_name: "def"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc3h"
-                expr {
-                  unexpr {
-                    op: INV
-                    arg {
-                      get_attr {
-                        arg {
-                          get_attr {
-                            arg {
-                              binexpr {
-                                op: TO_MATCHING
-                                lhs {
-                                  name: "."
+                        rhs: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/implied.sysl"
+                                start: {
+                                  line: 10
+                                  col: 19
                                 }
-                                rhs {
-                                  name: "foo"
+                                end: {
+                                  line: 10
+                                  col: 20
                                 }
-                                attr_name: "*"
                               }
                             }
                             attr: "abc"
                           }
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 10
+                              col: 19
+                            }
+                            end: {
+                              line: 10
+                              col: 20
+                            }
+                          }
                         }
-                        attr: "def"
+                        attr_name: "*"
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 10
+                          col: 16
+                        }
+                        end: {
+                          line: 10
+                          col: 20
+                        }
                       }
                     }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 10
+                      col: 6
+                    }
+                    end: {
+                      line: 10
+                      col: 20
+                    }
+                    text: "abc3c1 = ~~> .abc"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "abc4a"
-                expr {
-                  binexpr {
-                    op: WHERE
-                    lhs {
-                      name: "."
-                    }
-                    rhs {
-                      literal {
-                        b: true
-                      }
-                      type {
-                        primitive: BOOL
-                      }
-                    }
-                    scopevar: "abcdef"
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc5a"
-                expr {
-                  get_attr {
-                    arg {
-                      name: "."
-                    }
-                    attr: "abc"
-                    setof: true
-                  }
-                }
-              }
-            }
-            stmt {
-              assign {
-                name: "abc5a1"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
+            stmt: {
+              assign: {
+                name: "abc3d"
+                expr: {
+                  unexpr: {
+                    op: INV
+                    arg: {
+                      binexpr: {
+                        op: TO_MATCHING
+                        lhs: {
                           name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 11
+                              col: 15
+                            }
+                            end: {
+                              line: 11
+                              col: 23
+                            }
+                          }
                         }
-                        attr: "abc"
-                        setof: true
+                        rhs: {
+                          name: "abc"
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 11
+                              col: 23
+                            }
+                            end: {
+                              line: 11
+                              col: 23
+                            }
+                          }
+                        }
+                        attr_name: "abc"
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 11
+                          col: 15
+                        }
+                        end: {
+                          line: 11
+                          col: 23
+                        }
                       }
                     }
-                    attr: "def"
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 11
+                      col: 6
+                    }
+                    end: {
+                      line: 11
+                      col: 23
+                    }
+                    text: "abc3d = ~~[abc]> abc"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "abc5b"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
-                          get_attr {
-                            arg {
-                              name: "."
+            stmt: {
+              assign: {
+                name: "abc3e"
+                expr: {
+                  unexpr: {
+                    op: INV
+                    arg: {
+                      binexpr: {
+                        op: TO_NOT_MATCHING
+                        lhs: {
+                          name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 12
+                              col: 15
+                            }
+                            end: {
+                              line: 12
+                              col: 24
+                            }
+                          }
+                        }
+                        rhs: {
+                          name: "abc"
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 12
+                              col: 24
+                            }
+                            end: {
+                              line: 12
+                              col: 24
+                            }
+                          }
+                        }
+                        attr_name: "abc"
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 12
+                          col: 15
+                        }
+                        end: {
+                          line: 12
+                          col: 24
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 12
+                      col: 6
+                    }
+                    end: {
+                      line: 12
+                      col: 24
+                    }
+                    text: "abc3e = ~!~[abc]> abc"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc3f"
+                expr: {
+                  unexpr: {
+                    op: INV
+                    arg: {
+                      binexpr: {
+                        op: TO_MATCHING
+                        lhs: {
+                          name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 13
+                              col: 15
+                            }
+                            end: {
+                              line: 13
+                              col: 27
+                            }
+                          }
+                        }
+                        rhs: {
+                          name: "abc"
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 13
+                              col: 27
+                            }
+                            end: {
+                              line: 13
+                              col: 27
+                            }
+                          }
+                        }
+                        attr_name: "abc"
+                        attr_name: "def"
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 13
+                          col: 15
+                        }
+                        end: {
+                          line: 13
+                          col: 27
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 13
+                      col: 6
+                    }
+                    end: {
+                      line: 13
+                      col: 27
+                    }
+                    text: "abc3f = ~~[abc,def]> abc"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc3g"
+                expr: {
+                  unexpr: {
+                    op: INV
+                    arg: {
+                      binexpr: {
+                        op: TO_NOT_MATCHING
+                        lhs: {
+                          name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 14
+                              col: 15
+                            }
+                            end: {
+                              line: 14
+                              col: 28
+                            }
+                          }
+                        }
+                        rhs: {
+                          name: "abc"
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 14
+                              col: 28
+                            }
+                            end: {
+                              line: 14
+                              col: 28
+                            }
+                          }
+                        }
+                        attr_name: "abc"
+                        attr_name: "def"
+                      }
+                      type: {
+                        no_type: {}
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 14
+                          col: 15
+                        }
+                        end: {
+                          line: 14
+                          col: 28
+                        }
+                      }
+                    }
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 14
+                      col: 6
+                    }
+                    end: {
+                      line: 14
+                      col: 28
+                    }
+                    text: "abc3g = ~!~[abc,def]> abc"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc3h"
+                expr: {
+                  unexpr: {
+                    op: INV
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          get_attr: {
+                            arg: {
+                              binexpr: {
+                                op: TO_MATCHING
+                                lhs: {
+                                  name: "."
+                                  source_context: {
+                                    file: "tests/implied.sysl"
+                                    start: {
+                                      line: 15
+                                      col: 15
+                                    }
+                                    end: {
+                                      line: 15
+                                      col: 18
+                                    }
+                                  }
+                                }
+                                rhs: {
+                                  name: "foo"
+                                  source_context: {
+                                    file: "tests/implied.sysl"
+                                    start: {
+                                      line: 15
+                                      col: 18
+                                    }
+                                    end: {
+                                      line: 15
+                                      col: 18
+                                    }
+                                  }
+                                }
+                                attr_name: "*"
+                              }
+                              source_context: {
+                                file: "tests/implied.sysl"
+                                start: {
+                                  line: 15
+                                  col: 15
+                                }
+                                end: {
+                                  line: 15
+                                  col: 18
+                                }
+                              }
                             }
                             attr: "abc"
-                            setof: true
+                          }
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 15
+                              col: 21
+                            }
+                            end: {
+                              line: 15
+                              col: 22
+                            }
                           }
                         }
                         attr: "def"
                       }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 15
+                          col: 25
+                        }
+                        end: {
+                          line: 15
+                          col: 26
+                        }
+                      }
                     }
-                    attr: "ghi"
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 15
+                      col: 6
+                    }
+                    end: {
+                      line: 15
+                      col: 26
+                    }
+                    text: "abc3h = ~~> foo.abc.def"
                   }
                 }
               }
             }
-            stmt {
-              assign {
-                name: "abc5c"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
+            stmt: {
+              assign: {
+                name: "abc4a"
+                expr: {
+                  binexpr: {
+                    op: WHERE
+                    lhs: {
+                      name: "."
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 16
+                          col: 14
+                        }
+                        end: {
+                          line: 16
+                          col: 34
+                        }
+                      }
+                    }
+                    rhs: {
+                      literal: {
+                        b: true
+                      }
+                      type: {
+                        primitive: BOOL
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 16
+                          col: 30
+                        }
+                        end: {
+                          line: 16
+                          col: 30
+                        }
+                      }
+                    }
+                    scopevar: "abcdef"
+                  }
+                  type: {
+                    primitive: BOOL
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 16
+                      col: 6
+                    }
+                    end: {
+                      line: 16
+                      col: 34
+                    }
+                    text: "abc4a = . where(abcdef: true)"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc5a"
+                expr: {
+                  get_attr: {
+                    arg: {
+                      name: "."
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 18
+                          col: 14
+                        }
+                        end: {
+                          line: 18
+                          col: 24
+                        }
+                      }
+                    }
+                    attr: "abc"
+                    setof: true
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 18
+                      col: 6
+                    }
+                    end: {
+                      line: 18
+                      col: 24
+                    }
+                    text: "abc5a = .table of abc"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc5a1"
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 19
+                              col: 15
+                            }
+                            end: {
+                              line: 19
+                              col: 25
+                            }
+                          }
+                        }
+                        attr: "abc"
+                        setof: true
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 19
+                          col: 15
+                        }
+                        end: {
+                          line: 19
+                          col: 25
+                        }
+                      }
+                    }
+                    attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 19
+                      col: 6
+                    }
+                    end: {
+                      line: 19
+                      col: 29
+                    }
+                    text: "abc5a1 = .table of abc.def"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc5b"
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          get_attr: {
+                            arg: {
+                              name: "."
+                              source_context: {
+                                file: "tests/implied.sysl"
+                                start: {
+                                  line: 20
+                                  col: 14
+                                }
+                                end: {
+                                  line: 20
+                                  col: 24
+                                }
+                              }
+                            }
+                            attr: "abc"
+                            setof: true
+                          }
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 20
+                              col: 14
+                            }
+                            end: {
+                              line: 20
+                              col: 24
+                            }
+                          }
+                        }
+                        attr: "def"
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 20
+                          col: 27
+                        }
+                        end: {
+                          line: 20
+                          col: 28
+                        }
+                      }
+                    }
+                    attr: "ghi"
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 20
+                      col: 6
+                    }
+                    end: {
+                      line: 20
+                      col: 32
+                    }
+                    text: "abc5b = .table of abc.def.ghi"
+                  }
+                }
+              }
+            }
+            stmt: {
+              assign: {
+                name: "abc5c"
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
+                          name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 21
+                              col: 14
+                            }
+                            end: {
+                              line: 21
+                              col: 25
+                            }
+                          }
                         }
                         attr: "abc"
                         nullsafe: true
                         setof: true
                       }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 21
+                          col: 14
+                        }
+                        end: {
+                          line: 21
+                          col: 25
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 21
+                      col: 6
+                    }
+                    end: {
+                      line: 21
+                      col: 29
+                    }
+                    text: "abc5c = ?.table of abc.def"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc5d"
-                expr {
-                  get_attr {
-                    arg {
+                expr: {
+                  get_attr: {
+                    arg: {
                       name: "abc"
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 22
+                          col: 14
+                        }
+                        end: {
+                          line: 22
+                          col: 14
+                        }
+                      }
                     }
                     attr: "def"
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 22
+                      col: 6
+                    }
+                    end: {
+                      line: 22
+                      col: 18
+                    }
+                    text: "abc5d = abc.def"
                   }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc5e"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "abc"
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 23
+                              col: 14
+                            }
+                            end: {
+                              line: 23
+                              col: 14
+                            }
+                          }
                         }
                         attr: "def"
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 23
+                          col: 17
+                        }
+                        end: {
+                          line: 23
+                          col: 18
+                        }
                       }
                     }
                     attr: "ghi"
                   }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 23
+                      col: 6
+                    }
+                    end: {
+                      line: 23
+                      col: 22
+                    }
+                    text: "abc5e = abc.def.ghi"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc5f"
-                expr {
-                  get_attr {
-                    arg {
-                      get_attr {
-                        arg {
+                expr: {
+                  get_attr: {
+                    arg: {
+                      get_attr: {
+                        arg: {
                           name: "."
+                          source_context: {
+                            file: "tests/implied.sysl"
+                            start: {
+                              line: 24
+                              col: 14
+                            }
+                            end: {
+                              line: 24
+                              col: 15
+                            }
+                          }
                         }
                         attr: "abc"
+                      }
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 24
+                          col: 14
+                        }
+                        end: {
+                          line: 24
+                          col: 15
+                        }
                       }
                     }
                     attr: "def"
                   }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 24
+                      col: 6
+                    }
+                    end: {
+                      line: 24
+                      col: 19
+                    }
+                    text: "abc5f = .abc.def"
+                  }
                 }
               }
             }
-            stmt {
-              assign {
+            stmt: {
+              assign: {
                 name: "abc6"
-                expr {
-                  set {
-                    expr {
-                      type {
-                        tuple {
-                        }
+                expr: {
+                  set: {
+                    expr: {
+                      tuple: {}
+                      type: {
+                        tuple: {}
                       }
-                      tuple {
+                      source_context: {
+                        file: "tests/implied.sysl"
+                        start: {
+                          line: 25
+                          col: 14
+                        }
+                        end: {
+                          line: 25
+                          col: 14
+                        }
                       }
                     }
                   }
-                  type {
-                    set {
-                      tuple {
-                      }
+                  type: {
+                    set: {
+                      tuple: {}
                     }
+                  }
+                  source_context: {
+                    file: "tests/implied.sysl"
+                    start: {
+                      line: 25
+                      col: 6
+                    }
+                    end: {
+                      line: 25
+                      col: 17
+                    }
+                    text: "abc6 = {{:}}"
                   }
                 }
               }
             }
           }
+          source_context: {
+            file: "tests/implied.sysl"
+            start: {
+              line: 3
+              col: 4
+            }
+            end: {
+              line: 26
+              col: 5
+            }
+          }
         }
+        source_context: {
+          file: "tests/implied.sysl"
+          start: {
+            line: 2
+            col: 2
+          }
+          end: {
+            line: 27
+          }
+          text: "!view impliedTest(number <: int ) -> int:"
+        }
+      }
+    }
+    source_context: {
+      file: "tests/implied.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 47
       }
     }
   }

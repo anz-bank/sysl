@@ -1,0 +1,34 @@
+Source[~db]:
+    !type Foo:
+        x <: int
+
+    Read:
+        return x
+
+A:
+    Fetch:
+        Source <- Read
+
+B:
+    Fetch:
+        Source <- Read
+
+C:
+    FetchA:
+        A <- Fetch
+
+    FetchB:
+        B <- Fetch
+
+    Fetch:
+        . <- FetchA
+        . <- FetchB
+
+D:
+    Fetch:
+        A <- Fetch
+        C <- Fetch
+
+Client:
+    Do:
+        D <- Fetch

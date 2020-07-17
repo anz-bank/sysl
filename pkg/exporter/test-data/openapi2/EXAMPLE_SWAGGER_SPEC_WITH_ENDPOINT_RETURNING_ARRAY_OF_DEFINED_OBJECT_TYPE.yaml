@@ -11,7 +11,8 @@ definitions:
     type: object
 host: goat.example.com
 info:
-  description: No description.
+  description: |
+    No description.
   title: Goat CRUD API
   version: 1.2.3
 paths:

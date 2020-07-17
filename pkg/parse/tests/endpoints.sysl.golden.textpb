@@ -1,266 +1,352 @@
-apps: <
+apps: {
   key: "App"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "App"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: ".. * <- *"
-      value: <
+      value: {
         name: ".. * <- *"
-        stmt: <
-          action: <
+        stmt: {
+          action: {
             action: "POST /more/stuff.endpoint/{id}"
-          >
-          attrs: <
+          }
+          attrs: {
             key: "id"
-            value: <
+            value: {
               s: "one"
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "App"
-            >
+            }
             endpoint: "GET /serve.html"
-          >
-          attrs: <
+          }
+          attrs: {
             key: "id"
-            value: <
+            value: {
               s: "doesn't matter"
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
-            >
+            }
             endpoint: "GET /serve.html"
-          >
-          attrs: <
+          }
+          attrs: {
             key: "id"
-            value: <
+            value: {
               s: "doesn't matter"
-            >
-          >
-        >
-      >
-    >
-    endpoints: <
+            }
+          }
+        }
+        source_context: {
+          file: "tests/endpoints.sysl"
+          start: {
+            line: 24
+            col: 4
+          }
+          end: {
+            line: 28
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "GET /serve.html"
-      value: <
+      value: {
         name: "GET /serve.html"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+              }
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "My"
               part: "Server"
-            >
+            }
             endpoint: "GET /serve.html"
-          >
-          attrs: <
+          }
+          attrs: {
             key: "id"
-            value: <
+            value: {
               s: "doesn't matter"
-            >
-          >
-          attrs: <
+            }
+          }
+          attrs: {
             key: "patterns"
-            value: <
-              a: <
-                elt: <
+            value: {
+              a: {
+                elt: {
                   s: "https"
-                >
-              >
-            >
-          >
-        >
-        stmt: <
-          ret: <
+                }
+              }
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "ok <: Response"
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/serve.html"
-        >
-      >
-    >
-    endpoints: <
+        }
+        source_context: {
+          file: "tests/endpoints.sysl"
+          start: {
+            line: 17
+            col: 8
+          }
+          end: {
+            line: 21
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "POST /more/stuff.endpoint/{id}"
-      value: <
+      value: {
         name: "POST /more/stuff.endpoint/{id}"
-        attrs: <
+        attrs: {
           key: "id"
-          value: <
+          value: {
             s: "one"
-          >
-        >
-        attrs: <
+          }
+        }
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          call: <
-            target: <
+              }
+            }
+          }
+        }
+        stmt: {
+          call: {
+            target: {
               part: "App"
-            >
+            }
             endpoint: "GET /serve.html"
-          >
-          attrs: <
+          }
+          attrs: {
             key: "id"
-            value: <
+            value: {
               s: "doesn't matter"
-            >
-          >
-        >
-        stmt: <
-          ret: <
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "ok <: Response"
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: POST
           path: "/more/stuff.endpoint/{id}"
-          url_param: <
+          url_param: {
             name: "id"
-            type: <
+            type: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/endpoints.sysl"
-                start: <
+                start: {
                   line: 11
                   col: 27
-                >
-                end: <
+                }
+                end: {
                   line: 11
                   col: 40
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-    types: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/endpoints.sysl"
+          start: {
+            line: 12
+            col: 8
+          }
+          end: {
+            line: 16
+            col: 4
+          }
+        }
+      }
+    }
+    types: {
       key: "Response"
-      value: <
-        tuple: <
-          attr_defs: <
+      value: {
+        tuple: {
+          attr_defs: {
             key: "response"
-            value: <
+            value: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/endpoints.sysl"
-                start: <
+                start: {
                   line: 22
                   col: 20
-                >
-                end: <
+                }
+                end: {
                   line: 22
                   col: 20
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
-apps: <
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/endpoints.sysl"
+          start: {
+            line: 21
+            col: 4
+          }
+          end: {
+            line: 23
+            col: 3
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+        line: 23
+        col: 1
+      }
+      end: {
+        line: 23
+      }
+    }
+  }
+}
+apps: {
   key: "My :: Server"
-  value: <
-    name: <
+  value: {
+    name: {
       part: "My"
       part: "Server"
-    >
-    endpoints: <
+    }
+    endpoints: {
       key: "GET /serve.html"
-      value: <
+      value: {
         name: "GET /serve.html"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          ret: <
+              }
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "ok <: App.Response"
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: GET
           path: "/serve.html"
-        >
-      >
-    >
-    endpoints: <
+        }
+        source_context: {
+          file: "tests/endpoints.sysl"
+          start: {
+            line: 3
+            col: 8
+          }
+          end: {
+            line: 6
+            col: 4
+          }
+        }
+      }
+    }
+    endpoints: {
       key: "POST /more/stuff.endpoint/{id}"
-      value: <
+      value: {
         name: "POST /more/stuff.endpoint/{id}"
-        attrs: <
+        attrs: {
           key: "patterns"
-          value: <
-            a: <
-              elt: <
+          value: {
+            a: {
+              elt: {
                 s: "rest"
-              >
-            >
-          >
-        >
-        stmt: <
-          ret: <
+              }
+            }
+          }
+        }
+        stmt: {
+          ret: {
             payload: "ok <: App.Response"
-          >
-        >
-        rest_params: <
+          }
+        }
+        rest_params: {
           method: POST
           path: "/more/stuff.endpoint/{id}"
-          url_param: <
+          url_param: {
             name: "id"
-            type: <
+            type: {
               primitive: STRING
-              source_context: <
+              source_context: {
                 file: "tests/endpoints.sysl"
-                start: <
+                start: {
                   line: 6
                   col: 27
-                >
-                end: <
+                }
+                end: {
                   line: 6
                   col: 40
-                >
-              >
-            >
-          >
-        >
-      >
-    >
-  >
->
+                }
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/endpoints.sysl"
+          start: {
+            line: 7
+            col: 8
+          }
+          end: {
+            line: 10
+            col: 3
+          }
+        }
+      }
+    }
+    source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+        line: 1
+        col: 1
+      }
+      end: {
+        line: 1
+        col: 6
+      }
+    }
+  }
+}
