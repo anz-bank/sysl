@@ -97,4 +97,32 @@ func TestDrawTuple(t *testing.T) {
 			)
 		},
 	)
+
+	assertDraw(t,
+		`class "typeName" as _0 << (D,orchid) >> {
++ attr1 : **Sequence <string>**
++ attr2 : **Set <int>**
++ attr3 : **List <bool>**
+}
+`,
+		"typeName",
+		func(v *DataModelView, relationshipMap map[string]map[string]RelationshipParam) {
+			v.DrawTuple(
+				EntityViewParam{
+					EntityColor:  "orchid",
+					EntityHeader: "D",
+					EntityName:   "typeName",
+					EntityAlias:  "",
+				},
+				syslwrapper.MakeTuple(
+					map[string]*sysl.Type{
+						"attr1": syslwrapper.MakeSequence(syslwrapper.MakePrimitive("string")),
+						"attr2": syslwrapper.MakeSet(syslwrapper.MakePrimitive("int")),
+						"attr3": syslwrapper.MakeList(syslwrapper.MakePrimitive("bool")),
+					},
+				).Type.(*sysl.Type_Tuple_).Tuple,
+				relationshipMap,
+			)
+		},
+	)
 }

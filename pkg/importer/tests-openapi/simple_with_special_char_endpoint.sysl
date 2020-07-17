@@ -28,8 +28,20 @@ testapp "Simple" [package="package_foo"]:
             | No description.
             return ok <: SimpleObj
 
+    /withHeaders%3AandSpecialChars:
+        GET:
+            | No description.
+            return error <: _withHeaders%3AandSpecialChars_error
+            return ok <: SimpleObj
+
     #---------------------------------------------------------------------------
     # definitions
+
+    !type Error:
+        code <: int?:
+            @json_tag = "code"
+        description <: string?:
+            @json_tag = "description"
 
     !type SimpleObj:
         name <: string?:
@@ -38,3 +50,9 @@ testapp "Simple" [package="package_foo"]:
     !type SimpleObj2:
         name <: SimpleObj?:
             @json_tag = "name"
+
+    !type _withHeaders%3AandSpecialChars_error:
+        Error <: Error [mediatype="application/json"]:
+            @json_tag = "Error"
+        content-type <: string [~header]:
+            @json_tag = "content-type"

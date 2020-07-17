@@ -5,6 +5,7 @@ type ServiceVarsMap map[string]ServiceVars
 type serviceVarsBase struct {
 	Name   string `json:"name"`
 	Import string `json:"import"`
+	URL    string `json:"url"`
 }
 
 type ServiceVars struct {

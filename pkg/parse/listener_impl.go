@@ -765,7 +765,10 @@ func (s *TreeShapeListener) applyAnnotations(
 			if f.Attrs == nil {
 				f.Attrs = map[string]*sysl.Attribute{}
 			}
-			f.Attrs[varname] = attr
+			// if varname is already in lower scope, it shouldn't replace the value
+			if _, exists := f.Attrs[varname]; !exists {
+				f.Attrs[varname] = attr
+			}
 		}
 	}
 }
