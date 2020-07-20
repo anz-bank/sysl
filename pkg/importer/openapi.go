@@ -31,7 +31,7 @@ func NewOpenAPILoader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoade
 	loader.LoadSwaggerFromURIFunc = func(
 		loader *openapi3.SwaggerLoader, url *url.URL) (swagger *openapi3.Swagger, err error) {
 		if url.Host == "" && url.Scheme == "" {
-			logger.Infof("Loading openapi ref: %s", url.String())
+			logger.Debugf("Loading openapi ref: %s", url.String())
 			data, err := afero.ReadFile(fs, pathFromURL(url))
 			if err != nil {
 				return nil, err
