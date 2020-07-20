@@ -480,8 +480,6 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 				primaryKey = pk.GetAttrName()[0]
 			}
 		}
-	default:
-		fmt.Printf("Type not defined %s", t.Type)
 	}
 
 	return &Type{
