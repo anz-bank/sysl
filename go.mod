@@ -13,34 +13,37 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20200503195918-621b933c7a7f
+	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
 	github.com/arr-ai/hash v0.5.0 // indirect
 	github.com/arr-ai/wbnf v0.13.0
+	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-chi/chi v4.1.1+incompatible
+	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9
+	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
 	github.com/kr/pretty v0.2.0 // indirect
-	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/prometheus/client_golang v0.9.3 // indirect
 	github.com/rickb777/date v1.12.4
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.6.0
-	github.com/spf13/afero v1.2.2
+	github.com/spf13/afero v1.3.2
 	github.com/stretchr/objx v0.2.0 // indirect
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/pretty v1.0.1 // indirect
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
-	golang.org/x/sys v0.0.0-20200515095857-1151b9dac4a9 // indirect
+	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
+	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 	google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24 // indirect
 	google.golang.org/grpc v1.28.0
