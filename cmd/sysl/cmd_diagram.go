@@ -7,7 +7,6 @@ import (
 	"github.com/anz-bank/mermaid-go/mermaid"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/mermaid/datamodeldiagram"
-	"github.com/anz-bank/sysl/pkg/mermaid/endpointanalysisdiagram"
 	"github.com/anz-bank/sysl/pkg/mermaid/integrationdiagram"
 	"github.com/anz-bank/sysl/pkg/mermaid/sequencediagram"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -28,9 +27,9 @@ func (p *diagramCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("sequence",
 		"Generate a sequence diagram (Specify --app and --endpoint)",
 	).Default("false").Short('s').BoolVar(&p.SequenceDiagram)
-	cmd.Flag("endpointanalysis",
-		"Generate an integration diagram with its endpoints (Optional- specify --app)",
-	).Default("false").Short('p').BoolVar(&p.EndpointAnalysis)
+	// cmd.Flag("endpointanalysis",
+	// 	"Generate an integration diagram with its endpoints (Optional- specify --app)",
+	// ).Default("false").Short('p').BoolVar(&p.EndpointAnalysis)
 	cmd.Flag("data", "Generate a Data model diagram").Default("false").Short('d').BoolVar(&p.DataDiagram)
 	cmd.Flag("app", "Optional flag to specify specific application").Short('a').StringVar(&p.AppName)
 	cmd.Flag("endpoint", "Optional flag to specify endpoint").Short('e').StringVar(&p.Endpoint)
@@ -45,7 +44,8 @@ func (p *diagramCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	svg := mermaid.Execute(out)
+	g := mermaid.Init()
+	svg := g.Execute(out)
 	if err := ioutil.WriteFile(p.Output, []byte(svg), 0644); err != nil {
 		panic(err)
 	}
@@ -64,8 +64,8 @@ func callDiagramGenerator(m *sysl.Module, p *diagramCmd) (string, error) {
 			return sequencediagram.GenerateSequenceDiagram(m, p.AppName, p.Endpoint)
 		}
 		return "", errors.New("empty appname/endpoint; please check help for more information")
-	case p.EndpointAnalysis:
-		return endpointanalysisdiagram.GenerateEndpointAnalysisDiagram(m)
+	// case p.EndpointAnalysis:
+	// 	return endpointanalysisdiagram.GenerateEndpointAnalysisDiagram(m)
 	case p.DataDiagram:
 		return datamodeldiagram.GenerateFullDataDiagram(m)
 	default:
