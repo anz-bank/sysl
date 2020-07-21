@@ -52,7 +52,7 @@ Optional flags:
 -     --root=ROOT             sysl root directory for input model file. If root is not found, the module directory becomes the root, but the module can not import with absolute paths (or imports must be
                               relative).
 -     -i, --integration           Generate an integration diagram (Optional- specify --app)
--     -s, --sequence              Generate a sequence diagram (Specify --appname and --endpoint)
+-     -s, --sequence              Generate a sequence diagram (Specify --app and --endpoint)
 -     -p, --endpointanalysis      Generate an integration diagram with its endpoints (Optional- specify --app)
 -     -d, --data                  Generate a Data model diagram
 -     -a, --app=APP               Application

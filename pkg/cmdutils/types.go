@@ -100,8 +100,11 @@ type ExecuteArgs struct {
 }
 
 type DiagramCmd struct {
-	IntegrationDiagram string
-	SequenceDiagram    string
+	AppName            string
+	Endpoint           string
+	Output             string
+	IntegrationDiagram bool
+	SequenceDiagram    bool
 	EndpointAnalysis   bool
 	DataDiagram        bool
 }
