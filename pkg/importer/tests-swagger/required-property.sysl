@@ -14,5 +14,5 @@ testapp "Fruit API" [package="package_foo"]:
     # definitions
 
     !type Apple:
-        colour <: string:
+        colour <: string(1..255):
             @json_tag = "colour"

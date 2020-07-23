@@ -301,8 +301,14 @@ func (w *writer) writeDefinition(t *StandardType) {
 			suffix += ":"
 		}
 
-		w.writeLines(PushIndent, fmt.Sprintf("%s <: %s%s", appendSizeSpec(name, prop.SizeSpec),
-			getSyslTypeName(prop.Type), suffix))
+		typeName := getSyslTypeName(prop.Type)
+		if strings.HasPrefix(typeName, "sequence of ") {
+			name = appendSizeSpec(name, prop.SizeSpec)
+		} else {
+			typeName = appendSizeSpec(typeName, prop.SizeSpec)
+		}
+
+		w.writeLines(PushIndent, fmt.Sprintf("%s <: %s%s", name, typeName, suffix))
 		if !w.DisableJSONTags {
 			w.writeLines(PushIndent, fmt.Sprintf("@json_tag = %s", quote(prop.Name)), PopIndent)
 		}

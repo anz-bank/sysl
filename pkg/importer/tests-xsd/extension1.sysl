@@ -12,7 +12,7 @@ testapp [package="package_foo"]:
     # definitions
 
     !type Employee:
-        id(1..1) <: string:
+        id <: string(1..1):
             @json_tag = "id"
         name(0..10) <: sequence of string?:
             @json_tag = "name"
@@ -26,7 +26,7 @@ testapp [package="package_foo"]:
             @json_tag = "country"
 
     !type User:
-        id(1..1) <: string:
+        id <: string(1..1):
             @json_tag = "id"
         name(0..10) <: sequence of string?:
             @json_tag = "name"
