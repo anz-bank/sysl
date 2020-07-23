@@ -286,7 +286,10 @@ func (o *openapiv3) buildField(name string, prop *openapi3.SchemaRef) Field {
 		if isArray {
 			prop = prop.Value.Items
 		}
-		t := o.loadTypeSchema(strings.Join(o.nameStack, "_"), prop.Value)
+		ns := o.nameStack
+		o.nameStack = nil
+		defer func() { o.nameStack = ns }()
+		t := o.loadTypeSchema(strings.Join(ns, "_"), prop.Value)
 		o.types.Add(t)
 		if isArray && prop.Ref == "" {
 			f.Type = &Array{Items: t}

@@ -1,0 +1,47 @@
+swagger: "2.0"
+definitions:
+  TrackEventList:
+    type: object
+    required:
+      - events
+    properties:
+      events:
+        type: array
+        items:
+          type: object
+          required:
+            - category
+          properties:
+            category:
+              type: string
+              example: tip
+            action:
+              type: string
+              example: impression
+            label:
+              type: string
+              example: wieufh23i72ujhfksd
+            value:
+              type: object
+              properties:
+                data:
+                  type: string
+                  example: creditCardAppFormSubmitted
+                comment:
+                  type: string
+                  example: Yay I learned something today
+                reaction:
+                  type: string
+                  example: like
+                request_copy:
+                  type: boolean
+                latency_days:
+                  type: integer
+                  example: 90
+                  description: Number of days after which the tip can be shown again,
+                    for 'feedback' events only
+                latency_event:
+                  type: string
+                  example: latency_event, end_of_month
+                  description: When this tip can be shown again. Applicable only when
+                    the event action is feedback
