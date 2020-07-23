@@ -1,7 +1,7 @@
 # Generates the PlantUML for an integration diagram of model.sysl.
 
-let sysl = //encoding.proto.decode(//encoding.proto.proto, //os.file('sysl.pb'));
-let model = //encoding.proto.decode(sysl, 'Module' , //os.file('model.pb'));
+let syslDescriptor = //encoding.proto.descriptor(//os.file('sysl.pb'));
+let model = //encoding.proto.decode(syslDescriptor, 'Module' , //os.file('model.pb'));
 
 # Transforms a module to an adjacency list of applications.
 let toAdj = \m m.apps >>> \k \a 
