@@ -1,0 +1,12 @@
+\traversalData (
+    $`
+    @startuml
+    ${
+        traversalData =>
+        $`[${.from}] "${.from_endpoint}" --> "${.dest_endpoint}" [${.to}]: [${.returns orderby . -> //seq.join(', ', .)}]`
+        orderby .
+        ::\i:
+    }
+    @enduml
+    `
+)

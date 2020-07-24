@@ -3,7 +3,7 @@ Source[~db]:
         x <: int
 
     Read:
-        return x
+        return Source.Foo.x
 
 A:
     Fetch:

@@ -1,0 +1,1 @@
+sysl pb --mode=json $1 | arrai run script.arrai $2

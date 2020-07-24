@@ -1,0 +1,106 @@
+\mod (
+    let joinDot = //seq.join('.');
+    let strArr = \arr (arr => (:.@, @item: .@item.s));
+    let callersOf = \app \endpoint
+        let callName = \call cond {
+            (call('call')?:false): call -> joinDot(strArr(.('call', 'target', 'part').a) ++ [.('call', 'endpoint').s]),
+            _: {},
+        };
+        let callStmts = \stmts stmts => callName(.@item) where . != {};
+        let call = app ++ '.' ++ endpoint;
+        mod('apps') => (
+            :.@,
+            @value:
+                let endpoints = .@value('endpoints')?:false;
+                cond {
+                    endpoints: endpoints where (call <: callStmts(.@value('stmt')?.a:{})) => .@,
+                    _: {}
+                }
+        ) where .@value != {}
+        => ( let app = .@; .@value => (app: app, endpoint: .) )
+        -> //rel.union(.);
+    let endpointMap = \app \endpoints (
+        endpoints => (
+            :.@,
+            @value: (
+                callers: callersOf(app, .@),
+                returns: let primitives = {
+                        'int32', 'int64', 'int', 'float', 'string', 'date', 'bool',
+                        'decimal', 'datetime', 'xml', 'bytes', 'any',
+                    };
+                    .@value('stmt')?.a?:{} where .@item('ret')?:false =>
+                    # TODO: create trim whitespace function in the stdlib
+                    let trimWhitespace =
+                        let trimPre = //seq.trim_prefix(' ');
+                        let trimSuf = //seq.trim_suffix(' ');
+                        let rec trim = \word (
+                            let trimmed = trimPre(trimSuf(word));
+                            cond {
+                                (trimmed = word): trimmed,
+                                _: trim(trimmed)
+                            }
+                        );
+                        \word (trim(word));
+                    let splitted = //seq.split('<:', .@item('ret', 'payload').s);
+                    let name = cond (splitted count) {
+                        1: trimWhitespace(splitted(0)),
+                        2: trimWhitespace(splitted(1)),
+                        _: false, # shouldn't happen
+                    };
+                    #TODO: need to handle return type.field in its own App
+                    let splittedName = //seq.split('.', name);
+                    cond (splittedName count) {
+                        1: let lowered = //str.lower(splittedName(0));
+                            cond {
+                                (lowered <: primitives): lowered,
+                                _: app ++ '.' ++ splittedName(0)
+                            },
+                        _: name
+                    }
+            )
+        )
+    );
+    #TODO: handle inplace fields
+    let typeMap = \currApp \types (
+        types => (
+            :.@,
+            @value:
+                let mapOfAttrs = \type type('attrs', 'map_of', 'a', 'elt')?.a:{} => .@item('s').s;
+                let nameFromRef = \ref
+                    let external = ref('appname', 'part')?:false;
+                    cond {
+                        (ref = {}): {},
+                        external  : joinDot(strArr(external.a ++ ref('path').a)),
+                        _         : joinDot([currApp] ++ strArr(ref('path').a)),
+                    };
+                let rec nameFromLayeredRef = \ref (
+                    cond {
+                        (ref('sequence')?:false)      : nameFromLayeredRef(ref('sequence')),
+                        (ref('list')?:false)          : nameFromLayeredRef(ref('list', 'type')),
+                        (ref('set')?:false)           : nameFromLayeredRef(ref('set')),
+                        (ref('typeRef', 'ref')?:false): nameFromRef(ref('typeRef', 'ref')),
+                        _                             : {}
+                    }
+                );
+                (
+                    map_of: mapOfAttrs(.@value),
+                    fields: cond {
+                        (.@value('tuple')?:false):
+                            .@value('tuple', 'attrDefs') => (
+                                :.@,
+                                @value: mapOfAttrs(.@value),
+                            ),
+                        _: false,
+                    },
+                    type_ref: nameFromLayeredRef(.@value)
+                )
+        )
+    );
+    mod('apps') => (
+        :.@,
+        @value: (
+            endpoints: endpointMap(.@, .@value('endpoints')?:{}),
+            types: typeMap(.@, .@value('types')?:{}),
+        )
+    )
+)

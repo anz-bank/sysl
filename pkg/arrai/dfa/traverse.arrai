@@ -1,0 +1,86 @@
+# return {(from: string, to: string, from_endpoint: string, dest_endpoint: string, returns: {string})}
+\graph \sources \type (
+    # TODO: handle deep type traversal
+    #     let isRelated = \typeTarget \typeName (
+    #         let splitted = //seq.split('.', typeName);
+    #         let len = splitted count;
+    #         let rec traverseRef = \typeTarget \appName \typeName
+    #         cond len {
+    #             (1): false, #TODO: handle primitives better
+    #             _: cond {
+    #                 (//seq.has_prefix(typeTarget, typeName)): true,
+    #                 _:
+    #                     let ref = graph(splitted(0)).types(splitted(1));
+    #                     mainType <: ref.map_of ||
+    #                     ref.fields => (mainType <: .@value) -> //rel.union(.) ||
+    #                     (
+    #                         ref.type_ref != '' &&
+    #                         ((//seq.split('.', ref.type_ref) count) > 1)
+    #                         relatedTypes({ref.type_ref}, ref.type_ref)
+    #                     )
+
+    #             }
+    #         }
+    #     )
+    let relatedTypes = \types \mainTypes (
+        mainTypes => (
+            let mainType = .;
+            types where
+                let splitted = //seq.split('.', .);
+                let len = splitted count;
+                cond len {
+                    (1): false, #TODO: handle primitives better
+                    (2): cond {
+                        (. = mainType): true,
+                        _:
+                            let ref = graph(splitted(0)).types(splitted(1));
+                            (
+                                (mainType <: ref.map_of) ||
+                                (ref.fields != {}) ||
+                                (ref.fields => (mainType <: .@value) -> //rel.union(.))
+                            )
+                    }
+                }
+        ) -> //rel.union(.)
+    );
+    let isValidDestination = \destReturns \typeTargets (
+        (typeTargets & destReturns) || relatedTypes(
+            destReturns,
+            typeTargets
+        )
+    );
+    let rec traverse = \sourcesData (
+        cond {
+            (sourcesData = {}): {},
+            _: let nextSources = sourcesData => (
+                    let source = .;
+                    let endpointData = graph(.to).endpoints(.dest_endpoint);
+                    endpointData.callers =>
+                        cond {
+                            (isValidDestination(endpointData.returns, source.returns)): (
+                                from         : source.to,
+                                to           : .app,
+                                from_endpoint: source.dest_endpoint,
+                                dest_endpoint: .endpoint,
+                                returns      : relatedTypes(endpointData.returns, source.returns)
+                            ),
+                            _: {}
+                        }
+                    where . != {}
+                ) -> //rel.union(.);
+                sourcesData | nextSources | traverse(nextSources)
+        }
+    );
+    let init = sources => (
+            let s = .;
+            graph(.app).endpoints(.endpoint).callers
+            => (
+                from         : s.app,
+                to           : .app,
+                from_endpoint: s.endpoint,
+                dest_endpoint: .endpoint,
+                returns      : {type}
+            )
+        ) -> //rel.union(.);
+    traverse(init)
+)
