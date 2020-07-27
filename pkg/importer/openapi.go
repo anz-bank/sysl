@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"sort"
 	"strings"
@@ -75,7 +76,7 @@ func (o *openapiv3) Load(file string) (string, error) {
 	if err != nil {
 		spec, _ = loader.LoadSwaggerFromData([]byte(file)) // nolint: errcheck
 	}
-	return o.convertSpec(spec, "")
+	return o.convertSpec(spec)
 }
 
 func (o *openapiv3) pushName(n string) func() {
@@ -86,9 +87,19 @@ func (o *openapiv3) pushName(n string) func() {
 }
 func (o *openapiv3) popName() { o.nameStack = o.nameStack[:len(o.nameStack)-1] }
 
-func (o *openapiv3) convertSpec(spec *openapi3.Swagger, basepath string) (string, error) {
+func orderedKeys(mapObj interface{}) []string {
+	var typeNames []string
+	for _, k := range reflect.ValueOf(mapObj).MapKeys() {
+		typeNames = append(typeNames, k.String())
+	}
+	sort.Strings(typeNames)
+	return typeNames
+}
+
+func (o *openapiv3) convertSpec(spec *openapi3.Swagger) (string, error) {
 	o.types = TypeList{}
-	for name, ref := range spec.Components.Schemas {
+	for _, name := range orderedKeys(spec.Components.Schemas) {
+		ref := spec.Components.Schemas[name]
 		if _, found := o.types.Find(name); !found {
 			if ref.Value == nil {
 				o.types.Add(NewStringAlias(name))
@@ -276,12 +287,22 @@ func makeSizeSpec(min uint64, max *uint64) *sizeSpec {
 func (o *openapiv3) buildField(name string, prop *openapi3.SchemaRef) Field {
 	f := Field{Name: name}
 	typeName := typeNameFromSchemaRef(prop)
+
+	if prop.Ref != "" {
+		f.Type = nameOnlyType(typeName)
+		return f
+	}
+
 	defer o.pushName(name)()
+
+	if prop.Value.Type == ArrayTypeName && prop.Value.Items.Ref != "" {
+		f.Type = &Array{Items: nameOnlyType(typeNameFromSchemaRef(prop.Value.Items))}
+		f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
+		return f
+	}
+
 	f.Type = o.typeAliasForSchema(prop)
 	isArray := prop.Value.Type == ArrayTypeName
-	if isArray {
-		f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
-	}
 	if typeName == ObjectTypeName {
 		if isArray {
 			prop = prop.Value.Items
@@ -338,6 +359,14 @@ func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
 			name:       name,
 			Properties: nil,
 			Attributes: getAttrs(schema),
+		}
+
+		// AllOf means this object is composed of all of the sub-schemas (and potentially addiitonal properties)
+		for _, subschema := range schema.AllOf {
+			subType := o.loadTypeSchema("", subschema.Value)
+			if subObj, ok := subType.(*StandardType); ok {
+				obj.Properties = append(obj.Properties, subObj.Properties...)
+			}
 		}
 
 		for fname, prop := range schema.Properties {
