@@ -108,3 +108,29 @@ func TestGenerateMermaidIntegrationDiagraMultipleAppsWithUnrelated(t *testing.T)
 	assert.True(t, strings.Contains(r, "Visa"))
 	assert.True(t, strings.Contains(r, "MasterCard"))
 }
+
+func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantApps(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	apps := []string{"MegaDatabase"}
+	r, err := GenerateMultipleAppIntegrationDiagram(m, apps)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(r, "MegaDatabase"))
+	assert.True(t, strings.Contains(r, ` IdentityServer["IdentityServer"] --> MegaDatabase["MegaDatabase"]`))
+}
+
+func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantAppsCallInConditional(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	apps := []string{"Visa"}
+	r, err := GenerateMultipleAppIntegrationDiagram(m, apps)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(r, "Visa"))
+	assert.True(t, strings.Contains(r, `PaymentServer["PaymentServer"] --> Visa["Visa"]`))
+}
