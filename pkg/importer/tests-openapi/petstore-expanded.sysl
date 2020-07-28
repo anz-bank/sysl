@@ -41,20 +41,20 @@ testapp "Swagger Petstore" [package="package_foo"]:
             | lorem. Pellentesque vitae felis pretium, pulvinar elit eu, euismod
             | sapien.
             return error <: Error
-            return ok <: sequence of EXTERNAL_Pet
+            return ok <: sequence of Pet
 
     /pets/{id<:int64}:
         GET:
             | Returns a user based on a single ID, if the user does not have
             | access to the pet
             return error <: Error
-            return ok <: EXTERNAL_Pet
+            return ok <: Pet
 
     /pets:
         POST (NewPetRequest <: NewPet [mediatype="application/json", ~body]):
             | Creates a new pet in the store. Duplicates are allowed
             return error <: Error
-            return ok <: EXTERNAL_Pet
+            return ok <: Pet
 
     /pets/{id<:int64}:
         DELETE:
@@ -77,8 +77,13 @@ testapp "Swagger Petstore" [package="package_foo"]:
         tag <: string?:
             @json_tag = "tag"
 
-    !alias EXTERNAL_Pet:
-        string
+    !type Pet:
+        id <: int64:
+            @json_tag = "id"
+        name <: string:
+            @json_tag = "name"
+        tag <: string?:
+            @json_tag = "tag"
 
     !alias tags:
         sequence of string

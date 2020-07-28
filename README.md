@@ -20,17 +20,13 @@ The set of outputs is open-ended and allows for your own extensions. Sysl has
 been created with extensibility in mind and it will grow to support other
 representations over time.
 
-## Usage Examples
-
-[Sysl by Example](https://sysl.io/docs/byexample/) is a hands-on introduction to Sysl using annotated examples.
-
-## Installation
-
-There are several approaches to get start using Sysl. See the [install page](https://sysl.io/docs/install/) for details.
-
 ## Documentation
 
 Documentation is hosted live at [https://sysl.io](https://sysl.io).
+
+## Installation
+
+There are several approaches to get start using Sysl. See the [install page](https://sysl.io/docs/installation) for details.
 
 ## Contributing
 

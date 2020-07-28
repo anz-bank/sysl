@@ -46,7 +46,7 @@ func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
 	}
 	l.openAPI2Spec = oas2spec
 	l.basePath = basePath
-	return l.convertSpec(oas3spec, basePath)
+	return l.convertSpec(oas3spec)
 }
 
 // Set the AppName of the imported app
