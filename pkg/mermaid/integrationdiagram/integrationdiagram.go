@@ -68,13 +68,20 @@ func generateMultipleAppIntegrationDiagramHelper(m *sysl.Module, appNames []stri
 	var result string
 	result = mermaid.GeneratedHeader + "graph TD\n"
 	for _, appName := range appNames {
-		endPoints := m.Apps[appName].Endpoints
-		for _, endPoint := range endPoints {
-			statements := endPoint.Stmt
-			result += printIntegrationDiagramStatements(m, statements, appName, integrationPairs)
+		if app := m.Apps[appName]; app != nil {
+			endPoints := app.Endpoints
+			result += printClassStatement(appName)
+			for _, endPoint := range endPoints {
+				statements := endPoint.Stmt
+				result += printIntegrationDiagramStatements(m, statements, appName, integrationPairs)
+			}
 		}
 	}
 	return result, nil
+}
+
+func printClassStatement(className string) string {
+	return fmt.Sprintf("    %s\n", className)
 }
 
 //printIntegrationDiagramStatements is where the printing takes place
