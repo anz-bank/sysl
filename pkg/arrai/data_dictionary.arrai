@@ -4,39 +4,40 @@ let syslDescriptor = //encoding.proto.descriptor(//os.file('sysl.pb'));
 let model = //encoding.proto.decode(syslDescriptor, 'Module' , //os.file('model.pb'));
 
 # Transforms a type specification into a set of field specifications.
-let toFields = \app \object \value
-    let attrs = value.tuple?.attr_defs:{};
+let toFields = \type
+    let attrs = type.tuple?.attr_defs:{};
     attrs => (
-        container: app,
-        objName:   object,
-        attrName:  .@,
-        attrType:  .@value.primitive
+        typeDesc:  .@value.attrs?('description').s:{},
+        fieldName:  .@,
+        fieldType:  .@value.primitive,
     )
 ;
 
+# Returns the type of an application (DB or API).
+let appType = \app cond app {(attrs: {'~db': ...}, ...): 'DB', _: 'API'};
+
 # Transforms a module to a data dictionary.
 let toDataDict = \m 
-    let apps = (m.apps >>> \k \a a.types?:{}) where .@value count;
-    let fields = //rel.union(apps => \(@:a, @value:v)
-        //rel.union(v => \(@:t, @value:v)
-            toFields(a, t, v)
+    let typedApps = m.apps where .@value.types?:{};
+    //rel.union(typedApps => \(@:appName, @value:app)
+        //rel.union(app.types => \(@:typeName, @value:type)
+            toFields(type) => \(:typeDesc, :fieldName, :fieldType)
+                # TODO: Correctly populate dummy fields.
+                (
+                    action: 'action',
+                    plat: 'plat',
+                    tech: 'tech',
+                    :fieldName,
+                    objType: cond appType(app) {'DB': 'Table', 'API': 'API', _: '?'},
+                    container: appName,
+                    :typeName,
+                    :typeDesc,
+                    fieldTerm: 'term',
+                    fieldDesc: 'fieldDesc',
+                    :fieldType,
+                )
         )
-    );
-    fields => \(:container, :objName, :attrName, :attrType)
-        # TODO: Correctly populate dummy fields.
-        (
-            action: 'action',
-            plat: 'plat',
-            tech: 'tech',
-            :attrName,
-            objType: 'API',
-            :container,
-            :objName,
-            objDesc: 'objDesc',
-            attrTerm: 'term',
-            attrDesc: 'attrDesc',
-            :attrType,
-        )
+    )
 ;
 
 # Transforms a data dictionary into a CSV file per the Metadata Template.
@@ -45,18 +46,18 @@ let toCsv = \dd
         (key: 'action', label:'Action'),
         (key: 'plat', label:'Platform Name'),
         (key: 'tech', label:'Technology Name'),
-        (key: 'attrName', label:'Physical Attribute Name'),
+        (key: 'fieldName', label:'Physical Attribute Name'),
         (key: 'objType', label:'Physical Object Type'),
         (key: 'container', label:'Physical Object Container Name'),
-        (key: 'objName', label:'Physical Object Name'),
-        (key: 'objDesc', label:'Physical Object Description'),
-        (key: 'attrTerm', label:'Business Term'),
-        (key: 'attrDesc', label:'Attribute Business Description'),
+        (key: 'typeName', label:'Physical Object Name'),
+        (key: 'typeDesc', label:'Physical Object Description'),
+        (key: 'fieldTerm', label:'Business Term'),
+        (key: 'fieldDesc', label:'Attribute Business Description'),
     ];
     let headings = $`${cols >> .label::, }`;
 
     let rows = (dd orderby .plat) >>
-        $`${.action}, ${.plat}, ${.tech}, ${.attrName}, ${.objType}, ${.container}, ${.objName}, ${.objDesc}, ${.attrTerm}, ${.attrDesc}`;
+        $`${.action}, ${.plat}, ${.tech}, ${.fieldName}, ${.objType}, ${.container}, ${.typeName}, ${.typeDesc}, ${.fieldTerm}, ${.fieldDesc}`;
     $`${(rows | {(@: -1, @item: headings)}) >> . ::\n}`
 ;
 

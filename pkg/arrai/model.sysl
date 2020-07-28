@@ -1,5 +1,7 @@
 Source[~db]:
     !type Foo:
+        @description =:
+          | A Foo.
         x <: int
         y <: int
 
