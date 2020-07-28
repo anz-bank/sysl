@@ -2,7 +2,10 @@ Source[~db]:
     !type Foo:
         @description =:
           | A Foo.
-        x <: int
+        @foo = "bar"
+        x <: int:
+            @description =:
+              | The X value.
         y <: int
 
     Read:

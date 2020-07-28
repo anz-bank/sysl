@@ -3,13 +3,17 @@
 let syslDescriptor = //encoding.proto.descriptor(//os.file('sysl.pb'));
 let model = //encoding.proto.decode(syslDescriptor, 'Module' , //os.file('model.pb'));
 
+# Returns the description attribute of the given type.
+let getDescription = \type //seq.trim_suffix('\n', type.attrs?('description')?.s:{});
+
 # Transforms a type specification into a set of field specifications.
 let toFields = \type
-    let attrs = type.tuple?.attr_defs:{};
-    attrs => (
-        typeDesc:  //seq.trim_suffix('\n', .@value.attrs?('description').s:{}),
-        fieldName:  .@,
-        fieldType:  .@value.primitive,
+    let fields = type.tuple?.attr_defs:{};
+    fields => \(@:fieldName, @value:field) (
+        typeDesc:  getDescription(type) || '?',
+        :fieldName,
+        fieldType:  field.primitive?:'?',
+        fieldDesc:  getDescription(field) || '?',
     )
 ;
 
@@ -20,23 +24,28 @@ let appType = \app cond app {(attrs: {'~db': ...}, ...): 'DB', _: 'API'};
 let toDataDict = \m 
     let typedApps = m.apps where .@value.types?:{};
     //rel.union(typedApps => \(@:appName, @value:app)
-        //rel.union(app.types => \(@:typeName, @value:type)
-            toFields(type) => \(:typeDesc, :fieldName, :fieldType)
-                # TODO: Correctly populate dummy fields.
-                (
-                    action: '?',
-                    plat: '?',
-                    tech: '?',
-                    :fieldName,
-                    objType: cond appType(app) {'DB': 'Table', 'API': 'API', _: '?'},
-                    container: appName,
-                    :typeName,
-                    :typeDesc,
-                    fieldTerm: '?',
-                    fieldDesc: '?',
-                    :fieldType,
-                )
-        )
+        cond appName {
+            # Exclude uninteresting apps.
+            'google_api': {},
+            'google_protobuf': {},
+            _: //rel.union(app.types => \(@:typeName, @value:type)
+                toFields(type) => \(:typeDesc, :fieldName, :fieldType, :fieldDesc)
+                    # TODO: Correctly populate dummy fields.
+                    (
+                        action: '?',
+                        plat: '?',
+                        tech: '?',
+                        :fieldName,
+                        objType: cond appType(app) {'DB': 'Table', 'API': 'API', _: '?'},
+                        container: appName,
+                        :typeName,
+                        :typeDesc,
+                        fieldTerm: '?',
+                        :fieldDesc,
+                        :fieldType,
+                    )
+            )
+        }
     )
 ;
 
@@ -56,7 +65,7 @@ let toCsv = \dd
     ];
     let headings = $`${cols >> .label::, }`;
 
-    let rows = (dd orderby .plat) >>
+    let rows = (dd orderby [.container, .fieldName]) >>
         $`${.action}, ${.plat}, ${.tech}, ${.fieldName}, ${.objType}, ${.container}, ${.typeName}, ${.typeDesc}, ${.fieldTerm}, ${.fieldDesc}`;
     $`${(rows | {(@: -1, @item: headings)}) >> . ::\n}`
 ;

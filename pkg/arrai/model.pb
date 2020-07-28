@@ -1,5 +1,29 @@
-¾
-Source³
+p
+Dk
+
+D*K
+FetchB
+Fetch:
+
+AFetch:
+
+CFetchš
+
+model.sysl"&š
+
+model.sysl!!b
+ClientX
+
+Client*3
+Do-
+Do:
+
+DFetchš
+
+model.sysl')š
+
+model.sysl&&ï
+Sourceä
 
 Source"
 patterns:
@@ -8,24 +32,27 @@
 Read:B
 	ok <: Fooš
 
-model.sysl2»
-Foo³B
+model.sysl2ì
+FooäB
 description	"A Foo.
-š
+B
+foo"barš
 
-model.sysl|
-<
-x7B
+model.syslž
+P
+xKB
+description"The X value.
+B
+foo"barš
+
+model.sysl	
+J
+yEB
 description	"A Foo.
-š
+B
+foo"barš
 
-model.sysl
-<
-y7B
-description	"A Foo.
-š
-
-model.syslš
+model.sysl		š
 
 model.sysl
 d
@@ -37,9 +64,9 @@ model.sysl
 
 SourceReadš
 
-model.syslš
+model.syslš
 
-model.sysld
+model.sysld
 B_
 
 B*?
@@ -48,24 +75,12 @@ model.sysld
 
 SourceReadš
 
-model.syslš
+model.syslš
 
-model.syslñ
+model.syslñ
 Cë
 
-C*=
-FetchA3
-FetchA:
-
-AFetchš
-
-model.sysl*=
-FetchB3
-FetchB:
-
-BFetchš
-
-model.sysl*M
+C*M
 FetchD
 Fetch:
 
@@ -73,30 +88,18 @@ model.sysl*M
 
 CFetchBš
 
-model.syslš
-
-model.syslp
-Dk
+model.sysl!*=
+FetchA3
+FetchA:
 
-D*K
-FetchB
-Fetch:
+AFetchš
+
+model.sysl*=
+FetchB3
+FetchB:
 
-AFetch:
-
-CFetchš
+BFetchš
 
-model.sysl#š
+model.syslš
 
-model.syslb
-ClientX
-
-Client*3
-Do-
-Do:
-
-DFetchš
-
-model.sysl$&š
-
-model.sysl##
+model.sysl
