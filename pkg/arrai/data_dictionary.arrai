@@ -22,7 +22,21 @@ let toDataDict = \m
             toFields(a, t, v)
         )
     );
-    fields
+    fields => \(:container, :objName, :attrName, :attrType)
+        # TODO: Correctly populate dummy fields.
+        (
+            action: 'action',
+            plat: 'plat',
+            tech: 'tech',
+            :attrName,
+            objType: 'API',
+            :container,
+            :objName,
+            objDesc: 'objDesc',
+            attrTerm: 'term',
+            attrDesc: 'attrDesc',
+            :attrType,
+        )
 ;
 
 # Transforms a data dictionary into a CSV file per the Metadata Template.
@@ -40,12 +54,10 @@ let toCsv = \dd
         (key: 'attrDesc', label:'Attribute Business Description'),
     ];
     let headings = $`${cols >> .label::, }`;
-    let rows = dd =>
-        $`${'action'}, ${'plat'}, ${'tech'}, ${.attrName}, ${'objType'}, ${.container}, ${.objName}, ${'objDesc'}, ${'term'}, ${'attrDesc'}`
-    ;
-    let rows = (rows orderby .) => \(:@, :@item) (@:@+1, :@item);
-    let rows = rows | {(@: 0, @item: headings)};
-    $`${rows >> . ::\n}`
+
+    let rows = (dd orderby .plat) >>
+        $`${.action}, ${.plat}, ${.tech}, ${.attrName}, ${.objType}, ${.container}, ${.objName}, ${.objDesc}, ${.attrTerm}, ${.attrDesc}`;
+    $`${(rows | {(@: -1, @item: headings)}) >> . ::\n}`
 ;
 
 toCsv(toDataDict(model))
