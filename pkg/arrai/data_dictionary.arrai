@@ -36,7 +36,7 @@ let toCsv = \dd
         (key: 'container', label:'Physical Object Container Name'),
         (key: 'objName', label:'Physical Object Name'),
         (key: 'objDesc', label:'Physical Object Description'),
-        (key: 'attrTerm', label:'ANZx Business Term'),
+        (key: 'attrTerm', label:'Business Term'),
         (key: 'attrDesc', label:'Attribute Business Description'),
     ];
     let headings = $`${cols >> .label::, }`;
