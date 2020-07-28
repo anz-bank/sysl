@@ -33,3 +33,23 @@ func TestGenerateMermaidDataModelDiagramWithAppAndType(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
 }
+
+func TestGenerateMermaidDataModelDiagramWithAppAndTypeNonExistentType(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/petshop/petshop.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	r, err := GenerateDataDiagramWithAppAndType(m, "PetShopModel", "ThisDoesNotExist")
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+}
+
+func TestGenerateMermaidDataModelDiagramWithAppAndTypeEmptyString(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/petshop/petshop.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	r, err := GenerateDataDiagramWithAppAndType(m, "PetShopModel", "")
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+}

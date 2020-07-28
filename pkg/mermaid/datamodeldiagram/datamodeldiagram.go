@@ -60,19 +60,20 @@ func generateDataDiagramWithAppAndTypeHelper(simpleTypes map[string]*syslwrapper
 	}
 	getRelatedTypes(appType1, *externalLinks, appTypes, eLinks)
 	for _, appType := range *appTypes {
-		typeValue := simpleTypes[appType]
-		result += fmt.Sprintf(" class %s {\n", mermaid.CleanString(appType))
-		switch typeValue.Type {
-		case relation, tuple:
-			result += printProperties(typeValue.Properties, appType, externalLinks)
-		case enum:
-			result += printEnum(typeValue.Enum)
-		case mapS:
-			result += printMap(typeValue.Properties, appType, typeValue.PrimaryKey, externalLinks)
-		default:
-			result += ""
+		if typeValue := simpleTypes[appType]; typeValue != nil {
+			result += fmt.Sprintf(" class %s {\n", mermaid.CleanString(appType))
+			switch typeValue.Type {
+			case relation, tuple:
+				result += printProperties(typeValue.Properties, appType, externalLinks)
+			case enum:
+				result += printEnum(typeValue.Enum)
+			case mapS:
+				result += printMap(typeValue.Properties, appType, typeValue.PrimaryKey, externalLinks)
+			default:
+				result += ""
+			}
+			result += " }\n"
 		}
-		result += " }\n"
 	}
 	for _, eLink := range *eLinks {
 		result += fmt.Sprintf(" %s <-- %s\n", mermaid.CleanString(eLink.firstType),
