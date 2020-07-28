@@ -7,7 +7,7 @@ let model = //encoding.proto.decode(syslDescriptor, 'Module' , //os.file('model.
 let toFields = \type
     let attrs = type.tuple?.attr_defs:{};
     attrs => (
-        typeDesc:  .@value.attrs?('description').s:{},
+        typeDesc:  //seq.trim_suffix('\n', .@value.attrs?('description').s:{}),
         fieldName:  .@,
         fieldType:  .@value.primitive,
     )
