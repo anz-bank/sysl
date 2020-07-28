@@ -1,21 +1,36 @@
-Â
-Source·
+b
+ClientX
+
+Client*3
+Do-
+Do:
+
+DFetchš
+
+model.sysl"$š
+
+model.sysl!!î
+Sourceã
 
 Source"
 patterns:
-"db*0
-Read(
-Read:B
-xš
+"db*8
+Read0
+Read:B
+	ok <: Fooš
 
-model.sysl2H
-FooAš
+model.sysl	2l
+Fooeš
 
-model.sysl$
+model.syslH
 "
 xš
 
-model.syslš
+model.sysl
+"
+yš
+
+model.syslš
 
 model.sysl
 d
@@ -27,9 +42,10 @@ model.sysl
 
 SourceReadš
 
-model.sysl	š
+model.sysl
+š
 
-model.sysld
+model.sysl		d
 B_
 
 B*?
@@ -38,9 +54,9 @@ model.sysld
 
 SourceReadš
 
-model.syslš
+model.syslš
 
-model.syslñ
+model.syslñ
 Cë
 
 C*=
@@ -49,13 +65,13 @@ model.syslñ
 
 AFetchš
 
-model.sysl*=
+model.sysl*=
 FetchB3
 FetchB:
 
 BFetchš
 
-model.sysl*M
+model.sysl*M
 FetchD
 Fetch:
 
@@ -63,9 +79,9 @@ model.sysl*M
 
 CFetchBš
 
-model.syslš
+model.syslš
 
-model.syslp
+model.syslp
 Dk
 
 D*K
@@ -76,17 +92,6 @@ model.syslp
 
 CFetchš
 
-model.sysl š
+model.sysl!š
 
-model.syslb
-ClientX
-
-Client*3
-Do-
-Do:
-
-DFetchš
-
-model.sysl!#š
-
-model.sysl  
+model.sysl

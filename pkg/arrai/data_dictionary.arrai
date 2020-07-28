@@ -1,0 +1,51 @@
+# Generates a CSV data dictionary for model.sysl.
+
+let syslDescriptor = //encoding.proto.descriptor(//os.file('sysl.pb'));
+let model = //encoding.proto.decode(syslDescriptor, 'Module' , //os.file('model.pb'));
+
+# Transforms a type specification into a set of field specifications.
+let toFields = \app \object \value
+    let attrs = value.tuple?.attr_defs:{};
+    attrs => (
+        container: app,
+        objName:   object,
+        attrName:  .@,
+        attrType:  .@value.primitive
+    )
+;
+
+# Transforms a module to a data dictionary.
+let toDataDict = \m 
+    let apps = (m.apps >>> \k \a a.types?:{}) where .@value count;
+    let fields = //rel.union(apps => \(@:a, @value:v)
+        //rel.union(v => \(@:t, @value:v)
+            toFields(a, t, v)
+        )
+    );
+    fields
+;
+
+# Transforms a data dictionary into a CSV file per the Metadata Template.
+let toCsv = \dd 
+    let cols = [
+        (key: 'action', label:'Action'),
+        (key: 'plat', label:'Platform Name'),
+        (key: 'tech', label:'Technology Name'),
+        (key: 'attrName', label:'Physical Attribute Name'),
+        (key: 'objType', label:'Physical Object Type'),
+        (key: 'container', label:'Physical Object Container Name'),
+        (key: 'objName', label:'Physical Object Name'),
+        (key: 'objDesc', label:'Physical Object Description'),
+        (key: 'attrTerm', label:'ANZx Business Term'),
+        (key: 'attrDesc', label:'Attribute Business Description'),
+    ];
+    let headings = $`${cols >> .label::, }`;
+    let rows = dd =>
+        $`${'action'}, ${'plat'}, ${'tech'}, ${.attrName}, ${'objType'}, ${.container}, ${.objName}, ${'objDesc'}, ${'term'}, ${'attrDesc'}`
+    ;
+    let rows = (rows orderby .) => \(:@, :@item) (@:@+1, :@item);
+    let rows = rows | {(@: 0, @item: headings)};
+    $`${rows >> . ::\n}`
+;
+
+toCsv(toDataDict(model))

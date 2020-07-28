@@ -1,9 +1,10 @@
 Source[~db]:
     !type Foo:
         x <: int
+        y <: int
 
     Read:
-        return x
+        return ok <: Foo
 
 A:
     Fetch:
