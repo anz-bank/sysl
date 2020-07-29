@@ -228,7 +228,7 @@ of `App.Type1`, `App.Type2`, and `App.Type3`.
 The problems are mostly the same with the previous solution but also, this will
 require grammar and sysl compiler changes.
 
-### Simpler Implementation
+### Simpler (Naive) Implementation
 
 Another simpler implementation was considered. This solution does not require
 any special attributes in the sysl specification. This solution however does
