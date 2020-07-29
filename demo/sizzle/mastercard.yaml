@@ -1,0 +1,35 @@
+openapi: "3.0"
+info:
+  title: MasterCard
+paths:
+  /pay:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+        500:
+          $ref: "#/components/responses/500Response"
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        name:
+          type: string
+    SimpleObj2:
+      type: object
+      properties:
+        name:
+          type: SimpleObj
+    AustralianState:
+      type: string
+      enum: [act, nsw, nt, qld, sa, tas, vic, wa]
+  responses:
+    500Response:
+      description: Internal Server Error
+      schema:
+        $ref: "#/components/schemas/SimpleObj"
