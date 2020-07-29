@@ -1,9 +1,20 @@
 Source[~db]:
+    @description =:
+      | A database.
+      | Stores data.
     !type Foo:
         @description =:
           | A Foo.
-        x <: int
+          | Represents foo things.
+        x <: int:
+            @description = "The x value."
         y <: int
+
+    !table Bar:
+        @description = "A bar table."
+        a <: string [~pk]
+        b <: int?:
+            @description = "An optional int"
 
     Read:
         return ok <: Foo

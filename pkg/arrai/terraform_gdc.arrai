@@ -1,0 +1,71 @@
+# Generates a Terraform google_data_catalog_entry resource based on the table specs in model.sysl.
+
+let model = //{./loadModel};
+
+let getDescription = \t //seq.trim_suffix('\n', t.attrs?('description')?.s:{});
+
+# Transforms a relation specification into a set of field specifications.
+let toFields = \type
+    type.relation?.attr_defs?:{} => \(@:fieldName, @value:f)
+    (
+        :fieldName,
+        fieldType: f.primitive?:'?',
+        fieldDesc: getDescription(f),
+        fieldReqd: cond f {(opt:true, ...): false, _: true},
+    )
+;
+
+# Transforms a module a list of table specs.
+let toTables = \m
+    (//rel.union(m.apps => \(@:appName, @value:app)
+        app.types?:{} => \(@:typeName, @value: t)
+            (
+                :appName,
+                appDesc: getDescription(app),
+                :typeName,
+                typeDesc: getDescription(t),
+                typeContext: t.source_context,
+                columns: toFields(t) orderby .,
+            )
+    ) where . && .columns) orderby .
+;
+
+# Transforms an adjacency list of applications to a PlantUML integration diagram.
+let toEntry = \table
+$`resource "google_data_catalog_entry" "${//str.lower(table.typeName)}_entry" {
+  entry_group = google_data_catalog_entry_group.entry_group.id
+  entry_id = "${table.appName}.${table.typeName}"
+
+  user_specified_type = "${table.typeName}"
+  user_specified_system = "${table.appName}"
+  linked_resource = "${table.typeContext.file}:${table.typeContext.start.line}"
+
+  display_name = "${table.typeName}"
+  description  = "${table.appDesc}"
+
+  schema = <<EOF
+{
+  "columns": [
+    ${table.columns >> 
+  $`{
+      "column": "${.fieldName}",
+      "description": "${.fieldDesc}",
+      "mode": "${cond .fieldReqd {true: 'REQUIRED', _: 'NULLABLE'}}",
+      "type": "${.fieldType}"
+    }`::,\i}
+  ]
+}
+EOF
+}
+
+resource "google_data_catalog_entry_group" "entry_group" {
+  entry_group_id = "${table.appName}_group"
+}`;
+
+let toTerraform = \tables
+$`${
+    tables >> \x toEntry(x)
+::\i\n}`
+;
+
+toTerraform(toTables(model))
