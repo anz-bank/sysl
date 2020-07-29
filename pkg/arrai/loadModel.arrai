@@ -1,0 +1,12 @@
+# Loads and returns a Sysl model.
+#
+# If a command line arg is provided, it is treated as a path to a Sysl model load instead of the
+# default (model.pb).
+
+let path = cond //os.args {
+    [_, p]: p,
+    _: 'model.pb',
+};
+
+let syslDescriptor = //encoding.proto.descriptor(//os.file('sysl.pb'));
+//encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path))

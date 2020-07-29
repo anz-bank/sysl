@@ -1,31 +1,77 @@
-æ
-Source≥
+p
+Dk
+
+D*K
+FetchB
+Fetch:
+
+AFetch:
+
+CFetchö
+
+model.sysl*.ö
+
+model.sysl))b
+ClientX
+
+Client*3
+Do-
+Do:
+
+DFetchö
+
+model.sysl/1ö
+
+model.sysl..è
+SourceÑ
 
 Source"
 patterns:
-"db*8
+"db"+
+description"A database.
+ Stores data.
+*8
 Read0
 Read:B
 	ok <: Fooö
 
-model.sysl2ª
-Foo≥B
-description	"A Foo.
+model.sysl2Ò
+FooÈB0
+description!"A Foo.
+ Represents foo things.
 ö
 
-model.sysl|
-<
-x7B
-description	"A Foo.
+model.syslô
+A
+x<B
+description"The x value.ö
+
+model.sysl
+
+T
+yOB0
+description!"A Foo.
+ Represents foo things.
 ö
 
-model.sysl
-<
-y7B
-description	"A Foo.
-ö
+model.sysl2Î
+Bar„B
+description"A bar table.ö
 
-model.syslö
+model.sysl:¶
+W
+aRB
+patterns:
+"pkB
+description"A bar table.ö
+
+model.sysl
+F
+bAB 
+description"An optional int`ö
+
+model.sysl
+aö
 
 model.sysl
 d
@@ -37,9 +83,9 @@ model.sysl
 
 SourceReadö
 
-model.syslö
+model.syslö
 
-model.sysld
+model.sysld
 B_
 
 B*?
@@ -48,9 +94,9 @@ model.sysld
 
 SourceReadö
 
-model.syslö
+model.syslö
 
-model.syslÒ
+model.syslÒ
 CÎ
 
 C*=
@@ -59,13 +105,13 @@ model.syslÒ
 
 AFetchö
 
-model.sysl*=
+model.sysl"*=
 FetchB3
 FetchB:
 
 BFetchö
 
-model.sysl*M
+model.sysl"%*M
 FetchD
 Fetch:
 
@@ -73,30 +119,6 @@ model.sysl*M
 
 CFetchBö
 
-model.syslö
+model.sysl%)ö
 
-model.syslp
-Dk
-
-D*K
-FetchB
-Fetch:
-
-AFetch:
-
-CFetchö
-
-model.sysl#ö
-
-model.syslb
-ClientX
-
-Client*3
-Do-
-Do:
-
-DFetchö
-
-model.sysl$&ö
-
-model.sysl##
+model.sysl
