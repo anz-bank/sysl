@@ -91,7 +91,7 @@ func generateMultipleAppIntegrationDiagramHelper(m *sysl.Module, appNames []stri
 }
 
 func printClassStatement(className string) string {
-	return fmt.Sprintf("    %s\n", className)
+	return fmt.Sprintf("    %s\n", cleanAppName(className))
 }
 
 //printIntegrationDiagramStatements is where the printing takes place
