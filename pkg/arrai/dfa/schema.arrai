@@ -1,6 +1,6 @@
 # This is just a schema of what the output look likes of graph.arrai
 {
-    appName: (
+    appNameInString: (
         types: {
             typeName: (
                 map_of: {typesInString},
@@ -11,9 +11,9 @@
             )
         },
         endpoints: {
-            endpointName: (
+            endpointNameInString: (
                 returns: {typesInString},
-                callers: {app: {endpoints}}
+                callers: {app: {endpoints}} # whoever calls this endpoint
             )
         }
     )
