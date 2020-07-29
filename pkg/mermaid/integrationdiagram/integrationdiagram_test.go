@@ -134,3 +134,9 @@ func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantAppsCallInConditio
 	assert.True(t, strings.Contains(r, "Visa"))
 	assert.True(t, strings.Contains(r, `PaymentServer["PaymentServer"] --> Visa["Visa"]`))
 }
+
+func TestPrintClassStatementWithSpaces(t *testing.T) {
+	r := printClassStatement("my application")
+	expected := "    my_application\n"
+	assert.Equal(t, expected, r)
+}
