@@ -1,0 +1,353 @@
+# This example shows:
+#   ~human
+#   ~ui
+#   ~db
+#   package
+#   long description
+#   sequence of ...
+#   alias
+#   empty project
+#   types/tables/endpoints
+#   import OpenAPI3.0 file
+# TODO:
+#   convert endpoints to RESTful endpoints
+#   add database operation
+
+# This project tells our integration diagram what apps to include
+import mastercard.yaml as MasterCard.MasterCard
+
+# This app specifies the projects to include, it is optional and can be left out
+Sizzle[~project]:
+    @contact.name = "Jimmy Smith"
+    @description =:
+        | Sizzle is a Gourmet Sausage Restaurant.
+        |
+        | We aim to provide an authentic Aussie
+        | sausage sizzle experience to our customers.
+        |
+        | We will offer 90 minute table allocations and 
+        | comply with all directions and safety procedures 
+        | implemented by the state government.
+        |
+        | You can dine-in, take away, or shop online.
+    @version = "1.0.0"
+
+    Frontend:
+        Application
+    Backend:
+        IdentityServer
+        ProductServer
+        OrderServer
+        PaymentServer
+        DeliveryServer
+        Database
+    External:
+        MasterCard
+        Visa
+
+Dine-in Customer [~human]:
+    # ~human specifies a user
+    Menu:
+        Mobile <- Menu
+    Order:
+        Mobile <- Order
+    PlaceOrder:
+        Mobile <- PlaceOrder
+    Pay:
+        Dashboard <- Pay
+    Review:
+        Mobile <- Review
+
+Online Customer [~human]:
+    Sign up:
+        Website <- Signup
+    Login:
+        Website <- Login
+        Website <- Profile
+    Change password:
+        Website <- ChangePassword
+    Menu:
+        Website <- Menu
+    Order:
+        Website <- Order
+    Place and Pay Order:
+        Website <- PlaceOrder
+        Website <- Pay
+    Review:
+        Website <- Review
+
+
+Mobile [~ui]:
+    # ~ui specifies a user interface
+    @package = "Application"
+    @description = "Android and iOS App for Sizzle"
+    Menu:
+        ProductServer <- Menu
+    Order:
+        OrderServer <- Order
+    PlaceOrder:
+        OrderServer <- UpdateOrderStatus
+    Review:
+        OrderServer <- Review
+
+Dashboard [~ui]:
+    @package = "Application"
+    Pay:
+        PaymentServer <- Pay
+
+
+Website [~ui]:
+    @package = "Application"
+    @description = "Web App for Sizzle"
+    Signup(req <: NewCustomerRequest):
+        IdentityServer <- NewCustomer(req)
+
+    Login(input <: IdentityServer.Request):
+        @description = "For customer to login"
+        IdentityServer <- Authenticate
+
+    Profile(customer_id <: int):
+        IdentityServer <- CustomerProfile(customer_id)
+        return ok <: Customer
+
+    ChangePassword(customer_id <: int, old <: string, new <: string):
+        IdentityServer <- UpdatePassword(customer_id, old, new)
+        return ok
+
+    Menu:
+        ProductServer <- Menu
+    Order:
+        OrderServer <- Order
+    PlaceOrder:
+        OrderServer <- UpdateOrderStatus
+    Review:
+        OrderServer <- Review
+    Pay:
+        PaymentServer <- Pay
+
+
+
+Common:
+    !type Empty[~empty]:
+        @description="Empty Type"
+        ...
+
+IdentityServer:
+    @package="IdentityServer"
+    @description =: 
+        | This server handles all the customer related endpoints
+        | including customer profile, password update, 
+        | customer authentication, etc.
+
+    NewCustomer(req <: NewCustomerRequest):
+        MegaDatabase <- InsertCustomer
+        return ok <: Customer
+
+    Authenticate(email <: string, password <: string):
+        @description ="this is a description of Authenticate"
+        # TODO: how to present database interaction here?
+        if authenticated:
+          return 200 <: MegaDatabase.Empty
+        else:    
+          return 401 <: UnauthorizedError
+
+    CustomerProfile(customer_id <: int):
+        MegaDatabase <- SelectCustomer
+        return ok <: Customer
+
+    UpdatePassword(customer_id <: int, old <: string, new <: string):
+        # DB update
+        return ok
+
+    !type Customer:
+        @description="This contains all information relating to a customer"
+        first_name <: string
+        last_name <: string
+        phone <: string
+        email <: string
+
+    !type NewCustomerRequest:
+        first_name <: string
+        last_name <: string
+        phone <: string
+        email <: string
+        password <: string
+
+    !type UnauthorizedError:
+        error_msg <: string
+
+ProductServer:
+    @package="ProductServer"
+    @description =: 
+        | This server handles all the product
+        | related endpoints.
+
+    Menu:
+        # TODO: DB/cache op
+        return ok <: Products
+
+    !alias Products:
+        sequence of Product
+
+    !type Product:
+        @description="Product information"
+        id <: int
+        name <: string
+        image <: string
+        details <: string
+        price <: int
+
+
+OrderServer:
+    @package="OrderServer"
+    @description =: 
+        | This server handles all the order
+        | related endpoints.
+
+    Order(req <: OrderRequest):
+        if order_id is nil:
+            # TODO: DB op create a new order
+            return ok <: Order
+        else:
+            # TODO: add/update OrderProduct for the 
+            # existing order
+            return ok <: Order
+
+    UpdateOrderStatus(order_id <: int, status <: int):
+        # TODO: DB op get order by order_id
+        # state machine
+        return ok <: Order
+
+    Review(score <: int, comment <: string):
+        # TODO: DB op
+        return ok <: Order
+
+    !type OrderRequest:
+        order_id <: int
+        product_id <: int
+        quantity <: int
+
+    !type Order:
+        @description="Customer order information"
+        id <: int
+        status <: OrderStatus
+        total_price <: int
+        items <: sequence of OrderProduct
+        paid <: bool
+        review_score <: int
+        review_comment <: string
+
+    !type OrderProduct:
+        @description="Order items"
+        product_id <: int
+        quantity <: int
+        comments <: string
+
+    !enum OrderStatus:
+        created: 1
+        placed: 2
+        shipped: 3
+        delivered: 4
+    
+
+PaymentServer:
+    @package="PaymentServer"
+    @description =: 
+        | This server handles all the payment related endpoints.
+
+    Pay:
+        if processor_type == "visa":
+            Visa <- Pay
+        else if processor_type == "mastercard":
+            MasterCard <- POST /pay
+        else:
+            return 500 < NotSupportedError
+
+        return 200
+
+    !enum PaymentType:
+        cash: 1
+        card: 2
+
+Visa[~external]:
+    # ~external specifies an external service
+    Pay:
+        ...
+
+DeliveryServer:
+    @package="DeliveryServer"
+    @description =: 
+        | We are going to provide delivery service ASAP
+        | since our customers need it during COVID-19
+    ...
+
+
+
+MegaDatabase[~db]:
+    # ~db specifies a database
+    @package="Database"
+
+    # A placeholder to represent DB operation
+    InsertCustomer:
+        ...
+        return ok
+
+    # A placeholder to represent DB operation
+    SelectCustomer:
+        ...
+        return ok
+
+    !table customers:
+        id <: int [~pk]
+        first_name <: string
+        last_name <: string
+        phone <: string
+        email <: string
+        password <: string
+        signup_at <: datetime
+        last_login_at <: datetime
+
+    !table products:
+        id <: int [~pk]
+        name <: string
+        image <: string
+        details <: string
+        price <: int
+
+    !table orders:
+        id <: int [~pk]
+        customer_id <: customers.id
+        status <: int
+        review <: reviews.id
+        total_price <: int
+        created_at <: datetime
+        updated_at <: datetime
+
+    !table orders_products:
+        @description="order details"
+        order_id <: orders.id [~pk]
+        product_id <: products.id [~pk]
+        quantity <: int
+        comments <: string
+
+    !table payment_details:
+        id <: int [~pk]
+        order_id <: orders.id
+        type <: int
+        payment_card <: cards.id
+        paid_at <: datetime
+
+    !table cards:
+        id <: int [~pk]
+        card_number <: string
+        expiry <: string
+
+    !table reviews:
+        id <: int [~pk]
+        score <: int
+        comment <: string
+        created_at <: datetime
+
+Cache:
+    @package="Database"
+    ...
