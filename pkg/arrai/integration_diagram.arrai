@@ -3,12 +3,13 @@
 let model = //{./loadModel};
 
 # Transforms a module to an adjacency list of applications.
-let toAdj = \m m.apps >>> \k \a 
-    //seq.join('', 
-        # Names of targets of call statements of endpoints of app.
-        (a.endpoints >> \e e.stmt >> \s s.@item.call?.target.part.@item.@item : '') 
-        orderby .@value >> .@value
-    ) where .@item != k && .@item count;
+let toAdj = \m 
+    (m.apps >>> \appName \app
+        (//rel.union(
+            app.endpoints?:{} => \(@value:e, ...)
+                e.stmt?:{} => .@item.@item.call?.target.part.@item.@item:{}
+        ) where . && . != appName) orderby .
+    ) where .@value;
 
 # Transforms an adjacency list of applications to a PlantUML integration diagram.
 let toInt = \adj 
