@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.13
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.13
 
@@ -63,7 +63,7 @@ jobs:
           labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
 
       # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
-      # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets 
+      # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets
       # and uncomment this step.
       # - name: Release sysl_js
       #   run: cd unsorted/sysl_js && NPM_AUTH_TOKEN=$ npm publish
