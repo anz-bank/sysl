@@ -26,3 +26,5 @@ entity Foo {
 Bar             }o--|| Foo
 @enduml
 ```
+
+![Data diagram](data_diagram.svg)

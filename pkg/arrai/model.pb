@@ -1,47 +1,23 @@
-p
-Dk
-
-D*K
-FetchB
-Fetch:
-
-AFetch:
-
-CFetchö
-
-model.sysl*.ö
-
-model.sysl))b
-ClientX
+Ó
+Source„
 
-Client*3
-Do-
-Do:
-
-DFetchö
-
-model.sysl/1ö
-
-model.sysl..è
-SourceÑ
-
-Source"
-patterns:
-"db"+
+Source"+
 description"A database.
  Stores data.
-*8
+"
+patterns:
+"db*8
 Read0
 Read:B
 	ok <: Fooö
 
-model.sysl2Ò
+model.sysl2Ò
 FooÈB0
 description!"A Foo.
  Represents foo things.
 ö
 
-model.syslô
+model.sysl:ô
 A
 x<B
 description"The x value.ö
@@ -54,11 +30,11 @@ T
  Represents foo things.
 ö
 
-model.sysl2Î
-Bar„B
+model.sysl2 
+Bar¬B
 description"A bar table.ö
 
-model.sysl:¶
+model.sysl:Ö
 W
 aRB
 patterns:
@@ -70,7 +46,15 @@ F
 bAB 
 description"An optional int`ö
 
-model.sysl
+model.sysl
+]
+xXB
+description"A foreign keyö
+
+model.syslJ
+
+
+SourceBarFoox
 aö
 
 model.sysl
@@ -83,9 +67,9 @@ model.sysl
 
 SourceReadö
 
-model.syslö
+model.syslö
 
-model.sysld
+model.sysld
 B_
 
 B*?
@@ -94,9 +78,9 @@ model.sysld
 
 SourceReadö
 
-model.syslö
+model.sysl ö
 
-model.syslÒ
+model.syslÒ
 CÎ
 
 C*=
@@ -105,13 +89,13 @@ model.syslÒ
 
 AFetchö
 
-model.sysl"*=
+model.sysl!$*=
 FetchB3
 FetchB:
 
 BFetchö
 
-model.sysl"%*M
+model.sysl$'*M
 FetchD
 Fetch:
 
@@ -119,6 +103,30 @@ model.sysl"%*M
 
 CFetchBö
 
-model.sysl%)ö
+model.sysl'+ö
 
-model.sysl
+model.sysl  p
+Dk
+
+D*K
+FetchB
+Fetch:
+
+AFetch:
+
+CFetchö
+
+model.sysl,0ö
+
+model.sysl++b
+ClientX
+
+Client*3
+Do-
+Do:
+
+DFetchö
+
+model.sysl13ö
+
+model.sysl00
