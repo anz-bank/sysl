@@ -6,9 +6,9 @@ let model = //{./loadModel};
 let toFields = \type
     let attrs = type.tuple?.attr_defs:{};
     attrs => (
-        typeDesc:  //seq.trim_suffix('\n', .@value.attrs?('description').s:{}),
+        typeDesc:  //seq.trim_suffix('\n', .@value.attrs?('description')?.s:{}),
         fieldName:  .@,
-        fieldType:  .@value.primitive,
+        fieldType:  .@value.primitive?:'?',
     )
 ;
 
