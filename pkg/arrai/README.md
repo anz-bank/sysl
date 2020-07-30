@@ -18,6 +18,8 @@ $ arrai run integration_diagram.arrai
 
 Each script has an accompanying Markdown file describing the logic and output.
 
+To run all the scripts at once, run `make`. The Makefile commands also generate SVGs for the scripts that produce diagrams.
+
 <!-- TODO(ladeo): Generate these Markdown files from the arr.ai sources. -->
 
 ## Development

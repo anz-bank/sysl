@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="237px" preserveAspectRatio="none" style="width:113px;height:237px;" version="1.1" viewBox="0 0 113 237" width="113px" zoomAndPan="magnify"><defs><filter height="300%" id="fy2nn9u2ty9zy" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[fea15f7924bd848149aeb562f3a4d86b]
+class Bar--><rect fill="#FEFECE" filter="url(#fy2nn9u2ty9zy)" height="86.4141" id="Bar" style="stroke: #A80036; stroke-width: 1.5;" width="87" x="7" y="7"/><ellipse cx="37.3" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M41.4094,29 L33.6906,29 L33.6906,16.6094 L41.4094,16.6094 L41.4094,18.7656 L36.1438,18.7656 L36.1438,21.4375 L40.9094,21.4375 L40.9094,23.5938 L36.1438,23.5938 L36.1438,26.8438 L41.4094,26.8438 L41.4094,29 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="21" x="54.7" y="27.1543">Bar</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="8" x2="93" y1="39" y2="39"/><ellipse cx="18" cy="50" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="61" x="27" y="53.2104">a : STRING</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="8" x2="93" y1="59.8047" y2="59.8047"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="37" x="27" y="74.0151">b : INT</text><ellipse cx="18" cy="83.6094" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="48" x="27" y="86.8198">x : Foo.x</text><!--MD5=[d10371c429a20e8e62c953c705282488]
+class Foo--><rect fill="#FEFECE" filter="url(#fy2nn9u2ty9zy)" height="65.6094" id="Foo" style="stroke: #A80036; stroke-width: 1.5;" width="62" x="19.5" y="153"/><ellipse cx="37.65" cy="169" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M41.7594,175 L34.0406,175 L34.0406,162.6094 L41.7594,162.6094 L41.7594,164.7656 L36.4938,164.7656 L36.4938,167.4375 L41.2594,167.4375 L41.2594,169.5938 L36.4938,169.5938 L36.4938,172.8438 L41.7594,172.8438 L41.7594,175 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="23" x="52.35" y="173.1543">Foo</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="20.5" x2="80.5" y1="185" y2="185"/><ellipse cx="30.5" cy="196" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="36" x="39.5" y="199.2104">x : INT</text><ellipse cx="30.5" cy="208.8047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="36" x="39.5" y="212.0151">y : INT</text><!--MD5=[ec565736fa8c4caa1babd015b786ad3a]
+link Bar to Foo--><path d="M50.5,101.337 C50.5,115.5893 50.5,130.8822 50.5,144.4957 " fill="none" id="Bar-Foo" style="stroke: #DC143C; stroke-width: 1.0;"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="54.5" x2="46.5" y1="148.7307" y2="148.7307"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="54.5" x2="46.5" y1="145.7307" y2="145.7307"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="50.5" x2="50.5" y1="144.7307" y2="152.7307"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="50.5" x2="44.5" y1="101.0312" y2="93.0312"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="50.5" x2="56.5" y1="101.0312" y2="93.0312"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="50.5" x2="50.5" y1="101.0312" y2="93.0312"/><ellipse cx="50.5" cy="107.0312" fill="none" rx="4" ry="4" style="stroke: #DC143C; stroke-width: 1.0;"/><!--MD5=[528ea0cf6f847c2e9e987263511dd986]
+@startuml
+skinparam component {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+hide methods
+
+entity Bar {
+  *a : STRING
+  - -
+  b : INT
+  *x : Foo.x
+}
+
+entity Foo {
+  *x : INT
+  *y : INT
+}
+
+Bar             }o- -|| Foo
+@enduml
+
+PlantUML version 1.2020.13(Sat Jun 13 12:26:38 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
