@@ -3,21 +3,29 @@
 let model = //{./loadModel};
 
 # Transforms a module to an adjacency list of applications.
+#
+# The adjacency list is represented as an array of tuples with `from` (the name
+# of the upstream app) and `to` (a set of downstream apps that `from` calls).
 let toAdj = \m 
-    (m.apps >>> \appName \app
-        (//rel.union(
+    (m.apps => \(@value:app, ...)
+        let [..., (@item:name, ...)] = app.name.part;
+        let calls = //rel.union(
             app.endpoints?:{} => \(@value:e, ...)
                 e.stmt?:{} => .@item.@item.call?.target.part.@item.@item:{}
-        ) where . && . != appName) orderby .
-    ) where .@value;
+        ) where . && . != name;
+        (from: name, to: calls)
+    ) where .to;
 
 # Transforms an adjacency list of applications to a PlantUML integration diagram.
 let toInt = \adj 
 $`@startuml
-${
-    (adj >>> \k \v $`${v >> $`[${k}] --> [${.}]`::\n}`)
-    orderby .@ >> .@value
-::\n}
+skinparam component {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+${(adj => \(:from, :to) $`${to => $`[${from}] --> [${.}]` orderby .::\n}`)
+orderby .::\n}
 @enduml`;
 
 toInt(toAdj(model))
