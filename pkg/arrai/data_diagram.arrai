@@ -1,4 +1,4 @@
-# Generates a Terraform google_data_catalog_entry resource based on the table specs in model.sysl.
+# Generates an entity-relationship diagram from the tables of model.sysl.
 
 let model = //{./loadModel};
 
