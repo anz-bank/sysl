@@ -1,0 +1,62 @@
+# Generates an entity-relationship diagram from the tables of model.sysl.
+
+let model = //{./loadModel};
+
+# Transforms a relation specification into a set of field specifications.
+let toFields = \type
+    type.relation?.attr_defs?:{} => \(@:fieldName, @value:f)
+    (
+        :fieldName,
+        fieldType: cond f {
+            (primitive:_, ...): f.primitive,
+            (type_ref:_, ...): //seq.join('.', f.type_ref.ref.path => .@item),
+            _: '?',
+        },
+        fk: cond f.type_ref?.ref.path:{} {[a, b]: (type:a.@item, field:b.@item)},
+        pk: cond f.attrs?('patterns')?.a.elt.@item:{} {
+            (@item: (s: 'pk'), ...): true,
+        },
+        fieldReqd: cond f {(opt:true, ...): false, _: true},
+    )
+;
+
+# Transforms a module a list of table specs.
+let toTables = \m
+    //rel.union(m.apps => \(@:appName, @value:app)
+        app.types?:{} => \(@:typeName, @value: t)
+            (
+                :appName,
+                :typeName,
+                columns: toFields(t),
+            )
+    ) where . && .columns
+;
+
+# Returns '|' if a field is required, or 'o' if not.
+# Used to draw FK relationship cardinality of the target.
+let zo = \f cond f.fieldReqd {true: '|', _: 'o'};
+
+# Transforms tables to an entity-relationship diagram.
+let toErd = \tables
+$`@startuml
+skinparam component {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+
+${tables => 
+$`entity ${.typeName} {
+  ${.columns => 
+    $`${cond .fieldReqd {true: '*'}}${.fieldName} : ${.fieldType}`
+  orderby .::\i}
+}`
+orderby .::\n\n}
+
+${(tables => \(:typeName, :columns, ...)
+    let fks = columns where .fk orderby .;
+    $`${fks >> $`${typeName:-15s} }o--${zo(.)}| ${.fk.type}`::\i}`
+) orderby .::\i}
+@enduml`;
+
+toErd(toTables(model))

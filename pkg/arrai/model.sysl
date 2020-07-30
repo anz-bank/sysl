@@ -2,7 +2,7 @@ Source[~db]:
     @description =:
       | A database.
       | Stores data.
-    !type Foo:
+    !table Foo:
         @description =:
           | A Foo.
           | Represents foo things.
@@ -15,6 +15,8 @@ Source[~db]:
         a <: string [~pk]
         b <: int?:
             @description = "An optional int"
+        x <: Foo.x:
+            @description = "A foreign key"
 
     Read:
         return ok <: Foo
