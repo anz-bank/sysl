@@ -4,7 +4,11 @@ let model = //{./loadModel};
 
 # Transforms a type specification into a set of field specifications.
 let toFields = \type
-    let attrs = type.tuple?.attr_defs:{};
+    let attrs = cond {
+        type.tuple?:{}: type.tuple.attr_defs,
+        type.relation?:{}: type.relation.attr_defs,
+        _: {},
+    };
     attrs => (
         typeDesc:  //seq.trim_suffix('\n', .@value.attrs?('description')?.s:{}),
         fieldName:  .@,
@@ -16,7 +20,7 @@ let toFields = \type
 let appType = \app cond app {(attrs: {'~db': ...}, ...): 'DB', _: 'API'};
 
 # Transforms a module to a data dictionary.
-let toDataDict = \m 
+let toDataDict = \m
     let typedApps = m.apps where .@value.types?:{};
     //rel.union(typedApps => \(@:appName, @value:app)
         //rel.union(app.types => \(@:typeName, @value:type)
@@ -40,7 +44,7 @@ let toDataDict = \m
 ;
 
 # Transforms a data dictionary into a CSV file per the Metadata Template.
-let toCsv = \dd 
+let toCsv = \dd
     let cols = [
         (key: 'action',    label:'Action'),
         (key: 'plat',      label:'Platform Name'),
@@ -56,7 +60,7 @@ let toCsv = \dd
     let headings = $`${cols >> .label::, }`;
 
     let rows = (dd orderby .plat) >>
-        $`${.action}, ${.plat}, ${.tech}, ${.fieldName}, ${.objType}, ${.container}, ${.typeName}, ${.typeDesc}, ${.fieldTerm}, ${.fieldDesc}`;
+        $`${.action}, ${.plat}, ${.tech}, ${.fieldName}, ${.objType}, ${.container}, ${.typeName}, "${.typeDesc}", ${.fieldTerm}, "${.fieldDesc}"`;
     $`${(rows | {(@: -1, @item: headings)}) >> . ::\n}`
 ;
 

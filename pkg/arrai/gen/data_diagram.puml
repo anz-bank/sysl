@@ -1,9 +1,3 @@
-# Data Diagram
-
-Generates an entity-relationship diagram from the types of a Sysl model.
-
-```bash
-$ arrai run data_diagram.arrai
 @startuml
 skinparam component {
   BackgroundColor FloralWhite
@@ -27,6 +21,3 @@ entity Foo {
 Bar             }o--|| Foo
 
 @enduml
-```
-
-![Data diagram](gen/data_diagram.svg)
