@@ -1,0 +1,6 @@
+# Applies sysl.arrai to model.sysl.
+
+let model = //{./loadModel};
+
+# Return the polished model.
+//{./sysl}.polish(model)
