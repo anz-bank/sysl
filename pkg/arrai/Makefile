@@ -7,8 +7,7 @@ init:
 
 data_diagram: init
 	arrai run $@.arrai > out/$@.txt
-	# curl $(SYSL_PLANTUML)/svg/~1$(gzip out/$@.txt | base64) > out/$@.svg
-	mermaid-go out/$@.txt > out/$@.svg
+	curl $(SYSL_PLANTUML)/svg/~1$(shell cat out/$@.txt | plantuml-encode) > out/$@.svg
 
 data_dictionary: init
 	arrai run $@.arrai > out/$@.txt
