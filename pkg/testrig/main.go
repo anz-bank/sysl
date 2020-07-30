@@ -17,7 +17,7 @@ import (
 func LoadServices(ctx context.Context) error {
 	router := chi.NewRouter()
 
-	serviceInterface := {{.Service.Impl.Name}.{{.Service.Impl.InterfaceFactory}}()
+	serviceInterface := {{.Service.Impl.Name}}.{{.Service.Impl.InterfaceFactory}}()
 
 	genCallbacks := {{.Service.Impl.Name}}.{{.Service.Impl.CallbackFactory}}()
 
