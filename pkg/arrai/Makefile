@@ -27,11 +27,17 @@ integration_diagram: init-diagram
 	arrai run $@.arrai > $(OUT)/$@.puml && \
 	curl $(SYSL_PLANTUML)/svg/~1$(shell cat $(OUT)/$@.puml | plantuml-encode) > $(OUT)/$@.svg
 
+# Sysl to Sysl
+
+sysl_demo: init
+	arrai run $@.arrai > $(OUT)/$@.arrai
+
 # Platform
 
 # Initializes the environment to support other targets.
 init:
 	mkdir -p $(OUT)
+	sysl protobuf --mode=pb model.sysl > model.pb
 
 # Initializes the environment to support diagram generation targets.
 init-diagram: init plantuml
