@@ -1,12 +1,12 @@
 î
 Sourceã
 
-Source"+
+Source"
+patterns:
+"db"+
 description"A database.
  Stores data.
-"
-patterns:
-"db*8
+*8
 Read0
 Read:B
 	ok <: Fooš
