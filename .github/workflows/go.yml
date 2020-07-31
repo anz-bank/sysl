@@ -79,13 +79,12 @@ jobs:
       env:
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
-    - name: Set GOVERSION environment variable (Windows)
-      run: $Env:GOVERSION=(go version | %{($_ -split " ")[-2,-1] -join " "}); echo $Env:GOVERSION
-
     - name: Build sysl binary via goreleaser (Windows)
       uses: goreleaser/goreleaser-action@master
       with:
         args: release --snapshot --skip-publish --rm-dist --debug -f .goreleaser.yml
+      env:
+        GOVERSION: 1.13
 
     # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
     # Windows Server 2019 supports 64-bit applications
