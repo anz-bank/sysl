@@ -2,6 +2,7 @@
 
 let model = //{./loadModel};
 
+# Load the helper functions.
 let sysl = //{./sysl};
 
 # Return the polished model.

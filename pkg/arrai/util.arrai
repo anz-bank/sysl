@@ -10,9 +10,8 @@ let invokeMacro = \macro \s
 # Transforms an AST into a simple tuple of its values.
 # Useful for the @transform of a flat grammar.
 let simpleTransform = \ast
-    let d = //dict(ast) >> \v cond v {('':., ...): .};
-    //tuple(d where .@value)
-;
+    let d = //dict(ast) >> \term cond term {('':value, ...): value, _: {}};
+    //tuple(d where .@value);
 
 (
     :invokeMacro,
