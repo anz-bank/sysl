@@ -2,5 +2,9 @@
 
 let model = //{./loadModel};
 
+let sysl = //{./sysl};
+
 # Return the polished model.
-//{./sysl}.polish(model)
+//fmt.pretty(
+    sysl.polish(model)
+)

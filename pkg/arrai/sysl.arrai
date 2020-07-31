@@ -1,11 +1,43 @@
-let parse_return = \ret
-    ret;
+# Performs transformations of Sysl models, producing "better" Sysl models.
 
-# Applies 
+# Invokes a macro on a string as if it were source code at parsing time.
+let invokeMacro = \macro \s
+    macro -> (//dict(.@transform) >>> \rule \fn fn(//grammar.parse(.@grammar, rule, s))).@value;
+
+# Converts a return statement payload into a more structure tuple.
+let parse_return = \payload
+    let @grammar = {://grammar.lang.wbnf:
+        payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^ \t\[]*;
+        .wrapRE -> /{\s*()\s*};
+    :};
+    let @transform = (payload: \ast (status:ast.status?.'':{}, type:ast.type?.'':{}));
+    let macro = (:@grammar, :@transform);
+    invokeMacro(macro, payload);
+
+# Replaces all `ret` payloads with structured tuples.
+let polish_returns = \m
+    let tweak = \.
+        . +> (@item: .@item +> 
+                    (ret: .@item.ret +> 
+                         (payload: parse_return(.@item.ret.payload))));
+
+    m.apps?:{} >> \a a.endpoints?:{} >> \p p.stmt?:[] >> 
+        cond {
+            .@item.ret?:{}: tweak(.),
+            _: .,
+        }
+;
+
+# Applies polish functions to the appropriate elements of a Sysl model.
 let polish = \m
-    m;
+    polish_returns(m)
+;
 
-(
+# Export the functions from the module.
+let export = (
     :parse_return,
     :polish,
-)
+
+    :invokeMacro,
+);
+export
