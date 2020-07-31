@@ -11,7 +11,7 @@ else
 	TESTEXE := go test ./...
 endif
 
-all: lint build buildlsp install examples golden test coverage
+all: lint build buildlsp install examples test coverage
 
 TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 
