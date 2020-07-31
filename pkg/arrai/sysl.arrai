@@ -1,18 +1,14 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
-# Invokes a macro on a string as if it were source code at parsing time.
-let invokeMacro = \macro \s
-    macro -> (//dict(.@transform) >>> \rule \fn fn(//grammar.parse(.@grammar, rule, s))).@value;
-
-# Converts a return statement payload into a more structure tuple.
+# Converts a return statement payload into a tuple of its parts.
 let parse_return = \payload
     let @grammar = {://grammar.lang.wbnf:
-        payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^ \t\[]*;
+        payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:")? type=[^ \t\[]*;
         .wrapRE -> /{\s*()\s*};
     :};
-    let @transform = (payload: \ast (status:ast.status?.'':{}, type:ast.type?.'':{}));
+    let @transform = (payload: //{./util}.simpleTransform);
     let macro = (:@grammar, :@transform);
-    invokeMacro(macro, payload);
+    //{./util}.invokeMacro(macro, payload);
 
 # Replaces all `ret` payloads with structured tuples.
 let polish_returns = \m
@@ -31,13 +27,11 @@ let polish_returns = \m
 # Applies polish functions to the appropriate elements of a Sysl model.
 let polish = \m
     polish_returns(m)
+    # TODO: More polish.
 ;
 
 # Export the functions from the module.
-let export = (
+(
     :parse_return,
     :polish,
-
-    :invokeMacro,
-);
-export
+)
