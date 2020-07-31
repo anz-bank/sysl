@@ -1,3 +1,10 @@
+Project [appfmt="%(appname)"]:
+    _:
+        GroceryStore
+        Inventory
+        Cart
+        Payment
+
 GroceryStore [package="GroceryStore", ~rest]:
     @owner.name = "Eddard Stark"
     @team.slack = "https://slack.com/intl/en-au/"
@@ -59,7 +66,7 @@ GroceryStore [package="GroceryStore", ~rest]:
             | Checks out the specified cart
             return ok <: string
 
-Inventory[package="InventoryService", ~rest]:
+Inventory [package="InventoryService", ~rest]:
     @version = "1.0.0"
     @owner.name = "Jon Snow"
     @team.slack = "https://slack.com/intl/en-au/"
@@ -73,7 +80,7 @@ Inventory[package="InventoryService", ~rest]:
             | Returns a list of available items for purchase 
             return ok <: string
 
-Cart[package="InventoryService", ~rest]:
+Cart [package="InventoryService", ~rest]:
     @owner.name = "Sam Tarwell"
     @version = "1.0.0"
     @team.slack = "https://slack.com/intl/en-au/"
@@ -97,7 +104,7 @@ Cart[package="InventoryService", ~rest]:
             | Checks out the specified cart
             return ok <: string
 
-Payment[package="Payment", ~rest]:
+Payment [package="Payment", ~rest]:
     @owner.name = "Arya Stark"
     @version = "1.0.0"
     @team.slack = "https://slack.com/intl/en-au/"

@@ -45,6 +45,10 @@ Sizzle[~project]:
         MasterCard
         Visa
 
+Database[~project]:
+    Database:
+        MegaDatabase
+
 Dine-in Customer [~human]:
     # ~human specifies a user
     Menu:
