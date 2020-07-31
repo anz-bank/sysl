@@ -1,0 +1,11 @@
+# Applies sysl.arrai to model.sysl.
+
+let model = //{./loadModel};
+
+# Load the helper functions.
+let sysl = //{./sysl};
+
+# Return the polished model.
+let out = sysl.polish(model);
+
+//fmt.pretty(out)

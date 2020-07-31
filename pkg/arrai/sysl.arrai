@@ -1,0 +1,39 @@
+# Performs transformations of Sysl models, producing "better" Sysl models.
+
+# A macro to convert `ret` statement payload string to structured tuples.
+let payloadMacro = (
+    @grammar: {://grammar.lang.wbnf:
+        payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^ \t\[]*;
+        .wrapRE -> /{\s*()\s*};
+    :},
+    @transform: (payload: //{./util}.simpleTransform),
+);
+
+# Converts a return statement payload into a tuple of its parts.
+let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload);
+
+# Replaces all `ret` payloads with structured tuples.
+let polishReturns = \m
+    let tweak = \.
+        . +> (@item: .@item +> 
+                    (ret: .@item.ret +> 
+                         (payload: parseReturn(.@item.ret.payload))));
+
+    m.apps?:{} >> \a a.endpoints?:{} >> \p p.stmt?:[] >> 
+        cond {
+            .@item.ret?:{}: tweak(.),
+            _: .,
+        }
+;
+
+# Applies polish functions to the appropriate elements of a Sysl model.
+let polish = \m
+    polishReturns(m)
+    # TODO: More polish.
+;
+
+# Export the functions from the module.
+(
+    :parseReturn,
+    :polish,
+)
