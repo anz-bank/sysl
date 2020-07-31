@@ -1,4 +1,4 @@
-name: Generate-Tag
+name: Generate Tag
 
 on:
   push:
@@ -21,8 +21,8 @@ jobs:
         uses: anothrNick/github-tag-action@1.18.0
         env:
           # An action in a workflow run can't trigger a new workflow run.
-          # When you use GITHUB_TOKEN in your actions, all of the interactions 
-          # with the repository are on behalf of the Github-actions bot. 
+          # When you use GITHUB_TOKEN in your actions, all of the interactions
+          # with the repository are on behalf of the Github-actions bot.
           # The operations act by Github-actions bot cannot trigger a new workflow run.
           # More details: https://help.github.com/en/actions/reference/events-that-trigger-workflows#about-workflow-events
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}

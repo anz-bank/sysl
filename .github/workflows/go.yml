@@ -14,10 +14,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.13
-        
+
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
@@ -36,21 +36,18 @@ jobs:
       - name: Build sysl binary via goreleaser
         uses: goreleaser/goreleaser-action@master
         with:
-          args: release --snapshot --skip-publish --rm-dist --debug -f .github/goreleaser_configs/.goreleaser-${{ matrix.os }}.yml
+          args: release --snapshot --skip-publish --rm-dist --debug -f .goreleaser.yml
 
-      # sysl_linux_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
-      # Ubuntu 18.04 supports 64-bit applications
-      - name: Install sysl (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: mkdir $PWD/bin && cp ./dist/sysl_linux_amd64/sysl $PWD/bin/sysl
-      
-      # sysl_darwin_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
-      # macOS Catalina 10.15 supports 64-bit applications
-      - name: Install sysl (macOS)
-        if: matrix.os == 'macOS-latest'
-        run: mkdir $PWD/bin && cp ./dist/sysl_darwin_amd64/sysl $PWD/bin/sysl
+      # According to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
+      # Ubuntu: sysl_linux_amd64:
+      # macOS Catalina: sysl_darwin_amd64
+      - name: Install sysl
+        run: |
+          mkdir $PWD/bin && \
+          [ "${{ matrix.os }}" = 'ubuntu-latest' ] && PLATFORM='linux' || PLATFORM='darwin' && \
+          cp ./dist/sysl_${PLATFORM}_amd64/sysl $PWD/bin/sysl
 
-      - name: Test installed 
+      - name: Test installed
         run: ./scripts/test-gosysl.sh
         env:
           GOPATH: .
@@ -66,10 +63,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Set up Go
-      uses: actions/setup-go@v1
+      uses: actions/setup-go@v2
       with:
         go-version: 1.13
-      
+
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
@@ -82,13 +79,12 @@ jobs:
       env:
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
-    - name: Set GOVERSION environment variable (Windows)
-      run: $Env:GOVERSION=(go version | %{($_ -split " ")[-2,-1] -join " "}); echo $Env:GOVERSION
-
     - name: Build sysl binary via goreleaser (Windows)
       uses: goreleaser/goreleaser-action@master
       with:
-        args: release --snapshot --skip-publish --rm-dist --debug -f .github/goreleaser_configs/.goreleaser-windows-latest.yml
+        args: release --snapshot --skip-publish --rm-dist --debug -f .goreleaser.yml
+      env:
+        GOVERSION: 1.13
 
     # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
     # Windows Server 2019 supports 64-bit applications
@@ -122,7 +118,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.13
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.13
 
@@ -146,7 +142,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.13
         env:
@@ -156,7 +152,7 @@ jobs:
         uses: actions/checkout@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Check go.mod and go.sum are tidy
         run: make check-tidy
 
@@ -180,7 +176,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Go 1.13
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.13
 

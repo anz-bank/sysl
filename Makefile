@@ -1,5 +1,8 @@
+.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden
+
 include VersionReport.mk
 
+GOVERSION=$(shell go version | cut -d' ' -f3-4)
 BIN_DIR := $(GOPATH)/bin
 
 ifneq ("$(shell which gotestsum)", "")
@@ -8,55 +11,45 @@ else
 	TESTEXE := go test ./...
 endif
 
-all: test lint build buildlsp coverage examples ## test, lint, build, coverage test run
+all: lint build buildlsp install examples test coverage
 
 TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 
 examples: TUTORIALS
 	cd demo/examples/ && go run generate_website.go && cd ../../  && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden
-lint: ## Run golangci-lint
+lint:
 	golangci-lint run ./...
 
-golden: ## Updates golden test files in pkg/parse. TODO: Extend to work for all golden files
-	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
+test:
+	$(TESTEXE)
 
-coverage: ## Run tests and verify the test coverage remains high
+coverage:
 	./scripts/test-with-coverage.sh 80
+
+# Updates golden test files in pkg/parse.
+# TODO: Extend to work for all golden files
+golden:
+	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
 
 check-tidy: ## Check go.mod and go.sum is tidy
 	go mod tidy && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-test: ## Run tests without coverage
-	$(TESTEXE)
-
-BINARY := sysl
-PLATFORMS := windows linux darwin
-.PHONY: $(PLATFORMS)
-$(PLATFORMS): build
-	mkdir -p release
-	GOOS=$@ GOARCH=amd64 \
-		go build -o release/$(BINARY)-$(VERSION)-$@$(shell test $@ = windows && echo .exe) \
-		-ldflags=$(LDFLAGS) \
-		-v \
-		./cmd/sysl
-
-build: ## Build sysl into the ./dist folder
+build:
 	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
-buildlsp: ## Build sysllsp into the ./dist folder
+buildlsp:
 	go build -o ./dist/sysllsp -ldflags=$(LDFLAGS) -v ./cmd/sysllsp
 
-.PHONY: release
-release: $(PLATFORMS) ## Build release binaries for all supported platforms into ./release
+release:
+	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot
 
 install: build ## Install the sysl binary into $(GOPATH)/bin. We don't use go install because we need to pass in LDFLAGS.
 	test -n "$(GOPATH)"  # $$GOPATH
 	cp ./dist/sysl $(GOPATH)/bin
 
-clean: ## Clean temp and build files
-	rm -rf release dist
+clean:
+	rm -rf dist
 
 # Autogen rules
 ANTLR = java -jar pkg/antlr-4.7-complete.jar

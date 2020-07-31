@@ -7,8 +7,6 @@ before:
     - go mod tidy
 
 build:
-  binary: sysl
-  id: sysl
   main: ./cmd/sysl
   ldflags:
     - -s -w -X main.Version=v{{.Version}}
