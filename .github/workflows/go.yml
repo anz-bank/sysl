@@ -44,12 +44,8 @@ jobs:
       - name: Install sysl
         run: |
           mkdir $PWD/bin && \
-          [ matrix.os == 'ubuntu-latest' ] && PLATFORM='linux' || PLATFORM='darwin' && \
+          [ "${{ matrix.os }}" = 'ubuntu-latest' ] && PLATFORM='linux' || PLATFORM='darwin' && \
           cp ./dist/sysl_${PLATFORM}_amd64/sysl $PWD/bin/sysl
-
-      - name: Install sysl (macOS)
-        if: matrix.os == 'macOS-latest'
-        run: mkdir $PWD/bin && cp ./dist/sysl_darwin_amd64/sysl $PWD/bin/sysl
 
       - name: Test installed
         run: ./scripts/test-gosysl.sh
