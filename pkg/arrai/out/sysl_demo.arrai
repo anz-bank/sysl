@@ -1,0 +1,23 @@
+{
+  A: {
+    Fetch: [(@: 0, @item: (call: (endpoint: Read, target: (part: [(@: 0, @item: Source)]))))]
+  },
+  B: {
+    Fetch: [(@: 0, @item: (call: (endpoint: Read, target: (part: [(@: 0, @item: Source)]))))]
+  },
+  C: {
+    Fetch: [(@: 0, @item: (call: (endpoint: FetchA, target: (part: [(@: 0, @item: C)])))), (@: 1, @item: (call: (endpoint: FetchB, target: (part: [(@: 0, @item: C)]))))],
+    FetchA: [(@: 0, @item: (call: (endpoint: Fetch, target: (part: [(@: 0, @item: A)]))))],
+    FetchB: [(@: 0, @item: (call: (endpoint: Fetch, target: (part: [(@: 0, @item: B)]))))]
+  },
+  Client: {
+    Do: [(@: 0, @item: (call: (endpoint: Fetch, target: (part: [(@: 0, @item: D)]))))]
+  },
+  D: {
+    Fetch: [(@: 0, @item: (call: (endpoint: Fetch, target: (part: [(@: 0, @item: A)])))), (@: 1, @item: (call: (endpoint: Fetch, target: (part: [(@: 0, @item: C)]))))]
+  },
+  Source: {
+    Read: [(@: 0, @item: (ret: (payload: (status: ok, type: Foo))))]
+  }
+}
+{'A': {'Fetch': [(@: 0, @item: (call: (endpoint: 'Read', target: (part: [(@: 0, @item: 'Source')]))))]}, 'B': {'Fetch': [(@: 0, @item: (call: (endpoint: 'Read', target: (part: [(@: 0, @item: 'Source')]))))]}, 'C': {'Fetch': [(@: 0, @item: (call: (endpoint: 'FetchA', target: (part: [(@: 0, @item: 'C')])))), (@: 1, @item: (call: (endpoint: 'FetchB', target: (part: [(@: 0, @item: 'C')]))))], 'FetchA': [(@: 0, @item: (call: (endpoint: 'Fetch', target: (part: [(@: 0, @item: 'A')]))))], 'FetchB': [(@: 0, @item: (call: (endpoint: 'Fetch', target: (part: [(@: 0, @item: 'B')]))))]}, 'Client': {'Do': [(@: 0, @item: (call: (endpoint: 'Fetch', target: (part: [(@: 0, @item: 'D')]))))]}, 'D': {'Fetch': [(@: 0, @item: (call: (endpoint: 'Fetch', target: (part: [(@: 0, @item: 'A')])))), (@: 1, @item: (call: (endpoint: 'Fetch', target: (part: [(@: 0, @item: 'C')]))))]}, 'Source': {'Read': [(@: 0, @item: (ret: (payload: (status: 'ok', type: 6\'Foo'))))]}}

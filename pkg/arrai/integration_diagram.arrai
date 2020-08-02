@@ -1,6 +1,6 @@
 # Generates the PlantUML for an integration diagram of model.sysl.
 
-let model = //{./loadModel};
+let model = //{./load_model};
 
 # Transforms a module to an adjacency list of applications.
 #

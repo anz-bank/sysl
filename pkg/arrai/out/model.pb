@@ -35,13 +35,6 @@ model.sysl2Ê
 description"A bar table.š
 
 model.sysl:…
-W
-aRB
-patterns:
-"pkB
-description"A bar table.š
-
-model.sysl
 F
 bAB 
 description"An optional int`š
@@ -54,7 +47,14 @@ model.sysl
 model.syslJ
 
 
-SourceBarFoox
+SourceBarFoox
+W
+aRB
+patterns:
+"pkB
+description"A bar table.š
+
+model.sysl
 aš
 
 model.sysl

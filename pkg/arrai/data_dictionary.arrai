@@ -1,6 +1,6 @@
 # Generates a CSV data dictionary for model.sysl.
 
-let model = //{./loadModel};
+let model = //{./load_model};
 
 # Transforms a type specification into a set of field specifications.
 let toFields = \type
