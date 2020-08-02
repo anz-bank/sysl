@@ -10,7 +10,7 @@ RAW=$(OUT)/data_dictionary.csv \
 
 # Diagram targets that require rendering.
 DIAGRAMS=$(OUT)/data_diagram.svg \
-		 $(OUT)/integration_diagram.svg \
+		 $(OUT)/integration_diagram.svg
 
 all: raw diagrams
 
@@ -49,3 +49,22 @@ init-diagram: plantuml
 plantuml:
 	# Version pinned to reduce variability of generated outputs.
 	docker start plantuml || docker run -d -p 8080:8080 --name=plantuml plantuml/plantuml-server:jetty-v1.2020.14
+
+# Testing
+
+TEST=test
+TESTS=$(TEST)/data_diagram.svg \
+	  $(TEST)/data_diagram.md \
+	  $(TEST)/integration_diagram.svg \
+	  $(TEST)/integration_diagram.md
+
+$(TEST)/data_diagram.svg:
+	sysl data -d -o $@ model.sysl
+
+$(TEST)/integration_diagram.svg:
+	sysl ints -j all -o $@ model.sysl
+
+$(TEST)/%.md:
+	echo "![](../out/$*.svg)\n![]($*.svg)" > $(TEST)/$*.md
+
+compare: $(DIAGRAMS) $(TESTS)

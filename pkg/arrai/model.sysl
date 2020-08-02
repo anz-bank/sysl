@@ -48,3 +48,12 @@ D:
 Client:
     Do:
         D <- Fetch
+
+all:
+    all:
+        Source
+        Client
+        A
+        B
+        C
+        D

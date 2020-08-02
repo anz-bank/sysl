@@ -35,6 +35,13 @@ model.sysl2Ê
 description"A bar table.š
 
 model.sysl:…
+W
+aRB
+patterns:
+"pkB
+description"A bar table.š
+
+model.sysl
 F
 bAB 
 description"An optional int`š
@@ -47,14 +54,7 @@ model.sysl
 model.syslJ
 
 
-SourceBarFoox
-W
-aRB
-patterns:
-"pkB
-description"A bar table.š
-
-model.sysl
+SourceBarFoox
 aš
 
 model.sysl
@@ -118,15 +118,32 @@ model.sysl  p
 
 model.sysl,0š
 
-model.sysl++b
-ClientX
+model.sysl++d
+ClientZ
 
-Client*3
-Do-
+Client*5
+Do/
 Do:
 
-DFetchš
+DFetchš
 
-model.sysl13š
+model.sysl14š
 
-model.sysl00
+model.sysl00‚
+all{
+
+all*Y
+allR
+all:
+
+Source:
+
+Client:
+A:
+B:
+C:
+Dš
+
+model.sysl5<š
+
+model.sysl44
