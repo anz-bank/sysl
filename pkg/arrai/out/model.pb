@@ -84,12 +84,6 @@ model.syslñ
 Cë
 
 C*=
-FetchA3
-FetchA:
-
-AFetchš
-
-model.sysl!$*=
 FetchB3
 FetchB:
 
@@ -103,7 +97,13 @@ model.sysl$'*M
 
 CFetchBš
 
-model.sysl'+š
+model.sysl'+*=
+FetchA3
+FetchA:
+
+AFetchš
+
+model.sysl!$š
 
 model.sysl  p
 Dk
