@@ -205,6 +205,8 @@ func printEnum(enum map[int64]string) string {
 func getRelatedTypes(appType string, externalLinks []externalLink, appTypes *[]string, elinks *[]externalLink) {
 	if !appTypesContain(*appTypes, appType) {
 		*appTypes = append(*appTypes, appType)
+	} else {
+		return
 	}
 	for _, value := range externalLinks {
 		if appType == value.secondType {
