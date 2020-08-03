@@ -126,7 +126,7 @@ func isValidAppNameAndEndpoint(m *sysl.Module, appName string, epName string) er
 
 //callStatement is a printer to print a call statement
 func callStatement(appName string, epName string, nextApp string, indent int) string {
-	return fmt.Sprintf("%s%s ->>+ %s: %s\n", addIndent(indent),
+	return fmt.Sprintf("%s%s ->> %s: %s\n", addIndent(indent),
 		cleanAppName(appName), cleanAppName(nextApp), epName)
 }
 
@@ -136,7 +136,7 @@ func retStatement(appName string, epName string, previousApp string, indent int,
 		return fmt.Sprintf("%s%s -->> %s: %s\n", addIndent(indent),
 			cleanAppName(appName), cleanAppName(previousApp), epName)
 	}
-	return fmt.Sprintf("%s%s -->>- %s: %s\n", addIndent(indent),
+	return fmt.Sprintf("%s%s -->> %s: %s\n", addIndent(indent),
 		cleanAppName(appName), cleanAppName(previousApp), epName)
 }
 
