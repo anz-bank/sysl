@@ -1,6 +1,6 @@
 # Generates the PlantUML for an integration diagram of model.sysl.
 
-let model = //{./loadModel};
+let model = //{./load_model};
 
 # Transforms a module to an adjacency list of applications.
 #
@@ -14,18 +14,19 @@ let toAdj = \m
                 e.stmt?:{} => .@item.@item.call?.target.part.@item.@item:{}
         ) where . && . != name;
         (from: name, to: calls)
-    ) where .to;
+    ) where .to
+;
 
 # Transforms an adjacency list of applications to a PlantUML integration diagram.
-let toInt = \adj 
-$`@startuml
-skinparam component {
-  BackgroundColor FloralWhite
-  BorderColor Black
-  ArrowColor Crimson
-}
-${(adj => \(:from, :to) $`${to => $`[${from}] --> [${.}]` orderby .::\n}`)
-orderby .::\n}
-@enduml`;
+let toInt = \adj $`
+    @startuml
+    skinparam component {
+      BackgroundColor FloralWhite
+      BorderColor Black
+      ArrowColor Crimson
+    }
+    ${(adj => \(:from, :to) $`${to => $`[${from}] --> [${.}]` orderby .::\n}`) orderby .::\n}
+    @enduml
+`;
 
 toInt(toAdj(model))

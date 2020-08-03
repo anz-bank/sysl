@@ -1,6 +1,6 @@
 # Applies sysl.arrai to model.sysl.
 
-let model = //{./loadModel};
+let model = //{./load_model};
 
 # Load the helper functions.
 let sysl = //{./sysl};
