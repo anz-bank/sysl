@@ -53,10 +53,12 @@ plantuml:
 # Testing
 
 TEST=test
-TESTS=$(TEST)/data_diagram.svg \
-	  $(TEST)/data_diagram.md \
-	  $(TEST)/integration_diagram.svg \
-	  $(TEST)/integration_diagram.md
+SYSL_DIAGRAMS=$(TEST)/data_diagram.svg \
+	  		  $(TEST)/integration_diagram.svg \
+	  		  $(TEST)/sequence_diagram.svg
+COMPARISONS=$(TEST)/data_diagram.md \
+	  		$(TEST)/integration_diagram.md \
+	  		$(TEST)/sequence_diagram.md
 
 $(TEST)/data_diagram.svg:
 	sysl data -d -o $@ model.sysl
@@ -64,7 +66,11 @@ $(TEST)/data_diagram.svg:
 $(TEST)/integration_diagram.svg:
 	sysl ints -j all -o $@ model.sysl
 
+$(TEST)/sequence_diagram.svg:
+	sysl sd -s "Client <- Do" -o $@ model.sysl
+
 $(TEST)/%.md:
 	echo "![](../out/$*.svg)\n![]($*.svg)" > $(TEST)/$*.md
 
-compare: $(DIAGRAMS) $(TESTS)
+# Generates all diagrams with arr.ai and Sysl, and side-by-side Markdown comparisons.
+compare: $(DIAGRAMS) $(SYSL_DIAGRAMS) $(COMPARISONS)
