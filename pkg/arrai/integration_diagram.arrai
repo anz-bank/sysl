@@ -22,5 +22,4 @@ let toInt = \adj $`
     @enduml
 `;
 
-# toInt(toAdj(rel))
-//fmt.pretty(toAdj(rel))
+toInt(toAdj(rel))
