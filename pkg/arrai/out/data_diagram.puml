@@ -4,20 +4,21 @@ skinparam component {
   BorderColor Black
   ArrowColor Crimson
 }
+skinparam stereotypeCBackgroundColor Orchid
 hide methods
 
-entity Bar {
-  *a : STRING
+entity Source.Bar {
+  *a : string
   --
-  b : INT
-  *x : Foo.x
+  b : int
+  *x : Foo.x <<FK>>
 }
 
-entity Foo {
-  *x : INT
-  *y : INT
+entity Source.Foo {
+  *x : int
+  *y : int
 }
 
-Bar             }o--|| Foo
+Source.Bar      }o--|| Source.Foo
 
 @enduml

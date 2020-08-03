@@ -59,7 +59,7 @@ let toCsv = \dd
     ];
     let headings = $`${cols >> .label::, }`;
 
-    let rows = (dd orderby .container) >>
+    let rows = (dd orderby [.container, .typeName, .fieldName]) >>
         $`${.action}, ${.plat}, ${.tech}, ${.fieldName}, ${.objType}, ${.container}, ${.typeName}, "${.typeDesc}", ${.fieldTerm}, "${.fieldDesc}"`;
     $`${(rows | {(@: -1, @item: headings)}) >> . ::\n}`
 ;

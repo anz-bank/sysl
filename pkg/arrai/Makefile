@@ -1,4 +1,4 @@
-.PHONY: all diagrams clean init-diagram plantuml
+.PHONY: all diagrams init-diagram plantuml compare clean
 
 SYSL_PLANTUML=http://localhost:8080
 OUT=out
@@ -12,14 +12,10 @@ RAW=$(OUT)/data_dictionary.csv \
 DIAGRAMS=$(OUT)/data_diagram.svg \
 		 $(OUT)/integration_diagram.svg
 
-all: raw diagrams
+all: raw diagrams compare
 
 raw: $(OUT) $(RAW)
 diagrams: $(OUT) init-diagram $(DIAGRAMS)
-
-# Deletes all generated outputs.
-clean:
-	$(RM) -r $(OUT)
 
 # Creates the output directory.
 $(OUT):
@@ -27,7 +23,7 @@ $(OUT):
 
 # Generates outputs from the model by running named arr.ai scripts.
 .PRECIOUS: $(OUT)/%.puml
-$(OUT)/%.arrai $(OUT)/%.csv $(OUT)/%.puml $(OUT)/%.tf: $(OUT)/model.pb
+$(OUT)/%.arrai $(OUT)/%.csv $(OUT)/%.puml $(OUT)/%.tf: %.arrai $(OUT)/model.pb
 	arrai run $$(echo $* | cut -d'.' -f1).arrai > $@
 
 # Generates diagram outputs from the model by calling PlantUML with the generated .puml output.
@@ -39,7 +35,7 @@ $(OUT)/%.png $(OUT)/%.svg: $(OUT)/%.puml
 
 # Compiles Sysl specs for arr.ai import.
 .PRECIOUS: $(OUT)/%.pb
-$(OUT)/%.pb: %.sysl
+$(OUT)/%.pb: $(OUT) %.sysl
 	sysl protobuf --mode=pb $*.sysl > $(OUT)/$*.pb
 
 # Initializes the environment to support diagram generation targets.
@@ -60,17 +56,24 @@ COMPARISONS=$(TEST)/data_diagram.md \
 	  		$(TEST)/integration_diagram.md \
 	  		$(TEST)/sequence_diagram.md
 
-$(TEST)/data_diagram.svg:
+$(TEST):
+	mkdir -p $(TEST)
+
+$(TEST)/data_diagram.svg: $(TEST)
 	sysl data -d -o $@ model.sysl
 
-$(TEST)/integration_diagram.svg:
+$(TEST)/integration_diagram.svg: $(TEST)
 	sysl ints -j all -o $@ model.sysl
 
-$(TEST)/sequence_diagram.svg:
+$(TEST)/sequence_diagram.svg: $(TEST)
 	sysl sd -s "Client <- Do" -o $@ model.sysl
 
-$(TEST)/%.md:
+$(TEST)/%.md: $(TEST)
 	echo "![](../out/$*.svg)\n![]($*.svg)" > $(TEST)/$*.md
 
 # Generates all diagrams with arr.ai and Sysl, and side-by-side Markdown comparisons.
 compare: $(DIAGRAMS) $(SYSL_DIAGRAMS) $(COMPARISONS)
+
+# Deletes all generated outputs.
+clean:
+	$(RM) -r $(OUT) $(TEST)
