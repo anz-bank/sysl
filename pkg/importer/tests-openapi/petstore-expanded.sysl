@@ -77,13 +77,8 @@ testapp "Swagger Petstore" [package="package_foo"]:
         tag <: string?:
             @json_tag = "tag"
 
-    !type Pet:
-        id <: int64:
-            @json_tag = "id"
-        name <: string:
-            @json_tag = "name"
-        tag <: string?:
-            @json_tag = "tag"
+    !alias EXTERNAL_Pet:
+        string
 
     !alias tags:
         sequence of string
