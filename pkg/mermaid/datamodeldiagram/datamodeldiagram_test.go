@@ -64,3 +64,17 @@ classDiagram
  }`
 	assert.Equal(t, expected, r)
 }
+
+func TestGenerateMermaidDataModelDiagramWithRecursiveReference(t *testing.T) {
+	m, err := parse.NewParser().Parse("tests/recursive.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	mapper := syslwrapper.MakeAppMapper(m)
+	mapper.IndexTypes()
+	mapper.ConvertTypes()
+	r, err := GenerateDataDiagramWithAppAndType(m, "Simple", "simpleType")
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+	t.Log(r)
+}
