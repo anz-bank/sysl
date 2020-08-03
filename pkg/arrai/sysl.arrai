@@ -32,8 +32,46 @@ let polish = \m
     # TODO: More polish.
 ;
 
+# Returns a normalised, relational model of a Sysl model.
+let normalize = \m
+    let apps = m.apps => \(@:name, @value:app, ...)
+        (
+            :name,
+        )
+    ;
+    let endpoints = //rel.union(m.apps => \(@:appName, @value:app, ...)
+        app.endpoints?:{} => \(@:epName, @value:ep)
+            (
+                app: appName,
+                name: epName,
+            )
+    );
+    let calls = //rel.union(m.apps => \(@:appName, @value:app, ...)
+        //rel.union(
+            app.endpoints?:{} => \(@:epName, @value:e, ...)
+                e.stmt?:{} => 
+                    (
+                        from: (
+                            app: appName,
+                            endpoint: epName,
+                        ),
+                        to: (
+                            app: .@item.@item.call?.target.part.@item.@item:{},
+                            endpoint: .@item.@item.call?.endpoint:{},
+                        ),
+                    )
+        )
+    ) where .to.endpoint;
+    (
+        :apps,
+        :endpoints,
+        :calls,
+    )
+;
+
 # Export the functions from the module.
 (
     :parseReturn,
     :polish,
+    :normalize,
 )
