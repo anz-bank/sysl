@@ -361,13 +361,15 @@ func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
 			Attributes: getAttrs(schema),
 		}
 
-		// AllOf means this object is composed of all of the sub-schemas (and potentially addiitonal properties)
-		for _, subschema := range schema.AllOf {
-			subType := o.loadTypeSchema("", subschema.Value)
-			if subObj, ok := subType.(*StandardType); ok {
-				obj.Properties = append(obj.Properties, subObj.Properties...)
-			}
-		}
+		// Removing this as it breaks an import file. Details here: https://github.com/anzx/acceleration/issues/342
+		// AllOf means this object is composed of all of the sub-schemas (and potentially additional properties)
+		// for _, subschema := range schema.AllOf {
+		// 	subType := o.loadTypeSchema("", subschema.Value)
+
+		// 	if subObj, ok := subType.(*StandardType); ok {
+		// 		obj.Properties = append(obj.Properties, subObj.Properties...)
+		// 	}
+		// }
 
 		for fname, prop := range schema.Properties {
 			f := o.buildField(fname, prop)
