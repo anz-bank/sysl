@@ -1,6 +1,6 @@
 # Generates a CSV data dictionary for model.sysl.
 
-let model = //{./loadModel};
+let model = //{./load_model};
 
 # Transforms a type specification into a set of field specifications.
 let toFields = \type
@@ -59,7 +59,7 @@ let toCsv = \dd
     ];
     let headings = $`${cols >> .label::, }`;
 
-    let rows = (dd orderby .plat) >>
+    let rows = (dd orderby [.container, .typeName, .fieldName]) >>
         $`${.action}, ${.plat}, ${.tech}, ${.fieldName}, ${.objType}, ${.container}, ${.typeName}, "${.typeDesc}", ${.fieldTerm}, "${.fieldDesc}"`;
     $`${(rows | {(@: -1, @item: headings)}) >> . ::\n}`
 ;

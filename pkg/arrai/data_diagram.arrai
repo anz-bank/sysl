@@ -1,18 +1,20 @@
 # Generates an entity-relationship diagram from the tables of model.sysl.
 
-let model = //{./loadModel};
+let model = //{./load_model};
 
 # Transforms a relation specification into a set of field specifications.
-let toFields = \type
+let toFields = \appName \type
     type.relation?.attr_defs?:{} => \(@:fieldName, @value:f)
     (
         :fieldName,
         fieldType: cond f {
-            (primitive:_, ...): f.primitive,
+            (primitive:_, ...): //str.lower(f.primitive),
             (type_ref:_, ...): //seq.join('.', f.type_ref.ref.path => .@item),
             _: '?',
         },
-        fk: cond f.type_ref?.ref.path:{} {[a, b]: (type:a.@item, field:b.@item)},
+        fk: cond f.type_ref?.ref.path:{} {
+            [a, b]: (type:$`${appName}.${a.@item}`, field:b.@item)
+        },
         pk: cond f.attrs?('patterns')?.a.elt.@item:{} {
             (@item: (s: 'pk'), ...): true,
         },
@@ -25,9 +27,8 @@ let toTables = \m
     //rel.union(m.apps => \(@:appName, @value:app)
         app.types?:{} => \(@:typeName, @value: t)
             (
-                :appName,
-                :typeName,
-                columns: toFields(t),
+                typeName: $`${appName}.${typeName}`,
+                columns: toFields(appName, t),
             )
     ) where . && .columns
 ;
@@ -38,27 +39,30 @@ let zo = \f cond f.fieldReqd {true: '|', _: 'o'};
 
 # Returns an array of strings representing columns as entity fields.
 let toRows = \cols cols orderby .fieldName >> 
-    $`${cond .fieldReqd || .pk {true: '*'}}${.fieldName} : ${.fieldType}`;
+    $`${cond .fieldReqd || .pk {true: '*'}}${.fieldName} : ${.fieldType}${cond {.fk: ' <<FK>>'}}`;
 
 # Transforms tables to an entity-relationship diagram.
-let toErd = \tables
-$`@startuml
-skinparam component {
-  BackgroundColor FloralWhite
-  BorderColor Black
-  ArrowColor Crimson
-}
-hide methods
+let toErd = \tables $`
+    @startuml
+    skinparam component {
+      BackgroundColor FloralWhite
+      BorderColor Black
+      ArrowColor Crimson
+    }
+    skinparam stereotypeCBackgroundColor Orchid
+    hide methods
 
-${tables orderby .typeName >> \(:typeName, columns:cols, ...)
-$`entity ${typeName} {
-  ${toRows(cols where .pk) ++ cond {cols where .pk: ['--']} ++ toRows(cols where !.pk)::\i}
-}`::\n\n}
+    ${tables orderby .typeName >> \(:typeName, columns:cols, ...) $`
+    entity ${typeName} {
+      ${toRows(cols where .pk) ++ cond {cols where .pk: ['--']} ++ toRows(cols where !.pk)::\i}
+    }`
+    ::\n\n}
 
-${tables orderby .typeName >> \(:typeName, :columns, ...)
-    let fks = columns where .fk orderby .;
-    $`${fks >> $`${typeName:-15s} }o--${zo(.)}| ${.fk.type}`::\i}`
-::\i}
-@enduml`;
+    ${tables orderby .typeName >> \(:typeName, :columns, ...)
+        let fks = columns where .fk orderby .;
+        $`${fks >> $`${typeName:-15s} }o--${zo(.)}| ${.fk.type}`::\i}`
+    ::\i}
+    @enduml
+`;
 
 toErd(toTables(model))

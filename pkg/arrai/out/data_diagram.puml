@@ -1,0 +1,24 @@
+@startuml
+skinparam component {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+skinparam stereotypeCBackgroundColor Orchid
+hide methods
+
+entity Source.Bar {
+  *a : string
+  --
+  b : int
+  *x : Foo.x <<FK>>
+}
+
+entity Source.Foo {
+  *x : int
+  *y : int
+}
+
+Source.Bar      }o--|| Source.Foo
+
+@enduml
