@@ -1,5 +1,8 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
+# Extracts the set of pattern attributes of an element.
+let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item => .@item.s;
+
 # A macro to convert `ret` statement payload string to structured tuples.
 let payloadMacro = (
     @grammar: {://grammar.lang.wbnf:
@@ -34,16 +37,16 @@ let polish = \m
 
 # Returns a normalised, relational model of a Sysl model.
 let normalize = \m
-    let apps = m.apps => \(@:name, @value:app, ...)
+    let apps = m.apps => \(@:appName, @value:app, ...)
         (
-            :name,
+            :appName,
         )
     ;
     let endpoints = //rel.union(m.apps => \(@:appName, @value:app, ...)
         app.endpoints?:{} => \(@:epName, @value:ep)
             (
-                app: appName,
-                name: epName,
+                :appName,
+                :epName,
             )
     );
     let calls = //rel.union(m.apps => \(@:appName, @value:app, ...)
@@ -62,10 +65,43 @@ let normalize = \m
                     )
         )
     ) where .to.endpoint;
+    let types = //rel.union(m.apps => \(@:appName, @value:app)
+        app.types?:{} => \(@:typeName, @value: t)
+            (
+                :appName,
+                :typeName,
+            )
+        ) where .
+    ;
+    let fields = //rel.union(m.apps => \(@:appName, @value:app)
+        //rel.union(app.types?:{} => \(@:typeName, @value:type)
+            (type.relation).attr_defs?:{} => \(@:fieldName, @value:f)
+                let patterns = patterns(f);
+                (
+                    :appName,
+                    :typeName,
+                    :fieldName,
+                    fieldType: cond f {
+                        (primitive:p, ...): p,
+                        (type_ref:(ref:(path:p)), ...): //seq.join('.', p => .@item),
+                        _: '?',
+                    },
+                    fk: cond f.type_ref?.ref.path:{} {
+                        [a, b]: (type:$`${appName}.${a.@item}`, field:b.@item)
+                    },
+                    :patterns,
+                    pk: !!({'pk'} & patterns),
+                    opt: f.opt?:{},
+                )
+        ) where .
+    );
+
     (
         :apps,
         :endpoints,
         :calls,
+        :types,
+        :fields,
     )
 ;
 
@@ -75,3 +111,4 @@ let normalize = \m
     :polish,
     :normalize,
 )
+#.normalize(//{./load_model})
