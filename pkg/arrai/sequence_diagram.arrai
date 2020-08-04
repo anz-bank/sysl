@@ -21,7 +21,8 @@ let rec toUml = \(:from, :to, :calls) $`
     deactivate ${to.appName}
 `;
 
-let appendIfNew = \arr \val arr ++ cond {(arr => .@item) & {val}: [], _: [val]};
+# Appends `val` to `arr` if it's not already present.
+let appendIfNew = \arr \val arr ++ cond (arr => .@item) & {val} {{}: [val]};
 
 # Transforms a Sysl model into a sequence diagram, starting with a call to `appName <- epName`.
 let toSeq = \m \(:appName, :epName) 
@@ -31,26 +32,30 @@ let toSeq = \m \(:appName, :epName)
         calls: toTree((:m, :appName, :epName))
     );
 
+    # Returns a array of app names in the order they were first activated.
     let rec getApps = \(:from, :to, :calls) \all
         let all = appendIfNew(all, to.appName);
         cond {
             calls: //{./util}.reduceFlat(calls >> getApps(., all), appendIfNew, all),
             _: all,
         }
-
-        # set | {from.appName, to.appName} | //rel.union(calls => controls(.@item, {})) where .;
     ;
+
+    # Enriches the app names with `type`, inferred from patterns and used as the primary sort key.
     let apps = (getApps(model, []) => \(:@, @item:name) 
         let patterns = //rel.union(m.apps where .appName = name => .appPatterns);
-        (:@, :name, type: cond patterns {{'db', ...}: 'database', _: 'control'})
+        let type = cond patterns {{'db', ...}: 'database', _: 'control'};
+        (:@, :name, :type)
     ) orderby [.type, .@];
-    $`
-    @startuml
-    skinparam maxMessageSize 250
-    ${apps >> $`${.type} "${.name}"`::\i}
 
-    ${toUml(model)}
-    @enduml
-`;
+    $`
+        @startuml
+        skinparam MaxMessageSize 250
+        ${apps >> $`${.type} "${.name}"`::\i}
+
+        ${toUml(model)}
+        @enduml
+    `
+;
 
 toSeq(rel, (appName: 'Client', epName: 'Do'))
