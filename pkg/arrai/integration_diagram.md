@@ -20,4 +20,4 @@ skinparam component {
 @enduml
 ```
 
-![Integration diagram](gen/integration_diagram.svg)
+![Integration diagram](out/integration_diagram.svg)

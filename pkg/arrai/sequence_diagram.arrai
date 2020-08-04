@@ -1,0 +1,62 @@
+# Generates the PlantUML for a sequence diagram of "Client <- Do" in model.sysl.
+
+let model = //{./load_model};
+let rel = //{./sysl}.normalize(model);
+
+# Transforms a module to a tree of calls between endpoints.
+#
+# Each call is a tuple with attributes `from` (the upstream endpoint), `to` (the downstream endpoint
+# that `from` calls), and `calls` (a subtree of calls made by the downstream endpoint).
+let rec toTree = \(:m, :appName, :epName)
+    m.calls where .from.appName = appName && .from.epName = epName orderby .sourceContext.@
+        >> (:.from, :.to, calls: toTree((:m, :.to.appName, :.to.epName)))
+;
+
+# Transforms an endpoint to a PlantUML sequence from `from` to `to`, including all downstream calls.
+let rec toUml = \(:from, :to, :calls) $`
+    ${from.appName} -> ${to.appName} : ${to.epName}
+    activate ${to.appName}
+    ${cond calls {[_, ...]: calls >> toUml(.)}::\i}
+    ${from.appName} <-- ${to.appName}
+    deactivate ${to.appName}
+`;
+
+# Appends `val` to `arr` if it's not already present.
+let appendIfNew = \arr \val arr ++ cond (arr => .@item) & {val} {{}: [val]};
+
+# Transforms a Sysl model into a sequence diagram, starting with a call to `appName <- epName`.
+let toSeq = \m \(:appName, :epName) 
+    let model = (
+        from: (appName: ''),
+        to: (:appName, :epName),
+        calls: toTree((:m, :appName, :epName))
+    );
+
+    # Returns a array of app names in the order they were first activated.
+    let rec getApps = \(:from, :to, :calls) \all
+        let all = appendIfNew(all, to.appName);
+        cond {
+            calls: //{./util}.reduceFlat(calls >> getApps(., all), appendIfNew, all),
+            _: all,
+        }
+    ;
+
+    # Enriches the app names with `type`, inferred from patterns and used as the primary sort key.
+    let apps = (getApps(model, []) => \(:@, @item:name) 
+        let patterns = //rel.union(m.apps where .appName = name => .appPatterns);
+        let type = cond patterns {{'db', ...}: 'database', _: 'control'};
+        (:@, :name, :type)
+    ) orderby [.type, .@];
+
+    $`
+        @startuml
+        skinparam MaxMessageSize 250
+        
+        ${apps >> $`${.type} "${.name}"`::\i}
+
+        ${toUml(model)}
+        @enduml
+    `
+;
+
+toSeq(rel, (appName: 'Client', epName: 'Do'))
