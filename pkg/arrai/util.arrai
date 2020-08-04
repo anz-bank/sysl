@@ -5,15 +5,37 @@
 # Invokes a macro on a string as if it were source code at parsing time.
 let invokeMacro = \macro \s
     macro -> (//dict(.@transform) >>> \rule \fn 
-        fn(//grammar.parse(.@grammar, rule, s))).@value;
+        fn(//grammar.parse(.@grammar, rule, s))).@value
+;
 
 # Transforms an AST into a simple tuple of its values.
 # Useful for the @transform of a flat grammar.
 let simpleTransform = \ast
     let d = //dict(ast) >> \term cond term {('':value, ...): value, _: {}};
-    //tuple(d where .@value);
+    //tuple(d where .@value)
+;
+
+# Sequentially applies `fn(accumulator, i)` for each `i` in `arr`. The `accumulator` is initialised
+# to `val`, and updated to the result of `fn` after each invocation.
+# Returns the final accumulated value.
+let rec reduce = \arr \fn \val
+    cond arr {
+        [head, ...]:
+            let tail = -1\(arr without (@:0, @item:head));
+            reduce(tail, fn, fn(val, head)),
+        _: val,
+    }
+;
+
+# Performs `reduce` once on `arr`, and once for each array output of `fn`. Accumulates to the same
+# value across all invocations.
+let reduceFlat = \arr \fn \val
+    reduce(arr, \z \i reduce(i, fn, z), val)
+;
 
 (
     :invokeMacro,
     :simpleTransform,
+    :reduce,
+    :reduceFlat,
 )

@@ -8,7 +8,8 @@ let rel = //{./sysl}.normalize(model);
 # The adjacency list is represented as an array of tuples with `from` (the name
 # of the upstream app) and `to` (a set of downstream apps that `from` calls).
 let toAdj = \m 
-    m.calls => :> .app where .from != .to nest |to|to => :> => \v v.to?:v;
+    m.calls => ((:.from, :.to) :> .appName) where .from != .to nest |to|to => :> => \v v.to?:v
+;
 
 # Transforms an adjacency list of applications to a PlantUML integration diagram.
 let toInt = \adj $`

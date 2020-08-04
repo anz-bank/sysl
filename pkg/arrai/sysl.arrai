@@ -37,34 +37,37 @@ let polish = \m
 
 # Returns a normalised, relational model of a Sysl model.
 let normalize = \m
-    let apps = m.apps => \(@:appName, @value:app, ...)
+    let apps = m.apps => \(@:appName, @value:app)
         (
             :appName,
+            appPatterns: patterns(app),
         )
     ;
-    let endpoints = //rel.union(m.apps => \(@:appName, @value:app, ...)
-        app.endpoints?:{} => \(@:epName, @value:ep)
+    let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
+        app.endpoints?:{} => \(@:epName, ...)
             (
                 :appName,
                 :epName,
             )
     );
-    let calls = //rel.union(m.apps => \(@:appName, @value:app, ...)
-        //rel.union(
-            app.endpoints?:{} => \(@:epName, @value:e, ...)
-                e.stmt?:{} => 
-                    (
-                        from: (
-                            app: appName,
-                            endpoint: epName,
-                        ),
-                        to: (
-                            app: .@item.@item.call?.target.part.@item.@item:{},
-                            endpoint: .@item.@item.call?.endpoint:{},
-                        ),
-                    )
+    let calls = //rel.union(m.apps => \(@:appName, @value:app)
+        //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
+            ep.stmt?:{} where .@item.@item.call?:{} => 
+                (
+                    from: (
+                        :appName,
+                        :epName,
+                    ),
+                    to: (
+                        appName: .@item.@item.call.target.part.@item.@item,
+                        epName: .@item.@item.call.endpoint,
+                    ),
+                    # TODO: Use stmt.source_context once populated by parser.
+                    # https://github.com/anz-bank/sysl/issues/990
+                    sourceContext: ep.source_context +> (:.@),
+                )
         )
-    ) where .to.endpoint;
+    );
     let types = //rel.union(m.apps => \(@:appName, @value:app)
         app.types?:{} => \(@:typeName, @value: t)
             (
@@ -102,13 +105,16 @@ let normalize = \m
         :calls,
         :types,
         :fields,
+        # TODO:
+        # :annotations, (aka attributes)
+        # :tags, (aka patterns)
     )
 ;
 
 # Export the functions from the module.
 (
-    :parseReturn,
-    :polish,
     :normalize,
+    :parseReturn,
+    :patterns,
+    :polish,
 )
-#.normalize(//{./load_model})
