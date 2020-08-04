@@ -104,3 +104,10 @@ func ExtractVersion(path string) (newpath, ver string) {
 	}
 	return
 }
+
+func AppendVersion(path, ver string) string {
+	if ver == "" {
+		return path
+	}
+	return path + "@" + ver
+}

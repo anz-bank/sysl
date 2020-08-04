@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -21,23 +22,75 @@ type goModule struct {
 	Version string
 }
 
-func goGetByFilepath(filename, ver string) (err error) {
+type goModules struct{}
+
+func (d *goModules) Get(filename, ver string, m *Modules) (mod *Module, err error) {
 	if names := strings.Split(filename, "/"); len(names) > 0 {
 		for i := range names[1:] {
 			gogetPath := path.Join(names[:1+i]...)
-			if ver != "" {
-				gogetPath = gogetPath + "@" + ver
-			}
+			gogetPath = AppendVersion(gogetPath, ver)
 
 			err = goGet(gogetPath)
 			if err == nil {
-				return nil
+				err = d.Load(m)
+				if err != nil {
+					return nil, err
+				}
+				mod = d.Find(filename, ver, m)
+				if mod == nil {
+					return nil, fmt.Errorf("error finding module of file %s", filename)
+				}
+				return mod, nil
 			}
 			logrus.Debugf("go get %s error: %s\n", gogetPath, err.Error())
 		}
 	}
 
-	return errors.New("no such module")
+	return nil, errors.New("no such module")
+}
+
+func (*goModules) Find(filename, ver string, m *Modules) *Module {
+	for i, mod := range *m {
+		if hasPathPrefix(mod.Name, filename) {
+			if i != 0 && ver != "" && ver != "master" && mod.Version != ver {
+				continue
+			}
+			return mod
+		}
+	}
+
+	return nil
+}
+
+func (*goModules) Load(m *Modules) error {
+	err := goDownload()
+	if err != nil {
+		return err
+	}
+
+	b, err := goList()
+	if err != nil {
+		return err
+	}
+
+	dec := json.NewDecoder(b)
+	for {
+		module := &goModule{}
+		if err := dec.Decode(module); err != nil {
+			if err == io.EOF {
+				break
+			}
+			return errors.Wrap(err, "failed to decode modules list")
+		}
+
+		m.Add(&Module{
+			Name:    module.Path,
+			Dir:     module.Dir,
+			Version: module.Version,
+		})
+	}
+
+	return nil
 }
 
 func goGet(args ...string) error {
@@ -47,38 +100,21 @@ func goGet(args ...string) error {
 	return nil
 }
 
-func (m *Modules) Load() error {
-	out := ioutil.Discard
-
-	err := runGo(context.Background(), out, "mod", "download")
+func goDownload() error {
+	err := runGo(context.Background(), ioutil.Discard, "mod", "download")
 	if err != nil {
 		return errors.Wrap(err, "failed to download modules")
 	}
-
-	b := &bytes.Buffer{}
-	err = runGo(context.Background(), b, "list", "-m", "-json", "all")
-	if err != nil {
-		return errors.Wrap(err, "failed to list modules")
-	}
-
-	dec := json.NewDecoder(b)
-	for {
-		goMod := &goModule{}
-		if err := dec.Decode(goMod); err != nil {
-			if err == io.EOF {
-				break
-			}
-			return errors.Wrap(err, "failed to decode modules list")
-		}
-
-		m.Add(&Module{
-			Name:    goMod.Path,
-			Dir:     goMod.Dir,
-			Version: goMod.Version,
-		})
-	}
-
 	return nil
+}
+
+func goList() (io.Reader, error) {
+	b := &bytes.Buffer{}
+	err := runGo(context.Background(), b, "list", "-m", "-json", "all")
+	if err != nil {
+		return b, errors.Wrap(err, "failed to list modules")
+	}
+	return b, nil
 }
 
 func runGo(ctx context.Context, out io.Writer, args ...string) error {

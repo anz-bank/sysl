@@ -28,6 +28,7 @@ require (
 	github.com/go-openapi/swag v0.19.9
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/protobuf v1.4.2
+	github.com/google/go-github/v32 v32.1.0
 	github.com/hashicorp/hcl v1.0.0
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/pkg/errors v0.9.1
