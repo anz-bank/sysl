@@ -51,6 +51,7 @@ let toSeq = \m \(:appName, :epName)
     $`
         @startuml
         skinparam MaxMessageSize 250
+        
         ${apps >> $`${.type} "${.name}"`::\i}
 
         ${toUml(model)}
