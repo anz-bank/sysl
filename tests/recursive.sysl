@@ -1,0 +1,7 @@
+Simple:
+    !type simpleType:
+        field <: string
+        recurse <: recursiveType
+
+    !type recursiveType:
+        subType <: simpleType

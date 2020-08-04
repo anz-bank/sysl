@@ -6,35 +6,52 @@ This package contains experimental [arr.ai](https://github.com/arr-ai/arrai) cod
 * Replicate `sysl`'s various commands in a more concise, functional style.
 * Introduce new capabilities such as relational modelling and data flow analysis.
 
+Each script has an accompanying Markdown file describing the logic and output.
+
 ## Usage
 
 To keep things simple and consistent, all scripts currently work with the same `model.sysl` spec. This spec will evolve over time to contain the full range of Sysl features and patterns to stress test the scripts.
 
-To run the arr.ai scripts, install arr.ai and execute `arrai run [file]`. For example:
+To run all the scripts at once, run:
 
 ```bash
-$ arrai run integration_diagram.arrai
+make
 ```
 
-Each script has an accompanying Markdown file describing the logic and output.
+To run a particular script, run `make` for it's output target. For example, to generate the SVG output of the `data_diagram.arrai` script, run:
+
+```bash
+make data_diagram.svg
+```
+
+For diagram targets (`svg` and `png`), `make` will use the arr.ai script to produce the PlantUML output, then attempt to render it with a PlantUML server and save the result.
+
+You can of course run the scripts directly as well. For example:
+
+```bash
+arrai run data_diagram.arrai > out/data_diagram.puml
+```
 
 <!-- TODO(ladeo): Generate these Markdown files from the arr.ai sources. -->
 
 ## Development
 
-Many of the scripts will start by importing `model.sysl` (assuming it's in the current working directory) like so:
+### Loading the model
+
+Many of the scripts will start by importing the default `model.sysl` model like so:
 
 ```arrai
-let sysl = //encoding.proto.decode(//encoding.proto.proto, //os.file('sysl.pb'));
-let module = //encoding.proto.decode(sysl, 'Module' , //os.file('model.pb'));
+let model = //{./load_model};
 ...
 ```
 
-If `model.sysl` is changed, `model.pb` must be regenerated like so:
+This actually loads the proto-encoded `out/model.pb` file, so if `model.sysl` is changed, `out/model.pb` must be regenerated like so:
 
 ```bash
-$ sysl pb --mode=pb -o model.pb model.sysl
+sysl protobuf --mode=pb model.sysl > out/model.pb
 ```
+
+If an extra command line arg is provided to `arrai run`, the `load_model` script treats it as a path to a `.pb`-encoded Sysl model to use instead.
 
 ### Environment
 
@@ -53,5 +70,8 @@ To speed up the edit/refresh cycle, install the [Save and Run](https://github.co
         }
     ]
 }
+```
 
-This will make VS Code automatically run the script every time you save it.
+This will make VS Code automatically run the script every time you save it (after printing a newline for clarity).
+
+For more comprehensive testing, you can also run `make` on every save of every file in this directory.

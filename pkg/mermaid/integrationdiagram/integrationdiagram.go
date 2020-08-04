@@ -68,13 +68,30 @@ func generateMultipleAppIntegrationDiagramHelper(m *sysl.Module, appNames []stri
 	var result string
 	result = mermaid.GeneratedHeader + "graph TD\n"
 	for _, appName := range appNames {
-		endPoints := m.Apps[appName].Endpoints
+		if app := m.Apps[appName]; app != nil {
+			endPoints := app.Endpoints
+			result += printClassStatement(appName)
+			for _, endPoint := range endPoints {
+				statements := endPoint.Stmt
+				result += printIntegrationDiagramStatements(m, statements, appName, integrationPairs)
+			}
+		}
+	}
+
+	// Get all applications which call an App in appNames
+	for currentApp, appValue := range m.Apps {
+		endPoints := appValue.Endpoints
 		for _, endPoint := range endPoints {
-			statements := endPoint.Stmt
-			result += printIntegrationDiagramStatements(m, statements, appName, integrationPairs)
+			for _, targetApp := range appNames {
+				result += printIntegrationDiagramStatementsTargetedApp(m, endPoint.Stmt, currentApp, integrationPairs, targetApp)
+			}
 		}
 	}
 	return result, nil
+}
+
+func printClassStatement(className string) string {
+	return fmt.Sprintf("    %s\n", cleanAppName(className))
 }
 
 //printIntegrationDiagramStatements is where the printing takes place
@@ -107,6 +124,47 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 			result += printIntegrationDiagramStatements(m, c.LoopN.Stmt, appName, integrationPairs)
 		case *sysl.Statement_Foreach:
 			result += printIntegrationDiagramStatements(m, c.Foreach.Stmt, appName, integrationPairs)
+		case *sysl.Statement_Action:
+			result += ""
+		case *sysl.Statement_Ret:
+			result += ""
+		default:
+			result += ""
+		}
+	}
+	return result
+}
+
+//printIntegrationDiagramStatements is where the printing takes place
+//Uses a switch statement to decide what to print and what recursion needs to be done
+func printIntegrationDiagramStatementsTargetedApp(m *sysl.Module, statements []*sysl.Statement,
+	appName string, integrationPairs *[]integrationPair, targetAppName string) string {
+	var result string
+	for _, statement := range statements {
+		switch c := statement.Stmt.(type) {
+		case *sysl.Statement_Call:
+			nextApp := c.Call.Target.Part[0]
+			pair := integrationPair{appName, nextApp}
+			if !integrationPairsContain(*integrationPairs, pair) && nextApp == targetAppName {
+				*integrationPairs = append(*integrationPairs, pair)
+				result += fmt.Sprintf(" %s[\"%s\"] --> %s[\"%s\"]\n",
+					cleanAppName(appName), appName, cleanAppName(nextApp), nextApp)
+				out, err := generateIntegrationDiagramHelper(m, nextApp, integrationPairs, false)
+				if err != nil {
+					panic("Error in generating integration diagram; check if app name is correct")
+				}
+				result += out
+			}
+		case *sysl.Statement_Group:
+			result += printIntegrationDiagramStatementsTargetedApp(m, c.Group.Stmt, appName, integrationPairs, targetAppName)
+		case *sysl.Statement_Cond:
+			result += printIntegrationDiagramStatementsTargetedApp(m, c.Cond.Stmt, appName, integrationPairs, targetAppName)
+		case *sysl.Statement_Loop:
+			result += printIntegrationDiagramStatementsTargetedApp(m, c.Loop.Stmt, appName, integrationPairs, targetAppName)
+		case *sysl.Statement_LoopN:
+			result += printIntegrationDiagramStatementsTargetedApp(m, c.LoopN.Stmt, appName, integrationPairs, targetAppName)
+		case *sysl.Statement_Foreach:
+			result += printIntegrationDiagramStatementsTargetedApp(m, c.Foreach.Stmt, appName, integrationPairs, targetAppName)
 		case *sysl.Statement_Action:
 			result += ""
 		case *sysl.Statement_Ret:

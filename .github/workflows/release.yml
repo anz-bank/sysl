@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.13
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.13
 
@@ -37,7 +37,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v1.3.1
         with:
           version: v0.126.0
-          args: check -f .github/goreleaser_configs/.goreleaser.yml
+          args: check -f .goreleaser.yml
 
       - name: Set env
         run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
@@ -47,7 +47,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v1.3.1
         with:
           version: v0.126.0
-          args: release --rm-dist --debug -f .github/goreleaser_configs/.goreleaser.yml
+          args: release --rm-dist --debug -f .goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -63,7 +63,7 @@ jobs:
           labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
 
       # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
-      # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets 
+      # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets
       # and uncomment this step.
       # - name: Release sysl_js
       #   run: cd unsorted/sysl_js && NPM_AUTH_TOKEN=$ npm publish

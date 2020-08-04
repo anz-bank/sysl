@@ -1,9 +1,25 @@
 Source[~db]:
-    !type Foo:
-        x <: int
+    @description =:
+      | A database.
+      | Stores data.
+    !table Foo:
+        @description =:
+          | A Foo.
+          | Represents foo things.
+        x <: int:
+            @description = "The x value."
+        y <: int
+
+    !table Bar:
+        @description = "A bar table."
+        a <: string [~pk]
+        b <: int?:
+            @description = "An optional int"
+        x <: Foo.x:
+            @description = "A foreign key"
 
     Read:
-        return Source.Foo.x
+        return ok <: Foo
 
 A:
     Fetch:
@@ -32,3 +48,12 @@ D:
 Client:
     Do:
         D <- Fetch
+
+all:
+    all:
+        Source
+        Client
+        A
+        B
+        C
+        D

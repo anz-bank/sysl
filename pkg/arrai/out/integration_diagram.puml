@@ -1,9 +1,3 @@
-# Integration Diagram
-
-Generates the PlantUML for an integration diagram of `model.sysl`.
-
-```bash
-$ arrai run integration_diagram.arrai
 @startuml
 skinparam component {
   BackgroundColor FloralWhite
@@ -18,6 +12,3 @@ skinparam component {
 [D] --> [A]
 [D] --> [C]
 @enduml
-```
-
-![Integration diagram](gen/integration_diagram.svg)

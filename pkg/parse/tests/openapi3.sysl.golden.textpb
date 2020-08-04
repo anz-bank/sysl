@@ -141,7 +141,7 @@ apps: {
         }
         stmt: {
           ret: {
-            payload: "ok <: sequence of Preferences_obj"
+            payload: "ok <: Preferences"
           }
         }
         rest_params: {

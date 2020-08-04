@@ -1,0 +1,67 @@
+# Generates a CSV data dictionary for model.sysl.
+
+let model = //{./load_model};
+
+# Transforms a type specification into a set of field specifications.
+let toFields = \type
+    let attrs = cond {
+        type.tuple?:{}: type.tuple.attr_defs,
+        type.relation?:{}: type.relation.attr_defs,
+        _: {},
+    };
+    attrs => (
+        typeDesc:  //seq.trim_suffix('\n', .@value.attrs?('description')?.s:{}),
+        fieldName:  .@,
+        fieldType:  .@value.primitive?:'?',
+    )
+;
+
+# Returns the type of an application (DB or API).
+let appType = \app cond app {(attrs: {'~db': ...}, ...): 'DB', _: 'API'};
+
+# Transforms a module to a data dictionary.
+let toDataDict = \m
+    let typedApps = m.apps where .@value.types?:{};
+    //rel.union(typedApps => \(@:appName, @value:app)
+        //rel.union(app.types => \(@:typeName, @value:type)
+            toFields(type) => \(:typeDesc, :fieldName, :fieldType)
+                # TODO: Correctly populate dummy fields.
+                (
+                    action: '?',
+                    plat: '?',
+                    tech: '?',
+                    :fieldName,
+                    objType: cond appType(app) {'DB': 'Table', 'API': 'API', _: '?'},
+                    container: appName,
+                    :typeName,
+                    :typeDesc,
+                    fieldTerm: '?',
+                    fieldDesc: '?',
+                    :fieldType,
+                )
+        )
+    )
+;
+
+# Transforms a data dictionary into a CSV file per the Metadata Template.
+let toCsv = \dd
+    let cols = [
+        (key: 'action',    label:'Action'),
+        (key: 'plat',      label:'Platform Name'),
+        (key: 'tech',      label:'Technology Name'),
+        (key: 'fieldName', label:'Physical Attribute Name'),
+        (key: 'objType',   label:'Physical Object Type'),
+        (key: 'container', label:'Physical Object Container Name'),
+        (key: 'typeName',  label:'Physical Object Name'),
+        (key: 'typeDesc',  label:'Physical Object Description'),
+        (key: 'fieldTerm', label:'Business Term'),
+        (key: 'fieldDesc', label:'Attribute Business Description'),
+    ];
+    let headings = $`${cols >> .label::, }`;
+
+    let rows = (dd orderby [.container, .typeName, .fieldName]) >>
+        $`${.action}, ${.plat}, ${.tech}, ${.fieldName}, ${.objType}, ${.container}, ${.typeName}, "${.typeDesc}", ${.fieldTerm}, "${.fieldDesc}"`;
+    $`${(rows | {(@: -1, @item: headings)}) >> . ::\n}`
+;
+
+toCsv(toDataDict(model))

@@ -1,6 +1,7 @@
 package integrationdiagram
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/alecthomas/assert"
@@ -82,7 +83,6 @@ func TestGenerateMermaidIntegrationDiagramWithoutApp(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
 }
-
 func TestGenerateMermaidIntegrationDiagraMultipleApps(t *testing.T) {
 	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
@@ -94,4 +94,49 @@ func TestGenerateMermaidIntegrationDiagraMultipleApps(t *testing.T) {
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
+}
+
+func TestGenerateMermaidIntegrationDiagraMultipleAppsWithUnrelated(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	apps := []string{"Visa", "MasterCard", "ShouldNotDisplay"}
+	r, err := GenerateMultipleAppIntegrationDiagram(m, apps)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(r, "Visa"))
+	assert.True(t, strings.Contains(r, "MasterCard"))
+}
+
+func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantApps(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	apps := []string{"MegaDatabase"}
+	r, err := GenerateMultipleAppIntegrationDiagram(m, apps)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(r, "MegaDatabase"))
+	assert.True(t, strings.Contains(r, ` IdentityServer["IdentityServer"] --> MegaDatabase["MegaDatabase"]`))
+}
+
+func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantAppsCallInConditional(t *testing.T) {
+	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	apps := []string{"Visa"}
+	r, err := GenerateMultipleAppIntegrationDiagram(m, apps)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(r, "Visa"))
+	assert.True(t, strings.Contains(r, `PaymentServer["PaymentServer"] --> Visa["Visa"]`))
+}
+
+func TestPrintClassStatementWithSpaces(t *testing.T) {
+	r := printClassStatement("my application")
+	expected := "    my_application\n"
+	assert.Equal(t, expected, r)
 }
