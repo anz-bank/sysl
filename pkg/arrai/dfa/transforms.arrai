@@ -1,0 +1,44 @@
+\apps (
+    let typeGrammar = {:
+        //grammar.lang.wbnf[grammar]:
+        types -> app=(\w+) "." type=(\w+):".";
+    :};
+    let typeTuple = \type (
+        (//grammar -> .parse(typeGrammar, 'types', type))
+        -> let typeCount = .type count;
+        cond (typeCount) {
+            (1): (
+                :.app,
+                :.type,
+                field: ''
+            ),
+            _: let field = .type(typeCount-1);
+            (
+                :.app,
+                type: .type without (@:typeCount-1, @item: field),
+                :field
+            )
+        }
+    );
+    apps => (
+        let app = .@;
+        .@value => (
+            let ep = .@;
+            let ret = .@value.stmt?.a:{} where .@item.ret?:false;
+            (
+                ret => let currType = typeTuple(.@item.ret.payload);
+                    (:app, :ep, from: currType, to: currType)
+            ) | (
+                    (
+                        ret => let currType = typeTuple(.@item.ret.payload);
+                            ret.attr?.dataflow?:{} => (
+                            :app,
+                            :ep,
+                            from: typeTuple(.@item),
+                            to: currType
+                        )
+                ) -> //rel.union(.)
+            )
+        ) -> //rel.union(.)
+    ) -> //rel.union(.)
+)
