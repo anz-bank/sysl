@@ -1,0 +1,36 @@
+\apps (
+    # let transforms = //{./transforms.arrai}(apps);
+    let payloadGrammar = {:
+                            //grammar.lang.wbnf[grammar]:
+                            payload -> (("ok"|"error"|[1-5][0-9][0-9]) "<:")? type=[\w.]+;
+                            .wrapRE -> /{\s*()\s*};
+                        :};
+    (
+        apps => (
+            # TODO: handle multipart app name 
+            let appName = .@;
+            (
+                .@value('endpoints')?:{} => (
+                    let epName = .@;
+                    let calls = .@value('stmt')?.a:{} where .@item('call')?:false;
+                    (
+                        calls =>
+                            let appTarget = //seq.join('::', .@item('call', 'target', 'part').a >> .s);
+                            let epTarget = .@item('call', 'endpoint').s;
+                            let retTarget = apps(appTarget, 'endpoints', epTarget, 'stmt')?.a:{} where .@item('ret')?:false;
+                            # TODO: handle rest endpoint
+                            (
+                                retTarget =>
+                                    let payloadStr = .@item('ret', 'payload').s;
+                                    (
+                                        caller: (app: appName, ep: epName),
+                                        callee: (app: appTarget, ep: epTarget),
+                                        type: //grammar -> .parse(payloadGrammar, 'payload', payloadStr).type.''
+                                    )
+                            )
+                    ) -> //rel.union(.)
+                )
+            ) -> //rel.union(.)
+        )
+    ) -> //rel.union(.)
+)
