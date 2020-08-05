@@ -1,7 +1,7 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
 # Extracts the set of pattern attributes of an element.
-let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item => .@item.s;
+let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 
 # A macro to convert `ret` statement payload string to structured tuples.
 let payloadMacro = (
@@ -18,15 +18,10 @@ let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload);
 # Replaces all `ret` payloads with structured tuples.
 let polishReturns = \m
     let tweak = \.
-        . +> (@item: .@item +> 
-                    (ret: .@item.ret +> 
-                         (payload: parseReturn(.@item.ret.payload))));
+        . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
 
-    m.apps?:{} >> \a a.endpoints?:{} >> \p p.stmt?:[] >> 
-        cond {
-            .@item.ret?:{}: tweak(.),
-            _: .,
-        }
+    m.apps?:{} >> \a a.endpoints?:{} >> \p p.stmt?:[] >> \s
+        cond s.ret?:{} {{}: s, _: tweak(s)}
 ;
 
 # Applies polish functions to the appropriate elements of a Sysl model.
@@ -52,15 +47,15 @@ let normalize = \m
     );
     let calls = //rel.union(m.apps => \(@:appName, @value:app)
         //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
-            ep.stmt?:{} where .@item.@item.call?:{} => 
+            ep.stmt?:{} where .@item.call?:{} => 
                 (
                     from: (
                         :appName,
                         :epName,
                     ),
                     to: (
-                        appName: .@item.@item.call.target.part.@item.@item,
-                        epName: .@item.@item.call.endpoint,
+                        appName: .@item.call.target.part.@item,
+                        epName: .@item.call.endpoint,
                     ),
                     # TODO: Use stmt.source_context once populated by parser.
                     # https://github.com/anz-bank/sysl/issues/990
@@ -90,7 +85,7 @@ let normalize = \m
                         _: '?',
                     },
                     fk: cond f.type_ref?.ref.path:{} {
-                        [a, b]: (type:$`${appName}.${a.@item}`, field:b.@item)
+                        [a, b]: (type:$`${appName}.${a}`, field:b)
                     },
                     :patterns,
                     pk: !!({'pk'} & patterns),
