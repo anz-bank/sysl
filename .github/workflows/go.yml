@@ -168,20 +168,20 @@ jobs:
         with:
           golangci_lint_version: 1.23.8
 
-  build-examples:
-    name: Build Examples
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Set up Go 1.13
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.13
+  # build-examples:
+  #   name: Build Examples
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, macOS-latest]
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - name: Set up Go 1.13
+  #       uses: actions/setup-go@v2
+  #       with:
+  #         go-version: 1.13
 
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
+  #     - name: Check out code into the Go module directory
+  #       uses: actions/checkout@v2
 
-      - name: Build the examples into docs/website
-        run: make examples
+  #     - name: Build the examples into docs/website
+  #       run: make examples

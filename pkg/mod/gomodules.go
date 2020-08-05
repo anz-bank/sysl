@@ -52,7 +52,8 @@ func (d *goModules) Get(filename, ver string, m *Modules) (mod *Module, err erro
 func (*goModules) Find(filename, ver string, m *Modules) *Module {
 	for i, mod := range *m {
 		if hasPathPrefix(mod.Name, filename) {
-			if i != 0 && ver != "" && ver != "master" && mod.Version != ver {
+			if (i == 0 && ver != "" && ver != MasterBranch) ||
+				(i != 0 && mod.Version != "" && ver != "" && ver != MasterBranch && mod.Version != ver) {
 				continue
 			}
 			return mod

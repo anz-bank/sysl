@@ -8,8 +8,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-var SyslModules = os.Getenv("SYSL_MODULES") != "off"
-var GitHubMode = os.Getenv("SYSL_GITHUB") == "on"
+var SyslModules = os.Getenv("SYSL_MODULES") != SyslModulesOff
+var GitHubMode = os.Getenv("SYSL_MODULES") == SyslModulesGitHub
+
+const (
+	SyslModulesOff    = "off"
+	SyslModulesOn     = "on"
+	SyslModulesGitHub = "github"
+	MasterBranch      = "master"
+)
 
 type Module struct {
 	Name    string // "github.com/anz-bank/sysl"
@@ -35,23 +42,16 @@ func (m *Modules) Len() int {
 	return len(*m)
 }
 
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
-}
-
 func Find(name string, ver string) (*Module, error) {
-	if !fileExists("go.mod") {
-		return nil, errors.New("no go.mod file, run `go mod init` first")
-	}
-
 	var manager DependencyManager
 	if GitHubMode {
-		manager = &githubMgr{}
+		gh := &githubMgr{}
+		gh.Init()
+		manager = gh
 	} else {
+		if !fileExists("go.mod") {
+			return nil, errors.New("no go.mod file, run `go mod init` first")
+		}
 		manager = &goModules{}
 	}
 
@@ -78,4 +78,12 @@ func hasPathPrefix(prefix, s string) bool {
 	}
 
 	return s == prefix
+}
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
 }

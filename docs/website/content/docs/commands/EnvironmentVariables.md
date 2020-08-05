@@ -18,4 +18,4 @@ For more details, refer to [Install](/docs/install/)
 
 ## SYSL_MODULES
 
-`export SYSL_MODULES=true` is a flag to indicate whether Sysl modules are enabled. By default, if this is not declared, Sysl modules are enabled.
+`export SYSL_MODULES=on` is a flag to indicate whether Sysl modules are enabled. By default, if this is not declared, Sysl modules are enabled.

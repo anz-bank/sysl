@@ -19,8 +19,8 @@ type githubMgr struct{}
 
 var syslModulesCacheDir string
 
-func init() {
-	if GitHubMode {
+func (*githubMgr) Init() {
+	if client == nil {
 		client = github.NewClient(nil)
 
 		usr, err := user.Current()
@@ -65,8 +65,12 @@ func (*githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 	dir := filepath.Join(syslModulesCacheDir, name)
 	dir = AppendVersion(dir, ver)
 	fname := filepath.Join(dir, path)
-	_, err = os.Stat(fname)
-	if os.IsNotExist(err) {
+	new := &Module{
+		Name:    strings.Join([]string{"github.com", owner, repo}, "/"),
+		Dir:     dir,
+		Version: ver,
+	}
+	if !fileExists(fname) {
 		if err = os.MkdirAll(filepath.Dir(fname), 0770); err != nil {
 			return nil, err
 		}
@@ -78,20 +82,14 @@ func (*githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 			return nil, err
 		}
 		defer file.Close()
+		m.Add(new)
 	}
-
-	new := &Module{
-		Name:    name,
-		Dir:     dir,
-		Version: ver,
-	}
-	m.Add(new)
 
 	return new, nil
 }
 
 func (*githubMgr) Find(filename, ver string, m *Modules) *Module {
-	if ver == "" || ver == "master" {
+	if ver == "" || ver == MasterBranch {
 		return nil
 	}
 
@@ -113,7 +111,6 @@ func (*githubMgr) Load(m *Modules) error {
 		return err
 	}
 
-	// owners, err := ioutil.ReadDir(githubDir.Name())
 	owners, err := githubDir.Readdirnames(-1)
 	if err != nil {
 		return err
@@ -131,9 +128,6 @@ func (*githubMgr) Load(m *Modules) error {
 		for _, repo := range repos {
 			p, ver := ExtractVersion(repo)
 			name := filepath.Join("github.com", owner, p)
-			// fmt.Println(name)
-			// fmt.Println(filepath.Join(syslModulesCacheDir, "github.com", repo))
-			// fmt.Println(ver)
 			m.Add(&Module{
 				Name:    name,
 				Dir:     filepath.Join(ownerDir.Name(), repo),
