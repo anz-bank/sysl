@@ -1,6 +1,6 @@
 # Generates a Terraform google_data_catalog_entry resource based on the table specs in model.sysl.
 
-let model = //{./load_model};
+let model = //{./sysl}.load('out/model.pb');
 
 let getDescription = \t //seq.trim_suffix('\n', t.attrs?('description')?.s:{});
 
