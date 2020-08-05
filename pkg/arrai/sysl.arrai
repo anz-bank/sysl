@@ -1,5 +1,8 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
+# Extracts the set of pattern attributes of an element.
+let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
+
 # A macro to convert `ret` statement payload string to structured tuples.
 let payloadMacro = (
     @grammar: {://grammar.lang.wbnf:
@@ -15,15 +18,10 @@ let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload);
 # Replaces all `ret` payloads with structured tuples.
 let polishReturns = \m
     let tweak = \.
-        . +> (@item: .@item +> 
-                    (ret: .@item.ret +> 
-                         (payload: parseReturn(.@item.ret.payload))));
+        . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
 
-    m.apps?:{} >> \a a.endpoints?:{} >> \p p.stmt?:[] >> 
-        cond {
-            .@item.ret?:{}: tweak(.),
-            _: .,
-        }
+    m.apps?:{} >> \a a.endpoints?:{} >> \p p.stmt?:[] >> \s
+        cond s.ret?:{} {{}: s, _: tweak(s)}
 ;
 
 # Applies polish functions to the appropriate elements of a Sysl model.
@@ -32,8 +30,86 @@ let polish = \m
     # TODO: More polish.
 ;
 
+# Returns a normalised, relational model of a Sysl model.
+let normalize = \m
+    let apps = m.apps => \(@:appName, @value:app)
+        (
+            :appName,
+            appPatterns: patterns(app),
+        )
+    ;
+    let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
+        app.endpoints?:{} => \(@:epName, ...)
+            (
+                :appName,
+                :epName,
+            )
+    );
+    let calls = //rel.union(m.apps => \(@:appName, @value:app)
+        //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
+            ep.stmt?:{} where .@item.call?:{} => 
+                (
+                    from: (
+                        :appName,
+                        :epName,
+                    ),
+                    to: (
+                        appName: .@item.call.target.part.@item,
+                        epName: .@item.call.endpoint,
+                    ),
+                    # TODO: Use stmt.source_context once populated by parser.
+                    # https://github.com/anz-bank/sysl/issues/990
+                    sourceContext: ep.source_context +> (:.@),
+                )
+        )
+    );
+    let types = //rel.union(m.apps => \(@:appName, @value:app)
+        app.types?:{} => \(@:typeName, @value: t)
+            (
+                :appName,
+                :typeName,
+            )
+        ) where .
+    ;
+    let fields = //rel.union(m.apps => \(@:appName, @value:app)
+        //rel.union(app.types?:{} => \(@:typeName, @value:type)
+            (type.relation).attr_defs?:{} => \(@:fieldName, @value:f)
+                let patterns = patterns(f);
+                (
+                    :appName,
+                    :typeName,
+                    :fieldName,
+                    fieldType: cond f {
+                        (primitive:p, ...): p,
+                        (type_ref:(ref:(path:p)), ...): //seq.join('.', p => .@item),
+                        _: '?',
+                    },
+                    fk: cond f.type_ref?.ref.path:{} {
+                        [a, b]: (type:$`${appName}.${a}`, field:b)
+                    },
+                    :patterns,
+                    pk: !!({'pk'} & patterns),
+                    opt: f.opt?:{},
+                )
+        ) where .
+    );
+
+    (
+        :apps,
+        :endpoints,
+        :calls,
+        :types,
+        :fields,
+        # TODO:
+        # :annotations, (aka attributes)
+        # :tags, (aka patterns)
+    )
+;
+
 # Export the functions from the module.
 (
+    :normalize,
     :parseReturn,
+    :patterns,
     :polish,
 )

@@ -29,4 +29,4 @@ Bar             }o--|| Foo
 @enduml
 ```
 
-![Data diagram](gen/data_diagram.svg)
+![Data diagram](out/data_diagram.svg)

@@ -6,11 +6,12 @@ OUT=out
 # Raw targets that are generated directly by arr.ai.
 RAW=$(OUT)/data_dictionary.csv \
 	$(OUT)/terraform_gdc.tf \
-	$(OUT)/sysl_demo.arrai
+	$(OUT)/sysl_polish.arrai
 
 # Diagram targets that require rendering.
 DIAGRAMS=$(OUT)/data_diagram.svg \
-		 $(OUT)/integration_diagram.svg
+		 $(OUT)/integration_diagram.svg \
+		 $(OUT)/sequence_diagram.svg
 
 all: raw diagrams compare
 

@@ -1,0 +1,144 @@
+{
+  'A': {
+    'Fetch': [
+      (
+        call: (
+          endpoint: 'Read',
+          target: (
+            part: ['Source']
+          )
+        )
+      )
+    ]
+  },
+  'B': {
+    'Fetch': [
+      (
+        call: (
+          endpoint: 'Read',
+          target: (
+            part: ['Source']
+          )
+        )
+      )
+    ]
+  },
+  'C': {
+    'Fetch': [
+      (
+        call: (
+          endpoint: 'FetchA',
+          target: (
+            part: ['C']
+          )
+        )
+      ),
+      (
+        call: (
+          endpoint: 'FetchB',
+          target: (
+            part: ['C']
+          )
+        )
+      )
+    ],
+    'FetchA': [
+      (
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['A']
+          )
+        )
+      )
+    ],
+    'FetchB': [
+      (
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['B']
+          )
+        )
+      )
+    ]
+  },
+  'Client': {
+    'Do': [
+      (
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['D']
+          )
+        )
+      )
+    ]
+  },
+  'D': {
+    'Fetch': [
+      (
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['A']
+          )
+        )
+      ),
+      (
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['C']
+          )
+        )
+      )
+    ]
+  },
+  'Source': {
+    'Read': [
+      (
+        ret: (
+          payload: (
+            status: 'ok',
+            type: 'Foo'
+          )
+        )
+      )
+    ]
+  },
+  'all': {
+    'all': [
+      (
+        action: (
+          action: 'Source'
+        )
+      ),
+      (
+        action: (
+          action: 'Client'
+        )
+      ),
+      (
+        action: (
+          action: 'A'
+        )
+      ),
+      (
+        action: (
+          action: 'B'
+        )
+      ),
+      (
+        action: (
+          action: 'C'
+        )
+      ),
+      (
+        action: (
+          action: 'D'
+        )
+      )
+    ]
+  }
+}
