@@ -4,7 +4,7 @@
 
 # Invokes a macro on a string as if it were source code at parsing time.
 let invokeMacro = \macro \s
-    macro -> (//dict(.@transform) >>> \rule \fn 
+    macro -> (//dict(.@transform) >>> \rule \fn
         fn(//grammar.parse(.@grammar, rule, s))).@value
 ;
 

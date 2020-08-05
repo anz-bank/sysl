@@ -19,7 +19,7 @@ Source[~db]:
             @description = "A foreign key"
 
     Read:
-        return ok <: Foo
+        return ok <: Foo [dataflow=["test", "testsss"], ~Test+Again, test="Test", more_test=[["a", "b", "c"], ["w", "a", "s", "d"]]]
 
 A:
     Fetch:

@@ -1,0 +1,149 @@
+‚
+all{
+
+all*Y
+allR
+all:
+
+Source:
+
+Client:
+A:
+B:
+C:
+Dš
+
+model.sysl5<š
+
+model.sysl44Ü
+SourceÑ
+
+Source"
+patterns:
+"db"+
+description"A database.
+ Stores data.
+*¥
+Readœ
+Read:yBw
+uok <: Foo [dataflow=["test", "testsss"], ~Test+Again, test="Test", more_test=[["a", "b", "c"], ["w", "a", "s", "d"]]]š
+
+model.sysl2ñ
+FooéB0
+description!"A Foo.
+ Represents foo things.
+š
+
+model.sysl:™
+A
+x<B
+description"The x value.š
+
+model.sysl
+
+T
+yOB0
+description!"A Foo.
+ Represents foo things.
+š
+
+model.sysl2Ê
+BarÂB
+description"A bar table.š
+
+model.sysl:…
+]
+xXB
+description"A foreign keyš
+
+model.syslJ
+
+
+SourceBarFoox
+W
+aRB
+patterns:
+"pkB
+description"A bar table.š
+
+model.sysl
+F
+bAB 
+description"An optional int`š
+
+model.sysl
+aš
+
+model.sysl
+d
+A_
+
+A*?
+Fetch6
+Fetch:
+
+SourceReadš
+
+model.syslš
+
+model.sysld
+B_
+
+B*?
+Fetch6
+Fetch:
+
+SourceReadš
+
+model.sysl š
+
+model.syslñ
+Cë
+
+C*=
+FetchA3
+FetchA:
+
+AFetchš
+
+model.sysl!$*=
+FetchB3
+FetchB:
+
+BFetchš
+
+model.sysl$'*M
+FetchD
+Fetch:
+
+CFetchA:
+
+CFetchBš
+
+model.sysl'+š
+
+model.sysl  p
+Dk
+
+D*K
+FetchB
+Fetch:
+
+AFetch:
+
+CFetchš
+
+model.sysl,0š
+
+model.sysl++d
+ClientZ
+
+Client*5
+Do/
+Do:
+
+DFetchš
+
+model.sysl14š
+
+model.sysl00
