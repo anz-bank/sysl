@@ -1,6 +1,6 @@
 # Generates the PlantUML for an integration diagram of model.sysl.
 
-let rel = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
 
 # Transforms a module to an adjacency list of applications.
 #
@@ -22,4 +22,4 @@ let toInt = \adj $`
     @enduml
 `;
 
-toInt(toAdj(rel))
+toInt(toAdj(model))

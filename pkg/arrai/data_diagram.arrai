@@ -11,9 +11,11 @@ let toTables = \m
 # Used to draw FK relationship cardinality of the target.
 let zo = \f cond {f.opt: 'o', _: '|'};
 
-# Returns an array of strings representing columns as entity fields.
+# Returns an array of strings representing each column as an entity field.
 let toRows = \cols cols orderby .fieldName >> 
-    $`${cond !.opt || .pk {true: '*'}}${.fieldName} : ${.fieldType}${cond {.fk: ' <<FK>>'}}`;
+    let name = $`${cond {(!.opt || .pk): '* '}}${.fieldName}`;
+    let type = $`${cond {.fk: $`**${.fieldType}** <<FK>>`, _: //str.lower(.fieldType)}}`;
+    $`${name} : ${type}`;
 
 # Transforms tables to an entity-relationship diagram.
 let toErd = \tables $`
@@ -26,15 +28,15 @@ let toErd = \tables $`
     skinparam stereotypeCBackgroundColor Orchid
     hide methods
 
-    ${tables orderby .typeName >> \(:typeName, columns:cols, ...) $`
-    entity ${typeName} {
+    ${tables orderby .typeName >> \(:appName, :typeName, columns:cols, ...) $`
+    entity ${appName}.${typeName} {
       ${toRows(cols where .pk) ++ cond {cols where .pk: ['--']} ++ toRows(cols where !.pk)::\i}
     }`
     ::\n\n}
 
-    ${tables orderby .typeName >> \(:typeName, :columns, ...)
+    ${tables orderby .typeName >> \(:appName, :typeName, :columns, ...)
         let fks = columns where .fk orderby .;
-        $`${fks >> $`${typeName:-15s} }o--${zo(.)}| ${.fk.type}`::\i}`
+        $`${fks >> $`${appName}.${typeName:-15s} }o--${zo(.)}| ${.fk.appName}.${.fk.typeName}`::\i}`
     ::\i}
     @enduml
 `;
