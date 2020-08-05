@@ -1,6 +1,6 @@
 # A demo of the `polish` function in `sysl.arrai` applied to `model.sysl`.
 
-let model = //{./load_model};
+let model = //{./sysl}.load('out/model.pb');
 
 let out = //{./sysl}.polish(model);
 
