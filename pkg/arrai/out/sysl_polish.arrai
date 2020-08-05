@@ -2,18 +2,10 @@
   'A': {
     'Fetch': [
       (
-        @: 0,
-        @item: (
-          call: (
-            endpoint: 'Read',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'Source'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'Read',
+          target: (
+            part: ['Source']
           )
         )
       )
@@ -22,18 +14,10 @@
   'B': {
     'Fetch': [
       (
-        @: 0,
-        @item: (
-          call: (
-            endpoint: 'Read',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'Source'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'Read',
+          target: (
+            part: ['Source']
           )
         )
       )
@@ -42,70 +26,38 @@
   'C': {
     'Fetch': [
       (
-        @: 0,
-        @item: (
-          call: (
-            endpoint: 'FetchA',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'C'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'FetchA',
+          target: (
+            part: ['C']
           )
         )
       ),
       (
-        @: 1,
-        @item: (
-          call: (
-            endpoint: 'FetchB',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'C'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'FetchB',
+          target: (
+            part: ['C']
           )
         )
       )
     ],
     'FetchA': [
       (
-        @: 0,
-        @item: (
-          call: (
-            endpoint: 'Fetch',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'A'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['A']
           )
         )
       )
     ],
     'FetchB': [
       (
-        @: 0,
-        @item: (
-          call: (
-            endpoint: 'Fetch',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'B'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['B']
           )
         )
       )
@@ -114,18 +66,10 @@
   'Client': {
     'Do': [
       (
-        @: 0,
-        @item: (
-          call: (
-            endpoint: 'Fetch',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'D'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['D']
           )
         )
       )
@@ -134,34 +78,18 @@
   'D': {
     'Fetch': [
       (
-        @: 0,
-        @item: (
-          call: (
-            endpoint: 'Fetch',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'A'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['A']
           )
         )
       ),
       (
-        @: 1,
-        @item: (
-          call: (
-            endpoint: 'Fetch',
-            target: (
-              part: [
-                (
-                  @: 0,
-                  @item: 'C'
-                )
-              ]
-            )
+        call: (
+          endpoint: 'Fetch',
+          target: (
+            part: ['C']
           )
         )
       )
@@ -170,13 +98,10 @@
   'Source': {
     'Read': [
       (
-        @: 0,
-        @item: (
-          ret: (
-            payload: (
-              status: 'ok',
-              type: 'Foo'
-            )
+        ret: (
+          payload: (
+            status: 'ok',
+            type: 'Foo'
           )
         )
       )
@@ -185,51 +110,33 @@
   'all': {
     'all': [
       (
-        @: 0,
-        @item: (
-          action: (
-            action: 'Source'
-          )
+        action: (
+          action: 'Source'
         )
       ),
       (
-        @: 1,
-        @item: (
-          action: (
-            action: 'Client'
-          )
+        action: (
+          action: 'Client'
         )
       ),
       (
-        @: 2,
-        @item: (
-          action: (
-            action: 'A'
-          )
+        action: (
+          action: 'A'
         )
       ),
       (
-        @: 3,
-        @item: (
-          action: (
-            action: 'B'
-          )
+        action: (
+          action: 'B'
         )
       ),
       (
-        @: 4,
-        @item: (
-          action: (
-            action: 'C'
-          )
+        action: (
+          action: 'C'
         )
       ),
       (
-        @: 5,
-        @item: (
-          action: (
-            action: 'D'
-          )
+        action: (
+          action: 'D'
         )
       )
     ]
