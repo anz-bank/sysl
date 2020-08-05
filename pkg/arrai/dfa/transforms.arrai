@@ -1,21 +1,22 @@
 \apps (
+    # TODO: Handle type without app reference
     let typeGrammar = {:
         //grammar.lang.wbnf[grammar]:
-        types -> app=(\w+) "." type=(\w+):".";
+        types -> app=([\w\_]+) "." type=([\w\_]+):".";
     :};
     let typeTuple = \type (
         (//grammar -> .parse(typeGrammar, 'types', type))
         -> let typeCount = .type count;
         cond (typeCount) {
             (1): (
-                :.app,
-                :.type,
+                app  : .app.'',
+                type : .type >> .'',
                 field: ''
             ),
             _: let field = .type(typeCount-1);
             (
-                :.app,
-                type: .type without (@:typeCount-1, @item: field),
+                app : .app.'',
+                type: .type without (@:typeCount-1, @item: field) >> .@item.'',
                 :field
             )
         }
@@ -24,13 +25,13 @@
         let app = .@;
         .@value => (
             let ep = .@;
-            let ret = .@value.stmt?.a:{} where .@item.ret?:false;
+            let ret = .@value where .@item.ret?:false;
             (
-                ret => let currType = typeTuple(.@item.ret.payload);
+                ret => let currType = typeTuple(.@item.ret.payload.type);
                     (:app, :ep, from: currType, to: currType)
             ) | (
                     (
-                        ret => let currType = typeTuple(.@item.ret.payload);
+                        ret => let currType = typeTuple(.@item.ret.payload.type);
                             ret.attr?.dataflow?:{} => (
                             :app,
                             :ep,
