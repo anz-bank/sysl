@@ -1,0 +1,340 @@
+(
+  apps: {
+    (
+      appName: 'A',
+      appPatterns: {}
+    ),
+    (
+      appName: 'B',
+      appPatterns: {}
+    ),
+    (
+      appName: 'C',
+      appPatterns: {}
+    ),
+    (
+      appName: 'Client',
+      appPatterns: {}
+    ),
+    (
+      appName: 'D',
+      appPatterns: {}
+    ),
+    (
+      appName: 'Source',
+      appPatterns: {'db'}
+    ),
+    (
+      appName: 'all',
+      appPatterns: {}
+    )
+  },
+  calls: {
+    (
+      from: (
+        appName: 'A',
+        epName: 'Fetch'
+      ),
+      sourceContext: (
+        @: 0,
+        end: (
+          col: 1,
+          line: 28
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 25
+        )
+      ),
+      to: (
+        appName: 'Source',
+        epName: 'Read'
+      )
+    ),
+    (
+      from: (
+        appName: 'B',
+        epName: 'Fetch'
+      ),
+      sourceContext: (
+        @: 0,
+        end: (
+          col: 1,
+          line: 32
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 29
+        )
+      ),
+      to: (
+        appName: 'Source',
+        epName: 'Read'
+      )
+    ),
+    (
+      from: (
+        appName: 'C',
+        epName: 'Fetch'
+      ),
+      sourceContext: (
+        @: 0,
+        end: (
+          col: 1,
+          line: 43
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 39
+        )
+      ),
+      to: (
+        appName: 'C',
+        epName: 'FetchA'
+      )
+    ),
+    (
+      from: (
+        appName: 'C',
+        epName: 'Fetch'
+      ),
+      sourceContext: (
+        @: 1,
+        end: (
+          col: 1,
+          line: 43
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 39
+        )
+      ),
+      to: (
+        appName: 'C',
+        epName: 'FetchB'
+      )
+    ),
+    (
+      from: (
+        appName: 'C',
+        epName: 'FetchA'
+      ),
+      sourceContext: (
+        @: 0,
+        end: (
+          col: 4,
+          line: 36
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 33
+        )
+      ),
+      to: (
+        appName: 'A',
+        epName: 'Fetch'
+      )
+    ),
+    (
+      from: (
+        appName: 'C',
+        epName: 'FetchB'
+      ),
+      sourceContext: (
+        @: 0,
+        end: (
+          col: 4,
+          line: 39
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 36
+        )
+      ),
+      to: (
+        appName: 'B',
+        epName: 'Fetch'
+      )
+    ),
+    (
+      from: (
+        appName: 'Client',
+        epName: 'Do'
+      ),
+      sourceContext: (
+        @: 0,
+        end: (
+          col: 3,
+          line: 52
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 49
+        )
+      ),
+      to: (
+        appName: 'D',
+        epName: 'Fetch'
+      )
+    ),
+    (
+      from: (
+        appName: 'D',
+        epName: 'Fetch'
+      ),
+      sourceContext: (
+        @: 0,
+        end: (
+          col: 6,
+          line: 48
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 44
+        )
+      ),
+      to: (
+        appName: 'A',
+        epName: 'Fetch'
+      )
+    ),
+    (
+      from: (
+        appName: 'D',
+        epName: 'Fetch'
+      ),
+      sourceContext: (
+        @: 1,
+        end: (
+          col: 6,
+          line: 48
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 4,
+          line: 44
+        )
+      ),
+      to: (
+        appName: 'C',
+        epName: 'Fetch'
+      )
+    )
+  },
+  endpoints: {
+    (
+      appName: 'A',
+      epName: 'Fetch'
+    ),
+    (
+      appName: 'B',
+      epName: 'Fetch'
+    ),
+    (
+      appName: 'C',
+      epName: 'Fetch'
+    ),
+    (
+      appName: 'C',
+      epName: 'FetchA'
+    ),
+    (
+      appName: 'C',
+      epName: 'FetchB'
+    ),
+    (
+      appName: 'Client',
+      epName: 'Do'
+    ),
+    (
+      appName: 'D',
+      epName: 'Fetch'
+    ),
+    (
+      appName: 'Source',
+      epName: 'Read'
+    ),
+    (
+      appName: 'all',
+      epName: 'all'
+    )
+  },
+  fields: {
+    (
+      appName: 'Source',
+      fieldName: 'a',
+      fieldType: 'STRING',
+      fk: {},
+      opt: {},
+      patterns: {'pk'},
+      pk: {
+        (        )
+      },
+      typeName: 'Bar'
+    ),
+    (
+      appName: 'Source',
+      fieldName: 'b',
+      fieldType: 'INT',
+      fk: {},
+      opt: {
+        (        )
+      },
+      patterns: {},
+      pk: {},
+      typeName: 'Bar'
+    ),
+    (
+      appName: 'Source',
+      fieldName: 'x',
+      fieldType: 'Foo.x',
+      fk: (
+        appName: 'Source',
+        fieldName: 'x',
+        typeName: 'Foo'
+      ),
+      opt: {},
+      patterns: {},
+      pk: {},
+      typeName: 'Bar'
+    ),
+    (
+      appName: 'Source',
+      fieldName: 'x',
+      fieldType: 'INT',
+      fk: {},
+      opt: {},
+      patterns: {},
+      pk: {},
+      typeName: 'Foo'
+    ),
+    (
+      appName: 'Source',
+      fieldName: 'y',
+      fieldType: 'INT',
+      fk: {},
+      opt: {},
+      patterns: {},
+      pk: {},
+      typeName: 'Foo'
+    )
+  },
+  types: {
+    (
+      appName: 'Source',
+      typeName: 'Bar'
+    ),
+    (
+      appName: 'Source',
+      typeName: 'Foo'
+    )
+  }
+)
