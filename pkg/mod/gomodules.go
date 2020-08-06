@@ -55,7 +55,7 @@ func (*goModules) Find(filename, ver string, m *Modules) *Module {
 			fmt.Println(mod, filename, ver)
 
 			if i == 0 && ver != "" && ver != MasterBranch {
-				logrus.Warn("specified version of dependencies in current working directory is not supported: use local importing instead")
+				logrus.Warn("importing files from current folder in remote way is incorrect: use local importing instead")
 			}
 			if i == 0 || ver == "" || ver == MasterBranch || ver == mod.Version {
 				fmt.Println("---")
