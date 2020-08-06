@@ -12,10 +12,11 @@ let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 # TODO: handle dynamic type (int, float etc)
 let payloadMacro = (
     @grammar: {://grammar.lang.wbnf:
-        payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^ \t\[]* attr?;
-        attr -> %!Array(nvp);
-        nvp -> "dataflow={" df=[^}]* "}" | name=\w+ "=" nvp_item;
-        nvp_item -> ('"' [^""]+ '"') | %!Array(nvp_item);
+        payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^\_\t\[]* attr?;
+        attr -> %!Array(nvp|modifier);
+        nvp_item -> ('"' ([^"\\] | [\\][\\brntu'"])* '"' | "'" ([^''])* "'") | %!Array(nvp_item);
+        nvp ->  name=\w+ "=" nvp_item;
+        modifier -> "~" name=[\w\+]+;
         .wrapRE -> /{\s*()\s*};
         .macro Array(child) {"[" (child):"," "]"}
     :},
