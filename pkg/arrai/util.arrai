@@ -33,6 +33,8 @@ let reduceFlat = \arr \fn \val
     reduce(arr, \z \i reduce(i, fn, z), val)
 ;
 
+let remOffset = \word word rank (:.@);
+
 # TODO: Handle type without app reference
 let typeGrammar = {:
         //grammar.lang.wbnf[grammar]:
@@ -44,14 +46,13 @@ let unpackType = \type (
     cond (typeCount) {
         (1): (
             app  : .app.'',
-            type : .type >> .'',
+            type : .type >> remOffset(.''),
             field: ''
         ),
-        _: let field = .type(typeCount-1).'';
-        (
-            app : .app.'',
-            type: .type where .@ != typeCount - 1 >> .'',
-            :field
+        _: (
+            app  : .app.'',
+            type : .type where .@ != typeCount - 1 >> remOffset(.''),
+            field: remOffset(.type(typeCount-1).'')
         )
     }
 );
@@ -62,4 +63,5 @@ let unpackType = \type (
     :reduce,
     :reduceFlat,
     :unpackType,
+    :remOffset,
 )

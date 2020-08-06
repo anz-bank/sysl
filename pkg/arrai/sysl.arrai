@@ -29,7 +29,7 @@ let rec buildNvp = \nvp cond nvp {
     _: //eval.value(//seq.join('', nvp.''))
 };
 
-let name = \name name rank (:.@);
+let name = //{./util}.remOffset;
 # Converts a return statement payload into a tuple of its parts.
 let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload) +> (
     attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:{} -> \attr
