@@ -21,14 +21,13 @@ type githubMgr struct {
 
 var syslModulesCacheDir string
 
-// https://github.com/SyslBot
-const SyslBotAccessToken = "bc4bc9289261323a0e7a50ee8001e118c0df832c" // nolint: gosec
+var githubAccessToken = os.Getenv("SYSL_GITHUB_TOKEN")
 
 func (d *githubMgr) Init() {
 	if d.client == nil {
 		// Authenticated clients can make up to 5,000 requests per hour.
 		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: SyslBotAccessToken},
+			&oauth2.Token{AccessToken: githubAccessToken},
 		)
 		tc := oauth2.NewClient(context.Background(), ts)
 
