@@ -1,0 +1,7 @@
+# A demo of the `normalize` function in `sysl.arrai` applied to `model.sysl`.
+
+let model = //{./sysl}.load('out/model.pb');
+
+let out = //{./sysl}.normalize(model);
+
+//fmt.pretty(out)
