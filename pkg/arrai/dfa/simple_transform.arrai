@@ -1,0 +1,35 @@
+let sysl = //{./../sysl};
+let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+
+let dataflow = \stmt
+    (stmt.ret?.payload.attr?.nvp?:{} => (@: .@ rank (:.@), :.@value))('dataflow')?:{};
+
+let split = \str
+    //{./../util}.invokeMacro((
+        @grammar: {://grammar.lang.wbnf:str -> a=\w+ ("." b=\w+)*; .wrapRE -> /{\s*()\s*};:},
+        @transform: (str: \s [s.a.''] ++ (s.b?:{} >> .'') ++ [{},{}]),
+    ), str)
+;
+let extract = \m \(:appName, :type, ...)
+    let [a, b, c, ...] = split(type);
+    cond {
+        {a} & (m.apps => .appName): (appName: a, typeName: b, fieldName: c),
+        {a} & (m.types => .typeName): (:appName, typeName: a, fieldName: b),
+        _: (:appName, typeName: {}, fieldName: {}),
+    }
+;
+
+let map = \m //rel.union(
+    m.stmts where .stmt.ret?:{} =>
+        let (:appName, :epName, :stmt, ...) = .;
+        let df = dataflow(stmt);
+        let base = (:appName, :epName, to: extract(m, . +> (:.stmt.ret.payload.type)));
+        cond df {
+            {}: {base +> (from: base.to, description: '1:1 transform')},
+            _: df => base +> (from: extract(m, (:appName, type: .@item)), description: '???'),
+        }
+);
+
+map(model)
+# //fmt.pretty(map(model))
+# //fmt.pretty(model.calls)

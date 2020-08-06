@@ -19,35 +19,62 @@ Source[~db]:
             @description = "A foreign key"
 
     Read:
-        return ok <: Foo [dataflow=["test", "testsss"], ~Test+Again, test="Test", more_test=[["a", "b", "c"], ["w", "a", "s", "d"]]]
+        return ok <: Foo
 
 A:
     Fetch:
         Source <- Read
+        return ok <: A.FetchResponse [dataflow=["Source.Foo.x", "Source.Foo.y"], description="1:1 transform"]
+
+    !type FetchResponse:
+        ax <: int
+        ay <: int
 
 B:
     Fetch:
         Source <- Read
+        return ok <: B.FetchResponse [dataflow=["Source.Foo.x", "Source.Foo.y"], description="1:1 transform"]
+
+    !type FetchResponse:
+        bx <: int
+        by <: int
 
 C:
     FetchA:
         A <- Fetch
+        return ok <: C.FetchResponse [dataflow=["A.FetchResponse.ax", "A.FetchResponse.ay"], description="1:1 transform"]
 
     FetchB:
         B <- Fetch
+        return ok <: C.FetchResponse [dataflow=["B.FetchResponse.bx", "B.FetchResponse.by"], description="1:1 transform"]
 
     Fetch:
         . <- FetchA
         . <- FetchB
+        return ok <: C.FetchResponse [dataflow=["A.FetchResponse.ax", "A.FetchResponse.ay", "B.FetchResponse.bx", "B.FetchResponse.by", "C.FetchResponse"], description="1:1 transform"]
+
+    !type FetchResponse:
+        cx <: int
+        cy <: int
 
 D:
     Fetch:
         A <- Fetch
         C <- Fetch
+        return ok <: D.FetchResponse [dataflow=["A.FetchResponse.ax", "A.FetchResponse.ay", "C.FetchResponse.cx", "C.FetchResponse.cy"], description="1:1 transform"]
+
+    !type FetchResponse:
+        dx <: int
+        dy <: int
 
 Client:
     Do:
         D <- Fetch
+        return ok <: Client.Screen [dataflow=["D.FetchResponse.dx", "D.FetchResponse.dy"], description="1:1 transform"]
+
+    !type Screen:
+        xx <: int
+        yy <: int
 
 all:
     all:

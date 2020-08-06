@@ -1,0 +1,53 @@
+let sysl = //{./../sysl};
+let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+
+let transforms = //{./simple_transform};
+
+# Returns a model of the lineage of a field.
+let flow = \m \(:appName, :typeName, :fieldName)
+    let rec join = \explored \frontier
+        let explored = explored | frontier;
+        # Find downstream transforms: places where the explored outputs are used.
+        let newFrontier = (frontier => \s
+            (transforms where \t
+                t.from.appName = s.to.appName && 
+                t.from.typeName = s.to.typeName &&
+                (m.calls where 
+                    (.to.appName = s.appName || !s.appName) &&
+                    (.to.epName = s.epName || !s.epName) &&
+                    .from.appName = t.appName &&
+                    .from.epName = t.epName)
+            ) => 
+                let . = . +> (in: (:s.appName, :s.epName));
+                cond {
+                    !s.to.fieldName: . +> (from: .from +> (fieldName: {})),
+                    _: .,
+                }
+        ) -> //rel.union(.) &~ explored;
+        cond {
+            newFrontier: join(explored, newFrontier),
+            _: explored,
+        }
+    ;
+
+    # TODO: fieldName?
+    let sources = transforms where .to.appName = appName && .to.typeName = typeName;
+    # let sources = {(appName: {}, epName: {}, to: (:appName, :typeName, :fieldName))};
+    join({}, sources)
+;
+
+# Returns the PlantUML for a diagram illustrating the flow.
+let draw = \flow \query
+    let label = \. $`${.appName}.${.typeName}${cond {.fieldName: $`.${.fieldName}`}}`;
+    $`
+        @startuml
+        title ${label(query)}
+        ${(flow where \x x.in?:{}) => $`
+            [${.in.appName}] "${.in.epName}" --> "${.epName}" [${.appName}] : ${label(.from)}
+        ` orderby .::\i}
+        @enduml
+    `
+;
+
+let query = (appName: 'Source', typeName: 'Foo', fieldName: 'x');
+draw(flow(model, query), query)
