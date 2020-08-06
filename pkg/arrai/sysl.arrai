@@ -32,11 +32,13 @@ let rec buildNvp = \nvp cond nvp {
 };
 # Converts a return statement payload into a tuple of its parts.
 let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload) +> (
-    attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:{} -> \attr
-            (
+    attr: cond //grammar.parse(payloadMacro.@grammar, 'payload', payload).attr?:{} {
+        {}: (),
+        attr: (
                 nvp: attr.nvp?:{} => (@: .@item.name.'', @value: buildNvp(.@item.nvp_item)),
                 modifier: attr.modifier?:{} => .@item.name.''
             )
+    }
 );
 
 # Replaces all `ret` payloads with structured tuples.
@@ -44,9 +46,13 @@ let polishReturns = \m
     let tweak = \.
         . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
 
-    m.apps?:{} >> \a a +> (endpoints: a.endpoints?:{} >> \p p +> (stmt: p.stmt?:[] >> \s
-        cond s.ret?:{} {{}: s, _: tweak(s)}
-    ))
+    m +> (apps: m.apps?:{} >> \a 
+        a +> (endpoints: a.endpoints?:{} >> \p 
+            p +> (stmt: p.stmt?:[] >> \s
+                cond s.ret?:{} {{}: s, _: tweak(s)}
+            )
+        )
+    )
 ;
 
 # Applies polish functions to the appropriate elements of a Sysl model.
@@ -63,42 +69,51 @@ let normalize = \m
             appPatterns: patterns(app),
         )
     ;
-    let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
+    let endpoints = (m.apps => \(@:appName, @value:app)
         app.endpoints?:{} => \(@:epName, ...)
             (
                 :appName,
                 :epName,
             )
-    );
-    let calls = //rel.union(m.apps => \(@:appName, @value:app)
-        //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
-            ep.stmt?:{} where .@item.call?:{} =>
+    ) -> //rel.union(.);
+    let stmts = (m.apps => \(@:appName, @value:app)
+        (app.endpoints?:{} => \(@:epName, @value:ep)
+            ep.stmt?:{} =>
                 (
-                    from: (
-                        :appName,
-                        :epName,
+                    :appName,
+                    :epName,
+                    stmt: .@item +> (
+                        # TODO: Use stmt.source_context once populated by parser.
+                        # https://github.com/anz-bank/sysl/issues/990
+                        source_context: ep.source_context +> (:.@),
                     ),
-                    to: (
-                        appName: .@item.call.target.part.@item,
-                        epName: .@item.call.endpoint,
-                    ),
-                    # TODO: Use stmt.source_context once populated by parser.
-                    # https://github.com/anz-bank/sysl/issues/990
-                    sourceContext: ep.source_context +> (:.@),
                 )
+        ) -> //rel.union(.)
+    ) -> //rel.union(.);
+    let calls = stmts where .stmt.call?:{} => \(:appName, :epName, :stmt)
+        (
+            from: (
+                :appName,
+                :epName,
+            ),
+            to: (
+                appName: stmt.call.target.part.@item,
+                epName: stmt.call.endpoint,
+            ),
+            :stmt.source_context,
         )
-    );
-    let types = //rel.union(m.apps => \(@:appName, @value:app)
+    ;
+    let types = (m.apps => \(@:appName, @value:app)
         app.types?:{} => \(@:typeName, @value: t)
             (
                 :appName,
                 :typeName,
             )
-        ) where .
+        ) -> //rel.union(.) where .
     ;
-    let fields = //rel.union(m.apps => \(@:appName, @value:app)
-        //rel.union(app.types?:{} => \(@:typeName, @value:type)
-            (type.relation).attr_defs?:{} => \(@:fieldName, @value:field)
+    let fields = (m.apps => \(@:appName, @value:app)
+        (app.types?:{} => \(@:typeName, @value:type)
+            type.relation?.attr_defs?:{} => \(@:fieldName, @value:field)
                 let patterns = patterns(field);
                 (
                     :appName,
@@ -116,8 +131,8 @@ let normalize = \m
                     pk: !!({'pk'} & patterns),
                     opt: field.opt?:{},
                 )
-        ) where .
-    );
+        ) -> //rel.union(.) where .
+    ) -> //rel.union(.);
 
     (
         :apps,
@@ -127,6 +142,7 @@ let normalize = \m
         :fields,
         # TODO:
         # :annotations, (aka attributes)
+        :stmts,
         # :tags, (aka patterns)
     )
 ;
