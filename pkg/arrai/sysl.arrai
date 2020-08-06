@@ -1,5 +1,10 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
+# Loads and returns a Sysl model.
+let load = \path
+    let syslDescriptor = //encoding.proto.descriptor(//os.file('sysl.pb'));
+    //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
+
 # Extracts the set of pattern attributes of an element.
 let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 
@@ -39,8 +44,9 @@ let polishReturns = \m
     let tweak = \.
         . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
 
-    m.apps?:{} >> \a a.endpoints?:{} >> \p p.stmt?:[] >> \s
+    m.apps?:{} >> \a a +> (endpoints: a.endpoints?:{} >> \p p +> (stmt: p.stmt?:[] >> \s
         cond s.ret?:{} {{}: s, _: tweak(s)}
+    ))
 ;
 
 # Applies polish functions to the appropriate elements of a Sysl model.
@@ -92,23 +98,23 @@ let normalize = \m
     ;
     let fields = //rel.union(m.apps => \(@:appName, @value:app)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
-            (type.relation).attr_defs?:{} => \(@:fieldName, @value:f)
-                let patterns = patterns(f);
+            (type.relation).attr_defs?:{} => \(@:fieldName, @value:field)
+                let patterns = patterns(field);
                 (
                     :appName,
                     :typeName,
                     :fieldName,
-                    fieldType: cond f {
+                    fieldType: cond field {
                         (primitive:p, ...): p,
-                        (type_ref:(ref:(path:p)), ...): //seq.join('.', p => .@item),
+                        (type_ref:(ref:(path:p), ...), ...): //seq.join('.', p),
                         _: '?',
                     },
-                    fk: cond f.type_ref?.ref.path:{} {
-                        [a, b]: (type:$`${appName}.${a}`, field:b)
+                    fk: cond field.type_ref?.ref.path:{} {
+                        [t, f]: (:appName, typeName: t, fieldName: f)
                     },
                     :patterns,
                     pk: !!({'pk'} & patterns),
-                    opt: f.opt?:{},
+                    opt: field.opt?:{},
                 )
         ) where .
     );
@@ -127,6 +133,7 @@ let normalize = \m
 
 # Export the functions from the module.
 (
+    :load,
     :normalize,
     :parseReturn,
     :patterns,

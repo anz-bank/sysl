@@ -1,7 +1,6 @@
 # Generates the PlantUML for a sequence diagram of "Client <- Do" in model.sysl.
 
-let model = //{./load_model};
-let rel = //{./sysl}.normalize(model);
+let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
 
 # Transforms a module to a tree of calls between endpoints.
 #
@@ -59,4 +58,4 @@ let toSeq = \m \(:appName, :epName)
     `
 ;
 
-toSeq(rel, (appName: 'Client', epName: 'Do'))
+toSeq(model, (appName: 'Client', epName: 'Do'))

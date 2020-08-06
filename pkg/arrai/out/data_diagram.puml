@@ -7,18 +7,18 @@ skinparam component {
 skinparam stereotypeCBackgroundColor Orchid
 hide methods
 
-entity Bar {
-  *a : STRING
+entity Source.Bar {
+  * a : string
   --
-  b : INT
-  *x : ? <<FK>>
+  b : int
+  * x : **Foo.x** <<FK>>
 }
 
-entity Foo {
-  *x : INT
-  *y : INT
+entity Source.Foo {
+  * x : int
+  * y : int
 }
 
-Bar             }o--|| Source.Foo
+Source.Bar             }o--|| Source.Foo
 
 @enduml
