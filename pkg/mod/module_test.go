@@ -3,7 +3,6 @@ package mod
 import (
 	"testing"
 
-	"github.com/google/go-github/v32/github"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
@@ -51,7 +50,6 @@ func TestFindGoModules(t *testing.T) {
 }
 
 func TestFindGitHubMode(t *testing.T) {
-	client = github.NewClient(nil)
 	GitHubMode = true
 	defer func() {
 		GitHubMode = false
@@ -85,10 +83,21 @@ func TestFindWithWrongPath(t *testing.T) {
 }
 
 func TestHasPathPrefix(t *testing.T) {
-	assert.True(t, hasPathPrefix("github.com/anz-bank/sysl", "github.com/anz-bank/sysl/deps.sysl"))
-	assert.True(t, hasPathPrefix("github.com", "github.com/anz-bank/sysl"))
-	assert.True(t, hasPathPrefix("github.com/", "github.com/anz-bank/sysl"))
-	assert.True(t, hasPathPrefix("github.com/anz-bank/sysl", "github.com/anz-bank/sysl"))
-	assert.True(t, hasPathPrefix("github.com/anz-bank/sysl", "github.com/anz-bank/sysl/"))
+	t.Parallel()
+	tests := []struct {
+		prefix string
+	}{
+		{"github.com/anz-bank/sysl"},
+		{"github.com/anz-bank/sysl/"},
+		{"github.com/anz-bank/sysl/deps.sysl"},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.prefix, func(t *testing.T) {
+			t.Parallel()
+			assert.True(t, hasPathPrefix(tt.prefix, "github.com/anz-bank/sysl/deps.sysl"))
+		})
+	}
+
 	assert.False(t, hasPathPrefix("github.com/anz-bank/sysl2", "github.com/anz-bank/sysl/deps.sysl"))
 }

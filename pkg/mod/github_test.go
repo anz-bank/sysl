@@ -8,8 +8,7 @@ import (
 )
 
 func TestGitHubMgrGet(t *testing.T) {
-	client = github.NewClient(nil)
-	githubmod := &githubMgr{}
+	githubmod := &githubMgr{github.NewClient(nil)}
 	testMods := Modules{}
 
 	mod, err := githubmod.Get(RemoteDepsFile, "", &testMods)
@@ -25,7 +24,7 @@ func TestGitHubMgrGet(t *testing.T) {
 	assert.Equal(t, RemoteRepo, mod.Name)
 	assert.Equal(t, "v0.0.1", mod.Version)
 
-	mod, err = githubmod.Get("github.com/anz-bank/wrongpath", "", &testMods)
+	mod, err = githubmod.Get("github.com/anz-bank/wrong/path", "", &testMods)
 	assert.Error(t, err)
 	assert.Nil(t, mod)
 }

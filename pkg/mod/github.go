@@ -2,6 +2,7 @@ package mod
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/user"
@@ -13,15 +14,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-var client *github.Client
-
-type githubMgr struct{}
+type githubMgr struct {
+	client *github.Client
+}
 
 var syslModulesCacheDir string
 
-func (*githubMgr) Init() {
-	if client == nil {
-		client = github.NewClient(nil)
+func (d *githubMgr) Init() {
+	if d.client == nil {
+		d.client = github.NewClient(nil)
 
 		usr, err := user.Current()
 		if err != nil {
@@ -31,28 +32,34 @@ func (*githubMgr) Init() {
 	}
 }
 
-func (*githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
-	names := strings.Split(filename, "/")
-	if len(names) == 0 {
-		return nil, errors.New("Empty path is not supported")
+func (d *githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
+	repoPath, err := getGitHubRepoPath(filename)
+	if err != nil {
+		return nil, err
 	}
-	if names[0] != "github.com" {
-		return nil, errors.New("Non-github.com repository is not supported under GitHub mode")
-	}
-
-	owner := names[1]
-	repo := names[2]
-	path := path.Join(names[3:]...)
 	ctx := context.Background()
 	var ref *github.RepositoryContentGetOptions
 	if ver != "" {
 		ref = &github.RepositoryContentGetOptions{Ref: ver}
 	}
 
-	fileContent, _, _, err := client.Repositories.GetContents(ctx, owner, repo, path, ref)
-	if err != nil {
-		return nil, err
+	var fileContent *github.RepositoryContent
+	for i := 0; i < 10; i++ {
+		fileContent, _, _, err = d.client.Repositories.GetContents(ctx, repoPath.owner, repoPath.repo, repoPath.path, ref)
+		if err != nil {
+			if _, ok := err.(*github.RateLimitError); !ok {
+				return nil, err
+			}
+
+			log.Println("hit GitHub rate limit: ", i)
+			if i == 9 {
+				return nil, err
+			}
+			continue
+		}
+		break
 	}
+
 	content, err := fileContent.GetContent()
 	if err != nil {
 		return nil, err
@@ -61,27 +68,21 @@ func (*githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 		ver = "v0.0.0-" + fileContent.GetSHA()[:12]
 	}
 
-	name := filepath.Join("github.com", owner, repo)
-	dir := filepath.Join(syslModulesCacheDir, name)
+	name := strings.Join([]string{"github.com", repoPath.owner, repoPath.repo}, "/")
+	dir := filepath.Join(syslModulesCacheDir, "github.com", repoPath.owner, repoPath.repo)
 	dir = AppendVersion(dir, ver)
-	fname := filepath.Join(dir, path)
 	new := &Module{
-		Name:    strings.Join([]string{"github.com", owner, repo}, "/"),
+		Name:    name,
 		Dir:     dir,
 		Version: ver,
 	}
+
+	fname := filepath.Join(dir, repoPath.path)
 	if !fileExists(fname) {
-		if err = os.MkdirAll(filepath.Dir(fname), 0770); err != nil {
-			return nil, err
-		}
-		file, err := os.Create(fname)
+		err = writeFile(fname, []byte(content))
 		if err != nil {
 			return nil, err
 		}
-		if _, err = file.Write([]byte(content)); err != nil {
-			return nil, err
-		}
-		defer file.Close()
 		m.Add(new)
 	}
 
@@ -136,5 +137,46 @@ func (*githubMgr) Load(m *Modules) error {
 		}
 	}
 
+	return nil
+}
+
+type githubRepoPath struct {
+	owner string
+	repo  string
+	path  string
+}
+
+func getGitHubRepoPath(filename string) (*githubRepoPath, error) {
+	names := strings.Split(filename, "/")
+	if len(names) < 4 {
+		return nil, fmt.Errorf("the imported module path %s is invalid", filename)
+	}
+	if names[0] != "github.com" {
+		return nil, errors.New("non-github.com repository is not supported under GitHub mode")
+	}
+
+	owner := names[1]
+	repo := names[2]
+	path := path.Join(names[3:]...)
+
+	return &githubRepoPath{
+		owner: owner,
+		repo:  repo,
+		path:  path,
+	}, nil
+}
+
+func writeFile(filename string, content []byte) error {
+	if err := os.MkdirAll(filepath.Dir(filename), 0770); err != nil {
+		return err
+	}
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	if _, err = file.Write(content); err != nil {
+		return err
+	}
 	return nil
 }

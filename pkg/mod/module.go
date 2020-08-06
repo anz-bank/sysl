@@ -19,9 +19,14 @@ const (
 )
 
 type Module struct {
-	Name    string // "github.com/anz-bank/sysl"
-	Dir     string // "/Users/foo/go/pkg/mod/github.com/anz-bank/sysl@v1.1.0"
-	Version string // "v1.1.0"
+	// The name of module joined by forward slash(/). e.g. "github.com/anz-bank/sysl"
+	Name string
+	// The absolute path to the module.
+	// e.g. "/Users/foo/go/pkg/mod/github.com/anz-bank/sysl@v1.1.0" on Linux and macOS
+	//      "C:\Users\foo\go\pkg\mod\github.com\anz-bank\sysl@v1.1.0" on Windows
+	Dir string
+	// The version of the module. e.g. "v1.1.0"
+	Version string
 }
 
 type Modules []*Module
@@ -29,8 +34,11 @@ type Modules []*Module
 var modules Modules
 
 type DependencyManager interface {
+	// Download external dependency to local directory
 	Get(filename, ver string, m *Modules) (*Module, error)
+	// Find dependency in m *Modules
 	Find(filename, ver string, m *Modules) *Module
+	// Load local cache into m *Modules
 	Load(m *Modules) error
 }
 
