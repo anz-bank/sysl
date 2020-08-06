@@ -45,12 +45,12 @@ let unpackType = \type (
     -> let typeCount = .type count;
     cond (typeCount) {
         (1): (
-            app  : .app.'',
+            app  : remOffset(.app.''),
             type : .type >> remOffset(.''),
             field: ''
         ),
         _: (
-            app  : .app.'',
+            app  : remOffset(.app.''),
             type : .type where .@ != typeCount - 1 >> remOffset(.''),
             field: remOffset(.type(typeCount-1).'')
         )
