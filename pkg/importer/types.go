@@ -52,9 +52,13 @@ type ExternalAlias struct {
 }
 
 const (
-	StringTypeName = "string"
-	ObjectTypeName = "object"
-	ArrayTypeName  = "array"
+	StringTypeName  = "string"
+	ObjectTypeName  = "object"
+	ArrayTypeName   = "array"
+	EmptyTypeName   = ""
+	BooleanTypeName = "boolean"
+	IntegerTypeName = "integer"
+	NumberTypeName  = "number"
 )
 
 func NewStringAlias(name string, attrs ...string) Type {

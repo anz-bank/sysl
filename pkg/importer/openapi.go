@@ -236,11 +236,11 @@ func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 	switch ref.Value.Type {
 	case ArrayTypeName:
 		return typeNameFromSchemaRef(ref.Value.Items)
-	case ObjectTypeName, "":
+	case ObjectTypeName, EmptyTypeName:
 		return ObjectTypeName
-	case "boolean":
+	case BooleanTypeName:
 		return "bool"
-	case StringTypeName, "integer", "number":
+	case StringTypeName, IntegerTypeName, NumberTypeName:
 		return mapSwaggerTypeAndFormatToType(ref.Value.Type, ref.Value.Format, logrus.StandardLogger())
 	default:
 		return getSyslSafeName(ref.Value.Type)
@@ -261,7 +261,7 @@ func (o *openapiv3) typeAliasForSchema(ref *openapi3.SchemaRef) Type {
 		t = nameOnlyType(strings.Join(o.nameStack, "_"))
 	}
 
-	if _, ok := t.(*Array); !ok && ref.Value.Type == "array" {
+	if _, ok := t.(*Array); !ok && ref.Value.Type == ArrayTypeName {
 		return &Array{Items: t}
 	}
 	return t
@@ -344,7 +344,7 @@ func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
 	name = getSyslSafeName(name)
 	defer o.pushName(name)()
 	switch schema.Type {
-	case "array":
+	case ArrayTypeName:
 		var items Type
 		if childName := typeNameFromSchemaRef(schema.Items); childName == ObjectTypeName {
 			defer o.pushName("obj")()
@@ -354,7 +354,7 @@ func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
 			items = o.typeAliasForSchema(schema.Items)
 		}
 		return &Array{name: name, Items: items, Attrs: getAttrs(schema)}
-	case ObjectTypeName, "":
+	case ObjectTypeName, EmptyTypeName:
 		obj := &StandardType{
 			name:       name,
 			Properties: nil,
@@ -382,7 +382,7 @@ func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
 		sortProperties(obj.Properties)
 		return obj
 	default:
-		if schema.Type == "string" && schema.Enum != nil {
+		if schema.Type == StringTypeName && schema.Enum != nil {
 			return &Enum{name: name, Attrs: attrsForStrings(schema)}
 		}
 		if t, ok := checkBuiltInTypes(mapSwaggerTypeAndFormatToType(schema.Type, schema.Format, o.logger)); ok {
