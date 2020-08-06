@@ -23,32 +23,28 @@ let payloadMacro = (
 );
 
 # TODO: this is assuming that attribute values are similar to arrai values
-let rec buildNvp = \nvp 
-    cond nvp {
-        (nvp_item: i, ...): i => (:.@, @item: buildNvp(.@item)),
-        _: //eval.value(//seq.join('', nvp.''))
-    };
+let rec buildNvp = \nvp cond nvp {
+    (nvp_item: i, ...): i => (:.@, @item: buildNvp(.@item)),
+    _: //eval.value(//seq.join('', nvp.''))
+};
+
+let name = \name name rank (:.@);
 # Converts a return statement payload into a tuple of its parts.
-let parseReturn = \payload 
-    //{./util}.invokeMacro(payloadMacro, payload) +> (
-        attr: cond //grammar.parse(payloadMacro.@grammar, 'payload', payload).attr?:{} {
-            {}: (),
-            (nvp: [(df: df, ...), ...], ...): (dataflow: //eval.value($`{${df.''}}`)),
-            attr: (
-                    nvp: attr.nvp?:{} => (@: .@item.name.'', @value: buildNvp(.@item.nvp_item)),
-                    modifier: attr.modifier?:{} => .@item.name.''
-                )
-        }
-    )
-;
+let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload) +> (
+    attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:{} -> \attr
+            (
+                nvp: attr.nvp?:{} => (@: name(.@item.name.''), @value: buildNvp(.@item.nvp_item)),
+                modifier: attr.modifier?:{} => name(.@item.name.'')
+            )
+);
 
 # Replaces all `ret` payloads with structured tuples.
 let polishReturns = \m
     let tweak = \.
         . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
 
-    m +> (apps: m.apps?:{} >> \a 
-        a +> (endpoints: a.endpoints?:{} >> \p 
+    m +> (apps: m.apps?:{} >> \a
+        a +> (endpoints: a.endpoints?:{} >> \p
             p +> (stmt: p.stmt?:[] >> \s
                 cond s.ret?:{} {{}: s, _: tweak(s)}
             )

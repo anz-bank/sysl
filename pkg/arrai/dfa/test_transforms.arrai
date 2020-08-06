@@ -1,9 +1,3 @@
-let model = //{./../load_model};
+let model = //{./../sysl_polish};
 
-# Load the helper functions.
-let sysl = //{./../sysl};
-
-# Return the polished model.
-let out = sysl.polish(model);
-
-//fmt.pretty(//{./transforms}(out))
+//fmt.pretty(//{./transforms}(model))

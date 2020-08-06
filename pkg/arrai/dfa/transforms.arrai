@@ -13,26 +13,28 @@
                 type : .type >> .'',
                 field: ''
             ),
-            _: let field = .type(typeCount-1);
+            _: let field = .type(typeCount-1).'';
             (
                 app : .app.'',
-                type: .type without (@:typeCount-1, @item: field) >> .@item.'',
+                type: .type where .@ != typeCount - 1 >> .'',
                 :field
             )
         }
     );
     apps => (
         let app = .@;
-        .@value => (
+        .@value.endpoints?:{} => (
             let ep = .@;
-            let ret = .@value where .@item.ret?:false;
+            let ret = .@value.stmt?:{} where .@item.ret?:false;
             (
                 ret => let currType = typeTuple(.@item.ret.payload.type);
                     (:app, :ep, from: currType, to: currType)
             ) | (
                     (
-                        ret => let currType = typeTuple(.@item.ret.payload.type);
-                            ret.attr?.dataflow?:{} => (
+                        ret =>
+                        let payload = .@item.ret.payload;
+                        let currType = typeTuple(payload.type);
+                        payload.attr?.nvp('dataflow')?:{} => (
                             :app,
                             :ep,
                             from: typeTuple(.@item),
