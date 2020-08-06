@@ -1,43 +1,22 @@
 \apps (
-    # TODO: Handle type without app reference
-    let typeGrammar = {:
-        //grammar.lang.wbnf[grammar]:
-        types -> app=([\w\_]+) "." type=([\w\_]+):".";
-    :};
-    let typeTuple = \type (
-        (//grammar -> .parse(typeGrammar, 'types', type))
-        -> let typeCount = .type count;
-        cond (typeCount) {
-            (1): (
-                app  : .app.'',
-                type : .type >> .'',
-                field: ''
-            ),
-            _: let field = .type(typeCount-1).'';
-            (
-                app : .app.'',
-                type: .type where .@ != typeCount - 1 >> .'',
-                :field
-            )
-        }
-    );
+    let unpackType = //{./../util}.unpackType;
     apps => (
         let app = .@;
         .@value.endpoints?:{} => (
             let ep = .@;
             let ret = .@value.stmt?:{} where .@item.ret?:false;
             (
-                ret => let currType = typeTuple(.@item.ret.payload.type);
+                ret => let currType = unpackType(.@item.ret.payload.type);
                     (:app, :ep, from: currType, to: currType)
             ) | (
                     (
                         ret =>
                         let payload = .@item.ret.payload;
-                        let currType = typeTuple(payload.type);
+                        let currType = unpackType(payload.type);
                         payload.attr?.nvp('dataflow')?:{} => (
                             :app,
                             :ep,
-                            from: typeTuple(.@item),
+                            from: unpackType(.@item),
                             to: currType
                         )
                 ) -> //rel.union(.)

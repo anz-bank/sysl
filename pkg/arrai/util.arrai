@@ -33,9 +33,33 @@ let reduceFlat = \arr \fn \val
     reduce(arr, \z \i reduce(i, fn, z), val)
 ;
 
+# TODO: Handle type without app reference
+let typeGrammar = {:
+        //grammar.lang.wbnf[grammar]:
+        types -> app=([\w\_]+) "." type=([\w\_]+):".";
+    :};
+let unpackType = \type (
+    (//grammar -> .parse(typeGrammar, 'types', type))
+    -> let typeCount = .type count;
+    cond (typeCount) {
+        (1): (
+            app  : .app.'',
+            type : .type >> .'',
+            field: ''
+        ),
+        _: let field = .type(typeCount-1).'';
+        (
+            app : .app.'',
+            type: .type where .@ != typeCount - 1 >> .'',
+            :field
+        )
+    }
+);
+
 (
     :invokeMacro,
     :simpleTransform,
     :reduce,
     :reduceFlat,
+    :unpackType,
 )
