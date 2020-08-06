@@ -1,6 +1,0 @@
-let mod = //encoding.json.decode(//os.stdin);
-# let mod = //encoding.json.decode(//os.file('./tests.json'));
-let graph = //{./graph.arrai}(mod);
-let sources = //{./sources.arrai}(graph, //os.args(1));
-let traversal= //{./traverse.arrai}(graph, sources, //os.args(1));
-//{./draw.arrai}(traversal)

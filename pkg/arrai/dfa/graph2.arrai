@@ -1,3 +1,4 @@
+# TODO: maybe unnecessary?
 \apps (
     # let transforms = //{./transforms.arrai}(apps);
     let payloadGrammar = {:
@@ -7,7 +8,7 @@
                         :};
     (
         apps => (
-            # TODO: handle multipart app name 
+            # TODO: handle multipart app name
             let appName = .@;
             (
                 .@value('endpoints')?:{} => (
