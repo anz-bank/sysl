@@ -7,7 +7,7 @@
             let ret = .@value.stmt?:{} where .@item.ret?:false;
             (
                 ret => let currType = unpackType(.@item.ret.payload.type);
-                    (:app, :ep, from: currType, to: currType)
+                    (:app, :ep, from: currType, to: currType, desc: '1:1 transform')
             ) | (
                     (
                         ret =>
@@ -17,7 +17,8 @@
                             :app,
                             :ep,
                             from: unpackType(.@item),
-                            to: currType
+                            to: currType,
+                            desc: payload.attr.nvp('description')?:""
                         )
                 ) -> //rel.union(.)
             )
