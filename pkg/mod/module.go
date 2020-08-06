@@ -69,9 +69,11 @@ func Find(name string, ver string) (*Module, error) {
 		}
 	}
 
-	mod := manager.Find(name, ver, &modules)
-	if mod != nil {
-		return mod, nil
+	if ver != "" && ver != MasterBranch {
+		mod := manager.Find(name, ver, &modules)
+		if mod != nil {
+			return mod, nil
+		}
 	}
 
 	return manager.Get(name, ver, &modules)

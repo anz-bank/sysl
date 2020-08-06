@@ -29,6 +29,7 @@ jobs:
         run: make coverage
         env:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
+          SYSL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set GOVERSION environment variable
         run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
@@ -52,6 +53,7 @@ jobs:
         env:
           GOPATH: .
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
+          SYSL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash) -f ./coverage.txt
@@ -78,6 +80,7 @@ jobs:
       run: .\scripts\test-with-coverage-windows.bat
       env:
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
+        SYSL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build sysl binary via goreleaser (Windows)
       uses: goreleaser/goreleaser-action@master
@@ -95,6 +98,7 @@ jobs:
       run: .\scripts\test-gosysl.bat
       env:
         SYSL_PLANTUML: http://www.plantuml.com/plantuml
+        SYSL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-and-test-sysl_js:
     name: Build and test sysl_js on linux

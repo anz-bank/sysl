@@ -15,8 +15,9 @@ require (
 	github.com/antlr/antlr4 v0.0.0-20200503195918-621b933c7a7f
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
+	github.com/arr-ai/frozen v0.14.0 // indirect
 	github.com/arr-ai/hash v0.5.0 // indirect
-	github.com/arr-ai/wbnf v0.13.0
+	github.com/arr-ai/wbnf v0.15.0
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
@@ -52,4 +53,5 @@ require (
 	google.golang.org/protobuf v1.23.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )

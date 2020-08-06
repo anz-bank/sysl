@@ -25,13 +25,17 @@ var githubAccessToken = os.Getenv("SYSL_GITHUB_TOKEN")
 
 func (d *githubMgr) Init() {
 	if d.client == nil {
-		// Authenticated clients can make up to 5,000 requests per hour.
-		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: githubAccessToken},
-		)
-		tc := oauth2.NewClient(context.Background(), ts)
+		if githubAccessToken == "" {
+			d.client = github.NewClient(nil)
+		} else {
+			// Authenticated clients can make up to 5,000 requests per hour.
+			ts := oauth2.StaticTokenSource(
+				&oauth2.Token{AccessToken: githubAccessToken},
+			)
+			tc := oauth2.NewClient(context.Background(), ts)
 
-		d.client = github.NewClient(tc)
+			d.client = github.NewClient(tc)
+		}
 
 		usr, err := user.Current()
 		if err != nil {

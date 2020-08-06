@@ -52,11 +52,16 @@ func (d *goModules) Get(filename, ver string, m *Modules) (mod *Module, err erro
 func (*goModules) Find(filename, ver string, m *Modules) *Module {
 	for i, mod := range *m {
 		if hasPathPrefix(mod.Name, filename) {
-			if (i == 0 && ver != "" && ver != MasterBranch) ||
-				(i != 0 && mod.Version != "" && ver != "" && ver != MasterBranch && mod.Version != ver) {
-				continue
+			fmt.Println(mod, filename, ver)
+
+			if i == 0 && ver != "" && ver != MasterBranch {
+				logrus.Warn("specified version of dependencies in current working directory is not supported: use local importing instead")
 			}
-			return mod
+			if i == 0 || ver == "" || ver == MasterBranch || ver == mod.Version {
+				fmt.Println("---")
+				return mod
+			}
+			break
 		}
 	}
 
@@ -95,7 +100,7 @@ func (*goModules) Load(m *Modules) error {
 }
 
 func goGet(args ...string) error {
-	if err := runGo(context.Background(), logrus.StandardLogger().Out, append([]string{"get", "-u"}, args...)...); err != nil { // nolint:lll
+	if err := runGo(context.Background(), logrus.StandardLogger().Out, append([]string{"get"}, args...)...); err != nil { // nolint:lll
 		return errors.Wrapf(err, "failed to get %q", args)
 	}
 	return nil

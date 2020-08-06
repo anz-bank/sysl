@@ -31,20 +31,20 @@ func TestGoModulesGet(t *testing.T) {
 func TestGoModulesFind(t *testing.T) {
 	gomod := &goModules{}
 	testMods := Modules{}
-	master := &Module{Name: MasterBranch}
-	testMods.Add(master)
-	testMods.Add(&Module{Name: "modulepath", Version: "v1.0.0-20190902080502-41f04d3bba15"})
-	testMods.Add(&Module{Name: "modulepath", Version: "v0.2.0"})
+	local := &Module{Name: "local"}
+	mod2 := &Module{Name: "remote", Version: "v0.2.0"}
+	testMods.Add(local)
+	testMods.Add(mod2)
 
-	assert.Equal(t, master, gomod.Find("master/filename", "", &testMods))
-	assert.Equal(t, master, gomod.Find("master/filename2", "", &testMods))
-	assert.Equal(t, master, gomod.Find(".//master/filename", "", &testMods))
-	assert.Equal(t, master, gomod.Find(MasterBranch, "", &testMods))
-	assert.Nil(t, gomod.Find("master2/filename", "", &testMods))
+	assert.Equal(t, local, gomod.Find("local/filename", "", &testMods))
+	assert.Equal(t, local, gomod.Find("local/filename2", "", &testMods))
+	assert.Equal(t, local, gomod.Find(".//local/filename", "", &testMods))
+	assert.Equal(t, local, gomod.Find("local", "", &testMods))
+	assert.Nil(t, gomod.Find("local2/filename", "", &testMods))
 
-	assert.Equal(t, master, gomod.Find("master/filename", MasterBranch, &testMods))
-	assert.Nil(t, gomod.Find("master/filename", "v0.0.1", &testMods))
+	assert.Equal(t, local, gomod.Find("local/filename", MasterBranch, &testMods))
+	assert.Equal(t, local, gomod.Find("local/filename", "v0.0.1", &testMods))
 
-	assert.Equal(t, &Module{Name: "modulepath", Version: "v0.2.0"}, gomod.Find("modulepath/filename", "v0.2.0", &testMods))
-	assert.Nil(t, gomod.Find("modulepath/filename", "v1.0.0", &testMods))
+	assert.Equal(t, mod2, gomod.Find("remote/filename", "v0.2.0", &testMods))
+	assert.Nil(t, gomod.Find("remote/filename", "v1.0.0", &testMods))
 }
