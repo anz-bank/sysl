@@ -3,12 +3,12 @@ package mod
 import (
 	"testing"
 
-	"github.com/google/go-github/v32/github"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGitHubMgrGet(t *testing.T) {
-	githubmod := &githubMgr{github.NewClient(nil)}
+	githubmod := &githubMgr{}
+	githubmod.Init()
 	testMods := Modules{}
 
 	mod, err := githubmod.Get(RemoteDepsFile, "", &testMods)

@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/go-github/v32/github"
 	"github.com/pkg/errors"
+	"golang.org/x/oauth2"
 )
 
 type githubMgr struct {
@@ -20,9 +21,18 @@ type githubMgr struct {
 
 var syslModulesCacheDir string
 
+// https://github.com/SyslBot
+const SyslBotAccessToken = "bc4bc9289261323a0e7a50ee8001e118c0df832c" // nolint: gosec
+
 func (d *githubMgr) Init() {
 	if d.client == nil {
-		d.client = github.NewClient(nil)
+		// Authenticated clients can make up to 5,000 requests per hour.
+		ts := oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: SyslBotAccessToken},
+		)
+		tc := oauth2.NewClient(context.Background(), ts)
+
+		d.client = github.NewClient(tc)
 
 		usr, err := user.Current()
 		if err != nil {
@@ -43,21 +53,9 @@ func (d *githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 		ref = &github.RepositoryContentGetOptions{Ref: ver}
 	}
 
-	var fileContent *github.RepositoryContent
-	for i := 0; i < 10; i++ {
-		fileContent, _, _, err = d.client.Repositories.GetContents(ctx, repoPath.owner, repoPath.repo, repoPath.path, ref)
-		if err != nil {
-			if _, ok := err.(*github.RateLimitError); !ok {
-				return nil, err
-			}
-
-			log.Println("hit GitHub rate limit: ", i)
-			if i == 9 {
-				return nil, err
-			}
-			continue
-		}
-		break
+	fileContent, _, _, err := d.client.Repositories.GetContents(ctx, repoPath.owner, repoPath.repo, repoPath.path, ref)
+	if err != nil {
+		return nil, err
 	}
 
 	content, err := fileContent.GetContent()
