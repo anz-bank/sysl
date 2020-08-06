@@ -19,7 +19,7 @@ Source[~db]:
             @description = "A foreign key"
 
     Read:
-        return ok <: Source.Foo [dataflow=["Source.Foo.x", "Source.Bar.a"]]
+        return ok <: Source.Foo
 
 A:
     Fetch:

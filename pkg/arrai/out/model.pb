@@ -1,63 +1,3 @@
-¡
-Source–
-
-Source"
-patterns:
-"db"+
-description"A database.
- Stores data.
-*k
-Readc
-Read:@B>
-<ok <: Source.Foo [dataflow=["Source.Foo.x", "Source.Bar.a"]]š
-
-model.sysl2ñ
-FooéB0
-description!"A Foo.
- Represents foo things.
-š
-
-model.sysl:™
-A
-x<B
-description"The x value.š
-
-model.sysl
-
-T
-yOB0
-description!"A Foo.
- Represents foo things.
-š
-
-model.sysl2Ê
-BarÂB
-description"A bar table.š
-
-model.sysl:…
-F
-bAB 
-description"An optional int`š
-
-model.sysl
-]
-xXB
-description"A foreign keyš
-
-model.syslJ
-
-
-SourceBarFoox
-W
-aRB
-patterns:
-"pkB
-description"A bar table.š
-
-model.sysl
-aš
-
-model.sysl
 ô
 Aî
 
@@ -96,18 +36,27 @@ model.sysl"&2x
 
 model.sysl&*J
 #
-bxš
-
-model.sysl''
-#
 byš
 
-model.sysl((š
+model.sysl((
+#
+bxš
+
+model.sysl''š
 
 model.sysl!!þ
 Cø
 
-C*Ý
+C*
+Fetch“
+Fetch:
+
+CFetchA:
+
+CFetchB:ÌBÉ
+Æok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": ["A.FetchResponse.ax", "B.FetchResponse.bx"], "C.FetchResponse.cy": ["A.FetchResponse.ay", "B.FetchResponse.by"]}, description="1:1 transform"]š
+
+model.sysl38*Ý
 FetchAÒ
 FetchA:
 
@@ -121,16 +70,7 @@ model.sysl+/*Ý
 BFetch:œB™
 –ok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": "B.FetchResponse.bx", "C.FetchResponse.cy": "B.FetchResponse.by"}, description="1:1 transform"]š
 
-model.sysl/3*
-Fetch“
-Fetch:
-
-CFetchA:
-
-CFetchB:ÌBÉ
-Æok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": ["A.FetchResponse.ax", "B.FetchResponse.bx"], "C.FetchResponse.cy": ["A.FetchResponse.ay", "B.FetchResponse.by"]}, description="1:1 transform"]š
-
-model.sysl382x
+model.sysl/32x
 FetchResponsegš
 
 model.sysl8<J
@@ -208,4 +148,63 @@ model.syslFF‚
 
 model.syslPWš
 
-model.syslOO
+model.syslOOõ
+Sourceê
+
+Source"
+patterns:
+"db"+
+description"A database.
+ Stores data.
+*?
+Read7
+Read:B
+ok <: Source.Fooš
+
+model.sysl2ñ
+FooéB0
+description!"A Foo.
+ Represents foo things.
+š
+
+model.sysl:™
+A
+x<B
+description"The x value.š
+
+model.sysl
+
+T
+yOB0
+description!"A Foo.
+ Represents foo things.
+š
+
+model.sysl2Ê
+BarÂB
+description"A bar table.š
+
+model.sysl:…
+W
+aRB
+patterns:
+"pkB
+description"A bar table.š
+
+model.sysl
+F
+bAB 
+description"An optional int`š
+
+model.sysl
+]
+xXB
+description"A foreign keyš
+
+model.syslJ
+
+
+SourceBarFoox
+aš
+
+model.sysl

@@ -13,7 +13,7 @@
                         ret =>
                         let payload = .@item.ret.payload;
                         let currType = unpackType(payload.type);
-                        payload.attr?.nvp('dataflow')?:{} => (
+                        payload.attr?.nvp?('dataflow')?:{} => (
                             :app,
                             :ep,
                             from: unpackType(.@item),

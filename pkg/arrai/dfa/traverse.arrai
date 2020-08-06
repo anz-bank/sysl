@@ -2,11 +2,16 @@
     let targetType = //{./../util}.unpackType(targetType);
     let calls = rel.calls;
     let transforms = rel.transforms;
-    # This assumes that sources are only endpoints that does 1:1 transform of the target type
-    let sources =
-        let isSubsetType = \t t.app = targetType.app && //seq.has_prefix(t.field, targetType.field);
-        transforms where (.from = targetType || isSubsetType(.from))
+    let isSubsetType = \t \subset
+                            let makeSeq = \type (
+                                cond type.field {
+                                    (''): [type.app] ++ type.type,
+                                    _: [type.app] ++ type.type ++ [type.field],
+                                }
+                            );
+                            //seq.has_prefix(makeSeq(t), makeSeq(subset))
     ;
+    let sources = transforms where (.from = targetType || isSubsetType(.from, targetType));
     let initEdges = (
         sources =>
             let t = .;
@@ -31,7 +36,7 @@
                         let ts = transforms where (
                             .app = e.caller.appName &&
                             .ep = e.caller.epName &&
-                            .from = e.caller.type
+                            isSubsetType( e.caller.type, .from)
                         );
                         (
                             nextCalls =>
