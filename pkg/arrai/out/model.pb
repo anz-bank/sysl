@@ -1,21 +1,4 @@
-‚
-all{
-
-all*Y
-allR
-all:
-
-Source:
-
-Client:
-A:
-B:
-C:
-Dš
-
-model.syslPWš
-
-model.syslOO¡
+¡
 Source–
 
 Source"
@@ -52,13 +35,6 @@ model.sysl2Ê
 description"A bar table.š
 
 model.sysl:…
-W
-aRB
-patterns:
-"pkB
-description"A bar table.š
-
-model.sysl
 F
 bAB 
 description"An optional int`š
@@ -71,7 +47,14 @@ model.sysl
 model.syslJ
 
 
-SourceBarFoox
+SourceBarFoox
+W
+aRB
+patterns:
+"pkB
+description"A bar table.š
+
+model.sysl
 aš
 
 model.sysl
@@ -113,13 +96,13 @@ model.sysl"&2x
 
 model.sysl&*J
 #
-byš
-
-model.sysl((
-#
 bxš
 
-model.sysl''š
+model.sysl''
+#
+byš
+
+model.sysl((š
 
 model.sysl!!þ
 Cø
@@ -208,4 +191,21 @@ model.syslLL
 
 model.syslMMš
 
-model.syslFF
+model.syslFF‚
+all{
+
+all*Y
+allR
+all:
+
+Source:
+
+Client:
+A:
+B:
+C:
+Dš
+
+model.syslPWš
+
+model.syslOO

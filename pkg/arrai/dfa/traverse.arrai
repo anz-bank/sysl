@@ -1,0 +1,52 @@
+\rel \targetType (
+    let targetType = //{./../util}.unpackType(targetType);
+    let calls = rel.calls;
+    let transforms = rel.transforms;
+    # This assumes that sources are only endpoints that does 1:1 transform of the target type
+    let sources =
+        let isSubsetType = \t t.app = targetType.app && //seq.has_prefix(t.field, targetType.field);
+        transforms where (.from = targetType || isSubsetType(.from))
+    ;
+    let initEdges = (
+        sources =>
+            let t = .;
+            let c = calls where .to = (appName: t.app, epName: t.ep);
+            c => (
+                caller: .from +> (type: t.to),
+                callee: .to   +> (type: t.from),
+                desc  : t.desc,
+            )
+    ) -> //rel.union(.)
+    ;
+    let rec traverse = \edges (
+        cond edges {
+            ({}): {},
+            _:
+                let nextEdges = (
+                    edges =>
+                        let e = .;
+                        # whoever calls e.caller
+                        let nextCalls = calls where .to = (:e.caller.appName, : e.caller.epName);
+                        # every transforms in e.caller relates to target type
+                        let ts = transforms where (
+                            .app = e.caller.appName &&
+                            .ep = e.caller.epName &&
+                            .from = e.caller.type
+                        );
+                        (
+                            nextCalls =>
+                                let call = .;
+                                ts => (
+                                    caller: call.from +> (type: .to),
+                                    callee: call.to   +> (type: .from),
+                                    desc  : .desc
+                                )
+                        ) -> //rel.union(.)
+                ) -> //rel.union(.)
+                ;
+                edges | nextEdges | traverse(nextEdges &~ edges)
+        }
+    )
+    ;
+    traverse(initEdges)
+)
