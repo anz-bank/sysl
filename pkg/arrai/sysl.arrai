@@ -131,13 +131,14 @@ let normalize = \m
                 )
         ) -> //rel.union(.) where .
     ) -> //rel.union(.);
-
+    let transforms = //{./dfa/transforms}(m.apps);
     (
         :apps,
         :endpoints,
         :calls,
         :types,
         :fields,
+        :transforms,
         # TODO:
         # :annotations, (aka attributes)
         :stmts,
