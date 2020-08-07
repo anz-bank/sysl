@@ -1,561 +1,897 @@
-{
-  'A': (
-    endpoints: {
-      'Fetch': (
-        name: 'Fetch',
-        source_context: (
-          end: (
-            col: 1,
-            line: 28
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 25
-          )
-        ),
-        stmt: [
-          (
-            call: (
-              endpoint: 'Read',
-              target: (
-                part: ['Source']
-              )
-            )
-          )
-        ]
-      )
-    },
-    name: (
-      part: ['A']
-    ),
-    source_context: (
-      end: (
-        line: 24
-      ),
-      file: 'model.sysl',
-      start: (
-        col: 1,
-        line: 24
-      )
-    )
-  ),
-  'B': (
-    endpoints: {
-      'Fetch': (
-        name: 'Fetch',
-        source_context: (
-          end: (
-            col: 1,
-            line: 32
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 29
-          )
-        ),
-        stmt: [
-          (
-            call: (
-              endpoint: 'Read',
-              target: (
-                part: ['Source']
-              )
-            )
-          )
-        ]
-      )
-    },
-    name: (
-      part: ['B']
-    ),
-    source_context: (
-      end: (
-        line: 28
-      ),
-      file: 'model.sysl',
-      start: (
-        col: 1,
-        line: 28
-      )
-    )
-  ),
-  'C': (
-    endpoints: {
-      'Fetch': (
-        name: 'Fetch',
-        source_context: (
-          end: (
-            col: 1,
-            line: 43
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 39
-          )
-        ),
-        stmt: [
-          (
-            call: (
-              endpoint: 'FetchA',
-              target: (
-                part: ['C']
-              )
+(
+  apps: {
+    'A': (
+      endpoints: {
+        'Fetch': (
+          name: 'Fetch',
+          source_context: (
+            end: (
+              col: 4,
+              line: 29
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 25
             )
           ),
-          (
-            call: (
-              endpoint: 'FetchB',
-              target: (
-                part: ['C']
-              )
-            )
-          )
-        ]
-      ),
-      'FetchA': (
-        name: 'FetchA',
-        source_context: (
-          end: (
-            col: 4,
-            line: 36
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 33
-          )
-        ),
-        stmt: [
-          (
-            call: (
-              endpoint: 'Fetch',
-              target: (
-                part: ['A']
-              )
-            )
-          )
-        ]
-      ),
-      'FetchB': (
-        name: 'FetchB',
-        source_context: (
-          end: (
-            col: 4,
-            line: 39
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 36
-          )
-        ),
-        stmt: [
-          (
-            call: (
-              endpoint: 'Fetch',
-              target: (
-                part: ['B']
-              )
-            )
-          )
-        ]
-      )
-    },
-    name: (
-      part: ['C']
-    ),
-    source_context: (
-      end: (
-        line: 32
-      ),
-      file: 'model.sysl',
-      start: (
-        col: 1,
-        line: 32
-      )
-    )
-  ),
-  'Client': (
-    endpoints: {
-      'Do': (
-        name: 'Do',
-        source_context: (
-          end: (
-            col: 3,
-            line: 52
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 49
-          )
-        ),
-        stmt: [
-          (
-            call: (
-              endpoint: 'Fetch',
-              target: (
-                part: ['D']
-              )
-            )
-          )
-        ]
-      )
-    },
-    name: (
-      part: ['Client']
-    ),
-    source_context: (
-      end: (
-        line: 48
-      ),
-      file: 'model.sysl',
-      start: (
-        col: 1,
-        line: 48
-      )
-    )
-  ),
-  'D': (
-    endpoints: {
-      'Fetch': (
-        name: 'Fetch',
-        source_context: (
-          end: (
-            col: 6,
-            line: 48
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 44
-          )
-        ),
-        stmt: [
-          (
-            call: (
-              endpoint: 'Fetch',
-              target: (
-                part: ['A']
-              )
-            )
-          ),
-          (
-            call: (
-              endpoint: 'Fetch',
-              target: (
-                part: ['C']
-              )
-            )
-          )
-        ]
-      )
-    },
-    name: (
-      part: ['D']
-    ),
-    source_context: (
-      end: (
-        line: 43
-      ),
-      file: 'model.sysl',
-      start: (
-        col: 1,
-        line: 43
-      )
-    )
-  ),
-  'Source': (
-    attrs: {
-      'description': (
-        s: 'A database.
- Stores data.
-'
-      ),
-      'patterns': (
-        a: (
-          elt: [
+          stmt: [
             (
-              s: 'db'
+              call: (
+                endpoint: 'Read',
+                target: (
+                  part: ['Source']
+                )
+              )
+            ),
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    dataflow: {
+                      'A.FetchResponse.ax': 'Source.Foo.x',
+                      'A.FetchResponse.ay': 'Source.Foo.y'
+                    }
+                  ),
+                  status: 'ok',
+                  type: 'A.FetchResponse '
+                )
+              )
             )
           ]
         )
-      )
-    },
-    endpoints: {
-      'Read': (
-        name: 'Read',
-        source_context: (
-          end: (
-            col: 1,
-            line: 24
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 21
-          )
-        ),
-        stmt: [
-          (
-            ret: (
-              payload: (
-                status: 'ok',
-                type: 'Foo'
-              )
-            )
-          )
-        ]
-      )
-    },
-    name: (
-      part: ['Source']
-    ),
-    source_context: (
-      end: (
-        col: 10,
-        line: 1
+      },
+      name: (
+        part: ['A']
       ),
-      file: 'model.sysl',
-      start: (
-        col: 1,
-        line: 1
-      )
-    ),
-    types: {
-      'Bar': (
-        attrs: {
-          'description': (
-            s: 'A bar table.'
-          )
-        },
-        relation: (
-          attr_defs: {
-            'a': (
-              attrs: {
-                'description': (
-                  s: 'A bar table.'
-                ),
-                'patterns': (
-                  a: (
-                    elt: [
-                      (
-                        s: 'pk'
-                      )
-                    ]
+      source_context: (
+        end: (
+          line: 24
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 1,
+          line: 24
+        )
+      ),
+      types: {
+        'FetchResponse': (
+          source_context: (
+            end: (
+              col: 1,
+              line: 33
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 29
+            )
+          ),
+          tuple: (
+            attr_defs: {
+              'ax': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 30
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 30
                   )
                 )
-              },
-              primitive: 'STRING',
-              source_context: (
-                end: (
-                  col: 24,
-                  line: 15
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 13,
-                  line: 15
+              ),
+              'ay': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 31
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 31
+                  )
+                )
+              )
+            }
+          )
+        )
+      }
+    ),
+    'B': (
+      endpoints: {
+        'Fetch': (
+          name: 'Fetch',
+          source_context: (
+            end: (
+              col: 4,
+              line: 38
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 34
+            )
+          ),
+          stmt: [
+            (
+              call: (
+                endpoint: 'Read',
+                target: (
+                  part: ['Source']
                 )
               )
             ),
-            'b': (
-              attrs: {
-                'description': (
-                  s: 'An optional int'
-                )
-              },
-              opt: {
-                (                )
-              },
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 8,
-                  line: 18
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 13,
-                  line: 17
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    dataflow: {
+                      'B.FetchResponse.bx': 'Source.Foo.x',
+                      'B.FetchResponse.by': 'Source.Foo.y'
+                    }
+                  ),
+                  status: 'ok',
+                  type: 'B.FetchResponse '
                 )
               )
+            )
+          ]
+        )
+      },
+      name: (
+        part: ['B']
+      ),
+      source_context: (
+        end: (
+          line: 33
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 1,
+          line: 33
+        )
+      ),
+      types: {
+        'FetchResponse': (
+          source_context: (
+            end: (
+              col: 1,
+              line: 42
             ),
-            'x': (
-              attrs: {
-                'description': (
-                  s: 'A foreign key'
-                )
-              },
-              source_context: (
-                end: (
-                  col: 4,
-                  line: 21
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 13,
-                  line: 19
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 38
+            )
+          ),
+          tuple: (
+            attr_defs: {
+              'bx': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 39
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 39
+                  )
                 )
               ),
-              type_ref: (
-                context: (
-                  appname: (
-                    part: ['Source']
+              'by': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 40
                   ),
-                  path: ['Bar']
-                ),
-                ref: (
-                  path: ['Foo', 'x']
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 40
+                  )
                 )
               )
-            )
-          },
-          primary_key: (
-            attr_name: ['a']
-          )
-        ),
-        source_context: (
-          end: (
-            col: 4,
-            line: 21
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 14
+            }
           )
         )
-      ),
-      'Foo': (
-        attrs: {
-          'description': (
-            s: 'A Foo.
- Represents foo things.
-'
-          )
-        },
-        relation: (
-          attr_defs: {
-            'x': (
-              attrs: {
-                'description': (
-                  s: 'The x value.'
-                )
-              },
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 8,
-                  line: 11
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 13,
-                  line: 10
+      }
+    ),
+    'C': (
+      endpoints: {
+        'Fetch': (
+          name: 'Fetch',
+          source_context: (
+            end: (
+              col: 4,
+              line: 56
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 51
+            )
+          ),
+          stmt: [
+            (
+              call: (
+                endpoint: 'FetchA',
+                target: (
+                  part: ['C']
                 )
               )
             ),
-            'y': (
-              attrs: {
-                'description': (
-                  s: 'A Foo.
- Represents foo things.
-'
+            (
+              call: (
+                endpoint: 'FetchB',
+                target: (
+                  part: ['C']
                 )
-              },
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 13,
-                  line: 11
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 13,
-                  line: 11
+              )
+            ),
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    dataflow: {
+                      'C.FetchResponse.cx': ['A.FetchResponse.ax', 'B.FetchResponse.bx'],
+                      'C.FetchResponse.cy': ['A.FetchResponse.ay', 'B.FetchResponse.by']
+                    }
+                  ),
+                  status: 'ok',
+                  type: 'C.FetchResponse '
                 )
               )
             )
-          }
+          ]
         ),
-        source_context: (
-          end: (
-            col: 4,
-            line: 13
+        'FetchA': (
+          name: 'FetchA',
+          source_context: (
+            end: (
+              col: 4,
+              line: 47
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 43
+            )
           ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 6
+          stmt: [
+            (
+              call: (
+                endpoint: 'Fetch',
+                target: (
+                  part: ['A']
+                )
+              )
+            ),
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    dataflow: {
+                      'C.FetchResponse.cx': 'A.FetchResponse.ax',
+                      'C.FetchResponse.cy': 'A.FetchResponse.ay'
+                    }
+                  ),
+                  status: 'ok',
+                  type: 'C.FetchResponse '
+                )
+              )
+            )
+          ]
+        ),
+        'FetchB': (
+          name: 'FetchB',
+          source_context: (
+            end: (
+              col: 4,
+              line: 51
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 47
+            )
+          ),
+          stmt: [
+            (
+              call: (
+                endpoint: 'Fetch',
+                target: (
+                  part: ['B']
+                )
+              )
+            ),
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    dataflow: {
+                      'C.FetchResponse.cx': 'B.FetchResponse.bx',
+                      'C.FetchResponse.cy': 'B.FetchResponse.by'
+                    }
+                  ),
+                  status: 'ok',
+                  type: 'C.FetchResponse '
+                )
+              )
+            )
+          ]
+        )
+      },
+      name: (
+        part: ['C']
+      ),
+      source_context: (
+        end: (
+          line: 42
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 1,
+          line: 42
+        )
+      ),
+      types: {
+        'FetchResponse': (
+          source_context: (
+            end: (
+              col: 1,
+              line: 60
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 56
+            )
+          ),
+          tuple: (
+            attr_defs: {
+              'cx': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 57
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 57
+                  )
+                )
+              ),
+              'cy': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 58
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 58
+                  )
+                )
+              )
+            }
           )
         )
-      )
-    }
-  ),
-  'all': (
-    endpoints: {
-      'all': (
-        name: 'all',
-        source_context: (
-          end: (
-            line: 60
+      }
+    ),
+    'Client': (
+      endpoints: {
+        'Do': (
+          name: 'Do',
+          source_context: (
+            end: (
+              col: 4,
+              line: 75
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 71
+            )
           ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 53
+          stmt: [
+            (
+              call: (
+                endpoint: 'Fetch',
+                target: (
+                  part: ['D']
+                )
+              )
+            ),
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    dataflow: {
+                      'Client.Screen.xx': 'D.FetchResponse.dx',
+                      'Client.Screen.yy': 'D.FetchResponse.dy'
+                    }
+                  ),
+                  status: 'ok',
+                  type: 'Client.Screen '
+                )
+              )
+            )
+          ]
+        )
+      },
+      name: (
+        part: ['Client']
+      ),
+      source_context: (
+        end: (
+          line: 70
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 1,
+          line: 70
+        )
+      ),
+      types: {
+        'Screen': (
+          source_context: (
+            end: (
+              col: 3,
+              line: 79
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 75
+            )
+          ),
+          tuple: (
+            attr_defs: {
+              'xx': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 76
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 76
+                  )
+                )
+              ),
+              'yy': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 77
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 77
+                  )
+                )
+              )
+            }
+          )
+        )
+      }
+    ),
+    'D': (
+      endpoints: {
+        'Fetch': (
+          name: 'Fetch',
+          source_context: (
+            end: (
+              col: 4,
+              line: 66
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 61
+            )
+          ),
+          stmt: [
+            (
+              call: (
+                endpoint: 'Fetch',
+                target: (
+                  part: ['A']
+                )
+              )
+            ),
+            (
+              call: (
+                endpoint: 'Fetch',
+                target: (
+                  part: ['C']
+                )
+              )
+            ),
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    dataflow: {
+                      'D.FetchResponse.dx': ['A.FetchResponse.ax', 'C.FetchResponse.cx'],
+                      'D.FetchResponse.dy': ['A.FetchResponse.ay', 'C.FetchResponse.cy']
+                    }
+                  ),
+                  status: 'ok',
+                  type: 'D.FetchResponse '
+                )
+              )
+            )
+          ]
+        )
+      },
+      name: (
+        part: ['D']
+      ),
+      source_context: (
+        end: (
+          line: 60
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 1,
+          line: 60
+        )
+      ),
+      types: {
+        'FetchResponse': (
+          source_context: (
+            end: (
+              col: 6,
+              line: 70
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 66
+            )
+          ),
+          tuple: (
+            attr_defs: {
+              'dx': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 67
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 67
+                  )
+                )
+              ),
+              'dy': (
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 68
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 68
+                  )
+                )
+              )
+            }
+          )
+        )
+      }
+    ),
+    'Source': (
+      attrs: {
+        'description': (
+          s: 'A database.
+ Stores data.
+'
+        ),
+        'patterns': (
+          a: (
+            elt: [
+              (
+                s: 'db'
+              )
+            ]
+          )
+        )
+      },
+      endpoints: {
+        'Read': (
+          name: 'Read',
+          source_context: (
+            end: (
+              col: 1,
+              line: 24
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 21
+            )
+          ),
+          stmt: [
+            (
+              ret: (
+                payload: (
+                  attr: (                  ),
+                  status: 'ok',
+                  type: 'Foo'
+                )
+              )
+            )
+          ]
+        )
+      },
+      name: (
+        part: ['Source']
+      ),
+      source_context: (
+        end: (
+          col: 10,
+          line: 1
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 1,
+          line: 1
+        )
+      ),
+      types: {
+        'Bar': (
+          attrs: {
+            'description': (
+              s: 'A bar table.'
+            )
+          },
+          relation: (
+            attr_defs: {
+              'a': (
+                attrs: {
+                  'description': (
+                    s: 'A bar table.'
+                  ),
+                  'patterns': (
+                    a: (
+                      elt: [
+                        (
+                          s: 'pk'
+                        )
+                      ]
+                    )
+                  )
+                },
+                primitive: 'STRING',
+                source_context: (
+                  end: (
+                    col: 24,
+                    line: 15
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 13,
+                    line: 15
+                  )
+                )
+              ),
+              'b': (
+                attrs: {
+                  'description': (
+                    s: 'An optional int'
+                  )
+                },
+                opt: {
+                  (                  )
+                },
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 8,
+                    line: 18
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 13,
+                    line: 17
+                  )
+                )
+              ),
+              'x': (
+                attrs: {
+                  'description': (
+                    s: 'A foreign key'
+                  )
+                },
+                source_context: (
+                  end: (
+                    col: 4,
+                    line: 21
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 13,
+                    line: 19
+                  )
+                ),
+                type_ref: (
+                  context: (
+                    appname: (
+                      part: ['Source']
+                    ),
+                    path: ['Bar']
+                  ),
+                  ref: (
+                    path: ['Foo', 'x']
+                  )
+                )
+              )
+            },
+            primary_key: (
+              attr_name: ['a']
+            )
+          ),
+          source_context: (
+            end: (
+              col: 4,
+              line: 21
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 14
+            )
           )
         ),
-        stmt: [
-          (
-            action: (
-              action: 'Source'
+        'Foo': (
+          attrs: {
+            'description': (
+              s: 'A Foo.
+ Represents foo things.
+'
             )
+          },
+          relation: (
+            attr_defs: {
+              'x': (
+                attrs: {
+                  'description': (
+                    s: 'The x value.'
+                  )
+                },
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 8,
+                    line: 11
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 13,
+                    line: 10
+                  )
+                )
+              ),
+              'y': (
+                attrs: {
+                  'description': (
+                    s: 'A Foo.
+ Represents foo things.
+'
+                  )
+                },
+                primitive: 'INT',
+                source_context: (
+                  end: (
+                    col: 13,
+                    line: 11
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 13,
+                    line: 11
+                  )
+                )
+              )
+            }
           ),
-          (
-            action: (
-              action: 'Client'
-            )
-          ),
-          (
-            action: (
-              action: 'A'
-            )
-          ),
-          (
-            action: (
-              action: 'B'
-            )
-          ),
-          (
-            action: (
-              action: 'C'
-            )
-          ),
-          (
-            action: (
-              action: 'D'
+          source_context: (
+            end: (
+              col: 4,
+              line: 13
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 6
             )
           )
-        ]
-      )
-    },
-    name: (
-      part: ['all']
+        )
+      }
     ),
-    source_context: (
-      end: (
-        line: 52
+    'all': (
+      endpoints: {
+        'all': (
+          name: 'all',
+          source_context: (
+            end: (
+              line: 87
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 80
+            )
+          ),
+          stmt: [
+            (
+              action: (
+                action: 'Source'
+              )
+            ),
+            (
+              action: (
+                action: 'Client'
+              )
+            ),
+            (
+              action: (
+                action: 'A'
+              )
+            ),
+            (
+              action: (
+                action: 'B'
+              )
+            ),
+            (
+              action: (
+                action: 'C'
+              )
+            ),
+            (
+              action: (
+                action: 'D'
+              )
+            )
+          ]
+        )
+      },
+      name: (
+        part: ['all']
       ),
-      file: 'model.sysl',
-      start: (
-        col: 1,
-        line: 52
+      source_context: (
+        end: (
+          line: 79
+        ),
+        file: 'model.sysl',
+        start: (
+          col: 1,
+          line: 79
+        )
       )
     )
-  )
-}
+  }
+)

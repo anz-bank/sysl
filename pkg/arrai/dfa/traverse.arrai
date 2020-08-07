@@ -21,12 +21,12 @@
                     edges =>
                         let e = .;
                         # whoever calls e.caller
-                        let nextCalls = calls where .to = (:e.caller.appName, : e.caller.epName);
+                        let nextCalls = calls where .to = (:e.caller.appName, :e.caller.epName);
                         # every transforms in e.caller relates to target type
                         let ts = transforms where (
                             .app = e.caller.appName &&
                             .ep = e.caller.epName &&
-                            isSubsetType( e.caller.type, .from)
+                            isSubsetType(e.caller.type, .from)
                         );
                         (
                             nextCalls =>
@@ -34,7 +34,7 @@
                                 ts => (
                                     caller: call.from +> (type: .to),
                                     callee: call.to   +> (type: .from),
-                                    desc  : .desc
+                                    :.desc
                                 )
                         ) -> //rel.union(.)
                 ) -> //rel.union(.)
@@ -52,9 +52,12 @@
                 let t = .;
                 let c = calls where .to = (appName: t.app, epName: t.ep);
                 c => (
-                    caller: .from +> (type: t.to),
-                    callee: .to   +> (type: t.from),
-                    desc  : t.desc,
+                    caller: .from +> cond {
+                        isSubsetType(t.to, targetType): (type: targetType),
+                        _: (type: t.to)
+                    },
+                    callee: .to   +> (type: targetType),
+                    :t.desc,
                 )
         ) -> //rel.union(.)
     ;

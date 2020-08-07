@@ -3,7 +3,6 @@ package mod
 import (
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 	"testing"
 
@@ -49,7 +48,7 @@ func TestOpenLocalFileFailed(t *testing.T) {
 	mfs := NewFs(memfs, "../../tests/")
 	f, err := mfs.Open(filename)
 	assert.Nil(t, f)
-	assert.Equal(t, fmt.Sprintf("%s not found", filename), err.Error())
+	assert.Equal(t, fmt.Sprintf("%s not found: no such file in current working directory", filename), err.Error())
 }
 
 func TestOpenRemoteFile(t *testing.T) {
@@ -57,7 +56,7 @@ func TestOpenRemoteFile(t *testing.T) {
 	createGomodFile(t, fs)
 	defer removeGomodFile(t, fs)
 
-	filename := "github.com/anz-bank/sysl/tests/deps.sysl"
+	filename := SyslDepsFile
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	mfs := NewFs(memfs, "")
 	f, err := mfs.Open(filename)
@@ -75,7 +74,7 @@ func TestOpenRemoteFileFailed(t *testing.T) {
 	mfs := NewFs(memfs, "")
 	f, err := mfs.Open(filename)
 	assert.Nil(t, f)
-	assert.Equal(t, fmt.Sprintf("%s not found", path.Clean(filename)), err.Error())
+	assert.Error(t, err)
 }
 
 func TestOpenRemoteFileWithRoot(t *testing.T) {
@@ -115,7 +114,7 @@ func TestOpenFileFailed(t *testing.T) {
 	mfs := NewFs(memfs, "../../tests/")
 	f, err := mfs.OpenFile(filename, os.O_RDWR, 0600)
 	assert.Nil(t, f)
-	assert.Equal(t, fmt.Sprintf("%s not found", path.Join("../../tests/", filename)), err.Error())
+	assert.Error(t, err)
 }
 
 func removeGomodFile(t *testing.T, fs afero.Fs) {

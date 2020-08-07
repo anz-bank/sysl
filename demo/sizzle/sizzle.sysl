@@ -45,9 +45,9 @@ Sizzle[~project]:
         MasterCard
         Visa
 
-Database[~project]:
-    Database:
-        MegaDatabase
+DatabaseModel[~project]:
+    _:
+        Database
 
 Dine-in Customer [~human]:
     # ~human specifies a user
