@@ -1,0 +1,5 @@
+let [_, import_sql] = //os.args;
+let spanner = //{./spanner.arrai};
+let stmts = spanner.parse_schema_files([import_sql]);
+let model = spanner.apply_stmt(stmts, spanner.empty_model);
+model

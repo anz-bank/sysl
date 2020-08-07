@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+arrai r import.arrai $1 > $2
