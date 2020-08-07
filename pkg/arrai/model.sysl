@@ -24,7 +24,7 @@ Source[~db]:
 A:
     Fetch:
         Source <- Read
-        return ok <: A.FetchResponse [dataflow=["Source.Foo.x", "Source.Foo.y"], description="1:1 transform"]
+        return ok <: A.FetchResponse [dataflow={"A.FetchResponse.ax": "Source.Foo.x", "A.FetchResponse.ay": "Source.Foo.y"}, description="1:1 transform"]
 
     !type FetchResponse:
         ax <: int
@@ -33,7 +33,7 @@ A:
 B:
     Fetch:
         Source <- Read
-        return ok <: B.FetchResponse [dataflow=["Source.Foo.x", "Source.Foo.y"], description="1:1 transform"]
+        return ok <: B.FetchResponse [dataflow={"B.FetchResponse.bx": "Source.Foo.x", "B.FetchResponse.by": "Source.Foo.y"}, description="1:1 transform"]
 
     !type FetchResponse:
         bx <: int
@@ -42,16 +42,16 @@ B:
 C:
     FetchA:
         A <- Fetch
-        return ok <: C.FetchResponse [dataflow=["A.FetchResponse.ax", "A.FetchResponse.ay"], description="1:1 transform"]
+        return ok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": "A.FetchResponse.ax", "C.FetchResponse.cy": "A.FetchResponse.ay"}, description="1:1 transform"]
 
     FetchB:
         B <- Fetch
-        return ok <: C.FetchResponse [dataflow=["B.FetchResponse.bx", "B.FetchResponse.by"], description="1:1 transform"]
+        return ok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": "B.FetchResponse.bx", "C.FetchResponse.cy": "B.FetchResponse.by"}, description="1:1 transform"]
 
     Fetch:
         . <- FetchA
         . <- FetchB
-        return ok <: C.FetchResponse [dataflow=["A.FetchResponse.ax", "A.FetchResponse.ay", "B.FetchResponse.bx", "B.FetchResponse.by", "C.FetchResponse"], description="1:1 transform"]
+        return ok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": ["A.FetchResponse.ax", "B.FetchResponse.bx"], "C.FetchResponse.cy": ["A.FetchResponse.ay", "B.FetchResponse.by"]}, description="1:1 transform"]
 
     !type FetchResponse:
         cx <: int
@@ -61,7 +61,7 @@ D:
     Fetch:
         A <- Fetch
         C <- Fetch
-        return ok <: D.FetchResponse [dataflow=["A.FetchResponse.ax", "A.FetchResponse.ay", "C.FetchResponse.cx", "C.FetchResponse.cy"], description="1:1 transform"]
+        return ok <: D.FetchResponse [dataflow={"D.FetchResponse.dx": ["A.FetchResponse.ax", "C.FetchResponse.cx"], "D.FetchResponse.dy": ["A.FetchResponse.ay", "C.FetchResponse.cy"]}, description="1:1 transform"]
 
     !type FetchResponse:
         dx <: int
@@ -70,7 +70,7 @@ D:
 Client:
     Do:
         D <- Fetch
-        return ok <: Client.Screen [dataflow=["D.FetchResponse.dx", "D.FetchResponse.dy"], description="1:1 transform"]
+        return ok <: Client.Screen [dataflow={"Client.Screen.xx": "D.FetchResponse.dx", "Client.Screen.yy": "D.FetchResponse.dy"}, description="1:1 transform"]
 
     !type Screen:
         xx <: int

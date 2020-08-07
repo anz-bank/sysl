@@ -4,25 +4,30 @@ let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
 let transforms = //{./simple_transform};
 
 # Returns a model of the lineage of a field.
-let flow = \m \(:appName, :typeName, :fieldName)
+let flow = \m \query
+    # True if app and type names match, and field names match iff present in a.
+    # Note: order matters.
+    let equalish = \a \b
+        a.appName = b.appName && a.typeName = b.typeName &&
+        (!a.fieldName || a.fieldName = b.fieldName);
+    
+    # Truthy if transform t1 can "feed into" t2 by way of a call.
+    let isEdge = \m \t1 \t2 
+        equalish(t2.from, t1.to) &&
+        (m.calls where
+            (.to.appName = t1.appName || !t1.appName) &&
+            (.to.epName = t1.epName || !t1.epName) &&
+            .from.appName = t2.appName &&
+            .from.epName = t2.epName
+        )
+    ;
     let rec join = \explored \frontier
         let explored = explored | frontier;
         # Find downstream transforms: places where the explored outputs are used.
-        let newFrontier = (frontier => \s
-            (transforms where \t
-                t.from.appName = s.to.appName && 
-                t.from.typeName = s.to.typeName &&
-                (m.calls where 
-                    (.to.appName = s.appName || !s.appName) &&
-                    (.to.epName = s.epName || !s.epName) &&
-                    .from.appName = t.appName &&
-                    .from.epName = t.epName)
-            ) => 
-                let . = . +> (in: (:s.appName, :s.epName));
-                cond {
-                    !s.to.fieldName: . +> (from: .from +> (fieldName: {})),
-                    _: .,
-                }
+        let newFrontier = (frontier => \f
+            transforms where isEdge(m, f, .) => 
+                . +> (in: (:f.appName, :f.epName))
+                    +> cond {!f.to.fieldName: (from: .from +> (fieldName: {})), _: ()}
         ) -> //rel.union(.) &~ explored;
         cond {
             newFrontier: join(explored, newFrontier),
@@ -30,9 +35,7 @@ let flow = \m \(:appName, :typeName, :fieldName)
         }
     ;
 
-    # TODO: fieldName?
-    let sources = transforms where .to.appName = appName && .to.typeName = typeName;
-    # let sources = {(appName: {}, epName: {}, to: (:appName, :typeName, :fieldName))};
+    let sources = transforms where equalish(.to, query);
     join({}, sources)
 ;
 

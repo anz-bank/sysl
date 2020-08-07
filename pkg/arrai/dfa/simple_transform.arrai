@@ -1,8 +1,7 @@
 let sysl = //{./../sysl};
 let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
 
-let dataflow = \stmt
-    (stmt.ret?.payload.attr?.nvp?:{} => (@: .@ rank (:.@), :.@value))('dataflow')?:{};
+let dataflow = \stmt stmt.ret?.payload.attr?.dataflow?:{};
 
 let split = \str
     //{./../util}.invokeMacro((
@@ -19,17 +18,28 @@ let extract = \m \(:appName, :type, ...)
     }
 ;
 
-let map = \m //rel.union(
+let transforms = \m //rel.union(
     m.stmts where .stmt.ret?:{} =>
         let (:appName, :epName, :stmt, ...) = .;
+        let extract = \type extract(m, (:appName, :type));
         let df = dataflow(stmt);
-        let base = (:appName, :epName, to: extract(m, . +> (:.stmt.ret.payload.type)));
+        let base = (:appName, :epName, to: extract(stmt.ret.payload.type));
         cond df {
-            {}: {base +> (from: base.to, description: '1:1 transform')},
-            _: df => base +> (from: extract(m, (:appName, type: .@item)), description: '???'),
+            {}: m.fields <&> (m.types where (:.appName, :.typeName) = (:base.to.appName, :base.to.typeName)) => 
+                let to = base.to +> (:.fieldName);
+                base +> (:to, from: to, description: '1:1 transform'),
+            _: (df => \(@:toField, @value:fromFields)
+                let enhance = \fromField
+                    base +> (
+                            to: base.to +> extract(toField),
+                            from: extract(fromField),
+                            description: '???',
+                    );
+                cond fromFields {
+                    [...]: fromFields => enhance(.@item),
+                    _:     {enhance(fromFields)},
+            }) -> //rel.union(.)
         }
 );
 
-map(model)
-# //fmt.pretty(map(model))
-# //fmt.pretty(model.calls)
+transforms(model)

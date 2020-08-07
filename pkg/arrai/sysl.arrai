@@ -13,33 +13,34 @@ let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 let payloadMacro = (
     @grammar: {://grammar.lang.wbnf:
         payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^ \t\[]* attr?;
-        attr -> %!Array(nvp|modifier);
-        nvp_item -> ('"' ([^"\\] | [\\][\\brntu'"])* '"' | "'" ([^''])* "'") | %!Array(nvp_item);
-        nvp ->  name=\w+ "=" nvp_item;
-        modifier -> "~" name=[\w\+]+;
+        attr -> %!Array(nvp);
+        nvp -> "dataflow={" df=[^}]* "}" | name=\w+ "=" nvp_item;
+        nvp_item -> ('"' [^""]+ '"') | %!Array(nvp_item);
         .wrapRE -> /{\s*()\s*};
-        .macro Array(child) {
-            "[" (child):"," "]"
-        }
+        .macro Array(child) {"[" (child):"," "]"}
     :},
     @transform: (payload: //{./util}.simpleTransform),
 );
 
 # TODO: this is assuming that attribute values are similar to arrai values
-let rec buildNvp = \nvp cond nvp {
-    (nvp_item: i, ...): i => (:.@, @item: buildNvp(.@item)),
-    _: //eval.value(//seq.join('', nvp.''))
-};
+let rec buildNvp = \nvp 
+    cond nvp {
+        (nvp_item: i, ...): i => (:.@, @item: buildNvp(.@item)),
+        _: //eval.value(//seq.join('', nvp.''))
+    };
 # Converts a return statement payload into a tuple of its parts.
-let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload) +> (
-    attr: cond //grammar.parse(payloadMacro.@grammar, 'payload', payload).attr?:{} {
-        {}: (),
-        attr: (
-                nvp: attr.nvp?:{} => (@: .@item.name.'', @value: buildNvp(.@item.nvp_item)),
-                modifier: attr.modifier?:{} => .@item.name.''
-            )
-    }
-);
+let parseReturn = \payload 
+    //{./util}.invokeMacro(payloadMacro, payload) +> (
+        attr: cond //grammar.parse(payloadMacro.@grammar, 'payload', payload).attr?:{} {
+            {}: (),
+            (nvp: [(df: df, ...), ...], ...): (dataflow: //eval.value($`{${df.''}}`)),
+            attr: (
+                    nvp: attr.nvp?:{} => (@: .@item.name.'', @value: buildNvp(.@item.nvp_item)),
+                    modifier: attr.modifier?:{} => .@item.name.''
+                )
+        }
+    )
+;
 
 # Replaces all `ret` payloads with structured tuples.
 let polishReturns = \m
@@ -155,3 +156,5 @@ let normalize = \m
     :patterns,
     :polish,
 )
+#  -> //fmt.pretty(.polish(.load('out/model.pb')))
+#  -> //fmt.pretty(parseReturn('ok <: Foo [dataflow={"a.b.c": "b", "c": ["d", "e"]}]'))
