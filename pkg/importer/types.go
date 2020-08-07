@@ -21,6 +21,7 @@ type StandardType struct {
 
 func (s *StandardType) Name() string { return s.name }
 
+// Union represents a union type https://sysl.io/docs/lang-spec#union
 type Union struct {
 	name    string
 	Options FieldList

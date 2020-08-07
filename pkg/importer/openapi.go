@@ -361,6 +361,18 @@ func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
 			Attributes: getAttrs(schema),
 		}
 
+		if len(schema.OneOf) != 0 {
+			var fields FieldList
+			for _, subSchema := range schema.OneOf {
+				field := o.buildField(typeNameFromSchemaRef(subSchema), subSchema)
+				fields = append(fields, field)
+			}
+			return &Union{
+				name:    name,
+				Options: fields,
+			}
+		}
+
 		// Removing this as it breaks an import file. Details here: https://github.com/anzx/acceleration/issues/342
 		// AllOf means this object is composed of all of the sub-schemas (and potentially additional properties)
 		// for _, subschema := range schema.AllOf {

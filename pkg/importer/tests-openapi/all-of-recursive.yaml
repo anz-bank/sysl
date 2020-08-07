@@ -8,11 +8,9 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
+              allOf:
                 - $ref: '#/components/schemas/Cat'
                 - $ref: '#/components/schemas/Dog'
-              discriminator:
-                propertyName: pet_type
       responses:
         '200':
           description: Updated
