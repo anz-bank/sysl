@@ -1,15 +1,11 @@
 # TODO: maybe usable to create a graph
-let typeStr = \type (
-    cond type.field {
-        (''): $`${type.app}.${//seq.join('.', type.type)}`,
-        _: $`${type.app}.${//seq.join('.', type.type)}.${type.field}`,
-    }
-);
-\traversalData (
+let typeStr = //{./../util}.packType;
+\(:type, :edges) (
     $`
     @startuml
+    title ${typeStr(type)}
     ${
-        traversalData =>
+        edges =>
         $`[${.caller.appName}] "${.caller.epName}" <-- "${.callee.epName}" [${.callee.appName}]: ${typeStr(.caller.type)}`
         orderby .
         ::\i:

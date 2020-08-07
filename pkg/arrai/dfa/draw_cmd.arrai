@@ -1,0 +1,4 @@
+# TODO: create more complex model.sysl
+let sysl = //{./../sysl};
+let model = sysl.normalize(sysl.polish(sysl.load(//os.args(1))));
+//{./draw}(//{./traverse}(model, //os.args(2)))

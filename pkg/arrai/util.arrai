@@ -57,11 +57,20 @@ let unpackType = \type (
     }
 );
 
+let packType = \(app: appName, type: typeSeq, field: fieldName) (
+    cond fieldName {
+        (''): //seq.join('.', [appName] ++ typeSeq),
+        _: //seq.join('.', [appName] ++ typeSeq ++ [fieldName]),
+    }
+)
+;
+
 (
     :invokeMacro,
     :simpleTransform,
     :reduce,
     :reduceFlat,
     :unpackType,
+    :packType,
     :remOffset,
 )

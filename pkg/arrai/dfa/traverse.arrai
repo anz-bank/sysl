@@ -53,5 +53,8 @@
         }
     )
     ;
-    traverse(initEdges)
+    (
+        type : targetType,
+        edges: traverse(initEdges)
+    )
 )
