@@ -11,18 +11,8 @@
                             );
                             //seq.has_prefix(makeSeq(t), makeSeq(subset))
     ;
-    let sources = transforms where (.from = targetType || isSubsetType(.from, targetType));
-    let initEdges = (
-        sources =>
-            let t = .;
-            let c = calls where .to = (appName: t.app, epName: t.ep);
-            c => (
-                caller: .from +> (type: t.to),
-                callee: .to   +> (type: t.from),
-                desc  : t.desc,
-            )
-    ) -> //rel.union(.)
-    ;
+
+    # For each edges, find the next edges
     let rec traverse = \edges (
         cond edges {
             ({}): {},
@@ -52,6 +42,21 @@
                 edges | nextEdges | traverse(nextEdges &~ edges)
         }
     )
+    ;
+
+    # initial edges, edges where it involves the target type or type related to target type
+    let initEdges =
+        let sources = transforms where (.from = targetType || isSubsetType(.from, targetType));
+        (
+            sources =>
+                let t = .;
+                let c = calls where .to = (appName: t.app, epName: t.ep);
+                c => (
+                    caller: .from +> (type: t.to),
+                    callee: .to   +> (type: t.from),
+                    desc  : t.desc,
+                )
+        ) -> //rel.union(.)
     ;
     (
         type : targetType,
