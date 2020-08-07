@@ -1,0 +1,19 @@
+# Generates an entity-relationship diagram from the tables of model.sysl.
+
+let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+
+let tabulate = \m $`
+    ${(//dict(m) => \(@:table, @value:rows) $`
+        
+        # ${table}
+        
+        ${(rows => \row $`
+            |${(//dict(row) => \(@:col, @value:val) $`${col}`) orderby .::|:|}
+        `) orderby . ::\i}
+        ${(rows => \row $`
+            |${(//dict(row) => \(@:col, @value:val) $`${val}`) orderby .::|:|}
+        `) orderby . ::\i}
+    `) orderby . ::\i}
+`;
+
+tabulate(model)
