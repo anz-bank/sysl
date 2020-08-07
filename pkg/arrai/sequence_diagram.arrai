@@ -7,7 +7,7 @@ let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
 # Each call is a tuple with attributes `from` (the upstream endpoint), `to` (the downstream endpoint
 # that `from` calls), and `calls` (a subtree of calls made by the downstream endpoint).
 let rec toTree = \(:m, :appName, :epName)
-    m.calls where .from.appName = appName && .from.epName = epName orderby .sourceContext.@
+    m.calls where .from.appName = appName && .from.epName = epName orderby .source_context.@
         >> (:.from, :.to, calls: toTree((:m, :.to.appName, :.to.epName)))
 ;
 
