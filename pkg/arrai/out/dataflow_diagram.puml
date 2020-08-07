@@ -1,0 +1,9 @@
+@startuml
+title Source.Foo.x
+[A] "Fetch" --> "Fetch" [D] : A.FetchResponse.ax
+[A] "Fetch" --> "FetchA" [C] : A.FetchResponse.ax
+[B] "Fetch" --> "FetchB" [C] : B.FetchResponse.bx
+[D] "Fetch" --> "Do" [Client] : D.FetchResponse.dx
+[Source] "Read" --> "Fetch" [A] : Source.Foo.x
+[Source] "Read" --> "Fetch" [B] : Source.Foo.x
+@enduml

@@ -1,0 +1,6 @@
+# Generates the PlantUML for a dataflow diagram of model.sysl, field Source.Foo.x.
+
+let sysl = //{./sysl};
+let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+
+//{./dfa/simple_flow}

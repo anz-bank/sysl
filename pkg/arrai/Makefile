@@ -11,7 +11,8 @@ RAW=$(OUT)/data_dictionary.csv \
 # Diagram targets that require rendering.
 DIAGRAMS=$(OUT)/data_diagram.svg \
 		 $(OUT)/integration_diagram.svg \
-		 $(OUT)/sequence_diagram.svg
+		 $(OUT)/sequence_diagram.svg \
+		 $(OUT)/dataflow_diagram.svg
 
 all: raw diagrams compare
 
