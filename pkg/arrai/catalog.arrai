@@ -1,6 +1,6 @@
 # Generates a catalog of pages describing the applications in model.sysl.
 
-let model = //{./sysl}.normalize(//{./sysl}.load('../../../api-catalog/out/anz.pb'));
+let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
 
 # Transforms the model's information about the named package to a page of HTML content.
 let toPackagePage = \m \appPackage
