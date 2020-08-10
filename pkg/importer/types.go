@@ -21,6 +21,7 @@ type StandardType struct {
 
 func (s *StandardType) Name() string { return s.name }
 
+// Union represents a union type https://sysl.io/docs/lang-spec#union
 type Union struct {
 	name    string
 	Options FieldList
@@ -52,9 +53,13 @@ type ExternalAlias struct {
 }
 
 const (
-	StringTypeName = "string"
-	ObjectTypeName = "object"
-	ArrayTypeName  = "array"
+	StringTypeName  = "string"
+	ObjectTypeName  = "object"
+	ArrayTypeName   = "array"
+	EmptyTypeName   = ""
+	BooleanTypeName = "boolean"
+	IntegerTypeName = "integer"
+	NumberTypeName  = "number"
 )
 
 func NewStringAlias(name string, attrs ...string) Type {
