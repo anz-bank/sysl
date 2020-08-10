@@ -14,18 +14,27 @@ let payloadMacro = (
     @grammar: {://grammar.lang.wbnf:
         payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^\_\t\[]* attr?;
         attr -> %!Array(nvp|modifier);
-        nvp_item -> ('"' ([^"\\] | [\\][\\brntu'"])* '"' | "'" ([^''])* "'") | %!Array(nvp_item);
+        nvp_item -> ('"' ([^"\\] | [\\][\\brntu'"])* '"' | "'" ([^''])* "'") | array=%!Array(nvp_item) | dict=%!Dict(nvp_item);
         nvp ->  name=\w+ "=" nvp_item;
         modifier -> "~" name=[\w\+]+;
         .wrapRE -> /{\s*()\s*};
-        .macro Array(child) {"[" (child):"," "]"}
+        .macro Array(child) {
+            "[" (child):"," "]"
+        }
+        .macro Dict(child) {
+            "{" entry=(key=child ":" value=child):"," "}"
+        }
     :},
     @transform: (payload: //{./util}.simpleTransform),
 );
 
-# TODO: this is assuming that attribute values are similar to arrai values
+# TODO: this is assuming that attribute values are similar to arrai strings
 let rec buildNvp = \nvp cond nvp {
-    (nvp_item: i, ...): i => (:.@, @item: buildNvp(.@item)),
+    (array: (nvp_item: i, ...), ...): (a: i => (:.@, @item: buildNvp(.@item))),
+    (dict: (entry: i, ...), ...): (d: i => (
+        @     : buildNvp(.@item.key.nvp_item),
+        @value: buildNvp(.@item.value.nvp_item)
+    )),
     _: //eval.value(//seq.join('', nvp.''))
 };
 

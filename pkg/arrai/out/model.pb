@@ -1,128 +1,3 @@
-¼
-D¶
-
-D*›
-Fetch‘
-Fetch:
-
-AFetch:
-
-CFetch:ÌBÉ
-Æok <: D.FetchResponse [dataflow={"D.FetchResponse.dx": ["A.FetchResponse.ax", "C.FetchResponse.cx"], "D.FetchResponse.dy": ["A.FetchResponse.ay", "C.FetchResponse.cy"]}, description="1:1 transform"]š
-
-model.sysl=B2x
-FetchResponsegš
-
-model.syslBFJ
-#
-dxš
-
-model.syslCC
-#
-dyš
-
-model.syslDDš
-
-model.sysl<<ó
-Clientè
-
-Client*Ï
-DoÈ
-Do:
-
-DFetch:–B“
-ok <: Client.Screen [dataflow={"Client.Screen.xx": "D.FetchResponse.dx", "Client.Screen.yy": "D.FetchResponse.dy"}, description="1:1 transform"]š
-
-model.syslGK2q
-Screengš
-
-model.syslKOJ
-#
-yyš
-
-model.syslMM
-#
-xxš
-
-model.syslLLš
-
-model.syslFF‚
-all{
-
-all*Y
-allR
-all:
-
-Source:
-
-Client:
-A:
-B:
-C:
-Dš
-
-model.syslPWš
-
-model.syslOOõ
-Sourceê
-
-Source"
-patterns:
-"db"+
-description"A database.
- Stores data.
-*?
-Read7
-Read:B
-ok <: Source.Fooš
-
-model.sysl2ñ
-FooéB0
-description!"A Foo.
- Represents foo things.
-š
-
-model.sysl:™
-A
-x<B
-description"The x value.š
-
-model.sysl
-
-T
-yOB0
-description!"A Foo.
- Represents foo things.
-š
-
-model.sysl2Ê
-BarÂB
-description"A bar table.š
-
-model.sysl:…
-W
-aRB
-patterns:
-"pkB
-description"A bar table.š
-
-model.sysl
-F
-bAB 
-description"An optional int`š
-
-model.sysl
-]
-xXB
-description"A foreign keyš
-
-model.syslJ
-
-
-SourceBarFoox
-aš
-
-model.sysl
 ô
 Aî
 
@@ -208,4 +83,128 @@ model.sysl99
 
 model.sysl::š
 
-model.sysl**
+model.sysl**¼
+D¶
+
+D*›
+Fetch‘
+Fetch:
+
+AFetch:
+
+CFetch:ÌBÉ
+Æok <: D.FetchResponse [dataflow={"D.FetchResponse.dx": ["A.FetchResponse.ax", "C.FetchResponse.cx"], "D.FetchResponse.dy": ["A.FetchResponse.ay", "C.FetchResponse.cy"]}, description="1:1 transform"]š
+
+model.sysl=B2x
+FetchResponsegš
+
+model.syslBFJ
+#
+dxš
+
+model.syslCC
+#
+dyš
+
+model.syslDDš
+
+model.sysl<<ó
+Clientè
+
+Client*Ï
+DoÈ
+Do:
+
+DFetch:–B“
+ok <: Client.Screen [dataflow={"Client.Screen.xx": "D.FetchResponse.dx", "Client.Screen.yy": "D.FetchResponse.dy"}, description="1:1 transform"]š
+
+model.syslGK2q
+Screengš
+
+model.syslKOJ
+#
+xxš
+
+model.syslLL
+#
+yyš
+
+model.syslMMš
+
+model.syslFF‚
+all{
+
+all*Y
+allR
+all:
+
+Source:
+
+Client:
+A:
+B:
+C:
+Dš
+
+model.syslPWš
+
+model.syslOOÕ
+SourceÊ
+
+Source"
+patterns:
+"db"+
+description"A database.
+ Stores data.
+*ž
+Read•
+Read:rBp
+nok <: Source.Foo [dataflow={"Source.Foo.x": "Source.Bar.a", "Source.Foo.y": ["Source.Bar.b", "Source.Bar.x"]}]š
+
+model.sysl2Ê
+BarÂB
+description"A bar table.š
+
+model.sysl:…
+W
+aRB
+patterns:
+"pkB
+description"A bar table.š
+
+model.sysl
+F
+bAB 
+description"An optional int`š
+
+model.sysl
+]
+xXB
+description"A foreign keyš
+
+model.syslJ
+
+
+SourceBarFoox
+a2ñ
+FooéB0
+description!"A Foo.
+ Represents foo things.
+š
+
+model.sysl:™
+T
+yOB0
+description!"A Foo.
+ Represents foo things.
+š
+
+model.sysl
+A
+x<B
+description"The x value.š
+
+model.sysl
+š
+
+model.sysl

@@ -13,13 +13,42 @@
                         ret =>
                         let payload = .@item.ret.payload;
                         let currType = unpackType(payload.type);
-                        payload.attr?.nvp?('dataflow')?:{} => (
-                            :app,
-                            :ep,
-                            from: unpackType(.@item),
-                            to: currType,
-                            desc: payload.attr.nvp('description')?:""
-                        )
+                        let dataflow = payload.attr?.nvp?('dataflow')?:{};
+                        let desc = payload.attr?.nvp?('description')?:'';
+                        cond dataflow {
+                            (a: val): val => (
+                                                    :app,
+                                                    :ep,
+                                                    from: unpackType(.@item),
+                                                    to: currType,
+                                                    :desc,
+                                                ),
+                            (d: val): val => (
+                                let to = unpackType(.@);
+                                cond .@value {
+                                    (a: froms): (
+                                        froms => (
+                                            :app,
+                                            :ep,
+                                            from: unpackType(.@item),
+                                            :to,
+                                            :desc,
+                                        )
+                                    )
+                                    ,
+                                    # TODO: add string check
+                                    _: {(
+                                        :app,
+                                        :ep,
+                                        from: unpackType(.@value),
+                                        :to,
+                                        :desc,
+                                    )}
+                                }
+                            ) -> //rel.union(.),
+                            _: {}
+                        }
+
                 ) -> //rel.union(.)
             )
         ) -> //rel.union(.)
