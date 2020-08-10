@@ -57,7 +57,7 @@ func Find(name string, ver string) (*Module, error) {
 		gh.Init()
 		manager = gh
 	} else {
-		if !fileExists("go.mod") {
+		if !fileExists("go.mod", false) {
 			return nil, errors.New("no go.mod file, run `go mod init` first")
 		}
 		manager = &goModules{}
@@ -90,10 +90,13 @@ func hasPathPrefix(prefix, s string) bool {
 	return s == prefix
 }
 
-func fileExists(filename string) bool {
+func fileExists(filename string, isDir bool) bool {
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {
 		return false
+	}
+	if isDir {
+		return info.IsDir
 	}
 	return !info.IsDir()
 }

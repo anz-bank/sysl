@@ -79,7 +79,7 @@ func (d *githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 	}
 
 	fname := filepath.Join(dir, repoPath.path)
-	if !fileExists(fname) {
+	if !fileExists(fname, false) {
 		err = writeFile(fname, []byte(content))
 		if err != nil {
 			return nil, err
@@ -108,6 +108,12 @@ func (*githubMgr) Find(filename, ver string, m *Modules) *Module {
 
 func (*githubMgr) Load(m *Modules) error {
 	githubPath := filepath.Join(syslModulesCacheDir, "github.com")
+	if !fileExists(githubPath, true) {
+		if err := os.MkdirAll(githubPath, 0770); err != nil {
+			return err
+		}
+	}
+
 	githubDir, err := os.Open(githubPath)
 	if err != nil {
 		return err
