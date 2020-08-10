@@ -154,7 +154,9 @@ type githubRepoPath struct {
 }
 
 func getGitHubRepoPath(filename string) (*githubRepoPath, error) {
-	names := strings.Split(filename, "/")
+	names := strings.FieldsFunc(filename, func(c rune) bool {
+		return c == '/'
+	})
 	if len(names) < 4 {
 		return nil, fmt.Errorf("the imported module path %s is invalid", filename)
 	}

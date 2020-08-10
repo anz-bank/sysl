@@ -50,3 +50,24 @@ func TestGitHubMgrFind(t *testing.T) {
 	assert.Equal(t, mod2, githubmod.Find("remote/filename", "v0.2.0", &testMods))
 	assert.Nil(t, githubmod.Find("remote/filename", "v1.0.0", &testMods))
 }
+
+func TestGetGitHubRepoPath(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		filename string
+		path     *githubRepoPath
+	}{
+		{"github.com/anz-bank/sysl", nil},
+		{"github.com/anz-bank/sysl/", nil},
+		{"github.com/anz-bank/sysl/deps.sysl", &githubRepoPath{"anz-bank", "sysl", "deps.sysl"}},
+		{"github.com/anz-bank/sysl/nested/module/deps.sysl", &githubRepoPath{"anz-bank", "sysl", "nested/module/deps.sysl"}},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.filename, func(t *testing.T) {
+			t.Parallel()
+			p, _ := getGitHubRepoPath(tt.filename)
+			assert.Equal(t, tt.path, p)
+		})
+	}
+}

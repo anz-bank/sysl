@@ -96,7 +96,7 @@ func fileExists(filename string, isDir bool) bool {
 		return false
 	}
 	if isDir {
-		return info.IsDir
+		return info.IsDir()
 	}
 	return !info.IsDir()
 }
