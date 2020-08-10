@@ -59,7 +59,8 @@ func (d *githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 	fileContent, _, _, err := d.client.Repositories.GetContents(ctx, repoPath.owner, repoPath.repo, repoPath.path, ref)
 	if err != nil {
 		if _, ok := err.(*github.RateLimitError); ok {
-			return nil, errors.Wrap(err, "\033[1;36mplease setup your GitHub access token by setting the SYSL_GITHUB_TOKEN following https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token\033[0m")
+			return nil, errors.Wrap(err,
+				"\033[1;36mplease setup your GitHub access token by setting the SYSL_GITHUB_TOKEN\033[0m")
 		}
 		return nil, err
 	}

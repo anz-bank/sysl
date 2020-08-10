@@ -66,7 +66,12 @@ func TestGetGitHubRepoPath(t *testing.T) {
 		tt := tt
 		t.Run(tt.filename, func(t *testing.T) {
 			t.Parallel()
-			p, _ := getGitHubRepoPath(tt.filename)
+			p, err := getGitHubRepoPath(tt.filename)
+			if tt.path == nil {
+				assert.Error(t, err)
+			} else {
+				assert.Nil(t, err)
+			}
 			assert.Equal(t, tt.path, p)
 		})
 	}
