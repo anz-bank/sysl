@@ -48,7 +48,7 @@ func TestOpenLocalFileFailed(t *testing.T) {
 	mfs := NewFs(memfs, "../../tests/")
 	f, err := mfs.Open(filename)
 	assert.Nil(t, f)
-	assert.Equal(t, fmt.Sprintf("%s not found", filename), err.Error())
+	assert.Equal(t, fmt.Sprintf("%s not found: no such file in current working directory", filename), err.Error())
 }
 
 func TestOpenRemoteFile(t *testing.T) {

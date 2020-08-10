@@ -25,7 +25,7 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, fmt.Errorf("%s not found", name)
+		return nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
 	name, ver, err := mergeRootAndPath(fs.root, name)
@@ -51,7 +51,7 @@ func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, err
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, fmt.Errorf("%s not found", name)
+		return nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
 	name, ver, err := mergeRootAndPath(fs.root, name)

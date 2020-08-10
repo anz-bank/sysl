@@ -15,6 +15,7 @@ const (
 	SyslModulesOff    = "off"
 	SyslModulesOn     = "on"
 	SyslModulesGitHub = "github"
+	SyslModulesGoMod  = "gomod"
 	MasterBranch      = "master"
 )
 
