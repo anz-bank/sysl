@@ -2,7 +2,7 @@
 
 let model = //{./sysl}.normalize(//{./sysl}.load('../../../api-catalog/out/anz.pb'));
 
-# Transforms the model's information about the named app to a page of HTML content.
+# Transforms the model's information about the named package to a page of HTML content.
 let toPackagePage = \m \appPackage
     let apps = (m.apps where .appPackage = appPackage);
     let dbs = apps where .appPatterns & {'db'};
@@ -99,13 +99,8 @@ let toPackagePage = \m \appPackage
 
 # Transforms the model to a map of output filename to HTML page content.
 let toCatalog = \m
-    m.apps => .appPackage => (@:$`${.}.html`, @value: toPackagePage(m, .))
-    # let packages = m.apps => .appPackage;
-    # packages
-    # m.apps nest ~|appPackage|apps =>
-    #     (@:$`catalog/${.appName}.html`, @value: toPackagePage(m, .appName))
+    let packages = m.apps => .appPackage where . && !//seq.has_prefix('google_', .);
+    packages => (@:$`${.}.html`, @value: toPackagePage(m, .))
 ;
 
-# //fmt.pretty(
-    toCatalog(model)
-# )
+toCatalog(model)
