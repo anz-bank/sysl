@@ -36,7 +36,19 @@ components:
         oneOf:
           - $ref: '#/components/schemas/Cat'
           - $ref: '#/components/schemas/Dog'
-    # CatDog: Primitives in oneOf are currently unsupported
+    # This is also currently unsupported
+    # Feline:
+    #   type: object
+    #   oneOf:
+    #     - $ref: '#/components/schemas/Cat'
+    #     - type: object
+    #       properties:
+    #         hunts:
+    #           type: boolean
+    #         nocturnal:
+    #           type: boolean
+    #  Primitives in oneOf are currently unsupported
+    # CatDog: 
     #     type: object
     #     oneOf:
     #       - type: string
