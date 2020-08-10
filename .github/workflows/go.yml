@@ -4,6 +4,8 @@ on: [pull_request]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SYSL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
 jobs:
   build-and-test:
@@ -27,8 +29,6 @@ jobs:
 
       - name: Test
         run: make coverage
-        env:
-          SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Set GOVERSION environment variable
         run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
@@ -51,7 +51,6 @@ jobs:
         run: ./scripts/test-gosysl.sh
         env:
           GOPATH: .
-          SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Upload coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash) -f ./coverage.txt
@@ -76,8 +75,6 @@ jobs:
 
     - name: Test
       run: .\scripts\test-with-coverage-windows.bat
-      env:
-        SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
     - name: Build sysl binary via goreleaser (Windows)
       uses: goreleaser/goreleaser-action@master
@@ -93,8 +90,6 @@ jobs:
 
     - name: Test installed
       run: .\scripts\test-gosysl.bat
-      env:
-        SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
   build-and-test-sysl_js:
     name: Build and test sysl_js on linux
@@ -145,13 +140,9 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.13
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check go.mod and go.sum are tidy
         run: make check-tidy
@@ -167,21 +158,3 @@ jobs:
         uses: actions-contrib/golangci-lint@v1
         with:
           golangci_lint_version: 1.23.8
-
-  build-examples:
-    name: Build Examples
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Set up Go 1.13
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.13
-
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
-
-      - name: Build the examples into docs/website
-        run: make examples

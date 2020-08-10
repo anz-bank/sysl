@@ -8,17 +8,40 @@ import (
 	"github.com/pkg/errors"
 )
 
-var SyslModules = os.Getenv("SYSL_MODULES") != "off"
+var SyslModules = os.Getenv("SYSL_MODULES") != SyslModulesOff
+var GitHubMode = os.Getenv("SYSL_MODULES") == SyslModulesGitHub
+
+const (
+	SyslModulesOff    = "off"
+	SyslModulesOn     = "on"
+	SyslModulesGitHub = "github"
+	SyslModulesGoMod  = "gomod"
+	MasterBranch      = "master"
+)
 
 type Module struct {
-	Name    string
-	Dir     string
+	// The name of module joined by forward slash(/). e.g. "github.com/anz-bank/sysl"
+	Name string
+	// The absolute path to the module.
+	// e.g. "/Users/foo/go/pkg/mod/github.com/anz-bank/sysl@v1.1.0" on Linux and macOS
+	//      "C:\Users\foo\go\pkg\mod\github.com\anz-bank\sysl@v1.1.0" on Windows
+	Dir string
+	// The version of the module. e.g. "v1.1.0"
 	Version string
 }
 
 type Modules []*Module
 
 var modules Modules
+
+type DependencyManager interface {
+	// Download external dependency to local directory
+	Get(filename, ver string, m *Modules) (*Module, error)
+	// Find dependency in m *Modules
+	Find(filename, ver string, m *Modules) *Module
+	// Load local cache into m *Modules
+	Load(m *Modules) error
+}
 
 func (m *Modules) Add(v *Module) {
 	*m = append(*m, v)
@@ -28,61 +51,33 @@ func (m *Modules) Len() int {
 	return len(*m)
 }
 
-func (m *Modules) GetByFilename(filename, ver string) *Module {
-	for i, mod := range *m {
-		if hasPathPrefix(mod.Name, filename) {
-			if i != 0 && ver != "" && ver != "master" && mod.Version != ver {
-				continue
-			}
-			return mod
-		}
-	}
-
-	return nil
-}
-
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
-}
-
 func Find(name string, ver string) (*Module, error) {
-	if !fileExists("go.mod") {
-		return nil, errors.New("no go.mod file, run `go mod init` first")
+	var manager DependencyManager
+	if GitHubMode {
+		gh := &githubMgr{}
+		gh.Init()
+		manager = gh
+	} else {
+		if !fileExists("go.mod", false) {
+			return nil, errors.New("no go.mod file, run `go mod init` first")
+		}
+		manager = &goModules{}
 	}
 
 	if modules.Len() == 0 {
-		if err := modules.Load(); err != nil {
+		if err := manager.Load(&modules); err != nil {
 			return nil, fmt.Errorf("error loading modules: %s", err.Error())
 		}
 	}
 
-	mod := modules.GetByFilename(name, ver)
-	if mod != nil {
-		return mod, nil
+	if ver != "" && ver != MasterBranch {
+		mod := manager.Find(name, ver, &modules)
+		if mod != nil {
+			return mod, nil
+		}
 	}
 
-	err := goGetByFilepath(name, ver)
-	if err != nil {
-		return nil, fmt.Errorf("%s not found", name)
-	}
-
-	if err = modules.Load(); err != nil {
-		return nil, fmt.Errorf("error loading modules: %s", err.Error())
-	}
-
-	if modules == nil {
-		return nil, fmt.Errorf("modules list is empty")
-	}
-
-	mod = modules.GetByFilename(name, ver)
-	if mod == nil {
-		return nil, fmt.Errorf("error finding module of file %s", name)
-	}
-	return mod, nil
+	return manager.Get(name, ver, &modules)
 }
 
 func hasPathPrefix(prefix, s string) bool {
@@ -94,4 +89,15 @@ func hasPathPrefix(prefix, s string) bool {
 	}
 
 	return s == prefix
+}
+
+func fileExists(filename string, isDir bool) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	if isDir {
+		return info.IsDir()
+	}
+	return !info.IsDir()
 }
