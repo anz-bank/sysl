@@ -2,7 +2,18 @@
 (
     name: 'arrai-demo',
     repo: 'https://github.com/anz-bank/sysl',
+    path: 'pkg/arrai',
     tests: {
-        'make': 'make -f pkg/arrai/Makefile',
+        'make': 'make',
+    },
+    children: {
+        (
+            name: 'foo',
+            repo: 'https://github.com/anz-bank/sysl',
+            path: 'pkg/arrai/out',
+            tests: {
+                'bar': 'ls',
+            }
+        ),
     },
 )

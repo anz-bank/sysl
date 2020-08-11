@@ -39,6 +39,10 @@ $(OUT)/%.png $(OUT)/%.svg: $(OUT)/%.puml
 $(OUT)/%.pb: $(OUT) %.sysl
 	sysl protobuf --mode=pb $*.sysl > $(OUT)/$*.pb
 
+# 
+blueprint:
+	arrai run blueprint.arrai | arrai run blueprint_make.arrai > out/Makefile
+
 # Initializes the environment to support diagram generation targets.
 init-diagram: plantuml
 	which plantuml-encode || go install github.com/orlade/plantuml-encode

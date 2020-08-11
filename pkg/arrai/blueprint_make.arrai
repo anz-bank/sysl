@@ -1,5 +1,6 @@
 # Generates a Makefile to execute the tests of downstream repos.
 
+# let blueprint = //eval.value(//os.stdin); 
 let blueprint = //{./blueprint.arrai};
 
 # Set to true to run local repo tests as well.
@@ -11,35 +12,52 @@ let test = \app \case $`_${app}.${case}`;
 # Returns the name for an app clone target.
 let clone = \app $`_${app}.clone`;
 
+let default = \b (:b.name, :b.repo, path:b.path?:'', tests:b.tests?:{}, children:b.children?:{});
+
 # Returns the content of a Makefile to execute downstream tests.
 let toMakefile = \b
-    let selfTests = $`${b.tests => test(b.name, .@) orderby .::}`;
-    let childTests = $`
-        ${(b.children?:{} => \(:name, :tests, ...) 
+    let (:name, :repo, :path, :tests, :children) = default(b);
+
+    let selfTestNames = $`${tests => test(name, .@) orderby .::}`;
+    let childTestNames = $`
+        ${(children => \(:name, ?: tests:{}) 
         	$`${tests => test(name, .@) orderby .:: }`
         ) orderby .:: \\\n\t}`;
 
+    let testTargets = \b
+        let local = repo = b.repo?:repo;
+        let (:name, :repo, :path, :tests, :children) = default(b);
+        $`
+            ${tests => $`
+                ${test(name, .@)}: ${cond {!local: clone(b.name)}}
+                	${cond {path: $`cd ${path} && `}}${.@value}
+            ` orderby .::\i\n}
+        `
+    ;
+
     $`
-        all: ${cond {testSelf: selfTests}}${cond {b.children?:{}: ' \\'}}
-        	${childTests}
+        all: ${cond {testSelf: selfTestNames}}${cond {children: ' \\'}}
+        	${childTestNames}
 
         init:
         	mkdir -p ./blueprint/children
 
-        ${b.tests => $`
-            ${test(b.name, .@)}:
-            	${.@value}
-        ` orderby .::\i\n}
+        # ${name} (self)
 
-        ${(b.children?:{} => \(:name, :repo, :tests, ...) $`
-            ${clone(name)}: init
-            	git clone ${repo} ./blueprint/children
+        ${testTargets(b)}
 
-            ${tests => $`
-                ${test(name, .@)}: ${clone(name)}
-                	${.@value}
-            ` orderby .::\i\n}
-        `) orderby .::\i\n}
+        ${(children => \c 
+            let c = default(c);
+            let local = c.repo = repo;
+            $`
+                # ${c.name} ${cond {local: '(local)'}}
+
+                ${cond {!local: $`
+                    ${clone(c.name)}: init
+                    	git clone --depth=1 ${c.repo} ./blueprint/children
+                `}}
+                ${testTargets(c)}
+            `) orderby .::\i\n}
     `
 ;
 

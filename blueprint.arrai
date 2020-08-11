@@ -5,8 +5,8 @@
         'all': 'make test',
         'tidy': 'make check-tidy',
     },
-    # TODO: Replace with remote imports.
     children: {
+        # TODO: Replace with remote import.
         (
             name: 'ecosystem-test',
             repo: 'https://github.com/orlade-anz/ecosystem-test',
@@ -14,5 +14,6 @@
                 'all': 'make',
             },
         ),
+        //{./pkg/arrai/blueprint.arrai},
     }
 )
