@@ -1,0 +1,8 @@
+# Example of an arr.ai blueprint file.
+(
+    name: 'arrai-demo',
+    repo: 'https://github.com/anz-bank/sysl',
+    tests: {
+        'make': 'make -f pkg/arrai/Makefile',
+    },
+)

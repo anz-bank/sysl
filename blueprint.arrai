@@ -1,0 +1,18 @@
+(
+    name: 'sysl',
+    repo: 'https://github.com/anz-bank/sysl',
+    tests: {
+        'all': 'make test',
+        'tidy': 'make check-tidy',
+    },
+    # TODO: Replace with remote imports.
+    children: {
+        (
+            name: 'ecosystem-test',
+            repo: 'https://github.com/orlade-anz/ecosystem-test',
+            tests: {
+                'all': 'make',
+            },
+        ),
+    }
+)

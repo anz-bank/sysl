@@ -1,0 +1,46 @@
+# Generates a Makefile to execute the tests of downstream repos.
+
+let blueprint = //{./blueprint.arrai};
+
+# Set to true to run local repo tests as well.
+let testSelf = false;
+
+# Returns the name for an app test target.
+let test = \app \case $`_${app}.${case}`;
+
+# Returns the name for an app clone target.
+let clone = \app $`_${app}.clone`;
+
+# Returns the content of a Makefile to execute downstream tests.
+let toMakefile = \b
+    let selfTests = $`${b.tests => test(b.name, .@) orderby .::}`;
+    let childTests = $`
+        ${(b.children?:{} => \(:name, :tests, ...) 
+        	$`${tests => test(name, .@) orderby .:: }`
+        ) orderby .:: \\\n\t}`;
+
+    $`
+        all: ${cond {testSelf: selfTests}}${cond {b.children?:{}: ' \\'}}
+        	${childTests}
+
+        init:
+        	mkdir -p ./blueprint/children
+
+        ${b.tests => $`
+            ${test(b.name, .@)}:
+            	${.@value}
+        ` orderby .::\i\n}
+
+        ${(b.children?:{} => \(:name, :repo, :tests, ...) $`
+            ${clone(name)}: init
+            	git clone ${repo} ./blueprint/children
+
+            ${tests => $`
+                ${test(name, .@)}: ${clone(name)}
+                	${.@value}
+            ` orderby .::\i\n}
+        `) orderby .::\i\n}
+    `
+;
+
+toMakefile(blueprint)
