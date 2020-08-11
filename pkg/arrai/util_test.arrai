@@ -1,0 +1,20 @@
+let util = //{./util};
+
+let sum = \a \b a + b;
+let subtract = \a \b a - b;
+
+{
+    'reduce': [
+        util.reduce([], sum, 0) = 0,
+        util.reduce([], sum, 1) = 1,
+
+        util.reduce([1, 2, 3], sum, 0) = 6,
+        util.reduce([1, 2, 3], sum, 6) = 12,
+
+        [
+            (fn: sum, x: 6),
+            (fn: subtract, x: -3),
+        ] >> \(:fn, :x) 
+            util.reduce([1, 2, 3], fn, 0) = x,
+    ],
+}
