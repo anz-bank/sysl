@@ -21,6 +21,7 @@ message SourceContext {
     string      text    = 4;
 
     Delta   delta       = 6;
+    string  version     = 7; // This is populated when Github Mode is used for sysl modules, e.g v0.0.0-c63b9e92813a where v0.0.0 is the version tag and c63b9e92813a is the first 12 chars of the commit hash
 
     message Location {
         int32   line    = 1;

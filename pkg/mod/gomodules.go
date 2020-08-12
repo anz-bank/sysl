@@ -52,16 +52,12 @@ func (d *goModules) Get(filename, ver string, m *Modules) (mod *Module, err erro
 func (*goModules) Find(filename, ver string, m *Modules) *Module {
 	for i, mod := range *m {
 		if hasPathPrefix(mod.Name, filename) {
-			fmt.Println(mod, filename, ver)
-
 			if i == 0 && ver != "" && ver != MasterBranch {
 				logrus.Warn("importing files from current folder in remote way is incorrect: use local importing instead")
 			}
 			if i == 0 || ver == "" || ver == MasterBranch || ver == mod.Version {
-				fmt.Println("---")
 				return mod
 			}
-			break
 		}
 	}
 

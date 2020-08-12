@@ -51,7 +51,7 @@ func (m *Modules) Len() int {
 	return len(*m)
 }
 
-func Find(name string, ver string) (*Module, error) {
+func Retrieve(name string, ver string) (*Module, error) {
 	var manager DependencyManager
 	if GitHubMode {
 		gh := &githubMgr{}

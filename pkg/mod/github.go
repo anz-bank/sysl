@@ -51,12 +51,12 @@ func (d *githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 		return nil, err
 	}
 	ctx := context.Background()
-	var ref *github.RepositoryContentGetOptions
+	var refOps *github.RepositoryContentGetOptions
 	if ver != "" {
-		ref = &github.RepositoryContentGetOptions{Ref: ver}
+		refOps = &github.RepositoryContentGetOptions{Ref: ver}
 	}
 
-	fileContent, _, _, err := d.client.Repositories.GetContents(ctx, repoPath.owner, repoPath.repo, repoPath.path, ref)
+	fileContent, _, _, err := d.client.Repositories.GetContents(ctx, repoPath.owner, repoPath.repo, repoPath.path, refOps)
 	if err != nil {
 		if _, ok := err.(*github.RateLimitError); ok {
 			return nil, errors.Wrap(err,
@@ -69,8 +69,12 @@ func (d *githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 	if err != nil {
 		return nil, err
 	}
-	if ver == "" {
-		ver = "v0.0.0-" + fileContent.GetSHA()[:12]
+	if ver == "" || ver == MasterBranch {
+		ref, _, err := d.client.Git.GetRef(ctx, repoPath.owner, repoPath.repo, "heads/"+MasterBranch)
+		if err != nil {
+			return nil, err
+		}
+		ver = "v0.0.0-" + ref.GetObject().GetSHA()[:12]
 	}
 
 	name := strings.Join([]string{"github.com", repoPath.owner, repoPath.repo}, "/")
