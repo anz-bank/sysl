@@ -1,4 +1,4 @@
-.PHONY: all diagrams init-diagram plantuml compare clean
+.PHONY: all diagrams blueprint blueprint-test init-diagram plantuml compare clean
 
 SYSL_PLANTUML=http://localhost:8080
 OUT=out
@@ -13,7 +13,7 @@ DIAGRAMS=$(OUT)/data_diagram.svg \
 		 $(OUT)/integration_diagram.svg \
 		 $(OUT)/sequence_diagram.svg
 
-all: raw diagrams compare
+all: raw diagrams compare blueprint
 
 raw: $(OUT) $(RAW)
 diagrams: $(OUT) init-diagram $(DIAGRAMS)
@@ -38,6 +38,14 @@ $(OUT)/%.png $(OUT)/%.svg: $(OUT)/%.puml
 .PRECIOUS: $(OUT)/%.pb
 $(OUT)/%.pb: $(OUT) %.sysl
 	sysl protobuf --mode=pb $*.sysl > $(OUT)/$*.pb
+
+# Generates the blueprint Makefile.
+blueprint:
+	arrai run blueprint.arrai | arrai run blueprint_make.arrai > out/Makefile
+
+# Generates and runs the blueprint Makefile.
+blueprint-test:
+	./blueprint_test.sh
 
 # Initializes the environment to support diagram generation targets.
 init-diagram: plantuml
