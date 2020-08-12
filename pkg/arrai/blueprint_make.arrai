@@ -24,6 +24,10 @@ let toMakefile = \b
         	$`${tests => test(name, .@) orderby .:: }`
         ) orderby .:: \\\n\t}`;
 
+    let repoDir = \repo
+        let [..., x] = //seq.split("/", //seq.trim_suffix(".git", repo));
+        x
+    ;
     let testTargets = \b
         let local = repo = b.repo?:repo;
         let (:name, :repo, :path, :tests, :children) = default(b);
@@ -31,7 +35,10 @@ let toMakefile = \b
             ${tests => $`
                 .PHONY: ${test(name, .@)}
                 ${test(name, .@)}: ${cond {!local: clone(b.name)}}
-                	${cond {path: $`cd ${path} && `}}${.@value}
+                	${cond {
+                        !local: $`cd .blueprints/children/${repoDir(repo)}${cond {path: $`/${path}`}} && `,
+                        path: $`cd ${path} && `,
+                    }}${.@value}
             ` orderby .::\i\n}
         `
     ;
@@ -49,8 +56,7 @@ let toMakefile = \b
 
         ${testTargets(b)}
 
-        ${(children => \c 
-            let c = default(c);
+        ${(children orderby [.repo != repo, .name] >> default(.) >> \c 
             let local = c.repo = repo;
             $`
                 # ${c.name} ${cond {local: '(local)'}}
@@ -61,7 +67,7 @@ let toMakefile = \b
                     	git clone --depth=1 ${c.repo} ./blueprint/children
                 `}}
                 ${testTargets(c)}
-            `) orderby .::\i\n}
+            `)::\i\n}
     `
 ;
 

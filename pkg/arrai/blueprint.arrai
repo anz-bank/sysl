@@ -15,5 +15,13 @@
                 'bar': 'ls',
             }
         ),
+        # TODO: Replace with remote import.
+        (
+            name: 'ecosystem-test',
+            repo: 'https://github.com/orlade-anz/ecosystem-test',
+            tests: {
+                'all': 'make',
+            },
+        ),
     },
 )
