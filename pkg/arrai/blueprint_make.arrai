@@ -3,6 +3,9 @@
 # let blueprint = //eval.value(//os.stdin); 
 let blueprint = //{./blueprint.arrai};
 
+# The local directory for blueprint operation.
+let blueprintDir = '.blueprint';
+
 # Set to true to run local repo tests as well.
 let testSelf = false;
 
@@ -36,7 +39,7 @@ let toMakefile = \b
                 .PHONY: ${test(name, .@)}
                 ${test(name, .@)}: ${cond {!local: clone(b.name)}}
                 	${cond {
-                        !local: $`cd .blueprints/children/${repoDir(repo)}${cond {path: $`/${path}`}} && `,
+                        !local: $`cd ${blueprintDir}/children/${repoDir(repo)}${cond {path: $`/${path}`}} && `,
                         path: $`cd ${path} && `,
                     }}${.@value}
             ` orderby .::\i\n}
@@ -50,7 +53,7 @@ let toMakefile = \b
         	${childTestNames}
 
         init:
-        	mkdir -p ./blueprint/children
+        	mkdir -p ${blueprintDir}/children
 
         # ${name} (self)
 
@@ -58,13 +61,14 @@ let toMakefile = \b
 
         ${(children orderby [.repo != repo, .name] >> default(.) >> \c 
             let local = c.repo = repo;
+            let dir = $`${blueprintDir}/children/${repoDir(c.repo)}`;
             $`
                 # ${c.name} ${cond {local: '(local)'}}
 
                 ${cond {!local: $`
                     .PHONY: ${clone(c.name)}
                     ${clone(c.name)}: init
-                    	git clone --depth=1 ${c.repo} ./blueprint/children
+                    	rm -rf ${dir} && git clone --depth=1 ${c.repo} ${dir}
                 `}}
                 ${testTargets(c)}
             `)::\i\n}
