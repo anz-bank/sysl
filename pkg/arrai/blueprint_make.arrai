@@ -1,7 +1,6 @@
 # Generates a Makefile to execute the tests of downstream repos.
 
-# let blueprint = //eval.value(//os.stdin); 
-let blueprint = //{./blueprint.arrai};
+let blueprint = //eval.value(//os.stdin);
 
 # The local directory for blueprint operation.
 let blueprintDir = '.blueprint';
