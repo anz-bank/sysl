@@ -21,6 +21,7 @@ message SourceContext {
     string      text    = 4;
 
     Delta   delta       = 6;
+    string  version     = 7;
 
     message Location {
         int32   line    = 1;
