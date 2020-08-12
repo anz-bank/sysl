@@ -128,12 +128,12 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
 
-		fsinput, err := newFSFileStream(filename, fs)
+		fsinput, mod, err := newFSFileStream(filename, fs)
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 
-		listener.sc = sourceCtxHelper{source.filename}
+		listener.sc = sourceCtxHelper{source.filename, mod.Version}
 		listener.base = filepath.Dir(filename)
 
 		input, err := importForeign(source, fsinput)
@@ -147,7 +147,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		}
 
 		localListener := NewTreeShapeListener()
-		localListener.sc = sourceCtxHelper{source.filename}
+		localListener.sc = sourceCtxHelper{source.filename, mod.Version}
 		localListener.base = filepath.Dir(filename)
 
 		walker := antlr.NewParseTreeWalker()
