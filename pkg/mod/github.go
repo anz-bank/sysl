@@ -70,7 +70,7 @@ func (d *githubMgr) Get(filename, ver string, m *Modules) (*Module, error) {
 		return nil, err
 	}
 	if ver == "" || ver == MasterBranch {
-		ref, _, err := d.client.Git.GetRef(ctx.Background(), repoPath.owner, repoPath.repo, "heads/"+MasterBranch)
+		ref, _, err := d.client.Git.GetRef(ctx, repoPath.owner, repoPath.repo, "heads/"+MasterBranch)
 		if err != nil {
 			return nil, err
 		}

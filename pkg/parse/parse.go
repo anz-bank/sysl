@@ -132,8 +132,12 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
+		ver := ""
+		if mod != nil {
+			ver = mod.Version
+		}
 
-		listener.sc = sourceCtxHelper{source.filename, mod.Version}
+		listener.sc = sourceCtxHelper{source.filename, ver}
 		listener.base = filepath.Dir(filename)
 
 		input, err := importForeign(source, fsinput)
@@ -147,7 +151,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		}
 
 		localListener := NewTreeShapeListener()
-		localListener.sc = sourceCtxHelper{source.filename, mod.Version}
+		localListener.sc = sourceCtxHelper{source.filename, ver}
 		localListener.base = filepath.Dir(filename)
 
 		walker := antlr.NewParseTreeWalker()

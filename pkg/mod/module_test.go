@@ -34,38 +34,16 @@ func TestFindGoModules(t *testing.T) {
 	defer removeGomodFile(t, fs)
 
 	filename := SyslDepsFile
-	mod, err := Find(filename, "")
+	mod, err := Retrieve(filename, "")
 	assert.NoError(t, err)
 	assert.Equal(t, SyslRepo, mod.Name)
 
 	filename = RemoteDepsFile
-	mod, err = Find(filename, "")
+	mod, err = Retrieve(filename, "")
 	assert.NoError(t, err)
 	assert.Equal(t, RemoteRepo, mod.Name)
 
-	mod, err = Find(filename, "v0.0.1")
-	assert.NoError(t, err)
-	assert.Equal(t, RemoteRepo, mod.Name)
-	assert.Equal(t, "v0.0.1", mod.Version)
-}
-
-func TestFindGitHubMode(t *testing.T) {
-	GitHubMode = true
-	defer func() {
-		GitHubMode = false
-	}()
-
-	filename := SyslDepsFile
-	mod, err := Find(filename, "")
-	assert.NoError(t, err)
-	assert.Equal(t, SyslRepo, mod.Name)
-
-	filename = RemoteDepsFile
-	mod, err = Find(filename, "")
-	assert.NoError(t, err)
-	assert.Equal(t, RemoteRepo, mod.Name)
-
-	mod, err = Find(filename, "v0.0.1")
+	mod, err = Retrieve(filename, "v0.0.1")
 	assert.NoError(t, err)
 	assert.Equal(t, RemoteRepo, mod.Name)
 	assert.Equal(t, "v0.0.1", mod.Version)
@@ -77,7 +55,41 @@ func TestFindWithWrongPath(t *testing.T) {
 	defer removeGomodFile(t, fs)
 
 	wrongpath := "wrong_file_path/deps.sysl"
-	mod, err := Find(wrongpath, "")
+	mod, err := Retrieve(wrongpath, "")
+	assert.Error(t, err)
+	assert.Nil(t, mod)
+}
+
+func TestFindGitHubMode(t *testing.T) {
+	GitHubMode = true
+	defer func() {
+		GitHubMode = false
+	}()
+
+	filename := SyslDepsFile
+	mod, err := Retrieve(filename, "")
+	assert.NoError(t, err)
+	assert.Equal(t, SyslRepo, mod.Name)
+
+	filename = RemoteDepsFile
+	mod, err = Retrieve(filename, "")
+	assert.NoError(t, err)
+	assert.Equal(t, RemoteRepo, mod.Name)
+
+	mod, err = Retrieve(filename, "v0.0.1")
+	assert.NoError(t, err)
+	assert.Equal(t, RemoteRepo, mod.Name)
+	assert.Equal(t, "v0.0.1", mod.Version)
+}
+
+func TestFindWithWrongPathGitHubMode(t *testing.T) {
+	GitHubMode = true
+	defer func() {
+		GitHubMode = false
+	}()
+
+	wrongpath := "wrong_file_path/deps.sysl"
+	mod, err := Retrieve(wrongpath, "")
 	assert.Error(t, err)
 	assert.Nil(t, mod)
 }

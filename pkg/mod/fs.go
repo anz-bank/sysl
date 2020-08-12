@@ -39,17 +39,17 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 func (fs *Fs) OpenWithModule(name string) (afero.File, *Module, error) {
 	f, err := fs.Fs.Open(name)
 	if err == nil {
-		return f, nil
+		return f, nil, nil
 	} else if !SyslModules {
-		return nil, fmt.Errorf("%s not found: no such file in current working directory", name)
+		return nil, nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
 	mod, relpath, err := fs.fetchRemoteFile(name)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	f, err := syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
+	f, err = syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
 	return f, mod, err
 }
 
