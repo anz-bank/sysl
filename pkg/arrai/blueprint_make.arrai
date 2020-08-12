@@ -36,6 +36,8 @@ let toMakefile = \b
     ;
 
     $`
+        .PHONY: all init ${selfTestNames} ${childTestNames}
+
         all: ${cond {testSelf: selfTestNames}}${cond {children: ' \\'}}
         	${childTestNames}
 
