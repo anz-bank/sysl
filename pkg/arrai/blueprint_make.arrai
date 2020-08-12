@@ -70,6 +70,7 @@ let toMakefile = \b
                     ${clone(c.name)}: init
                     	rm -rf ${dir} && git clone --depth=1 ${c.repo} ${dir}
                 `}}
+                
                 ${testTargets(c)}
             `)::\i\n}
     `
