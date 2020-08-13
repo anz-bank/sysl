@@ -1,3 +1,5 @@
+# A grammar to parse SVG documents.
+
 {://grammar.lang.wbnf:
 doc         -> header node;
 header      -> "<?xml" [^?]* "?>";

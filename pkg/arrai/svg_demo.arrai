@@ -1,0 +1,7 @@
+# Parses, transforms and reserializes an SVG document.
+
+let data = //os.file('out/ssd.svg');
+
+let (:macro, :toSvg, ...) = //{./svg};
+let model = //{./util}.invokeMacro(macro, data);
+toSvg(model)

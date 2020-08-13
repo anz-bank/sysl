@@ -1,8 +1,4 @@
-# Parses SVG.
-
-let data = //os.file('out/ssd.svg');
-
-let ast = //grammar.parse(//{./svg_grammar}, 'doc', data);
+# Functions for working with SVG documents.
 
 let comment = \k \v k = "comment";
 let at = \k \v //seq.has_prefix("@", k);
@@ -10,7 +6,7 @@ let at = \k \v //seq.has_prefix("@", k);
 let pred = \k \v !comment(k, v) && !at(k, v);
 
 # Transforms an SVG AST into a more natural arr.ai structure.
-let transform = \ast
+let transformDoc = \ast
     let rec transformNode = \node (
         @tag: node.tag.name.'',
         attrs: node.attr?:{} => \(@item:a, ...) (@: a.name.'', @value: a.value.''),
@@ -39,6 +35,10 @@ let toSvg = \m
     `
 ;
 
-let f = //{./util}.filterTree(pred, ast);
-let t = transform(f);
-toSvg(t)
+(
+    macro: (
+        @grammar: //{./svg_grammar},
+        @transform: (doc: transformDoc),
+    ),
+    :toSvg,
+)
