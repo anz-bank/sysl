@@ -38,19 +38,23 @@ let remOffset = \word word rank (:.@);
 # TODO: Handle type without app reference
 let typeGrammar = {:
         //grammar.lang.wbnf[grammar]:
-        types -> app=([\w\_]+) "." type=([\w\_]+):".";
+        types -> (app=([\w\_]+) ".")? type=([\w\_]+):".";
     :};
 let unpackType = \type (
     (//grammar -> .parse(typeGrammar, 'types', type))
-    -> let typeCount = .type count;
+    ->
+    # TODO: remove once .field?: is fixed
+    let t = .;
+    let app = remOffset(t.app?.''?:'');
+    let typeCount = .type count;
     cond (typeCount) {
         (1): (
-            app  : remOffset(.app.''),
+            :app,
             type : .type >> remOffset(.''),
             field: ''
         ),
         _: (
-            app  : remOffset(.app.''),
+            :app,
             type : .type where .@ != typeCount - 1 >> remOffset(.''),
             field: remOffset(.type(typeCount-1).'')
         )

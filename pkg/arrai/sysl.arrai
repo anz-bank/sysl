@@ -39,24 +39,43 @@ let rec buildNvp = \nvp cond nvp {
 };
 
 let name = //{./util}.remOffset;
+
+# tries to fix type without full reference
+let fixType = \apps \appName \typePayload
+    let (:app, :type, :field) = //{./util}.unpackType(typePayload);
+    let pack = //{./util}.packType;
+    cond app {
+        (''): pack((app: appName, :type, :field)),
+        _: cond {
+            (app <: apps): typePayload,
+            _: pack((app: appName, type: [app] ++ type, :field))
+        }
+    }
+;
 # Converts a return statement payload into a tuple of its parts.
-let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload) +> (
-    attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:{} -> \attr
-            (
-                nvp: attr.nvp?:{} => (@: name(.@item.name.''), @value: buildNvp(.@item.nvp_item)),
-                modifier: attr.modifier?:{} => name(.@item.name.'')
-            )
-);
+let parseReturn = \payload \apps \currApp
+    let ret = //{./util}.invokeMacro(payloadMacro, payload);
+    let retType = ret.type;
+    ret +> (
+        type: fixType(apps, currApp, retType),
+        attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:() -> \attr
+                (
+                    nvp: attr.nvp?:{} => (@: name(.@item.name.''), @value: buildNvp(.@item.nvp_item)),
+                    modifier: attr.modifier?:{} => name(.@item.name.'')
+                )
+    )
+;
 
 # Replaces all `ret` payloads with structured tuples.
 let polishReturns = \m
-    let tweak = \.
-        . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
+    let apps = m.apps => .@;
+    let tweak = \. \currApp
+        . +> (ret: .ret +> (payload: parseReturn(.ret.payload, apps, currApp)));
 
-    m +> (apps: m.apps?:{} >> \a
+    m +> (apps: m.apps?:{} >>> \currApp \a
         a +> (endpoints: a.endpoints?:{} >> \p
             p +> (stmt: p.stmt?:[] >> \s
-                cond s.ret?:{} {{}: s, _: tweak(s)}
+                cond s.ret?:{} {{}: s, _: tweak(s, currApp)}
             )
         )
     )
