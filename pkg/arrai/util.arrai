@@ -15,6 +15,18 @@ let simpleTransform = \ast
     //tuple(d where .@value)
 ;
 
+# Filters the nodes of a hierarchical data structure based on a (key, value) predicate.
+# Key-value pairs for which the predicate returns false will be removed from the result.
+let rec filterTree = \pred \ast
+    cond ast {
+        {(@:..., @value:...), ...}: ast where pred(.@, .@value) >> filterTree(pred, .),
+        [...]: ast >> filterTree(pred, .),
+        {...}: ast => filterTree(pred, .),
+        (...): //{./util}.safetuple(//dict(ast) where pred(.@, .@value) >> filterTree(pred, .)),
+        _: ast,
+    }
+;
+
 # Sequentially applies `fn(accumulator, i)` for each `i` in `arr`. The `accumulator` is initialised
 # to `val`, and updated to the result of `fn` after each invocation.
 # Returns the final accumulated value.
@@ -33,9 +45,21 @@ let reduceFlat = \arr \fn \val
     reduce(arr, \z \i reduce(i, fn, z), val)
 ;
 
+# Workaround for https://github.com/arr-ai/arrai/issues/571
+let safetuple = \d
+    let empty = d('')?:{};
+    let rest = //tuple(d without (@:'', @value:empty));
+    cond {
+        empty: rest +> ('': empty),
+        _: rest,
+    }
+;
+
 (
+    :filterTree,
     :invokeMacro,
     :simpleTransform,
     :reduce,
     :reduceFlat,
+    :safetuple,
 )
