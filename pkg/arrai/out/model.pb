@@ -1,7 +1,60 @@
-˛
+Ù
+AÓ
+
+A*”
+Fetch…
+Fetch:
+
+SourceRead:êBç
+äok <: A.FetchResponse [dataflow={"A.FetchResponse.ax": "Source.Foo.x", "A.FetchResponse.ay": "Source.Foo.y"}, description="1:1 transform"]ö
+
+model.sysl2x
+FetchResponsegö
+
+model.sysl!J
+#
+axö
+
+model.sysl
+#
+ayö
+
+model.syslö
+
+model.syslÙ
+BÓ
+
+B*”
+Fetch…
+Fetch:
+
+SourceRead:êBç
+äok <: B.FetchResponse [dataflow={"B.FetchResponse.bx": "Source.Foo.x", "B.FetchResponse.by": "Source.Foo.y"}, description="1:1 transform"]ö
+
+model.sysl"&2x
+FetchResponsegö
+
+model.sysl&*J
+#
+bxö
+
+model.sysl''
+#
+byö
+
+model.sysl((ö
+
+model.sysl!!˛
 C¯
 
-C*ù
+C*›
+FetchB“
+FetchB:
+
+BFetch:úBô
+ñok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": "B.FetchResponse.bx", "C.FetchResponse.cy": "B.FetchResponse.by"}, description="1:1 transform"]ö
+
+model.sysl/4*ù
 Fetchì
 Fetch:
 
@@ -17,25 +70,18 @@ model.sysl49*›
 AFetch:úBô
 ñok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": "A.FetchResponse.ax", "C.FetchResponse.cy": "A.FetchResponse.ay"}, description="1:1 transform"]ö
 
-model.sysl+/*›
-FetchB“
-FetchB:
-
-BFetch:úBô
-ñok <: C.FetchResponse [dataflow={"C.FetchResponse.cx": "B.FetchResponse.bx", "C.FetchResponse.cy": "B.FetchResponse.by"}, description="1:1 transform"]ö
-
-model.sysl/42x
+model.sysl+/2x
 FetchResponsegö
 
 model.sysl9=J
 #
-cxö
-
-model.sysl::
-#
 cyö
 
-model.sysl;;ö
+model.sysl;;
+#
+cxö
+
+model.sysl::ö
 
 model.sysl**º
 D∂
@@ -102,45 +148,20 @@ model.syslGGÇ
 
 model.syslQXö
 
-model.syslPPı
-SourceÍ
+model.syslPPÓ
+Source„
 
 Source"
 patterns:
 "db"+
 description"A database.
  Stores data.
-*?
-Read7
-Read:B
-ok <: Source.Fooö
+*8
+Read0
+Read:B
+	ok <: Fooö
 
-model.sysl2 
-Bar¬B
-description"A bar table.ö
-
-model.sysl:Ö
-F
-bAB 
-description"An optional int`ö
-
-model.sysl
-]
-xXB
-description"A foreign keyö
-
-model.syslJ
-
-
-SourceBarFoox
-W
-aRB
-patterns:
-"pkB
-description"A bar table.ö
-
-model.sysl
-a2Ò
+model.sysl2Ò
 FooÈB0
 description!"A Foo.
  Represents foo things.
@@ -159,53 +180,31 @@ T
  Represents foo things.
 ö
 
-model.syslö
+model.sysl2 
+Bar¬B
+description"A bar table.ö
+
+model.sysl:Ö
+W
+aRB
+description"A bar table.B
+patterns:
+"pkö
+
+model.sysl
+F
+bAB 
+description"An optional int`ö
+
+model.sysl
+]
+xXB
+description"A foreign keyö
+
+model.syslJ
+
+
+SourceBarFoox
+aö
 
 model.sysl
-Ù
-AÓ
-
-A*”
-Fetch…
-Fetch:
-
-SourceRead:êBç
-äok <: A.FetchResponse [dataflow={"A.FetchResponse.ax": "Source.Foo.x", "A.FetchResponse.ay": "Source.Foo.y"}, description="1:1 transform"]ö
-
-model.sysl2x
-FetchResponsegö
-
-model.sysl!J
-#
-axö
-
-model.sysl
-#
-ayö
-
-model.syslö
-
-model.syslÙ
-BÓ
-
-B*”
-Fetch…
-Fetch:
-
-SourceRead:êBç
-äok <: B.FetchResponse [dataflow={"B.FetchResponse.bx": "Source.Foo.x", "B.FetchResponse.by": "Source.Foo.y"}, description="1:1 transform"]ö
-
-model.sysl"&2x
-FetchResponsegö
-
-model.sysl&*J
-#
-bxö
-
-model.sysl''
-#
-byö
-
-model.sysl((ö
-
-model.sysl!!
