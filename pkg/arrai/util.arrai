@@ -35,29 +35,44 @@ let reduceFlat = \arr \fn \val
 
 let remOffset = \word word rank (:.@);
 
+# TODO: this should be part of stdlib
+let rec trimWhitespace = \str
+    let prefix = //seq.trim_prefix(' ');
+    let suffix = //seq.trim_suffix(' ');
+    let trimmed = prefix(suffix(str));
+    cond trimmed {
+        (str): str,
+        _: trimWhitespace(trimmed)
+    }
+;
+
+
 # TODO: Handle type without app reference
 let typeGrammar = {:
         //grammar.lang.wbnf[grammar]:
-        types -> (app=([\w\_]+) ".")? type=([\w\_]+):".";
+        types -> (app=([^\.]+) ".")? type=([^\.]+):".";
     :};
 let unpackType = \type (
-    (//grammar -> .parse(typeGrammar, 'types', type))
-    ->
-    # TODO: remove once .field?: is fixed
-    let t = .;
-    let app = remOffset(t.app?.''?:'');
-    let typeCount = .type count;
-    cond (typeCount) {
-        (1): (
-            :app,
-            type : .type >> remOffset(.''),
-            field: ''
-        ),
-        _: (
-            :app,
-            type : .type where .@ != typeCount - 1 >> remOffset(.''),
-            field: remOffset(.type(typeCount-1).'')
-        )
+    cond type {
+        (''): (app: '', type: '', field: ''),
+        _: (//grammar -> .parse(typeGrammar, 'types', type))
+            ->
+            # TODO: remove once .field?: is fixed
+            let t = .;
+            let app = trimWhitespace(remOffset(t.app?.''?:''));
+            let typeCount = .type count;
+            cond (typeCount) {
+                (1): (
+                    :app,
+                    type : .type >> trimWhitespace(remOffset(.'')),
+                    field: ''
+                ),
+                _: (
+                    :app,
+                    type : .type where .@ != typeCount - 1 >> trimWhitespace(remOffset(.'')),
+                    field: trimWhitespace(remOffset(.type(typeCount-1).''))
+                )
+            }
     }
 );
 
@@ -77,4 +92,5 @@ let packType = \(app: appName, type: typeSeq, field: fieldName) (
     :unpackType,
     :packType,
     :remOffset,
+    :trimWhitespace
 )
