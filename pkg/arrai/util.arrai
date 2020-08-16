@@ -45,15 +45,16 @@ let reduceFlat = \arr \fn \val
     reduce(arr, \z \i reduce(i, fn, z), val)
 ;
 
+# Returns a sequence with any offset and holes removed.
+let ranked = \s s rank (:.@);
+
 # Workaround for https://github.com/arr-ai/arrai/issues/571
 let safetuple = \d
-    let empty = d('')?:{};
-    let rest = //tuple(d without (@:'', @value:empty));
-    cond {
-        empty: rest +> ('': empty),
+    let rest = //tuple(d where .@ != '');
+    cond d where .@ = '' {
+        {(@:'', @value: value)}: rest +> (@: value),
         _: rest,
-    }
-;
+    };
 
 (
     :filterTree,
@@ -61,5 +62,6 @@ let safetuple = \d
     :simpleTransform,
     :reduce,
     :reduceFlat,
+    :ranked,
     :safetuple,
 )

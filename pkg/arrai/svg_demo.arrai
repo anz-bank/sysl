@@ -2,6 +2,16 @@
 
 let data = //os.file('out/ssd.svg');
 
-let (:macro, :toSvg, ...) = //{./svg};
+let (:macro, :toSvg, :colored, :byText, ...) = //{./svg};
 let model = //{./util}.invokeMacro(macro, data);
-toSvg(model)
+
+
+'<html>' ++
+toSvg(
+    colored(
+        model,
+        'green',
+        byText(model, 'Read')
+    )
+)
+++ '<style></style></html>'
