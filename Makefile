@@ -2,7 +2,8 @@
 
 include VersionReport.mk
 
-GOVERSION=$(shell go version | cut -d' ' -f3-4)
+GOPATH    = $(shell go env GOPATH)
+GOVERSION = $(shell go version | cut -d' ' -f3-4)
 BIN_DIR := $(GOPATH)/bin
 
 ifneq ("$(shell which gotestsum)", "")
