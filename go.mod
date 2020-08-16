@@ -48,9 +48,8 @@ require (
 	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
 	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
-	google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24 // indirect
 	google.golang.org/grpc v1.28.0
-	google.golang.org/protobuf v1.23.0
+	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
