@@ -14,6 +14,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20200503195918-621b933c7a7f
 	github.com/anz-bank/mermaid-go v0.1.1
+	github.com/anz-bank/sysl-examples v0.0.1 // indirect
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
 	github.com/arr-ai/frozen v0.14.0 // indirect
 	github.com/arr-ai/hash v0.5.0 // indirect
