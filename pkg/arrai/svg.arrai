@@ -74,13 +74,14 @@ let parts = \in
     )
 ;
 
+let kids = \ns ns => .children => .@item;
+
 # Returns text nodes that contain the given text. May be nested in a nodes.
 let texts = \svg \text
     let raw = byTag(svg, 'text') where ranked(.text) = ranked(text);
-    let _ = //log.print('comparing');
-    let as = (byTag(svg, 'a') where //log.print(pi(.attrs('href')) = pi(text))) => .children => .@item;
-    let ats = byTag(svg, 'a') => .children => .@item where ranked(.text) = ranked(text);
-    raw | //log.print(as) | ats
+    let as = kids(byTag(svg, 'a') where parts(.attrs('href')) = parts(text));
+    let ats = kids(byTag(svg, 'a')) where ranked(.text) = ranked(text);
+    raw | as | ats
 ;
 
 # Returns the nodes most closely associated with the given text.
