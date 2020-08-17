@@ -64,14 +64,15 @@ hex_value           -> /{-?0x[[:xdigit:]]+};
 #################### PARSE TREE EVALUATORS ####################
 # These functions turn a spanner ddl parse tree into ddl statements
 
-# eval_int64 turns an int64 parse node into an integer
-let eval_int64 = \parsed cond parsed {
+# evalInt64 turns an int64 parse node into an integer
+let evalInt64 = \parsed cond parsed {
     (decimal_value: ('': val), ...): //eval.value(val),
-    (hex_value: ('': val), ...): 0,
+    (hex_value: ('': val), ...): val,
+    _: "MAX"
 };
 
-# eval_type turns an attr_type parse node into an attribute type
-let eval_type = \parsed
+# evalType turns an attr_type parse node into an attribute type
+let evalType = \parsed
     let data = cond parsed {
         (SCALAR_TYPE: scalar, ...):                    (scalar: scalar, array: false),
         (ARRAY_TYPE: (SCALAR_TYPE: scalar, ...), ...): (scalar: scalar, array: true),
@@ -82,8 +83,8 @@ let eval_type = \parsed
         (FLOAT64: _, ...):                (type: "float64", length: 0),
         (DATE: _, ...):                   (type:"date", length: 0),
         (TIMESTAMP: _, ...):              (type:"timestamp", length: 0),
-        (STRING: _, length: length, ...): (type: "string", length: eval_int64(length.int64_value)),
-        (BYTES: _, length: length, ...):  (type: "bytes", length: eval_int64(length.int64_value)),
+        (STRING: _, length: length, ...): (type: "string", length: evalInt64(length.int64_value?:"MAX")),
+        (BYTES: _, length: length, ...):  (type: "bytes", length: evalInt64(length.int64_value?:"MAX")),
     };
     (
         type: type.type,
@@ -91,9 +92,9 @@ let eval_type = \parsed
         array: data.array,
     );
 
-# eval_attribute turns an attr node into an attribute of a relation
-let eval_attribute = \parsed
-    let type = eval_type(parsed.attr_type);
+# evalAttribute turns an attr node into an attribute of a relation
+let evalAttribute = \parsed
+    let type = evalType(parsed.attr_type);
     (
         name:     parsed.column_name.'' rank (:.@),
         type:     type.type,
@@ -106,7 +107,7 @@ let eval_attribute = \parsed
         nullable: cond parsed {(not_null: _, ...): false, _: true},
     );
 
-let eval_foreign_key_constraint = \parsed
+let evalForeignKeyConstraint = \parsed
     let reference = parsed.foreign -> (
         table_name: .table_name.'' rank (@: .@),
         attributes: .column_name >> (.'' rank (@: .@)),
@@ -120,12 +121,12 @@ let eval_foreign_key_constraint = \parsed
         ),
     );
 
-let eval_table_alteration = \parsed cond parsed {
+let evalTableAlteration = \parsed cond parsed {
     (table_alteration: (ADD_COLUMN: data, ...), ...): (
         type: "add_column",
         alteration: (
             name: data.column_name.'' rank (@: .@),
-            type: eval_type(data.attr_type),
+            type: evalType(data.attr_type),
         ),
     ),
 
@@ -143,7 +144,7 @@ let eval_table_alteration = \parsed cond parsed {
 
     (table_alteration: (ADD_CONSTRAINT: data, ...), ...): (
         type: "add_constraint",
-        alteration: eval_foreign_key_constraint(data.table_constraint),
+        alteration: evalForeignKeyConstraint(data.table_constraint),
     ),
 
     (table_alteration: (DROP_CONSTRAINT: data, ...), ...): (
@@ -154,16 +155,16 @@ let eval_table_alteration = \parsed cond parsed {
     (attr_alteration: data, ...): (type: "alter_column", alteration: data),
 };
 
-# eval_ddl turns a ddl parse tree into a list of ddl statements ready to be applied to a model
-# Use apply_stmt to apply these statements to a spanner model
-let eval_ddl = \parsed parsed.stmt >> cond . {
+# evalDdl turns a ddl parse tree into a list of ddl statements ready to be applied to a model
+# Use applyStmt to apply these statements to a spanner model
+let evalDdl = \parsed parsed.stmt >> cond . {
     (create_table: val, ...): (
         stmt: "create_table",
         data: (
             name: val.table_name.'' rank (:.@),
-            attributes: val.attr => eval_attribute(.@item),
+            attributes: val.attr => evalAttribute(.@item),
             foreign_keys: cond val {
-                (table_constraint: [...constraints], ...): constraints => eval_foreign_key_constraint(.@item),
+                (table_constraint: [...constraints], ...): constraints => evalForeignKeyConstraint(.@item),
             },
             primary_key: val.pk.key_part.column_name => (.@item.'' rank (@: .@)),
             cluster: cond {
@@ -179,11 +180,11 @@ let eval_ddl = \parsed parsed.stmt >> cond . {
     (create_index: val, ...): (
         stmt: "create_index",
         data: (
-            unique: (val.unique?.'':'') rank (@: .@), 
-            nullfiltered: (val.nullfiltered?.'':'') rank (@: .@), 
+            unique: (val.unique?.'':'') rank (@: .@),
+            nullfiltered: (val.nullfiltered?.'':'') rank (@: .@),
             name: val.index_name.'' rank (@: .@),
             table_name: val.table_name.'' rank (@: .@),
-            key_part: (val.key_part.column_name.@item.'' rank (@: .@)) ++ ' ' ++ (val.key_part.''.@item rank (@: .@)), 
+            key_part: (val.key_part.column_name.@item.'' rank (@: .@)) ++ ' ' ++ (val.key_part.''.@item rank (@: .@)),
             storing_col: cond {
                 (val.storing_clause?:false): val.storing_clause.column_name >> (.'' rank (@: .@)),
                 _: {}
@@ -203,7 +204,7 @@ let eval_ddl = \parsed parsed.stmt >> cond . {
         stmt: "alter_table",
         data: (
             table_name: val.table_name.'' rank (@: .@),
-            alterations: val.alter >> eval_table_alteration(.),
+            alterations: val.alter >> evalTableAlteration(.),
         ),
     ),
 
@@ -216,87 +217,95 @@ let eval_ddl = \parsed parsed.stmt >> cond . {
 ################## PARSERS ##################
 
 # parses a byte array against the ddl grammar and hands it to eval
-let parse_ddl = \bytes eval_ddl(//grammar.parse(grammar, "ddl", bytes));
+let parseDdl = \bytes evalDdl(//grammar.parse(grammar, "ddl", bytes));
 
-# parses a list of schema files. reads each file and hands to parse_ddl
-let parse_schema_files = \files //seq.concat(files >> parse_ddl(//os.file(.)));
+# parses a list of schema files. reads each file and hands to parseDdl
+let parseSchema = \files //seq.concat(files >> parseDdl(//os.file(.)));
 
 ################## STATEMENTS #################
 
 # applies a create table statement
-let apply_create_table = \relation \model
-    let relations = cond model.relations where .name=relation.name {
-        false: model.relations | {relation},
+let applyCreateTable = \relation \model
+    let relations = cond model.entities where .name=relation.name {
+        false: model.entities | {relation},
         true: false, # a match means the ddl is trying to create a table that already exists
     };
     (
-        relations: relations,
+        entities: relations,
+        indexes: model.indexes,
+        schema: model.schema,
     );
 
 # applies an alter table stamement
 # NOT IMPLEMENTED
-let apply_alter_table = \alteration \model
+let applyAlterTable = \alteration \model
     model;
 
 # applies a create index statement
-let apply_create_index = \index \model
-    let indexes = cond model.relations where .name=index.name {
-        false: model.relations | {index},
+let applyCreateIndex = \index \model
+    let indxs = cond model.indexes where .name=index.name {
+        false: model.indexes | {index},
         true: false, # a match means the ddl is trying to create a index that already exists
     };
     (
-        relations: indexes,
+        entities: model.entities,
+        indexes: indxs,
+        schema: model.schema,
     );
 
-let apply_create_database = \database \model
-    let apps = cond model.relations where .name=database.name {
-        false: model.relations | {database},
+let applyCreateDatabase = \database \model
+    let dbschema = cond model.schema where .name=database.name {
+        false: model.schema | {database},
         true: false, # a match means the ddl is trying to create a database that already exists
     };
     (
-        relations: apps,
+        entities: model.entities,
+        indexes: model.indexes,
+        schema: dbschema,
     );
 
 # applies a drop table statement
-let apply_drop_table = \name \model
-    let relations = model.relations where .name != relation;
+let applyDropTable = \name \model
+    let relations = model.entities where .name != relation;
     (
-        relations: relations,
+        entities: relations,
+        indexes: model.indexes,
+        schema: model.schema,
     );
 
 # applies a drop_index statement
 # NOT IMPLEMENTED
-let apply_drop_index = \name \model
+let applyDropIndex = \name \model
     model;
 
 # applies either a single staement or a list of statements in the given order
-let rec apply_stmt = \stmt \model
+let rec applyStmt = \stmt \model
     cond stmt {
         # match against the single statement types
-        (stmt: "create_database", data: relation):  apply_create_database(relation, model),
-        (stmt: "create_table", data: relation):  apply_create_table(relation, model),
-        (stmt: "create_index", data: index):     apply_create_index(index, model),
-        (stmt: "alter_table", data: alteration): apply_alter_table(alteration, model),
-        (stmt: "drop_table", data: name):        apply_drop_table(name, model),
-        (stmt: "drop_index", data: name):        apply_drop_index(name, model),
+        (stmt: "create_database", data: schema):  applyCreateDatabase(schema, model),
+        (stmt: "create_table", data: relation):  applyCreateTable(relation, model),
+        (stmt: "create_index", data: index):     applyCreateIndex(index, model),
+        (stmt: "alter_table", data: alteration): applyAlterTable(alteration, model),
+        (stmt: "drop_table", data: name):        applyDropTable(name, model),
+        (stmt: "drop_index", data: name):        applyDropIndex(name, model),
         (...): model, # guard against unrecognised statements
 
         # match against an arrai of statements and recursively apply them in order
-        [first, ...rem]: apply_stmt(rem, apply_stmt(first, model)),
+        [first, ...rem]: applyStmt(rem, applyStmt(first, model)),
         []:              model,
     };
 
 ################# EXPOSE ################
 (
-    # empty model, use this as the base of an apply_stmt call to create a model from a ddl statement
-    empty_model:        (relations: {}),
+    # empty model, use this as the base of an applyStmt call to create a model from a ddl statement
+    emptyModel:        (entities: {}, indexes: {}, schema: {}),
 
     # parses a single byte array representing a spanner schema
-    parse_ddl:          parse_ddl,
+    parseDdl:          parseDdl,
 
-    # parses a list of schema files. opens the files and calls parse_ddl on them in the given order
-    parse_schema_files: parse_schema_files,
+    # parses a list of schema files. opens the files and calls parseDdl on them in the given order
+    parseSchema: parseSchema,
 
-    # applies a ddl stmt to a model. Use empty_model to get a model from scratch
-    apply_stmt:         apply_stmt,
+    # applies a ddl stmt to a model. Use emptyModel to get a model from scratch
+    applyStmt:         applyStmt,
 )

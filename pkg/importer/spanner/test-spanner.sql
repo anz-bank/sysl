@@ -30,8 +30,8 @@ CREATE TABLE CustomerHasAccount (
 CREATE TABLE AccountAddress (
     AccountNum        STRING(23) NOT NULL,
     AddressPostCode   STRING(10) NOT NULL OPTIONS (allow_commit_timestamp=true),
-    AddressLine1      STRING(100),
-    AddressLine2      STRING(100),
+    AddressLine1      BYTES(MAX),
+    AddressLine2      STRING(0x100),
     AddressLine3      STRING(100),
-) PRIMARY KEY (AccountNum, AddressPostCode),
+) PRIMARY KEY (AccountNum ASC, AddressPostCode DESC),
 INTERLEAVE IN PARENT Account ON DELETE CASCADE;

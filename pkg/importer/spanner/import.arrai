@@ -1,5 +1,6 @@
-let [_, import_sql] = //os.args;
+let [_, importSql] = //os.args;
 let spanner = //{./spanner.arrai};
-let stmts = spanner.parse_schema_files([import_sql]);
-let model = spanner.apply_stmt(stmts, spanner.empty_model);
-model
+let sysl = //{./sysl.arrai};
+let stmts = spanner.parseSchema([importSql]);
+let model = spanner.applyStmt(stmts, spanner.emptyModel);
+$`${sysl.transformModel(model)}`
