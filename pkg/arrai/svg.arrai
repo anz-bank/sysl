@@ -60,13 +60,36 @@ let getY = \n
     n.attrs('y')?:{} || n.attrs('y1')?:{} || py(n)
 ;
 
+# Performs rough decoding of URL-encoded strings.
+let urldecode = \in //seq.sub('&gt;', '>', //seq.sub('&lt;', '<', //seq.sub('%20', ' ', in)));
+
+# Returns the LHS, RHS and arrow of an endpoint expression (e.g. x -> y).
+let parts = \in
+    let ing = //re.compile('#?\\s*([^-<>]*)\\s*([-<>]+)\\s*(.+)');
+    let [[_, lhs, arrow, rhs]] = ing.match(//str.lower(urldecode(in)));
+    (
+        lhs: ranked(//seq.trim_suffix(' ', lhs)),
+        arrow: ranked(arrow), 
+        rhs: (//seq.trim_suffix(' ', rhs))
+    )
+;
+
+# Returns text nodes that contain the given text. May be nested in a nodes.
+let texts = \svg \text
+    let raw = byTag(svg, 'text') where ranked(.text) = ranked(text);
+    let _ = //log.print('comparing');
+    let as = (byTag(svg, 'a') where //log.print(pi(.attrs('href')) = pi(text))) => .children => .@item;
+    let ats = byTag(svg, 'a') => .children => .@item where ranked(.text) = ranked(text);
+    raw | //log.print(as) | ats
+;
+
 # Returns the nodes most closely associated with the given text.
 let byText = \svg \text
-    let texts = byTag(svg, 'text') where ranked(.text) = ranked(text);
+    let texts = texts(svg, text);
     //rel.union({'line', 'polygon'} => \t
         let elts = byTag(svg, t) orderby getY(.);
-        texts => getY(.) => \y ranked(elts where getY(.@item) > y)(0)
-    ) | texts
+        texts => getY(.) => \y ranked(elts where getY(.@item) > y)(0)?:{}
+    ) | texts where .
 ;
 
 # Returns the SVG with the text colored.
