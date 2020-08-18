@@ -1,0 +1,20 @@
+# Helper functions for working with JSON data.
+
+# Returns a "simplified" structure, replacing decoded tuples with their internal values.
+# Intended for cases in which the types of null values is not interesting.
+let rec simplify = \j
+    cond j {
+        [...]: j >> simplify(.),
+        (:a): simplify(a),
+        (:s): simplify(s),
+        (:b): simplify(b),
+        _: cond {
+            j < 99999999999999999999: j,
+            _: j >> simplify(.),
+        },
+    }
+;
+
+(
+    :simplify,
+)

@@ -1,0 +1,34 @@
+let id = \. //seq.sub("/", "_", //str.lower($`
+    ${.serviceName}_${.request.method}_${.request.route}`));
+
+let render = \. $`
+    <div class="subtrace ${id(.)}" style="display: none">
+    <p>${.serviceName}: ${.request.method} ${.request.route} (${.request.url})</p>
+
+    <h2>Request</h2>
+    <h3>Headers</h3>
+    <pre>${.request.headers}</pre>
+
+    <h3>Body</h3>
+    <pre>${.request.body}</pre>
+
+    <h2>Response</h2>
+    <p>
+        Status:
+        <span class="status ${.response.statusCode // 100} ${.response.statusCode}">
+            ${.response.statusCode} ${.response.status}
+        </span>
+        (${.response.latency/1000000:.1f}ms)
+    </p>
+
+    <h3>Headers</h3>
+    <pre>${.response.headers}</pre>
+
+    <h3>Body</h3>
+    <pre>${cond .response.body {x: x, _: "(none)"}}</pre>
+    </div>
+`;
+
+(
+    :render,
+)
