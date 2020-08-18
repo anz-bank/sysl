@@ -37,6 +37,5 @@ let concat = \f
     )::\i\n}`
 ;
 
-(
-    :concat,
-)
+let [_, filename] = //os.args;
+concat(filename)
