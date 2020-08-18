@@ -1,0 +1,40 @@
+let (:explore, :unimported, :topsort, ...) = //{./util};
+
+# Matches local arr.ai imports.
+let import = //re.compile('//\\{\\./([\\w/.]+)\\}');
+
+# Returns the set of local arr.ai imports in f.
+let step = \f import.match($`${//os.file(f)}`) => ((.@item(1) rank (:.@)) ++ '.arrai');
+
+let unpackImport = //re.compile(`(let [^=]+=\s*)//\{\./([^}]+)\};`);
+let cleanImports = \content unpackImport.sub('${1}${2}_arrai;', content);
+
+# Returns an arr.ai file concatenating f and all of its transitive dependencies.
+let concat = \f
+    let deps = explore(f, step, {});
+    let files = topsort(deps, [], unimported(deps));
+    let div = $`### ${//seq.repeat(72, '-')} ###`;
+    let names = files => (@: .@item, @value: //seq.sub('.', '_', .@item));
+    $`${(files rank (@:-.@) >>
+        let c = $`${//os.file(.)}`;
+        let c = cond {
+            . = f: c,
+            _:
+                let blocks = //seq.split(';', c);
+                let [..., tail] = blocks;
+                let end = $`let ${names(.)} = ${tail};`;
+                //seq.join(';', (//log.print(blocks) where .@item != tail) ++ [end])
+        };
+
+        $`
+            ${div}
+            ###  ${.:-71s} ###
+            ${div}
+
+            ${cleanImports(c)}`
+    )::\i\n}`
+;
+
+(
+    :concat,
+).concat('debug.arrai')

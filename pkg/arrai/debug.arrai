@@ -1,12 +1,15 @@
 # Renders the sysl-go debug trace details screen.
 
 let (:macro, :toSvg, :colored, :byText, ...) = //{./svg};
+let (:simplify, ...) = //{./json};
+let (:invokeMacro, ...) = //{./util};
+let (:render, ...) = //{./debug_subtrace};
 
 let sd = //os.file('out/sequence_diagram.svg');
 let traceId = '123';
 
-let sdModel = //{./util}.invokeMacro(macro, sd);
-let metadata = //{./json}.simplify(
+let sdModel = invokeMacro(macro, sd);
+let metadata = simplify(
     //encoding.json.decode(//os.args(1)?://os.file('debug_metadata.json'))
 );
 let entries = metadata('entries') >> (
@@ -39,7 +42,7 @@ $`
 
 ${sd}
 
-${entries >> //{./debug_subtrace}.render(.)::\i}
+${entries >> render(.)::\i}
 
 <script>
 function display(href) {

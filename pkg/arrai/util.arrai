@@ -22,7 +22,7 @@ let rec filterTree = \pred \ast
         {(@:..., @value:...), ...}: ast where pred(.@, .@value) >> filterTree(pred, .),
         [...]: ast >> filterTree(pred, .),
         {...}: ast => filterTree(pred, .),
-        (...): //{./util}.safetuple(//dict(ast) where pred(.@, .@value) >> filterTree(pred, .)),
+        (...): safetuple(//dict(ast) where pred(.@, .@value) >> filterTree(pred, .)),
         _: ast,
     }
 ;
@@ -55,13 +55,41 @@ let safetuple = \d
         {(@:'', @value: value)}: rest +> (@: value),
         _: rest,
     };
+# Explore constructs a dependency graph by starting at source and calling step
+# to find adjacent nodes. Deps is the graph constructed so far.
+# Self-edges are ignored.
+let rec explore = \source \step \deps
+    cond {
+        {source} & (deps => .@): deps,
+        _:
+            let next = step(source) where . != source;
+            let deps = deps | {(@:source, @value: next)};
+            //{./util}.reduce(next orderby ., \v \i explore(i, step, v), deps)
+    };
+
+# Unimported returns the set of nodes with no in-edges.
+let unimported = \g (g => .@) where !({.} & //rel.union(g => .@value));
+
+# Topsort returns an array of nodes in graph in dependency order.
+let rec topsort = \graph \sorted \sources
+    cond sources orderby . {
+        []: sorted,
+        [..., tail]: 
+            let adjs = graph(tail);
+            let graph = graph where .@ != tail;
+            let sources = (sources &~ {tail}) | (adjs & unimported(graph));
+            topsort(graph, sorted ++ [tail], sources)
+    };
 
 (
+    :explore,
     :filterTree,
     :invokeMacro,
-    :simpleTransform,
+    :ranked,
     :reduce,
     :reduceFlat,
-    :ranked,
     :safetuple,
+    :simpleTransform,
+    :topsort,
+    :unimported,
 )
