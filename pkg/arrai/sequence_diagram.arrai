@@ -13,14 +13,18 @@ let rec toTree = \(:m, :appName, :epName)
 
 # Transforms an endpoint to a PlantUML sequence from `from` to `to`, including all downstream calls.
 let rec toUml = \(:from, :to, :calls) \urls
-    let url = //seq.sub(' ', '%20', $`#${from.appName} ${from.epName} -> ${to.appName} ${to.epName}`);
-    let returl = //seq.sub(' ', '%20', $`#${from.appName} ${from.epName} <-- ${to.appName} ${to.epName}`);
+    let label = cond {
+        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} -> ${to.appName} ${to.epName}`)} ${to.epName}]]`, 
+        _: to.epName
+    };
+    let retLabel = cond {
+        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} <-- ${to.appName} ${to.epName}`)} ok]]`,
+        _: 'ok'
+    };
     $`
-        ${from.appName} -> ${to.appName} : ${cond {urls: $`[[${url} ${to.epName}]]`, _: to.epName}}
-        activate ${to.appName}
-        ${cond calls {[_, ...]: calls >> toUml(.)}::\i}
-        ${from.appName} <-- ${to.appName} : ${cond {urls: $`[[${returl} ok]]`, _: 'ok'}}
-        deactivate ${to.appName}
+        ${from.appName} -> ${to.appName} ++ : ${label}
+        ${cond calls {[_, ...]: calls >> toUml(., urls)}::\i}
+        return ${retLabel}
     `
 ;
 
@@ -54,9 +58,10 @@ let toSeq = \m \(:appName, :epName) \urls
     $`
         @startuml
         skinparam MaxMessageSize 250
+        ${cond {urls: $`
         skinparam sequence {
             ArrowColor grey
-        }
+        }`}}
         
         ${apps >> $`${.type} "${.name}"`::\i}
 
