@@ -64,7 +64,7 @@ let rec _explore = \source \step \deps
         _:
             let next = step(source) where . != source;
             let deps = deps | {(@:source, @value: next)};
-            //{./util}.reduce(next orderby ., \v \i _explore(i, step, v), deps)
+            reduce(next orderby ., \v \i _explore(i, step, v), deps)
     };
 let explore = \source \step _explore(source, step, {});
 
