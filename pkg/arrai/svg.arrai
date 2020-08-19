@@ -93,23 +93,50 @@ let byText = \svg \text
     ) | texts where .
 ;
 
-# Returns the SVG with the text colored.
-let colored = \svg \color \nodes
-    let tags = nodes => .@tag;
-    let strokeRe = //re.compile('stroke: [^;]+');
-    let strokeWidthRe = //re.compile('stroke-width: [^;]+');
+# Regex matching the stroke attribute.
+let strokeRe = //re.compile('stroke: [^;]+');
+# Regex matching the stroke-width attribute.
+let strokeWidthRe = //re.compile('stroke-width: [^;]+');
+
+# Sets the relevant color attributes of a node.
+let colorize = \node \color
+    node +> (attrs: node.attrs >>> \k \v
+        cond k {
+            'style': strokeWidthRe.sub('stroke-width: 2.0', strokeRe.sub($`stroke: ${color}; cursor: pointer`, v)),
+            'fill': color,
+            _: v,
+        }
+    )
+;
+# Sets the text of a node.
+let retext = \node \text node +> (:text);
+
+# Returns an updated copy of node with action applied.
+let updateNode = \node \action
+    let node = cond action('color')?:{} {{}: node, c: colorize(node, c)};
+    let node = cond action('text')?:{} {{}: node, t: retext(node, t)};
+    node
+;
+
+# Returns the SVG with the new text applied to the label nodes.
+let update = \svg \actions
+    let tags = actions => .@.@tag;
     svg +> (root: svg.root +> (children: svg.root.children >>
-        cond tag(.) {'g': . +> (children: .children >>
-            cond {{.@tag} & tags: . +> (attrs: .attrs >>> \k \v
-                cond k {
-                    'style': strokeWidthRe.sub('stroke-width: 2.0', strokeRe.sub($`stroke: ${color}; cursor: pointer`, v)),
-                    'fill': color,
-                    _: v,
+        cond tag(.) {
+            'g': . +> (children: .children >> \child
+                cond {
+                    {child.@tag} & tags: updateNode(child, actions(child)),
+                    child.children?:{}: child +> (children: child.children >>
+                        cond {
+                            {.@tag} & tags: updateNode(., actions(.)),
+                            _: .
+                        }
+                    ),
+                    _: child
                 }),
-                _: .,
-            }),
-        _: .,
-    }))
+            _: .,
+        }
+    ))
 ;
 
 (
@@ -119,5 +146,5 @@ let colored = \svg \color \nodes
     ),
     :toSvg,
     :byText,
-    :colored,
+    :update,
 )
