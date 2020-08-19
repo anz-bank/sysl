@@ -200,10 +200,13 @@
             },
             {
               "name": "titleList",
-              "type": {
-                "type": "array",
-                "items": "string"
-              },
+              "type": [
+                "null",
+                {
+                  "type": "array",
+                  "items": "string"
+                }
+              ],
               "default": []
             },
             {
@@ -268,7 +271,7 @@
         "type": "array",
         "items": "string"
       },
-      "default": []
+      "default": ["tag1", "tag2"]
     },
     {
       "name": "len",

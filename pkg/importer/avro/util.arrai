@@ -58,28 +58,28 @@ let getTypeName = \t
         {'type': (s: 'array'), 'items': (s: primitiveType), ...}: 
             (
                 s : $'${//str.title(t('items').s)}Sequence',
-                type : $'sequence of ${t('items').s}' # will be displayed in union definition
+                type_S : $'sequence of ${t('items').s}' # will be displayed in union definition
             ),
         {'type': (s: 'map'), 'items': (s: primitiveType), ...}: 
             (
                 s : $'${//str.title(t('items').s)}Set',
-                type : $'set of ${t('items').s}' # will be displayed in union definition
+                type_S : $'set of ${t('items').s}' # will be displayed in union definition
             ),
         {'type': (s: 'array'), 'items': {'type': (s: 'record'), ...}, ...}:
             (
                 s : $'${t('items')('name').s}Sequence',
-                type : $'sequence of ${t('items')('name').s}' # will be displayed in union definition
+                type_S : $'sequence of ${t('items')('name').s}' # will be displayed in union definition
             ),
         {'type': (s: 'map'), 'items': {'type': (s: 'record'), ...}, ...}:
             (
                 s : $'${t('items')('name').s}Set',
-                type : $'set of ${t('items')('name').s}' # will be displayed in union definition
+                type_S : $'set of ${t('items')('name').s}' # will be displayed in union definition
             ),
     }
 ;
 
 let getDisplayedTypeName = \.
-    cond . {(type:typeS, ...): typeS, _: .s}
+    cond . {(type_S:type_S, ...): type_S, _: .s}
 ;
 
 let combineTypes = \types
@@ -90,7 +90,7 @@ let combineTypes = \types
             let typeNames = fullTypeNames where .@item.s != 'null' rank (:.@);
             cond types count {
                 2: //seq.concat(typeNames >> getDisplayedTypeName(.)) + '?',
-                _: //seq.concat(typeNames >> //str.title(getDisplayedTypeName(.))) + '?'
+                _: //seq.concat(typeNames >> //str.title(.s)) + '?'
             }
         ,
         _: //seq.concat(types >> //str.title(.))

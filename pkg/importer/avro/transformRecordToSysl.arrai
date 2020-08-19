@@ -39,7 +39,21 @@ let buildLogicalTypeAnnotation = \.
             },
         _: []
     }
-;  
+;
+
+# TODO default = {} can't work still
+let getDefaultVal = \.
+    let default = .('default')?:""; 
+    cond default {
+        "": "",
+        ():'default="null"', 
+        (b: true): $'default="true"',
+        (b: false): $'default="false"',
+        (a: {}): $'default="[]"',
+        (a: [(:s), ...]): $'default="${default.a >> .s}"',
+        _: $'default="${default}"'
+    } 
+;
 
 let buildAnnotations = \.
     cond .('type') {
@@ -50,13 +64,7 @@ let buildAnnotations = \.
             [
                 buildTypeAnnotation(.('type')),
                 util.getAnnotationS(., 'doc'),
-                let default = .('default')?:""; cond default {
-                    "": "", 
-                    ():'default="null"', 
-                    (b: true): $'default="true"',
-                    (b: false): $'default="false"',
-                    _: $'default="${default}"'
-                },
+                getDefaultVal(.),
                 util.getAnnotationS(., 'order'),
             ]
     }
@@ -66,14 +74,19 @@ let t = \record
 $`${
     cond record {
         {'isMap':(s: 'true'), ...}: 
-            $'${'\n'}${util.indent}!type String${record('name').s}[json_map_key="key"]:${'\n'}${util.indent}${util.indent}key <: string${'\n'}${util.indent}${util.indent}value <: ${record('name').s}${'\n\n'}', 
+            $'${'\n'}${util.indent}!type String${record('name').s}[json_map_key="key"]:${'\n'}${util.indent}${util.indent}key <: string${
+                '\n'}${util.indent}${util.indent}value <: ${record('name').s}${'\n\n'}', 
             _:''
         }
-}${'\n'}${util.indent}!type ${record('name').s}${util.prettyAnnotations([util.getAnnotationS(record, 'namespace'), util.getAnnotationS(record, 'doc')])}:
+}${'\n'}${util.indent}!type ${record('name').s}${
+    util.prettyAnnotations([util.getAnnotationS(record, 'namespace'), util.getAnnotationS(record, 'doc')])
+}:
 ${
     let fields = record('fields')? .a:[]; 
     fields >> 
-        ($`${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))}${util.prettyAnnotations(buildAnnotations(.))}${
+        ($`${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))}${
+                util.prettyAnnotations(buildAnnotations(.))
+            }${
                 let aliases = .('aliases')? .a:[];
                 cond aliases {
                     []: '',
