@@ -23,9 +23,13 @@ let concat = \f
         let c = $`${//os.file(.)}`;
         let c = cond {
             . = f: c,
-            _:
-                let [...head, tail] = //seq.split(';', c);
-                //seq.join(';', head ++ [$`let ${toName(.)} = ${tail};`])
+            _: cond {
+                # TODO: Handle presence of only non-meaningful semicolons.
+                //seq.contains(';', c):
+                    let [...head, tail] = //seq.split(';', c);
+                    //seq.join(';', head ++ [$`let ${toName(.)} = ${tail};`]),
+                _: $`let ${toName(.)} = ${c};`
+            }
         };
 
         $`
