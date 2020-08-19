@@ -60,7 +60,7 @@ td, pre {
 .status {
     color: red;
 }
-.status.2 {
+.status._2 {
     color: green;
 }
 </style>

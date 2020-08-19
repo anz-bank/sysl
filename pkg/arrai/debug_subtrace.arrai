@@ -19,7 +19,7 @@ let render = \. $`
     <h2>Response</h2>
     <p>
         Status:
-        <span class="status ${.response.statusCode // 100} ${.response.statusCode}">
+        <span class="status _${.response.statusCode // 100} ${.response.statusCode}">
             ${.response.statusCode} ${.response.status}
         </span>
         (${.response.latency/1000000:.1f}ms)
