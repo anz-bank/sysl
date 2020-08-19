@@ -3,14 +3,18 @@ let id = \. //seq.sub("/", "_", //str.lower($`
 
 let render = \. $`
     <div class="subtrace ${id(.)}" style="display: none">
-    <p>${.serviceName}: ${.request.method} ${.request.route} (${.request.url})</p>
+    <p class="url">${.request.url}</p>
+    <p>${.serviceName}:
+        <span class="method">${.request.method}</span>
+        <span class="route">${.request.route}</span>
+    </p>
 
     <h2>Request</h2>
     <h3>Headers</h3>
-    <pre>${.request.headers}</pre>
+    ${cond .request.headers?:{} {{}: {}, h: //{./table}.html(h)}}
 
     <h3>Body</h3>
-    <pre>${.request.body}</pre>
+    <pre>${.request.body?:{}}</pre>
 
     <h2>Response</h2>
     <p>
@@ -22,10 +26,10 @@ let render = \. $`
     </p>
 
     <h3>Headers</h3>
-    <pre>${.response.headers}</pre>
+    ${cond .response.headers?:{} {{}: {}, h: //{./table}.html(h)}}
 
     <h3>Body</h3>
-    <pre>${cond .response.body {x: x, _: "(none)"}}</pre>
+    <pre>${cond .response.body?:{} {x: x, _: "(none)"}}</pre>
     </div>
 `;
 

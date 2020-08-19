@@ -7,9 +7,10 @@ let rec simplify = \j
         [...]: j >> simplify(.),
         (:a): simplify(a),
         (:s): simplify(s),
+        (): {},
         _: cond {
             j < 99999999999999999999: j,
-            _: j >> simplify(.),
+            _: //log.print(j) >> simplify(.),
         },
     }
 ;
