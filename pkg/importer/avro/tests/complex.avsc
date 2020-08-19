@@ -1,0 +1,298 @@
+{
+  "namespace": "com.example",
+  "name": "Event",
+  "type": "record",
+  "fields": [
+    {
+      "name": "action",
+      "type": {
+        "type": "enum",
+        "namespace": "com.example",
+        "doc": "Performed action",
+        "name": "Action",
+        "symbols": [
+          "add",
+          "update",
+          "delete",
+          "none"
+        ],
+        "default": "add",
+        "aliases": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "name": "header",
+      "type": {
+        "type": "record",
+        "name": "Header",
+        "fields": [
+          {
+            "name": "eventUUID",
+            "type": {
+              "type": "record",
+              "name": "EventUUID",
+              "fields": [
+                {
+                  "name": "id",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "body",
+      "type": [
+        {
+          "type": "record",
+          "name": "Party",
+          "doc": "Party Details",
+          "fields": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "A unique identifier for party"
+            },
+            {
+              "name": "subject",
+              "type": {
+                "name": "Subject",
+                "type": "record",
+                "fields": [
+                  {
+                    "name": "id",
+                    "type": "string"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "null"
+      ]
+    },
+    {
+      "name": "mapRecords",
+      "type": {
+        "type":"map",
+        "items": {
+          "type": "record",
+          "name": "MapRecord",
+          "fields": [
+            {"name": "id", "type": "string"}
+          ]
+        } 
+      },
+      "default": {} 
+    },
+    {
+      "name": "relationships",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "Relationship",
+          "type": "record",
+          "namespace": "com.example",
+          "aliases": [
+            "P1",
+            "P2"
+          ],
+          "doc": "account relationship.",
+          "fields": [
+            {
+              "name": "owner",
+              "type": [
+                "null",
+                {
+                  "name": "Owner",
+                  "type": "record",
+                  "fields": [
+                    {
+                      "name":"id",
+                      "type":"string"
+                    },
+                    {
+                      "name":"ownerTags",
+                      "type":[
+                        "null",
+                        {
+                          "type": "array",
+                          "items":{
+                            "name":"OwnerTag",
+                            "type":"record",
+                            "fields":[
+                              {"name":"id", "type":"string"},
+                              {"name":"tag", "type":"string"}
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "performedAction",
+              "type": "Action"
+            },
+            {
+              "name": "relationshipType",
+              "type": "string",
+              "doc": "This would be the business key for uniquely identifying a relation"
+            },
+            {
+              "name": "startDate",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null,
+              "doc": "Relationship start date"
+            },
+            {
+              "name": "endDate",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null,
+              "doc": "Relationship end date"
+            },
+            {
+              "name": "closeDate",
+              "type": [
+                "null",
+                "string",
+                "int"
+              ],
+              "default": null,
+              "doc": "Relationship close date"
+            },
+            {
+              "name": "issueDate",
+              "type": [
+                "int",
+                "string",
+                "null"
+              ],
+              "default": null,
+              "doc": "Relationship issue date"
+            },
+            {
+              "name": "updateDate",
+              "type": [
+                "string",
+                "int"
+              ],
+              "default": null,
+              "order": "ascending",
+              "doc": "Relationship update date",
+              "aliases": [
+                "updateDate1",
+                "updateDate2"
+              ]
+            },
+            {
+              "name": "titleList",
+              "type": {
+                "type": "array",
+                "items": "string"
+              },
+              "default": []
+            },
+            {
+              "name": "tagList",
+              "type": [
+                {
+                  "type": "array",
+                  "items": "string"
+                },
+                "null",
+                {
+                  "type": "array",
+                  "items": {
+                    "name" : "tagListItem",
+                    "type": "record",
+                    "fields": [
+                      {"name":"id", "type":"string"},
+                      {"name":"name", "type":"string"}
+                    ]
+                  }
+                }
+              ],
+              "default": []
+            },
+            {
+              "name": "titleMap",
+              "type": {
+                "type": "map",
+                "items": "string"
+              },
+              "default": {}
+            },
+            {
+              "name": "tagMap",
+              "type": [
+                "null",
+                {
+                  "type": "map",
+                  "items": "string"
+                },
+                {
+                  "type": "map",
+                  "items": {
+                    "name": "tagMapItem",
+                    "type": "record",
+                    "fields": [
+                      {"name":"id", "type":"string"},
+                      {"name":"name", "type":"string"}
+                    ]
+                  }
+                }
+              ],
+              "default": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "tagList",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "default": []
+    },
+    {
+      "name": "len",
+      "type" : {"type": "fixed", "size": 16, "namespace":"com.example"}
+    },
+    {
+      "name": "occurrenceDateTime",
+      "doc": "The date and time, to millisecond precision, that this event occurred",
+      "type": {
+        "logicalType": "timestamp-millis",
+        "type": "long",
+        "doc": "A timestamp-millis logical type annotates an Avro long."
+      }
+    },
+    {
+      "name": "amount",
+      "doc": "Test field",
+      "type": {
+        "logicalType": "decimal",
+        "type": "bytes",
+        "precision": 4,
+        "scale": 2  
+      },
+      "default": 0
+    }
+  ]
+}
