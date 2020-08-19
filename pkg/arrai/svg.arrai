@@ -109,7 +109,10 @@ let colorize = \node \color
     )
 ;
 # Sets the text of a node.
-let retext = \node \text node +> (:text);
+let retext = \node \text node +> (
+    :text,
+    attrs: node.attrs >>> \k \v cond k {'textLength': v / node.text count * text count, _: v},
+);
 
 # Returns an updated copy of node with action applied.
 let updateNode = \node \action
