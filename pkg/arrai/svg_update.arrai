@@ -7,9 +7,7 @@ let (:macro, :toSvg, :update, :byText, ...) = //{./svg};
 # For example: {'Client -> Do': {'color': 'red', 'text': 'new'}}.
 let apply = \svg \actions
     let svg = //{./util}.invokeMacro(macro, svg);
-    let actions = //rel.union(actions => \(:@, :@value) 
-        byText(svg, @) => (@: ., :@value)
-    );
+    let actions = //rel.union(actions => \(:@, :@value) byText(svg, @) => (@: ., :@value));
     toSvg(update(svg, actions))
 ;
 
