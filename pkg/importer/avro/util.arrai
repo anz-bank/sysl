@@ -1,0 +1,135 @@
+# Utilities
+let indent = "    ";
+
+let getAnnotationS = \item \name
+    let annotation = item(name)? .s:"";
+    let annotationTxt = 
+        cond annotation {
+            "":"", 
+            _: $'${cond name {'doc':'description', _:name}}="${annotation}"'
+        };
+    annotationTxt
+;
+
+# Pretty annotation array
+let prettyAnnotations = \annotationArray
+    let str = $`${let a = annotationArray where .@item != "" rank (:.@); a >>> \i \item item::, }`;
+    cond str {'':$'', _:$'[${str}]'}
+;
+
+# Transform Avro primitive types to Sysl ones
+let transformPrimitiveType = \type
+    cond type {
+        'null': 'null',
+        'boolean': 'bool',
+        'int': 'int32',
+        'long': 'int64',
+        'float': 'float32',
+        'double': 'float64',
+        'bytes': "bytes",
+        'string': 'string',
+        _: 'NonePrimitiveType'              
+    }
+;
+
+let transformLogicalTypes = \type
+    cond type('logicalType').s {
+        'decimal': $'decimal(${type('precision')}.${type('scale')})',
+        'uuid': 'string',
+        'date': 'date',
+        'time-millis': 'uint32',
+        'time-micros': 'uint64',
+        'timestamp-millis': 'datetime',
+        'timestamp-micros': 'datetime',
+        'local-timestamp-millis': 'datetime',
+        'local-timestamp-micros': 'datetime',
+        'duration': 'bytes',
+        _: 'NoneLogicalType'  
+    }
+;
+
+# Get type name from types which looks like:
+# ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
+let getTypeName = \t
+    cond t {
+        (:s): t,
+        {'type': (s: 'record'), ...}: (s : t('name').s),
+        {'type': (s: 'enum'), ...}: (s : t('name').s),
+        {'type': (s: 'array'), 'items': (s: primitiveType), ...}: 
+            (
+                s : $'${//str.title(t('items').s)}Sequence',
+                type : $'sequence of ${t('items').s}' # will be displayed in union definition
+            ),
+        {'type': (s: 'map'), 'items': (s: primitiveType), ...}: 
+            (
+                s : $'${//str.title(t('items').s)}Set',
+                type : $'set of ${t('items').s}' # will be displayed in union definition
+            ),
+        {'type': (s: 'array'), 'items': {'type': (s: 'record'), ...}, ...}:
+            (
+                s : $'${t('items')('name').s}Sequence',
+                type : $'sequence of ${t('items')('name').s}' # will be displayed in union definition
+            ),
+        {'type': (s: 'map'), 'items': {'type': (s: 'record'), ...}, ...}:
+            (
+                s : $'${t('items')('name').s}Set',
+                type : $'set of ${t('items')('name').s}' # will be displayed in union definition
+            ),
+    }
+;
+
+let getDisplayedTypeName = \.
+    cond . {(type:typeS, ...): typeS, _: .s}
+;
+
+let combineTypes = \types
+    let fullTypeNames = types >> getTypeName(.);
+    let types = fullTypeNames >> .s;
+    cond //seq.contains(['null'])(types) {
+        true:
+            let typeNames = fullTypeNames where .@item.s != 'null' rank (:.@);
+            cond types count {
+                2: //seq.concat(typeNames >> getDisplayedTypeName(.)) + '?',
+                _: //seq.concat(typeNames >> //str.title(getDisplayedTypeName(.))) + '?'
+            }
+        ,
+        _: //seq.concat(types >> //str.title(.))
+    }
+;
+
+let transformType = \type
+    cond type {
+        # (s: 'string') etc.
+        (s: typeName):
+            let primitive = transformPrimitiveType(typeName);
+            cond primitive {
+                "null": "string[~null]",
+                'NonePrimitiveType': typeName,
+                _: primitive
+            },
+        (a: typeArray):
+            # type can be ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
+            # [(s: 'null'), (s: 'string')] to ['null', 'string']
+            combineTypes(typeArray),
+        {'logicalType': logicalTypeName, 'type': typeName, ...}: # Must be before {'type': typeName, ...}
+            transformLogicalTypes(type), 
+        {'type': typeName, ...}:
+            # it is array, map or fixed
+            cond typeName.s {
+                'array': 'sequence of ' + cond type {{'items': {'name': name, ...}, ...}: name.s, _: type('items').s},
+                'map': 'set of ' + cond type {{'items': {'name': name, ...}, ...}: 'String' + name.s + 'Item', _: type('items').s},
+                'fixed': $'bytes(${type('size')})',
+                _: type('name').s
+            },
+    }
+;
+
+let util = (
+    : prettyAnnotations,
+    : transformType,
+    : getAnnotationS,
+    : getTypeName,
+    : combineTypes,
+    : indent,
+);
+util

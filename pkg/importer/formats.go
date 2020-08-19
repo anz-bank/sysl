@@ -33,6 +33,12 @@ var Grammar = Format{
 	FileExt:   []string{".g"},
 }
 
+var AVRO = Format{
+	Name:      "avro",
+	Signature: "",
+	FileExt:   []string{".avsc"},
+}
+
 // OpenAPI3 is identified by the openapi header. -  The value MUST be "3.x.x".
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasDocument
 var OpenAPI3 = Format{

@@ -1,0 +1,8 @@
+let avroTransform = \transformer \schema
+    let schema = //encoding.json.decode(//os.file(schema));transformer(schema)
+;
+
+let helper = (
+    : avroTransform
+);
+helper

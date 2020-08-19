@@ -24,6 +24,7 @@ var Formats = []Format{
 	OpenAPI3,
 	Swagger,
 	XSD,
+	AVRO,
 }
 
 // Factory takes in an absolute filePath and a file and returns an importer from the detected file type
@@ -45,6 +46,9 @@ func Factory(filePath string, file []byte, logger *logrus.Logger) (Importer, err
 	case Grammar.Name:
 		logger.Debugln("Detected Grammar file")
 		return nil, fmt.Errorf("importer disabled for: %s", fileType.Name)
+	case AVRO.Name:
+		logger.Debugln("Detected AVRO")
+		return NewAvroImporter(logger), nil
 	default:
 		return nil, fmt.Errorf("an importer does not exist for: %s", fileType.Name)
 	}
