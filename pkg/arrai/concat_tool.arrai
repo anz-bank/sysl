@@ -1,0 +1,13 @@
+let [_, ...args] = //os.args;
+
+let rec parse = \args
+    cond args {
+        [k, v, ...tail]: cond {
+            //seq.has_prefix('-', k): {(@:k, @value:v)}   | parse(tail),
+                                   _: {(@:'@', @value:k)} | parse([v] ++ tail),
+        },
+        [v, ...tail]:                 {(@:'@', @value:v)} | parse(tail),
+        _: {}
+    }
+;
+parse(args)
