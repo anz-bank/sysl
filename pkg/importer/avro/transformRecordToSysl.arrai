@@ -74,7 +74,7 @@ let t = \record
 $`${
     cond record {
         {'isMap':(s: 'true'), ...}: 
-            $'${'\n'}${util.indent}!type String${record('name').s}[json_map_key="key"]:${'\n'}${util.indent}${util.indent}key <: string${
+            $'${'\n'}${util.indent}!type String${record('name').s}Item[json_map_key="key"]:${'\n'}${util.indent}${util.indent}key <: string${
                 '\n'}${util.indent}${util.indent}value <: ${record('name').s}${'\n\n'}', 
             _:''
         }

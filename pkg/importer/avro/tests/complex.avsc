@@ -165,6 +165,16 @@
               "doc": "Relationship end date"
             },
             {
+              "name": "issueDate",
+              "type": [
+                "int",
+                "string",
+                "null"
+              ],
+              "default": null,
+              "doc": "Relationship issue date"
+            },
+            {
               "name": "closeDate",
               "type": [
                 "null",
@@ -175,14 +185,14 @@
               "doc": "Relationship close date"
             },
             {
-              "name": "issueDate",
+              "name": "realCloseDate",
               "type": [
-                "int",
                 "string",
-                "null"
+                "null",
+                "int"
               ],
               "default": null,
-              "doc": "Relationship issue date"
+              "doc": "Relationship real close date"
             },
             {
               "name": "updateDate",
@@ -288,7 +298,7 @@
     },
     {
       "name": "amount",
-      "doc": "Test field",
+      "doc": "Amount",
       "type": {
         "logicalType": "decimal",
         "type": "bytes",

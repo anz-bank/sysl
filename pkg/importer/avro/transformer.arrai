@@ -69,7 +69,10 @@ ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'
 ${util.indent}# Types
 ${extraRecords(schema) => //{./transformRecordToSysl}(.) orderby . ::}
 ${util.indent}# Unions
-${extraUnions(schema) => //{./transformUnionToSysl}(.) orderby . ::}
+${
+# It applies //{./transformUnionToSysl}(.) to every item and will remove duplidated items if //{./transformUnionToSysl}(.)
+# produces, as it iterates set.
+extraUnions(schema) => //{./transformUnionToSysl}(.) orderby . ::}
 ${util.indent}# Enums
 ${extraEnums(schema) => //{./transformEnumToSysl}(.) orderby . ::}
 '
