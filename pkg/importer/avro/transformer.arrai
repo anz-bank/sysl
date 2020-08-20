@@ -12,7 +12,11 @@ let rec extraEnums = \schema
         (a: types): //rel.union(types => extraEnums(.@item)), # array
         (:s): extraEnums(items.s), # primitive
         _: extraEnums(items),
-      }
+      },
+    {'type': (a: types)}: # type is an array
+      //rel.union(types => extraEnums(.@item)),  
+    (a: types): # root is json array 
+      //rel.union(types => extraEnums(.@item)),
   }
 ;
 
@@ -50,7 +54,11 @@ let rec extraAliases = \schema
         (a: types): //rel.union(types => extraAliases(.@item)), # array
         (:s): extraAliases(items.s), # primitive
         _: extraAliases(items),
-      }
+      },
+    {'type': (a: types)}: # type is an array
+      //rel.union(types => extraAliases(.@item)),  
+    (a: types): # root is json array 
+      //rel.union(types => extraAliases(.@item)),
 };
 
 # Extra item transformed to Sysl type !union
