@@ -377,30 +377,26 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 func makeTypeConstraint(t sysl.Type_Primitive, size_spec *parser.Size_specContext) []*sysl.Type_Constraint {
 	c := []*sysl.Type_Constraint{}
 	var err error
-	var l int
+	var l int64
 
 	switch t {
 	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_STRING:
 		val1 := size_spec.DIGITS(0).GetText()
-		if l, err = strconv.Atoi(val1); err == nil {
+		if l, err = strconv.ParseInt(val1, 10, 0); err == nil {
 			c = append(c, &sysl.Type_Constraint{
-				Length: &sysl.Type_Constraint_Length{
-					Max: int64(l),
-				},
+				Length: &sysl.Type_Constraint_Length{Max: l},
 			})
 		}
 	case sysl.Type_DECIMAL:
 		val1 := size_spec.DIGITS(0).GetText()
-		if l, err = strconv.Atoi(val1); err == nil {
+		if l, err = strconv.ParseInt(val1, 10, 0); err == nil {
 			c = append(c, &sysl.Type_Constraint{
-				Length: &sysl.Type_Constraint_Length{
-					Max: int64(l),
-				},
+				Length: &sysl.Type_Constraint_Length{Max: l},
 			})
 			if size_spec.DIGITS(1) != nil {
 				c[0].Precision = int32(l)
 				val1 = size_spec.DIGITS(1).GetText()
-				if l, err = strconv.Atoi(val1); err == nil {
+				if l, err = strconv.ParseInt(val1, 10, 0); err == nil {
 					c[0].Scale = int32(l)
 				}
 			}
@@ -416,7 +412,7 @@ func makeTypeConstraint(t sysl.Type_Primitive, size_spec *parser.Size_specContex
 func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeContext) []*sysl.Type_Constraint {
 	c := []*sysl.Type_Constraint{}
 	var err error
-	var l int
+	var l int64
 
 	switch t {
 	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING:
@@ -425,15 +421,15 @@ func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeCon
 		}
 		if t != sysl.Type_STRING && array_size.DIGITS(0) != nil {
 			val := array_size.DIGITS(0).GetText()
-			if l, err = strconv.Atoi(val); err == nil && l != 0 {
-				ct.Length.Min = int64(l)
+			if l, err = strconv.ParseInt(val, 10, 0); err == nil && l != 0 {
+				ct.Length.Min = l
 			}
 		}
 
 		if array_size.DIGITS(1) != nil {
 			val1 := array_size.DIGITS(1).GetText()
-			if l, err = strconv.Atoi(val1); err == nil && l != 0 {
-				ct.Length.Max = int64(l)
+			if l, err = strconv.ParseInt(val1, 10, 0); err == nil && l != 0 {
+				ct.Length.Max = l
 			}
 		}
 		c = append(c, ct)
@@ -1956,10 +1952,10 @@ func (s *TreeShapeListener) ExitLiteral(ctx *parser.LiteralContext) {
 			Decimal: txt,
 		}
 	case ctx.E_DIGITS() != nil:
-		iVal, err := strconv.Atoi(txt)
+		iVal, err := strconv.ParseInt(txt, 10, 0)
 		syslutil.PanicOnError(err)
 		val.Value = &sysl.Value_I{
-			I: int64(iVal),
+			I: iVal,
 		}
 	case ctx.E_TRUE() != nil || ctx.E_FALSE() != nil:
 		val.Value = &sysl.Value_B{
