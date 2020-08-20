@@ -3,21 +3,21 @@ let util = //{./util};
 # Extra items transformed to Sysl type !enum
 let rec extraEnums = \schema
   cond schema {
-    {'type': (s: 'enum'), 'name':(s: name), ...}:
+    {'type': (s: 'enum'), 'name': name, ...}:
       {schema},
-    {'type': (s: 'record'), 'name':(s: name), "fields": (a : fields), ...}:
+    {'type': (s: 'record'), 'name': name, "fields": (a : fields), ...}:
       //rel.union(fields => extraEnums(.@item("type"))),
-    {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
-      //rel.union(fields => extraEnums(.@item("type"))),
-    {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
-      //rel.union(fields => extraEnums(.@item("type"))), 
-    (a: types):
-      //rel.union(types => .@item => extraEnums(.))
+    {'type': type, 'items': items, ...}: # Map or array
+      cond items {
+        (a: types): //rel.union(types => extraEnums(.@item)), # array
+        (:s): extraEnums(items.s), # primitive
+        _: extraEnums(items),
+      }
   }
 ;
 
 # Extra items transformed to Sysl type !type 
-let rec extraTypes = \schema 
+let rec extraTypes = \schema
   cond schema {
     {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
       {schema} | //rel.union(fields => extraTypes(.@item("type"))),
@@ -32,43 +32,32 @@ let rec extraTypes = \schema
 };
 
 # Extra items transformed to Sysl type !alias
-let rec extraAliases = \schema 
+let rec extraAliases = \schema
   cond schema {
-    {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
-      //rel.union(fields => extraAliases(.@item("type"))),
-    {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
-      //rel.union(fields => extraAliases(.@item("type"))),
-    {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
-      //rel.union(fields => extraAliases(.@item("type"))),
-    {'type': (a: types)}: # type is an array
-      //rel.union(types => .@item => extraAliases(.)),  
-    (a: types): 
-      //rel.union(types => .@item => extraAliases(.)),
     {'type': (s: 'fixed'), ...}: # fixed type
       {schema},
+    {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
+      //rel.union(fields => extraAliases(.@item("type"))),
+    {'type': type, 'items': items, ...}: # array or map
+      cond items {
+        (a: types): //rel.union(types => extraAliases(.@item)), # array
+        (:s): extraAliases(items.s), # primitive
+        _: extraAliases(items),
+      }
 };
 
 # Extra item transformed to Sysl type !union
 let rec extraUnions = \schema
   cond schema {
-    (a:[...]):
-      {schema.a} | //rel.union(
-        schema.a => .@item => \.
-          cond . {
-              {'type': (s: 'record'), "fields": (a : fields), ...}:
-                //rel.union(fields => extraUnions(.@item("type"))),
-              {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
-                //rel.union(fields => extraUnions(.@item("type"))),
-              {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
-                //rel.union(fields => extraUnions(.@item("type"))),
-          }
-        ),
+    (a: types): {types} | //rel.union(types => extraUnions(.@item)),
     {'type': (s: 'record'), "fields": (a : fields), ...}:
       //rel.union(fields => extraUnions(.@item("type"))),
-    {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
-      //rel.union(fields => extraUnions(.@item("type"))),
-    {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
-      //rel.union(fields => extraUnions(.@item("type"))),
+    {'type': type, 'items': items, ...}: # array or map
+      cond items {
+        (a: types): //rel.union(types => extraUnions(.@item)), # array
+        (:s): extraUnions(items.s), # primitive
+        _: extraUnions(items),
+      },  
   }
 ;
 
