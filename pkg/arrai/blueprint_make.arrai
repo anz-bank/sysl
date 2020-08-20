@@ -31,7 +31,7 @@ let toMakefile = \b
 
     let selfTestNames = $`${tests => test(name, .@) orderby .::}`;
     let childTestNames = $`
-        ${(children => \(:name, ?: tests:{}) 
+        ${(children => \(:name, ?: tests:{})
         	$`${tests => test(name, .@) orderby .:: }`
         ) orderby .:: \\\n\t}`;
 
@@ -68,7 +68,7 @@ let toMakefile = \b
 
         ${testTargets(b)}
 
-        ${(children orderby [.repo != repo, .name] >> default(.) >> \c 
+        ${(children orderby [.repo != repo, .name] >> default(.) >> \c
             let local = c.repo = repo;
             let dir = $`${blueprintDir}/children/${repoDir(c.repo)}`;
             $`
