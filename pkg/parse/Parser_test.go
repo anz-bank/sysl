@@ -631,6 +631,11 @@ func TestDuplicateImportWarning(t *testing.T) {
 	}
 }
 
+func TestLintValid(t *testing.T) {
+	assertLintLogs(t,
+		"tests/lint_valid.sysl", "")
+}
+
 func TestCaseSensitiveRedefinition(t *testing.T) {
 	assertLintLogs(t,
 		"tests/case_sensitive_redefinition.sysl",
@@ -710,7 +715,11 @@ func assertLintLogs(t *testing.T, file, logMsg string) {
 	_, err := NewParser().Parse(file, syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.NoError(t, err)
 	logrus.SetOutput(os.Stderr)
-	assert.Contains(t, buf.String(), fmt.Sprintf("level=warning msg=\"%s\"", logMsg))
+	if logMsg == "" {
+		assert.Equal(t, "", buf.String())
+	} else {
+		assert.Contains(t, buf.String(), fmt.Sprintf("level=warning msg=\"%s\"", logMsg))
+	}
 }
 
 func TestInferExprTypeNonTransform(t *testing.T) {
