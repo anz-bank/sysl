@@ -53,28 +53,17 @@ let transformLogicalTypes = \type
 let getTypeName = \t
     cond t {
         (:s): t,
-        {'type': (s: 'record'), ...}: (s : t('name').s),
-        {'type': (s: 'enum'), ...}: (s : t('name').s),
-        {'type': (s: 'array'), 'items': (s: primitiveType), ...}: 
-            (
-                s : $'${//str.title(t('items').s)}Sequence',
-                type_S : $'sequence of ${t('items').s}' # will be displayed in union definition
-            ),
-        {'type': (s: 'map'), 'items': (s: primitiveType), ...}: 
-            (
-                s : $'${//str.title(t('items').s)}Set',
-                type_S : $'set of ${t('items').s}' # will be displayed in union definition
-            ),
-        {'type': (s: 'array'), 'items': {'type': (s: 'record'), ...}, ...}:
-            (
-                s : $'${t('items')('name').s}Sequence',
-                type_S : $'sequence of ${t('items')('name').s}' # will be displayed in union definition
-            ),
-        {'type': (s: 'map'), 'items': {'type': (s: 'record'), ...}, ...}:
-            (
-                s : $'${t('items')('name').s}Set',
-                type_S : $'set of ${t('items')('name').s}' # will be displayed in union definition
-            ),
+        {'type': (s: type), 'items': (:s), ...}:
+            cond type {
+                'map': (s: $'${//str.title(t('items').s)}Set', type_S: $'set of ${t('items').s}'), # will be displayed in union definition
+                'array': (s: $'${//str.title(t('items').s)}Sequence', type_S: $'sequence of ${t('items').s}'), # will be displayed in union definition
+            },
+        {'type': (s: type), 'items': {'type': (:s), ...}, ...}:
+            cond type {
+                'map': (s: $'${t('items')('name').s}Set', type_S: $'set of ${t('items')('name').s}'), # will be displayed in union definition
+                'array': (s: $'${t('items')('name').s}Sequence', type_S: $'sequence of ${t('items')('name').s}'), # will be displayed in union definition
+            },
+        {'type': (:s), ...}: (s : t('name').s),
     }
 ;
 
