@@ -21,15 +21,22 @@ let rec extraTypes = \schema
   cond schema {
     {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
       {schema} | //rel.union(fields => extraTypes(.@item("type"))),
-    {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
-      {schema('items')} | //rel.union(fields => extraTypes(.@item("type"))),
-    {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
-      {schema('items') | {'isMap': (s: 'true')}} | //rel.union(fields => extraTypes(.@item("type"))),
+    {'type': (s: type), 'items': items, ...}: # array or map
+      cond items {
+        (a: types): //rel.union(types => extraTypes(.@item)), # array
+        (:s): extraTypes(items.s), # primitive
+        _:
+          cond type {
+            'map': {schema('items') | {'isMap': (s: 'true')}} | extraTypes(items),
+            _: extraTypes(items),
+          } 
+      },
     {'type': (a: types)}: # type is an array
-      //rel.union(types => .@item => extraTypes(.)),  
-    (a: types): 
-      //rel.union(types => .@item => extraTypes(.)),
-};
+      //rel.union(types => extraTypes(.@item)),  
+    (a: types): # root is json array 
+      //rel.union(types => extraTypes(.@item)),
+  }
+;
 
 # Extra items transformed to Sysl type !alias
 let rec extraAliases = \schema
@@ -57,7 +64,11 @@ let rec extraUnions = \schema
         (a: types): //rel.union(types => extraUnions(.@item)), # array
         (:s): extraUnions(items.s), # primitive
         _: extraUnions(items),
-      },  
+      },
+    {'type': (a: types)}: # type is an array
+      //rel.union(types => extraUnions(.@item)),  
+    (a: types): # root is json array 
+      //rel.union(types => extraUnions(.@item)),    
   }
 ;
 
