@@ -27,6 +27,9 @@ jobs:
       - name: Unshallow
         run: git fetch --prune --unshallow
 
+      - name: Lint
+        run: make lint
+
       - name: Test
         run: make coverage
 
