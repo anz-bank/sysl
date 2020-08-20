@@ -114,11 +114,10 @@ let transformType = \type
         {'logicalType': logicalTypeName, 'type': typeName, ...}: # Must be before {'type': typeName, ...}
             transformLogicalTypes(type), 
         {'type': typeName, ...}:
-            # it is array, map or fixed
+            # it is array, map
             cond typeName.s {
                 'array': 'sequence of ' + cond type {{'items': {'name': name, ...}, ...}: name.s, _: type('items').s},
                 'map': 'set of ' + cond type {{'items': {'name': name, ...}, ...}: 'String' + name.s + 'Item', _: type('items').s},
-                'fixed': $'bytes(${type('size')})',
                 _: type('name').s
             },
     }

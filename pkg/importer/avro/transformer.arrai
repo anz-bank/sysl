@@ -31,6 +31,23 @@ let rec extraRecords = \schema
       //rel.union(types => .@item => extraRecords(.)),
 };
 
+# Extra type fixed
+let rec extraFixed = \schema 
+  cond schema {
+    {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
+      //rel.union(fields => extraFixed(.@item("type"))),
+    {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
+      //rel.union(fields => extraFixed(.@item("type"))),
+    {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
+      //rel.union(fields => extraFixed(.@item("type"))),
+    {'type': (a: types)}: # type is an array
+      //rel.union(types => .@item => extraFixed(.)),  
+    (a: types): 
+      //rel.union(types => .@item => extraFixed(.)),
+    {'type': (s: 'fixed'), ...}: # fixed type
+      {schema},
+};
+
 # Extra type union
 let rec extraUnions = \schema
   cond schema {
@@ -68,6 +85,8 @@ $'
 ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'', _:$'package="${packageName}"'}}'])}:
 ${util.indent}# Types
 ${extraRecords(schema) => //{./transformRecordToSysl}(.) orderby . ::}
+${util.indent}# Alias
+${extraFixed(schema) => //{./transformFixedToSysl}(.) orderby . ::}
 ${util.indent}# Unions
 ${
 # It applies //{./transformUnionToSysl}(.) to every item and will remove duplidated items if //{./transformUnionToSysl}(.)

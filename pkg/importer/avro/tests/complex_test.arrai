@@ -18,7 +18,8 @@ Avro[avro_spec="1.0", package="com.example"]:
         mapRecords <: set of StringMapRecordItem
         relationships <: sequence of Relationship
         tagList <: sequence of string[default="['tag1', 'tag2']"]
-        len <: bytes(16)[~fixed, namespace="com.example"]
+        len <: md5
+        width <: width
         occurrenceDateTime <: datetime[~timestamp-millis, description="The date and time, to millisecond precision, that this event occurred"]
         amount <: decimal(4.2)[description="Amount", default="0"]
 
@@ -92,6 +93,13 @@ Avro[avro_spec="1.0", package="com.example"]:
         name <: string
 
 
+    # Alias
+
+    !alias md5[~fixed, namespace="com.example"]: bytes(16)
+    
+    !alias width[~fixed, namespace="com.example"]: bytes(16)
+    !alias width1: width
+    !alias width2: width
     # Unions
 
     !union IntString:

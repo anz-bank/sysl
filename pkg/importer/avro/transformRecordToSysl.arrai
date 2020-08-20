@@ -56,18 +56,13 @@ let getDefaultVal = \.
 ;
 
 let buildAnnotations = \.
-    cond .('type') {
-        {'type': (s: 'fixed'), ...}:
-            ['~fixed', util.getAnnotationS(.('type'), 'namespace')],
-        _: 
-            buildLogicalTypeAnnotation(.) + 
-            [
-                buildTypeAnnotation(.('type')),
-                util.getAnnotationS(., 'doc'),
-                getDefaultVal(.),
-                util.getAnnotationS(., 'order'),
-            ]
-    }
+    buildLogicalTypeAnnotation(.) + 
+    [
+        buildTypeAnnotation(.('type')),
+        util.getAnnotationS(., 'doc'),
+        getDefaultVal(.),
+        util.getAnnotationS(., 'order'),
+    ]
 ;
 
 let t = \record

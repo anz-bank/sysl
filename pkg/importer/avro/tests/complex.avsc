@@ -285,7 +285,11 @@
     },
     {
       "name": "len",
-      "type" : {"type": "fixed", "size": 16, "namespace":"com.example"}
+      "type" : {"type": "fixed", "size": 16, "namespace":"com.example", "name":"md5"}
+    },
+    {
+      "name": "width",
+      "type" : {"type": "fixed", "size": 16, "namespace":"com.example", "name":"width", "aliases": ["width1","width2"]}
     },
     {
       "name": "occurrenceDateTime",
