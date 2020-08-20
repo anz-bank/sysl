@@ -15,6 +15,14 @@ let test = \app \case $`_${app}.${case}`;
 # Returns the name for an app clone target.
 let clone = \app $`_${app}.clone`;
 
+# Returns the relative path from from to to.
+let realpath = \from \to
+    cond {
+        //seq.has_prefix(from, to): $`./${//seq.trim_prefix('/', //seq.trim_prefix(from, to))}`,
+        _: to,
+    }
+;
+
 let default = \b (:b.name, :b.repo, path:b.path?:'', tests:b.tests?:{}, children:b.children?:{});
 
 # Returns the content of a Makefile to execute downstream tests.
@@ -31,16 +39,16 @@ let toMakefile = \b
         let [..., x] = //seq.split("/", //seq.trim_suffix(".git", repo));
         x
     ;
-    let testTargets = \b
-        let local = repo = b.repo?:repo;
-        let (:name, :repo, :path, :tests, :children) = default(b);
+    let testTargets = \t
+        let local = repo = t.repo?:repo;
+        let (:name, :repo, :path, :tests, :children) = default(t);
         $`
             ${tests => $`
                 .PHONY: ${test(name, .@)}
-                ${test(name, .@)}: ${cond {!local: clone(b.name)}}
+                ${test(name, .@)}: ${cond {!local: clone(t.name)}}
                 	${cond {
                         !local: $`cd ${blueprintDir}/children/${repoDir(repo)}${cond {path: $`/${path}`}} && `,
-                        path: $`cd ${path} && `,
+                        path: $`cd ${realpath(b.path, path)} && `,
                     }}${.@value}
             ` orderby .::\i\n}
         `
