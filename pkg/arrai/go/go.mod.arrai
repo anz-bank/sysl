@@ -1,0 +1,8 @@
+\(:org, :name, ...) $`
+module github.com/${org}/${name}
+
+go 1.14
+
+require (
+)
+`

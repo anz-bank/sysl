@@ -1,0 +1,24 @@
+\(:org, :name, :description, ...) $`
+# ${name}
+
+${description}
+
+## Install
+
+${'```'}bash
+go get github.com/${org}/${name}
+${'```'}
+
+## Usage
+
+${'```'}bash
+${name}
+${'```'}
+
+With Docker:
+
+${'```'}bash
+docker run -i --rm ${org}/${name}
+${'```'}
+
+`

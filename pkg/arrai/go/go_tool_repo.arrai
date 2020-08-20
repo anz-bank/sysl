@@ -1,0 +1,29 @@
+# Generates the sources to populate a GitHub repo with a new Go tool.
+
+# Run with --out=dir:some/dir
+
+let org = //os.args(1)?:'foo';
+let name = //os.args(2)?:'bar';
+let description = //os.args(3)?:'description';
+
+let args = (:org, :name, :description);
+
+{
+    '.github': {
+        'workflows': {
+            'generate-tag.yml': //{./workflow_generate_tag.yml.arrai}(args),
+            'go.yml': //{./workflow_go.yml.arrai}(args),
+            'release.yml': //{./workflow_release.yml.arrai}(args),
+        },
+    },
+    '.gitignore': //{./gitignore}(args),
+    '.golangci.yml': //{./golangci.yml.arrai}(args),
+    '.goreleaser.yml': //{./goreleaser.yml.arrai}(args),
+    'Dockerfile': //{./dockerfile}(args),
+    'go.mod': //{./go.mod.arrai}(args),
+    'LICENSE': //{./license}(args),
+    'main.go': //{./main.go.arrai}(args),
+    'main_test.go': //{./main_test.go.arrai}(args),
+    'Makefile': //{./makefile}(args),
+    'README.md': //{./readme.md.arrai}(args),
+}

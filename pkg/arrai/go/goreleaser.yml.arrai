@@ -1,0 +1,79 @@
+\(:org, :name, :description, ...) $`
+project_name: ${name}
+env:
+  - GO111MODULE=on
+  - GOPROXY=https://proxy.golang.org
+before:
+  hooks:
+    - go mod tidy
+
+build:
+  ldflags:
+    - -s -w -X main.Version=v{{.Version}}
+    - -X main.GitCommit={{.ShortCommit}}
+    - -X main.GitFullCommit={{.FullCommit}}
+    - -X main.BuildDate={{.Date}}
+    - -X main.BuildOS={{.Os}}/{{.Arch}}
+    - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
+  goos:
+    - darwin
+    - linux
+    - windows
+  goarch:
+    - amd64
+    - 386
+  goarm:
+    - 7
+
+archives:
+  - id: "${name}"
+    builds: ["${name}"]
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    replacements:
+      darwin: darwin
+      linux: linux
+      windows: windows
+      openbsd: openBSD
+      netbsd: netBSD
+      freebsd: freeBSD
+      dragonfly: dragonFlyBSD
+    name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: "{{.ProjectName}}_{{.Version}}_checksums.txt"
+snapshot:
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - typo
+
+brews:
+  - name: ${name}
+    description: "${description}"
+
+    # GitHub repository to push the tap to.
+    tap:
+      owner: ${org}
+      name: ${name}
+
+    url_template: "https://github.com/${org}/${name}/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    # So you can 'brew test' your formula.
+    # Default is empty.
+    test: |
+      system "#{bin}/${name} --version"
+    # Custom install script for brew.
+    # Default is 'bin.install "program"'.
+    install: |
+      bin.install "${name}"
+`

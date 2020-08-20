@@ -1,0 +1,75 @@
+\(:org, :name, ...) $`
+name: Build and Test
+
+on: [pull_request]
+
+env:
+  GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build-and-test:
+    name: Build Go and Test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+    runs-on: $${{ matrix.os }}
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.13
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+        # Needed for changelog generation by goreleaser
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+
+      - name: Test
+        run: make coverage
+
+      - name: Set GOVERSION environment variable
+        run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
+
+      - name: Build binary via goreleaser
+        uses: goreleaser/goreleaser-action@master
+        with:
+          args: release --snapshot --skip-publish --rm-dist --debug -f .github/goreleaser_configs/.goreleaser-$${{ matrix.os }}.yml
+
+  build-docker:
+    name: Builds the Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.14
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: $${{ secrets.DOCKER_USER }}
+          password: $${{ secrets.DOCKER_PASS }}
+          repository: docker.io/${org}/${name}
+          tag_with_ref: true
+          add_git_labels: true
+          tags: latest
+          push: false
+          labels: org.opencontainers.image.revision=$${{ github.sha }},org.opencontainers.image.url=https://github.com/${org}/${name}
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Run golangci-lint 1.23.8
+        uses: actions-contrib/golangci-lint@v1
+        with:
+          golangci_lint_version: 1.23.8
+`

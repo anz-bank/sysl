@@ -1,0 +1,52 @@
+\(:org, :name, ...) $`
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    name: Release ${name}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.14
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
+
+      - name: Test
+        run: make test
+
+      - name: Validate goreleaser config
+        uses: goreleaser/goreleaser-action@v1.3.1
+        with:
+          version: v0.140.0
+          args: check -f .goreleaser.yml
+
+      - name: Set env
+        run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
+
+      - name: Release binaries via goreleaser
+        uses: goreleaser/goreleaser-action@v1.3.1
+        with:
+          version: v0.140.0
+          args: release --rm-dist --debug -f .goreleaser.yml
+        env:
+          GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: $${{ secrets.DOCKER_USER }}
+          password: $${{ secrets.DOCKER_PASS }}
+          repository: docker.io/${org}/${name}
+          tag_with_ref: true
+          add_git_labels: true
+          tags: latest
+          labels: org.opencontainers.image.revision=$${{ github.sha }},org.opencontainers.image.url=https://github.com/${org}/${name}
+`

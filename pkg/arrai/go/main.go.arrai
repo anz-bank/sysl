@@ -1,0 +1,6 @@
+\(:org, :name, ...) $`
+package main
+
+func main() {
+}
+`
