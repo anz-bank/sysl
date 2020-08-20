@@ -56,7 +56,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				result, err := imp.Load(string(input))
 				require.NoError(t, err)
 				if *update {
-					err = ioutil.WriteFile(syslFile, []byte(result), 0644)
+					err = ioutil.WriteFile(syslFile, []byte(result), 0600)
 					if err != nil {
 						t.Error(err)
 					}

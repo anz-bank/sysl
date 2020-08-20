@@ -51,7 +51,7 @@ func TestExportAll(t *testing.T) {
 				out, err := swaggerExporter.SerializeOutput("yaml")
 				require.NoError(t, err)
 				if *update {
-					err = ioutil.WriteFile(openAPIFileName, out, 0644)
+					err = ioutil.WriteFile(openAPIFileName, out, 0600)
 					if err != nil {
 						t.Error(err)
 					}
