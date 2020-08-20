@@ -22,6 +22,7 @@ let realpath = \from \to
     }
 ;
 
+# Ensures all fields of the blueprint struct are populated with something.
 let default = \b (:b.name, :b.repo, path:b.path?:'', tests:b.tests?:{}, children:b.children?:{});
 
 # Returns the content of a Makefile to execute downstream tests.
