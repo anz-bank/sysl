@@ -1,5 +1,5 @@
 service:
-  golangci-lint-version: 1.23.3
+  golangci-lint-version: 1.30.0
 run:
   timeout: 10m
   skip-files:

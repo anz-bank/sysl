@@ -16,7 +16,7 @@ func CompareSQL(t *testing.T, expected map[string]string, actual []ScriptOutput)
 		assert.Nil(t, err)
 		golden = syslutil.HandleCRLF(golden)
 		if string(golden) != entry.content {
-			err := ioutil.WriteFile(name, []byte(entry.content), 0777)
+			err := ioutil.WriteFile(name, []byte(entry.content), 0600)
 			assert.Nil(t, err)
 		}
 		golden = syslutil.HandleCRLF(golden)

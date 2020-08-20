@@ -243,7 +243,7 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 		if err = pbutil.FTextPB(&updated, mod); err != nil {
 			return false, err
 		}
-		err = ioutil.WriteFile(goldenFilename, updated.Bytes(), 0644)
+		err = ioutil.WriteFile(goldenFilename, updated.Bytes(), 0600)
 		if err != nil {
 			return false, err
 		}
