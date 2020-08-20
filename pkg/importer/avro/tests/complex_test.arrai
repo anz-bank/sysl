@@ -93,7 +93,7 @@ Avro[avro_spec="1.0", package="com.example"]:
         name <: string
 
 
-    # Alias
+    # Aliases
 
     !alias md5[~fixed, namespace="com.example"]: bytes(16)
     

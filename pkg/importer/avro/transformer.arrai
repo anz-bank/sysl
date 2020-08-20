@@ -1,6 +1,6 @@
 let util = //{./util};
 
-# Extra type enum
+# Extra items transformed to Sysl type !enum
 let rec extraEnums = \schema
   cond schema {
     {'type': (s: 'enum'), 'name':(s: name), ...}:
@@ -16,39 +16,39 @@ let rec extraEnums = \schema
   }
 ;
 
-# Extra type record
-let rec extraRecords = \schema 
+# Extra items transformed to Sysl type !type 
+let rec extraTypes = \schema 
   cond schema {
     {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
-      {schema} | //rel.union(fields => extraRecords(.@item("type"))),
+      {schema} | //rel.union(fields => extraTypes(.@item("type"))),
     {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
-      {schema('items')} | //rel.union(fields => extraRecords(.@item("type"))),
+      {schema('items')} | //rel.union(fields => extraTypes(.@item("type"))),
     {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
-      {schema('items') | {'isMap': (s: 'true')}} | //rel.union(fields => extraRecords(.@item("type"))),
+      {schema('items') | {'isMap': (s: 'true')}} | //rel.union(fields => extraTypes(.@item("type"))),
     {'type': (a: types)}: # type is an array
-      //rel.union(types => .@item => extraRecords(.)),  
+      //rel.union(types => .@item => extraTypes(.)),  
     (a: types): 
-      //rel.union(types => .@item => extraRecords(.)),
+      //rel.union(types => .@item => extraTypes(.)),
 };
 
-# Extra type fixed
-let rec extraFixed = \schema 
+# Extra items transformed to Sysl type !alias
+let rec extraAliases = \schema 
   cond schema {
     {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
-      //rel.union(fields => extraFixed(.@item("type"))),
+      //rel.union(fields => extraAliases(.@item("type"))),
     {'type': (s: 'array'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record array
-      //rel.union(fields => extraFixed(.@item("type"))),
+      //rel.union(fields => extraAliases(.@item("type"))),
     {'type': (s: 'map'), 'items': {'type': (s: 'record'), "fields": (a : fields), ...}, ...}: # record map
-      //rel.union(fields => extraFixed(.@item("type"))),
+      //rel.union(fields => extraAliases(.@item("type"))),
     {'type': (a: types)}: # type is an array
-      //rel.union(types => .@item => extraFixed(.)),  
+      //rel.union(types => .@item => extraAliases(.)),  
     (a: types): 
-      //rel.union(types => .@item => extraFixed(.)),
+      //rel.union(types => .@item => extraAliases(.)),
     {'type': (s: 'fixed'), ...}: # fixed type
       {schema},
 };
 
-# Extra type union
+# Extra item transformed to Sysl type !union
 let rec extraUnions = \schema
   cond schema {
     (a:[...]):
@@ -84,15 +84,15 @@ $'
 ##########################################
 ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'', _:$'package="${packageName}"'}}'])}:
 ${util.indent}# Types
-${extraRecords(schema) => //{./transformRecordToSysl}(.) orderby . ::}
-${util.indent}# Alias
-${extraFixed(schema) => //{./transformFixedToSysl}(.) orderby . ::}
+${extraTypes(schema) => //{./transformToSyslType}(.) orderby . ::}
+${util.indent}# Aliases
+${extraAliases(schema) => //{./transformToSyslAlias}(.) orderby . ::}
 ${util.indent}# Unions
 ${
 # It applies //{./transformUnionToSysl}(.) to every item and will remove duplidated items if //{./transformUnionToSysl}(.)
 # produces, as it iterates set.
-extraUnions(schema) => //{./transformUnionToSysl}(.) orderby . ::}
+extraUnions(schema) => //{./transformToSyslUnion}(.) orderby . ::}
 ${util.indent}# Enums
-${extraEnums(schema) => //{./transformEnumToSysl}(.) orderby . ::}
+${extraEnums(schema) => //{./transformToSyslEnum}(.) orderby . ::}
 '
 ;avroTransform
