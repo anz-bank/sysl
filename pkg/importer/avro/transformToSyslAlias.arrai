@@ -1,0 +1,11 @@
+let util = //{./util};
+
+let t = \.
+    $'${'\n'}${util.indent}!alias ${.('name').s}${
+        util.prettyAnnotations(['~fixed', util.getAnnotationS(., 'namespace')])
+    }: bytes(${.('size')})
+    ${
+        let aliases = .('aliases')? .a:[];
+        aliases >> \item ($`!alias ${item.s}: ${.('name').s}`)::
+    }'
+;t
