@@ -35,7 +35,7 @@ drop_index          -> "DROP INDEX" index_name;
 
 options_def         -> "OPTIONS ("(option):",",? ")";
 option              -> "allow_commit_timestamp="("true"|"false");
-key_part            -> (column_name ("ASC"|"DESC")?):",",?;
+key_part            -> (column_name sort_by=("ASC"|"DESC")?):",",?;
 attr_type           -> (SCALAR_TYPE|ARRAY_TYPE);
 
 ARRAY_TYPE          -> "ARRAY<" SCALAR_TYPE ">";
@@ -155,6 +155,13 @@ let evalTableAlteration = \parsed cond parsed {
     (attr_alteration: data, ...): (type: "alter_column", alteration: data),
 };
 
+let parseKeyPart = \t
+     t.column_name => \(@:i, @item:n)
+        cond {
+            (t.sort_by?(i)?:false): $`${n.''}(${//str.lower(t.sort_by(i).'')})`,
+            _:  $`${n.''}`,
+        };
+
 # evalDdl turns a ddl parse tree into a list of ddl statements ready to be applied to a model
 # Use applyStmt to apply these statements to a spanner model
 let evalDdl = \parsed parsed.stmt >> cond . {
@@ -162,11 +169,11 @@ let evalDdl = \parsed parsed.stmt >> cond . {
         stmt: "create_table",
         data: (
             name: val.table_name.'' rank (:.@),
-            attributes: val.attr => evalAttribute(.@item),
+            attributes: val.attr >> evalAttribute(.),
             foreign_keys: cond val {
                 (table_constraint: [...constraints], ...): constraints => evalForeignKeyConstraint(.@item),
             },
-            primary_key: val.pk.key_part.column_name => (.@item.'' rank (@: .@)),
+            primary_key: parseKeyPart(val.pk.key_part),
             cluster: cond {
                 (val.cluster?:false): val.cluster >> (
                     interleaved_in: (.table_name.'' rank (@: .@)),
@@ -184,7 +191,7 @@ let evalDdl = \parsed parsed.stmt >> cond . {
             nullfiltered: (val.nullfiltered?.'':'') rank (@: .@),
             name: val.index_name.'' rank (@: .@),
             table_name: val.table_name.'' rank (@: .@),
-            key_part: (val.key_part.column_name.@item.'' rank (@: .@)) ++ ' ' ++ (val.key_part.''.@item rank (@: .@)),
+            key_part: parseKeyPart(val.key_part),
             storing_col: cond {
                 (val.storing_clause?:false): val.storing_clause.column_name >> (.'' rank (@: .@)),
                 _: {}

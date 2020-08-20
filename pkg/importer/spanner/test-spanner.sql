@@ -16,16 +16,17 @@ CREATE TABLE Customer (
     Mobile     STRING(10),
 ) PRIMARY KEY (CustomerID);
 
-CREATE UNIQUE NULL_FILTERED INDEX CustomerByEmail ON Customer (Email ASC) STORING (Email, Mobile) INTERLEAVE IN Customer;
+CREATE UNIQUE NULL_FILTERED INDEX CustomerByEmail ON Customer (Email ASC, Mobile DESC) STORING (Email, Mobile) INTERLEAVE IN Customer;
 
 CREATE TABLE CustomerHasAccount (
     CustomerID  STRING(36) NOT NULL,
     AccountNum  STRING(23) NOT NULL,
     LegalRole   STRING(10) NOT NULL,
+    BranchID    STRING(6)  NOT NULL,
     Permissions ARRAY<STRING(10)>,
-    CONSTRAINT FK_CustomerID FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID),
+    CONSTRAINT FK_CustomerID FOREIGN KEY (CustomerID, BranchID) REFERENCES Customer (CustomerID, BSB),
     CONSTRAINT FK_AccountNum FOREIGN KEY (AccountNum) REFERENCES Account (AccountNum),
-) PRIMARY KEY (CustomerID, AccountNum);
+) PRIMARY KEY (AccountNum ASC, CustomerID);
 
 CREATE TABLE AccountAddress (
     AccountNum        STRING(23) NOT NULL,

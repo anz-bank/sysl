@@ -1,6 +1,7 @@
 let size = \length
     cond {
         length = 'MAX': '',
+        //seq.has_prefix('0x', length): '(' ++ //seq.trim_prefix('0x', length) ++ ')',
         length > 0: $`(${length})`,
         _: '',
     };
@@ -9,8 +10,9 @@ let size = \length
 let attributePatternToken = \entity \attr \token
     cond {
         (attr.options?:{}): token,
-        ({attr.name} & entity.primary_key): token,
-        let fks = entity.foreign_keys => .foreign_keys => .attribute; ({attr.name} & fks): token,
+        (entity.primary_key where //seq.contains(attr.name, .)): token,
+        let fks = (entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
+            .reference_attribute orderby .)) where . != {}; (fks): token,
         (attr.length = 'MAX'): token,
         (//seq.has_prefix('0x', attr.length)): token,
         _: '',
@@ -23,12 +25,31 @@ let entityPatternToken = \entity \model \token
         _: '',
     };
 
+# sortingOrder determines and appends sorting order
+let sortingOrder = \e \attr
+    let pk = //seq.split('(', //seq.join('', (e.primary_key where //seq.contains(attr.name, .)) orderby .));
+    cond {
+        pk count > 1: ', ~' ++ //seq.trim_suffix(')', //str.lower(pk(1))),
+        _: '',
+    };
+
+# compareColumnOrder compares the col order between primary key and table
+let compareColumnOrder = \entity
+    let pk = (entity.primary_key orderby .) >> //seq.split('(', .) >> .(0);
+    cond {
+        pk & (entity.attributes >> .name): false,
+        _: true,
+    };
+
 # attributePattern generates the pattern constituents depending on the mode
 let attributePattern = \entity \attr \mode
     cond {
-        (mode = 0 && ({attr.name} & entity.primary_key)): '~pk',
-        let fks = entity.foreign_keys => .foreign_keys => .attribute; (mode = 1 && ({attr.name} & fks)): '~fk',
-        (mode = 2 && attr.options): attr.options,
+        (mode = 0 && (entity.primary_key where //seq.contains(attr.name, .))): '~pk' ++ sortingOrder(entity, attr),
+        let fks = (entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
+            .reference_attribute orderby .)) where . != {}; (mode = 1 && fks): '~fk',
+        (mode = 2 && attr.options):
+            let opt = //seq.split('=',attr.options);
+            opt(0) + '=' + "'" + opt(1) + "'",
         (mode = 3 && attr.length = 'MAX'): '~max',
         (mode = 4 && //seq.has_prefix('0x', attr.length)): '~hex',
         _: '',
@@ -37,22 +58,20 @@ let attributePattern = \entity \attr \mode
 # entityPattern generates the pattern constituents depending on the mode
 let entityPattern = \entity \model \mode
     cond {
-        (mode = 0 && entity.primary_key count > 1):
-            'primary_key="' ++ //seq.join(", ", entity.primary_key orderby .) ++ '"',
+        (mode = 0 && entity.primary_key count > 1 && compareColumnOrder(entity)):
+            'primary_key="' ++ //seq.join(', ', entity.primary_key orderby .) ++ '"',
         (mode = 1 && entity.cluster):
             //seq.join('', entity.cluster >> 'interleave_in_parent="' ++
             .interleaved_in ++ '", interleave_on_delete="' ++ .on_delete ++ '"'),
         (mode = 2 && entity.foreign_keys):
-            'foreign_keys=[' ++ //seq.join(', ',(entity.foreign_keys => \keys '[' ++ //seq.join(', ', (keys.foreign_keys =>
-            '"constraint:' ++ keys.constraint_name ++
-            '","columns:' ++ .attribute ++ '"')
-             orderby .) ++ ']' ) orderby .) ++ ']',
-        let relatedIndices = ((model.indexes orderby .) where .@item.table_name = entity.name); (mode = 3 && model.indexes && relatedIndices):
+            'foreign_keys=[' ++ //seq.join(', ',(entity.foreign_keys => \keys '["constraint:' ++ keys.constraint_name ++
+            '","columns:' ++ //seq.join(', ', (keys.foreign_keys => .attribute) orderby .) ++ '"]' ) orderby .) ++ ']',
+        let relatedIndices = ((model.indexes orderby .) where .@item.table_name = entity.name); (mode = 3 && relatedIndices):
             'indexes=[' ++ //seq.join(', ', ((model.indexes orderby .) where .@item.table_name = entity.name) >>
             '"name:' ++ .table_name ++
             '","unique:' ++ (cond {(.unique = 'UNIQUE'):'true', _:'false'}) ++
             '","null_filtered:' ++ (cond {(.nullfiltered = 'NULL_FILTERED'):'true', _:'false'}) ++
-            '","key_parts:' ++ .key_part ++
+            '","key_parts:' ++ //seq.join(', ', .key_part orderby .) ++
             cond {(.storing_col): '","storing:' ++ (//seq.join(', ',.storing_col))}  ++
             '","interleave_in:' ++ .table_name) ++ '"]',
         _: '',
@@ -74,22 +93,36 @@ let allAttributePatterns = \entity \attr
         attributePattern(entity,attr,3), attributePattern(entity,attr,4)] where .@item != '')
     }}${attributePatternToken(entity,attr,']')}`;
 
+# typeInfo generates the type info for an attribute
+let typeInfo = \entity \attr \type \isArray
+    let refAttr = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
+        .reference_attribute orderby .);
+    let refTable = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
+        .reference_table orderby .);
+    let fkAttr = (refAttr where . != {});
+    let fkTable = (refTable where . != {});
+    cond {
+        fkAttr | fkTable:  //seq.join('', (fkTable => //seq.join('', .) orderby .)) ++ '.'
+            ++ //seq.join('', (fkAttr => //seq.join('', .) orderby .)),
+        isArray: 'sequence of ' ++ type,
+        _: type ++ size(attr.length),
+    };
+
 # transformModel translates the empty model into sysl file
 let transformModel = \model
     # sysl specification
     # https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.proto
     $`
-        //   THIS IS AUTOGENERATED BY sysl   //
+        ########   THIS IS AUTOGENERATED BY sysl   ########
         ${model.schema => $`
             ${.name}:
             ${//seq.sub('#>>>\n', '')($`
             ${(model.entities => \entity $`
             #>>>
                 !table ${entity.name}${allEntityPatterns(entity, model)}:
-                    ${entity.attributes =>
+                    ${entity.attributes >>
                         $`
-                            ${.name}  ${.type}${size(.length)}${cond {.nullable:'?'}}${allAttributePatterns(entity, .)}
-                                ` orderby .::\i:
+                            ${.name} <: ${typeInfo(entity, ., .type, .array)}${cond {.nullable:'?'}}${allAttributePatterns(entity, .)}` ::\i:
                         }`
                     )
                     orderby .::\i\n:
