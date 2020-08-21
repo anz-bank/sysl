@@ -1,31 +1,33 @@
 .PHONY: all init
 
 all:  \
-	_ecosystem-test.all \
-	_foo.bar
+	ecosystem-test.all \
+	foo.bar
 
 init:
 	mkdir -p .blueprint/children
 
-# arrai-demo (self)
 
-.PHONY: _arrai-demo.make
-_arrai-demo.make: 
-	cd pkg/arrai && make
+### arrai-demo (self)
 
-# foo (local)
+.PHONY: arrai-demo.make
+arrai-demo.make: 
+	cd ./ && make
+
+### foo (local)
 
 
-.PHONY: _foo.bar
-_foo.bar: 
-	cd pkg/arrai/out && ls
+.PHONY: foo.bar
+foo.bar: 
+	cd ./out && ls
 
-# ecosystem-test 
+### ecosystem-test
 
-.PHONY: _ecosystem-test.clone
-_ecosystem-test.clone: init
-	rm -rf .blueprint/children/ecosystem-test && git clone --depth=1 https://github.com/orlade-anz/ecosystem-test .blueprint/children/ecosystem-test
+.PHONY: ecosystem-test.clone
+ecosystem-test.clone: init
+	rm -rf .blueprint/children/ecosystem-test && \
+		git clone --depth=1 https://github.com/orlade-anz/ecosystem-test .blueprint/children/ecosystem-test
 
-.PHONY: _ecosystem-test.all
-_ecosystem-test.all: _ecosystem-test.clone
+.PHONY: ecosystem-test.all
+ecosystem-test.all: ecosystem-test.clone
 	cd .blueprint/children/ecosystem-test && make

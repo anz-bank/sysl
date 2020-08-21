@@ -9,10 +9,10 @@ let blueprintDir = '.blueprint';
 let testSelf = false;
 
 # Returns the name for an app test target.
-let test = \app \case $`_${app}.${case}`;
+let test = \app \case $`${app}.${case}`;
 
 # Returns the name for an app clone target.
-let clone = \app $`_${app}.clone`;
+let clone = \app $`${app}.clone`;
 
 # Returns the relative path from from to to.
 let realpath = \from \to
@@ -48,7 +48,7 @@ let toMakefile = \b
                 ${test(name, .@)}: ${cond {!local: clone(t.name)}}
                 	${cond {
                         !local: $`cd ${blueprintDir}/children/${repoDir(repo)}${cond {path: $`/${path}`}} && `,
-                        path: $`cd ${realpath(t.path, path)} && `,
+                        path: $`cd ${realpath(b.path?:'', path)} && `,
                     }}${.@value}
             ` orderby .::\i\n}
         `
@@ -72,13 +72,14 @@ let toMakefile = \b
             let local = c.repo = repo;
             let dir = $`${blueprintDir}/children/${repoDir(c.repo)}`;
             $`
-                ### ${c.name} ${cond {local: '(local)'}}
+                ### ${c.name}${cond {local: ' (local)'}}
 
                 ${cond {!local: $`
                     .PHONY: ${clone(c.name)}
                     ${clone(c.name)}: init
-                    	rm -rf ${dir} && git clone --depth=1 ${c.repo} ${dir}
-                `}}
+                    	rm -rf ${dir} && \
+                    		git clone --depth=1 ${c.repo} ${dir}`
+                }}
 
                 ${testTargets(c)}
             `)::\i\n}
