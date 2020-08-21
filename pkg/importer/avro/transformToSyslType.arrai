@@ -41,26 +41,12 @@ let buildLogicalTypeAnnotation = \.
     }
 ;
 
-# TODO default = {} can't work still
-let getDefaultVal = \.
-    let default = .('default')?:""; 
-    cond default {
-        "": "",
-        ():'default="null"', 
-        (b: true): $'default="true"',
-        (b: false): $'default="false"',
-        (a: {}): $'default="[]"',
-        (a: [(:s), ...]): $'default="${default.a >> .s}"',
-        _: $'default="${default}"'
-    } 
-;
-
 let buildAnnotations = \.
     buildLogicalTypeAnnotation(.) + 
     [
         buildTypeAnnotation(.('type')),
         util.getAnnotationS(., 'doc'),
-        getDefaultVal(.),
+        util.getDefaultVal(.),
         util.getAnnotationS(., 'order'),
     ]
 ;
@@ -68,12 +54,20 @@ let buildAnnotations = \.
 let t = \record
 $`${
     cond record {
-        {'isMap':(s: 'true'), ...}: 
-            $'${'\n'}${util.indent}!type String${record('name').s}Item[json_map_key="key"]:${'\n'}${util.indent}${util.indent}key <: string${
-                '\n'}${util.indent}${util.indent}value <: ${record('name').s}${'\n\n'}', 
-            _:''
-        }
-}${util.indent}!type ${record('name').s}${
+        {'isMap':(s: 'true'), ...}:
+            let valueType = cond record {
+                {"name": (s: name)}: name,
+                {"items": (s: type), ...}: type
+            };
+            $'${'\n'}${util.indent}!type String${valueType}Item${
+                    util.prettyAnnotations(['json_map_key="key"', util.getDefaultVal(record)])
+                }:${'\n'}${util.indent}${util.indent}key <: string${
+                '\n'}${util.indent}${util.indent}value <: ${valueType}${'\n\n'}',
+    }
+}${
+cond record {
+{'type': (s: 'record'), ...}:
+$'${util.indent}!type ${record('name').s}${
     util.prettyAnnotations([util.getAnnotationS(record, 'namespace'), util.getAnnotationS(record, 'doc')])
 }:
 ${
@@ -97,4 +91,4 @@ let aliases = record('aliases')? .a:[];
 aliases >> 
 ($`${util.indent}!alias ${.s}:
 ${util.indent}${util.indent}${record('name').s}`)::\i
-}`;t
+}'}}`;t

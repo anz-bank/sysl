@@ -1,11 +1,17 @@
 let util = //{./util};
 
 let t = \.
+cond . {
+{'type': 'fixed', ...}:
     $'${util.indent}!alias ${.('name').s}${
         util.prettyAnnotations(['~fixed', util.getAnnotationS(., 'namespace')])
     }: bytes(${.('size')})
     ${
         let aliases = .('aliases')? .a:[];
         aliases >> \alias ($`!alias ${alias.s}: ${.('name').s}`)::
-    }'
-;t
+    }',
+{'type': (s: 'array'), ...}:
+    $'${util.indent}!alias ${//str.title(.('items').s)}Sequence${
+        util.prettyAnnotations([util.getDefaultVal(.)])
+    }: sequence of ${.('items').s}'
+};t

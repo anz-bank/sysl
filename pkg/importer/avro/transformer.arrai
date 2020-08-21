@@ -28,7 +28,7 @@ let rec extraTypes = \schema
     {'type': (s: type), 'items': items, ...}: # array or map
       cond items {
         (a: types): //rel.union(types => extraTypes(.@item)), # array
-        (:s): extraTypes(items.s), # primitive
+        (:s): cond type {'map': {schema | {'isMap': (s: 'true')}}}, # primitive
         _:
           cond type {
             'map': {schema('items') | {'isMap': (s: 'true')}} | extraTypes(items),
@@ -52,7 +52,7 @@ let rec extraAliases = \schema
     {'type': type, 'items': items, ...}: # array or map
       cond items {
         (a: types): //rel.union(types => extraAliases(.@item)), # array
-        (:s): extraAliases(items.s), # primitive
+        (:s): cond type.s {'array': {schema}}, # primitive
         _: extraAliases(items),
       },
     {'type': (a: types)}: # type is an array
@@ -92,15 +92,19 @@ $'
 ##########################################
 ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'', _:$'package="${packageName}"'}}'])}:
 ${util.indent}# Types
+
 ${extraTypes(schema) => //{./transformToSyslType}(.) orderby . ::}
 ${util.indent}# Aliases
+
 ${extraAliases(schema) => //{./transformToSyslAlias}(.) orderby . ::\n}
 ${util.indent}# Unions
+
 ${
 # It applies //{./transformUnionToSysl}(.) to every item and will remove duplidated items if //{./transformUnionToSysl}(.)
 # produces, as it iterates set.
 extraUnions(schema) => //{./transformToSyslUnion}(.) orderby . ::\n}
 ${util.indent}# Enums
+
 ${extraEnums(schema) => //{./transformToSyslEnum}(.) orderby . ::\n}
 '
 ;avroTransform

@@ -112,6 +112,20 @@ let transformType = \type
     }
 ;
 
+# TODO default = {} can't work still
+let getDefaultVal = \.
+    let default = .('default')?:""; 
+    cond default {
+        "": "",
+        ():'default="null"', 
+        (b: true): $'default="true"',
+        (b: false): $'default="false"',
+        (a: {}): $'default="[]"',
+        (a: [(:s), ...]): $'default="${default.a >> .s}"',
+        _: $'default="${default}"'
+    } 
+;
+
 let util = (
     : prettyAnnotations,
     : transformType,
@@ -119,5 +133,6 @@ let util = (
     : getTypeName,
     : combineTypes,
     : indent,
+    : getDefaultVal
 );
 util
