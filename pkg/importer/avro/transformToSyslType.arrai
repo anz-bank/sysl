@@ -73,20 +73,20 @@ $`${
                 '\n'}${util.indent}${util.indent}value <: ${record('name').s}${'\n\n'}', 
             _:''
         }
-}${'\n'}${util.indent}!type ${record('name').s}${
+}${util.indent}!type ${record('name').s}${
     util.prettyAnnotations([util.getAnnotationS(record, 'namespace'), util.getAnnotationS(record, 'doc')])
 }:
 ${
     let fields = record('fields')? .a:[]; 
     fields >> 
-        ($`${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))}${
+        ($`${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))} ${
                 util.prettyAnnotations(buildAnnotations(.))
             }${
                 let aliases = .('aliases')? .a:[];
                 cond aliases {
                     []: '',
                     _: $'${'\n'}${aliases >> \alias 
-                                    $'${util.indent}${util.indent}${alias.s} <: ${util.transformType(.('type'))}${
+                                    $'${util.indent}${util.indent}${alias.s} <: ${util.transformType(.('type'))} ${
                                         util.prettyAnnotations(buildAnnotations(.) + [$'alias_of="${.('name').s}"'])}'::\i}'
                 }
             }`)::

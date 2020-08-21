@@ -94,13 +94,13 @@ ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'
 ${util.indent}# Types
 ${extraTypes(schema) => //{./transformToSyslType}(.) orderby . ::}
 ${util.indent}# Aliases
-${extraAliases(schema) => //{./transformToSyslAlias}(.) orderby . ::}
+${extraAliases(schema) => //{./transformToSyslAlias}(.) orderby . ::\n}
 ${util.indent}# Unions
 ${
 # It applies //{./transformUnionToSysl}(.) to every item and will remove duplidated items if //{./transformUnionToSysl}(.)
 # produces, as it iterates set.
-extraUnions(schema) => //{./transformToSyslUnion}(.) orderby . ::}
+extraUnions(schema) => //{./transformToSyslUnion}(.) orderby . ::\n}
 ${util.indent}# Enums
-${extraEnums(schema) => //{./transformToSyslEnum}(.) orderby . ::}
+${extraEnums(schema) => //{./transformToSyslEnum}(.) orderby . ::\n}
 '
 ;avroTransform
