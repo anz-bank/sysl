@@ -1,0 +1,25 @@
+AppOne:
+    EndpointOne:
+        AppOne <- EndpointOne
+        AppTwo <- EndpointTwo
+        RestAppOne <- GET /endpoint-one
+        RestAppTwo <- GET /endpoint-two
+        return ok <: string
+
+AppTwo:
+    EndpointTwo:
+        ...
+
+RestAppOne:
+    /endpoint-one:
+        GET:
+            AppOne <- EndpointOne
+            AppTwo <- EndpointTwo
+            RestAppOne <- GET /endpoint-one
+            RestAppTwo <- GET /endpoint-two
+            return ok <: string
+
+RestAppTwo:
+    /endpoint-two:
+        GET:
+            ...
