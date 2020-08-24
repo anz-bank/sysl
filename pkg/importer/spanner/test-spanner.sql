@@ -1,4 +1,4 @@
-CREATE DATABASE CustomerAccounts;
+CREATE DATABASE customeraccounts;
 
 CREATE TABLE Account (
     AccountNum STRING(23) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE Customer (
     Mobile     STRING(10),
 ) PRIMARY KEY (CustomerID);
 
-CREATE UNIQUE NULL_FILTERED INDEX CustomerByEmail ON Customer (Email ASC, Mobile DESC) STORING (Email, Mobile) INTERLEAVE IN Customer;
+CREATE UNIQUE NULL_FILTERED INDEX CustomerByEmail ON Customer (Email ASC, Mobile DESC);
 
 CREATE TABLE CustomerHasAccount (
     CustomerID  STRING(36) NOT NULL,
@@ -24,13 +24,14 @@ CREATE TABLE CustomerHasAccount (
     LegalRole   STRING(10) NOT NULL,
     BranchID    STRING(6)  NOT NULL,
     Permissions ARRAY<STRING(10)>,
-    CONSTRAINT FK_CustomerID FOREIGN KEY (CustomerID, BranchID) REFERENCES Customer (CustomerID, BSB),
-    CONSTRAINT FK_AccountNum FOREIGN KEY (AccountNum) REFERENCES Account (AccountNum),
+    CONSTRAINT FK_CustomerID FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID),
+    CONSTRAINT FK_AccountNum FOREIGN KEY (AccountNum, BranchID) REFERENCES Account (AccountNum, BSB),
 ) PRIMARY KEY (AccountNum ASC, CustomerID);
 
 CREATE TABLE AccountAddress (
     AccountNum        STRING(23) NOT NULL,
-    AddressPostCode   STRING(10) NOT NULL OPTIONS (allow_commit_timestamp=true),
+    AddressPostCode   STRING(10) NOT NULL,
+    LastUpdated       TIMESTAMP OPTIONS (allow_commit_timestamp=true),
     AddressLine1      BYTES(MAX),
     AddressLine2      STRING(0x100),
     AddressLine3      STRING(100),

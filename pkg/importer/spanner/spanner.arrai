@@ -82,7 +82,7 @@ let evalType = \parsed
         (INT64: _, ...):                  (type: "int64", length: 0),
         (FLOAT64: _, ...):                (type: "float64", length: 0),
         (DATE: _, ...):                   (type:"date", length: 0),
-        (TIMESTAMP: _, ...):              (type:"timestamp", length: 0),
+        (TIMESTAMP: _, ...):              (type:"datetime", length: 0),
         (STRING: _, length: length, ...): (type: "string", length: evalInt64(length.int64_value?:"MAX")),
         (BYTES: _, length: length, ...):  (type: "bytes", length: evalInt64(length.int64_value?:"MAX")),
     };
