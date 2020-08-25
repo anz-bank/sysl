@@ -1,4 +1,4 @@
-.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden import embed-arrai
+.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden embed-arrai
 
 include VersionReport.mk
 
