@@ -1,5 +1,5 @@
 # Transform Avro enum to Sysl enum
-let util = //{./util};
+let util = //{./avro_util};
 
 let t = \enum
 

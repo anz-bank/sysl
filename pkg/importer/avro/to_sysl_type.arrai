@@ -1,5 +1,5 @@
 # Transform Avro record to Sysl record
-let util = //{./util};
+let util = //{./avro_util};
 
 # Build type annotation like [union=["int32", "null"]]
 let buildTypeAnnotation = \type

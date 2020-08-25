@@ -1,5 +1,5 @@
 # Transform Avro union to Sysl union
-let util = //{./util};
+let util = //{./avro_util};
 
 let combineTypes = \types
     let fullTypeNames = types >> util.getTypeName(.);

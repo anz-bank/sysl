@@ -1,4 +1,4 @@
-let util = //{./util};
+let util = //{./avro_util};
 
 let t = \.
 cond . {
