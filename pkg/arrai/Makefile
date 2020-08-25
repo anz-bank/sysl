@@ -1,4 +1,4 @@
-.PHONY: all diagrams init-diagram plantuml compare clean
+.PHONY: all diagrams init-diagram plantuml test compare clean
 
 SYSL_PLANTUML=http://localhost:8080
 OUT=out
@@ -53,32 +53,37 @@ plantuml:
 
 # Testing
 
-TEST=test
-SYSL_DIAGRAMS=$(TEST)/data_diagram.svg \
-	  		  $(TEST)/integration_diagram.svg \
-	  		  $(TEST)/sequence_diagram.svg
-COMPARISONS=$(TEST)/data_diagram.md \
-	  		$(TEST)/integration_diagram.md \
-	  		$(TEST)/sequence_diagram.md
+# Run arr.ai unit tests.
+test:
+	arrai test
 
-$(TEST):
-	mkdir -p $(TEST)
+# Directory for Sysl/arr.ai comparisons.
+CMP_DIR=compare
+SYSL_DIAGRAMS=$(CMP_DIR)/data_diagram.svg \
+			  $(CMP_DIR)/integration_diagram.svg \
+			  $(CMP_DIR)/sequence_diagram.svg
+COMPARISONS=$(CMP_DIR)/data_diagram.md \
+			$(CMP_DIR)/integration_diagram.md \
+			$(CMP_DIR)/sequence_diagram.md
 
-$(TEST)/data_diagram.svg: $(TEST)
+$(CMP_DIR):
+	mkdir -p $(CMP_DIR)
+
+$(CMP_DIR)/data_diagram.svg: $(CMP_DIR)
 	sysl data -d -o $@ model.sysl
 
-$(TEST)/integration_diagram.svg: $(TEST)
+$(CMP_DIR)/integration_diagram.svg: $(CMP_DIR)
 	sysl ints -j all -o $@ model.sysl
 
-$(TEST)/sequence_diagram.svg: $(TEST)
+$(CMP_DIR)/sequence_diagram.svg: $(CMP_DIR)
 	sysl sd -s "Client <- Do" -o $@ model.sysl
 
-$(TEST)/%.md: $(TEST)
-	echo "![](../out/$*.svg)\n![]($*.svg)" > $(TEST)/$*.md
+$(CMP_DIR)/%.md: $(CMP_DIR)
+	echo "![](../out/$*.svg)\n![]($*.svg)" > $(CMP_DIR)/$*.md
 
 # Generates all diagrams with arr.ai and Sysl, and side-by-side Markdown comparisons.
 compare: $(DIAGRAMS) $(SYSL_DIAGRAMS) $(COMPARISONS)
 
 # Deletes all generated outputs.
 clean:
-	$(RM) -r $(OUT) $(TEST)
+	$(RM) -r $(OUT) $(CMP_DIR)
