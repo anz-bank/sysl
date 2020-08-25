@@ -1,0 +1,21 @@
+let (:grammar, :toArrai, :toTuple, :macro, ...) = //{./xml};
+
+let _simple = '<a><b>c</b></a>';
+
+(
+    grammar: 
+        let ast = //grammar.parse(grammar, 'doc', _simple);
+        (ast.node.node.@item.text(0).'' rank (:.@)) = 'c',
+
+    toArrai: 
+        let ast = //grammar.parse(grammar, 'doc', _simple);
+        toArrai(ast).root.children(0).text = 'c',
+
+    toTuple: toTuple(toArrai(//grammar.parse(grammar, 'doc', _simple))) = (a: (b: 'c')),
+
+    macro: ({:macro:<a><b>c</b></a>:}).root.children(0).text = 'c',
+
+    customMacro:
+        let customMacro = (@grammar: grammar, @transform: (doc: \ast toTuple(toArrai(ast))));
+        ({:customMacro:<a><b>c</b></a>:}) = (a: (b: 'c')),
+)

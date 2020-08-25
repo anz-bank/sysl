@@ -1,0 +1,51 @@
+# Functions for working with XML documents.
+
+# An ωbnf grammar for parsing simple XML documents with elements, attributes and comments.
+let grammar = {://grammar.lang.wbnf:
+doc         -> header? node;
+header      -> "<?xml" [^?]* "?>";
+node        -> "<" tag=name attr* ("/>" | (">" (node | comment | text)* "</" name ">"));
+name        -> [-:\w]+;
+attr        -> name "=" '"' value=[^""]* '"';
+comment     -> "<!--" comment_rest;
+comment_rest -> "-->" | ([^-]+ | [-]) comment_rest;
+text        -> [^<]+;
+
+thisisntusedanywhere -> "<";
+.wrapRE     -> /{\s*()\s*};
+:};
+
+# Transforms an XML AST into a more natural arr.ai structure.
+let toArrai = \ast
+    let rec transformNode = \node (
+        @tag: node.tag.name.'',
+        attrs: node.attr?:{} => \(@item:a, ...) (@: a.name.'' rank (:.@), @value: a.value.''),
+        text: //seq.join("", node.text?:{} >> .''),
+        children: node.node?:{} >> transformNode(.),
+    );
+    (header: //seq.join(' ', ast.header?.'':{}), root: transformNode(ast.node))
+;
+
+# Transforms an arr.ai XML model into an even simpler tuple, ignore attributes.
+let rec toTuple = \xml
+    cond xml {
+        (:root, ...): toTuple(root),
+        (:@tag, ...): //tuple({@tag rank (:.@): cond {
+            xml.children?:{}: //tuple(//rel.union(xml.children => .@item => //dict(toTuple(.)))),
+            xml.text?:{}: xml.text,
+        }}),
+    }
+;
+
+# The default macro to convert XML source into an arr.ai structure.
+let macro = (
+    @grammar: grammar,
+    @transform: (doc: \ast toArrai(ast)),
+);
+
+(
+    :grammar,
+    :toArrai,
+    :toTuple,
+    :macro,
+)
