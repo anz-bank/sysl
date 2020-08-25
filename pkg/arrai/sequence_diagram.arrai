@@ -12,21 +12,29 @@ let rec toTree = \(:m, :appName, :epName)
 ;
 
 # Transforms an endpoint to a PlantUML sequence from `from` to `to`, including all downstream calls.
-let rec toUml = \(:from, :to, :calls) $`
-    ${from.appName} -> ${to.appName} : ${to.epName}
-    activate ${to.appName}
-    ${cond calls {[_, ...]: calls >> toUml(.)}::\i}
-    ${from.appName} <-- ${to.appName}
-    deactivate ${to.appName}
-`;
+let rec toUml = \(:from, :to, :calls) \urls
+    let label = cond {
+        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} -> ${to.appName} ${to.epName}`)} ${to.epName}]]`, 
+        _: to.epName
+    };
+    let retLabel = cond {
+        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} <-- ${to.appName} ${to.epName}`)} ok]]`,
+        _: 'ok'
+    };
+    $`
+        ${from.appName} -> ${to.appName} ++ : ${label}
+        ${cond calls {[_, ...]: calls >> toUml(., urls)}::\i}
+        return ${retLabel}
+    `
+;
 
 # Appends `val` to `arr` if it's not already present.
 let appendIfNew = \arr \val arr ++ cond (arr => .@item) & {val} {{}: [val]};
 
 # Transforms a Sysl model into a sequence diagram, starting with a call to `appName <- epName`.
-let toSeq = \m \(:appName, :epName) 
+let toSeq = \m \(:appName, :epName) \urls
     let model = (
-        from: (appName: ''),
+        from: (appName: '', epName: ''),
         to: (:appName, :epName),
         calls: toTree((:m, :appName, :epName))
     );
@@ -43,19 +51,23 @@ let toSeq = \m \(:appName, :epName)
     # Enriches the app names with `type`, inferred from patterns and used as the primary sort key.
     let apps = (getApps(model, []) => \(:@, @item:name) 
         let patterns = //rel.union(m.apps where .appName = name => .appPatterns);
-        let type = cond patterns {{'db', ...}: 'database', _: 'control'};
+        let type = cond {{'db'} & patterns: 'database', _: 'control'};
         (:@, :name, :type)
     ) orderby [.type, .@];
 
     $`
         @startuml
         skinparam MaxMessageSize 250
+        ${cond {urls: $`
+        skinparam sequence {
+            ArrowColor grey
+        }`}}
         
         ${apps >> $`${.type} "${.name}"`::\i}
 
-        ${toUml(model)}
+        ${toUml(model, urls)}
         @enduml
     `
 ;
 
-toSeq(model, (appName: 'Client', epName: 'Do'))
+toSeq(model, (appName: 'Client', epName: 'Do'), false)

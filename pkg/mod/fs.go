@@ -25,20 +25,10 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, fmt.Errorf("%s not found", name)
+		return nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
-	name, ver, err := mergeRootAndPath(fs.root, name)
-	if err != nil {
-		return nil, err
-	}
-
-	mod, err := Find(name, ver)
-	if err != nil {
-		return nil, err
-	}
-
-	relpath, err := filepath.Rel(mod.Name, name)
+	mod, relpath, err := fs.fetchRemoteFile(name)
 	if err != nil {
 		return nil, err
 	}
@@ -46,25 +36,32 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 	return syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
 }
 
+func (fs *Fs) OpenWithModule(name string) (afero.File, *Module, error) {
+	f, err := fs.Fs.Open(name)
+	if err == nil {
+		return f, nil, nil
+	} else if !SyslModules {
+		return nil, nil, fmt.Errorf("%s not found: no such file in current working directory", name)
+	}
+
+	mod, relpath, err := fs.fetchRemoteFile(name)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	f, err = syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
+	return f, mod, err
+}
+
 func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
 	f, err := fs.Fs.OpenFile(name, flag, perm)
 	if err == nil {
 		return f, nil
 	} else if !SyslModules {
-		return nil, fmt.Errorf("%s not found", name)
+		return nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
-	name, ver, err := mergeRootAndPath(fs.root, name)
-	if err != nil {
-		return nil, err
-	}
-
-	mod, err := Find(name, ver)
-	if err != nil {
-		return nil, err
-	}
-
-	relpath, err := filepath.Rel(mod.Name, name)
+	mod, relpath, err := fs.fetchRemoteFile(name)
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +71,25 @@ func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, err
 
 func (fs *Fs) Name() string {
 	return "ModSupportedFs"
+}
+
+func (fs *Fs) fetchRemoteFile(filename string) (*Module, string, error) {
+	name, ver, err := mergeRootAndPath(fs.root, filename)
+	if err != nil {
+		return nil, "", err
+	}
+
+	mod, err := Retrieve(name, ver)
+	if err != nil {
+		return nil, "", err
+	}
+
+	relpath, err := filepath.Rel(mod.Name, name)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return mod, relpath, nil
 }
 
 func mergeRootAndPath(root, name string) (string, string, error) {
@@ -103,4 +119,11 @@ func ExtractVersion(path string) (newpath, ver string) {
 		newpath = path[:len(path)-len(ver)-1]
 	}
 	return
+}
+
+func AppendVersion(path, ver string) string {
+	if ver == "" {
+		return path
+	}
+	return path + "@" + ver
 }

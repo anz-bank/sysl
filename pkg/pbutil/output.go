@@ -3,6 +3,7 @@ package pbutil
 import (
 	"fmt"
 	"io"
+	"regexp"
 
 	"github.com/spf13/afero"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -24,6 +25,9 @@ func JSONPB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 	return FJSONPB(f, m)
 }
 
+// Recognise extra whitespace after a JSON key.
+var extraSpaceAfterKeyRE = regexp.MustCompile(`(?m)^(\s*"[^"]*": ) `)
+
 // FJSONPB ...
 func FJSONPB(w io.Writer, m protoreflect.ProtoMessage) error {
 	if m == nil {
@@ -34,6 +38,10 @@ func FJSONPB(w io.Writer, m protoreflect.ProtoMessage) error {
 	if err != nil {
 		return err
 	}
+
+	// TODO: Remove after we get protobuf working locally and in docker builds.
+	mb = extraSpaceAfterKeyRE.ReplaceAll(mb, []byte("$1"))
+
 	_, err = w.Write(mb)
 	return err
 }

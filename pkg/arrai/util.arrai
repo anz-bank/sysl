@@ -10,9 +10,30 @@ let invokeMacro = \macro \s
 
 # Transforms an AST into a simple tuple of its values.
 # Useful for the @transform of a flat grammar.
-let simpleTransform = \ast
-    let d = //dict(ast) >> \term cond term {('':value, ...): value, _: {}};
-    //tuple(d where .@value)
+let rec simpleTransform = \ast
+    cond ast {
+        (...): 
+            let d = //dict(ast) >> \term cond term {
+                ('':value): value, 
+                (...): simpleTransform(term), 
+                [...]: term >> simpleTransform(.) where .@item,
+                _: {},
+            };
+            //tuple(d where .@value),
+        _: {}
+    }
+;
+
+# Filters the nodes of a hierarchical data structure based on a (key, value) predicate.
+# Key-value pairs for which the predicate returns false will be removed from the result.
+let rec filterTree = \pred \ast
+    cond ast {
+        {(@:..., @value:...), ...}: ast where pred(.@, .@value) >> filterTree(pred, .),
+        [...]: ast >> filterTree(pred, .),
+        {...}: ast => filterTree(pred, .),
+        (...): //{./util}.safetuple(//dict(ast) where pred(.@, .@value) >> filterTree(pred, .)),
+        _: ast,
+    }
 ;
 
 # Sequentially applies `fn(accumulator, i)` for each `i` in `arr`. The `accumulator` is initialised
@@ -33,9 +54,23 @@ let reduceFlat = \arr \fn \val
     reduce(arr, \z \i reduce(i, fn, z), val)
 ;
 
+# Returns a sequence with any offset and holes removed.
+let ranked = \s s rank (:.@);
+
+# Workaround for https://github.com/arr-ai/arrai/issues/571
+let safetuple = \d
+    let rest = //tuple(d where .@ != '');
+    cond d where .@ = '' {
+        {(@:'', @value: value)}: rest +> (@: value),
+        _: rest,
+    };
+
 (
+    :filterTree,
     :invokeMacro,
     :simpleTransform,
     :reduce,
     :reduceFlat,
+    :ranked,
+    :safetuple,
 )

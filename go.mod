@@ -15,8 +15,9 @@ require (
 	github.com/antlr/antlr4 v0.0.0-20200503195918-621b933c7a7f
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/sysl-go v0.0.0-20200325045908-46c4ce0a2736
+	github.com/arr-ai/frozen v0.14.0 // indirect
 	github.com/arr-ai/hash v0.5.0 // indirect
-	github.com/arr-ai/wbnf v0.13.0
+	github.com/arr-ai/wbnf v0.15.0
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
@@ -28,6 +29,7 @@ require (
 	github.com/go-openapi/swag v0.19.9
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/protobuf v1.4.2
+	github.com/google/go-github/v32 v32.1.0
 	github.com/hashicorp/hcl v1.0.0
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/pkg/errors v0.9.1
@@ -42,12 +44,13 @@ require (
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/pretty v1.0.1 // indirect
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
+	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
 	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
 	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
-	google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24 // indirect
 	google.golang.org/grpc v1.28.0
-	google.golang.org/protobuf v1.23.0
+	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )

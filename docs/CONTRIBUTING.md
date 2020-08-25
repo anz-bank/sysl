@@ -24,7 +24,10 @@ Prerequisites:
 - `make`
 - [Go 1.13+](https://golang.org/doc/install)
 - `GOPATH` env var set (this is used by the make install command)
-- [golangci-lint 1.23.8+](https://github.com/golangci/golangci-lint)
+- [golangci-lint 1.30.0+](https://github.com/golangci/golangci-lint)
+- `protoc`: `brew install protobuf` (macOS)
+- `protoc-gen-go`: `go get github.com/golang/protobuf/protoc-gen-go`
+
 
 Clone `sysl` to create a local copy on your computer:
 

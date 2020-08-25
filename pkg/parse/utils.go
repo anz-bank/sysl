@@ -17,6 +17,7 @@ func makeExpr(ctx *sysl.SourceContext) *sysl.Expr {
 
 type sourceCtxHelper struct {
 	filename string
+	version  string
 }
 
 func (s sourceCtxHelper) Get(ctx *antlr.BaseParserRuleContext) *sysl.SourceContext {
@@ -48,7 +49,8 @@ func (s sourceCtxHelper) get(start, end antlr.Token, withText bool) *sysl.Source
 			Line: int32(end.GetLine()),
 			Col:  int32(end.GetColumn()),
 		},
-		Text: text,
+		Text:    text,
+		Version: s.version,
 	}
 }
 

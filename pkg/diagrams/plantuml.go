@@ -56,7 +56,7 @@ func ComparePUML(t *testing.T, expected, actual map[string]string) {
 		golden, err := ioutil.ReadFile(goldenFile)
 		assert.Nil(t, err)
 		if string(golden) != actual[name] {
-			err := ioutil.WriteFile(filepath.Join(testDir, name+".puml"), []byte(actual[name]), 0777)
+			err := ioutil.WriteFile(filepath.Join(testDir, name+".puml"), []byte(actual[name]), 0600)
 			assert.Nil(t, err)
 		}
 		golden = syslutil.HandleCRLF(golden)

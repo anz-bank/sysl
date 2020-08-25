@@ -1,0 +1,19 @@
+(
+    name: 'sysl',
+    repo: 'github.com/anz-bank/sysl',
+    tests: {
+        'all': 'make test',
+        'tidy': 'make check-tidy',
+    },
+    children: {
+        # TODO: Replace with remote import.
+        (
+            name: 'ecosystem-test',
+            repo: 'github.com/orlade-anz/ecosystem-test',
+            tests: {
+                'all': 'make',
+            },
+        ),
+        //{./pkg/arrai/blueprint.arrai},
+    },
+)

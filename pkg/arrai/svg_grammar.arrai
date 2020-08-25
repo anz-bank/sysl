@@ -1,0 +1,15 @@
+# A grammar to parse SVG documents.
+
+{://grammar.lang.wbnf:
+doc         -> header? node;
+header      -> "<?xml" [^?]* "?>";
+node        -> "<" tag=name attr* ("/>" | (">" (node | comment | text)* "</" name ">"));
+name        -> [-:\w]+;
+attr        -> name "=" '"' value=[^""]* '"';
+comment     -> "<!--" comment_rest;
+comment_rest -> "-->" | ([^-]+ | [-]) comment_rest;
+text        -> [^<]+;
+
+thisisntusedanywhere -> "<";
+.wrapRE     -> /{\s*()\s*};
+:}

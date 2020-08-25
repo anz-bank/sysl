@@ -185,13 +185,14 @@ func (s *TreeShapeListener) lintEndpoint() {
 			if app, exists := (*apps)[appName]; exists {
 				if endpoints, exists := (*app.rec)[endpoint]; exists {
 					// if method is empty string, it is linting simple endpoint, not REST endpoint
-					if method != "" {
-						if _, exists = (*endpoints.rec)[method]; exists {
-							continue
-						}
-						logrus.Warnf("lint %s: Method '%s' does not exist for call '%s'", location, method, call)
+					if method == "" {
 						continue
 					}
+					if _, exists = (*endpoints.rec)[method]; exists {
+						continue
+					}
+					logrus.Warnf("lint %s: Method '%s' does not exist for call '%s'", location, method, call)
+					continue
 				}
 				logrus.Warnf("lint %s: Endpoint '%s' does not exist for call '%s'", location, endpoint, call)
 				continue
