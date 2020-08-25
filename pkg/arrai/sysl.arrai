@@ -41,7 +41,10 @@ let normalize = \m
     let apps = m.apps => \(@:appName, @value:app)
         (
             :appName,
+            appPackage: app.attrs?('package')?.s:{},
+            appDescription: app.attrs?('description')?.s:{},
             appPatterns: patterns(app),
+            appAnnotations: app.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
         )
     ;
     let endpoints = //rel.union(m.apps => \(@:appName, @value:app)

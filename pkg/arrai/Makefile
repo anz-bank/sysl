@@ -32,6 +32,10 @@ $(OUT)/%.png $(OUT)/%.svg: $(OUT)/%.puml
 	@$(eval FORMAT=`echo $@ | rev | cut -d'.' -f1 | rev`)
 	curl $(SYSL_PLANTUML)/$(FORMAT)/~1$(shell cat $< | plantuml-encode) > $@
 
+# Generates a catalog view of the model.
+catalog: $(OUT)/model.pb
+	arrai run --out=dir:out/catalog catalog.arrai
+
 # Platform
 
 # Compiles Sysl specs for arr.ai import.
