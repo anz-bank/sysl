@@ -1,0 +1,18 @@
+let util = //{./util};
+
+let _sum = \z \i z + i;
+
+(
+    reduce: (
+        empty: util.reduce([], _sum, {}) = {},
+        one: util.reduce([1], _sum, 0) = 1,
+        many: util.reduce([1,2,3], _sum, 0) = 6,
+    ),
+
+    reduceFlat: (
+        empty: util.reduceFlat([], _sum, {}) = {},
+        one: util.reduceFlat([[1]], _sum, 0) = 1,
+        many: util.reduceFlat([[1],[2],[3]], _sum, 0) = 6,
+        pairs: util.reduceFlat([[1,2],[3,4]], _sum, 0) = 10,
+    )
+)
