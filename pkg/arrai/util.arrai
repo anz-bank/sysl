@@ -10,9 +10,18 @@ let invokeMacro = \macro \s
 
 # Transforms an AST into a simple tuple of its values.
 # Useful for the @transform of a flat grammar.
-let simpleTransform = \ast
-    let d = //dict(ast) >> \term cond term {('':value, ...): value, _: {}};
-    //tuple(d where .@value)
+let rec simpleTransform = \ast
+    cond ast {
+        (...): 
+            let d = //dict(ast) >> \term cond term {
+                ('':value): value, 
+                (...): simpleTransform(term), 
+                [...]: term >> simpleTransform(.) where .@item,
+                _: {},
+            };
+            //tuple(d where .@value),
+        _: {}
+    }
 ;
 
 # Filters the nodes of a hierarchical data structure based on a (key, value) predicate.
