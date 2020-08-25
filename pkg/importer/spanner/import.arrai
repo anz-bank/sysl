@@ -1,4 +1,4 @@
-let [_, importSql, sqlSchema, syslPackage] = //os.args;
+let [_, importSql, appName, syslPackage] = //os.args;
 let spanner = //{./spanner.arrai};
 let sysl = //{./sysl.arrai};
 let stmts = spanner.parseSchema([importSql]);
@@ -9,6 +9,6 @@ $`${sysl.transformModel(
         _: (
             entities: model.entities,
             indexes: model.indexes,
-            schema: {(name: sqlSchema)},
+            schema: {(name: appName)},
         )
     }, syslPackage)}`
