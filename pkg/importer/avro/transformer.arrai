@@ -1,4 +1,4 @@
-let util = //{./util};
+let util = //{./avro_util};
 
 # Extra items transformed to Sysl type !enum
 let rec extraEnums = \schema
@@ -82,7 +82,7 @@ let rec extraUnions = \schema
 
 let avroTransform = \schema \appName \packageName
   # Load Avro spec whose format is protobuf 
-  let schema = //encoding.json.decode(//os.file(schema));
+  let schema = //encoding.json.decode(schema);
 
 $'
 ##########################################
@@ -93,18 +93,18 @@ $'
 ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'', _:$'package="${packageName}"'}}'])}:
 ${util.indent}# Types
 
-${extraTypes(schema) => //{./transformToSyslType}(.) orderby . ::}
+${extraTypes(schema) => //{./to_sysl_type}(.) orderby . ::}
 ${util.indent}# Aliases
 
-${extraAliases(schema) => //{./transformToSyslAlias}(.) orderby . ::\n}
+${extraAliases(schema) => //{./to_sysl_alias}(.) orderby . ::\n}
 ${util.indent}# Unions
 
 ${
-# It applies //{./transformUnionToSysl}(.) to every item and will remove duplidated items if //{./transformUnionToSysl}(.)
+# It applies to_sysl_union(.) to every item and will remove duplidated items if to_sysl_union(.)
 # produces, as it iterates set.
-extraUnions(schema) => //{./transformToSyslUnion}(.) orderby . ::\n}
+extraUnions(schema) => //{./to_sysl_union}(.) orderby . ::\n}
 ${util.indent}# Enums
 
-${extraEnums(schema) => //{./transformToSyslEnum}(.) orderby . ::\n}
-'
-;avroTransform
+${extraEnums(schema) => //{./to_sysl_enum}(.) orderby . ::\n}
+';
+avroTransform

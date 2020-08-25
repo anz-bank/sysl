@@ -8,7 +8,7 @@ cond . {
     }: bytes(${.('size')})
     ${
         let aliases = .('aliases')? .a:[];
-        aliases >> \alias ($`!alias ${alias.s}: ${.('name').s}`)::
+        aliases >> \alias ($'!alias ${alias.s}: ${.('name').s}')::
     }',
 {'type': (s: 'array'), ...}:
     $'${util.indent}!alias ${//str.title(.('items').s)}Sequence${

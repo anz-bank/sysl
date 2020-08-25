@@ -52,7 +52,7 @@ let buildAnnotations = \.
 ;
 
 let t = \record
-$`${
+$'${
     cond record {
         {'isMap':(s: 'true'), ...}:
             let valueType = cond record {
@@ -73,7 +73,7 @@ $'${util.indent}!type ${record('name').s}${
 ${
     let fields = record('fields')? .a:[]; 
     fields >> 
-        ($`${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))} ${
+        ($'${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))} ${
                 util.prettyAnnotations(buildAnnotations(.))
             }${
                 let aliases = .('aliases')? .a:[];
@@ -83,12 +83,12 @@ ${
                                     $'${util.indent}${util.indent}${alias.s} <: ${util.transformType(.('type'))} ${
                                         util.prettyAnnotations(buildAnnotations(.) + [$'alias_of="${.('name').s}"'])}'::\i}'
                 }
-            }`)::
+            }')::
 }
 
 ${
 let aliases = record('aliases')? .a:[];
 aliases >> 
-($`${util.indent}!alias ${.s}:
-${util.indent}${util.indent}${record('name').s}`)::\i
-}'}}`;t
+($'${util.indent}!alias ${.s}:
+${util.indent}${util.indent}${record('name').s}')::\i
+}'}}';t

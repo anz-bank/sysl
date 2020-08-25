@@ -1,4 +1,4 @@
-.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden
+.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden import embed-arrai
 
 include VersionReport.mk
 
@@ -19,10 +19,10 @@ TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 examples: TUTORIALS
 	cd demo/examples/ && go run generate_website.go && cd ../../  && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-lint:
+lint: embed-arrai
 	golangci-lint run ./...
 
-test:
+test: embed-arrai
 	$(TESTEXE)
 
 coverage:
@@ -36,7 +36,7 @@ golden:
 check-tidy: ## Check go.mod and go.sum is tidy
 	go mod tidy && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-build:
+build: embed-arrai 
 	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp:
@@ -81,3 +81,6 @@ test-grammar:
 update-grammar-result:
 	which wbnf || go install github.com/arr-ai/wbnf
 	./scripts/test-grammar-wbnf.sh . > ./scripts/grammar-out.txt
+
+embed-arrai:
+	cd ./pkg/importer/avro && arrai run ./../../arrai/concat.arrai transformer.arrai > full_avro_transformer.arrai && arrai run full_avro_transformer.go.arrai > full_avro_transformer.go

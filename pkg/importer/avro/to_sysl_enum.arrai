@@ -5,14 +5,14 @@ let t = \enum
 
 let annotations = [util.getAnnotationS(enum, 'namespace'), util.getAnnotationS(enum, 'default'), util.getAnnotationS(enum, 'doc')];
 
-$`${util.indent}!enum ${enum('name').s}${util.prettyAnnotations(annotations)}:
+$'${util.indent}!enum ${enum('name').s}${util.prettyAnnotations(annotations)}:
 ${
     enum('symbols').a >>> \i \item  $'${util.indent}${util.indent}${item.s}: ${i}'::
 }
 ${
 let aliases = enum('aliases')? .a:[]; 
-aliases >> ($`
+aliases >> ($'
 
 ${util.indent}!alias ${.s}:
-${util.indent}${util.indent}${enum('name').s}`)::\n}
-`;t
+${util.indent}${util.indent}${enum('name').s}')::\n}
+';t

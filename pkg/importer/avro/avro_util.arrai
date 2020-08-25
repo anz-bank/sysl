@@ -13,7 +13,7 @@ let getAnnotationS = \item \name
 
 # Pretty annotation array
 let prettyAnnotations = \annotationArray
-    let str = $`${let a = annotationArray where .@item != "" rank (:.@); a >>> \i \item item::, }`;
+    let str = $'${let a = annotationArray where .@item != "" rank (:.@); a >>> \i \item item::, }';
     cond str {'':$'', _:$'[${str}]'}
 ;
 
