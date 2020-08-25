@@ -1,5 +1,5 @@
 # demo/
 
 ## Warning
-These examples have test case dependencies, think carefuly before changing them
+These examples have test case dependencies, think carefully before changing them
 
