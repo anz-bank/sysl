@@ -19,10 +19,10 @@ TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 examples: TUTORIALS
 	cd demo/examples/ && go run generate_website.go && cd ../../  && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-lint: embed-arrai
+lint:
 	golangci-lint run ./...
 
-test: embed-arrai
+test:
 	$(TESTEXE)
 
 coverage:
@@ -36,7 +36,7 @@ golden:
 check-tidy: ## Check go.mod and go.sum is tidy
 	go mod tidy && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-build: embed-arrai 
+build:
 	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp:
