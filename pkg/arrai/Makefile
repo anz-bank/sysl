@@ -1,4 +1,4 @@
-.PHONY: all diagrams blueprint blueprint-test init-diagram plantuml compare clean
+.PHONY: all diagrams init-diagram plantuml test compare clean
 
 SYSL_PLANTUML=http://localhost:8080
 OUT=out
@@ -13,7 +13,7 @@ DIAGRAMS=$(OUT)/data_diagram.svg \
 		 $(OUT)/integration_diagram.svg \
 		 $(OUT)/sequence_diagram.svg
 
-all: raw diagrams compare blueprint
+all: raw diagrams compare
 
 raw: $(OUT) $(RAW)
 diagrams: $(OUT) init-diagram $(DIAGRAMS)
@@ -32,20 +32,16 @@ $(OUT)/%.png $(OUT)/%.svg: $(OUT)/%.puml
 	@$(eval FORMAT=`echo $@ | rev | cut -d'.' -f1 | rev`)
 	curl $(SYSL_PLANTUML)/$(FORMAT)/~1$(shell cat $< | plantuml-encode) > $@
 
+# Generates a catalog view of the model.
+catalog: $(OUT)/model.pb
+	arrai run --out=dir:out/catalog catalog.arrai
+
 # Platform
 
 # Compiles Sysl specs for arr.ai import.
 .PRECIOUS: $(OUT)/%.pb
 $(OUT)/%.pb: $(OUT) %.sysl
 	sysl protobuf --mode=pb $*.sysl > $(OUT)/$*.pb
-
-# Generates the blueprint Makefile.
-blueprint:
-	arrai run blueprint.arrai | arrai run blueprint_make.arrai > out/Makefile
-
-# Generates and runs the blueprint Makefile.
-blueprint-test:
-	./blueprint_test.sh
 
 # Initializes the environment to support diagram generation targets.
 init-diagram: plantuml
@@ -57,32 +53,37 @@ plantuml:
 
 # Testing
 
-TEST=test
-SYSL_DIAGRAMS=$(TEST)/data_diagram.svg \
-	  		  $(TEST)/integration_diagram.svg \
-	  		  $(TEST)/sequence_diagram.svg
-COMPARISONS=$(TEST)/data_diagram.md \
-	  		$(TEST)/integration_diagram.md \
-	  		$(TEST)/sequence_diagram.md
+# Run arr.ai unit tests.
+test:
+	arrai test
 
-$(TEST):
-	mkdir -p $(TEST)
+# Directory for Sysl/arr.ai comparisons.
+CMP_DIR=compare
+SYSL_DIAGRAMS=$(CMP_DIR)/data_diagram.svg \
+			  $(CMP_DIR)/integration_diagram.svg \
+			  $(CMP_DIR)/sequence_diagram.svg
+COMPARISONS=$(CMP_DIR)/data_diagram.md \
+			$(CMP_DIR)/integration_diagram.md \
+			$(CMP_DIR)/sequence_diagram.md
 
-$(TEST)/data_diagram.svg: $(TEST)
+$(CMP_DIR):
+	mkdir -p $(CMP_DIR)
+
+$(CMP_DIR)/data_diagram.svg: $(CMP_DIR)
 	sysl data -d -o $@ model.sysl
 
-$(TEST)/integration_diagram.svg: $(TEST)
+$(CMP_DIR)/integration_diagram.svg: $(CMP_DIR)
 	sysl ints -j all -o $@ model.sysl
 
-$(TEST)/sequence_diagram.svg: $(TEST)
+$(CMP_DIR)/sequence_diagram.svg: $(CMP_DIR)
 	sysl sd -s "Client <- Do" -o $@ model.sysl
 
-$(TEST)/%.md: $(TEST)
-	echo "![](../out/$*.svg)\n![]($*.svg)" > $(TEST)/$*.md
+$(CMP_DIR)/%.md: $(CMP_DIR)
+	echo "![](../out/$*.svg)\n![]($*.svg)" > $(CMP_DIR)/$*.md
 
 # Generates all diagrams with arr.ai and Sysl, and side-by-side Markdown comparisons.
 compare: $(DIAGRAMS) $(SYSL_DIAGRAMS) $(COMPARISONS)
 
 # Deletes all generated outputs.
 clean:
-	$(RM) -r $(OUT) $(TEST)
+	$(RM) -r $(OUT) $(CMP_DIR)

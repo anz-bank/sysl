@@ -1,0 +1,106 @@
+# Generates a catalog of pages describing the applications in model.sysl.
+
+let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+
+# Transforms the model's information about the named package to a page of HTML content.
+let toPackagePage = \m \appPackage
+    let apps = (m.apps where .appPackage = appPackage);
+    let dbs = apps where .appPatterns & {'db'};
+    let endpoints = apps <&> m.endpoints;
+    let types = apps <&> m.types;
+
+    $`
+    <h1>${appPackage}</h1>
+
+    <h2>Integration Diagram</h2>
+    <img src="TODO" />
+
+    <h2>Database Index</h2>
+    <table border="1">
+    <tr>
+        <th>Database Application Name</th>
+    </tr>
+    ${dbs => $`
+        <tr>
+            <td>${.appName}</td>
+        </tr>
+    ` orderby .::\i}
+    </table>
+
+    <h2>Application Index</h2>
+    <table border="1">
+    <tr>
+        <th>Application Name</th>
+        <th>Method</th>
+    </tr>
+    ${endpoints => $`
+        <tr>
+            <td>${.appName}</td>
+            <td>${.epName}</td>
+        </tr>
+    ` orderby .::\i}
+    </table>
+
+    <h2>Type Index</h2>
+    <table border="1">
+    <tr>
+        <th>Application Name</th>
+        <th>Type Name</th>
+    </tr>
+    ${apps <&> m.types => $`
+        <tr>
+            <td>${.appName}</td>
+            <td>${.typeName}</td>
+        </tr>
+    ` orderby .::\i}
+    </table>
+
+    <h1>Databases</h1>
+    ${dbs => $`
+        <h2>Database ${.appName}</h2>
+    ` orderby .::\i}
+
+    <h1>Applications</h1>
+    ${apps => $`
+        <h2>Application ${.appName}</h2>
+        <p>${.appDescription}</p>
+        ${endpoints => $`
+            <h3>${.appName} ${.epName}</h3>
+            <p>Sequence diagram</p>
+            <p>Request types</p>
+            <p>Response types</p>
+        ` orderby .::\i}
+    ` orderby .::\i}
+
+    <h1>Types</h1>
+    <ul>
+    ${types => $`
+        <li>
+            <p>${.appName}.${.typeName}</p>
+            <p>Fields:</p>
+            <table border="1">
+            <tr>
+                <th>Field name</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            ${{.} <&> m.fields => $`
+                <tr>
+                    <td>${.fieldName}</td>
+                    <td>${.fieldType}</td>
+                    <td></td>
+                </tr>
+            ` orderby .::\i}
+            </table>
+        </li>
+    ` orderby .::\i}
+    `
+;
+
+# Transforms the model to a map of output filename to HTML page content.
+let toCatalog = \m
+    let packages = m.apps => .appPackage where . && !//seq.has_prefix('google_', .);
+    packages => (@:$`${.}.html`, @value: toPackagePage(m, .))
+;
+
+toCatalog(model)
