@@ -13,7 +13,6 @@ require (
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
 	github.com/anz-bank/mermaid-go v0.1.1
-	github.com/anz-bank/sysl-examples v0.0.1 // indirect
 	github.com/arr-ai/arrai v0.141.0
 	github.com/arr-ai/wbnf v0.23.0
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect

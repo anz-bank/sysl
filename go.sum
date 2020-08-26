@@ -31,10 +31,6 @@ github.com/anz-bank/mermaid-go v0.1.1 h1:nTtJKas+gx0cyChwjZn61iLDpGCN/MSzAl4VTVX
 github.com/anz-bank/mermaid-go v0.1.1/go.mod h1:vo8d6wJgGhqvyjBNBjbGvg7PtgYL/JS6JqXwfVD+bZk=
 github.com/anz-bank/pkg v0.0.9 h1:Ic7JTe3KUlLxLRSBeLtXKI/5VlCvheckRIseqlEoKA8=
 github.com/anz-bank/pkg v0.0.9/go.mod h1:vByZ+ntzng+MzBiFf5ChnOCeqkvg1wbxOjwZhltedSI=
-github.com/anz-bank/sysl-examples v0.0.1 h1:Qn+aF2847YGUdJzeJG7D4oa7cuFXt9X1O/JRTS+dG6o=
-github.com/anz-bank/sysl-examples v0.0.1/go.mod h1:AdokLChJxixvIBlAByw+kI13pAKawobfpcYCyPssvLQ=
-github.com/anz-bank/sysl-examples v0.0.2 h1:szNx6secul+G1tyQaWTMKXTD2YByJ/ln2V85O34IhZk=
-github.com/anz-bank/sysl-examples v0.0.2/go.mod h1:AdokLChJxixvIBlAByw+kI13pAKawobfpcYCyPssvLQ=
 github.com/arr-ai/arrai v0.141.0 h1:Fq3287gJmEd5aHqSviV1YOeCZaiaxTJ0Y3Qfv0AuYXo=
 github.com/arr-ai/arrai v0.141.0/go.mod h1:qN9Pc3x0kMHcvkDv18ZnK00UAfvGlC/fPhiOvVt0rj8=
 github.com/arr-ai/frozen v0.11.1/go.mod h1:YEr4TubkrAoA3f9U1R4PcEVB5ocBUdiS3NKh03cbVts=
