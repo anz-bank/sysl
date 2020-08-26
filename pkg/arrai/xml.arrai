@@ -11,15 +11,19 @@ comment     -> "<!--" comment_rest;
 comment_rest -> "-->" | ([^-]+ | [-]) comment_rest;
 text        -> [^<]+;
 
+// TODO: Remove this once parsing no longer fails without it.
 thisisntusedanywhere -> "<";
 .wrapRE     -> /{\s*()\s*};
 :};
+
+# Removes any offset from a sequence.
+let ranked = \s s rank (:.@);
 
 # Transforms an XML AST into a more natural arr.ai structure.
 let toArrai = \ast
     let rec transformNode = \node (
         @tag: node.tag.name.'',
-        attrs: node.attr?:{} => \(@item:a, ...) (@: a.name.'' rank (:.@), @value: a.value.''),
+        attrs: node.attr?:{} => \(@item:a, ...) (@: ranked(a.name.''), @value: ranked(a.value.'')),
         text: //seq.join("", node.text?:{} >> .''),
         children: node.node?:{} >> transformNode(.),
     );
@@ -30,7 +34,7 @@ let toArrai = \ast
 let rec toTuple = \xml
     cond xml {
         (:root, ...): toTuple(root),
-        (:@tag, ...): //tuple({@tag rank (:.@): cond {
+        (:@tag, ...): //tuple({ranked(@tag): cond {
             xml.children?:{}: //tuple(//rel.union(xml.children => .@item => //dict(toTuple(.)))),
             xml.text?:{}: xml.text,
         }}),
