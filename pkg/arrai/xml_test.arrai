@@ -4,7 +4,7 @@ let _simple = '<a><b>c</b></a>';
 let _attrs = '<a k="v"><b k="v" b="b">c</b></a>';
 
 (
-    grammar: 
+    grammar:
         let ast = //grammar.parse(grammar, 'doc', _simple);
         (ast.node.node.@item.text(0).'' rank (:.@)) = 'c',
 
@@ -12,7 +12,7 @@ let _attrs = '<a k="v"><b k="v" b="b">c</b></a>';
         simple:
             let ast = //grammar.parse(grammar, 'doc', _simple);
             toArrai(ast).root.children(0).text = 'c',
-        
+
         attrs:
             let ast = //grammar.parse(grammar, 'doc', _attrs);
             toArrai(ast).root ->
