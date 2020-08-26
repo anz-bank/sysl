@@ -84,11 +84,7 @@ ${
                                         util.prettyAnnotations(buildAnnotations(.) + [$'alias_of="${.('name').s}"'])}'::\i}'
                 }
             }')::
-}
-
-${
+}${
 let aliases = record('aliases')? .a:[];
-aliases >> 
-($'${util.indent}!alias ${.s}:
-${util.indent}${util.indent}${record('name').s}')::\i
+cond aliases {[...]: $'${'\n\n'}${aliases >> ($'${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}')::\i\n}${'\n'}'}
 }'}}';t

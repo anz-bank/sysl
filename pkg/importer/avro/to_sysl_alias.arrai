@@ -2,7 +2,7 @@ let util = //{./avro_util};
 
 let t = \.
 cond . {
-{'type': 'fixed', ...}:
+{'type': (s: 'fixed'), ...}:
     $'${util.indent}!alias ${.('name').s}${
         util.prettyAnnotations(['~fixed', util.getAnnotationS(., 'namespace')])
     }: bytes(${.('size')})
