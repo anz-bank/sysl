@@ -4,8 +4,8 @@ let t = \.
 cond . {
 {'type': (s: 'fixed'), ...}:
     $'${util.indent}!alias ${.('name').s}${
-        util.prettyAnnotations(['~fixed', util.getAnnotationS(., 'namespace')])
-    }: bytes(${.('size')})
+        util.prettyAnnotations(['~fixed', 'fixed_size="'+ ${.('size')} + '"', util.getAnnotationS(., 'namespace')])
+    }: bytes
     ${
         let aliases = .('aliases')? .a:[];
         aliases >> \alias ($'!alias ${alias.s}: ${.('name').s}')::
