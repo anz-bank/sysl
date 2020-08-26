@@ -448,4 +448,4 @@ ${util.indent}# Enums
 ${extraEnums(schema) => to_sysl_enum_arrai(.) orderby . ::\n}
 ';
 avroTransform
-`
+` 
