@@ -811,7 +811,8 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	context_path := s.currentTypePath.Parts()
 
 	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
-	for _, ref := range ctx.AllUser_defined_type() {
+	// for _, ref := range ctx.AllUser_defined_type() {
+	for _, ref := range ctx.AllUnion_type() {
 		oneof.Type = append(oneof.Type, &sysl.Type{
 			Type: &sysl.Type_TypeRef{
 				TypeRef: &sysl.ScopedRef{
@@ -822,7 +823,8 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 						Path: context_path,
 					},
 					Ref: &sysl.Scope{
-						Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
+						// Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
+						Path: []string{ref.(*parser.Union_typeContext).GetText()},
 					},
 				},
 			},
