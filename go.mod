@@ -8,7 +8,6 @@ require (
 	aqwari.net/xml v0.0.0-20200619145941-6c62842e69c1
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/alecthomas/chroma v0.7.3
-	github.com/alecthomas/colour v0.1.0 // indirect
 	github.com/alecthomas/repr v0.0.0-20200325044227-4184120f674c // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
@@ -16,8 +15,6 @@ require (
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/sysl-examples v0.0.1 // indirect
 	github.com/arr-ai/arrai v0.141.0
-	github.com/arr-ai/frozen v0.14.0 // indirect
-	github.com/arr-ai/hash v0.5.0 // indirect
 	github.com/arr-ai/wbnf v0.23.0
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect
 	github.com/cornelk/hashmap v1.0.1
@@ -27,7 +24,6 @@ require (
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9
-	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-github/v32 v32.1.0
@@ -42,10 +38,10 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/pretty v1.0.1 // indirect
+	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
 	golang.org/x/text v0.3.3 // indirect
-	golang.org/x/tools v0.0.0-20200123013950-ba161d9e22ab // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
