@@ -816,8 +816,10 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
 	// for _, ref := range ctx.AllUser_defined_type() {
 	for _, ref := range ctx.AllUnion_type() {
-		primType, constraints := primitiveFromNativeDataType(ref.(*parser.Union_typeContext).NativeDataTypes())
+		typeCtx := ref.(*parser.Union_typeContext)
+		primType, constraints := primitiveFromNativeDataType(typeCtx.NativeDataTypes())
 		if primType != nil {
+			// data type is primitive
 			subType := &sysl.Type{
 				Type: primType,
 			}
@@ -826,22 +828,29 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 			}
 			oneof.Type = append(oneof.Type, subType)
 		} else {
-			oneof.Type = append(oneof.Type, &sysl.Type{
-				Type: &sysl.Type_TypeRef{
-					TypeRef: &sysl.ScopedRef{
-						Context: &sysl.Scope{
-							Appname: &sysl.AppName{
-								Part: contextAppPart,
+			cType := typeCtx.Collection_type()
+			if cType != nil {
+				// data type is collection
+				//  &sysl.Type_Sequence{Sequence: type1}
+				fmt.Println(cType.GetText())
+			} else {
+				// data type is user-defined
+				oneof.Type = append(oneof.Type, &sysl.Type{
+					Type: &sysl.Type_TypeRef{
+						TypeRef: &sysl.ScopedRef{
+							Context: &sysl.Scope{
+								Appname: &sysl.AppName{
+									Part: contextAppPart,
+								},
+								Path: contextPath,
 							},
-							Path: contextPath,
-						},
-						Ref: &sysl.Scope{
-							// Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
-							Path: []string{ref.(*parser.Union_typeContext).GetText()},
+							Ref: &sysl.Scope{
+								Path: []string{typeCtx.GetText()},
+							},
 						},
 					},
-				},
-			})
+				})
+			}
 		}
 	}
 
