@@ -36,6 +36,9 @@ $(OUT)/%.png $(OUT)/%.svg: $(OUT)/%.puml
 catalog: $(OUT)/model.pb
 	arrai run --out=dir:out/catalog catalog.arrai
 
+json: $(OUT)/model.pb
+	arrai run --out=dir:out/json json.arrai
+
 # Platform
 
 # Compiles Sysl specs for arr.ai import.

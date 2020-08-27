@@ -1,0 +1,48 @@
+let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+
+# Transforms the model's information about the named package to a JSON content.
+let toPackagePage = \m \appPackage
+    let apps = (m.apps where .appPackage = appPackage);
+    let endpoints = apps <&> m.endpoints;
+
+    $`
+    {
+      "apps": {
+        ${apps => $`
+              "${.appName}": {
+                "name": "${.appName}",
+                "description": "${//seq.sub('\n', '\\n', .appDescription)}",
+                "package": "${appPackage}",
+                "endpoints":  {
+                  ${.appEndpoints => $`
+                  "${.epName}": {
+                    "name": "${.epName}",
+                    "description": "${//seq.sub('\n', '\\n', .epDescription)}",
+                    "protocol": "${.epProtocol}",
+                    "parameters": [
+                      ${.epParams => $`
+                      {
+                        "name": "${.name}",
+                        "type": "${.type}",
+                      },
+                      ` orderby .::\i}
+                    ],
+                    "responses": [
+                    ]
+                  },
+                  ` orderby .::\i}
+              },
+        ` orderby .::\i}
+      },
+    }
+    
+    `
+;
+
+# Transforms the model to a map of output filename to JSON content.
+let toJSON = \m
+    let packages = m.apps => .appPackage where . && !//seq.has_prefix('google_', .);
+    packages => (@:$`${.}.json`, @value: toPackagePage(m, .))
+;
+
+toJSON(model)

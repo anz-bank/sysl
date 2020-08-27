@@ -6,12 +6,12 @@
         source_context: (
           end: (
             col: 1,
-            line: 28
+            line: 29
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 25
+            line: 26
           )
         ),
         stmt: [
@@ -31,12 +31,12 @@
     ),
     source_context: (
       end: (
-        line: 24
+        line: 25
       ),
-      file: 'dev/sysl/pkg/arrai/model.sysl',
+      file: 'pkg/arrai/model.sysl',
       start: (
         col: 1,
-        line: 24
+        line: 25
       )
     )
   ),
@@ -47,12 +47,12 @@
         source_context: (
           end: (
             col: 1,
-            line: 32
+            line: 33
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 29
+            line: 30
           )
         ),
         stmt: [
@@ -72,12 +72,12 @@
     ),
     source_context: (
       end: (
-        line: 28
+        line: 29
       ),
-      file: 'dev/sysl/pkg/arrai/model.sysl',
+      file: 'pkg/arrai/model.sysl',
       start: (
         col: 1,
-        line: 28
+        line: 29
       )
     )
   ),
@@ -88,12 +88,12 @@
         source_context: (
           end: (
             col: 1,
-            line: 43
+            line: 44
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 39
+            line: 40
           )
         ),
         stmt: [
@@ -120,12 +120,12 @@
         source_context: (
           end: (
             col: 4,
-            line: 36
+            line: 37
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 33
+            line: 34
           )
         ),
         stmt: [
@@ -144,12 +144,12 @@
         source_context: (
           end: (
             col: 4,
-            line: 39
+            line: 40
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 36
+            line: 37
           )
         ),
         stmt: [
@@ -169,12 +169,12 @@
     ),
     source_context: (
       end: (
-        line: 32
+        line: 33
       ),
-      file: 'dev/sysl/pkg/arrai/model.sysl',
+      file: 'pkg/arrai/model.sysl',
       start: (
         col: 1,
-        line: 32
+        line: 33
       )
     )
   ),
@@ -185,12 +185,12 @@
         source_context: (
           end: (
             col: 3,
-            line: 52
+            line: 53
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 49
+            line: 50
           )
         ),
         stmt: [
@@ -210,12 +210,12 @@
     ),
     source_context: (
       end: (
-        line: 48
+        line: 49
       ),
-      file: 'dev/sysl/pkg/arrai/model.sysl',
+      file: 'pkg/arrai/model.sysl',
       start: (
         col: 1,
-        line: 48
+        line: 49
       )
     )
   ),
@@ -226,12 +226,12 @@
         source_context: (
           end: (
             col: 6,
-            line: 48
+            line: 49
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 44
+            line: 45
           )
         ),
         stmt: [
@@ -259,12 +259,12 @@
     ),
     source_context: (
       end: (
-        line: 43
+        line: 44
       ),
-      file: 'dev/sysl/pkg/arrai/model.sysl',
+      file: 'pkg/arrai/model.sysl',
       start: (
         col: 1,
-        line: 43
+        line: 44
       )
     )
   ),
@@ -272,6 +272,9 @@
     attrs: {
       'description': (
         s: 'A database.\n Stores data.\n'
+      ),
+      'package': (
+        s: 'source'
       ),
       'patterns': (
         a: (
@@ -286,22 +289,35 @@
     endpoints: {
       'Read': (
         name: 'Read',
+        param: [
+          (
+            name: 'request',
+            type: (
+              type_ref: (
+                ref: (
+                  appname: (
+                    part: ['Bar']
+                  )
+                )
+              )
+            )
+          )
+        ],
         source_context: (
           end: (
             col: 1,
-            line: 24
+            line: 25
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 21
+            line: 22
           )
         ),
         stmt: [
           (
             ret: (
               payload: (
-                status: 'ok',
                 type: 6\'Foo'
               )
             )
@@ -317,7 +333,7 @@
         col: 10,
         line: 1
       ),
-      file: 'dev/sysl/pkg/arrai/model.sysl',
+      file: 'pkg/arrai/model.sysl',
       start: (
         col: 1,
         line: 1
@@ -351,12 +367,12 @@
               source_context: (
                 end: (
                   col: 24,
-                  line: 15
+                  line: 16
                 ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
+                file: 'pkg/arrai/model.sysl',
                 start: (
                   col: 13,
-                  line: 15
+                  line: 16
                 )
               )
             ),
@@ -373,12 +389,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 18
+                  line: 19
                 ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
+                file: 'pkg/arrai/model.sysl',
                 start: (
                   col: 13,
-                  line: 17
+                  line: 18
                 )
               )
             ),
@@ -391,12 +407,12 @@
               source_context: (
                 end: (
                   col: 4,
-                  line: 21
+                  line: 22
                 ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
+                file: 'pkg/arrai/model.sysl',
                 start: (
                   col: 13,
-                  line: 19
+                  line: 20
                 )
               ),
               type_ref: (
@@ -419,12 +435,12 @@
         source_context: (
           end: (
             col: 4,
-            line: 21
+            line: 22
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 14
+            line: 15
           )
         )
       ),
@@ -446,12 +462,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 11
+                  line: 12
                 ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
+                file: 'pkg/arrai/model.sysl',
                 start: (
                   col: 13,
-                  line: 10
+                  line: 11
                 )
               )
             ),
@@ -465,12 +481,12 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 11
+                  line: 12
                 ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
+                file: 'pkg/arrai/model.sysl',
                 start: (
                   col: 13,
-                  line: 11
+                  line: 12
                 )
               )
             )
@@ -479,12 +495,12 @@
         source_context: (
           end: (
             col: 4,
-            line: 13
+            line: 14
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 6
+            line: 7
           )
         )
       )
@@ -496,12 +512,12 @@
         name: 'all',
         source_context: (
           end: (
-            line: 60
+            line: 61
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 53
+            line: 54
           )
         ),
         stmt: [
@@ -543,12 +559,12 @@
     ),
     source_context: (
       end: (
-        line: 52
+        line: 53
       ),
-      file: 'dev/sysl/pkg/arrai/model.sysl',
+      file: 'pkg/arrai/model.sysl',
       start: (
         col: 1,
-        line: 52
+        line: 53
       )
     )
   )

@@ -4,28 +4,28 @@ resource "google_data_catalog_entry" "foo_entry" {
 
   user_specified_type = "Foo"
   user_specified_system = "Source"
-  linked_resource = "dev/sysl/pkg/arrai/model.sysl:6"
+  linked_resource = "pkg/arrai/model.sysl:7"
 
   display_name = "Foo"
   description  = "A database.
- Stores data."
+   Stores data."
 
   schema = <<EOF
 {
   "columns": [
     {
-      "column": "y",
-      "description": "A Foo.
- Represents foo things.",
-      "mode": "REQUIRED",
-      "type": "INT"
-    },
+          "column": "y",
+          "description": "A Foo.
+           Represents foo things.",
+          "mode": "REQUIRED",
+          "type": "INT"
+        },
     {
-      "column": "x",
-      "description": "The x value.",
-      "mode": "REQUIRED",
-      "type": "INT"
-    }
+          "column": "x",
+          "description": "The x value.",
+          "mode": "REQUIRED",
+          "type": "INT"
+        }
   ]
 }
 EOF
@@ -41,33 +41,33 @@ resource "google_data_catalog_entry" "bar_entry" {
 
   user_specified_type = "Bar"
   user_specified_system = "Source"
-  linked_resource = "dev/sysl/pkg/arrai/model.sysl:14"
+  linked_resource = "pkg/arrai/model.sysl:15"
 
   display_name = "Bar"
   description  = "A database.
- Stores data."
+   Stores data."
 
   schema = <<EOF
 {
   "columns": [
     {
-      "column": "a",
-      "description": "A bar table.",
-      "mode": "REQUIRED",
-      "type": "STRING"
-    },
+          "column": "a",
+          "description": "A bar table.",
+          "mode": "REQUIRED",
+          "type": "STRING"
+        },
     {
-      "column": "x",
-      "description": "A foreign key",
-      "mode": "REQUIRED",
-      "type": "?"
-    },
+          "column": "x",
+          "description": "A foreign key",
+          "mode": "REQUIRED",
+          "type": "?"
+        },
     {
-      "column": "b",
-      "description": "An optional int",
-      "mode": "NULLABLE",
-      "type": "INT"
-    }
+          "column": "b",
+          "description": "An optional int",
+          "mode": "NULLABLE",
+          "type": "INT"
+        }
   ]
 }
 EOF

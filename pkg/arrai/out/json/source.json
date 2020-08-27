@@ -1,0 +1,23 @@
+{
+  "apps": {
+    "Source": {
+      "name": "Source",
+      "description": "A database.\n Stores data.\n",
+      "package": "source",
+      "endpoints":  {
+        "Read": {
+          "name": "Read",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+            {
+              "name": "request",
+              "type": "map[type_ref:map[ref:map[appname:map[part:[Bar]]]]]",
+            },
+          ],
+          "responses": [
+          ]
+        },
+    },
+  },
+}

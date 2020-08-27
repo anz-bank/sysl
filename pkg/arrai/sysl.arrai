@@ -8,6 +8,14 @@ let load = \path
 # Extracts the set of pattern attributes of an element.
 let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 
+# Extracts the protocol from pattern set
+let a = 'gRPC'; let b = 'rest';
+let protocol = \x cond x {
+    {(a), ...}: a,
+    {(b), ...}: b,
+    _: '',
+};
+
 # A macro to convert `ret` statement payload string to structured tuples.
 let payloadMacro = (
     @grammar: {://grammar.lang.wbnf:
@@ -45,10 +53,23 @@ let normalize = \m
             appDescription: app.attrs?('description')?.s:{},
             appPatterns: patterns(app),
             appAnnotations: app.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
+            appEndpoints: app.endpoints?:{} => \(@:epName, @value:ep)
+            (
+                :epName,
+                epDescription: ep.attrs?('description')?.s:{},
+                epPatterns: patterns(ep),
+                epAnnotations: ep.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
+                epParams: ep.param?:[] => \(@:i, @item:param) 
+                    (
+                        name: param.name,
+                        type: param.type,
+                    ),
+                epProtocol: protocol(//rel.union({patterns(ep), patterns(app)})),
+            ),
         )
     ;
     let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
-        app.endpoints?:{} => \(@:epName, ...)
+        app.endpoints?:{} => \(@:epName, @value:ep)
             (
                 :appName,
                 :epName,
