@@ -57,7 +57,13 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 		return err
 	}
 	imp.WithAppName(p.AppName).WithPackage(p.Package)
-	output, err := imp.Load(string(data))
+
+	var output string
+	if _, isSpannerSQL := imp.(*importer.Spanner); isSpannerSQL {
+		output, err = imp.Load(inputFilePath)
+	} else {
+		output, err = imp.Load(string(data))
+	}
 	if err != nil {
 		return err
 	}

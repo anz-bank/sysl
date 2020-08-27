@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -101,6 +102,42 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 		testDir:       "tests-xsd",
 		testExtension: ".xsd",
 	})
+}
+
+func generateSyslFromSpannerSQL() (string, error) {
+	absFilePath, err := filepath.Abs(`../../tests/test-spanner.sql`)
+	if err != nil {
+		return "", err
+	}
+	logger, _ := test.NewNullLogger()
+	imp, err := Factory(absFilePath, nil, logger)
+	if err != nil {
+		return "", err
+	}
+	imp.WithAppName("customeraccounts").WithPackage("retail")
+	return imp.Load(absFilePath)
+}
+
+func readGoldenSyslForSpannerSQL() (string, error) {
+	absFilePath, err := filepath.Abs(`../../tests/accounts.golden.sysl`)
+	if err != nil {
+		return "", err
+	}
+	bytes, err := ioutil.ReadFile(absFilePath)
+	return string(bytes), err
+}
+
+func TestCompareSpannerSQLWithGolden(t *testing.T) {
+	// Load generated sysl module
+	genSysl, err := generateSyslFromSpannerSQL()
+	require.Nil(t, err)
+
+	// Load golden sysl module
+	goldenSysl, err := readGoldenSyslForSpannerSQL()
+	require.Nil(t, err)
+
+	isValid := reflect.DeepEqual(genSysl, goldenSysl)
+	require.True(t, isValid)
 }
 
 /*

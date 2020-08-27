@@ -14,6 +14,7 @@ CREATE TABLE Customer (
     LastName   STRING(64)  NOT NULL,
     Email      STRING(256),
     Mobile     STRING(10),
+    NetWorth   FLOAT64,
 ) PRIMARY KEY (CustomerID);
 
 CREATE UNIQUE NULL_FILTERED INDEX CustomerByEmail ON Customer (Email ASC, Mobile DESC);

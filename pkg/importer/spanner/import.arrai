@@ -1,14 +1,18 @@
-let [_, importSql, appName, syslPackage] = //os.args;
-let spanner = //{./spanner.arrai};
-let sysl = //{./sysl.arrai};
-let stmts = spanner.parseSchema([importSql]);
-let model = spanner.applyStmt(stmts, spanner.emptyModel);
-$`${sysl.transformModel(
-    cond {
-        (model.schema): model,
-        _: (
-            entities: model.entities,
-            indexes: model.indexes,
-            schema: {(name: appName)},
-        )
-    }, syslPackage)}`
+let import = \importSql \appName \syslPackage
+    let spanner = //{./spanner};
+    let sysl = //{./sysl};
+    let stmts = spanner.parseSchema([importSql]);
+    let model = spanner.applyStmt(stmts, spanner.emptyModel);
+    $'${sysl.transformModel(
+        cond {
+            (model.schema): model,
+            _: (
+                entities: model.entities,
+                indexes: model.indexes,
+                schema: {(name: appName)},
+            )
+        }, syslPackage)}';
+
+(
+    :import,
+)

@@ -1,3 +1,11 @@
+//nolint
+package importer
+
+const importSpannerScript = `
+### ------------------------------------------------------------------------ ###
+###  spanner.arrai                                                           ###
+### ------------------------------------------------------------------------ ###
+
 # spanner ddl grammar
 # CREATE DATABASE statements are parsed to avoid errors but ignore by the modelling functions
 let grammar = {://grammar.lang.wbnf[grammar]:
@@ -300,7 +308,7 @@ let rec applyStmt = \stmt \model
         # match against an arrai of statements and recursively apply them in order
         [first, ...rem]: applyStmt(rem, applyStmt(first, model)),
         []:              model,
-    };
+    };let spanner_arrai =
 
 ################# EXPOSE ################
 (
@@ -316,3 +324,175 @@ let rec applyStmt = \stmt \model
     # applies a ddl stmt to a model. Use emptyModel to get a model from scratch
     applyStmt:         applyStmt,
 )
+;
+
+### ------------------------------------------------------------------------ ###
+###  sysl.arrai                                                              ###
+### ------------------------------------------------------------------------ ###
+
+# Transforms that generate sysl from arrai based sql model
+# size returns the size of an attribute
+let size = \length
+    cond {
+        length = 'MAX': '',
+        //seq.has_prefix('0x', length): $` + "`" + `(${//seq.trim_prefix('0x', length)})` + "`" + `,
+        length > 0: $` + "`" + `(${length})` + "`" + `,
+    };
+
+# hasAttributePattern checks whether an attribute has associated patterns
+let hasAttributePattern = \entity \attr
+    cond {
+        attr.options?:{}: true,
+        (entity.primary_key where //seq.contains(attr.name, .)): true,
+        let fks = (entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
+            .reference_attribute orderby .)) where .; fks: true,
+        attr.length = 'MAX': true,
+        //seq.has_prefix('0x', attr.length): true,
+    };
+
+# hasEntityPattern checks whether an entity has associated patterns
+let hasEntityPattern = \entity \model
+    entity.primary_key | entity.foreign_keys | entity.cluster | model.indexes;
+
+# attributePatternDelimiter returns the token based on attribute value
+let attributePatternDelimiter = \entity \attr \token
+    cond {
+        hasAttributePattern(entity, attr): token
+    };
+
+# entityPatternDelimiter returns the token based on entity value
+let entityPatternDelimiter = \entity \model \token
+    cond {
+        hasEntityPattern(entity, model): token
+    };
+
+# sortingOrder determines and appends sorting order
+let sortingOrder = \e \attr
+    let keyOrder = //seq.split('(', //seq.join('', (e.primary_key where //seq.contains(attr.name, .)) orderby .));
+    cond {
+        keyOrder count > 1: cond keyOrder(1) {
+            'asc)': ', ~asc',
+            'desc)': ', ~desc'
+        }
+    };
+
+# compareColumnOrder compares the col order between primary key and table
+let compareColumnOrder = \entity
+    let pk = (entity.primary_key orderby .) >> //seq.split('(', .) >> .(0);
+    cond {
+        pk & (entity.attributes >> .name): false,
+        _: true,
+    };
+
+# attributePattern generates the pattern constituents depending on the mode
+let attributePattern = \entity \attr \mode
+    cond {
+        mode = 0 && (entity.primary_key where //seq.contains(attr.name, .)): $` + "`" + `~pk${sortingOrder(entity, attr)}` + "`" + `,
+        let fks = (entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) => .reference_attribute orderby .)) where .;
+        mode = 1 && fks: '~fk',
+        mode = 2 && attr.options:
+            let opt = //seq.split('=',attr.options);
+            $` + "`" + `${opt(0)}='${opt(1)}'` + "`" + `,
+        mode = 3 && attr.length = 'MAX': '~max',
+        mode = 4 && //seq.has_prefix('0x', attr.length): '~hex',
+    };
+
+# entityPattern generates the pattern constituents depending on the mode
+let entityPattern = \entity \model \mode
+    cond {
+        mode = 0 && entity.primary_key count > 1 && compareColumnOrder(entity):
+            $` + "`" + `primary_key="${//seq.join(', ', entity.primary_key orderby .)}"` + "`" + `,
+        mode = 1 && entity.cluster:
+            //seq.join('', entity.cluster >> $` + "`" + `interleave_in_parent="${.interleaved_in}", interleave_on_delete="${.on_delete}"` + "`" + `),
+        mode = 2 && entity.foreign_keys:
+            $` + "`" + `foreign_keys=[${//seq.join(', ',(entity.foreign_keys => \keys $` + "`" + `["constraint:${keys.constraint_name}` + "`" + ` ++
+            $` + "`" + `","columns:${//seq.join(', ', (keys.foreign_keys => .attribute) orderby .)}"]` + "`" + `) orderby .)}]` + "`" + `,
+        let relatedIndices = ((model.indexes orderby .) where .@item.table_name = entity.name); mode = 3 && relatedIndices:
+            $` + "`" + `indexes=[${//seq.join(', ', ((model.indexes orderby .) where .@item.table_name = entity.name) >>
+            $` + "`" + `"name:${.table_name}` + "`" + ` ++
+            $` + "`" + `","unique:${cond {(.unique = 'UNIQUE'):'true', _:'false'}}` + "`" + ` ++
+            $` + "`" + `","null_filtered:${cond {(.nullfiltered = 'NULL_FILTERED'):'true', _:'false'}}` + "`" + ` ++
+            $` + "`" + `","key_parts:${//seq.join(', ', .key_part orderby .)}` + "`" + ` ++
+            cond {.storing_col: $` + "`" + `","storing:' ${//seq.join(', ',.storing_col)}` + "`" + `}  ++
+            cond {.interleaved_table: $` + "`" + `","interleave_in:' ${.interleaved_table}` + "`" + `})}"]` + "`" + `,
+    };
+
+# allEntityPatterns generates the pattern string for an entity
+let allEntityPatterns = \entity \model
+    $` + "`" + `${entityPatternDelimiter(entity, model, '[')}${cond {
+        hasEntityPattern(entity, model):
+        //seq.join(', ',[entityPattern(entity, model, 0), entityPattern(entity, model, 1),
+        entityPattern(entity, model, 2), entityPattern(entity, model, 3)] where .@item != '')
+    }}${entityPatternDelimiter(entity, model, ']')}` + "`" + `;
+
+# allAttributePatterns generates the pattern string for an entity attribute
+let allAttributePatterns = \entity \attr
+    $` + "`" + `${attributePatternDelimiter(entity,attr,'[')}${cond {
+        hasAttributePattern(entity,attr):
+        //seq.join(', ',[attributePattern(entity,attr,2), attributePattern(entity,attr,0), attributePattern(entity,attr,1),
+        attributePattern(entity,attr,3), attributePattern(entity,attr,4)] where .@item != '')
+    }}${attributePatternDelimiter(entity,attr,']')}` + "`" + `;
+
+# typeInfo generates the type info for an attribute
+let typeInfo = \entity \attr \type \isArray
+    let fkAttr = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
+        .reference_attribute orderby .) where .;
+    let fkTable = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
+        .reference_table orderby .) where .;
+    cond {
+        fkAttr | fkTable:  //seq.join('', (fkTable => //seq.join('', .) orderby .)) ++ '.'
+            ++ //seq.join('', (fkAttr => //seq.join('', .) orderby .)),
+        isArray: $` + "`" + `sequence of ${type}` + "`" + `,
+        _: type,
+    };
+
+# transformModel translates the empty model into sysl file
+let transformModel = \model \package
+    # sysl specification
+    # https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.proto
+    $` + "`" + `
+        ########   THIS IS AUTOGENERATED BY sysl   ########
+        ${model.schema => $` + "`" + `
+            ${.name}${cond {package: $` + "`" + `[package="${package}"]` + "`" + `} }:
+            ${//seq.sub('#>>>\n', '')($` + "`" + `
+            ${(model.entities => \entity $` + "`" + `
+            #>>>
+                !table ${entity.name} ${allEntityPatterns(entity, model)}:
+                    ${entity.attributes >>
+                        $` + "`" + `
+                            ${.name} <: ${typeInfo(entity, ., .type ++ size(.length), .array)}${cond {.nullable:'?'}} ${allAttributePatterns(entity, .)}` + "`" + ` ::\i:
+                        }` + "`" + `
+                    )
+                    orderby .::\i:
+            }
+            ` + "`" + `)}
+        ` + "`" + ` orderby .:::}
+    ` + "`" + `;let sysl_arrai =
+(
+    :transformModel,
+)
+;
+
+### ------------------------------------------------------------------------ ###
+###  import.arrai                                                            ###
+### ------------------------------------------------------------------------ ###
+
+let import = \importSql \appName \syslPackage
+    let spanner = spanner_arrai;
+    let sysl = sysl_arrai;
+    let stmts = spanner.parseSchema([importSql]);
+    let model = spanner.applyStmt(stmts, spanner.emptyModel);
+    $'${sysl.transformModel(
+        cond {
+            (model.schema): model,
+            _: (
+                entities: model.entities,
+                indexes: model.indexes,
+                schema: {(name: appName)},
+            )
+        }, syslPackage)}';
+
+(
+    :import,
+)
+`

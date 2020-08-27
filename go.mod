@@ -15,7 +15,7 @@ require (
 	github.com/anz-bank/pkg v0.0.19
 	github.com/arr-ai/frozen v0.14.0 // indirect
 	github.com/arr-ai/hash v0.5.0 // indirect
-	github.com/arr-ai/wbnf v0.15.0
+	github.com/arr-ai/wbnf v0.23.0
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
@@ -24,6 +24,7 @@ require (
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9
+	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
@@ -41,8 +42,9 @@ require (
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
 	golang.org/x/text v0.3.3 // indirect
+	golang.org/x/tools v0.0.0-20200123013950-ba161d9e22ab // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
-	google.golang.org/grpc v1.29.0
+	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.3.0

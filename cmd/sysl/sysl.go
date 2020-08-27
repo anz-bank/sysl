@@ -6,8 +6,10 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cfg"
+	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -86,7 +88,13 @@ func main2(
 	main3 func(args []string, fs afero.Fs, logger *logrus.Logger) error,
 ) int {
 	if err := main3(args, fs, logger); err != nil {
-		logger.Errorln(err.Error())
+		arraiErr, ok := errors.Cause(err).(importer.ArraiTransformError)
+		if ok {
+			logger.Debugln(err)
+			logger.Errorln(arraiErr.ShortMsg)
+		} else {
+			logger.Errorln(err.Error())
+		}
 		if err, ok := err.(parse.Exit); ok {
 			return err.Code
 		}
