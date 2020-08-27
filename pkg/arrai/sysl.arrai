@@ -44,16 +44,40 @@ let normalize = \m
             appPackage: app.attrs?('package')?.s:{},
             appDescription: app.attrs?('description')?.s:{},
             appPatterns: patterns(app),
+            # TODO: Remove.
             appAnnotations: app.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
         )
     ;
-    let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
+    let appAnnos = (m.apps => \(@:appName, @value:app)
+        app.attrs?:{} >>> \k \v 
+            (
+                :appName,
+                appAnnoKey: k,
+                appAnnoVal: v.s?:(v.a.elt >> .s),
+            )
+    ) -> //rel.union(.);
+
+    # TODO: Rename eps.
+    let endpoints = (m.apps => \(@:appName, @value:app)
         app.endpoints?:{} => \(@:epName, ...)
             (
                 :appName,
                 :epName,
             )
-    );
+    ) -> //rel.union(.);
+
+    let epAnnos = (m.apps => \(@:appName, @value:app)
+        (app.endpoints?:{} => \(@:epName, @value:ep)
+            ep.attrs?:{} >>> \k \v
+                (
+                    :appName,
+                    :epName,
+                    epAnnoKey: k,
+                    epAnnoVal: v.s?:(v.a.elt >> .s),
+                )
+        ) -> //rel.union(.)
+    ) -> //rel.union(.);
+
     let calls = //rel.union(m.apps => \(@:appName, @value:app)
         //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
             ep.stmt?:{} where .@item.call?:{} => 
@@ -77,12 +101,13 @@ let normalize = \m
             (
                 :appName,
                 :typeName,
+                annotations: t.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
             )
         ) where .
     ;
     let fields = //rel.union(m.apps => \(@:appName, @value:app)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
-            type.relation?.attr_defs?:{} => \(@:fieldName, @value:field)
+            type.relation?:(type.tuple?:()).attr_defs?:{} => \(@:fieldName, @value:field)
                 let patterns = patterns(field);
                 (
                     :appName,
@@ -105,7 +130,9 @@ let normalize = \m
 
     (
         :apps,
+        :appAnnos,
         :endpoints,
+        :epAnnos,
         :calls,
         :types,
         :fields,
