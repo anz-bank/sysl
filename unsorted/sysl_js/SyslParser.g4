@@ -49,9 +49,11 @@ table_def: attribs_or_modifiers? COLON ( WHATEVER | table_stmts);
 
 table   :  SYSL_COMMENT* (TYPE | TABLE) name_str table_def;
 
+union_type : collection_type | user_defined_type | NativeDataTypes;
+
 union   :   SYSL_COMMENT*
             UNION
-            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | user_defined_type | annotation | WHATEVER )+ DEDENT)
+            name_str attribs_or_modifiers? COLON ( WHATEVER | INDENT (SYSL_COMMENT | union_type | annotation | WHATEVER )+ DEDENT)
         ;
 
 package_name   : name_str;
