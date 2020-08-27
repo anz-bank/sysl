@@ -810,12 +810,40 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 
 // EnterUnion_type is called when production union_type is entered.
 func (s *TreeShapeListener) EnterUnion_type(ctx *parser.Union_typeContext) {
+	fieldName := ctx.GetText()
+	s.fieldname = append(s.fieldname, fieldName)
+	dataType, has := s.typemap[fieldName]
+	if has {
+		logrus.Warnf("%s) %s.(%s) defined multiple times, merge definitions",
+			s.sc.filename, s.currentTypePath.Get(), fieldName)
+	} else {
+		dataType = &sysl.Type{}
+		dataType.Type = &sysl.Type_NoType_{
+			NoType: &sysl.Type_NoType{},
+		}
+		// typeCtx := ref.(*parser.Union_typeContext)
+		// primType, constraints := primitiveFromNativeDataType(typeCtx.NativeDataTypes())
+		// if primType != nil {
+		// 	// data type is primitive
+		// 	subType := &sysl.Type{
+		// 		Type: primType,
+		// 	}
+		// 	if constraints != nil {
+		// 		subType.Constraint = []*sysl.Type_Constraint{constraints}
+		// 	}
+		// }
 
+		// ctx.AllUnion_type()
+	}
+
+	dataType.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+
+	s.typemap[fieldName] = dataType
+	s.app_name.Reset()
 }
 
 // ExitUnion_type is called when production union_type is exited.
 func (s *TreeShapeListener) ExitUnion_type(ctx *parser.Union_typeContext) {
-
 }
 
 // ExitUnion is called when production union is exited.
@@ -823,49 +851,49 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.applyAnnotations(ctx.AllAnnotation())
 	s.popScope()
 
-	contextAppPart := s.currentApp().Name.Part
-	contextPath := s.currentTypePath.Parts()
+	// contextAppPart := s.currentApp().Name.Part
+	// contextPath := s.currentTypePath.Parts()
 
-	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
+	// oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
 	// for _, ref := range ctx.AllUser_defined_type() {
-	for _, ref := range ctx.AllUnion_type() {
-		typeCtx := ref.(*parser.Union_typeContext)
-		primType, constraints := primitiveFromNativeDataType(typeCtx.NativeDataTypes())
-		if primType != nil {
-			// data type is primitive
-			subType := &sysl.Type{
-				Type: primType,
-			}
-			if constraints != nil {
-				subType.Constraint = []*sysl.Type_Constraint{constraints}
-			}
-			oneof.Type = append(oneof.Type, subType)
-		} else {
-			cType := typeCtx.Collection_type()
-			if cType != nil {
-				// data type is collection
-				//  &sysl.Type_Sequence{Sequence: type1}
-				fmt.Println(cType.GetText())
-			} else {
-				// data type is user-defined
-				oneof.Type = append(oneof.Type, &sysl.Type{
-					Type: &sysl.Type_TypeRef{
-						TypeRef: &sysl.ScopedRef{
-							Context: &sysl.Scope{
-								Appname: &sysl.AppName{
-									Part: contextAppPart,
-								},
-								Path: contextPath,
-							},
-							Ref: &sysl.Scope{
-								Path: []string{typeCtx.GetText()},
-							},
-						},
-					},
-				})
-			}
-		}
-	}
+	// for _, ref := range ctx.AllUnion_type() {
+	// 	typeCtx := ref.(*parser.Union_typeContext)
+	// 	primType, constraints := primitiveFromNativeDataType(typeCtx.NativeDataTypes())
+	// 	if primType != nil {
+	// 		// data type is primitive
+	// 		subType := &sysl.Type{
+	// 			Type: primType,
+	// 		}
+	// 		if constraints != nil {
+	// 			subType.Constraint = []*sysl.Type_Constraint{constraints}
+	// 		}
+	// 		oneof.Type = append(oneof.Type, subType)
+	// 	} else {
+	// 		cType := typeCtx.Collection_type()
+	// 		if cType != nil {
+	// 			// data type is collection
+	// 			//  &sysl.Type_Sequence{Sequence: type1}
+	// 			fmt.Println(cType.GetText())
+	// 		} else {
+	// 			// data type is user-defined
+	// 			oneof.Type = append(oneof.Type, &sysl.Type{
+	// 				Type: &sysl.Type_TypeRef{
+	// 					TypeRef: &sysl.ScopedRef{
+	// 						Context: &sysl.Scope{
+	// 							Appname: &sysl.AppName{
+	// 								Part: contextAppPart,
+	// 							},
+	// 							Path: contextPath,
+	// 						},
+	// 						Ref: &sysl.Scope{
+	// 							Path: []string{typeCtx.GetText()},
+	// 						},
+	// 					},
+	// 				},
+	// 			})
+	// 		}
+	// 	}
+	// }
 
 	s.currentTypePath.Pop()
 	s.fieldname = []string{}

@@ -45,7 +45,7 @@ table_def: attribs_or_modifiers? COLON ( WHATEVER | table_stmts);
 
 table   :  SYSL_COMMENT* (TYPE | TABLE) name_str table_def;
 
-union_type : collection_type | user_defined_type | NativeDataTypes;
+union_type : collection_type | types;
 
 union   :   SYSL_COMMENT*
             UNION
