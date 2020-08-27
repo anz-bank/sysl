@@ -781,6 +781,9 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 	s.typemap = map[string]*sysl.Type{}
 
 	types := s.currentApp().Types
+	if types == nil {
+		types = map[string]*sysl.Type{}
+	}
 
 	if types[s.currentTypePath.Get()].GetOneOf().GetType() != nil {
 		panic("not implemented yet")
@@ -803,6 +806,16 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 	}
 	s.pushScope(type1)
 	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+}
+
+// EnterUnion_type is called when production union_type is entered.
+func (s *TreeShapeListener) EnterUnion_type(ctx *parser.Union_typeContext) {
+
+}
+
+// ExitUnion_type is called when production union_type is exited.
+func (s *TreeShapeListener) ExitUnion_type(ctx *parser.Union_typeContext) {
+
 }
 
 // ExitUnion is called when production union is exited.
