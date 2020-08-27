@@ -173,6 +173,9 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 // EnterTypes is called when production types is entered.
 func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
 	type1 := s.currentType()
+	if type1 == nil {
+		return
+	}
 	primType, constraints := primitiveFromNativeDataType(ctx.NativeDataTypes())
 	if primType != nil {
 		type1.Type = primType
@@ -807,28 +810,39 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.applyAnnotations(ctx.AllAnnotation())
 	s.popScope()
 
-	context_app_part := s.currentApp().Name.Part
-	context_path := s.currentTypePath.Parts()
+	contextAppPart := s.currentApp().Name.Part
+	contextPath := s.currentTypePath.Parts()
 
 	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
 	// for _, ref := range ctx.AllUser_defined_type() {
 	for _, ref := range ctx.AllUnion_type() {
-		oneof.Type = append(oneof.Type, &sysl.Type{
-			Type: &sysl.Type_TypeRef{
-				TypeRef: &sysl.ScopedRef{
-					Context: &sysl.Scope{
-						Appname: &sysl.AppName{
-							Part: context_app_part,
+		primType, constraints := primitiveFromNativeDataType(ref.(*parser.Union_typeContext).NativeDataTypes())
+		if primType != nil {
+			subType := &sysl.Type{
+				Type: primType,
+			}
+			if constraints != nil {
+				subType.Constraint = []*sysl.Type_Constraint{constraints}
+			}
+			oneof.Type = append(oneof.Type, subType)
+		} else {
+			oneof.Type = append(oneof.Type, &sysl.Type{
+				Type: &sysl.Type_TypeRef{
+					TypeRef: &sysl.ScopedRef{
+						Context: &sysl.Scope{
+							Appname: &sysl.AppName{
+								Part: contextAppPart,
+							},
+							Path: contextPath,
 						},
-						Path: context_path,
-					},
-					Ref: &sysl.Scope{
-						// Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
-						Path: []string{ref.(*parser.Union_typeContext).GetText()},
+						Ref: &sysl.Scope{
+							// Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
+							Path: []string{ref.(*parser.Union_typeContext).GetText()},
+						},
 					},
 				},
-			},
-		})
+			})
+		}
 	}
 
 	s.currentTypePath.Pop()
@@ -3231,9 +3245,15 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 }
 
 func (s *TreeShapeListener) currentType() *sysl.Type {
+	if len(s.fieldname) == 0 {
+		return nil
+	}
 	return s.typemap[s.fieldname[len(s.fieldname)-1]]
 }
 
 func (s *TreeShapeListener) setCurrentType(type1 *sysl.Type) {
+	if len(s.fieldname) == 0 {
+		return
+	}
 	s.typemap[s.fieldname[len(s.fieldname)-1]] = type1
 }
