@@ -14,7 +14,7 @@ let toName = \filename $`${//seq.sub('.', '_', filename)}`;
 let inlineImport = //re.compile(`//\{\./([^}]+)\}`);
 # Returns a copy of content with the imports replace with variable names.
 # TODO: Fix //re.sub and use toName.
-let cleanImports = \content inlineImport.sub('${1}_arrai', content);
+let cleanImports = inlineImport.sub('${1}_arrai');
 
 # Returns an arr.ai file concatenating f and all of its transitive dependencies.
 let concat = \f
