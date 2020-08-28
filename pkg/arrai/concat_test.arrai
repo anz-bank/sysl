@@ -1,0 +1,24 @@
+let (:concat, ...) = //{./concat};
+
+(
+    noImports: concat('util.arrai') = $`
+        ### ------------------------------------------------------------------------ ###
+        ###  util.arrai                                                              ###
+        ### ------------------------------------------------------------------------ ###
+
+        ${//os.file('util.arrai')}`,
+
+    many: concat('concat_go_test.arrai') ->
+        //seq.contains('###  util.arrai', .) &&
+        //seq.contains('let util_arrai =', .) &&
+        //seq.contains('###  concat.arrai', .) &&
+        //seq.contains('let concat_arrai =', .) &&
+        //seq.contains('###  concat_go.arrai', .) &&
+        //seq.contains('let concat_go_arrai =', .) &&
+        //seq.contains('###  concat_go_test.arrai', .) &&
+        !//seq.contains('//{./util}', .) &&
+        !//seq.contains('//{./concat}', .) &&
+        !//seq.contains('//{./concat_go}', .) &&
+        //eval.value(.).noInput = true
+    ,
+)
