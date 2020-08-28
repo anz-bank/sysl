@@ -1,0 +1,4 @@
+cond //os.args(1)?:{} {
+    {}: 'provide a filename',
+    filename: //seq.sub('`', '`+"`"+`', //{./concat}.concat(filename))
+}
