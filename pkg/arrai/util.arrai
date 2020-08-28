@@ -48,6 +48,20 @@ let rec reduce = \arr \fn \val
     }
 ;
 
+# Sequentially applies `fn(accumulator, k, v)` for each `{k: v}` pair in `obj`.
+# The `accumulator` is initialised to `val`, and updated to the result of `fn`
+# after each invocation.
+# Returns the final accumulated value.
+let rec reduceObj = \obj \fn \val
+    cond obj {
+        {}: val,
+        [(@:k, @value:v), ...tail]: reduceObj(tail rank (:.@), fn, fn(val, k, v)),
+        [(@:k, @item:v), ...tail]:  reduceObj(tail rank (:.@), fn, fn(val, k, v)),
+        (...): reduceObj(//dict(obj) orderby .@, fn, val),
+        _:     reduceObj(obj orderby .@, fn, val),
+    }
+;
+
 # Performs `reduce` once on `arr`, and once for each array output of `fn`. Accumulates to the same
 # value across all invocations.
 let reduceFlat = \arr \fn \val
@@ -92,6 +106,7 @@ let topsort = \graph _topsort(graph, [], unimported(graph));
     :ranked,
     :reduce,
     :reduceFlat,
+    :reduceObj,
     :ranked,
     :simpleTransform,
     :topsort,
