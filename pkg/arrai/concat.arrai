@@ -41,5 +41,6 @@ let concat = \f
     )::\i\n}`
 ;
 
-let [_, filename] = //os.args;
-concat(filename)
+(
+    :concat,
+)
