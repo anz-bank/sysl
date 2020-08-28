@@ -27,8 +27,11 @@ let toPackagePage = \m \appPackage
                       },
                       ` orderby .::\i}
                     ],
-                    "responses": [
-                    ]
+                    "responses": {
+                      ${.epReturns >> $`
+                      "${.status}": "${.type}",
+                      ` ::\i}
+                    },
                   },
                   ` orderby .::\i}
               },

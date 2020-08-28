@@ -69,7 +69,8 @@ let normalize = \m
                         type: param.type,
                     ),
                 epProtocol: protocol(//rel.union({patterns(ep), patterns(app)})),
-                epStmt: ep.stmt,
+                epStmt: ep.stmt?:[],
+                epReturns: (ep.stmt?:[] where .@item.ret?.payload?:[]) >> .ret.payload,
             )
     );
     let calls = //rel.union(m.apps => \(@:appName, @value:app)

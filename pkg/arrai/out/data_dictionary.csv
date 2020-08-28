@@ -1,4 +1,5 @@
 Action, Platform Name, Technology Name, Physical Attribute Name, Physical Object Type, Physical Object Container Name, Physical Object Name, Physical Object Description, Business Term, Attribute Business Description
+?, ?, ?, id, Table, Client, Req, "", ?, "?"
 ?, ?, ?, a, Table, Source, Bar, "A bar table.", ?, "?"
 ?, ?, ?, b, Table, Source, Bar, "An optional int", ?, "?"
 ?, ?, ?, x, Table, Source, Bar, "A foreign key", ?, "?"

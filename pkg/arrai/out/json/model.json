@@ -1,0 +1,122 @@
+{
+  "apps": {
+    "A": {
+      "name": "A",
+      "description": "",
+      "package": "model",
+      "endpoints":  {
+        "Fetch": {
+          "name": "Fetch",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+          ],
+          "responses": {
+          },
+        },
+    },
+    "B": {
+      "name": "B",
+      "description": "",
+      "package": "model",
+      "endpoints":  {
+        "Fetch": {
+          "name": "Fetch",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+          ],
+          "responses": {
+          },
+        },
+    },
+    "C": {
+      "name": "C",
+      "description": "",
+      "package": "model",
+      "endpoints":  {
+        "Fetch": {
+          "name": "Fetch",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+          ],
+          "responses": {
+          },
+        },
+        "FetchA": {
+          "name": "FetchA",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+          ],
+          "responses": {
+          },
+        },
+        "FetchB": {
+          "name": "FetchB",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+          ],
+          "responses": {
+          },
+        },
+    },
+    "Client": {
+      "name": "Client",
+      "description": "",
+      "package": "model",
+      "endpoints":  {
+        "Do": {
+          "name": "Do",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+          ],
+          "responses": {
+          },
+        },
+    },
+    "D": {
+      "name": "D",
+      "description": "",
+      "package": "model",
+      "endpoints":  {
+        "Fetch": {
+          "name": "Fetch",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+          ],
+          "responses": {
+          },
+        },
+    },
+    "Source": {
+      "name": "Source",
+      "description": "A database.\n Stores data.\n",
+      "package": "model",
+      "endpoints":  {
+        "Read": {
+          "name": "Read",
+          "description": "",
+          "protocol": "",
+          "parameters": [
+            {
+              "name": "request",
+              "type": "map[type_ref:map[ref:map[appname:map[part:[Client]] path:[Req]]]]",
+            },
+            {
+              "name": "request_type",
+              "type": "map[primitive:INT]",
+            },
+          ],
+          "responses": {
+            "error": "Bar",
+            "ok": "Foo",
+          },
+        },
+    },
+  },
+}

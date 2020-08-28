@@ -1,5 +1,5 @@
 Source[~db]:
-    @package = "source"
+    @package = "model"
     @description =:
       | A database.
       | Stores data.
@@ -19,18 +19,22 @@ Source[~db]:
         x <: Foo.x:
             @description = "A foreign key"
 
-    Read (request <: Bar):
+    Read (request <: Client.Req, request_type <: int):
+        return error <: Bar
         return ok <: Foo
 
 A:
+    @package = "model"
     Fetch:
         Source <- Read
 
 B:
+    @package = "model"
     Fetch:
         Source <- Read
 
 C:
+    @package = "model"
     FetchA:
         A <- Fetch
 
@@ -42,11 +46,16 @@ C:
         . <- FetchB
 
 D:
+    @package = "model"
     Fetch:
         A <- Fetch
         C <- Fetch
 
 Client:
+    @package = "model"
+    !type Req:
+        id <: int
+
     Do:
         D <- Fetch
 

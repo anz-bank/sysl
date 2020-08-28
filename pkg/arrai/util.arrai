@@ -14,7 +14,7 @@ let rec simpleTransform = \ast
     cond ast {
         (...): 
             let d = //dict(ast) >> \term cond term {
-                ('':value): value, 
+                ('':value, ...): value, 
                 (...): simpleTransform(term), 
                 [...]: term >> simpleTransform(.) where .@item,
                 _: {},
