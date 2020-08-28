@@ -9,7 +9,7 @@ let import = //re.compile('//\\{\\./([\\w/.]+)\\}');
 let step = \f import.match($`${//os.file(f)}`) => ((.@item(1) rank (:.@)) ++ '.arrai');
 
 # Returns the canonical variable name for a file's contents.
-let toName = \filename $`${//seq.sub('.', '_', filename)}`;
+let toName = $`${//seq.sub('.', '_')}`;
 # Regex pattern to match local import expressions.
 let inlineImport = //re.compile(`//\{\./([^}]+)\}`);
 # Returns a copy of content with the imports replace with variable names.
