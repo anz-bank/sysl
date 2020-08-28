@@ -1,4 +1,4 @@
-let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+let model = //{./sysl}.normalize(//{./sysl}.polish(//{./sysl}.load('out/model.pb')));
 
 # Transforms the model's information about the named package to a JSON content.
 let toPackagePage = \m \appPackage
@@ -14,7 +14,7 @@ let toPackagePage = \m \appPackage
                 "description": "${//seq.sub('\n', '\\n', .appDescription)}",
                 "package": "${appPackage}",
                 "endpoints":  {
-                  ${.appEndpoints => $`
+                  ${{(appName: .appName)} <&> m.endpoints => $`
                   "${.epName}": {
                     "name": "${.epName}",
                     "description": "${//seq.sub('\n', '\\n', .epDescription)}",

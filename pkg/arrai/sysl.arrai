@@ -33,9 +33,9 @@ let polishReturns = \m
     let tweak = \.
         . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
 
-    m.apps?:{} >> \a a +> (endpoints: a.endpoints?:{} >> \p p +> (stmt: p.stmt?:[] >> \s
+    m +> (apps: m.apps?:{} >> \a a +> (endpoints: a.endpoints?:{} >> \p p +> (stmt: p.stmt?:[] >> \s
         cond s.ret?:{} {{}: s, _: tweak(s)}
-    ))
+    )))
 ;
 
 # Applies polish functions to the appropriate elements of a Sysl model.
@@ -53,8 +53,12 @@ let normalize = \m
             appDescription: app.attrs?('description')?.s:{},
             appPatterns: patterns(app),
             appAnnotations: app.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
-            appEndpoints: app.endpoints?:{} => \(@:epName, @value:ep)
+        )
+    ;
+    let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
+        app.endpoints?:{} => \(@:epName, @value:ep)
             (
+                :appName,
                 :epName,
                 epDescription: ep.attrs?('description')?.s:{},
                 epPatterns: patterns(ep),
@@ -65,14 +69,7 @@ let normalize = \m
                         type: param.type,
                     ),
                 epProtocol: protocol(//rel.union({patterns(ep), patterns(app)})),
-            ),
-        )
-    ;
-    let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
-        app.endpoints?:{} => \(@:epName, @value:ep)
-            (
-                :appName,
-                :epName,
+                epStmt: ep.stmt,
             )
     );
     let calls = //rel.union(m.apps => \(@:appName, @value:app)
