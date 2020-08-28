@@ -1,44 +1,49 @@
 # Concatenates the contents of local imports to produce a self-contained script.
 
-let (:explore, :unimported, :topsort, ...) = //{./util};
+let (:explore, :topsort, ...) = //{./util};
 
-# Matches local arr.ai imports.
+# Regex pattern to match local arr.ai import expressions.
 let import = //re.compile('//\\{\\./([\\w/.]+)\\}');
 
-# Returns the set of local arr.ai imports in f.
-let step = \f import.match($`${//os.file(f)}`) => ((.@item(1) rank (:.@)) ++ '.arrai');
-
 # Returns the canonical variable name for a file's contents.
-let toName = $`${//seq.sub('.', '_')}`;
-# Regex pattern to match local import expressions.
-let inlineImport = //re.compile(`//\{\./([^}]+)\}`);
+let toName = //seq.sub('.', '_');
+
 # Returns a copy of content with the imports replace with variable names.
 # TODO: Fix //re.sub and use toName.
-let cleanImports = inlineImport.sub('${1}_arrai');
+let cleanImports = import.sub('${1}_arrai');
+
+# Creates a string to assign the tail of a file to a named variable.
+let assignTail = \name \tail $`let ${name} = 
+${//re.compile('^\\s*|\\s*$').sub('', tail)};`;
+
+# The string with which to divide file sections.
+let div = $`### ${//seq.repeat(72, '-')} ###`;
 
 # Returns an arr.ai file concatenating f and all of its transitive dependencies.
-let concat = \f
-    let div = $`### ${//seq.repeat(72, '-')} ###`;
-    $`${(topsort(explore(f, step)) rank (@:-.@) >>
+let concat = \source
+    # Returns the set of local arr.ai imports in f.
+    let step = \f import.match($`${//os.file(f)}`) => ((.@item(1) rank (:.@)) ++ '.arrai');
+
+    let content = \f
         let c = $`${//os.file(.)}`;
-        let c = cond {
+        cleanImports(cond {
             . = f: c,
-            _: cond {
-                # TODO: Handle presence of only non-meaningful semicolons.
-                //seq.contains(';', c):
-                    let [...head, tail] = //seq.split(';', c);
-                    //seq.join(';', head ++ [$`let ${toName(.)} = ${tail};`]),
-                _: $`let ${toName(.)} = ${c};`
+            _: cond //seq.split(';', c) {
+                [...head, tail]: $`
+                    ${head::;:;}
+
+                    ${assignTail(toName(.), tail)}`,
             }
-        };
+        });
+    
+    let files = topsort(explore(source, step)) rank (@:-.@);
+    $`${files >> $`
+        ${div}
+        ###  ${.:-71s} ###
+        ${div}
 
-        $`
-            ${div}
-            ###  ${.:-71s} ###
-            ${div}
-
-            ${cleanImports(c)}`
-    )::\i\n}`
+        ${content(.)}
+    `::\i\n}`
 ;
 
 (
