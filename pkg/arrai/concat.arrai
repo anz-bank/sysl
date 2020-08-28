@@ -1,5 +1,5 @@
 # Concatenates the contents of local imports to produce a self-contained script.
-     
+
 let (:explore, :topsort, ...) = //{./util};
 
 # Regex pattern to match local arr.ai import expressions.

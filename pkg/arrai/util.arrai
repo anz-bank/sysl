@@ -1,7 +1,7 @@
 # A collection of helper functions for arr.ai.
 #
 # If generally useful, these should gradually migrate to a more standard library.
-   
+
 # Invokes a macro on a string as if it were source code at parsing time.
 let invokeMacro = \macro \s
     macro -> (//dict(.@transform) >>> \rule \fn
