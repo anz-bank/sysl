@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -831,13 +830,8 @@ func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.popScope()
 
 	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
-	keys := make([]string, 0, len(s.typemap))
-	for key := range s.typemap {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	for _, key := range keys {
-		oneof.Type = append(oneof.Type, s.typemap[key])
+	for _, i := range ctx.AllUnion_type() {
+		oneof.Type = append(oneof.Type, s.typemap[i.GetText()])
 	}
 
 	s.currentTypePath.Pop()
