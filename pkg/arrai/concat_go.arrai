@@ -1,1 +1,3 @@
-//seq.sub('`', '`+"`"+`', //{./concat})
+let [_, filename] = //os.args;
+
+//seq.sub('`', '`+"`"+`', //{./concat}.concat(filename))
