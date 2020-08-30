@@ -1,17 +1,17 @@
 let util = //{./avro_util};
 
-let t = \.
+let transformer = \.
 cond . {
 {'type': (s: 'fixed'), ...}:
-    $'${util.indent}!alias ${.('name').s}${
-        util.prettyAnnotations(['~fixed', $'fixed_size="${.('size')}"', util.getAnnotationS(., 'namespace')])
+    $`${util.indent}!alias ${.('name').s}${
+        util.prettyAnnotations(['~fixed', $`fixed_size="${.('size')}"`, util.getAnnotationS(., 'namespace')])
     }: bytes
     ${
         let aliases = .('aliases')? .a:[];
-        aliases >> \alias ($'!alias ${alias.s}: ${.('name').s}')::
-    }',
+        aliases >> \alias ($`!alias ${alias.s}: ${.('name').s}`)::
+    }`,
 {'type': (s: 'array'), ...}:
-    $'${util.indent}!alias ${//str.title(.('items').s)}Sequence${
+    $`${util.indent}!alias ${//str.title(.('items').s)}Sequence${
         util.prettyAnnotations([util.getDefaultVal(.)])
-    }: sequence of ${.('items').s}'
-};t
+    }: sequence of ${.('items').s}`
+};transformer

@@ -8,7 +8,7 @@ let buildTypeAnnotation = \type
             let types = (typeArray >> util.getTypeName(.)) >> .s;
             cond //seq.contains(['null'])(types) {
                 true:
-                    cond //seq.has_prefix(['null'])(types) {
+                    cond //seq.has_prefix(['null'], types) {
                         true: # types is ['null', 'string']
                             '',
                         _: # types is ['string', 'null']
@@ -52,42 +52,42 @@ let buildAnnotations = \.
 ;
 
 let t = \record
-$'${
+$`${
     cond record {
         {'isMap':(s: 'true'), ...}:
             let valueType = cond record {
                 {"name": (s: name)}: name,
                 {"items": (s: type), ...}: type
             };
-            $'${'\n'}${util.indent}!type String${valueType}Item${
+            $`${'\n'}${util.indent}!type String${valueType}Item${
                     util.prettyAnnotations(['json_map_key="key"', util.getDefaultVal(record)])
                 }:${'\n'}${util.indent}${util.indent}key <: string${
-                '\n'}${util.indent}${util.indent}value <: ${valueType}${'\n\n'}',
+                '\n'}${util.indent}${util.indent}value <: ${valueType}${'\n\n'}`,
     }
 }${
 cond record {
 {'type': (s: 'record'), ...}:
-$'${util.indent}!type ${record('name').s}${
+$`${util.indent}!type ${record('name').s}${
     util.prettyAnnotations([util.getAnnotationS(record, 'namespace'), util.getAnnotationS(record, 'doc')])
 }:
 ${
     let fields = record('fields')? .a:[]; 
     fields >> 
-        ($'${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))} ${
+        ($`${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))} ${
                 util.prettyAnnotations(buildAnnotations(.))
             }${
                 let aliases = .('aliases')? .a:[];
                 cond aliases {
                     []: '',
-                    _: $'${'\n'}${aliases >> \alias 
-                                    $'${util.indent}${util.indent}${alias.s} <: ${util.transformType(.('type'))} ${
-                                        util.prettyAnnotations(buildAnnotations(.) + [$'alias_of="${.('name').s}"'])}'::\i}'
+                    _: $`${'\n'}${aliases >> \alias 
+                                    $`${util.indent}${util.indent}${alias.s} <: ${util.transformType(.('type'))} ${
+                                        util.prettyAnnotations(buildAnnotations(.) + [$`alias_of="${.('name').s}"`])}`::\i}`
                 }
-            }')::
+            }`)::
 }${
 let aliases = record('aliases')? .a:[];
 cond aliases {
-    [...]: $'${'\n\n'}${
-        aliases >> ($'${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}')::\i\n}${'\n'}'
+    [...]: $`${'\n\n'}${
+        aliases >> ($`${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}`)::\i\n}${'\n'}`
     }
-}'}}';t
+}`}}`;t
