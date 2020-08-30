@@ -86,5 +86,8 @@ ${
             }')::
 }${
 let aliases = record('aliases')? .a:[];
-cond aliases {[...]: $'${'\n\n'}${aliases >> ($'${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}')::\i\n}${'\n'}'}
+cond aliases {
+    [...]: $'${'\n\n'}${
+        aliases >> ($'${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}')::\i\n}${'\n'}'
+    }
 }'}}';t

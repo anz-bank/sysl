@@ -23,7 +23,7 @@ let rec extraEnums = \schema
 # Extra items transformed to Sysl type !type 
 let rec extraTypes = \schema
   cond schema {
-    {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
+    {"type": (s: "record"), "fields": (a : fields), ...}:
       {schema} | //rel.union(fields => extraTypes(.@item("type"))),
     {'type': (s: type), 'items': items, ...}: # array or map
       cond items {

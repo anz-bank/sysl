@@ -105,8 +105,8 @@ let transformType = \type
         {'type': typeName, ...}:
             # it is array, map
             cond typeName.s {
-                'array': 'sequence of ' + cond type {{'items': {'name': name, ...}, ...}: name.s, _: type('items').s},
-                'map': 'set of ' + cond type {{'items': {'name': name, ...}, ...}: 'String' + name.s + 'Item', _: type('items').s},
+                'array': 'sequence of ' + cond type('items') {{'name': (:s), ...}: s, (:s): s},
+                'map': 'set of ' + cond type('items') {{'name': (:s), ...}: 'String' + s + 'Item', (:s): s},
                 _: type('name').s
             },
     }

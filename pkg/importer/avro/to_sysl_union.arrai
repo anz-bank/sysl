@@ -18,8 +18,8 @@ let combineTypes = \types
 
 let printUnion = \union
     let types = union >> util.getTypeName(.) >> cond . {(type: typeS, ...): typeS, _: .s};
-    $'${util.indent}!union ${//seq.sub("?", "")(combineTypes(union))}:
-    ${types where .@item != 'null' rank (:.@) >> $'${util.indent}${.}'::\n}${'\n'}'
+    $`${util.indent}!union ${//seq.sub("?", "")(combineTypes(union))}:
+    ${types where .@item != 'null' rank (:.@) >> $'${util.indent}${.}'::\n}${'\n'}`
 ;
 
 let t = \union
