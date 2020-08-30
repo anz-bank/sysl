@@ -55,7 +55,7 @@ func Retrieve(name string, ver string) (*Module, error) {
 	var manager DependencyManager
 	if GitHubMode {
 		gh := &githubMgr{}
-		gh.Init()
+		gh.Init(".sysl")
 		manager = gh
 	} else {
 		if !fileExists("go.mod", false) {
@@ -70,7 +70,7 @@ func Retrieve(name string, ver string) (*Module, error) {
 		}
 	}
 
-	if ver != "" && ver != MasterBranch {
+	if ver != MasterBranch || (GitHubMode && ver != "") {
 		mod := manager.Find(name, ver, &modules)
 		if mod != nil {
 			return mod, nil
