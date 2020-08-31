@@ -25,14 +25,14 @@ let concat = \source
     let step = \f import.match($`${//os.file(f)}`) => ((.@item(1) rank (:.@)) ++ '.arrai');
 
     let content = \f
-        let c = $`${//os.file(.)}`;
+        let c = $`${//os.file(f)}`;
         cleanImports(cond {
-            . = f: c,
+            f = source: c,
             _: cond //seq.split(';', c) {
                 [...head, tail]: $`
                     ${head::;:;}
 
-                    ${assignTail(toName(.), tail)}`,
+                    ${assignTail(toName(f), tail)}`,
             }
         });
     
