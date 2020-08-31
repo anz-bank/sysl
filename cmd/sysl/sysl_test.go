@@ -924,6 +924,32 @@ func TestSpannerSQLImport(t *testing.T) {
 	os.RemoveAll(tmp1)
 }
 
+func TestSpannerSQLImportWithoutPackage(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	tmp1, err := ioutil.TempDir("", "tmp1")
+	assert.NoError(t, err)
+	ret := main2([]string{"sysl", "import", "--input", filepath.Join(testDir, "/test-spanner.sql"),
+		"--app-name", "customeraccounts",
+		"--output", filepath.Join(tmp1, "/accounts.sysl")}, afero.NewOsFs(), logger, main3)
+	assert.Equal(t, 0, ret)
+	_, err = ioutil.ReadFile(filepath.Join(tmp1, "/accounts.sysl"))
+	assert.NoError(t, err)
+	os.RemoveAll(tmp1)
+}
+
+func TestSpannerSQLImportDefOut(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	ret := main2([]string{"sysl", "import", "--input", filepath.Join(testDir, "/test-spanner.sql"),
+		"--app-name", "customeraccounts",
+		"--package", "retail"}, afero.NewOsFs(), logger, main3)
+	assert.Equal(t, 0, ret)
+	_, err := ioutil.ReadFile("output.sysl")
+	assert.NoError(t, err)
+	os.RemoveAll("output.sysl")
+}
+
 func TestMain3(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	fs := afero.NewOsFs()
