@@ -108,7 +108,6 @@ let transformType = \type
     }
 ;
 
-# TODO default = {} can't work still
 let getDefaultVal = \.
     let default = .('default')?:""; 
     cond default {

@@ -28,10 +28,10 @@ let rec extraTypes = \schema
     {'type': (s: type), 'items': items, ...}: # array or map
       cond items {
         (a: types): //rel.union(types => extraTypes(.@item)), # array
-        (:s): cond type {'map': {schema | {'isMap': (s: 'true')}}}, # primitive
+        (:s): {}, # primitive
         _:
           cond type {
-            'map': {schema('items') | {'isMap': (s: 'true')}} | extraTypes(items),
+            'map': extraTypes(items |  {'isMap': (s: 'true')}),
             _: extraTypes(items),
           } 
       },
