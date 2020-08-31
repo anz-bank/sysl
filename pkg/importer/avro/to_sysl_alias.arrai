@@ -15,11 +15,11 @@ cond . {
         util.prettyAnnotations([util.getDefaultVal(.)])
     }: sequence of ${.('items').s}`,
 'int':
-    $`!alias Int32: int [bits="32"]`,
+    $`!alias Int_32 [bits="32"]: int`,
 'long':
-    $`!alias Int64: int [bits="64"]`,
+    $`!alias Int_64 [bits="64"]: int`,
 'float':
-    $`!alias Float32: int [bits="32"]`,
+    $`!alias Float32 [bits="32"]: float`,
 'double':
-    $`!alias Float64: int [bits="32"]`,        
+    $`!alias Float64 [bits="32"]: float`,        
 };transformer

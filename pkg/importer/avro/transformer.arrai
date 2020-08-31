@@ -10,7 +10,7 @@ let rec extraEnums = \schema
     {'type': type, 'items': items, ...}: # Map or array
       cond items {
         (a: types): //rel.union(types => extraEnums(.@item)), # array
-        (:s): extraEnums(s), # primitive
+        (:s): {}, # primitive
         _: extraEnums(items),
       },
     {'type': (a: types)}: # type is an array
@@ -50,14 +50,15 @@ let rec extraAliases = \schema
     {'type': type, 'items': items, ...}: # array or map
       cond items {
         (:a): //rel.union(a => extraAliases(.@item)), # array
-        (:s): {schema}, # primitive
+        (:s): {}, # primitive
+        _: extraAliases(items)
       },
     {'type': (:a), ...}: # type is an array
       //rel.union(a => extraAliases(.@item)),  
     (:a): # root is json array 
       //rel.union(a => extraAliases(.@item)),
-    {'type': (:s), ...}:
-      {s},
+    {'type': (:s), ...}: # fixed
+      {schema},
     (:s):
       {s},
 };
@@ -71,7 +72,7 @@ let rec extraUnions = \schema
     {'type': type, 'items': items, ...}: # array or map
       cond items {
         (a: types): //rel.union(types => extraUnions(.@item)), # array
-        (:s): extraUnions(s), # primitive
+        (:s): {}, # primitive
         _: extraUnions(items),
       },
     {'type': (a: types)}: # type is an array
