@@ -45,20 +45,21 @@ let rec extraTypes = \schema
 # Extra items transformed to Sysl type !alias
 let rec extraAliases = \schema
   cond schema {
-    {'type': (s: 'fixed'), ...}: # fixed type
-      {schema},
     {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
       //rel.union(fields => extraAliases(.@item("type"))),
     {'type': type, 'items': items, ...}: # array or map
       cond items {
-        (a: types): //rel.union(types => extraAliases(.@item)), # array
-        (:s): cond type.s {'array': {schema}}, # primitive
-        _: extraAliases(items),
+        (:a): //rel.union(a => extraAliases(.@item)), # array
+        (:s): {schema}, # primitive
       },
-    {'type': (a: types)}: # type is an array
-      //rel.union(types => extraAliases(.@item)),  
-    (a: types): # root is json array 
-      //rel.union(types => extraAliases(.@item)),
+    {'type': (:a), ...}: # type is an array
+      //rel.union(a => extraAliases(.@item)),  
+    (:a): # root is json array 
+      //rel.union(a => extraAliases(.@item)),
+    {'type': (:s), ...}:
+      {s},
+    (:s):
+      {s},
 };
 
 # Extra item transformed to Sysl type !union

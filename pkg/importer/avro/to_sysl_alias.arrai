@@ -13,5 +13,13 @@ cond . {
 {'type': (s: 'array'), ...}:
     $`${util.indent}!alias ${//str.title(.('items').s)}Sequence${
         util.prettyAnnotations([util.getDefaultVal(.)])
-    }: sequence of ${.('items').s}`
+    }: sequence of ${.('items').s}`,
+'int':
+    $`!alias Int32: int [bits="32"]`,
+'long':
+    $`!alias Int64: int [bits="64"]`,
+'float':
+    $`!alias Float32: int [bits="32"]`,
+'double':
+    $`!alias Float64: int [bits="32"]`,        
 };transformer
