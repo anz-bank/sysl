@@ -53,6 +53,153 @@ apps: {
       }
     }
     types: {
+      key: "Mixed"
+      value: {
+        one_of: {
+          type: {
+            primitive: INT
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 12
+                col: 8
+              }
+              end: {
+                line: 12
+                col: 8
+              }
+            }
+          }
+          type: {
+            primitive: STRING
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 13
+                col: 8
+              }
+              end: {
+                line: 13
+                col: 8
+              }
+            }
+          }
+          type: {
+            sequence: {
+              primitive: STRING
+              source_context: {
+                file: "tests/union.sysl"
+                start: {
+                  line: 14
+                  col: 8
+                }
+                end: {
+                  line: 14
+                  col: 20
+                }
+              }
+            }
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 14
+                col: 8
+              }
+              end: {
+                line: 14
+                col: 20
+              }
+            }
+          }
+          type: {
+            set: {
+              primitive: BYTES
+              source_context: {
+                file: "tests/union.sysl"
+                start: {
+                  line: 15
+                  col: 8
+                }
+                end: {
+                  line: 15
+                  col: 15
+                }
+              }
+            }
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 15
+                col: 8
+              }
+              end: {
+                line: 15
+                col: 15
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
+                  part: "Test"
+                }
+                path: "Mixed"
+              }
+              ref: {
+                path: "A"
+              }
+            }
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 16
+                col: 8
+              }
+              end: {
+                line: 16
+                col: 8
+              }
+            }
+          }
+          type: {
+            type_ref: {
+              context: {
+                appname: {
+                  part: "Test"
+                }
+                path: "Mixed"
+              }
+              ref: {
+                path: "U"
+              }
+            }
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 17
+                col: 8
+              }
+              end: {
+                line: 17
+                col: 8
+              }
+            }
+          }
+        }
+        source_context: {
+          file: "tests/union.sysl"
+          start: {
+            line: 11
+            col: 4
+          }
+          end: {
+            line: 18
+          }
+        }
+      }
+    }
+    types: {
       key: "U"
       value: {
         one_of: {
@@ -68,6 +215,17 @@ apps: {
                 path: "A"
               }
             }
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 7
+                col: 8
+              }
+              end: {
+                line: 7
+                col: 8
+              }
+            }
           }
           type: {
             type_ref: {
@@ -79,6 +237,17 @@ apps: {
               }
               ref: {
                 path: "B"
+              }
+            }
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 8
+                col: 8
+              }
+              end: {
+                line: 8
+                col: 8
               }
             }
           }
@@ -94,6 +263,17 @@ apps: {
                 path: "C"
               }
             }
+            source_context: {
+              file: "tests/union.sysl"
+              start: {
+                line: 9
+                col: 8
+              }
+              end: {
+                line: 9
+                col: 8
+              }
+            }
           }
         }
         source_context: {
@@ -103,7 +283,8 @@ apps: {
             col: 4
           }
           end: {
-            line: 10
+            line: 11
+            col: 4
           }
         }
       }
