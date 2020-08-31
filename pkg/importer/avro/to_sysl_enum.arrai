@@ -11,8 +11,8 @@ ${
 }
 ${
 let aliases = enum('aliases')? .a:[]; 
-aliases >> ($`
+aliases >> $`
 
 ${util.indent}!alias ${.s}:
-${util.indent}${util.indent}${enum('name').s}`)::\n}
+${util.indent}${util.indent}${enum('name').s}`::\n}
 `;transformer

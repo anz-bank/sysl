@@ -6,10 +6,10 @@ let buildTypeAnnotation = \type
     cond type {
         (a: typeArray):
             let types = (typeArray >> util.getTypeName(.)) >> .s;
-            cond //seq.contains(['null'])(types) {
-                true:
-                    cond //seq.has_prefix(['null'], types) {
-                        true: # types is ['null', 'string']
+            cond {
+                //seq.contains(['null'], types):
+                    cond {
+                        //seq.has_prefix(['null'], types): # types is ['null', 'string']
                             '',
                         _: # types is ['string', 'null']
                             $'union=${types}'
@@ -42,7 +42,7 @@ let buildLogicalTypeAnnotation = \.
 ;
 
 let buildAnnotations = \.
-    buildLogicalTypeAnnotation(.) + 
+    buildLogicalTypeAnnotation(.) ++ 
     [
         buildTypeAnnotation(.('type')),
         util.getAnnotationS(., 'doc'),
