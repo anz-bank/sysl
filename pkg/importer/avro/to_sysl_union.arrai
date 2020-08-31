@@ -7,14 +7,14 @@ let printUnion = \union
     ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${util.indent}${.}'::\n}${'\n'}`
 ;
 
-let t = \union
+let transformer = \union
     let types = union >> util.getTypeName(.) >> .s;
-    cond //seq.contains(['null'])(types) {
-        true:
+    cond {
+        //seq.contains(['null'], types):
             cond types count > 2 {
                 true: printUnion(union),
             }
         ,
         _: printUnion(union)
     }
-;t
+;transformer
