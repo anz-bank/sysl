@@ -98,6 +98,9 @@ type SyslParserListener interface {
 	// EnterTable is called when entering the table production.
 	EnterTable(c *TableContext)
 
+	// EnterUnion_type is called when entering the union_type production.
+	EnterUnion_type(c *Union_typeContext)
+
 	// EnterUnion is called when entering the union production.
 	EnterUnion(c *UnionContext)
 
@@ -637,6 +640,9 @@ type SyslParserListener interface {
 
 	// ExitTable is called when exiting the table production.
 	ExitTable(c *TableContext)
+
+	// ExitUnion_type is called when exiting the union_type production.
+	ExitUnion_type(c *Union_typeContext)
 
 	// ExitUnion is called when exiting the union production.
 	ExitUnion(c *UnionContext)

@@ -4,7 +4,7 @@
 
 # Invokes a macro on a string as if it were source code at parsing time.
 let invokeMacro = \macro \s
-    macro -> (//dict(.@transform) >>> \rule \fn 
+    macro -> (//dict(.@transform) >>> \rule \fn
         fn(//grammar.parse(.@grammar, rule, s))).@value
 ;
 
@@ -12,10 +12,10 @@ let invokeMacro = \macro \s
 # Useful for the @transform of a flat grammar.
 let rec simpleTransform = \ast
     cond ast {
-        (...): 
+        (...):
             let d = //dict(ast) >> \term cond term {
-                ('':value): value, 
-                (...): simpleTransform(term), 
+                ('':value): value,
+                (...): simpleTransform(term),
                 [...]: term >> simpleTransform(.) where .@item,
                 _: {},
             };
@@ -48,6 +48,20 @@ let rec reduce = \arr \fn \val
     }
 ;
 
+# Sequentially applies `fn(accumulator, k, v)` for each `{k: v}` pair in `obj`.
+# The `accumulator` is initialised to `val`, and updated to the result of `fn`
+# after each invocation.
+# Returns the final accumulated value.
+let rec reduceObj = \obj \fn \val
+    cond obj {
+        {}: val,
+        [(@:k, @value:v), ...tail]: reduceObj(tail rank (:.@), fn, fn(val, k, v)),
+        [(@:k, @item:v), ...tail]:  reduceObj(tail rank (:.@), fn, fn(val, k, v)),
+        (...): reduceObj(//dict(obj) orderby .@, fn, val),
+        _:     reduceObj(obj orderby .@, fn, val),
+    }
+;
+
 # Performs `reduce` once on `arr`, and once for each array output of `fn`. Accumulates to the same
 # value across all invocations.
 let reduceFlat = \arr \fn \val
@@ -56,14 +70,33 @@ let reduceFlat = \arr \fn \val
 
 # Returns a sequence with any offset and holes removed.
 let ranked = \s s rank (:.@);
-
-# Workaround for https://github.com/arr-ai/arrai/issues/571
-let safetuple = \d
-    let rest = //tuple(d where .@ != '');
-    cond d where .@ = '' {
-        {(@:'', @value: value)}: rest +> (@: value),
-        _: rest,
+# Explore constructs a dependency graph by starting at source and calling step
+# to find adjacent nodes. Deps is the graph constructed so far.
+# Self-edges are ignored.
+let rec _explore = \source \step \deps
+    cond {
+        {source} & (deps => .@): deps,
+        _:
+            let next = step(source) where . != source;
+            let deps = deps | {(@:source, @value: next)};
+            reduce(next orderby ., \v \i _explore(i, step, v), deps)
     };
+let explore = \source \step _explore(source, step, {});
+
+# Unimported returns the set of nodes with no in-edges.
+let unimported = \g (g => .@) where !({.} & //rel.union(g => .@value));
+
+# Topsort returns an array of nodes in graph in dependency order.
+let rec _topsort = \graph \sorted \sources
+    cond sources orderby . {
+        []: sorted,
+        [..., tail]:
+            let adjs = graph(tail);
+            let graph = graph where .@ != tail;
+            let sources = (sources &~ {tail}) | (adjs & unimported(graph));
+            _topsort(graph, sorted ++ [tail], sources)
+    };
+<<<<<<< HEAD
 # Explore constructs a dependency graph by starting at source and calling step
 # to find adjacent nodes. Deps is the graph constructed so far.
 # Self-edges are ignored.
@@ -90,16 +123,27 @@ let rec _topsort = \graph \sorted \sources
                 let sources = (sources &~ {tail}) | (adjs & unimported(graph));
                 _topsort(graph, sorted ++ [tail], sources)
         };
+=======
+>>>>>>> origin/master
 let topsort = \graph _topsort(graph, [], unimported(graph));
 
 (
     :explore,
     :filterTree,
     :invokeMacro,
+<<<<<<< HEAD
     :ranked,
     :reduce,
     :reduceFlat,
     :safetuple,
+=======
+    :simpleTransform,
+    :ranked,
+    :reduce,
+    :reduceFlat,
+    :reduceObj,
+    :ranked,
+>>>>>>> origin/master
     :simpleTransform,
     :topsort,
     :unimported,

@@ -778,6 +778,9 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 	s.typemap = map[string]*sysl.Type{}
 
 	types := s.currentApp().Types
+	if types == nil {
+		types = map[string]*sysl.Type{}
+	}
 
 	if types[s.currentTypePath.Get()].GetOneOf().GetType() != nil {
 		panic("not implemented yet")
@@ -802,31 +805,33 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 }
 
+// EnterUnion_type is called when production union_type is entered.
+func (s *TreeShapeListener) EnterUnion_type(ctx *parser.Union_typeContext) {
+	fieldName := ctx.GetText()
+	s.fieldname = append(s.fieldname, fieldName)
+	dataType, has := s.typemap[fieldName]
+	if has {
+		logrus.Warnf("%s) %s.(%s) defined multiple times, redefinition ignored",
+			s.sc.filename, s.currentTypePath.Get(), fieldName)
+	} else {
+		dataType = &sysl.Type{}
+		dataType.Type = &sysl.Type_NoType_{
+			NoType: &sysl.Type_NoType{},
+		}
+	}
+
+	dataType.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	s.typemap[fieldName] = dataType
+}
+
 // ExitUnion is called when production union is exited.
 func (s *TreeShapeListener) ExitUnion(ctx *parser.UnionContext) {
 	s.applyAnnotations(ctx.AllAnnotation())
 	s.popScope()
 
-	context_app_part := s.currentApp().Name.Part
-	context_path := s.currentTypePath.Parts()
-
 	oneof := s.currentApp().Types[s.currentTypePath.Get()].GetOneOf()
-	for _, ref := range ctx.AllUser_defined_type() {
-		oneof.Type = append(oneof.Type, &sysl.Type{
-			Type: &sysl.Type_TypeRef{
-				TypeRef: &sysl.ScopedRef{
-					Context: &sysl.Scope{
-						Appname: &sysl.AppName{
-							Part: context_app_part,
-						},
-						Path: context_path,
-					},
-					Ref: &sysl.Scope{
-						Path: []string{ref.(*parser.User_defined_typeContext).Name_str().GetText()},
-					},
-				},
-			},
-		})
+	for _, i := range ctx.AllUnion_type() {
+		oneof.Type = append(oneof.Type, s.typemap[i.GetText()])
 	}
 
 	s.currentTypePath.Pop()
