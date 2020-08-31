@@ -17,16 +17,17 @@ let rec simplify = \j
 
 # Returns a copy of v with all dicts satifying pred converted to tuples.
 # This is essentially decoding JSON with a logical schema.
-let rec tuplify = \k \v \pred
+let rec _tuplify = \k \v \pred
     cond v {
-        [...]: v >>> \k2 \v2 tuplify(k2, v2, pred),
-        {...}: v => tuplify({}, ., pred),
-        (...): v :> tuplify({}, ., pred),
+        [...]: v >>> \k2 \v2 _tuplify(k2, v2, pred),
+        {...}: v => _tuplify({}, ., pred),
+        (...): v :> _tuplify({}, ., pred),
         {x: ...}: 
-            let v = v >>> \k2 \v2 tuplify(k2, v2, pred);
+            let v = v >>> \k2 \v2 _tuplify(k2, v2, pred);
             cond {pred(k, v): //tuple(v), _: v},
         _: v
     };
+let tuplify = \json _tuplify({}, json, \k \v true);
 
 (
     :simplify,
