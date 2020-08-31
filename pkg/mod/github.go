@@ -23,7 +23,7 @@ var syslModulesCacheDir string
 
 var githubAccessToken = os.Getenv("SYSL_GITHUB_TOKEN")
 
-func (d *githubMgr) Init() {
+func (d *githubMgr) Init(cacheDir string) {
 	if d.client == nil {
 		if githubAccessToken == "" {
 			d.client = github.NewClient(nil)
@@ -41,7 +41,7 @@ func (d *githubMgr) Init() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		syslModulesCacheDir = filepath.Join(usr.HomeDir, ".sysl")
+		syslModulesCacheDir = filepath.Join(usr.HomeDir, cacheDir)
 	}
 }
 
