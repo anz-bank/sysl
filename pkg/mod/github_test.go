@@ -8,7 +8,7 @@ import (
 
 func TestGitHubMgrGet(t *testing.T) {
 	githubmod := &githubMgr{}
-	githubmod.Init()
+	githubmod.Init(".sysl")
 	testMods := Modules{}
 
 	mod, err := githubmod.Get(RemoteDepsFile, "", &testMods)
