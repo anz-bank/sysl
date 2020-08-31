@@ -80,7 +80,7 @@ let rec extraUnions = \schema
   }
 ;
 
-let avroTransform = \schema \appName \packageName
+let avroTransformer = \schema \appName \packageName
   # Load Avro spec whose format is protobuf 
   let schema = //encoding.json.decode(schema);
 
@@ -96,11 +96,8 @@ ${extraTypes(schema) => //{./to_sysl_type}(.) orderby . ::\n}
 ${util.indent}# Aliases
 ${extraAliases(schema) => //{./to_sysl_alias}(.) orderby . ::\n}
 ${util.indent}# Unions
-${
-# It applies to_sysl_union(.) to every item and will remove duplidated items if to_sysl_union(.)
-# produces, as it iterates set.
-extraUnions(schema) => //{./to_sysl_union}(.) orderby . ::\n}
+${extraUnions(schema) => //{./to_sysl_union}(.) orderby . ::\n}
 ${util.indent}# Enums
 ${extraEnums(schema) => //{./to_sysl_enum}(.) orderby . ::\n}
 `;
-avroTransform
+avroTransformer

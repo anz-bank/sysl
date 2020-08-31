@@ -9,17 +9,17 @@ let combineTypes = \types
             let typeNames = fullTypeNames where .@item.s != 'null' rank (:.@);
             cond types count {
                 2: //seq.concat(typeNames >> .s) + '?',
-                _: //seq.concat(typeNames >> //str.title(.s)) + '?'
+                _: //seq.concat(typeNames >> //str.title(.s) orderby .@item >> .@item) + '?'
             }
         ,
-        _: //seq.concat(types >> //str.title(.))
+        _: //seq.concat(types >> //str.title(.) orderby .@item >> .@item)
     }
 ;
 
 let printUnion = \union
     let types = union >> util.getTypeName(.) >> cond . {(type: typeS, ...): typeS, _: .s};
     $`${util.indent}!union ${//seq.sub("?", "")(combineTypes(union))}:
-    ${types where .@item != 'null' rank (:.@) >> $'${util.indent}${.}'::\n}${'\n'}`
+    ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${util.indent}${.}'::\n}${'\n'}`
 ;
 
 let t = \union
