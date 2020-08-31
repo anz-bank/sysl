@@ -1,24 +1,9 @@
 # Transform Avro union to Sysl union
 let util = //{./avro_util};
 
-let combineTypes = \types
-    let fullTypeNames = types >> util.getTypeName(.);
-    let types = fullTypeNames >> .s;
-    cond //seq.contains(['null'])(types) {
-        true:
-            let typeNames = fullTypeNames where .@item.s != 'null' rank (:.@);
-            cond types count {
-                2: //seq.concat(typeNames >> .s) + '?',
-                _: //seq.concat(typeNames >> //str.title(.s) orderby .@item >> .@item) + '?'
-            }
-        ,
-        _: //seq.concat(types >> //str.title(.) orderby .@item >> .@item)
-    }
-;
-
 let printUnion = \union
     let types = union >> util.getTypeName(.) >> cond . {(type: typeS, ...): typeS, _: .s};
-    $`${util.indent}!union ${//seq.sub("?", "")(combineTypes(union))}:
+    $`${util.indent}!union ${//seq.sub("?", "", util.combineTypes(union, \. .s))}:
     ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${util.indent}${.}'::\n}${'\n'}`
 ;
 

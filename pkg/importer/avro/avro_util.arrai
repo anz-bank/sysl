@@ -67,22 +67,18 @@ let getTypeName = \t
     }
 ;
 
-let getDisplayedTypeName = \.
-    cond . {(type_S:type_S, ...): type_S, _: .s}
-;
-
-let combineTypes = \types
+let combineTypes = \types \handler
     let fullTypeNames = types >> getTypeName(.);
     let types = fullTypeNames >> .s;
-    cond //seq.contains(['null'])(types) {
+    cond //seq.contains(['null'], types) {
         true:
             let typeNames = fullTypeNames where .@item.s != 'null' rank (:.@);
             cond types count {
-                2: //seq.concat(typeNames >> getDisplayedTypeName(.)) + '?',
-                _: //seq.concat(typeNames >> //str.title(.s)) + '?'
+                2: //seq.concat(typeNames >> handler(.)) + '?',
+                _: //seq.concat(typeNames >> //str.title(.s) orderby .@item >> .@item) + '?'
             }
         ,
-        _: //seq.concat(types >> //str.title(.))
+        _: //seq.concat(types >> //str.title(.) orderby .@item >> .@item)
     }
 ;
 
@@ -99,7 +95,7 @@ let transformType = \type
         (a: typeArray):
             # type can be ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
             # [(s: 'null'), (s: 'string')] to ['null', 'string']
-            combineTypes(typeArray),
+            combineTypes(typeArray, \. cond . {(type_S:type_S, ...): type_S, _: .s}),
         {'logicalType': logicalTypeName, 'type': typeName, ...}: # Must be before {'type': typeName, ...}
             transformLogicalTypes(type), 
         {'type': typeName, ...}:
@@ -131,8 +127,8 @@ let util = (
     : transformType,
     : getAnnotationS,
     : getTypeName,
-    : combineTypes,
     : indent,
-    : getDefaultVal
+    : getDefaultVal,
+    : combineTypes,
 );
 util
