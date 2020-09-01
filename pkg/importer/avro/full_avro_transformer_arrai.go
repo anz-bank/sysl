@@ -30,10 +30,10 @@ let transformPrimitiveType = \type
     cond type {
         'null': 'null',
         'boolean': 'bool',
-        'int': 'int32',
-        'long': 'int64',
-        'float': 'float32',
-        'double': 'float64',
+        'int': 'Int32',
+        'long': 'Int64',
+        'float': 'Float32',
+        'double': 'Float64',
         'bytes': "bytes",
         'string': 'string',
         _: 'NonePrimitiveType'              
@@ -116,7 +116,6 @@ let transformType = \type
     }
 ;
 
-# TODO default = {} can't work still
 let getDefaultVal = \.
     let default = .('default')?:""; 
     cond default {
@@ -130,12 +129,16 @@ let getDefaultVal = \.
     } 
 ;
 
+let isFirstLetterUppercase = \str
+    let letter = str where .@ = 0;
+    //str.upper(letter) = letter
+;
+
 let util = (
     : prettyAnnotations,
     : transformType,
     : getAnnotationS,
     : getTypeName,
-    : indent,
     : getDefaultVal,
     : combineTypes,
 );
@@ -152,17 +155,43 @@ let util = avro_util_arrai;
 let transformer = \.
 cond . {
 {'type': (s: 'fixed'), ...}:
-    $`+"`"+`${util.indent}!alias ${.('name').s}${
-        util.prettyAnnotations(['~fixed', $`+"`"+`fixed_size="${.('size')}"`+"`"+`, util.getAnnotationS(., 'namespace')])
-    }: bytes
-    ${
-        let aliases = .('aliases')? .a:[];
-        aliases >> \alias ($`+"`"+`!alias ${alias.s}: ${.('name').s}`+"`"+`)::
-    }`+"`"+`,
+$`+"`"+`!alias ${.('name').s}${
+    util.prettyAnnotations(['~fixed', $`+"`"+`fixed_size="${.('size')}"`+"`"+`, util.getAnnotationS(., 'namespace')])
+}:
+    bytes
+${
+    let aliases = .('aliases')? .a:[];
+    cond {
+        aliases count > 0: $'
+        
+${aliases >> \alias $`+"`"+`!alias ${alias.s}:
+    ${.('name').s}`+"`"+`::\n\n}',
+    }
+}`+"`"+`,
 {'type': (s: 'array'), ...}:
-    $`+"`"+`${util.indent}!alias ${//str.title(.('items').s)}Sequence${
+    $`+"`"+`!alias ${//str.title(.('items').s)}Sequence${
         util.prettyAnnotations([util.getDefaultVal(.)])
-    }: sequence of ${.('items').s}`+"`"+`
+    }: sequence of ${.('items').s}`+"`"+`,
+'int':
+$`+"`"+`!alias Int_32 [bits="32"]:
+    int
+    
+`+"`"+`,
+'long':
+$`+"`"+`!alias Int_64 [bits="64"]:
+    int
+
+`+"`"+`,
+'float':
+$`+"`"+`!alias Float32 [bits="32"]:
+    float    
+
+`+"`"+`,
+'double':
+$`+"`"+`!alias Float64 [bits="32"]:
+    float    
+
+`+"`"+`,        
 };
 
 let to_sysl_alias_arrai = 
@@ -179,17 +208,14 @@ let transformer = \enum
 
 let annotations = ['namespace', 'default', 'doc'] >> util.getAnnotationS(enum, .);
 
-$`+"`"+`${util.indent}!enum ${enum('name').s}${util.prettyAnnotations(annotations)}:
-${
-    enum('symbols').a >>> \i \item  $`+"`"+`${util.indent}${util.indent}${item.s}: ${i}`+"`"+`::
-}
+$`+"`"+`!enum ${enum('name').s}${util.prettyAnnotations(annotations)}:
+    ${enum('symbols').a >>> \i \item  $`+"`"+`${item.s}: ${i}`+"`"+`::\i}
+
 ${
 let aliases = enum('aliases')? .a:[]; 
-aliases >> ($`+"`"+`
-
-${util.indent}!alias ${.s}:
-${util.indent}${util.indent}${enum('name').s}`+"`"+`)::\n}
-`+"`"+`;
+aliases >> $`+"`"+`
+    !alias ${.s}: ${enum('name').s}`+"`"+`::\n
+}`+"`"+`;
 
 let to_sysl_enum_arrai = 
 transformer;
@@ -206,10 +232,10 @@ let buildTypeAnnotation = \type
     cond type {
         (a: typeArray):
             let types = (typeArray >> util.getTypeName(.)) >> .s;
-            cond //seq.contains(['null'])(types) {
-                true:
-                    cond //seq.has_prefix(['null'], types) {
-                        true: # types is ['null', 'string']
+            cond {
+                //seq.contains(['null'], types):
+                    cond {
+                        //seq.has_prefix(['null'], types): # types is ['null', 'string']
                             '',
                         _: # types is ['string', 'null']
                             $'union=${types}'
@@ -242,7 +268,7 @@ let buildLogicalTypeAnnotation = \.
 ;
 
 let buildAnnotations = \.
-    buildLogicalTypeAnnotation(.) + 
+    buildLogicalTypeAnnotation(.) ++ 
     [
         buildTypeAnnotation(.('type')),
         util.getAnnotationS(., 'doc'),
@@ -251,49 +277,53 @@ let buildAnnotations = \.
     ]
 ;
 
-let t = \record
+let printMapType = \record
+$`+"`"+`!type String${util.transformType(record)}Item ${util.prettyAnnotations(['json_map_key="key"', util.getDefaultVal(record)])}:
+    key <: string
+    value <: ${util.transformType(record)}${'\n'}
+`+"`"+`;
+
+let printFieldAliases = \field
+    let aliases = field('aliases')? .a:[];
+    cond aliases {[]: '',
+        _: 
+$`+"`"+`
+
+${aliases >> \alias 
+    $`+"`"+`${alias.s} <: ${util.transformType(field('type'))} ${util.prettyAnnotations(buildAnnotations(field) + [$`+"`"+`alias_of="${field('name').s}"`+"`"+`])}`+"`"+`::\i}`+"`"+`
+}
+;  
+
+let transformer = \record
 $`+"`"+`${
     cond record {
         {'isMap':(s: 'true'), ...}:
-            let valueType = cond record {
-                {"name": (s: name)}: name,
-                {"items": (s: type), ...}: type
-            };
-            $`+"`"+`${'\n'}${util.indent}!type String${valueType}Item${
-                    util.prettyAnnotations(['json_map_key="key"', util.getDefaultVal(record)])
-                }:${'\n'}${util.indent}${util.indent}key <: string${
-                '\n'}${util.indent}${util.indent}value <: ${valueType}${'\n\n'}`+"`"+`,
+            cond record {
+                {"name": (s: typeName), ...}: printMapType(record),
+            },
     }
-}${
+}
+${
 cond record {
 {'type': (s: 'record'), ...}:
-$`+"`"+`${util.indent}!type ${record('name').s}${
-    util.prettyAnnotations([util.getAnnotationS(record, 'namespace'), util.getAnnotationS(record, 'doc')])
-}:
-${
+$`+"`"+`!type ${record('name').s} ${util.prettyAnnotations(['namespace', 'doc'] >> util.getAnnotationS(record, .))}:
+    ${
     let fields = record('fields')? .a:[]; 
-    fields >> 
-        ($`+"`"+`${util.indent}${util.indent}${.('name').s} <: ${util.transformType(.('type'))} ${
-                util.prettyAnnotations(buildAnnotations(.))
-            }${
-                let aliases = .('aliases')? .a:[];
-                cond aliases {
-                    []: '',
-                    _: $`+"`"+`${'\n'}${aliases >> \alias 
-                                    $`+"`"+`${util.indent}${util.indent}${alias.s} <: ${util.transformType(.('type'))} ${
-                                        util.prettyAnnotations(buildAnnotations(.) + [$`+"`"+`alias_of="${.('name').s}"`+"`"+`])}`+"`"+`::\i}`+"`"+`
-                }
-            }`+"`"+`)::
-}${
+    fields >> $`+"`"+`${.('name').s} <: ${util.transformType(.('type'))} ${util.prettyAnnotations(buildAnnotations(.))}${
+            printFieldAliases(.)        
+        }`+"`"+`::\n}
+${
 let aliases = record('aliases')? .a:[];
 cond aliases {
-    [...]: $`+"`"+`${'\n\n'}${
-        aliases >> ($`+"`"+`${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}`+"`"+`)::\i\n}${'\n'}`+"`"+`
-    }
-}`+"`"+`}}`+"`"+`;
+    [...]: 
+$`+"`"+`
+
+${aliases >> ($`+"`"+`!alias ${.s}:
+    ${record('name').s}`+"`"+`)::\i\n}`+"`"+`,
+}}`+"`"+`}}`+"`"+`;
 
 let to_sysl_type_arrai = 
-t;
+transformer;
 
 ### ------------------------------------------------------------------------ ###
 ###  to_sysl_union.arrai                                                     ###
@@ -303,17 +333,18 @@ t;
 let util = avro_util_arrai;
 
 let printUnion = \union
-    let types = union >> util.getTypeName(.) >> cond . {(type: typeS, ...): typeS, _: .s};
-    $`+"`"+`${util.indent}!union ${//seq.sub("?", "", util.combineTypes(union, \. .s))}:
-    ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${util.indent}${.}'::\n}${'\n'}`+"`"+`
+
+let types = union >> util.getTypeName(.) >> cond . {(:type_S, ...): type_S, _: .s};
+$`+"`"+`!union ${//seq.sub("?", "", util.combineTypes(union, \. .s))}:
+    ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${.}'::\n}`+"`"+`
 ;
 
-let t = \union
+let transformer = \union
     let types = union >> util.getTypeName(.) >> .s;
-    cond //seq.contains(['null'])(types) {
-        true:
-            cond types count > 2 {
-                true: printUnion(union),
+    cond {
+        //seq.contains(['null'], types):
+            cond {
+                types count > 2: printUnion(union),
             }
         ,
         _: printUnion(union)
@@ -321,7 +352,7 @@ let t = \union
 ;
 
 let to_sysl_union_arrai = 
-t;
+transformer;
 
 ### ------------------------------------------------------------------------ ###
 ###  transformer.arrai                                                       ###
@@ -339,7 +370,7 @@ let rec extraEnums = \schema
     {'type': type, 'items': items, ...}: # Map or array
       cond items {
         (a: types): //rel.union(types => extraEnums(.@item)), # array
-        (:s): extraEnums(s), # primitive
+        (:s): {}, # primitive
         _: extraEnums(items),
       },
     {'type': (a: types)}: # type is an array
@@ -357,10 +388,10 @@ let rec extraTypes = \schema
     {'type': (s: type), 'items': items, ...}: # array or map
       cond items {
         (a: types): //rel.union(types => extraTypes(.@item)), # array
-        (:s): cond type {'map': {schema | {'isMap': (s: 'true')}}}, # primitive
+        (:s): {}, # primitive
         _:
           cond type {
-            'map': {schema('items') | {'isMap': (s: 'true')}} | extraTypes(items),
+            'map': extraTypes(items |  {'isMap': (s: 'true')}),
             _: extraTypes(items),
           } 
       },
@@ -374,20 +405,22 @@ let rec extraTypes = \schema
 # Extra items transformed to Sysl type !alias
 let rec extraAliases = \schema
   cond schema {
-    {'type': (s: 'fixed'), ...}: # fixed type
-      {schema},
     {"type": (s: "record"), "name": (s: name), "fields": (a : fields), ...}:
       //rel.union(fields => extraAliases(.@item("type"))),
     {'type': type, 'items': items, ...}: # array or map
       cond items {
-        (a: types): //rel.union(types => extraAliases(.@item)), # array
-        (:s): cond type.s {'array': {schema}}, # primitive
-        _: extraAliases(items),
+        (:a): //rel.union(a => extraAliases(.@item)), # array
+        (:s): {}, # primitive
+        _: extraAliases(items)
       },
-    {'type': (a: types)}: # type is an array
-      //rel.union(types => extraAliases(.@item)),  
-    (a: types): # root is json array 
-      //rel.union(types => extraAliases(.@item)),
+    {'type': (:a), ...}: # type is an array
+      //rel.union(a => extraAliases(.@item)),  
+    (:a): # root is json array 
+      //rel.union(a => extraAliases(.@item)),
+    {'type': (:s), ...}: # fixed
+      {schema},
+    (:s):
+      {s},
 };
 
 # Extra item transformed to Sysl type !union
@@ -399,7 +432,7 @@ let rec extraUnions = \schema
     {'type': type, 'items': items, ...}: # array or map
       cond items {
         (a: types): //rel.union(types => extraUnions(.@item)), # array
-        (:s): extraUnions(s), # primitive
+        (:s): {}, # primitive
         _: extraUnions(items),
       },
     {'type': (a: types)}: # type is an array
@@ -420,14 +453,14 @@ $`+"`"+`
 ##                                      ##
 ##########################################
 ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'', _:$'package="${packageName}"'}}'])}:
-${util.indent}# Types
-${extraTypes(schema) => to_sysl_type_arrai(.) orderby . ::\n}
-${util.indent}# Aliases
-${extraAliases(schema) => to_sysl_alias_arrai(.) orderby . ::\n}
-${util.indent}# Unions
-${extraUnions(schema) => to_sysl_union_arrai(.) orderby . ::\n}
-${util.indent}# Enums
-${extraEnums(schema) => to_sysl_enum_arrai(.) orderby . ::\n}
+    # Types
+    ${extraTypes(schema) => to_sysl_type_arrai(.) orderby . ::\n\n}
+    # Aliases
+    ${extraAliases(schema) => to_sysl_alias_arrai(.) orderby . ::\n}
+    # Unions
+    ${extraUnions(schema) => to_sysl_union_arrai(.) orderby . ::\n\n}
+    # Enums
+    ${extraEnums(schema) => to_sysl_enum_arrai(.) orderby . ::\n}
 `+"`"+`;
 avroTransformer
 `

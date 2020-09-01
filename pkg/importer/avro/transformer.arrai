@@ -94,7 +94,7 @@ $`
 ##########################################
 ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'', _:$'package="${packageName}"'}}'])}:
     # Types
-    ${extraTypes(schema) => //{./to_sysl_type}(.) orderby . ::\n}
+    ${extraTypes(schema) => //{./to_sysl_type}(.) orderby . ::\n\n}
     # Aliases
     ${extraAliases(schema) => //{./to_sysl_alias}(.) orderby . ::\n}
     # Unions

@@ -121,12 +121,16 @@ let getDefaultVal = \.
     } 
 ;
 
+let isFirstLetterUppercase = \str
+    let letter = str where .@ = 0;
+    //str.upper(letter) = letter
+;
+
 let util = (
     : prettyAnnotations,
     : transformType,
     : getAnnotationS,
     : getTypeName,
-    : indent,
     : getDefaultVal,
     : combineTypes,
 );
