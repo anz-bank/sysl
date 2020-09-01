@@ -47,7 +47,7 @@ func Factory(filePath string, file []byte, logger *logrus.Logger) (Importer, err
 		logger.Debugln("Detected Grammar file")
 		return nil, fmt.Errorf("importer disabled for: %s", fileType.Name)
 	case SpannerSQL.Name:
-		logger.Debugln("Detected Spanner sql file")
+		logger.Debugln("Detected Spanner SQL file")
 		return MakeSpannerImporter(logger), nil
 	default:
 		return nil, fmt.Errorf("an importer does not exist for: %s", fileType.Name)

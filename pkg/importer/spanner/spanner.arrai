@@ -187,8 +187,14 @@ let evalDdl = \parsed parsed.stmt >> cond . {
     (create_index: val, ...): (
         stmt: "create_index",
         data: (
-            unique: (val.unique?.'':'') rank (@: .@),
-            nullfiltered: (val.nullfiltered?.'':'') rank (@: .@),
+            unique: cond {
+                (val.unique?:false): 'true',
+                _: 'false'
+            },
+            nullfiltered: cond {
+                (val.nullfiltered?:false): 'true',
+                _: 'false'
+            },
             name: val.index_name.'' rank (@: .@),
             table_name: val.table_name.'' rank (@: .@),
             key_part: parseKeyPart(val.key_part),

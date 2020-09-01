@@ -6,13 +6,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -136,8 +136,7 @@ func TestCompareSpannerSQLWithGolden(t *testing.T) {
 	goldenSysl, err := readGoldenSyslForSpannerSQL()
 	require.Nil(t, err)
 
-	isValid := reflect.DeepEqual(genSysl, goldenSysl)
-	require.True(t, isValid)
+	assert.Equal(t, genSysl, goldenSysl)
 }
 
 /*

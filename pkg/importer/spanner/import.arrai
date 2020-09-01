@@ -3,7 +3,7 @@ let import = \importSql \appName \syslPackage
     let sysl = //{./sysl};
     let stmts = spanner.parseSchema([importSql]);
     let model = spanner.applyStmt(stmts, spanner.emptyModel);
-    $'${sysl.transformModel(
+    sysl.transformModel(
         cond {
             (model.schema): model,
             _: (
@@ -11,7 +11,7 @@ let import = \importSql \appName \syslPackage
                 indexes: model.indexes,
                 schema: {(name: appName)},
             )
-        }, syslPackage)}';
+        }, syslPackage);
 
 (
     :import,
