@@ -2,17 +2,19 @@
 let util = //{./avro_util};
 
 let printUnion = \union
-    let types = union >> util.getTypeName(.) >> cond . {(:type_S, ...): type_S, _: .s};
-    $`${util.indent}!union ${//seq.sub("?", "", util.combineTypes(union, \. .s))}:
-    ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${util.indent}${.}'::\n}${'\n'}`
+
+let types = union >> util.getTypeName(.) >> cond . {(:type_S, ...): type_S, _: .s};
+    $`!union ${//seq.sub("?", "", util.combineTypes(union, \. .s))}:
+        ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${.}'::\n}
+    `
 ;
 
 let transformer = \union
     let types = union >> util.getTypeName(.) >> .s;
     cond {
         //seq.contains(['null'], types):
-            cond types count > 2 {
-                true: printUnion(union),
+            cond {
+                types count > 2: printUnion(union),
             }
         ,
         _: printUnion(union)

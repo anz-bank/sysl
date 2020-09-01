@@ -5,14 +5,12 @@ let transformer = \enum
 
 let annotations = ['namespace', 'default', 'doc'] >> util.getAnnotationS(enum, .);
 
-$`${util.indent}!enum ${enum('name').s}${util.prettyAnnotations(annotations)}:
-${
-    enum('symbols').a >>> \i \item  $`${util.indent}${util.indent}${item.s}: ${i}`::
-}
+$`!enum ${enum('name').s}${util.prettyAnnotations(annotations)}:
+    ${enum('symbols').a >>> \i \item  $`${item.s}: ${i}`::\i}
+
 ${
 let aliases = enum('aliases')? .a:[]; 
 aliases >> $`
-
-${util.indent}!alias ${.s}:
-${util.indent}${util.indent}${enum('name').s}`::\n}
-`;transformer
+    !alias ${.s}: ${enum('name').s}`::\n
+}`;
+transformer
