@@ -2,14 +2,27 @@ package mod
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/user"
 	"path"
 	"path/filepath"
-	"strings"
+	"sync"
 
+	"github.com/anz-bank/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/spf13/afero"
 )
+
+var SyslModules = os.Getenv("SYSL_MODULES") != SyslModulesOff
+var ModMode = mod.ModeType(os.Getenv("SYSL_MODULES"))
+
+const (
+	SyslModulesOff = "off"
+	SyslModulesOn  = "on"
+)
+
+var githubAccessToken = os.Getenv("SYSL_GITHUB_TOKEN")
 
 type Fs struct {
 	afero.Fs
@@ -28,15 +41,15 @@ func (fs *Fs) Open(name string) (afero.File, error) {
 		return nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
-	mod, relpath, err := fs.fetchRemoteFile(name)
+	m, relpath, err := fs.fetchRemoteFile(name)
 	if err != nil {
 		return nil, err
 	}
 
-	return syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
+	return syslutil.NewChrootFs(afero.NewOsFs(), m.Dir).Open(relpath)
 }
 
-func (fs *Fs) OpenWithModule(name string) (afero.File, *Module, error) {
+func (fs *Fs) OpenWithModule(name string) (afero.File, *mod.Module, error) {
 	f, err := fs.Fs.Open(name)
 	if err == nil {
 		return f, nil, nil
@@ -44,13 +57,13 @@ func (fs *Fs) OpenWithModule(name string) (afero.File, *Module, error) {
 		return nil, nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
-	mod, relpath, err := fs.fetchRemoteFile(name)
+	m, relpath, err := fs.fetchRemoteFile(name)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	f, err = syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).Open(relpath)
-	return f, mod, err
+	f, err = syslutil.NewChrootFs(afero.NewOsFs(), m.Dir).Open(relpath)
+	return f, m, err
 }
 
 func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
@@ -61,43 +74,67 @@ func (fs *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, err
 		return nil, fmt.Errorf("%s not found: no such file in current working directory", name)
 	}
 
-	mod, relpath, err := fs.fetchRemoteFile(name)
+	m, relpath, err := fs.fetchRemoteFile(name)
 	if err != nil {
 		return nil, err
 	}
 
-	return syslutil.NewChrootFs(afero.NewOsFs(), mod.Dir).OpenFile(relpath, flag, perm)
+	return syslutil.NewChrootFs(afero.NewOsFs(), m.Dir).OpenFile(relpath, flag, perm)
 }
 
 func (fs *Fs) Name() string {
 	return "ModSupportedFs"
 }
 
-func (fs *Fs) fetchRemoteFile(filename string) (*Module, string, error) {
+var configModOnce sync.Once
+
+func (fs *Fs) fetchRemoteFile(filename string) (*mod.Module, string, error) {
 	name, ver, err := mergeRootAndPath(fs.root, filename)
 	if err != nil {
 		return nil, "", err
 	}
 
-	mod, err := Retrieve(name, ver)
+	Config()
+
+	m, err := mod.Retrieve(name, ver)
 	if err != nil {
 		return nil, "", err
 	}
 
-	relpath, err := filepath.Rel(mod.Name, name)
+	relpath, err := filepath.Rel(m.Name, name)
 	if err != nil {
 		return nil, "", err
 	}
 
-	return mod, relpath, nil
+	return m, relpath, nil
+}
+
+func Config() {
+	configModOnce.Do(func() {
+		usr, err := user.Current()
+		if err != nil {
+			log.Fatal(err)
+		}
+		cacheDir := filepath.Join(usr.HomeDir, ".sysl")
+		var accessToken *string
+		if githubAccessToken != "" {
+			accessToken = &githubAccessToken
+		}
+		if ModMode == "" {
+			ModMode = mod.GoModulesMode
+		}
+		if err := mod.Config(ModMode, nil, &cacheDir, accessToken); err != nil {
+			log.Fatal(err)
+		}
+	})
 }
 
 func mergeRootAndPath(root, name string) (string, string, error) {
 	// path.Join will strip path elements of ".", so if the root is "."
 	// it will still work as a go module path when prepended with "."
-	root, ver := ExtractVersion(root)
+	root, ver := mod.ExtractVersion(root)
 	var nameVer string
-	name, nameVer = ExtractVersion(name)
+	name, nameVer = mod.ExtractVersion(name)
 
 	if ver != "" && nameVer != "" && ver != nameVer {
 		return "", "", fmt.Errorf("root version %s does not equal to path version %s", ver, nameVer)
@@ -109,21 +146,4 @@ func mergeRootAndPath(root, name string) (string, string, error) {
 
 	name = path.Join(root, name)
 	return name, ver, nil
-}
-
-func ExtractVersion(path string) (newpath, ver string) {
-	newpath = path
-	s := strings.Split(path, "@")
-	if len(s) > 1 {
-		ver = s[len(s)-1]
-		newpath = path[:len(path)-len(ver)-1]
-	}
-	return
-}
-
-func AppendVersion(path, ver string) string {
-	if ver == "" {
-		return path
-	}
-	return path + "@" + ver
 }

@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/anz-bank/pkg/mod"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
-	"github.com/anz-bank/sysl/pkg/mod"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
