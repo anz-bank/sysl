@@ -51,19 +51,32 @@ let buildAnnotations = \.
     ]
 ;
 
+let printMapType = \record
+$`!type String${util.transformType(record)}Item ${util.prettyAnnotations(['json_map_key="key"', util.getDefaultVal(record)])}:
+    key <: string
+    value <: ${util.transformType(record)}
+`;
+
+let printFieldAliases = \field
+    let aliases = field('aliases')? .a:[];
+    cond aliases {[]: '',
+        _: 
+$`
+
+${aliases >> \alias 
+    $`${alias.s} <: ${util.transformType(field('type'))} ${util.prettyAnnotations(buildAnnotations(field) + [$`alias_of="${field('name').s}"`])}`::\i}`
+}
+;  
+
 let transformer = \record
 $`${
     cond record {
         {'isMap':(s: 'true'), ...}:
             cond record {
-                {"name": (s: typeName), ...}:
-$`!type String${util.transformType(record)}Item ${util.prettyAnnotations(['json_map_key="key"', util.getDefaultVal(record)])}:
-    key <: string
-    value <: ${util.transformType(record)}`,
-                },
-        }
+                {"name": (s: typeName), ...}: printMapType(record),
+            },
+    }
 }
-
 ${
 cond record {
 {'type': (s: 'record'), ...}:
@@ -71,23 +84,15 @@ $`!type ${record('name').s} ${util.prettyAnnotations(['namespace', 'doc'] >> uti
     ${
     let fields = record('fields')? .a:[]; 
     fields >> $`${.('name').s} <: ${util.transformType(.('type'))} ${util.prettyAnnotations(buildAnnotations(.))}${
-                let aliases = .('aliases')? .a:[];
-                cond aliases {
-                    []: '',
-                    _: 
-                     $`
-
-                     ${aliases >> \alias 
-                      $`${alias.s} <: ${util.transformType(.('type'))} ${
-                          util.prettyAnnotations(buildAnnotations(.) + [$`alias_of="${.('name').s}"`])
-                        }`::}`
-                }
-              }`::
-    }
+            printFieldAliases(.)        
+        }`::
+}
 ${
 let aliases = record('aliases')? .a:[];
 cond aliases {
-    [...]: $`${
-        aliases >> ($`${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}`)::\i\n}`
-    }
+    [...]: 
+$`
+
+${aliases >> ($`${util.indent}!alias ${.s}:${'\n'}${util.indent}${util.indent}${record('name').s}`)::\i\n}`
+}
 }`}}`;transformer

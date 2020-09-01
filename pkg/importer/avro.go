@@ -11,7 +11,7 @@ import (
 
 // NewAvroImporter returns a new avroImporter
 func NewAvroImporter(logger *logrus.Logger) Importer {
-	return avroImporter{
+	return &avroImporter{
 		logger: logger,
 	}
 }
@@ -24,7 +24,7 @@ type avroImporter struct {
 }
 
 // Load returns Sysl result
-func (i avroImporter) Load(avroSpec string) (string, error) {
+func (i *avroImporter) Load(avroSpec string) (string, error) {
 	i.logger.Debugln("Load avro spec")
 
 	val, err := syntax.EvaluateExpr("",
@@ -37,13 +37,13 @@ func (i avroImporter) Load(avroSpec string) (string, error) {
 	return val.String(), nil
 }
 
-func (i avroImporter) WithAppName(appName string) Importer {
+func (i *avroImporter) WithAppName(appName string) Importer {
 	i.appName = appName
 	return i
 }
 
 // Set the package attribute of the imported app
-func (i avroImporter) WithPackage(pkg string) Importer {
+func (i *avroImporter) WithPackage(pkg string) Importer {
 	i.pkg = pkg
 	return i
 }
