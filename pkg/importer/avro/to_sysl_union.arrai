@@ -4,9 +4,8 @@ let util = //{./avro_util};
 let printUnion = \union
 
 let types = union >> util.getTypeName(.) >> cond . {(:type_S, ...): type_S, _: .s};
-    $`!union ${//seq.sub("?", "", util.combineTypes(union, \. .s))}:
-        ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${.}'::\n}
-    `
+$`!union ${//seq.sub("?", "", util.combineTypes(union, \. .s))}:
+    ${types where .@item != 'null' rank (:.@) orderby .@item >> .@item >> $'${.}'::\n}`
 ;
 
 let transformer = \union

@@ -93,13 +93,13 @@ $`
 ##                                      ##
 ##########################################
 ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$'${cond packageName {'':'', _:$'package="${packageName}"'}}'])}:
-${util.indent}# Types
-${extraTypes(schema) => //{./to_sysl_type}(.) orderby . ::\n}
-${util.indent}# Aliases
-${extraAliases(schema) => //{./to_sysl_alias}(.) orderby . ::\n}
-${util.indent}# Unions
-${extraUnions(schema) => //{./to_sysl_union}(.) orderby . ::\n}
-${util.indent}# Enums
-${extraEnums(schema) => //{./to_sysl_enum}(.) orderby . ::\n}
+    # Types
+    ${extraTypes(schema) => //{./to_sysl_type}(.) orderby . ::\n}
+    # Aliases
+    ${extraAliases(schema) => //{./to_sysl_alias}(.) orderby . ::\n}
+    # Unions
+    ${extraUnions(schema) => //{./to_sysl_union}(.) orderby . ::\n\n}
+    # Enums
+    ${extraEnums(schema) => //{./to_sysl_enum}(.) orderby . ::\n}
 `;
 avroTransformer

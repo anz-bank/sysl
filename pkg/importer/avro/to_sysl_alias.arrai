@@ -3,23 +3,41 @@ let util = //{./avro_util};
 let transformer = \.
 cond . {
 {'type': (s: 'fixed'), ...}:
-    $`${util.indent}!alias ${.('name').s}${
-        util.prettyAnnotations(['~fixed', $`fixed_size="${.('size')}"`, util.getAnnotationS(., 'namespace')])
-    }: bytes
-    ${
-        let aliases = .('aliases')? .a:[];
-        aliases >> \alias ($`!alias ${alias.s}: ${.('name').s}`)::
-    }`,
+$`!alias ${.('name').s}${
+    util.prettyAnnotations(['~fixed', $`fixed_size="${.('size')}"`, util.getAnnotationS(., 'namespace')])
+}:
+    bytes
+${
+    let aliases = .('aliases')? .a:[];
+    cond {
+        aliases count > 0: $'
+        
+${aliases >> \alias $`!alias ${alias.s}:
+    ${.('name').s}`::\n\n}',
+    }
+}`,
 {'type': (s: 'array'), ...}:
-    $`${util.indent}!alias ${//str.title(.('items').s)}Sequence${
+    $`!alias ${//str.title(.('items').s)}Sequence${
         util.prettyAnnotations([util.getDefaultVal(.)])
     }: sequence of ${.('items').s}`,
 'int':
-    $`!alias Int_32 [bits="32"]: int`,
+$`!alias Int_32 [bits="32"]:
+    int
+    
+`,
 'long':
-    $`!alias Int_64 [bits="64"]: int`,
+$`!alias Int_64 [bits="64"]:
+    int
+
+`,
 'float':
-    $`!alias Float32 [bits="32"]: float`,
+$`!alias Float32 [bits="32"]:
+    float    
+
+`,
 'double':
-    $`!alias Float64 [bits="32"]: float`,        
+$`!alias Float64 [bits="32"]:
+    float    
+
+`,        
 };transformer
