@@ -1,5 +1,4 @@
 # Utilities
-let indent = "    ";
 
 let getAnnotationS = \item \name
     let annotation = item(name)? .s:"";
@@ -28,7 +27,7 @@ let transformPrimitiveType = \type
         'double': 'Float64',
         'bytes': "bytes",
         'string': 'string',
-        _: 'NonePrimitiveType'              
+        _: 'NonPrimitiveType'              
     }
 ;
 
@@ -44,7 +43,19 @@ let transformLogicalTypes = \type
         'local-timestamp-millis': 'datetime',
         'local-timestamp-micros': 'datetime',
         'duration': 'bytes',
-        _: 'NoneLogicalType'  
+        _: 'NonLogicalType'  
+    }
+;
+
+let isFirstLetterUppercase = \str
+    let letter = str where .@ = 0;
+    //str.upper(letter) = letter
+;
+
+let correctName = \name
+    cond transformPrimitiveType(name) {
+        'NonPrimitiveType': //str.title(name),
+        _: name
     }
 ;
 
@@ -52,18 +63,18 @@ let transformLogicalTypes = \type
 # ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
 let getTypeName = \t
     cond t {
-        (:s): t,
+        (:s): (s: correctName(s)),
         {'type': (s: type), 'items': (:s), ...}:
             cond type {
-                'map': (s: $'${//str.title(t('items').s)}Set', type_S: $'set of ${t('items').s}'), # will be displayed in union definition
-                'array': (s: $'${//str.title(t('items').s)}Sequence', type_S: $'sequence of ${t('items').s}'), # will be displayed in union definition
+                'map': (s: $'${correctName(t('items').s)}Set', type_S: $'set of ${correctName(t('items').s)}'), # will be displayed in union definition
+                'array': (s: $'${correctName(t('items').s)}Sequence', type_S: $'sequence of ${correctName(t('items').s)}'), # will be displayed in union definition
             },
         {'type': (s: type), 'items': {'type': (:s), ...}, ...}:
             cond type {
-                'map': (s: $'${t('items')('name').s}Set', type_S: $'set of ${t('items')('name').s}'), # will be displayed in union definition
-                'array': (s: $'${t('items')('name').s}Sequence', type_S: $'sequence of ${t('items')('name').s}'), # will be displayed in union definition
+                'map': (s: $'${correctName(t('items')('name').s)}Set', type_S: $'set of ${correctName(t('items')('name').s)}'), # will be displayed in union definition
+                'array': (s: $'${correctName(t('items')('name').s)}Sequence', type_S: $'sequence of ${correctName(t('items')('name').s)}'), # will be displayed in union definition
             },
-        {'type': (:s), ...}: (s : t('name').s),
+        {'type': (:s), ...}: (s : correctName(t('name').s)),
     }
 ;
 
@@ -89,7 +100,7 @@ let transformType = \type
             let primitive = transformPrimitiveType(typeName);
             cond primitive {
                 "null": "string[~null]",
-                'NonePrimitiveType': typeName,
+                'NonPrimitiveType': typeName,
                 _: primitive
             },
         (a: typeArray):
@@ -119,11 +130,6 @@ let getDefaultVal = \.
         (a: [(:s), ...]): $'default="${default.a >> .s}"',
         _: $'default="${default}"'
     } 
-;
-
-let isFirstLetterUppercase = \str
-    let letter = str where .@ = 0;
-    //str.upper(letter) = letter
 ;
 
 let util = (
