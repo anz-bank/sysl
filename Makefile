@@ -83,4 +83,4 @@ update-grammar-result:
 	./scripts/test-grammar-wbnf.sh . > ./scripts/grammar-out.txt
 
 embed-arrai:
-	cd ./pkg/importer/avro && arrai run ./../../arrai/concat.arrai transformer.arrai > merged_full_avro_transformer.arrai && arrai run full_avro_transformer.go.arrai > full_avro_transformer_arrai.go
+	cd ./pkg/importer/avro && arrai run ./../../arrai/concat_go.arrai transformer.arrai > merged_full_avro_transformer.arrai && arrai run full_avro_transformer.go.arrai > full_avro_transformer_arrai.go
