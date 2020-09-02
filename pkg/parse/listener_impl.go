@@ -207,7 +207,7 @@ func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specCon
 	if sizeSpec != nil {
 		if type1.GetPrimitive() != sysl.Type_NO_Primitive {
 			spec := sizeSpec.(*parser.Size_specContext)
-			type1.Constraint = makeTypeConstraint(type1.GetPrimitive(), spec)
+			type1.Constraint = makeTypeConstraint(type1, spec)
 		}
 	}
 	return
@@ -364,7 +364,7 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 		size_spec, has_size_spec := ctx.Size_spec().(*parser.Size_specContext)
 		array_spec, has_array_spec := ctx.Array_size().(*parser.Array_sizeContext)
 		if has_size_spec {
-			type1.Constraint = makeTypeConstraint(primitive_type, size_spec)
+			type1.Constraint = makeTypeConstraint(type1, size_spec)
 		} else if has_array_spec {
 			type1.Constraint = makeArrayConstraint(primitive_type, array_spec)
 		}
@@ -374,12 +374,12 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 	}
 }
 
-func makeTypeConstraint(t sysl.Type_Primitive, size_spec *parser.Size_specContext) []*sysl.Type_Constraint {
+func makeTypeConstraint(t *sysl.Type, size_spec *parser.Size_specContext) []*sysl.Type_Constraint {
 	c := []*sysl.Type_Constraint{}
 	var err error
 	var l int64
 
-	switch t {
+	switch t.GetPrimitive() {
 	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_STRING:
 		val1 := size_spec.DIGITS(0).GetText()
 		if l, err = strconv.ParseInt(val1, 10, 0); err == nil {
