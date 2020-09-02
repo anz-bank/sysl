@@ -366,7 +366,7 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 		if has_size_spec {
 			type1.Constraint = makeTypeConstraint(type1, size_spec)
 		} else if has_array_spec {
-			type1.Constraint = makeArrayConstraint(primitive_type, array_spec)
+			type1.Constraint = makeArrayConstraint(type1, array_spec)
 		}
 	}
 	if ctx.Annotations() != nil {
@@ -379,13 +379,21 @@ func makeTypeConstraint(t *sysl.Type, size_spec *parser.Size_specContext) []*sys
 	var err error
 	var l int64
 
+	bitWidth := getBitWidth(t)
 	switch t.GetPrimitive() {
 	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_STRING:
 		val1 := size_spec.DIGITS(0).GetText()
 		if l, err = strconv.ParseInt(val1, 10, 0); err == nil {
-			c = append(c, &sysl.Type_Constraint{
-				Length: &sysl.Type_Constraint_Length{Max: l},
-			})
+			if bitWidth > 0 {
+				c = append(c, &sysl.Type_Constraint{
+					BitWidth: bitWidth,
+					Length:   &sysl.Type_Constraint_Length{Max: l},
+				})
+			} else {
+				c = append(c, &sysl.Type_Constraint{
+					Length: &sysl.Type_Constraint_Length{Max: l},
+				})
+			}
 		}
 	case sysl.Type_DECIMAL:
 		val1 := size_spec.DIGITS(0).GetText()
@@ -409,17 +417,26 @@ func makeTypeConstraint(t *sysl.Type, size_spec *parser.Size_specContext) []*sys
 	return c
 }
 
-func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeContext) []*sysl.Type_Constraint {
+func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*sysl.Type_Constraint {
 	c := []*sysl.Type_Constraint{}
 	var err error
 	var l int64
 
-	switch t {
+	bitWidth := getBitWidth(t)
+	switch t.GetPrimitive() {
 	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING:
-		ct := &sysl.Type_Constraint{
-			Length: &sysl.Type_Constraint_Length{},
+		var ct *sysl.Type_Constraint
+		if bitWidth > 0 {
+			ct = &sysl.Type_Constraint{
+				BitWidth: bitWidth,
+				Length:   &sysl.Type_Constraint_Length{},
+			}
+		} else {
+			ct = &sysl.Type_Constraint{
+				Length: &sysl.Type_Constraint_Length{},
+			}
 		}
-		if t != sysl.Type_STRING && array_size.DIGITS(0) != nil {
+		if t.GetPrimitive() != sysl.Type_STRING && array_size.DIGITS(0) != nil {
 			val := array_size.DIGITS(0).GetText()
 			if l, err = strconv.ParseInt(val, 10, 0); err == nil && l != 0 {
 				ct.Length.Min = l

@@ -57,12 +57,12 @@ func (s sourceCtxHelper) get(start, end antlr.Token, withText bool) *sysl.Source
 func getBitWidth(t *sysl.Type) int32 {
 	if t.Constraint != nil {
 		for _, item := range t.Constraint {
-			if item.BitWidth > 0 {
-				return item.BitWidth			
+			if item.BitWidth > 0 { // 32 or 64
+				return item.BitWidth
 			}
 		}
 	}
-	
+
 	return 0
 }
 
