@@ -7,12 +7,11 @@
 package sysl
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	proto "github.com/golang/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -549,7 +548,7 @@ type SourceContext struct {
 	End     *SourceContext_Location `protobuf:"bytes,3,opt,name=end,proto3" json:"end,omitempty"`
 	Text    string                  `protobuf:"bytes,4,opt,name=text,proto3" json:"text,omitempty"`
 	Delta   Delta                   `protobuf:"varint,6,opt,name=delta,proto3,enum=sysl.Delta" json:"delta,omitempty"`
-	Version string                  `protobuf:"bytes,7,opt,name=version,proto3" json:"version,omitempty"`
+	Version string                  `protobuf:"bytes,7,opt,name=version,proto3" json:"version,omitempty"` // This is populated when Github Mode is used for sysl modules, e.g v0.0.0-c63b9e92813a where v0.0.0 is the version tag and c63b9e92813a is the first 12 chars of the commit hash
 }
 
 func (x *SourceContext) Reset() {
