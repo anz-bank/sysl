@@ -69,6 +69,7 @@ func primitiveFromNativeDataType(native antlr.TerminalNode) (*sysl.Type_Primitiv
 	case "INT32":
 		primitiveType = sysl.Type_Primitive(sysl.Type_Primitive_value["INT"])
 		constraint = &sysl.Type_Constraint{
+			BitWidth: 32,
 			Range: &sysl.Type_Constraint_Range{
 				Min: &sysl.Value{
 					Value: &sysl.Value_I{
@@ -86,6 +87,7 @@ func primitiveFromNativeDataType(native antlr.TerminalNode) (*sysl.Type_Primitiv
 	case "INT64":
 		primitiveType = sysl.Type_Primitive(sysl.Type_Primitive_value["INT"])
 		constraint = &sysl.Type_Constraint{
+			BitWidth: 64,
 			Range: &sysl.Type_Constraint_Range{
 				Min: &sysl.Value{
 					Value: &sysl.Value_I{
@@ -99,6 +101,13 @@ func primitiveFromNativeDataType(native antlr.TerminalNode) (*sysl.Type_Primitiv
 				},
 			},
 		}
+
+	case "FLOAT32":
+		primitiveType = sysl.Type_Primitive(sysl.Type_Primitive_value["FLOAT"])
+		constraint = &sysl.Type_Constraint{BitWidth: 32}
+	case "FLOAT64":
+		primitiveType = sysl.Type_Primitive(sysl.Type_Primitive_value["FLOAT"])
+		constraint = &sysl.Type_Constraint{BitWidth: 64}
 	}
 	return &sysl.Type_Primitive_{Primitive: primitiveType}, constraint
 }

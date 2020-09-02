@@ -38,7 +38,7 @@ fragment Y : [yY];
 fragment Z : [zZ];
 
 NativeDataTypes     :
-                    ( (I N T '3' '2') | (I N T '6' '4') | (I N T) | (F L O A T) | ( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L) | (B Y T E S) | (A N Y))
+                    ( (I N T '3' '2') | (I N T '6' '4') | (I N T) | (F L O A T '3' '2') | (F L O A T '6' '4') | (F L O A T) | ( S T R I N G) | (D A T E) | (B O O L) | (D E C I M A L) | (D A T E T I M E) | (X M L) | (B Y T E S) | (A N Y))
                     { ls(p).inSqBrackets == 0 }?
                     ;
 
