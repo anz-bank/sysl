@@ -3,7 +3,7 @@ let util = //{./avro_util};
 let transformer = \.
 cond . {
 {'type': (s: 'fixed'), ...}:
-$`!alias ${.('name').s}${
+$`!alias ${util.correctName(.('name').s)}${
     util.prettyAnnotations(['~fixed', $`fixed_size="${.('size')}"`, util.getAnnotationS(., 'namespace')])
 }:
     bytes
@@ -12,12 +12,12 @@ ${
     cond {
         aliases count > 0: $'
         
-${aliases >> \alias $`!alias ${alias.s}:
+${aliases >> \alias $`!alias ${util.correctName(alias.s)}:
     ${.('name').s}`::\n\n}',
     }
 }`,
 {'type': (s: 'array'), ...}:
-    $`!alias ${//str.title(.('items').s)}Sequence${
+    $`!alias ${util.correctName(.('items').s)}Sequence${
         util.prettyAnnotations([util.getDefaultVal(.)])
     }: sequence of ${.('items').s}`,
 'int':

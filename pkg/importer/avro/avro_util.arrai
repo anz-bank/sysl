@@ -97,11 +97,10 @@ let transformType = \type
     cond type {
         # (s: 'string') etc.
         (s: typeName):
-            let primitive = transformPrimitiveType(typeName);
-            cond primitive {
+            let correctedName = correctName(typeName);
+            cond correctedName {
                 "null": "string[~null]",
-                'NonPrimitiveType': typeName,
-                _: primitive
+                _: correctedName,
             },
         (a: typeArray):
             # type can be ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
@@ -112,9 +111,9 @@ let transformType = \type
         {'type': typeName, ...}:
             # it is array, map
             cond typeName.s {
-                'array': 'sequence of ' + cond type('items') {{'name': (:s), ...}: s, (:s): s},
-                'map': 'set of ' + cond type('items') {{'name': (:s), ...}: 'String' + s + 'Item', (:s): s},
-                _: type('name').s
+                'array': 'sequence of ' + cond type('items') {{'name': (:s), ...}: correctName(s), (:s): correctName(s),},
+                'map': 'set of ' + cond type('items') {{'name': (:s), ...}: 'String' + correctName(s) + 'Item', (:s): correctName(s),},
+                _: correctName(type('name').s)
             },
     }
 ;
@@ -139,5 +138,6 @@ let util = (
     : getTypeName,
     : getDefaultVal,
     : combineTypes,
+    : correctName,
 );
 util
