@@ -19,25 +19,6 @@ ${aliases >> \alias $`!alias ${util.correctName(alias.s)}:
 {'type': (s: 'array'), ...}:
     $`!alias ${util.correctName(.('items').s)}Sequence${
         util.prettyAnnotations([util.getDefaultVal(.)])
-    }: sequence of ${.('items').s}`,
-'int':
-$`!alias Int_32 [bits="32"]:
-    int
-    
-`,
-'long':
-$`!alias Int_64 [bits="64"]:
-    int
-
-`,
-'float':
-$`!alias Float32 [bits="32"]:
-    float    
-
-`,
-'double':
-$`!alias Float64 [bits="32"]:
-    float    
-
-`,        
+    }: sequence of ${.('items').s}`
+,        
 };transformer

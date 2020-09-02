@@ -80,10 +80,10 @@ $`${
 ${
 cond record {
 {'type': (s: 'record'), ...}:
-$`!type ${util.correctName(record('name').s)} ${util.prettyAnnotations(['namespace', 'doc'] >> util.getAnnotationS(record, .))}:
+$`!type ${util.correctName(record('name').s)} ${util.prettyAnnotations(['namespace', 'name', 'doc'] >> util.getAnnotationS(record, .))}:
     ${
     let fields = record('fields')? .a:[]; 
-    fields >> $`${util.correctName(.('name').s)} <: ${util.transformType(.('type'))} ${util.prettyAnnotations(buildAnnotations(.))}${
+    fields >> $`${.('name').s} <: ${util.transformType(.('type'))} ${util.prettyAnnotations(buildAnnotations(.))}${
             printFieldAliases(.)        
         }`::\n}
 ${

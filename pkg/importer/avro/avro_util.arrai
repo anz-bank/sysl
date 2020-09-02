@@ -1,30 +1,14 @@
 # Utilities
 
-let getAnnotationS = \item \name
-    let annotation = item(name)? .s:"";
-    let annotationTxt = 
-        cond annotation {
-            "":"", 
-            _: $'${cond name {'doc':'description', _:name}}="${annotation}"'
-        };
-    annotationTxt
-;
-
-# Pretty annotation array
-let prettyAnnotations = \annotationArray
-    let str = $'${let a = annotationArray where .@item != "" rank (:.@); a >>> \i \item item::, }';
-    cond str {'':$'', _:$'[${str}]'}
-;
-
 # Transform Avro primitive types to Sysl ones
 let transformPrimitiveType = \type
     cond type {
         'null': 'null',
         'boolean': 'bool',
-        'int': 'Int32',
-        'long': 'Int64',
-        'float': 'Float32',
-        'double': 'Float64',
+        'int': 'int32',
+        'long': 'int64',
+        'float': 'float32',
+        'double': 'float64',
         'bytes': "bytes",
         'string': 'string',
         _: 'NonPrimitiveType'              
@@ -36,8 +20,8 @@ let transformLogicalTypes = \type
         'decimal': $'decimal(${type('precision')}.${type('scale')})',
         'uuid': 'string',
         'date': 'date',
-        'time-millis': 'uint32',
-        'time-micros': 'uint64',
+        'time-millis': 'int32',
+        'time-micros': 'int64',
         'timestamp-millis': 'datetime',
         'timestamp-micros': 'datetime',
         'local-timestamp-millis': 'datetime',
@@ -47,15 +31,56 @@ let transformLogicalTypes = \type
     }
 ;
 
+let isSyslReserved = \str
+    {}
+;
+
 let isFirstLetterUppercase = \str
     let letter = str where .@ = 0;
     //str.upper(letter) = letter
 ;
 
-let correctName = \name
+let shouldCorrectName = \name
     cond transformPrimitiveType(name) {
-        'NonPrimitiveType': //str.title(name),
-        _: name
+        'NonPrimitiveType':
+                !(//seq.has_prefix("set of", name) || //seq.has_prefix("sequence of", name)) 
+                    && !isFirstLetterUppercase(name)
+                    && !isSyslReserved(name)
+        ,
+    }
+;
+
+let getAnnotationS = \item \name
+    let annotation = item(name)? .s:"";
+    let annotationTxt = 
+        cond annotation {
+            "": "",
+            _: cond name {
+                'name': cond {
+                    shouldCorrectName(annotation): $'name="${annotation}"',
+                },
+                'doc': $'description="${annotation}"', 
+                _: $'${name}="${annotation}"',
+            }
+        };
+    annotationTxt
+;
+
+# Pretty annotation array
+let prettyAnnotations = \annotationArray
+    let str = $'${let a = annotationArray where .@item != "" rank (:.@); a >>> \i \item item::, }';
+    cond str {'':$'', _:$'[${str}]'}
+;
+
+let correctName = \name
+    let primitive = transformPrimitiveType(name);
+    cond primitive {
+        'NonPrimitiveType': 
+            cond {
+                //seq.has_prefix("set of", name) || //seq.has_prefix("sequence of", name): name,
+                _: //str.title(name),
+            },
+        _: primitive
     }
 ;
 

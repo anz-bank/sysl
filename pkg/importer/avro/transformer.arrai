@@ -59,8 +59,6 @@ let rec extraAliases = \schema
       //rel.union(a => extraAliases(.@item)),
     {'type': (:s), ...}: # fixed
       {schema},
-    (:s):
-      {s},
 };
 
 # Extra item transformed to Sysl type !union

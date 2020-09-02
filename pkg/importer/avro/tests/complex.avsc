@@ -4,6 +4,10 @@
   "type": "record",
   "fields": [
     {
+      "name": "id",
+      "type": "long"
+    },
+    {
       "name": "action",
       "type": {
         "type": "enum",

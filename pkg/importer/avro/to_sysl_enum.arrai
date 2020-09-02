@@ -11,6 +11,7 @@ $`!enum ${enum('name').s}${util.prettyAnnotations(annotations)}:
 ${
 let aliases = enum('aliases')? .a:[]; 
 aliases >> $`
-    !alias ${.s}: ${enum('name').s}`::\n
+    !alias ${.s}: 
+        ${enum('name').s}`::\n
 }`;
 transformer
