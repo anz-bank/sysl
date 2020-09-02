@@ -11,6 +11,7 @@ import (
 
 	"github.com/anz-bank/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 )
 
@@ -98,6 +99,14 @@ func (fs *Fs) fetchRemoteFile(filename string) (*mod.Module, string, error) {
 
 	m, err := mod.Retrieve(name, ver)
 	if err != nil {
+		switch err.(type) {
+		case *mod.RateLimitError:
+			return nil, "", errors.Wrap(err,
+				"\033[1;36mplease set up envvar SYSL_GITHUB_TOKEN\033[0m")
+		case *mod.NotFoundError:
+			return nil, "", errors.Wrap(err,
+				"\033[1;36mplease check whether envvar SYSL_GITHUB_TOKEN is set if it is a private repository\033[0m")
+		}
 		return nil, "", err
 	}
 
