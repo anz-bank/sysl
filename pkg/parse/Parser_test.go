@@ -428,6 +428,12 @@ func TestInplaceTuple(t *testing.T) {
 	testParseAgainstGolden(t, "tests/inplace_tuple.sysl", "")
 }
 
+func TestNumbersFormat(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/numbers_format.sysl", "")
+}
+
 func TestImports(t *testing.T) {
 	t.Parallel()
 

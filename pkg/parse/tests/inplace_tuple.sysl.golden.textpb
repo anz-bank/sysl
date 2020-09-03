@@ -233,6 +233,7 @@ apps: {
                         i: 2147483647
                       }
                     }
+                    bit_width: 32
                   }
                   source_context: {
                     file: "tests/inplace_tuple.sysl"
@@ -264,6 +265,7 @@ apps: {
                         i: 9223372036854775807
                       }
                     }
+                    bit_width: 64
                   }
                   source_context: {
                     file: "tests/inplace_tuple.sysl"

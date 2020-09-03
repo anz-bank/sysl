@@ -295,6 +295,7 @@ message Type {
         Resolution resolution = 3;
         int32 precision = 4;
         int32 scale = 5;
+        int32 bit_width = 6;
 
         message Range {
             Value min = 1;
