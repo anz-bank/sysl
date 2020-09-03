@@ -275,7 +275,7 @@ func Type(param *sysl.Param) string {
 		if a.Ref.Appname != nil {
 			return strings.Join(append(a.Ref.Appname.Part, a.Ref.Path...), ".")
 		}
-		return strings.Join(a.Ref.Path, "")
+		return strings.Join(a.Ref.Path, ".")
 	}
 	return strings.Join(param.Type.GetTypeRef().Ref.Appname.Part, "")
 }
