@@ -399,7 +399,7 @@ func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName strin
 	} else {
 		if ref.GetAppname() != nil {
 			appName = strings.Join(ref.Appname.Part, "")
-		} else {
+		} else if t.GetTypeRef().GetContext() != nil {
 			appName = strings.Join(t.GetTypeRef().GetContext().Appname.Part, "")
 		}
 		typeName = strings.Join(ref.GetPath(), ".")
