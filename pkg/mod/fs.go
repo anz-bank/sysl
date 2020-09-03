@@ -95,7 +95,7 @@ func (fs *Fs) fetchRemoteFile(filename string) (*mod.Module, string, error) {
 		return nil, "", err
 	}
 
-	Config()
+	config(fs.root)
 
 	m, err := mod.Retrieve(name, ver)
 	if err != nil {
@@ -118,21 +118,24 @@ func (fs *Fs) fetchRemoteFile(filename string) (*mod.Module, string, error) {
 	return m, relpath, nil
 }
 
-func Config() {
+func config(root string) {
 	configModOnce.Do(func() {
 		usr, err := user.Current()
 		if err != nil {
 			log.Fatal(err)
 		}
 		cacheDir := filepath.Join(usr.HomeDir, ".sysl")
-		var accessToken *string
-		if githubAccessToken != "" {
-			accessToken = &githubAccessToken
-		}
 		if ModMode == "" {
 			ModMode = mod.GoModulesMode
 		}
-		if err := mod.Config(ModMode, nil, &cacheDir, accessToken); err != nil {
+
+		wd, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := mod.Config(ModMode,
+			mod.GoModulesOptions{Root: root, ModName: filepath.Base(wd)},
+			mod.GitHubOptions{CacheDir: cacheDir, AccessToken: githubAccessToken}); err != nil {
 			log.Fatal(err)
 		}
 	})

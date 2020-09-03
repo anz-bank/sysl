@@ -82,7 +82,7 @@ func TestOpenRemoteFileWithRoot(t *testing.T) {
 	createGomodFile(t, fs)
 	defer removeGomodFile(t, fs)
 
-	root := "github.com/anz-bank/sysl"
+	root := "../../"
 	path := "demo/examples/Modules/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	mfs := NewFs(memfs, root)
