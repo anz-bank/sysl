@@ -28,41 +28,6 @@ apps: {
           attr_defs: {
             key: "aAttr1"
             value: {
-              primitive: FLOAT
-              source_context: {
-                file: "tests/numbers_format.sysl"
-                start: {
-                  line: 4
-                  col: 18
-                }
-                end: {
-                  line: 4
-                  col: 18
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/numbers_format.sysl"
-          start: {
-            line: 2
-            col: 4
-          }
-          end: {
-            line: 6
-            col: 4
-          }
-        }
-      }
-    }
-    types: {
-      key: "B"
-      value: {
-        tuple: {
-          attr_defs: {
-            key: "bAttr0"
-            value: {
               primitive: INT
               constraint: {
                 range: {
@@ -78,106 +43,18 @@ apps: {
               source_context: {
                 file: "tests/numbers_format.sysl"
                 start: {
-                  line: 7
+                  line: 4
                   col: 18
                 }
                 end: {
-                  line: 7
+                  line: 4
                   col: 18
                 }
               }
             }
           }
           attr_defs: {
-            key: "bAttr1"
-            value: {
-              primitive: INT
-              constraint: {
-                length: {
-                  max: 4
-                }
-                bitWidth: 32
-              }
-              source_context: {
-                file: "tests/numbers_format.sysl"
-                start: {
-                  line: 8
-                  col: 18
-                }
-                end: {
-                  line: 8
-                  col: 25
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "bAttr2"
-            value: {
-              primitive: INT
-              constraint: {
-                length: {
-                  max: 4
-                }
-                bitWidth: 32
-              }
-              source_context: {
-                file: "tests/numbers_format.sysl"
-                start: {
-                  line: 9
-                  col: 18
-                }
-                end: {
-                  line: 9
-                  col: 27
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "bAttr3"
-            value: {
-              primitive: INT
-              constraint: {
-                length: {
-                  min: 4
-                  max: 8
-                }
-                bitWidth: 32
-              }
-              source_context: {
-                file: "tests/numbers_format.sysl"
-                start: {
-                  line: 10
-                  col: 18
-                }
-                end: {
-                  line: 10
-                  col: 28
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/numbers_format.sysl"
-          start: {
-            line: 6
-            col: 4
-          }
-          end: {
-            line: 12
-            col: 4
-          }
-        }
-      }
-    }
-    types: {
-      key: "C"
-      value: {
-        tuple: {
-          attr_defs: {
-            key: "cAttr0"
+            key: "aAttr3"
             value: {
               primitive: INT
               constraint: {
@@ -194,82 +71,12 @@ apps: {
               source_context: {
                 file: "tests/numbers_format.sysl"
                 start: {
-                  line: 13
+                  line: 5
                   col: 18
                 }
                 end: {
-                  line: 13
+                  line: 5
                   col: 18
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "cAttr1"
-            value: {
-              primitive: INT
-              constraint: {
-                length: {
-                  max: 4
-                }
-                bitWidth: 64
-              }
-              source_context: {
-                file: "tests/numbers_format.sysl"
-                start: {
-                  line: 14
-                  col: 18
-                }
-                end: {
-                  line: 14
-                  col: 25
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "cAttr2"
-            value: {
-              primitive: INT
-              constraint: {
-                length: {
-                  max: 4
-                }
-                bitWidth: 64
-              }
-              source_context: {
-                file: "tests/numbers_format.sysl"
-                start: {
-                  line: 15
-                  col: 18
-                }
-                end: {
-                  line: 15
-                  col: 27
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "cAttr3"
-            value: {
-              primitive: INT
-              constraint: {
-                length: {
-                  min: 4
-                  max: 8
-                }
-                bitWidth: 64
-              }
-              source_context: {
-                file: "tests/numbers_format.sysl"
-                start: {
-                  line: 16
-                  col: 18
-                }
-                end: {
-                  line: 16
-                  col: 28
                 }
               }
             }
@@ -278,22 +85,39 @@ apps: {
         source_context: {
           file: "tests/numbers_format.sysl"
           start: {
-            line: 12
+            line: 2
             col: 4
           }
           end: {
-            line: 18
+            line: 7
             col: 4
           }
         }
       }
     }
     types: {
-      key: "D"
+      key: "B"
       value: {
         tuple: {
           attr_defs: {
-            key: "dAttr0"
+            key: "bAttr0"
+            value: {
+              primitive: FLOAT
+              source_context: {
+                file: "tests/numbers_format.sysl"
+                start: {
+                  line: 8
+                  col: 18
+                }
+                end: {
+                  line: 8
+                  col: 18
+                }
+              }
+            }
+          }
+          attr_defs: {
+            key: "bAttr1"
             value: {
               primitive: FLOAT
               constraint: {
@@ -302,18 +126,18 @@ apps: {
               source_context: {
                 file: "tests/numbers_format.sysl"
                 start: {
-                  line: 19
+                  line: 9
                   col: 18
                 }
                 end: {
-                  line: 19
+                  line: 9
                   col: 18
                 }
               }
             }
           }
           attr_defs: {
-            key: "dAttr1"
+            key: "bAttr2"
             value: {
               primitive: FLOAT
               constraint: {
@@ -322,11 +146,11 @@ apps: {
               source_context: {
                 file: "tests/numbers_format.sysl"
                 start: {
-                  line: 20
+                  line: 10
                   col: 18
                 }
                 end: {
-                  line: 20
+                  line: 10
                   col: 18
                 }
               }
@@ -336,11 +160,11 @@ apps: {
         source_context: {
           file: "tests/numbers_format.sysl"
           start: {
-            line: 18
+            line: 7
             col: 4
           }
           end: {
-            line: 21
+            line: 12
           }
         }
       }
