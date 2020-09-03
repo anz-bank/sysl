@@ -109,7 +109,7 @@ let transformModel = \model \package
         ##                                      ##
         ##########################################
         ${model.schema => $`
-            ${.name}${cond {package: $`[package="${package}"]`} }:
+            ${.name}${cond {package: $`[spanner_spec="1.0", package="${package}"]`} }:
             ${//seq.sub('#>>>\n', '')($`
             ${(model.entities => \entity $`
             #>>>

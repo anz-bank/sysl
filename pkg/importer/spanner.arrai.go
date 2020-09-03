@@ -341,8 +341,8 @@ let spanner_arrai =
 let size = \length
     cond {
         length = 'MAX': '',
-        //seq.has_prefix('0x', length): $` + "`" + `(${//seq.trim_prefix('0x', length)})` + "`" + `,
-        length > 0: $` + "`" + `(${length})` + "`" + `,
+        //seq.has_prefix('0x', length): $`+"`"+`(${//seq.trim_prefix('0x', length)})`+"`"+`,
+        length > 0: $`+"`"+`(${length})`+"`"+`,
     };
 
 # hasAttributePattern checks whether an attribute has associated patterns.
@@ -359,9 +359,9 @@ let hasEntityPattern = \entity \model
 
 # sortingOrder determines and appends sorting order.
 let sortingOrder = \e \attr
-    let re = //re.compile($` + "`" + `${attr.name}\((asc|desc)\)` + "`" + `);
+    let re = //re.compile($`+"`"+`${attr.name}\((asc|desc)\)`+"`"+`);
     let keyOrder = e.primary_key => (re.match(.)(0)?(1)?:{} rank (:.@)) where .;
-    cond keyOrder {{x}: $` + "`" + `~${x}` + "`" + `};
+    cond keyOrder {{x}: $`+"`"+`~${x}`+"`"+`};
 
 # compareColumnOrder compares the col order between primary key and table.
 let compareColumnOrder = \entity
@@ -373,11 +373,11 @@ let attributePatterns = \entity \attr
     let options = cond {
         attr.options:
             let [k, v, ...] = //seq.split('=', attr.options);
-            $` + "`" + `${k}="${v}"` + "`" + `,
+            $`+"`"+`${k}="${v}"`+"`"+`,
         };
     let pk = cond {
         (entity.primary_key where //seq.contains(attr.name, .)):
-            $` + "`" + `~pk${cond {sortingOrder(entity, attr): $` + "`" + `, ${sortingOrder(entity, attr)}` + "`" + `}}` + "`" + `
+            $`+"`"+`~pk${cond {sortingOrder(entity, attr): $`+"`"+`, ${sortingOrder(entity, attr)}`+"`"+`}}`+"`"+`
     };
     let fk = cond {
         (entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
@@ -391,7 +391,7 @@ let attributePatterns = \entity \attr
         //seq.has_prefix('0x', attr.length): '~hex',
     };
     let byteLength = cond {
-        attr.type = 'bytes' && attr.length > 0 && attr.length != 'MAX': $` + "`" + `length="${attr.length}"` + "`" + `
+        attr.type = 'bytes' && attr.length > 0 && attr.length != 'MAX': $`+"`"+`length="${attr.length}"`+"`"+`
     };
     //seq.join(', ', ([options, byteLength, pk, fk, length, hexPrefix] where .@item != ''));
 
@@ -399,30 +399,30 @@ let attributePatterns = \entity \attr
 let entityPatterns = \entity \model
     let pk = cond {
         entity.primary_key count > 1 && compareColumnOrder(entity):
-            $` + "`" + `primary_key="${entity.primary_key orderby .::, }"` + "`" + `,
+            $`+"`"+`primary_key="${entity.primary_key orderby .::, }"`+"`"+`,
     };
     let cluster = cond {
         entity.cluster:
             //seq.join('', entity.cluster >>
-            $` + "`" + `interleave_in_parent="${.interleaved_in}", interleave_on_delete="${.on_delete}"` + "`" + `),
+            $`+"`"+`interleave_in_parent="${.interleaved_in}", interleave_on_delete="${.on_delete}"`+"`"+`),
     };
     let fk = cond {
         entity.foreign_keys:
-            $` + "`" + `foreign_keys=[${//seq.join(', ',(entity.foreign_keys =>
-                \keys $` + "`" + `["constraint:${keys.constraint_name}","columns:${//seq.join(', ', (keys.foreign_keys => .attribute) orderby .)}"]` + "`" + `) orderby .)}]` + "`" + `,
+            $`+"`"+`foreign_keys=[${//seq.join(', ',(entity.foreign_keys =>
+                \keys $`+"`"+`["constraint:${keys.constraint_name}","columns:${//seq.join(', ', (keys.foreign_keys => .attribute) orderby .)}"]`+"`"+`) orderby .)}]`+"`"+`,
     };
     let indices = cond {
         (model.indexes where .table_name = entity.name):
-            $` + "`" + `indexes=[${//seq.join(', ', ((model.indexes orderby .) where .@item.table_name = entity.name) >>
-                $` + "`" + `"name:${.table_name}","unique:${.unique}","null_filtered:${.nullfiltered}","key_parts:${//seq.join(', ', .key_part orderby .)}${cond {.storing_col: $` + "`" + `","storing:${//seq.join(', ',.storing_col)}` + "`" + `}}${cond {.interleaved_table: $` + "`" + `","interleave_in:${.interleaved_table}` + "`" + `}}` + "`" + `)}"]` + "`" + `,
+            $`+"`"+`indexes=[${//seq.join(', ', ((model.indexes orderby .) where .@item.table_name = entity.name) >>
+                $`+"`"+`"name:${.table_name}","unique:${.unique}","null_filtered:${.nullfiltered}","key_parts:${//seq.join(', ', .key_part orderby .)}${cond {.storing_col: $`+"`"+`","storing:${//seq.join(', ',.storing_col)}`+"`"+`}}${cond {.interleaved_table: $`+"`"+`","interleave_in:${.interleaved_table}`+"`"+`}}`+"`"+`)}"]`+"`"+`,
     };
     //seq.join(', ', ([pk, cluster, fk, indices] where .@item != ''));
 
 # appendEntityPatterns returns a pattern for the entity patterns together.
-let appendEntityPatterns = \entity \model cond { hasEntityPattern(entity, model): $` + "`" + `[${entityPatterns(entity, model)}]` + "`" + `};
+let appendEntityPatterns = \entity \model cond { hasEntityPattern(entity, model): $`+"`"+`[${entityPatterns(entity, model)}]`+"`"+`};
 
 # appendAttributePatterns returns a pattern for the attribute patterns together.
-let appendAttributePatterns = \entity \attr cond { hasAttributePattern(entity, attr): $` + "`" + `[${attributePatterns(entity, attr)}]` + "`" + `};
+let appendAttributePatterns = \entity \attr cond { hasAttributePattern(entity, attr): $`+"`"+`[${attributePatterns(entity, attr)}]`+"`"+`};
 
 # typeInfo generates the type info for an attribute.
 let typeInfo = \entity \attr \type \isArray
@@ -431,8 +431,8 @@ let typeInfo = \entity \attr \type \isArray
     let fkTable = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
         .reference_table orderby .) where .;
     cond {
-        fkAttr && fkTable: $` + "`" + `${fkTable => $` + "`" + `${.::}` + "`" + ` orderby .::}.${fkAttr => $` + "`" + `${.::}` + "`" + ` orderby .::}` + "`" + `,
-        isArray: $` + "`" + `sequence of ${type}` + "`" + `,
+        fkAttr && fkTable: $`+"`"+`${fkTable => $`+"`"+`${.::}`+"`"+` orderby .::}.${fkAttr => $`+"`"+`${.::}`+"`"+` orderby .::}`+"`"+`,
+        isArray: $`+"`"+`sequence of ${type}`+"`"+`,
         _: type,
     };
 
@@ -440,28 +440,28 @@ let typeInfo = \entity \attr \type \isArray
 let transformModel = \model \package
     # sysl specification
     # https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.proto
-    $` + "`" + `
+    $`+"`"+`
         ##########################################
         ##                                      ##
         ##  AUTOGENERATED CODE -- DO NOT EDIT!  ##
         ##                                      ##
         ##########################################
-        ${model.schema => $` + "`" + `
-            ${.name}${cond {package: $` + "`" + `[package="${package}"]` + "`" + `} }:
-            ${//seq.sub('#>>>\n', '')($` + "`" + `
-            ${(model.entities => \entity $` + "`" + `
+        ${model.schema => $`+"`"+`
+            ${.name}${cond {package: $`+"`"+`[spanner_spec="1.0", package="${package}"]`+"`"+`} }:
+            ${//seq.sub('#>>>\n', '')($`+"`"+`
+            ${(model.entities => \entity $`+"`"+`
             #>>>
                 !table ${entity.name} ${appendEntityPatterns(entity, model)}:
                     ${entity.attributes >>
-                        $` + "`" + `
-                            ${.name} <: ${typeInfo(entity, ., .type ++ cond {.type != 'bytes': size( .length)}, .array)}${cond {.nullable:'?'}} ${appendAttributePatterns(entity, .)}` + "`" + ` ::\i:
-                        }` + "`" + `
+                        $`+"`"+`
+                            ${.name} <: ${typeInfo(entity, ., .type ++ cond {.type != 'bytes': size( .length)}, .array)}${cond {.nullable:'?'}} ${appendAttributePatterns(entity, .)}`+"`"+` ::\i:
+                        }`+"`"+`
                     )
                     orderby .::\i:
             }
-            ` + "`" + `)}
-        ` + "`" + ` orderby .::}
-    ` + "`" + `;
+            `+"`"+`)}
+        `+"`"+` orderby .::}
+    `+"`"+`;
 
 let sysl_arrai =
 (
