@@ -1,3 +1,4 @@
+// nolint
 package importer
 
 const importSpannerScript = `
@@ -315,7 +316,7 @@ let rec applyStmt = \stmt \model
         []:              model,
     };
 
-let spanner_arrai = 
+let spanner_arrai =
 ################# EXPOSE ################
 (
     # empty model, use this as the base of an applyStmt call to create a model from a ddl statement
@@ -335,7 +336,7 @@ let spanner_arrai =
 ###  sysl.arrai                                                              ###
 ### ------------------------------------------------------------------------ ###
 
-# Transforms that generate sysl from arrai based sql model.
+# Transforms that generate sysl from an arr.ai-based SQL model.
 # size returns the size of an attribute.
 let size = \length
     cond {
@@ -346,7 +347,8 @@ let size = \length
 
 # hasAttributePattern checks whether an attribute has associated patterns.
 let hasAttributePattern = \entity \attr
-    attr.options?:{} || (entity.primary_key where //seq.contains(attr.name, .)) ||
+    (attr.type = 'bytes' && attr.length > 0) || attr.options?:{} ||
+    (entity.primary_key where //seq.contains(attr.name, .)) ||
     attr.length = 'MAX' || //seq.has_prefix('0x', attr.length) ||
     ((entity.foreign_keys => ((.foreign_keys where .attribute = attr.name)
         => .reference_attribute orderby .)) where .);
@@ -359,7 +361,7 @@ let hasEntityPattern = \entity \model
 let sortingOrder = \e \attr
     let re = //re.compile($`+"`"+`${attr.name}\((asc|desc)\)`+"`"+`);
     let keyOrder = e.primary_key => (re.match(.)(0)?(1)?:{} rank (:.@)) where .;
-    cond keyOrder {{x}: $`+"`"+`, ~${x}`+"`"+`};
+    cond keyOrder {{x}: $`+"`"+`~${x}`+"`"+`};
 
 # compareColumnOrder compares the col order between primary key and table.
 let compareColumnOrder = \entity
@@ -370,12 +372,12 @@ let compareColumnOrder = \entity
 let attributePatterns = \entity \attr
     let options = cond {
         attr.options:
-            let opt = //seq.split('=',attr.options);
-            $`+"`"+`${opt(0)}='${opt(1)}'`+"`"+`,
+            let [k, v, ...] = //seq.split('=', attr.options);
+            $`+"`"+`${k}="${v}"`+"`"+`,
         };
     let pk = cond {
         (entity.primary_key where //seq.contains(attr.name, .)):
-            '~pk' ++ sortingOrder(entity, attr)
+            $`+"`"+`~pk${cond {sortingOrder(entity, attr): $`+"`"+`, ${sortingOrder(entity, attr)}`+"`"+`}}`+"`"+`
     };
     let fk = cond {
         (entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
@@ -388,7 +390,10 @@ let attributePatterns = \entity \attr
     let hexPrefix = cond {
         //seq.has_prefix('0x', attr.length): '~hex',
     };
-    //seq.join(', ', ([options, pk, fk, length, hexPrefix] where .@item != ''));
+    let byteLength = cond {
+        attr.type = 'bytes' && attr.length > 0 && attr.length != 'MAX': $`+"`"+`length="${attr.length}"`+"`"+`
+    };
+    //seq.join(', ', ([options, byteLength, pk, fk, length, hexPrefix] where .@item != ''));
 
 # entityPatterns generates the patterns for an entity.
 let entityPatterns = \entity \model
@@ -413,17 +418,11 @@ let entityPatterns = \entity \model
     };
     //seq.join(', ', ([pk, cluster, fk, indices] where .@item != ''));
 
-# appendEntityPatterns appends the entity patterns together.
-let appendEntityPatterns = \entity \model
-    cond {
-        hasEntityPattern(entity, model): $`+"`"+`[${entityPatterns(entity, model)}]`+"`"+`
-    };
+# appendEntityPatterns returns a pattern for the entity patterns together.
+let appendEntityPatterns = \entity \model cond { hasEntityPattern(entity, model): $`+"`"+`[${entityPatterns(entity, model)}]`+"`"+`};
 
-# appendAttributePatterns appends the attribute patterns together.
-let appendAttributePatterns = \entity \attr
-    cond {
-        hasAttributePattern(entity,attr): $`+"`"+`[${attributePatterns(entity, attr)}]`+"`"+`
-    };
+# appendAttributePatterns returns a pattern for the attribute patterns together.
+let appendAttributePatterns = \entity \attr cond { hasAttributePattern(entity, attr): $`+"`"+`[${attributePatterns(entity, attr)}]`+"`"+`};
 
 # typeInfo generates the type info for an attribute.
 let typeInfo = \entity \attr \type \isArray
@@ -432,8 +431,7 @@ let typeInfo = \entity \attr \type \isArray
     let fkTable = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
         .reference_table orderby .) where .;
     cond {
-        fkAttr | fkTable:  //seq.join('', (fkTable => //seq.join('', .) orderby .)) ++ '.'
-            ++ //seq.join('', (fkAttr => //seq.join('', .) orderby .)),
+        fkAttr && fkTable: $`+"`"+`${fkTable => $`+"`"+`${.::}`+"`"+` orderby .::}.${fkAttr => $`+"`"+`${.::}`+"`"+` orderby .::}`+"`"+`,
         isArray: $`+"`"+`sequence of ${type}`+"`"+`,
         _: type,
     };
@@ -452,7 +450,7 @@ let transformModel = \model \package
                 !table ${entity.name} ${appendEntityPatterns(entity, model)}:
                     ${entity.attributes >>
                         $`+"`"+`
-                            ${.name} <: ${typeInfo(entity, ., .type ++ size(.length), .array)}${cond {.nullable:'?'}} ${appendAttributePatterns(entity, .)}`+"`"+` ::\i:
+                            ${.name} <: ${typeInfo(entity, ., .type ++ cond {.type != 'bytes': size( .length)}, .array)}${cond {.nullable:'?'}} ${appendAttributePatterns(entity, .)}`+"`"+` ::\i:
                         }`+"`"+`
                     )
                     orderby .::\i:
@@ -461,7 +459,7 @@ let transformModel = \model \package
         `+"`"+` orderby .::}
     `+"`"+`;
 
-let sysl_arrai = 
+let sysl_arrai =
 (
     :transformModel,
 );

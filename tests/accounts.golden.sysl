@@ -8,10 +8,10 @@ customeraccounts[package="retail"]:
     !table AccountAddress [interleave_in_parent="Account", interleave_on_delete="CASCADE"]:
         AccountNum <: string(23) [~pk, ~asc]
         AddressPostCode <: string(10) [~pk, ~desc]
-        LastUpdated <: datetime? [allow_commit_timestamp='true']
+        LastUpdated <: datetime? [allow_commit_timestamp="true"]
         AddressLine1 <: bytes? [~max]
         AddressLine2 <: string(100)? [~hex]
-        AddressLine3 <: string(100)? 
+        AddressLine3 <: bytes? [length="100"]
                                 
     !table Customer [indexes=["name:Customer","unique:true","null_filtered:true","key_parts:Email(asc), Mobile(desc)"]]:
         CustomerID <: string(36) [~pk]

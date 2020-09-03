@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/arr-ai/arrai/pkg/arraictx"
 	"github.com/arr-ai/arrai/syntax"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -48,7 +49,8 @@ func (s *Spanner) WithPackage(packageName string) Importer {
 // It returns the converted Sysl as a string.
 func (s *Spanner) Load(filePath string) (string, error) {
 	importParams := fmt.Sprintf("import(`%s`, `%s`, `%s`)", filePath, s.appName, s.pkg)
-	syslFile, err := syntax.EvaluateExpr(context.Background(), "", fmt.Sprintf("%s.%s", importSpannerScript, importParams))
+	syslFile, err := syntax.EvaluateExpr(arraictx.InitRunCtx(context.Background()), "",
+		fmt.Sprintf("%s.%s", importSpannerScript, importParams))
 	if err != nil {
 		return "", errors.Wrap(ArraiTransformError{
 			Context:  importParams,

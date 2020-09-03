@@ -35,6 +35,6 @@ CREATE TABLE AccountAddress (
     LastUpdated       TIMESTAMP OPTIONS (allow_commit_timestamp=true),
     AddressLine1      BYTES(MAX),
     AddressLine2      STRING(0x100),
-    AddressLine3      STRING(100),
+    AddressLine3      BYTES(100),
 ) PRIMARY KEY (AccountNum ASC, AddressPostCode DESC),
 INTERLEAVE IN PARENT Account ON DELETE CASCADE;
