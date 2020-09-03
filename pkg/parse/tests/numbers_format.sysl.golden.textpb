@@ -38,7 +38,7 @@ apps: {
                     i: 2147483647
                   }
                 }
-                bitWidth: 32
+                bit_width: 32
               }
               source_context: {
                 file: "tests/numbers_format.sysl"
@@ -66,7 +66,7 @@ apps: {
                     i: 9223372036854775807
                   }
                 }
-                bitWidth: 64
+                bit_width: 64
               }
               source_context: {
                 file: "tests/numbers_format.sysl"
@@ -121,7 +121,7 @@ apps: {
             value: {
               primitive: FLOAT
               constraint: {
-                bitWidth: 32
+                bit_width: 32
               }
               source_context: {
                 file: "tests/numbers_format.sysl"
@@ -141,7 +141,7 @@ apps: {
             value: {
               primitive: FLOAT
               constraint: {
-                bitWidth: 64
+                bit_width: 64
               }
               source_context: {
                 file: "tests/numbers_format.sysl"
