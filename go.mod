@@ -12,7 +12,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
 	github.com/anz-bank/mermaid-go v0.1.1
-	github.com/anz-bank/pkg v0.0.19
+	github.com/anz-bank/pkg v0.0.22
 	github.com/arr-ai/frozen v0.14.0 // indirect
 	github.com/arr-ai/hash v0.5.0 // indirect
 	github.com/arr-ai/wbnf v0.15.0
@@ -32,7 +32,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.6.0
-	github.com/spf13/afero v1.3.4
+	github.com/spf13/afero v1.3.5
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
