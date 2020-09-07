@@ -56,7 +56,7 @@ func TestOpenRemoteFile(t *testing.T) {
 	createGomodFile(t, fs)
 	defer removeGomodFile(t, fs)
 
-	filename := SyslDepsFile
+	filename := "github.com/anz-bank/sysl/tests/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	mfs := NewFs(memfs, "")
 	f, err := mfs.Open(filename)
@@ -82,7 +82,7 @@ func TestOpenRemoteFileWithRoot(t *testing.T) {
 	createGomodFile(t, fs)
 	defer removeGomodFile(t, fs)
 
-	root := "github.com/anz-bank/sysl"
+	root := "../../"
 	path := "demo/examples/Modules/deps.sysl"
 	_, memfs := syslutil.WriteToMemOverlayFs("/")
 	mfs := NewFs(memfs, root)
@@ -132,16 +132,11 @@ func createGomodFile(t *testing.T, fs afero.Fs) {
 	assert.NoError(t, err)
 }
 
-func TestExtractVersion(t *testing.T) {
-	path, ver := ExtractVersion("github.com/anz-bank/sysl@v0.1")
-	assert.Equal(t, "github.com/anz-bank/sysl", path)
-	assert.Equal(t, "v0.1", ver)
-
-	path, ver = ExtractVersion("github.com/anz-bank/sysl/pkg@v0.2")
-	assert.Equal(t, "github.com/anz-bank/sysl/pkg", path)
-	assert.Equal(t, "v0.2", ver)
-
-	path, ver = ExtractVersion("github.com/anz-bank/sysl/pkg")
-	assert.Equal(t, "github.com/anz-bank/sysl/pkg", path)
-	assert.Equal(t, "", ver)
+func removeFile(t *testing.T, fs afero.Fs, file string) {
+	exists, err := afero.Exists(fs, file)
+	assert.NoError(t, err)
+	if exists {
+		err = fs.Remove(file)
+		assert.NoError(t, err)
+	}
 }

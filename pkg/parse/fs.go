@@ -5,7 +5,8 @@ import (
 	"io"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/anz-bank/sysl/pkg/mod"
+	"github.com/anz-bank/pkg/mod"
+	syslmod "github.com/anz-bank/sysl/pkg/mod"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
@@ -30,7 +31,7 @@ type fsFileStream struct {
 func newFSFileStream(filename string, fs afero.Fs) (s *fsFileStream, m *mod.Module, err error) {
 	var f afero.File
 	switch t := fs.(type) {
-	case *mod.Fs:
+	case *syslmod.Fs:
 		f, m, err = t.OpenWithModule(filename)
 	default:
 		f, err = fs.Open(filename)

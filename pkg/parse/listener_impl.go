@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/anz-bank/pkg/mod"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
-	"github.com/anz-bank/sysl/pkg/mod"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
@@ -207,7 +207,7 @@ func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specCon
 	if sizeSpec != nil {
 		if type1.GetPrimitive() != sysl.Type_NO_Primitive {
 			spec := sizeSpec.(*parser.Size_specContext)
-			type1.Constraint = makeTypeConstraint(type1.GetPrimitive(), spec)
+			type1.Constraint = makeTypeConstraint(type1, spec)
 		}
 	}
 	return
@@ -364,9 +364,9 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 		size_spec, has_size_spec := ctx.Size_spec().(*parser.Size_specContext)
 		array_spec, has_array_spec := ctx.Array_size().(*parser.Array_sizeContext)
 		if has_size_spec {
-			type1.Constraint = makeTypeConstraint(primitive_type, size_spec)
+			type1.Constraint = makeTypeConstraint(type1, size_spec)
 		} else if has_array_spec {
-			type1.Constraint = makeArrayConstraint(primitive_type, array_spec)
+			type1.Constraint = makeArrayConstraint(type1, array_spec)
 		}
 	}
 	if ctx.Annotations() != nil {
@@ -374,18 +374,26 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 	}
 }
 
-func makeTypeConstraint(t sysl.Type_Primitive, size_spec *parser.Size_specContext) []*sysl.Type_Constraint {
+func makeTypeConstraint(t *sysl.Type, size_spec *parser.Size_specContext) []*sysl.Type_Constraint {
 	c := []*sysl.Type_Constraint{}
 	var err error
 	var l int64
 
-	switch t {
+	bitWidth := getBitWidth(t)
+	switch t.GetPrimitive() {
 	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_STRING:
 		val1 := size_spec.DIGITS(0).GetText()
 		if l, err = strconv.ParseInt(val1, 10, 0); err == nil {
-			c = append(c, &sysl.Type_Constraint{
-				Length: &sysl.Type_Constraint_Length{Max: l},
-			})
+			if bitWidth > 0 {
+				c = append(c, &sysl.Type_Constraint{
+					BitWidth: bitWidth,
+					Length:   &sysl.Type_Constraint_Length{Max: l},
+				})
+			} else {
+				c = append(c, &sysl.Type_Constraint{
+					Length: &sysl.Type_Constraint_Length{Max: l},
+				})
+			}
 		}
 	case sysl.Type_DECIMAL:
 		val1 := size_spec.DIGITS(0).GetText()
@@ -409,17 +417,26 @@ func makeTypeConstraint(t sysl.Type_Primitive, size_spec *parser.Size_specContex
 	return c
 }
 
-func makeArrayConstraint(t sysl.Type_Primitive, array_size *parser.Array_sizeContext) []*sysl.Type_Constraint {
+func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*sysl.Type_Constraint {
 	c := []*sysl.Type_Constraint{}
 	var err error
 	var l int64
 
-	switch t {
+	bitWidth := getBitWidth(t)
+	switch t.GetPrimitive() {
 	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING:
-		ct := &sysl.Type_Constraint{
-			Length: &sysl.Type_Constraint_Length{},
+		var ct *sysl.Type_Constraint
+		if bitWidth > 0 {
+			ct = &sysl.Type_Constraint{
+				BitWidth: bitWidth,
+				Length:   &sysl.Type_Constraint_Length{},
+			}
+		} else {
+			ct = &sysl.Type_Constraint{
+				Length: &sysl.Type_Constraint_Length{},
+			}
 		}
-		if t != sysl.Type_STRING && array_size.DIGITS(0) != nil {
+		if t.GetPrimitive() != sysl.Type_STRING && array_size.DIGITS(0) != nil {
 			val := array_size.DIGITS(0).GetText()
 			if l, err = strconv.ParseInt(val, 10, 0); err == nil && l != 0 {
 				ct.Length.Min = l

@@ -8,8 +8,8 @@ import (
 
 	"github.com/spf13/afero"
 
+	"github.com/anz-bank/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/importer"
-	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
