@@ -155,11 +155,16 @@ let evalTableAlteration = \parsed cond parsed {
     (attr_alteration: data, ...): (type: "alter_column", alteration: data),
 };
 
+# concatOffset appends the two strings preserving string offsets
+let concatOffset = \str1 \str2
+    (str1 => .@ orderby .)(0)\$`${str1}${str2}`;
+
+# parseKeyPart parses the primary_key generated from spanner sql
 let parseKeyPart = \t
      t.column_name => \(@:i, @item:n)
         cond {
-            (t.sort_by?(i)?:false): $'${n.''}(${//str.lower(t.sort_by(i).'')})',
-            _:  $'${n.''}',
+            (t.sort_by?(i)?:false): concatOffset(n.'', $`(${//str.lower(t.sort_by(i).'')})`),
+            _:  n.'',
         };
 
 # evalDdl turns a ddl parse tree into a list of ddl statements ready to be applied to a model

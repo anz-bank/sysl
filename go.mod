@@ -11,9 +11,9 @@ require (
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
 	github.com/anz-bank/mermaid-go v0.1.1
-	github.com/anz-bank/pkg v0.0.19
-	github.com/arr-ai/arrai v0.158.0
-	github.com/arr-ai/wbnf v0.23.0
+	github.com/anz-bank/pkg v0.0.22
+	github.com/arr-ai/arrai v0.147.0
+	github.com/arr-ai/wbnf v0.28.0
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
@@ -29,13 +29,13 @@ require (
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.6.0
-	github.com/spf13/afero v1.3.4
+	github.com/spf13/afero v1.3.5
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/pretty v1.0.1 // indirect
 	golang.org/x/text v0.3.3 // indirect
-	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
-	google.golang.org/grpc v1.29.1
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
+	google.golang.org/grpc v1.31.1
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.3.0

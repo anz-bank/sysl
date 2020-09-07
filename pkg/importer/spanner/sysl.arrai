@@ -1,4 +1,5 @@
 # Transforms that generate sysl from an arr.ai-based SQL model.
+
 # size returns the size of an attribute.
 let size = \length
     cond {
@@ -9,11 +10,12 @@ let size = \length
 
 # hasAttributePattern checks whether an attribute has associated patterns.
 let hasAttributePattern = \entity \attr
-    (attr.type = 'bytes' && attr.length > 0) || attr.options?:{} ||
-    (entity.primary_key where //seq.contains(attr.name, .)) ||
-    attr.length = 'MAX' || //seq.has_prefix('0x', attr.length) ||
-    ((entity.foreign_keys => ((.foreign_keys where .attribute = attr.name)
-        => .reference_attribute orderby .)) where .);
+    (attr.type = 'bytes' && attr.length > 0)
+    || attr.options?:{}
+    || (entity.primary_key where //seq.contains(attr.name, .))
+    || attr.length = 'MAX' || //seq.has_prefix('0x', attr.length)
+    || ((entity.foreign_keys =>
+        ((.foreign_keys where .attribute = attr.name) => .reference_attribute orderby .)) where .);
 
 # hasEntityPattern checks whether an entity has associated patterns.
 let hasEntityPattern = \entity \model
@@ -27,8 +29,12 @@ let sortingOrder = \e \attr
 
 # compareColumnOrder compares the col order between primary key and table.
 let compareColumnOrder = \entity
-    let pk = (entity.primary_key orderby .) >> //seq.split('(', .) >> .(0);
+    let pk = (entity.primary_key orderby (. => .@ orderby .)(0)) >> //seq.split('(', .)(0);
     pk !(<=) (entity.attributes >> .name);
+
+# matchingFKs returns the foreign keys matching attribute name.
+let matchingFKs = \entity \attr
+    entity.foreign_keys => (.foreign_keys where .attribute = attr.name) where .;
 
 # attributePatterns generates the patterns for an attribute.
 let attributePatterns = \entity \attr
@@ -41,21 +47,13 @@ let attributePatterns = \entity \attr
         (entity.primary_key where //seq.contains(attr.name, .)):
             $`~pk${cond {sortingOrder(entity, attr): $`, ${sortingOrder(entity, attr)}`}}`
     };
-    let fk = cond {
-        (entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
-        .reference_attribute orderby .)) where .:
-            '~fk'
-    };
-    let length = cond {
-        attr.length = 'MAX': '~max',
-    };
-    let hexPrefix = cond {
-        //seq.has_prefix('0x', attr.length): '~hex',
-    };
+    let fk = cond { matchingFKs(entity, attr): '~fk' };
+    let length = cond { attr.length = 'MAX': '~max' };
+    let hexPrefix = cond { //seq.has_prefix('0x', attr.length): '~hex' };
     let byteLength = cond {
         attr.type = 'bytes' && attr.length > 0 && attr.length != 'MAX': $`length="${attr.length}"`
     };
-    //seq.join(', ', ([options, byteLength, pk, fk, length, hexPrefix] where .@item != ''));
+    //seq.join(', ', [options, byteLength, pk, fk, length, hexPrefix] where .@item);
 
 # entityPatterns generates the patterns for an entity.
 let entityPatterns = \entity \model
@@ -69,16 +67,21 @@ let entityPatterns = \entity \model
             $`interleave_in_parent="${.interleaved_in}", interleave_on_delete="${.on_delete}"`),
     };
     let fk = cond {
-        entity.foreign_keys:
-            $`foreign_keys=[${//seq.join(', ',(entity.foreign_keys =>
-                \keys $`["constraint:${keys.constraint_name}","columns:${//seq.join(', ', (keys.foreign_keys => .attribute) orderby .)}"]`) orderby .)}]`,
+        entity.foreign_keys: $`
+            foreign_keys=[${(entity.foreign_keys => \keys $`
+                ["constraint:${keys.constraint_name}","columns:${keys.foreign_keys => .attribute orderby .::, }"]
+            `) orderby .::, }]
+        `,
     };
-    let indices = cond {
-        (model.indexes where .table_name = entity.name):
-            $`indexes=[${//seq.join(', ', ((model.indexes orderby .) where .@item.table_name = entity.name) >>
-                $`"name:${.table_name}","unique:${.unique}","null_filtered:${.nullfiltered}","key_parts:${//seq.join(', ', .key_part orderby .)}${cond {.storing_col: $`","storing:${//seq.join(', ',.storing_col)}`}}${cond {.interleaved_table: $`","interleave_in:${.interleaved_table}`}}`)}"]`,
-    };
-    //seq.join(', ', ([pk, cluster, fk, indices] where .@item != ''));
+    let indx = model.indexes where .table_name = entity.name => ([
+        $`"name:${.table_name}"`,
+        $`"unique:${.unique}"`,
+        $`"null_filtered:${.nullfiltered}"`,
+        $`"key_parts:${.key_part orderby .::,}"`,
+        cond {.storing_col: $`"storing:${.storing_col::,}"`},
+        cond {.interleaved_table: $`"interleave_in:${.interleaved_table}"`},
+    ] where .@item) => //seq.join(',', .);
+    //seq.join(', ', [pk, cluster, fk, cond { indx: $`indexes=[${indx orderby . ::}]` }] where .@item);
 
 # appendEntityPatterns returns a pattern for the entity patterns together.
 let appendEntityPatterns = \entity \model cond { hasEntityPattern(entity, model): $`[${entityPatterns(entity, model)}]`};
@@ -88,12 +91,14 @@ let appendAttributePatterns = \entity \attr cond { hasAttributePattern(entity, a
 
 # typeInfo generates the type info for an attribute.
 let typeInfo = \entity \attr \type \isArray
-    let fkAttr = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
-        .reference_attribute orderby .) where .;
-    let fkTable = entity.foreign_keys => ((.foreign_keys where .attribute = attr.name) =>
-        .reference_table orderby .) where .;
+    let fkAttr = cond {
+        matchingFKs(entity, attr):  matchingFKs(entity, attr) => .reference_attribute
+    };
+    let fkTable = cond {
+        matchingFKs(entity, attr):  matchingFKs(entity, attr) => .reference_table
+    };
     cond {
-        fkAttr && fkTable: $`${fkTable => $`${.::}` orderby .::}.${fkAttr => $`${.::}` orderby .::}`,
+        fkAttr && fkTable: $`${fkTable orderby . ::}.${fkAttr orderby . ::}`,
         isArray: $`sequence of ${type}`,
         _: type,
     };

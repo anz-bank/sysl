@@ -17,7 +17,7 @@ customeraccounts[spanner_spec="1.0", package="retail"]:
         AddressLine2 <: string(100)? [~hex]
         AddressLine3 <: bytes? [length="100"]
                                 
-    !table Customer [indexes=["name:Customer","unique:true","null_filtered:true","key_parts:Email(asc), Mobile(desc)"]]:
+    !table Customer [indexes=["name:Customer","unique:true","null_filtered:true","key_parts:Email(asc),Mobile(desc)"]]:
         CustomerID <: string(36) [~pk]
         FirstName <: string(64) 
         LastName <: string(64) 
