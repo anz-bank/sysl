@@ -158,3 +158,17 @@ jobs:
         uses: actions-contrib/golangci-lint@v1
         with:
           golangci_lint_version: 1.30.0
+
+  downstream:
+    name: Test downstream repos
+    runs-on: ubuntu-latest
+    container: golang:1.14-stretch
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Run downstream tests
+        env:
+          DOWNSTREAM_TEST: ${{ secrets.DOWNSTREAM_TEST }}
+          ORG_GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
+        run: eval "${DOWNSTREAM_TEST:-echo 'no downstream repos to test'}"
