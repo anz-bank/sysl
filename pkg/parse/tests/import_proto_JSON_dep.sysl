@@ -1,0 +1,6 @@
+import grocery.sysl.pb.json
+
+Cart:
+    GetCart:
+      Grocery <- GET /cart
+      return ok

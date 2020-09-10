@@ -596,6 +596,47 @@ func TestOpenAPI3(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/openapi3.sysl")
 }
 
+func TestImportProtoJSON(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/import_proto_JSON.sysl", "")
+}
+
+func TestImportProtoJSONConflict(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/import_proto_JSON_conflict.sysl", "")
+}
+func TestImportProtoJSONMerge(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/import_proto_JSON_merge.sysl", "")
+}
+
+func TestImportProtoJSONEmpty(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/import_proto_JSON_empty.sysl", "")
+}
+
+func TestImportProtoJSONDep(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/import_proto_JSON_dep.sysl", "")
+}
+
+func TestImportProtoJSONNonExistent(t *testing.T) {
+	t.Parallel()
+	_, err := parseComparable("tests/import_proto_JSON_nonexistent.sysl", "tests", false)
+	assert.Error(t, err)
+}
+
+func TestImportProtoJSONInvalid(t *testing.T) {
+	t.Parallel()
+	_, err := parseComparable("tests/import_proto_JSON_invalid.sysl", "tests", false)
+	assert.Error(t, err)
+}
+
 func TestAttrScope(t *testing.T) {
 	t.Parallel()
 

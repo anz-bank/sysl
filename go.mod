@@ -25,6 +25,7 @@ require (
 	github.com/go-openapi/swag v0.19.9
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
+	github.com/imdario/mergo v0.3.11
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0

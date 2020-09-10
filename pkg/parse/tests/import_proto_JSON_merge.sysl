@@ -1,0 +1,22 @@
+import grocery.sysl.pb.json
+
+Cart:
+    @apple="1234"
+    /cart:
+        POST:
+            | Creates a new item in the cart
+            @action="Add to cart"
+            return ok <: string
+        GET:
+            | Creates a new item in the cart
+            @action="Get cart"
+            return ok <: string
+
+GroceryStore:
+    !type InventoryResponse[json_map_key="item_id"]:
+        item_id <: string:
+            @json_tag = "item_id"
+        quantity <: int:
+            @json_tag = "quantity"
+        discount <: int:
+            @json_tag = "discount"

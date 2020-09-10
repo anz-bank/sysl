@@ -6,18 +6,19 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/imdario/mergo"
 	"github.com/spf13/afero"
 
-	"github.com/anz-bank/pkg/mod"
-	"github.com/anz-bank/sysl/pkg/importer"
-
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	pkgmod "github.com/anz-bank/pkg/mod"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
+	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/msg"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // TypeData contains referenced type and actual tuple of referenced type
@@ -53,9 +54,22 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	return tree, nil
 }
 
+// Currently only supports JSON format Proto.
+// TODO: Add support for binary and textpb
+func importSyslProto(fsinput antlr.CharStream) (*sysl.Module, error) {
+	file := fsinput.GetText(0, fsinput.Size())
+	syslFile := &sysl.Module{}
+	err := protojson.Unmarshal([]byte(file), syslFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return syslFile, nil
+}
+
 func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
 	logger := logrus.StandardLogger()
-	fileName, _ := mod.ExtractVersion(def.filename)
+	fileName, _ := pkgmod.ExtractVersion(def.filename)
 	file := input.GetText(0, input.Size())
 	fileType, err := detectFileType(fileName, []byte(file))
 	if err != nil {
@@ -139,6 +153,23 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 
 		listener.sc = sourceCtxHelper{source.filename, ver}
 		listener.base = filepath.Dir(filename)
+
+		// Import Sysl Proto
+		fileName, _ := pkgmod.ExtractVersion(source.filename)
+		if strings.HasSuffix(fileName, ".sysl.pb.json") {
+			syslProtoImport, err := importSyslProto(fsinput)
+			if err != nil {
+				return nil, fmt.Errorf("error parsing %s: %w", source.filename, err)
+			}
+			if syslProtoImport != nil {
+				// Merge structs recursively
+				//nolint:govet
+				if err := mergo.Merge(listener.module, *syslProtoImport); err != nil {
+					return nil, err
+				}
+			}
+			break
+		}
 
 		input, err := importForeign(source, fsinput)
 		if err != nil {

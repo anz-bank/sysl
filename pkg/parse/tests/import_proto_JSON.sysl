@@ -1,0 +1,5 @@
+import grocery.sysl.pb.json
+
+Cart:
+    @apple="1234"
+    ...

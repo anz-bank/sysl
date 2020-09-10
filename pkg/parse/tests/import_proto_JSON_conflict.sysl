@@ -1,0 +1,16 @@
+import grocery.sysl.pb.json
+
+# This file tests the behaviour when two conflicting definitions are encountered.
+# The results show that anything in the sysl file overwrites the contents of the imported file
+
+Cart:
+    @apple="1234"
+    /cart:
+        POST:
+            | Creates a new item in the cart
+            return ok <: int
+
+GroceryStore:
+    !type InventoryResponse[json_map_key="item_id"]:
+        quantity <: string:
+            @json_tag = "quantity"

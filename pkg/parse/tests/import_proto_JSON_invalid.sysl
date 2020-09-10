@@ -1,0 +1,4 @@
+import invalid.sysl.pb.json
+
+TestApp:
+    ...

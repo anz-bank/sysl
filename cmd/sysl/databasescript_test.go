@@ -2,6 +2,7 @@ package main
 
 import (
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/loader"
@@ -9,7 +10,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
 	"github.com/anz-bank/sysl/pkg/database"
-	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
@@ -105,8 +105,8 @@ func TestDoConstructDatabaseScriptInvalidFile(t *testing.T) {
 	}
 	_, err := DoConstructDatabaseScriptWithParams("", args.title, args.outputDir,
 		args.appNames, args.source)
-	expectedError := parse.Exitf(2, "invalid.sysl has syntax errors\n")
-	assert.Equal(t, expectedError, err)
+	assert.Error(t, err)
+	assert.True(t, strings.Contains(err.Error(), "invalid.sysl has syntax errors\n"))
 }
 
 func DoConstructDatabaseScriptWithParams(
