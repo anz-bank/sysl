@@ -13,13 +13,14 @@ require (
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.19
+	github.com/anz-bank/sysl-catalog v1.4.188 // indirect
 	github.com/arr-ai/frozen v0.14.0 // indirect
 	github.com/arr-ai/hash v0.5.0 // indirect
 	github.com/arr-ai/wbnf v0.15.0
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b // indirect
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.1 // indirect
-	github.com/getkin/kin-openapi v0.8.0
+	github.com/getkin/kin-openapi v0.18.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.7
