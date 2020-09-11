@@ -65,7 +65,7 @@ func FTextPB(w io.Writer, m protoreflect.ProtoMessage) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}
-	pt := prototext.MarshalOptions{Multiline: true, Indent: "  ", EmitUnknown: false}
+	pt := prototext.MarshalOptions{Multiline: true, Indent: " ", EmitUnknown: false}
 	mt, err := pt.Marshal(m)
 	if err != nil {
 		return err

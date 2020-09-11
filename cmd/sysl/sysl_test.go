@@ -5,9 +5,12 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/loader"
+	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
@@ -60,7 +63,30 @@ func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 	assert.NoError(t, err)
 
 	expected = syslutil.HandleCRLF(expected)
-	assert.Equal(t, string(expected), string(actual))
+
+	// In this test case, it will generate different value of file in sourceContext as current code which
+	// loading Sysl module will evaluate absolute path of Sysl module, and the path relies on environment.
+	// In order to make sure file value can be the same in all environments, add this code to reset file
+	// value as "" in runtime.
+	if strings.HasSuffix(golden, ".json") {
+		reg := regexp.MustCompile(`"file": *\"[^,\n]*\"`)
+		expectedStr := reg.ReplaceAllString(string(expected), `"file": ""`)
+		actualStr := reg.ReplaceAllString(string(actual), `"file": ""`)
+		assert.Equal(t, expectedStr, actualStr)
+	} else if strings.HasSuffix(golden, ".textpb") {
+		reg := regexp.MustCompile(`file: *\"[^,\n]*\"`)
+		expectedStr := reg.ReplaceAllString(string(expected), `file: ""`)
+		actualStr := reg.ReplaceAllString(string(actual), `file: ""`)
+		// In protobuf text file, the space in case like `apps: {` is not fixed, it can be `apps: {` or
+		// or `apps:  {`. So update it make sure it has only one space in this case.
+		reg = regexp.MustCompile(`[^ ]+: +[^\n ]+`) // indent is 2 or more spaces
+		splitReg := regexp.MustCompile(` +`)
+		actualStr = reg.ReplaceAllStringFunc(actualStr, func(foundStr string) string {
+			newStr := strings.Join(splitReg.Split(foundStr, -1), " ")
+			return newStr
+		})
+		assert.Equal(t, expectedStr, actualStr)
+	}
 }
 
 func testMain2WithSyslRootMarker(t *testing.T, args []string, golden string) {
@@ -76,20 +102,26 @@ func testMain2(t *testing.T, args []string, golden string) {
 }
 
 func testAllMain2(t *testing.T, args []string, inputFile string, golden string) {
+	testAllMain2WithRoot(t, args, inputFile, golden)
+	testAllMain2WithoutRoot(t, args, inputFile, golden)
+}
+
+func testAllMain2WithoutRoot(t *testing.T, args []string, inputFile string, golden string) {
 	// no root defined
 	noRootFile := filepath.Join(testDir, inputFile)
 	testMain2(t, append(args, noRootFile), filepath.Join(testDir, golden))
 
 	// root marker
 	testMain2WithSyslRootMarker(t, append(args, noRootFile), filepath.Join(testDir, golden))
+}
 
+func testAllMain2WithRoot(t *testing.T, args []string, inputFile string, golden string) {
 	// root flag defined
 	rootFile := "tests/" + inputFile
 
 	args = append([]string{"--root", projDir}, args...)
 	golden = filepath.Join(testDir, golden)
-	out := "rooted" + filepath.Base(golden)
-	golden = filepath.Join(filepath.Dir(golden), out)
+	golden = filepath.Join(filepath.Dir(golden), filepath.Base(golden))
 	testMain2(t, append(args, rootFile), golden)
 
 	testMain2WithSyslRootMarker(t, append(args, rootFile), golden)
@@ -97,7 +129,7 @@ func testAllMain2(t *testing.T, args []string, inputFile string, golden string) 
 
 func TestMain2TextPB(t *testing.T) {
 	t.Parallel()
-	// tests/ is used because the projDir in args is expecting to have a directory called tests
+
 	testAllMain2(t, []string{}, "args.sysl", "args.sysl.golden.textpb")
 }
 
@@ -213,8 +245,9 @@ func TestMain2SeqdiagWithNonsensicalOutput(t *testing.T) {
 		fs, logger, main3,
 	)
 	assert.NotEqual(t, 0, rc)
-	assertLogEntry(t, hook.LastEntry(), logrus.ErrorLevel,
-		`extension must be svg, png or uml, not "zzz"`)
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	reg := regexp.MustCompile(`extension must be .[a-z]+,?|or not "zzz"`)
+	assert.True(t, reg.MatchString(hook.LastEntry().Message))
 }
 
 func TestMain2WithBlackboxParams(t *testing.T) {
@@ -435,8 +468,6 @@ func TestMain2WithGenerateCode(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	grammar, err := filepath.Abs(filepath.Join(testDir, "test.gen.g"))
-	assert.NoError(t, err)
 	ret := main2(
 		[]string{
 			"sysl",
@@ -444,7 +475,7 @@ func TestMain2WithGenerateCode(t *testing.T) {
 			"--root", testDir,
 			"--root-transform", testDir,
 			"--transform", "test.gen_multiple_annotations.sysl",
-			"--grammar", grammar,
+			"--grammar", "test.gen.g",
 			"--app-name", "Model",
 			"--start", "javaFile",
 			"--dep-path", "example.com/abc/asx/lmno/",
@@ -652,7 +683,7 @@ func TestSwaggerExportCurrentDir(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
-		syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+		syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/SIMPLE_SWAGGER_EXAMPLE.yaml")
 }
 
@@ -662,7 +693,7 @@ func TestSwaggerExportTargetDir(t *testing.T) {
 	tmp1, err := ioutil.TempDir("", "tmp1")
 	assert.NoError(t, err)
 	main2([]string{"sysl", "export", "-o", tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml", "-a", "testapp",
-		syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	_, err = ioutil.ReadFile(tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml")
 	assert.NoError(t, err)
 	os.RemoveAll(tmp1)
@@ -674,7 +705,7 @@ func TestSwaggerExportJson(t *testing.T) {
 	tmp2, err := ioutil.TempDir("", "tmp2")
 	assert.NoError(t, err)
 	main2([]string{"sysl", "export", "-o", tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json",
-		"-a", "testapp", syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		"-a", "testapp", syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
 	_, err = ioutil.ReadFile(tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json")
 	assert.NoError(t, err)
 	os.RemoveAll(tmp2)
@@ -685,7 +716,7 @@ func TestSwaggerExportInvalid(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
-		syslDir + "exporter/test-data/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+		syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
 	assert.True(t, errInt == 1)
 }
 
@@ -693,7 +724,8 @@ func TestSwaggerAppExportNoDir(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
 	main2([]string{"sysl", "export", "-o", "out/%(appname).yaml",
-		syslDir + "exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		syslDir + "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"},
+		afero.NewOsFs(), logger, main3)
 	for _, file := range []string{"out/single.yaml", "out/multiple.yaml"} {
 		_, err := ioutil.ReadFile(file)
 		assert.NoError(t, err)
@@ -707,7 +739,8 @@ func TestSwaggerAppExportDirExists(t *testing.T) {
 	tmp3, err := ioutil.TempDir("", "tmp3")
 	assert.NoError(t, err)
 	main2([]string{"sysl", "export", "-o", tmp3 + "/%(appname).yaml",
-		syslDir + "exporter/test-data/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"}, afero.NewOsFs(), logger, main3)
+		syslDir + "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"},
+		afero.NewOsFs(), logger, main3)
 	for _, file := range []string{tmp3 + "/single.yaml", tmp3 + "/multiple.yaml"} {
 		_, err := ioutil.ReadFile(file)
 		assert.NoError(t, err)
@@ -913,8 +946,6 @@ func TestMain3(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	fs := afero.NewOsFs()
 
-	assert.Equal(t, nil, main3([]string{"sysl"}, fs, logger))
-
 	assert.Error(t, main3([]string{"sysl", "codegen"}, fs, logger))
 
 	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config.txt"}, fs, logger))
@@ -923,4 +954,15 @@ func TestMain3(t *testing.T) {
 
 	assert.Error(t, main3([]string{"sysl", "codegen", "--grammar=go.gen.g", "--transform=go.gen.sysl", "model.sysl"},
 		fs, logger))
+}
+
+// Refers https://golang.org/pkg/testing/#hdr-Main
+func TestMain(m *testing.M) {
+	// Set mod.SyslModules = false to disable Sysl modules remote fetching for all test cases in main package.
+	// Or test case executing will try to fetch remote sysl module and generate go.mod and go.sum files in
+	// ./cmd/sysl folder, because this remote fetching uses go get. Generated go.mod and go.sum cause it can't
+	// build Sysl binary file successfully in CI and local environments.
+	mod.SyslModules = false
+	exitCode := m.Run()
+	os.Exit(exitCode)
 }

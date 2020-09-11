@@ -11,11 +11,10 @@ class "PrimitiveAliasModel.Account" as _0 << (D,orchid) >> {
 }
 class "PrimitiveAliasModel.User" as _1 << (D,orchid) >> {
 + acc : **Account**
-+ id : **Account**
++ id : **uuid**
 }
-class "PrimitiveAliasModel.uuid" as _2 << (D,orchid) >> {
-+ id : int
+class "PrimitiveAliasModel.uuid" as _3 << (D,orchid) int >> {
 }
 _1 *-- "1..1 " _0
-_1 *-- "1..1 " _0
+_1 *-- "1..1 " _2
 @enduml

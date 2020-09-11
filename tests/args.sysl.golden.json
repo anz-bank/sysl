@@ -104,7 +104,7 @@
         "endpoint": "PUT /foo",
         "arg": [
          {
-          "name": "bar \u003c: String"
+          "name": "bar <: String"
          }
         ]
        }

@@ -3,8 +3,8 @@ Project [seqtitle="DataModel"]:
         RelModel
     Object-Model:
         ObjectModel
-#    Primitive-Alias-Model:
-#        PrimitiveAliasModel
+    Primitive-Alias-Model:
+        PrimitiveAliasModel
 
 RelModel:
     !table Employee:
@@ -45,12 +45,12 @@ ObjectModel:
         order_id <: int
         customer <: Customer
 
-# TODO: Readd this test
-# PrimitiveAliasModel:
-#     !type User:
-#         id <: uuid
-#         acc <: Account
-#     !type Account:
-#         foo <: string
-#     !alias uuid:
-#         int
+
+PrimitiveAliasModel:
+    !type User:
+        id <: uuid
+        acc <: Account
+    !type Account:
+        foo <: string
+    !alias uuid:
+        int
