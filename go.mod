@@ -2,7 +2,7 @@ module github.com/anz-bank/sysl
 
 go 1.13
 
-replace github.com/spf13/afero => github.com/anz-bank/afero v1.2.3
+replace github.com/spf13/afero => github.com/anz-bank/afero v1.2.4
 
 require (
 	aqwari.net/xml v0.0.0-20200619145941-6c62842e69c1
@@ -39,7 +39,6 @@ require (
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
-	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 	google.golang.org/grpc v1.29.0
 	google.golang.org/protobuf v1.25.0
