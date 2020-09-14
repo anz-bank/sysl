@@ -1,0 +1,4 @@
+\model \type
+let sysl = //{/pkg/arrai/sysl};
+let model = sysl.normalize(sysl.polish(sysl.load(model)));
+//{./draw}(//{./traverse}(model, type))

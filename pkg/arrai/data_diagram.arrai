@@ -1,6 +1,7 @@
 # Generates an entity-relationship diagram from the tables of model.sysl.
 
-let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+let sysl = //{./sysl};
+let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
 
 # Transforms a relation model into a set of table specs.
 let toTables = \m
@@ -12,7 +13,7 @@ let toTables = \m
 let zo = \f cond {f.opt: 'o', _: '|'};
 
 # Returns an array of strings representing each column as an entity field.
-let toRows = \cols cols orderby .fieldName >> 
+let toRows = \cols cols orderby .fieldName >>
     let name = $`${cond {(!.opt || .pk): '* '}}${.fieldName}`;
     let type = $`${cond {.fk: $`**${.fieldType}** <<FK>>`, _: //str.lower(.fieldType)}}`;
     $`${name} : ${type}`;

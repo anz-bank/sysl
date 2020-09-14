@@ -11,23 +11,82 @@ let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 # A macro to convert `ret` statement payload string to structured tuples.
 let payloadMacro = (
     @grammar: {://grammar.lang.wbnf:
-        payload -> (status=("ok"|"error"|[1-5][0-9][0-9]) "<:"?)? type=[^ \t\[]*;
+        payload -> (status ("<:" type)? | (status "<:")? type) attr?;
+        type -> [^\[\n]*;
+        status -> ("ok"|"error"|[1-5][0-9][0-9]);
+        attr -> %!Array(nvp|modifier);
+        nvp_item -> str | array=%!Array(nvp_item) | dict=%!Dict(nvp_item);
+        nvp ->  name=\w+ "=" nvp_item;
+        modifier -> "~" name=[\w\+]+;
+        str -> ('"' ([^"\\] | [\\][\\brntu'"])* '"' | "'" ([^''])* "'") {
+             .wrapRE -> /{()};
+        };
         .wrapRE -> /{\s*()\s*};
+        .macro Array(child) {
+            "[" (child):"," "]"
+        }
+        .macro Dict(child) {
+            "{" entry=(key=child ":" value=child):"," "}"
+        }
     :},
     @transform: (payload: //{./util}.simpleTransform),
 );
 
+# TODO: this is assuming that attribute values are similar to arrai strings
+let rec buildNvp = \nvp cond nvp {
+    (array: (nvp_item: i, ...), ...): (a: i => (:.@, @item: buildNvp(.@item))),
+    (dict: (entry: i, ...), ...): (d: i => (
+        @     : buildNvp(.@item.key.nvp_item),
+        @value: buildNvp(.@item.value.nvp_item)
+    )),
+    (str: ('': s, ...), ...): //eval.value(//seq.join('', s)),
+    _: //eval.value(//seq.join('', //log.print(nvp.'')))
+};
+
+let name = //{./util}.ranked;
+
+# tries to fix type without full reference
+let fixType = \apps \appName \typePayload
+    # add trim whitespace function
+    let typePayload = //{./util}.trimWhitespace(typePayload);
+    let (:app, :type, :field) = //{./util}.unpackType(typePayload);
+    let pack = //{./util}.packType;
+    cond app {
+        (''): pack((app: appName, :type, :field)),
+        _: cond {
+            (app <: apps): typePayload,
+            _: pack((app: appName, type: [app] ++ type, :field))
+        }
+    }
+;
+
 # Converts a return statement payload into a tuple of its parts.
-let parseReturn = \payload //{./util}.invokeMacro(payloadMacro, payload);
+let parseReturn = \payload \apps \currApp
+    let ret = //{./util}.invokeMacro(payloadMacro, payload);
+    let retType = ret.type?:'';
+    ret +> (
+        type: fixType(apps, currApp, retType),
+        attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:() -> \attr
+                (
+                    nvp: attr.nvp?:{} => (@: name(.@item.name.''), @value: buildNvp(.@item.nvp_item)),
+                    modifier: attr.modifier?:{} => name(.@item.name.'')
+                )
+    )
+;
 
 # Replaces all `ret` payloads with structured tuples.
 let polishReturns = \m
-    let tweak = \.
-        . +> (ret: .ret +> (payload: parseReturn(.ret.payload)));
+    let apps = m.apps => .@;
+    let tweak = \. \currApp
+        . +> (ret: .ret +> (payload: parseReturn(.ret.payload, apps, currApp)));
 
-    m.apps?:{} >> \a a +> (endpoints: a.endpoints?:{} >> \p p +> (stmt: p.stmt?:[] >> \s
-        cond s.ret?:{} {{}: s, _: tweak(s)}
-    ))
+    m +> (apps: m.apps?:{} >>> \currApp \a
+        a +> (endpoints: a.endpoints?:{} >> \p
+            p +> (stmt: p.stmt?:[] >> \s
+                cond s.ret?:{} {{}: s, _: tweak(s, currApp)}
+            )
+        )
+    )
 ;
 
 # Applies polish functions to the appropriate elements of a Sysl model.
@@ -56,7 +115,7 @@ let normalize = \m
     );
     let calls = //rel.union(m.apps => \(@:appName, @value:app)
         //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
-            ep.stmt?:{} where .@item.call?:{} => 
+            ep.stmt?:{} where .@item.call?:{} =>
                 (
                     from: (
                         :appName,
@@ -102,13 +161,14 @@ let normalize = \m
                 )
         ) where .
     );
-
+    let transforms = //{./dfa/transforms}(m.apps);
     (
         :apps,
         :endpoints,
         :calls,
         :types,
         :fields,
+        :transforms,
         # TODO:
         # :annotations, (aka attributes)
         # :tags, (aka patterns)

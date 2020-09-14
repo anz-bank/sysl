@@ -1,0 +1,68 @@
+\rel \targetType (
+    let targetType = //{/pkg/arrai/util}.unpackType(targetType);
+    let calls = rel.calls;
+    let transforms = rel.transforms;
+    let isSubsetType = \t \subset
+                            let makeSeq = \type (
+                                cond type.field {
+                                    (''): [type.app] ++ type.type,
+                                    _: [type.app] ++ type.type ++ [type.field],
+                                }
+                            );
+                            //seq.has_prefix(makeSeq(t), makeSeq(subset))
+    ;
+
+    # For each edges, find the next edges
+    let rec traverse = \edges (
+        cond edges {
+            ({}): {},
+            _:
+                let nextEdges = (
+                    edges =>
+                        let e = .;
+                        # whoever calls e.caller
+                        let nextCalls = calls where .to = (:e.caller.appName, :e.caller.epName);
+                        # every transforms in e.caller relates to target type
+                        let ts = transforms where (
+                            .app = e.caller.appName &&
+                            .ep = e.caller.epName &&
+                            isSubsetType(e.caller.type, .from)
+                        );
+                        (
+                            nextCalls =>
+                                let call = .;
+                                ts => (
+                                    caller: call.from +> (type: .to),
+                                    callee: call.to   +> (type: .from),
+                                    :.desc
+                                )
+                        ) -> //rel.union(.)
+                ) -> //rel.union(.)
+                ;
+                edges | nextEdges | traverse(nextEdges &~ edges)
+        }
+    )
+    ;
+
+    # initial edges, edges where it involves the target type or type related to target type
+    let initEdges =
+        let sources = transforms where (.from = targetType || isSubsetType(.from, targetType));
+        (
+            sources =>
+                let t = .;
+                let c = calls where .to = (appName: t.app, epName: t.ep);
+                c => (
+                    caller: .from +> cond {
+                        isSubsetType(t.to, targetType): (type: targetType),
+                        _: (type: t.to)
+                    },
+                    callee: .to   +> (type: targetType),
+                    :t.desc,
+                )
+        ) -> //rel.union(.)
+    ;
+    (
+        type : targetType,
+        edges: traverse(initEdges)
+    )
+)

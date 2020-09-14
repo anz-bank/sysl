@@ -1,0 +1,39 @@
+# TODO: unfinished
+let mapping = \data 
+    data => \(
+        from: (
+            appName: fAppName,
+            typeName  : fTypeName,
+            fieldName : fFieldName
+        ),
+        to: (
+            appName  : tAppName,
+            typeName : tTypeName,
+            fieldName: tFieldName
+        ),
+        :description,
+    )
+
+    $`
+    Data Flow Details, ?, ?, Target Data, ?, ?, ?, Source Data, ?, ?, ?, ?, Data Transformation
+    Data Flow Name, Run Schedule Frequency, Interface Type Name, Physical Attribute Name, Physical Object Type Name, Physical Object Container Name, Physical Object Name, Physical Attribute Name, Source Platform Name, Physical Object Type Name, Physical Object Container Name, Physical Object Name, Business Rule Transformation Description (in Plain English)
+    ,,,${tFieldName}, 'API', ${tAppName}, ${tTypeName}, ${fFieldName}, ?, 'API', ${fAppName}, ${fTypeName}, "${description}";
+    ::\i:\n}
+    `
+;
+
+mapping({
+    (
+        from: (
+            appName: 'Source',
+            typeName  : 'Foo',
+            fieldName : 'x'
+        ),
+        to: (
+            appName  : 'A',
+            typeName : 'Foo',
+            fieldName: 'y'
+        ),
+        description: '1:1 transform',
+    )
+})

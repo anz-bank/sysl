@@ -98,6 +98,55 @@ let rec _topsort = \graph \sorted \sources
     };
 let topsort = \graph _topsort(graph, [], unimported(graph));
 
+# TODO: this should be part of stdlib
+let rec trimWhitespace = \str
+    let prefix = //seq.trim_prefix(' ');
+    let suffix = //seq.trim_suffix(' ');
+    let trimmed = prefix(suffix(str));
+    cond trimmed {
+        (str): str,
+        _: trimWhitespace(trimmed)
+    }
+;
+
+
+# TODO: Handle type without app reference
+let typeGrammar = {:
+        //grammar.lang.wbnf[grammar]:
+        types -> (app=([^\.]+) ".")? type=([^\.]+):".";
+    :};
+let unpackType = \type (
+    cond type {
+        (''): (app: '', type: '', field: ''),
+        _: (//grammar -> .parse(typeGrammar, 'types', type))
+            ->
+            # TODO: remove once .field?: is fixed
+            let t = .;
+            let app = trimWhitespace(ranked(t.app?.''?:''));
+            let typeCount = .type count;
+            cond (typeCount) {
+                (1): (
+                    :app,
+                    type : .type >> trimWhitespace(ranked(.'')),
+                    field: ''
+                ),
+                _: (
+                    :app,
+                    type : .type where .@ != typeCount - 1 >> trimWhitespace(ranked(.'')),
+                    field: trimWhitespace(ranked(.type(typeCount-1).''))
+                )
+            }
+    }
+);
+
+let packType = \(app: appName, type: typeSeq, field: fieldName) (
+    cond fieldName {
+        (''): //seq.join('.', [appName] ++ typeSeq),
+        _: //seq.join('.', [appName] ++ typeSeq ++ [fieldName]),
+    }
+)
+;
+
 (
     :explore,
     :filterTree,
@@ -111,4 +160,7 @@ let topsort = \graph _topsort(graph, [], unimported(graph));
     :simpleTransform,
     :topsort,
     :unimported,
+    :unpackType,
+    :packType,
+    :trimWhitespace
 )

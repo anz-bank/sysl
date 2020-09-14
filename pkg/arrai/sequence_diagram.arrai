@@ -1,6 +1,7 @@
 # Generates the PlantUML for a sequence diagram of "Client <- Do" in model.sysl.
 
-let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+let sysl = //{./sysl};
+let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
 
 # Transforms a module to a tree of calls between endpoints.
 #
@@ -14,7 +15,7 @@ let rec toTree = \(:m, :appName, :epName)
 # Transforms an endpoint to a PlantUML sequence from `from` to `to`, including all downstream calls.
 let rec toUml = \(:from, :to, :calls) \urls
     let label = cond {
-        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} -> ${to.appName} ${to.epName}`)} ${to.epName}]]`, 
+        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} -> ${to.appName} ${to.epName}`)} ${to.epName}]]`,
         _: to.epName
     };
     let retLabel = cond {
@@ -49,7 +50,7 @@ let toSeq = \m \(:appName, :epName) \urls
     ;
 
     # Enriches the app names with `type`, inferred from patterns and used as the primary sort key.
-    let apps = (getApps(model, []) => \(:@, @item:name) 
+    let apps = (getApps(model, []) => \(:@, @item:name)
         let patterns = //rel.union(m.apps where .appName = name => .appPatterns);
         let type = cond {{'db'} & patterns: 'database', _: 'control'};
         (:@, :name, :type)
@@ -62,7 +63,7 @@ let toSeq = \m \(:appName, :epName) \urls
         skinparam sequence {
             ArrowColor grey
         }`}}
-        
+
         ${apps >> $`${.type} "${.name}"`::\i}
 
         ${toUml(model, urls)}

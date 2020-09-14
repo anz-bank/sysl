@@ -1,0 +1,396 @@
+let sysl = //{/pkg/arrai/sysl};
+let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+(
+    testTransformsModelPB: model.transforms = {
+        (
+            app: 'A',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'A',
+                field: {},
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'A',
+                field: {},
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'A',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'Source',
+                field: 'x',
+                type: ['Foo']
+            ),
+            to: (
+                app: 'A',
+                field: 'ax',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'A',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'Source',
+                field: 'y',
+                type: ['Foo']
+            ),
+            to: (
+                app: 'A',
+                field: 'ay',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'B',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'B',
+                field: {},
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'B',
+                field: {},
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'B',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'Source',
+                field: 'x',
+                type: ['Foo']
+            ),
+            to: (
+                app: 'B',
+                field: 'bx',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'B',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'Source',
+                field: 'y',
+                type: ['Foo']
+            ),
+            to: (
+                app: 'B',
+                field: 'by',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'C',
+                field: {},
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: {},
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'FetchA',
+            from: (
+                app: 'C',
+                field: {},
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: {},
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'FetchB',
+            from: (
+                app: 'C',
+                field: {},
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: {},
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'A',
+                field: 'ax',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cx',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'A',
+                field: 'ay',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cy',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'B',
+                field: 'bx',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cx',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'B',
+                field: 'by',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cy',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'FetchA',
+            from: (
+                app: 'A',
+                field: 'ax',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cx',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'FetchA',
+            from: (
+                app: 'A',
+                field: 'ay',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cy',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'FetchB',
+            from: (
+                app: 'B',
+                field: 'bx',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cx',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'C',
+            desc: '1:1 transform',
+            ep: 'FetchB',
+            from: (
+                app: 'B',
+                field: 'by',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'C',
+                field: 'cy',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'Client',
+            desc: '1:1 transform',
+            ep: 'Do',
+            from: (
+                app: 'Client',
+                field: {},
+                type: ['Screen']
+            ),
+            to: (
+                app: 'Client',
+                field: {},
+                type: ['Screen']
+            )
+        ),
+        (
+            app: 'Client',
+            desc: '1:1 transform',
+            ep: 'Do',
+            from: (
+                app: 'D',
+                field: 'dx',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'Client',
+                field: 'xx',
+                type: ['Screen']
+            )
+        ),
+        (
+            app: 'Client',
+            desc: '1:1 transform',
+            ep: 'Do',
+            from: (
+                app: 'D',
+                field: 'dy',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'Client',
+                field: 'yy',
+                type: ['Screen']
+            )
+        ),
+        (
+            app: 'D',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'D',
+                field: {},
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'D',
+                field: {},
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'D',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'A',
+                field: 'ax',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'D',
+                field: 'dx',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'D',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'A',
+                field: 'ay',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'D',
+                field: 'dy',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'D',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'C',
+                field: 'cx',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'D',
+                field: 'dx',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'D',
+            desc: '1:1 transform',
+            ep: 'Fetch',
+            from: (
+                app: 'C',
+                field: 'cy',
+                type: ['FetchResponse']
+            ),
+            to: (
+                app: 'D',
+                field: 'dy',
+                type: ['FetchResponse']
+            )
+        ),
+        (
+            app: 'Source',
+            desc: '1:1 transform',
+            ep: 'Read',
+            from: (
+                app: 'Source',
+                field: {},
+                type: ['Foo']
+            ),
+            to: (
+                app: 'Source',
+                field: {},
+                type: ['Foo']
+            )
+        )
+    }
+)

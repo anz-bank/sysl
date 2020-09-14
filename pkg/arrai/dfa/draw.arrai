@@ -1,0 +1,13 @@
+# TODO: maybe usable to create a graph
+let typeStr = //{/pkg/arrai/util}.packType;
+\(:type, :edges) (
+    $`
+    @startuml
+    title ${typeStr(type)}
+    ${edges =>
+        $`[${.caller.appName}] "${.caller.epName}" <-- "${.callee.epName}" [${.callee.appName}]: ${typeStr(.caller.type)}`
+        orderby .
+        ::\i}
+    @enduml
+    `
+)

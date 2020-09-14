@@ -1,0 +1,3 @@
+let model = //os.args(1);
+let type = //os.args(2);
+//{./draw_cmd}(model, type)

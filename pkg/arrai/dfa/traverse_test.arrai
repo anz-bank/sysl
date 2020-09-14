@@ -1,0 +1,663 @@
+let sysl = //{/pkg/arrai/sysl};
+let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+let traverseFn = //{./traverse}(model);
+
+(
+    testTraverseSourceFooX: traverseFn('Source.Foo.x') = (
+        edges: {
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'B',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'bx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'bx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'Client',
+                    epName: 'Do',
+                    type: (
+                        app: 'D',
+                        field: 'dx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'Source',
+                    epName: 'Read',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'Source',
+                    epName: 'Read',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'B',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                desc: '1:1 transform'
+            )
+        },
+        type: (
+            app: 'Source',
+            field: 'x',
+            type: ['Foo']
+        )
+    )
+    testTraverseSourceFooY: traverseFn('Source.Foo.y') = (
+        edges: {
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'B',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'by',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cy',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'by',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cy',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'Client',
+                    epName: 'Do',
+                    type: (
+                        app: 'D',
+                        field: 'dy',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'Source',
+                    epName: 'Read',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'Source',
+                    epName: 'Read',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'B',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                desc: '1:1 transform'
+            )
+        },
+        type: (
+            app: 'Source',
+            field: 'y',
+            type: ['Foo']
+        )
+    )
+    testTraverseSourceFoo: traverseFn('Source.Foo') = (
+        edges: {
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'B',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'x',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'bx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'B',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: 'y',
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'by',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchA',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cy',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'bx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'C',
+                    epName: 'FetchB',
+                    type: (
+                        app: 'B',
+                        field: 'by',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'C',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'C',
+                        field: 'cy',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ax',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'Client',
+                    epName: 'Do',
+                    type: (
+                        app: 'D',
+                        field: 'dx',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'D',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'A',
+                        field: 'ay',
+                        type: ['FetchResponse']
+                    )
+                ),
+                caller: (
+                    appName: 'Client',
+                    epName: 'Do',
+                    type: (
+                        app: 'D',
+                        field: 'dy',
+                        type: ['FetchResponse']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'Source',
+                    epName: 'Read',
+                    type: (
+                        app: 'Source',
+                        field: {},
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'A',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: {},
+                        type: ['Foo']
+                    )
+                ),
+                desc: '1:1 transform'
+            ),
+            (
+                callee: (
+                    appName: 'Source',
+                    epName: 'Read',
+                    type: (
+                        app: 'Source',
+                        field: {},
+                        type: ['Foo']
+                    )
+                ),
+                caller: (
+                    appName: 'B',
+                    epName: 'Fetch',
+                    type: (
+                        app: 'Source',
+                        field: {},
+                        type: ['Foo']
+                    )
+                ),
+                desc: '1:1 transform'
+            )
+        },
+        type: (
+            app: 'Source',
+            field: {},
+            type: ['Foo']
+        )
+    )
+)
