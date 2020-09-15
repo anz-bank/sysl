@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"github.com/joshcarp/gop/gop"
 	"io"
 	"io/ioutil"
 	"os"
@@ -935,4 +936,91 @@ App:
 		...`
 	_, err := NewParser().ParseString(content)
 	assert.Nil(t, err)
+}
+
+type retriever struct {
+	contents map[string]string
+	res      map[string]gop.Object
+}
+
+func (r retriever) Retrieve(repo, resource, version string) (res gop.Object, cached bool, err error) {
+	if version == "" {
+		val, ok := r.contents[resource]
+		if !ok {
+			return res, cached, fmt.Errorf("resource not found %s", resource)
+		}
+		res.Content = []byte(val)
+		res.Resource = resource
+		r.res[resource] = res
+		return
+	}
+	filename := fmt.Sprintf("%s/%s@%s", repo, resource, version)
+	val, ok := r.contents[filename]
+	if !ok {
+		return res, cached, fmt.Errorf("resource not found %s", resource)
+	}
+	res.Content = []byte(val)
+	res.Resource = resource
+	res.Version = version
+	res.Repo = repo
+	r.res[filename] = res
+	return
+}
+
+/* TestParseSyslRetriever tests that a file can be imported */
+func TestParseSyslRetriever(t *testing.T) {
+	r := retriever{res: map[string]gop.Object{}, contents: map[string]string{
+		"./one.sysl": `
+import two.sysl
+App:
+	_:
+		...`,
+		"./two.sysl": `
+Two:
+	...
+`}}
+	_, err := NewParser().Parse("./one", r)
+	require.NoError(t, err)
+}
+
+/* TestParseSyslRetrieverRemote tests a remote import */
+func TestParseSyslRetrieverRemote(t *testing.T) {
+	r := retriever{res: map[string]gop.Object{}, contents: map[string]string{
+		"./one.sysl": `
+import //github.com/one/two/three.sysl@1234
+App:
+	_:
+		...`,
+		"github.com/one/two/three.sysl@1234": `
+Two:
+	...
+`}}
+	_, err := NewParser().Parse("./one", r)
+	require.NoError(t, err)
+	for filename, e := range r.contents {
+		require.Equal(t, e, string(r.res[filename].Content))
+	}
+}
+
+/* TestParseSyslRetrieverRemoteImport tests that a remote file that imports from it's own repository */
+func TestParseSyslRetrieverRemoteImport(t *testing.T) {
+	r := retriever{res: map[string]gop.Object{}, contents: map[string]string{
+		"./one.sysl": `
+import //github.com/one/two/three.sysl@1234
+App:
+	_:
+		...`,
+		"github.com/one/two/three.sysl@1234": `
+import four.sysl
+Two:
+	...
+`, "github.com/one/two/four.sysl@1234": `
+App:
+	...
+`}}
+	_, err := NewParser().Parse("./one", r)
+	require.NoError(t, err)
+	for filename, e := range r.contents {
+		require.Equal(t, e, string(r.res[filename].Content))
+	}
 }
