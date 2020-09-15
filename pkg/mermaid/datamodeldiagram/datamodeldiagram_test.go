@@ -12,7 +12,7 @@ import (
 )
 
 func TestGenerateMermaidDataModelDiagram(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/petshop/petshop.sysl",
+	m, err := parse.NewParser().ParseFs("demo/petshop/petshop.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	mapper := syslwrapper.MakeAppMapper(m)
@@ -25,7 +25,7 @@ func TestGenerateMermaidDataModelDiagram(t *testing.T) {
 }
 
 func TestGenerateMermaidDataModelDiagramWithAppAndType(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/petshop/petshop.sysl",
+	m, err := parse.NewParser().ParseFs("demo/petshop/petshop.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	r, err := GenerateDataDiagramWithAppAndType(m, "PetShopModel", "Pet")
@@ -35,7 +35,7 @@ func TestGenerateMermaidDataModelDiagramWithAppAndType(t *testing.T) {
 }
 
 func TestGenerateMermaidDataModelDiagramWithAppAndTypeNonExistentType(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/petshop/petshop.sysl",
+	m, err := parse.NewParser().ParseFs("demo/petshop/petshop.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	r, err := GenerateDataDiagramWithAppAndType(m, "PetShopModel", "ThisDoesNotExist")
@@ -45,7 +45,7 @@ func TestGenerateMermaidDataModelDiagramWithAppAndTypeNonExistentType(t *testing
 }
 
 func TestGenerateMermaidDataModelDiagramWithAppAndTypeEmptyString(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/petshop/petshop.sysl",
+	m, err := parse.NewParser().ParseFs("demo/petshop/petshop.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	r, err := GenerateDataDiagramWithAppAndType(m, "PetShopModel", "")
@@ -66,7 +66,7 @@ classDiagram
 }
 
 func TestGenerateMermaidDataModelDiagramWithRecursiveReference(t *testing.T) {
-	m, err := parse.NewParser().Parse("tests/recursive.sysl",
+	m, err := parse.NewParser().ParseFs("tests/recursive.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	mapper := syslwrapper.MakeAppMapper(m)

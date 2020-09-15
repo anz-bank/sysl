@@ -120,7 +120,7 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
+	module, err := NewParser().ParseFs(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	if err != nil {
 		return nil, err
 	}
@@ -236,7 +236,7 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 			filename += syslExt
 		}
 		// update test files
-		mod, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), "."))
+		mod, err := NewParser().ParseFs(filename, syslutil.NewChrootFs(afero.NewOsFs(), "."))
 		if err != nil {
 			return false, err
 		}
@@ -648,7 +648,7 @@ func TestUndefinedRootAbsoluteImport(t *testing.T) {
 
 	parser := NewParser()
 	parser.RestrictToLocalImport()
-	_, err := parser.Parse("absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
+	_, err := parser.ParseFs("absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
 	require.EqualError(t, err, "error importing: importing outside current directory is only allowed when root is defined")
 }
 
@@ -666,7 +666,7 @@ func TestDuplicateImport(t *testing.T) {
 func TestDuplicateImportWarning(t *testing.T) {
 	var buf bytes.Buffer
 	logrus.SetOutput(&buf)
-	_, err := NewParser().Parse("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := NewParser().ParseFs("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	logrus.SetOutput(os.Stderr)
 
 	if assert.NoError(t, err) {
@@ -759,7 +759,7 @@ func assertLintLogs(t *testing.T, file, logMsg string) {
 	var buf bytes.Buffer
 	//FIXME: using logrus global logger makes it impossible to parallelize log tests
 	logrus.SetOutput(&buf)
-	_, err := NewParser().Parse(file, syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := NewParser().ParseFs(file, syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.NoError(t, err)
 	logrus.SetOutput(os.Stderr)
 	if logMsg == "" {

@@ -16,7 +16,7 @@ import (
 func TestSequenceDiagramFail(t *testing.T) {
 	t.Parallel()
 
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := parse.NewParser().ParseFs("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 
@@ -24,7 +24,7 @@ func TestSequenceDiagramDitto(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("tests/ditto2.sysl",
+	m, err := parse.NewParser().ParseFs("tests/ditto2.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
 	l := &cmdutils.Labeler{}
@@ -65,7 +65,7 @@ func TestSequenceDiagramHidden(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("tests/hidden.sysl",
+	m, err := parse.NewParser().ParseFs("tests/hidden.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
 	l := &cmdutils.Labeler{}
@@ -104,7 +104,7 @@ func TestSequenceDiagramWithEndpointHyperlink(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-endpoint-hyperlink.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-endpoint-hyperlink.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
 	l := &cmdutils.Labeler{}
@@ -145,7 +145,7 @@ func TestSequenceDiagramWithAppNameHyperlink(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-app-hyperlink.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-app-hyperlink.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
 	l := &cmdutils.Labeler{}
@@ -186,7 +186,7 @@ func TestSequenceDiagramWithEndpointAndAppNameHyperlink(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-endpoint-app-hyperlink.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-endpoint-app-hyperlink.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
 	l := &cmdutils.Labeler{}
@@ -228,7 +228,7 @@ func TestSequenceDiagram(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-sd.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
 	l := &cmdutils.Labeler{}
@@ -276,7 +276,7 @@ func TestSequenceDiagram2(t *testing.T) {
 	t.Parallel()
 
 	logger, _ := test.NewNullLogger()
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-sd2.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projDir))
 	require.NoError(t, err)
 	l := &cmdutils.Labeler{}
@@ -326,7 +326,7 @@ func TestSequenceDiagramToFormatNameAttributes(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs(testDir)
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
+	m, err := parse.NewParser().ParseFs("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
 	al := cmdutils.MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)
@@ -381,7 +381,7 @@ func TestSequenceDiagramramsToFormatComplexAttributes(t *testing.T) {
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs(testDir)
-	m, err := parse.NewParser().Parse("sequence_diagram_name_format.sysl", fs)
+	m, err := parse.NewParser().ParseFs("sequence_diagram_name_format.sysl", fs)
 	require.NoError(t, err)
 	syslutil.AssertFsHasExactly(t, memFs)
 	al := cmdutils.MakeFormatParser(`%(@status?<color red>%(appname)</color>|%(appname))`)

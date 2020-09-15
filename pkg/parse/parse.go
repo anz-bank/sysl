@@ -2,6 +2,8 @@ package parse
 
 import (
 	"fmt"
+	"github.com/joshcarp/gop/gop"
+	"github.com/joshcarp/gop/gop/retriever/retriever_local"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -119,15 +121,17 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 	if _, err := file.Write([]byte(content)); err != nil {
 		return nil, err
 	}
-	return p.Parse("temp.sysl", fs)
+	return p.ParseFs("temp.sysl", fs)
 }
 
-func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
+func (p *Parser) ParseFs(filename string, fs afero.Fs) (*sysl.Module, error) {
+	retriever := retriever_local.New(fs)
+	return p.Parse(filename, retriever)
+}
+
+func (p *Parser) Parse(filename string, retriever gop.Retriever) (*sysl.Module, error) {
 	if !strings.HasSuffix(filename, syslExt) {
 		filename += syslExt
-	}
-	if !fileExists(filename, fs) {
-		return nil, Exitf(ImportError, "input file does not exist: %#v", filename)
 	}
 
 	imported := map[string]struct{}{}
@@ -142,7 +146,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
 
-		fsinput, mod, err := newFSFileStream(filename, fs)
+		fsinput, mod, err := newFSFileStream(filename, retriever)
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
@@ -699,7 +703,7 @@ func getDefaultAppName(mod *sysl.Module) string {
 
 func LoadAndGetDefaultApp(model string, fs afero.Fs, p *Parser) (*sysl.Module, string, error) {
 	// Model we want to generate code for
-	mod, err := p.Parse(model, fs)
+	mod, err := p.ParseFs(model, fs)
 	if err != nil {
 		return nil, "", err
 	}

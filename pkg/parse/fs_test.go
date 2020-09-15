@@ -2,6 +2,7 @@ package parse
 
 import (
 	"fmt"
+	"github.com/joshcarp/gop/gop/retriever/retriever_local"
 	"io"
 	"net/http"
 	"os"
@@ -31,7 +32,7 @@ func TestFileExistsBadFile(t *testing.T) {
 func TestNewFSFileStream(t *testing.T) {
 	t.Parallel()
 
-	fs, _, err := newFSFileStream("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), "."))
+	fs, _, err := newFSFileStream("fs_test.go", retriever_local.New(syslutil.NewChrootFs(afero.NewOsFs(), ".")))
 	if assert.NoError(t, err) {
 		text := syslutil.HandleCRLF([]byte(fs.GetText(0, 13)))
 		assert.Equal(t, "package parse\n", string(text))
@@ -41,9 +42,9 @@ func TestNewFSFileStream(t *testing.T) {
 func TestNewFSFileStreamNotFound(t *testing.T) {
 	t.Parallel()
 
-	_, _, err := newFSFileStream("x", syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir"))
+	_, _, err := newFSFileStream("x", retriever_local.New(syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir")))
 	assert.Error(t, err)
-	_, _, err = newFSFileStream("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), "."))
+	_, _, err = newFSFileStream("non-existent.file", retriever_local.New(syslutil.NewChrootFs(afero.NewOsFs(), ".")))
 	assert.Error(t, err)
 }
 

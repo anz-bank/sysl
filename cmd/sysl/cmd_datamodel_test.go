@@ -25,7 +25,7 @@ func TestDataModel(t *testing.T) {
 	p.Direct = false
 	fs := afero.NewOsFs()
 	filename := testDir + "multiple-app-datamodel.sysl"
-	m, err := parse.NewParser().Parse(filename, fs)
+	m, err := parse.NewParser().ParseFs(filename, fs)
 	if err != nil {
 		panic(err)
 	}
@@ -65,7 +65,7 @@ func TestHTML(t *testing.T) {
 	fs := afero.NewOsFs()
 	plantuml := os.Getenv("SYSL_PLANTUML")
 	filename := testDir + "multiple-app-datamodel.sysl"
-	m, err := parse.NewParser().Parse(filename, fs)
+	m, err := parse.NewParser().ParseFs(filename, fs)
 	if err != nil {
 		panic(err)
 	}
@@ -104,7 +104,7 @@ func TestLinkOutput(t *testing.T) {
 	plantuml := os.Getenv("SYSL_PLANTUML")
 	fs := afero.NewOsFs()
 	filename := testDir + "multiple-app-datamodel.sysl"
-	m, err := parse.NewParser().Parse(filename, fs)
+	m, err := parse.NewParser().ParseFs(filename, fs)
 	if err != nil {
 		panic(err)
 	}
@@ -144,7 +144,7 @@ func TestSequence(t *testing.T) {
 	plantuml := os.Getenv("SYSL_PLANTUML")
 	fs := afero.NewOsFs()
 	filename := testDir + "sequence.sysl"
-	m, err := parse.NewParser().Parse(filename, fs)
+	m, err := parse.NewParser().ParseFs(filename, fs)
 	if err != nil {
 		panic(err)
 	}

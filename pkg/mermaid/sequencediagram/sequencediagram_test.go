@@ -13,7 +13,7 @@ func TestBadInputsToGenerateMermaidSequenceDiagram(t *testing.T) {
 	t.Parallel()
 	appName := "wrongName"
 	epName := "wrongEp"
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-sd.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
@@ -28,7 +28,7 @@ func TestGenerateMermaidSequenceDiagram(t *testing.T) {
 	t.Parallel()
 	appName := "WebFrontend"
 	epName := "RequestProfile"
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-sd.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
@@ -43,7 +43,7 @@ func TestGenerateMermaidSequenceDiagram2(t *testing.T) {
 	t.Parallel()
 	appName := "WebFrontend"
 	epName := "RequestProfile"
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-sd2.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
@@ -58,7 +58,7 @@ func TestGenerateMermaidSequenceDiagram3(t *testing.T) {
 	t.Parallel()
 	appName := "MobileApp"
 	epName := "Login"
-	m, err := parse.NewParser().Parse("demo/simple/sysl-app-hyperlink.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/sysl-app-hyperlink.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)
@@ -73,7 +73,7 @@ func TestGenerateMermaidSequenceDiagramWithIfElseLoopActionAndGroupStatements(t 
 	t.Parallel()
 	appName := "DragonEater"
 	epName := "EatDragon"
-	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
+	m, err := parse.NewParser().ParseFs("demo/simple/best-ever-sysl-example.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), projectDir))
 	if err != nil {
 		t.Error(err)

@@ -1,12 +1,10 @@
 package parse
 
 import (
-	"bytes"
-	"io"
-
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/anz-bank/pkg/mod"
-	syslmod "github.com/anz-bank/sysl/pkg/mod"
+	"github.com/joshcarp/gop/app"
+	"github.com/joshcarp/gop/gop"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
@@ -28,24 +26,15 @@ type fsFileStream struct {
 	filename string
 }
 
-func newFSFileStream(filename string, fs afero.Fs) (s *fsFileStream, m *mod.Module, err error) {
-	var f afero.File
-	switch t := fs.(type) {
-	case *syslmod.Fs:
-		f, m, err = t.OpenWithModule(filename)
-	default:
-		f, err = fs.Open(filename)
+func newFSFileStream(filename string, retriever gop.Retriever) (s *fsFileStream, m *mod.Module, err error) {
+	var res gop.Object
+	repo, resource, version, err := app.ProcessRequest(filename)
+	if err != nil {
+		resource = filename
 	}
-
+	res, _, err = retriever.Retrieve(repo, resource, version)
 	if err != nil {
 		return nil, nil, err
 	}
-	defer f.Close()
-
-	var buf bytes.Buffer
-	if _, err = io.Copy(&buf, f); err != nil {
-		return nil, nil, err
-	}
-
-	return &fsFileStream{antlr.NewInputStream(buf.String()), filename}, m, nil
+	return &fsFileStream{antlr.NewInputStream(string(res.Content)), filename}, m, nil
 }
