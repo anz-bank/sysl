@@ -131,29 +131,33 @@ func (p *Parser) ParseFs(filename string, fs afero.Fs) (*sysl.Module, error) {
 	return p.Parse(filename, retriever)
 }
 
-func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, error) {
-	repo, resource, version, _ := app.ProcessRequest(resource)
-	if !strings.HasSuffix(resource, syslExt) {
-		resource += syslExt
-	}
-	if version != ""{
-		resource = fmt.Sprintf("%s/%s@%s", repo, resource, version)
-	}
-
+func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, error) { //nolint:funlen
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener()
 	listener.lint()
 
-	source := importDef{
-		filename: resource,
+	repo, resource, version, err := app.ProcessRequest(resource)
+	if err != nil {
+		return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", resource, err))
 	}
-
+	if !strings.HasSuffix(resource, syslExt) {
+		resource += syslExt
+	}
+	source := importDef{filename: resource}
+	if version != "" {
+		source.filename = fmt.Sprintf("%s/%s@%s", repo, resource, version)
+	}
 	for {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
 		repo, resource, version, err := app.ProcessRequest(filename)
-
+		if err != nil {
+			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+		}
 		res, _, err := retriever.Retrieve(repo, resource, version)
+		if err != nil {
+			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+		}
 		fsinput := &fsFileStream{antlr.NewInputStream(string(res.Content)), filename}
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
@@ -217,6 +221,9 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 		for len(listener.imports) > 0 {
 			source = listener.imports[0]
 			listener.imports = listener.imports[1:]
+			if !strings.Contains(source.filename, "@") && version != ""{
+				source.filename += "@"+version
+			}
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
 					return nil, Exitf(2,
