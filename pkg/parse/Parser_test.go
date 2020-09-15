@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/joshcarp/gop/gop"
 	"io"
 	"io/ioutil"
 	"os"
 	"path"
 	"strings"
 	"testing"
+
+	"github.com/joshcarp/gop/gop"
 
 	"github.com/pmezard/go-difflib/difflib"
 	"google.golang.org/protobuf/encoding/prototext"
