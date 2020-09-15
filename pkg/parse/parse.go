@@ -221,8 +221,8 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 		for len(listener.imports) > 0 {
 			source = listener.imports[0]
 			listener.imports = listener.imports[1:]
-			if !strings.Contains(source.filename, "@") && version != ""{
-				source.filename += "@"+version
+			if !strings.Contains(source.filename, "@") && version != "" {
+				source.filename += "@" + version
 			}
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
