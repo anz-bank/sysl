@@ -620,10 +620,19 @@ func (p *Parser) postProcess(mod *sysl.Module) {
 
 			switch x := types.Type.(type) {
 			case *sysl.Type_Tuple_:
+				if len(x.Tuple.AttrDefs) == 0 {
+					types.Type = nil
+					continue
+				}
 				attrs = x.Tuple.GetAttrDefs()
 			case *sysl.Type_Relation_:
+				if len(x.Relation.AttrDefs) == 0 {
+					types.Type = nil
+					continue
+				}
 				attrs = x.Relation.GetAttrDefs()
 			}
+
 			for fieldname, t := range attrs {
 				if x := t.GetTypeRef(); x != nil {
 					refApp := app

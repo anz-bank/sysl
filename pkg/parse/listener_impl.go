@@ -16,6 +16,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const patternsKey = "patterns"
+
 var _ = fmt.Println
 
 type importDef struct {
@@ -524,7 +526,7 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 		}
 	}
 	if len(patterns) > 0 {
-		attributes["patterns"] = &sysl.Attribute{
+		attributes[patternsKey] = &sysl.Attribute{
 			Attribute: &sysl.Attribute_A{
 				A: &sysl.Attribute_Array{
 					Elt: patterns,
@@ -620,7 +622,9 @@ func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 		}
 	}
 	if ctx.Field(0) == nil {
-		type1.Type = nil
+		if type1.Attrs == nil && type1.Type.(*sysl.Type_Tuple_).Tuple.AttrDefs == nil {
+			type1.Type = nil
+		}
 	}
 }
 
@@ -628,7 +632,19 @@ func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
 	type1 := s.currentApp().Types[s.currentTypePath.Get()]
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		type1.Attrs = makeAttributeArray(attribs)
+		if attrs := makeAttributeArray(attribs); type1.Attrs == nil {
+			type1.Attrs = attrs
+		} else {
+			for k, v := range attrs {
+				if k == patternsKey {
+					if patterns, hasPatterns := type1.GetAttrs()[patternsKey]; hasPatterns {
+						patterns.GetA().Elt = append(patterns.GetA().Elt, v.GetA().Elt...)
+						continue
+					}
+				}
+				type1.Attrs[k] = v
+			}
+		}
 	}
 	if ctx.WHATEVER() != nil {
 		type1.Type = nil
@@ -655,21 +671,25 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 			panic("not implemented yet")
 		}
 
-		types[s.currentTypePath.Get()] = &sysl.Type{
-			Type: &sysl.Type_Relation_{
-				Relation: &sysl.Type_Relation{
-					AttrDefs: s.typemap,
+		if _, exists := types[s.currentTypePath.Get()]; !exists {
+			types[s.currentTypePath.Get()] = &sysl.Type{
+				Type: &sysl.Type_Relation_{
+					Relation: &sysl.Type_Relation{
+						AttrDefs: s.typemap,
+					},
 				},
-			},
+			}
 		}
 	}
 	if ctx.TYPE() != nil {
-		types[s.currentTypePath.Get()] = &sysl.Type{
-			Type: &sysl.Type_Tuple_{
-				Tuple: &sysl.Type_Tuple{
-					AttrDefs: s.typemap,
+		if _, exists := types[s.currentTypePath.Get()]; !exists {
+			types[s.currentTypePath.Get()] = &sysl.Type{
+				Type: &sysl.Type_Tuple_{
+					Tuple: &sysl.Type_Tuple{
+						AttrDefs: s.typemap,
+					},
 				},
-			},
+			}
 		}
 	}
 	type1 := types[s.currentTypePath.Get()]
@@ -736,7 +756,7 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 		pks := []string{}
 		for _, name := range s.fieldname {
 			f := rel.GetAttrDefs()[name]
-			if patterns, has := f.GetAttrs()["patterns"]; has {
+			if patterns, has := f.GetAttrs()[patternsKey]; has {
 				for _, a := range patterns.GetA().Elt {
 					if a.GetS() == "pk" {
 						pks = append(pks, name)
@@ -1573,7 +1593,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	s.pushScope(restEndpoint)
 
 	attrs := map[string]*sysl.Attribute{
-		"patterns": {
+		patternsKey: {
 			Attribute: &sysl.Attribute_A{
 				A: &sysl.Attribute_Array{
 					Elt: []*sysl.Attribute{
@@ -3077,7 +3097,7 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 			},
 		})
 
-		attributes["patterns"] = &sysl.Attribute{
+		attributes[patternsKey] = &sysl.Attribute{
 			Attribute: &sysl.Attribute_A{
 				A: &sysl.Attribute_Array{
 					Elt: patterns,

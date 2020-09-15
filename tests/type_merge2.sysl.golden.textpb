@@ -1,0 +1,71 @@
+apps: {
+ key: "Foo"
+ value: {
+  name: {
+   part: "Foo"
+  }
+  types: {
+   key: "FooResponse"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "f"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "type_merge2.sysl"
+        start: {
+         line: 7
+         col: 13
+        }
+        end: {
+         line: 7
+         col: 13
+        }
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "dataflow"
+     value: {
+      s: "{'f': 'FooRequest.f'}"
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "child"
+       }
+       elt: {
+        s: "parent"
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "type_merge2.sysl"
+     start: {
+      line: 6
+      col: 4
+     }
+     end: {
+      line: 8
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "type_merge2.sysl"
+   start: {
+    line: 5
+    col: 1
+   }
+   end: {
+    line: 5
+   }
+  }
+ }
+}

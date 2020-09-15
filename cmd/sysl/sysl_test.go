@@ -133,6 +133,14 @@ func TestMain2TextPB(t *testing.T) {
 	testAllMain2(t, []string{}, "args.sysl", "args.sysl.golden.textpb")
 }
 
+func TestMain2MultipleDefinitionsTypeMerge(t *testing.T) {
+	t.Parallel()
+
+	// can't use the same expected file because of different source context.
+	testAllMain2(t, []string{}, "type_merge1.sysl", "type_merge1.sysl.golden.textpb")
+	testAllMain2(t, []string{}, "type_merge2.sysl", "type_merge2.sysl.golden.textpb")
+}
+
 func TestMain2JSON(t *testing.T) {
 	t.Parallel()
 

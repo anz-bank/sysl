@@ -1,0 +1,7 @@
+Foo:
+    !type FooResponse[~parent]:
+        f <: int
+
+Foo:
+    !type FooResponse[~child]:
+        @dataflow = "{'f': 'FooRequest.f'}"
