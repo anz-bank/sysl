@@ -2,11 +2,12 @@ package parse
 
 import (
 	"fmt"
-	"github.com/joshcarp/gop/gop/retriever/retriever_local"
 	"io"
 	"net/http"
 	"os"
 	"testing"
+
+	"github.com/joshcarp/gop/gop/retriever/retriever_local"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"

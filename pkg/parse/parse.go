@@ -2,11 +2,12 @@ package parse
 
 import (
 	"fmt"
-	"github.com/joshcarp/gop/gop"
-	"github.com/joshcarp/gop/gop/retriever/retriever_local"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/joshcarp/gop/gop"
+	"github.com/joshcarp/gop/gop/retriever/retriever_local"
 
 	"github.com/imdario/mergo"
 	"github.com/spf13/afero"
