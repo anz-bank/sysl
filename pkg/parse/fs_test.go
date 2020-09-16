@@ -28,25 +28,6 @@ func TestFileExistsBadFile(t *testing.T) {
 	assert.False(t, fileExists("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
 }
 
-func TestNewFSFileStream(t *testing.T) {
-	t.Parallel()
-
-	fs, _, err := newFSFileStream("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), "."))
-	if assert.NoError(t, err) {
-		text := syslutil.HandleCRLF([]byte(fs.GetText(0, 13)))
-		assert.Equal(t, "package parse\n", string(text))
-	}
-}
-
-func TestNewFSFileStreamNotFound(t *testing.T) {
-	t.Parallel()
-
-	_, _, err := newFSFileStream("x", syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir"))
-	assert.Error(t, err)
-	_, _, err = newFSFileStream("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), "."))
-	assert.Error(t, err)
-}
-
 type flappyFile struct {
 	data    []byte
 	succeed bool

@@ -13,7 +13,7 @@ import (
 
 func TestBadInputsToGenerateMermaidIntegrationDiagram(t *testing.T) {
 	appName := "wrongName"
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/simple/sysl-sd.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	if err != nil {
 		t.Error(err)
@@ -25,7 +25,7 @@ func TestBadInputsToGenerateMermaidIntegrationDiagram(t *testing.T) {
 }
 
 func TestGenerateMermaidIntegrationDiagram(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/simple/sysl-sd.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	if err != nil {
 		t.Error(err)
@@ -37,7 +37,7 @@ func TestGenerateMermaidIntegrationDiagram(t *testing.T) {
 }
 
 func TestGenerateMermaidIntegrationDiagram2(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/sysl-sd2.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/simple/sysl-sd2.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	if err != nil {
 		t.Error(err)
@@ -49,7 +49,7 @@ func TestGenerateMermaidIntegrationDiagram2(t *testing.T) {
 }
 
 func TestGenerateMermaidIntegrationDiagram3(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/sysl-ints.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/simple/sysl-ints.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	if err != nil {
 		t.Error(err)
@@ -61,7 +61,7 @@ func TestGenerateMermaidIntegrationDiagram3(t *testing.T) {
 }
 
 func TestGenerateMermaidIntegrationDiagram4(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/simple/best-ever-sysl-example.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	if err != nil {
 		t.Error(err)
@@ -73,7 +73,7 @@ func TestGenerateMermaidIntegrationDiagram4(t *testing.T) {
 }
 
 func TestGenerateMermaidIntegrationDiagramWithoutApp(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/simple/best-ever-sysl-example.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	if err != nil {
 		t.Error(err)
@@ -84,7 +84,7 @@ func TestGenerateMermaidIntegrationDiagramWithoutApp(t *testing.T) {
 	assert.NoError(t, err)
 }
 func TestGenerateMermaidIntegrationDiagraMultipleApps(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/simple/best-ever-sysl-example.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/simple/best-ever-sysl-example.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	if err != nil {
 		t.Error(err)
@@ -97,7 +97,7 @@ func TestGenerateMermaidIntegrationDiagraMultipleApps(t *testing.T) {
 }
 
 func TestGenerateMermaidIntegrationDiagraMultipleAppsWithUnrelated(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/sizzle/sizzle.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	apps := []string{"Visa", "MasterCard", "ShouldNotDisplay"}
@@ -110,7 +110,7 @@ func TestGenerateMermaidIntegrationDiagraMultipleAppsWithUnrelated(t *testing.T)
 }
 
 func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantApps(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/sizzle/sizzle.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	apps := []string{"MegaDatabase"}
@@ -123,7 +123,7 @@ func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantApps(t *testing.T)
 }
 
 func TestGenerateMermaidIntegrationDiagraMultipleAppsDependantAppsCallInConditional(t *testing.T) {
-	m, err := parse.NewParser().Parse("demo/sizzle/sizzle.sysl",
+	m, err := parse.NewParser().ParseFromFs("demo/sizzle/sizzle.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
 	assert.NoError(t, err)
 	apps := []string{"Visa"}

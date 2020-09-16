@@ -120,7 +120,7 @@ func parseComparable(
 	filename, root string,
 	stripSourceContext bool,
 ) (*sysl.Module, error) {
-	module, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
+	module, err := NewParser().ParseFromFs(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
 	if err != nil {
 		return nil, err
 	}
@@ -236,7 +236,7 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 			filename += syslExt
 		}
 		// update test files
-		mod, err := NewParser().Parse(filename, syslutil.NewChrootFs(afero.NewOsFs(), "."))
+		mod, err := NewParser().ParseFromFs(filename, syslutil.NewChrootFs(afero.NewOsFs(), "."))
 		if err != nil {
 			return false, err
 		}
@@ -648,7 +648,7 @@ func TestUndefinedRootAbsoluteImport(t *testing.T) {
 
 	parser := NewParser()
 	parser.RestrictToLocalImport()
-	_, err := parser.Parse("absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
+	_, err := parser.ParseFromFs("absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
 	require.EqualError(t, err, "error importing: importing outside current directory is only allowed when root is defined")
 }
 
@@ -666,7 +666,7 @@ func TestDuplicateImport(t *testing.T) {
 func TestDuplicateImportWarning(t *testing.T) {
 	var buf bytes.Buffer
 	logrus.SetOutput(&buf)
-	_, err := NewParser().Parse("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := NewParser().ParseFromFs("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	logrus.SetOutput(os.Stderr)
 
 	if assert.NoError(t, err) {
@@ -759,7 +759,7 @@ func assertLintLogs(t *testing.T, file, logMsg string) {
 	var buf bytes.Buffer
 	//FIXME: using logrus global logger makes it impossible to parallelize log tests
 	logrus.SetOutput(&buf)
-	_, err := NewParser().Parse(file, syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := NewParser().ParseFromFs(file, syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.NoError(t, err)
 	logrus.SetOutput(os.Stderr)
 	if logMsg == "" {
@@ -935,4 +935,81 @@ App:
 		...`
 	_, err := NewParser().ParseString(content)
 	assert.Nil(t, err)
+}
+
+type retriever struct {
+	contents map[string]string
+	res      map[string]string
+}
+
+func (r retriever) Retrieve(resource string) (res []byte, cached bool, err error) {
+	r.res[resource] = r.contents[resource]
+	return []byte(r.contents[resource]), false, nil
+}
+
+/* TestParseSyslRetriever tests that a file can be imported */
+func TestParseSyslRetriever(t *testing.T) {
+	r := retriever{res: map[string]string{}, contents: map[string]string{
+		"./one.sysl": `
+import two.sysl
+App:
+	_:
+		...`,
+		"./two.sysl": `
+Two:
+	...
+`}}
+	p := NewParser()
+	p.SetVersioned()
+
+	_, err := p.Parse("./one", r)
+	require.NoError(t, err)
+}
+
+/* TestParseSyslRetrieverRemote tests a remote import */
+func TestParseSyslRetrieverRemote(t *testing.T) {
+	r := retriever{res: map[string]string{}, contents: map[string]string{
+		"./one.sysl": `
+import //github.com/one/two/three.sysl@1234
+App:
+	_:
+		...`,
+		"github.com/one/two/three.sysl@1234": `
+Two:
+	...
+`}}
+	p := NewParser()
+	p.SetVersioned()
+
+	_, err := p.Parse("./one", r)
+	require.NoError(t, err)
+	for filename, e := range r.contents {
+		require.Equal(t, e, r.res[filename])
+	}
+}
+
+/* TestParseSyslRetrieverRemoteImport tests that a remote file that imports from it's own repository */
+func TestParseSyslRetrieverRemoteImport(t *testing.T) {
+	r := retriever{res: map[string]string{}, contents: map[string]string{
+		"./one.sysl": `
+import //github.com/one/two/three.sysl@1234
+App:
+	_:
+		...`,
+		"github.com/one/two/three.sysl@1234": `
+import four.sysl
+Two:
+	...
+`, "github.com/one/two/four.sysl@1234": `
+App:
+	...
+`}}
+	p := NewParser()
+	p.SetVersioned()
+
+	_, err := p.Parse("./one", r)
+	require.NoError(t, err)
+	for filename, e := range r.contents {
+		require.Equal(t, e, r.res[filename])
+	}
 }

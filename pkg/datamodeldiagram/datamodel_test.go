@@ -18,7 +18,7 @@ import (
 
 func TestGenerateDataDiagFail(t *testing.T) {
 	t.Parallel()
-	_, err := parse.NewParser().Parse("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
+	_, err := parse.NewParser().ParseFromFs("doesn't-exist.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.Error(t, err)
 }
 

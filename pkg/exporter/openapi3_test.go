@@ -16,7 +16,7 @@ import (
 )
 
 func readSyslModule(filename string) (*sysl.Module, error) {
-	mod, err := parse.NewParser().Parse(filename,
+	mod, err := parse.NewParser().ParseFromFs(filename,
 		syslutil.NewChrootFs(afero.NewOsFs(), "."))
 	return mod, err
 }

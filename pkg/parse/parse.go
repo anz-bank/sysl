@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/modv2"
+
 	"github.com/imdario/mergo"
 	"github.com/spf13/afero"
 
@@ -34,6 +36,12 @@ type Parser struct {
 	LetTypes            map[string]TypeData
 	Messages            map[string][]msg.Msg
 	allowAbsoluteImport bool
+	appendVersion       bool
+}
+
+/* SetVersioned enables appending @ver to remote imports that are relative to those remote imports */
+func (p *Parser) SetVersioned() {
+	p.appendVersion = true
 }
 
 func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
@@ -119,47 +127,56 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 	if _, err := file.Write([]byte(content)); err != nil {
 		return nil, err
 	}
-	return p.Parse("temp.sysl", fs)
+	return p.ParseFromFs("temp.sysl", fs)
 }
 
-func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
-	if !strings.HasSuffix(filename, syslExt) {
-		filename += syslExt
-	}
-	if !fileExists(filename, fs) {
-		return nil, Exitf(ImportError, "input file does not exist: %#v", filename)
-	}
+// ParseFromFs parses a sysl definition from an afero filesystem
+func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error) {
+	retriever := modv2.NewFs(fs)
+	return p.Parse(filename, retriever)
+}
 
+// Parse parses a sysl definition from an retriever interface
+func (p *Parser) Parse(resource string, retriever modv2.Retriever) (*sysl.Module, error) { //nolint:funlen
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener()
 	listener.lint()
 
-	source := importDef{
-		filename: filename,
+	repo, resource, version, err := modv2.ProcessRequest(resource)
+	if err != nil {
+		return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", resource, err))
 	}
-
+	if !strings.HasSuffix(resource, syslExt) {
+		resource += syslExt
+	}
+	source := importDef{filename: resource}
+	if version != "" {
+		source.filename = fmt.Sprintf("%s/%s@%s", repo, resource, version)
+	}
 	for {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
-
-		fsinput, mod, err := newFSFileStream(filename, fs)
+		_, resource, version, err := modv2.ProcessRequest(filename)
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
-		ver := ""
-		if mod != nil {
-			ver = mod.Version
+		res, _, err := retriever.Retrieve(filename)
+		if err != nil {
+			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+		}
+		fsinput := &fsFileStream{antlr.NewInputStream(string(res)), filename}
+		if err != nil {
+			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 
-		listener.sc = sourceCtxHelper{source.filename, ver}
+		listener.sc = sourceCtxHelper{source.filename, version}
 		listener.base = filepath.Dir(filename)
 
 		// Import Sysl Proto
-		fileName, _ := pkgmod.ExtractVersion(source.filename)
-		if strings.HasSuffix(fileName, ".sysl.pb.json") {
+		if strings.HasSuffix(resource, ".sysl.pb.json") {
 			syslProtoImport, err := importSyslProto(fsinput)
 			if err != nil {
-				return nil, fmt.Errorf("error parsing %s: %w", source.filename, err)
+				return nil, fmt.Errorf("error parsing %s: %w", filename, err)
 			}
 			if syslProtoImport != nil {
 				// Merge structs recursively
@@ -182,7 +199,7 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		}
 
 		localListener := NewTreeShapeListener()
-		localListener.sc = sourceCtxHelper{source.filename, ver}
+		localListener.sc = sourceCtxHelper{source.filename, version}
 		localListener.base = filepath.Dir(filename)
 
 		walker := antlr.NewParseTreeWalker()
@@ -210,6 +227,9 @@ func (p *Parser) Parse(filename string, fs afero.Fs) (*sysl.Module, error) {
 		for len(listener.imports) > 0 {
 			source = listener.imports[0]
 			listener.imports = listener.imports[1:]
+			if p.appendVersion && !strings.Contains(source.filename, "@") && version != "" {
+				source.filename += "@" + version
+			}
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
 					return nil, Exitf(2,
@@ -708,7 +728,7 @@ func getDefaultAppName(mod *sysl.Module) string {
 
 func LoadAndGetDefaultApp(model string, fs afero.Fs, p *Parser) (*sysl.Module, string, error) {
 	// Model we want to generate code for
-	mod, err := p.Parse(model, fs)
+	mod, err := p.ParseFromFs(model, fs)
 	if err != nil {
 		return nil, "", err
 	}

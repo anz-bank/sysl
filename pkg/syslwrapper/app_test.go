@@ -12,7 +12,7 @@ import (
 )
 
 func TestMapRest(t *testing.T) {
-	mod, err := parse.NewParser().Parse("./tests/rest.sysl", afero.NewOsFs())
+	mod, err := parse.NewParser().ParseFromFs("./tests/rest.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
@@ -26,7 +26,7 @@ func TestMapRest(t *testing.T) {
 	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["GET /post"].Params["PostId"].Type.Type)
 }
 func TestMap(t *testing.T) {
-	mod, err := parse.NewParser().Parse("./tests/types.sysl", afero.NewOsFs())
+	mod, err := parse.NewParser().ParseFromFs("./tests/types.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
@@ -41,7 +41,7 @@ func TestMap(t *testing.T) {
 	assert.Equal(t, "Server:Request", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Reference)
 }
 func TestResolveTypesWithSyslFile(t *testing.T) {
-	mod, err := parse.NewParser().Parse("./tests/types.sysl", afero.NewOsFs())
+	mod, err := parse.NewParser().ParseFromFs("./tests/types.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	typeIndex := mapper.IndexTypes()
@@ -57,7 +57,7 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 }
 
 func TestConvertMapType(t *testing.T) {
-	mod, err := parse.NewParser().Parse("./tests/map.sysl", afero.NewOsFs())
+	mod, err := parse.NewParser().ParseFromFs("./tests/map.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
@@ -83,7 +83,7 @@ func TestConvertMapType(t *testing.T) {
 	assert.Equal(t, expectedResult, simpleTypes["MapType:InventoryResponse"])
 }
 func TestMapPetStoreToSimpleTypes(t *testing.T) {
-	mod, err := parse.NewParser().Parse("../../demo/petshop/petshop.sysl", afero.NewOsFs())
+	mod, err := parse.NewParser().ParseFromFs("../../demo/petshop/petshop.sysl", afero.NewOsFs())
 	assert.NoError(t, err)
 	mapper := MakeAppMapper(mod)
 	mapper.IndexTypes()
