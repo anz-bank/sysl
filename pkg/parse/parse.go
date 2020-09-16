@@ -6,11 +6,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/joshcarp/gop/app"
-	"github.com/joshcarp/gop/gop"
-	"github.com/joshcarp/gop/gop/retriever/retriever_local"
+	"github.com/anz-bank/sysl/pkg/modv2"
 
 	"github.com/imdario/mergo"
+	"github.com/joshcarp/gop/app"
 	"github.com/spf13/afero"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -127,11 +126,11 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 }
 
 func (p *Parser) ParseFs(filename string, fs afero.Fs) (*sysl.Module, error) {
-	retriever := retriever_local.New(fs)
+	retriever := modv2.NewFs(fs)
 	return p.Parse(filename, retriever)
 }
 
-func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, error) { //nolint:funlen
+func (p *Parser) Parse(resource string, retriever modv2.Retriever) (*sysl.Module, error) { //nolint:funlen
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener()
 	listener.lint()
@@ -150,27 +149,27 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 	for {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
-		repo, resource, version, err := app.ProcessRequest(filename)
+		_, resource, version, err := app.ProcessRequest(filename)
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
-		res, _, err := retriever.Retrieve(repo, resource, version)
+		res, _, err := retriever.Retrieve(filename)
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
-		fsinput := &fsFileStream{antlr.NewInputStream(string(res.Content)), filename}
+		fsinput := &fsFileStream{antlr.NewInputStream(string(res)), filename}
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 
-		listener.sc = sourceCtxHelper{source.filename, res.Version}
+		listener.sc = sourceCtxHelper{source.filename, version}
 		listener.base = filepath.Dir(filename)
 
 		// Import Sysl Proto
-		if strings.HasSuffix(res.Resource, ".sysl.pb.json") {
+		if strings.HasSuffix(resource, ".sysl.pb.json") {
 			syslProtoImport, err := importSyslProto(fsinput)
 			if err != nil {
-				return nil, fmt.Errorf("error parsing %s: %w", res.Resource, err)
+				return nil, fmt.Errorf("error parsing %s: %w", filename, err)
 			}
 			if syslProtoImport != nil {
 				// Merge structs recursively
@@ -193,7 +192,7 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 		}
 
 		localListener := NewTreeShapeListener()
-		localListener.sc = sourceCtxHelper{source.filename, res.Version}
+		localListener.sc = sourceCtxHelper{source.filename, version}
 		localListener.base = filepath.Dir(filename)
 
 		walker := antlr.NewParseTreeWalker()

@@ -11,8 +11,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/joshcarp/gop/gop"
-
 	"github.com/pmezard/go-difflib/difflib"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -941,36 +939,17 @@ App:
 
 type retriever struct {
 	contents map[string]string
-	res      map[string]gop.Object
+	res      map[string]string
 }
 
-func (r retriever) Retrieve(repo, resource, version string) (res gop.Object, cached bool, err error) {
-	if version == "" {
-		val, ok := r.contents[resource]
-		if !ok {
-			return res, cached, fmt.Errorf("resource not found %s", resource)
-		}
-		res.Content = []byte(val)
-		res.Resource = resource
-		r.res[resource] = res
-		return
-	}
-	filename := fmt.Sprintf("%s/%s@%s", repo, resource, version)
-	val, ok := r.contents[filename]
-	if !ok {
-		return res, cached, fmt.Errorf("resource not found %s", resource)
-	}
-	res.Content = []byte(val)
-	res.Resource = resource
-	res.Version = version
-	res.Repo = repo
-	r.res[filename] = res
-	return
+func (r retriever) Retrieve(resource string) (res []byte, cached bool, err error) {
+	r.res[resource] = r.contents[resource]
+	return []byte(r.contents[resource]), false, nil
 }
 
 /* TestParseSyslRetriever tests that a file can be imported */
 func TestParseSyslRetriever(t *testing.T) {
-	r := retriever{res: map[string]gop.Object{}, contents: map[string]string{
+	r := retriever{res: map[string]string{}, contents: map[string]string{
 		"./one.sysl": `
 import two.sysl
 App:
@@ -986,7 +965,7 @@ Two:
 
 /* TestParseSyslRetrieverRemote tests a remote import */
 func TestParseSyslRetrieverRemote(t *testing.T) {
-	r := retriever{res: map[string]gop.Object{}, contents: map[string]string{
+	r := retriever{res: map[string]string{}, contents: map[string]string{
 		"./one.sysl": `
 import //github.com/one/two/three.sysl@1234
 App:
@@ -999,13 +978,13 @@ Two:
 	_, err := NewParser().Parse("./one", r)
 	require.NoError(t, err)
 	for filename, e := range r.contents {
-		require.Equal(t, e, string(r.res[filename].Content))
+		require.Equal(t, e, r.res[filename])
 	}
 }
 
 /* TestParseSyslRetrieverRemoteImport tests that a remote file that imports from it's own repository */
 func TestParseSyslRetrieverRemoteImport(t *testing.T) {
-	r := retriever{res: map[string]gop.Object{}, contents: map[string]string{
+	r := retriever{res: map[string]string{}, contents: map[string]string{
 		"./one.sysl": `
 import //github.com/one/two/three.sysl@1234
 App:
@@ -1022,6 +1001,6 @@ App:
 	_, err := NewParser().Parse("./one", r)
 	require.NoError(t, err)
 	for filename, e := range r.contents {
-		require.Equal(t, e, string(r.res[filename].Content))
+		require.Equal(t, e, r.res[filename])
 	}
 }
