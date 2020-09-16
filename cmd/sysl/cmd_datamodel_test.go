@@ -23,7 +23,7 @@ func TestDataModel(t *testing.T) {
 	p.Project = "Project"          //nolint:goconst
 	p.ClassFormat = "%(classname)" //nolint:goconst
 	p.Direct = false
-	fs := afero.NewOsFs()
+	fs := afero.NewMemMapFs()
 	filename := testDir + "multiple-app-datamodel.sysl"
 	m, err := parse.NewParser().ParseFs(filename, fs)
 	if err != nil {
