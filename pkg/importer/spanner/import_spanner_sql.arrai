@@ -1,0 +1,3 @@
+let importlib = //{./import};
+let [_, importSql, appName, syslPackage] = //os.args;
+importlib.import(importSql, appName, syslPackage)

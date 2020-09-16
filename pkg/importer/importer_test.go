@@ -12,6 +12,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -101,6 +102,41 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 		testDir:       "tests-xsd",
 		testExtension: ".xsd",
 	})
+}
+
+func generateSyslFromSpannerSQL() (string, error) {
+	absFilePath, err := filepath.Abs(`../../tests/spanner.sql`)
+	if err != nil {
+		return "", err
+	}
+	logger, _ := test.NewNullLogger()
+	imp, err := Factory(absFilePath, nil, logger)
+	if err != nil {
+		return "", err
+	}
+	imp.WithAppName("customeraccounts").WithPackage("retail")
+	return imp.Load(absFilePath)
+}
+
+func readGoldenSyslForSpannerSQL() (string, error) {
+	absFilePath, err := filepath.Abs(`../../tests/spanner.sql.golden.sysl`)
+	if err != nil {
+		return "", err
+	}
+	bytes, err := ioutil.ReadFile(absFilePath)
+	return string(bytes), err
+}
+
+func TestCompareSpannerSQLWithGolden(t *testing.T) {
+	// Load generated sysl module
+	genSysl, err := generateSyslFromSpannerSQL()
+	require.Nil(t, err)
+
+	// Load golden sysl module
+	goldenSysl, err := readGoldenSyslForSpannerSQL()
+	require.Nil(t, err)
+
+	assert.Equal(t, genSysl, goldenSysl)
 }
 
 /*

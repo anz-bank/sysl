@@ -10,8 +10,9 @@ require (
 	github.com/alecthomas/chroma v0.7.3
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
 	github.com/anz-bank/mermaid-go v0.1.1
-	github.com/anz-bank/pkg v0.0.22
-	github.com/arr-ai/wbnf v0.15.0
+	github.com/anz-bank/pkg v0.0.24
+	github.com/arr-ai/arrai v0.171.0
+	github.com/arr-ai/wbnf v0.28.0
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
@@ -27,8 +28,6 @@ require (
 	github.com/spf13/afero v1.4.0
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
-	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
-	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43 // indirect
 	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	google.golang.org/genproto v0.0.0-20200914193844-75d14daec038 // indirect
