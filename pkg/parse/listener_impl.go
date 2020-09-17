@@ -1393,24 +1393,13 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 		case *sysl.Type_Set:
 			t.Set.GetTypeRef().Context = nil
 			t.Set.SourceContext = nil
-			ref := t.Set.GetTypeRef().GetRef()
-			if ref.Appname == nil {
-				ref.Appname = &sysl.AppName{
-					Part: ref.Path,
-				}
-				ref.Path = nil
-			}
 		case *sysl.Type_TypeRef:
 			t.TypeRef.Context = nil
 			ref := t.TypeRef.GetRef()
-			if ref.Appname == nil {
-				ref.Appname = &sysl.AppName{
-					Part: ref.Path,
+			if ref.Appname != nil && ref.Appname.Part != nil {
+				for i := range ref.Appname.Part {
+					ref.Appname.Part[i] = strings.TrimSpace(ref.Appname.Part[i])
 				}
-				ref.Path = nil
-			}
-			for i := range ref.Appname.Part {
-				ref.Appname.Part[i] = strings.TrimSpace(ref.Appname.Part[i])
 			}
 		case nil:
 			type1.Type = &sysl.Type_NoType_{
@@ -1964,23 +1953,6 @@ func (s *TreeShapeListener) ExitSubscribe(ctx *parser.SubscribeContext) {
 		s.popScope()
 	}
 	s.endpointName = ""
-}
-
-// ExitView_type_spec is called when production view_type_spec is exited.
-func (s *TreeShapeListener) ExitView_type_spec(*parser.View_type_specContext) {
-	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
-	if type1.GetSet() != nil {
-		type1 = type1.GetSet()
-	}
-	if type1.GetTypeRef() != nil {
-		tr := type1.GetTypeRef()
-		if tr.Ref.Appname == nil && len(tr.Ref.Path) == 1 {
-			tr.Ref.Appname = &sysl.AppName{
-				Part: tr.Ref.Path,
-			}
-			tr.Ref.Path = nil
-		}
-	}
 }
 
 // ExitLiteral is called when production literal is exited.

@@ -15,11 +15,9 @@
        "type": {
         "typeRef": {
          "ref": {
-          "appname": {
-           "part": [
-            "type1"
-           ]
-          }
+          "path": [
+           "type1"
+          ]
          }
         }
        }
@@ -29,11 +27,9 @@
        "type": {
         "typeRef": {
          "ref": {
-          "appname": {
-           "part": [
-            "type2"
-           ]
-          }
+          "path": [
+           "type2"
+          ]
          }
         }
        }

@@ -13,9 +13,7 @@ apps: {
      type: {
       type_ref: {
        ref: {
-        appname: {
-         part: "type1"
-        }
+        path: "type1"
        }
       }
      }
@@ -25,9 +23,7 @@ apps: {
      type: {
       type_ref: {
        ref: {
-        appname: {
-         part: "type2"
-        }
+        path: "type2"
        }
       }
      }

@@ -269,11 +269,13 @@ func Type(param *sysl.Param) string {
 	if param.Type == nil {
 		return ""
 	}
-	// Ref.Appname.Part is the type name if the type is in the same package and the application name of where it's at
-	// stored if its in another application and then Ref.Path is the type name
+	// The Appname field represents a reference to the app that contains the referenced type.
+	// The Path field represents the type itself.
 	if a := param.Type.GetTypeRef(); a != nil {
-		ans := append(a.Ref.Appname.Part, a.Ref.Path...)
-		return strings.Join(ans, ".")
+		if a.Ref.Appname != nil {
+			return strings.Join(append(a.Ref.Appname.Part, a.Ref.Path...), ".")
+		}
+		return strings.Join(a.Ref.Path, ".")
 	}
 	return strings.Join(param.Type.GetTypeRef().Ref.Appname.Part, "")
 }

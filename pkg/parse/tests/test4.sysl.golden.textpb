@@ -106,9 +106,7 @@ apps: {
           type: {
             type_ref: {
               ref: {
-                appname: {
-                  part: "id"
-                }
+                path: "id"
               }
             }
           }
