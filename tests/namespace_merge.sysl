@@ -1,0 +1,12 @@
+A::B::C:
+    A:
+        ...
+
+A :: B :: C:
+    B:
+        ...
+
+A::B::C:
+    # tested because subcribes does add and lookup operation to applications map
+    A ::B ::C -> B:
+        ...

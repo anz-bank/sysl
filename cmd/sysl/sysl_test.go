@@ -139,6 +139,7 @@ func TestMain2MultipleDefinitionsTypeMerge(t *testing.T) {
 	// can't use the same expected file because of different source context.
 	testAllMain2(t, []string{}, "type_merge1.sysl", "type_merge1.sysl.golden.textpb")
 	testAllMain2(t, []string{}, "type_merge2.sysl", "type_merge2.sysl.golden.textpb")
+	testAllMain2(t, []string{}, "namespace_merge.sysl", "namespace_merge.golden.textpb")
 }
 
 func TestMain2JSON(t *testing.T) {

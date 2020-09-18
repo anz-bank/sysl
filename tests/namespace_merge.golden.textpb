@@ -1,0 +1,101 @@
+apps: {
+ key: "A :: B :: C"
+ value: {
+  name: {
+   part: "A"
+   part: "B"
+   part: "C"
+  }
+  endpoints: {
+   key: "A"
+   value: {
+    name: "A"
+    stmt: {
+     action: {
+      action: "..."
+     }
+    }
+    source_context: {
+     file: "namespace_merge.sysl"
+     start: {
+      line: 2
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 1
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "A :: B :: C -> B"
+   value: {
+    name: "A :: B :: C -> B"
+    source: {
+     part: "A"
+     part: "B"
+     part: "C"
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+    }
+    source_context: {
+     file: "namespace_merge.sysl"
+     start: {
+      line: 11
+      col: 4
+     }
+     end: {
+      line: 13
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "B"
+   value: {
+    name: "B"
+    stmt: {
+     action: {
+      action: "..."
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "A"
+       part: "B"
+       part: "C"
+      }
+      endpoint: "A :: B :: C -> B"
+     }
+    }
+    source_context: {
+     file: "namespace_merge.sysl"
+     start: {
+      line: 6
+      col: 4
+     }
+     end: {
+      line: 9
+      col: 1
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "namespace_merge.sysl"
+   start: {
+    line: 9
+    col: 1
+   }
+   end: {
+    line: 9
+    col: 6
+   }
+  }
+ }
+}

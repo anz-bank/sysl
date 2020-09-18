@@ -246,7 +246,7 @@ apps: {
   }
 }
 apps: {
-  key: "GO ::Sample:: My Todo App"
+  key: "GO :: Sample :: My Todo App"
   value: {
     name: {
       part: "GO"
@@ -389,7 +389,7 @@ apps: {
   }
 }
 apps: {
-  key: "Sample::My Todo App"
+  key: "Sample :: My Todo App"
   value: {
     name: {
       part: "Sample"

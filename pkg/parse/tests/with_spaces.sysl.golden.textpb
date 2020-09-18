@@ -215,7 +215,7 @@ apps: {
   }
 }
 apps: {
-  key: "My ::  App with :: space"
+  key: "My :: App with :: space"
   value: {
     name: {
       part: "My"

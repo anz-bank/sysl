@@ -883,7 +883,7 @@ func (s *TreeShapeListener) EnterApp_name(*parser.App_nameContext) {
 
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribsContext) {
-	appName := ctx.App_name().GetText()
+	appName := syslutil.CleanAppName(ctx.App_name().GetText())
 	if _, has := s.module.Apps[appName]; !has {
 		s.module.Apps[appName] = &sysl.Application{
 			Name: &sysl.AppName{},
@@ -1892,7 +1892,7 @@ func (s *TreeShapeListener) ExitEvent(ctx *parser.EventContext) {
 func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 	if ctx.App_name() != nil {
 		eventName := ctx.Name_str().GetText()
-		s.endpointName = ctx.App_name().GetText() + ctx.ARROW_RIGHT().GetText() + eventName
+		s.endpointName = syslutil.CleanAppName(ctx.App_name().GetText()) + ctx.ARROW_RIGHT().GetText() + eventName
 		// fmt.Printf("\t%s Subscriber: %s\n", s.appName, s.endpointName)
 		str := strings.Split(ctx.App_name().GetText(), "::")
 		for i := range str {
