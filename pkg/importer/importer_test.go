@@ -53,7 +53,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				imp, err := Factory(absFilePath, input, logger)
 				require.NoError(t, err)
-				imp.WithAppName("testapp").WithPackage("package_foo")
+				imp.WithAppName("TestApp").WithPackage("com.example.package")
 				result, err := imp.Load(string(input))
 				require.NoError(t, err)
 				if *update {

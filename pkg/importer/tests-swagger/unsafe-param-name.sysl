@@ -4,7 +4,7 @@
 ##                                      ##
 ##########################################
 
-testapp "Unsafe Param Names" [package="package_foo"]:
+TestApp "Unsafe Param Names" [package="com.example.package"]:
     @description =:
         | No description.
 

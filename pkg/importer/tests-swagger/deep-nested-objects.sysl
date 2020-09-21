@@ -4,7 +4,7 @@
 ##                                      ##
 ##########################################
 
-testapp [package="package_foo"]:
+TestApp [package="com.example.package"]:
     @description =:
         | No description.
 

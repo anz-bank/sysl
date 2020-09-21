@@ -4,7 +4,7 @@
 ##                                      ##
 ##########################################
 
-testapp "Simple" [package="package_foo"]:
+TestApp "Simple" [package="com.example.package"]:
     @description =:
         | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
         | hendrerit velit sed ultrices ornare. Sed viverra sagittis laoreet.

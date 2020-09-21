@@ -4,7 +4,7 @@
 ##                                      ##
 ##########################################
 
-testapp "Sample API" [package="package_foo"]:
+TestApp "Sample API" [package="com.example.package"]:
     @version = "1.0.0"
     @description =:
         | API description in Markdown.
