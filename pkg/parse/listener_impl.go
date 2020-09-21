@@ -2941,9 +2941,12 @@ func (s *TreeShapeListener) ExitTransform_return_type(ctx *parser.Transform_retu
 }
 
 // EnterView_return_type is called when production view_return_type is entered.
-func (s *TreeShapeListener) EnterView_return_type(*parser.View_return_typeContext) {
+func (s *TreeShapeListener) EnterView_return_type(ctx *parser.View_return_typeContext) {
 	s.fieldname = append(s.fieldname, "view-return"+s.viewName)
 	s.typemap[s.fieldname[len(s.fieldname)-1]] = &sysl.Type{}
+	if ctx.QN() != nil {
+		s.typemap[s.fieldname[len(s.fieldname)-1]].Opt = true
+	}
 }
 
 // ExitView_return_type is called when production view_return_type is exited.
@@ -2997,6 +3000,9 @@ func (s *TreeShapeListener) ExitTransform(ctx *parser.TransformContext) {
 func (s *TreeShapeListener) EnterView_param(ctx *parser.View_paramContext) {
 	s.fieldname = append(s.fieldname, ctx.Name_str().GetText())
 	s.typemap[s.fieldname[len(s.fieldname)-1]] = &sysl.Type{}
+	if ctx.QN() != nil {
+		s.typemap[s.fieldname[len(s.fieldname)-1]].Opt = true
+	}
 }
 
 // ExitView_param is called when production view_param is exited.

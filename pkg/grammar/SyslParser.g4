@@ -354,7 +354,7 @@ expr_inject_stmt: expr_func E_DOT E_STAR E_NL;
 expr_stmt: expr_statement_no_nl | expr_statement | expr_inject_stmt;
 
 transform_return_type:  set_of | sequence_of | view_type_spec;
-view_return_type: view_type_spec;
+view_return_type: view_type_spec QN?;
 
 transform_scope_var: E_Name;
 transform_arg: expr;
@@ -370,7 +370,7 @@ transform: transform_arg?
 
 expr_block: INDENT transform DEDENT;
 
-view_param: name_str LESS_COLON view_type_spec;
+view_param: name_str LESS_COLON view_type_spec QN?;
 
 view_params: view_param (COMMA view_param)*;
 

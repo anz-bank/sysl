@@ -1,0 +1,5 @@
+codegen:
+  !view Foo(bar <: string?) -> string?:
+    bar -> (:
+        out = bar
+    )

@@ -631,6 +631,12 @@ func TestImportProtoJSONDep(t *testing.T) {
 	testParseAgainstGolden(t, "tests/import_proto_JSON_dep.sysl", "")
 }
 
+func TestParseOptionalViewParams(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/optional_params_view.sysl", "")
+}
+
 func TestImportProtoJSONNonExistent(t *testing.T) {
 	t.Parallel()
 	_, err := parseComparable("tests/import_proto_JSON_nonexistent.sysl", "tests", false)
