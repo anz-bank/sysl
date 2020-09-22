@@ -150,3 +150,11 @@ func TestLoadGrammarFromTestFiles(t *testing.T) {
 	})
 }
 */
+
+func TestLoadAvroFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadAvroFromTestFiles",
+		testDir:       "avro/tests",
+		testExtension: ".avsc",
+	})
+}

@@ -680,7 +680,5 @@ let import = \importSql \appName \syslPackage
             )
         }, syslPackage);
 
-(
-    :import,
-)
+import
 `

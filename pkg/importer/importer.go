@@ -24,6 +24,7 @@ var Formats = []Format{
 	OpenAPI3,
 	Swagger,
 	XSD,
+	Avro,
 	SpannerSQL,
 }
 
@@ -46,6 +47,9 @@ func Factory(filePath string, file []byte, logger *logrus.Logger) (Importer, err
 	case Grammar.Name:
 		logger.Debugln("Detected Grammar file")
 		return nil, fmt.Errorf("importer disabled for: %s", fileType.Name)
+	case Avro.Name:
+		logger.Debugln("Detected AVRO")
+		return NewAvroImporter(logger), nil
 	case SpannerSQL.Name:
 		logger.Debugln("Detected Spanner SQL file")
 		return MakeSpannerImporter(logger), nil

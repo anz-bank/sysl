@@ -1,0 +1,84 @@
+{
+    "namespace": "com.example",
+    "name": "Event",
+    "type": "record",
+    "fields": [
+        { "name": "null_type", "type": "null" },
+        { "name": "boolean_type", "type": "boolean" },
+        { "name": "long_type", "type": "long" },
+        { "name": "float_type", "type": "float" },
+        { "name": "double_type", "type": "double" },
+        { "name": "bytes_type", "type": "bytes" },
+        {
+            "name": "decimal_type",
+            "type": {
+                "logicalType": "decimal",
+                "type": "bytes",
+                "precision": 4,
+                "scale": 2  
+            }
+        },
+        {
+            "name": "uuid_type",
+            "type": {
+                "logicalType": "uuid",
+                "type": "string"
+            }
+        },
+        {
+            "name": "date_type",
+            "type": {
+                "logicalType": "date",
+                "type": "int"
+            }
+        },
+        {
+            "name": "time_millis_type",
+            "type": {
+                "logicalType": "time-millis",
+                "type": "int"
+            }
+        },
+        {
+            "name": "time_micros_type",
+            "type": {
+                "logicalType": "time-micros",
+                "type": "long"
+            }
+        },
+        {
+            "name": "timestamp_millis_type",
+            "type": {
+                "logicalType": "timestamp-millis",
+                "type": "long"
+            }
+        },
+        {
+            "name": "timestamp_micros_type",
+            "type": {
+                "logicalType": "timestamp-micros",
+                "type": "long"
+            }
+        },
+        {
+            "name": "local_timestamp_millis_type",
+            "type": {
+                "logicalType": "local-timestamp-millis",
+                "type": "long"
+            }
+        },
+        {
+            "name": "local_timestamp_micros_type",
+            "type": {
+                "logicalType": "local-timestamp-micros",
+                "type": "long"
+            }
+        },
+        {
+            "name": "duration_type",
+            "type": {
+                "logicalType": "duration", "type" : "fixed", "size" : 12, "name" : "FixedDuration"
+            }
+        }
+    ] 
+}

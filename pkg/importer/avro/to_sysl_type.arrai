@@ -1,0 +1,113 @@
+# Transform Avro record to Sysl record.
+let util = //{./avro_util};
+
+# Build type annotation like [union=["int32", "null", "string"]].
+let buildTypeAnnotation = \type
+    cond type {
+        (a: typeArray):
+            let types = (typeArray >> util.getTypeName(.)) >> .type_S;
+            cond types {
+                ['null', ...]: 
+                    # Types like ['null', 'string', 'int'].
+                    cond {types count > 2: 
+                        $'union=${types}',
+                    },
+                _: $'union=${types}', # Types like ['string', 'int32', 'null'] or ['string', 'null'].
+            },
+    }
+;
+
+let buildLogicalTypeAnnotation = \type
+    let t = type('type');
+    cond t {
+        {'type': typeName, 'logicalType': logicalTypeName, ...}:
+            cond logicalTypeName.s {
+                'uuid': ['~uuid'],
+                'date': '',
+                'time-millis': ['~time-millis'],
+                'time-micros': ['~time-micros'],
+                'timestamp-millis': ['~timestamp-millis'],
+                'timestamp-micros': ['~timestamp-micros'],
+                'local-timestamp-millis': ['~local-timestamp-millis'],
+                'local-timestamp-micros': ['~local-timestamp-micros'],
+                'duration': ['~fixed', $`fixed_size="${t('size')}"`, '~duration', $`name="${t('name').s}"`],
+            },
+    }
+;
+
+let buildAnnotations = \type
+    buildLogicalTypeAnnotation(type) ++ 
+    [
+        buildTypeAnnotation(type('type')),
+        util.getAnnotationS(type, 'doc'),
+        util.defaultVal(type),
+        util.getAnnotationS(type, 'order'),
+    ]
+;
+
+let printMapType = \record
+    cond record {
+        # Sample {'isMap': (s: 'true'), 'values': (s: 'string'), 'type': (s: 'map')}.
+        {'values': (:s), ...}: $`
+            !type String${//str.title(s)}Item ${util.prettyAnnotations(['json_map_key="key"', util.defaultVal(record)])}:
+                key <: string
+                value <: ${util.correctName(s)}
+        `,
+        {'type': (s: 'record'), ...}: $`
+            !type String${util.transformType(record)}Item ${util.prettyAnnotations(['json_map_key="key"', util.defaultVal(record)])}:
+                key <: string
+                value <: ${util.transformType(record)}
+        `
+    }
+;
+
+let transformer = \record
+    # Display map item.
+    $`
+        ${(record('isMap')?:()).s?:{} = 'true' && (printMapType(record) + '\n')}
+        ${
+            cond record {
+                {'type': (s: 'record'), ...}:
+                    $`
+                        !type ${util.correctName(record('name').s)}${
+                            let annotations = util.prettyAnnotations(['namespace', 'name', 'doc'] >> util.getAnnotationS(record, .));
+                            cond {annotations: ' ' + $`${annotations}`}
+                        }:
+                            ${ # List fields.
+                                let fields = record('fields')?.a:[]; 
+                                fields >> \field $`
+                                    ${field('name').s} <: ${util.transformType(field('type'))} ${util.prettyAnnotations(buildAnnotations(field))}${
+                                        let aliases = field('aliases')?.a:[];
+                                        cond {
+                                            aliases: '\n' + $`
+                                                ${aliases >> \alias $`
+                                                    ${alias.s} <: ${util.transformType(field('type'))} ${
+                                                        let aliasAnnotaions = 
+                                                            util.prettyAnnotations(buildAnnotations(field) + [$`alias_of="${field('name').s}"`]);
+                                                        aliasAnnotaions
+                                                    }
+                                                `::\n}
+                                            `,
+                                        }                                            
+                                    }
+                                `::\n}
+                        ${ # List records's aliases.
+                            let aliases = record('aliases')?.a:[];
+                            cond {
+                                aliases: '\n' + $`
+                                    ${aliases >> \alias $`
+                                        !alias ${util.correctName(alias.s)}${
+                                            let annotations = util.prettyAnnotations([util.getAnnotationS(alias, 'name')]);
+                                            cond {annotations: ' ' + $`${annotations}`}
+                                        }:
+                                            ${util.correctName(record('name').s)}
+                                    `::\n\n}
+                                ` + '\n',
+                            }
+                        }
+                    `
+            }
+        }`
+;
+
+transformer

@@ -1016,3 +1016,44 @@ func TestMain(m *testing.M) {
 	exitCode := m.Run()
 	os.Exit(exitCode)
 }
+
+func TestAvroImport(t *testing.T) {
+	t.Parallel()
+	logger, _ := test.NewNullLogger()
+	tmp, err := ioutil.TempDir("", "tmp")
+	assert.NoError(t, err)
+	ret := main2([]string{"sysl", "import",
+		"--input", filepath.Join(testDir, "/simple_avro.avsc"),
+		"--app-name", "testapp",
+		"--package", "test",
+		"--output", filepath.Join(tmp, "/simple_avro.sysl")}, afero.NewOsFs(), logger, main3)
+	assert.Equal(t, 0, ret)
+	_, err = ioutil.ReadFile(filepath.Join(tmp, "/simple_avro.sysl"))
+	assert.NoError(t, err)
+	os.RemoveAll(tmp)
+}
+
+// Validate all test Sysl files with `sysl validate`.
+func TestSyslSyntaxValidate(t *testing.T) {
+	t.Parallel()
+
+	dirs := []string{"../../pkg/importer/avro/tests",
+		"../../pkg/importer/tests-grammar",
+		"../../pkg/importer/tests-openapi",
+		"../../pkg/importer/tests-swagger",
+		"../../pkg/importer/tests-xsd",
+		"../../tests"}
+
+	for _, dir := range dirs {
+		logger, _ := test.NewNullLogger()
+		files, err := ioutil.ReadDir(dir)
+		assert.NoError(t, err)
+		for _, file := range files {
+			if strings.HasSuffix(file.Name(), ".sysl") {
+				ret := main2([]string{"sysl", "validate",
+					filepath.Join(dir, file.Name())}, afero.NewOsFs(), logger, main3)
+				assert.Equal(t, 0, ret)
+			}
+		}
+	}
+}

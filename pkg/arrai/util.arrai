@@ -152,8 +152,9 @@ let isValidIdentifier = \identifier
     # InvalidIdentifiers that would be appended by underscore('_') when used as an identifier in the ingested SQL
     # for instance  a column "Int64 INT64" becomes _Int64 <: int [name="Int64"].
     # List is still fairly limited but more keywords could be added as we go.
-    let invalidIdentifiers = { "any", "as", "bool", "bytes", "date", "datetime", "decimal",
-    "else", "float", "float64", "if", "int", "int64", "string" };
+    let invalidIdentifiers = { "as", "if", "else", 
+        "any", "int", "int32", "int64", "float", "float32", "float64", "decimal", "string", "bool", "date", "datetime", "bytes"
+    };
 
     # sysl is largely case insensitive so lowercase the identifier before comparison
     # taken from pkg/grammar/SyslLexer.g4

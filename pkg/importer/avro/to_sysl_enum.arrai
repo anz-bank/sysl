@@ -1,0 +1,23 @@
+# Transform Avro enum to Sysl enum.
+let util = //{./avro_util};
+
+let transformer = \enumItem
+    $`
+        !enum ${util.correctName(enumItem('name').s)}${
+                    let annotations = util.prettyAnnotations(['name', 'namespace', 'default', 'doc'] >> util.getAnnotationS(enumItem, .));
+                    cond {annotations: ' ' + $`${annotations}`}
+                }:
+            ${enumItem('symbols').a >>> \i \(s: item)  $`${item}: ${i}`::\i}
+
+        ${
+            enumItem('aliases')?.a:[] >> $`
+                !alias ${util.correctName(.s)}${
+                            let annotations = util.prettyAnnotations([util.getAnnotationS(., 'name')]);
+                            cond {annotations: ' ' + $`${annotations}`}
+                        }: 
+                    ${util.correctName(enumItem('name').s)}
+            `::\n\n}
+    `
+;
+
+transformer

@@ -33,6 +33,12 @@ var Grammar = Format{
 	FileExt:   []string{".g"},
 }
 
+var Avro = Format{
+	Name:      "avro",
+	Signature: "",
+	FileExt:   []string{".avsc"},
+}
+
 var SpannerSQL = Format{
 	Name:      "spannerSQL",
 	Signature: "",

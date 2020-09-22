@@ -1,6 +1,7 @@
-.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden
+include ./scripts/version-report.mk
+include ./scripts/embed-arrai.mk
 
-include VersionReport.mk
+.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden embed-arrai
 
 GOPATH    = $(shell go env GOPATH)
 GOVERSION = $(shell go version | cut -d' ' -f3-4)
