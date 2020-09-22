@@ -6,7 +6,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/modv2"
+	"github.com/anz-bank/sysl/pkg/env"
+	"github.com/joshcarp/gop/gop"
+
+	"github.com/joshcarp/gop/gop/cli"
 
 	"github.com/imdario/mergo"
 	"github.com/spf13/afero"
@@ -36,12 +39,6 @@ type Parser struct {
 	LetTypes            map[string]TypeData
 	Messages            map[string][]msg.Msg
 	allowAbsoluteImport bool
-	appendVersion       bool
-}
-
-/* SetVersioned enables appending @ver to remote imports that are relative to those remote imports */
-func (p *Parser) SetVersioned() {
-	p.appendVersion = true
 }
 
 func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
@@ -132,17 +129,35 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 
 // ParseFromFs parses a sysl definition from an afero filesystem
 func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error) {
-	retriever := modv2.NewFs(fs)
+	tokensEnv := env.SYSL_TOKENS.Value() // Expects the token to be in form gita.com:<tokena>,gitb.com:<tokenb>
+	var hostTokens []string
+	var cache, proxy string
+	if tokensEnv != "" {
+		hostTokens = strings.Split(tokensEnv, ",")
+	}
+	tokenmap := make(map[string]string, len(hostTokens))
+	for _, e := range hostTokens {
+		arr := strings.Split(e, ":")
+		if len(arr) < 2 {
+			return nil, fmt.Errorf("SYSL_TOKENS env var is invalid, should be in form `gita.com:<tokena>,gitb.com:<tokenb>`")
+		}
+		tokenmap[arr[0]] = arr[1]
+	}
+	if moduleFlag := env.SYSL_MODULES.Value(); moduleFlag != "" && moduleFlag != "false" && moduleFlag != "off" {
+		cache = env.SYSL_CACHE.Value()
+		proxy = env.SYSL_PROXY.Value()
+	}
+	retriever := cli.Default(fs, cache, proxy, tokenmap)
 	return p.Parse(filename, retriever)
 }
 
 // Parse parses a sysl definition from an retriever interface
-func (p *Parser) Parse(resource string, retriever modv2.Retriever) (*sysl.Module, error) { //nolint:funlen
+func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, error) { //nolint:funlen
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener()
 	listener.lint()
 
-	repo, resource, version, err := modv2.ProcessRequest(resource)
+	repo, resource, version, err := gop.ProcessRequest(resource)
 	if err != nil {
 		return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", resource, err))
 	}
@@ -156,13 +171,13 @@ func (p *Parser) Parse(resource string, retriever modv2.Retriever) (*sysl.Module
 	for {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
-		_, resource, version, err := modv2.ProcessRequest(filename)
+		_, resource, version, err := gop.ProcessRequest(filename)
 		if err != nil {
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 		res, _, err := retriever.Retrieve(filename)
 		if err != nil {
-			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: \n%v\n", filename, err))
 		}
 		fsinput := &fsFileStream{antlr.NewInputStream(string(res)), filename}
 		if err != nil {
@@ -171,7 +186,7 @@ func (p *Parser) Parse(resource string, retriever modv2.Retriever) (*sysl.Module
 
 		listener.sc = sourceCtxHelper{source.filename, version}
 		listener.base = filepath.Dir(filename)
-
+		listener.version = version
 		// Import Sysl Proto
 		if strings.HasSuffix(resource, ".sysl.pb.json") {
 			syslProtoImport, err := importSyslProto(fsinput)
@@ -201,7 +216,7 @@ func (p *Parser) Parse(resource string, retriever modv2.Retriever) (*sysl.Module
 		localListener := NewTreeShapeListener()
 		localListener.sc = sourceCtxHelper{source.filename, version}
 		localListener.base = filepath.Dir(filename)
-
+		localListener.version = version
 		walker := antlr.NewParseTreeWalker()
 		walker.Walk(localListener, tree)
 		walker.Walk(listener, tree)
@@ -227,9 +242,6 @@ func (p *Parser) Parse(resource string, retriever modv2.Retriever) (*sysl.Module
 		for len(listener.imports) > 0 {
 			source = listener.imports[0]
 			listener.imports = listener.imports[1:]
-			if p.appendVersion && !strings.Contains(source.filename, "@") && version != "" {
-				source.filename += "@" + version
-			}
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
 					return nil, Exitf(2,

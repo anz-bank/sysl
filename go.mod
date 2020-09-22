@@ -21,6 +21,7 @@ require (
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
 	github.com/imdario/mergo v0.3.11
+	github.com/joshcarp/gop v0.0.0-20200922043230-a225272c1746
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/russross/blackfriday v2.0.0+incompatible

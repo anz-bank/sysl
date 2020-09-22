@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/anz-bank/pkg/mod"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -31,6 +30,7 @@ type importDef struct {
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base         string
+	version      string
 	sc           sourceCtxHelper
 	imports      []importDef
 	module       *sysl.Module
@@ -3212,18 +3212,14 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	if !strings.HasPrefix(path, "/") {
 		path = filepath.ToSlash(s.base) + "/" + path
 	}
-
-	name, ver := mod.ExtractVersion(path)
-	if !strings.Contains(filepath.Base(name), ".") {
-		name += syslExt
-		path = name
-		if ver != "" {
-			path = name + "@" + ver
-		}
+	if filepath.Ext(path) == "" {
+		path += syslExt
 	}
-
 	if strings.HasPrefix(path, "//") {
 		path = strings.TrimPrefix(path, "//")
+	}
+	if !strings.Contains(path, "@") && s.version != "" {
+		path += "@" + s.version
 	}
 
 	id := importDef{

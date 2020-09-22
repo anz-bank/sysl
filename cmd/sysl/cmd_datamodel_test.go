@@ -31,7 +31,7 @@ func TestDataModel(t *testing.T) {
 	}
 	outmap, err := datamodeldiagram.GenerateDataModels(&p.CmdContextParamDatagen, m, logrus.New())
 	assert.Nil(t, err, "Generating the data diagrams failed")
-	err = p.GenerateFromMap(outmap, fs)
+	err = p.GenerateFromMap(outmap, afero.NewMemMapFs())
 	assert.Nil(t, err, "Generating the data diagrams failed")
 
 	expected := map[string]string{"whatever.svg": `@startuml

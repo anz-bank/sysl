@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/loader"
-	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
@@ -1012,7 +1011,6 @@ func TestMain(m *testing.M) {
 	// Or test case executing will try to fetch remote sysl module and generate go.mod and go.sum files in
 	// ./cmd/sysl folder, because this remote fetching uses go get. Generated go.mod and go.sum cause it can't
 	// build Sysl binary file successfully in CI and local environments.
-	mod.SyslModules = false
 	exitCode := m.Run()
 	os.Exit(exitCode)
 }

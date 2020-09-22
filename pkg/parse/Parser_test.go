@@ -972,7 +972,6 @@ Two:
 	...
 `}}
 	p := NewParser()
-	p.SetVersioned()
 
 	_, err := p.Parse("./one", r)
 	require.NoError(t, err)
@@ -983,15 +982,20 @@ func TestParseSyslRetrieverRemote(t *testing.T) {
 	r := retriever{res: map[string]string{}, contents: map[string]string{
 		"./one.sysl": `
 import //github.com/one/two/three.sysl@1234
+import 3.sysl
 App:
 	_:
 		...`,
 		"github.com/one/two/three.sysl@1234": `
 Two:
 	...
-`}}
+`, `./3.sysl`: `
+blah:
+	_:
+		...
+`,
+	}}
 	p := NewParser()
-	p.SetVersioned()
 
 	_, err := p.Parse("./one", r)
 	require.NoError(t, err)
@@ -1017,7 +1021,6 @@ App:
 	...
 `}}
 	p := NewParser()
-	p.SetVersioned()
 
 	_, err := p.Parse("./one", r)
 	require.NoError(t, err)

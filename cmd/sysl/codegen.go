@@ -5,8 +5,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/syslutil"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-	"github.com/anz-bank/sysl/pkg/mod"
 
 	"github.com/anz-bank/sysl/pkg/ebnfparser"
 
@@ -128,7 +129,7 @@ func GenerateCode(
 	logger.Debugf("start: %s\n", codegenParams.Start)
 	logger.Debugf("basePath: %s\n", codegenParams.BasePath)
 
-	transformFs := mod.NewFs(fs, codegenParams.RootTransform)
+	transformFs := syslutil.NewChrootFs(fs, codegenParams.RootTransform)
 	tfmParser := parse.NewParser()
 	tx, transformAppName, err := parse.LoadAndGetDefaultApp(codegenParams.Transform, transformFs, tfmParser)
 	if err != nil {

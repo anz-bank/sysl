@@ -2,27 +2,11 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-
+	"github.com/anz-bank/sysl/pkg/env"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
-
-// The sysl command consults environment variables for configuration.
-// If an environment variable is unset, the sysl command uses a sensible
-// default setting.
-// 	SYSL_PLANTUML
-// 		URL of PlantUML server. Sysl depends upon
-// 		[PlantUML](http://plantuml.com/) for diagram generation.
-// 	SYSL_MODULES
-// 		Whether the sysl modules is enabled.
-// 		Enable by default, set to "off" to disable sysl modules.
-const KnownEnv = `
-	SYSL_MODULES
-	SYSL_PLANTUML
-`
 
 type envCmd struct{}
 
@@ -34,10 +18,8 @@ func (c *envCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (c *envCmd) Execute(args cmdutils.ExecuteArgs) error {
-	for _, e := range strings.Fields(KnownEnv) {
-		v := os.Getenv(e)
-		fmt.Printf("%s=\"%s\"\n", e, v)
+	for _, e := range env.VARS {
+		fmt.Printf("%s=\"%s\"\n", e, e.Value())
 	}
-
 	return nil
 }
