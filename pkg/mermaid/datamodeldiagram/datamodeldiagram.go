@@ -31,6 +31,17 @@ func GenerateFullDataDiagram(m *sysl.Module) (string, error) {
 	return generateFullDataDiagramHelper(mapper.SimpleTypes, &[]externalLink{})
 }
 
+//GenerateDataDiagramWithMapper generates the data model diagram for a specific type with a provided mapper
+// The mapper should first be initialised using
+// mapper := syslwrapper.MakeAppMapper(module)
+// mapper.IndexTypes()
+// mapper.ConvertTypes()
+func GenerateDataDiagramWithMapper(mapper *syslwrapper.AppMapper, appName string, typeName string,
+) (string, error) {
+	return generateDataDiagramWithAppAndTypeHelper(mapper.SimpleTypes, appName, typeName,
+		&[]externalLink{}, &[]string{}, &[]externalLink{})
+}
+
 //GenerateDataDiagramWithAppAndType generates the data model for a specific type
 func GenerateDataDiagramWithAppAndType(m *sysl.Module, appName string, typeName string) (string, error) {
 	mapper := syslwrapper.MakeAppMapper(m)

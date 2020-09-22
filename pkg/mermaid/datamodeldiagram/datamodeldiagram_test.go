@@ -24,6 +24,18 @@ func TestGenerateMermaidDataModelDiagram(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestGenerateMermaidDataModelDiagramWithMapper(t *testing.T) {
+	m, err := parse.NewParser().ParseFromFs("demo/petshop/petshop.sysl",
+		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))
+	assert.NoError(t, err)
+	mapper := syslwrapper.MakeAppMapper(m)
+	mapper.IndexTypes()
+	mapper.ConvertTypes()
+	r, err := GenerateDataDiagramWithMapper(mapper, "PetShopModel", "Pet")
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+}
 func TestGenerateMermaidDataModelDiagramWithAppAndType(t *testing.T) {
 	m, err := parse.NewParser().ParseFromFs("demo/petshop/petshop.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), mermaid.ProjectDir))

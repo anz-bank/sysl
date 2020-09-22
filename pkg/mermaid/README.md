@@ -36,6 +36,7 @@ The data-model diagram generator uses the sysl wrapper library to simplify the p
 
 - `GenerateFullDataDiagram` takes a sysl module and uses the sysl wrapper library to generating a map of strings to Type. The types in these maps can be the either of the following – **tuple, relation, enum, map or empty**. Tuples and relations consist of primitive types, lists of other types or references to other types. If a type refers to or is a list of another type, this relationship is stored and printed in the diagram. Maps take a similar approach as well. Enums do not contain any references, thus appropriate mermaid output is printed directly.
 - `GetDataDiagramWithAppAndType` takes a sysl module, along with an app and a type. This runs in a similar fashion to the previous function but it runs through it twice. The first iteration captures all the relationships that exists in that module and this result is used to find all the relationship that the given app and types has to other types. The resulting types are run through in the second iteration and the appropriate mermaid code is generated along with the relationships between the printed types. This uses the class diagram concept in mermaid.
+- `GenerateDataDiagramWithMapper` takes a syslwrapper.AppMapper along with an app and a type. This allows mapper.Index and Mapper.ConvertTypes to be run once and passed in when generating large numbers of type diagrams, vastly improving performance.
 
 **Command Line Parameters**
 
