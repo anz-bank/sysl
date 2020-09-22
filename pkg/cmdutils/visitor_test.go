@@ -320,6 +320,28 @@ deactivate _0
 	assert.Equal(t, expected, w.String())
 }
 
+func TestSequenceDiagramVisitorVisit_Nonexistent(t *testing.T) {
+	t.Parallel()
+
+	logger, _ := test.NewNullLogger()
+	l := &Labeler{}
+	w := MakeSequenceDiagramWriter(true)
+	m, err := readModule(filepath.Join(testDir, "sequence_diagram_project.golden.json"))
+	require.NoError(t, err)
+	v := MakeSequenceDiagramVisitor(l, l, w, m, "appname", "", logger)
+	e := MakeEndpointCollectionElement("Profile", []string{"unknown <- RequestProfile"}, map[string]*Upto{})
+	err = e.Accept(v)
+
+	assert.Error(t, err)
+	assert.Equal(t, `no app named "unknown"`, err.Error())
+
+	e = MakeEndpointCollectionElement("Profile", []string{"WebFrontend <- unknown"}, map[string]*Upto{})
+	err = e.Accept(v)
+
+	assert.Error(t, err)
+	assert.Equal(t, `no endpoint named "WebFrontend <- unknown"`, err.Error())
+}
+
 func TestSequenceDiagramToFormatNameAttributesVisitorVisit(t *testing.T) {
 	t.Parallel()
 

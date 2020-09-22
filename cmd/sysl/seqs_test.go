@@ -130,12 +130,12 @@ func TestDoConstructSequenceDiagramsNoSyslSdFilters(t *testing.T) {
 	}
 
 	// When
-	assert.Panics(t, func() {
-		_, err := DoConstructSequenceDiagramsWithParams(args.RootModel, args.EndpointFormat, args.AppFormat,
-			args.Title, args.Output, args.Modules, args.Endpoints, args.Apps, args.Blackboxes,
-			args.Groupbox)
-		assert.NoError(t, err)
-	})
+	_, err := DoConstructSequenceDiagramsWithParams(args.RootModel, args.EndpointFormat, args.AppFormat,
+		args.Title, args.Output, args.Modules, args.Endpoints, args.Apps, args.Blackboxes,
+		args.Groupbox)
+
+	// Then
+	assert.Error(t, err)
 }
 
 func TestDoConstructSequenceDiagrams(t *testing.T) {

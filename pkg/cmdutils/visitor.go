@@ -274,14 +274,25 @@ func (v *SequenceDiagramVisitor) visitEndpointCollection(e *EndpointCollectionEl
 	}
 
 	for _, entry := range e.entries {
+		if entry.appName == "" {
+			return fmt.Errorf("no app name provided")
+		}
 		allUptos := syslutil.MakeStrSet()
 		for _, entry := range e.entries {
 			item := fmt.Sprintf("%s <- %s", entry.appName, entry.endpointName)
 			allUptos.Insert(item)
 		}
 		allUptos.Insert(entry.upto)
-		appLink := v.m.Apps[entry.appName].Attrs["link"].GetS()
-		epLink := v.m.Apps[entry.appName].Endpoints[entry.endpointName].Attrs["link"].GetS()
+		app, ok := v.m.Apps[entry.appName]
+		if !ok {
+			return fmt.Errorf(`no app named "%s"`, entry.appName)
+		}
+		appLink := app.Attrs["link"].GetS()
+		ep, ok := app.Endpoints[entry.endpointName]
+		if !ok {
+			return fmt.Errorf(`no endpoint named "%s <- %s"`, entry.appName, entry.endpointName)
+		}
+		epLink := ep.Attrs["link"].GetS()
 		switch {
 		case epLink != "" && appLink != "":
 			fmt.Fprintf(v.w, "== [[%s %s]] <- [[%s %s]] ==\n", appLink, entry.appName, epLink, entry.endpointName)
