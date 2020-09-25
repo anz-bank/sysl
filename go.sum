@@ -81,8 +81,6 @@ github.com/anz-bank/mermaid-go v0.1.1/go.mod h1:vo8d6wJgGhqvyjBNBjbGvg7PtgYL/JS6
 github.com/anz-bank/pkg v0.0.19/go.mod h1:CEkb9wZnUdHMO/ipyuxI/5/5jYwA00ULilMzA2+PTSo=
 github.com/anz-bank/pkg v0.0.22 h1:uRIQk3JoroCJ+KGZIujVY9Pb/zbqxeygbLsDCCk5s98=
 github.com/anz-bank/pkg v0.0.22/go.mod h1:NSkF/h+NBS8lADLotCb1Exmdmt7wdmr1yOqAEbar+Io=
-github.com/anz-bank/pkg v0.0.24 h1:z1L55gvQ69l9TqdFydo4mAUBnJppL+APHqaqq8rVk4s=
-github.com/anz-bank/pkg v0.0.24/go.mod h1:NSkF/h+NBS8lADLotCb1Exmdmt7wdmr1yOqAEbar+Io=
 github.com/anz-bank/pkg v0.0.25 h1:r7LxEoG+h2LVfuWVp0hDglWC2Fn+XQKw96bA945dM8I=
 github.com/anz-bank/pkg v0.0.25/go.mod h1:nRFfKjtkHhrj5/7f83cE87rsPOKsgPxQUIK65JInkx0=
 github.com/anz-bank/sysl v0.207.0/go.mod h1:7B7C93LbRBLlKg2DfCVug692IO3d1NepkNHwlJ5sRsE=

@@ -2,12 +2,15 @@ package cmdutils
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/mock"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type entry struct {
@@ -631,4 +634,44 @@ type Var struct {
 
 func (s Var) String() string {
 	return fmt.Sprintf(`%s "%s" as %s`, s.Name, s.Label, s.Alias)
+}
+
+type mockEndpointLabeler struct {
+	mock.Mock
+}
+
+func (m *mockEndpointLabeler) LabelEndpoint(p *EndpointLabelerParam) string {
+	args := m.Called(p)
+
+	return args.String(0)
+}
+
+func readModule(p string) (*sysl.Module, error) {
+	m := &sysl.Module{}
+	f, err := os.Open(p)
+	if err != nil {
+		return nil, err
+	}
+	stats, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	b := make([]byte, stats.Size())
+	if _, err = f.Read(b); err != nil {
+		return nil, err
+	}
+	if err := protojson.Unmarshal(b, m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+type Labeler struct{}
+
+func (l *Labeler) LabelApp(appName, controls string, attrs map[string]*sysl.Attribute) string {
+	return appName
+}
+
+func (l *Labeler) LabelEndpoint(p *EndpointLabelerParam) string {
+	return p.EndpointName
 }
