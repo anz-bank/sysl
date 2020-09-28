@@ -21,8 +21,9 @@ apps: {
                 ref: {
                   appname: {
                     part: "App with"
+                    part: "space"
                   }
-                  path: "space"
+                  path: "SomeTable"
                   path: "Id"
                 }
               }
@@ -34,7 +35,7 @@ apps: {
                 }
                 end: {
                   line: 11
-                  col: 32
+                  col: 42
                 }
               }
             }
@@ -52,8 +53,9 @@ apps: {
                 ref: {
                   appname: {
                     part: "App with"
+                    part: "space"
                   }
-                  path: "space"
+                  path: "SomeTable"
                   path: "Id"
                 }
               }
@@ -65,7 +67,7 @@ apps: {
                 }
                 end: {
                   line: 12
-                  col: 35
+                  col: 45
                 }
               }
             }
@@ -84,8 +86,9 @@ apps: {
                   appname: {
                     part: "My"
                     part: "App with"
+                    part: "space"
                   }
-                  path: "space"
+                  path: "SomeTable"
                   path: "Id"
                 }
               }
@@ -97,7 +100,7 @@ apps: {
                 }
                 end: {
                   line: 13
-                  col: 41
+                  col: 51
                 }
               }
             }
@@ -116,8 +119,9 @@ apps: {
                   appname: {
                     part: "My"
                     part: "App with"
+                    part: "space"
                   }
-                  path: "space"
+                  path: "SomeTable"
                   path: "Id"
                 }
               }
@@ -129,7 +133,7 @@ apps: {
                 }
                 end: {
                   line: 14
-                  col: 44
+                  col: 54
                 }
               }
             }

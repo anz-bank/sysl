@@ -740,8 +740,8 @@ apps: {
                 ref: {
                   appname: {
                     part: "My"
+                    part: "Tuple Model"
                   }
-                  path: "Tuple Model"
                   path: "TopLevelPayload"
                 }
               }
@@ -775,8 +775,8 @@ apps: {
                     ref: {
                       appname: {
                         part: "My"
+                        part: "Tuple Model"
                       }
-                      path: "Tuple Model"
                       path: "Response"
                     }
                   }
@@ -1124,8 +1124,8 @@ apps: {
                 ref: {
                   appname: {
                     part: "My"
+                    part: "Client Model"
                   }
-                  path: "Client Model"
                   path: "Request"
                   path: "status"
                 }
@@ -1245,8 +1245,8 @@ apps: {
                   appname: {
                     part: "My"
                     part: "Browser"
+                    part: "Client Model"
                   }
-                  path: "Client Model"
                   path: "Request"
                   path: "status"
                 }

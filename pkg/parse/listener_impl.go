@@ -718,11 +718,12 @@ func fixFieldDefinitions(collection *sysl.Type) {
 			type1 := typeRefForType(name, f)
 
 			if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
-				l := len(type1.Ref.Appname.Part)
-				str := []string{strings.TrimSpace(type1.Ref.Appname.Part[l-1])}
-				type1.Ref.Path = append(str, type1.Ref.Path...)
-				type1.Ref.Appname.Part = type1.Ref.Appname.Part[:l-1]
-				if len(type1.Ref.Appname.Part) == 0 {
+				// If the appname has multiple parts, it must be a qualified name like A :: B.
+				// In that case, it must unambiguously refer to an app.
+				// If the appname has only a single part, the ref is of the form S(.T)*, and S may
+				// refer to a different application or a type within the current application.
+				if len(type1.Ref.Appname.Part) == 1 {
+					type1.Ref.Path = append(type1.Ref.Appname.Part, type1.Ref.Path...)
 					type1.Ref.Appname = nil
 				}
 			}

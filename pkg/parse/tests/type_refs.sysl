@@ -1,0 +1,30 @@
+A:
+    !type T:
+        U <: int
+
+A :: T:
+    !type U: ...
+
+B:
+    !type A:
+        !type T:
+            U <: int
+
+    !type B:
+        A <: int
+
+        ambiguousType <: A.T
+        ambiguousField <: A.T.U
+
+        unambiguousType <: A :: T.U
+
+    !type C:
+        ambiguousType <: B.A
+
+        unambiguousType <: B
+        unambiguousType <: D.T    # TODO: Fix parsing so D is appname.part, not path.
+        unambiguousField <: D.T.V # TODO: Fix parsing so D is appname.part, not path.
+
+D:
+    !type T:
+        V <: int

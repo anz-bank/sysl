@@ -8,7 +8,7 @@ My ::  App with :: space:
 
 AnotherApp:
     !type SecondTable:
-        Id <: App with :: space.Id
-        Id2 <: App with  ::  space.Id
-        Id3 <: My :: App with  ::  space.Id
-        Id4 <: My   ::  App with  ::  space.Id
+        Id <: App with :: space.SomeTable.Id
+        Id2 <: App with  ::  space.SomeTable.Id
+        Id3 <: My :: App with  ::  space.SomeTable.Id
+        Id4 <: My   ::  App with  ::  space.SomeTable.Id

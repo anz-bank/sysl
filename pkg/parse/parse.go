@@ -690,16 +690,15 @@ func (p *Parser) postProcess(mod *sysl.Module) {
 							field = x.GetRef().GetPath()[last]
 							_, has = refAttrs[field]
 						} else if len(x.GetRef().GetPath()) == 1 {
-							last := len(x.GetRef().GetPath()) - 1
-							field = x.GetRef().GetPath()[last]
+							field = x.GetRef().GetPath()[0]
 							_, has = refApp.Types[field]
 						}
 						if !has {
-							logrus.Warnf("Field %#v (type %#v) refers to Field %#v (type %#v) in app %#v",
+							logrus.Infof("Field %#v (type %#v) refers to Field %#v (type %#v) in app %#v",
 								fieldname, typeName, field, refName, appName)
 						}
 					} else {
-						logrus.Warnf("Field %#v (type %#v) refers to type %s in app %#v",
+						logrus.Infof("Field %#v (type %#v) refers to type %s in app %#v",
 							fieldname, typeName, refName, appName)
 					}
 				}

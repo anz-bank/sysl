@@ -398,6 +398,13 @@ func TestMixins(t *testing.T) {
 
 	testParseAgainstGolden(t, "tests/mixin.sysl", "")
 }
+
+func TestNamespaceTypes(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/namespace_types.sysl", "")
+}
+
 func TestForLoops(t *testing.T) {
 	t.Parallel()
 
@@ -498,6 +505,12 @@ func TestTransform(t *testing.T) {
 	t.Parallel()
 
 	testParseAgainstGolden(t, "tests/transform.sysl", "")
+}
+
+func TestTypeRefs(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/type_refs.sysl", "")
 }
 
 func TestImpliedDot(t *testing.T) {

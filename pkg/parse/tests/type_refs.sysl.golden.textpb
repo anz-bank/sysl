@@ -1,0 +1,436 @@
+apps:  {
+ key:  "A"
+ value:  {
+  name:  {
+   part:  "A"
+  }
+  types:  {
+   key:  "T"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "U"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  3
+         col:  13
+        }
+        end:  {
+         line:  3
+         col:  13
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  5
+      col:  1
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+ }
+}
+apps:  {
+ key:  "A :: T"
+ value:  {
+  name:  {
+   part:  "A"
+   part:  "T"
+  }
+  types:  {
+   key:  "U"
+   value:  {
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  6
+      col:  4
+     }
+     end:  {
+      line:  6
+      col:  13
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  5
+    col:  1
+   }
+   end:  {
+    line:  5
+    col:  5
+   }
+  }
+ }
+}
+apps:  {
+ key:  "B"
+ value:  {
+  name:  {
+   part:  "B"
+  }
+  types:  {
+   key:  "A"
+   value:  {
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  9
+      col:  4
+     }
+     end:  {
+      line:  13
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "A.T"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "U"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  11
+         col:  17
+        }
+        end:  {
+         line:  11
+         col:  17
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  10
+      col:  8
+     }
+     end:  {
+      line:  13
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "B"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "A"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  14
+         col:  13
+        }
+        end:  {
+         line:  14
+         col:  13
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "ambiguousField"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "B"
+        }
+        ref:  {
+         path:  "A"
+         path:  "T"
+         path:  "U"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  17
+         col:  26
+        }
+        end:  {
+         line:  17
+         col:  30
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "ambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "B"
+        }
+        ref:  {
+         path:  "A"
+         path:  "T"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  16
+         col:  25
+        }
+        end:  {
+         line:  16
+         col:  27
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "unambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "B"
+        }
+        ref:  {
+         appname:  {
+          part:  "A"
+          part:  "T"
+         }
+         path:  "U"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  19
+         col:  27
+        }
+        end:  {
+         line:  19
+         col:  34
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  13
+      col:  4
+     }
+     end:  {
+      line:  21
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "C"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "ambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         path:  "B"
+         path:  "A"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  22
+         col:  25
+        }
+        end:  {
+         line:  22
+         col:  27
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "unambiguousField"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         path:  "D"
+         path:  "T"
+         path:  "V"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  26
+         col:  28
+        }
+        end:  {
+         line:  26
+         col:  32
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "unambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         path:  "D"
+         path:  "T"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  25
+         col:  27
+        }
+        end:  {
+         line:  25
+         col:  29
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  21
+      col:  4
+     }
+     end:  {
+      line:  28
+      col:  1
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  8
+    col:  1
+   }
+   end:  {
+    line:  8
+   }
+  }
+ }
+}
+apps:  {
+ key:  "D"
+ value:  {
+  name:  {
+   part:  "D"
+  }
+  types:  {
+   key:  "T"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "V"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  30
+         col:  13
+        }
+        end:  {
+         line:  30
+         col:  13
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  29
+      col:  4
+     }
+     end:  {
+      line:  31
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  28
+    col:  1
+   }
+   end:  {
+    line:  28
+   }
+  }
+ }
+}
