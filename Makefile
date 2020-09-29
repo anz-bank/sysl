@@ -68,7 +68,10 @@ pkg/grammar/sysl_lexer.go pkg/grammar/SyslLexer.tokens &: pkg/grammar/SyslLexer.
 pkg/sysl/sysl.pb.go: pkg/sysl/sysl.proto
 	protoc -I pkg/sysl -I $(GOPATH)/src --go_out=pkg/sysl/ sysl.proto
 
-proto: pkg/sysl/sysl.pb.go
+pkg/sysl/sysl.pb: pkg/sysl/sysl.proto
+	protoc -o $@ $<
+
+proto: pkg/sysl/sysl.pb.go pkg/sysl/sysl.pb
 
 .PHONY: help
 

@@ -2,7 +2,7 @@
 
 # Loads and returns a Sysl model.
 let load = \path
-    let syslDescriptor = //encoding.proto.descriptor(//os.file('sysl.pb'));
+    let syslDescriptor = //encoding.proto.descriptor(//os.file('../sysl/sysl.pb'));
     //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
 
 # Extracts the set of pattern attributes of an element.
