@@ -588,6 +588,16 @@ func TestMain2WithEmptySdParams(t *testing.T) {
 	syslutil.AssertFsHasExactly(t, memFs)
 }
 
+func TestMain2WithValidateSyslNamespaces(t *testing.T) {
+	t.Parallel()
+
+	logger, hook := test.NewNullLogger()
+	_, fs := syslutil.WriteToMemOverlayFs("/")
+	ret := main2([]string{"sysl", "validate", filepath.Join(testDir, "apps_namespaces.sysl")}, fs, logger, main3)
+	assert.Equal(t, 0, ret)
+	assert.False(t, len(hook.AllEntries()) > 0)
+}
+
 func TestMain2WithEmptyPbParams(t *testing.T) {
 	t.Parallel()
 

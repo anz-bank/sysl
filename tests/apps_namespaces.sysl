@@ -1,0 +1,36 @@
+client::MobileApp:
+  Login:
+    client :: APIGateway <- Login
+
+client::APIGateway:
+  Login:
+    server :: QueryService <- Login
+    return ok <: APIGateway.LoginResponse
+
+  !type LoginResponse:
+    message <: string
+
+server :: QueryService:
+  Login(data <: LoginData):
+    build query
+    server :: DB <- Query
+    check result
+    return ok <: QueryService.LoginResponse
+
+  !type LoginData:
+    username <: string
+    password <: string
+
+  !type LoginResponse:
+    message <: string
+
+server :: DB:
+  Query:
+    lookup data
+    return ok <: data
+  Save:
+    ...
+
+Project:
+  Seq:
+    client :: MobileApp <- Login
