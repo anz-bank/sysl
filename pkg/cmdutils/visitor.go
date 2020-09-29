@@ -404,7 +404,7 @@ func (v *SequenceDiagramVisitor) visitEndpoint(e *EndpointElement) error {
 		}
 		_, hitVisited := v.visited[visiting]
 
-		if hitUpto || hitVisited {
+		if (hitUpto && upto.ValueType != UpTo) || hitVisited {
 			if upto != nil {
 				if len(payload) > 0 {
 					v.w.Activate(agent)
