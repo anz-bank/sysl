@@ -1,7 +1,9 @@
 package syslutil
 
 import (
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"strings"
+
+	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
 // GetTypeDetail returns name of the type and details in string format
@@ -104,4 +106,12 @@ func HasSameType(type1 *sysl.Type, type2 *sysl.Type) bool {
 	}
 
 	return false
+}
+
+func JoinAppName(name *sysl.AppName) string {
+	return strings.Join(name.GetPart(), " :: ")
+}
+
+func JoinTypePath(path []string) string {
+	return strings.Join(path, ".")
 }

@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/syslutil"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/integrationdiagram"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -217,7 +219,6 @@ func (v *DataModelView) DrawTuple(
 	}
 	sort.Strings(attrNames)
 	for _, attrName := range attrNames {
-		var path = []string{}
 		//If the first element before the dot isn't what we passed in, then it's referring to another app
 		if arr := strings.Split(attrName, "."); len(arr) <= 1 {
 			appName = strings.Split(viewParam.EntityName, ".")[0]
@@ -230,52 +231,30 @@ func (v *DataModelView) DrawTuple(
 			relationshipMap[encEntity] = map[string]RelationshipParam{}
 		}
 		if attrType.GetPrimitive() == sysl.Type_NO_Primitive {
+			var path []string
+			var label string
 			switch {
 			case attrType.GetList() != nil:
-				if attrType.GetList().GetType().GetPrimitive() == sysl.Type_NO_Primitive {
-					path = attrType.GetList().GetType().GetTypeRef().GetRef().Path
-				} else {
-					isPrimitiveList = true
-					path = append(path, strings.ToLower(attrType.GetList().GetType().GetPrimitive().String()))
-				}
-				collectionString = fmt.Sprintf("+ %s : **List <%s>**\n", attrName, path[0])
+				appName, path, label, isPrimitiveList = getNames(attrType.GetList().GetType())
+				collectionString = fmt.Sprintf("+ %s : **List <%s>**\n", attrName, label)
 				relation = `0..*` //nolint:goconst
 			case attrType.GetSet() != nil:
-				if attrType.GetSet().GetPrimitive() == sysl.Type_NO_Primitive {
-					path = attrType.GetSet().GetTypeRef().GetRef().Path
-				} else {
-					isPrimitiveList = true
-					path = append(path, strings.ToLower(attrType.GetSet().GetPrimitive().String()))
-				}
-				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, path[0])
+				appName, path, label, isPrimitiveList = getNames(attrType.GetSet())
+				collectionString = fmt.Sprintf("+ %s : **Set <%s>**\n", attrName, label)
 				relation = `0..*` //nolint:goconst
 			case attrType.GetSequence() != nil:
-				if attrType.GetSequence().GetPrimitive() == sysl.Type_NO_Primitive {
-					path = attrType.GetSequence().GetTypeRef().GetRef().Path
-					if len(path) > 1 {
-						appName = path[0]
-					}
-				} else {
-					isPrimitiveList = true
-					path = append(path, strings.ToLower(attrType.GetSequence().GetPrimitive().String()))
-				}
-				fullName := strings.Join(path, ".")
-				collectionString = fmt.Sprintf("+ %s : **Sequence <%s>**\n", attrName, strings.Join(path, "."))
+				appName, path, label, isPrimitiveList = getNames(attrType.GetSequence())
+				collectionString = fmt.Sprintf("+ %s : **Sequence <%s>**\n", attrName, label)
+				fullName := syslutil.JoinTypePath(append([]string{appName}, path...))
 				if _, ok := viewParam.IgnoredTypes[fullName]; ok {
 					v.StringBuilder.WriteString(collectionString)
 					continue
 				}
 				relation = `0..*` //nolint:goconst
 			case attrType.GetTypeRef() != nil:
-				arr := attrType.GetTypeRef().GetRef().Path
-				// If the array is larger than 1 then we don't neeed appName
-				// TODO: Fix this when appname and typename are parsed differently
-				if len(arr) > 1 {
-					appName = ""
-				}
-				path = append(path, strings.Join(arr, "."))
-				collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, path[0])
-				fullName := strings.Join(attrType.GetTypeRef().GetRef().Path, ".")
+				appName, path, label, isPrimitiveList = getNames(attrType)
+				collectionString = fmt.Sprintf("+ %s : **%s**\n", attrName, label)
+				fullName := syslutil.JoinTypePath(path)
 				if _, ok := viewParam.IgnoredTypes[fullName]; ok {
 					v.StringBuilder.WriteString(collectionString)
 					continue
@@ -318,9 +297,37 @@ func (v *DataModelView) DrawTuple(
 	v.StringBuilder.WriteString("}\n")
 }
 
+// getNames returns the names and details needed to represent a type in a diagram.
+func getNames(t *sysl.Type) (appName string, path []string, label string, isPrimitiveList bool) {
+	if t.GetPrimitive() == sysl.Type_NO_Primitive {
+		contextAppName := syslutil.JoinAppName(t.GetTypeRef().GetContext().GetAppname())
+		ref := t.GetTypeRef().GetRef()
+		if ref.GetAppname().GetPart() != nil { //nolint:gocritic
+			appName = syslutil.JoinAppName(ref.GetAppname())
+		} else if len(path) > 1 {
+			appName = ref.Path[0]
+		} else {
+			appName = contextAppName
+		}
+		path = ref.GetPath()
+		pathLabel := syslutil.JoinTypePath(ref.Path)
+		switch appName {
+		case contextAppName, "":
+			label = pathLabel
+		default:
+			label = syslutil.JoinTypePath([]string{appName, pathLabel})
+		}
+	} else {
+		label = strings.ToLower(t.GetPrimitive().String())
+		path = []string{label}
+		isPrimitiveList = true
+	}
+	return
+}
+
 func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	var isRelation bool
-	appName := strings.Join(dataParam.App.Name.Part, "")
+	appName := syslutil.JoinAppName(dataParam.App.Name)
 	relationshipMap := map[string]map[string]RelationshipParam{}
 	v.StringBuilder.WriteString("@startuml\n")
 	if dataParam.Title != "" {
@@ -337,7 +344,7 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	entityNames := []string{}
 	for _, app := range dataParam.Mod.Apps {
 		for entityName, entityValue := range app.GetTypes() {
-			entityName = strings.Join(app.Name.GetPart(), "") + "." + entityName
+			entityName = syslutil.JoinAppName(app.GetName()) + "." + entityName
 			if entityValue.Type != nil {
 				typeMap[entityName] = entityValue
 				entityNames = append(entityNames, entityName)

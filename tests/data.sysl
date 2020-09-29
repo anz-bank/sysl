@@ -5,6 +5,8 @@ Project [seqtitle="DataModel"]:
         ObjectModel
     Primitive-Alias-Model:
         PrimitiveAliasModel
+    Cross-Model:
+        Namespace :: CrossModel
 
 RelModel:
     !table Employee:
@@ -45,6 +47,13 @@ ObjectModel:
         order_id <: int
         customer <: Customer
 
+Namespace :: CrossModel:
+    !type Self:
+        name <: string
+
+    !type CustomerExt:
+        customer <: ObjectModel.Customer
+        self <: Namespace :: CrossModel.Self
 
 PrimitiveAliasModel:
     !type User:

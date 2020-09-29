@@ -23,6 +23,11 @@ examples: TUTORIALS
 lint:
 	golangci-lint run ./...
 
+tidy:
+	go mod tidy
+	gofmt -s -w .
+	goimports -w .
+
 test:
 	$(TESTEXE)
 

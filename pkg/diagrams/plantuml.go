@@ -60,9 +60,9 @@ func ComparePUML(t *testing.T, expected, actual map[string]string) {
 			assert.Nil(t, err)
 		}
 		golden = syslutil.HandleCRLF(golden)
-		assert.Equal(t, string(golden), actual[name])
+		assert.Equal(t, string(golden), actual[name], "PlantUML not equal for %s", name)
 	}
 
 	// Then
-	assert.Equal(t, len(expected), len(actual))
+	assert.Len(t, actual, len(expected))
 }
