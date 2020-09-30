@@ -1905,6 +1905,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 		typeEndpoint := &sysl.Endpoint{
 			Name:          s.endpointName,
 			Source:        app_src,
+			Attrs:         map[string]*sysl.Attribute{},
 			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 		}
 		if ctx.Attribs_or_modifiers() != nil {

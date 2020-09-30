@@ -12,6 +12,7 @@ Yet :: Another :: Publisher:
 
 My :: Subscriber:
     Publisher -> BusinessEvent:
+        @description = "Handle BusinessEvent"
         External <- Endpoint
 
     Another :: Publisher -> BusinessEvent:
