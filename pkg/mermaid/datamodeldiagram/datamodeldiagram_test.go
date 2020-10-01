@@ -88,5 +88,4 @@ func TestGenerateMermaidDataModelDiagramWithRecursiveReference(t *testing.T) {
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
-	t.Log(r)
 }

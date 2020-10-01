@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	proto "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/go-openapi/spec"
 	"github.com/sirupsen/logrus"
 )
@@ -107,7 +108,7 @@ func (t *TypeExporter) findSwaggerType(syslType *proto.Type) (protoType, error) 
 		if s.TypeRef.GetRef().GetAppname() == nil {
 			return protoType{Format: s.TypeRef.GetRef().Path[0], Type: "object"}, nil
 		}
-		return protoType{Format: s.TypeRef.GetRef().GetAppname().Part[0], Type: "object"}, nil
+		return protoType{Format: syslutil.GetAppName(s.TypeRef.GetRef().GetAppname()), Type: "object"}, nil
 	default:
 		return protoType{}, fmt.Errorf("none of the Swagger Types match for %s", syslType.String())
 	}

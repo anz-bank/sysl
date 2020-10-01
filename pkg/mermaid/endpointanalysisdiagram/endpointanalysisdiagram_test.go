@@ -70,3 +70,27 @@ func TestGenerateMermaidIntegrationDiagram4(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
 }
+
+func TestGenerateMermaidEPAWithNamespace(t *testing.T) {
+	t.Parallel()
+	apps := []string{"Org :: Team :: TestApp", "Org :: Team :: TestApp2"}
+	syslInput := `
+Org :: Team :: TestApp:
+	myEndPoint1:
+		Org :: Team :: TestApp2 <- myEndPoint2
+		return ok <: string
+
+Org :: Team :: TestApp2:
+	myEndPoint2:
+		return ok <: string
+	`
+	expected := `Org__Team__TestApp2-myEndPoint2 --> myEndPoint2`
+	m, err := parse.NewParser().ParseString(syslInput)
+	assert.NoError(t, err)
+	assert.NotNil(t, m)
+
+	r, err := GenerateMultipleAppEndpointAnalysisDiagram(m, apps)
+	assert.NotEmpty(t, r)
+	assert.NoError(t, err)
+	assert.Contains(t, r, expected)
+}

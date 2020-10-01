@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/syslwrapper"
 
 	"github.com/anz-bank/sysl/pkg/exporter"
@@ -71,7 +72,7 @@ func (p *exportCmd) writeSwaggerForApp(
 	case openapi3Mode:
 		mod := &sysl.Module{
 			Apps: map[string]*sysl.Application{
-				syslApp.Name.Part[0]: syslApp,
+				syslutil.GetAppName(syslApp.Name): syslApp,
 			},
 		}
 		mapper := syslwrapper.MakeAppMapper(mod)
@@ -86,7 +87,7 @@ func (p *exportCmd) writeSwaggerForApp(
 			logger.Warnf("Error generating Openapi3 for the application %s", err)
 			return err
 		}
-		output, err = openapi3Exporter.SerializeOutput(syslApp.Name.Part[0], p.format)
+		output, err = openapi3Exporter.SerializeOutput(syslutil.GetAppName(syslApp.Name), p.format)
 		if err != nil {
 			return err
 		}

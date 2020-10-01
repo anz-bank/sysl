@@ -7,6 +7,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/mermaid"
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 //integrationPair keeps track of the application pairs we visit during the recursion
@@ -26,7 +27,7 @@ func GenerateIntegrationDiagram(m *sysl.Module, appName string) (string, error) 
 }
 
 func GenerateMultipleAppIntegrationDiagram(m *sysl.Module, appNames []string) (string, error) {
-	return generateMultipleAppIntegrationDiagramHelper(m, appNames, &[]integrationPair{})
+	return generateMultipleAppIntegrationDiagramHelper(m, mermaid.CleanAppNames(appNames), &[]integrationPair{})
 }
 
 //generateEntireIntegrationDiagramHelper is a helper which is generates an entire integration diagram
@@ -102,7 +103,7 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 	for _, statement := range statements {
 		switch c := statement.Stmt.(type) {
 		case *sysl.Statement_Call:
-			nextApp := c.Call.Target.Part[0]
+			nextApp := syslutil.GetAppName(c.Call.Target)
 			pair := integrationPair{appName, nextApp}
 			if !integrationPairsContain(*integrationPairs, pair) {
 				*integrationPairs = append(*integrationPairs, pair)
@@ -143,7 +144,7 @@ func printIntegrationDiagramStatementsTargetedApp(m *sysl.Module, statements []*
 	for _, statement := range statements {
 		switch c := statement.Stmt.(type) {
 		case *sysl.Statement_Call:
-			nextApp := c.Call.Target.Part[0]
+			nextApp := syslutil.GetAppName(c.Call.Target)
 			pair := integrationPair{appName, nextApp}
 			if !integrationPairsContain(*integrationPairs, pair) && nextApp == targetAppName {
 				*integrationPairs = append(*integrationPairs, pair)

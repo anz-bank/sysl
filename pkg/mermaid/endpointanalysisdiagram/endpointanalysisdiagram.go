@@ -5,6 +5,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/mermaid"
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 //externalLink keeps track of the statement-endpoint pairs we visit during execution
@@ -21,7 +22,7 @@ func GenerateEndpointAnalysisDiagram(m *sysl.Module) (string, error) {
 //Similar to the above, but accepts a slice of application names
 //and returns a diagram only including applications specified
 func GenerateMultipleAppEndpointAnalysisDiagram(m *sysl.Module, appNames []string) (string, error) {
-	return generateMultipleAppEndpointAnalysisDiagramHelper(m, appNames, &[]externalLink{}, true)
+	return generateMultipleAppEndpointAnalysisDiagramHelper(m, mermaid.CleanAppNames(appNames), &[]externalLink{}, true)
 }
 
 //generateEndpointAnalysisDiagram is a helper which has additional arguments which need not be entered by the user
@@ -77,7 +78,9 @@ func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statemen
 	for _, statement := range statements {
 		switch c := statement.Stmt.(type) {
 		case *sysl.Statement_Call:
-			appEndPoint := fmt.Sprintf("%s-%s", mermaid.CleanString(c.Call.Target.Part[0]), mermaid.CleanString(c.Call.Endpoint))
+			targetApp := mermaid.CleanString(syslutil.GetAppName(c.Call.Target))
+			targetEp := mermaid.CleanString(c.Call.Endpoint)
+			appEndPoint := fmt.Sprintf("%s-%s", targetApp, targetEp)
 			result += fmt.Sprintf("  %s --> %s\n", endPoint, appEndPoint)
 			pair := externalLink{appEndPoint, mermaid.CleanString(c.Call.Endpoint)}
 			if !externalLinksContain(*externalLinks, pair) {

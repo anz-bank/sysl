@@ -125,5 +125,4 @@ Org :: Team :: TestApp2:
 	assert.NotNil(t, m)
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
-	t.Log(r)
 }
