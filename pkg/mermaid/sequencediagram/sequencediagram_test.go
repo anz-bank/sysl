@@ -83,3 +83,47 @@ func TestGenerateMermaidSequenceDiagramWithIfElseLoopActionAndGroupStatements(t 
 	assert.NotNil(t, r)
 	assert.NoError(t, err)
 }
+
+func TestGenerateMermaidSequenceDiagramWithNamespacesNoSpaces(t *testing.T) {
+	t.Parallel()
+	appName := "Org::Team::TestApp"
+	epName := "myEndPoint"
+	syslInput := `
+Org::Team::TestApp:
+	myEndPoint:
+		return ok <: string
+	`
+	m, err := parse.NewParser().ParseString(syslInput)
+	if err != nil {
+		t.Error(err)
+	}
+	r, err := GenerateSequenceDiagram(m, appName, epName)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+}
+
+func TestGenerateMermaidSequenceDiagramWithNamespacesWithSpaces(t *testing.T) {
+	t.Parallel()
+	appName := "Org :: Team :: TestApp"
+	epName := "myEndPoint1"
+	syslInput := `
+Org :: Team :: TestApp:
+	myEndPoint1:
+		Org :: Team :: TestApp2 <- myEndPoint2
+		return ok <: string
+
+Org :: Team :: TestApp2:
+	myEndPoint2:
+		return ok <: string
+	`
+	m, err := parse.NewParser().ParseString(syslInput)
+	if err != nil {
+		t.Error(err)
+	}
+	r, err := GenerateSequenceDiagram(m, appName, epName)
+	assert.NotNil(t, m)
+	assert.NotNil(t, r)
+	assert.NoError(t, err)
+	t.Log(r)
+}

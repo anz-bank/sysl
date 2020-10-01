@@ -1,13 +1,13 @@
 package sequencediagram
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/mermaid"
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 //sequencePair keeps track of the application pairs and the associated endpoint we visit during the recursion
@@ -24,18 +24,20 @@ var isLoop = regexp.MustCompile("^loop.*")
 //GenerateSequenceDiagram accepts an application name and an endpoint as inputs and returns a string and an error
 //The resulting string is the mermaid code for the sequence diagram for that application and endpoint
 func GenerateSequenceDiagram(m *sysl.Module, appname string, epname string) (string, error) {
-	return generateSequenceDiagramHelper(m, appname, epname, "...", 1, &[]sequencePair{}, true)
+	return generateSequenceDiagramHelper(m, syslutil.CleanAppName(appname), epname, "...", 1, &[]sequencePair{}, true)
 }
 
 //generateSequenceDiagramHelper is a helper which has additional arguments which need not be entered by the user
 func generateSequenceDiagramHelper(m *sysl.Module, appName string, epName string,
 	previousApp string, indent int, sequencePairs *[]sequencePair, theStart bool) (string, error) {
 	var result string
+
+	if err := isValidAppNameAndEndpoint(m, appName, epName); err != nil {
+		return "", err
+	}
+
 	if theStart {
 		result = mermaid.GeneratedHeader + "sequenceDiagram\n"
-		if err := isValidAppNameAndEndpoint(m, appName, epName); err != nil {
-			return "", err
-		}
 		result += fmt.Sprintf(" %s ->> %s: %s\n", previousApp, cleanAppName(appName), epName)
 	}
 	statements := m.Apps[appName].Endpoints[epName].GetStmt()
@@ -60,7 +62,7 @@ func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement
 				result += fmt.Sprintf("%send\n", addIndent(indent))
 			}
 		case *sysl.Statement_Call:
-			nextapp := c.Call.Target.Part[0]
+			nextapp := syslutil.GetAppName(c.Call.Target)
 			nextep := c.Call.Endpoint
 			pair := sequencePair{appName, nextep, nextep}
 			if !sequencePairsContain(*sequencePairs, pair) {
@@ -116,10 +118,10 @@ func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement
 //isValidAppNameAndEndpoint checks if the entered application name and endpoint exists in the sysl module or not
 func isValidAppNameAndEndpoint(m *sysl.Module, appName string, epName string) error {
 	if _, ok := m.Apps[appName]; !ok {
-		return errors.New("invalid app name")
+		return fmt.Errorf("invalid app name %s", appName)
 	}
 	if _, ok := m.Apps[appName].Endpoints[epName]; !ok {
-		return errors.New("invalid endpoint")
+		return fmt.Errorf("invalid endpoint %s", epName)
 	}
 	return nil
 }
@@ -166,5 +168,6 @@ func sequencePairsContain(s []sequencePair, sp sequencePair) bool {
 }
 
 func cleanAppName(s string) string {
-	return strings.ReplaceAll(s, "-", "_")
+	removeColons := strings.ReplaceAll(s, " :: ", "_")
+	return strings.ReplaceAll(removeColons, "-", "_")
 }
