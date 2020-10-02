@@ -5,119 +5,118 @@
 ##########################################
 
 TestApp[avro_spec="1.0", package="com.example.package"]:
-  !type Event [namespace="com.example"]:
-      id <: int64 
-      action <: Action 
-      header <: Header 
-      body <: Party? [union=['Party', 'null']]
-      mapRecords <: set of StringMapRecordItem [default="{}"]
-      relationships <: sequence of Relationship 
-      tagList <: sequence of string [default="['tag1', 'tag2']"]
-      len <: Md5 
-      width <: Width 
-      occurrenceDateTime <: datetime [~timestamp-millis, description="The date and time, to millisecond precision, that this event occurred"]
-      amount <: decimal(4.2) [description="Amount"]
-  
-  !type EventUUID:
-      id <: string 
-  
-  !type Header:
-      eventUUID <: EventUUID 
-  
-  !type Owner:
-      id <: string 
-      ownerTags <: sequence of OwnerTag? 
-  
-  !type OwnerTag:
-      id <: string 
-      tag <: string 
-  
-  !type Party [description="Party Details"]:
-      id <: string [description="A unique identifier for party"]
-      subject <: Subject 
-  
-  !type Relationship [namespace="com.example", description="account relationship."]:
-      owner <: Owner? 
-      relationshipType <: string [description="This would be the business key for uniquely identifying a relation"]
-      startDate <: string? [description="Relationship start date", default="null"]
-      endDate <: string? [union=['string', 'null'], description="Relationship end date", default="2020-09-18"]
-      issueDate <: Int32String? [union=['int32', 'string', 'null'], description="Relationship issue date", default="2.0200918e+07"]
-      closeDate <: Int32String? [union=['null', 'string', 'int32'], description="Relationship close date", default="null"]
-      realCloseDate <: Int32String? [union=['string', 'null', 'int32'], description="Relationship real close date", default="20200919"]
-      updateDate <: Int32String [union=['string', 'int32'], description="Relationship update date", default="20200919", order="ascending"]
-      updateDate1 <: Int32String [union=['string', 'int32'], description="Relationship update date", default="20200919", order="ascending", alias_of="updateDate"]
-      updateDate2 <: Int32String [union=['string', 'int32'], description="Relationship update date", default="20200919", order="ascending", alias_of="updateDate"]
-      titleList <: sequence of string? [default="null"]
-      tagList <: StringTagListItemSequence? [union=['string', 'null', 'sequence of TagListItem'], default="tag1,tag2"]
-      titleMap <: set of StringStringItem [default="{'k1': 'v1', 'k2': 'v2'}"]
-      tagMap <: StringStringTagMapItemItem? [union=['null', 'string', 'set of StringTagMapItemItem'], default="null"]
-  
-  !alias P1:
-      Relationship
-  
-  !alias P2 [name="p2"]:
-      Relationship
-  
-  !type StringMapRecordItem [json_map_key="key"]:
-      key <: string
-      value <: MapRecord
-  
-  !type MapRecord:
-      id <: string 
-  
-  !type StringStringItem [json_map_key="key"]:
-      key <: string
-      value <: string
-  
-  
-  !type StringTagMapItemItem [json_map_key="key"]:
-      key <: string
-      value <: TagMapItem
-  
-  !type TagMapItem [name="tagMapItem"]:
-      id <: string 
-      name <: string 
-  
-  !type Subject:
-      id <: string 
-  
-  !type TagListItem [name="tagListItem"]:
-      id <: string 
-      name <: string 
-  
-  !enum Action [name="action", namespace="com.example", default="add", description="Performed action"]:
-      add: 0
-      update: 1
-      delete: 2
-      none: 3
-  
-  !alias E1 [name="e1"]: 
-      Action
-  
-  !alias E2: 
-      Action
-  
-  !alias Md5 [~fixed, fixed_size="16", namespace="com.example", name="md5"]:
-      bytes
-  
-  !alias Width [~fixed, fixed_size="16", namespace="com.example", name="width"]:
-      bytes
-  
-  !alias Width1:
-      Width
-  
-  !alias Width2 [name="width2"]:
-      Width
-  
-  
-  !union Int32String:
-      int32
-      string
-  
-  !union StringStringTagMapItemItem:
-      set of StringTagMapItemItem
-      string
-  
-  !union StringTagListItemSequence:
-      sequence of TagListItem
-      string
+    !type Event [namespace="com.example"]:
+        id <: int64
+        action <: Action
+        header <: Header
+        body <: Party? [union=['Party', 'null']]
+        mapRecords <: set of StringMapRecordItem [default="{}"]
+        relationships <: sequence of Relationship
+        tagList <: sequence of string [default="['tag1', 'tag2']"]
+        len <: Md5
+        width <: Width
+        occurrenceDateTime <: datetime [~timestamp-millis, description="The date and time, to millisecond precision, that this event occurred"]
+        amount <: decimal(4.2) [description="Amount"]
+
+    !type EventUUID:
+        id <: string
+
+    !type Header:
+        eventUUID <: EventUUID
+
+    !type Owner:
+        id <: string
+        ownerTags <: sequence of OwnerTag?
+
+    !type OwnerTag:
+        id <: string
+        tag <: string
+
+    !type Party [description="Party Details"]:
+        id <: string [description="A unique identifier for party"]
+        subject <: Subject
+
+    !type Relationship [namespace="com.example", description="account relationship."]:
+        owner <: Owner?
+        relationshipType <: string [description="This would be the business key for uniquely identifying a relation"]
+        startDate <: string? [description="Relationship start date", default="null"]
+        endDate <: string? [union=['string', 'null'], description="Relationship end date", default="2020-09-18"]
+        issueDate <: Int32String? [union=['int32', 'string', 'null'], description="Relationship issue date", default="2.0200918e+07"]
+        closeDate <: Int32String? [union=['null', 'string', 'int32'], description="Relationship close date", default="null"]
+        realCloseDate <: Int32String? [union=['string', 'null', 'int32'], description="Relationship real close date", default="20200919"]
+        updateDate <: Int32String [union=['string', 'int32'], description="Relationship update date", default="20200919", order="ascending"]
+        updateDate1 <: Int32String [union=['string', 'int32'], description="Relationship update date", default="20200919", order="ascending", alias_of="updateDate"]
+        updateDate2 <: Int32String [union=['string', 'int32'], description="Relationship update date", default="20200919", order="ascending", alias_of="updateDate"]
+        titleList <: sequence of string? [default="null"]
+        tagList <: StringTagListItemSequence? [union=['string', 'null', 'sequence of TagListItem'], default="tag1,tag2"]
+        titleMap <: set of StringStringItem [default="{'k1': 'v1', 'k2': 'v2'}"]
+        tagMap <: StringStringTagMapItemItem? [union=['null', 'string', 'set of StringTagMapItemItem'], default="null"]
+
+    !alias P1:
+        Relationship
+
+    !alias P2 [name="p2"]:
+        Relationship
+
+    !type StringMapRecordItem [json_map_key="key"]:
+        key <: string
+        value <: MapRecord
+
+    !type MapRecord:
+        id <: string
+
+    !type StringStringItem [json_map_key="key"]:
+        key <: string
+        value <: string
+
+
+    !type StringTagMapItemItem [json_map_key="key"]:
+        key <: string
+        value <: TagMapItem
+
+    !type TagMapItem [name="tagMapItem"]:
+        id <: string
+        name <: string
+
+    !type Subject:
+        id <: string
+
+    !type TagListItem [name="tagListItem"]:
+        id <: string
+        name <: string
+
+    !enum Action [name="action", namespace="com.example", default="add", description="Performed action"]:
+        add: 0
+        update: 1
+        delete: 2
+        none: 3
+
+    !alias E1 [name="e1"]:
+        Action
+
+    !alias E2:
+        Action
+
+    !alias Md5 [~fixed, fixed_size="16", namespace="com.example", name="md5"]:
+        bytes
+
+    !alias Width [~fixed, fixed_size="16", namespace="com.example", name="width"]:
+        bytes
+
+    !alias Width1:
+        Width
+
+    !alias Width2 [name="width2"]:
+        Width
+
+    !union Int32String:
+        int32
+        string
+
+    !union StringStringTagMapItemItem:
+        set of StringTagMapItemItem
+        string
+
+    !union StringTagListItemSequence:
+        sequence of TagListItem
+        string

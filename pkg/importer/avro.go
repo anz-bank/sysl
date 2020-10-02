@@ -1,9 +1,12 @@
 package importer
 
 import (
+	"fmt"
 	"strings"
 
+	arrai2 "github.com/anz-bank/sysl/internal/arrai"
 	"github.com/anz-bank/sysl/pkg/arrai"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,13 +24,18 @@ type avroImporter struct {
 
 // Load returns a Sysl spec equivalent to avroSpec.
 func (i *avroImporter) Load(avroSpec string) (string, error) {
-	i.logger.Debugln("Load avro spec")
-
-	val, err := arrai.EvaluateScript(avroTransformerScript, avroSpec, i.appName, i.pkg)
+	b, err := arrai2.Asset("pkg/importer/avro/transformer_cli.arraiz")
 	if err != nil {
 		return "", err
 	}
-
+	val, err := arrai.EvaluateBundle(b, avroSpec, i.appName, i.pkg)
+	if err != nil {
+		return "", errors.Wrap(ArraiTransformError{
+			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", avroSpec, i.appName, i.pkg),
+			Err:      err,
+			ShortMsg: "Error executing SQL dir importer",
+		}, "Executing arrai transform failed")
+	}
 	return strings.TrimSpace(val.String()) + "\n", nil
 }
 

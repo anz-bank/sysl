@@ -3,6 +3,7 @@ package importer
 import (
 	"fmt"
 
+	arrai2 "github.com/anz-bank/sysl/internal/arrai"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -45,15 +46,19 @@ func (s *Spanner) WithPackage(packageName string) Importer {
 
 // Load takes in a string in a format supported by an the importer.
 // It returns the converted Sysl as a string.
-func (s *Spanner) Load(filePath string) (string, error) {
+func (s *Spanner) Load(path string) (string, error) {
+	b, err := arrai2.Asset("pkg/importer/spanner/import_spanner_sql.arraiz")
+	if err != nil {
+		return "", err
+	}
 	// TODO: Make the appname optional
-	syslFile, err := arrai.EvaluateScript(importSpannerScript, filePath, s.appName, s.pkg)
+	val, err := arrai.EvaluateBundle(b, path, s.appName, s.pkg)
 	if err != nil {
 		return "", errors.Wrap(ArraiTransformError{
-			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", filePath, s.appName, s.pkg),
+			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", path, s.appName, s.pkg),
 			Err:      err,
-			ShortMsg: "Error executing sql importer",
+			ShortMsg: "Error executing SQL importer",
 		}, "Executing arrai transform failed")
 	}
-	return syslFile.String(), nil
+	return val.String(), nil
 }

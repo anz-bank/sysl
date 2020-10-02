@@ -11,7 +11,6 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -105,7 +104,7 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 }
 
 func generateSyslFromSpannerSQL() (string, error) {
-	absFilePath, err := filepath.Abs(`../../tests/spanner.sql`)
+	absFilePath, err := filepath.Abs(`spanner/tests/spanner.sql`)
 	if err != nil {
 		return "", err
 	}
@@ -114,12 +113,12 @@ func generateSyslFromSpannerSQL() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	imp.WithAppName("customeraccounts").WithPackage("retail")
+	imp.WithAppName("customeraccounts").WithPackage("com.example.package")
 	return imp.Load(absFilePath)
 }
 
 func readGoldenSyslForSpannerSQL() (string, error) {
-	absFilePath, err := filepath.Abs(`../../tests/spanner.sql.golden.sysl`)
+	absFilePath, err := filepath.Abs(`spanner/tests/spanner.sysl`)
 	if err != nil {
 		return "", err
 	}

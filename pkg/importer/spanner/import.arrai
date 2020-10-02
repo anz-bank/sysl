@@ -1,7 +1,9 @@
-let import = \importSql \appName \syslPackage
+# Generates a Sysl spec equivalent to the model produced by applying the sequence of statements in
+# importSqls.
+let import = \importSqls \appName \syslPackage
     let spanner = //{./spanner};
     let sysl = //{./sysl};
-    let stmts = spanner.parseSchema([importSql]);
+    let stmts = spanner.parseSchema(importSqls);
     let model = spanner.applyStmt(stmts, spanner.emptyModel);
     sysl.transformModel(
         cond {

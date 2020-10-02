@@ -28,25 +28,32 @@ tidy:
 	gofmt -s -w .
 	goimports -w .
 
-test:
+test: internal/arrai/bindata.go
 	$(TESTEXE)
 
-coverage:
+coverage: internal/arrai/bindata.go
 	./scripts/test-with-coverage.sh 80
 
 # Updates golden test files in pkg/parse.
 # TODO: Extend to work for all golden files
-golden:
+golden: internal/arrai/bindata.go
 	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
 
 check-tidy: ## Check go.mod and go.sum is tidy
 	go mod tidy && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-build:
+build: internal/arrai/bindata.go
 	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp:
 	go build -o ./dist/sysllsp -ldflags=$(LDFLAGS) -v ./cmd/sysllsp
+
+%.arraiz: %.arrai
+	arrai bundle $< > $@
+
+internal/arrai/bindata.go: pkg/importer/avro/transformer_cli.arraiz \
+							pkg/importer/spanner/import_spanner_sql.arraiz
+	go-bindata -pkg arrai -o $@ $^
 
 release:
 	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot

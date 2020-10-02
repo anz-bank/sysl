@@ -5,7 +5,7 @@ let printUnion = \union
     let types = union >> util.getTypeName(.) >> cond . {(:type_S, ...): type_S, _: .s};
     $`
         !union ${//seq.sub('?', '', util.combineTypes(union, \. .s))}:
-            ${types where .@item != 'null' rank (:.@) => .@item orderby .::\n}
+            ${types where .@item != 'null' rank (:.@) => .@item orderby .::\n:\n}
     `
 ;
 

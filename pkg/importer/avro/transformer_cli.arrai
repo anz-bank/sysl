@@ -1,0 +1,4 @@
+# Generates a Sysl spec equivalent to the model in the Avro schema.
+let [_, schema, appName, packageName] = //os.args;
+
+//{./transformer}(schema, appName, packageName)

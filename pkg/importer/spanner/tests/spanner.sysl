@@ -4,14 +4,14 @@
 ##                                      ##
 ##########################################
 
-customeraccounts [spanner_spec="1.0", package="retail"]:
+customeraccounts [spanner_spec="1.0", package="com.example.package"]:
     !table Account [indexes=[["name:AccountsByNum","key_parts:AccountNum(desc)"],["name:Complex","key_parts:AccountNum,BSB(desc),Balance(asc)"]]]:
         AccountNum <: string(23) [~pk]
-        BSB <: string(6) 
-        Balance <: int 
-        CreationDate <: date 
-        Table <: string(32)? 
-                                
+        BSB <: string(6)
+        Balance <: int
+        CreationDate <: date
+        Table <: string(32)?
+
     !table AccountAddress [interleave_in_parent="Account", interleave_on_delete="cascade"]:
         AccountNum <: string(23) [~pk, ~asc]
         AddressPostCode <: string(10) [~pk, ~desc]
@@ -19,25 +19,24 @@ customeraccounts [spanner_spec="1.0", package="retail"]:
         AddressLine1 <: bytes? [~max]
         AddressLine2 <: string(100)? [~hex]
         AddressLine3 <: bytes? [length="100"]
-                                
+
     !table Customer [indexes=[["name:CustomerByEmail","unique:true","null_filtered:true","key_parts:Email,Mobile(desc)","storing:Email,Mobile","interleave_in:Customer"],["name:InterleaveIndex","key_parts:AccountNum,CustomerID","interleave_in:Account"],["name:StoringIndex","key_parts:CustomerID","storing:NetWorth"]]]:
         CustomerID <: string(36) [~pk]
-        FirstName <: string(64) 
-        LastName <: string(64) 
-        Email <: string(256)? 
-        Mobile <: string(10)? 
-        NetWorth <: float? 
+        FirstName <: string(64)
+        LastName <: string(64)
+        Email <: string(256)?
+        Mobile <: string(10)?
+        NetWorth <: float?
         _Int <: int [name="Int"]
-                                
+
     !table CustomerHasAccount [primary_key="AccountNum(asc),CustomerID", foreign_keys=[["columns:CustomerID"],["constraint:FK_AccountNum","columns:AccountNum,BranchID"]]]:
         CustomerID <: Customer.CustomerID [~pk, ~fk]
         AccountNum <: Account.AccountNum [~pk, ~asc, ~fk]
-        LegalRole <: string(10) 
+        LegalRole <: string(10)
         BranchID <: Account.BSB [~fk]
-        Permissions <: sequence of string(10)? 
-                                
+        Permissions <: sequence of string(10)?
+
     !table PayID:
         PayID <: string(23) [~pk]
-        BSB <: string(6) 
+        BSB <: string(6)
         _float64 <: float [name="float64"]
-                                

@@ -1,3 +1,5 @@
-let importlib = //{./import};
+# Generates a Sysl spec equivalent to the model produced by applying the sequence of statements in
+# the file importSql.
 let [_, importSql, appName, syslPackage] = //os.args;
-importlib.import(importSql, appName, syslPackage)
+
+//{./import}.import([importSql], appName, syslPackage)
