@@ -3,6 +3,7 @@ package importer
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"path/filepath"
 	"reflect"
@@ -68,6 +69,14 @@ func (o *openapiv3) WithAppName(appName string) Importer {
 func (o *openapiv3) WithPackage(packageName string) Importer {
 	o.pkg = packageName
 	return o
+}
+
+func (o *openapiv3) LoadFile(path string) (string, error) {
+	bs, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return o.Load(string(bs))
 }
 
 func (o *openapiv3) Load(file string) (string, error) {

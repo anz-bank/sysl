@@ -1,0 +1,8 @@
+# Generates a Sysl spec equivalent to the model produced by applying the sequence of statements in
+# the migration scripts (`.up.sql`) contained within importSqlDir.
+let (:import, ...) = //{./import};
+let [_, importSqlDir, appName, syslPackage] = //os.args;
+
+let sqls = //os.tree(importSqlDir) where //seq.has_suffix('.up.sql', .path) => .path orderby .;
+
+import(sqls, appName, syslPackage)

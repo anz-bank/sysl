@@ -1,0 +1,1 @@
+CREATE TABLE foo (a INT64) PRIMARY KEY (a);

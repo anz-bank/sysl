@@ -9,44 +9,36 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// ArraiTransformError encapsulates detailed error msgs from arrai runtime.
-type ArraiTransformError struct {
-	Context  string
-	Err      error
-	ShortMsg string
-}
-
-func (e ArraiTransformError) Error() string { return e.Context + ": " + e.Err.Error() }
-
-// Spanner encapsulates glue code for calling arrai scripts which in turn ingests spanner sql.
-type Spanner struct {
+// SpannerDir encapsulates glue code for calling arrai scripts which in turn ingests spanner sql.
+type SpannerDir struct {
 	appName string
 	pkg     string
 	logger  *logrus.Logger
 }
 
 // MakeSpannerImporter is a factory method for creating new spanner sql importer.
-func MakeSpannerImporter(logger *logrus.Logger) *Spanner {
-	return &Spanner{
+func MakeSpannerDirImporter(logger *logrus.Logger) *SpannerDir {
+	return &SpannerDir{
 		logger: logger,
 	}
 }
 
 // WithAppName allows the exported Sysl application name to be specified.
-func (s *Spanner) WithAppName(appName string) Importer {
+func (s *SpannerDir) WithAppName(appName string) Importer {
 	s.appName = appName
 	return s
 }
 
 // WithPackage allows the exported Sysl package attribute to be specified.
-func (s *Spanner) WithPackage(packageName string) Importer {
+func (s *SpannerDir) WithPackage(packageName string) Importer {
 	s.pkg = packageName
 	return s
 }
 
-// LoadFile generates a Sysl spec equivalent to the sum of the statements in the specified SQL file.
-func (s *Spanner) LoadFile(path string) (string, error) {
-	b, err := arrai2.Asset("pkg/importer/spanner/import_spanner_sql.arraiz")
+// LoadFile takes a path to a directory of migration SQL scripts (.up.sql) and generates a Sysl spec
+// representing the sum of statements in those scripts.
+func (s *SpannerDir) LoadFile(path string) (string, error) {
+	b, err := arrai2.Asset("pkg/importer/spanner/import_migrations.arraiz")
 	if err != nil {
 		return "", err
 	}
@@ -56,12 +48,13 @@ func (s *Spanner) LoadFile(path string) (string, error) {
 		return "", errors.Wrap(ArraiTransformError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", path, s.appName, s.pkg),
 			Err:      err,
-			ShortMsg: "Error executing SQL importer",
+			ShortMsg: "Error executing SQL dir importer",
 		}, "Executing arrai transform failed")
 	}
 	return val.String(), nil
 }
 
-func (s *Spanner) Load(content string) (string, error) {
+// Load is not implemented, since SpannerDir importing requires a directory.
+func (s *SpannerDir) Load(string) (string, error) {
 	panic("not implemented")
 }

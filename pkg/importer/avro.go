@@ -2,6 +2,7 @@ package importer
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	arrai2 "github.com/anz-bank/sysl/internal/arrai"
@@ -20,6 +21,14 @@ type avroImporter struct {
 	appName string
 	pkg     string
 	logger  *logrus.Logger
+}
+
+func (i *avroImporter) LoadFile(path string) (string, error) {
+	bs, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return i.Load(string(bs))
 }
 
 // Load returns a Sysl spec equivalent to avroSpec.

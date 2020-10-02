@@ -18,6 +18,8 @@ import (
 
 func TestDataModel(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	p := &datamodelCmd{}
 	p.Output = "whatever.svg"
 	p.Project = "Project"          //nolint:goconst
@@ -57,6 +59,8 @@ _0 *-- "1..1 " _1
 
 func TestHTML(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	p := &datamodelCmd{}
 	p.Output = "whatever.html"
 	p.Project = "Project"          //nolint:goconst
@@ -96,6 +100,8 @@ func TestHTML(t *testing.T) {
 
 func TestLinkOutput(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	p := &datamodelCmd{}
 	p.Output = "whatever.html"
 	p.Project = "Project"          //nolint:goconst
@@ -136,6 +142,8 @@ func TestLinkOutput(t *testing.T) {
 
 func TestSequence(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	p := &datamodelCmd{}
 	p.Output = "whatever.puml"
 	p.Project = "sequence"

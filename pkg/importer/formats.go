@@ -2,7 +2,8 @@ package importer
 
 import (
 	"fmt"
-	"path"
+	"io/ioutil"
+	"path/filepath"
 	"strings"
 
 	"github.com/ghodss/yaml"
@@ -45,6 +46,12 @@ var SpannerSQL = Format{
 	FileExt:   []string{".sql"},
 }
 
+var SpannerSQLDir = Format{
+	Name:      "spannerSQLdir",
+	Signature: "",
+	FileExt:   []string{".up.sql"},
+}
+
 // OpenAPI3 is identified by the openapi header. -  The value MUST be "3.x.x".
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasDocument
 var OpenAPI3 = Format{
@@ -61,12 +68,23 @@ var Swagger = Format{
 	FileExt:   []string{".yaml", ".json", ".yml"},
 }
 
-// GuessFileType detects the file based on the extension and the file itself.
-// It returns the detected format if successful, or an error, if it has failed.
-// It first tries to match the file extensions before checking the files for signatures such as swagger: "2.0"
-func GuessFileType(filename string, data []byte, validFormats []Format) (*Format, error) {
+// GuessFileType detects the file based on the filename extension and the file itself.
+// It returns the detected format if successful, or an error if not.
+// It first tries to match the file extensions before checking the files for signatures such as
+// `swagger: "2.0"`.
+func GuessFileType(path string, isDir bool, content []byte, validFormats []Format) (*Format, error) {
+	if isDir {
+		if files, err := ioutil.ReadDir(path); err == nil {
+			for _, info := range files {
+				if strings.HasSuffix(info.Name(), ".up.sql") {
+					return &SpannerSQLDir, nil
+				}
+			}
+		}
+	}
+
 	var matchesExt []Format
-	ext := path.Ext(filename)
+	ext := filepath.Ext(path)
 	for _, format := range validFormats {
 		for _, formatExt := range format.FileExt {
 			if formatExt == ext {
@@ -84,14 +102,14 @@ func GuessFileType(filename string, data []byte, validFormats []Format) (*Format
 	// Convert to yaml so we only need to compare a single format
 	if ext == ".json" {
 		var err error
-		data, err = yaml.JSONToYAML(data)
+		content, err = yaml.JSONToYAML(content)
 		if err != nil {
-			return nil, fmt.Errorf("error converting spec to yaml for: %s", filename)
+			return nil, fmt.Errorf("error converting spec to yaml for: %s", path)
 		}
 	}
 
 	for _, format := range matchesExt {
-		if strings.Contains(string(data), format.Signature) {
+		if strings.Contains(string(content), format.Signature) {
 			matchesSignature = append(matchesSignature, format)
 		}
 	}
@@ -101,5 +119,5 @@ func GuessFileType(filename string, data []byte, validFormats []Format) (*Format
 	}
 
 	// We return an error if the number of matches is less than 0 or greater than 1
-	return nil, fmt.Errorf("error detecting input file format for: %s", filename)
+	return nil, fmt.Errorf("error detecting input file format for: %s", path)
 }

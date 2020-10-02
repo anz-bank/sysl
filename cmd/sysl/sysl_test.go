@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -10,7 +11,6 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/loader"
-
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/anz-bank/sysl/pkg/parse"
@@ -171,8 +171,10 @@ func TestMain2TextPBStdout(t *testing.T) {
 func TestMain2JSONStdout(t *testing.T) {
 	t.Parallel()
 
-	testMain2Stdout(t, []string{"--mode", "json",
-		filepath.Join(testDir, "args.sysl")}, filepath.Join(testDir, "args.sysl.golden.json"))
+	testMain2Stdout(t,
+		[]string{"--mode", "json", filepath.Join(testDir, "args.sysl")},
+		filepath.Join(testDir, "args.sysl.golden.json"),
+	)
 }
 
 func TestMain2BadMode(t *testing.T) {
@@ -260,6 +262,7 @@ func TestMain2SeqdiagWithNonsensicalOutput(t *testing.T) {
 
 func TestMain2WithBlackboxParams(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
 
 	logger, hook := test.NewNullLogger()
 	out := filepath.Clean("/out1.png")
@@ -284,6 +287,7 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 
 func TestMain2WithReadOnlyFs(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
 
 	logger, hook := test.NewNullLogger()
 	out := "/out2.png"
@@ -331,6 +335,7 @@ func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
 
 func TestMain2WithBlackboxSysl(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
@@ -410,6 +415,7 @@ func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 
 func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
@@ -431,6 +437,7 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 
 func TestMain2WithGroupingParamsSysl(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
@@ -453,6 +460,7 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 
 func TestMain2WithGenerateIntegrations(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
 
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
@@ -641,6 +649,8 @@ func TestMain2WithEmptyIntsParams(t *testing.T) {
 
 func TestMain2WithDataMultipleFiles(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png",
@@ -651,6 +661,8 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 
 func TestMain2WithDataSingleFile(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "data.png",
@@ -672,6 +684,8 @@ func TestMain2WithDataNoProject(t *testing.T) {
 
 func TestMain2WithDataFilter(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f",
@@ -682,6 +696,8 @@ func TestMain2WithDataFilter(t *testing.T) {
 
 func TestMain2WithDataMultipleRelationships(t *testing.T) {
 	t.Parallel()
+	checkPlantUML(t)
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png",
@@ -1065,4 +1081,13 @@ func TestSyslSyntaxValidate(t *testing.T) {
 			}
 		}
 	}
+}
+
+// checkPlantUML causes a test to fail with a useful error message if a local PlantUML cannot be
+// reached for tests that require it.
+func checkPlantUML(t *testing.T) {
+	plantURL := os.Getenv("SYSL_PLANTUML")
+	res, err := http.Head(plantURL) //nolint:gosec
+	require.NoError(t, err, "PlantUML is not running at %s", plantURL)
+	_ = res.Body.Close()
 }

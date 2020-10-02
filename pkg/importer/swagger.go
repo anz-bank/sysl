@@ -3,6 +3,7 @@ package importer
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"strings"
 
@@ -33,6 +34,14 @@ type OpenAPI2Importer struct {
 	openAPI2Spec string
 	filepath     string
 	*openapiv3
+}
+
+func (l *OpenAPI2Importer) LoadFile(path string) (string, error) {
+	bs, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return l.Load(string(bs))
 }
 
 func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {

@@ -42,9 +42,16 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
-	data, err := ioutil.ReadFile(p.filename)
-	if err != nil {
+	info, err := os.Stat(p.filename)
+	if os.IsNotExist(err) {
 		return err
+	}
+	var data []byte
+	if !info.IsDir() {
+		data, err = ioutil.ReadFile(p.filename)
+		if err != nil {
+			return err
+		}
 	}
 
 	var imp importer.Importer
@@ -52,16 +59,18 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	imp, err = importer.Factory(inputFilePath, data, logrus.New())
+	imp, err = importer.Factory(inputFilePath, info.IsDir(), data, logrus.New())
 	if err != nil {
 		return err
 	}
 	imp.WithAppName(p.AppName).WithPackage(p.Package)
 
 	var output string
-	if _, isSpannerSQL := imp.(*importer.Spanner); isSpannerSQL {
-		output, err = imp.Load(inputFilePath)
-	} else {
+	// TODO: Abstract this logic.
+	switch imp.(type) {
+	case *importer.Spanner, *importer.SpannerDir:
+		output, err = imp.LoadFile(inputFilePath)
+	default:
 		output, err = imp.Load(string(data))
 	}
 	if err != nil {

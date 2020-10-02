@@ -20,7 +20,6 @@ func EvaluateScript(arraiScript string, scriptParams ...interface{}) (rel.Value,
 
 // RunBundle runs an arr.ai bundle with the passed parameters set as //os.args[1:].
 // It help to pass Go's type parameters to arrai script explicitly.
-// TODO: will move it to arrai when it is ready.
 func EvaluateBundle(bundle []byte, args ...string) (rel.Value, error) {
 	args = append([]string{""}, args...)
 	return syntax.EvaluateBundle(bundle, args...)

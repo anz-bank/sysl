@@ -51,8 +51,10 @@ buildlsp:
 %.arraiz: %.arrai
 	arrai bundle $< > $@
 
-internal/arrai/bindata.go: pkg/importer/avro/transformer_cli.arraiz \
-							pkg/importer/spanner/import_spanner_sql.arraiz
+internal/arrai/bindata.go: \
+		pkg/importer/avro/transformer_cli.arraiz \
+		pkg/importer/spanner/import_spanner_sql.arraiz \
+		pkg/importer/spanner/import_migrations.arraiz
 	go-bindata -pkg arrai -o $@ $^
 
 release:

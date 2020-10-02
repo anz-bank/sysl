@@ -4,6 +4,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,6 +14,8 @@ var formatsToTest = []Format{
 	OpenAPI3,
 	SYSL,
 	Swagger,
+	SpannerSQL,
+	SpannerSQLDir,
 }
 
 var formatTests = []struct {
@@ -31,6 +35,7 @@ var formatTests = []struct {
 	{"Parses swagger2 json files", ".json", []byte(`{"swagger": "2.0"}`), &Swagger, nil},
 	{"Parses xsd files", ".xsd", []byte(`xml`), &XSD, nil},
 	{"Parses xml files", ".xml", []byte(`xml`), &XSD, nil},
+	{"Parses Spanner SQL files", ".sql", []byte{}, &SpannerSQL, nil},
 	{"Fails for unknown extension", ".abcde", []byte{}, nil, errors.New("error detecting input file format for: ")},
 	{"Fails for invalid json", ".json", []byte{}, nil, errors.New("error converting json to yaml for: ")},
 	{"Fails for empty string", "", []byte{}, nil, errors.New("error detecting input file format for: ")},
@@ -41,11 +46,19 @@ func TestGuessFileType(t *testing.T) {
 	for _, tt := range formatTests {
 		t.Run(tt.testName, func(t *testing.T) {
 			t.Parallel()
-			guessedType, err := GuessFileType(tt.fileName, tt.fileContents, formatsToTest)
+			guessedType, err := GuessFileType(tt.fileName, false, tt.fileContents, formatsToTest)
 			assert.Equal(t, tt.err, err)
 			if tt.out != nil {
 				assert.Equal(t, tt.out.Name, guessedType.Name)
 			}
 		})
 	}
+}
+
+func TestGuessFileType_Dir(t *testing.T) {
+	t.Parallel()
+
+	f, err := GuessFileType("spanner/tests/migrations", true, []byte{}, formatsToTest)
+	require.NoError(t, err)
+	assert.Equal(t, SpannerSQLDir, *f)
 }

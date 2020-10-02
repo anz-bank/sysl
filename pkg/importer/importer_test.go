@@ -11,7 +11,6 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -50,10 +49,10 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				absFilePath, err := filepath.Abs(filepath.Join(cfg.testDir, filename+cfg.testExtension))
 				require.NoError(t, err)
-				imp, err := Factory(absFilePath, input, logger)
+				imp, err := Factory(absFilePath, false, input, logger)
 				require.NoError(t, err)
 				imp.WithAppName("TestApp").WithPackage("com.example.package")
-				result, err := imp.Load(string(input))
+				result, err := imp.LoadFile(absFilePath)
 				require.NoError(t, err)
 				if *update {
 					err = ioutil.WriteFile(syslFile, []byte(result), 0600)
@@ -69,6 +68,21 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 			})
 		}
 	}
+}
+
+func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
+	logger, _ := test.NewNullLogger()
+	syslFile := filepath.Join(cfg.testDir, filepath.Base(cfg.testDir)+".sysl")
+	path := syslutil.MustAbsolute(t, cfg.testDir)
+	imp, err := Factory(path, true, nil, logger)
+	require.NoError(t, err)
+	out, err := imp.WithAppName("TestApp").WithPackage("com.example.package").LoadFile(path)
+	require.NoError(t, err)
+	expected, err := ioutil.ReadFile(syslFile)
+	require.NoError(t, err)
+	expected = syslutil.HandleCRLF(expected)
+	require.NoError(t, err)
+	require.Equal(t, string(expected), out)
 }
 
 func TestLoadSwaggerJSONFromTestFiles(t *testing.T) {
@@ -103,39 +117,20 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 	})
 }
 
-func generateSyslFromSpannerSQL() (string, error) {
-	absFilePath, err := filepath.Abs(`spanner/tests/spanner.sql`)
-	if err != nil {
-		return "", err
-	}
-	logger, _ := test.NewNullLogger()
-	imp, err := Factory(absFilePath, nil, logger)
-	if err != nil {
-		return "", err
-	}
-	imp.WithAppName("customeraccounts").WithPackage("com.example.package")
-	return imp.Load(absFilePath)
+func TestLoadSpannerFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadSpannerFromTestFiles",
+		testDir:       "spanner/tests",
+		testExtension: ".sql",
+	})
 }
 
-func readGoldenSyslForSpannerSQL() (string, error) {
-	absFilePath, err := filepath.Abs(`spanner/tests/spanner.sysl`)
-	if err != nil {
-		return "", err
-	}
-	bytes, err := ioutil.ReadFile(absFilePath)
-	return string(bytes), err
-}
-
-func TestCompareSpannerSQLWithGolden(t *testing.T) {
-	// Load generated sysl module
-	genSysl, err := generateSyslFromSpannerSQL()
-	require.Nil(t, err)
-
-	// Load golden sysl module
-	goldenSysl, err := readGoldenSyslForSpannerSQL()
-	require.Nil(t, err)
-
-	assert.Equal(t, genSysl, goldenSysl)
+func TestLoadSpannerDirFromTestDir(t *testing.T) {
+	runImportDirEqualityTests(t, testConfig{
+		name:          "TestLoadSpannerDirFromTestDir",
+		testDir:       "spanner/tests/migrations",
+		testExtension: "",
+	})
 }
 
 /*

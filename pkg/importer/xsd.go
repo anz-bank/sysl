@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"sort"
 	"strconv"
 	"strings"
@@ -23,6 +24,14 @@ type XSDImporter struct {
 	pkg     string
 	types   TypeList
 	logger  *logrus.Logger
+}
+
+func (i *XSDImporter) LoadFile(path string) (string, error) {
+	bs, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return i.Load(string(bs))
 }
 
 func (i *XSDImporter) Load(input string) (string, error) {
