@@ -139,6 +139,8 @@ func TestHasSameType(t *testing.T) {
 		input := test.input
 		expected := test.expected
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
 			isSame := HasSameType(input.type1, input.type2)
 			assert.True(t, expected == isSame, "Unexpected result")
 		})
@@ -203,6 +205,8 @@ func TestGetTypeDetail(t *testing.T) {
 		expectedTypeName := test.expectedTypeName
 		expectedTypeDetail := test.expectedTypeDetail
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
 			typeName, typeDetail := GetTypeDetail(input)
 			assert.Equal(t, expectedTypeName, typeName)
 			assert.Equal(t, expectedTypeDetail, typeDetail)

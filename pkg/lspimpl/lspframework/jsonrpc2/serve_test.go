@@ -13,6 +13,8 @@ import (
 )
 
 func TestIdleTimeout(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

@@ -22,6 +22,8 @@ func readSyslModule(filename string) (*sysl.Module, error) {
 }
 
 func TestExportWithFile(t *testing.T) {
+	t.Parallel()
+
 	mod, err := readSyslModule("./test-data/openapi3/petstore.sysl")
 	assert.NoError(t, err)
 	mapper := syslwrapper.MakeAppMapper(mod)
@@ -56,6 +58,8 @@ func TestExportWithFile(t *testing.T) {
 	assert.True(t, postPetsRequired.Bool())
 }
 func TestExport(t *testing.T) {
+	t.Parallel()
+
 	type1 := syslwrapper.MakeMap(
 		syslwrapper.MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"}),
 		syslwrapper.MakePrimitive("string"))
@@ -89,6 +93,8 @@ func TestExport(t *testing.T) {
 }
 
 func TestMapOptional(t *testing.T) {
+	t.Parallel()
+
 	simpleApps := map[string]*syslwrapper.App{
 		"TestApp": {
 			Name: "TestApp",
@@ -119,6 +125,8 @@ func TestMapOptional(t *testing.T) {
 }
 
 func TestMapEnums(t *testing.T) {
+	t.Parallel()
+
 	simpleApps := map[string]*syslwrapper.App{
 		"TestApp": {
 			Name: "TestApp",
@@ -155,6 +163,8 @@ func TestMapEnums(t *testing.T) {
 	}
 }
 func TestMakeOpenAPI3Exporter(t *testing.T) {
+	t.Parallel()
+
 	exporter := MakeOpenAPI3Exporter(map[string]*syslwrapper.App{}, &logrus.Logger{})
 	expected := &OpenAPI3Exporter{
 		apps:     map[string]*syslwrapper.App{},

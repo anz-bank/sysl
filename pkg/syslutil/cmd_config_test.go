@@ -8,6 +8,7 @@ import (
 
 func TestReadCMDFlags(t *testing.T) {
 	t.Parallel()
+
 	flags, err := ReadCMDFlags("tests/config.txt")
 	assert.Equal(t, nil, err)
 	assert.Equal(t, 4, len(flags))
@@ -19,6 +20,7 @@ func TestReadCMDFlags(t *testing.T) {
 
 func TestPopulateCMDFlagsFromFile(t *testing.T) {
 	t.Parallel()
+
 	cmdArgs := []string{"sysl", "codegen", "@tests/config.txt"}
 	flags, err := PopulateCMDFlagsFromFile(cmdArgs)
 	assert.Equal(t, nil, err)

@@ -16,6 +16,8 @@ import (
 )
 
 func TestPrinting(t *testing.T) {
+	t.Parallel()
+
 	_, fs := syslutil.WriteToMemOverlayFs("tests")
 	log := logrus.Logger{}
 
@@ -33,6 +35,8 @@ func TestPrinting(t *testing.T) {
 }
 
 func TestExample(t *testing.T) {
+	t.Parallel()
+
 	// Create Sysl sile in Memory file system
 	fs := afero.NewMemMapFs()
 	f, err := fs.Create("/test.sysl")

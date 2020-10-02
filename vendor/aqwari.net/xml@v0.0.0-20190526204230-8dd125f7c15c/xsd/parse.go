@@ -380,7 +380,7 @@ func deref(ref, real *xmltree.Element) *xmltree.Element {
 	// Some attributes can contain a qname, and must be converted to use the
 	// xmlns prefixes in ref's scope.
 	hasQName := map[xml.Name]bool{
-		xml.Name{"", "type"}: true,
+		{"", "type"}: true,
 	}
 	for i, attr := range el.StartElement.Attr {
 		if hasQName[attr.Name] {

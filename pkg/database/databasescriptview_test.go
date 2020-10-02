@@ -12,6 +12,8 @@ import (
 )
 
 func TestGenerateDatabaseScriptCreate(t *testing.T) {
+	t.Parallel()
+
 	goldenFileName := "db_scripts/postgres-create-script-golden.sql"
 	modelParser := parse.NewParser()
 	mod, _, err := parse.LoadAndGetDefaultApp("database/db_scripts/dataForSqlScriptOrg.sysl",
@@ -24,6 +26,8 @@ func TestGenerateDatabaseScriptCreate(t *testing.T) {
 }
 
 func TestGenerateDatabaseScriptModify(t *testing.T) {
+	t.Parallel()
+
 	goldenFileName := "db_scripts/postgres-modify-script-golden.sql"
 	modelParser := parse.NewParser()
 	modOld, _, err := parse.LoadAndGetDefaultApp("database/db_scripts/dataForSqlScriptOrg.sysl",
@@ -41,6 +45,8 @@ func TestGenerateDatabaseScriptModify(t *testing.T) {
 }
 
 func TestGenerateDatabaseScriptModifyTwoApps(t *testing.T) {
+	t.Parallel()
+
 	expected := map[string]string{
 		"RelModel.sql":    "db_scripts/postgres-modify-script-golden.sql",
 		"RelModelNew.sql": "db_scripts/postgres-modify-script-golden_second_app.sql",
