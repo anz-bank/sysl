@@ -1,24 +1,24 @@
 apps: {
-  key: "TestApp"
-  value: {
-    name: {
-      part: "TestApp"
-    }
-    endpoints: {
-      key: "..."
-      value: {
-        name: "..."
-      }
-    }
-    source_context: {
-      file: "tests/import_proto_JSON_empty.sysl"
-      start: {
-        line: 3
-        col: 1
-      }
-      end: {
-        line: 3
-      }
-    }
+ key: "TestApp"
+ value: {
+  name: {
+   part: "TestApp"
   }
+  endpoints: {
+   key: "..."
+   value: {
+    name: "..."
+   }
+  }
+  source_context: {
+   file: "tests/import_proto_JSON_empty.sysl"
+   start: {
+    line: 3
+    col: 1
+   }
+   end: {
+    line: 3
+   }
+  }
+ }
 }

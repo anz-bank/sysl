@@ -63,6 +63,17 @@
           ]
          }
         }
+       },
+       "sourceContext": {
+        "file": "github.com/anz-bank/sysl/tests/args.sysl",
+        "start": {
+         "line": 13,
+         "col": 8
+        },
+        "end": {
+         "line": 13,
+         "col": 30
+        }
        }
       },
       {
@@ -73,6 +84,17 @@
          ]
         },
         "endpoint": "PUT /foo/"
+       },
+       "sourceContext": {
+        "file": "github.com/anz-bank/sysl/tests/args.sysl",
+        "start": {
+         "line": 14,
+         "col": 8
+        },
+        "end": {
+         "line": 14,
+         "col": 18
+        }
        }
       },
       {
@@ -88,6 +110,17 @@
           "name": "bar"
          }
         ]
+       },
+       "sourceContext": {
+        "file": "github.com/anz-bank/sysl/tests/args.sysl",
+        "start": {
+         "line": 15,
+         "col": 8
+        },
+        "end": {
+         "line": 15,
+         "col": 31
+        }
        }
       },
       {
@@ -103,11 +136,22 @@
           "name": "bar <: String"
          }
         ]
+       },
+       "sourceContext": {
+        "file": "github.com/anz-bank/sysl/tests/args.sysl",
+        "start": {
+         "line": 16,
+         "col": 8
+        },
+        "end": {
+         "line": 16,
+         "col": 41
+        }
        }
       }
      ],
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "github.com/anz-bank/sysl/tests/args.sysl",
       "start": {
        "line": 12,
        "col": 4
@@ -119,7 +163,7 @@
     }
    },
    "sourceContext": {
-    "file": "args.sysl",
+    "file": "github.com/anz-bank/sysl/tests/args.sysl",
     "start": {
      "line": 11,
      "col": 1
@@ -142,11 +186,22 @@
       {
        "action": {
         "action": "..."
+       },
+       "sourceContext": {
+        "file": "github.com/anz-bank/sysl/tests/args.sysl",
+        "start": {
+         "line": 3,
+         "col": 8
+        },
+        "end": {
+         "line": 3,
+         "col": 8
+        }
        }
       }
      ],
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "github.com/anz-bank/sysl/tests/args.sysl",
       "start": {
        "line": 2,
        "col": 4
@@ -174,6 +229,17 @@
       {
        "action": {
         "action": "..."
+       },
+       "sourceContext": {
+        "file": "github.com/anz-bank/sysl/tests/args.sysl",
+        "start": {
+         "line": 7,
+         "col": 12
+        },
+        "end": {
+         "line": 7,
+         "col": 12
+        }
        }
       }
      ],
@@ -182,7 +248,7 @@
       "path": "/foo"
      },
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "github.com/anz-bank/sysl/tests/args.sysl",
       "start": {
        "line": 6,
        "col": 8
@@ -210,6 +276,17 @@
       {
        "action": {
         "action": "..."
+       },
+       "sourceContext": {
+        "file": "github.com/anz-bank/sysl/tests/args.sysl",
+        "start": {
+         "line": 10,
+         "col": 16
+        },
+        "end": {
+         "line": 10,
+         "col": 16
+        }
        }
       }
      ],
@@ -218,7 +295,7 @@
       "path": "/foo/"
      },
      "sourceContext": {
-      "file": "args.sysl",
+      "file": "github.com/anz-bank/sysl/tests/args.sysl",
       "start": {
        "line": 9,
        "col": 12
@@ -231,7 +308,7 @@
     }
    },
    "sourceContext": {
-    "file": "args.sysl",
+    "file": "github.com/anz-bank/sysl/tests/args.sysl",
     "start": {
      "line": 1,
      "col": 1

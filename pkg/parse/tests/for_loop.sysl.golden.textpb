@@ -1,254 +1,342 @@
 apps: {
-  key: "Car Models"
-  value: {
-    name: {
-      part: "Car Models"
-    }
-    endpoints: {
-      key: "Get All Makes"
-      value: {
-        name: "Get All Makes"
-        param: {
-          name: "year"
-          type: {
-            no_type: {}
-          }
-        }
-        source_context: {
-          file: "tests/for_loop.sysl"
-          start: {
-            line: 3
-            col: 4
-          }
-          end: {
-            line: 3
-            col: 26
-          }
-        }
-      }
-    }
-    endpoints: {
-      key: "Get All Models"
-      value: {
-        name: "Get All Models"
-        param: {
-          name: "year"
-          type: {
-            no_type: {}
-          }
-        }
-        param: {
-          name: "make"
-          type: {
-            no_type: {}
-          }
-        }
-        source_context: {
-          file: "tests/for_loop.sysl"
-          start: {
-            line: 4
-            col: 4
-          }
-          end: {
-            line: 4
-            col: 33
-          }
-        }
-      }
-    }
-    endpoints: {
-      key: "Get All Series"
-      value: {
-        name: "Get All Series"
-        param: {
-          name: "year"
-          type: {
-            no_type: {}
-          }
-        }
-        param: {
-          name: "make"
-          type: {
-            no_type: {}
-          }
-        }
-        param: {
-          name: "model"
-          type: {
-            no_type: {}
-          }
-        }
-        source_context: {
-          file: "tests/for_loop.sysl"
-          start: {
-            line: 5
-            col: 4
-          }
-          end: {
-            line: 5
-            col: 40
-          }
-        }
-      }
-    }
-    endpoints: {
-      key: "Get All Years"
-      value: {
-        name: "Get All Years"
-        source_context: {
-          file: "tests/for_loop.sysl"
-          start: {
-            line: 2
-            col: 4
-          }
-          end: {
-            line: 2
-            col: 19
-          }
-        }
-      }
+ key: "Car Models"
+ value: {
+  name: {
+   part: "Car Models"
+  }
+  endpoints: {
+   key: "Get All Makes"
+   value: {
+    name: "Get All Makes"
+    param: {
+     name: "year"
+     type: {
+      no_type: {}
+     }
     }
     source_context: {
-      file: "tests/for_loop.sysl"
-      start: {
-        line: 1
-        col: 1
-      }
-      end: {
-        line: 1
-      }
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 3
+      col: 26
+     }
     }
+   }
   }
+  endpoints: {
+   key: "Get All Models"
+   value: {
+    name: "Get All Models"
+    param: {
+     name: "year"
+     type: {
+      no_type: {}
+     }
+    }
+    param: {
+     name: "make"
+     type: {
+      no_type: {}
+     }
+    }
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 4
+      col: 33
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "Get All Series"
+   value: {
+    name: "Get All Series"
+    param: {
+     name: "year"
+     type: {
+      no_type: {}
+     }
+    }
+    param: {
+     name: "make"
+     type: {
+      no_type: {}
+     }
+    }
+    param: {
+     name: "model"
+     type: {
+      no_type: {}
+     }
+    }
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 40
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "Get All Years"
+   value: {
+    name: "Get All Years"
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 2
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 19
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/for_loop.sysl"
+   start: {
+    line: 1
+    col: 1
+   }
+   end: {
+    line: 1
+   }
+  }
+ }
 }
 apps: {
-  key: "Other App"
-  value: {
-    name: {
-      part: "Other App"
-    }
-    endpoints: {
-      key: "FOO"
-      value: {
-        name: "FOO"
-        stmt: {
-          call: {
-            target: {
-              part: "Car Models"
-            }
-            endpoint: "Get All Years"
-          }
-        }
-        stmt: {
-          group: {
-            title: "for all series"
-            stmt: {
-              action: {
-                action: "evaluate series pricing"
-              }
-            }
-            stmt: {
-              cond: {
-                test: "has pricing"
-                stmt: {
-                  action: {
-                    action: "select series"
-                  }
-                }
-              }
-            }
-            stmt: {
-              action: {
-                action: "dump pricing information"
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/for_loop.sysl"
-          start: {
-            line: 8
-            col: 4
-          }
-          end: {
-            line: 15
-            col: 4
-          }
-        }
+ key: "Other App"
+ value: {
+  name: {
+   part: "Other App"
+  }
+  endpoints: {
+   key: "FOO"
+   value: {
+    name: "FOO"
+    stmt: {
+     call: {
+      target: {
+       part: "Car Models"
       }
-    }
-    endpoints: {
-      key: "Profit"
-      value: {
-        name: "Profit"
-        stmt: {
-          foreach: {
-            collection: "year"
-            stmt: {
-              action: {
-                action: "calculate profit"
-              }
-            }
-            stmt: {
-              group: {
-                title: "Loop \"n times\""
-                stmt: {
-                  action: {
-                    action: "run simulation"
-                  }
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/for_loop.sysl"
-          start: {
-            line: 15
-            col: 4
-          }
-          end: {
-            line: 20
-            col: 4
-          }
-        }
-      }
-    }
-    endpoints: {
-      key: "WhileTest"
-      value: {
-        name: "WhileTest"
-        stmt: {
-          loop: {
-            mode: WHILE
-            criterion: "condition not true"
-            stmt: {
-              action: {
-                action: "\"wait for 5 secs\""
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/for_loop.sysl"
-          start: {
-            line: 20
-            col: 4
-          }
-          end: {
-            line: 23
-          }
-        }
-      }
-    }
-    source_context: {
+      endpoint: "Get All Years"
+     }
+     source_context: {
       file: "tests/for_loop.sysl"
       start: {
-        line: 7
-        col: 1
+       line: 9
+       col: 8
       }
       end: {
-        line: 7
+       line: 9
+       col: 22
       }
+     }
     }
+    stmt: {
+     group: {
+      title: "for all series"
+      stmt: {
+       action: {
+        action: "evaluate series pricing"
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 11
+         col: 12
+        }
+        end: {
+         line: 11
+         col: 12
+        }
+       }
+      }
+      stmt: {
+       cond: {
+        test: "has pricing"
+        stmt: {
+         action: {
+          action: "select series"
+         }
+         source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+           line: 13
+           col: 16
+          }
+          end: {
+           line: 13
+           col: 16
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 12
+         col: 12
+        }
+        end: {
+         line: 14
+         col: 12
+        }
+       }
+      }
+      stmt: {
+       action: {
+        action: "dump pricing information"
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 14
+         col: 12
+        }
+        end: {
+         line: 14
+         col: 12
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 8
+      col: 4
+     }
+     end: {
+      line: 15
+      col: 4
+     }
+    }
+   }
   }
+  endpoints: {
+   key: "Profit"
+   value: {
+    name: "Profit"
+    stmt: {
+     foreach: {
+      collection: "year"
+      stmt: {
+       action: {
+        action: "calculate profit"
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 17
+         col: 12
+        }
+        end: {
+         line: 17
+         col: 12
+        }
+       }
+      }
+      stmt: {
+       group: {
+        title: "Loop \"n times\""
+        stmt: {
+         action: {
+          action: "run simulation"
+         }
+         source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+           line: 19
+           col: 18
+          }
+          end: {
+           line: 19
+           col: 18
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 15
+      col: 4
+     }
+     end: {
+      line: 20
+      col: 4
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "WhileTest"
+   value: {
+    name: "WhileTest"
+    stmt: {
+     loop: {
+      mode: WHILE
+      criterion: "condition not true"
+      stmt: {
+       action: {
+        action: "\"wait for 5 secs\""
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 22
+         col: 12
+        }
+        end: {
+         line: 22
+         col: 12
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 23
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/for_loop.sysl"
+   start: {
+    line: 7
+    col: 1
+   }
+   end: {
+    line: 7
+   }
+  }
+ }
 }

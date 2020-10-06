@@ -1,418 +1,627 @@
 apps: {
-  key: "App"
-  value: {
-    name: {
-      part: "App"
-    }
-    endpoints: {
-      key: ".. * <- *"
+ key: "App"
+ value: {
+  name: {
+   part: "App"
+  }
+  endpoints: {
+   key: ".. * <- *"
+   value: {
+    name: ".. * <- *"
+    stmt: {
+     action: {
+      action: "Endpoint_One"
+     }
+     attrs: {
+      key: "id"
       value: {
-        name: ".. * <- *"
-        stmt: {
-          action: {
-            action: "Endpoint_One"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "one"
-            }
-          }
-        }
-        stmt: {
-          action: {
-            action: "Endpoint_Two"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "two"
-            }
-          }
-        }
-        stmt: {
-          call: {
-            target: {
-              part: "My"
-              part: "Server"
-            }
-            endpoint: "Endpoint_One"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "three"
-            }
-          }
-        }
-        stmt: {
-          call: {
-            target: {
-              part: "My"
-              part: "Server"
-            }
-            endpoint: "Endpoint_Two"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "four"
-            }
-          }
-        }
-        stmt: {
-          call: {
-            target: {
-              part: "My"
-              part: "Server"
-            }
-            endpoint: "Endpoint_Two"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "final"
-            }
-          }
-        }
-        stmt: {
-          call: {
-            target: {
-              part: "My"
-              part: "Server"
-            }
-            endpoint: "Endpoint_Three"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "final"
-            }
-          }
-        }
-        source_context: {
-          file: "tests/collector.sysl"
-          start: {
-            line: 30
-            col: 4
-          }
-          end: {
-            line: 37
-          }
-        }
+       s: "one"
       }
-    }
-    endpoints: {
-      key: "Endpoint_One"
-      value: {
-        name: "Endpoint_One"
-        attrs: {
-          key: "id"
-          value: {
-            s: "one"
-          }
-        }
-        stmt: {
-          call: {
-            target: {
-              part: "My"
-              part: "Server"
-            }
-            endpoint: "Endpoint_One"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "three"
-            }
-          }
-        }
-        stmt: {
-          cond: {
-            test: "result not ok"
-            stmt: {
-              call: {
-                target: {
-                  part: "My"
-                  part: "Server"
-                }
-                endpoint: "Endpoint_Two"
-              }
-              attrs: {
-                key: "id"
-                value: {
-                  s: "final"
-                }
-              }
-              attrs: {
-                key: "patterns"
-                value: {
-                  a: {
-                    elt: {
-                      s: "https"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        stmt: {
-          group: {
-            title: "loop"
-            stmt: {
-              call: {
-                target: {
-                  part: "My"
-                  part: "Server"
-                }
-                endpoint: "Endpoint_Two"
-              }
-              attrs: {
-                key: "id"
-                value: {
-                  s: "final"
-                }
-              }
-              attrs: {
-                key: "patterns"
-                value: {
-                  a: {
-                    elt: {
-                      s: "https"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/collector.sysl"
-          start: {
-            line: 13
-            col: 4
-          }
-          end: {
-            line: 21
-            col: 4
-          }
-        }
-      }
-    }
-    endpoints: {
-      key: "Endpoint_Two"
-      value: {
-        name: "Endpoint_Two"
-        attrs: {
-          key: "id"
-          value: {
-            s: "two"
-          }
-        }
-        stmt: {
-          call: {
-            target: {
-              part: "My"
-              part: "Server"
-            }
-            endpoint: "Endpoint_Two"
-          }
-          attrs: {
-            key: "id"
-            value: {
-              s: "final"
-            }
-          }
-          attrs: {
-            key: "patterns"
-            value: {
-              a: {
-                elt: {
-                  s: "https"
-                }
-              }
-            }
-          }
-        }
-        stmt: {
-          alt: {
-            choice: {
-              cond: "condition = one"
-              stmt: {
-                call: {
-                  target: {
-                    part: "My"
-                    part: "Server"
-                  }
-                  endpoint: "Endpoint_Three"
-                }
-                attrs: {
-                  key: "id"
-                  value: {
-                    s: "final"
-                  }
-                }
-                attrs: {
-                  key: "patterns"
-                  value: {
-                    a: {
-                      elt: {
-                        s: "https"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            choice: {
-              cond: "condition two"
-              stmt: {
-                call: {
-                  target: {
-                    part: "My"
-                    part: "Server"
-                  }
-                  endpoint: "Endpoint_Three"
-                }
-                attrs: {
-                  key: "id"
-                  value: {
-                    s: "final"
-                  }
-                }
-                attrs: {
-                  key: "patterns"
-                  value: {
-                    a: {
-                      elt: {
-                        s: "https"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/collector.sysl"
-          start: {
-            line: 21
-            col: 4
-          }
-          end: {
-            line: 29
-            col: 3
-          }
-        }
-      }
-    }
-    source_context: {
+     }
+     source_context: {
       file: "tests/collector.sysl"
       start: {
-        line: 29
-        col: 1
+       line: 31
+       col: 8
       }
       end: {
-        line: 29
+       line: 31
+       col: 8
       }
+     }
     }
+    stmt: {
+     action: {
+      action: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "two"
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 32
+       col: 8
+      }
+      end: {
+       line: 32
+       col: 8
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_One"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "three"
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 33
+       col: 8
+      }
+      end: {
+       line: 33
+       col: 24
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "four"
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 34
+       col: 8
+      }
+      end: {
+       line: 34
+       col: 24
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "final"
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 35
+       col: 8
+      }
+      end: {
+       line: 35
+       col: 24
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Three"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "final"
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 36
+       col: 8
+      }
+      end: {
+       line: 36
+       col: 24
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 30
+      col: 4
+     }
+     end: {
+      line: 37
+     }
+    }
+   }
   }
+  endpoints: {
+   key: "Endpoint_One"
+   value: {
+    name: "Endpoint_One"
+    attrs: {
+     key: "id"
+     value: {
+      s: "one"
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_One"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "three"
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 14
+       col: 8
+      }
+      end: {
+       line: 14
+       col: 24
+      }
+     }
+    }
+    stmt: {
+     cond: {
+      test: "result not ok"
+      stmt: {
+       call: {
+        target: {
+         part: "My"
+         part: "Server"
+        }
+        endpoint: "Endpoint_Two"
+       }
+       attrs: {
+        key: "id"
+        value: {
+         s: "final"
+        }
+       }
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "https"
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 16
+         col: 12
+        }
+        end: {
+         line: 16
+         col: 28
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 15
+       col: 8
+      }
+      end: {
+       line: 17
+       col: 8
+      }
+     }
+    }
+    stmt: {
+     group: {
+      title: "loop"
+      stmt: {
+       call: {
+        target: {
+         part: "My"
+         part: "Server"
+        }
+        endpoint: "Endpoint_Two"
+       }
+       attrs: {
+        key: "id"
+        value: {
+         s: "final"
+        }
+       }
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "https"
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 18
+         col: 12
+        }
+        end: {
+         line: 18
+         col: 28
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 13
+      col: 4
+     }
+     end: {
+      line: 21
+      col: 4
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "Endpoint_Two"
+   value: {
+    name: "Endpoint_Two"
+    attrs: {
+     key: "id"
+     value: {
+      s: "two"
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "final"
+      }
+     }
+     attrs: {
+      key: "patterns"
+      value: {
+       a: {
+        elt: {
+         s: "https"
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 22
+       col: 8
+      }
+      end: {
+       line: 22
+       col: 24
+      }
+     }
+    }
+    stmt: {
+     alt: {
+      choice: {
+       cond: "condition = one"
+       stmt: {
+        call: {
+         target: {
+          part: "My"
+          part: "Server"
+         }
+         endpoint: "Endpoint_Three"
+        }
+        attrs: {
+         key: "id"
+         value: {
+          s: "final"
+         }
+        }
+        attrs: {
+         key: "patterns"
+         value: {
+          a: {
+           elt: {
+            s: "https"
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 25
+          col: 16
+         }
+         end: {
+          line: 25
+          col: 32
+         }
+        }
+       }
+      }
+      choice: {
+       cond: "condition two"
+       stmt: {
+        call: {
+         target: {
+          part: "My"
+          part: "Server"
+         }
+         endpoint: "Endpoint_Three"
+        }
+        attrs: {
+         key: "id"
+         value: {
+          s: "final"
+         }
+        }
+        attrs: {
+         key: "patterns"
+         value: {
+          a: {
+           elt: {
+            s: "https"
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 27
+          col: 16
+         }
+         end: {
+          line: 27
+          col: 32
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 23
+       col: 8
+      }
+      end: {
+       line: 29
+       col: 3
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 21
+      col: 4
+     }
+     end: {
+      line: 29
+      col: 3
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/collector.sysl"
+   start: {
+    line: 29
+    col: 1
+   }
+   end: {
+    line: 29
+   }
+  }
+ }
 }
 apps: {
-  key: "My :: Server"
-  value: {
-    name: {
-      part: "My"
-      part: "Server"
-    }
-    endpoints: {
-      key: "Endpoint_One"
-      value: {
-        name: "Endpoint_One"
-        stmt: {
-          action: {
-            action: "process request"
-          }
-        }
-        stmt: {
-          cond: {
-            test: "result ok"
-            stmt: {
-              action: {
-                action: "do further processing"
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/collector.sysl"
-          start: {
-            line: 2
-            col: 4
-          }
-          end: {
-            line: 7
-            col: 4
-          }
-        }
-      }
-    }
-    endpoints: {
-      key: "Endpoint_Three"
-      value: {
-        name: "Endpoint_Three"
-        stmt: {
-          action: {
-            action: "process request"
-          }
-        }
-        source_context: {
-          file: "tests/collector.sysl"
-          start: {
-            line: 10
-            col: 4
-          }
-          end: {
-            line: 12
-            col: 3
-          }
-        }
-      }
-    }
-    endpoints: {
-      key: "Endpoint_Two"
-      value: {
-        name: "Endpoint_Two"
-        stmt: {
-          action: {
-            action: "process request"
-          }
-        }
-        source_context: {
-          file: "tests/collector.sysl"
-          start: {
-            line: 7
-            col: 4
-          }
-          end: {
-            line: 10
-            col: 4
-          }
-        }
-      }
-    }
-    source_context: {
+ key: "My :: Server"
+ value: {
+  name: {
+   part: "My"
+   part: "Server"
+  }
+  endpoints: {
+   key: "Endpoint_One"
+   value: {
+    name: "Endpoint_One"
+    stmt: {
+     action: {
+      action: "process request"
+     }
+     source_context: {
       file: "tests/collector.sysl"
       start: {
-        line: 1
-        col: 1
+       line: 3
+       col: 8
       }
       end: {
-        line: 1
-        col: 6
+       line: 3
+       col: 8
       }
+     }
     }
+    stmt: {
+     cond: {
+      test: "result ok"
+      stmt: {
+       action: {
+        action: "do further processing"
+       }
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 5
+         col: 12
+        }
+        end: {
+         line: 5
+         col: 12
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 4
+       col: 8
+      }
+      end: {
+       line: 7
+       col: 4
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 2
+      col: 4
+     }
+     end: {
+      line: 7
+      col: 4
+     }
+    }
+   }
   }
+  endpoints: {
+   key: "Endpoint_Three"
+   value: {
+    name: "Endpoint_Three"
+    stmt: {
+     action: {
+      action: "process request"
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 11
+       col: 8
+      }
+      end: {
+       line: 11
+       col: 8
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 10
+      col: 4
+     }
+     end: {
+      line: 12
+      col: 3
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "Endpoint_Two"
+   value: {
+    name: "Endpoint_Two"
+    stmt: {
+     action: {
+      action: "process request"
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 8
+       col: 8
+      }
+      end: {
+       line: 8
+       col: 8
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 7
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 4
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/collector.sysl"
+   start: {
+    line: 1
+    col: 1
+   }
+   end: {
+    line: 1
+    col: 6
+   }
+  }
+ }
 }

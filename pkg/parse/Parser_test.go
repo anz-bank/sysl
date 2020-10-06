@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -160,28 +161,27 @@ func parseAndCompareSysl(
 	if proto.Equal(module1, module2) {
 		return true, nil
 	}
+	return checkSyslEqual(module1, module2), nil
+}
 
-	first := bytes.Buffer{}
-	second := bytes.Buffer{}
-	if err = pbutil.FTextPB(&first, module1); err != nil {
-		return false, err
+func checkSyslEqual(model1 *sysl.Module, model2 *sysl.Module) bool {
+	if len(model1.Apps) != len(model2.Apps) {
+		return false
 	}
-	if err = pbutil.FTextPB(&second, module2); err != nil {
-		return false, err
+	for app1, syslApp1 := range model1.Apps {
+		app2, exists := model2.Apps[app1]
+		if !exists {
+			return false
+		}
+		for endpoint1, syslEndpoint1 := range syslApp1.Endpoints {
+			syslEndpoint2, exists := app2.Endpoints[endpoint1]
+			if !exists {
+				return false
+			}
+			return reflect.DeepEqual(syslEndpoint1.Stmt[0].Stmt, syslEndpoint2.Stmt[0].Stmt)
+		}
 	}
-	diff, err := difflib.GetUnifiedDiffString(difflib.UnifiedDiff{
-		A:        difflib.SplitLines(first.String()),
-		B:        difflib.SplitLines(second.String()),
-		FromFile: "First: ",
-		FromDate: "",
-		ToFile:   "Second: ",
-		ToDate:   "",
-		Context:  1,
-	})
-	if err != nil {
-		return false, err
-	}
-	return false, errors.New(diff)
+	return false
 }
 
 func parseAndCompare(

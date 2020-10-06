@@ -1073,6 +1073,7 @@ func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
 				Payload: payload,
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	})
 }
 
@@ -1124,6 +1125,7 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 				Endpoint: endpoint,
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	})
 
 	if ctx.Call_args() != nil {
@@ -1140,6 +1142,7 @@ func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
 				Stmt: []*sysl.Statement{},
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	}
 	s.addToCurrentScope(if_stmt)
 	s.pushScope(if_stmt.GetCond())
@@ -1164,6 +1167,7 @@ func (s *TreeShapeListener) EnterElse_stmt(ctx *parser.Else_stmtContext) {
 				Stmt:  []*sysl.Statement{},
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	}
 	s.addToCurrentScope(else_stmt)
 	s.pushScope(else_stmt.GetGroup())
@@ -1274,14 +1278,15 @@ func (s *TreeShapeListener) ExitOne_of_cases(*parser.One_of_casesContext) {
 }
 
 // EnterOne_of_stmt is called when production one_of_stmt is entered.
-func (s *TreeShapeListener) EnterOne_of_stmt(*parser.One_of_stmtContext) {
+func (s *TreeShapeListener) EnterOne_of_stmt(ctx *parser.One_of_stmtContext) {
 	alt := &sysl.Statement_Alt{
 		Alt: &sysl.Alt{
 			Choice: []*sysl.Alt_Choice{},
 		},
 	}
 	s.addToCurrentScope(&sysl.Statement{
-		Stmt: alt,
+		Stmt:          alt,
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	})
 	s.pushScope(alt.Alt)
 }
@@ -1313,6 +1318,7 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 					Action: str,
 				},
 			},
+			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 		})
 		s.pendingDocString = false
 	} else {
@@ -1336,6 +1342,7 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 						Action: "|",
 					},
 				},
+				SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 			})
 		}
 	}
@@ -1763,6 +1770,7 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	})
 }
 
@@ -1777,6 +1785,7 @@ func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_
 				Action: text,
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	})
 }
 
@@ -1798,6 +1807,7 @@ func (s *TreeShapeListener) EnterCollector_pubsub_call(ctx *parser.Collector_pub
 				Endpoint: strings.TrimSpace(publisher + ctx.Name_str().GetText()),
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	})
 }
 
@@ -1810,6 +1820,7 @@ func (s *TreeShapeListener) EnterCollector_action_stmt(ctx *parser.Collector_act
 				Action: text,
 			},
 		},
+		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 	})
 }
 
@@ -1944,6 +1955,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 					Endpoint: s.endpointName,
 				},
 			},
+			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
 		}
 		ep.Stmt = append(ep.Stmt, stmt)
 	}

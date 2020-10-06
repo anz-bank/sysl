@@ -14,6 +14,17 @@ apps: {
      action: {
       action: "..."
      }
+     source_context: {
+      file: "namespace_merge.sysl"
+      start: {
+       line: 3
+       col: 8
+      }
+      end: {
+       line: 3
+       col: 8
+      }
+     }
     }
     source_context: {
      file: "namespace_merge.sysl"
@@ -41,6 +52,17 @@ apps: {
      action: {
       action: "..."
      }
+     source_context: {
+      file: "namespace_merge.sysl"
+      start: {
+       line: 12
+       col: 8
+      }
+      end: {
+       line: 12
+       col: 8
+      }
+     }
     }
     source_context: {
      file: "namespace_merge.sysl"
@@ -62,6 +84,17 @@ apps: {
      action: {
       action: "..."
      }
+     source_context: {
+      file: "namespace_merge.sysl"
+      start: {
+       line: 7
+       col: 8
+      }
+      end: {
+       line: 7
+       col: 8
+      }
+     }
     }
     stmt: {
      call: {
@@ -71,6 +104,16 @@ apps: {
        part: "C"
       }
       endpoint: "A :: B :: C -> B"
+     }
+     source_context: {
+      file: "namespace_merge.sysl"
+      start: {
+       line: 11
+       col: 4
+      }
+      end: {
+       line: 13
+      }
      }
     }
     source_context: {

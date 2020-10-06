@@ -51,6 +51,17 @@ apps: {
        }
       }
      }
+     source_context: {
+      file: "args.sysl"
+      start: {
+       line: 13
+       col: 8
+      }
+      end: {
+       line: 13
+       col: 30
+      }
+     }
     }
     stmt: {
      call: {
@@ -58,6 +69,17 @@ apps: {
        part: "Server"
       }
       endpoint: "PUT /foo/"
+     }
+     source_context: {
+      file: "args.sysl"
+      start: {
+       line: 14
+       col: 8
+      }
+      end: {
+       line: 14
+       col: 18
+      }
      }
     }
     stmt: {
@@ -70,6 +92,17 @@ apps: {
        name: "bar"
       }
      }
+     source_context: {
+      file: "args.sysl"
+      start: {
+       line: 15
+       col: 8
+      }
+      end: {
+       line: 15
+       col: 31
+      }
+     }
     }
     stmt: {
      call: {
@@ -79,6 +112,17 @@ apps: {
       endpoint: "PUT /foo"
       arg: {
        name: "bar <: String"
+      }
+     }
+     source_context: {
+      file: "args.sysl"
+      start: {
+       line: 16
+       col: 8
+      }
+      end: {
+       line: 16
+       col: 41
       }
      }
     }
@@ -120,6 +164,17 @@ apps: {
      action: {
       action: "..."
      }
+     source_context: {
+      file: "args.sysl"
+      start: {
+       line: 3
+       col: 8
+      }
+      end: {
+       line: 3
+       col: 8
+      }
+     }
     }
     source_context: {
      file: "args.sysl"
@@ -151,6 +206,17 @@ apps: {
     stmt: {
      action: {
       action: "..."
+     }
+     source_context: {
+      file: "args.sysl"
+      start: {
+       line: 7
+       col: 12
+      }
+      end: {
+       line: 7
+       col: 12
+      }
      }
     }
     rest_params: {
@@ -187,6 +253,17 @@ apps: {
     stmt: {
      action: {
       action: "..."
+     }
+     source_context: {
+      file: "args.sysl"
+      start: {
+       line: 10
+       col: 16
+      }
+      end: {
+       line: 10
+       col: 16
+      }
      }
     }
     rest_params: {
