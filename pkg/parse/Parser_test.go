@@ -609,6 +609,12 @@ func TestMergeAttrs(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/merge_attrs.sysl")
 }
 
+func TestMergeAttrsTable(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/merge_attrs_table.sysl")
+}
+
 func TestOpenAPI3(t *testing.T) {
 	t.Parallel()
 

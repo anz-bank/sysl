@@ -667,10 +667,6 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 		}
 	}
 	if ctx.TABLE() != nil {
-		if types[s.currentTypePath.Get()].GetRelation().GetAttrDefs() != nil {
-			panic("not implemented yet")
-		}
-
 		if _, exists := types[s.currentTypePath.Get()]; !exists {
 			types[s.currentTypePath.Get()] = &sysl.Type{
 				Type: &sysl.Type_Relation_{
