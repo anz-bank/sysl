@@ -1,0 +1,98 @@
+let (
+    emptyModel: empty,
+    :parseDdl,
+
+    :applyCreateTable,
+    :applyCreateIndex,
+    :applyCreateDatabase,
+    :applyAlterTable,
+    :applyDropTable,
+    :applyDropIndex,
+    ...
+) = //{./spanner};
+
+let [createTable] = parseDdl('CREATE TABLE foo (a INT64) PRIMARY KEY (a);');
+let foo = applyCreateTable(createTable.data, empty);
+
+let [addCol] = parseDdl('ALTER TABLE foo ADD COLUMN b INT64;');
+let foo_b = applyAlterTable(addCol.data, foo);
+
+let [alterCol] = parseDdl('ALTER TABLE foo ALTER COLUMN b INT64 NOT NULL;');
+let foo_b2 = applyAlterTable(alterCol.data, foo_b);
+
+let [dropCol] = parseDdl('ALTER TABLE foo DROP COLUMN b;');
+let foo_bx = applyAlterTable(dropCol.data, foo_b2);
+
+(
+    applyCreateTable: (
+        foo: foo.entities = {(
+            name: 'foo',
+            attributes: [
+                (array: {}, length: 0, name: 'a', nullable: true, options: {}, type: 'int'),
+            ],
+            primary_key: [40\'a'],
+            foreign_keys: {},
+            cluster: {},
+        )}
+    ),
+
+    parseDdl: (
+        createTable: true, # TODO
+        addCol: addCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'add_column',
+                    alteration: (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0),
+                )],
+            ),
+        ),
+        dropCol: dropCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'drop_column',
+                    alteration: (name: 'b'),
+                )],
+            ),
+        ),
+        alterCol: alterCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'alter_column',
+                    alteration: (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0),,
+                )],
+            ),
+        ),
+    ),
+
+    applyAlterTable: (
+        addCol: foo_b.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0),
+                (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0),
+            ],
+            primary_key: [40\'a'],
+            foreign_keys: {},
+            cluster: {},
+        )},
+
+        alterCol: foo_b2.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0),
+                (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0),
+            ],
+            primary_key: [40\'a'],
+            foreign_keys: {},
+            cluster: {},
+        )},
+
+        dropCol: foo_bx = foo,
+    ),
+)

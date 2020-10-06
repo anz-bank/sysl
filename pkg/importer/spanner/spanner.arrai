@@ -1,43 +1,43 @@
 # spanner ddl grammar
 # CREATE DATABASE statements are parsed to avoid errors but ignore by the modelling functions
 let grammar = {://grammar.lang.wbnf[grammar]:
-ddl                 -> stmt=(create_database|create_table|create_index|alter_table|drop_table|drop_index):";" ";" \s*;
+ddl                 -> stmt=(create_database|create_table|create_index|alter_table|drop_table|drop_index):";" ";"? \s*;
 
-create_database     -> "CREATE DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
+create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
-create_table        -> "CREATE TABLE" table_name "("(
-                              attr=(column_name attr_type not_null? options_def?)
+create_table        -> "CREATE" "TABLE" table_name "("(
+                              attr=(column_name attr_type options_def?)
                             | table_constraint
-                        ):"," "," ")"
+                        ):"," ","? ")"
                        pk=("PRIMARY KEY" "(" key_part ")")
                        ("," cluster)*;
-not_null            -> "NOT NULL";
 table_constraint    -> ("CONSTRAINT" constraint_name)? "FOREIGN KEY" "(" column_name:"," ")" "REFERENCES" foreign=(table_name "(" column_name:"," ")");
-cluster             -> "INTERLEAVE IN PARENT" table_name ("ON DELETE" on_delete)?;
+cluster             -> "INTERLEAVE" "IN" "PARENT" table_name ("ON" "DELETE" on_delete)?;
 on_delete           -> CASCADE   = "CASCADE"
-                     | NO_ACTION = "NO ACTION";
+                     | NO_ACTION = "NO" "ACTION";
 
 create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED")? "INDEX" index_name "ON" table_name "(" key_part ")" storing_clause? interleaving_clause?;
 storing_clause      -> "STORING" "(" column_name:",",? ")";
-interleaving_clause -> "INTERLEAVE IN" table_name;
+interleaving_clause -> "INTERLEAVE" "IN" table_name;
 
-alter_table         -> "ALTER TABLE" table_name (alter=(table_alteration|attr_alteration)):",";
-table_alteration    -> ADD_COLUMN      = ("ADD COLUMN" column_name (attr_type | options_def))
-                     | DROP_COLUMN     = ("DROP COLUMN" column_name)
-                     | SET_COLUMN      = ("SET ON DELETE" on_delete)
+alter_table         -> "ALTER" "TABLE" table_name (alter=(table_alteration|attr_alteration)):",";
+table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN" column_name (attr_type | options_def))
+                     | DROP_COLUMN     = ("DROP" "COLUMN" column_name)
+                     | SET_COLUMN      = ("SET" "ON" "DELETE" on_delete)
                      | ADD_CONSTRAINT  = ("ADD" table_constraint)
-                     | DROP_CONSTRAINT = ("DROP CONSTRAINT" constraint_name);
-attr_alteration     -> "ALTER COLUMN" column_name (attr_type | "SET" options_def);
+                     | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name);
+attr_alteration     -> "ALTER" "COLUMN" column_name (attr_type | "SET" options_def);
 
-drop_table          -> "DROP TABLE" table_name;
+drop_table          -> "DROP" "TABLE" table_name;
 
-drop_index          -> "DROP INDEX" index_name;
+drop_index          -> "DROP" "INDEX" index_name;
 
 options_def         -> "OPTIONS" "("(option):",",? ")";
 option              -> "allow_commit_timestamp" "=" ("true"|"false");
 key_part            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
-attr_type           -> (SCALAR_TYPE|ARRAY_TYPE);
+attr_type           -> (SCALAR_TYPE|ARRAY_TYPE) not_null?;
 
+not_null            -> "NOT" "NULL";
 ARRAY_TYPE          -> "ARRAY<" SCALAR_TYPE ">";
 SCALAR_TYPE         -> BOOL      = "BOOL"
                      | INT64     = "INT64"
@@ -51,7 +51,7 @@ length              -> (int64_value|"MAX");
 
 table_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 constraint_name     -> [$@A-Za-z_][0-9$@A-Za-z_]*;
-column_name         -> /{`[^`]*`|[$@A-Za-z_][0-9$@A-Za-z_]*};
+column_name         -> /{`[^`]*`|[$@A-Za-z_][0-9$@A-Za-z_]*}; //`
 index_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 
 int64_value         -> hex_value|decimal_value;
@@ -102,23 +102,21 @@ let evalAttribute = \parsed
         array:    type.array,
         options: cond {
             (parsed.options_def?:false): //seq.join('',parsed.options_def.option.@item.''),
-            _: {}
         },
-        nullable: cond parsed {(not_null: _, ...): false, _: true},
+        nullable: cond parsed {(attr_type: (not_null: _, ...), ...): false, _: true},
     );
 
 let evalForeignKeyConstraint = \parsed
     let reference = parsed.foreign -> (
-        table_name: .table_name.'' rank (@: .@),
-        attributes: .column_name >> (.'' rank (@: .@)),
+        table_name: .table_name.'' rank (:.@),
+        attributes: .column_name >> (.'' rank (:.@)),
     );
     (
         constraint_name: cond {
-            (parsed.constraint_name?:false): parsed.constraint_name.'' rank (@: .@),
-            _: {}
+            (parsed.constraint_name?:false): parsed.constraint_name.'' rank (:.@),
         },
         foreign_keys: parsed.column_name => (
-            attribute: .@item.'' rank (@: .@),
+            attribute: .@item.'' rank (:.@),
             reference_table: reference.table_name,
             reference_attribute: reference.attributes(.@),
         ),
@@ -127,16 +125,13 @@ let evalForeignKeyConstraint = \parsed
 let evalTableAlteration = \parsed cond parsed {
     (table_alteration: (ADD_COLUMN: data, ...), ...): (
         type: "add_column",
-        alteration: (
-            name: data.column_name.'' rank (@: .@),
-            type: evalType(data.attr_type),
-        ),
+        alteration: evalAttribute(data),
     ),
 
     (table_alteration: (DROP_COLUMN: data, ...), ...): (
         type: "drop_column",
         alteration: (
-            name: data.column_name.'' rank (@: .@),
+            name: data.column_name.'' rank (:.@),
         ),
     ),
 
@@ -155,7 +150,10 @@ let evalTableAlteration = \parsed cond parsed {
         alteration: data,
     ),
 
-    (attr_alteration: data, ...): (type: "alter_column", alteration: data),
+    (attr_alteration: data, ...): (
+        type: "alter_column",
+        alteration: evalAttribute(data),
+    ),
 };
 
 # concatOffset appends the two strings preserving string offsets
@@ -183,10 +181,12 @@ let evalDdl = \parsed parsed.stmt >> cond . {
             primary_key: parseKeyPart(val.pk.key_part),
             cluster: cond {
                 (val.cluster?:false): val.cluster >> (
-                    interleaved_in: (.table_name.'' rank (@: .@)),
-                    on_delete: (.on_delete.CASCADE.'' rank (@: .@))
+                    interleaved_in: (.table_name.'' rank (:.@)),
+                    on_delete: cond (.).on_delete?:{} {
+                        (CASCADE: ('': s), ...): s rank (:.@),
+                        (NO_ACTION: ('': s), ...): s rank (:.@),
+                    },
                 ),
-                _: {}
             },
         ),
     ),
@@ -200,28 +200,27 @@ let evalDdl = \parsed parsed.stmt >> cond . {
             nullfiltered: cond {
                 (val.nullfiltered?:false): true,
             },
-            name: val.index_name.'' rank (@: .@),
-            table_name: val.table_name.'' rank (@: .@),
+            name: val.index_name.'' rank (:.@),
+            table_name: val.table_name.'' rank (:.@),
             key_part: parseKeyPart(val.key_part),
             storing_col: cond {
-                (val.storing_clause?:false): val.storing_clause.column_name >> (.'' rank (@: .@)),
-                _: {}
+                (val.storing_clause?:false): val.storing_clause.column_name >> (.'' rank (:.@)),
             },
-            interleaved_table: (val.interleaving_clause?.table_name.'':'') rank (@: .@),
+            interleaved_table: (val.interleaving_clause?.table_name.'':'') rank (:.@),
         ),
     ),
 
     (create_database: val, ...): (
         stmt: "create_database",
         data: (
-            name: val.database.'' rank (@: .@),
+            name: val.database.'' rank (:.@),
         ),
     ),
 
     (alter_table: val, ...): (
         stmt: "alter_table",
         data: (
-            table_name: val.table_name.'' rank (@: .@),
+            table_name: val.table_name.'' rank (:.@),
             alterations: val.alter >> evalTableAlteration(.),
         ),
     ),
@@ -253,11 +252,6 @@ let applyCreateTable = \relation \model
         indexes: model.indexes,
         schema: model.schema,
     );
-
-# applies an alter table stamement
-# NOT IMPLEMENTED
-let applyAlterTable = \alteration \model
-    model;
 
 # applies a create index statement
 let applyCreateIndex = \index \model
@@ -296,6 +290,41 @@ let applyDropTable = \name \model
 let applyDropIndex = \name \model
     model;
 
+# Alterations.
+
+# changeCols returns an altered model with fn applied to the attributes of the entity named t.
+let changeCols = \m \t \fn
+    let {old} = m.entities where .name = t; 
+    m +> (entities: m.entities without old with old +> (
+        attributes: fn(old.attributes)
+    ));
+
+# addCol adds column c to t's attributes in m.
+let addCol = \m \t \c changeCols(m, t, \cs cs ++ [c]);
+# dropCol removes the named column from t's attributes in m.
+let dropCol = \m \t \name changeCols(m, t, \cs (cs where .@item.name != name) rank (:.@));
+# alterCol replaces the named column in t's attributes in m.
+let alterCol = \m \t \c changeCols(m, t, \cs
+    let {@} = (cs where .@item.name = c.name) => .@;
+    (cs where .@ != @) | {(:@, @item:c)}
+);
+
+# Applies a single table alteration given model, table name and alteration data.
+let stepAlt = \m \t \(:type, alteration:alt)
+    cond type {
+        'add_column': addCol(m, t, alt),
+        'drop_column': dropCol(m, t, alt.name),
+        'alter_column': alterCol(m, t, alt),
+        # 'on_delete':  TODO,
+        # 'add_constraint':  TODO,
+        # 'drop_constraint':  TODO,
+        _: m,
+    };
+
+# applies an alter table stamement
+let applyAlterTable = \(table_name: t, :alterations) \model
+    //{/pkg/arrai/util}.reduce(alterations, \m \a stepAlt(m, t, a), model);
+
 # applies either a single staement or a list of statements in the given order
 let rec applyStmt = \stmt \model
     cond stmt {
@@ -315,6 +344,14 @@ let rec applyStmt = \stmt \model
 
 ################# EXPOSE ################
 (
+    :applyCreateTable,
+    :applyAlterTable,
+    :applyCreateIndex,
+    :applyCreateDatabase,
+    :applyDropTable,
+    :applyDropIndex,
+    
+    # For testing.
     # empty model, use this as the base of an applyStmt call to create a model from a ddl statement
     emptyModel:        (entities: {}, indexes: {}, schema: {}),
 
