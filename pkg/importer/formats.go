@@ -76,7 +76,7 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 	if isDir {
 		if files, err := ioutil.ReadDir(path); err == nil {
 			for _, info := range files {
-				if strings.HasSuffix(info.Name(), ".up.sql") {
+				if strings.HasSuffix(info.Name(), ".up.sql") || strings.HasSuffix(info.Name(), ".up.ddl") {
 					return &SpannerSQLDir, nil
 				}
 			}

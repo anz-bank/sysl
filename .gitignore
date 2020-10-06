@@ -15,3 +15,4 @@ build
 coverage.txt
 .DS_Store
 .blueprint
+out/
