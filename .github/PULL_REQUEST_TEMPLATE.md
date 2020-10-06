@@ -1,4 +1,3 @@
-* Please attach **WIP** tag when this PR is still work in progress.
 * Please attach **breaking-change** tag if this PR potentially causes other components to fail or changes previous sysl executable's behaviour.
 
 Fixes # .
