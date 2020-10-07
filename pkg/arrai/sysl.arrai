@@ -1,8 +1,13 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
 # Loads and returns a Sysl model.
+let syslPbPath = '../sysl/sysl.pb';
+let syslPb = cond //os.exists(syslPbPath) {
+    true: //os.file(syslPbPath),
+    false: //net.http.get('https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.pb?raw=true').body,
+};
 let load = \path
-    let syslDescriptor = //encoding.proto.descriptor(//os.file('../sysl/sysl.pb'));
+    let syslDescriptor = //encoding.proto.descriptor(syslPb);
     //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
 
 # Extracts the set of pattern attributes of an element.
