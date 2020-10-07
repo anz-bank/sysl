@@ -33,6 +33,7 @@ CREATE INDEX InterleaveIndex ON Customer (AccountNum, CustomerID) INTERLEAVE IN 
 
 CREATE TABLE CustomerHasAccount (
     CustomerID  STRING(36) NOT NULL,
+    Customer    STRING(36) NOT NULL,
     AccountNum  STRING(23) NOT NULL,
     LegalRole   STRING(10) NOT NULL,
     BranchID    STRING(6)  NOT NULL,

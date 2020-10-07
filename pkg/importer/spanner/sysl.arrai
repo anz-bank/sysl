@@ -37,7 +37,7 @@ let attributePatterns = \entity \attr
             $`${k}="${v}"`,
         };
     let pk = cond {
-        (entity.primary_key where //seq.contains(attr.name, .@item)):
+        entity.primary_key where attr.name = //seq.split("(", .@item rank (:.@))(0):
             $`~pk${cond {sortingOrder(entity, attr):$`, ~${sortingOrder(entity, attr) ::}`}}`
     };
     let fk = cond { matchingFKs(entity, attr): '~fk' };

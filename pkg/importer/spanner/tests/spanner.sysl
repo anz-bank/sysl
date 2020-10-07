@@ -31,6 +31,7 @@ customeraccounts [spanner_spec="1.0", package="com.example.package"]:
 
     !table CustomerHasAccount [primary_key="AccountNum(asc),CustomerID", foreign_keys=[["columns:CustomerID"],["constraint:FK_AccountNum","columns:AccountNum,BranchID"]]]:
         CustomerID <: Customer.CustomerID [~pk, ~fk]
+        Customer <: string(36)
         AccountNum <: Account.AccountNum [~pk, ~asc, ~fk]
         LegalRole <: string(10)
         BranchID <: Account.BSB [~fk]
