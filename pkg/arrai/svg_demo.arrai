@@ -1,18 +1,12 @@
 # Parses, transforms and reserializes an SVG document.
 
-let (:macro, :toSvg, :colored, :byText, ...) = //{./svg};
+let data = //os.file('out/sequence_diagram.svg');
+# let data = //os.stdin;
 
-# let data = //os.file('out/sequence_diagram.svg');
-let data = //os.stdin;
-
-let model = //{./util}.invokeMacro(macro, data);
-let texts = //eval.value(//os.args(1)?:'{"PaymentServer POST /pay -> Visa POST /pay"}');
+let texts = //eval.value(//os.args(1)?:'{"Do"}');
 let color = //os.args(2)?:'green';
 
-toSvg(
-    colored(
-        model,
-        color,
-        //rel.union(texts => byText(model, .))
-    )
+//{./svg_update}.apply(
+    $`${data}`,
+    texts => (@:., @value:{'color': 'green'})
 )
