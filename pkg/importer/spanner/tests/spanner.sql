@@ -23,7 +23,7 @@ CREATE TABLE Customer (
     LastName   STRING(64)  NOT NULL,
     Email      STRING(256),
     Mobile     STRING(10),
-    NetWorth   FLOAT64,
+    NetWorth   NUMERIC,
     Int        INT64       NOT NULL,
 ) PRIMARY KEY (CustomerID);
 

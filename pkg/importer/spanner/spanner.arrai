@@ -45,7 +45,8 @@ SCALAR_TYPE         -> BOOL      = "BOOL"
                      | DATE      = "DATE"
                      | TIMESTAMP = "TIMESTAMP"
                      | STRING    = "STRING(" length ")"
-                     | BYTES     = "BYTES(" length ")";
+                     | BYTES     = "BYTES(" length ")"
+                     | NUMERIC   = "NUMERIC";
 
 length              -> (int64_value|"MAX");
 
@@ -81,6 +82,7 @@ let evalType = \parsed
         (BOOL: _, ...):                   (type: "bool", length: 0),
         (INT64: _, ...):                  (type: "int", length: 0),
         (FLOAT64: _, ...):                (type: "float", length: 0),
+        (NUMERIC: _, ...):                (type: "float64", length: 38, scale: 9),
         (DATE: _, ...):                   (type: "date", length: 0),
         (TIMESTAMP: _, ...):              (type: "datetime", length: 0),
         (STRING: _, length: length, ...): (type: "string", length: evalInt64(length.int64_value?:"MAX")),
@@ -89,6 +91,7 @@ let evalType = \parsed
     (
         type: type.type,
         length: type.length,
+        scale: type.scale?:{},
         array: data.array,
     );
 
@@ -96,10 +99,11 @@ let evalType = \parsed
 let evalAttribute = \parsed
     let type = evalType(parsed.attr_type);
     (
-        name:     parsed.column_name.'' rank (:.@),
-        type:     type.type,
-        length:   type.length,
-        array:    type.array,
+        name:       parsed.column_name.'' rank (:.@),
+        type:       type.type,
+        length:     type.length,
+        scale:      type.scale,
+        array:      type.array,
         options: cond {
             (parsed.options_def?:false): //seq.join('',parsed.options_def.option.@item.''),
         },
@@ -294,7 +298,7 @@ let applyDropIndex = \name \model
 
 # changeCols returns an altered model with fn applied to the attributes of the entity named t.
 let changeCols = \m \t \fn
-    let {old} = m.entities where .name = t; 
+    let {old} = m.entities where .name = t;
     m +> (entities: m.entities without old with old +> (
         attributes: fn(old.attributes)
     ));
@@ -350,7 +354,7 @@ let rec applyStmt = \stmt \model
     :applyCreateDatabase,
     :applyDropTable,
     :applyDropIndex,
-    
+
     # For testing.
     # empty model, use this as the base of an applyStmt call to create a model from a ddl statement
     emptyModel:        (entities: {}, indexes: {}, schema: {}),

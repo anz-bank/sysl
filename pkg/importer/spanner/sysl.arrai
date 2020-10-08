@@ -4,11 +4,11 @@
 let util = //{/pkg/arrai/util};
 
 # size returns the size of an attribute.
-let size = \length
+let size = \length \type
     cond {
         length = 'MAX': '',
         //seq.has_prefix('0x', length): $`(${//seq.trim_prefix('0x', length)})`,
-        length > 0: $`(${length})`,
+        length > 0 && type != 'float64': $`(${length})`,
     };
 
 # sortingOrder determines and appends sorting order.
@@ -42,11 +42,14 @@ let attributePatterns = \entity \attr
     };
     let fk = cond { matchingFKs(entity, attr): '~fk' };
     let length = cond { attr.length = 'MAX': '~max' };
+    let precisionScale = cond {
+        attr.type = 'float64' && attr.length = 38 && attr.scale = 9: '~numeric'
+    };
     let hexPrefix = cond { //seq.has_prefix('0x', attr.length): '~hex' };
     let byteLength = cond {
         attr.type = 'bytes' && attr.length > 0 && attr.length != 'MAX': $`length="${attr.length}"`
     };
-    [attrName, options, byteLength, pk, fk, length, hexPrefix] where .@item;
+    [attrName, options, byteLength, pk, fk, length, precisionScale, hexPrefix] where .@item;
 
 # entityPatterns generates the patterns for an entity.
 let entityPatterns = \entity \model
@@ -123,7 +126,7 @@ let transformModel = \model \package
                             ${entity.attributes >>
                                 let aps = attributePatternsString(entity, .);
                                 let name = util.resolveValidIdentifier(//seq.sub("`", "", .name));
-                                let type = typeInfo(entity, ., .type ++ cond {.type != 'bytes': size( .length)}, .array);
+                                let type = typeInfo(entity, ., .type ++ cond {.type != 'bytes': size(.length, .type)}, .array);
                                 $`
                                     ${name} <: ${type}${cond {.nullable:'?'}} ${aps}
                                 `

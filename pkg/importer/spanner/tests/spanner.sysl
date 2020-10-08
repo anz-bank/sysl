@@ -26,7 +26,7 @@ customeraccounts [spanner_spec="1.0", package="com.example.package"]:
         LastName <: string(64)
         Email <: string(256)?
         Mobile <: string(10)?
-        NetWorth <: float?
+        NetWorth <: float64? [~numeric]
         _Int <: int [name="Int"]
 
     !table CustomerHasAccount [primary_key="AccountNum(asc),CustomerID", foreign_keys=[["columns:CustomerID"],["constraint:FK_AccountNum","columns:AccountNum,BranchID"]]]:
