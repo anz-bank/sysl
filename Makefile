@@ -1,11 +1,11 @@
 include ./scripts/version-report.mk
-include ./scripts/embed-arrai.mk
 
-.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden embed-arrai
+.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden
 
-GOPATH    = $(shell go env GOPATH)
-GOVERSION = $(shell go version | cut -d' ' -f3-4)
-BIN_DIR := $(GOPATH)/bin
+GOPATH		= $(shell go env GOPATH)
+GOVERSION	= $(shell go version | cut -d' ' -f3-4)
+BIN_DIR		:= $(GOPATH)/bin
+ARRAI		= docker run --rm -v $(CURDIR):/src -w /src anzbank/arrai
 
 ifneq ("$(shell which gotestsum)", "")
 	TESTEXE := gotestsum --
@@ -20,36 +20,54 @@ TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
 examples: TUTORIALS
 	cd demo/examples/ && go run generate_website.go && cd ../../  && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-lint:
+lint: generate
 	golangci-lint run ./...
+
+lint-docker: generate
+	docker run --rm \
+		-v $(CURDIR):/app \
+		-v $(CURDIR)/.lint-cache:/cache/go \
+		-e GOCACHE=/cache/go \
+		-e GOLANGCI_LINT_CACHE=/cache/go \
+		-v ${GOPATH}/pkg:/go/pkg \
+		-w /app \
+		golangci/golangci-lint:v1.30.0 \
+			golangci-lint run -v
 
 tidy:
 	go mod tidy
 	gofmt -s -w .
 	goimports -w .
 
-test: internal/arrai/bindata.go
+# Generates intermediate files for build.
+generate: internal/arrai/bindata.go
+
+test: generate
 	$(TESTEXE)
 
-coverage: internal/arrai/bindata.go
+coverage: generate
 	./scripts/test-with-coverage.sh 80
 
 # Updates golden test files in pkg/parse.
 # TODO: Extend to work for all golden files
-golden: internal/arrai/bindata.go
+golden: generate
 	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
 
-check-tidy: ## Check go.mod and go.sum is tidy
-	go mod tidy && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
+check-tidy: generate
+	git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-build: internal/arrai/bindata.go
+build: generate
 	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp:
 	go build -o ./dist/sysllsp -ldflags=$(LDFLAGS) -v ./cmd/sysllsp
 
-%.arraiz: %.arrai
-	arrai bundle $< > $@
+build-docker: generate
+	docker build -t sysl .
+
+# Assumes that every arr.ai script depends on every other arr.ai script.
+%.arraiz: %.arrai $(shell find . -name '*.arrai')
+	$(ARRAI) bundle $< > $@
 
 internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \

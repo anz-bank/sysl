@@ -27,6 +27,7 @@ Prerequisites:
 - [golangci-lint 1.30.0+](https://github.com/golangci/golangci-lint)
 - `protoc`: `brew install protobuf` (macOS)
 - `protoc-gen-go`: `go get github.com/golang/protobuf/protoc-gen-go`
+- `go-bindata`: `go get github.com/kevinburke/go-bindata/...`
 
 
 Clone `sysl` to create a local copy on your computer:
@@ -41,13 +42,19 @@ Get dependencies using go modules (needs go 1.11+)
 $ go get ./...
 ```
 
+Some files need to be generated for Sysl to build. This will happen automatically when running relevant `make` commands, but you can also (re)generate them explicitly with:
+
+```sh
+make generate
+```
+
 A good way of making sure everything is all right is running the test suite:
 
 ```sh
 $ make test
 ```
 
-Run all the linters(we use [golangci-lint](https://github.com/golangci/golangci-lint)):
+Run all the linters (using [golangci-lint](https://github.com/golangci/golangci-lint)):
 
 ```sh
 $ make lint

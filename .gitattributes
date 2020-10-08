@@ -7,4 +7,3 @@ pkged.go    linguist-generated=true
 
 *_arrai.go  linguist-generated=true
 *.arraiz    linguist-generated=true
-*bindata.go linguist-generated=true

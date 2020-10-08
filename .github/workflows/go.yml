@@ -23,7 +23,7 @@ jobs:
       - name: Install go-bindata
         run: go get github.com/kevinburke/go-bindata/...
 
-      - name: Check out code into the Go module directory
+      - name: Check out code
         uses: actions/checkout@v2
 
         # Needed for changelog generation by goreleaser
@@ -69,8 +69,14 @@ jobs:
       with:
         go-version: 1.13
 
-    - name: Check out code into the Go module directory
+    - name: Install go-bindata
+      run: go get github.com/kevinburke/go-bindata/...
+
+    - name: Check out code
       uses: actions/checkout@v2
+
+    - name: Generate intermediate files
+      run: make generate
 
       # Needed for changelog generation by goreleaser
     - name: Unshallow
@@ -102,7 +108,7 @@ jobs:
         uses: actions/setup-node@v1
 
       - name: Check out code
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       - name: Install and test sysl_js
         run: |
@@ -120,8 +126,14 @@ jobs:
         with:
           go-version: 1.13
 
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@master
+      - name: Install go-bindata
+        run: go get github.com/kevinburke/go-bindata/...
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Generate intermediate files
+        run: make generate
 
       - name: Build and push docker image
         uses: docker/build-push-action@v1
@@ -135,8 +147,8 @@ jobs:
           push: false
           labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
 
-  check-tidy:
-    name: Check go mod tidy
+  Lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
@@ -144,31 +156,31 @@ jobs:
         with:
           go-version: 1.13
 
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@master
+      - name: Install go-bindata
+        run: go get github.com/kevinburke/go-bindata/...
 
-      - name: Check go.mod and go.sum are tidy
-        run: make check-tidy
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code into the Go module directory
+      - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Run golangci-lint 1.30.0
-        uses: actions-contrib/golangci-lint@v1
-        with:
-          golangci_lint_version: 1.30.0
+      - name: Generate intermediate files
+        run: make generate
+
+      - name: Run golangci-lint
+        run: make lint-docker
+
+      - name: Check tidy
+        run: make check-tidy
 
   downstream:
     name: Test downstream repos
     runs-on: ubuntu-latest
     container: golang:1.14-stretch
     steps:
-      - name: Check out code into the Go module directory
+      - name: Check out code
         uses: actions/checkout@v2
+
+      - name: Install go-bindata
+        run: go get github.com/kevinburke/go-bindata/...
 
       - name: Run downstream tests
         env:
