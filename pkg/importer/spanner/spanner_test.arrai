@@ -23,19 +23,13 @@ let foo_b2 = applyAlterTable(alterCol.data, foo_b);
 let [dropCol] = parseDdl('ALTER TABLE foo DROP COLUMN b;');
 let foo_bx = applyAlterTable(dropCol.data, foo_b2);
 
-(
-    applyCreateTable: (
-        foo: foo.entities = {(
-            name: 'foo',
-            attributes: [
-                (array: {}, length: 0, name: 'a', nullable: true, options: {}, type: 'int'),
-            ],
-            primary_key: [40\'a'],
-            foreign_keys: {},
-            cluster: {},
-        )}
-    ),
+let [addIndex] = parseDdl('CREATE INDEX i ON foo (a DESC);');
+let foo_i = applyCreateIndex(addIndex.data, foo_bx);
 
+let [dropIndex] = parseDdl('DROP INDEX i;');
+let foo_ix = applyDropIndex(dropIndex.data, foo_i);
+
+(
     parseDdl: (
         createTable: true, # TODO
         addCol: addCol = (
@@ -68,6 +62,34 @@ let foo_bx = applyAlterTable(dropCol.data, foo_b2);
                 )],
             ),
         ),
+    ),
+
+    applyCreateTable: (
+        foo: foo.entities = {(
+            name: 'foo',
+            attributes: [
+                (array: {}, length: 0, name: 'a', nullable: true, options: {}, type: 'int'),
+            ],
+            primary_key: [40\'a'],
+            foreign_keys: {},
+            cluster: {},
+        )}
+    ),
+
+    applyCreateIndex: (
+        foo_i: foo_i.indexes = {(
+            name: 'i',
+            table_name: 'foo',
+            key_part: [23\'a(desc)'],
+            unique: {},
+            nullfiltered: {},
+            storing_col: {},
+            interleaved_table: {},
+        )}
+    ),
+
+    applyDropIndex: (
+        foo: foo.indexes = {}
     ),
 
     applyAlterTable: (

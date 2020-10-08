@@ -233,6 +233,13 @@ let evalDdl = \parsed parsed.stmt >> cond . {
         stmt: "drop_table",
         data: val.table_name.'' rank (:.@),
     ),
+
+    (drop_index: val, ...): (
+        stmt: "drop_index",
+        data: val.index_name.'' rank (:.@),
+    ),
+
+    _: let _ = //log.print($`skipped unsupported statement: ${.}`); {}
 };
 
 ################## PARSERS ##################
@@ -247,52 +254,28 @@ let parseSchema = \files //seq.concat(files >> parseDdl(//os.file(.)));
 
 # applies a create table statement
 let applyCreateTable = \relation \model
-    let relations = cond model.entities where .name=relation.name {
-        false: model.entities | {relation},
-        true: false, # a match means the ddl is trying to create a table that already exists
-    };
-    (
-        entities: relations,
-        indexes: model.indexes,
-        schema: model.schema,
-    );
+    let _ = //test.assert.equal({}, model.entities where .name = relation.name);
+    model +> (entities: model.entities | {relation});
 
 # applies a create index statement
 let applyCreateIndex = \index \model
-    let indxs = cond model.indexes where .name=index.name {
-        false: model.indexes | {index},
-        true: false, # a match means the ddl is trying to create a index that already exists
-    };
-    (
-        entities: model.entities,
-        indexes: indxs,
-        schema: model.schema,
-    );
+    let _ = //test.assert.equal({}, model.indexes where .name = index.name);
+    model +> (indexes: model.indexes | {index});
 
+# applies a create database statement
 let applyCreateDatabase = \database \model
-    let dbschema = cond model.schema where .name=database.name {
-        false: model.schema | {database},
-        true: false, # a match means the ddl is trying to create a database that already exists
-    };
-    (
-        entities: model.entities,
-        indexes: model.indexes,
-        schema: dbschema,
-    );
+    let _ = //test.assert.equal({}, model.schema where .name = database.name);
+    model +> (schema: model.schema | {database});
 
 # applies a drop table statement
 let applyDropTable = \name \model
-    let relations = model.entities where .name != relation;
-    (
-        entities: relations,
-        indexes: model.indexes,
-        schema: model.schema,
-    );
+    let _ = //test.assert.equal(1, (model.entities where .name = name) count);
+    model +> (entities: model.entities where .name != name);
 
-# applies a drop_index statement
-# NOT IMPLEMENTED
+# applies a drop index statement
 let applyDropIndex = \name \model
-    model;
+    let _ = //test.assert.equal(1, (model.indexes where .name = name) count);
+    model +> (indexes: model.indexes where .name != name);
 
 # Alterations.
 
@@ -333,13 +316,16 @@ let applyAlterTable = \(table_name: t, :alterations) \model
 let rec applyStmt = \stmt \model
     cond stmt {
         # match against the single statement types
-        (stmt: "create_database", data: schema):  applyCreateDatabase(schema, model),
+        (stmt: "create_database", data: schema): applyCreateDatabase(schema, model),
         (stmt: "create_table", data: relation):  applyCreateTable(relation, model),
         (stmt: "create_index", data: index):     applyCreateIndex(index, model),
         (stmt: "alter_table", data: alteration): applyAlterTable(alteration, model),
         (stmt: "drop_table", data: name):        applyDropTable(name, model),
         (stmt: "drop_index", data: name):        applyDropIndex(name, model),
-        (...): model, # guard against unrecognised statements
+        (...):
+            # guard against unrecognised statements
+            let _ = //log.print($`unknown statement: ${stmt}`);
+            model,
 
         # match against an arrai of statements and recursively apply them in order
         [first, ...rem]: applyStmt(rem, applyStmt(first, model)),
