@@ -1,0 +1,10 @@
+let (:export, ...) = //{./spanner};
+
+let sysl = //{//pkg/arrai/sysl.arrai};
+let sample = sysl.normalize(sysl.load('sample.pb'));
+
+(
+    export: (
+        sample: export(sample)
+    )
+)

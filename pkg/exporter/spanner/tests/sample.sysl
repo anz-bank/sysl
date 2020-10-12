@@ -1,0 +1,47 @@
+# A Sysl model that exercises all the Spanner export features.
+App[~db]:
+    !table Types [indexes=[["name:Ix", "key_parts:float64_,int64_(desc)"]]]:
+        array <: sequence of int [~pk]
+        array_set <: set of int
+        bytes_ <: bytes
+        bytes_1 <: bytes [length="1"]
+        bytes_1024_hex <: bytes [length="1024", ~hex]
+        bytes_max <: bytes [~max]
+
+        bool_ <: bool
+        opt <: bool?
+        int64_ <: int
+        float64_ <: float
+        date_ <: date
+        timestamp_ <: datetime
+        timestamp_commit <: datetime [allow_commit_timestamp = "true"]
+
+        string_ <: string
+        string_1 <: string(1)
+        string_100 <: string(100) [~hex]
+        string_max <: string [~max]
+
+        cust_id <: Customer.id [~fk]
+
+    !table Customer:
+        id <: int [~pk]
+        ref_desc <: int [~pk, ~desc]
+        ref_asc <: int [~pk, ~asc]
+    
+    !table Constraints:
+        # @foreign_keys=[[
+        #     "constraint:c1",
+        #     "columns:cust_id"
+        # ],[
+        #     "columns:types_int,types_string"
+        # ]]]
+        cust_id <: Customer.id [~fk]
+        types_int <: Types.int64_ [~fk]
+        types_string <: Types.string_ [~fk]
+
+    # TODO: Support empty relations.
+    # !table Empty:
+    #     ...
+
+    !type NotTable:
+        id <: int

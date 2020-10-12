@@ -141,6 +141,8 @@ let normalize = \m
             (
                 :appName,
                 :typeName,
+                typeAnnotations: t.attrs?:{} >>> \k \v v.s?:(v.a.elt),
+                typeSourceContext: t.source_context,
             )
         ) where .
     ;
@@ -155,14 +157,19 @@ let normalize = \m
                     fieldType: cond field {
                         (primitive:p, ...): p,
                         (type_ref:(ref:(path:p), ...), ...): //seq.join('.', p),
+                        (sequence: (primitive: p, ...), ...): [p],
+                        (set: (primitive: p, ...), ...): {p},
                         _: '?',
                     },
+                    fieldConstraint: field.constraint?:{},
                     fk: cond field.type_ref?.ref.path:{} {
                         [t, f]: (:appName, typeName: t, fieldName: f)
                     },
+                    fieldAnnotations: field.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
                     :patterns,
-                    pk: !!({'pk'} & patterns),
+                    pk: 'pk' <: patterns,
                     opt: field.opt?:{},
+                    fieldSourceContext: field.source_context,
                 )
         ) where .
     );

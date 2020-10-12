@@ -1,0 +1,4 @@
+# Loads a Sysl model and transforms it to Spanner DDL.
+let [_, syslPath] = //os.args;
+
+//{./spanner}.exportFile(syslPath)
