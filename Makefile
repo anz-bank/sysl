@@ -73,7 +73,10 @@ internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \
 		pkg/importer/spanner/import_spanner_sql.arraiz \
 		pkg/importer/spanner/import_migrations.arraiz
-	go-bindata -pkg arrai -o $@ $^
+	# Binary files in bindata.go have metadata like size, mode and modification time(modTime).
+	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-tidy failed.
+	# So add parameter `-modtime 1` to set a fixed modTime.
+	go-bindata -modtime 1 -pkg arrai -o $@ $^
 
 release:
 	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot
