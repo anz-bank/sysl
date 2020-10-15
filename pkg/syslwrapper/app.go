@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 // App is a simplified representation of an application in sysl
@@ -87,7 +88,7 @@ func (am *AppMapper) IndexTypes() map[string]*sysl.Type {
 	var typeIndex map[string]*sysl.Type = make(map[string]*sysl.Type, 10)
 	for appName, app := range am.Module.Apps {
 		for typeName, typeVal := range app.Types {
-			typeIndex[appName+":"+typeName] = typeVal
+			typeIndex[appName+"."+typeName] = typeVal
 		}
 	}
 	am.Types = typeIndex
@@ -124,7 +125,7 @@ func (am *AppMapper) mapAttributes(attributes map[string]*sysl.Attribute) map[st
 func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) map[string]*Type {
 	simpleTypes := make(map[string]*Type, 15)
 	for typeName := range syslTypes {
-		if simpleTypeFromLookup := am.MapType(am.Types[appName+":"+typeName]); simpleTypeFromLookup != nil {
+		if simpleTypeFromLookup := am.MapType(am.Types[appName+"."+typeName]); simpleTypeFromLookup != nil {
 			simpleTypes[typeName] = simpleTypeFromLookup
 		}
 	}
@@ -203,18 +204,17 @@ func (am *AppMapper) mapReturnType(retValue string, appName string) *Type {
 func (am *AppMapper) mapSimpleReturnType(retName string, appName string) *Type {
 	var returnType *Type
 	if strings.Contains(retName, ".") {
-		returnRef := strings.Replace(retName, ".", ":", 1)
 		returnType = &Type{
 			Type:      "ref",
-			Reference: returnRef,
+			Reference: retName,
 		}
 	} else {
 		// Handle references to type in same app, e.g 200 <: Error
-		_, ok := am.Types[appName+":"+retName]
+		_, ok := am.Types[appName+"."+retName]
 		if ok {
 			returnType = &Type{
 				Type:      "ref",
-				Reference: appName + ":" + retName,
+				Reference: appName + "." + retName,
 			}
 		}
 		// Type reference not found. Trying to convert primitive
@@ -366,7 +366,7 @@ func (am *AppMapper) MapSyslType(t *sysl.Type) (*sysl.Type, error) {
 		return nil, fmt.Errorf("invalid arguments")
 	}
 	appName, typeName := am.GetRefDetails(t)
-	resolvedType, ok := am.Types[appName+":"+typeName]
+	resolvedType, ok := am.Types[appName+"."+typeName]
 	if !ok {
 		return nil, fmt.Errorf("unable to find type ref for %s", typeName)
 	}
@@ -390,7 +390,7 @@ func (am *AppMapper) MapSyslType(t *sysl.Type) (*sysl.Type, error) {
 func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName string) {
 	ref := t.GetTypeRef().GetRef()
 	if ref.GetPath() == nil {
-		typeName = strings.Join(ref.Appname.Part, "")
+		typeName = syslutil.GetAppName(ref.Appname)
 		return appName, typeName
 	}
 	if len(ref.GetPath()) > 1 {
@@ -398,9 +398,9 @@ func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName strin
 		typeName = ref.Path[1]
 	} else {
 		if ref.GetAppname() != nil {
-			appName = strings.Join(ref.Appname.Part, "")
+			appName = syslutil.GetAppName(ref.Appname)
 		} else if t.GetTypeRef().GetContext() != nil {
-			appName = strings.Join(t.GetTypeRef().GetContext().Appname.Part, "")
+			appName = syslutil.GetAppName(t.GetTypeRef().GetContext().Appname)
 		}
 		typeName = strings.Join(ref.GetPath(), ".")
 	}
@@ -446,7 +446,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 	case *sysl.Type_TypeRef:
 		simpleType = "ref"
 		appName, typeName := am.GetRefDetails(t)
-		ref = appName + ":" + typeName
+		ref = appName + "." + typeName
 	case *sysl.Type_Tuple_:
 		// Currently maps in Sysl are represented as Tuples due to limitations in the grammar.
 		// We need to check for the presence of a json_map_key attribute to distinguish between tuples and maps
@@ -469,7 +469,7 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 				appName, typeName := convertTableRef(v)
 				properties[k] = &Type{
 					Type:      "ref",
-					Reference: appName + ":" + typeName,
+					Reference: appName + "." + typeName,
 				}
 			default:
 				properties[k] = am.MapType(v)
@@ -502,8 +502,12 @@ func convertTableRef(tableRef *sysl.Type) (appName string, typeName string) {
 
 func (am *AppMapper) convertPrimitive(typeStr string) string {
 	primTypeFirstLine := strings.Split(typeStr, " ")[0]
-	primType := strings.Split(primTypeFirstLine, ":")[1]
-	primTypeLower := strings.ToLower(primType)
-	primTypeNoSpace := strings.TrimSpace(primTypeLower)
-	return primTypeNoSpace
+	primTypeSplit := strings.Split(primTypeFirstLine, ":")
+	if len(primTypeSplit) > 1 {
+		primType := primTypeSplit[1]
+		primTypeLower := strings.ToLower(primType)
+		primTypeNoSpace := strings.TrimSpace(primTypeLower)
+		return primTypeNoSpace
+	}
+	return "UNKNOWN_PRIMITIVE"
 }

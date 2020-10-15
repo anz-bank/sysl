@@ -214,6 +214,6 @@ func parseResponseCode(response string) int {
 	return responseCode
 }
 func SyslRefToJSONSchema(syslRef string) string {
-	reference := strings.Split(syslRef, ":")
+	reference := strings.Split(syslRef, ".")
 	return "#/components/schemas/" + reference[1]
 }

@@ -2,7 +2,6 @@
 package syslwrapper
 
 import (
-	"encoding/json"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/parse"
@@ -19,7 +18,7 @@ func TestMapRest(t *testing.T) {
 	mapper.ResolveTypes()
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
-	prettyPrint(t, simpleApps)
+	//prettyPrint(t, simpleApps)
 	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["CustomerID"].Type.Type)
 	assert.Equal(t, "string", simpleApps["SampleRestApp"].Endpoints["POST /login/{CustomerID}"].Params["newPost"].Type.Type)
 	assert.Equal(t, "ref", simpleApps["SampleRestApp"].Endpoints["POST /post"].Params["PostID"].Type.Type)
@@ -33,12 +32,12 @@ func TestMap(t *testing.T) {
 	mapper.ResolveTypes()
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
-	prettyPrint(t, simpleApps)
+	//prettyPrint(t, simpleApps)
 	assert.Equal(t, "", simpleApps["Server"].Types["Response"].Properties["balance"].Type)
 	assert.Equal(t, "tuple", simpleApps["Server"].Types["Response"].Properties["query"].Type)
 	assert.Equal(t, "int", simpleApps["Server"].Types["Response"].Properties["query"].Properties["amount"].Type)
 	assert.Equal(t, "ref", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Type)
-	assert.Equal(t, "Server:Request", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Reference)
+	assert.Equal(t, "Server.Request", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Reference)
 }
 func TestResolveTypesWithSyslFile(t *testing.T) {
 	mod, err := parse.NewParser().ParseFromFs("./tests/types.sysl", afero.NewOsFs())
@@ -52,8 +51,8 @@ func TestResolveTypesWithSyslFile(t *testing.T) {
 		"balance": MakePrimitive("empty"),
 	})
 
-	assert.Equal(t, expectedResult.GetAttrs()["query"], typeIndex["Server:Response"].GetAttrs()["query"])
-	assert.Equal(t, expectedResult.GetAttrs()["balance"], typeIndex["Server:Response"].GetAttrs()["balance"])
+	assert.Equal(t, expectedResult.GetAttrs()["query"], typeIndex["Server.Response"].GetAttrs()["query"])
+	assert.Equal(t, expectedResult.GetAttrs()["balance"], typeIndex["Server.Response"].GetAttrs()["balance"])
 }
 
 func TestConvertMapType(t *testing.T) {
@@ -74,13 +73,13 @@ func TestConvertMapType(t *testing.T) {
 			},
 			"message": {
 				Type:      "ref",
-				Reference: "MapType:Message",
+				Reference: "MapType.Message",
 			},
 		},
 		PrimaryKey: "item_id",
 	}
 
-	assert.Equal(t, expectedResult, simpleTypes["MapType:InventoryResponse"])
+	assert.Equal(t, expectedResult, simpleTypes["MapType.InventoryResponse"])
 }
 func TestMapPetStoreToSimpleTypes(t *testing.T) {
 	mod, err := parse.NewParser().ParseFromFs("../../demo/petshop/petshop.sysl", afero.NewOsFs())
@@ -90,10 +89,10 @@ func TestMapPetStoreToSimpleTypes(t *testing.T) {
 	mapper.ConvertTypes()
 	expected := &Type{
 		Type:      "ref",
-		Reference: "PetShopModel:Breed",
+		Reference: "PetShopModel.Breed",
 	}
-	assert.Equal(t, "relation", mapper.SimpleTypes["PetShopModel:Pet"].Type)
-	assert.Equal(t, expected, mapper.SimpleTypes["PetShopModel:Pet"].Properties["breedId"])
+	assert.Equal(t, "relation", mapper.SimpleTypes["PetShopModel.Pet"].Type)
+	assert.Equal(t, expected, mapper.SimpleTypes["PetShopModel.Pet"].Properties["breedId"])
 }
 
 func TestMapTypeRef(t *testing.T) {
@@ -113,7 +112,7 @@ func TestMapTypeRef(t *testing.T) {
 
 	mappedType := mapper.MapType(type1)
 	assert.Equal(t, "ref", mappedType.Type)
-	assert.Equal(t, "app2:request", mappedType.Reference)
+	assert.Equal(t, "app2.request", mappedType.Reference)
 }
 func TestResolveNonExistentType(t *testing.T) {
 	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"nonexist"})
@@ -132,8 +131,8 @@ func TestResolveNonExistentType(t *testing.T) {
 
 	mapper.ResolveTypes()
 
-	assert.Equal(t, nil, mapper.Types["app2:request"].GetType())
-	assert.Equal(t, nil, mapper.Types["app1:list"].GetType())
+	assert.Equal(t, nil, mapper.Types["app2.request"].GetType())
+	assert.Equal(t, nil, mapper.Types["app1.list"].GetType())
 }
 func TestResolveTypesNil(t *testing.T) {
 	type1 := MakeTypeRef("app1", []string{"login"}, "app2", []string{"request"})
@@ -149,9 +148,9 @@ func TestResolveTypesNil(t *testing.T) {
 	mapper := MakeAppMapper(mod)
 	typeIndex := mapper.IndexTypes()
 	mapper.ResolveTypes()
-	prettyPrint(t, typeIndex["app2:request"])
-	assert.Equal(t, nil, typeIndex["app2:request"].GetType())
-	assert.Equal(t, nil, typeIndex["app1:list"].GetType())
+	//prettyPrint(t, typeIndex["app2.request"])
+	assert.Equal(t, nil, typeIndex["app2.request"].GetType())
+	assert.Equal(t, nil, typeIndex["app1.list"].GetType())
 }
 
 func TestResolveTypeOneOf(t *testing.T) {
@@ -171,7 +170,7 @@ func TestResolveTypeOneOf(t *testing.T) {
 	typeIndex := mapper.IndexTypes()
 
 	syslType := mapper.resolveType(type1)
-	assert.Equal(t, type2, typeIndex["app2"+":"+"request"])
+	assert.Equal(t, type2, typeIndex["app2"+"."+"request"])
 	assert.Equal(t, MakeOneOf([]*sysl.Type{MakePrimitive("string")}), type1)
 	assert.Equal(t, MakeOneOf([]*sysl.Type{MakePrimitive("string")}), syslType)
 }
@@ -193,7 +192,7 @@ func TestResolveTypeMap(t *testing.T) {
 	typeIndex := mapper.IndexTypes()
 
 	syslType := mapper.resolveType(type1)
-	assert.Equal(t, type2, typeIndex["app2:request"])
+	assert.Equal(t, type2, typeIndex["app2.request"])
 	assert.Equal(t, MakeMap(MakePrimitive("string"), MakePrimitive("string")), type1)
 	assert.Equal(t, MakeMap(MakePrimitive("string"), MakePrimitive("string")), syslType)
 }
@@ -214,7 +213,7 @@ func TestResolveTypeList(t *testing.T) {
 	typeIndex := mapper.IndexTypes()
 
 	syslType := mapper.resolveType(type1)
-	assert.Equal(t, type2, typeIndex["app2:request"])
+	assert.Equal(t, type2, typeIndex["app2.request"])
 	assert.Equal(t, MakeList(MakePrimitive("string")), type1)
 	assert.Equal(t, MakeList(MakePrimitive("string")), syslType)
 }
@@ -236,7 +235,7 @@ func TestResolveTypeTypeRef(t *testing.T) {
 	typeIndex := mapper.IndexTypes()
 
 	syslType := mapper.resolveType(type1)
-	assert.Equal(t, type2, typeIndex["app2:request"])
+	assert.Equal(t, type2, typeIndex["app2.request"])
 	assert.Equal(t, MakePrimitive("string"), syslType)
 }
 
@@ -261,7 +260,7 @@ func TestTypesFromRef(t *testing.T) {
 		t.Error(err)
 	}
 	typeIndex := mapper.IndexTypes()
-	assert.Equal(t, type2, typeIndex["app2:request"])
+	assert.Equal(t, type2, typeIndex["app2.request"])
 	assert.Equal(t, type2, syslType)
 }
 
@@ -425,7 +424,7 @@ func TestMapReturnStatements(t *testing.T) {
 				Items: []*Type{
 					{
 						Type:      "ref",
-						Reference: "app2:request",
+						Reference: "app2.request",
 					},
 				},
 				Type: "set",
@@ -440,7 +439,7 @@ func TestMapReturnStatements(t *testing.T) {
 		"401": {
 			Name: "401",
 			Type: &Type{
-				Reference: "app2:request",
+				Reference: "app2.request",
 				Type:      "ref",
 			},
 		},
@@ -450,7 +449,7 @@ func TestMapReturnStatements(t *testing.T) {
 				Items: []*Type{
 					{
 						Type:      "ref",
-						Reference: "app2:request",
+						Reference: "app2.request",
 					},
 				},
 				Type: "list",
@@ -462,7 +461,7 @@ func TestMapReturnStatements(t *testing.T) {
 				Items: []*Type{
 					{
 						Type:      "ref",
-						Reference: "app2:request",
+						Reference: "app2.request",
 					},
 				},
 				Type: "list",
@@ -525,10 +524,17 @@ func TestConvertPrimitive(t *testing.T) {
 	assert.Equal(t, "string", result)
 }
 
-func prettyPrint(t *testing.T, v interface{}) {
-	json, err := json.MarshalIndent(v, "", " ")
-	if err != nil {
-		t.Log(t, err)
-	}
-	t.Log(t, string(json))
+func TestConvertPrimitiveWithContext(t *testing.T) {
+	input := `primitive:DATETIME source_context:{file:"github.com/anz-bank/sysl-examples/demos/sizzle_restaurant/sizzle.sysl" start:{line:291 col:22} end:{line:291 col:22}}`
+	mapper := MakeAppMapper(&sysl.Module{})
+	result := mapper.convertPrimitive(input)
+	assert.Equal(t, "datetime", result)
 }
+
+// func prettyPrint(t *testing.T, v interface{}) {
+// 	json, err := json.MarshalIndent(v, "", " ")
+// 	if err != nil {
+// 		t.Log(t, err)
+// 	}
+// 	t.Log(t, string(json))
+// }
