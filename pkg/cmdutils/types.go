@@ -97,6 +97,7 @@ type ExecuteArgs struct {
 	Logger         *logrus.Logger
 	DefaultAppName string
 	ModulePaths    []string
+	Root           string
 }
 
 type DiagramCmd struct {

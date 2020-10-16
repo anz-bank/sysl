@@ -312,6 +312,41 @@ let stepAlt = \m \t \(:type, alteration:alt)
 let applyAlterTable = \(table_name: t, :alterations) \model
     //{/pkg/arrai/util}.reduce(alterations, \m \a stepAlt(m, t, a), model);
 
+# Alterations.
+
+# changeCols returns an altered model with fn applied to the attributes of the entity named t.
+let changeCols = \m \t \fn
+    let {old} = m.entities where .name = t;
+    m +> (entities: m.entities without old with old +> (
+        attributes: fn(old.attributes)
+    ));
+
+# addCol adds column c to t's attributes in m.
+let addCol = \m \t \c changeCols(m, t, \cs cs ++ [c]);
+# dropCol removes the named column from t's attributes in m.
+let dropCol = \m \t \name changeCols(m, t, \cs (cs where .@item.name != name) rank (:.@));
+# alterCol replaces the named column in t's attributes in m.
+let alterCol = \m \t \c changeCols(m, t, \cs
+    let {@} = (cs where .@item.name = c.name) => .@;
+    (cs where .@ != @) | {(:@, @item:c)}
+);
+
+# Applies a single table alteration given model, table name and alteration data.
+let stepAlt = \m \t \(:type, alteration:alt)
+    cond type {
+        'add_column': addCol(m, t, alt),
+        'drop_column': dropCol(m, t, alt.name),
+        'alter_column': alterCol(m, t, alt),
+        # 'on_delete':  TODO,
+        # 'add_constraint':  TODO,
+        # 'drop_constraint':  TODO,
+        _: m,
+    };
+
+# applies an alter table stamement
+let applyAlterTable = \(table_name: t, :alterations) \model
+    //{/pkg/arrai/util}.reduce(alterations, \m \a stepAlt(m, t, a), model);
+
 # applies either a single staement or a list of statements in the given order
 let rec applyStmt = \stmt \model
     cond stmt {

@@ -5,8 +5,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/arrai"
+
 	"github.com/anz-bank/sysl/pkg/cfg"
-	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
@@ -88,7 +89,7 @@ func main2(
 	main3 func(args []string, fs afero.Fs, logger *logrus.Logger) error,
 ) int {
 	if err := main3(args, fs, logger); err != nil {
-		arraiErr, ok := errors.Cause(err).(importer.ArraiTransformError)
+		arraiErr, ok := errors.Cause(err).(arrai.ExecutionError)
 		if ok {
 			logger.Debugln(err)
 			logger.Errorln(arraiErr.ShortMsg)

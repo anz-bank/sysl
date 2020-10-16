@@ -45,7 +45,7 @@ func (s *SpannerDir) LoadFile(path string) (string, error) {
 	// TODO: Make the appname optional
 	val, err := arrai.EvaluateBundle(b, path, s.appName, s.pkg)
 	if err != nil {
-		return "", errors.Wrap(ArraiTransformError{
+		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", path, s.appName, s.pkg),
 			Err:      err,
 			ShortMsg: "Error executing SQL dir importer",

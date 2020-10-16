@@ -173,14 +173,14 @@ let normalize = \m
                 )
         ) where .
     );
-    let transforms = //{./dfa/transforms}(m.apps);
+    # let transforms = //{./dfa/transforms}(m.apps);
     (
         :apps,
         :endpoints,
         :calls,
         :types,
         :fields,
-        :transforms,
+        # :transforms,
         # TODO:
         # :annotations, (aka attributes)
         # :tags, (aka patterns)

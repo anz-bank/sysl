@@ -10,6 +10,15 @@ import (
 	"github.com/arr-ai/arrai/syntax"
 )
 
+// ExecutionError encapsulates detailed error msgs from arr.ai runtime.
+type ExecutionError struct {
+	Context  string
+	Err      error
+	ShortMsg string
+}
+
+func (e ExecutionError) Error() string { return e.Context + ": " + e.Err.Error() }
+
 // EvaluateScript evaluates script with passed parameters.
 // It help to pass Go's type parameters to arrai script explicitly.
 // TODO: will move it to arrai when it is ready.

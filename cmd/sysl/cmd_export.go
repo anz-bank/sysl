@@ -29,6 +29,7 @@ const (
 	openapi2Mode = "openapi2"
 	openapi3Mode = "openapi3"
 	jsonMode     = "json"
+	spannerMode  = "spanner"
 	yamlMode     = "yaml"
 )
 
@@ -36,18 +37,74 @@ func (p *exportCmd) Name() string       { return "export" }
 func (p *exportCmd) MaxSyslModule() int { return 1 }
 
 func (p *exportCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types: Swagger,openapi2,openapi3")
+	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types: Swagger,openapi2,openapi3,spanner")
 	cmd.Flag("app-name", "name of the sysl App defined in the sysl model."+
 		" if there are multiple Apps defined in the sysl model,"+
 		" swagger will be generated only for the given app").Short('a').StringVar(&p.appName)
 	cmd.Flag(
 		"format",
-		"format of export, supported options; (swagger | openapi2 | openapi3)",
+		"format of export, supported options; (swagger | openapi2 | openapi3 | spanner)",
 	).Default("swagger").Short('f').StringVar(&p.mode)
 	cmd.Flag("output", "output filepath.format(yaml | json) (default: %(appname).yaml)").Default(
 		"%(appname).yaml").Short('o').StringVar(&p.out)
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
+}
+
+func (p *exportCmd) Execute(args cmdutils.ExecuteArgs) error {
+	format, err := p.determineOperationMode(p.out)
+	if err != nil {
+		return err
+	}
+	p.format = format
+
+	if format == spannerMode {
+		x := exporter.MakeSpannerExporter(args.Filesystem, args.Logger, args.Root, p.out)
+		err := x.ExportFile(args.ModulePaths[0])
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	var writeCount int
+	for appName, syslApp := range args.Modules[0].GetApps() {
+		if appName == p.appName || p.appName == "" {
+			outputFileName := cmdutils.MakeFormatParser(p.out).LabelApp(appName, "", syslApp.GetAttrs())
+			if err := args.Filesystem.MkdirAll(filepath.Dir(outputFileName), os.ModePerm); err != nil {
+				return err
+			}
+			if p.appName == "" && outputFileName == p.out {
+				ext := filepath.Ext(outputFileName)
+				// convert out.yaml something like out.Fooapp.yaml
+				outputFileName = fmt.Sprintf("%s.%s%s", strings.TrimSuffix(outputFileName, ext), appName, ext)
+			}
+			args.Logger.Infof("Exporting app `%s` -> %s\n", appName, outputFileName)
+			err := p.writeSwaggerForApp(args.Filesystem, outputFileName, syslApp, args.Logger)
+			if err != nil {
+				return err
+			}
+			writeCount++
+		}
+	}
+	if writeCount == 0 {
+		return fmt.Errorf("app not found in the Sysl file")
+	}
+	return nil
+}
+
+func (p *exportCmd) determineOperationMode(filename string) (string, error) {
+	fileExtn := strings.TrimPrefix(filepath.Ext(filename), ".")
+	switch fileExtn {
+	case jsonMode:
+		return jsonMode, nil
+	case spannerMode, "sql":
+		return spannerMode, nil
+	case yamlMode:
+		return yamlMode, nil
+	default:
+		return "", fmt.Errorf("invalid output file format %s", fileExtn)
+	}
 }
 
 func (p *exportCmd) writeSwaggerForApp(
@@ -109,51 +166,6 @@ func (p *exportCmd) writeSwaggerForApp(
 	err = afero.WriteFile(fs, filename, output, os.ModePerm)
 	if err != nil {
 		return err
-	}
-	return nil
-}
-
-func (p *exportCmd) Execute(args cmdutils.ExecuteArgs) error {
-	err := p.determineOperationMode(p.out)
-	if err != nil {
-		return err
-	}
-
-	var writeCount int
-	for appName, syslApp := range args.Modules[0].GetApps() {
-		if appName == p.appName || p.appName == "" {
-			outputFileName := cmdutils.MakeFormatParser(p.out).LabelApp(appName, "", syslApp.GetAttrs())
-			if err := args.Filesystem.MkdirAll(filepath.Dir(outputFileName), os.ModePerm); err != nil {
-				return err
-			}
-			if p.appName == "" && outputFileName == p.out {
-				ext := filepath.Ext(outputFileName)
-				// convert out.yaml something like out.Fooapp.yaml
-				outputFileName = fmt.Sprintf("%s.%s%s", strings.TrimSuffix(outputFileName, ext), appName, ext)
-			}
-			args.Logger.Infof("Exporting app `%s` -> %s\n", appName, outputFileName)
-			err := p.writeSwaggerForApp(args.Filesystem, outputFileName, syslApp, args.Logger)
-			if err != nil {
-				return err
-			}
-			writeCount++
-		}
-	}
-	if writeCount == 0 {
-		return fmt.Errorf("app not found in the Sysl file")
-	}
-	return nil
-}
-
-func (p *exportCmd) determineOperationMode(filename string) error {
-	fileExtn := strings.TrimLeft(filepath.Ext(filepath.Base(filename)), ".")
-	switch fileExtn {
-	case jsonMode:
-		p.format = jsonMode
-	case yamlMode:
-		p.format = yamlMode
-	default:
-		return fmt.Errorf("invalid output file format %s", fileExtn)
 	}
 	return nil
 }

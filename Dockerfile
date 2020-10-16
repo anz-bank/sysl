@@ -15,6 +15,8 @@ WORKDIR /sysl
 
 COPY . .
 
+RUN go get github.com/kevinburke/go-bindata/...
+
 RUN make build
 
 FROM golang:${go_ver}-alpine${alpine_ver} as runner

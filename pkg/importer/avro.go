@@ -39,7 +39,7 @@ func (i *avroImporter) Load(avroSpec string) (string, error) {
 	}
 	val, err := arrai.EvaluateBundle(b, avroSpec, i.appName, i.pkg)
 	if err != nil {
-		return "", errors.Wrap(ArraiTransformError{
+		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", avroSpec, i.appName, i.pkg),
 			Err:      err,
 			ShortMsg: "Error executing SQL dir importer",

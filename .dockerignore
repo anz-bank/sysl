@@ -1,5 +1,6 @@
-.dockerignore
+**/.git
 **/node_modules
+.dockerignore
 /dist/
 /pkg/antlr*.jar
 /release/

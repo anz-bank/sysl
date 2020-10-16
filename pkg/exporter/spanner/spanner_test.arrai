@@ -1,10 +1,10 @@
 let (:export, ...) = //{./spanner};
 
 let sysl = //{//pkg/arrai/sysl.arrai};
-let sample = sysl.normalize(sysl.load('sample.pb'));
+let sample = sysl.normalize(sysl.load('../test-data/spanner/sample.sysl.pb'));
 
 (
     export: (
-        sample: export(sample)
+        sample: //seq.has_prefix("CREATE TABLE Types", export(sample))
     )
 )
