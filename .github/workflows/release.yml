@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: Install go-bindata
-        run: go get github.com/kevinburke/go-bindata/...
+        run: go get github.com/kevinburke/go-bindata/... && go mod tidy
 
       - name: Unshallow
         run: git fetch --prune --unshallow
