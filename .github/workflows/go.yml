@@ -20,26 +20,27 @@ jobs:
         with:
           go-version: 1.13
 
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: Install go-bindata
         run: go get github.com/kevinburke/go-bindata/...
 
       - name: Check out code
         uses: actions/checkout@v2
 
-        # Needed for changelog generation by goreleaser
-      - name: Unshallow
-        run: git fetch --prune --unshallow
-
-      - name: Test
+      - name: Run unit tests
         run: make coverage
 
       - name: Set GOVERSION environment variable
         run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
 
-      - name: Build sysl binary via goreleaser
-        uses: goreleaser/goreleaser-action@master
-        with:
-          args: release --snapshot --skip-publish --rm-dist --debug -f .goreleaser.yml
+      - name: Build sysl binary
+        run: make build
 
       # According to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
       # Ubuntu: sysl_linux_amd64:
@@ -47,8 +48,7 @@ jobs:
       - name: Install sysl
         run: |
           mkdir $PWD/bin && \
-          [ "${{ matrix.os }}" = 'ubuntu-latest' ] && PLATFORM='linux' || PLATFORM='darwin' && \
-          cp ./dist/sysl_${PLATFORM}_amd64/sysl $PWD/bin/sysl
+          cp ./dist/sysl $PWD/bin/sysl
 
       - name: Test installed
         run: ./scripts/test-gosysl.sh
@@ -60,14 +60,23 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  build-and-test-windows:
-    name: Build Go and Test (Windows)
+  test-windows:
+    name: Run unit tests (Windows)
     runs-on: windows-latest
     steps:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
         go-version: 1.13
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/go/bin
+        key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-cache-
 
     - name: Install go-bindata
       run: go get github.com/kevinburke/go-bindata/...
@@ -78,24 +87,43 @@ jobs:
     - name: Generate intermediate files
       run: make generate
 
-      # Needed for changelog generation by goreleaser
-    - name: Unshallow
-      run: git fetch --prune --unshallow
-
-    - name: Test
+    - name: Run unit tests
       run: .\scripts\test-with-coverage-windows.bat
 
-    - name: Build sysl binary via goreleaser (Windows)
-      uses: goreleaser/goreleaser-action@master
+  build-windows:
+    name: Build Go (Windows)
+    runs-on: windows-latest
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v2
       with:
-        args: release --snapshot --skip-publish --rm-dist --debug -f .goreleaser.yml
-      env:
-        GOVERSION: 1.13
+        go-version: 1.13
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/go/bin
+        key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-cache-
+
+    - name: Install go-bindata
+      run: go get github.com/kevinburke/go-bindata/...
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Generate intermediate files
+      run: make generate
+
+    - name: Build sysl binary
+      run: make build-windows
 
     # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
     # Windows Server 2019 supports 64-bit applications
     - name: Install sysl
-      run: md .\bin; copy .\dist\sysl_windows_amd64\sysl.exe .\bin\sysl.exe
+      run: md .\bin; copy .\dist\sysl.exe .\bin\sysl.exe
 
     - name: Test installed
       run: .\scripts\test-gosysl.bat

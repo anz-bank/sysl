@@ -1,6 +1,6 @@
 include ./scripts/version-report.mk
 
-.PHONY: all install grammar antlr build lint test coverage clean check-tidy golden
+.PHONY: all install grammar antlr build lint coverage clean check-tidy golden
 
 GOPATH		= $(shell go env GOPATH)
 GOVERSION	= $(shell go version | cut -d' ' -f3-4)
@@ -13,12 +13,7 @@ else
 	TESTEXE := go test ./...
 endif
 
-all: lint build buildlsp install examples test coverage
-
-TUTORIALS: $(wildcard ./demo/examples/*) $(wildcard ./demo/examples/*/*)
-
-examples: TUTORIALS
-	cd demo/examples/ && go run generate_website.go && cd ../../  && git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
+all: lint build buildlsp install test coverage
 
 lint: generate
 	golangci-lint run ./...
@@ -58,6 +53,9 @@ check-tidy: generate
 
 build: generate
 	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
+
+build-windows: generate
+	go build -o ./dist/sysl.exe -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp:
 	go build -o ./dist/sysllsp -ldflags=$(LDFLAGS) -v ./cmd/sysllsp

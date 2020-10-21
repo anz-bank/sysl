@@ -43,6 +43,7 @@ func makeNonNullValueList() *sysl.Value {
 }
 
 func TestCmpListNull_BothNull(t *testing.T) {
+	t.Parallel()
 	lhs := makeNullValue()
 	rhs := makeNullValue()
 
@@ -50,6 +51,7 @@ func TestCmpListNull_BothNull(t *testing.T) {
 }
 
 func TestCmpListNull_RhsNull(t *testing.T) {
+	t.Parallel()
 	lhs := makeNullValueList()
 	rhs := makeNullValue()
 
@@ -57,6 +59,7 @@ func TestCmpListNull_RhsNull(t *testing.T) {
 }
 
 func TestCmpListNull_LhsNull(t *testing.T) {
+	t.Parallel()
 	lhs := makeNullValue()
 	rhs := makeNullValueList()
 
@@ -64,6 +67,7 @@ func TestCmpListNull_LhsNull(t *testing.T) {
 }
 
 func TestCmpListNull_LhsValid(t *testing.T) {
+	t.Parallel()
 	lhs := makeNonNullValueList()
 	rhs := makeNullValue()
 
@@ -71,6 +75,7 @@ func TestCmpListNull_LhsValid(t *testing.T) {
 }
 
 func TestCmpListNull_RhsValid(t *testing.T) {
+	t.Parallel()
 	lhs := makeNullValue()
 	rhs := makeNonNullValueList()
 
@@ -78,6 +83,7 @@ func TestCmpListNull_RhsValid(t *testing.T) {
 }
 
 func TestConcat_NilNilPanic(t *testing.T) {
+	t.Parallel()
 	defer func() {
 		r := recover()
 		require.NotNil(t, r)
@@ -94,11 +100,13 @@ func TestConcat_NilListPanic(t *testing.T) {
 }
 
 func TestConcat_EmptyList(t *testing.T) {
+	t.Parallel()
 	result := concatListList(MakeValueList(), MakeValueList())
 	assert.Equal(t, []*sysl.Value{}, result.GetList().Value)
 }
 
 func TestConcat_OneItemList(t *testing.T) {
+	t.Parallel()
 	lhs := MakeValueList(MakeValueBool(true))
 	rhs := MakeValueList(MakeValueBool(false))
 	result := concatListList(lhs, rhs)
@@ -107,6 +115,7 @@ func TestConcat_OneItemList(t *testing.T) {
 }
 
 func TestConcat_OneItemSet(t *testing.T) {
+	t.Parallel()
 	lhs := MakeValueList(MakeValueBool(true))
 	rhs := MakeValueSet()
 	rhs.GetSet().Value = append(rhs.GetSet().Value, MakeValueBool(false))
@@ -117,6 +126,7 @@ func TestConcat_OneItemSet(t *testing.T) {
 }
 
 func TestFlattenSetList_AllNilPanic(t *testing.T) {
+	t.Parallel()
 	defer func() {
 		r := recover()
 		require.NotNil(t, r)
@@ -125,6 +135,7 @@ func TestFlattenSetList_AllNilPanic(t *testing.T) {
 }
 
 func TestFlattenSetList_NameExpr(t *testing.T) {
+	t.Parallel()
 	nameExpr := &sysl.Expr{
 		Expr: &sysl.Expr_Name{
 			Name: "var",
@@ -142,6 +153,7 @@ func TestFlattenSetList_NameExpr(t *testing.T) {
 }
 
 func TestFlattenListSet_NameExpr(t *testing.T) {
+	t.Parallel()
 	nameExpr := &sysl.Expr{
 		Expr: &sysl.Expr_Name{
 			Name: "var",

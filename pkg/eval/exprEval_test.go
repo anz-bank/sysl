@@ -538,16 +538,19 @@ func TestListOfTypeNames(t *testing.T) {
 }
 
 func TestListAppender_Nil(t *testing.T) {
+	t.Parallel()
 	result := listAppender(nil, nil)
 	require.Nil(t, result[0])
 }
 
 func TestSetAppender_Nil(t *testing.T) {
+	t.Parallel()
 	result := setAppender(nil, nil)
 	require.Nil(t, result[0])
 }
 
 func TestListAppender_AllowDup(t *testing.T) {
+	t.Parallel()
 	val := MakeValueString("val")
 	list := MakeValueList(MakeValueString("val"))
 
@@ -559,6 +562,7 @@ func TestListAppender_AllowDup(t *testing.T) {
 }
 
 func TestListAppender_BlockDup(t *testing.T) {
+	t.Parallel()
 	val := MakeValueString("val")
 	set := MakeValueSet()
 	set.GetSet().Value = append(set.GetSet().Value, MakeValueString("val"))

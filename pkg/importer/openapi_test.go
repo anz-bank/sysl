@@ -10,6 +10,7 @@ import (
 )
 
 func Test_openapiv3_loadTypeSchema(t *testing.T) {
+	t.Parallel()
 	loader := openapi3.NewSwaggerLoader()
 	loader.IsExternalRefsAllowed = true
 	schema, err := loader.LoadSwaggerFromFile("tests-openapi/one-of.yaml")

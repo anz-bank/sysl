@@ -433,6 +433,7 @@ func TestStmtToValueCall(t *testing.T) {
 }
 
 func TestAddModule(t *testing.T) {
+	t.Parallel()
 	mod, err := parse.NewParser().ParseFromFs("model_with_deps.sysl",
 		syslutil.NewChrootFs(afero.NewOsFs(), testDir))
 	require.NoError(t, err)
@@ -448,6 +449,7 @@ func TestAddModule(t *testing.T) {
 }
 
 func TestGetValueSlice_NullPanic(t *testing.T) {
+	t.Parallel()
 	defer func() {
 		r := recover()
 		require.NotNil(t, r)
@@ -456,6 +458,7 @@ func TestGetValueSlice_NullPanic(t *testing.T) {
 }
 
 func TestGetValueSlice_ListNoPanic(t *testing.T) {
+	t.Parallel()
 	defer func() {
 		r := recover()
 		require.Nil(t, r)
@@ -464,6 +467,7 @@ func TestGetValueSlice_ListNoPanic(t *testing.T) {
 }
 
 func TestGetValueSlice_SetNoPanic(t *testing.T) {
+	t.Parallel()
 	defer func() {
 		r := recover()
 		require.Nil(t, r)
@@ -472,12 +476,14 @@ func TestGetValueSlice_SetNoPanic(t *testing.T) {
 }
 
 func TestGetValueSlice_SameList(t *testing.T) {
+	t.Parallel()
 	boolList := MakeValueList(MakeValueBool(true))
 	result := GetValueSlice(boolList)
 	assert.Equal(t, &result[0], &boolList.GetList().Value[0])
 }
 
 func TestGetValueSlice_SameSet(t *testing.T) {
+	t.Parallel()
 	boolSet := MakeValueSet()
 	boolSet.GetSet().Value = append(boolSet.GetSet().Value, MakeValueBool(true))
 	result := GetValueSlice(boolSet)
@@ -485,6 +491,7 @@ func TestGetValueSlice_SameSet(t *testing.T) {
 }
 
 func TestTypeToValue(t *testing.T) {
+	t.Parallel()
 	dataType := sysl.Type{}
 	val := TypeToValue(&dataType)
 	// assert.Equal(t, &result[0], &boolSet.GetSet().Value[0])

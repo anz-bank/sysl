@@ -30,6 +30,7 @@ func TestREPL_simpleCommands(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			input := bytes.NewBufferString(tt.command + "\n")
 			output := bytes.Buffer{}
 
@@ -41,6 +42,7 @@ func TestREPL_simpleCommands(t *testing.T) {
 }
 
 func TestREPL_Expression(t *testing.T) {
+	t.Parallel()
 	input := bytes.NewBufferString("let foo = 1\n f = foo\nf\n")
 	output := bytes.Buffer{}
 
@@ -148,6 +150,7 @@ func Test_makeBreakpoint(t *testing.T) {
 }
 
 func TestREPL_DumpScope(t *testing.T) {
+	t.Parallel()
 	input := bytes.NewBufferString("d\n")
 	output := bytes.Buffer{}
 
@@ -167,6 +170,7 @@ func TestREPL_DumpScope(t *testing.T) {
 }
 
 func TestREPL_CallView(t *testing.T) {
+	t.Parallel()
 	filename := filepath.Join(testDir, "transform1.sysl")
 	sysl, appname, err := parse.LoadAndGetDefaultApp(filename, afero.NewOsFs(), parse.NewParser())
 	require.NoError(t, err)
