@@ -2,15 +2,15 @@
 let util = //{./avro_util};
 
 let printUnion = \union
-    let types = union >> util.getTypeName(.) >> cond . {(:type_S, ...): type_S, _: .s};
+    let types = union >> util.syslTypeNameTuple(.) >> cond . {(:collectionType, ...): collectionType, _: .s};
     $`
-        !union ${//seq.sub('?', '', util.combineTypes(union, \. .s))}:
+        !union ${//seq.sub('?', '', util.syslCombinedTypesName(union, \. .s))}:
             ${types where .@item != 'null' rank (:.@) => .@item orderby .::\n:\n}
     `
 ;
 
 let transformer = \union
-    let types = union >> util.getTypeName(.) >> .s;
+    let types = union >> util.syslTypeNameTuple(.) >> .s;
     cond {
         //seq.contains(['null'], types):
             cond {

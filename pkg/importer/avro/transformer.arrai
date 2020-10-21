@@ -131,7 +131,7 @@ trim($`
     ##                                      ##
     ##########################################
 
-    ${appName}${util.prettyAnnotations(['avro_spec="1.0"',$`${cond packageName {'':'', _:$`package="${packageName}"`}}`])}:
+    ${appName}${util.prettyAnnotations([(name: 'avro_spec', value: '1.0'), cond {packageName: (name: 'package', value: packageName), _: ()}])}:
         ${extraTypes(schema) => //{./to_sysl_type}(.) orderby . ::\n}
         ${extraEnums(schema) => //{./to_sysl_enum}(.) orderby . ::\n}
         ${extraAliases(schema) => //{./to_sysl_alias}(.) orderby . ::\n}

@@ -1,5 +1,7 @@
 # Utilities
 
+let (:isValidIdentifier, :resolveValidIdentifier, ...) = //{/pkg/arrai/util};
+
 # Transforms Avro primitive types to Sysl ones.
 let transformPrimitiveType = \type
     cond type {
@@ -36,44 +38,62 @@ let isFirstLetterUppercase = \str
     //str.upper(fLetter) = fLetter
 ;
 
-# TODO: Check if it is sysl keywords with isValidIdentifier in /pkg/arrai/util.arrai.
-# Now there is an issue in /pkg/arrai/concat_go.arrai which can't import /pkg/arrai/util.arrai 
-# to the final arrai Go file.
-let shouldCorrectName = \name    
-    cond transformPrimitiveType(name) {
-        'NonPrimitiveType': # Doesn't capitalize first letter if it is primitive type.
-                !(//seq.has_prefix('set of', name) || //seq.has_prefix('sequence of', name)) 
-                    && !isFirstLetterUppercase(name)
-        ,
+# annotation returns the annotation of the given name as retrieved from the item.
+# This method returns a (name, value) tuple in instances where the annotation
+# can be retrieved from the item, or an empty tuple () in instances where is cannot.
+let annotation = \item \name
+    let annotation = cond item {
+        (:s): s,
+        _: 
+            let key = cond name {
+                'description': 'doc',
+                n: n,
+            }; 
+            item(key)?.s:'',
+    };
+    cond annotation {
+        '': (),
+        _: (name: name, value: annotation),
     }
 ;
 
-let getAnnotationS = \item \name
+# nameAnnotation returns the 'name' annotation as required for the given item.
+# This method returns a (name, value) tuple in instances where the item requires
+# that a 'name' annotation is appended, or an empty tuple () in instances it is not.
+# 
+# The result of this function may differ depending on whether or not the annotation
+# is being applied to a type or a field:
+# !type Type1         # type
+#   attr1 <: string   # field
+let nameAnnotation = \item \isType 
     let annotation = cond item {
         (:s): s,
-        _: item(name)?.s:'',
+        _: item('name')?.s:'',
     };
     cond annotation {
-        '': '',
-        _: cond name {
-            'name': cond {
-                shouldCorrectName(annotation): $'name="${annotation}"',
-                _: ''
-            },
-            'doc': $`description="${annotation}"`, 
-            _: $`${name}="${annotation}"`,
-        }
+        '': (),
+        _: cond {
+            isType && (!isValidIdentifier(annotation) || !isFirstLetterUppercase(annotation)): (name: 'name', value: annotation),
+            !isType && !isValidIdentifier(annotation): (name: 'name', value: annotation),
+            _: (),
+        },
     }
 ;
 
 # Returns a string representation of an annotation array of the form:
 # [union=['string', 'null'], description="Relationship end date", default="null"].
-let prettyAnnotations = \annotationArray
-    let str = $`${annotationArray where .@item rank (:.@)::, }`;
+let prettyAnnotations = \annotations
+    let str = $`${annotations >> . && cond . {
+        (name: 'union', :value): $'union=${value}', 
+        (:name, :value): $'${name}="${value}"', 
+        (:name): $'${name}', 
+        _: {},
+    } where .@item rank (:.@)::, }`;
     str && $`[${str}]`
 ;
 
-let correctName = \name
+# Returns an appropriate Sysl type name for the given string.
+let syslTypeName = \name
     let type = transformPrimitiveType(name);
     cond type {
         'NonPrimitiveType': # Doesn't capitalize first letter if it is primitive type.
@@ -85,36 +105,46 @@ let correctName = \name
     }
 ;
 
-# Get type name from types which looks like:
-# ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
+# Sysl identifier check + func syslTypeName.
+# It can't be merged to func syslTypeName as case of union.
+# For example: !union IntString is valid identifier, and doesn't need to transfer to !union _int_string.
+let syslTypeNameWithIdentifierCheck = \name
+    cond {
+        !isValidIdentifier(name): resolveValidIdentifier(name),
+        _: syslTypeName(name),         
+    }
+;
+
+# Get type name from types which looks like: ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
+# And outputs a tuple: (s: sysl type name, collectionType: sysl type name with collection format if it is collection).
 # param t is type.
-let getTypeName = \t
+let syslTypeNameTuple = \t
     cond t {
         (:s): 
-            (s: correctName(s), type_S: correctName(s)),
+            (s: syslTypeName(s), collectionType: syslTypeName(s)),
         {'type': _, 'items': items, ...}:
             cond items {
                 (:s):
-                    let name = correctName(s); (s: $`${name}Sequence`, type_S: $`sequence of ${name}`),
+                    let name = syslTypeName(s); (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
                 {'type': _, 'name': (s: initName), ...}:
-                    let name = correctName(initName); (s: $`${name}Sequence`, type_S: $`sequence of ${name}`),
+                    let name = syslTypeName(initName); (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
             },
         {'type': _, 'values': values, ...}:
             cond values {
                 (:s):
-                    let name = correctName(s); (s: $`String${//str.title(name)}Item`, type_S: $`set of String${//str.title(name)}Item`),
+                    let name = syslTypeName(s); (s: $`String${//str.title(name)}Item`, collectionType: $`set of String${//str.title(name)}Item`),
                 {'type': _, 'name': (s: initName), ...}:
-                    let name = correctName(initName); (s: $`String${name}Item`, type_S: $`set of String${name}Item`),
+                    let name = syslTypeName(initName); (s: $`String${name}Item`, collectionType: $`set of String${name}Item`),
             },
         {'type': _, 'name': (:s), ...}: # This pattern matching must be in the end. 
-            (s: correctName(s), type_S: correctName(s)),
+            (s: syslTypeName(s), collectionType: syslTypeName(s)),
     }
 ;
 
 # Produces combined types, for example "type": ["int", "string", "null"],
 # it will be processed to final type `Int32String?`.
-let combineTypes = \types \handler
-    let fullTypeNames = types >> getTypeName(.);
+let syslCombinedTypesName = \types \handler
+    let fullTypeNames = types >> syslTypeNameTuple(.);
     let types = fullTypeNames >> .s;
     cond {
         //seq.contains(['null'], types):
@@ -136,14 +166,14 @@ let transformType = \type
     cond type {
         # (s: 'string') etc.
         (s: typeName):
-            cond correctName(typeName) {
+            cond syslTypeName(typeName) {
                 'null': 'string[~null]',
                 name: name,
             },
         (a: typeArray):
             # Type can be ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
             # [(s: 'null'), (s: 'string')] to ['null', 'string'].
-            combineTypes(typeArray, \type cond type {(:type_S, ...): type_S, _: type.s}),
+            syslCombinedTypesName(typeArray, \type cond type {(:collectionType, ...): collectionType, _: type.s}),
         {'logicalType': logicalTypeName, 'type': typeName, ...}: # Must be before {'type': typeName, ...}.
             transformLogicalTypes(type), 
         {'type': typeName, ...}:
@@ -151,15 +181,15 @@ let transformType = \type
             cond typeName.s {
                 'array': 
                     'sequence of ' + cond type('items') {
-                                        {'name': (:s), ...}: correctName(s), 
-                                        (:s): correctName(s),
+                                        {'name': (:s), ...}: syslTypeNameWithIdentifierCheck(s), 
+                                        (:s): syslTypeName(s),
                                     },
                 'map': 
                     'set of ' + cond type('values') {
-                                    {'name': (:s), ...}: 'String' + correctName(s) + 'Item', 
+                                    {'name': (:s), ...}: 'String' + syslTypeName(s) + 'Item', 
                                     (:s): 'String' + //str.title(s) + 'Item', # Primitive.
                                 },
-                _: correctName(type('name').s)
+                _: syslTypeNameWithIdentifierCheck(type('name').s)
             },
     }
 ;
@@ -168,26 +198,30 @@ let defaultVal = \item
     let default = item('default')?:''; 
     cond default {
         '': cond item {
-                {'type': {'type': (s: 'map'), ...}, ...}: 'default="{}"', # Map's default value is {}.
+                {'type': {'type': (s: 'map'), ...}, ...}: (name: 'default', value: "{}"), # Map's default value is {}.
                 _: '',
             },
-        ():'default="null"', 
-        (b: true): $`default="true"`,
-        (b: false): $`default="false"`,
-        (a: {}): $`default="[]"`,
-        (a: [(:s), ...]): $`default="${default.a >> .s}"`,
-        {...}: $`default="${default >> .s}"`,
-        (:s): $`default="${s}"`,
-        _: $`default="${default}"`,
+        (): (name: 'default', value: "null"), 
+        (b: true): (name: 'default', value: true),
+        (b: false): (name: 'default', value: false),
+        (a: {}): (name: 'default', value: "[]"),
+        (a: [(:s), ...]): (name: 'default', value: default.a >> .s),
+        {...}: (name: 'default', value: default >> .s),
+        (:s): (name: 'default', value: s),
+        _: (name: 'default', value: default),
     } 
 ;
 
 (
     :prettyAnnotations,
     :transformType,
-    :getAnnotationS,
-    :getTypeName,
+    :annotation,
+    :nameAnnotation,
+    :syslTypeNameTuple,
+    :syslCombinedTypesName,
+    :syslTypeName,
+    :syslTypeNameWithIdentifierCheck,
     :defaultVal,
-    :combineTypes,
-    :correctName,
+    :isValidIdentifier,
+    :resolveValidIdentifier,
 )

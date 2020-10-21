@@ -2,18 +2,19 @@
 let util = //{./avro_util};
 
 let transformer = \enumItem $`
-    !enum ${util.correctName(enumItem('name').s)}${
-        let annotations = util.prettyAnnotations(['name', 'namespace', 'default', 'doc'] >> util.getAnnotationS(enumItem, .));
+    !enum ${util.syslTypeNameWithIdentifierCheck(enumItem('name').s)}${
+        let annotations = util.prettyAnnotations(
+                [util.nameAnnotation(enumItem, true)] ++ (['namespace', 'default', 'description'] >> util.annotation(enumItem, .)));
         cond {annotations: ' ' + $`${annotations}`}
     }:
         ${enumItem('symbols').a >>> \i \(s: item)  $`${item}: ${i}`::\i}
 
     ${enumItem('aliases')?.a:[] >> $`
-        !alias ${util.correctName(.s)}${
-            let annotations = util.prettyAnnotations([util.getAnnotationS(., 'name')]);
+        !alias ${util.syslTypeNameWithIdentifierCheck(.s)}${
+            let annotations = util.prettyAnnotations([util.nameAnnotation(., true)]);
             cond {annotations: ' ' + $`${annotations}`}
         }:
-            ${util.correctName(enumItem('name').s)}
+            ${util.syslTypeNameWithIdentifierCheck(enumItem('name').s)}
     `::\n\n}
 `;
 

@@ -42,7 +42,7 @@ func (i *avroImporter) Load(avroSpec string) (string, error) {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", avroSpec, i.appName, i.pkg),
 			Err:      err,
-			ShortMsg: "Error executing SQL dir importer",
+			ShortMsg: err.Error(),
 		}, "Executing arrai transform failed")
 	}
 	return strings.TrimSpace(val.String()) + "\n", nil

@@ -1,0 +1,53 @@
+{
+    "name": "Int32",
+    "type": "record",
+    "fields": [
+        {
+            "name": "id",
+            "type": "string",
+            "doc": "Invalid identifier case.",
+            "aliases": [
+                "int",
+                "int32"
+            ]
+        },
+        {
+          "name": "string",
+          "type": "string",
+          "doc": "Invalid identifier case."
+        },
+        {
+            "name": "action",
+            "type": {
+                "type": "enum",
+                "namespace": "com.example",
+                "doc": "Performed action",
+                "name": "any",
+                "symbols": [
+                    "add",
+                    "update",
+                    "delete",
+                    "none"
+                ],
+                "default": "add",
+                "aliases": [
+                    "as",
+                    "E2"
+                ]
+            }
+        },
+        {
+            "name": "if",
+            "type": {
+                "type" : "fixed", 
+                "size" : 12, 
+                "name" : "float",
+                "aliases": ["else", "width2"]
+            }
+        }
+    ],
+    "aliases": [
+        "int64",
+        "int32"
+    ] 
+}

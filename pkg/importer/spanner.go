@@ -47,7 +47,7 @@ func (s *Spanner) LoadFile(path string) (string, error) {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", path, s.appName, s.pkg),
 			Err:      err,
-			ShortMsg: "Error executing SQL importer",
+			ShortMsg: err.Error(),
 		}, "Executing arrai transform failed")
 	}
 	return val.String(), nil

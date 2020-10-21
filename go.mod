@@ -16,6 +16,7 @@ require (
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9
 	github.com/golang/protobuf v1.4.2

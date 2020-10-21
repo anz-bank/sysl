@@ -5,10 +5,10 @@ let transformer = \aliasItem
         {'type': (s: 'fixed'), 'name': (s: name), "logicalType": (s: "duration"), ...}:
             '', # Ignore logicalType duration.
         {'type': (s: 'fixed'), 'name': (s: name), ...}: $`
-            !alias ${util.correctName(name)}${
-                let annotations = util.prettyAnnotations(
-                    ['~fixed', $`fixed_size="${aliasItem('size')}"`] ++ (['namespace', 'name'] >> util.getAnnotationS(aliasItem, .))
-                );
+            !alias ${util.syslTypeNameWithIdentifierCheck(name)}${
+                let annotations = util.prettyAnnotations([
+                    (name: '~fixed'), (name: 'fixed_size', value: aliasItem('size')),
+                    util.annotation(aliasItem, 'namespace'), util.nameAnnotation(aliasItem, true)]);
                 cond {annotations: ' ' + $`${annotations}`}
             }:
                 bytes
@@ -18,11 +18,11 @@ let transformer = \aliasItem
                     aliases count > 0: $`
                         
                         ${aliases >> \alias $`
-                            !alias ${util.correctName(alias.s)}${
-                                let annotations = util.prettyAnnotations([util.getAnnotationS(alias, 'name')]);
+                            !alias ${util.syslTypeNameWithIdentifierCheck(alias.s)}${
+                                let annotations = util.prettyAnnotations([util.nameAnnotation(alias, true)]);
                                 cond {annotations: ' ' + $`${annotations}`}
                             }:
-                                ${util.correctName(name)}
+                                ${util.syslTypeNameWithIdentifierCheck(name)}
                         `::\n\n}
                     `,
                 }
@@ -30,7 +30,7 @@ let transformer = \aliasItem
         `,
         # Double check.
         {'type': (s: 'array'), 'items': (s: itemsType), ...}: $`
-            !alias ${util.correctName(itemsType)}Sequence${
+            !alias ${util.syslTypeName(itemsType)}Sequence${
                 util.prettyAnnotations([util.defaultVal(.)])
             }:
                 sequence of ${itemsType}
