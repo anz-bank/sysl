@@ -46,7 +46,7 @@ func Module(w io.Writer, mod *sysl.Module) {
 // Application prints applications:
 // App:
 func Application(w io.Writer, a *sysl.Application) {
-	p(w, "\n", strings.Join(a.Name.GetPart(), ""))
+	p(w, "\n", strings.Join(a.Name.GetPart(), " :: "))
 	Patterns(w, a.GetAttrs())
 	p(w, ":\n")
 	for _, key := range sortedKeys(a.GetAttrs()) {

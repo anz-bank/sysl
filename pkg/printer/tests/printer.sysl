@@ -32,6 +32,10 @@ MobileApp:
     Login[~this, ~that, ~foobar]:
         APIGateway <- Login
 
+Org :: Team :: NamespacedApp:
+    Foo:
+        ...
+
 Project:
     @description =:
         |this is another one this is a super long comment that should be split into the n
