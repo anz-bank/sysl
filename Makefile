@@ -75,7 +75,8 @@ internal/arrai/bindata.go: \
 	# Binary files in bindata.go have metadata like size, mode and modification time(modTime).
 	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-tidy failed.
 	# So add parameter `-modtime 1` to set a fixed modTime.
-	go-bindata -modtime 1 -pkg arrai -o $@ $^
+	# Add `-mode 0644` for similar reason as files' mode are possible different in CI and local development environments.
+	go-bindata -mode 0644 -modtime 1 -pkg arrai -o $@ $^
 
 release:
 	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot

@@ -16,7 +16,6 @@ require (
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9
 	github.com/golang/protobuf v1.4.2
@@ -25,7 +24,6 @@ require (
 	github.com/joshcarp/gop v0.0.0-20200922043230-a225272c1746
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
-	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/afero v1.4.0
 	github.com/stretchr/testify v1.6.1
@@ -34,5 +32,4 @@ require (
 	google.golang.org/grpc v1.32.0
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gopkg.in/yaml.v2 v2.3.0
 )
