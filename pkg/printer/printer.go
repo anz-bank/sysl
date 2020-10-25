@@ -273,7 +273,8 @@ func Type(param *sysl.Param) string {
 	// The Path field represents the type itself.
 	if a := param.Type.GetTypeRef(); a != nil {
 		if a.Ref.Appname != nil {
-			return strings.Join(append(a.Ref.Appname.Part, a.Ref.Path...), ".")
+			path := append([]string{strings.Join(a.Ref.Appname.Part, " :: ")}, a.Ref.Path...)
+			return strings.Join(path, ".")
 		}
 		return strings.Join(a.Ref.Path, ".")
 	}

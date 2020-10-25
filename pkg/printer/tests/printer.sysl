@@ -33,7 +33,11 @@ MobileApp:
         APIGateway <- Login
 
 Org :: Team :: NamespacedApp:
-    Foo:
+    !type Bar:
+        ...
+    Foo(input <: Bar):
+        ...
+    Foo2(input <: Org :: Team :: NamespacedApp.Bar):
         ...
 
 Project:
