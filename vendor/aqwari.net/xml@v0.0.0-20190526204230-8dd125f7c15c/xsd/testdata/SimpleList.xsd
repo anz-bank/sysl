@@ -1,3 +1,0 @@
-<simpleType name="stringList">
-   <list itemType="string" />
-</simpleType>
