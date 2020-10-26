@@ -225,6 +225,32 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 	diagrams.ComparePUML(t, expected, result)
 }
 
+func TestGenerateIntegrationsWithDeepCluster(t *testing.T) {
+	t.Parallel()
+
+	// Given
+	args := &IntsArg{
+		RootModel: testDir,
+		Modules:   "integration_with_deep_cluster.sysl",
+		Output:    "%(epname).png",
+		Project:   "Project",
+		Clustered: true,
+	}
+
+	// When
+	result, err := GenerateIntegrationsWithParams(args.RootModel, args.Title, args.Output,
+		args.Project, args.Filter, args.Modules, args.Exclude, args.Clustered,
+		args.Epa)
+	require.NoError(t, err)
+
+	expected := map[string]string{
+		"cluster.png": filepath.Join(testDir, "cluster-deep-golden.puml"),
+	}
+
+	// Then
+	diagrams.ComparePUML(t, expected, result)
+}
+
 func TestGenerateIntegrationsWithEpa(t *testing.T) {
 	t.Parallel()
 

@@ -228,9 +228,10 @@ func (v *IntsDiagramVisitor) BuildClusterForIntsView(apps []string) map[string]s
 	nameMap := map[string]string{}
 	clusters := map[string][]string{}
 	for _, v := range apps {
-		cluster := strings.Split(v, " :: ")
+		cluster := syslutil.SplitAppNameParts(v)
 		if len(cluster) > 1 {
-			clusters[cluster[0]] = append(clusters[cluster[0]], v)
+			cname := syslutil.JoinAppNameParts(cluster[:len(cluster)-1]...)
+			clusters[cname] = append(clusters[cname], v)
 		}
 	}
 
@@ -239,7 +240,8 @@ func (v *IntsDiagramVisitor) BuildClusterForIntsView(apps []string) map[string]s
 			delete(clusters, k)
 		}
 		for _, s := range v {
-			nameMap[s] = strings.Split(s, " :: ")[1]
+			sParts := syslutil.SplitAppNameParts(s)
+			nameMap[s] = sParts[len(sParts)-1]
 		}
 	}
 
@@ -421,7 +423,7 @@ func (v *IntsDiagramVisitor) DrawIntsView(viewParams ViewParams, params *IntsPar
 		}
 		for _, app := range params.Apps {
 			for _, mixin := range v.Mod.Apps[app].GetMixin2() {
-				mixinName := strings.Join(mixin.Name.Part, " :: ")
+				mixinName := syslutil.JoinAppName(mixin.Name)
 				fmt.Fprintf(
 					v.StringBuilder,
 					"%s <|.. %s\n",
@@ -452,8 +454,8 @@ func (v *IntsDiagramVisitor) DrawSystemView(viewParams ViewParams, params *IntsP
 		if _, ok := params.DrawableApps[appB]; ok {
 			direct = append(direct, appB)
 		}
-		appA = strings.Split(appA, " :: ")[0]
-		appB = strings.Split(appB, " :: ")[0]
+		appA = syslutil.SplitAppNameParts(appA)[0]
+		appB = syslutil.SplitAppNameParts(appB)[0]
 		if _, ok := callsDrawn[appPair]; !ok {
 			if len(direct) > 0 || direct != nil || viewParams.IndirectArrowColor != ArrowColorNone {
 				indirect := ""

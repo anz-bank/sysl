@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/alecthomas/assert"
@@ -59,8 +60,9 @@ func ComparePUML(t *testing.T, expected, actual map[string]string) {
 			err := ioutil.WriteFile(filepath.Join(testDir, name+".puml"), []byte(actual[name]), 0600)
 			assert.Nil(t, err)
 		}
-		golden = syslutil.HandleCRLF(golden)
-		assert.Equal(t, string(golden), actual[name], "PlantUML not equal for %s", name)
+		a := strings.TrimSuffix(string(syslutil.HandleCRLF(golden)), "\n")
+		b := strings.TrimSuffix(actual[name], "\n")
+		assert.Equal(t, a, b, "PlantUML not equal for %s", name)
 	}
 
 	// Then

@@ -21,13 +21,13 @@ var LogLevels = map[string]logrus.Level{
 func CleanAppName(name string) string {
 	parts := strings.Split(name, "::")
 	for i := range parts {
-		parts[i] = strings.Trim(parts[i], " \t")
+		parts[i] = strings.TrimSpace(parts[i])
 	}
 	return GetAppName(&sysl.AppName{Part: parts})
 }
 
 func GetAppName(appname *sysl.AppName) string {
-	return strings.Join(appname.Part, " :: ")
+	return JoinAppName(appname)
 }
 
 func GetApp(appName *sysl.AppName, mod *sysl.Module) *sysl.Application {

@@ -6,6 +6,8 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
+const namespaceSeparator = " :: "
+
 // GetTypeDetail returns name of the type and details in string format
 func GetTypeDetail(t *sysl.Type) (typeName string, typeDetail string) {
 	switch x := t.Type.(type) {
@@ -108,10 +110,27 @@ func HasSameType(type1 *sysl.Type, type2 *sysl.Type) bool {
 	return false
 }
 
+// JoinAppName returns a string with the parts of an app name joined on the namespace separator.
 func JoinAppName(name *sysl.AppName) string {
-	return strings.Join(name.GetPart(), " :: ")
+	return JoinAppNameParts(name.GetPart()...)
 }
 
+// JoinAppNameParts returns a string with the parts of an app name joined on the namespace
+// separator.
+func JoinAppNameParts(parts ...string) string {
+	return strings.Join(parts, namespaceSeparator)
+}
+
+// SplitAppNameParts returns the parts of an app name that was previously joined into a string.
+func SplitAppNameParts(appName string) []string {
+	parts := strings.Split(appName, strings.TrimSpace(namespaceSeparator))
+	for i := range parts {
+		parts[i] = strings.TrimSpace(parts[i])
+	}
+	return parts
+}
+
+// JoinTypePath returns a string with the parts of a type reference path joined on ".".
 func JoinTypePath(path []string) string {
 	return strings.Join(path, ".")
 }

@@ -1,0 +1,21 @@
+Org :: IntegratedSystem:
+    integrated_endpoint_1:
+        Org :: Team :: System :: a <- endpoint
+        Org :: Team :: System :: b <- endpoint
+        Org :: Team2 :: System :: c <- endpoint
+
+Org :: Team :: System :: a:
+    endpoint: ...
+
+Project [appfmt="%(appname)"]:
+    cluster:
+        Org :: IntegratedSystem
+        Org :: Team :: System :: a
+        Org :: Team :: System :: b
+        Org :: Team2 :: System :: c
+
+Org :: Team :: System :: b:
+    endpoint: ...
+
+Org :: Team2 :: System :: c:
+    endpoint: ...

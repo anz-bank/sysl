@@ -46,7 +46,7 @@ func Module(w io.Writer, mod *sysl.Module) {
 // Application prints applications:
 // App:
 func Application(w io.Writer, a *sysl.Application) {
-	p(w, "\n", strings.Join(a.Name.GetPart(), " :: "))
+	p(w, "\n", syslutil.JoinAppName(a.Name))
 	Patterns(w, a.GetAttrs())
 	p(w, ":\n")
 	for _, key := range sortedKeys(a.GetAttrs()) {
@@ -273,10 +273,10 @@ func Type(param *sysl.Param) string {
 	// The Path field represents the type itself.
 	if a := param.Type.GetTypeRef(); a != nil {
 		if a.Ref.Appname != nil {
-			path := append([]string{strings.Join(a.Ref.Appname.Part, " :: ")}, a.Ref.Path...)
-			return strings.Join(path, ".")
+			path := append([]string{syslutil.JoinAppName(a.Ref.Appname)}, a.Ref.Path...)
+			return syslutil.JoinTypePath(path)
 		}
-		return strings.Join(a.Ref.Path, ".")
+		return syslutil.JoinTypePath(a.Ref.Path)
 	}
 	return strings.Join(param.Type.GetTypeRef().Ref.Appname.Part, "")
 }
