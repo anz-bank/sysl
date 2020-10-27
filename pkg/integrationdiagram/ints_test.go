@@ -244,7 +244,7 @@ func TestGenerateIntegrationsWithDeepCluster(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]string{
-		"cluster.png": filepath.Join(testDir, "cluster-deep-golden.puml"),
+		"cluster_deep.png": filepath.Join(testDir, "cluster_deep-golden.puml"),
 	}
 
 	// Then

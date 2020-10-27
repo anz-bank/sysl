@@ -8,7 +8,7 @@ Org :: Team :: System :: a:
     endpoint: ...
 
 Project [appfmt="%(appname)"]:
-    cluster:
+    cluster_deep:
         Org :: IntegratedSystem
         Org :: Team :: System :: a
         Org :: Team :: System :: b

@@ -271,12 +271,8 @@ func Type(param *sysl.Param) string {
 	}
 	// The Appname field represents a reference to the app that contains the referenced type.
 	// The Path field represents the type itself.
-	if a := param.Type.GetTypeRef(); a != nil {
-		if a.Ref.Appname != nil {
-			path := append([]string{syslutil.JoinAppName(a.Ref.Appname)}, a.Ref.Path...)
-			return syslutil.JoinTypePath(path)
-		}
-		return syslutil.JoinTypePath(a.Ref.Path)
+	if param.Type.GetTypeRef() != nil {
+		return syslutil.JoinTypeRef(param.Type.GetTypeRef())
 	}
 	return strings.Join(param.Type.GetTypeRef().Ref.Appname.Part, "")
 }

@@ -166,10 +166,10 @@ func TestGetTypeDetail(t *testing.T) {
 			Type: &sysl.Type_TypeRef{
 				TypeRef: &sysl.ScopedRef{
 					Ref: &sysl.Scope{
-						Path:    []string{"foo", ""},
+						Path:    []string{"foo"},
 						Appname: &sysl.AppName{Part: []string{"bar"}}}}}},
 			expectedTypeName:   "type_ref",
-			expectedTypeDetail: "bar"},
+			expectedTypeDetail: "bar.foo"},
 		"sequence": {input: &sysl.Type{
 			Type: &sysl.Type_Sequence{
 				Sequence: TypeString()}},

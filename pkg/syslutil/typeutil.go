@@ -16,16 +16,7 @@ func GetTypeDetail(t *sysl.Type) (typeName string, typeDetail string) {
 		typeDetail = sysl.Type_Primitive_name[int32(x.Primitive)]
 	case *sysl.Type_TypeRef:
 		typeName = "type_ref"
-		if x.TypeRef.Ref != nil {
-			if len(x.TypeRef.Ref.Path) == 1 {
-				typeDetail = x.TypeRef.Ref.Path[0]
-				if x.TypeRef.Ref.Appname != nil {
-					typeDetail = GetAppName(x.TypeRef.Ref.Appname) + "." + typeDetail
-				}
-			} else if x.TypeRef.Ref.Appname != nil && len(x.TypeRef.Ref.Appname.Part) > 0 {
-				typeDetail = GetAppName(x.TypeRef.Ref.Appname)
-			}
-		}
+		typeDetail = JoinTypeRef(x.TypeRef)
 	case *sysl.Type_Sequence:
 		typeName = "sequence"
 		_, d := GetTypeDetail(x.Sequence)
@@ -133,4 +124,21 @@ func SplitAppNameParts(appName string) []string {
 // JoinTypePath returns a string with the parts of a type reference path joined on ".".
 func JoinTypePath(path []string) string {
 	return strings.Join(path, ".")
+}
+
+// JoinTypeRef returns a string encoding the reference to a type.
+//
+// If the app name is present it will be joined on " :: " and prefixed to the path, joined by ".".
+func JoinTypeRef(ref *sysl.ScopedRef) string {
+	return JoinTypeRefScope(ref.Ref)
+}
+
+// JoinTypeRefScope returns a string encoding the reference to a type.
+//
+// If the app name is present it will be joined on " :: " and prefixed to the path, joined by ".".
+func JoinTypeRefScope(ref *sysl.Scope) string {
+	if ref.Appname != nil && len(ref.Appname.Part) > 0 {
+		return JoinTypePath(append([]string{JoinAppName(ref.Appname)}, ref.Path...))
+	}
+	return JoinTypePath(ref.Path)
 }

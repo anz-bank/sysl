@@ -34,7 +34,8 @@ MobileApp:
 
 Org :: Team :: NamespacedApp:
     !type Bar:
-        ...
+        bs <: sequence of Bar
+        fqbs <: sequence of Org :: Team :: NamespacedApp.Bar
     Foo(input <: Bar):
         ...
     Foo2(input <: Org :: Team :: NamespacedApp.Bar):
