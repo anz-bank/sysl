@@ -817,7 +817,7 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 	}
 
 	if types[s.currentTypePath.Get()].GetOneOf().GetType() != nil {
-		panic("not implemented yet")
+		logrus.Warnf("oneof is not implemented yet")
 	}
 
 	types[s.currentTypePath.Get()] = &sysl.Type{
