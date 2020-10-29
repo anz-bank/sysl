@@ -1,0 +1,9 @@
+# A demo of the `normalize` feature that transform the canonical Sysl proto
+# model into a relational model.
+
+let sysl = //{./sysl};
+let model = sysl.load('out/model.pb');
+
+let out = sysl.newNormalize(model);
+
+//fmt.pretty(out)

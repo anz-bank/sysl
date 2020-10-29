@@ -3,3 +3,5 @@ test/
 # The binary model is non-deterministic.
 out/model.pb
 out/tmp*
+# Comparisons are for development.
+compare/

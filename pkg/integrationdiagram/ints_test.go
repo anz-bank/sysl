@@ -226,8 +226,6 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 }
 
 func TestGenerateIntegrationsWithDeepCluster(t *testing.T) {
-	t.Parallel()
-
 	// Given
 	args := &IntsArg{
 		RootModel: testDir,

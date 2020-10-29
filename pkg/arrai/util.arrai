@@ -115,14 +115,13 @@ let typeGrammar = {:
         //grammar.lang.wbnf[grammar]:
         types -> (app=([^\.]+) ".")? type=([^\.]+):".";
     :};
+
 let unpackType = \type (
     cond type {
         (''): (app: '', type: '', field: ''),
         _: (//grammar -> .parse(typeGrammar, 'types', type))
             ->
-            # TODO: remove once .field?: is fixed
-            let t = .;
-            let app = trimWhitespace(ranked(t.app?.''?:''));
+            let app = trimWhitespace(ranked((.).app?.''?:''));
             let typeCount = .type count;
             cond (typeCount) {
                 (1): (

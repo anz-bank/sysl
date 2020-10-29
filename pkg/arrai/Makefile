@@ -6,14 +6,15 @@ OUT=out
 # Raw targets that are generated directly by arr.ai.
 RAW=$(OUT)/data_dictionary.csv \
 	$(OUT)/terraform_gdc.tf \
-	$(OUT)/sysl_polish.arrai
+	$(OUT)/sysl_polish.arrai \
+	$(OUT)/sysl_normalize.arrai
 
 # Diagram targets that require rendering.
 DIAGRAMS=$(OUT)/data_diagram.svg \
 		 $(OUT)/integration_diagram.svg \
 		 $(OUT)/sequence_diagram.svg
 
-all: raw diagrams compare
+all: raw diagrams comparisons
 
 raw: $(OUT) $(RAW)
 diagrams: $(OUT) init-diagram $(DIAGRAMS)
@@ -42,6 +43,11 @@ catalog: $(OUT)/model.pb
 .PRECIOUS: $(OUT)/%.pb
 $(OUT)/%.pb: $(OUT) %.sysl
 	sysl protobuf --mode=pb $*.sysl > $(OUT)/$*.pb
+
+# Compiles Sysl specs for inspection.
+.PRECIOUS: $(OUT)/%.textpb
+$(OUT)/%.textpb: $(OUT) %.sysl
+	sysl protobuf --mode=textpb $*.sysl > $(OUT)/$*.textpb
 
 # Initializes the environment to support diagram generation targets.
 init-diagram: plantuml
@@ -82,7 +88,7 @@ $(CMP_DIR)/%.md: $(CMP_DIR)
 	echo "![](../out/$*.svg)\n![]($*.svg)" > $(CMP_DIR)/$*.md
 
 # Generates all diagrams with arr.ai and Sysl, and side-by-side Markdown comparisons.
-compare: $(DIAGRAMS) $(SYSL_DIAGRAMS) $(COMPARISONS)
+comparisons: $(DIAGRAMS) $(SYSL_DIAGRAMS) $(COMPARISONS)
 
 # Deletes all generated outputs.
 clean:

@@ -1,0 +1,2492 @@
+(
+  anno: (
+    app: {
+      (
+        appAnnoName: 'annotation',
+        appAnnoValue: 'annotation',
+        appName: ['AppWithAnnotation'],
+      ),
+    },
+    ep: {
+      (
+        appName: ['EventAndSubscriber'],
+        epAnnoName: 'annotations',
+        epAnnoValue: 'annotation',
+        epName: 'App -> Event',
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epAnnoName: 'annotation',
+        epAnnoValue: 'annotation',
+        epName: 'SimpleEpWithAnnotations',
+      ),
+      (
+        appName: ['Statements'],
+        epAnnoName: 'annotation1',
+        epAnnoValue: 'you can do string annotation like this',
+        epName: 'Annotations',
+      ),
+      (
+        appName: ['Statements'],
+        epAnnoName: 'annotation2',
+        epAnnoValue: ['or', 'in', 'an', 'array'],
+        epName: 'Annotations',
+      ),
+      (
+        appName: ['Statements'],
+        epAnnoName: 'annotation3',
+        epAnnoValue: 'you can also do\n multiline annotations\n like this\n',
+        epName: 'Annotations',
+      ),
+    },
+    event: {
+      (
+        appName: ['EventAndSubscriber'],
+        eventAnnoName: 'annotations',
+        eventAnnoValue: 'annotation',
+        eventName: 'Event',
+      ),
+    },
+    field: {},
+    mixin: {},
+    stmt: {},
+    type: {
+      (
+        appName: ['Types'],
+        typeAnnoName: 'annotation',
+        typeAnnoValue: 'annotation',
+        typeName: 'Enum',
+      ),
+      (
+        appName: ['Types'],
+        typeAnnoName: 'annotation',
+        typeAnnoValue: 'annotation',
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        typeAnnoName: 'annotation',
+        typeAnnoValue: 'annotation',
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        typeAnnoName: 'annotation',
+        typeAnnoValue: 'annotation',
+        typeName: 'Union',
+      ),
+    },
+    view: {},
+  ),
+  app: {
+    (
+      appDocstring: {},
+      appLongName: {},
+      appName: ['AppWithAnnotation'],
+    ),
+    (
+      appDocstring: {},
+      appLongName: {},
+      appName: ['EventAndSubscriber'],
+    ),
+    (
+      appDocstring: {},
+      appLongName: {},
+      appName: ['RestEndpoint'],
+    ),
+    (
+      appDocstring: {},
+      appLongName: {},
+      appName: ['SimpleEndpoint'],
+    ),
+    (
+      appDocstring: {},
+      appLongName: {},
+      appName: ['Statements'],
+    ),
+    (
+      appDocstring: {},
+      appLongName: {},
+      appName: ['Types'],
+    ),
+    (
+      appDocstring: {},
+      appLongName: 'display name',
+      appName: ['App'],
+    ),
+    (
+      appDocstring: {},
+      appLongName: 'display name',
+      appName: ['App', 'with', 'subpackages'],
+    ),
+  },
+  ep: {
+    (
+      appName: ['EventAndSubscriber'],
+      epDocstring: {},
+      epEvent: (
+        appName: (
+          part: ['App'],
+        ),
+        eventName: 'Event',
+      ),
+      epLongName: {},
+      epName: 'App -> Event',
+      rest: {},
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'DELETE /',
+      rest: (
+        method: 'DELETE',
+        path: '/',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'DELETE /param',
+      rest: (
+        method: 'DELETE',
+        path: '/param',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'GET /',
+      rest: (
+        method: 'GET',
+        path: '/',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'GET /nested1/nested2/nested3',
+      rest: (
+        method: 'GET',
+        path: '/nested1/nested2/nested3',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'GET /notnested',
+      rest: (
+        method: 'GET',
+        path: '/notnested',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'GET /param',
+      rest: (
+        method: 'GET',
+        path: '/param',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'GET /pathwithtype/{native}',
+      rest: (
+        method: 'GET',
+        path: '/pathwithtype/{native}',
+        url_param: [
+          (
+            name: 'native',
+            type: (
+              primitive: 'INT',
+              source_context: (
+                end: (
+                  col: 32,
+                  line: 59,
+                ),
+                file: 'all.sysl',
+                start: (
+                  col: 18,
+                  line: 59,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'GET /query',
+      rest: (
+        method: 'GET',
+        path: '/query',
+        query_param: [
+          (
+            name: 'native',
+            type: (
+              primitive: 'STRING',
+              source_context: (
+                end: (
+                  col: 19,
+                  line: 64,
+                ),
+                file: 'all.sysl',
+                start: (
+                  col: 12,
+                  line: 64,
+                ),
+              ),
+            ),
+          ),
+          (
+            name: 't',
+            type: (
+              source_context: (
+                end: (
+                  col: 28,
+                  line: 64,
+                ),
+                file: 'all.sysl',
+                start: (
+                  col: 26,
+                  line: 64,
+                ),
+              ),
+            ),
+          ),
+          (
+            name: 'curly',
+            type: (
+              source_context: (
+                end: (
+                  col: 44,
+                  line: 64,
+                ),
+                file: 'all.sysl',
+                start: (
+                  col: 33,
+                  line: 64,
+                ),
+              ),
+              type_ref: (
+                context: (
+                  appname: (
+                    part: ['RestEndpoint'],
+                  ),
+                ),
+                ref: (
+                  path: ['Type'],
+                ),
+              ),
+            ),
+          ),
+          (
+            name: 'optional',
+            type: (
+              opt: {
+                (),
+              },
+              primitive: 'STRING',
+              source_context: (
+                end: (
+                  col: 61,
+                  line: 64,
+                ),
+                file: 'all.sysl',
+                start: (
+                  col: 46,
+                  line: 64,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'PATCH /',
+      rest: (
+        method: 'PATCH',
+        path: '/',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'PATCH /param',
+      rest: (
+        method: 'PATCH',
+        path: '/param',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'POST /',
+      rest: (
+        method: 'POST',
+        path: '/',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'POST /param',
+      rest: (
+        method: 'POST',
+        path: '/param',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'PUT /',
+      rest: (
+        method: 'PUT',
+        path: '/',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'PUT /param',
+      rest: (
+        method: 'PUT',
+        path: '/param',
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'SimpleEp',
+      rest: {},
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'SimpleEpWithAnnotations',
+      rest: {},
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'SimpleEpWithArray',
+      rest: {},
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'SimpleEpWithParamsRef',
+      rest: {},
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'SimpleEpWithTypes',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'AnnotatedStatements',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'Annotations',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'Calls',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'GroupStatements',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'IfStmt',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'Loops',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'Miscellanous',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'OneOfStatements',
+      rest: {},
+    ),
+    (
+      appName: ['Statements'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'Returns',
+      rest: {},
+    ),
+  },
+  event: {
+    (
+      appName: ['App'],
+      eventName: 'Event',
+    ),
+    (
+      appName: ['EventAndSubscriber'],
+      eventName: 'Event',
+    ),
+    (
+      appName: ['EventAndSubscriber'],
+      eventName: 'EventWithParams',
+    ),
+  },
+  field: {
+    (
+      appName: ['RestEndpoint'],
+      fieldName: 'x',
+      fieldOpt: {},
+      fieldType: 'INT',
+      typeName: 'Type',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'a',
+      fieldOpt: {},
+      fieldType: 'STRING',
+      typeName: 'Table.inplace',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'a',
+      fieldOpt: {},
+      fieldType: 'STRING',
+      typeName: 'Type.inplace',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'b',
+      fieldOpt: {},
+      fieldType: 'INT',
+      typeName: 'Table.inplace',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'b',
+      fieldOpt: {},
+      fieldType: 'INT',
+      typeName: 'Type.inplace',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'inplace',
+      fieldOpt: {},
+      fieldType: 'inplace',
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'inplace',
+      fieldOpt: {},
+      fieldType: 'inplace',
+      typeName: 'Type',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'nativeTypeField',
+      fieldOpt: {},
+      fieldType: 'STRING',
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'nativeTypeField',
+      fieldOpt: {},
+      fieldType: 'STRING',
+      typeName: 'Type',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'optional',
+      fieldOpt: {
+        (),
+      },
+      fieldType: 'STRING',
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'optional',
+      fieldOpt: {
+        (),
+      },
+      fieldType: 'STRING',
+      typeName: 'Type',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'reference',
+      fieldOpt: {},
+      fieldType: 'RestEndpoint.Type',
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'reference',
+      fieldOpt: {},
+      fieldType: 'RestEndpoint.Type',
+      typeName: 'Type',
+    ),
+  },
+  mixin: {},
+  param: {
+    (
+      appName: ['RestEndpoint'],
+      epName: 'DELETE /param',
+      paramIndex: 0,
+      paramName: 'with_string',
+      paramType: (
+        docstring: 'this is a doc string for param',
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'GET /param',
+      paramIndex: 0,
+      paramName: (),
+      paramType: {},
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'PATCH /param',
+      paramIndex: 0,
+      paramName: 't',
+      paramType: (
+        attrs: {
+          'patterns': (
+            a: (
+              elt: [
+                (
+                  s: 'body',
+                ),
+              ],
+            ),
+          ),
+        },
+        type_ref: (
+          ref: (
+            appname: (
+              part: ['Types'],
+            ),
+            path: ['type'],
+          ),
+        ),
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'POST /param',
+      paramIndex: 0,
+      paramName: 'native',
+      paramType: (
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'PUT /param',
+      paramIndex: 0,
+      paramName: 'unlimited',
+      paramType: (
+        constraint: [
+          (
+            length: (),
+          ),
+        ],
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'PUT /param',
+      paramIndex: 1,
+      paramName: 'limited',
+      paramType: (
+        constraint: [
+          (
+            length: (
+              max: 10,
+            ),
+          ),
+        ],
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'PUT /param',
+      paramIndex: 2,
+      paramName: 'num',
+      paramType: (
+        constraint: [
+          (
+            length: (
+              max: 5,
+            ),
+          ),
+        ],
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'PUT /param',
+      paramIndex: 3,
+      paramName: 'limited_num',
+      paramType: (
+        constraint: [
+          (
+            length: (
+              max: 5,
+            ),
+          ),
+        ],
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'PUT /param',
+      paramIndex: 4,
+      paramName: 'x',
+      paramType: (
+        list: (
+          type: (
+            primitive: 'INT',
+            source_context: (
+              end: (
+                col: 117,
+                line: 80,
+              ),
+              file: 'all.sysl',
+              start: (
+                col: 117,
+                line: 80,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epName: 'SimpleEpWithArray',
+      paramIndex: 0,
+      paramName: 'unlimited',
+      paramType: (
+        constraint: [
+          (
+            length: (),
+          ),
+        ],
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epName: 'SimpleEpWithArray',
+      paramIndex: 1,
+      paramName: 'limited',
+      paramType: (
+        constraint: [
+          (
+            length: (
+              max: 10,
+            ),
+          ),
+        ],
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epName: 'SimpleEpWithArray',
+      paramIndex: 2,
+      paramName: 'num',
+      paramType: (
+        constraint: [
+          (
+            length: (
+              max: 5,
+            ),
+          ),
+        ],
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epName: 'SimpleEpWithArray',
+      paramIndex: 3,
+      paramName: 'limited_num',
+      paramType: (
+        constraint: [
+          (
+            length: (
+              max: 5,
+            ),
+          ),
+        ],
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epName: 'SimpleEpWithArray',
+      paramIndex: 4,
+      paramName: 'x',
+      paramType: (
+        list: (
+          type: (
+            primitive: 'INT',
+            source_context: (
+              end: (
+                col: 127,
+                line: 25,
+              ),
+              file: 'all.sysl',
+              start: (
+                col: 127,
+                line: 25,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epName: 'SimpleEpWithParamsRef',
+      paramIndex: 0,
+      paramName: 'Types.type',
+      paramType: (
+        no_type: (),
+      ),
+    ),
+    (
+      appName: ['SimpleEndpoint'],
+      epName: 'SimpleEpWithTypes',
+      paramIndex: 0,
+      paramName: 'native',
+      paramType: (
+        primitive: 'STRING',
+      ),
+    ),
+  },
+  src: (
+    app: {
+      (
+        appName: ['App'],
+        appSrc: (
+          end: (
+            col: 29,
+            line: 3,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 3,
+          ),
+        ),
+      ),
+      (
+        appName: ['App', 'with', 'subpackages'],
+        appSrc: (
+          end: (
+            col: 27,
+            line: 10,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 10,
+          ),
+        ),
+      ),
+      (
+        appName: ['AppWithAnnotation'],
+        appSrc: (
+          end: (
+            line: 6,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 6,
+          ),
+        ),
+      ),
+      (
+        appName: ['EventAndSubscriber'],
+        appSrc: (
+          end: (
+            line: 222,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 222,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        appSrc: (
+          end: (
+            line: 31,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 31,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        appSrc: (
+          end: (
+            line: 13,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 13,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        appSrc: (
+          end: (
+            line: 121,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 121,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        appSrc: (
+          end: (
+            line: 86,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 1,
+            line: 86,
+          ),
+        ),
+      ),
+    },
+    ep: {
+      (
+        appName: ['EventAndSubscriber'],
+        epName: 'App -> Event',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 238,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 234,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 47,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 44,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /param',
+        epSrc: (
+          end: (
+            col: 5,
+            line: 86,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 83,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 38,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 36,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /nested1/nested2/nested3',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 53,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 16,
+            line: 50,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /notnested',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 59,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 54,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /param',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 72,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 69,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /pathwithtype/{native}',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 63,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 60,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 67,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 64,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 44,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 42,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /param',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 77,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 72,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 40,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 38,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /param',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 80,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 77,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 42,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 40,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 83,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 80,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEp',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 17,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 14,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithAnnotations',
+        epSrc: (
+          end: (
+            col: 12,
+            line: 31,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 28,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 28,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 25,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithParamsRef',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 22,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 17,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithTypes',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 25,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 22,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'AnnotatedStatements',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 197,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 192,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Annotations',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 192,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 184,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Calls',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 165,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 158,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'GroupStatements',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 184,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 179,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'IfStmt',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 133,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 122,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Loops',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 153,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 133,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Miscellanous',
+        epSrc: (
+          end: (
+            col: 18,
+            line: 222,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 197,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'OneOfStatements',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 179,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 165,
+          ),
+        ),
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Returns',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 158,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 153,
+          ),
+        ),
+      ),
+    },
+    event: {
+      (
+        appName: ['App'],
+        eventName: 'Event',
+        eventSrc: {},
+      ),
+      (
+        appName: ['EventAndSubscriber'],
+        eventName: 'Event',
+        eventSrc: (
+          end: (
+            col: 4,
+            line: 230,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 223,
+          ),
+        ),
+      ),
+      (
+        appName: ['EventAndSubscriber'],
+        eventName: 'EventWithParams',
+        eventSrc: (
+          end: (
+            col: 4,
+            line: 234,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 230,
+          ),
+        ),
+      ),
+    },
+    field: {
+      (
+        appName: ['RestEndpoint'],
+        fieldName: 'x',
+        fieldSrc: (
+          end: (
+            col: 13,
+            line: 33,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 13,
+            line: 33,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'a',
+        fieldSrc: (
+          end: (
+            col: 17,
+            line: 94,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 17,
+            line: 94,
+          ),
+        ),
+        typeName: 'Type.inplace',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'a',
+        fieldSrc: (
+          end: (
+            col: 17,
+            line: 104,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 17,
+            line: 104,
+          ),
+        ),
+        typeName: 'Table.inplace',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'b',
+        fieldSrc: (
+          end: (
+            col: 17,
+            line: 95,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 17,
+            line: 95,
+          ),
+        ),
+        typeName: 'Type.inplace',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'b',
+        fieldSrc: (
+          end: (
+            col: 17,
+            line: 105,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 17,
+            line: 105,
+          ),
+        ),
+        typeName: 'Table.inplace',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'inplace',
+        fieldSrc: (
+          end: (
+            col: 4,
+            line: 97,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 93,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'inplace',
+        fieldSrc: (
+          end: (
+            col: 4,
+            line: 107,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 103,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'nativeTypeField',
+        fieldSrc: (
+          end: (
+            col: 27,
+            line: 90,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 27,
+            line: 90,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'nativeTypeField',
+        fieldSrc: (
+          end: (
+            col: 27,
+            line: 100,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 27,
+            line: 100,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'optional',
+        fieldSrc: (
+          end: (
+            col: 26,
+            line: 92,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 92,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'optional',
+        fieldSrc: (
+          end: (
+            col: 26,
+            line: 102,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 102,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'reference',
+        fieldSrc: (
+          end: (
+            col: 34,
+            line: 91,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 21,
+            line: 91,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'reference',
+        fieldSrc: (
+          end: (
+            col: 34,
+            line: 101,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 21,
+            line: 101,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+    },
+    mixin: {},
+    stmt: {
+      (
+        appName: ['EventAndSubscriber'],
+        epName: 'App -> Event',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /param',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /nested1/nested2/nested3',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /notnested',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /param',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /pathwithtype/{native}',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /param',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /param',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEp',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithAnnotations',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithParamsRef',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithTypes',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'AnnotatedStatements',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Calls',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'GroupStatements',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'IfStmt',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Loops',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Miscellanous',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'OneOfStatements',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'Returns',
+        stmtSrc: {},
+      ),
+    },
+    type: {
+      (
+        appName: ['RestEndpoint'],
+        typeName: 'Type',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 35,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 32,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Alias',
+        typeSrc: (
+          end: (
+            col: 10,
+            line: 121,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 118,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Enum',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 112,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 107,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Table',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 107,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 97,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Table.inplace',
+        typeSrc: {},
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Type',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 97,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 87,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Type.inplace',
+        typeSrc: {},
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Union',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 118,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 112,
+          ),
+        ),
+      ),
+    },
+    view: {},
+  ),
+  stmt: {
+    (
+      appName: ['Statements'],
+      epName: 'AnnotatedStatements',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 1,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        payload: (
+          attr: (
+            modifier: {},
+            nvp: {
+              'annotation': (
+                a: ['as', 'an', 'array'],
+              ),
+            },
+          ),
+          type: 'Statements.string',
+        ),
+      ),
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'AnnotatedStatements',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: (
+        appName: (
+          part: ['Statements'],
+        ),
+        epName: 'Miscellanous',
+      ),
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'AnnotatedStatements',
+      stmtAction: '"statement"',
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 2,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Calls',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: (
+        appName: (
+          part: ['RestEndpoint'],
+        ),
+        epName: 'GET /param',
+      ),
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 1,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Calls',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: (
+        appName: (
+          part: ['Statements'],
+        ),
+        epName: 'Returns',
+      ),
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'GroupStatements',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: (
+        title: 'grouped',
+      ),
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'IfStmt',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: (
+        title: 'else',
+      ),
+      stmtIndex: 2,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'IfStmt',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: (
+        title: 'else if predicate2',
+      ),
+      stmtIndex: 1,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'IfStmt',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: (
+        test: 'predicate1',
+      ),
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Loops',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 1,
+      stmtLoop: (
+        criterion: 'predicate',
+        mode: 'UNTIL',
+      ),
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Loops',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 5,
+      stmtLoop: (
+        criterion: 'predicate',
+        mode: 'WHILE',
+      ),
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Loops',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: (
+        title: 'alt predicate',
+      ),
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Loops',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: (
+        title: 'for predicate',
+      ),
+      stmtIndex: 3,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Loops',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: (
+        title: 'loop predicate',
+      ),
+      stmtIndex: 4,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Loops',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: (
+        coll: 'predicate',
+      ),
+      stmtGroup: {},
+      stmtIndex: 2,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Miscellanous',
+      stmtAction: '"string statements"',
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 1,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Miscellanous',
+      stmtAction: 'SimpleEndpoint -> SimpleEp',
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 2,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Miscellanous',
+      stmtAction: '| you can add comments like this',
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'OneOfStatements',
+      stmtAction: {},
+      stmtAlt: (
+        choice: [
+          (
+            cond: 'case1',
+            stmt: [
+              (
+                ret: (
+                  payload: 'ok <: string',
+                ),
+              ),
+            ],
+          ),
+          (
+            cond: 'case number 2',
+            stmt: [
+              (
+                ret: (
+                  payload: 'ok <: int',
+                ),
+              ),
+            ],
+          ),
+          (
+            cond: '"case 3"',
+            stmt: [
+              (
+                ret: (
+                  payload: 'ok <: Types.Type',
+                ),
+              ),
+            ],
+          ),
+          (
+            stmt: [
+              (
+                ret: (
+                  payload: 'error <: string',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Returns',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        payload: (
+          attr: (
+            modifier: {},
+            nvp: {},
+          ),
+          type: 'Statements.string',
+        ),
+      ),
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Returns',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 1,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        payload: (
+          attr: (
+            modifier: {},
+            nvp: {},
+          ),
+          type: 'Types.Type',
+        ),
+      ),
+    ),
+    (
+      appName: ['Statements'],
+      epName: 'Returns',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 2,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        payload: (
+          attr: (
+            modifier: {},
+            nvp: {},
+          ),
+          type: 'Types.Type',
+        ),
+      ),
+    ),
+  },
+  table: {
+    (
+      appName: ['Types'],
+      pk: {},
+      typeName: 'Table',
+    ),
+  },
+  tag: (
+    app: {
+      (
+        appName: ['App'],
+        appTag: 'abstract',
+      ),
+    },
+    ep: {
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /param',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /nested1/nested2/nested3',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /notnested',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /param',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /pathwithtype/{native}',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /param',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /param',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        epTag: 'rest',
+      ),
+    },
+    event: {},
+    field: {},
+    mixin: {},
+    stmt: {},
+    type: {},
+    view: {},
+  ),
+  type: {
+    (
+      appName: ['RestEndpoint'],
+      typeDocstring: {},
+      typeName: 'Type',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'Alias',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'Enum',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'Table',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'Table.inplace',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'Type',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'Type.inplace',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'Union',
+      typeOpt: {},
+    ),
+  },
+  view: {},
+)

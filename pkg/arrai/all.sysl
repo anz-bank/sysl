@@ -1,0 +1,238 @@
+# This sysl file is meant to show every features sysl has
+
+App "display name" [~abstract]:
+    ...
+
+AppWithAnnotation:
+    @annotation = "annotation"
+    ...
+
+App :: with :: subpackages "display name":
+    ...
+
+SimpleEndpoint:
+    SimpleEp:
+        ...
+
+    SimpleEpWithParamsRef (Types.type):
+        ...
+
+    # FIXME: sequence and set
+    # SimpleEpWithTypes (native <: string, seq <: sequence of string, s <: set of string):
+    SimpleEpWithTypes (native <: string):
+        ...
+
+    SimpleEpWithArray (unlimited <: string(5..), limited <: string(5..10), num <: int(5), limited_num <: int(5.8), x(5..10) <: int):
+        ...
+
+    SimpleEpWithAnnotations [annotation="annotation"]:
+        ...
+
+RestEndpoint:
+    !type Type:
+        x <: int
+
+    /:
+        GET:
+            ...
+        POST:
+            ...
+        PUT:
+            ...
+        PATCH:
+            ...
+        DELETE:
+            ...
+
+    /nested1:
+        /nested2:
+            /nested3:
+                GET:
+                    ...
+
+    /notnested:
+        GET:
+            ...
+
+    # FIXME: Type not allowed
+    # /pathwithtype/{native <: int}/{t <: Type}/{ref <: Types.Type}:
+    /pathwithtype/{native <: int}:
+        GET:
+            ...
+
+    /query:
+        GET?native=string&t=Type&curly={Type}&optional=string?:
+            ...
+
+    /param:
+        # just reference to a type
+        GET (Types.type):
+            ...
+
+        PATCH (t <: Types.type [~body]):
+            ...
+
+        # FIXME: sequence and set
+        # POST (native <: string, seq <: sequence of string, set <: set of string):
+        POST (native <: string):
+            ...
+
+        PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5), limited_num <: int(5.8), x(5..10) <: int):
+            ...
+
+        DELETE(with_string <: int "this is a doc string for param"):
+            ...
+
+Types:
+    !type Type [annotation="annotation"]:
+        # FIXME: annotation not allowed
+        # @another_annotation = "annotation"
+        nativeTypeField <: string
+        reference <: RestEndpoint.Type
+        optional <: string?
+        inplace <:
+            a <: string
+            b <: int
+
+    !table Table [annotation="annotation"]:
+        # FIXME: annotation not allowed
+        # @another_annotation = "annotation"
+        nativeTypeField <: string
+        reference <: RestEndpoint.Type
+        optional <: string?
+        inplace <:
+            a <: string
+            b <: int
+
+    !enum Enum [annotation="annotation"]:
+        ENUM_1: 1
+        ENUM_2: 2
+        ENUM_3: 3
+
+    !union Union [annotation="annotation"]:
+        # FIXME: annotation not allowed
+        # @another_annotation = "annotation"
+        # any type
+        string
+
+    !alias Alias:
+        sequence of string
+
+Statements:
+    IfStmt:
+        if predicate1:
+            # more statements
+            return ok <: string
+        else if predicate2:
+            # more statements
+            . <- IfStmt
+        else:
+            # more statements
+            ...
+
+    Loops:
+        alt predicate:
+            # more statements
+            ...
+        until predicate:
+            # more statements
+            ...
+        for each predicate:
+            # more statements
+            ...
+        for predicate:
+            # more statements
+            ...
+        loop predicate:
+            # more statements
+            ...
+        while predicate:
+            # more statements
+            ...
+
+    Returns:
+        return ok <: string
+        return ok <: Types.Type
+        return error <: Types.Type
+
+    Calls:
+        # self call
+        . <- Returns
+
+        # Rest endpoint call
+        RestEndpoint <- GET /param
+
+    OneOfStatements:
+        one of:
+            case1:
+                # more statements
+                return ok <: string
+            case number 2:
+                # more statements
+                return ok <: int
+            "case 3":
+                # more statements
+                return ok <: Types.Type
+            :
+                return error <: string
+
+    GroupStatements:
+        grouped:
+            # more statements
+            . <- GroupStatements
+
+    Annotations:
+        @annotation1 = "you can do string annotation like this"
+        @annotation2 = ["or", "in", "an", "array"]
+        @annotation3 =:
+            | you can also do
+            | multiline annotations
+            | like this
+
+    AnnotatedStatements:
+        . <- Miscellanous [annotation="annotation can be added for any statement as a string"]
+        return ok <: string [annotation=["as", "an", "array"]]
+        "statement" [annotation=[["or", "as", "an"], ["array", "of", "arrays"]]]
+
+    Miscellanous:
+        | you can add comments like this
+        "string statements"
+        SimpleEndpoint -> SimpleEp # TODO: what's this for?
+
+# Collector:
+#     /endpoint:
+#         GET:
+#             ...
+
+#     CollectorEndpoint:
+#         ...
+
+#     .. * <- *:
+#         # collector statements
+#         CollectorEndpoint [annotation="annotation"]
+
+#         # Call statements
+#         SimpleEndpoint <- SimpleEp [annotation="annotation"]
+#         RestEndpoint <- GET /param [annotation="annotation"]
+
+#         # http statements
+#         GET /endpoint [annotation="annotation"]
+#         Subscriber <- Publisher -> Collector [annotation="annotation"]
+
+EventAndSubscriber:
+    <-> Event [annotations="annotation"]:
+        # any statements
+        return ok <: string
+
+    # it can also have any params just like Rest Endpoints
+    # FIXME:
+    # <-> EventWithParams(native <: string, seq <: sequence of string, set <: set of string):
+    <-> EventWithParams(native <: string):
+        ...
+
+    # subscriber
+    App -> Event [annotations="annotation"]:
+        # any statements
+        ...
+
+    -|> App # TODO: this is a mixin, what does this do

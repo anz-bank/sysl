@@ -1,6 +1,7 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
 # Loads and returns a Sysl model.
+let empty = '...';
 let syslPbPath = '../sysl/sysl.pb';
 let syslPb = cond //os.exists(syslPbPath) {
     true: //os.file(syslPbPath),
@@ -10,8 +11,51 @@ let load = \path
     let syslDescriptor = //encoding.proto.descriptor(syslPb);
     //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
 
+# Returns appName from a node
+let rec extractedAppName = \x cond x {
+    (:@, :@item): extractedAppName(@item),
+    (name: (:part), ...): part, # appName, mixinName
+    _: x,
+};
+
+# Returns the epName and paramName from a node
+let rec extractedEpName = \x cond x {
+    (:@, :@item): extractedEpName(@item),
+    (name: n, ...): n, # epName, paramName
+    _: x,
+};
+
+# Extracts the dictionary of annotations of an element.
+let annotations = \x x.attrs?:{} where .@ != 'patterns' >> \v v.s?:(v.a.elt >> .s);
 # Extracts the set of pattern attributes of an element.
-let patterns = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
+let tags = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
+
+# Returns a relation of annotations for a given type.
+let annoRel = \type \rel
+    //rel.union(rel =>
+        let t = //dict(.);
+        annotations(t(type)) =>
+            let names = t where //seq.has_suffix('Name', .@);
+            let anno = {$`${type}AnnoName`: .@, $`${type}AnnoValue`: .@value};
+            //tuple(names | anno)
+    );
+
+# Returns a relation of tags for a given type.
+let tagRel = \type \rel
+    //rel.union(rel =>
+        let t = //dict(.);
+        tags(t(type)) =>
+            let names = t where //seq.has_suffix('Name', .@);
+            //tuple(names | {$`${type}Tag`: .})
+    );
+
+# Returns a relation of source contexts for a given type.
+let srcRel = \type \rel
+    rel =>
+        let t = //dict(.);
+        let names = t where //seq.has_suffix('Name', .@);
+        //tuple(names | {$`${type}Src`: t(type).source_context?:{}})
+    ;
 
 # A macro to convert `ret` statement payload string to structured tuples.
 let payloadMacro = (
@@ -45,10 +89,10 @@ let rec buildNvp = \nvp cond nvp {
         @value: buildNvp(.@item.value.nvp_item)
     )),
     (str: ('': s, ...), ...): //eval.value(//seq.join('', s)),
-    _: //eval.value(//seq.join('', //log.print(nvp.'')))
+    _: //eval.value(//seq.join('', nvp.''))
 };
 
-let name = //{./util}.ranked;
+let (:ranked, ...) = //{./util};
 
 # tries to fix type without full reference
 let fixType = \apps \appName \typePayload
@@ -73,8 +117,8 @@ let parseReturn = \payload \apps \currApp
         type: fixType(apps, currApp, retType),
         attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:() -> \attr
                 (
-                    nvp: attr.nvp?:{} => (@: name(.@item.name.''), @value: buildNvp(.@item.nvp_item)),
-                    modifier: attr.modifier?:{} => name(.@item.name.'')
+                    nvp: attr.nvp?:{} => (@: ranked(.@item.name.''), @value: buildNvp(.@item.nvp_item)),
+                    modifier: attr.modifier?:{} => ranked(.@item.name.'')
                 )
     )
 ;
@@ -83,7 +127,10 @@ let parseReturn = \payload \apps \currApp
 let polishReturns = \m
     let apps = m.apps => .@;
     let tweak = \. \currApp
-        . +> (ret: .ret +> (payload: parseReturn(.ret.payload, apps, currApp)));
+        cond .ret.payload {
+            (:type, ...): ., # Already tweaked.
+            _: . +> (ret: .ret +> (payload: parseReturn(.ret.payload, apps, currApp))),
+        };
 
     m +> (apps: m.apps?:{} >>> \currApp \a
         a +> (endpoints: a.endpoints?:{} >> \p
@@ -101,13 +148,196 @@ let polish = \m
 ;
 
 # Returns a normalised, relational model of a Sysl model.
+let newNormalize = \m
+    let m = polish(m);
+
+    # Applications
+    let _apps = m.apps => \(@value:app, ...) (appName: extractedAppName(app), :app);
+    let app = _apps => \(:appName, :app)
+        (
+            :appName,
+            appLongName: app.long_name?:{},
+            appDocstring: app.docstring?:{},
+        );
+
+    # Mixins
+    let _mixins = //rel.union(m.apps => \(@value:app, ...)
+        app.mixins2?:{} => \mixin (
+            appName: extractedAppName(app),
+            mixinName: extractedAppName(mixin),
+            :mixin,
+        )
+    ) where .;
+    let mixin = _mixins => \(:appName, :mixinName, :mixin)
+        (
+            :appName,
+            :mixinName,
+        );
+
+    # Endpoints
+    let _eps = //rel.union(m.apps => \(@value:app, ...)
+        app.endpoints?:{} where !.@value.is_pubsub?:{} && .@ != empty => \(@:epName, @value:ep)
+            (appName: extractedAppName(app), :epName, :ep)
+    ) where .;
+    let ep = _eps => \(:appName, :epName, :ep)
+        (
+            :appName,
+            :epName,
+            epLongName: ep.long_name?:{},
+            epDocstring: ep.docstring?:{},
+            epEvent: cond ep.source?:{} {
+                {}: {},
+                s: (appName: s, eventName: //seq.split(' -> ', epName)(1)),
+            },
+            rest: ep.rest_params?:{},
+        );
+
+    # Parameters
+    let _params = //rel.union(_eps => \(:appName, :epName, :ep)
+        ep.param?:{} => (:appName, :epName, paramName: extractedEpName(.), param: .)
+    ) where .;
+    let param = _params => \(:appName, :epName, :paramName, param: (:@, @item:param))
+        (
+            :appName,
+            :epName,
+            :paramName,
+            paramIndex: @,
+            paramType: param.type?:{},
+        );
+
+    # Statements
+    let _stmts = //rel.union(_eps => \(:appName, :epName, :ep)
+        ep.stmt?:{} => (:appName, :epName, stmt: .)
+    );
+    let stmt = (_stmts => \(:appName, :epName, stmt: (@:stmtIndex, @item:stmt))
+        let stmtAction = stmt.action?.action?:{};
+        cond {
+            (stmtAction != empty): (
+                :appName,
+                :epName,
+                :stmtIndex,
+                stmtParent: {},
+                :stmtAction,
+                stmtCall: cond stmt.call?:{} {(:target, :endpoint, ...): (appName: target, epName: endpoint)},
+                stmtCond: cond stmt.cond?:{} {(:test, ...): (:test)},
+                stmtLoop: cond stmt.loop?:{} {(:mode, :criterion, ...): (:mode, :criterion)},
+                stmtLoopN: cond stmt.loop_n?:{} {(:count, ...): (:count)},
+                stmtForeach: cond stmt.foreach?:{} {(collection:coll, ...): (:coll)},
+                stmtAlt: cond stmt.alt?:{} {(:choice, ...): (:choice)},
+                stmtGroup: cond stmt.group?:{} {(:title, ...): (:title)},
+                stmtRet: stmt.ret?:{},
+            )
+        })
+        where . != {}
+    ;
+
+    # Events
+    let _events = //rel.union(m.apps => \(@value:app, ...)
+        app.endpoints?:{} where .@value.is_pubsub?:{} => \(@:eventName, @value:event)
+            (appName: extractedAppName(app), :eventName, :event)
+    ) where .;
+    let event = _events => \(:appName, :eventName, :event)
+        (
+            :appName,
+            :eventName,
+        );
+
+    # Types
+    let _types = //rel.union(m.apps => \(@value:app, ...)
+        app.types?:{} => \(@:typeName, @value:type)
+            (appName: extractedAppName(app), :typeName, :type)
+    ) where .;
+    let type = _types => \(:appName, :typeName, :type)
+        (
+            :appName,
+            :typeName,
+            typeDocstring: type.docstring?:{},
+            typeOpt: type.opt?:{},
+        );
+
+    let table = _types where .type.relation?:{} => \(:appName, :typeName, type: (relation: rel, ...), ...)
+        (
+            :appName,
+            :typeName,
+            pk: rel.primary_key?.attr_name:{}
+        );
+
+    # Fields
+    let _fields = //rel.union(m.apps => \(@value:app, ...)
+        //rel.union(app.types?:{} => \(@:typeName, @value:type)
+            (type.tuple?:(type.relation?:())).attr_defs?:{} => \(@:fieldName, @value:field)
+                (appName: extractedAppName(app), :typeName, :fieldName, :field)
+        ) where .
+    );
+    let field = _fields => \(:appName, :typeName, :fieldName, :field)
+        (
+            :appName,
+            :typeName,
+            :fieldName,
+            fieldOpt: field.opt?:{},
+            fieldType: cond field {
+                (primitive:p, ...): p,
+                (type_ref:(ref:(path:p), ...), ...): //seq.join('.', p),
+                _: '?',
+            },
+            # fk: cond field.type_ref?.ref.path:{} {
+            #     [t, f]: (appName:app.name.part, typeName: t, fieldName: f)
+            # },
+            # pk: !!({'pk'} & tags),
+        );
+
+    # View
+    let _views = //rel.union(m.apps => \(@value:app, ...)
+        app.views?:{} => (appName: extractedAppName(app), viewName: .@, view: .@value)
+    ) where .;
+    let view = _views => \(:appName, :viewName, :view)
+        (
+            :appName,
+            :viewName,
+            viewType: view.ret_type?:{},
+        );
+
+    # Build the relations that are common to all types.
+    let data = {
+        'app': _apps,
+        'mixin': _mixins,
+        'ep': _eps,
+        'stmt': _stmts,
+        'event': _events,
+        'type': _types,
+        'field': _fields,
+        'view': _views,
+    };
+    let [anno, tag, src] = [annoRel, tagRel, srcRel] >> \builder
+        //tuple(data >>> \k \v builder(k, v));
+
+    (
+        :app,
+        :ep,
+        :param,
+        :stmt,
+        :type,
+        :table,
+        :event,
+        :field,
+        :view,
+        :mixin,
+        :anno,
+        :tag,
+        :src,
+    )
+;
+
+# Deprecated.
+# Returns a normalised, relational model of a Sysl model.
 let normalize = \m
+    let m = polish(m);
     let apps = m.apps => \(@:appName, @value:app)
         (
             :appName,
             appPackage: app.attrs?('package')?.s:{},
             appDescription: app.attrs?('description')?.s:{},
-            appPatterns: patterns(app),
+            appPatterns: tags(app),
             appAnnotations: app.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
         )
     ;
@@ -127,7 +357,7 @@ let normalize = \m
                         :epName,
                     ),
                     to: (
-                        appName: .@item.call.target.part.@item,
+                        appName: //seq.join(' :: ', .@item.call.target.part),
                         epName: .@item.call.endpoint,
                     ),
                     # TODO: Use stmt.source_context once populated by parser.
@@ -149,7 +379,7 @@ let normalize = \m
     let fields = //rel.union(m.apps => \(@:appName, @value:app)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
             type.relation?.attr_defs?:{} => \(@:fieldName, @value:field)
-                let patterns = patterns(field);
+                let tags = tags(field);
                 (
                     :appName,
                     :typeName,
@@ -166,8 +396,8 @@ let normalize = \m
                         [t, f]: (:appName, typeName: t, fieldName: f)
                     },
                     fieldAnnotations: field.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
-                    :patterns,
-                    pk: 'pk' <: patterns,
+                    patterns: tags,
+                    pk: 'pk' <: tags,
                     opt: field.opt?:{},
                     fieldSourceContext: field.source_context,
                 )
@@ -190,8 +420,15 @@ let normalize = \m
 # Export the functions from the module.
 (
     :load,
-    :normalize,
-    :parseReturn,
-    :patterns,
     :polish,
+    :normalize,
+    :newNormalize,
+
+    :extractedAppName,
+    :extractedEpName,
+    :annotations,
+    :tags,
+    :annoRel,
+    :tagRel,
+    :parseReturn,
 )

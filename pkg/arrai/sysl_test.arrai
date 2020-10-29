@@ -1,0 +1,59 @@
+let (:extractedAppName, :extractedEpName, :annotations, :tags, :annoRel, :tagRel,
+     :load, :polish, :normalize, :newNormalize, ...) = //{./sysl};
+
+let _model = load('out/model.pb');
+
+let _app = (
+    appName: 'App',
+    attrs: {
+        'foo': (s: 'bar'),
+        'patterns': (a: (elt: [(s: 'db')])),
+    },
+);
+
+(
+    extractedAppName: (
+        empty: extractedAppName({}) = {},
+        string: extractedAppName('foo') = 'foo',
+        namedItem: extractedAppName((@:0, @item:(name: (part: 'foo')))) = 'foo',
+        app: extractedAppName((name: (part: ['foo']))) = ['foo'],
+    ),
+    extractedEpName: (
+        empty: extractedEpName({}) = {},
+        string: extractedEpName('foo') = 'foo',
+        named: extractedEpName((name: 'foo')) = 'foo',
+        namedItem: extractedEpName((@:0, @item:(name: 'foo'))) = 'foo',
+    ),
+    annotations: (
+        empty: annotations(()) = {},
+        string: annotations((attrs: {'foo': (s: 'bar')})) = {'foo': 'bar'},
+        array: annotations((attrs: {'foo': (a: (elt: [(s: 'bar')]))})) = {'foo': ['bar']},
+    ),
+    tags: (
+        empty: tags(()) = {},
+        array: tags((attrs: {'patterns': (a: (elt: [(s: 'bar')]))})) = {'bar'},
+    ),
+    annoRel: (
+        empty: annoRel('app', {}) = (app: {}),
+        single: annoRel('app', {(appName: 'App', app: _app)}) =
+            (app: {(appName: 'App', appAnnoName: 'foo', appAnnoValue: 'bar')}),
+    ),
+    tagRel: (
+        empty: tagRel('app', {}) = (app: {}),
+        single: tagRel('app', {(appName: 'App', app: _app)}) =
+            (app: {(appName: 'App', appTag: 'db')}),
+    ),
+
+    polish: (
+        idempotent: polish(_model) = polish(polish(_model)),
+    ),
+    normalize: (
+        model: normalize(_model) != (),
+    ),
+    newNormalize: (
+        model: newNormalize(_model) != (),
+        all:
+            let _all = load('out/all.pb');
+            newNormalize(_all) = //{./test_all_sysl_normalized}
+    ),
+)

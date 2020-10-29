@@ -9,7 +9,7 @@
               col: 4,
               line: 29
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 25
@@ -53,7 +53,7 @@
         end: (
           line: 24
         ),
-        file: 'model.sysl',
+        file: 'dev/sysl/pkg/arrai/model.sysl',
         start: (
           col: 1,
           line: 24
@@ -66,7 +66,7 @@
               col: 1,
               line: 33
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 29
@@ -81,7 +81,7 @@
                     col: 14,
                     line: 30
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 30
@@ -95,7 +95,7 @@
                     col: 14,
                     line: 31
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 31
@@ -116,7 +116,7 @@
               col: 4,
               line: 38
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 34
@@ -160,7 +160,7 @@
         end: (
           line: 33
         ),
-        file: 'model.sysl',
+        file: 'dev/sysl/pkg/arrai/model.sysl',
         start: (
           col: 1,
           line: 33
@@ -173,7 +173,7 @@
               col: 1,
               line: 42
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 38
@@ -188,7 +188,7 @@
                     col: 14,
                     line: 39
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 39
@@ -202,7 +202,7 @@
                     col: 14,
                     line: 40
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 40
@@ -223,7 +223,7 @@
               col: 4,
               line: 57
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 52
@@ -278,7 +278,7 @@
               col: 4,
               line: 47
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 43
@@ -321,7 +321,7 @@
               col: 4,
               line: 52
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 47
@@ -365,7 +365,7 @@
         end: (
           line: 42
         ),
-        file: 'model.sysl',
+        file: 'dev/sysl/pkg/arrai/model.sysl',
         start: (
           col: 1,
           line: 42
@@ -378,7 +378,7 @@
               col: 1,
               line: 61
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 57
@@ -393,7 +393,7 @@
                     col: 14,
                     line: 58
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 58
@@ -407,7 +407,7 @@
                     col: 14,
                     line: 59
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 59
@@ -428,7 +428,7 @@
               col: 4,
               line: 76
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 72
@@ -472,7 +472,7 @@
         end: (
           line: 71
         ),
-        file: 'model.sysl',
+        file: 'dev/sysl/pkg/arrai/model.sysl',
         start: (
           col: 1,
           line: 71
@@ -482,10 +482,10 @@
         'Screen': (
           source_context: (
             end: (
-              col: 3,
+              col: 5,
               line: 80
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 76
@@ -500,7 +500,7 @@
                     col: 14,
                     line: 77
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 77
@@ -514,7 +514,7 @@
                     col: 14,
                     line: 78
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 78
@@ -535,7 +535,7 @@
               col: 4,
               line: 67
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 62
@@ -591,7 +591,7 @@
         end: (
           line: 61
         ),
-        file: 'model.sysl',
+        file: 'dev/sysl/pkg/arrai/model.sysl',
         start: (
           col: 1,
           line: 61
@@ -604,7 +604,7 @@
               col: 6,
               line: 71
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 67
@@ -619,7 +619,7 @@
                     col: 14,
                     line: 68
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 68
@@ -633,7 +633,7 @@
                     col: 14,
                     line: 69
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 14,
                     line: 69
@@ -644,6 +644,443 @@
           )
         )
       }
+    ),
+    'Pizza :: Supreme': (
+      endpoints: {
+        'DoEverything': (
+          name: 'DoEverything',
+          param: [
+            (
+              name: 'x',
+              type: (
+                primitive: 'STRING'
+              )
+            ),
+            (
+              name: 'y',
+              type: (
+                primitive: 'STRING'
+              )
+            )
+          ],
+          source_context: (
+            end: (
+              col: 4,
+              line: 105
+            ),
+            file: 'dev/sysl/pkg/arrai/model.sysl',
+            start: (
+              col: 4,
+              line: 81
+            )
+          ),
+          stmt: [
+            (
+              action: (
+                action: 'an action'
+              )
+            ),
+            (
+              call: (
+                arg: [
+                  (
+                    name: '"1"'
+                  ),
+                  (
+                    name: '"2"'
+                  )
+                ],
+                endpoint: 'DoEverything',
+                target: (
+                  part: ['Pizza', 'Supreme']
+                )
+              )
+            ),
+            (
+              cond: (
+                stmt: [
+                  (
+                    action: (
+                      action: 'success'
+                    )
+                  )
+                ],
+                test: 'test'
+              )
+            ),
+            (
+              group: (
+                stmt: [
+                  (
+                    action: (
+                      action: 'success'
+                    )
+                  )
+                ],
+                title: 'else if test2'
+              )
+            ),
+            (
+              group: (
+                stmt: [
+                  (
+                    action: (
+                      action: 'failure'
+                    )
+                  )
+                ],
+                title: 'else'
+              )
+            ),
+            (
+              group: (
+                stmt: [
+                  (
+                    action: (
+                      action: 'do loop'
+                    )
+                  )
+                ],
+                title: 'loop pred'
+              )
+            ),
+            (
+              foreach: (
+                collection: 'pred',
+                stmt: [
+                  (
+                    action: (
+                      action: 'do each'
+                    )
+                  )
+                ]
+              )
+            ),
+            (
+              group: (
+                stmt: [
+                  (
+                    action: (
+                      action: 'do alt'
+                    )
+                  )
+                ],
+                title: 'alt pred'
+              )
+            ),
+            (
+              group: (
+                stmt: [
+                  (
+                    action: (
+                      action: 'inner'
+                    )
+                  )
+                ],
+                title: 'group label'
+              )
+            ),
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    modifier: {},
+                    nvp: {}
+                  ),
+                  type: 'Pizza :: Supreme.int'
+                )
+              )
+            )
+          ]
+        ),
+        'Event': (
+          is_pubsub: {
+            (            )
+          },
+          name: 'Event',
+          source_context: (
+            end: (
+              col: 15,
+              line: 114
+            ),
+            file: 'dev/sysl/pkg/arrai/model.sysl',
+            start: (
+              col: 4,
+              line: 114
+            )
+          ),
+          stmt: [
+            (
+              call: (
+                endpoint: 'Pizza :: Supreme -> Event',
+                target: (
+                  part: ['Pizza', 'Supreme']
+                )
+              )
+            )
+          ]
+        ),
+        'GET /a/{ap}': (
+          attrs: {
+            'patterns': (
+              a: (
+                elt: [
+                  (
+                    s: 'rest'
+                  )
+                ]
+              )
+            )
+          },
+          name: 'GET /a/{ap}',
+          rest_params: (
+            method: 'GET',
+            path: '/a/{ap}',
+            query_param: [
+              (
+                name: 'aq',
+                type: (
+                  primitive: 'INT',
+                  source_context: (
+                    end: (
+                      col: 15,
+                      line: 106
+                    ),
+                    file: 'dev/sysl/pkg/arrai/model.sysl',
+                    start: (
+                      col: 12,
+                      line: 106
+                    )
+                  )
+                )
+              )
+            ],
+            url_param: [
+              (
+                name: 'ap',
+                type: (
+                  primitive: 'STRING',
+                  source_context: (
+                    end: (
+                      col: 20,
+                      line: 105
+                    ),
+                    file: 'dev/sysl/pkg/arrai/model.sysl',
+                    start: (
+                      col: 7,
+                      line: 105
+                    )
+                  )
+                )
+              )
+            ]
+          ),
+          source_context: (
+            end: (
+              col: 4,
+              line: 108
+            ),
+            file: 'dev/sysl/pkg/arrai/model.sysl',
+            start: (
+              col: 8,
+              line: 106
+            )
+          ),
+          stmt: [
+            (
+              action: (
+                action: '...'
+              )
+            )
+          ]
+        ),
+        'POST /b/{bp}': (
+          attrs: {
+            'patterns': (
+              a: (
+                elt: [
+                  (
+                    s: 'rest'
+                  )
+                ]
+              )
+            )
+          },
+          name: 'POST /b/{bp}',
+          rest_params: (
+            method: 'POST',
+            path: '/b/{bp}',
+            query_param: [
+              (
+                name: 'bq',
+                type: (
+                  primitive: 'INT',
+                  source_context: (
+                    end: (
+                      col: 16,
+                      line: 109
+                    ),
+                    file: 'dev/sysl/pkg/arrai/model.sysl',
+                    start: (
+                      col: 13,
+                      line: 109
+                    )
+                  )
+                )
+              )
+            ],
+            url_param: [
+              (
+                name: 'bp',
+                type: (
+                  primitive: 'STRING',
+                  source_context: (
+                    end: (
+                      col: 20,
+                      line: 108
+                    ),
+                    file: 'dev/sysl/pkg/arrai/model.sysl',
+                    start: (
+                      col: 7,
+                      line: 108
+                    )
+                  )
+                )
+              )
+            ]
+          ),
+          source_context: (
+            end: (
+              col: 8,
+              line: 111
+            ),
+            file: 'dev/sysl/pkg/arrai/model.sysl',
+            start: (
+              col: 8,
+              line: 109
+            )
+          ),
+          stmt: [
+            (
+              action: (
+                action: '...'
+              )
+            )
+          ]
+        ),
+        'PUT /b/{bp}': (
+          attrs: {
+            'patterns': (
+              a: (
+                elt: [
+                  (
+                    s: 'rest'
+                  )
+                ]
+              )
+            )
+          },
+          name: 'PUT /b/{bp}',
+          rest_params: (
+            method: 'PUT',
+            path: '/b/{bp}',
+            query_param: [
+              (
+                name: 'cq',
+                type: (
+                  primitive: 'INT',
+                  source_context: (
+                    end: (
+                      col: 15,
+                      line: 111
+                    ),
+                    file: 'dev/sysl/pkg/arrai/model.sysl',
+                    start: (
+                      col: 12,
+                      line: 111
+                    )
+                  )
+                )
+              )
+            ],
+            url_param: [
+              (
+                name: 'bp',
+                type: (
+                  primitive: 'STRING',
+                  source_context: (
+                    end: (
+                      col: 20,
+                      line: 108
+                    ),
+                    file: 'dev/sysl/pkg/arrai/model.sysl',
+                    start: (
+                      col: 7,
+                      line: 108
+                    )
+                  )
+                )
+              )
+            ]
+          ),
+          source_context: (
+            end: (
+              col: 4,
+              line: 114
+            ),
+            file: 'dev/sysl/pkg/arrai/model.sysl',
+            start: (
+              col: 8,
+              line: 111
+            )
+          ),
+          stmt: [
+            (
+              action: (
+                action: '...'
+              )
+            )
+          ]
+        ),
+        'Pizza :: Supreme -> Event': (
+          name: 'Pizza :: Supreme -> Event',
+          source: (
+            part: ['Pizza', 'Supreme']
+          ),
+          source_context: (
+            end: (
+              col: 3,
+              line: 119
+            ),
+            file: 'dev/sysl/pkg/arrai/model.sysl',
+            start: (
+              col: 4,
+              line: 116
+            )
+          ),
+          stmt: [
+            (
+              action: (
+                action: '...'
+              )
+            )
+          ]
+        )
+      },
+      name: (
+        part: ['Pizza', 'Supreme']
+      ),
+      source_context: (
+        end: (
+          col: 9,
+          line: 80
+        ),
+        file: 'dev/sysl/pkg/arrai/model.sysl',
+        start: (
+          col: 1,
+          line: 80
+        )
+      )
     ),
     'Source': (
       attrs: {
@@ -668,7 +1105,7 @@
               col: 1,
               line: 24
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 21
@@ -697,7 +1134,7 @@
           col: 10,
           line: 1
         ),
-        file: 'model.sysl',
+        file: 'dev/sysl/pkg/arrai/model.sysl',
         start: (
           col: 1,
           line: 1
@@ -733,7 +1170,7 @@
                     col: 24,
                     line: 15
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 13,
                     line: 15
@@ -755,7 +1192,7 @@
                     col: 8,
                     line: 18
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 13,
                     line: 17
@@ -773,7 +1210,7 @@
                     col: 4,
                     line: 21
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 13,
                     line: 19
@@ -801,7 +1238,7 @@
               col: 4,
               line: 21
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 14
@@ -828,7 +1265,7 @@
                     col: 8,
                     line: 11
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 13,
                     line: 10
@@ -847,7 +1284,7 @@
                     col: 13,
                     line: 11
                   ),
-                  file: 'model.sysl',
+                  file: 'dev/sysl/pkg/arrai/model.sysl',
                   start: (
                     col: 13,
                     line: 11
@@ -861,7 +1298,7 @@
               col: 4,
               line: 13
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
               line: 6
@@ -876,12 +1313,12 @@
           name: 'all',
           source_context: (
             end: (
-              line: 88
+              line: 127
             ),
-            file: 'model.sysl',
+            file: 'dev/sysl/pkg/arrai/model.sysl',
             start: (
               col: 4,
-              line: 81
+              line: 120
             )
           ),
           stmt: [
@@ -923,12 +1360,12 @@
       ),
       source_context: (
         end: (
-          line: 80
+          line: 119
         ),
-        file: 'model.sysl',
+        file: 'dev/sysl/pkg/arrai/model.sysl',
         start: (
           col: 1,
-          line: 80
+          line: 119
         )
       )
     )

@@ -1,0 +1,1292 @@
+apps:  {
+ key:  "A"
+ value:  {
+  name:  {
+   part:  "A"
+  }
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Source"
+      }
+      endpoint:  "Read"
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: A.FetchResponse [dataflow={\"A.FetchResponse.ax\": \"Source.Foo.x\", \"A.FetchResponse.ay\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  25
+      col:  4
+     }
+     end:  {
+      line:  29
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "ax"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  30
+         col:  14
+        }
+        end:  {
+         line:  30
+         col:  14
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "ay"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  31
+         col:  14
+        }
+        end:  {
+         line:  31
+         col:  14
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  29
+      col:  4
+     }
+     end:  {
+      line:  33
+      col:  1
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  24
+    col:  1
+   }
+   end:  {
+    line:  24
+   }
+  }
+ }
+}
+apps:  {
+ key:  "B"
+ value:  {
+  name:  {
+   part:  "B"
+  }
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Source"
+      }
+      endpoint:  "Read"
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: B.FetchResponse [dataflow={\"B.FetchResponse.bx\": \"Source.Foo.x\", \"B.FetchResponse.by\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  34
+      col:  4
+     }
+     end:  {
+      line:  38
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "bx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  39
+         col:  14
+        }
+        end:  {
+         line:  39
+         col:  14
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "by"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  40
+         col:  14
+        }
+        end:  {
+         line:  40
+         col:  14
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  38
+      col:  4
+     }
+     end:  {
+      line:  42
+      col:  1
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  33
+    col:  1
+   }
+   end:  {
+    line:  33
+   }
+  }
+ }
+}
+apps:  {
+ key:  "C"
+ value:  {
+  name:  {
+   part:  "C"
+  }
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "C"
+      }
+      endpoint:  "FetchA"
+     }
+    }
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "C"
+      }
+      endpoint:  "FetchB"
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": [\"A.FetchResponse.ax\", \"B.FetchResponse.bx\"], \"C.FetchResponse.cy\": [\"A.FetchResponse.ay\", \"B.FetchResponse.by\"]}, description=\"1:1 transform\"]"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  52
+      col:  4
+     }
+     end:  {
+      line:  57
+      col:  4
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "FetchA"
+   value:  {
+    name:  "FetchA"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "A"
+      }
+      endpoint:  "Fetch"
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"A.FetchResponse.ax\", \"C.FetchResponse.cy\": \"A.FetchResponse.ay\"}, description=\"1:1 transform\"]"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  43
+      col:  4
+     }
+     end:  {
+      line:  47
+      col:  4
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "FetchB"
+   value:  {
+    name:  "FetchB"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "B"
+      }
+      endpoint:  "Fetch"
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"B.FetchResponse.bx\", \"C.FetchResponse.cy\": \"B.FetchResponse.by\"}, description=\"1:1 transform\"]"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  47
+      col:  4
+     }
+     end:  {
+      line:  52
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "cx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  58
+         col:  14
+        }
+        end:  {
+         line:  58
+         col:  14
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "cy"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  59
+         col:  14
+        }
+        end:  {
+         line:  59
+         col:  14
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  57
+      col:  4
+     }
+     end:  {
+      line:  61
+      col:  1
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  42
+    col:  1
+   }
+   end:  {
+    line:  42
+   }
+  }
+ }
+}
+apps:  {
+ key:  "Client"
+ value:  {
+  name:  {
+   part:  "Client"
+  }
+  endpoints:  {
+   key:  "Do"
+   value:  {
+    name:  "Do"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "D"
+      }
+      endpoint:  "Fetch"
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Client.Screen [dataflow={\"Client.Screen.xx\": \"D.FetchResponse.dx\", \"Client.Screen.yy\": \"D.FetchResponse.dy\"}, description=\"1:1 transform\"]"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  72
+      col:  4
+     }
+     end:  {
+      line:  76
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Screen"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "xx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  77
+         col:  14
+        }
+        end:  {
+         line:  77
+         col:  14
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "yy"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  78
+         col:  14
+        }
+        end:  {
+         line:  78
+         col:  14
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  76
+      col:  4
+     }
+     end:  {
+      line:  80
+      col:  5
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  71
+    col:  1
+   }
+   end:  {
+    line:  71
+   }
+  }
+ }
+}
+apps:  {
+ key:  "D"
+ value:  {
+  name:  {
+   part:  "D"
+  }
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "A"
+      }
+      endpoint:  "Fetch"
+     }
+    }
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "C"
+      }
+      endpoint:  "Fetch"
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: D.FetchResponse [dataflow={\"D.FetchResponse.dx\": [\"A.FetchResponse.ax\", \"C.FetchResponse.cx\"], \"D.FetchResponse.dy\": [\"A.FetchResponse.ay\", \"C.FetchResponse.cy\"]}, description=\"1:1 transform\"]"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  62
+      col:  4
+     }
+     end:  {
+      line:  67
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "dx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  68
+         col:  14
+        }
+        end:  {
+         line:  68
+         col:  14
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "dy"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  69
+         col:  14
+        }
+        end:  {
+         line:  69
+         col:  14
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  67
+      col:  4
+     }
+     end:  {
+      line:  71
+      col:  6
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  61
+    col:  1
+   }
+   end:  {
+    line:  61
+   }
+  }
+ }
+}
+apps:  {
+ key:  "Pizza :: Supreme"
+ value:  {
+  name:  {
+   part:  "Pizza"
+   part:  "Supreme"
+  }
+  endpoints:  {
+   key:  "DoEverything"
+   value:  {
+    name:  "DoEverything"
+    param:  {
+     name:  "x"
+     type:  {
+      primitive:  STRING
+     }
+    }
+    param:  {
+     name:  "y"
+     type:  {
+      primitive:  STRING
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "an action"
+     }
+    }
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Pizza"
+       part:  "Supreme"
+      }
+      endpoint:  "DoEverything"
+      arg:  {
+       name:  "\"1\""
+      }
+      arg:  {
+       name:  "\"2\""
+      }
+     }
+    }
+    stmt:  {
+     cond:  {
+      test:  "test"
+      stmt:  {
+       action:  {
+        action:  "success"
+       }
+      }
+     }
+    }
+    stmt:  {
+     group:  {
+      title:  "else if test2"
+      stmt:  {
+       action:  {
+        action:  "success"
+       }
+      }
+     }
+    }
+    stmt:  {
+     group:  {
+      title:  "else"
+      stmt:  {
+       action:  {
+        action:  "failure"
+       }
+      }
+     }
+    }
+    stmt:  {
+     group:  {
+      title:  "loop pred"
+      stmt:  {
+       action:  {
+        action:  "do loop"
+       }
+      }
+     }
+    }
+    stmt:  {
+     foreach:  {
+      collection:  "pred"
+      stmt:  {
+       action:  {
+        action:  "do each"
+       }
+      }
+     }
+    }
+    stmt:  {
+     group:  {
+      title:  "alt pred"
+      stmt:  {
+       action:  {
+        action:  "do alt"
+       }
+      }
+     }
+    }
+    stmt:  {
+     group:  {
+      title:  "group label"
+      stmt:  {
+       action:  {
+        action:  "inner"
+       }
+      }
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: int"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  81
+      col:  4
+     }
+     end:  {
+      line:  105
+      col:  4
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "Event"
+   value:  {
+    name:  "Event"
+    is_pubsub:  true
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Pizza"
+       part:  "Supreme"
+      }
+      endpoint:  "Pizza :: Supreme -> Event"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  114
+      col:  4
+     }
+     end:  {
+      line:  114
+      col:  15
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "GET /a/{ap}"
+   value:  {
+    name:  "GET /a/{ap}"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "..."
+     }
+    }
+    rest_params:  {
+     method:  GET
+     path:  "/a/{ap}"
+     query_param:  {
+      name:  "aq"
+      type:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  106
+         col:  12
+        }
+        end:  {
+         line:  106
+         col:  15
+        }
+       }
+      }
+     }
+     url_param:  {
+      name:  "ap"
+      type:  {
+       primitive:  STRING
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  105
+         col:  7
+        }
+        end:  {
+         line:  105
+         col:  20
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  106
+      col:  8
+     }
+     end:  {
+      line:  108
+      col:  4
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "POST /b/{bp}"
+   value:  {
+    name:  "POST /b/{bp}"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "..."
+     }
+    }
+    rest_params:  {
+     method:  POST
+     path:  "/b/{bp}"
+     query_param:  {
+      name:  "bq"
+      type:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  109
+         col:  13
+        }
+        end:  {
+         line:  109
+         col:  16
+        }
+       }
+      }
+     }
+     url_param:  {
+      name:  "bp"
+      type:  {
+       primitive:  STRING
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  108
+         col:  7
+        }
+        end:  {
+         line:  108
+         col:  20
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  109
+      col:  8
+     }
+     end:  {
+      line:  111
+      col:  8
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "PUT /b/{bp}"
+   value:  {
+    name:  "PUT /b/{bp}"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "..."
+     }
+    }
+    rest_params:  {
+     method:  PUT
+     path:  "/b/{bp}"
+     query_param:  {
+      name:  "cq"
+      type:  {
+       primitive:  INT
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  111
+         col:  12
+        }
+        end:  {
+         line:  111
+         col:  15
+        }
+       }
+      }
+     }
+     url_param:  {
+      name:  "bp"
+      type:  {
+       primitive:  STRING
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  108
+         col:  7
+        }
+        end:  {
+         line:  108
+         col:  20
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  111
+      col:  8
+     }
+     end:  {
+      line:  114
+      col:  4
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "Pizza :: Supreme -> Event"
+   value:  {
+    name:  "Pizza :: Supreme -> Event"
+    source:  {
+     part:  "Pizza"
+     part:  "Supreme"
+    }
+    stmt:  {
+     action:  {
+      action:  "..."
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  116
+      col:  4
+     }
+     end:  {
+      line:  119
+      col:  3
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  80
+    col:  1
+   }
+   end:  {
+    line:  80
+    col:  9
+   }
+  }
+ }
+}
+apps:  {
+ key:  "Source"
+ value:  {
+  name:  {
+   part:  "Source"
+  }
+  attrs:  {
+   key:  "description"
+   value:  {
+    s:  "A database.\n Stores data.\n"
+   }
+  }
+  attrs:  {
+   key:  "patterns"
+   value:  {
+    a:  {
+     elt:  {
+      s:  "db"
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "Read"
+   value:  {
+    name:  "Read"
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Foo"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  21
+      col:  4
+     }
+     end:  {
+      line:  24
+      col:  1
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Bar"
+   value:  {
+    relation:  {
+     attr_defs:  {
+      key:  "a"
+      value:  {
+       primitive:  STRING
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "A bar table."
+        }
+       }
+       attrs:  {
+        key:  "patterns"
+        value:  {
+         a:  {
+          elt:  {
+           s:  "pk"
+          }
+         }
+        }
+       }
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  15
+         col:  13
+        }
+        end:  {
+         line:  15
+         col:  24
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "b"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "An optional int"
+        }
+       }
+       opt:  true
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  17
+         col:  13
+        }
+        end:  {
+         line:  18
+         col:  8
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "x"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Source"
+         }
+         path:  "Bar"
+        }
+        ref:  {
+         path:  "Foo"
+         path:  "x"
+        }
+       }
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "A foreign key"
+        }
+       }
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  19
+         col:  13
+        }
+        end:  {
+         line:  21
+         col:  4
+        }
+       }
+      }
+     }
+     primary_key:  {
+      attr_name:  "a"
+     }
+    }
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "A bar table."
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  14
+      col:  4
+     }
+     end:  {
+      line:  21
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Foo"
+   value:  {
+    relation:  {
+     attr_defs:  {
+      key:  "x"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "The x value."
+        }
+       }
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  10
+         col:  13
+        }
+        end:  {
+         line:  11
+         col:  8
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "y"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "A Foo.\n Represents foo things.\n"
+        }
+       }
+       source_context:  {
+        file:  "dev/sysl/pkg/arrai/model.sysl"
+        start:  {
+         line:  11
+         col:  13
+        }
+        end:  {
+         line:  11
+         col:  13
+        }
+       }
+      }
+     }
+    }
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "A Foo.\n Represents foo things.\n"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  6
+      col:  4
+     }
+     end:  {
+      line:  13
+      col:  4
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  10
+   }
+  }
+ }
+}
+apps:  {
+ key:  "all"
+ value:  {
+  name:  {
+   part:  "all"
+  }
+  endpoints:  {
+   key:  "all"
+   value:  {
+    name:  "all"
+    stmt:  {
+     action:  {
+      action:  "Source"
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "Client"
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "A"
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "B"
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "C"
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "D"
+     }
+    }
+    source_context:  {
+     file:  "dev/sysl/pkg/arrai/model.sysl"
+     start:  {
+      line:  120
+      col:  4
+     }
+     end:  {
+      line:  127
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "dev/sysl/pkg/arrai/model.sysl"
+   start:  {
+    line:  119
+    col:  1
+   }
+   end:  {
+    line:  119
+   }
+  }
+ }
+}
