@@ -262,6 +262,16 @@ let newNormalize = \m
             pk: rel.primary_key?.attr_name:{}
         );
 
+    let enum = //rel.union(m.apps => \(@value: app, ...)
+        app.types?:{} filter . {
+            (@:typeName, @value: (enum: (:items, ...), ...)): (
+                appName: extractedAppName(app),
+                :typeName,
+                enumItems: items,
+            )
+        }
+    ) where .;
+
     # Fields
     let _fields = //rel.union(m.apps => \(@value:app, ...)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
@@ -320,6 +330,7 @@ let newNormalize = \m
         :table,
         :event,
         :field,
+        :enum,
         :view,
         :mixin,
         :anno,
