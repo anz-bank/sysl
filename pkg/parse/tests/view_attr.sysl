@@ -1,0 +1,9 @@
+App:
+    !type A:
+        @desc = "type A"
+        id <: string:
+            @desc = "field id"
+
+    !view getAccountUuid(accountNumber <: string) -> string [~abstract]:
+            @name="getAccountUuid"
+            @description = "Generate a universal unique identifier for the given account number."

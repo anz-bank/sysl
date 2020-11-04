@@ -1522,6 +1522,8 @@ func (s *TreeShapeListener) peekAttrs() map[string]*sysl.Attribute {
 		return t.Attrs
 	case *sysl.Endpoint:
 		return t.Attrs
+	case *sysl.View:
+		return t.Attrs
 	default:
 		fmt.Printf("got unexpected %T\n", t)
 		panic("not implemented")
@@ -3069,6 +3071,12 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 
 	s.fieldname = []string{}
 	s.typemap = map[string]*sysl.Type{}
+
+	v := s.currentApp().Views[s.viewName]
+	if v.Attrs == nil {
+		v.Attrs = map[string]*sysl.Attribute{}
+	}
+	s.pushScope(v)
 }
 
 // ExitView is called when production view is exited.
@@ -3092,7 +3100,7 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 				},
 			},
 		}
-		view.Attrs = attributes
+		mergeAttrs(attributes, view.Attrs)
 	}
 	t1, has := s.typemap["view-return"+s.viewName]
 	if has {
@@ -3100,6 +3108,8 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 	} else {
 		view.RetType = view.Expr.Type
 	}
+
+	s.popScope()
 	s.fieldname = []string{}
 	s.typemap = map[string]*sysl.Type{}
 }

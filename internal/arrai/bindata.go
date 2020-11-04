@@ -293,19 +293,19 @@ type bintree struct {
 }
 
 var _bintree = &bintree{nil, map[string]*bintree{
-	"pkg": &bintree{nil, map[string]*bintree{
-		"exporter": &bintree{nil, map[string]*bintree{
-			"spanner": &bintree{nil, map[string]*bintree{
-				"spanner_cli.arraiz": &bintree{pkgExporterSpannerSpanner_cliArraiz, map[string]*bintree{}},
+	"pkg": {nil, map[string]*bintree{
+		"exporter": {nil, map[string]*bintree{
+			"spanner": {nil, map[string]*bintree{
+				"spanner_cli.arraiz": {pkgExporterSpannerSpanner_cliArraiz, map[string]*bintree{}},
 			}},
 		}},
-		"importer": &bintree{nil, map[string]*bintree{
-			"avro": &bintree{nil, map[string]*bintree{
-				"transformer_cli.arraiz": &bintree{pkgImporterAvroTransformer_cliArraiz, map[string]*bintree{}},
+		"importer": {nil, map[string]*bintree{
+			"avro": {nil, map[string]*bintree{
+				"transformer_cli.arraiz": {pkgImporterAvroTransformer_cliArraiz, map[string]*bintree{}},
 			}},
-			"spanner": &bintree{nil, map[string]*bintree{
-				"import_migrations.arraiz":  &bintree{pkgImporterSpannerImport_migrationsArraiz, map[string]*bintree{}},
-				"import_spanner_sql.arraiz": &bintree{pkgImporterSpannerImport_spanner_sqlArraiz, map[string]*bintree{}},
+			"spanner": {nil, map[string]*bintree{
+				"import_migrations.arraiz": {pkgImporterSpannerImport_migrationsArraiz, map[string]*bintree{}},
+				"import_spanner_sql.arraiz": {pkgImporterSpannerImport_spanner_sqlArraiz, map[string]*bintree{}},
 			}},
 		}},
 	}},

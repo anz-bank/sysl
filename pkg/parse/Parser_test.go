@@ -674,6 +674,12 @@ func TestAttrScope(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/attr_scope.sysl")
 }
 
+func TestViewAttr(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/view_attr.sysl")
+}
+
 func TestUndefinedRootAbsoluteImport(t *testing.T) {
 	t.Parallel()
 
