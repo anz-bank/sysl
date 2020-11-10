@@ -15,7 +15,7 @@ WORKDIR /sysl
 
 COPY . .
 
-RUN go get github.com/kevinburke/go-bindata/...
+RUN go get github.com/anz-bank/go-bindata/...
 
 RUN make build
 
