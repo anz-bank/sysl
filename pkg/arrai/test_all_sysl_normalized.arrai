@@ -6,6 +6,21 @@
         appAnnoValue: 'annotation',
         appName: ['AppWithAnnotation'],
       ),
+      (
+        appAnnoName: 'annotation1',
+        appAnnoValue: 'you can do string annotation like this',
+        appName: ['AppWithAnnotation'],
+      ),
+      (
+        appAnnoName: 'annotation2',
+        appAnnoValue: ['or', 'in', 'an', 'array'],
+        appName: ['AppWithAnnotation'],
+      ),
+      (
+        appAnnoName: 'annotation3',
+        appAnnoValue: 'you can also do\n multiline annotations\n like this\n',
+        appName: ['AppWithAnnotation'],
+      ),
     },
     ep: {
       (
@@ -47,7 +62,22 @@
         eventName: 'Event',
       ),
     },
-    field: {},
+    field: {
+      (
+        appName: ['Types'],
+        fieldAnnoName: 'annotation',
+        fieldAnnoValue: 'this is an annotation',
+        fieldName: 'with_anno',
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldAnnoName: 'annotation',
+        fieldAnnoValue: 'this is an annotation',
+        fieldName: 'with_anno',
+        typeName: 'Type',
+      ),
+    },
     mixin: {},
     stmt: {},
     type: {
@@ -228,12 +258,12 @@
               source_context: (
                 end: (
                   col: 32,
-                  line: 59,
+                  line: 65,
                 ),
                 file: 'all.sysl',
                 start: (
                   col: 18,
-                  line: 59,
+                  line: 65,
                 ),
               ),
             ),
@@ -258,12 +288,12 @@
               source_context: (
                 end: (
                   col: 19,
-                  line: 64,
+                  line: 70,
                 ),
                 file: 'all.sysl',
                 start: (
                   col: 12,
-                  line: 64,
+                  line: 70,
                 ),
               ),
             ),
@@ -274,12 +304,12 @@
               source_context: (
                 end: (
                   col: 28,
-                  line: 64,
+                  line: 70,
                 ),
                 file: 'all.sysl',
                 start: (
                   col: 26,
-                  line: 64,
+                  line: 70,
                 ),
               ),
             ),
@@ -290,12 +320,12 @@
               source_context: (
                 end: (
                   col: 44,
-                  line: 64,
+                  line: 70,
                 ),
                 file: 'all.sysl',
                 start: (
                   col: 33,
-                  line: 64,
+                  line: 70,
                 ),
               ),
               type_ref: (
@@ -320,12 +350,12 @@
               source_context: (
                 end: (
                   col: 61,
-                  line: 64,
+                  line: 70,
                 ),
                 file: 'all.sysl',
                 start: (
                   col: 46,
-                  line: 64,
+                  line: 70,
                 ),
               ),
             ),
@@ -610,6 +640,13 @@
     ),
     (
       appName: ['Types'],
+      fieldName: 'primaryKey',
+      fieldOpt: {},
+      fieldType: 'STRING',
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
       fieldName: 'reference',
       fieldOpt: {},
       fieldType: 'RestEndpoint.Type',
@@ -620,6 +657,20 @@
       fieldName: 'reference',
       fieldOpt: {},
       fieldType: 'RestEndpoint.Type',
+      typeName: 'Type',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'with_anno',
+      fieldOpt: {},
+      fieldType: 'STRING',
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
+      fieldName: 'with_anno',
+      fieldOpt: {},
+      fieldType: 'STRING',
       typeName: 'Type',
     ),
   },
@@ -752,12 +803,12 @@
             source_context: (
               end: (
                 col: 117,
-                line: 80,
+                line: 86,
               ),
               file: 'all.sysl',
               start: (
                 col: 117,
-                line: 80,
+                line: 86,
               ),
             ),
           ),
@@ -838,12 +889,12 @@
             source_context: (
               end: (
                 col: 127,
-                line: 25,
+                line: 31,
               ),
               file: 'all.sysl',
               start: (
                 col: 127,
-                line: 25,
+                line: 31,
               ),
             ),
           ),
@@ -890,12 +941,12 @@
         appSrc: (
           end: (
             col: 27,
-            line: 10,
+            line: 16,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 10,
+            line: 16,
           ),
         ),
       ),
@@ -916,12 +967,12 @@
         appName: ['EventAndSubscriber'],
         appSrc: (
           end: (
-            line: 222,
+            line: 233,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 222,
+            line: 233,
           ),
         ),
       ),
@@ -929,12 +980,12 @@
         appName: ['RestEndpoint'],
         appSrc: (
           end: (
-            line: 31,
+            line: 37,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 31,
+            line: 37,
           ),
         ),
       ),
@@ -942,12 +993,12 @@
         appName: ['SimpleEndpoint'],
         appSrc: (
           end: (
-            line: 13,
+            line: 19,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 13,
+            line: 19,
           ),
         ),
       ),
@@ -955,12 +1006,12 @@
         appName: ['Statements'],
         appSrc: (
           end: (
-            line: 121,
+            line: 132,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 121,
+            line: 132,
           ),
         ),
       ),
@@ -968,12 +1019,12 @@
         appName: ['Types'],
         appSrc: (
           end: (
-            line: 86,
+            line: 92,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 86,
+            line: 92,
           ),
         ),
       ),
@@ -985,12 +1036,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 238,
+            line: 249,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 234,
+            line: 245,
           ),
         ),
       ),
@@ -1000,7 +1051,157 @@
         epSrc: (
           end: (
             col: 4,
-            line: 47,
+            line: 53,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 50,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /param',
+        epSrc: (
+          end: (
+            col: 5,
+            line: 92,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 89,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 44,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 42,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /nested1/nested2/nested3',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 59,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 16,
+            line: 56,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /notnested',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 65,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 60,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /param',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 78,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 75,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /pathwithtype/{native}',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 69,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 66,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 73,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 70,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 50,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 48,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /param',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 83,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 78,
+          ),
+        ),
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /',
+        epSrc: (
+          end: (
+            col: 8,
+            line: 46,
           ),
           file: 'all.sysl',
           start: (
@@ -1011,10 +1212,10 @@
       ),
       (
         appName: ['RestEndpoint'],
-        epName: 'DELETE /param',
+        epName: 'POST /param',
         epSrc: (
           end: (
-            col: 5,
+            col: 8,
             line: 86,
           ),
           file: 'all.sysl',
@@ -1026,166 +1227,16 @@
       ),
       (
         appName: ['RestEndpoint'],
-        epName: 'GET /',
-        epSrc: (
-          end: (
-            col: 8,
-            line: 38,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 36,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /nested1/nested2/nested3',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 53,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 16,
-            line: 50,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /notnested',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 59,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 54,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /param',
-        epSrc: (
-          end: (
-            col: 8,
-            line: 72,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 69,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /pathwithtype/{native}',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 63,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 60,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 67,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 64,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /',
-        epSrc: (
-          end: (
-            col: 8,
-            line: 44,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 42,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /param',
-        epSrc: (
-          end: (
-            col: 8,
-            line: 77,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 72,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'POST /',
-        epSrc: (
-          end: (
-            col: 8,
-            line: 40,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 38,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'POST /param',
-        epSrc: (
-          end: (
-            col: 8,
-            line: 80,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 77,
-          ),
-        ),
-      ),
-      (
-        appName: ['RestEndpoint'],
         epName: 'PUT /',
         epSrc: (
           end: (
             col: 8,
-            line: 42,
+            line: 48,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 40,
+            line: 46,
           ),
         ),
       ),
@@ -1195,12 +1246,12 @@
         epSrc: (
           end: (
             col: 8,
-            line: 83,
+            line: 89,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 80,
+            line: 86,
           ),
         ),
       ),
@@ -1210,12 +1261,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 17,
+            line: 23,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 14,
+            line: 20,
           ),
         ),
       ),
@@ -1225,6 +1276,51 @@
         epSrc: (
           end: (
             col: 12,
+            line: 37,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 34,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 34,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 31,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithParamsRef',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 28,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 23,
+          ),
+        ),
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithTypes',
+        epSrc: (
+          end: (
+            col: 4,
             line: 31,
           ),
           file: 'all.sysl',
@@ -1235,62 +1331,17 @@
         ),
       ),
       (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 28,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 4,
-            line: 25,
-          ),
-        ),
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithParamsRef',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 22,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 4,
-            line: 17,
-          ),
-        ),
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithTypes',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 25,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 4,
-            line: 22,
-          ),
-        ),
-      ),
-      (
         appName: ['Statements'],
         epName: 'AnnotatedStatements',
         epSrc: (
           end: (
             col: 4,
-            line: 197,
+            line: 208,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 192,
+            line: 203,
           ),
         ),
       ),
@@ -1300,12 +1351,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 192,
+            line: 203,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 184,
+            line: 195,
           ),
         ),
       ),
@@ -1315,12 +1366,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 165,
+            line: 176,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 158,
+            line: 169,
           ),
         ),
       ),
@@ -1330,12 +1381,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 184,
+            line: 195,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 179,
+            line: 190,
           ),
         ),
       ),
@@ -1345,12 +1396,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 133,
+            line: 144,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 122,
+            line: 133,
           ),
         ),
       ),
@@ -1360,12 +1411,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 153,
+            line: 164,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 133,
+            line: 144,
           ),
         ),
       ),
@@ -1375,12 +1426,12 @@
         epSrc: (
           end: (
             col: 18,
-            line: 222,
+            line: 233,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 197,
+            line: 208,
           ),
         ),
       ),
@@ -1390,12 +1441,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 179,
+            line: 190,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 165,
+            line: 176,
           ),
         ),
       ),
@@ -1405,12 +1456,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 158,
+            line: 169,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 153,
+            line: 164,
           ),
         ),
       ),
@@ -1427,12 +1478,12 @@
         eventSrc: (
           end: (
             col: 4,
-            line: 230,
+            line: 241,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 223,
+            line: 234,
           ),
         ),
       ),
@@ -1442,12 +1493,12 @@
         eventSrc: (
           end: (
             col: 4,
-            line: 234,
+            line: 245,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 230,
+            line: 241,
           ),
         ),
       ),
@@ -1459,12 +1510,12 @@
         fieldSrc: (
           end: (
             col: 13,
-            line: 33,
+            line: 39,
           ),
           file: 'all.sysl',
           start: (
             col: 13,
-            line: 33,
+            line: 39,
           ),
         ),
         typeName: 'Type',
@@ -1475,12 +1526,12 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 94,
+            line: 102,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 94,
+            line: 102,
           ),
         ),
         typeName: 'Type.inplace',
@@ -1491,12 +1542,12 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 104,
+            line: 115,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 104,
+            line: 115,
           ),
         ),
         typeName: 'Table.inplace',
@@ -1507,12 +1558,12 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 95,
+            line: 103,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 95,
+            line: 103,
           ),
         ),
         typeName: 'Type.inplace',
@@ -1523,12 +1574,12 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 105,
+            line: 116,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 105,
+            line: 116,
           ),
         ),
         typeName: 'Table.inplace',
@@ -1539,108 +1590,124 @@
         fieldSrc: (
           end: (
             col: 4,
+            line: 105,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 101,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'inplace',
+        fieldSrc: (
+          end: (
+            col: 4,
+            line: 118,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 114,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'nativeTypeField',
+        fieldSrc: (
+          end: (
+            col: 27,
+            line: 96,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 27,
+            line: 96,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'nativeTypeField',
+        fieldSrc: (
+          end: (
+            col: 27,
+            line: 109,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 27,
+            line: 109,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'optional',
+        fieldSrc: (
+          end: (
+            col: 26,
+            line: 98,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 98,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'optional',
+        fieldSrc: (
+          end: (
+            col: 26,
+            line: 111,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 111,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'primaryKey',
+        fieldSrc: (
+          end: (
+            col: 33,
+            line: 108,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 22,
+            line: 108,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'reference',
+        fieldSrc: (
+          end: (
+            col: 34,
             line: 97,
           ),
           file: 'all.sysl',
           start: (
-            col: 8,
-            line: 93,
-          ),
-        ),
-        typeName: 'Type',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'inplace',
-        fieldSrc: (
-          end: (
-            col: 4,
-            line: 107,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 8,
-            line: 103,
-          ),
-        ),
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'nativeTypeField',
-        fieldSrc: (
-          end: (
-            col: 27,
-            line: 90,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 27,
-            line: 90,
-          ),
-        ),
-        typeName: 'Type',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'nativeTypeField',
-        fieldSrc: (
-          end: (
-            col: 27,
-            line: 100,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 27,
-            line: 100,
-          ),
-        ),
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'optional',
-        fieldSrc: (
-          end: (
-            col: 26,
-            line: 92,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 20,
-            line: 92,
-          ),
-        ),
-        typeName: 'Type',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'optional',
-        fieldSrc: (
-          end: (
-            col: 26,
-            line: 102,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 20,
-            line: 102,
-          ),
-        ),
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'reference',
-        fieldSrc: (
-          end: (
-            col: 34,
-            line: 91,
-          ),
-          file: 'all.sysl',
-          start: (
             col: 21,
-            line: 91,
+            line: 97,
           ),
         ),
         typeName: 'Type',
@@ -1651,12 +1718,44 @@
         fieldSrc: (
           end: (
             col: 34,
+            line: 110,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 21,
+            line: 110,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'with_anno',
+        fieldSrc: (
+          end: (
+            col: 8,
             line: 101,
           ),
           file: 'all.sysl',
           start: (
             col: 21,
-            line: 101,
+            line: 100,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'with_anno',
+        fieldSrc: (
+          end: (
+            col: 8,
+            line: 114,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 21,
+            line: 113,
           ),
         ),
         typeName: 'Table',
@@ -1812,12 +1911,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 35,
+            line: 41,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 32,
+            line: 38,
           ),
         ),
       ),
@@ -1827,7 +1926,22 @@
         typeSrc: (
           end: (
             col: 10,
-            line: 121,
+            line: 132,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 129,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Enum',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 123,
           ),
           file: 'all.sysl',
           start: (
@@ -1838,31 +1952,16 @@
       ),
       (
         appName: ['Types'],
-        typeName: 'Enum',
-        typeSrc: (
-          end: (
-            col: 4,
-            line: 112,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 4,
-            line: 107,
-          ),
-        ),
-      ),
-      (
-        appName: ['Types'],
         typeName: 'Table',
         typeSrc: (
           end: (
             col: 4,
-            line: 107,
+            line: 118,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 97,
+            line: 105,
           ),
         ),
       ),
@@ -1877,12 +1976,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 97,
+            line: 105,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 87,
+            line: 93,
           ),
         ),
       ),
@@ -1897,12 +1996,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 118,
+            line: 129,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 112,
+            line: 123,
           ),
         ),
       ),
@@ -1933,7 +2032,8 @@
               ),
             },
           ),
-          type: 'Statements.string',
+          status: 'ok',
+          type: 'string',
         ),
       ),
     ),
@@ -2055,7 +2155,7 @@
       stmtCond: {},
       stmtForeach: {},
       stmtGroup: (
-        title: 'else if predicate2',
+        title: 'else predicate2',
       ),
       stmtIndex: 1,
       stmtLoop: {},
@@ -2242,6 +2342,17 @@
                 ret: (
                   payload: 'ok <: string',
                 ),
+                source_context: (
+                  end: (
+                    col: 22,
+                    line: 180,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 16,
+                    line: 180,
+                  ),
+                ),
               ),
             ],
           ),
@@ -2251,6 +2362,17 @@
               (
                 ret: (
                   payload: 'ok <: int',
+                ),
+                source_context: (
+                  end: (
+                    col: 22,
+                    line: 183,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 16,
+                    line: 183,
+                  ),
                 ),
               ),
             ],
@@ -2262,6 +2384,17 @@
                 ret: (
                   payload: 'ok <: Types.Type',
                 ),
+                source_context: (
+                  end: (
+                    col: 22,
+                    line: 186,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 16,
+                    line: 186,
+                  ),
+                ),
               ),
             ],
           ),
@@ -2270,6 +2403,17 @@
               (
                 ret: (
                   payload: 'error <: string',
+                ),
+                source_context: (
+                  end: (
+                    col: 22,
+                    line: 188,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 16,
+                    line: 188,
+                  ),
                 ),
               ),
             ],
@@ -2305,7 +2449,8 @@
             modifier: {},
             nvp: {},
           ),
-          type: 'Statements.string',
+          status: 'ok',
+          type: 'string',
         ),
       ),
     ),
@@ -2328,6 +2473,7 @@
             modifier: {},
             nvp: {},
           ),
+          status: 'ok',
           type: 'Types.Type',
         ),
       ),
@@ -2351,6 +2497,7 @@
             modifier: {},
             nvp: {},
           ),
+          status: 'error',
           type: 'Types.Type',
         ),
       ),
@@ -2359,7 +2506,7 @@
   table: {
     (
       appName: ['Types'],
-      pk: {},
+      pk: ['primaryKey'],
       typeName: 'Table',
     ),
   },
@@ -2443,7 +2590,14 @@
       ),
     },
     event: {},
-    field: {},
+    field: {
+      (
+        appName: ['Types'],
+        fieldName: 'primaryKey',
+        fieldTag: 'pk',
+        typeName: 'Table',
+      ),
+    },
     mixin: {},
     stmt: {},
     type: {},

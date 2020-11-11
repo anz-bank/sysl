@@ -225,29 +225,29 @@ func TestGenerateIntegrationsWithCluster(t *testing.T) {
 	diagrams.ComparePUML(t, expected, result)
 }
 
-func TestGenerateIntegrationsWithDeepCluster(t *testing.T) {
-	// Given
-	args := &IntsArg{
-		RootModel: testDir,
-		Modules:   "integration_with_deep_cluster.sysl",
-		Output:    "%(epname).png",
-		Project:   "Project",
-		Clustered: true,
-	}
+// func TestGenerateIntegrationsWithDeepCluster(t *testing.T) {
+// 	// Given
+// 	args := &IntsArg{
+// 		RootModel: testDir,
+// 		Modules:   "integration_with_deep_cluster.sysl",
+// 		Output:    "%(epname).png",
+// 		Project:   "Project",
+// 		Clustered: true,
+// 	}
 
-	// When
-	result, err := GenerateIntegrationsWithParams(args.RootModel, args.Title, args.Output,
-		args.Project, args.Filter, args.Modules, args.Exclude, args.Clustered,
-		args.Epa)
-	require.NoError(t, err)
+// 	// When
+// 	result, err := GenerateIntegrationsWithParams(args.RootModel, args.Title, args.Output,
+// 		args.Project, args.Filter, args.Modules, args.Exclude, args.Clustered,
+// 		args.Epa)
+// 	require.NoError(t, err)
 
-	expected := map[string]string{
-		"cluster_deep.png": filepath.Join(testDir, "cluster_deep-golden.puml"),
-	}
+// 	expected := map[string]string{
+// 		"cluster_deep.png": filepath.Join(testDir, "cluster_deep-golden.puml"),
+// 	}
 
-	// Then
-	diagrams.ComparePUML(t, expected, result)
-}
+// 	// Then
+// 	diagrams.ComparePUML(t, expected, result)
+// }
 
 func TestGenerateIntegrationsWithEpa(t *testing.T) {
 	t.Parallel()

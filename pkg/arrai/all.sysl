@@ -5,6 +5,12 @@ App "display name" [~abstract]:
 
 AppWithAnnotation:
     @annotation = "annotation"
+    @annotation1 = "you can do string annotation like this"
+    @annotation2 = ["or", "in", "an", "array"]
+    @annotation3 =:
+        | you can also do
+        | multiline annotations
+        | like this
     ...
 
 App :: with :: subpackages "display name":
@@ -90,6 +96,8 @@ Types:
         nativeTypeField <: string
         reference <: RestEndpoint.Type
         optional <: string?
+        with_anno <: string:
+            @annotation = "this is an annotation"
         inplace <:
             a <: string
             b <: int
@@ -97,9 +105,12 @@ Types:
     !table Table [annotation="annotation"]:
         # FIXME: annotation not allowed
         # @another_annotation = "annotation"
+        primaryKey <: string [~pk]
         nativeTypeField <: string
         reference <: RestEndpoint.Type
         optional <: string?
+        with_anno <: string:
+            @annotation = "this is an annotation"
         inplace <:
             a <: string
             b <: int

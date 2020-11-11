@@ -14,7 +14,7 @@ let rec simpleTransform = \ast
     cond ast {
         (...):
             let d = //dict(ast) >> \term cond term {
-                ('':value): value,
+                ('':value, ...): value,
                 (...): simpleTransform(term),
                 [...]: term >> simpleTransform(.) where .@item,
                 _: {},
@@ -140,7 +140,10 @@ let unpackType = \type (
 
 let packType = \(app: appName, type: typeSeq, field: fieldName) (
     cond fieldName {
-        (''): //seq.join('.', [appName] ++ typeSeq),
+        (''): cond appName {
+                (''): //seq.join('.', typeSeq),
+                _: //seq.join('.', [appName] ++ typeSeq),
+            },
         _: //seq.join('.', [appName] ++ typeSeq ++ [fieldName]),
     }
 )
@@ -151,7 +154,7 @@ let isValidIdentifier = \identifier
     # InvalidIdentifiers that would be appended by underscore('_') when used as an identifier in the ingested SQL
     # for instance  a column "Int64 INT64" becomes _Int64 <: int [name="Int64"].
     # List is still fairly limited but more keywords could be added as we go.
-    let invalidIdentifiers = { "as", "if", "else", 
+    let invalidIdentifiers = { "as", "if", "else",
         "any", "int", "int32", "int64", "float", "float32", "float64", "decimal", "string", "bool", "date", "datetime", "bytes"
     };
 
@@ -166,6 +169,12 @@ let resolveValidIdentifier = \identifier
         !isValidIdentifier(identifier): '_' ++ identifier,
         _: identifier
     };
+
+let nativeDataTypes = {
+    'int', 'int32', 'int64', 'string', 'any', 'float', 'float32', 'float64',
+    'date', 'bool', 'decimal', 'datetime', 'bytes'
+};
+
 (
     :explore,
     :filterTree,
@@ -184,4 +193,5 @@ let resolveValidIdentifier = \identifier
     :trimWhitespace,
     :isValidIdentifier,
     :resolveValidIdentifier,
+    :nativeDataTypes,
 )

@@ -1,0 +1,226 @@
+\m
+let app = m.app?:{};
+let enum = m.enum?:{};
+let ep = m.ep?:{};
+let event = m.event?:{};
+let field = m.field?:{};
+let mixin = m.mixin?:{};
+let param = m.param?:{};
+let stmt = m.stmt?:{};
+let table = m.table?:{};
+let type = m.type?:{};
+let view = m.view?:{};
+let anno = (
+    app: m.anno?.app?:{},
+    ep: m.anno?.ep?:{},
+    field: m.anno?.field?:{},
+    mixin: m.anno?.mixin?:{},
+    stmt: m.anno?.stmt?:{},
+    type: m.anno?.type?:{},
+    view: m.anno?.view?:{},
+);
+let tag = (
+    app: m.tag?.app?:{},
+    ep: m.tag?.ep?:{},
+    field: m.tag?.field?:{},
+    mixin: m.tag?.mixin?:{},
+    stmt: m.tag?.stmt?:{},
+    type: m.tag?.type?:{},
+    view: m.tag?.view?:{},
+);
+let src = (
+    app: m.src?.app?:{},
+    ep: m.src?.ep?:{},
+    field: m.src?.field?:{},
+    mixin: m.src?.mixin?:{},
+    stmt: m.src?.stmt?:{},
+    type: m.src?.type?:{},
+    view: m.src?.view?:{},
+);
+
+let (nativeDataTypes: native, :trimWhitespace, ...) = //{./util};
+
+let joinedName = //seq.join(' :: ');
+
+let resolveStmts = \stmt
+    stmt >> cond {
+        .stmtAction: $`${.stmtAction}`,
+        .stmtAlt: .stmtAlt -> \(:choice) $`
+            ${choice >> \c
+                # TODO: handle parent
+                # TODO: change the name attribute of cond
+                $`
+                    ${c.cond?:''}:
+                        ...
+                `
+            ::\i}
+        `,
+        .stmtCall: .stmtCall -> \(appName: (:part), :epName) $`${joinedName(part)} <- ${epName}`,
+        .stmtCond: '', # TODO: seems something is wrong with this
+        .stmtForeach: '', # TODO
+        .stmtGroup: '', # TODO
+        .stmtLoop: '', # TODO
+        .stmtLoopN: '', # TODO
+        .stmtRet: .stmtRet -> \(payload: (attr: (:modifier, :nvp), :status, :type))
+            $`
+                return ${status} <: ${type}${
+                    # TODO: handle modifer
+                    nvp && (
+                        ' ' + $`[${nvp => $`${.@}=${cond .@value {
+                            (:a): $`[${a >> $`'${.}'`::,}]`,
+                            (:s): $`'${s}'`,
+                        }}`}]`
+                    )
+                }
+            `
+        ,
+    }
+;
+
+let stmtBlock = \stmt \ep resolveStmts(stmt where .epName = ep orderby .stmtIndex);
+
+let resolvedType = \t cond { (//str.lower(t) <: native): //str.lower(t), _: t };
+
+let resolvedAnnotations = \annotations
+    annotations orderby .name >> \(:name, :value)
+        cond value {
+            [...]: $`@${name} = ${value}`,
+            _:
+                cond {
+                    //seq.contains('\n', value):
+                        $`
+                            @${name} =:
+                                ${//seq.split('\n', value) where .@item != '' >> $`| ${trimWhitespace(.)}`::\i}
+                        `,
+                    _: $`@${name} = "${value}"`,
+                }
+        }
+;
+
+let resolvedTypeAnno = \typeAnno \typeName
+    resolvedAnnotations(
+        (typeAnno where .typeName = typeName) => (name: .typeAnnoName, value: .typeAnnoValue)
+    )
+;
+
+let resolvedFieldAnno = \fieldAnno \fieldName
+    resolvedAnnotations(
+        (fieldAnno where .fieldName = fieldName) => (name: .fieldAnnoName, value: .fieldAnnoValue)
+    )
+;
+
+let orderedField = \field \typeName
+    (field where typeName = .typeName && .fieldType != 'inplace') orderby .fieldName
+;
+
+let files = (src.app => \(:appName, :appSrc) (:appName, :appSrc, :appSrc.file)) nest |appName, appSrc|apps;
+files => \(:file, :apps) (
+    @: file,
+    @value:
+        let apps = apps orderby .appSrc.start.line;
+        let sortedEp = src.ep where .epSrc.file = file;
+        # TODO: imports
+        $`
+            ${apps >> \(:appName, ...)
+                # TODO: appDocstring
+                let (:appLongName, ...) = (app where .appName = appName) single;
+                let appTags = ((tag.app where .appName = appName) => $`~${.appTag}`) orderby .;
+                let appTags = cond {(appTags != []): ' ' + $`[${//seq.join(', ', appTags)}]`};
+                let [anno, src, tag] = [anno, src, tag] >> (. :> \v (v where .appName = appName));
+                let appAnno = anno.app where .appName = appName;
+                let (
+                    :ep,
+                    :type,
+                    :field,
+                    :table,
+                    :enum,
+                    :event,
+                    :mixin,
+                    :param,
+                    :stmt
+                ) = (:ep, :type, :field, :table, :enum, :event, :mixin, :param, :stmt) :> \i (i where .appName = appName);
+
+                # TODO: exclude union and alias
+                let type =
+                    let enumAndTable = (enum | table) => .typeName;
+                    # TODO: inplace fields
+                    type where .typeName !<: enumAndTable && !//seq.contains('.', .typeName)
+                ;
+                let isEmpty = //rel.union({ep, type, field, table, enum, mixin, appAnno}) = {};
+                $`
+                    ${joinedName(appName)}${cond {(appLongName != ""): ' ' + $`"${appLongName}"`}}${appTags}:
+                        ${cond {isEmpty: '...'}}
+                        ${resolvedAnnotations(
+                            anno.app => \(:appAnnoName, :appAnnoValue, ...) (name: appAnnoName, value: appAnnoValue)
+                        )::\i}
+                        ${enum orderby .typeName >> \(:typeName, :enumItems, ...)
+                            $`
+                                !enum ${typeName}:
+                                    ${(enumItems orderby .@value >> $`${.@}: ${.@value}`) || ['...']::\i}
+                            `
+                        ::\i\n:\n}
+                        ${type orderby .typeName >> \(:typeName, ...)
+                            let typeTags = ((tag.type where .typeName = typeName) => $`~${.typeTag}`) orderby .;
+                            $`
+                                !type ${typeName} ${typeTags}:
+                                    ${resolvedTypeAnno(anno.type, typeName)::\i}
+                                    ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
+                                            $`
+                                                ${fieldName} <: ${resolvedType(fieldType)}${cond {fieldOpt: '?'}}${
+                                                    let anno = resolvedFieldAnno(anno.field, fieldName);
+                                                    anno && $`
+                                                        :
+                                                            ${anno::\i}
+                                                    `
+                                                }
+                                            `)
+                                    || ['...'] ::\i}
+                            `
+                        ::\i\n:\n}
+                        ${table orderby .typeName >> \(:typeName, :pk, ...)
+                            # TODO: tags
+                            # TODO: pk should be set?
+                            let pk = pk => .@item;
+                            $`
+                                !table ${typeName}:
+                                    ${resolvedTypeAnno(anno.type, typeName)::\i}
+                                    ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
+                                            $`
+                                                ${fieldName} <: ${resolvedType(fieldType)}${cond {fieldOpt: '?'}}${cond {(fieldName <: pk): ' [~pk]'}}${
+                                                    let anno = resolvedFieldAnno(anno.field, fieldName);
+                                                    cond {
+                                                        (anno != ''): $`
+                                                            :
+                                                                ${anno::\i}
+                                                        `,
+                                                    }
+                                                }
+                                            `)
+                                    || ['...'] ::\i}
+                            `
+                        ::\i\n:\n}
+                        ${((ep where .rest) => . +> (:.rest.method, :.rest.path)) nest ~|path|eps orderby .path
+                                >> \(:path, :eps)
+                                    # TODO: stmts with parents
+                                    # TODO: handle parameterized path
+                                    $`
+                                        ${path}:
+                                            ${(eps orderby .method >> \(:method, :epName, ...)
+                                                $`
+                                                    ${method}:
+                                                        ${stmtBlock(stmt, epName) || ['...']::\i}
+                                                `
+                                            ) || ['...'] ::\i}
+
+                                    `
+                        ::\i\n:\n}
+                        ${(ep where !.rest orderby .epName) >> \(:epName, ...)
+                            $`
+                                ${epName}:
+                                    ${stmtBlock(stmt, epName) || ['...']::\i}
+                            `
+                        ::\i\n:\n}
+                `
+            ::\n:\n}
+            `
+)

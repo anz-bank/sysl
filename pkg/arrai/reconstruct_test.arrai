@@ -1,0 +1,11 @@
+let (:load, :newNormalize, ...) = //{./sysl};
+
+let model = newNormalize(load('out/model.pb'));
+let all = newNormalize(load('out/all.pb'));
+
+let reconstruct = //{./reconstruct};
+
+(
+    all: reconstruct(all) = //{./test_reconstruct_all},
+    model: reconstruct(model) = //{./test_reconstruct_model},
+)

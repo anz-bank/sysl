@@ -92,7 +92,7 @@ let rec buildNvp = \nvp cond nvp {
     _: //eval.value(//seq.join('', nvp.''))
 };
 
-let (:ranked, ...) = //{./util};
+let (:ranked, :nativeDataTypes, ...) = //{./util};
 
 # tries to fix type without full reference
 let fixType = \apps \appName \typePayload
@@ -100,8 +100,9 @@ let fixType = \apps \appName \typePayload
     let typePayload = //{./util}.trimWhitespace(typePayload);
     let (:app, :type, :field) = //{./util}.unpackType(typePayload);
     let pack = //{./util}.packType;
-    cond app {
-        (''): pack((app: appName, :type, :field)),
+    cond {
+        (cond type {[t]: t <: nativeDataTypes}): pack((app: '', :type, field: '')),
+        app = '': pack((app: appName, :type, :field)),
         _: cond {
             (app <: apps): typePayload,
             _: pack((app: appName, type: [app] ++ type, :field))
@@ -219,6 +220,7 @@ let newNormalize = \m
                 stmtParent: {},
                 :stmtAction,
                 stmtCall: cond stmt.call?:{} {(:target, :endpoint, ...): (appName: target, epName: endpoint)},
+                # TODO: fix, `else if` is considered stmtGroup
                 stmtCond: cond stmt.cond?:{} {(:test, ...): (:test)},
                 stmtLoop: cond stmt.loop?:{} {(:mode, :criterion, ...): (:mode, :criterion)},
                 stmtLoopN: cond stmt.loop_n?:{} {(:count, ...): (:count)},
