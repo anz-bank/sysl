@@ -391,7 +391,7 @@ let normalize = \m
     ;
     let fields = //rel.union(m.apps => \(@:appName, @value:app)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
-            type.relation?.attr_defs?:{} => \(@:fieldName, @value:field)
+            type.relation?:(type.tuple?:()).attr_defs?:{} => \(@:fieldName, @value:field)
                 let tags = tags(field);
                 (
                     :appName,
