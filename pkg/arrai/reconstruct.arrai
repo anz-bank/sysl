@@ -103,9 +103,9 @@ let resolvedTypeAnno = \typeAnno \typeName
     )
 ;
 
-let resolvedFieldAnno = \fieldAnno \fieldName
+let resolvedFieldAnno = \fieldAnno \typeName \fieldName
     resolvedAnnotations(
-        (fieldAnno where .fieldName = fieldName) => (name: .fieldAnnoName, value: .fieldAnnoValue)
+        (fieldAnno where .fieldName = fieldName && .typeName = typeName) => (name: .fieldAnnoName, value: .fieldAnnoValue)
     )
 ;
 
@@ -167,7 +167,7 @@ files => \(:file, :apps) (
                                     ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
                                             $`
                                                 ${fieldName} <: ${resolvedType(fieldType)}${cond {fieldOpt: '?'}}${
-                                                    let anno = resolvedFieldAnno(anno.field, fieldName);
+                                                    let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
                                                     anno && $`
                                                         :
                                                             ${anno::\i}
@@ -187,7 +187,7 @@ files => \(:file, :apps) (
                                     ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
                                             $`
                                                 ${fieldName} <: ${resolvedType(fieldType)}${cond {fieldOpt: '?'}}${cond {(fieldName <: pk): ' [~pk]'}}${
-                                                    let anno = resolvedFieldAnno(anno.field, fieldName);
+                                                    let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
                                                     cond {
                                                         (anno != ''): $`
                                                             :
