@@ -767,10 +767,6 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 			}
 		}
 	}
-	tableDef := ctx.Table_def().(*parser.Table_defContext)
-	if tableStmts := tableDef.Table_stmts(); tableStmts != nil {
-		s.applyAnnotations(tableStmts.(*parser.Table_stmtsContext).AllAnnotation())
-	}
 	s.popScope()
 
 	// Match legacy behavior

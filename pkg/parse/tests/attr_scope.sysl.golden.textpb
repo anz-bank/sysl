@@ -36,12 +36,6 @@ apps: {
             value: {
               primitive: STRING
               attrs: {
-                key: "scope1"
-                value: {
-                  s: "scope1"
-                }
-              }
-              attrs: {
                 key: "scope2"
                 value: {
                   s: "scope2"

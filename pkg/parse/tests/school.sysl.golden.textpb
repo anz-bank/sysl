@@ -74,12 +74,6 @@ apps: {
                   path: "Idd"
                 }
               }
-              attrs: {
-                key: "description"
-                value: {
-                  s: "describe the table"
-                }
-              }
               source_context: {
                 file: "tests/school.sysl"
                 start: {
@@ -97,12 +91,6 @@ apps: {
             key: "Id"
             value: {
               primitive: INT
-              attrs: {
-                key: "description"
-                value: {
-                  s: "describe the table"
-                }
-              }
               attrs: {
                 key: "patterns"
                 value: {

@@ -127,12 +127,6 @@ apps: {
             key: "id"
             value: {
               primitive: INT
-              attrs: {
-                key: "description"
-                value: {
-                  s: "some description"
-                }
-              }
               source_context: {
                 file: "tests/test2.sysl"
                 start: {
@@ -264,12 +258,6 @@ apps: {
             key: "fieldname"
             value: {
               primitive: STRING
-              attrs: {
-                key: "description"
-                value: {
-                  s: "Multi-line annotation\n statement\n"
-                }
-              }
               source_context: {
                 file: "tests/test2.sysl"
                 start: {
@@ -298,12 +286,6 @@ apps: {
                     line: 11
                     col: 29
                   }
-                }
-              }
-              attrs: {
-                key: "description"
-                value: {
-                  s: "Multi-line annotation\n statement\n"
                 }
               }
               source_context: {
@@ -344,12 +326,6 @@ apps: {
                     line: 12
                     col: 22
                   }
-                }
-              }
-              attrs: {
-                key: "description"
-                value: {
-                  s: "Multi-line annotation\n statement\n"
                 }
               }
               source_context: {

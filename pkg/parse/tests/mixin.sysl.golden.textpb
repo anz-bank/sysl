@@ -73,12 +73,6 @@ apps: {
             key: "id"
             value: {
               primitive: INT
-              attrs: {
-                key: "description"
-                value: {
-                  s: "some description"
-                }
-              }
               source_context: {
                 file: "tests/mixin.sysl"
                 start: {
@@ -282,12 +276,6 @@ apps: {
             key: "id"
             value: {
               primitive: INT
-              attrs: {
-                key: "description"
-                value: {
-                  s: "some description"
-                }
-              }
               source_context: {
                 file: "tests/mixin.sysl"
                 start: {
