@@ -37,7 +37,7 @@ jobs:
         run: make coverage
 
       - name: Set GOVERSION environment variable
-        run: echo ::set-env name=GOVERSION::$(go version | awk '{print $3, $4;}')
+        run: echo "GOVERSION=$(go version | awk '{print $3, $4;}')" >> $GITHUB_ENV
 
       - name: Build sysl binary
         run: make build
