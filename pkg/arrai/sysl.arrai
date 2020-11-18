@@ -11,22 +11,10 @@ let load = \path
     let syslDescriptor = //encoding.proto.descriptor(syslPb);
     //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
 
-# Returns appName from a node
-let rec extractedAppName = \x cond x {
-    (:@, :@item): extractedAppName(@item),
-    (name: (:part), ...): part, # appName, mixinName
-    _: x,
-};
-
-# Returns the epName and paramName from a node
-let rec extractedEpName = \x cond x {
-    (:@, :@item): extractedEpName(@item),
-    (name: n, ...): n, # epName, paramName
-    _: x,
-};
-
 # Extracts the dictionary of annotations of an element.
-let annotations = \x x.attrs?:{} where .@ != 'patterns' >> \v v.s?:(v.a.elt >> .s);
+# Handles strings, arrays of strings, and arrays of arrays of strings.
+let annotations = \x x.attrs?:{} where .@ != 'patterns' >> \v
+    v.s?:(v.a.elt >> \v v.s?:(v.a.elt >> .s));
 # Extracts the set of pattern attributes of an element.
 let tags = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 
@@ -128,9 +116,10 @@ let parseReturn = \payload \apps \currApp
 let polishReturns = \m
     let apps = m.apps => .@;
     let tweak = \. \currApp
-        cond .ret.payload {
-            (:type, ...): ., # Already tweaked.
-            _: . +> (ret: .ret +> (payload: parseReturn(.ret.payload, apps, currApp))),
+        cond (.).ret.payload?:{} {
+            (:type, ...): .,    # Already tweaked.
+            {}: .,              # Nothing to tweak.
+            p: . +> (ret: .ret +> (payload: parseReturn(p, apps, currApp))),
         };
 
     m +> (apps: m.apps?:{} >>> \currApp \a
@@ -153,7 +142,7 @@ let newNormalize = \m
     let m = polish(m);
 
     # Applications
-    let _apps = m.apps => \(@value:app, ...) (appName: extractedAppName(app), :app);
+    let _apps = m.apps => \(@value:app, ...) (appName: app.name.part, :app);
     let app = _apps => \(:appName, :app)
         (
             :appName,
@@ -164,8 +153,8 @@ let newNormalize = \m
     # Mixins
     let _mixins = //rel.union(m.apps => \(@value:app, ...)
         app.mixins2?:{} => \mixin (
-            appName: extractedAppName(app),
-            mixinName: extractedAppName(mixin),
+            appName: app.name.part,
+            mixinName: mixin.name.part,
             :mixin,
         )
     ) where .;
@@ -178,7 +167,7 @@ let newNormalize = \m
     # Endpoints
     let _eps = //rel.union(m.apps => \(@value:app, ...)
         app.endpoints?:{} where !.@value.is_pubsub?:{} && .@ != empty => \(@:epName, @value:ep)
-            (appName: extractedAppName(app), :epName, :ep)
+            (appName: app.name.part, :epName, :ep)
     ) where .;
     let ep = _eps => \(:appName, :epName, :ep)
         (
@@ -195,7 +184,7 @@ let newNormalize = \m
 
     # Parameters
     let _params = //rel.union(_eps => \(:appName, :epName, :ep)
-        ep.param?:{} => (:appName, :epName, paramName: extractedEpName(.), param: .)
+        ep.param?:{} => (:appName, :epName, paramName: .@item.name, param: .)
     ) where .;
     let param = _params => \(:appName, :epName, :paramName, param: (:@, @item:param))
         (
@@ -219,7 +208,7 @@ let newNormalize = \m
                 :stmtIndex,
                 stmtParent: {},
                 :stmtAction,
-                stmtCall: cond stmt.call?:{} {(:target, :endpoint, ...): (appName: target, epName: endpoint)},
+                stmtCall: cond stmt.call?:{} {(:target, :endpoint, ...): (appName: target.part, epName: endpoint)},
                 # TODO: fix, `else if` is considered stmtGroup
                 stmtCond: cond stmt.cond?:{} {(:test, ...): (:test)},
                 stmtLoop: cond stmt.loop?:{} {(:mode, :criterion, ...): (:mode, :criterion)},
@@ -236,7 +225,7 @@ let newNormalize = \m
     # Events
     let _events = //rel.union(m.apps => \(@value:app, ...)
         app.endpoints?:{} where .@value.is_pubsub?:{} => \(@:eventName, @value:event)
-            (appName: extractedAppName(app), :eventName, :event)
+            (appName: app.name.part, :eventName, :event)
     ) where .;
     let event = _events => \(:appName, :eventName, :event)
         (
@@ -247,7 +236,7 @@ let newNormalize = \m
     # Types
     let _types = //rel.union(m.apps => \(@value:app, ...)
         app.types?:{} => \(@:typeName, @value:type)
-            (appName: extractedAppName(app), :typeName, :type)
+            (appName: app.name.part, :typeName, :type)
     ) where .;
     let type = _types => \(:appName, :typeName, :type)
         (
@@ -267,7 +256,7 @@ let newNormalize = \m
     let enum = //rel.union(m.apps => \(@value: app, ...)
         app.types?:{} filter . {
             (@:typeName, @value: (enum: (:items, ...), ...)): (
-                appName: extractedAppName(app),
+                appName: app.name.part,
                 :typeName,
                 enumItems: items,
             )
@@ -278,7 +267,7 @@ let newNormalize = \m
     let _fields = //rel.union(m.apps => \(@value:app, ...)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
             (type.tuple?:(type.relation?:())).attr_defs?:{} => \(@:fieldName, @value:field)
-                (appName: extractedAppName(app), :typeName, :fieldName, :field)
+                (appName: app.name.part, :typeName, :fieldName, :field)
         ) where .
     );
     let field = _fields => \(:appName, :typeName, :fieldName, :field)
@@ -300,7 +289,7 @@ let newNormalize = \m
 
     # View
     let _views = //rel.union(m.apps => \(@value:app, ...)
-        app.views?:{} => (appName: extractedAppName(app), viewName: .@, view: .@value)
+        app.views?:{} => (appName: app.name.part, viewName: .@, view: .@value)
     ) where .;
     let view = _views => \(:appName, :viewName, :view)
         (
@@ -437,8 +426,6 @@ let normalize = \m
     :normalize,
     :newNormalize,
 
-    :extractedAppName,
-    :extractedEpName,
     :annotations,
     :tags,
     :annoRel,

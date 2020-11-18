@@ -1,4 +1,4 @@
-let (:extractedAppName, :extractedEpName, :annotations, :tags, :annoRel, :tagRel,
+let (:annotations, :tags, :annoRel, :tagRel,
      :load, :polish, :normalize, :newNormalize, ...) = //{./sysl};
 
 let _model = load('out/model.pb');
@@ -12,18 +12,6 @@ let _app = (
 );
 
 (
-    extractedAppName: (
-        empty: extractedAppName({}) = {},
-        string: extractedAppName('foo') = 'foo',
-        namedItem: extractedAppName((@:0, @item:(name: (part: 'foo')))) = 'foo',
-        app: extractedAppName((name: (part: ['foo']))) = ['foo'],
-    ),
-    extractedEpName: (
-        empty: extractedEpName({}) = {},
-        string: extractedEpName('foo') = 'foo',
-        named: extractedEpName((name: 'foo')) = 'foo',
-        namedItem: extractedEpName((@:0, @item:(name: 'foo'))) = 'foo',
-    ),
     annotations: (
         empty: annotations(()) = {},
         string: annotations((attrs: {'foo': (s: 'bar')})) = {'foo': 'bar'},
