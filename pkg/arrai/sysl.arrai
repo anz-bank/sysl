@@ -12,9 +12,17 @@ let load = \path
     //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
 
 # Extracts the dictionary of annotations of an element.
-# Handles strings, arrays of strings, and arrays of arrays of strings.
-let annotations = \x x.attrs?:{} where .@ != 'patterns' >> \v
-    v.s?:(v.a.elt >> \v v.s?:(v.a.elt >> .s));
+let annotations =
+    let rec resolveVal = \v
+        cond v {
+            (a: (:elt)): resolveVal(elt),
+            [...]: v >> resolveVal(.),
+            (:s): resolveVal(s),
+            _: v,
+        };
+    \x x.attrs?:{} where .@ != 'patterns' >> resolveVal(.)
+;
+
 # Extracts the set of pattern attributes of an element.
 let tags = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
 
