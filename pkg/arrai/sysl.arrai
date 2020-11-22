@@ -88,7 +88,7 @@ let rec buildNvp = \nvp cond nvp {
     _: //eval.value(//seq.join('', nvp.''))
 };
 
-let (:ranked, :nativeDataTypes, ...) = //{./util};
+let (:ranked, :nativeDataTypes, :reduce, ...) = //{./util};
 
 # tries to fix type without full reference
 let fixType = \apps \appName \typePayload
@@ -192,7 +192,7 @@ let newNormalize = \m
 
     # Parameters
     let _params = //rel.union(_eps => \(:appName, :epName, :ep)
-        ep.param?:{} => (:appName, :epName, paramName: .@item.name, param: .)
+        ep.param?:{} => (:appName, :epName, paramName: .@item.name?:{}, param: .)
     ) where .;
     let param = _params => \(:appName, :epName, :paramName, param: (:@, @item:param))
         (
@@ -278,6 +278,11 @@ let newNormalize = \m
                 (appName: app.name.part, :typeName, :fieldName, :field)
         ) where .
     );
+
+    let mergeArrayTuples = \input
+        reduce(input, \z \i i +> z, ())
+    ;
+
     let field = _fields => \(:appName, :typeName, :fieldName, :field)
         (
             :appName,
@@ -289,6 +294,7 @@ let newNormalize = \m
                 (type_ref:(ref:(path:p), ...), ...): //seq.join('.', p),
                 _: '?',
             },
+            fieldConstraint: let constraint = field.constraint?:{}; mergeArrayTuples(constraint),
             # fk: cond field.type_ref?.ref.path:{} {
             #     [t, f]: (appName:app.name.part, typeName: t, fieldName: f)
             # },

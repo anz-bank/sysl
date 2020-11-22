@@ -72,10 +72,10 @@ RestEndpoint:
 
     /param:
         # just reference to a type
-        GET (Types.type):
+        GET (Types.Type):
             ...
 
-        PATCH (t <: Types.type [~body]):
+        PATCH (t <: Types.Type [~body]):
             ...
 
         # FIXME: sequence and set
@@ -111,6 +111,9 @@ Types:
         optional <: string?
         with_anno <: string:
             @annotation = "this is an annotation"
+        decimal_with_precision <: decimal(5.8)
+        string_max_constraint <: string(5)
+        string_range_constraint <: string(5..10)
         inplace <:
             a <: string
             b <: int
