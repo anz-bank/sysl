@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@types/node": "^10.12.12",
-    "antlr4": "^4.7.0"
+    "antlr4": "4.7.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",
