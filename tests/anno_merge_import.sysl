@@ -1,0 +1,6 @@
+App:
+    @a = "x"
+    !type Type:
+        @b = "y"
+        a <: int:
+            @c = "z"

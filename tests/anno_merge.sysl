@@ -1,0 +1,8 @@
+import anno_merge_import.sysl
+
+App:
+    @a = "a"
+    !type Type:
+        @b = "b"
+        a <: int:
+            @c = "c"

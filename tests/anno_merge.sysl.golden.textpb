@@ -1,0 +1,69 @@
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
+  }
+  attrs: {
+   key: "a"
+   value: {
+    s: "a"
+   }
+  }
+  types: {
+   key: "Type"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "a"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "c"
+        value: {
+         s: "c"
+        }
+       }
+       source_context: {
+        file: "./anno_merge_import.sysl"
+        start: {
+         line: 6
+         col: 13
+        }
+        end: {
+         line: 7
+        }
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "b"
+     value: {
+      s: "b"
+     }
+    }
+    source_context: {
+     file: "./anno_merge_import.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 7
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "./anno_merge_import.sysl"
+   start: {
+    line: 1
+    col: 1
+   }
+   end: {
+    line: 1
+   }
+  }
+ }
+}

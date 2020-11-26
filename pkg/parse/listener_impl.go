@@ -274,6 +274,10 @@ func fromQString(str string) string {
 func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueContext) {
 	attrs := s.peekAttrs()
 
+	// This ensures that the first parsed annotation has the highest precedence and does not get replaced
+	if v, exists := attrs[s.annotation]; exists && v.Attribute != nil {
+		return
+	}
 	switch {
 	case ctx.QSTRING() != nil:
 		attrs[s.annotation].Attribute = &sysl.Attribute_S{
@@ -303,7 +307,12 @@ func (s *TreeShapeListener) ExitAnnotation_value(ctx *parser.Annotation_valueCon
 func (s *TreeShapeListener) EnterAnnotation(ctx *parser.AnnotationContext) {
 	attr_name := ctx.VAR_NAME().GetText()
 	attrs := s.peekAttrs()
-	attrs[attr_name] = &sysl.Attribute{}
+
+	// if v.Attribute is not nil, there are already values defined for the
+	// annotation which should not be replaced.
+	if v, exists := attrs[attr_name]; !exists || v.Attribute == nil {
+		attrs[attr_name] = &sysl.Attribute{}
+	}
 	s.annotation = attr_name
 	if t, ok := s.peekScope().(*sysl.Type); ok {
 		if t.SourceContext != nil {
