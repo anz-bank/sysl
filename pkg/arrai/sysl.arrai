@@ -7,7 +7,7 @@ let syslPbFallbackPath = './sysl/sysl.pb';
 let syslPb = cond  {
     //os.exists(syslPbPath): //os.file(syslPbPath),
     //os.exists(syslPbFallbackPath): //os.file(syslPbFallbackPath),
-    _: //net.http.get('https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.pb?raw=true').body,
+    _: //net.http.get((), 'https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.pb?raw=true').body,
 };
 let load = \path
     let syslDescriptor = //encoding.proto.descriptor(syslPb);

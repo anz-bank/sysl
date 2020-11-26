@@ -55,7 +55,7 @@ let resolveStmts = \stmt
                 `
             ::\i}
         `,
-        .stmtCall: .stmtCall -> \(appName: (:part), :epName) $`${joinedName(part)} <- ${epName}`,
+        .stmtCall: .stmtCall -> \(:appName, :epName) $`${joinedName(appName)} <- ${epName}`,
         .stmtCond: '', # TODO: seems something is wrong with this
         .stmtForeach: '', # TODO
         .stmtGroup: '', # TODO
