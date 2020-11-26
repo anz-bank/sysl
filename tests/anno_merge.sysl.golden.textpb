@@ -24,14 +24,21 @@ apps: {
          s: "c"
         }
        }
+       attrs: {
+        key: "d"
+        value: {
+         s: "d"
+        }
+       }
        source_context: {
         file: "./anno_merge_import.sysl"
         start: {
-         line: 6
+         line: 7
          col: 13
         }
         end: {
          line: 7
+         col: 20
         }
        }
       }
@@ -51,6 +58,7 @@ apps: {
      }
      end: {
       line: 7
+      col: 20
      }
     }
    }
