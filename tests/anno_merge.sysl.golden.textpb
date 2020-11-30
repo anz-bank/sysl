@@ -37,8 +37,44 @@ apps: {
          col: 13
         }
         end: {
-         line: 7
-         col: 20
+         line: 8
+         col: 8
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "b"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "e"
+        value: {
+         s: "e"
+        }
+       }
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "tag1"
+          }
+          elt: {
+           s: "tag2"
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "./anno_merge_import.sysl"
+        start: {
+         line: 8
+         col: 13
+        }
+        end: {
+         line: 8
+         col: 26
         }
        }
       }
@@ -57,8 +93,7 @@ apps: {
       col: 4
      }
      end: {
-      line: 7
-      col: 20
+      line: 9
      }
     }
    }

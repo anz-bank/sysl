@@ -7,3 +7,5 @@ App:
         a <: int:
             @c = "c"
             @d = ""
+        b <: string [~tag1]:
+            @e = "e"

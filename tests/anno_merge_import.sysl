@@ -5,3 +5,4 @@ App:
         a <: int:
             @c = "z"
             @d = "d"
+        b <: string [~tag2]

@@ -272,35 +272,22 @@ func fromQString(str string) string {
 
 // EnterAnnotation_value is called when production annotation_value is entered.
 func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueContext) {
-	attrs := s.peekAttrs()
-
-	// This ensures that the first non-empty annotation has the highest precedence and does not get replaced
-	if v, exists := attrs[s.annotation]; exists && v.Attribute != nil {
-		switch x := v.Attribute.(type) {
-		case *sysl.Attribute_S:
-			if x.S != "" {
-				return
-			}
-		case *sysl.Attribute_A:
-			if len(x.A.GetElt()) > 0 {
-				return
-			}
-		}
-	}
+	attr := &sysl.Attribute{}
 	switch {
 	case ctx.QSTRING() != nil:
-		attrs[s.annotation].Attribute = &sysl.Attribute_S{
+		attr.Attribute = &sysl.Attribute_S{
 			S: fromQString(ctx.QSTRING().GetText()),
 		}
 	case ctx.Multi_line_docstring() != nil:
-		attrs[s.annotation].Attribute = &sysl.Attribute_S{}
+		attr.Attribute = &sysl.Attribute_S{}
 	default:
 		arr := makeArrayOfStringsAttribute(ctx.Array_of_strings().(*parser.Array_of_stringsContext))
 
-		attrs[s.annotation].Attribute = &sysl.Attribute_A{
+		attr.Attribute = &sysl.Attribute_A{
 			A: arr.GetA(),
 		}
 	}
+	addAttrWithPrecendence(s.peekAttrs(), s.annotation, attr)
 }
 
 // ExitAnnotation_value is called when production annotation_value is exited.
@@ -341,7 +328,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		type1.Attrs = makeAttributeArray(attribs)
+		type1.Attrs = mergeAttrsWithPrecendence(type1.Attrs, makeAttributeArray(attribs))
 	}
 
 	if ctx.QN() != nil {
@@ -498,6 +485,46 @@ func makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) 
 			},
 		},
 	}
+}
+
+func addAttrWithPrecendence(
+	attrs map[string]*sysl.Attribute,
+	key string, attr *sysl.Attribute,
+) map[string]*sysl.Attribute {
+	if attrs == nil {
+		attrs = make(map[string]*sysl.Attribute)
+	}
+	if patterns, hasPatterns := attrs[patternsKey]; hasPatterns && key == patternsKey {
+		currPatterns := patterns.Attribute.(*sysl.Attribute_A)
+		newPatterns := attr.Attribute.(*sysl.Attribute_A)
+		currPatterns.A.Elt = append(currPatterns.A.GetElt(), newPatterns.A.GetElt()...)
+		return attrs
+	}
+	// This ensures that the first non-empty annotation has the highest precedence and does not get replaced
+	if v, exists := attrs[key]; exists && v.Attribute != nil {
+		switch x := v.Attribute.(type) {
+		case *sysl.Attribute_S:
+			if x.S != "" {
+				return attrs
+			}
+		case *sysl.Attribute_A:
+			if len(x.A.GetElt()) > 0 {
+				return attrs
+			}
+		}
+	}
+	attrs[key] = attr
+	return attrs
+}
+
+func mergeAttrsWithPrecendence(currentAttrs, newAttrs map[string]*sysl.Attribute) map[string]*sysl.Attribute {
+	if currentAttrs == nil {
+		currentAttrs = make(map[string]*sysl.Attribute)
+	}
+	for k, v := range newAttrs {
+		currentAttrs = addAttrWithPrecendence(currentAttrs, k, v)
+	}
+	return currentAttrs
 }
 
 func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]*sysl.Attribute {
