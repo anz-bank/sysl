@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	contentScriptType="application/ecmascript"
+	contentStyleType="text/css"
+	preserveAspectRatio="none"
+	version="1.1"
+	viewBox="0 0 617 984"
+	zoomAndPan="magnify"
+	style="width:617px;height:984px;background-color:white;"
+	width="617px"
+	height="984px"
+	>
+  <defs>
+    <filter height="300%" id="f1wnxt5n5b3ed0" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0"/>
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/>
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/>
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/>
+    </filter>
+  </defs>
+  <g>
+    <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="379" x="114.75" y="22.9951">SEQ-ATM: Submit Application (Bankers Desktop)</text>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="102.5313" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="155.8594"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="138.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="330.6563"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="138.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="548.7188"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="138.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="766.7813"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="184.9922"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="390.0547"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="608.1172"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="826.1797"/>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="101" x2="101" y1="81.5938" y2="930.5781"/>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="378.5" x2="378.5" y1="81.5938" y2="930.5781"/>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="541.5" x2="541.5" y1="81.5938" y2="930.5781"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="34" x="81" y="78.292">ATM</text>
+    <ellipse cx="101" cy="49.2969" fill="#FEFECE" filter="url(#f1wnxt5n5b3ed0)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/>
+    <polygon fill="#A80036" points="97,37.2969,103,32.2969,101,37.2969,103,42.2969,97,37.2969" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="34" x="81" y="942.5732">ATM</text>
+    <ellipse cx="101" cy="961.875" fill="#FEFECE" filter="url(#f1wnxt5n5b3ed0)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/>
+    <polygon fill="#A80036" points="97,949.875,103,944.875,101,949.875,103,954.875,97,949.875" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="183" x="284.5" y="78.292">AccountTransactionApi</text>
+    <ellipse cx="379" cy="49.2969" fill="#FEFECE" filter="url(#f1wnxt5n5b3ed0)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/>
+    <polygon fill="#A80036" points="375,37.2969,381,32.2969,379,37.2969,381,42.2969,375,37.2969" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="183" x="284.5" y="942.5732">AccountTransactionApi</text>
+    <ellipse cx="379" cy="961.875" fill="#FEFECE" filter="url(#f1wnxt5n5b3ed0)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/>
+    <polygon fill="#A80036" points="375,949.875,381,944.875,379,949.875,381,954.875,375,949.875" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="111" x="483.5" y="78.292">BankDatabase</text>
+    <ellipse cx="542" cy="49.2969" fill="#FEFECE" filter="url(#f1wnxt5n5b3ed0)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/>
+    <polygon fill="#A80036" points="538,37.2969,544,32.2969,542,37.2969,544,42.2969,538,37.2969" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="111" x="483.5" y="942.5732">BankDatabase</text>
+    <ellipse cx="542" cy="961.875" fill="#FEFECE" filter="url(#f1wnxt5n5b3ed0)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/>
+    <polygon fill="#A80036" points="538,949.875,544,944.875,542,949.875,544,954.875,538,949.875" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="102.5313" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="155.8594"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="138.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="330.6563"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="138.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="548.7188"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="138.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="96" y="766.7813"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="184.9922"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="390.0547"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="608.1172"/>
+    <rect fill="#FFFFFF" filter="url(#f1wnxt5n5b3ed0)" height="44.2656" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="374" y="826.1797"/>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="3" style="stroke: #EEEEEE; stroke-width: 1.0;" width="602.5" x="3" y="112.1602"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="112.1602" y2="112.1602"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="115.1602" y2="115.1602"/>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="23.1328" style="stroke: #000000; stroke-width: 2.0;" width="160" x="224.25" y="101.5938"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="141" x="230.25" y="117.6606">ATM &lt;- GetBalance</text>
+    <polygon fill="#A80036" points="84,151.8594,94,155.8594,84,159.8594,88,155.8594" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="3" x2="90" y1="155.8594" y2="155.8594"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="74" x="10" y="150.7935">GetBalance</text>
+    <polygon fill="#A80036" points="362,180.9922,372,184.9922,362,188.9922,366,184.9922" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="106" x2="368" y1="184.9922" y2="184.9922"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="219" x="113" y="179.9263">GET /accounts/{account_number}</text>
+    <polygon fill="#A80036" points="530,225.2578,540,229.2578,530,233.2578,534,229.2578" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="379" x2="536" y1="229.2578" y2="229.2578"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="75" x="386" y="209.0591">GetAccount</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="5" x="386" y="224.1919">(</text>
+    <text fill="#0000FF" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="4" x="391" y="224.1919">.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="11" x="399" y="224.1919">&lt;</text>
+    <text fill="#008000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="410" y="224.1919">?, ?</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="16" x="432" y="224.1919">&gt;)</text>
+    <polygon fill="#A80036" points="14,254.3906,4,258.3906,14,262.3906,10,258.3906" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="8" x2="100" y1="258.3906" y2="258.3906"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="50" x="20" y="253.3247">balance</text>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="3" style="stroke: #EEEEEE; stroke-width: 1.0;" width="602.5" x="3" y="286.957"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="286.957" y2="286.957"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="289.957" y2="289.957"/>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="23.1328" style="stroke: #000000; stroke-width: 2.0;" width="146" x="231.25" y="276.3906"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="127" x="237.25" y="292.4575">ATM &lt;- Withdraw</text>
+    <polygon fill="#A80036" points="84,326.6563,94,330.6563,84,334.6563,88,330.6563" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="3" x2="90" y1="330.6563" y2="330.6563"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="57" x="10" y="325.5903">Withdraw</text>
+    <polygon fill="#A80036" points="362,386.0547,372,390.0547,362,394.0547,366,390.0547" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="106" x2="368" y1="390.0547" y2="390.0547"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="34" x="113" y="354.7231">POST</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="249" x="113" y="369.856">/accounts/{account_number}/withdraw</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="5" x="113" y="384.9888">(</text>
+    <text fill="#0000FF" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="4" x="118" y="384.9888">.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="11" x="126" y="384.9888">&lt;</text>
+    <text fill="#008000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="137" y="384.9888">?, ?</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="16" x="159" y="384.9888">&gt;)</text>
+    <polygon fill="#A80036" points="530,430.3203,540,434.3203,530,438.3203,534,434.3203" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="379" x2="536" y1="434.3203" y2="434.3203"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="95" x="386" y="414.1216">WithdrawFunds</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="5" x="386" y="429.2544">(</text>
+    <text fill="#0000FF" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="4" x="391" y="429.2544">.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="11" x="399" y="429.2544">&lt;</text>
+    <text fill="#008000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="410" y="429.2544">?, ?</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="16" x="432" y="429.2544">&gt;)</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="106" x2="148" y1="468.4531" y2="468.4531"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="148" x2="148" y1="468.4531" y2="481.4531"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="101" x2="148" y1="481.4531" y2="481.4531"/>
+    <polygon fill="#A80036" points="111,477.4531,101,481.4531,111,485.4531,107,481.4531" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="96" x="113" y="463.3872">Withdraw funds</text>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="3" style="stroke: #EEEEEE; stroke-width: 1.0;" width="602.5" x="3" y="505.0195"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="505.0195" y2="505.0195"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="508.0195" y2="508.0195"/>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="23.1328" style="stroke: #000000; stroke-width: 2.0;" width="133" x="237.75" y="494.4531"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="114" x="243.75" y="510.52">ATM &lt;- Deposit</text>
+    <polygon fill="#A80036" points="84,544.7188,94,548.7188,84,552.7188,88,548.7188" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="3" x2="90" y1="548.7188" y2="548.7188"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="49" x="10" y="543.6528">Deposit</text>
+    <polygon fill="#A80036" points="362,604.1172,372,608.1172,362,612.1172,366,608.1172" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="106" x2="368" y1="608.1172" y2="608.1172"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="34" x="113" y="572.7856">POST</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="241" x="113" y="587.9185">/accounts/{account_number}/deposit</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="5" x="113" y="603.0513">(</text>
+    <text fill="#0000FF" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="4" x="118" y="603.0513">.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="11" x="126" y="603.0513">&lt;</text>
+    <text fill="#008000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="137" y="603.0513">?, ?</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="16" x="159" y="603.0513">&gt;)</text>
+    <polygon fill="#A80036" points="530,648.3828,540,652.3828,530,656.3828,534,652.3828" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="379" x2="536" y1="652.3828" y2="652.3828"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="87" x="386" y="632.1841">DepositFunds</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="5" x="386" y="647.3169">(</text>
+    <text fill="#0000FF" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="4" x="391" y="647.3169">.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="11" x="399" y="647.3169">&lt;</text>
+    <text fill="#008000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="410" y="647.3169">?, ?</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="16" x="432" y="647.3169">&gt;)</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="106" x2="148" y1="686.5156" y2="686.5156"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="148" x2="148" y1="686.5156" y2="699.5156"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="101" x2="148" y1="699.5156" y2="699.5156"/>
+    <polygon fill="#A80036" points="111,695.5156,101,699.5156,111,703.5156,107,699.5156" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="88" x="113" y="681.4497">Deposit funds</text>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="3" style="stroke: #EEEEEE; stroke-width: 1.0;" width="602.5" x="3" y="723.082"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="723.082" y2="723.082"/>
+    <line style="stroke: #000000; stroke-width: 1.0;" x1="3" x2="605.5" y1="726.082" y2="726.082"/>
+    <rect fill="#EEEEEE" filter="url(#f1wnxt5n5b3ed0)" height="23.1328" style="stroke: #000000; stroke-width: 2.0;" width="137" x="235.75" y="712.5156"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="118" x="241.75" y="728.5825">ATM &lt;- Transfer</text>
+    <polygon fill="#A80036" points="84,762.7813,94,766.7813,84,770.7813,88,766.7813" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="3" x2="90" y1="766.7813" y2="766.7813"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="52" x="10" y="761.7153">Transfer</text>
+    <polygon fill="#A80036" points="362,822.1797,372,826.1797,362,830.1797,366,826.1797" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="106" x2="368" y1="826.1797" y2="826.1797"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="34" x="113" y="790.8481">POST</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="244" x="113" y="805.981">/accounts/{account_number}/transfer</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="5" x="113" y="821.1138">(</text>
+    <text fill="#0000FF" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="4" x="118" y="821.1138">.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="11" x="126" y="821.1138">&lt;</text>
+    <text fill="#008000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="137" y="821.1138">?, ?</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="16" x="159" y="821.1138">&gt;)</text>
+    <polygon fill="#A80036" points="530,866.4453,540,870.4453,530,874.4453,534,870.4453" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="379" x2="536" y1="870.4453" y2="870.4453"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="90" x="386" y="850.2466">TransferFunds</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="5" x="386" y="865.3794">(</text>
+    <text fill="#0000FF" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="4" x="391" y="865.3794">.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="11" x="399" y="865.3794">&lt;</text>
+    <text fill="#008000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="410" y="865.3794">?, ?</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="16" x="432" y="865.3794">&gt;)</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="106" x2="148" y1="904.5781" y2="904.5781"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="148" x2="148" y1="904.5781" y2="917.5781"/>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="101" x2="148" y1="917.5781" y2="917.5781"/>
+    <polygon fill="#A80036" points="111,913.5781,101,917.5781,111,921.5781,107,917.5781" style="stroke: #A80036; stroke-width: 1.0;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="91" x="113" y="899.5122">Transfer funds</text>
+  </g>
+</svg>

@@ -1,0 +1,41 @@
+{
+  "name": "sysl-website",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "spellcheck": "pyspelling -c .spellcheck.yml",
+    "sort": "sort -f -o .wordlist.txt .wordlist.txt",
+    "format": "yarn prettier --write ."
+  },
+  "dependencies": {
+    "@docusaurus/core": "^2.0.0-alpha.65",
+    "@docusaurus/plugin-google-analytics": "^2.0.0-alpha.65",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.65",
+    "ace-builds": "^1.4.12",
+    "classnames": "^2.2.6",
+    "elliptic": "^6.5.3",
+    "react": "^16.8.4",
+    "react-ace": "^9.1.2",
+    "react-dom": "^16.8.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "markdown-link-check": "^3.8.3",
+    "prettier": "2.0.5"
+  }
+}

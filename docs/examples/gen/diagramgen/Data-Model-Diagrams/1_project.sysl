@@ -1,0 +1,34 @@
+# In this example will use a simple system and start using the sysl command to generate diagrams.
+
+Project:
+
+    # This is a "root level application" We can name it or leave it blank, at the moment we don't need to use it, so we can substitute with an _ 
+    # . These "root level applications" don't really mean anything at the moment; they're just a "dirty hack" for sysl to know what to render
+    Server:
+        Server
+    App:
+        App 
+    Relational-Model:
+        Relationships
+
+Server:
+    !type id:
+        id <: int
+App:
+    !type User:
+
+        # Here we define that this id refers to another type defined in the Server Application
+        id <: Server.id
+
+AnotherOne:
+    !type name:
+        firstName <: string
+        lastName <: string
+
+Relationships:
+    !table Account:
+        ResourceID <: string [~pk]
+        AccountID <: string
+    !table Role:
+        RoleID <: int [~pk]
+        RoleName <: string

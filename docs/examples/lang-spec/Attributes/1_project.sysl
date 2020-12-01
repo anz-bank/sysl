@@ -1,0 +1,8 @@
+# Attributes are additional bits of information which can be attached to applications and endpoints.
+# Specify attributes of applications or endpoints in square brackets. 
+Foo [package="com.mycompany"]:
+    # Attributes can also be specified using the @ notation for a key value notation
+    @owner="jane.smith@company.com"
+    # Attributes can also be tags specified with tilda notation
+    Bar(newPost <: string [~body]):
+        return string

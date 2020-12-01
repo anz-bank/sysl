@@ -1,0 +1,115 @@
+.deliver__section {
+  padding: 2rem;
+}
+.deliver__title {
+  color: var(--ifm-color--text--primary);
+}
+.deliver__title__section {
+  border-radius: 0 0 60% 60%;
+  background: rgba(198, 223, 234, 0.3);
+  padding: 2.5rem;
+}
+.deliver__desc {
+  color: var(--ifm-color--text--primary);
+  text-align: center;
+  font-size: 1.25rem;
+}
+.deliver__body {
+  display: flex;
+  justify-content: center;
+}
+
+.deliver__left,
+.deliver__right {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.deliver__left {
+  justify-content: flex-end;
+}
+
+.deliver__left__title,
+.deliver__right__title {
+  flex: 100%;
+  font-size: 24px;
+  color: var(--ifm-color--text--desc);
+  line-height: 25px;
+  text-align: center;
+  font-weight: 200;
+}
+.deliver__left__title {
+  left: 9%;
+  position: relative;
+}
+.deliver__right__title {
+  right: 9%;
+  position: relative;
+}
+.deliver__button__group__left,
+.deliver__button__group__right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.deliver__button__group__left {
+  align-items: flex-end;
+}
+
+.deliver__button__group__right {
+  align-items: flex-start;
+  height: 293px;
+}
+
+.deliver__arrow__left {
+  padding: 15px 0;
+}
+.deliver__middle__title {
+  font-size: 50px;
+  color: var(--ifm-color--text--primary);
+}
+
+.button__round {
+  border-radius: 50px;
+  color: #ffffff;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 36px;
+  border-radius: 36px;
+}
+
+.deliver__arrow__right__group {
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 9;
+}
+
+@media screen and (max-width: 1100px) {
+  .avatar__container,
+  .deliver__arrow__right__group,
+  .deliver__arrow__left,
+  .deliver__middle {
+    display: none;
+  }
+  .deliver__button__group__right {
+    height: auto;
+  }
+  .deliver__body {
+    height: 210px;
+  }
+  .button__round {
+    font-size: 16px;
+    padding: 3px 20px;
+  }
+  .deliver__right {
+    margin-left: 1rem;
+  }
+  .deliver__left__title {
+    left: 30%;
+  }
+  .deliver__right__title {
+    text-align: left;
+    right: 0;
+  }
+}

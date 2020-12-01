@@ -1,0 +1,29 @@
+# Our first program will make a simple "Hello world" application with two endpoints.
+
+# Specify an application called `HelloWorld`.
+HelloWorld:
+    # Specify composite types with "!type" followed by type fields.
+    !type Request:
+        userId <: int
+        id <: int
+        title <: string
+        completed <: bool
+        day <: date
+        timestamp <: datetime
+        # Specify optional fields by using "?" at the end of the data type.
+        something <: string?
+
+    !type ErrorResponse:
+        status <: string
+    # Use the `!alias` keyword to alias to another identifier 
+    !alias Requests:
+        sequence of Request
+    # Specify an endpoint as the next indent.
+    endpoint(input <: Request):
+        # Specify a return type for the endpoint. Anything after the return is considered a payload.
+        return Requests
+
+
+# Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands.
+
+# TODO: Mandatory vs optional fields

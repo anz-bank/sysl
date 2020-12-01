@@ -1,0 +1,34 @@
+# In this example will use a simple system and start using the sysl command to generate diagrams.
+
+# Let's breakdown the `sd` aka `sequence diagram` command:
+
+# ```
+# sysl sd -o 'call-login-sequence.png' -s 'MobileApp <- Login' call.sysl
+# ```
+
+# - `-o` specifies the output filename
+# - `-s` specifies the start endpoint
+# - `call.sysl` the source to start the analysis from
+
+# Sysl analyzes the starting endpoint and finds all the `call`s that this endpoint makes to other endpoints (including the ones to other applications). It finds all the transitive dependencies till there are none.
+
+# In the above diagram, `DB` is the last app in this flow. Sysl also captures the return data that each endpoint returns to its caller. See below for more details.
+
+MobileApp:
+    Login:
+
+        # Here it is defined that this "Login" endpoint calls the server endpoint "LoginRequest"
+        Server <- LoginRequest
+
+    !type LoginData:
+        username <: string
+        password <: string
+
+    !type LoginResponse:
+        message <: string
+
+Server:
+
+    # Here the datatype uses a datatype defined in MobileApp
+    LoginRequest(data <: MobileApp.LoginData):
+        return MobileApp.LoginResponse

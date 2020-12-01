@@ -1,0 +1,8 @@
+Payment:
+    !type CardInfo:
+        credit_card_number <: string:
+            @sensitive="true"
+        type <: string
+    !type Payment:
+        CardInfo <: CardInfo
+        Amount <: int

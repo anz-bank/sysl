@@ -1,0 +1,23 @@
+GroceryStore:
+    /checkout:
+        POST?payment_info=string:
+            Payment <- POST /validate
+            Payment <- POST /pay
+            | Checks out the specified cart
+            return ok <: string
+
+Payment:
+    /validate:
+        POST?payment_info=string:
+            | Validates payment information
+            return 200 <: string
+
+    /pay:
+        POST:
+            | Processes a payment
+            return ok <: string
+
+Project [appfmt="%(appname)"]:
+    _:
+        GroceryStore
+        Payment

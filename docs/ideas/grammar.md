@@ -36,7 +36,3 @@ The output would be a grammar protobuf, which is handed to a grammar interpreter
 
 ⁷ 	PYTHON_FUNC: "def" ID ":" INDENT BODY DEDENT
 ```
-
-## Example: Java Grammar
-
-See [pkg/lib/lang/java.sysl](../../pkg/lib/lang/java.sysl).

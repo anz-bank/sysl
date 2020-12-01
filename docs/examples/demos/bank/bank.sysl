@@ -1,0 +1,127 @@
+BankModel [package="io.sysl.bank.model"]:
+    !table Branch:
+        branch_id <: int [~pk]
+        branch_name <: string?
+        branch_address <: string?
+
+    !table Customer:
+        customer_id <: int [~pk]
+        customer_name <: string?
+        customer_address <: string?
+        customer_dob <: date?
+        branch_id <: Branch.branch_id
+
+    !table Account:
+        account_number <: int [~pk]
+        account_type <: string?
+        account_status <: string?
+        account_balance <: int?
+
+    !table Transaction:
+        transaction_id <: int [~pk]
+        transaction_type <: string?
+        transaction_date_time <: date?
+        transaction_amount <: int?
+        from_account_number <: Account.account_number
+        to_account_number <: Account.account_number
+
+    !table CustomerAccount:
+        customer_id <: Customer.customer_id
+        account_number <: Account.account_number
+
+
+BankFacade [package="io.sysl.bank.facade"]:
+    !wrap BankModel:
+        !table Branch
+        !table Customer
+        !table Account
+        !table Transaction
+        !table CustomerAccount
+
+BankDatabase:
+    GetCustomer (customer_id): ...
+    UpdateCustomer: ...
+    DeleteCustomer (customer_id): ...
+
+    GetAccount (account_number): ...
+    UpdateAccount (account_number): ...
+    DeleteAccount (account_number): ...
+
+    WithdrawFunds (account_number): ...
+    DepositFunds (account_number): ...
+    TransferFunds (account_number): ...
+
+CustomerApi [package="io.sysl.customer.api"]:
+    /customers:
+        /{customer_id<:int}:
+            GET:
+                BankDatabase <- GetCustomer
+
+            /update:
+                POST (customer <: Customer):
+                    BankDatabase <- UpdateCustomer
+
+            /delete:
+                POST (customer <: Customer):
+                    BankDatabase <- DeleteCustomer
+
+    !type Customer:
+        customer_id <: string?
+        customer_name <: string?
+        customer_address <: string?
+        customer_dob <: date?
+
+AccountTransactionApi [package="io.sysl.account.api"]:
+    /accounts:
+        /{account_number<:int}:
+            GET:
+                BankDatabase <- GetAccount(account_number)
+
+            /update:
+                POST (a<:Account):
+                    BankDatabase <- UpdateAccount(account_number)
+
+            /delete:
+                POST (a<:Account):
+                    BankDatabase <- DeleteAccount(account_number)
+
+            /withdraw:
+                POST (a<:Transaction):
+                    BankDatabase <- WithdrawFunds(account_number)
+
+            /deposit:
+                POST (a<:Transaction):
+                    BankDatabase <- DepositFunds(account_number)
+
+            /transfer:
+                POST (a<:Transaction):
+                    BankDatabase <- TransferFunds(account_number)
+
+    !type Account:
+        account_number <: int?
+        account_type <: string?
+        account_status <: string?
+        account_balance <: int?
+
+    !type Transaction:
+        transaction_id <: int?
+        transaction_type <: string?
+        transaction_date_time <: date?
+        transaction_amount <: int?
+        from_account_number <: Account.account_number
+        to_account_number <: Account.account_number
+
+ATM:
+    GetBalance:
+        AccountTransactionApi <- GET /accounts/{account_number}
+        Return balance
+    Withdraw:
+        AccountTransactionApi <- POST /accounts/{account_number}/withdraw
+        Withdraw funds
+    Deposit:
+        AccountTransactionApi <- POST /accounts/{account_number}/deposit
+        Deposit funds
+    Transfer:
+        AccountTransactionApi <- POST /accounts/{account_number}/transfer
+        Transfer funds
+

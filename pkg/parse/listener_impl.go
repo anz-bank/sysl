@@ -130,7 +130,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 
 		space := ""
 		text := ctx.TEXT().GetText()
-		text = strings.Replace(text, `"`, `\"`, -1)
+		text = strings.ReplaceAll(text, `"`, `\"`)
 		text = fromQString(`"` + text[1:] + `"`)
 
 		if s.currentApp().Endpoints[s.endpointName].GetRestParams() != nil {

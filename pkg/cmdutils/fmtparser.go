@@ -100,7 +100,7 @@ func (fp *FormatParser) Parse(attrs map[string]string) string {
 	logrus.Debugf("self: %s", fp.Self)
 	logrus.Debugf("attrs: %v", attrs)
 	fp.Expansions(ItemReDefault, attrs)
-	formatted := strings.Replace(fp.Result, "\n", "\\n", -1)
+	formatted := strings.ReplaceAll(fp.Result, "\n", "\\n")
 	fp.Clear()
 	logrus.Debugf("format string: %s", formatted)
 
@@ -245,9 +245,9 @@ func (fp *FormatParser) Clear() {
 
 func RemovePercentSymbol(src string) string {
 	substitute := string([]byte{1})
-	src = strings.Replace(src, "%%", substitute, -1)
-	src = strings.Replace(src, "%", "", -1)
-	src = strings.Replace(src, substitute, "%", -1)
+	src = strings.ReplaceAll(src, "%%", substitute)
+	src = strings.ReplaceAll(src, "%", "")
+	src = strings.ReplaceAll(src, substitute, "%")
 
 	return src
 }

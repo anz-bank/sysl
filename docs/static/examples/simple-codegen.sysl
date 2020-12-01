@@ -1,0 +1,122 @@
+Simple "Simple Server" [package="simple"]:
+    @basePath = "/simple"
+    @go_package = "simple"
+
+    /stuff:
+        GET ?dt=DATETIME?&st=string?&bt=bool?&it=int:
+            return ok <: Stuff
+        POST (request <: str [~body]):
+            return ok <: str
+
+    /raw:
+        GET ?bt=bool:
+            return ok <: str
+
+    /raw/states:
+        GET:
+            return ok <: sequence of Status
+
+    /raw/{id<:string}/states [~vars_in_url_name]:
+        GET:
+            return ok <: str
+
+    /raw/{id<:int64}/states2:
+        GET:
+            return ok <: str     
+
+    /raw-int:
+        GET:
+            return ok <: integer
+
+    /oops:
+        GET:
+            return ok <: Response
+            # status is intentionally lower case, do not change
+            return error <: status
+
+    # /no-return-type:
+    #     GET:
+    #         return
+
+    /just-return-ok:
+        GET:
+            return ok
+
+    /just-return-error:
+        GET:
+            return error
+
+    /just-ok-and-just-error:
+        GET:
+            return error
+            return ok
+
+    /ok-type-and-just-error:
+        GET:
+            return ok <: Response
+            return error
+
+    /get-some-bytes:
+        GET:
+            return ok <: Pdf
+
+    !type Stuff:
+        @description =:
+            | just some stuff
+        innerStuff <: string:
+            @json_tag = "innerStuff"
+        sensitiveStuff <: string:
+            @json_tag = "sensitiveStuff"
+            @sensitive = "true"
+        rawTimeStuff <: DATETIME:
+            @json_tag = "rawTimeStuff"
+            @time_format = "stdtime"
+        timeStuff <: DATETIME:
+            @json_tag = "timeStuff"
+        responseStuff <: Response:
+            @json_tag = "responseStuff"
+        emptyStuff <: Empty:
+            @json_tag = "emptyStuff"
+        sequenceStuff <: sequence of str?:
+            @json_tag = "sequenceStuff"
+            
+    !type BusinessLogicError [~error]:
+        http_status <: string [value = "500"]
+        http_code <: string [value = "1001"]
+        http_message <: string [value = "foo"]
+
+    !type businessLogicError2 [~error]:
+        http_status <: string [value = "501"]
+        http_code <: string [value = "1002"]
+        http_message <: string [value = "foo2"]
+
+    !alias str:
+        string
+
+    !alias Pdf:
+        bytes
+
+    !alias integer:
+        int
+
+    !type Response:
+        Data <: set of Item
+
+    !type Item [json_map_key="Name"]:
+        Name <: string [~pk, ~no_json]
+        A1 <: string
+        A2 <: string
+
+    !type Empty:
+        ...
+
+    !type Status:
+        statusField <: string
+
+    !type PostRequest [~validate]:
+        Bt <: bool?:
+            @json_tag = "Bt"
+        Dt <: datetime:
+            @json_tag = "dt"
+        St <: string:
+            @json_tag = "St"

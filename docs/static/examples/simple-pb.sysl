@@ -1,0 +1,8 @@
+Simple "Simple":
+    @description =:
+        | Simple demo for protobuf export
+
+    # definitions
+    !type SimpleObj:
+        name <: string?:
+            @json_tag = "name"

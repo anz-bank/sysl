@@ -1,0 +1,18 @@
+Payment:
+    !type CardInfo:
+        credit_card_number <: string:
+            @sensitive="true"
+        type <: string
+    !type Payment:
+        CardInfo <: CardInfo
+        Amount <: int
+
+PaymentService:
+    !type PaymentProvider:
+        Provider <: string
+
+Project:
+    PaymentService:
+        PaymentService
+    Payment:
+        Payment

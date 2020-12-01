@@ -1,0 +1,171 @@
+PetShopModel [package="io.sysl.demo.petshop.model"]:
+    !table Employee:
+        employeeId <: int [~pk, ~autoinc]
+        name <: string?
+        dob <: date?
+        error <: int
+
+    !table Breed:
+        breedId <: int [~pk, ~autoinc]
+        breedName <: string?
+        species <: string?
+        numLegs <: int?
+        avgLifespan <: decimal(14.2)?
+        avgWeight <: decimal(14)?
+        legRank <: int?
+
+    !table Pet:
+        petId <: int [~pk, ~autoinc]
+        breedId <: Breed.breedId
+        name <: string?
+        dob <: date?
+        numLegs <: int?
+
+    !table EmployeeTendsPet:
+        employeeId <: Employee.employeeId [~pk]
+        petId <: Pet.petId [~pk]
+
+
+PetShopFacade [package="io.sysl.demo.petshop.facade"]:
+    !wrap PetShopModel:
+        !table Employee
+        !table Breed
+        !table Pet
+        !table EmployeeTendsPet
+
+
+PetShopApi [package="io.sysl.demo.petshop.api", ~rest]:
+    /petshop:
+        GET:
+            return PetShop
+
+    !type PetShop:
+        employees <: set of Employee
+        breeds <: set of Breed
+        numLegs <: int?
+
+    !type Employee:
+        name <: string?
+        dob <: date?
+        index <: int [~xml_attribute]
+
+    !type Breed:
+        name <: string?
+        species <: string?
+        pets <: set of Pet
+        avgLifespan <: decimal?
+        index <: int [~xml_attribute]
+
+    !type Pet:
+        name <: string?
+        dob <: date?
+        numLegs <: int?
+        legRank <: int
+
+
+PetShopModelToApi [package="io.sysl.demo.petshop.views"]:
+    !view modelToApi(petshop <: PetShopModel):
+        petshop -> <PetShopApi.PetShop>(:
+            let rankedPets = .table of Pet rank<PetShopModelToApi.PetRankedByLeg>(.numLegs as legRank)
+
+            employees = employeeToApi(.table of Employee)
+            breeds = breedToApi(.table of Breed, rankedPets)
+            numLegs = .table of Pet sum(.numLegs ?? 0)
+
+            # some ~> scenarios
+            let pp = .table of Pet
+            let bb = pp ~> .table of Breed
+            let yy = pp !~> .table of Breed
+            #let bb2 = .table of Breed where ({.} ~> pp)
+            let p = pp any(1) singleOrNull
+            let b = p -> Breed
+            let pp2 = b ?-> set of Pet
+            #let b = {p} ~> .table of Breed
+        )
+
+    !view employeeToApi(employee <: set of PetShopModel.Employee):
+        employee -> <set of PetShopApi.Employee>(:
+            .name
+            .dob
+            index = autoinc("Employee")
+        )
+
+    !view breedToApi(breed <: set of PetShopModel.Breed, pet <: set of PetShopModelToApi.PetRankedByLeg):
+        breed -> <set of PetShopApi.Breed>(:
+            name = .breedName
+            .species
+            pets = petToApi(-> set of Pet ~[petId]> pet)
+            avgLifespan = -1.0
+            index = autoinc("Breed")
+        )
+
+    !view petToApi(pet <: set of PetShopModelToApi.PetRankedByLeg):
+        pet -> <set of PetShopApi.Pet>(:
+            .name
+            .dob
+            .numLegs
+            legRank = fibonacci(.legRank)
+        )
+
+    !view fibonacci(n <: int) -> int [~abstract]
+
+    !type PetRankedByLeg:
+        petId <: int
+        breedId <: int
+        name <: string?
+        dob <: date?
+        numLegs <: int?
+        legRank <: int?
+
+
+PetShopApiToModel [package="io.sysl.demo.petshop.views"]:
+    !view apiToModel(petshop <: PetShopApi.PetShop):
+        petshop -> <PetShopModel>(:
+            let _breedsAndPets = .breeds -> <set of>(:
+                let breedId = autoinc()
+
+                breed = -> <PetShopModel.Breed>(:
+                    breedId = breedId
+                    species = .species
+                    breedName = .name
+                )
+
+                pets = .pets -> <set of PetShopModel.Pet>(:
+                    petId = autoinc()
+                    breedId = breedId
+                    .name
+                    .dob
+                )
+            )
+
+            let breedsAndPets = _breedsAndPets snapshot
+
+            let minId1 = breedsAndPets max(.breed.breedId)
+            let minId2 = breedsAndPets max(.breed.breedId)
+
+            let lee = {{:}} -> <set of PetShopModel.Employee>(:
+                name = "Bruce"
+            )
+
+            let leeless = !lee
+
+            let decimal1 = 1.2
+            let decimal2 = 2.3
+            let decimal3 = +decimal1 + decimal2
+
+            let one_third = 1.0 / 3.0
+            let one_ninth = one_third ** 2
+            # let smaller = clamp(one_ninth, 0.0, 0.05)
+
+            # Test conditional precedence.
+            let bruce_lee = lee singleOrNull?.name + substr(" Leek", 0, 4)
+
+            table of Employee = .employees -> <set of PetShopModel.Employee>(:
+                employeeId = autoinc()
+                .name
+                .dob
+                error = minId2 - minId1
+            )
+            table of Breed = breedsAndPets -> set of .breed
+            table of Pet = breedsAndPets flatten(.pets)
+        )

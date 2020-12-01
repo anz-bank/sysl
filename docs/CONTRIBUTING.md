@@ -29,7 +29,6 @@ Prerequisites:
 - `protoc-gen-go`: `go get github.com/golang/protobuf/protoc-gen-go`
 - `go-bindata`: `go get github.com/anz-bank/go-bindata/...`
 
-
 Clone `sysl` to create a local copy on your computer:
 
 ```sh

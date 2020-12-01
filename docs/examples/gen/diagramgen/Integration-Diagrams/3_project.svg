@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="151px" preserveAspectRatio="none" style="width:212px;height:151px;" version="1.1" viewBox="0 0 212 151" width="212px" zoomAndPan="magnify"><defs><filter height="300%" id="f1aenjomc4edcl" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[834ef74a6aa73a899f9de7987f49a674]
+entity _0--><rect fill="#FFFAF0" filter="url(#f1aenjomc4edcl)" height="36.2969" style="stroke: #000000; stroke-width: 1.5;" width="142" x="32" y="8"/><rect fill="#FFFAF0" height="5" style="stroke: #000000; stroke-width: 1.5;" width="10" x="27" y="13"/><rect fill="#FFFAF0" height="5" style="stroke: #000000; stroke-width: 1.5;" width="10" x="27" y="34.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="122" x="42" y="30.9951">IntegratedSystem</text><!--MD5=[5793e68b51480d2da18d2edf8802f392]
+entity _1--><rect fill="#FFFAF0" filter="url(#f1aenjomc4edcl)" height="36.2969" style="stroke: #000000; stroke-width: 1.5;" width="80" x="6" y="104"/><rect fill="#FFFAF0" height="5" style="stroke: #000000; stroke-width: 1.5;" width="10" x="1" y="109"/><rect fill="#FFFAF0" height="5" style="stroke: #000000; stroke-width: 1.5;" width="10" x="1" y="130.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="60" x="16" y="126.9951">System1</text><!--MD5=[fc69c2ef26418c6b4957312aae07cc91]
+entity _2--><rect fill="#FFFAF0" filter="url(#f1aenjomc4edcl)" height="36.2969" style="stroke: #000000; stroke-width: 1.5;" width="80" x="121" y="104"/><rect fill="#FFFAF0" height="5" style="stroke: #000000; stroke-width: 1.5;" width="10" x="116" y="109"/><rect fill="#FFFAF0" height="5" style="stroke: #000000; stroke-width: 1.5;" width="10" x="116" y="130.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="60" x="131" y="126.9951">System2</text><!--MD5=[b84326987e98dcb917912705a3ef9c62]
+link _0 to _1--><path d="M92.5453,44.241 C83.1445,59.7441 69.2938,82.5856 59.1457,99.3211 " fill="none" id="_0-&gt;_1" style="stroke: #DC143C; stroke-width: 1.0;"/><polygon fill="#DC143C" points="56.3884,103.8683,64.4753,98.2468,58.981,99.593,57.6348,94.0986,56.3884,103.8683" style="stroke: #DC143C; stroke-width: 1.0;"/><!--MD5=[0fa3c531946f58762b8ab90cbdfa2c60]
+link _0 to _2--><path d="M113.638,44.241 C123.204,59.7441 137.298,82.5856 147.624,99.3211 " fill="none" id="_0-&gt;_2" style="stroke: #DC143C; stroke-width: 1.0;"/><polygon fill="#DC143C" points="150.429,103.8683,149.1077,94.1085,147.8037,99.613,142.2992,98.309,150.429,103.8683" style="stroke: #DC143C; stroke-width: 1.0;"/><!--MD5=[cec9e0051c86a3d855570bd380207d81]
+@startuml
+
+
+hide stereotype
+scale max 16384 height
+skinparam component {
+  BackgroundColor FloralWhite
+  BorderColor Black
+  ArrowColor Crimson
+}
+[IntegratedSystem] as _0 <<highlight>>
+[System1] as _1 <<highlight>>
+_0 - -> _1
+[System2] as _2 <<highlight>>
+_0 - -> _2
+@enduml
+
+PlantUML version 1.2019.13(Tue Dec 10 17:18:29 UTC 2019)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 1.7.0_25-b15
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

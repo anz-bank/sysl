@@ -58,7 +58,7 @@ func ConstructFormatParser(former, latter string) *cmdutils.FormatParser {
 func EscapeWordBoundary(src string) string {
 	result, err := json.Marshal(src)
 	syslutil.PanicOnError(err)
-	escapeStr := strings.Replace(string(result), `\u0008`, `\\b`, -1)
+	escapeStr := strings.ReplaceAll(string(result), `\u0008`, `\\b`)
 	var val string
 	err = json.Unmarshal([]byte(escapeStr), &val)
 	syslutil.PanicOnError(err)

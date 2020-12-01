@@ -1,0 +1,28 @@
+# To import a sysl file from the same folder
+import deps
+# To import a sysl file from the subdirectory
+import moredeps/moredeps
+# To import a sysl file via absolute path based on root
+import /tests/bananatree
+# To import a sysl file from external repo. Add // at the beginning of the path
+import //github.com/anz-bank/syslgen-examples/examples/todos
+# To import a sysl file from external repo with fixed version
+import //github.com/anz-bank/syslgen-examples/examples/todos@0.0.1
+# To import a swagger file from the same folder. com.foo.bar.app is the alias of the module
+import foreign_import_swagger.yaml as com.foo.bar.app ~swagger
+
+ModelWithDeps [package="model"]:
+  !type Response:
+    userId <: int
+    id <: int
+    title <: string
+
+  /responses:
+    /{id<:int}:
+      GET:
+        Dep <- GET /dep/{id}
+        Dep <- GET /moredep/{id}
+        Dep2 <- GET /dep2/{id}
+        Todos <- GET /todos/{id}
+        Bananatree <- GET /banana/{id}
+        return Response

@@ -25,40 +25,39 @@ For each app found in sysl module, `test-rig` generates Go program out of pre-ba
 
 1. `sysl test-rig` requires you to provide two factory functions. One to return `GenCallback` inteface implementation:
 
-    ```go
-    // non-db version
-    type factoryFuncType = func() GenCallback
-    ```
+   ```go
+   // non-db version
+   type factoryFuncType = func() GenCallback
+   ```
 
-    ```go
-    // db version
-    type factoryFuncType = func(db *sql.DB) GenCallback
-    ```
+   ```go
+   // db version
+   type factoryFuncType = func(db *sql.DB) GenCallback
+   ```
 
-    Another to return `ServiceInterface` implementation:
+   Another to return `ServiceInterface` implementation:
 
-    ```go
-    type factoryFuncType = func() ServiceInterface
-    ```
+   ```go
+   type factoryFuncType = func() ServiceInterface
+   ```
 
 2. `test-rig` needs json file that contains things needed for `main()` templating. This json file contains number of blocks, each representing sysl app you implemented business logic for. Example:
 
-    ```json
-    {
-        "dbfront": {  <- sysl app name
-            "name": "dbfront", <- generated package name for your app; this also will be your container name
-            "import": "< golang import path to generated code >",
-            "port": "8080", <- port for http server
-            "impl": {
-                "name": "dbfront_impl", <- package name for your implementation
-                "import": "< golang import path to your implementation >",
-                "interface_factory": "GetServiceInterfaceImplementation", <- factory function name exported from your implementation package
-                "callback_factory": "GetCallback" <- factory function name exported from your implementation package
-            }
-        }
-    }
-    ```
-
+   ```json
+   {
+       "dbfront": {  <- sysl app name
+           "name": "dbfront", <- generated package name for your app; this also will be your container name
+           "import": "< golang import path to generated code >",
+           "port": "8080", <- port for http server
+           "impl": {
+               "name": "dbfront_impl", <- package name for your implementation
+               "import": "< golang import path to your implementation >",
+               "interface_factory": "GetServiceInterfaceImplementation", <- factory function name exported from your implementation package
+               "callback_factory": "GetCallback" <- factory function name exported from your implementation package
+           }
+       }
+   }
+   ```
 
 ## Example project
 

@@ -32,11 +32,11 @@ var VARS = []VAR{SYSL_MODULES, SYSL_PLANTUML, SYSL_TOKENS, SYSL_CACHE, SYSL_PROX
 
 func (e VAR) Default() string {
 	return [...]string{
-		"on",                            //SYSL_MODULES
-		"https://plantuml.com/plantuml", //SYSL_PLANTUML
-		"",                              //SYSL_TOKENS
-		"sysl_modules",                  //SYSL_CACHE
-		"",                              //SYSL_TOKENS
+		"on",                            // SYSL_MODULES
+		"https://plantuml.com/plantuml", // SYSL_PLANTUML
+		"",                              // SYSL_TOKENS
+		"sysl_modules",                  // SYSL_CACHE
+		"",                              // SYSL_TOKENS
 	}[e]
 }
 

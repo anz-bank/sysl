@@ -1,0 +1,15 @@
+# Our first program will make a simple "Hello world" application with two endpoints
+
+# Specify an application called `HelloWorld`
+HelloWorld:
+    # Specify an endpoint as the next indent.
+    endpoint1:
+        # Specify a return type for the endpoint. Anything after the return is considered a payload.
+        return string
+
+    # Specify parameters; a string parameter named "request" and an int named "id" to the endpoint
+    endpoint2(request <: string, id <: int):
+        return string
+
+
+# Seeing that we have only the simplest sysl files and no interactions between services we cannot run any meaningful commands.

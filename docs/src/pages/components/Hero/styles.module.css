@@ -1,0 +1,128 @@
+.hero__title {
+  font-size: 2rem;
+}
+.hero__subtitile {
+  font-size: 1.25rem;
+}
+.button__developer {
+  background: #ffffff;
+  border: 2px solid #403f3f;
+  border-radius: 4px;
+  border-radius: 4px;
+  color: #403f3f;
+  font-weight: 500;
+}
+
+.button__non_developer {
+  margin-left: 10px;
+  background: #403f3f;
+  border: 2px solid #403f3f;
+  border-radius: 4px;
+  border-radius: 4px;
+  color: #ffffff;
+  font-weight: 500;
+  border-color: #403f3f;
+}
+.button__non_developer:hover,
+.button__developer:hover {
+  border: 2px solid #fdc83f;
+  background: #4a4a4a;
+  color: #fdc83f;
+}
+.hero__container {
+  padding-bottom: 6rem;
+  padding-top: 8rem;
+  margin: auto;
+  max-width: 1140px;
+}
+.logo__white {
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+.logo__icon {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s; /* Animation */
+}
+.logo__icon:hover {
+  transform: scale(1.1);
+}
+
+.avatar__line {
+  display: block;
+}
+.avatar__container {
+  position: relative;
+}
+.avatar__item {
+  position: absolute;
+  position: absolute;
+  text-align: center;
+}
+.avatar__item__architects {
+  top: -100px;
+}
+.line__item__architects {
+  border: 2px solid #d4ce8b;
+  transform: rotate(33deg) translate(10px, -55px);
+}
+.avatar__item__security {
+  top: -145px;
+  left: 240px;
+}
+.line__item__security {
+  border: 2px solid #4bc7d7;
+  transform: rotate(-85deg) translate(7px, -4px);
+}
+.avatar__line_security {
+  position: absolute;
+  left: 100px;
+  top: 30px;
+}
+
+.avatar__item__testers {
+  top: -90px;
+  left: 450px;
+}
+.line__item__testers {
+  border: 2px solid #5bc6e8;
+  transform: rotate(-30deg) translate(-40px, -40px);
+}
+
+.avatar__item__developers {
+  top: 80px;
+  left: -20px;
+}
+.line__item__developers {
+  border: 2px solid #c6dfea;
+  transform: rotate(150deg) translate(-100px, 50px);
+}
+
+.avatar__item__analysts {
+  top: 150px;
+  left: 220px;
+}
+.line__item__analysts {
+  border: 2px solid #eee8c4;
+  transform: rotate(90deg) translate(-100px, 0px);
+}
+
+.avatar__item__dataengineers {
+  top: 120px;
+  left: 400px;
+}
+.line__item__dataengineers {
+  border: 2px solid #aa9b8f;
+  transform: rotate(35deg) translate(-80px, -45px);
+}
+.avatar__item__dataengineers {
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 1100px) {
+  .avatar__container {
+    display: none;
+  }
+}

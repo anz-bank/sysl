@@ -15,9 +15,9 @@
 #       www: personal website (optional)
 
 authors:
-- name: Australia and New Zealand Banking Group Limited
-  short-name: ANZ
-  email: marcelo.cantos@anz.com
-  www: anz.com
-- name: Oliver Lade
-  email: oliverlrlade@gmail.com
+  - name: Australia and New Zealand Banking Group Limited
+    short-name: ANZ
+    email: marcelo.cantos@anz.com
+    www: anz.com
+  - name: Oliver Lade
+    email: oliverlrlade@gmail.com

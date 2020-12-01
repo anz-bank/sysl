@@ -1,0 +1,20 @@
+SimpleOpenAPI3 "SimpleOpenAPI3":
+    @description =:
+        | Simple demo for openapi file export
+
+    /test:
+        GET:
+            | Endpoint for testing GET
+            return error
+            return ok <: SimpleObj
+
+    #---------------------------------------------------------------------------
+    # definitions
+
+    !type SimpleObj:
+        name <: string?:
+            @json_tag = "name"
+
+    !type SimpleObj2:
+        name <: SimpleObj?:
+            @json_tag = "name"

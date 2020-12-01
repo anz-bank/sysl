@@ -1,0 +1,10 @@
+# The fantastic Hello World greeting system.
+
+HelloService:
+    /greeting/{userId <: int}:
+        GET:
+            ...
+
+Hello App:
+    Greet:
+        HelloService <- GET /greeting/{userId}

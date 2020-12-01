@@ -1,0 +1,16 @@
+Foo:
+  !type ErrorResponse:
+    status <: string
+
+  !type ResourceNotFoundError:
+    status <: string 
+  todos:
+  
+    # Here we can use if (or IF) and specify conditional returns based on the https status codes
+    # Note these variables don't need to be defined; they're just for sequence diagram generation
+    if notfound:
+      return 404 <: ResourceNotFoundError
+    else if failed:
+      return 500 <: ErrorResponse
+    else:    
+      return 200 <: Todo 

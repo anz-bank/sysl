@@ -1,0 +1,11 @@
+MobileApp:
+    Login:
+        Server <- LoginRequest
+    !type LoginData:
+        username <: string
+        password <: string
+    !type LoginResponse:
+        message <: string
+Server:
+    LoginRequest(data <: MobileApp.LoginData):
+        return MobileApp.LoginResponse

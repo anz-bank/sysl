@@ -13,7 +13,7 @@ import (
 func TestVarManagerForComponent(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -22,17 +22,17 @@ func TestVarManagerForComponent(t *testing.T) {
 		Symbols:       map[string]*cmdutils.Var{},
 	}
 
-	//When
+	// When
 	result := v.VarManagerForComponent("test", map[string]string{})
 
-	//Then
+	// Then
 	assert.Equal(t, "_0", result)
 }
 
 func TestVarManagerForComponentWithNameMap(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -45,19 +45,19 @@ func TestVarManagerForComponentWithNameMap(t *testing.T) {
 		},
 	}
 
-	//When
+	// When
 	result := v.VarManagerForComponent("test", map[string]string{
 		"test": "appName",
 	})
 
-	//Then
+	// Then
 	assert.Equal(t, "_1", result)
 }
 
 func TestVarManagerForComponentWithExistingName(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -70,17 +70,17 @@ func TestVarManagerForComponentWithExistingName(t *testing.T) {
 		},
 	}
 
-	//When
+	// When
 	result := v.VarManagerForComponent("test", map[string]string{})
 
-	//Then
+	// Then
 	assert.Equal(t, "_1", result)
 }
 
 func TestVarManagerForEPA(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -97,17 +97,17 @@ func TestVarManagerForEPA(t *testing.T) {
 		Symbols:      map[string]*cmdutils.Var{},
 	}
 
-	//When
+	// When
 	result := v.VarManagerForEPA("a : b")
 
-	//Then
+	// Then
 	assert.Equal(t, "_0", result)
 }
 
 func TestVarManagerForEPAWithExistingName(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -132,17 +132,17 @@ func TestVarManagerForEPAWithExistingName(t *testing.T) {
 		},
 	}
 
-	//When
+	// When
 	result := v.VarManagerForEPA("a : b")
 
-	//Then
+	// Then
 	assert.Equal(t, "_1", result)
 }
 
 func TestVarManagerForTopState(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -151,17 +151,17 @@ func TestVarManagerForTopState(t *testing.T) {
 		TopSymbols:    map[string]*_topVar{},
 	}
 
-	//When
+	// When
 	result := v.VarManagerForTopState("a : b")
 
-	//Then
+	// Then
 	assert.Equal(t, "_0", result)
 }
 
 func TestVarManagerForTopStateWithExistingName(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -174,17 +174,17 @@ func TestVarManagerForTopStateWithExistingName(t *testing.T) {
 		},
 	}
 
-	//When
+	// When
 	result := v.VarManagerForTopState("a : b")
 
-	//Then
+	// Then
 	assert.Equal(t, "_1", result)
 }
 
 func TestBuildClusterForIntsView(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -227,10 +227,10 @@ func TestBuildClusterForIntsView(t *testing.T) {
 		},
 	}
 
-	//When
+	// When
 	v.BuildClusterForEPAView(deps, "")
 
-	//Then
+	// Then
 	assert.Equal(t, `state "a" as X_0 {
   state "epa" as _0
   state "epb client" as _1
@@ -244,7 +244,7 @@ state "b" as X_1 {
 func TestBuildClusterForComponentView(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -255,10 +255,10 @@ func TestBuildClusterForComponentView(t *testing.T) {
 	}
 	apps := []string{"a :: A", "a :: A", "b :: B", "c :: C"}
 
-	//When
+	// When
 	v.BuildClusterForIntsView(apps)
 
-	//Then
+	// Then
 	assert.Equal(t, `package "a" {
 [A] as _0
 }
@@ -268,10 +268,10 @@ func TestBuildClusterForComponentView(t *testing.T) {
 func TestGenerateIntsView(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	v := makeIntDiagramVisitor()
 
-	//When
+	// When
 	v.GenerateIntsView(
 		&Args{},
 		ViewParams{},
@@ -286,7 +286,7 @@ func TestGenerateIntsView(t *testing.T) {
 		},
 	)
 
-	//Then
+	// Then
 	assert.Equal(t, `@startuml
 hide stereotype
 scale max 16384 height
@@ -306,10 +306,10 @@ _2 <|.. _1
 func TestGenerateIntsViewWithCustomAppfmt(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	v := makeIntDiagramVisitorWithAppfmt("**%(appname)**")
 
-	//When
+	// When
 	v.GenerateIntsView(
 		&Args{},
 		ViewParams{},
@@ -324,7 +324,7 @@ func TestGenerateIntsViewWithCustomAppfmt(t *testing.T) {
 		},
 	)
 
-	//Then
+	// Then
 	assert.Equal(t, `@startuml
 hide stereotype
 scale max 16384 height
@@ -374,7 +374,7 @@ func testEPAModule() *sysl.Module {
 func TestGenerateEPAView(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -385,7 +385,7 @@ func TestGenerateEPAView(t *testing.T) {
 		Symbols:       map[string]*cmdutils.Var{},
 	}
 
-	//When
+	// When
 	v.GenerateEPAView(
 		ViewParams{
 			DiagramTitle:       "test",
@@ -407,7 +407,7 @@ func TestGenerateEPAView(t *testing.T) {
 		},
 	)
 
-	//Then
+	// Then
 	assert.Equal(t, `@startuml
 title test
 left to right direction
@@ -453,7 +453,7 @@ func TestGenerateEPAViewEndpointPattern(t *testing.T) {
 		Symbols:       map[string]*cmdutils.Var{},
 	}
 
-	//When
+	// When
 	v.GenerateEPAView(
 		ViewParams{
 			DiagramTitle:       "test",
@@ -478,7 +478,7 @@ func TestGenerateEPAViewEndpointPattern(t *testing.T) {
 		},
 	)
 
-	//Then
+	// Then
 	assert.Equal(t, `@startuml
 title test
 left to right direction
@@ -520,7 +520,7 @@ func TestGenerateEPAViewSameApp(t *testing.T) {
 		Symbols:       map[string]*cmdutils.Var{},
 	}
 
-	//When
+	// When
 	v.GenerateEPAView(
 		ViewParams{
 			DiagramTitle:       "test",
@@ -550,7 +550,7 @@ func TestGenerateEPAViewSameApp(t *testing.T) {
 		},
 	)
 
-	//Then
+	// Then
 	assert.Equal(t, `@startuml
 title test
 left to right direction
@@ -575,7 +575,7 @@ _0 -[#grey]-> _1
 func TestGenerateView(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	deps := []AppDependency{
 		{
 			Self: AppElement{
@@ -621,10 +621,10 @@ func TestGenerateView(t *testing.T) {
 		},
 	}
 
-	//When
+	// When
 	result := GenerateView(args, params, m)
 
-	//Then
+	// Then
 	assert.Equal(t, `''''''''''''''''''''''''''''''''''''''''''
 ''                                      ''
 ''  AUTOGENERATED CODE -- DO NOT EDIT!  ''
@@ -648,7 +648,7 @@ _0 --> _1 <<indirect>>
 func TestDrawSystemView(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	var stringBuilder strings.Builder
 	v := &IntsDiagramVisitor{
 		StringBuilder: &stringBuilder,
@@ -684,10 +684,10 @@ func TestDrawSystemView(t *testing.T) {
 	viewParams := &ViewParams{}
 	nameMap := map[string]string{}
 
-	//When
+	// When
 	v.DrawSystemView(*viewParams, params, nameMap)
 
-	//Then
+	// Then
 	assert.Equal(t, `[a] as _1
 [b] as _2
 _1 --> _2 <<indirect>>

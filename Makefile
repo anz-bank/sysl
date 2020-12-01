@@ -17,6 +17,7 @@ all: lint build buildlsp install test coverage
 
 lint: generate
 	golangci-lint run ./...
+	make -C docs lint
 
 lint-docker: generate
 	docker run --rm \
@@ -33,6 +34,7 @@ tidy:
 	go mod tidy
 	gofmt -s -w .
 	goimports -w .
+	make -C docs tidy
 
 # Generates intermediate files for build.
 generate: internal/arrai/bindata.go

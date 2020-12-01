@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="92px" preserveAspectRatio="none" style="width:315px;height:92px;" version="1.1" viewBox="0 0 315 92" width="315px" zoomAndPan="magnify"><defs><filter height="300%" id="f1ows4wp15qdnm" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[f77682fd75c3e1fc6a82f566c0814d0f]
+class _0--><rect fill="#FEFECE" filter="url(#f1ows4wp15qdnm)" height="73.6094" id="_0" style="stroke: #A80036; stroke-width: 1.5;" width="135" x="6" y="8"/><ellipse cx="44.4" cy="24" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M41.6656,27.2969 L41.6656,20.7813 C40.9938,20.7813 40.6188,20.4844 40.6188,19.9375 C40.6188,19.6563 40.775,19.3594 41.025,19.2031 C41.1813,19.1094 41.3063,19.0938 41.7594,19.0938 L45.3688,19.0938 C47.8531,19.0938 49.7438,21.1406 49.7438,23.8125 L49.7438,24.6094 C49.7438,25.8594 49.3375,26.9063 48.5563,27.7188 C47.7281,28.6094 46.7125,29 45.2281,29 L41.7594,29 C41.3531,29 41.1344,28.9531 40.9781,28.8281 C40.7594,28.6719 40.6188,28.4063 40.6188,28.1563 C40.6188,27.6094 41.0094,27.2969 41.6656,27.2969 Z M43.3531,27.2969 L45.2438,27.2969 C46.2594,27.2969 46.8219,27.0938 47.3531,26.5469 C47.8219,26.0313 48.0563,25.4375 48.0563,24.5625 L48.0563,23.7813 C48.0563,22.9844 47.775,22.2344 47.2906,21.6563 C46.775,21.0625 46.1344,20.7813 45.2281,20.7813 L43.3531,20.7813 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="51" x="63.6" y="28.1543">Account</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="140" y1="40" y2="40"/><ellipse cx="17" cy="51" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="100" x="26" y="54.2104">AccountID : string</text><ellipse cx="17" cy="63.8047" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="109" x="26" y="67.0151">ResourceID : string</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="140" y1="73.6094" y2="73.6094"/><!--MD5=[37d6e5304215b5e345f427169db70937]
+class _1--><rect fill="#FEFECE" filter="url(#f1ows4wp15qdnm)" height="73.6094" id="_1" style="stroke: #A80036; stroke-width: 1.5;" width="128" x="176.5" y="8"/><ellipse cx="222.75" cy="24" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M220.0156,27.2969 L220.0156,20.7813 C219.3438,20.7813 218.9688,20.4844 218.9688,19.9375 C218.9688,19.6563 219.125,19.3594 219.375,19.2031 C219.5313,19.1094 219.6563,19.0938 220.1094,19.0938 L223.7188,19.0938 C226.2031,19.0938 228.0938,21.1406 228.0938,23.8125 L228.0938,24.6094 C228.0938,25.8594 227.6875,26.9063 226.9063,27.7188 C226.0781,28.6094 225.0625,29 223.5781,29 L220.1094,29 C219.7031,29 219.4844,28.9531 219.3281,28.8281 C219.1094,28.6719 218.9688,28.4063 218.9688,28.1563 C218.9688,27.6094 219.3594,27.2969 220.0156,27.2969 Z M221.7031,27.2969 L223.5938,27.2969 C224.6094,27.2969 225.1719,27.0938 225.7031,26.5469 C226.1719,26.0313 226.4063,25.4375 226.4063,24.5625 L226.4063,23.7813 C226.4063,22.9844 226.125,22.2344 225.6406,21.6563 C225.125,21.0625 224.4844,20.7813 223.5781,20.7813 L221.7031,20.7813 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="27" x="243.25" y="28.1543">Role</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="177.5" x2="303.5" y1="40" y2="40"/><ellipse cx="187.5" cy="51" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="61" x="196.5" y="54.2104">RoleID : int</text><ellipse cx="187.5" cy="63.8047" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="102" x="196.5" y="67.0151">RoleName : string</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="177.5" x2="303.5" y1="73.6094" y2="73.6094"/><!--MD5=[864c211a67b9cfb285bb0547c1de1a60]
+@startuml
+
+class "Account" as _0 << (D,orchid) >> {
++ AccountID : string
++ ResourceID : string
+}
+class "Role" as _1 << (D,orchid) >> {
++ RoleID : int
++ RoleName : string
+}
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 1.7.0_25-b15
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

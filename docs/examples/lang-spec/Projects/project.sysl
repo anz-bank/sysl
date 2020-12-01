@@ -1,0 +1,23 @@
+# In this example we will use the "call" syntax to link two applications together.
+
+# 
+MobileApp:
+    Login:
+
+        # Here we specify that this endpoint has a dependency that it calls internally. 
+        Server <- Login
+
+    !type LoginData:
+        username <: string
+        password <: string
+
+    !type LoginResponse:
+        message <: string
+
+Server:
+
+    # Use "Application.Type" to use a data type defined in another application
+    Login(data <: MobileApp.LoginData):
+        return MobileApp.LoginResponse
+
+# TODO: Imports

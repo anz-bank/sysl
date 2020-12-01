@@ -382,7 +382,7 @@ func (o *openapiv3) loadTypeSchema(name string, schema *openapi3.Schema) Type {
 			}
 		}
 
-		// Removing this as it breaks an import file. Details here: https://github.com/anzx/acceleration/issues/342
+		// Removing this as it breaks an import file.
 		// AllOf means this object is composed of all of the sub-schemas (and potentially additional properties)
 		// for _, subschema := range schema.AllOf {
 		// 	subType := o.loadTypeSchema("", subschema.Value)

@@ -1,0 +1,19 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.features h3 {
+  text-align: center;
+  font-size: 1.75em;
+  font-weight: normal;
+  margin-top: 0.5em;
+}
+
+.featureImage {
+  height: 64px;
+  width: 64px;
+  filter: var(--feature-svg--filter);
+}

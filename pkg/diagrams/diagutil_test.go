@@ -39,17 +39,17 @@ const plantumlDotCom = "http://www.plantuml.com/plantuml"
 func TestDeflateAndEncode(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	const expected = "UDfSaKbhmp0GXU_pAnwvYqY6NaniKkXoAgGRFUGW9l4qY7gh99SkzByN9GvnUfBGzmrwZw5bYE" +
 		"pZqDIqxThekngp5zdS-AwDqbOpS83L9tRPkyEReOeZRpW8PbVZxK0o2c-kxTbpWuO_xoG4ticZ-nPa5vgYYxLWv" +
 		"RjNLmiL1IRVOQ7m8E-3X3WAA0fQgz9gvFy8yJQw3uwIyi5gLLg37BVNJvWFGNoO_wJ3kkftteyZECqO0gnHfSsG" +
 		"utuG__KSn1CcIhPN5ahjdH5NSYPOdRWP-J7QcMLedPpKu5XgnJkXgQDfAMsLjl0N003__swwWGu0"
 
-	//When
+	// When
 	actual, err := DeflateAndEncode([]byte(testPlantumlInput))
 	require.NoError(t, err)
 
-	//Then
+	// Then
 	assert.Equal(t, expected, actual)
 }
 
@@ -123,13 +123,13 @@ func TestOutPutWithWrongFormat(t *testing.T) {
 func TestWrongHttpRequest(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	url := "ww.plantuml.co"
 
-	//When
+	// When
 	out, err := sendHTTPRequest(url)
 
-	//Then
+	// Then
 	assert.Nil(t, out)
 	assert.NotNil(t, err)
 }
@@ -137,12 +137,12 @@ func TestWrongHttpRequest(t *testing.T) {
 func TestEncode(t *testing.T) {
 	t.Parallel()
 
-	//Given
+	// Given
 	data := []byte{'a'}
 
-	//When
+	// When
 	r := encode(data)
 
-	//Then
+	// Then
 	assert.NotNil(t, r)
 }

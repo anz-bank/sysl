@@ -1,0 +1,16 @@
+# The fantastic Hello World greeting system.
+
+HelloService:
+    /greeting/{userId <: int}:
+        GET:
+            ...
+
+Hello App:
+    Greet:
+        HelloService <- GET /greeting/{userId}
+
+HelloProject [appfmt="%(appname)"]:
+    Greeting:
+        Hello App
+        HelloService
+        Hello App <- Greet
