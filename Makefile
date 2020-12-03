@@ -79,6 +79,7 @@ internal/arrai/bindata.go: \
 	# So add parameter `-modtime 1` to set a fixed modTime.
 	# Add `-mode 0644` for similar reason as files' mode are possible different in CI and local development environments.
 	go-bindata -mode 0644 -modtime 1 -pkg arrai -o $@ $^
+	gofmt -s -w $@
 
 release:
 	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot

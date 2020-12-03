@@ -26,7 +26,8 @@ let foo_bx = applyAlterTable(dropCol.data, foo_b2);
 let [addIndex] = parseDdl('CREATE INDEX i ON foo (a DESC);');
 let foo_i = applyCreateIndex(addIndex.data, foo_bx);
 
-let [dropIndex] = parseDdl('DROP INDEX i;');
+let dropIndexSql = 'DROP INDEX i;';
+let [dropIndex] = parseDdl(dropIndexSql);
 let foo_ix = applyDropIndex(dropIndex.data, foo_i);
 
 (
@@ -38,7 +39,7 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
                 table_name: 'foo',
                 alterations: [(
                     type: 'add_column',
-                    alteration: (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0),
+                    alteration: (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
                 )],
             ),
         ),
@@ -58,17 +59,43 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
                 table_name: 'foo',
                 alterations: [(
                     type: 'alter_column',
-                    alteration: (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0),,
+                    alteration: (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0, scale: {}),
                 )],
             ),
         ),
+        dropCol: dropCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'drop_column',
+                    alteration: (name: 'b'),
+                )],
+            )
+        ),
+        dropIndex: dropIndex = (
+            stmt: 'drop_index',
+            data: 'i',
+        ),
+        commentOnly: parseDdl("-- Foo\n--bar") = {},
+        commentWrapped: parseDdl($`
+            -- Foo
+            --bar
+            ${dropIndexSql}
+            --Baz
+        `) = [dropIndex],
+        commentInline: parseDdl($`
+            DROP --a
+            INDEX --b
+            i --c;
+        `) = [dropIndex]
     ),
 
     applyCreateTable: (
         foo: foo.entities = {(
             name: 'foo',
             attributes: [
-                (array: {}, length: 0, name: 'a', nullable: true, options: {}, type: 'int'),
+                (array: {}, length: 0, name: 'a', nullable: true, options: {}, type: 'int', scale: {}),
             ],
             primary_key: [40\'a'],
             foreign_keys: {},
@@ -96,8 +123,8 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
         addCol: foo_b.entities = {(
             name: 'foo',
             attributes: [
-                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0),
-                (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0),
+                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
             ],
             primary_key: [40\'a'],
             foreign_keys: {},
@@ -107,8 +134,8 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
         alterCol: foo_b2.entities = {(
             name: 'foo',
             attributes: [
-                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0),
-                (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0),
+                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0, scale: {}),
             ],
             primary_key: [40\'a'],
             foreign_keys: {},
