@@ -27,6 +27,7 @@ type testConfig struct {
 	name          string
 	testDir       string
 	testExtension string
+	format        string
 }
 
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
@@ -49,7 +50,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				absFilePath, err := filepath.Abs(filepath.Join(cfg.testDir, filename+cfg.testExtension))
 				require.NoError(t, err)
-				imp, err := Factory(absFilePath, false, input, logger)
+				imp, err := Factory(absFilePath, false, cfg.format, input, logger)
 				require.NoError(t, err)
 				imp.WithAppName("TestApp").WithPackage("com.example.package")
 				result, err := imp.LoadFile(absFilePath)
@@ -74,7 +75,7 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	logger, _ := test.NewNullLogger()
 	syslFile := filepath.Join(cfg.testDir, filepath.Base(cfg.testDir)+".sysl")
 	path := syslutil.MustAbsolute(t, cfg.testDir)
-	imp, err := Factory(path, true, nil, logger)
+	imp, err := Factory(path, true, "", nil, logger)
 	require.NoError(t, err)
 	out, err := imp.WithAppName("TestApp").WithPackage("com.example.package").LoadFile(path)
 	require.NoError(t, err)
@@ -122,6 +123,7 @@ func TestLoadSpannerFromTestFiles(t *testing.T) {
 		name:          "TestLoadSpannerFromTestFiles",
 		testDir:       "spanner/tests",
 		testExtension: ".sql",
+		format:        "spannerSQL",
 	})
 }
 
@@ -130,6 +132,25 @@ func TestLoadSpannerDirFromTestDir(t *testing.T) {
 		name:          "TestLoadSpannerDirFromTestDir",
 		testDir:       "spanner/tests/migrations",
 		testExtension: "",
+		format:        "spannerDir",
+	})
+}
+
+func TestLoadPostgresqlFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadPostgresqlFromTestDir",
+		testDir:       "postgresql/tests",
+		testExtension: ".sql",
+		format:        "postgres",
+	})
+}
+
+func TestLoadPostgresqlDirFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadPostgresqlDirFromTestDir",
+		testDir:       "postgresql/tests/migrations",
+		testExtension: "",
+		format:        "postgresDir",
 	})
 }
 

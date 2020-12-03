@@ -29,15 +29,32 @@ var Formats = []Format{
 	Avro,
 	SpannerSQL,
 	SpannerSQLDir,
+	Postgres,
+	PostgresDir,
 }
 
 // Factory takes in an absolute path and its contents (if path is a file) and returns an importer
 // for the detected file type.
-func Factory(path string, isDir bool, content []byte, logger *logrus.Logger) (Importer, error) {
-	fileType, err := GuessFileType(path, isDir, content, Formats)
-	if err != nil {
-		return nil, err
+func Factory(path string, isDir bool, format string, content []byte, logger *logrus.Logger) (Importer, error) {
+	var fileType Format
+	if format != "" {
+		for _, f := range Formats {
+			if format == f.Name {
+				fileType = f
+				break
+			}
+		}
+		if fileType.Name == "" {
+			return nil, fmt.Errorf("an importer does not exist for %s", format)
+		}
+	} else {
+		ft, err := GuessFileType(path, isDir, content, Formats)
+		if err != nil {
+			return nil, err
+		}
+		fileType = ft
 	}
+
 	switch fileType.Name {
 	case Swagger.Name:
 		logger.Debugln("Detected OpenAPI2")
@@ -60,7 +77,13 @@ func Factory(path string, isDir bool, content []byte, logger *logrus.Logger) (Im
 	case SpannerSQLDir.Name:
 		logger.Debugln("Detected Spanner SQL directory")
 		return MakeSpannerDirImporter(logger), nil
+	case Postgres.Name:
+		logger.Debugln("Detected PostgreSQL file")
+		return MakePostgresqlImporter(logger), nil
+	case PostgresDir.Name:
+		logger.Debugln("Detected PostgreSQL directory")
+		return MakePostgresqlDirImporter(logger), nil
 	default:
-		return nil, fmt.Errorf("an importer does not exist for: %s", fileType.Name)
+		return nil, fmt.Errorf("an importer does not exist for %s", fileType.Name)
 	}
 }

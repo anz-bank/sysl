@@ -1,0 +1,191 @@
+let (
+    emptyModel: empty,
+    :parseDdl,
+
+    :applyCreateTable,
+    :applyCreateIndex,
+    :applyCreateDatabase,
+    :applyAlterTable,
+    :applyDropTable,
+    :applyDropIndex,
+    ...
+) = //{./postgresql};
+
+let [createTable] = parseDdl('CREATE TABLE foo (a INT PRIMARY KEY);');
+let foo = applyCreateTable(createTable.data, empty);
+
+let [addCol] = parseDdl('ALTER TABLE foo ADD COLUMN b INT;');
+let foo_b = applyAlterTable(addCol.data, foo);
+
+let [alterCol] = parseDdl('ALTER TABLE foo ALTER COLUMN b SET NOT NULL;');
+let foo_b2 = applyAlterTable(alterCol.data, foo_b);
+
+let [dropCol] = parseDdl('ALTER TABLE foo DROP COLUMN b;');
+let foo_bx = applyAlterTable(dropCol.data, foo_b2);
+
+let [addIndex] = parseDdl('CREATE INDEX i ON foo (a DESC);');
+let foo_i = applyCreateIndex(addIndex.data, foo_bx);
+
+let [dropIndex] = parseDdl('DROP INDEX i;');
+let foo_ix = applyDropIndex(dropIndex.data, foo_i);
+
+let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));');
+
+(
+    parseDdl: (
+        createTable: createTable = (
+            stmt: 'create_table',
+            data: (
+                name: 'foo',
+                attributes: [(name: 'a', type: 'int', array: {}, length: 0, nullable: true, pk: true, scale: {})],
+                primary_key: ['a'],
+                foreign_keys: {},
+                cluster: {},
+            ),
+        ),
+        createTableInlinePK: createTableInlinePK = (createTable ->
+            . +> (data: .data +> (attributes: .data.attributes >> .~|pk|))),
+        addCol: addCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'add_column',
+                    alteration: (name: 'b', type: 'int', nullable: true, array: {}, length: 0, scale: {}),
+                )],
+            ),
+        ),
+        dropCol: dropCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'drop_column',
+                    alteration: (name: 'b'),
+                )],
+            ),
+        ),
+        alterCol: alterCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'alter_column',
+                    alteration: (name: 'b', nullable: false),
+                )],
+            ),
+        ),
+    ),
+
+    applyCreateTable: (
+        foo: foo.entities = {(
+            name: 'foo',
+            attributes: [
+                (array: {}, length: 0, name: 'a', nullable: true, pk: true, scale: {}, type: 'int'),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            cluster: {},
+        )}
+    ),
+
+    applyCreateIndex: (
+        foo_i: foo_i.indexes = {(
+            name: 'i',
+            table_name: 'foo',
+            key_part: [23\'a(desc)'],
+            unique: {},
+            nullfiltered: {},
+            storing_col: {},
+            interleaved_table: {},
+        )}
+    ),
+
+    applyDropIndex: (
+        foo: foo.indexes = {}
+    ),
+
+    applyAlterTable: (
+        addCol: foo_b.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int', pk: true, nullable: true, array: {}, length: 0, scale: {}),
+                (name: 'b', type: 'int', nullable: true, array: {}, length: 0, scale: {}),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            cluster: {},
+        )},
+
+        alterCol: foo_b2.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int', pk: true, nullable: true, array: {}, length: 0, scale: {}),
+                (name: 'b', type: 'int', nullable: false, array: {}, length: 0, scale: {}),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            cluster: {},
+        )},
+
+        dropCol: foo_bx = foo,
+    ),
+
+    # TODO: Import with //{} syntax.
+    testFile: parseDdl(`
+        CREATE DATABASE customeraccounts;
+
+        CREATE TABLE PayID (
+            PayID   VARCHAR(23) NOT NULL PRIMARY KEY,
+            BSB     VARCHAR(6)  NOT NULL,
+            float   FLOAT       NOT NULL,
+        );
+
+        CREATE TABLE Account (
+            AccountNum   VARCHAR(23) NOT NULL,
+            BSB          VARCHAR(6)  NOT NULL,
+            Balance      BIGINT      NOT NULL,
+            CreationDate DATE        NOT NULL,
+            Table        Varchar(32),
+            PRIMARY KEY (AccountNum)
+        );
+
+        CREATE INDEX AccountsByNum ON Account (AccountNum DESC);
+        CREATE INDEX Complex ON Account (AccountNum, BSB DESC, Balance ASC);
+
+        CREATE TABLE Customer (
+            CustomerID VARCHAR(36)  NOT NULL,
+            FirstName  VARCHAR(64)  NOT NULL,
+            LastName   VARCHAR(64)  NOT NULL,
+            Email      VARCHAR(256),
+            Mobile     VARCHAR(10),
+            NetWorth   NUMERIC,
+            Int        INT          NOT NULL,
+            PRIMARY KEY (CustomerID)
+        );
+
+        CREATE UNIQUE INDEX CustomerByEmail ON Customer (Email, Mobile DESC);
+
+        CREATE TABLE CustomerHasAccount (
+            CustomerID  VARCHAR(36) NOT NULL,
+            Customer    VARCHAR(36) NOT NULL,
+            AccountNum  VARCHAR(23) NOT NULL,
+            LegalRole   VARCHAR(10) NOT NULL,
+            BranchID    VARCHAR(6)  NOT NULL,
+            Permissions VARCHAR(10)[],
+            PRIMARY KEY (AccountNum, CustomerID),
+            FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID),
+            CONSTRAINT FK_AccountNum FOREIGN KEY (AccountNum, BranchID) REFERENCES Account (AccountNum, BSB),
+        );
+
+        CREATE TABLE AccountAddress (
+            AccountNum      VARCHAR(23) NOT NULL PRIMARY KEY,
+            AddressPostCode VARCHAR(10) NOT NULL PRIMARY KEY,
+            LastUpdated     TIMESTAMP,
+            AddressLine1    BYTES(MAX),
+            AddressLine2    VARCHAR(0x100),
+            AddressLine3    BYTES(100),
+            PRIMARY KEY (AccountNum, AddressPostCode)
+        );
+    `) count = 9
+)

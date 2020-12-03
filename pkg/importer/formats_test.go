@@ -36,9 +36,9 @@ var formatTests = []struct {
 	{"Parses xsd files", ".xsd", []byte(`xml`), &XSD, nil},
 	{"Parses xml files", ".xml", []byte(`xml`), &XSD, nil},
 	{"Parses Spanner SQL files", ".sql", []byte{}, &SpannerSQL, nil},
-	{"Fails for unknown extension", ".abcde", []byte{}, nil, errors.New("error detecting input file format for: ")},
-	{"Fails for invalid json", ".json", []byte{}, nil, errors.New("error converting json to yaml for: ")},
-	{"Fails for empty string", "", []byte{}, nil, errors.New("error detecting input file format for: ")},
+	{"Fails for unknown extension", ".abcde", []byte{}, nil, errors.New("error detecting input file format for ")},
+	{"Fails for invalid json", ".json", []byte{}, nil, errors.New("error converting json to yaml for ")},
+	{"Fails for empty string", "", []byte{}, nil, errors.New("error detecting input file format for ")},
 }
 
 //nolint:scopelint
@@ -60,5 +60,5 @@ func TestGuessFileType_Dir(t *testing.T) {
 
 	f, err := GuessFileType("spanner/tests/migrations", true, []byte{}, formatsToTest)
 	require.NoError(t, err)
-	assert.Equal(t, SpannerSQLDir, *f)
+	assert.Equal(t, SpannerSQLDir, f)
 }

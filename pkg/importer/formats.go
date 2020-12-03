@@ -52,6 +52,18 @@ var SpannerSQLDir = Format{
 	FileExt:   []string{".up.sql"},
 }
 
+var Postgres = Format{
+	Name:      "postgres",
+	Signature: "",
+	FileExt:   []string{".sql"},
+}
+
+var PostgresDir = Format{
+	Name:      "postgresDir",
+	Signature: "",
+	FileExt:   []string{".up.sql"},
+}
+
 // OpenAPI3 is identified by the openapi header. -  The value MUST be "3.x.x".
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasDocument
 var OpenAPI3 = Format{
@@ -72,12 +84,12 @@ var Swagger = Format{
 // It returns the detected format if successful, or an error if not.
 // It first tries to match the file extensions before checking the files for signatures such as
 // `swagger: "2.0"`.
-func GuessFileType(path string, isDir bool, content []byte, validFormats []Format) (*Format, error) {
+func GuessFileType(path string, isDir bool, content []byte, validFormats []Format) (Format, error) {
 	if isDir {
 		if files, err := ioutil.ReadDir(path); err == nil {
 			for _, info := range files {
 				if strings.HasSuffix(info.Name(), ".up.sql") || strings.HasSuffix(info.Name(), ".up.ddl") {
-					return &SpannerSQLDir, nil
+					return SpannerSQLDir, nil
 				}
 			}
 		}
@@ -95,7 +107,7 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 	}
 
 	if len(matchesExt) == 1 {
-		return &matchesExt[0], nil
+		return matchesExt[0], nil
 	}
 
 	var matchesSignature []Format
@@ -104,7 +116,7 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 		var err error
 		content, err = yaml.JSONToYAML(content)
 		if err != nil {
-			return nil, fmt.Errorf("error converting spec to yaml for: %s", path)
+			return Format{}, fmt.Errorf("error converting spec to yaml for: %s", path)
 		}
 	}
 
@@ -114,10 +126,19 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 		}
 	}
 
-	if len(matchesSignature) == 1 {
-		return &matchesSignature[0], nil
+	switch len(matchesSignature) {
+	case 1:
+		return matchesSignature[0], nil
+	case 0:
+		return Format{}, fmt.Errorf("error detecting input file format for %s", path)
+	default:
+		names := make([]string, len(matchesSignature))
+		for i, f := range matchesSignature {
+			names[i] = f.Name
+		}
+		return Format{}, fmt.Errorf(
+			"input file format for %s could be one of {%v}; pass --format to specify",
+			path,
+			strings.Join(names, ", "))
 	}
-
-	// We return an error if the number of matches is less than 0 or greater than 1
-	return nil, fmt.Errorf("error detecting input file format for: %s", path)
 }

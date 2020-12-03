@@ -85,7 +85,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	case importer.SYSL.Name:
 		return input, nil
 	case importer.OpenAPI3.Name, importer.Swagger.Name:
-		imp, err := importer.Factory(fileName, false, []byte(file), logger)
+		imp, err := importer.Factory(fileName, false, "", []byte(file), logger)
 		imp.WithAppName(def.appname).WithPackage(def.pkg)
 		if err != nil {
 			return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
@@ -100,7 +100,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	}
 }
 
-func detectFileType(fileName string, file []byte) (*importer.Format, error) {
+func detectFileType(fileName string, file []byte) (importer.Format, error) {
 	var ParserFormats = []importer.Format{
 		importer.OpenAPI3,
 		importer.Swagger,

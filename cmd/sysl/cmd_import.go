@@ -20,6 +20,7 @@ type importCmd struct {
 	importer.OutputData
 	filename string
 	outfile  string
+	format   string
 }
 
 func (p *importCmd) Name() string       { return "import" }
@@ -27,17 +28,15 @@ func (p *importCmd) MaxSyslModule() int { return 0 }
 
 func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	optsText := buildOptionsText(importer.Formats)
-	cmd := app.Command(p.Name(), "Import foreign type to sysl. Supported types: ["+optsText+"]")
+	cmd := app.Command(p.Name(), "Import foreign type to Sysl. Supported types: ["+optsText+"]")
 	cmd.Flag("input", "input filename").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
-		"name of the sysl app to define in sysl model.").Required().Short('a').StringVar(&p.AppName)
+		"name of the Sysl app to define in Sysl model.").Required().Short('a').StringVar(&p.AppName)
 	cmd.Flag("package",
-		"name of the sysl package to define in sysl model.").Short('p').StringVar(&p.Package)
+		"name of the Sysl package to define in Sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
 	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]."+
-		"NOTE: This flag is deprecated. Please remove this from your scripts, as formats are now autodetected",
-		optsText)).String()
-
+		"Formats are autodetected, but this can force the use of a particular importer.", optsText)).StringVar(&p.format)
 	return cmd
 }
 
@@ -59,7 +58,7 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	imp, err = importer.Factory(inputFilePath, info.IsDir(), data, logrus.New())
+	imp, err = importer.Factory(inputFilePath, info.IsDir(), p.format, data, logrus.New())
 	if err != nil {
 		return err
 	}
@@ -68,7 +67,7 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	var output string
 	// TODO: Abstract this logic.
 	switch imp.(type) {
-	case *importer.Spanner, *importer.SpannerDir:
+	case *importer.ArraiImporter:
 		output, err = imp.LoadFile(inputFilePath)
 	default:
 		output, err = imp.Load(string(data))

@@ -38,6 +38,7 @@ tidy:
 
 # Generates intermediate files for build.
 generate: internal/arrai/bindata.go
+gen: generate
 
 test: generate
 	$(TESTEXE)
@@ -71,6 +72,8 @@ build-docker: generate
 
 internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \
+		pkg/importer/postgresql/import_postgresql_sql.arraiz \
+		pkg/importer/postgresql/import_migrations.arraiz \
 		pkg/importer/spanner/import_spanner_sql.arraiz \
 		pkg/importer/spanner/import_migrations.arraiz \
 		pkg/exporter/spanner/spanner_cli.arraiz
