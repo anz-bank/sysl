@@ -6,7 +6,7 @@ import deliveryStyles from "../Deliver/styles.module.css";
 const badges = [
   {
     title: <>Guaranteed Consistency</>,
-    imageUrl: "img/icon/garanteed_consistency.svg",
+    imageUrl: "img/icon/feature-consistency.svg",
     description: (
       <>
         Sysl is built for change. With Sysl, your specifications become the
@@ -18,7 +18,7 @@ const badges = [
   },
   {
     title: <>Quality Built-in</>,
-    imageUrl: "img/icon/Quality Built-in.svg",
+    imageUrl: "img/icon/feature-quality.svg",
     description: (
       <>
         With Sysl, you can generate high-quality code, diagrams and
@@ -29,7 +29,7 @@ const badges = [
   },
   {
     title: <>Flexible</>,
-    imageUrl: "img/icon/Flexible.svg",
+    imageUrl: "img/icon/feature-flexible.svg",
     description: (
       <>
         Sysl's open-ended architecture makes it possible to generate code for

@@ -55,7 +55,7 @@ function Hero() {
                 )}
               >
                 <img
-                  src="img/icon/Architects.svg"
+                  src="img/icon/role-architect.svg"
                   className={styles.logo__icon}
                 ></img>
                 <div className={styles.line__item__architects}></div>
@@ -68,7 +68,7 @@ function Hero() {
                 )}
               >
                 <img
-                  src="img/icon/Security.svg"
+                  src="img/icon/role-security.svg"
                   className={styles.logo__icon}
                 ></img>
                 <div className={styles.line__item__security}></div>
@@ -87,7 +87,7 @@ function Hero() {
                 )}
               >
                 <img
-                  src="img/icon/Testers.svg"
+                  src="img/icon/role-test.svg"
                   className={styles.logo__icon}
                 ></img>
                 <div className={styles.line__item__testers}></div>
@@ -104,7 +104,7 @@ function Hero() {
                 )}
               >
                 <img
-                  src="img/icon/Developers.svg"
+                  src="img/icon/role-dev.svg"
                   className={styles.logo__icon}
                 ></img>
                 <div className={styles.line__item__developers}></div>
@@ -123,7 +123,7 @@ function Hero() {
                 )}
               >
                 <img
-                  src="img/icon/Analysts.svg"
+                  src="img/icon/role-analyst.svg"
                   className={styles.logo__icon}
                 ></img>
                 <div className={styles.line__item__analysts}></div>
@@ -136,7 +136,7 @@ function Hero() {
                 )}
               >
                 <img
-                  src="img/icon/Data_engineers.svg"
+                  src="img/icon/role-data.svg"
                   className={styles.logo__icon}
                 ></img>
                 <div className={styles.line__item__dataengineers}></div>
