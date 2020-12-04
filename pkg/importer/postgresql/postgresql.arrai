@@ -1,7 +1,17 @@
 # spanner ddl grammar
 # CREATE DATABASE statements are parsed to avoid errors but ignore by the modelling functions
 let grammar = {://grammar.lang.wbnf:
-ddl                 -> stmt=(create_database|create_table|create_index|create_sequence|create_function|create_trigger|alter_table|drop_table|drop_index):";" ";"? \s*;
+ddl                 -> stmt=(create_database
+                            |create_table
+                            |create_index
+                            |create_sequence
+                            |create_function
+                            |create_trigger
+                            |alter_table
+                            |drop_table
+                            |drop_index
+                            |insert
+                            |grant):";"? ";"? \s*;
 
 create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
@@ -49,6 +59,21 @@ drop_table          -> "DROP" "TABLE" table_name;
 
 drop_index          -> "DROP" "INDEX" index_name;
 
+insert              -> "INSERT" "INTO" table_name "(" column_name:"," ")"
+                       "VALUES" "(" value:"," ")" on_conflict?;
+on_conflict         -> "ON" "CONFLICT" "(" column_name:"," ")" conflict_action?;
+conflict_action     -> "DO" "NOTHING"; // TODO: "DO" "UPDATE" "SET"
+
+grant               -> "GRANT" right:"," "ON" ("ALL" ("TABLES"|"SEQUENCES"|"FUNCTIONS") "IN")?
+                       "SCHEMA" schema=name "TO" '"' subject=[^"]+ '"'; //'
+right               -> "USAGE"
+                     | "SELECT"
+                     | "INSERT"
+                     | "UPDATE"
+                     | "TRIGGER"
+                     | "REFERENCES"
+                     | "EXECUTE";
+
 option              -> "allow_commit_timestamp" "=" ("true"|"false");
 key_part            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
 attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) not_null? default?;
@@ -78,13 +103,16 @@ column_name         -> /{`[^`]*`|[$@A-Za-z_][0-9$@A-Za-z_]*}; //`
 index_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 sequence_name       -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 
-value               -> int_value|bool_value; // TODO: Others
+value               -> int_value|bool_value|string_value|time_value; // TODO: Others
 int_value           -> hex_value|decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
 bool_value          -> "TRUE" | "FALSE";
+string_value        -> ('"' [^"]* '"' | "'" [^']* "'"); //'
+time_value          -> "NOW" "(" ")" "at" "time" "zone" string_value;
 
-.wrapRE -> /{(?i)\s*()};
+// All tokens are case-insensitive and may be preceded by comments or whitespace.
+.wrapRE -> /{(?i)(--[^\n]*|\s)*()};
 :};
 
 #################### PARSE TREE EVALUATORS ####################
@@ -211,7 +239,7 @@ let parseKeyPart = \t
 
 # evalDdl turns a ddl parse tree into a list of ddl statements ready to be applied to a model
 # Use applyStmt to apply these statements to a spanner model
-let evalDdl = \parsed parsed.stmt >> cond . {
+let evalDdl = \parsed parsed.stmt?:[] >> cond . {
     (create_table: val, ...):
         let attributes = val.attr >> evalAttribute(.);
         (
@@ -220,7 +248,12 @@ let evalDdl = \parsed parsed.stmt >> cond . {
                 name: val.table_name.'' rank (:.@),
                 :attributes,
                 foreign_keys: cond val {
-                    (table_constraint: [...constraints], ...): constraints => evalConstraint(.@item),
+                    (table_constraint: [...constraints], ...):
+                        constraints where .@item.fk?:{} => evalConstraint(.@item),
+                },
+                unique_keys: cond val {
+                    (table_constraint: [...constraints], ...):
+                        constraints where .@item.unique?:{} => evalConstraint(.@item),
                 },
                 primary_key: cond val {
                     (:pk, key_part: [k], ...): parseKeyPart(k),
@@ -282,6 +315,10 @@ let evalDdl = \parsed parsed.stmt >> cond . {
         stmt: "drop_index",
         data: val.index_name.'' rank (:.@),
     ),
+
+    # TODO: Handle non-DDL statements.
+    (insert: val, ...): {},
+    (grant: val, ...): {},
 
     _: let _ = //log.print($`skipped unsupported statement: ${.}`); {}
 };
