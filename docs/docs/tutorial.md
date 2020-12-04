@@ -109,7 +109,7 @@ HelloService:
 
 Hello App:
     Greet:
-        HelloService <- GET /greeting/{userId <: int}
+        HelloService <- GET /greeting/{userId}
 ```
 
 We've added a new `Hello App` application with a `Greet` endpoint, and specified its behaviour. The behaviour says that `Greet` does one thing: it sends a request to `HelloService`, invoking the `GET /greeting/{userId <: int}` endpoint (the `app <- endpoint` operator can be read like "`app` receives call to `endpoint`").
@@ -152,7 +152,7 @@ HelloService:
 
 Hello App:
     Greet:
-        HelloService <- GET /greeting/{userId <: int}
+        HelloService <- GET /greeting/{userId}
 
 HelloProject:
     Greeting:

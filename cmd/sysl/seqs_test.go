@@ -342,8 +342,8 @@ func TestDoConstructSequenceDiagramWithGroupingSysl(t *testing.T) {
 		RootModel: testDir,
 		Modules:   "groupby.sysl",
 		Output:    "%(epname).png",
-		Endpoints: []string{"SEQ-One"},
-		Apps:      []string{"Project :: Sequences"},
+		Endpoints: []string{"Project :: Sequences <- SEQ-One"},
+		Apps:      []string{},
 	}
 	var boxPresent bool
 	var err error
@@ -379,8 +379,8 @@ func TestDoConstructSequenceDiagramWithOneEntityBox(t *testing.T) {
 		RootModel: testDir,
 		Modules:   "groupby.sysl",
 		Output:    "%(epname).png",
-		Endpoints: []string{"SEQ-Two"},
-		Apps:      []string{"Project :: Sequences"},
+		Endpoints: []string{"Project :: Sequences <- SEQ-Two"},
+		Apps:      []string{},
 		Groupbox:  "location",
 	}
 

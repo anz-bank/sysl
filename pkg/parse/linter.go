@@ -177,8 +177,6 @@ func (s *TreeShapeListener) lintEndpoint() {
 	}
 	lint := func(appName, endpoint, method, call string, locations map[string]bool) {
 		for location := range locations {
-			// trim white space before checking membership in app graph
-			appName = strings.ReplaceAll(appName, " ", "")
 			apps, exists := s.linter.apps[strings.ToLower(appName)]
 			if !exists {
 				appNotExistLog(location, appName, call)

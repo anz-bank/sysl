@@ -94,7 +94,15 @@ func DoConstructSequenceDiagrams(
 			logger.Warnf("Ignoring blackboxes passed from command line")
 		}
 		spout := cmdutils.MakeFormatParser(cmdContextParam.Output)
-		for _, appName := range cmdContextParam.AppsFlag {
+		// If no apps were provided, assume the parents of the given endpoints.
+		apps := cmdContextParam.AppsFlag
+		if len(apps) == 0 {
+			apps = make([]string, 0, len(cmdContextParam.EndpointsFlag))
+			for _, name := range cmdContextParam.EndpointsFlag {
+				apps = append(apps, strings.TrimSpace(strings.Split(name, "<-")[0]))
+			}
+		}
+		for _, appName := range apps {
 			app := model.Apps[appName]
 			bbs := cmdutils.TransformBlackBoxes(app.GetAttrs()["blackboxes"].GetA().GetElt())
 			spseqtitle := ConstructFormatParser(app.GetAttrs()["seqtitle"].GetS(), cmdContextParam.Title)
@@ -114,19 +122,26 @@ func DoConstructSequenceDiagrams(
 				outputDir := spout.FmtOutput(appName, k, endpoint.GetLongName(), epAttrs)
 				bbs2 := cmdutils.TransformBlackBoxes(endpoint.GetAttrs()["blackboxes"].GetA().GetElt())
 				varrefs := cmdutils.MergeAttributes(app.GetAttrs(), endpoint.GetAttrs())
+
+				// Use the given endpoints if any, else find some calls in the given apps.
 				sdEndpoints := []string{}
-				for _, stmt := range endpoint.GetStmt() {
-					_, ok := stmt.Stmt.(*sysl.Statement_Call)
-					if ok {
-						parts := stmt.GetCall().GetTarget().GetPart()
-						ep := stmt.GetCall().GetEndpoint()
-						sdEndpoints = append(sdEndpoints, strings.Join(parts, " :: ")+" <- "+ep)
+				if len(cmdContextParam.EndpointsFlag) > 0 {
+					sdEndpoints = cmdContextParam.EndpointsFlag
+				} else {
+					for _, stmt := range endpoint.GetStmt() {
+						_, ok := stmt.Stmt.(*sysl.Statement_Call)
+						if ok {
+							parts := stmt.GetCall().GetTarget().GetPart()
+							ep := stmt.GetCall().GetEndpoint()
+							sdEndpoints = append(sdEndpoints, strings.Join(parts, " :: ")+" <- "+ep)
+						}
+					}
+					if len(sdEndpoints) == 0 {
+						return nil, fmt.Errorf("no call statements to build sequence diagram for endpoint %s",
+							endpoint.Name)
 					}
 				}
-				if len(sdEndpoints) == 0 {
-					return nil, fmt.Errorf("no call statements to build sequence diagram for endpoint %s",
-						endpoint.Name)
-				}
+
 				groupAttr := epAttrs["groupby"].GetS()
 				if len(groupAttr) == 0 {
 					groupAttr = cmdContextParam.Group
