@@ -1,7 +1,13 @@
 # spanner ddl grammar
 # CREATE DATABASE statements are parsed to avoid errors but ignore by the modelling functions
 let grammar = {://grammar.lang.wbnf[grammar]:
-ddl                 -> stmt=(create_database|create_table|create_index|alter_table|drop_table|drop_index):";"? ";"? \s*;
+ddl                 -> stmt=(create_database
+                            |create_table
+                            |create_index
+                            |alter_table
+                            |insert
+                            |drop_table
+                            |drop_index):";"? ";"? \s*;
 
 create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
@@ -27,6 +33,9 @@ table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN" column_name (attr_type 
                      | ADD_CONSTRAINT  = ("ADD" table_constraint)
                      | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name);
 attr_alteration     -> "ALTER" "COLUMN" column_name (attr_type | "SET" options_def);
+
+insert              -> "INSERT" "INTO" table_name "(" column_name:"," ")"
+                       "VALUES" "(" value:"," ")";
 
 drop_table          -> "DROP" "TABLE" table_name;
 
@@ -55,9 +64,13 @@ constraint_name     -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 column_name         -> /{`[^`]*`|[$@A-Za-z_][0-9$@A-Za-z_]*}; //`
 index_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 
-int64_value         -> hex_value|decimal_value;
+value               -> int64_value|bool_value|string_value|time_value; // TODO: Others
+int64_value           -> hex_value|decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
+bool_value          -> "TRUE" | "FALSE";
+string_value        -> ('"' [^"]* '"' | "'" [^']* "'"); //'
+time_value          -> "NOW" "(" ")" "at" "time" "zone" string_value;
 
 // All tokens are case-insensitive and may be preceded by comments or whitespace.
 .wrapRE -> /{(?i)(--[^\n]*|\s)*()};
@@ -239,6 +252,9 @@ let evalDdl = \parsed parsed.stmt?:{} >> cond . {
         stmt: "drop_index",
         data: val.index_name.'' rank (:.@),
     ),
+
+    # Ignore INSERT statements.
+    (insert: val, ...): {},
 
     _: let _ = //log.print($`skipped unsupported statement: ${.}`); {}
 };

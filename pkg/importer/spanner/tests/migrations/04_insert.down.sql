@@ -1,0 +1,1 @@
+DELETE FROM foo WHERE a = 1;
