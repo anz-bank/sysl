@@ -20,18 +20,15 @@ let _app = (
             let result = annotations(
                 (attrs:
                     {'foo':
-                        (a:
-                            (elt:
-                                (a:
-                                    (elt: [(s: 'bar')])
-                                )
-                            )
-                        )
+                        (a: (elt: [
+                            (a: (elt: [
+                                (s: 'bar')
+                            ]))
+                        ]))
                     }
-
                 )
             );
-            let expected = {'foo': ['bar']};
+            let expected = {'foo': [['bar']]};
             //test.assert.equal(expected, result),
     ),
     tags: (
