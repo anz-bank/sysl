@@ -71,7 +71,7 @@ A few things are happening here:
 
 `#` begins a comment. The first line is just describing the system represented by the specification (this is of course optional).
 
-`/greeting/{userId <: int}` is the path of the endpoint. Using a path indicates that this endpoint is a REST endpoint; RPC endpoints can also be specified with a function signature (e.g. `GetGreeting(userIduserId <: int)`).
+`/greeting/{userId <: int}` is the path of the endpoint. Using a path indicates that this endpoint is a REST endpoint; RPC endpoints can also be specified with a function signature (e.g. `GetGreeting(userId <: int)`).
 
 `{userId <: int}` describes a path **parameter** of **type** integer. Whatever value is provided when calling the endpoint will be interpreted as an integer, and bound to the name `userId`.
 
@@ -112,7 +112,9 @@ Hello App:
         HelloService <- GET /greeting/{userId}
 ```
 
-We've added a new `Hello App` application with a `Greet` endpoint, and specified its behaviour. The behaviour says that `Greet` does one thing: it sends a request to `HelloService`, invoking the `GET /greeting/{userId <: int}` endpoint (the `app <- endpoint` operator can be read like "`app` receives call to `endpoint`").
+We've added a new `Hello App` application with a `Greet` endpoint, and specified its behaviour. The behaviour says that `Greet` does one thing: it sends a request to `HelloService`, invoking the `GET /greeting/{userId}` endpoint (the `app <- endpoint` operator can be read like "`app` receives call to `endpoint`").
+
+Note that the `<: int` parameter type specification is present in the endpoint definition, but not the call.
 
 :::note
 At this level of detail, we're not interested in specifically what happens to the result of the call. However Sysl has a special grammar for specifying more detailed behaviour as transformations.
