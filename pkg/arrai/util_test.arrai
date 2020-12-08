@@ -23,5 +23,17 @@ let _concat = \z \k \v $`${z}+${k}${v}`;
         one: util.reduceObj((a: 1), _concat, '') = '+a1',
         tuple: util.reduceObj((b: 1, a: 2), _concat, '') = '+a2+b1',
         dict: util.reduceObj({'b': 1, 'a': 2}, _concat, '') = '+a2+b1',
+    ),
+
+    trimLines: (
+        empty: util.trimLines('') = '',
+        singleDirty: util.trimLines(' a') = ' a',
+        singleClean: util.trimLines(' a ') = ' a',
+        multiple: util.trimLines($`
+            a
+              b${'\t\t'}
+                c ${'\t'}
+            ${'\n \n'}
+            `) = 'a\n  b\n    c\n',
     )
 )

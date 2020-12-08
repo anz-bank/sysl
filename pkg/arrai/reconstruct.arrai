@@ -38,7 +38,7 @@ let src = (
     view: m.src?.view?:{},
 );
 
-let (nativeDataTypes: native, :trimWhitespace, ...) = //{./util};
+let (nativeDataTypes: native, :trimLines, ...) = //{./util};
 
 let joinedName = //seq.join(' :: ');
 
@@ -88,9 +88,10 @@ let resolvedAnnotations = \annotations
             _:
                 cond {
                     //seq.contains('\n', value):
+                        let value = //seq.trim_suffix('\n', trimLines(value));
                         $`
                             @${name} =:
-                                ${//seq.split('\n', value) where .@item != '' >> $`| ${trimWhitespace(.)}`::\i}
+                                ${//seq.split('\n', value) >> $`| ${.}`::\i}
                         `,
                     _: $`@${name} = "${value}"`,
                 }
@@ -117,13 +118,13 @@ let files = (src.app => \(:appName, :appSrc) (:appName, :appSrc, :appSrc.file)) 
 files => \(:file, :apps) (
     @: file,
     @value:
-        let apps = apps orderby .appSrc.start.line;
+        let apps = apps orderby .appSrc.start?.line?:0;
         let sortedEp = src.ep where .epSrc.file = file;
         # TODO: imports
-        $`
+        //{./util}.trimLines($`
             ${apps >> \(:appName, ...)
                 # TODO: appDocstring
-                let (:appLongName, ...) = (app where .appName = appName) single;
+                let appLongName = ((app where .appName = appName) single).appLongName?:{};
                 let appTags = ((tag.app where .appName = appName) => $`~${.appTag}`) orderby .;
                 let appTags = cond {(appTags != []): ' ' + $`[${//seq.join(', ', appTags)}]`};
                 let [anno, src, tag] = [anno, src, tag] >> (. :> \v (v where .appName = appName));
@@ -222,5 +223,5 @@ files => \(:file, :apps) (
                         ::\i\n:\n}
                 `
             ::\n:\n}
-            `
+        `)
 )

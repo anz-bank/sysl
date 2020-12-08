@@ -109,6 +109,14 @@ let rec trimWhitespace = \str
     }
 ;
 
+# Trims trailing whitespace from each line of a string.
+let trimLines =
+    let newlinesRe = //re.compile(`\n\s+$`);
+    let re = //re.compile(`^(.*[^\s])\s*$`);
+    \str
+        let str = newlinesRe.sub('\n', str);
+        $`${//seq.split('\n', str) >> cond re.match(.) {[[_, s]]: s, _: ''}::\n}`
+;
 
 # TODO: Handle type without app reference
 let typeGrammar = {:
@@ -191,6 +199,7 @@ let nativeDataTypes = {
     :unpackType,
     :packType,
     :trimWhitespace,
+    :trimLines,
     :isValidIdentifier,
     :resolveValidIdentifier,
     :nativeDataTypes,
