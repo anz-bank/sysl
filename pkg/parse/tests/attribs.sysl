@@ -1,3 +1,5 @@
-App [blackbox=[['one', 'two'], ['one', 'two']]]:
+App [strings=['a', 'b'], arrays=[['a'], ['b', 'c']]]:
+    @at_strings = ['a', 'b']
+    @at_arrays = [['a'], ['b', 'c']]
     Endpoint:
         ...

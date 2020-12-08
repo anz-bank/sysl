@@ -274,18 +274,22 @@ func fromQString(str string) string {
 func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueContext) {
 	attr := &sysl.Attribute{}
 	switch {
+	case ctx.Multi_line_docstring() != nil:
+		attr.Attribute = &sysl.Attribute_S{}
 	case ctx.QSTRING() != nil:
 		attr.Attribute = &sysl.Attribute_S{
 			S: fromQString(ctx.QSTRING().GetText()),
 		}
-	case ctx.Multi_line_docstring() != nil:
-		attr.Attribute = &sysl.Attribute_S{}
-	default:
-		arr := makeArrayOfStringsAttribute(ctx.Array_of_strings().(*parser.Array_of_stringsContext))
-
+	case ctx.Array_of_strings() != nil:
 		attr.Attribute = &sysl.Attribute_A{
-			A: arr.GetA(),
+			A: makeArrayOfStringsAttribute(ctx.Array_of_strings().(*parser.Array_of_stringsContext)).GetA(),
 		}
+	case ctx.Array_of_arrays() != nil:
+		attr.Attribute = &sysl.Attribute_A{
+			A: makeArrayOfArraysAttribute(ctx.Array_of_arrays().(*parser.Array_of_arraysContext)).GetA(),
+		}
+	default:
+		panic("unexpected annotation value")
 	}
 	addAttrWithPrecendence(s.peekAttrs(), s.annotation, attr)
 }
@@ -468,15 +472,30 @@ func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*
 }
 
 func makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) *sysl.Attribute {
-	arr := []*sysl.Attribute{}
-	for _, ars := range array_strings.AllQuoted_string() {
+	arr := make([]*sysl.Attribute, len(array_strings.AllQuoted_string()))
+	for i, ars := range array_strings.AllQuoted_string() {
 		str := ars.(*parser.Quoted_stringContext)
 
-		arr = append(arr, &sysl.Attribute{
+		arr[i] = &sysl.Attribute{
 			Attribute: &sysl.Attribute_S{
 				S: fromQString(str.QSTRING().GetText()),
 			},
-		})
+		}
+	}
+	return &sysl.Attribute{
+		Attribute: &sysl.Attribute_A{
+			A: &sysl.Attribute_Array{
+				Elt: arr,
+			},
+		},
+	}
+}
+
+func makeArrayOfArraysAttribute(array_arrays *parser.Array_of_arraysContext) *sysl.Attribute {
+	arr := make([]*sysl.Attribute, len(array_arrays.AllArray_of_strings()))
+	for i, arrCtx := range array_arrays.AllArray_of_strings() {
+		aosCtx := arrCtx.(*parser.Array_of_stringsContext)
+		arr[i] = makeArrayOfStringsAttribute(aosCtx)
 	}
 	return &sysl.Attribute{
 		Attribute: &sysl.Attribute_A{

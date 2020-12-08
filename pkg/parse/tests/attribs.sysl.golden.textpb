@@ -5,28 +5,75 @@ apps: {
    part: "App"
   }
   attrs: {
-   key: "blackbox"
+   key: "arrays"
    value: {
     a: {
      elt: {
       a: {
        elt: {
-        s: "one"
-       }
-       elt: {
-        s: "two"
+        s: "a"
        }
       }
      }
      elt: {
       a: {
        elt: {
-        s: "one"
+        s: "b"
        }
        elt: {
-        s: "two"
+        s: "c"
        }
       }
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "at_arrays"
+   value: {
+    a: {
+     elt: {
+      a: {
+       elt: {
+        s: "a"
+       }
+      }
+     }
+     elt: {
+      a: {
+       elt: {
+        s: "b"
+       }
+       elt: {
+        s: "c"
+       }
+      }
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "at_strings"
+   value: {
+    a: {
+     elt: {
+      s: "a"
+     }
+     elt: {
+      s: "b"
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "strings"
+   value: {
+    a: {
+     elt: {
+      s: "a"
+     }
+     elt: {
+      s: "b"
      }
     }
    }
@@ -42,11 +89,11 @@ apps: {
      source_context: {
       file: "tests/attribs.sysl"
       start: {
-       line: 3
+       line: 5
        col: 8
       }
       end: {
-       line: 3
+       line: 5
        col: 8
       }
      }
@@ -54,11 +101,11 @@ apps: {
     source_context: {
      file: "tests/attribs.sysl"
      start: {
-      line: 2
+      line: 4
       col: 4
      }
      end: {
-      line: 4
+      line: 6
      }
     }
    }
@@ -71,7 +118,7 @@ apps: {
    }
    end: {
     line: 1
-    col: 46
+    col: 51
    }
   }
  }
