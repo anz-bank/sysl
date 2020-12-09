@@ -285,17 +285,23 @@ let newNormalize = \m
         reduce(input, \z \i i +> z, ())
     ;
 
+    let rec parseFieldType = \field cond field {
+        (:primitive, ...): (:primitive),
+        (ref:(path:p), ...): (appName: [], typePath: p),
+        (ref:(appname: (part:a), path:p), ...): (appName: a, typePath: p),
+        (:type_ref, ...): parseFieldType(type_ref),
+        (:set, ...): (set: parseFieldType(set)),
+        (:sequence, ...): (sequence: parseFieldType(sequence)),
+        _: let _ = //log.print(field); '???',
+    };
+
     let field = _fields => \(:appName, :typeName, :fieldName, :field)
         (
             :appName,
             :typeName,
             :fieldName,
             fieldOpt: field.opt?:{},
-            fieldType: cond field {
-                (primitive:p, ...): p,
-                (type_ref:(ref:(path:p), ...), ...): //seq.join('.', p),
-                _: '?',
-            },
+            fieldType: parseFieldType(field),
             fieldConstraint: let constraint = field.constraint?:{}; mergeArrayTuples(constraint),
             # fk: cond field.type_ref?.ref.path:{} {
             #     [t, f]: (appName:app.name.part, typeName: t, fieldName: f)

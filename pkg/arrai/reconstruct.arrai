@@ -79,7 +79,13 @@ let resolveStmts = \stmt
 
 let stmtBlock = \stmt \ep resolveStmts(stmt where .epName = ep orderby .stmtIndex);
 
-let resolvedType = \t cond { (//str.lower(t) <: native): //str.lower(t), _: t };
+let rec resolvedType = \t cond t {
+    (:primitive): //str.lower(primitive),
+    (appName: a, typePath: p): $`${cond {a: //seq.join('::', a)++'.'}}${//seq.join('.', p)}`,
+    (:set): $`set of ${resolvedType(set)}`,
+    (:sequence): $`sequence of ${resolvedType(sequence)}`,
+    _: t
+};
 
 let resolvedAnnotations = \annotations
     annotations orderby .name >> \(:name, :value)
@@ -91,7 +97,7 @@ let resolvedAnnotations = \annotations
                         let value = //seq.trim_suffix('\n', trimLines(value));
                         $`
                             @${name} =:
-                                ${//seq.split('\n', value) >> $`| ${.}`::\i}
+                                ${//seq.split('\n', value) >> $`| ${//seq.trim_prefix(' ', .)}`::\i}
                         `,
                     _: $`@${name} = "${value}"`,
                 }

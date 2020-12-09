@@ -4,8 +4,8 @@
       (
         appAnnoName: 'description',
         appAnnoValue: 'A database.\n Stores data.\n',
-        appName: ['Source']
-      )
+        appName: ['Source'],
+      ),
     },
     ep: {},
     event: {},
@@ -13,38 +13,24 @@
       (
         appName: ['Source'],
         fieldAnnoName: 'description',
-        fieldAnnoValue: 'A Foo.\n Represents foo things.\n',
-        fieldName: 'y',
-        typeName: 'Foo'
-      ),
-      (
-        appName: ['Source'],
-        fieldAnnoName: 'description',
-        fieldAnnoValue: 'A bar table.',
-        fieldName: 'a',
-        typeName: 'Bar'
-      ),
-      (
-        appName: ['Source'],
-        fieldAnnoName: 'description',
         fieldAnnoValue: 'A foreign key',
         fieldName: 'x',
-        typeName: 'Bar'
+        typeName: 'Bar',
       ),
       (
         appName: ['Source'],
         fieldAnnoName: 'description',
         fieldAnnoValue: 'An optional int',
         fieldName: 'b',
-        typeName: 'Bar'
+        typeName: 'Bar',
       ),
       (
         appName: ['Source'],
         fieldAnnoName: 'description',
         fieldAnnoValue: 'The x value.',
         fieldName: 'x',
-        typeName: 'Foo'
-      )
+        typeName: 'Foo',
+      ),
     },
     mixin: {},
     stmt: {},
@@ -53,59 +39,55 @@
         appName: ['Source'],
         typeAnnoName: 'description',
         typeAnnoValue: 'A Foo.\n Represents foo things.\n',
-        typeName: 'Foo'
+        typeName: 'Foo',
       ),
       (
         appName: ['Source'],
         typeAnnoName: 'description',
         typeAnnoValue: 'A bar table.',
-        typeName: 'Bar'
-      )
+        typeName: 'Bar',
+      ),
     },
-    view: {}
+    view: {},
   ),
   app: {
     (
       appDocstring: {},
       appLongName: {},
-      appName: ['A']
+      appName: ['A'],
     ),
     (
       appDocstring: {},
       appLongName: {},
-      appName: ['B']
+      appName: ['B'],
     ),
     (
       appDocstring: {},
       appLongName: {},
-      appName: ['C']
+      appName: ['C'],
     ),
     (
       appDocstring: {},
       appLongName: {},
-      appName: ['Client']
+      appName: ['Client'],
     ),
     (
       appDocstring: {},
       appLongName: {},
-      appName: ['D']
+      appName: ['D'],
     ),
     (
       appDocstring: {},
       appLongName: {},
-      appName: ['Pizza', 'Supreme']
+      appName: ['Source'],
     ),
     (
       appDocstring: {},
       appLongName: {},
-      appName: ['Source']
+      appName: ['all'],
     ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['all']
-    )
   },
+  enum: {},
   ep: {
     (
       appName: ['A'],
@@ -113,7 +95,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'Fetch',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['B'],
@@ -121,7 +103,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'Fetch',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['C'],
@@ -129,7 +111,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'Fetch',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['C'],
@@ -137,7 +119,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'FetchA',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['C'],
@@ -145,7 +127,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'FetchB',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['Client'],
@@ -153,7 +135,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'Do',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['D'],
@@ -161,175 +143,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'Fetch',
-      rest: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'DoEverything',
-      rest: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'GET /a/{ap}',
-      rest: (
-        method: 'GET',
-        path: '/a/{ap}',
-        query_param: [
-          (
-            name: 'aq',
-            type: (
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 15,
-                  line: 106
-                ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
-                start: (
-                  col: 12,
-                  line: 106
-                )
-              )
-            )
-          )
-        ],
-        url_param: [
-          (
-            name: 'ap',
-            type: (
-              primitive: 'STRING',
-              source_context: (
-                end: (
-                  col: 20,
-                  line: 105
-                ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
-                start: (
-                  col: 7,
-                  line: 105
-                )
-              )
-            )
-          )
-        ]
-      )
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'POST /b/{bp}',
-      rest: (
-        method: 'POST',
-        path: '/b/{bp}',
-        query_param: [
-          (
-            name: 'bq',
-            type: (
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 16,
-                  line: 109
-                ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
-                start: (
-                  col: 13,
-                  line: 109
-                )
-              )
-            )
-          )
-        ],
-        url_param: [
-          (
-            name: 'bp',
-            type: (
-              primitive: 'STRING',
-              source_context: (
-                end: (
-                  col: 20,
-                  line: 108
-                ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
-                start: (
-                  col: 7,
-                  line: 108
-                )
-              )
-            )
-          )
-        ]
-      )
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'PUT /b/{bp}',
-      rest: (
-        method: 'PUT',
-        path: '/b/{bp}',
-        query_param: [
-          (
-            name: 'cq',
-            type: (
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 15,
-                  line: 111
-                ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
-                start: (
-                  col: 12,
-                  line: 111
-                )
-              )
-            )
-          )
-        ],
-        url_param: [
-          (
-            name: 'bp',
-            type: (
-              primitive: 'STRING',
-              source_context: (
-                end: (
-                  col: 20,
-                  line: 108
-                ),
-                file: 'dev/sysl/pkg/arrai/model.sysl',
-                start: (
-                  col: 7,
-                  line: 108
-                )
-              )
-            )
-          )
-        ]
-      )
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epDocstring: {},
-      epEvent: (
-        appName: (
-          part: ['Pizza', 'Supreme']
-        ),
-        eventName: 'Event'
-      ),
-      epLongName: {},
-      epName: 'Pizza :: Supreme -> Event',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['Source'],
@@ -337,7 +151,7 @@
       epEvent: {},
       epLongName: {},
       epName: 'Read',
-      rest: {}
+      rest: {},
     ),
     (
       appName: ['all'],
@@ -345,253 +159,258 @@
       epEvent: {},
       epLongName: {},
       epName: 'all',
-      rest: {}
-    )
+      rest: {},
+    ),
   },
-  event: {
-    (
-      appName: ['Pizza', 'Supreme'],
-      eventName: 'Event'
-    )
-  },
+  event: {},
   field: {
     (
       appName: ['A'],
+      fieldConstraint: (),
       fieldName: 'ax',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['A'],
+      fieldConstraint: (),
       fieldName: 'ay',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['B'],
+      fieldConstraint: (),
       fieldName: 'bx',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['B'],
+      fieldConstraint: (),
       fieldName: 'by',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['C'],
+      fieldConstraint: (),
       fieldName: 'cx',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['C'],
+      fieldConstraint: (),
       fieldName: 'cy',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['Client'],
+      fieldConstraint: (),
       fieldName: 'xx',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'Screen'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'Screen',
     ),
     (
       appName: ['Client'],
+      fieldConstraint: (),
       fieldName: 'yy',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'Screen'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'Screen',
     ),
     (
       appName: ['D'],
+      fieldConstraint: (),
       fieldName: 'dx',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['D'],
+      fieldConstraint: (),
       fieldName: 'dy',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'FetchResponse'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'FetchResponse',
     ),
     (
       appName: ['Source'],
+      fieldConstraint: (),
       fieldName: 'a',
-      fieldType: 'STRING',
-      opt: {},
-      typeName: 'Bar'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'STRING',
+      ),
+      typeName: 'Bar',
     ),
     (
       appName: ['Source'],
+      fieldConstraint: (),
       fieldName: 'b',
-      fieldType: 'INT',
-      opt: {
-        (        )
+      fieldOpt: {
+        (),
       },
-      typeName: 'Bar'
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'Bar',
     ),
     (
       appName: ['Source'],
+      fieldConstraint: (),
       fieldName: 'x',
-      fieldType: 'Foo.x',
-      opt: {},
-      typeName: 'Bar'
+      fieldOpt: {},
+      fieldType: '???',
+      typeName: 'Bar',
     ),
     (
       appName: ['Source'],
+      fieldConstraint: (),
       fieldName: 'x',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'Foo'
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'Foo',
     ),
     (
       appName: ['Source'],
+      fieldConstraint: (),
       fieldName: 'y',
-      fieldType: 'INT',
-      opt: {},
-      typeName: 'Foo'
-    )
+      fieldOpt: {},
+      fieldType: (
+        primitive: 'INT',
+      ),
+      typeName: 'Foo',
+    ),
   },
   mixin: {},
-  param: {
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      paramIndex: 0,
-      paramName: 'x',
-      paramType: (
-        primitive: 'STRING'
-      )
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      paramIndex: 1,
-      paramName: 'y',
-      paramType: (
-        primitive: 'STRING'
-      )
-    )
-  },
+  param: {},
   src: (
     app: {
       (
         appName: ['A'],
         appSrc: (
           end: (
-            line: 24
+            line: 24,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 1,
-            line: 24
-          )
-        )
+            line: 24,
+          ),
+        ),
       ),
       (
         appName: ['B'],
         appSrc: (
           end: (
-            line: 33
+            line: 33,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 1,
-            line: 33
-          )
-        )
+            line: 33,
+          ),
+        ),
       ),
       (
         appName: ['C'],
         appSrc: (
           end: (
-            line: 42
+            line: 42,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 1,
-            line: 42
-          )
-        )
+            line: 42,
+          ),
+        ),
       ),
       (
         appName: ['Client'],
         appSrc: (
           end: (
-            line: 71
+            line: 71,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 1,
-            line: 71
-          )
-        )
+            line: 71,
+          ),
+        ),
       ),
       (
         appName: ['D'],
         appSrc: (
           end: (
-            line: 61
+            line: 61,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 1,
-            line: 61
-          )
-        )
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        appSrc: (
-          end: (
-            col: 9,
-            line: 80
+            line: 61,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
-          start: (
-            col: 1,
-            line: 80
-          )
-        )
+        ),
       ),
       (
         appName: ['Source'],
         appSrc: (
           end: (
             col: 10,
-            line: 1
+            line: 1,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 1,
-            line: 1
-          )
-        )
+            line: 1,
+          ),
+        ),
       ),
       (
         appName: ['all'],
         appSrc: (
           end: (
-            line: 119
+            line: 80,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 1,
-            line: 119
-          )
-        )
-      )
+            line: 80,
+          ),
+        ),
+      ),
     },
     ep: {
       (
@@ -600,14 +419,14 @@
         epSrc: (
           end: (
             col: 4,
-            line: 29
+            line: 29,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 25
-          )
-        )
+            line: 25,
+          ),
+        ),
       ),
       (
         appName: ['B'],
@@ -615,14 +434,14 @@
         epSrc: (
           end: (
             col: 4,
-            line: 38
+            line: 38,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 34
-          )
-        )
+            line: 34,
+          ),
+        ),
       ),
       (
         appName: ['C'],
@@ -630,14 +449,14 @@
         epSrc: (
           end: (
             col: 4,
-            line: 57
+            line: 57,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 52
-          )
-        )
+            line: 52,
+          ),
+        ),
       ),
       (
         appName: ['C'],
@@ -645,14 +464,14 @@
         epSrc: (
           end: (
             col: 4,
-            line: 47
+            line: 47,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 43
-          )
-        )
+            line: 43,
+          ),
+        ),
       ),
       (
         appName: ['C'],
@@ -660,14 +479,14 @@
         epSrc: (
           end: (
             col: 4,
-            line: 52
+            line: 52,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 47
-          )
-        )
+            line: 47,
+          ),
+        ),
       ),
       (
         appName: ['Client'],
@@ -675,14 +494,14 @@
         epSrc: (
           end: (
             col: 4,
-            line: 76
+            line: 76,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 72
-          )
-        )
+            line: 72,
+          ),
+        ),
       ),
       (
         appName: ['D'],
@@ -690,89 +509,14 @@
         epSrc: (
           end: (
             col: 4,
-            line: 67
+            line: 67,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 62
-          )
-        )
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'DoEverything',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 105
+            line: 62,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
-          start: (
-            col: 4,
-            line: 81
-          )
-        )
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'GET /a/{ap}',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 108
-          ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
-          start: (
-            col: 8,
-            line: 106
-          )
-        )
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'POST /b/{bp}',
-        epSrc: (
-          end: (
-            col: 8,
-            line: 111
-          ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
-          start: (
-            col: 8,
-            line: 109
-          )
-        )
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'PUT /b/{bp}',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 114
-          ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
-          start: (
-            col: 8,
-            line: 111
-          )
-        )
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'Pizza :: Supreme -> Event',
-        epSrc: (
-          end: (
-            col: 3,
-            line: 119
-          ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
-          start: (
-            col: 4,
-            line: 116
-          )
-        )
+        ),
       ),
       (
         appName: ['Source'],
@@ -780,47 +524,31 @@
         epSrc: (
           end: (
             col: 1,
-            line: 24
+            line: 24,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 21
-          )
-        )
+            line: 21,
+          ),
+        ),
       ),
       (
         appName: ['all'],
         epName: 'all',
         epSrc: (
           end: (
-            line: 127
+            line: 88,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 120
-          )
-        )
-      )
-    },
-    event: {
-      (
-        appName: ['Pizza', 'Supreme'],
-        eventName: 'Event',
-        eventSrc: (
-          end: (
-            col: 15,
-            line: 114
+            line: 81,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
-          start: (
-            col: 4,
-            line: 114
-          )
-        )
-      )
+        ),
+      ),
     },
+    event: {},
     field: {
       (
         appName: ['A'],
@@ -828,15 +556,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 30
+            line: 30,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 30
-          )
+            line: 30,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['A'],
@@ -844,15 +572,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 31
+            line: 31,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 31
-          )
+            line: 31,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['B'],
@@ -860,15 +588,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 39
+            line: 39,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 39
-          )
+            line: 39,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['B'],
@@ -876,15 +604,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 40
+            line: 40,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 40
-          )
+            line: 40,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['C'],
@@ -892,15 +620,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 58
+            line: 58,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 58
-          )
+            line: 58,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['C'],
@@ -908,15 +636,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 59
+            line: 59,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 59
-          )
+            line: 59,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['Client'],
@@ -924,15 +652,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 77
+            line: 77,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 77
-          )
+            line: 77,
+          ),
         ),
-        typeName: 'Screen'
+        typeName: 'Screen',
       ),
       (
         appName: ['Client'],
@@ -940,15 +668,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 78
+            line: 78,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 78
-          )
+            line: 78,
+          ),
         ),
-        typeName: 'Screen'
+        typeName: 'Screen',
       ),
       (
         appName: ['D'],
@@ -956,15 +684,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 68
+            line: 68,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 68
-          )
+            line: 68,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['D'],
@@ -972,15 +700,15 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 69
+            line: 69,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 14,
-            line: 69
-          )
+            line: 69,
+          ),
         ),
-        typeName: 'FetchResponse'
+        typeName: 'FetchResponse',
       ),
       (
         appName: ['Source'],
@@ -988,15 +716,15 @@
         fieldSrc: (
           end: (
             col: 24,
-            line: 15
+            line: 15,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 13,
-            line: 15
-          )
+            line: 15,
+          ),
         ),
-        typeName: 'Bar'
+        typeName: 'Bar',
       ),
       (
         appName: ['Source'],
@@ -1004,15 +732,15 @@
         fieldSrc: (
           end: (
             col: 8,
-            line: 18
+            line: 18,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 13,
-            line: 17
-          )
+            line: 17,
+          ),
         ),
-        typeName: 'Bar'
+        typeName: 'Bar',
       ),
       (
         appName: ['Source'],
@@ -1020,15 +748,15 @@
         fieldSrc: (
           end: (
             col: 4,
-            line: 21
+            line: 21,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 13,
-            line: 19
-          )
+            line: 19,
+          ),
         ),
-        typeName: 'Bar'
+        typeName: 'Bar',
       ),
       (
         appName: ['Source'],
@@ -1036,15 +764,15 @@
         fieldSrc: (
           end: (
             col: 8,
-            line: 11
+            line: 11,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 13,
-            line: 10
-          )
+            line: 10,
+          ),
         ),
-        typeName: 'Foo'
+        typeName: 'Foo',
       ),
       (
         appName: ['Source'],
@@ -1052,89 +780,64 @@
         fieldSrc: (
           end: (
             col: 13,
-            line: 11
+            line: 11,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 13,
-            line: 11
-          )
+            line: 11,
+          ),
         ),
-        typeName: 'Foo'
-      )
+        typeName: 'Foo',
+      ),
     },
     mixin: {},
     stmt: {
       (
         appName: ['A'],
         epName: 'Fetch',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['B'],
         epName: 'Fetch',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['C'],
         epName: 'Fetch',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['C'],
         epName: 'FetchA',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['C'],
         epName: 'FetchB',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['Client'],
         epName: 'Do',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['D'],
         epName: 'Fetch',
-        stmtSrc: {}
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'DoEverything',
-        stmtSrc: {}
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'GET /a/{ap}',
-        stmtSrc: {}
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'POST /b/{bp}',
-        stmtSrc: {}
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'PUT /b/{bp}',
-        stmtSrc: {}
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'Pizza :: Supreme -> Event',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['Source'],
         epName: 'Read',
-        stmtSrc: {}
+        stmtSrc: {},
       ),
       (
         appName: ['all'],
         epName: 'all',
-        stmtSrc: {}
-      )
+        stmtSrc: {},
+      ),
     },
     type: {
       (
@@ -1143,14 +846,14 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 33
+            line: 33,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 29
-          )
-        )
+            line: 29,
+          ),
+        ),
       ),
       (
         appName: ['B'],
@@ -1158,14 +861,14 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 42
+            line: 42,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 38
-          )
-        )
+            line: 38,
+          ),
+        ),
       ),
       (
         appName: ['C'],
@@ -1173,29 +876,29 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 61
+            line: 61,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 57
-          )
-        )
+            line: 57,
+          ),
+        ),
       ),
       (
         appName: ['Client'],
         typeName: 'Screen',
         typeSrc: (
           end: (
-            col: 5,
-            line: 80
+            col: 3,
+            line: 80,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 76
-          )
-        )
+            line: 76,
+          ),
+        ),
       ),
       (
         appName: ['D'],
@@ -1203,14 +906,14 @@
         typeSrc: (
           end: (
             col: 6,
-            line: 71
+            line: 71,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 67
-          )
-        )
+            line: 67,
+          ),
+        ),
       ),
       (
         appName: ['Source'],
@@ -1218,14 +921,14 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 21
+            line: 21,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 14
-          )
-        )
+            line: 14,
+          ),
+        ),
       ),
       (
         appName: ['Source'],
@@ -1233,17 +936,17 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 13
+            line: 13,
           ),
           file: 'dev/sysl/pkg/arrai/model.sysl',
           start: (
             col: 4,
-            line: 6
-          )
-        )
-      )
+            line: 6,
+          ),
+        ),
+      ),
     },
-    view: {}
+    view: {},
   ),
   stmt: {
     (
@@ -1267,15 +970,16 @@
               'dataflow': (
                 d: {
                   'A.FetchResponse.ax': 'Source.Foo.x',
-                  'A.FetchResponse.ay': 'Source.Foo.y'
-                }
+                  'A.FetchResponse.ay': 'Source.Foo.y',
+                },
               ),
-              'description': '1:1 transform'
-            }
+              'description': '1:1 transform',
+            },
           ),
-          type: 'A.FetchResponse'
-        )
-      )
+          status: 'ok',
+          type: 'A.FetchResponse',
+        ),
+      ),
     ),
     (
       appName: ['A'],
@@ -1283,10 +987,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['Source']
-        ),
-        epName: 'Read'
+        appName: ['Source'],
+        epName: 'Read',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1295,7 +997,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['B'],
@@ -1318,15 +1020,16 @@
               'dataflow': (
                 d: {
                   'B.FetchResponse.bx': 'Source.Foo.x',
-                  'B.FetchResponse.by': 'Source.Foo.y'
-                }
+                  'B.FetchResponse.by': 'Source.Foo.y',
+                },
               ),
-              'description': '1:1 transform'
-            }
+              'description': '1:1 transform',
+            },
           ),
-          type: 'B.FetchResponse'
-        )
-      )
+          status: 'ok',
+          type: 'B.FetchResponse',
+        ),
+      ),
     ),
     (
       appName: ['B'],
@@ -1334,10 +1037,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['Source']
-        ),
-        epName: 'Read'
+        appName: ['Source'],
+        epName: 'Read',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1346,7 +1047,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['C'],
@@ -1369,19 +1070,20 @@
               'dataflow': (
                 d: {
                   'C.FetchResponse.cx': (
-                    a: ['A.FetchResponse.ax', 'B.FetchResponse.bx']
+                    a: ['A.FetchResponse.ax', 'B.FetchResponse.bx'],
                   ),
                   'C.FetchResponse.cy': (
-                    a: ['A.FetchResponse.ay', 'B.FetchResponse.by']
-                  )
-                }
+                    a: ['A.FetchResponse.ay', 'B.FetchResponse.by'],
+                  ),
+                },
               ),
-              'description': '1:1 transform'
-            }
+              'description': '1:1 transform',
+            },
           ),
-          type: 'C.FetchResponse'
-        )
-      )
+          status: 'ok',
+          type: 'C.FetchResponse',
+        ),
+      ),
     ),
     (
       appName: ['C'],
@@ -1389,10 +1091,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['C']
-        ),
-        epName: 'FetchA'
+        appName: ['C'],
+        epName: 'FetchA',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1401,7 +1101,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['C'],
@@ -1409,10 +1109,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['C']
-        ),
-        epName: 'FetchB'
+        appName: ['C'],
+        epName: 'FetchB',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1421,7 +1119,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['C'],
@@ -1444,15 +1142,16 @@
               'dataflow': (
                 d: {
                   'C.FetchResponse.cx': 'A.FetchResponse.ax',
-                  'C.FetchResponse.cy': 'A.FetchResponse.ay'
-                }
+                  'C.FetchResponse.cy': 'A.FetchResponse.ay',
+                },
               ),
-              'description': '1:1 transform'
-            }
+              'description': '1:1 transform',
+            },
           ),
-          type: 'C.FetchResponse'
-        )
-      )
+          status: 'ok',
+          type: 'C.FetchResponse',
+        ),
+      ),
     ),
     (
       appName: ['C'],
@@ -1460,10 +1159,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['A']
-        ),
-        epName: 'Fetch'
+        appName: ['A'],
+        epName: 'Fetch',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1472,7 +1169,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['C'],
@@ -1495,15 +1192,16 @@
               'dataflow': (
                 d: {
                   'C.FetchResponse.cx': 'B.FetchResponse.bx',
-                  'C.FetchResponse.cy': 'B.FetchResponse.by'
-                }
+                  'C.FetchResponse.cy': 'B.FetchResponse.by',
+                },
               ),
-              'description': '1:1 transform'
-            }
+              'description': '1:1 transform',
+            },
           ),
-          type: 'C.FetchResponse'
-        )
-      )
+          status: 'ok',
+          type: 'C.FetchResponse',
+        ),
+      ),
     ),
     (
       appName: ['C'],
@@ -1511,10 +1209,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['B']
-        ),
-        epName: 'Fetch'
+        appName: ['B'],
+        epName: 'Fetch',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1523,7 +1219,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['Client'],
@@ -1546,15 +1242,16 @@
               'dataflow': (
                 d: {
                   'Client.Screen.xx': 'D.FetchResponse.dx',
-                  'Client.Screen.yy': 'D.FetchResponse.dy'
-                }
+                  'Client.Screen.yy': 'D.FetchResponse.dy',
+                },
               ),
-              'description': '1:1 transform'
-            }
+              'description': '1:1 transform',
+            },
           ),
-          type: 'Client.Screen'
-        )
-      )
+          status: 'ok',
+          type: 'Client.Screen',
+        ),
+      ),
     ),
     (
       appName: ['Client'],
@@ -1562,10 +1259,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['D']
-        ),
-        epName: 'Fetch'
+        appName: ['D'],
+        epName: 'Fetch',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1574,7 +1269,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['D'],
@@ -1597,19 +1292,20 @@
               'dataflow': (
                 d: {
                   'D.FetchResponse.dx': (
-                    a: ['A.FetchResponse.ax', 'C.FetchResponse.cx']
+                    a: ['A.FetchResponse.ax', 'C.FetchResponse.cx'],
                   ),
                   'D.FetchResponse.dy': (
-                    a: ['A.FetchResponse.ay', 'C.FetchResponse.cy']
-                  )
-                }
+                    a: ['A.FetchResponse.ay', 'C.FetchResponse.cy'],
+                  ),
+                },
               ),
-              'description': '1:1 transform'
-            }
+              'description': '1:1 transform',
+            },
           ),
-          type: 'D.FetchResponse'
-        )
-      )
+          status: 'ok',
+          type: 'D.FetchResponse',
+        ),
+      ),
     ),
     (
       appName: ['D'],
@@ -1617,10 +1313,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['A']
-        ),
-        epName: 'Fetch'
+        appName: ['A'],
+        epName: 'Fetch',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1629,7 +1323,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['D'],
@@ -1637,10 +1331,8 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['C']
-        ),
-        epName: 'Fetch'
+        appName: ['C'],
+        epName: 'Fetch',
       ),
       stmtCond: {},
       stmtForeach: {},
@@ -1649,244 +1341,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 9,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {}
-          ),
-          type: 'Pizza :: Supreme.int'
-        )
-      )
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: (
-        title: 'alt pred'
-      ),
-      stmtIndex: 7,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: (
-        title: 'else'
-      ),
-      stmtIndex: 4,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: (
-        title: 'else if test2'
-      ),
-      stmtIndex: 3,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: (
-        title: 'group label'
-      ),
-      stmtIndex: 8,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: (
-        title: 'loop pred'
-      ),
-      stmtIndex: 5,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: (
-        coll: 'pred'
-      ),
-      stmtGroup: {},
-      stmtIndex: 6,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: (
-        test: 'test'
-      ),
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 2,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: (
-          part: ['Pizza', 'Supreme']
-        ),
-        epName: 'DoEverything'
-      ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'DoEverything',
-      stmtAction: 'an action',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'GET /a/{ap}',
-      stmtAction: '...',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'POST /b/{bp}',
-      stmtAction: '...',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'PUT /b/{bp}',
-      stmtAction: '...',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
-    ),
-    (
-      appName: ['Pizza', 'Supreme'],
-      epName: 'Pizza :: Supreme -> Event',
-      stmtAction: '...',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['Source'],
@@ -1905,11 +1360,12 @@
         payload: (
           attr: (
             modifier: {},
-            nvp: {}
+            nvp: {},
           ),
-          type: 'Source.Foo'
-        )
-      )
+          status: 'ok',
+          type: 'Source.Foo',
+        ),
+      ),
     ),
     (
       appName: ['all'],
@@ -1924,7 +1380,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['all'],
@@ -1939,7 +1395,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['all'],
@@ -1954,7 +1410,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['all'],
@@ -1969,7 +1425,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['all'],
@@ -1984,7 +1440,7 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
+      stmtRet: {},
     ),
     (
       appName: ['all'],
@@ -1999,102 +1455,86 @@
       stmtLoop: {},
       stmtLoopN: {},
       stmtParent: {},
-      stmtRet: {}
-    )
+      stmtRet: {},
+    ),
   },
   table: {
     (
       appName: ['Source'],
       pk: {},
-      typeName: 'Foo'
+      typeName: 'Foo',
     ),
     (
       appName: ['Source'],
       pk: ['a'],
-      typeName: 'Bar'
-    )
+      typeName: 'Bar',
+    ),
   },
   tag: (
     app: {
       (
         appName: ['Source'],
-        appTag: 'db'
-      )
-    },
-    ep: {
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'GET /a/{ap}',
-        epTag: 'rest'
+        appTag: 'db',
       ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'POST /b/{bp}',
-        epTag: 'rest'
-      ),
-      (
-        appName: ['Pizza', 'Supreme'],
-        epName: 'PUT /b/{bp}',
-        epTag: 'rest'
-      )
     },
+    ep: {},
     event: {},
     field: {
       (
         appName: ['Source'],
         fieldName: 'a',
         fieldTag: 'pk',
-        typeName: 'Bar'
-      )
+        typeName: 'Bar',
+      ),
     },
     mixin: {},
     stmt: {},
     type: {},
-    view: {}
+    view: {},
   ),
   type: {
     (
       appName: ['A'],
       typeDocstring: {},
       typeName: 'FetchResponse',
-      typeOpt: {}
+      typeOpt: {},
     ),
     (
       appName: ['B'],
       typeDocstring: {},
       typeName: 'FetchResponse',
-      typeOpt: {}
+      typeOpt: {},
     ),
     (
       appName: ['C'],
       typeDocstring: {},
       typeName: 'FetchResponse',
-      typeOpt: {}
+      typeOpt: {},
     ),
     (
       appName: ['Client'],
       typeDocstring: {},
       typeName: 'Screen',
-      typeOpt: {}
+      typeOpt: {},
     ),
     (
       appName: ['D'],
       typeDocstring: {},
       typeName: 'FetchResponse',
-      typeOpt: {}
+      typeOpt: {},
     ),
     (
       appName: ['Source'],
       typeDocstring: {},
       typeName: 'Bar',
-      typeOpt: {}
+      typeOpt: {},
     ),
     (
       appName: ['Source'],
       typeDocstring: {},
       typeName: 'Foo',
-      typeOpt: {}
-    )
+      typeOpt: {},
+    ),
   },
-  view: {}
+  view: {},
 )

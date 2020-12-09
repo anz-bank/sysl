@@ -1,2 +1,169 @@
-# TODO: make this more readable
-{'all.sysl': "App \"display name\" [~abstract]:\n    ...\n\nAppWithAnnotation:\n    @annotation = \"annotation\"\n    @annotation1 = \"you can do string annotation like this\"\n    @annotation2 = ['or', 'in', 'an', 'array']\n    @annotation3 =:\n        | you can also do\n        | multiline annotations\n        | like this\n\nApp :: with :: subpackages \"display name\":\n    ...\n\nSimpleEndpoint:\n    SimpleEp:\n        ...\n    \n    SimpleEpWithAnnotations:\n        ...\n    \n    SimpleEpWithArray:\n        ...\n    \n    SimpleEpWithParamsRef:\n        ...\n    \n    SimpleEpWithTypes:\n        ...\n    \nRestEndpoint:\n    !type Type :\n        x <: int\n    \n    /:\n        DELETE:\n            ...\n        GET:\n            ...\n        PATCH:\n            ...\n        POST:\n            ...\n        PUT:\n            ...\n    \n    /nested1/nested2/nested3:\n        GET:\n            ...\n    \n    /notnested:\n        GET:\n            ...\n    \n    /param:\n        DELETE:\n            ...\n        GET:\n            ...\n        PATCH:\n            ...\n        POST:\n            ...\n        PUT:\n            ...\n    \n    /pathwithtype/{native}:\n        GET:\n            ...\n    \n    /query:\n        GET:\n            ...\n    \n\nTypes:\n    !enum Enum:\n        ENUM_1: 1\n        ENUM_2: 2\n        ENUM_3: 3\n    \n    !type Alias :\n        ...\n    \n    !type Type :\n        @annotation = \"annotation\"\n        nativeTypeField <: string\n        optional <: string?\n        reference <: RestEndpoint.Type\n        with_anno <: string:\n            @annotation = \"this is an annotation\"\n    \n    !type Union :\n        @annotation = \"annotation\"\n        ...\n    \n    !table Table:\n        @annotation = \"annotation\"\n        decimal_with_precision <: decimal\n        nativeTypeField <: string\n        optional <: string?\n        primaryKey <: string [~pk]\n        reference <: RestEndpoint.Type\n        string_max_constraint <: string\n        string_range_constraint <: string\n        with_anno <: string:\n            @annotation = \"this is an annotation\"\n    \n\nStatements:\n    AnnotatedStatements:\n        Statements <- Miscellanous\n        return ok <: string [{\"annotation=['as','an','array']\"}]\n        \"statement\"\n    \n    Annotations:\n        ...\n    \n    Calls:\n        Statements <- Returns\n        RestEndpoint <- GET /param\n    \n    GroupStatements:\n    \n    \n    IfStmt:\n        \n        \n        \n    \n    Loops:\n        \n        \n        \n        \n        \n        \n    \n    Miscellanous:\n        | you can add comments like this\n        \"string statements\"\n        SimpleEndpoint -> SimpleEp\n    \n    OneOfStatements:\n        case1:\n            ...\n        case number 2:\n            ...\n        \"case 3\":\n            ...\n        :\n            ...\n    \n    Returns:\n        return ok <: string\n        return ok <: Types.Type\n        return error <: Types.Type\n    \nEventAndSubscriber:\n    App -> Event:\n        ...\n    \n"}
+{'all.sysl': `App "display name" [~abstract]:
+    ...
+
+AppWithAnnotation:
+    @annotation = "annotation"
+    @annotation1 = "you can do string annotation like this"
+    @annotation2 = ['or', 'in', 'an', 'array']
+    @annotation3 =:
+        | you can also do
+        | multiline annotations
+        | like this
+
+App :: with :: subpackages "display name":
+    ...
+
+SimpleEndpoint:
+    SimpleEp:
+        ...
+
+    SimpleEpWithAnnotations:
+        ...
+
+    SimpleEpWithArray:
+        ...
+
+    SimpleEpWithParamsRef:
+        ...
+
+    SimpleEpWithTypes:
+        ...
+
+RestEndpoint:
+    !type Type :
+        x <: int
+
+    /:
+        DELETE:
+            ...
+        GET:
+            ...
+        PATCH:
+            ...
+        POST:
+            ...
+        PUT:
+            ...
+
+    /nested1/nested2/nested3:
+        GET:
+            ...
+
+    /notnested:
+        GET:
+            ...
+
+    /param:
+        DELETE:
+            ...
+        GET:
+            ...
+        PATCH:
+            ...
+        POST:
+            ...
+        PUT:
+            ...
+
+    /pathwithtype/{native}:
+        GET:
+            ...
+
+    /query:
+        GET:
+            ...
+
+
+Types:
+    !enum Enum:
+        ENUM_1: 1
+        ENUM_2: 2
+        ENUM_3: 3
+
+    !type Alias :
+        ...
+
+    !type Type :
+        @annotation = "annotation"
+        inplace <: inplace
+        nativeTypeField <: string
+        optional <: string?
+        reference <: RestEndpoint.Type
+        sequence <: sequence of string
+        set <: set of string
+        with_anno <: string:
+            @annotation = "this is an annotation"
+
+    !type Union :
+        @annotation = "annotation"
+        ...
+
+    !table Table:
+        @annotation = "annotation"
+        decimal_with_precision <: decimal
+        inplace <: inplace
+        nativeTypeField <: string
+        optional <: string?
+        primaryKey <: string [~pk]
+        reference <: RestEndpoint.Type
+        sequence <: sequence of string
+        set <: set of string
+        string_max_constraint <: string
+        string_range_constraint <: string
+        with_anno <: string:
+            @annotation = "this is an annotation"
+
+
+Statements:
+    AnnotatedStatements:
+        Statements <- Miscellanous
+        return ok <: string [{"annotation=['as','an','array']"}]
+        "statement"
+
+    Annotations:
+        ...
+
+    Calls:
+        Statements <- Returns
+        RestEndpoint <- GET /param
+
+    GroupStatements:
+
+
+    IfStmt:
+
+
+
+
+    Loops:
+
+
+
+
+
+
+
+    Miscellanous:
+        | you can add comments like this
+        "string statements"
+        SimpleEndpoint -> SimpleEp
+
+    OneOfStatements:
+        case1:
+            ...
+        case number 2:
+            ...
+        "case 3":
+            ...
+        :
+            ...
+
+    Returns:
+        return ok <: string
+        return ok <: Types.Type
+        return error <: Types.Type
+
+EventAndSubscriber:
+    App -> Event:
+        ...
+`}
