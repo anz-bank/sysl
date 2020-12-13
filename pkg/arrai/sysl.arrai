@@ -22,7 +22,10 @@ let annotations =
             (:s): resolveVal(s),
             _: v,
         };
-    \x x.attrs?:{} where .@ != 'patterns' >> resolveVal(.)
+    \x cond x {
+        (attrs:attrs, ...): attrs,
+        (@item:(attrs:attrs, ...), ...): attrs,
+    } where .@ != 'patterns' >> resolveVal(.)
 ;
 
 # Extracts the set of pattern attributes of an element.
@@ -35,7 +38,8 @@ let annoRel = \type \rel
         annotations(t(type)) =>
             let names = t where //seq.has_suffix('Name', .@);
             let anno = {$`${type}AnnoName`: .@, $`${type}AnnoValue`: .@value};
-            //tuple(names | anno)
+            let indexes = cond type { "stmt": {'stmtIndex':t(type).@} };
+            //tuple(names | anno | indexes)
     );
 
 # Returns a relation of tags for a given type.

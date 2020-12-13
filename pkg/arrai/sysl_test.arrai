@@ -30,22 +30,27 @@ let _app = (
             );
             let expected = {'foo': [['bar']]};
             //test.assert.equal(expected, result),
+        item: annotations( (@:0, @item:(attrs: {'foo': (s: 'bar')})) ) = {'foo': 'bar'}
     ),
     tags: (
         empty: tags(()) = {},
         array: tags((attrs: {'patterns': (a: (elt: [(s: 'bar')]))})) = {'bar'},
     ),
     annoRel: (
-        "empty": //test.assert.equal({},annoRel('app', {})),
-        "single":
+        empty: //test.assert.equal({},annoRel('app', {})),
+        single:
             let expected = {(appName: 'App', appAnnoName: 'foo', appAnnoValue: 'bar')};
             let result = annoRel('app', {(appName: 'App', app: _app)});
             //test.assert.equal(expected, result),
-
+        statement:
+            let expected = {(appName: ['App'], epName: 'ep', stmtAnnoName: 'foo', stmtAnnoValue: 'bar', stmtIndex: 0)};
+            let rel = { (appName: ['App'], epName: 'ep', stmt: (@: 0, @item: (attrs: {'foo': (s: 'bar')} ) )) };
+            let result = annoRel('stmt', rel);
+            //test.assert.equal(expected, result),
     ),
     tagRel: (
-        "empty": tagRel('app', {}) = {},
-        "single": tagRel('app', {(appName: 'App', app: _app)}) =
+        empty: tagRel('app', {}) = {},
+        single: tagRel('app', {(appName: 'App', app: _app)}) =
              {(appName: 'App', appTag: 'db')},
     ),
 
