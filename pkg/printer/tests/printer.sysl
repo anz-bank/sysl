@@ -43,8 +43,7 @@ Org :: Team :: NamespacedApp:
 
 Project:
     @description =:
-        |this is another one this is a super long comment that should be split into the n
-        |ext line la dee dah
+        | this is another one this is a super long comment that should be split into the next line la dee dah
     @seqtitle = "Diagram"
     Seq:
         @description = "endpoint comment"

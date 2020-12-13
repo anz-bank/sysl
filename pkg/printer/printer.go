@@ -53,7 +53,7 @@ func Application(w io.Writer, a *sysl.Application) {
 		if key == patterns {
 			continue
 		}
-		Attrs(w, key, a.GetAttrs()[key], APPLICATIONINDENT)
+		Attrs(w, key, a.GetAttrs()[key], APPLICATIONINDENT, false)
 	}
 	for _, key := range sortedKeys(a.GetTypes()) {
 		TypeDecl(w, key, a.GetTypes()[key])
@@ -83,7 +83,7 @@ func EnumDecl(w io.Writer, key string, t *sysl.Type) {
 	p(w, "    !enum ", key, ":\n")
 	for _, key := range sortedKeys(t.GetAttrs()) {
 		if key != patterns {
-			Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT)
+			Attrs(w, key, t.GetAttrs()[key], ENDPOINTINDENT, false)
 		}
 	}
 	ef := v.Enum.Items
@@ -100,7 +100,7 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 	attributes := t.GetAttrs()
 	for _, key := range sortedKeys(attributes) {
 		if key != patterns {
-			Attrs(w, key, attributes[key], ENDPOINTINDENT)
+			Attrs(w, key, attributes[key], ENDPOINTINDENT, false)
 		}
 	}
 	if tuple == nil || tuple.GetAttrDefs() == nil || len(tuple.GetAttrDefs()) == 0 {
@@ -132,7 +132,7 @@ func NonEnumDecl(w io.Writer, key string, t *sysl.Type) {
 						p(w, ":\n")
 						nl = false
 					}
-					Attrs(w, key, fieldAttrs[key], TYPEINDENT)
+					Attrs(w, key, fieldAttrs[key], TYPEINDENT, false)
 				}
 			}
 		}
@@ -194,7 +194,7 @@ func Endpoint(w io.Writer, e *sysl.Endpoint) {
 		if key == patterns {
 			continue
 		}
-		Attrs(w, key, attr, ENDPOINTINDENT)
+		Attrs(w, key, attr, ENDPOINTINDENT, false)
 	}
 	for _, stmnt := range e.GetStmt() {
 		Statement(w, stmnt)
@@ -243,7 +243,7 @@ func Action(w io.Writer, a *sysl.Action) {
 
 // Attrs prints Attributes:
 // @owner="server"
-func Attrs(w io.Writer, key string, a *sysl.Attribute, indentNum int) {
+func Attrs(w io.Writer, key string, a *sysl.Attribute, indentNum int, trim bool) {
 	lines := strings.Split(a.GetS(), "\n")
 	indent := strings.Repeat(" ", indentNum)
 	if len(lines) == 1 && len(lines[0]) < MAXLINE {
@@ -251,14 +251,20 @@ func Attrs(w io.Writer, key string, a *sysl.Attribute, indentNum int) {
 		return
 	}
 	p(w, indent, "@", key, " =:\n")
-	for _, line := range lines {
+	for i, line := range lines {
 		lineLen := len(line)
-		for i := 0; i < lineLen; i += MAXLINE {
-			endIndex := i + MAXLINE
-			if endIndex >= lineLen {
-				endIndex = lineLen
+		if trim {
+			for i := 0; i < lineLen; i += MAXLINE {
+				endIndex := i + MAXLINE
+				if endIndex >= lineLen {
+					endIndex = lineLen
+				}
+				p(w, indent, "    | ", line[i:endIndex], "\n")
 			}
-			p(w, indent, "    |", line[i:endIndex], "\n")
+			continue
+		}
+		if i != len(lines)-1 || lineLen != 0 {
+			p(w, indent, "    | ", line[:lineLen], "\n")
 		}
 	}
 }
