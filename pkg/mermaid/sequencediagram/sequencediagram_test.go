@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/afero"
 )
 
+const projectDir = "../../../"
+
 func TestBadInputsToGenerateMermaidSequenceDiagram(t *testing.T) {
 	t.Parallel()
 	appName := "wrongName"

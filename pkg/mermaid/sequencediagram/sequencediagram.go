@@ -15,8 +15,6 @@ type sequencePair struct {
 	firstApp, secondApp, endPoint string
 }
 
-const projectDir = "../../../"
-
 var startElse = regexp.MustCompile("^else.*")
 var isElse = regexp.MustCompile("^else$")
 var isLoop = regexp.MustCompile("^loop.*")

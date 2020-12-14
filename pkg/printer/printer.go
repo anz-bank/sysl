@@ -246,7 +246,8 @@ func Action(w io.Writer, a *sysl.Action) {
 func Attrs(w io.Writer, key string, a *sysl.Attribute, indentNum int, trim bool) {
 	lines := strings.Split(a.GetS(), "\n")
 	indent := strings.Repeat(" ", indentNum)
-	if len(lines) == 1 && len(lines[0]) < MAXLINE {
+	descIndent := "    |"
+	if len(lines) == 1 && ((trim && len(lines[0]) < MAXLINE) || !trim) {
 		p(w, indent, "@", key, ` = "`, lines[0], `"`, "\n")
 		return
 	}
@@ -259,12 +260,12 @@ func Attrs(w io.Writer, key string, a *sysl.Attribute, indentNum int, trim bool)
 				if endIndex >= lineLen {
 					endIndex = lineLen
 				}
-				p(w, indent, "    | ", line[i:endIndex], "\n")
+				p(w, indent, descIndent, line[i:endIndex], "\n")
 			}
 			continue
 		}
 		if i != len(lines)-1 || lineLen != 0 {
-			p(w, indent, "    | ", line[:lineLen], "\n")
+			p(w, indent, descIndent, line[:lineLen], "\n")
 		}
 	}
 }
