@@ -291,7 +291,10 @@
       fieldConstraint: (),
       fieldName: 'x',
       fieldOpt: {},
-      fieldType: '???',
+      fieldType: (
+        appName: {},
+        typePath: ['Foo', 'x'],
+      ),
       typeName: 'Bar',
     ),
     (
@@ -325,7 +328,7 @@
           end: (
             line: 24,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 1,
             line: 24,
@@ -338,7 +341,7 @@
           end: (
             line: 33,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 1,
             line: 33,
@@ -351,7 +354,7 @@
           end: (
             line: 42,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 1,
             line: 42,
@@ -364,7 +367,7 @@
           end: (
             line: 71,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 1,
             line: 71,
@@ -377,7 +380,7 @@
           end: (
             line: 61,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 1,
             line: 61,
@@ -391,7 +394,7 @@
             col: 10,
             line: 1,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 1,
             line: 1,
@@ -404,7 +407,7 @@
           end: (
             line: 80,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 1,
             line: 80,
@@ -421,7 +424,7 @@
             col: 4,
             line: 29,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 25,
@@ -436,7 +439,7 @@
             col: 4,
             line: 38,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 34,
@@ -451,7 +454,7 @@
             col: 4,
             line: 57,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 52,
@@ -466,7 +469,7 @@
             col: 4,
             line: 47,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 43,
@@ -481,7 +484,7 @@
             col: 4,
             line: 52,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 47,
@@ -496,7 +499,7 @@
             col: 4,
             line: 76,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 72,
@@ -511,7 +514,7 @@
             col: 4,
             line: 67,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 62,
@@ -526,7 +529,7 @@
             col: 1,
             line: 24,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 21,
@@ -540,7 +543,7 @@
           end: (
             line: 88,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 81,
@@ -558,7 +561,7 @@
             col: 14,
             line: 30,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 30,
@@ -574,7 +577,7 @@
             col: 14,
             line: 31,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 31,
@@ -590,7 +593,7 @@
             col: 14,
             line: 39,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 39,
@@ -606,7 +609,7 @@
             col: 14,
             line: 40,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 40,
@@ -622,7 +625,7 @@
             col: 14,
             line: 58,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 58,
@@ -638,7 +641,7 @@
             col: 14,
             line: 59,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 59,
@@ -654,7 +657,7 @@
             col: 14,
             line: 77,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 77,
@@ -670,7 +673,7 @@
             col: 14,
             line: 78,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 78,
@@ -686,7 +689,7 @@
             col: 14,
             line: 68,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 68,
@@ -702,7 +705,7 @@
             col: 14,
             line: 69,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 14,
             line: 69,
@@ -718,7 +721,7 @@
             col: 24,
             line: 15,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 13,
             line: 15,
@@ -734,7 +737,7 @@
             col: 8,
             line: 18,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 13,
             line: 17,
@@ -750,7 +753,7 @@
             col: 4,
             line: 21,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 13,
             line: 19,
@@ -766,7 +769,7 @@
             col: 8,
             line: 11,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 13,
             line: 10,
@@ -782,7 +785,7 @@
             col: 13,
             line: 11,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 13,
             line: 11,
@@ -848,7 +851,7 @@
             col: 1,
             line: 33,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 29,
@@ -863,7 +866,7 @@
             col: 1,
             line: 42,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 38,
@@ -878,7 +881,7 @@
             col: 1,
             line: 61,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 57,
@@ -893,7 +896,7 @@
             col: 3,
             line: 80,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 76,
@@ -908,7 +911,7 @@
             col: 6,
             line: 71,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 67,
@@ -923,7 +926,7 @@
             col: 4,
             line: 21,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 14,
@@ -938,7 +941,7 @@
             col: 4,
             line: 13,
           ),
-          file: 'dev/sysl/pkg/arrai/model.sysl',
+          file: 'model.sysl',
           start: (
             col: 4,
             line: 6,
@@ -963,21 +966,22 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'dataflow': (
-                d: {
-                  'A.FetchResponse.ax': 'Source.Foo.x',
-                  'A.FetchResponse.ay': 'Source.Foo.y',
-                },
-              ),
-              'description': '1:1 transform',
-            },
-          ),
-          status: 'ok',
-          type: 'A.FetchResponse',
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'A.FetchResponse.ax': 'Source.Foo.x',
+                'A.FetchResponse.ay': 'Source.Foo.y',
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        status: 'ok',
+        type: (
+          appName: ['A'],
+          typePath: ['FetchResponse'],
         ),
       ),
     ),
@@ -1013,21 +1017,22 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'dataflow': (
-                d: {
-                  'B.FetchResponse.bx': 'Source.Foo.x',
-                  'B.FetchResponse.by': 'Source.Foo.y',
-                },
-              ),
-              'description': '1:1 transform',
-            },
-          ),
-          status: 'ok',
-          type: 'B.FetchResponse',
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'B.FetchResponse.bx': 'Source.Foo.x',
+                'B.FetchResponse.by': 'Source.Foo.y',
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        status: 'ok',
+        type: (
+          appName: ['B'],
+          typePath: ['FetchResponse'],
         ),
       ),
     ),
@@ -1063,25 +1068,26 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'dataflow': (
-                d: {
-                  'C.FetchResponse.cx': (
-                    a: ['A.FetchResponse.ax', 'B.FetchResponse.bx'],
-                  ),
-                  'C.FetchResponse.cy': (
-                    a: ['A.FetchResponse.ay', 'B.FetchResponse.by'],
-                  ),
-                },
-              ),
-              'description': '1:1 transform',
-            },
-          ),
-          status: 'ok',
-          type: 'C.FetchResponse',
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'C.FetchResponse.cx': (
+                  a: ['A.FetchResponse.ax', 'B.FetchResponse.bx'],
+                ),
+                'C.FetchResponse.cy': (
+                  a: ['A.FetchResponse.ay', 'B.FetchResponse.by'],
+                ),
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        status: 'ok',
+        type: (
+          appName: ['C'],
+          typePath: ['FetchResponse'],
         ),
       ),
     ),
@@ -1135,21 +1141,22 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'dataflow': (
-                d: {
-                  'C.FetchResponse.cx': 'A.FetchResponse.ax',
-                  'C.FetchResponse.cy': 'A.FetchResponse.ay',
-                },
-              ),
-              'description': '1:1 transform',
-            },
-          ),
-          status: 'ok',
-          type: 'C.FetchResponse',
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'C.FetchResponse.cx': 'A.FetchResponse.ax',
+                'C.FetchResponse.cy': 'A.FetchResponse.ay',
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        status: 'ok',
+        type: (
+          appName: ['C'],
+          typePath: ['FetchResponse'],
         ),
       ),
     ),
@@ -1185,21 +1192,22 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'dataflow': (
-                d: {
-                  'C.FetchResponse.cx': 'B.FetchResponse.bx',
-                  'C.FetchResponse.cy': 'B.FetchResponse.by',
-                },
-              ),
-              'description': '1:1 transform',
-            },
-          ),
-          status: 'ok',
-          type: 'C.FetchResponse',
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'C.FetchResponse.cx': 'B.FetchResponse.bx',
+                'C.FetchResponse.cy': 'B.FetchResponse.by',
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        status: 'ok',
+        type: (
+          appName: ['C'],
+          typePath: ['FetchResponse'],
         ),
       ),
     ),
@@ -1235,21 +1243,22 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'dataflow': (
-                d: {
-                  'Client.Screen.xx': 'D.FetchResponse.dx',
-                  'Client.Screen.yy': 'D.FetchResponse.dy',
-                },
-              ),
-              'description': '1:1 transform',
-            },
-          ),
-          status: 'ok',
-          type: 'Client.Screen',
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'Client.Screen.xx': 'D.FetchResponse.dx',
+                'Client.Screen.yy': 'D.FetchResponse.dy',
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        status: 'ok',
+        type: (
+          appName: ['Client'],
+          typePath: ['Screen'],
         ),
       ),
     ),
@@ -1285,25 +1294,26 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'dataflow': (
-                d: {
-                  'D.FetchResponse.dx': (
-                    a: ['A.FetchResponse.ax', 'C.FetchResponse.cx'],
-                  ),
-                  'D.FetchResponse.dy': (
-                    a: ['A.FetchResponse.ay', 'C.FetchResponse.cy'],
-                  ),
-                },
-              ),
-              'description': '1:1 transform',
-            },
-          ),
-          status: 'ok',
-          type: 'D.FetchResponse',
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'D.FetchResponse.dx': (
+                  a: ['A.FetchResponse.ax', 'C.FetchResponse.cx'],
+                ),
+                'D.FetchResponse.dy': (
+                  a: ['A.FetchResponse.ay', 'C.FetchResponse.cy'],
+                ),
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        status: 'ok',
+        type: (
+          appName: ['D'],
+          typePath: ['FetchResponse'],
         ),
       ),
     ),
@@ -1357,13 +1367,14 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {},
-          ),
-          status: 'ok',
-          type: 'Source.Foo',
+        attr: (
+          modifier: {},
+          nvp: {},
+        ),
+        status: 'ok',
+        type: (
+          appName: ['Source'],
+          typePath: ['Foo'],
         ),
       ),
     ),

@@ -183,6 +183,10 @@ let nativeDataTypes = {
     'date', 'bool', 'decimal', 'datetime', 'bytes'
 };
 
+let appToParts = \appName
+    //seq.split('::', appName) >> trimWhitespace(.)
+;
+
 (
     :explore,
     :filterTree,
@@ -203,4 +207,5 @@ let nativeDataTypes = {
     :isValidIdentifier,
     :resolveValidIdentifier,
     :nativeDataTypes,
+    :appToParts,
 )

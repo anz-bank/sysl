@@ -94,20 +94,23 @@ let rec buildNvp = \nvp cond nvp {
     _: //eval.value(//seq.join('', nvp.''))
 };
 
-let (:ranked, :nativeDataTypes, :reduce, ...) = //{./util};
+let (:ranked, :nativeDataTypes, :reduce, :trimWhitespace, :unpackType, :appToParts, ...) = //{./util};
 
+# TODO: add this fix in the parsing instead of here.
 # tries to fix type without full reference
 let fixType = \apps \appName \typePayload
     # add trim whitespace function
-    let typePayload = //{./util}.trimWhitespace(typePayload);
-    let (:app, :type, :field) = //{./util}.unpackType(typePayload);
-    let pack = //{./util}.packType;
+    let typePayload = trimWhitespace(typePayload);
+    let (:app, :type, :field) = unpackType(typePayload);
     cond {
-        (cond type {[t]: t <: nativeDataTypes}): pack((app: '', :type, field: '')),
-        app = '': pack((app: appName, :type, :field)),
+        (cond type {[t]: t <: nativeDataTypes}): (primitive: type),
+        # local type ref
+        app = '': (ref: (appname: (part: appToParts(appName)), path: (type ++ [field]) where .@item)),
         _: cond {
-            (app <: apps): typePayload,
-            _: pack((app: appName, type: [app] ++ type, :field))
+            # non-local type ref
+            (app <: apps): (ref: (appname: (part: appToParts(app)), path: (type ++ [field]) where .@item)),
+            # local type ref
+            _: (ref: (appname: (part: appToParts(appName)), path: ([app] ++ type ++ [field]) where .@item)),
         }
     }
 ;
@@ -209,6 +212,16 @@ let newNormalize = \m
             paramType: param.type?:{},
         );
 
+    let rec parseFieldType = \field cond field {
+        (:primitive, ...): (:primitive),
+        (ref:(path:p), ...): (appName: [], typePath: p),
+        (ref:(appname: (part:a), path:p), ...): (appName: a, typePath: p),
+        (:type_ref, ...): parseFieldType(type_ref),
+        (:set, ...): (set: parseFieldType(set)),
+        (:sequence, ...): (sequence: parseFieldType(sequence)),
+        _: let _ = //log.print(field); '???',
+    };
+
     # Statements
     let _stmts = //rel.union(_eps => \(:appName, :epName, :ep)
         ep.stmt?:{} => (:appName, :epName, stmt: .)
@@ -230,7 +243,7 @@ let newNormalize = \m
                 stmtForeach: cond stmt.foreach?:{} {(collection:coll, ...): (:coll)},
                 stmtAlt: cond stmt.alt?:{} {(:choice, ...): (:choice)},
                 stmtGroup: cond stmt.group?:{} {(:title, ...): (:title)},
-                stmtRet: stmt.ret?:{},
+                stmtRet: let ret = stmt.ret?.payload?:{}; cond {ret: ret +> (type: parseFieldType(ret.type))},
             )
         })
         where . != {}
@@ -288,16 +301,6 @@ let newNormalize = \m
     let mergeArrayTuples = \input
         reduce(input, \z \i i +> z, ())
     ;
-
-    let rec parseFieldType = \field cond field {
-        (:primitive, ...): (:primitive),
-        (ref:(path:p), ...): (appName: [], typePath: p),
-        (ref:(appname: (part:a), path:p), ...): (appName: a, typePath: p),
-        (:type_ref, ...): parseFieldType(type_ref),
-        (:set, ...): (set: parseFieldType(set)),
-        (:sequence, ...): (sequence: parseFieldType(sequence)),
-        _: let _ = //log.print(field); '???',
-    };
 
     let field = _fields => \(:appName, :typeName, :fieldName, :field)
         (

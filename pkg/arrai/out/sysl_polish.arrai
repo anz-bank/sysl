@@ -7,22 +7,33 @@
           source_context: (
             end: (
               col: 4,
-              line: 29
+              line: 29,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 25
-            )
+              line: 25,
+            ),
           ),
           stmt: [
             (
               call: (
                 endpoint: 'Read',
                 target: (
-                  part: ['Source']
-                )
-              )
+                  part: ['Source'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 18,
+                  line: 26,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 26,
+                ),
+              ),
             ),
             (
               ret: (
@@ -33,44 +44,63 @@
                       'dataflow': (
                         d: {
                           'A.FetchResponse.ax': 'Source.Foo.x',
-                          'A.FetchResponse.ay': 'Source.Foo.y'
-                        }
+                          'A.FetchResponse.ay': 'Source.Foo.y',
+                        },
                       ),
-                      'description': '1:1 transform'
-                    }
+                      'description': '1:1 transform',
+                    },
                   ),
-                  type: 'A.FetchResponse'
-                )
-              )
-            )
-          ]
-        )
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['A'],
+                      ),
+                      path: ['FetchResponse'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 27,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 27,
+                ),
+              ),
+            ),
+          ],
+        ),
       },
       name: (
-        part: ['A']
+        part: ['A'],
       ),
       source_context: (
         end: (
-          line: 24
+          line: 24,
         ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
+        file: 'model.sysl',
         start: (
           col: 1,
-          line: 24
-        )
+          line: 24,
+        ),
       ),
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 1,
-              line: 33
+              line: 33,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 29
-            )
+              line: 29,
+            ),
           ),
           tuple: (
             attr_defs: {
@@ -79,33 +109,33 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 30
+                    line: 30,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 30
-                  )
-                )
+                    line: 30,
+                  ),
+                ),
               ),
               'ay': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 31
+                    line: 31,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 31
-                  )
-                )
-              )
-            }
-          )
-        )
-      }
+                    line: 31,
+                  ),
+                ),
+              ),
+            },
+          ),
+        ),
+      },
     ),
     'B': (
       endpoints: {
@@ -114,22 +144,33 @@
           source_context: (
             end: (
               col: 4,
-              line: 38
+              line: 38,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 34
-            )
+              line: 34,
+            ),
           ),
           stmt: [
             (
               call: (
                 endpoint: 'Read',
                 target: (
-                  part: ['Source']
-                )
-              )
+                  part: ['Source'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 18,
+                  line: 35,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 35,
+                ),
+              ),
             ),
             (
               ret: (
@@ -140,44 +181,63 @@
                       'dataflow': (
                         d: {
                           'B.FetchResponse.bx': 'Source.Foo.x',
-                          'B.FetchResponse.by': 'Source.Foo.y'
-                        }
+                          'B.FetchResponse.by': 'Source.Foo.y',
+                        },
                       ),
-                      'description': '1:1 transform'
-                    }
+                      'description': '1:1 transform',
+                    },
                   ),
-                  type: 'B.FetchResponse'
-                )
-              )
-            )
-          ]
-        )
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['B'],
+                      ),
+                      path: ['FetchResponse'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 36,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 36,
+                ),
+              ),
+            ),
+          ],
+        ),
       },
       name: (
-        part: ['B']
+        part: ['B'],
       ),
       source_context: (
         end: (
-          line: 33
+          line: 33,
         ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
+        file: 'model.sysl',
         start: (
           col: 1,
-          line: 33
-        )
+          line: 33,
+        ),
       ),
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 1,
-              line: 42
+              line: 42,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 38
-            )
+              line: 38,
+            ),
           ),
           tuple: (
             attr_defs: {
@@ -186,33 +246,33 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 39
+                    line: 39,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 39
-                  )
-                )
+                    line: 39,
+                  ),
+                ),
               ),
               'by': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 40
+                    line: 40,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 40
-                  )
-                )
-              )
-            }
-          )
-        )
-      }
+                    line: 40,
+                  ),
+                ),
+              ),
+            },
+          ),
+        ),
+      },
     ),
     'C': (
       endpoints: {
@@ -221,30 +281,52 @@
           source_context: (
             end: (
               col: 4,
-              line: 57
+              line: 57,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 52
-            )
+              line: 52,
+            ),
           ),
           stmt: [
             (
               call: (
                 endpoint: 'FetchA',
                 target: (
-                  part: ['C']
-                )
-              )
+                  part: ['C'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 12,
+                  line: 53,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 53,
+                ),
+              ),
             ),
             (
               call: (
                 endpoint: 'FetchB',
                 target: (
-                  part: ['C']
-                )
-              )
+                  part: ['C'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 12,
+                  line: 54,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 54,
+                ),
+              ),
             ),
             (
               ret: (
@@ -255,43 +337,73 @@
                       'dataflow': (
                         d: {
                           'C.FetchResponse.cx': (
-                            a: ['A.FetchResponse.ax', 'B.FetchResponse.bx']
+                            a: ['A.FetchResponse.ax', 'B.FetchResponse.bx'],
                           ),
                           'C.FetchResponse.cy': (
-                            a: ['A.FetchResponse.ay', 'B.FetchResponse.by']
-                          )
-                        }
+                            a: ['A.FetchResponse.ay', 'B.FetchResponse.by'],
+                          ),
+                        },
                       ),
-                      'description': '1:1 transform'
-                    }
+                      'description': '1:1 transform',
+                    },
                   ),
-                  type: 'C.FetchResponse'
-                )
-              )
-            )
-          ]
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['C'],
+                      ),
+                      path: ['FetchResponse'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 55,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 55,
+                ),
+              ),
+            ),
+          ],
         ),
         'FetchA': (
           name: 'FetchA',
           source_context: (
             end: (
               col: 4,
-              line: 47
+              line: 47,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 43
-            )
+              line: 43,
+            ),
           ),
           stmt: [
             (
               call: (
                 endpoint: 'Fetch',
                 target: (
-                  part: ['A']
-                )
-              )
+                  part: ['A'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 13,
+                  line: 44,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 44,
+                ),
+              ),
             ),
             (
               ret: (
@@ -302,39 +414,69 @@
                       'dataflow': (
                         d: {
                           'C.FetchResponse.cx': 'A.FetchResponse.ax',
-                          'C.FetchResponse.cy': 'A.FetchResponse.ay'
-                        }
+                          'C.FetchResponse.cy': 'A.FetchResponse.ay',
+                        },
                       ),
-                      'description': '1:1 transform'
-                    }
+                      'description': '1:1 transform',
+                    },
                   ),
-                  type: 'C.FetchResponse'
-                )
-              )
-            )
-          ]
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['C'],
+                      ),
+                      path: ['FetchResponse'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 45,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 45,
+                ),
+              ),
+            ),
+          ],
         ),
         'FetchB': (
           name: 'FetchB',
           source_context: (
             end: (
               col: 4,
-              line: 52
+              line: 52,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 47
-            )
+              line: 47,
+            ),
           ),
           stmt: [
             (
               call: (
                 endpoint: 'Fetch',
                 target: (
-                  part: ['B']
-                )
-              )
+                  part: ['B'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 13,
+                  line: 48,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 48,
+                ),
+              ),
             ),
             (
               ret: (
@@ -345,44 +487,63 @@
                       'dataflow': (
                         d: {
                           'C.FetchResponse.cx': 'B.FetchResponse.bx',
-                          'C.FetchResponse.cy': 'B.FetchResponse.by'
-                        }
+                          'C.FetchResponse.cy': 'B.FetchResponse.by',
+                        },
                       ),
-                      'description': '1:1 transform'
-                    }
+                      'description': '1:1 transform',
+                    },
                   ),
-                  type: 'C.FetchResponse'
-                )
-              )
-            )
-          ]
-        )
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['C'],
+                      ),
+                      path: ['FetchResponse'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 49,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 49,
+                ),
+              ),
+            ),
+          ],
+        ),
       },
       name: (
-        part: ['C']
+        part: ['C'],
       ),
       source_context: (
         end: (
-          line: 42
+          line: 42,
         ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
+        file: 'model.sysl',
         start: (
           col: 1,
-          line: 42
-        )
+          line: 42,
+        ),
       ),
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 1,
-              line: 61
+              line: 61,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 57
-            )
+              line: 57,
+            ),
           ),
           tuple: (
             attr_defs: {
@@ -391,33 +552,33 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 58
+                    line: 58,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 58
-                  )
-                )
+                    line: 58,
+                  ),
+                ),
               ),
               'cy': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 59
+                    line: 59,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 59
-                  )
-                )
-              )
-            }
-          )
-        )
-      }
+                    line: 59,
+                  ),
+                ),
+              ),
+            },
+          ),
+        ),
+      },
     ),
     'Client': (
       endpoints: {
@@ -426,22 +587,33 @@
           source_context: (
             end: (
               col: 4,
-              line: 76
+              line: 76,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 72
-            )
+              line: 72,
+            ),
           ),
           stmt: [
             (
               call: (
                 endpoint: 'Fetch',
                 target: (
-                  part: ['D']
-                )
-              )
+                  part: ['D'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 13,
+                  line: 73,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 73,
+                ),
+              ),
             ),
             (
               ret: (
@@ -452,44 +624,63 @@
                       'dataflow': (
                         d: {
                           'Client.Screen.xx': 'D.FetchResponse.dx',
-                          'Client.Screen.yy': 'D.FetchResponse.dy'
-                        }
+                          'Client.Screen.yy': 'D.FetchResponse.dy',
+                        },
                       ),
-                      'description': '1:1 transform'
-                    }
+                      'description': '1:1 transform',
+                    },
                   ),
-                  type: 'Client.Screen'
-                )
-              )
-            )
-          ]
-        )
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['Client'],
+                      ),
+                      path: ['Screen'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 74,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 74,
+                ),
+              ),
+            ),
+          ],
+        ),
       },
       name: (
-        part: ['Client']
+        part: ['Client'],
       ),
       source_context: (
         end: (
-          line: 71
+          line: 71,
         ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
+        file: 'model.sysl',
         start: (
           col: 1,
-          line: 71
-        )
+          line: 71,
+        ),
       ),
       types: {
         'Screen': (
           source_context: (
             end: (
-              col: 5,
-              line: 80
+              col: 3,
+              line: 80,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 76
-            )
+              line: 76,
+            ),
           ),
           tuple: (
             attr_defs: {
@@ -498,33 +689,33 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 77
+                    line: 77,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 77
-                  )
-                )
+                    line: 77,
+                  ),
+                ),
               ),
               'yy': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 78
+                    line: 78,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 78
-                  )
-                )
-              )
-            }
-          )
-        )
-      }
+                    line: 78,
+                  ),
+                ),
+              ),
+            },
+          ),
+        ),
+      },
     ),
     'D': (
       endpoints: {
@@ -533,30 +724,52 @@
           source_context: (
             end: (
               col: 4,
-              line: 67
+              line: 67,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 62
-            )
+              line: 62,
+            ),
           ),
           stmt: [
             (
               call: (
                 endpoint: 'Fetch',
                 target: (
-                  part: ['A']
-                )
-              )
+                  part: ['A'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 13,
+                  line: 63,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 63,
+                ),
+              ),
             ),
             (
               call: (
                 endpoint: 'Fetch',
                 target: (
-                  part: ['C']
-                )
-              )
+                  part: ['C'],
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 13,
+                  line: 64,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 64,
+                ),
+              ),
             ),
             (
               ret: (
@@ -567,48 +780,67 @@
                       'dataflow': (
                         d: {
                           'D.FetchResponse.dx': (
-                            a: ['A.FetchResponse.ax', 'C.FetchResponse.cx']
+                            a: ['A.FetchResponse.ax', 'C.FetchResponse.cx'],
                           ),
                           'D.FetchResponse.dy': (
-                            a: ['A.FetchResponse.ay', 'C.FetchResponse.cy']
-                          )
-                        }
+                            a: ['A.FetchResponse.ay', 'C.FetchResponse.cy'],
+                          ),
+                        },
                       ),
-                      'description': '1:1 transform'
-                    }
+                      'description': '1:1 transform',
+                    },
                   ),
-                  type: 'D.FetchResponse'
-                )
-              )
-            )
-          ]
-        )
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['D'],
+                      ),
+                      path: ['FetchResponse'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 65,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 65,
+                ),
+              ),
+            ),
+          ],
+        ),
       },
       name: (
-        part: ['D']
+        part: ['D'],
       ),
       source_context: (
         end: (
-          line: 61
+          line: 61,
         ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
+        file: 'model.sysl',
         start: (
           col: 1,
-          line: 61
-        )
+          line: 61,
+        ),
       ),
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 6,
-              line: 71
+              line: 71,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 67
-            )
+              line: 67,
+            ),
           ),
           tuple: (
             attr_defs: {
@@ -617,485 +849,48 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 68
+                    line: 68,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 68
-                  )
-                )
+                    line: 68,
+                  ),
+                ),
               ),
               'dy': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 69
+                    line: 69,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 69
-                  )
-                )
-              )
-            }
-          )
-        )
-      }
-    ),
-    'Pizza :: Supreme': (
-      endpoints: {
-        'DoEverything': (
-          name: 'DoEverything',
-          param: [
-            (
-              name: 'x',
-              type: (
-                primitive: 'STRING'
-              )
-            ),
-            (
-              name: 'y',
-              type: (
-                primitive: 'STRING'
-              )
-            )
-          ],
-          source_context: (
-            end: (
-              col: 4,
-              line: 105
-            ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
-            start: (
-              col: 4,
-              line: 81
-            )
-          ),
-          stmt: [
-            (
-              action: (
-                action: 'an action'
-              )
-            ),
-            (
-              call: (
-                arg: [
-                  (
-                    name: '"1"'
+                    line: 69,
                   ),
-                  (
-                    name: '"2"'
-                  )
-                ],
-                endpoint: 'DoEverything',
-                target: (
-                  part: ['Pizza', 'Supreme']
-                )
-              )
-            ),
-            (
-              cond: (
-                stmt: [
-                  (
-                    action: (
-                      action: 'success'
-                    )
-                  )
-                ],
-                test: 'test'
-              )
-            ),
-            (
-              group: (
-                stmt: [
-                  (
-                    action: (
-                      action: 'success'
-                    )
-                  )
-                ],
-                title: 'else if test2'
-              )
-            ),
-            (
-              group: (
-                stmt: [
-                  (
-                    action: (
-                      action: 'failure'
-                    )
-                  )
-                ],
-                title: 'else'
-              )
-            ),
-            (
-              group: (
-                stmt: [
-                  (
-                    action: (
-                      action: 'do loop'
-                    )
-                  )
-                ],
-                title: 'loop pred'
-              )
-            ),
-            (
-              foreach: (
-                collection: 'pred',
-                stmt: [
-                  (
-                    action: (
-                      action: 'do each'
-                    )
-                  )
-                ]
-              )
-            ),
-            (
-              group: (
-                stmt: [
-                  (
-                    action: (
-                      action: 'do alt'
-                    )
-                  )
-                ],
-                title: 'alt pred'
-              )
-            ),
-            (
-              group: (
-                stmt: [
-                  (
-                    action: (
-                      action: 'inner'
-                    )
-                  )
-                ],
-                title: 'group label'
-              )
-            ),
-            (
-              ret: (
-                payload: (
-                  attr: (
-                    modifier: {},
-                    nvp: {}
-                  ),
-                  type: 'Pizza :: Supreme.int'
-                )
-              )
-            )
-          ]
+                ),
+              ),
+            },
+          ),
         ),
-        'Event': (
-          is_pubsub: {
-            (            )
-          },
-          name: 'Event',
-          source_context: (
-            end: (
-              col: 15,
-              line: 114
-            ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
-            start: (
-              col: 4,
-              line: 114
-            )
-          ),
-          stmt: [
-            (
-              call: (
-                endpoint: 'Pizza :: Supreme -> Event',
-                target: (
-                  part: ['Pizza', 'Supreme']
-                )
-              )
-            )
-          ]
-        ),
-        'GET /a/{ap}': (
-          attrs: {
-            'patterns': (
-              a: (
-                elt: [
-                  (
-                    s: 'rest'
-                  )
-                ]
-              )
-            )
-          },
-          name: 'GET /a/{ap}',
-          rest_params: (
-            method: 'GET',
-            path: '/a/{ap}',
-            query_param: [
-              (
-                name: 'aq',
-                type: (
-                  primitive: 'INT',
-                  source_context: (
-                    end: (
-                      col: 15,
-                      line: 106
-                    ),
-                    file: 'dev/sysl/pkg/arrai/model.sysl',
-                    start: (
-                      col: 12,
-                      line: 106
-                    )
-                  )
-                )
-              )
-            ],
-            url_param: [
-              (
-                name: 'ap',
-                type: (
-                  primitive: 'STRING',
-                  source_context: (
-                    end: (
-                      col: 20,
-                      line: 105
-                    ),
-                    file: 'dev/sysl/pkg/arrai/model.sysl',
-                    start: (
-                      col: 7,
-                      line: 105
-                    )
-                  )
-                )
-              )
-            ]
-          ),
-          source_context: (
-            end: (
-              col: 4,
-              line: 108
-            ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
-            start: (
-              col: 8,
-              line: 106
-            )
-          ),
-          stmt: [
-            (
-              action: (
-                action: '...'
-              )
-            )
-          ]
-        ),
-        'POST /b/{bp}': (
-          attrs: {
-            'patterns': (
-              a: (
-                elt: [
-                  (
-                    s: 'rest'
-                  )
-                ]
-              )
-            )
-          },
-          name: 'POST /b/{bp}',
-          rest_params: (
-            method: 'POST',
-            path: '/b/{bp}',
-            query_param: [
-              (
-                name: 'bq',
-                type: (
-                  primitive: 'INT',
-                  source_context: (
-                    end: (
-                      col: 16,
-                      line: 109
-                    ),
-                    file: 'dev/sysl/pkg/arrai/model.sysl',
-                    start: (
-                      col: 13,
-                      line: 109
-                    )
-                  )
-                )
-              )
-            ],
-            url_param: [
-              (
-                name: 'bp',
-                type: (
-                  primitive: 'STRING',
-                  source_context: (
-                    end: (
-                      col: 20,
-                      line: 108
-                    ),
-                    file: 'dev/sysl/pkg/arrai/model.sysl',
-                    start: (
-                      col: 7,
-                      line: 108
-                    )
-                  )
-                )
-              )
-            ]
-          ),
-          source_context: (
-            end: (
-              col: 8,
-              line: 111
-            ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
-            start: (
-              col: 8,
-              line: 109
-            )
-          ),
-          stmt: [
-            (
-              action: (
-                action: '...'
-              )
-            )
-          ]
-        ),
-        'PUT /b/{bp}': (
-          attrs: {
-            'patterns': (
-              a: (
-                elt: [
-                  (
-                    s: 'rest'
-                  )
-                ]
-              )
-            )
-          },
-          name: 'PUT /b/{bp}',
-          rest_params: (
-            method: 'PUT',
-            path: '/b/{bp}',
-            query_param: [
-              (
-                name: 'cq',
-                type: (
-                  primitive: 'INT',
-                  source_context: (
-                    end: (
-                      col: 15,
-                      line: 111
-                    ),
-                    file: 'dev/sysl/pkg/arrai/model.sysl',
-                    start: (
-                      col: 12,
-                      line: 111
-                    )
-                  )
-                )
-              )
-            ],
-            url_param: [
-              (
-                name: 'bp',
-                type: (
-                  primitive: 'STRING',
-                  source_context: (
-                    end: (
-                      col: 20,
-                      line: 108
-                    ),
-                    file: 'dev/sysl/pkg/arrai/model.sysl',
-                    start: (
-                      col: 7,
-                      line: 108
-                    )
-                  )
-                )
-              )
-            ]
-          ),
-          source_context: (
-            end: (
-              col: 4,
-              line: 114
-            ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
-            start: (
-              col: 8,
-              line: 111
-            )
-          ),
-          stmt: [
-            (
-              action: (
-                action: '...'
-              )
-            )
-          ]
-        ),
-        'Pizza :: Supreme -> Event': (
-          name: 'Pizza :: Supreme -> Event',
-          source: (
-            part: ['Pizza', 'Supreme']
-          ),
-          source_context: (
-            end: (
-              col: 3,
-              line: 119
-            ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
-            start: (
-              col: 4,
-              line: 116
-            )
-          ),
-          stmt: [
-            (
-              action: (
-                action: '...'
-              )
-            )
-          ]
-        )
       },
-      name: (
-        part: ['Pizza', 'Supreme']
-      ),
-      source_context: (
-        end: (
-          col: 9,
-          line: 80
-        ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
-        start: (
-          col: 1,
-          line: 80
-        )
-      )
     ),
     'Source': (
       attrs: {
         'description': (
-          s: 'A database.\n Stores data.\n'
+          s: 'A database.\n Stores data.\n',
         ),
         'patterns': (
           a: (
             elt: [
               (
-                s: 'db'
-              )
-            ]
-          )
-        )
+                s: 'db',
+              ),
+            ],
+          ),
+        ),
       },
       endpoints: {
         'Read': (
@@ -1103,13 +898,13 @@
           source_context: (
             end: (
               col: 1,
-              line: 24
+              line: 24,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 21
-            )
+              line: 21,
+            ),
           ),
           stmt: [
             (
@@ -1117,195 +912,206 @@
                 payload: (
                   attr: (
                     modifier: {},
-                    nvp: {}
+                    nvp: {},
                   ),
-                  type: 'Source.Foo'
-                )
-              )
-            )
-          ]
-        )
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['Source'],
+                      ),
+                      path: ['Foo'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 14,
+                  line: 22,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 22,
+                ),
+              ),
+            ),
+          ],
+        ),
       },
       name: (
-        part: ['Source']
+        part: ['Source'],
       ),
       source_context: (
         end: (
           col: 10,
-          line: 1
+          line: 1,
         ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
+        file: 'model.sysl',
         start: (
           col: 1,
-          line: 1
-        )
+          line: 1,
+        ),
       ),
       types: {
         'Bar': (
           attrs: {
             'description': (
-              s: 'A bar table.'
-            )
+              s: 'A bar table.',
+            ),
           },
           relation: (
             attr_defs: {
               'a': (
                 attrs: {
-                  'description': (
-                    s: 'A bar table.'
-                  ),
                   'patterns': (
                     a: (
                       elt: [
                         (
-                          s: 'pk'
-                        )
-                      ]
-                    )
-                  )
+                          s: 'pk',
+                        ),
+                      ],
+                    ),
+                  ),
                 },
                 primitive: 'STRING',
                 source_context: (
                   end: (
                     col: 24,
-                    line: 15
+                    line: 15,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 13,
-                    line: 15
-                  )
-                )
+                    line: 15,
+                  ),
+                ),
               ),
               'b': (
                 attrs: {
                   'description': (
-                    s: 'An optional int'
-                  )
+                    s: 'An optional int',
+                  ),
                 },
                 opt: {
-                  (                  )
+                  (),
                 },
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 8,
-                    line: 18
+                    line: 18,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 13,
-                    line: 17
-                  )
-                )
+                    line: 17,
+                  ),
+                ),
               ),
               'x': (
                 attrs: {
                   'description': (
-                    s: 'A foreign key'
-                  )
+                    s: 'A foreign key',
+                  ),
                 },
                 source_context: (
                   end: (
                     col: 4,
-                    line: 21
+                    line: 21,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 13,
-                    line: 19
-                  )
+                    line: 19,
+                  ),
                 ),
                 type_ref: (
                   context: (
                     appname: (
-                      part: ['Source']
+                      part: ['Source'],
                     ),
-                    path: ['Bar']
+                    path: ['Bar'],
                   ),
                   ref: (
-                    path: ['Foo', 'x']
-                  )
-                )
-              )
+                    path: ['Foo', 'x'],
+                  ),
+                ),
+              ),
             },
             primary_key: (
-              attr_name: ['a']
-            )
+              attr_name: ['a'],
+            ),
           ),
           source_context: (
             end: (
               col: 4,
-              line: 21
+              line: 21,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 14
-            )
-          )
+              line: 14,
+            ),
+          ),
         ),
         'Foo': (
           attrs: {
             'description': (
-              s: 'A Foo.\n Represents foo things.\n'
-            )
+              s: 'A Foo.\n Represents foo things.\n',
+            ),
           },
           relation: (
             attr_defs: {
               'x': (
                 attrs: {
                   'description': (
-                    s: 'The x value.'
-                  )
+                    s: 'The x value.',
+                  ),
                 },
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 8,
-                    line: 11
+                    line: 11,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 13,
-                    line: 10
-                  )
-                )
+                    line: 10,
+                  ),
+                ),
               ),
               'y': (
-                attrs: {
-                  'description': (
-                    s: 'A Foo.\n Represents foo things.\n'
-                  )
-                },
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 13,
-                    line: 11
+                    line: 11,
                   ),
-                  file: 'dev/sysl/pkg/arrai/model.sysl',
+                  file: 'model.sysl',
                   start: (
                     col: 13,
-                    line: 11
-                  )
-                )
-              )
-            }
+                    line: 11,
+                  ),
+                ),
+              ),
+            },
           ),
           source_context: (
             end: (
               col: 4,
-              line: 13
+              line: 13,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 6
-            )
-          )
-        )
-      }
+              line: 6,
+            ),
+          ),
+        ),
+      },
     ),
     'all': (
       endpoints: {
@@ -1313,61 +1119,127 @@
           name: 'all',
           source_context: (
             end: (
-              line: 127
+              line: 88,
             ),
-            file: 'dev/sysl/pkg/arrai/model.sysl',
+            file: 'model.sysl',
             start: (
               col: 4,
-              line: 120
-            )
+              line: 81,
+            ),
           ),
           stmt: [
             (
               action: (
-                action: 'Source'
-              )
+                action: 'Source',
+              ),
+              source_context: (
+                end: (
+                  col: 8,
+                  line: 82,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 82,
+                ),
+              ),
             ),
             (
               action: (
-                action: 'Client'
-              )
+                action: 'Client',
+              ),
+              source_context: (
+                end: (
+                  col: 8,
+                  line: 83,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 83,
+                ),
+              ),
             ),
             (
               action: (
-                action: 'A'
-              )
+                action: 'A',
+              ),
+              source_context: (
+                end: (
+                  col: 8,
+                  line: 84,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 84,
+                ),
+              ),
             ),
             (
               action: (
-                action: 'B'
-              )
+                action: 'B',
+              ),
+              source_context: (
+                end: (
+                  col: 8,
+                  line: 85,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 85,
+                ),
+              ),
             ),
             (
               action: (
-                action: 'C'
-              )
+                action: 'C',
+              ),
+              source_context: (
+                end: (
+                  col: 8,
+                  line: 86,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 86,
+                ),
+              ),
             ),
             (
               action: (
-                action: 'D'
-              )
-            )
-          ]
-        )
+                action: 'D',
+              ),
+              source_context: (
+                end: (
+                  col: 8,
+                  line: 87,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 8,
+                  line: 87,
+                ),
+              ),
+            ),
+          ],
+        ),
       },
       name: (
-        part: ['all']
+        part: ['all'],
       ),
       source_context: (
         end: (
-          line: 119
+          line: 80,
         ),
-        file: 'dev/sysl/pkg/arrai/model.sysl',
+        file: 'model.sysl',
         start: (
           col: 1,
-          line: 119
-        )
-      )
-    )
-  }
+          line: 80,
+        ),
+      ),
+    ),
+  },
 )

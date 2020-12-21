@@ -9,9 +9,8 @@ Action, Platform Name, Technology Name, Physical Attribute Name, Physical Object
 ?, ?, ?, yy, API, Client, Screen, "", ?, "?"
 ?, ?, ?, dx, API, D, FetchResponse, "", ?, "?"
 ?, ?, ?, dy, API, D, FetchResponse, "", ?, "?"
-?, ?, ?, a, Table, Source, Bar, "A bar table.", ?, "?"
+?, ?, ?, a, Table, Source, Bar, "", ?, "?"
 ?, ?, ?, b, Table, Source, Bar, "An optional int", ?, "?"
 ?, ?, ?, x, Table, Source, Bar, "A foreign key", ?, "?"
 ?, ?, ?, x, Table, Source, Foo, "The x value.", ?, "?"
-?, ?, ?, y, Table, Source, Foo, "A Foo.
- Represents foo things.", ?, "?"
+?, ?, ?, y, Table, Source, Foo, "", ?, "?"
