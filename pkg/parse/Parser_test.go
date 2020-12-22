@@ -1053,3 +1053,187 @@ App:
 		require.Equal(t, e, r.res[filename])
 	}
 }
+
+func TestFixTypeRefScope(t *testing.T) {
+	t.Parallel()
+	module := getTestModule()
+
+	fields := module.Apps["App"].Types["Type"].Type.(*sysl.Type_Tuple_).Tuple.AttrDefs
+	// full type ref
+	ref := fields["a"].GetTypeRef().Ref
+	fixTypeRefScope(module, "App", ref)
+	assert.Equal(t, []string{"Types"}, ref.GetAppname().Part)
+	assert.Equal(t, []string{"Type2"}, ref.GetPath())
+
+	// local type ref to a field
+	ref = fields["b"].GetTypeRef().Ref
+	fixTypeRefScope(module, "App", ref)
+	assert.True(t, ref.GetAppname() == nil)
+	assert.Equal(t, []string{"Type", "a"}, ref.GetPath())
+
+	// local type ref
+	ref = fields["c"].GetTypeRef().Ref
+	fixTypeRefScope(module, "App", ref)
+	assert.True(t, ref.GetAppname() == nil)
+	assert.Equal(t, []string{"Type"}, ref.GetPath())
+
+	// full type ref with namespace
+	ref = fields["d"].GetTypeRef().Ref
+	fixTypeRefScope(module, "App", ref)
+	assert.Equal(t, []string{"A", "B", "C"}, ref.GetAppname().Part)
+	assert.Equal(t, []string{"Type"}, ref.GetPath())
+
+	// full type ref to a local type
+	ref = fields["e"].GetTypeRef().Ref
+	fixTypeRefScope(module, "App", ref)
+	assert.Equal(t, []string{"App"}, ref.GetAppname().Part)
+	assert.Equal(t, []string{"Type"}, ref.GetPath())
+
+	// nil ref
+	ref = fields["f"].GetTypeRef().Ref
+	fixTypeRefScope(module, "App", ref)
+	assert.True(t, ref == nil)
+
+	// empty type path
+	ref = fields["g"].GetTypeRef().Ref
+	fixTypeRefScope(module, "App", ref)
+	assert.True(t, len(ref.GetPath()) == 0)
+
+	// params
+	fixParamTypeRef(module, module.Apps["App"], "App")
+	params := module.Apps["App"].Endpoints["Endpoint"].Param
+
+	ref = params[0].Type.GetTypeRef().Ref
+	assert.True(t, ref.GetAppname() == nil)
+	assert.Equal(t, []string{"Type", "a"}, ref.GetPath())
+
+	ref = params[1].Type.GetTypeRef().Ref
+	assert.Equal(t, []string{"Types"}, ref.GetAppname().Part)
+	assert.Equal(t, []string{"Type2"}, ref.GetPath())
+}
+
+func getTestModule() *sysl.Module {
+	return &sysl.Module{
+		Apps: map[string]*sysl.Application{
+			"App": {
+				Name: &sysl.AppName{Part: []string{"App"}},
+				Endpoints: map[string]*sysl.Endpoint{
+					"Endpoint": {
+						Name: "Endpoint",
+						Param: []*sysl.Param{
+							{
+								Name: "a",
+								Type: &sysl.Type{
+									Type: &sysl.Type_TypeRef{
+										TypeRef: &sysl.ScopedRef{
+											Ref: &sysl.Scope{
+												// refer to the field Type.x
+												Appname: &sysl.AppName{Part: []string{"Type"}},
+												Path:    []string{"a"},
+											},
+										},
+									},
+								},
+							},
+							{
+								Name: "b",
+								Type: &sysl.Type{
+									Type: &sysl.Type_TypeRef{
+										TypeRef: &sysl.ScopedRef{
+											Ref: &sysl.Scope{
+												Appname: &sysl.AppName{Part: []string{"Types"}},
+												Path:    []string{"Type2"},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				Types: map[string]*sysl.Type{
+					"Type": {
+						Type: &sysl.Type_Tuple_{
+							Tuple: &sysl.Type_Tuple{
+								AttrDefs: map[string]*sysl.Type{
+									"a": {
+										Type: &sysl.Type_TypeRef{
+											TypeRef: &sysl.ScopedRef{
+												Ref: &sysl.Scope{
+													Appname: &sysl.AppName{Part: []string{"Types"}},
+													Path:    []string{"Type2"},
+												},
+											},
+										},
+									},
+									"b": {
+										Type: &sysl.Type_TypeRef{
+											TypeRef: &sysl.ScopedRef{
+												Ref: &sysl.Scope{
+													// refer to the field Type.x
+													Appname: &sysl.AppName{Part: []string{"Type"}},
+													Path:    []string{"a"},
+												},
+											},
+										},
+									},
+									"c": {
+										Type: &sysl.Type_TypeRef{
+											TypeRef: &sysl.ScopedRef{
+												Ref: &sysl.Scope{
+													Path: []string{"Type"},
+												},
+											},
+										},
+									},
+									"d": {
+										Type: &sysl.Type_TypeRef{
+											TypeRef: &sysl.ScopedRef{
+												Ref: &sysl.Scope{
+													Appname: &sysl.AppName{Part: []string{"A", "B", "C"}},
+													Path:    []string{"Type"},
+												},
+											},
+										},
+									},
+									"e": {
+										Type: &sysl.Type_TypeRef{
+											TypeRef: &sysl.ScopedRef{
+												Ref: &sysl.Scope{
+													Appname: &sysl.AppName{Part: []string{"App"}},
+													Path:    []string{"Type"},
+												},
+											},
+										},
+									},
+									"f": {
+										Type: &sysl.Type_TypeRef{
+											TypeRef: &sysl.ScopedRef{
+												Ref: nil,
+											},
+										},
+									},
+									"g": {
+										Type: &sysl.Type_TypeRef{
+											TypeRef: &sysl.ScopedRef{
+												Ref: &sysl.Scope{Path: []string{}},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"Types": {
+				Name: &sysl.AppName{Part: []string{"Types"}},
+				Types: map[string]*sysl.Type{
+					"Type2": {
+						Type: &sysl.Type_Tuple_{},
+					},
+				},
+			},
+		},
+	}
+}

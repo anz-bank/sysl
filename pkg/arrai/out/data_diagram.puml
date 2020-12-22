@@ -8,10 +8,6 @@ skinparam stereotypeCBackgroundColor Orchid
 hide methods
 
 entity Source.Bar {
-  b : int
-}
-
-entity Source.Bar {
   * a : string
   --
 }
@@ -20,12 +16,8 @@ entity Source.Bar {
   * x : **Foo.x** <<FK>>
 }
 
-entity B.FetchResponse {
-  * bx : int
-}
-
-entity C.FetchResponse {
-  * cy : int
+entity Source.Bar {
+  b : int
 }
 
 entity B.FetchResponse {
@@ -33,7 +25,15 @@ entity B.FetchResponse {
 }
 
 entity A.FetchResponse {
+  * ax : int
+}
+
+entity A.FetchResponse {
   * ay : int
+}
+
+entity C.FetchResponse {
+  * cy : int
 }
 
 entity D.FetchResponse {
@@ -44,12 +44,12 @@ entity D.FetchResponse {
   * dy : int
 }
 
-entity C.FetchResponse {
-  * cx : int
+entity B.FetchResponse {
+  * bx : int
 }
 
-entity A.FetchResponse {
-  * ax : int
+entity C.FetchResponse {
+  * cx : int
 }
 
 entity Source.Foo {
@@ -69,8 +69,8 @@ entity Client.Screen {
 }
 
 
-
 Source.Bar             }o--|| Source.Foo
+
 
 
 

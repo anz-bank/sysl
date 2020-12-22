@@ -199,19 +199,6 @@ let newNormalize = \m
             rest: ep.rest_params?:{},
         );
 
-    # Parameters
-    let _params = //rel.union(_eps => \(:appName, :epName, :ep)
-        ep.param?:{} => (:appName, :epName, paramName: .@item.name?:{}, param: .)
-    ) where .;
-    let param = _params => \(:appName, :epName, :paramName, param: (:@, @item:param))
-        (
-            :appName,
-            :epName,
-            :paramName,
-            paramIndex: @,
-            paramType: param.type?:{},
-        );
-
     let rec parseFieldType = \field cond field {
         (:primitive, ...): (:primitive),
         (ref:(path:p), ...): (appName: [], typePath: p),
@@ -314,6 +301,19 @@ let newNormalize = \m
             #     [t, f]: (appName:app.name.part, typeName: t, fieldName: f)
             # },
             # pk: !!({'pk'} & tags),
+        );
+
+    # Parameters
+    let _params = //rel.union(_eps => \(:appName, :epName, :ep)
+        ep.param?:{} => (:appName, :epName, paramName: .@item.name?:{}, param: .)
+    ) where .;
+    let param = _params => \(:appName, :epName, :paramName, param: (:@, @item:param))
+        (
+            :appName,
+            :epName,
+            :paramName,
+            paramIndex: @,
+            paramType: parseFieldType(param.type?:{}),
         );
 
     # View

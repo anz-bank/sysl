@@ -1212,7 +1212,9 @@ apps: {
                   path: "TopLevelPayload"
                 }
                 ref: {
-                  path: "Model"
+                  appname: {
+                    part: "Model"
+                  }
                   path: "Request"
                   path: "status"
                 }
@@ -1277,7 +1279,9 @@ apps: {
                     path: "TopLevelPayload"
                   }
                   ref: {
-                    path: "Response"
+                    appname: {
+                      part: "Response"
+                    }
                     path: "foo"
                   }
                 }

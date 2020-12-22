@@ -605,6 +605,67 @@ func (p *Parser) inferTypes(mod *sysl.Module, appName string) {
 	}
 }
 
+// fixTypeRefScope fixes the local and full type references so that it points to the correct type.
+func fixTypeRefScope(mod *sysl.Module, currApp string, ref *sysl.Scope) {
+	if ref == nil {
+		return
+	}
+
+	appPath := ref.GetAppname().GetPart()
+	if len(appPath) > 1 {
+		// multiple app parts means full type specification
+		return
+	}
+
+	// type ref must have at least app and type
+	typePath := ref.GetPath()
+	if len(typePath) == 0 {
+		// impossible
+		return
+	}
+
+	if len(appPath) == 0 && len(typePath) == 1 {
+		// local type ref
+		return
+	}
+
+	appName, typeName := appPath[0], typePath[0]
+	if currApp == appName {
+		// same app
+		return
+	}
+
+	if app, exists := mod.Apps[appName]; exists {
+		if _, exists := app.Types[typeName]; exists {
+			// full type ref
+			return
+		}
+	}
+
+	if app, exists := mod.Apps[currApp]; exists {
+		if _, exists := app.Types[appName]; exists {
+			// local type ref using deep ref e.g A.B.C.D
+			ref.Appname = nil
+			ref.Path = append([]string{appName}, typePath...)
+			return
+		}
+	}
+	// TODO: type not found, return an error?
+}
+
+func fixParamTypeRef(mod *sysl.Module, app *sysl.Application, appName string) {
+	for _, ep := range app.GetEndpoints() {
+		if params := ep.GetParam(); params != nil {
+			for _, param := range params {
+				t := param.GetType()
+				if ref := t.GetTypeRef(); ref != nil {
+					fixTypeRefScope(mod, appName, ref.GetRef())
+				}
+			}
+		}
+	}
+}
+
 func (p *Parser) postProcess(mod *sysl.Module) {
 	appNames := make([]string, 0, len(mod.Apps))
 	for a := range mod.Apps {
@@ -614,6 +675,7 @@ func (p *Parser) postProcess(mod *sysl.Module) {
 
 	for _, appName := range appNames {
 		app := mod.Apps[appName]
+		fixParamTypeRef(mod, app, appName)
 
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
@@ -672,6 +734,7 @@ func (p *Parser) postProcess(mod *sysl.Module) {
 					if refName == "string_8" {
 						continue
 					}
+					fixTypeRefScope(mod, appName, x.GetRef())
 					if refType, has := refApp.Types[refName]; has {
 						var refAttrs map[string]*sysl.Type
 

@@ -616,7 +616,6 @@ func (s *TreeShapeListener) EnterInplace_tuple(*parser.Inplace_tupleContext) {
 
 // ExitInplace_tuple is called when production inplace_tuple is exited.
 func (s *TreeShapeListener) ExitInplace_tuple(*parser.Inplace_tupleContext) {
-	fixFieldDefinitions(s.currentApp().Types[s.currentTypePath.Get()])
 	s.currentTypePath.Pop()
 	s.typemap = s.currentApp().Types[s.currentTypePath.Get()].GetTuple().GetAttrDefs()
 }
@@ -769,47 +768,6 @@ func attributesForType(collection *sysl.Type) map[string]*sysl.Type {
 	return attrs
 }
 
-func fixFieldDefinitions(collection *sysl.Type) {
-	for name, f := range attributesForType(collection) {
-		if f.Type == nil {
-			continue
-		}
-		if f.GetPrimitive() == sysl.Type_NO_Primitive {
-			type1 := typeRefForType(name, f)
-
-			if type1 != nil && type1.Ref != nil && type1.Ref.Appname != nil {
-				// If the appname has multiple parts, it must be a qualified name like A :: B.
-				// In that case, it must unambiguously refer to an app.
-				// If the appname has only a single part, the ref is of the form S(.T)*, and S may
-				// refer to a different application or a type within the current application.
-				if len(type1.Ref.Appname.Part) == 1 {
-					type1.Ref.Path = append(type1.Ref.Appname.Part, type1.Ref.Path...)
-					type1.Ref.Appname = nil
-				}
-			}
-		}
-	}
-}
-
-func typeRefForType(name string, f *sysl.Type) *sysl.ScopedRef {
-	var type1 *sysl.ScopedRef
-	switch t := f.GetType().(type) {
-	case *sysl.Type_TypeRef:
-		type1 = t.TypeRef
-	case *sysl.Type_Sequence:
-		type1 = t.Sequence.GetTypeRef()
-	case *sysl.Type_Set:
-		type1 = t.Set.GetTypeRef()
-	case *sysl.Type_List_:
-		type1 = t.List.GetType().GetTypeRef()
-	case *sysl.Type_NoType_:
-		return nil
-	default:
-		panic("unhandled type:" + name)
-	}
-	return type1
-}
-
 // ExitTable is called when production table is exited.
 func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 	// wire up primary key
@@ -832,10 +790,6 @@ func (s *TreeShapeListener) ExitTable(ctx *parser.TableContext) {
 		}
 	}
 	s.popScope()
-
-	// Match legacy behavior
-	fixFieldDefinitions(s.currentApp().Types[s.currentTypePath.Get()])
-	// End
 
 	s.currentTypePath.Pop()
 	s.fieldname = []string{}

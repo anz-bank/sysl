@@ -207,7 +207,9 @@ apps: {
                   path: "Data"
                 }
                 ref: {
-                  path: "My Todo App"
+                  appname: {
+                    part: "My Todo App"
+                  }
                   path: "Todo"
                   path: "id"
                 }

@@ -22,9 +22,18 @@ B:
         ambiguousType <: B.A
 
         unambiguousType <: B
-        unambiguousType <: D.T    # TODO: Fix parsing so D is appname.part, not path.
-        unambiguousField <: D.T.V # TODO: Fix parsing so D is appname.part, not path.
+        unambiguousType <: D.T
+        unambiguousField <: D.T.V
+        deepField <: B.A.T.U
 
 D:
     !type T:
         V <: int
+
+E:
+    # type refs in param
+    !type F: ...
+
+    /endpoint:
+        POST(x <: F, y <: B.A, z <: A :: T.U):
+            ...

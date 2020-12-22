@@ -176,7 +176,9 @@ apps:  {
          path:  "B"
         }
         ref:  {
-         path:  "A"
+         appname:  {
+          part:  "A"
+         }
          path:  "T"
          path:  "U"
         }
@@ -205,7 +207,9 @@ apps:  {
          path:  "B"
         }
         ref:  {
-         path:  "A"
+         appname:  {
+          part:  "A"
+         }
          path:  "T"
         }
        }
@@ -282,7 +286,9 @@ apps:  {
          path:  "C"
         }
         ref:  {
-         path:  "B"
+         appname:  {
+          part:  "B"
+         }
          path:  "A"
         }
        }
@@ -300,6 +306,38 @@ apps:  {
       }
      }
      attr_defs:  {
+      key:  "deepField"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "A"
+         path:  "T"
+         path:  "U"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  27
+         col:  21
+        }
+        end:  {
+         line:  27
+         col:  27
+        }
+       }
+      }
+     }
+     attr_defs:  {
       key:  "unambiguousField"
       value:  {
        type_ref:  {
@@ -310,7 +348,9 @@ apps:  {
          path:  "C"
         }
         ref:  {
-         path:  "D"
+         appname:  {
+          part:  "D"
+         }
          path:  "T"
          path:  "V"
         }
@@ -339,7 +379,9 @@ apps:  {
          path:  "C"
         }
         ref:  {
-         path:  "D"
+         appname:  {
+          part:  "D"
+         }
          path:  "T"
         }
        }
@@ -364,7 +406,7 @@ apps:  {
       col:  4
      }
      end:  {
-      line:  28
+      line:  29
       col:  1
      }
     }
@@ -399,11 +441,11 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  30
+         line:  31
          col:  13
         }
         end:  {
-         line:  30
+         line:  31
          col:  13
         }
        }
@@ -413,11 +455,12 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  29
+      line:  30
       col:  4
      }
      end:  {
-      line:  31
+      line:  33
+      col:  1
      }
     }
    }
@@ -425,11 +468,129 @@ apps:  {
   source_context:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  28
+    line:  29
     col:  1
    }
    end:  {
-    line:  28
+    line:  29
+   }
+  }
+ }
+}
+apps:  {
+ key:  "E"
+ value:  {
+  name:  {
+   part:  "E"
+  }
+  endpoints:  {
+   key:  "POST /endpoint"
+   value:  {
+    name:  "POST /endpoint"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "x"
+     type:  {
+      type_ref:  {
+       ref:  {
+        path:  "F"
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "y"
+     type:  {
+      type_ref:  {
+       ref:  {
+        appname:  {
+         part:  "B"
+        }
+        path:  "A"
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "z"
+     type:  {
+      type_ref:  {
+       ref:  {
+        appname:  {
+         part:  "A"
+         part:  "T"
+        }
+        path:  "U"
+       }
+      }
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "..."
+     }
+     source_context:  {
+      file:  "tests/type_refs.sysl"
+      start:  {
+       line:  39
+       col:  12
+      }
+      end:  {
+       line:  39
+       col:  12
+      }
+     }
+    }
+    rest_params:  {
+     method:  POST
+     path:  "/endpoint"
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  38
+      col:  8
+     }
+     end:  {
+      line:  39
+      col:  15
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "F"
+   value:  {
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  35
+      col:  4
+     }
+     end:  {
+      line:  35
+      col:  13
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  33
+    col:  1
+   }
+   end:  {
+    line:  33
    }
   }
  }
