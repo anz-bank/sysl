@@ -314,6 +314,7 @@ let newNormalize = \m
             :paramName,
             paramIndex: @,
             paramType: parseFieldType(param.type?:{}),
+            paramOpt: param.type?.opt?:false,
         );
 
     # View
