@@ -58,7 +58,6 @@ func TestGuessFileType(t *testing.T) {
 func TestGuessFileType_Dir(t *testing.T) {
 	t.Parallel()
 
-	f, err := GuessFileType("spanner/tests/migrations", true, []byte{}, formatsToTest)
-	require.NoError(t, err)
-	assert.Equal(t, SpannerSQLDir, f)
+	_, err := GuessFileType("spanner/tests/migrations", true, []byte{}, formatsToTest)
+	require.Error(t, err)
 }

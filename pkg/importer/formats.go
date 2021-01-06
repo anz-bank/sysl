@@ -89,7 +89,9 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 		if files, err := ioutil.ReadDir(path); err == nil {
 			for _, info := range files {
 				if strings.HasSuffix(info.Name(), ".up.sql") || strings.HasSuffix(info.Name(), ".up.ddl") {
-					return SpannerSQLDir, nil
+					return Format{}, fmt.Errorf(
+						"input file format for %s could be one of {%v, %v}; pass --format to specify",
+						path, SpannerSQLDir.Name, PostgresDir.Name)
 				}
 			}
 		}

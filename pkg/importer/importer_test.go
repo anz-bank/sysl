@@ -75,7 +75,7 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	logger, _ := test.NewNullLogger()
 	syslFile := filepath.Join(cfg.testDir, filepath.Base(cfg.testDir)+".sysl")
 	path := syslutil.MustAbsolute(t, cfg.testDir)
-	imp, err := Factory(path, true, "", nil, logger)
+	imp, err := Factory(path, true, cfg.format, nil, logger)
 	require.NoError(t, err)
 	out, err := imp.WithAppName("TestApp").WithPackage("com.example.package").LoadFile(path)
 	require.NoError(t, err)
@@ -132,7 +132,7 @@ func TestLoadSpannerDirFromTestDir(t *testing.T) {
 		name:          "TestLoadSpannerDirFromTestDir",
 		testDir:       "spanner/tests/migrations",
 		testExtension: "",
-		format:        "spannerDir",
+		format:        "spannerSQLdir",
 	})
 }
 
