@@ -119,7 +119,7 @@ let transformModel = \model \package
                     $`
                         !table ${entity.name}${cond{eps: ' ' ++ eps}}:
                             ${entity.attributes >>
-                                let aps = attributePatternsString(entity, .);
+                                let aps = //seq.sub(", , ", ", ", attributePatternsString(entity, .));
                                 let name = util.resolveValidIdentifier(//seq.sub("`", "", .name));
                                 let type = typeInfo(entity, ., .type ++ cond {.type != 'bytes': size(.)}, .array);
                                 $`

@@ -49,5 +49,5 @@ CREATE TABLE AccountAddress (
     AddressLine1      BYTES(MAX),
     AddressLine2      STRING(0x100),
     AddressLine3      BYTES(100),
-) PRIMARY KEY (AccountNum ASC, AddressPostCode DESC),
+) PRIMARY KEY (AccountNum ASC, AddressPostCode DESC, LastUpdated),
 INTERLEAVE IN PARENT Account ON DELETE CASCADE;
