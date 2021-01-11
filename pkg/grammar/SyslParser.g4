@@ -67,7 +67,7 @@ var_in_curly    : CURLY_OPEN Name CURLY_CLOSE;
 query_var       : Name EQ (NativeDataTypes | name_str | var_in_curly) QN?;
 query_param     : QN query_var (AMP query_var)*;
 
-http_path_part : (name_str (QN Name EQ Name (AMP Name EQ Name)*)?) | DIGITS;
+http_path_part : ((name_str | DIGITS)+ (QN Name EQ Name (AMP Name EQ Name)*)?);
 http_path_var_with_type : CURLY_OPEN http_path_part LESS_COLON (NativeDataTypes | name_str | reference) CURLY_CLOSE;
 http_path_static : http_path_part;
 http_path_suffix : FORWARD_SLASH (http_path_static | http_path_var_with_type);
@@ -150,7 +150,7 @@ collector_query_var: name_str EQ (NativeDataTypes | name_str);
 collector_query_param: QN collector_query_var (AMP collector_query_var)*;
 collector_call_stmt:  target ARROW_LEFT target_endpoint;
 
-collector_http_stmt_part: name_str | CURLY_OPEN name_str CURLY_CLOSE ;
+collector_http_stmt_part: (name_str | DIGITS)+ | CURLY_OPEN name_str CURLY_CLOSE;
 collector_http_stmt_suffix: (FORWARD_SLASH collector_http_stmt_part)+ collector_query_param?;
 collector_http_stmt: HTTP_VERBS collector_http_stmt_suffix;
 
