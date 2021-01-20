@@ -26,6 +26,8 @@ let foo_bx = applyAlterTable(dropCol.data, foo_b2);
 let [addIndex] = parseDdl('CREATE INDEX i ON foo (a DESC);');
 let foo_i = applyCreateIndex(addIndex.data, foo_bx);
 
+let [updateTable] = parseDdl('UPDATE foo SET a = 1 WHERE a >= 1;');
+
 let dropIndexSql = 'DROP INDEX i;';
 let [dropIndex] = parseDdl(dropIndexSql);
 let foo_ix = applyDropIndex(dropIndex.data, foo_i);
@@ -88,7 +90,9 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
             DROP --a
             INDEX --b
             i --c;
-        `) = [dropIndex]
+        `) = [dropIndex],
+
+        updateTable: updateTable = {},
     ),
 
     applyCreateTable: (

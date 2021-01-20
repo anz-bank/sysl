@@ -51,3 +51,7 @@ CREATE TABLE AccountAddress (
     AddressLine3      BYTES(100),
 ) PRIMARY KEY (AccountNum ASC, AddressPostCode DESC, LastUpdated),
 INTERLEAVE IN PARENT Account ON DELETE CASCADE;
+
+UPDATE Account
+SET AccountNum = 123
+WHERE `Table` IS NULL;

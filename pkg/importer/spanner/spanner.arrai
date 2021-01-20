@@ -7,7 +7,8 @@ ddl                 -> stmt=(create_database
                             |alter_table
                             |insert
                             |drop_table
-                            |drop_index):";"? ";"? \s*;
+                            |drop_index
+                            |update_table):";"? ";"? \s*;
 
 create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
@@ -37,6 +38,13 @@ attr_alteration     -> "ALTER" "COLUMN" column_name (attr_type | "SET" options_d
 insert              -> "INSERT" "INTO" table_name "(" column_name:"," ")"
                        "VALUES" "(" value:"," ")";
 
+update_table        -> "UPDATE" table_name
+                       "SET" update_item:","
+                       ("WHERE" condition)?;
+update_item         -> column_name "=" (value | "DEFAULT");
+condition           -> column_name (("IS" "NOT"? "NULL") | comparison value);
+comparison          -> "=" | "!=" | "<>" | "<=" | "<" | ">=" | ">";
+
 drop_table          -> "DROP" "TABLE" table_name;
 
 drop_index          -> "DROP" "INDEX" index_name;
@@ -65,7 +73,7 @@ column_name         -> /{`[^`]*`|[$@A-Za-z_][0-9$@A-Za-z_]*}; //`
 index_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 
 value               -> int64_value|bool_value|string_value|time_value; // TODO: Others
-int64_value           -> hex_value|decimal_value;
+int64_value         -> hex_value|decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
 bool_value          -> "TRUE" | "FALSE";
