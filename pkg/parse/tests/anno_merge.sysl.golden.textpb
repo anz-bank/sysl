@@ -30,14 +30,20 @@ apps: {
          s: "d"
         }
        }
+       attrs: {
+        key: "multiline1"
+        value: {
+         s: "line1\n line2\n"
+        }
+       }
        source_context: {
-        file: "./anno_merge_import.sysl"
+        file: "tests/anno_merge_import.sysl"
         start: {
-         line: 7
+         line: 8
          col: 13
         }
         end: {
-         line: 8
+         line: 11
          col: 8
         }
        }
@@ -54,6 +60,12 @@ apps: {
         }
        }
        attrs: {
+        key: "multiline2"
+        value: {
+         s: "line1\n\n\n\n\n\n\nline2"
+        }
+       }
+       attrs: {
         key: "patterns"
         value: {
          a: {
@@ -67,14 +79,13 @@ apps: {
         }
        }
        source_context: {
-        file: "./anno_merge_import.sysl"
+        file: "tests/anno_merge_import.sysl"
         start: {
-         line: 8
+         line: 12
          col: 13
         }
         end: {
-         line: 8
-         col: 26
+         line: 15
         }
        }
       }
@@ -87,19 +98,19 @@ apps: {
      }
     }
     source_context: {
-     file: "./anno_merge_import.sysl"
+     file: "tests/anno_merge_import.sysl"
      start: {
       line: 4
       col: 4
      }
      end: {
-      line: 9
+      line: 15
      }
     }
    }
   }
   source_context: {
-   file: "./anno_merge_import.sysl"
+   file: "tests/anno_merge_import.sysl"
    start: {
     line: 1
     col: 1

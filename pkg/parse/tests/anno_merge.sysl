@@ -1,0 +1,20 @@
+import anno_merge_import.sysl
+
+App:
+    @a = "a"
+    !type Type:
+        @b = "b"
+        a <: int:
+            @c = "c"
+            @d = ""
+            @multiline1 =:
+                | line1
+                | line2
+        b <: string [~tag1]:
+            @e = "e"
+            @multiline2 =:
+                | line1
+                |
+                |
+                |
+                | line2

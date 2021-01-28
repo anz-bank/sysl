@@ -674,6 +674,12 @@ func TestAttrScope(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/attr_scope.sysl")
 }
 
+func TestAnnotationMerge(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/anno_merge.sysl")
+}
+
 func TestViewAttr(t *testing.T) {
 	t.Parallel()
 

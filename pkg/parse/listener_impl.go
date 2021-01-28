@@ -59,6 +59,7 @@ type TreeShapeListener struct {
 	stmt_scope            []interface{} // Endpoint, if, if_else, loop
 	expr_stack            []*sysl.Expr
 	opmap                 map[string]sysl.Expr_BinExpr_Op
+	currentMultiLineAnno  string
 }
 
 // NewTreeShapeListener ...
@@ -153,23 +154,23 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		stmt.GetAction().Action = str
 		return
 	}
-	attrs := s.peekAttrs()
 
+	// This part process multiline docstring for annotations. It collects the strings line by line, store them in
+	// s.currentMultiLineAnno, and then assign them in ExitAnnotationValue
 	str := ctx.TEXT().GetText()
 	if len(strings.TrimSpace(str)) == 0 {
 		// hack to match legacy code, required to support excel sheets
-		attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += "\n\n"
+		s.currentMultiLineAnno += "\n\n"
 		s.prevLineEmpty = true
 		return
 	}
-	ss := attrs[s.annotation].Attribute.(*sysl.Attribute_S).S
-	if s.prevLineEmpty && len(ss) > 2 && lastTwoChars(ss) == "\n\n" {
-		attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += strings.TrimSpace(str)
+	if s.prevLineEmpty && len(s.currentMultiLineAnno) > 2 && lastTwoChars(s.currentMultiLineAnno) == "\n\n" {
+		s.currentMultiLineAnno += strings.TrimSpace(str)
 		s.prevLineEmpty = false
 		return
 	}
 	s.prevLineEmpty = false
-	attrs[s.annotation].Attribute.(*sysl.Attribute_S).S += str + "\n"
+	s.currentMultiLineAnno += str + "\n"
 }
 
 // EnterTypes is called when production types is entered.
@@ -297,9 +298,12 @@ func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueCo
 // ExitAnnotation_value is called when production annotation_value is exited.
 func (s *TreeShapeListener) ExitAnnotation_value(ctx *parser.Annotation_valueContext) {
 	if ctx.Multi_line_docstring() != nil {
-		attrs := s.peekAttrs()
-		attrs[s.annotation].Attribute.(*sysl.Attribute_S).S =
-			strings.TrimLeft(attrs[s.annotation].GetS(), " ")
+		addAttrWithPrecendence(s.peekAttrs(), s.annotation, &sysl.Attribute{
+			Attribute: &sysl.Attribute_S{
+				S: strings.TrimLeft(s.currentMultiLineAnno, " "),
+			},
+		})
+		s.currentMultiLineAnno = ""
 	}
 }
 

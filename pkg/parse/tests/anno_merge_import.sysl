@@ -1,0 +1,14 @@
+App:
+    @a = "x"
+    !type Type:
+        @b = "y"
+        a <: int:
+            @c = "z"
+            @d = "d"
+            @multiline1 =:
+                | line3
+                | line4
+        b <: string [~tag2]:
+            @multiline2 =:
+                | line3
+                | line4
