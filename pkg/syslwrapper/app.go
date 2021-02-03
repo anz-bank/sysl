@@ -135,6 +135,11 @@ func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) m
 func (am *AppMapper) mapEndpoints(appName string, ep map[string]*sysl.Endpoint) map[string]*Endpoint {
 	endpoints := make(map[string]*Endpoint, 15)
 	for key, value := range ep {
+		// Skip endpoints which are of format ...
+		// In sysl, ... is a placeholder to indicate empty apps
+		if key == "..." {
+			continue
+		}
 		endpoints[key] = &Endpoint{
 			Summary:     am.GetAttribute(value.GetAttrs(), "summary"),
 			Path:        key,

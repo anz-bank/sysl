@@ -81,6 +81,7 @@ func (s *OpenAPI3Exporter) GenerateOpenAPI3(app *syslwrapper.App) (*openapi3.Swa
 	for k, v := range app.Types {
 		spec.Components.Schemas[k] = s.exportType(v)
 	}
+	spec.Paths = openapi3.Paths{}
 	for _, v := range app.Endpoints {
 		var method, path string
 		epPath := strings.Split(v.Path, " ")

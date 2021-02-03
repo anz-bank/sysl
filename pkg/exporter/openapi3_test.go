@@ -208,5 +208,5 @@ func TestExportIgnoresTripleDot(t *testing.T) {
 	assert.NoError(t, err)
 	t.Log(string(outputSpecJSON))
 	paths := gjson.Get(string(outputSpecJSON), "paths")
-	assert.Empty(t, paths)
+	assert.Equal(t, "{}", paths.Raw)
 }
