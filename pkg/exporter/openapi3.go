@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"encoding/json"
+	"errors"
 	"strconv"
 	"strings"
 
@@ -37,7 +38,11 @@ func (s *OpenAPI3Exporter) Export() error {
 }
 
 func (s *OpenAPI3Exporter) SerializeOutput(appName string, mode string) ([]byte, error) {
-	jsonSpec, err := json.MarshalIndent(s.openapi3[appName], "", " ")
+	spec, ok := s.openapi3[appName]
+	if !ok {
+		return nil, errors.New("spec not found")
+	}
+	jsonSpec, err := json.MarshalIndent(spec, "", " ")
 	if err != nil {
 		return nil, err
 	}

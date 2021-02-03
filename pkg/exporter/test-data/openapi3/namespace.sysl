@@ -1,0 +1,4 @@
+Namespace :: testapp "Simple" [package="package_foo"]:
+    @description =:
+        | No description.
+

@@ -74,10 +74,10 @@ func (am *AppMapper) Map() (map[string]*App, error) {
 // which hides the complexities of the protobuf generated type.
 func (am *AppMapper) BuildApplication(a *sysl.Application) *App {
 	cleanApp := &App{
-		Name:       strings.Join(a.GetName().GetPart(), " "),
+		Name:       syslutil.GetAppName(a.Name),
 		Attributes: am.mapAttributes(a.GetAttrs()),
-		Endpoints:  am.mapEndpoints(strings.Join(a.GetName().GetPart(), " "), a.GetEndpoints()),
-		Types:      am.mapTypes(strings.Join(a.GetName().GetPart(), " "), a.GetTypes()),
+		Endpoints:  am.mapEndpoints(syslutil.GetAppName(a.Name), a.GetEndpoints()),
+		Types:      am.mapTypes(syslutil.GetAppName(a.Name), a.GetTypes()),
 	}
 	return cleanApp
 }

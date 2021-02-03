@@ -173,3 +173,21 @@ func TestMakeOpenAPI3Exporter(t *testing.T) {
 	}
 	assert.Equal(t, exporter, expected)
 }
+
+func TestExportHandlesNamespaces(t *testing.T) {
+	t.Parallel()
+	appName := "Namespace :: testapp"
+	mod, err := readSyslModule("./test-data/openapi3/namespace.sysl")
+	assert.NoError(t, err)
+	mapper := syslwrapper.MakeAppMapper(mod)
+	mapper.IndexTypes()
+	simpleApps, err := mapper.Map()
+	assert.NoError(t, err)
+
+	exporter := MakeOpenAPI3Exporter(simpleApps, &logrus.Logger{})
+	err = exporter.Export()
+	assert.NoError(t, err)
+	outputSpecJSON, err := exporter.SerializeOutput(appName, "json")
+	assert.NoError(t, err)
+	assert.Contains(t, string(outputSpecJSON), appName)
+}
