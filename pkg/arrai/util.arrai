@@ -187,6 +187,43 @@ let appToParts = \appName
     //seq.split('::', appName) >> trimWhitespace(.)
 ;
 
+# `isDict` returns true if the given argument is a dictionary.
+let isDict = \d
+    cond d {
+        {...}: let items = d orderby .; cond items { [(@:_, @value:_), ...]: true, _: false, },
+        _: false,
+    };
+
+# `dictMergeResolve` recursively merges two dictionaries into a single dictionary, combining 
+# values that themselves are dictionaries. In instances where both dictionaries define the same key 
+# the `resolve` function is called.
+# `a` is the first dictionary to merge.
+# `b` is the second dictionary to merge.
+# `resolve` is a function with signature `\x \y \k` where `x` and `y` are dictionaries that both
+# contain key `k`, the result of the function being the value to set for the merged result.
+let rec dictMergeResolve = \a \b \resolve
+    let keys = (a => .@) | (b => .@);
+    keys => (@:., @value:
+        let has_a = . <: (a => .@);
+        let has_b = . <: (b => .@);
+        cond {
+            has_a && has_b && isDict(a(.)) && isDict(b(.)): dictMergeResolve(a(.), b(.), resolve),
+            has_a && has_b: resolve(a, b, .),
+            has_a: a(.),
+            _: b(.),
+        }
+    );
+
+# `dictMerge` recursively merges two dictionaries into a single dictionary, combining values that
+# themselves are dictionaries. In instances where both dictionaries define the same key and the
+# values present are not themselves dictionaries to be merged, the value from dictionary `b`
+# overwrites the values from dictionary `a`.
+# `dictMerge({1:{1:2}}, {1:{2:3}})` returns `{1:{1:2, 2:3}}`
+# `a` is the first dictionary to merge.
+# `b` is the second dictionary to merge.
+let dictMerge = \a \b
+    dictMergeResolve(a, b, \_ \y \k y(k));
+
 (
     :explore,
     :filterTree,
@@ -208,4 +245,7 @@ let appToParts = \appName
     :resolveValidIdentifier,
     :nativeDataTypes,
     :appToParts,
+    :isDict,
+    :dictMergeResolve,
+    :dictMerge,
 )

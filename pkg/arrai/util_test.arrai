@@ -4,6 +4,8 @@ let _sum = \z \i z + i;
 
 let _concat = \z \k \v $`${z}+${k}${v}`;
 
+let fail = \a \b //test.assert.false(true);
+
 (
     reduce: (
         empty: util.reduce([], _sum, {}) = {},
@@ -35,5 +37,49 @@ let _concat = \z \k \v $`${z}+${k}${v}`;
                 c ${'\t'}
             ${'\n \n'}
             `) = 'a\n  b\n    c\n',
-    )
+    ),
+
+    isDict: (
+        empty: //test.assert.false(util.isDict({})),
+        string: //test.assert.false(util.isDict('hello')),
+        dict: //test.assert.true(util.isDict({'a':'b'})),
+    ),
+
+    dictMerge: (
+        empty:
+            let expected = {1:{1:2}};
+            let actual = util.dictMerge({}, {1:{1:2}});
+            //test.assert.equal(expected, actual),
+        simple: 
+            let expected = {1:{1:2, 2:3}};
+            let actual = util.dictMerge({1:{1:2}}, {1:{2:3}});
+            //test.assert.equal(expected, actual),
+        conflict: 
+            let expected = {1:{1:3}};
+            let actual = util.dictMerge({1:{1:2}}, {1:{1:3}});
+            //test.assert.equal(expected, actual),
+    ),
+
+    dictMergeResolve: (
+        empty:
+            let expected = {1:{1:2}};
+            let actual = util.dictMergeResolve({}, {1:{1:2}}, fail);
+            //test.assert.equal(expected, actual),
+        noConflict: 
+            let expected = {1:{1:2, 2:3}};
+            let actual = util.dictMergeResolve({1:{1:2}}, {1:{2:3}}, fail);
+            //test.assert.equal(expected, actual),
+        conflictResolveA:
+            let expected = {1:{1:2}};
+            let actual = util.dictMergeResolve({1:{1:2}}, {1:{1:3}}, \x \y \k x(k));
+            //test.assert.equal(expected, actual),
+        conflictResolveB:
+            let expected = {1:{1:3}};
+            let actual = util.dictMergeResolve({1:{1:2}}, {1:{1:3}}, \x \y \k y(k));
+            //test.assert.equal(expected, actual),
+        conflictResolveMerge:
+            let expected = {1: 'ab'};
+            let actual = util.dictMergeResolve({1: 'a'}, {1: 'b'}, \x \y \k x(k) ++ y(k));
+            //test.assert.equal(expected, actual),
+    ),
 )
