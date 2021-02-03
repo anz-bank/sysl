@@ -19,6 +19,10 @@ paths:
           required: true
           in: header
           format: date
+        - in: cookie
+          name: csrftoken
+          schema:
+            type: string
       requestBody:
         content:
           application/json:

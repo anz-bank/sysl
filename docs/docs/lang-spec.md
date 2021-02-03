@@ -298,11 +298,12 @@ Server:
         sequence of string
 ```
 
-#### Header and Body Parameters
+#### Header, Cookie and Body Parameters
 
-Header and body parameters can be defined using brackets (foo <: int)
+Header, cookie and body parameters can be defined using brackets (foo <: int)
 To create a body parameter, we use the pattern ~body e.g `(bodyParam <: int [~body])`
-To create a header parameter, we use the pattern ~header e.g `(bodyParam <: int [~header])`
+To create a header parameter, we use the pattern ~header e.g `(headerParam <: int [~header])`
+To create a cookie parameter, we use the pattern ~cookie e.g `(cookieParam <: int [~cookie])`
 Parameters are separated by commas
 
 ```

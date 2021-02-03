@@ -32,6 +32,7 @@ Some Tags have a standard meaning in all Sysl models. They should be used for th
 - `hex`: The [Field](./field.md)'s value should be interpreted as a hexadecimal string.
 - `body`: The [Endpoint](./endpoint.md) Parameter is expected in the body of the HTTP request.
 - `header`: The Endpoint Parameter is expected in the header of the HTTP request.
+- `cookie`: The Endpoint Parameter passed in the Cookie header, such as `Cookie: debug=0; csrftoken=BUSe35dohU3O1MZvDCU`
 
 ## See also
 

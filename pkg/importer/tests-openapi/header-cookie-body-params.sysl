@@ -9,7 +9,7 @@ TestApp "Simple" [package="com.example.package"]:
         | No description.
 
     /test:
-        POST (SimpleObjRequest <: SimpleObj [mediatype="application/json", ~body], key <: int [~header, ~optional, name="key"], min_date <: string [~header, ~required, name="min_date"]):
+        POST (SimpleObjRequest <: SimpleObj [mediatype="application/json", ~body], key <: int [~header, ~optional, name="key"], min_date <: string [~header, ~required, name="min_date"], csrftoken <: string [~cookie, ~optional, name="csrftoken"]):
             | No description.
             return ok
 

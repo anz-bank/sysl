@@ -13,7 +13,7 @@ Sysl supports two kinds of Endpoint:
 - REST: A function mapped to a URL with a specific path and HTTP method. Parameters can be specified in three ways:
   - Path parameters: `/foo/bar/{param <: int}`. Types must be primitive.
   - Query parameters: `GET ?foo=int&bar={TypeName}`. Types may be primitive (bare) or references (wrapped in curly braces).
-  - Payload parameters: `POST (foo <: string [~body], head <: TypeName [~header])`. Can contain header and body content, identified by the corresponding [Tag](./tag.md)s.
+  - Payload parameters: `POST (foo <: string [~body], head <: TypeName [~header], bar <: int [~cookie])`. Can contain header, cookie and body content, identified by the corresponding [Tag](./tag.md)s.
 
 ## Syntax
 

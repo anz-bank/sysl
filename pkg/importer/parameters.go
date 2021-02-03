@@ -54,3 +54,6 @@ func (p Parameters) BodyParams() []Param {
 func (p Parameters) PathParams() []Param {
 	return p.findParams("path")
 }
+func (p Parameters) CookieParams() []Param {
+	return p.findParams("cookie")
+}

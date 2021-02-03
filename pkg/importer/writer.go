@@ -186,7 +186,15 @@ func buildRequestBodyString(params []Param) string {
 }
 
 func buildRequestHeadersString(params []Param) string {
-	headers := ""
+	return buildRequestString(params, "header")
+}
+
+func buildRequestCookiesString(params []Param) string {
+	return buildRequestString(params, "cookie")
+}
+
+func buildRequestString(params []Param, loc string) string {
+	requests := ""
 	if len(params) > 0 {
 		var parts []string
 		for _, p := range params {
@@ -194,12 +202,12 @@ func buildRequestHeadersString(params []Param) string {
 
 			safeName := regexp.MustCompile("( |-)+").ReplaceAll([]byte(p.Name), []byte("_"))
 			text := fmt.Sprintf("%s <: %s", strings.ToLower(string(safeName)),
-				appendAttributesString(getSyslTypeName(p.Type), []string{"~header", optional, "name=" + quote(p.Name)}))
+				appendAttributesString(getSyslTypeName(p.Type), []string{"~" + loc, optional, "name=" + quote(p.Name)}))
 			parts = append(parts, text)
 		}
-		headers = strings.Join(parts, ", ")
+		requests = strings.Join(parts, ", ")
 	}
-	return headers
+	return requests
 }
 
 func buildPathString(path string, params []Param) string {
@@ -215,12 +223,17 @@ func buildPathString(path string, params []Param) string {
 
 func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 	header := buildRequestHeadersString(endpoint.Params.HeaderParams())
+	cookie := buildRequestCookiesString(endpoint.Params.CookieParams())
 	body := buildRequestBodyString(endpoint.Params.BodyParams())
 	reqStr := ""
-	if len(header) > 0 && len(body) > 0 {
-		reqStr = fmt.Sprintf(" (%s)", strings.Join([]string{body, header}, ", "))
-	} else if len(header) > 0 || len(body) > 0 {
-		reqStr = fmt.Sprintf(" (%s)", body+header)
+	var parts []string
+	for _, s := range []string{body, header, cookie} {
+		if strings.TrimSpace(s) != "" {
+			parts = append(parts, s)
+		}
+	}
+	if len(parts) > 0 {
+		reqStr = fmt.Sprintf(" (%s)", strings.Join(parts, ", "))
 	}
 
 	pathStr := strings.TrimSuffix(buildPathString(endpoint.Path, endpoint.Params.PathParams()), "/")
