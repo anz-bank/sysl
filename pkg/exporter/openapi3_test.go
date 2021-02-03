@@ -191,3 +191,22 @@ func TestExportHandlesNamespaces(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Contains(t, string(outputSpecJSON), appName)
 }
+
+func TestExportIgnoresTripleDot(t *testing.T) {
+	t.Parallel()
+	mod, err := readSyslModule("./test-data/openapi3/empty.sysl")
+	assert.NoError(t, err)
+	mapper := syslwrapper.MakeAppMapper(mod)
+	mapper.IndexTypes()
+	simpleApps, err := mapper.Map()
+	assert.NoError(t, err)
+
+	exporter := MakeOpenAPI3Exporter(simpleApps, &logrus.Logger{})
+	err = exporter.Export()
+	assert.NoError(t, err)
+	outputSpecJSON, err := exporter.SerializeOutput("EmptyApp", "json")
+	assert.NoError(t, err)
+	t.Log(string(outputSpecJSON))
+	paths := gjson.Get(string(outputSpecJSON), "paths")
+	assert.Empty(t, paths)
+}
