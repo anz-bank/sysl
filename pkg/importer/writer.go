@@ -198,11 +198,11 @@ func buildRequestString(params []Param, loc string) string {
 	if len(params) > 0 {
 		var parts []string
 		for _, p := range params {
-			optional := map[bool]string{true: "~optional", false: "~required"}[p.Optional]
+			optional := map[bool]string{true: "?", false: ""}[p.Optional]
 
 			safeName := regexp.MustCompile("( |-)+").ReplaceAll([]byte(p.Name), []byte("_"))
 			text := fmt.Sprintf("%s <: %s", strings.ToLower(string(safeName)),
-				appendAttributesString(getSyslTypeName(p.Type), []string{"~" + loc, optional, "name=" + quote(p.Name)}))
+				appendAttributesString(getSyslTypeName(p.Type)+optional, []string{"~" + loc, "name=" + quote(p.Name)}))
 			parts = append(parts, text)
 		}
 		requests = strings.Join(parts, ", ")

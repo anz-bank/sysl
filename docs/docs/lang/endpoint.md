@@ -59,6 +59,11 @@ Bank:
         amount <: int
 ```
 
+To make a parameter optional, append a suffix `?` to the type, e.g. 
+- Path parameters: `/foo/bar/{param <: int?}`
+- Query parameters: `GET ?foo=int?&bar={TypeName}?`
+- Payload parameters: `POST (foo <: string? [~body], head <: TypeName? [~header])`.
+
 ## See also
 
 - [Application](./application.md): parent of an Endpoint

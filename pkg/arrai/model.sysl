@@ -18,8 +18,20 @@ Source[~db]:
         x <: Foo.x:
             @description = "A foreign key"
 
-    Read:
+    # RPC function parameter
+    Read(accountNumber <: string):
         return ok <: Foo
+
+    # path parameter
+    /get:
+        /{id<:int}:
+            GET:
+                return ok <: Foo
+
+    # payload(header, body, cookie) and query parameters
+    /post:
+        POST (accept <: string [~header, ~required, name="accept"], ssotoken <: string? [~cookie, ~required, name="ssotoken"], request <: Bar [mediatype="application/json", ~body]) ?page=int?&bar={Bar}?:
+            return ok <: Foo
 
 A:
     Fetch:

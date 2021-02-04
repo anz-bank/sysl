@@ -150,6 +150,98 @@
       epDocstring: {},
       epEvent: {},
       epLongName: {},
+      epName: 'GET /get/{id}',
+      rest: (
+        method: 'GET',
+        path: '/get/{id}',
+        url_param: [
+          (
+            name: 'id',
+            type: (
+              primitive: 'INT',
+              source_context: (
+                end: (
+                  col: 17,
+                  line: 27,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 9,
+                  line: 27,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
+      epName: 'POST /post',
+      rest: (
+        method: 'POST',
+        path: '/post',
+        query_param: [
+          (
+            name: 'page',
+            type: (
+              opt: {
+                (),
+              },
+              primitive: 'INT',
+              source_context: (
+                end: (
+                  col: 190,
+                  line: 33,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 182,
+                  line: 33,
+                ),
+              ),
+            ),
+          ),
+          (
+            name: 'bar',
+            type: (
+              opt: {
+                (),
+              },
+              source_context: (
+                end: (
+                  col: 201,
+                  line: 33,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 192,
+                  line: 33,
+                ),
+              ),
+              type_ref: (
+                context: (
+                  appname: (
+                    part: ['Source'],
+                  ),
+                ),
+                ref: (
+                  path: ['Bar'],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epDocstring: {},
+      epEvent: {},
+      epLongName: {},
       epName: 'Read',
       rest: {},
     ),
@@ -319,19 +411,105 @@
     ),
   },
   mixin: {},
-  param: {},
+  param: {
+    (
+      appName: ['Source'],
+      epName: 'GET /get/{id}',
+      paramIndex: 0,
+      paramLoc: 'path',
+      paramName: 'id',
+      paramOpt: {},
+      paramType: (
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epName: 'POST /post',
+      paramIndex: 0,
+      paramLoc: 'header',
+      paramName: 'accept',
+      paramOpt: {},
+      paramType: (
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epName: 'POST /post',
+      paramIndex: 0,
+      paramLoc: 'query',
+      paramName: 'page',
+      paramOpt: {
+        (),
+      },
+      paramType: (
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epName: 'POST /post',
+      paramIndex: 1,
+      paramLoc: 'cookie',
+      paramName: 'ssotoken',
+      paramOpt: {
+        (),
+      },
+      paramType: (
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epName: 'POST /post',
+      paramIndex: 1,
+      paramLoc: 'query',
+      paramName: 'bar',
+      paramOpt: {
+        (),
+      },
+      paramType: (
+        appName: {},
+        typePath: ['Bar'],
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epName: 'POST /post',
+      paramIndex: 2,
+      paramLoc: 'body',
+      paramName: 'request',
+      paramOpt: {},
+      paramType: (
+        appName: {},
+        typePath: ['Bar'],
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epName: 'Read',
+      paramIndex: 0,
+      paramLoc: 'method',
+      paramName: 'accountNumber',
+      paramOpt: {},
+      paramType: (
+        primitive: 'STRING',
+      ),
+    ),
+  },
   src: (
     app: {
       (
         appName: ['A'],
         appSrc: (
           end: (
-            line: 24,
+            line: 36,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 24,
+            line: 36,
           ),
         ),
       ),
@@ -339,12 +517,12 @@
         appName: ['B'],
         appSrc: (
           end: (
-            line: 33,
+            line: 45,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 33,
+            line: 45,
           ),
         ),
       ),
@@ -352,12 +530,12 @@
         appName: ['C'],
         appSrc: (
           end: (
-            line: 42,
+            line: 54,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 42,
+            line: 54,
           ),
         ),
       ),
@@ -365,12 +543,12 @@
         appName: ['Client'],
         appSrc: (
           end: (
-            line: 71,
+            line: 83,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 71,
+            line: 83,
           ),
         ),
       ),
@@ -378,12 +556,12 @@
         appName: ['D'],
         appSrc: (
           end: (
-            line: 61,
+            line: 73,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 61,
+            line: 73,
           ),
         ),
       ),
@@ -405,12 +583,12 @@
         appName: ['all'],
         appSrc: (
           end: (
-            line: 80,
+            line: 92,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 80,
+            line: 92,
           ),
         ),
       ),
@@ -422,12 +600,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 29,
+            line: 41,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 25,
+            line: 37,
           ),
         ),
       ),
@@ -437,12 +615,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 38,
+            line: 50,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 34,
+            line: 46,
           ),
         ),
       ),
@@ -452,12 +630,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 57,
+            line: 69,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 52,
+            line: 64,
           ),
         ),
       ),
@@ -467,12 +645,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 47,
+            line: 59,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 43,
+            line: 55,
           ),
         ),
       ),
@@ -482,12 +660,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 52,
+            line: 64,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 47,
+            line: 59,
           ),
         ),
       ),
@@ -497,12 +675,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 76,
+            line: 88,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 72,
+            line: 84,
           ),
         ),
       ),
@@ -512,12 +690,42 @@
         epSrc: (
           end: (
             col: 4,
-            line: 67,
+            line: 79,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 62,
+            line: 74,
+          ),
+        ),
+      ),
+      (
+        appName: ['Source'],
+        epName: 'GET /get/{id}',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 32,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 12,
+            line: 28,
+          ),
+        ),
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        epSrc: (
+          end: (
+            col: 1,
+            line: 36,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 33,
           ),
         ),
       ),
@@ -526,13 +734,13 @@
         epName: 'Read',
         epSrc: (
           end: (
-            col: 1,
-            line: 24,
+            col: 4,
+            line: 26,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 21,
+            line: 22,
           ),
         ),
       ),
@@ -541,12 +749,12 @@
         epName: 'all',
         epSrc: (
           end: (
-            line: 88,
+            line: 100,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 81,
+            line: 93,
           ),
         ),
       ),
@@ -559,12 +767,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 30,
+            line: 42,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 30,
+            line: 42,
           ),
         ),
         typeName: 'FetchResponse',
@@ -575,12 +783,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 31,
+            line: 43,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 31,
+            line: 43,
           ),
         ),
         typeName: 'FetchResponse',
@@ -591,12 +799,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 39,
+            line: 51,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 39,
+            line: 51,
           ),
         ),
         typeName: 'FetchResponse',
@@ -607,12 +815,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 40,
+            line: 52,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 40,
+            line: 52,
           ),
         ),
         typeName: 'FetchResponse',
@@ -623,12 +831,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 58,
+            line: 70,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 58,
+            line: 70,
           ),
         ),
         typeName: 'FetchResponse',
@@ -639,12 +847,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 59,
+            line: 71,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 59,
+            line: 71,
           ),
         ),
         typeName: 'FetchResponse',
@@ -655,12 +863,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 77,
+            line: 89,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 77,
+            line: 89,
           ),
         ),
         typeName: 'Screen',
@@ -671,12 +879,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 78,
+            line: 90,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 78,
+            line: 90,
           ),
         ),
         typeName: 'Screen',
@@ -687,12 +895,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 68,
+            line: 80,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 68,
+            line: 80,
           ),
         ),
         typeName: 'FetchResponse',
@@ -703,12 +911,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 69,
+            line: 81,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 69,
+            line: 81,
           ),
         ),
         typeName: 'FetchResponse',
@@ -751,7 +959,7 @@
         fieldSrc: (
           end: (
             col: 4,
-            line: 21,
+            line: 22,
           ),
           file: 'model.sysl',
           start: (
@@ -833,6 +1041,16 @@
       ),
       (
         appName: ['Source'],
+        epName: 'GET /get/{id}',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        stmtSrc: {},
+      ),
+      (
+        appName: ['Source'],
         epName: 'Read',
         stmtSrc: {},
       ),
@@ -849,12 +1067,12 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 33,
+            line: 45,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 29,
+            line: 41,
           ),
         ),
       ),
@@ -864,12 +1082,12 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 42,
+            line: 54,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 38,
+            line: 50,
           ),
         ),
       ),
@@ -879,12 +1097,12 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 61,
+            line: 73,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 57,
+            line: 69,
           ),
         ),
       ),
@@ -894,12 +1112,12 @@
         typeSrc: (
           end: (
             col: 3,
-            line: 80,
+            line: 92,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 76,
+            line: 88,
           ),
         ),
       ),
@@ -909,12 +1127,12 @@
         typeSrc: (
           end: (
             col: 6,
-            line: 71,
+            line: 83,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 67,
+            line: 79,
           ),
         ),
       ),
@@ -924,7 +1142,7 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 21,
+            line: 22,
           ),
           file: 'model.sysl',
           start: (
@@ -1355,6 +1573,56 @@
     ),
     (
       appName: ['Source'],
+      epName: 'GET /get/{id}',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        attr: (
+          modifier: {},
+          nvp: {},
+        ),
+        status: 'ok',
+        type: (
+          appName: ['Source'],
+          typePath: ['Foo'],
+        ),
+      ),
+    ),
+    (
+      appName: ['Source'],
+      epName: 'POST /post',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        attr: (
+          modifier: {},
+          nvp: {},
+        ),
+        status: 'ok',
+        type: (
+          appName: ['Source'],
+          typePath: ['Foo'],
+        ),
+      ),
+    ),
+    (
+      appName: ['Source'],
       epName: 'Read',
       stmtAction: {},
       stmtAlt: {},
@@ -1488,7 +1756,18 @@
         appTag: 'db',
       ),
     },
-    ep: {},
+    ep: {
+      (
+        appName: ['Source'],
+        epName: 'GET /get/{id}',
+        epTag: 'rest',
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        epTag: 'rest',
+      ),
+    },
     event: {},
     field: {
       (

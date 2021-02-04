@@ -10,35 +10,35 @@ TestApp "foo" [package="com.example.package"]:
         | foo
 
     /contiguous_hyphens:
-        POST (test_sample <: string [~header, ~required, name="test-----sample"]):
+        POST (test_sample <: string [~header, name="test-----sample"]):
             | unsafe post param names
 
     /contiguous_spaces:
-        POST (test_sample <: string [~header, ~required, name="test     sample"]):
+        POST (test_sample <: string [~header, name="test     sample"]):
             | unsafe post param names
 
     /correct_name:
-        POST (test_sample <: string [~header, ~required, name="teSt_saMple"]):
+        POST (test_sample <: string [~header, name="teSt_saMple"]):
             | unsafe post param names
 
     /hyphens_in_weird_locations:
-        POST (te_s_t_s_am_ple <: string [~header, ~required, name="te--s-t-s-Am----ple"]):
+        POST (te_s_t_s_am_ple <: string [~header, name="te--s-t-s-Am----ple"]):
             | unsafe post param names
 
     /space_and_hyphens_mixes:
-        POST (test_s_a_m_p_l_e <: string [~header, ~required, name="test - - s a -- m p - l-e"]):
+        POST (test_s_a_m_p_l_e <: string [~header, name="test - - s a -- m p - l-e"]):
             | unsafe post param names
 
     /spaces_in_weird_locations:
-        POST (test_s_a_m_p_le <: string [~header, ~required, name="test     s a  m p  le"]):
+        POST (test_s_a_m_p_le <: string [~header, name="test     s a  m p  le"]):
             | unsafe post param names
 
     /with_a_hyphen:
-        POST (test_sample <: string [~header, ~required, name="Test-Sample"]):
+        POST (test_sample <: string [~header, name="Test-Sample"]):
             | unsafe post param names
 
     /with_a_space:
-        POST (test_sample <: string [~header, ~required, name="test sample"]):
+        POST (test_sample <: string [~header, name="test sample"]):
             | unsafe post param names
 
     #---------------------------------------------------------------------------

@@ -12,7 +12,7 @@ TestApp "Sample API" [package="com.example.package"]:
         | API description in Markdown.
 
     /users/{id<:int}:
-        GET (metadata <: bool [~header, ~optional, name="metadata"]):
+        GET (metadata <: bool? [~header, name="metadata"]):
             | No description.
             return ok
 

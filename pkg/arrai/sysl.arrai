@@ -304,14 +304,30 @@ let newNormalize = \m
         );
 
     # Parameters
-    let _params = //rel.union(_eps => \(:appName, :epName, :ep)
-        ep.param?:{} => (:appName, :epName, paramName: .@item.name?:{}, param: .)
+    let _payload_params = //rel.union(
+        _eps => \(:appName, :epName, :ep) ep.param?:{} => 
+            let locs = tags(.@item.type?:{});
+            let loc = cond locs count {
+                0: 'method',
+                _: (locs orderby .)(0),
+            };
+            (:appName, :epName, paramName: .@item.name?:{}, paramLoc: loc, param: .)
     ) where .;
-    let param = _params => \(:appName, :epName, :paramName, param: (:@, @item:param))
+    let _url_params = //rel.union(
+        _eps where .ep.rest_params?.url_param?:{} => \(:appName, :epName, :ep)
+            ep.rest_params.url_param => (:appName, :epName, paramName: .@item.name?:{}, paramLoc: "path", param: .)
+    );
+    let _query_params = //rel.union(
+        _eps where .ep.rest_params?.query_param?:{} => \(:appName, :epName, :ep)
+            ep.rest_params.query_param => (:appName, :epName, paramName: .@item.name?:{}, paramLoc: "query", param: .)
+    );
+    let _params = //rel.union({_payload_params, _url_params, _query_params});
+    let param = _params => \(:appName, :epName, :paramName, :paramLoc, param: (:@, @item:param))
         (
             :appName,
             :epName,
             :paramName,
+            :paramLoc,
             paramIndex: @,
             paramType: parseFieldType(param.type?:{}),
             paramOpt: param.type?.opt?:false,
