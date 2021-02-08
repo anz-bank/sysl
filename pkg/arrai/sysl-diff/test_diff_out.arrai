@@ -1,0 +1,1357 @@
+(
+  anno: (
+    app: {
+      (
+        appAnnoName: 'app',
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        new: (
+          appAnnoValue: 'changed',
+        ),
+        old: (
+          appAnnoValue: 'annotation',
+        ),
+      ),
+    },
+    ep: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        epAnnoName: 'ep',
+        epName: 'simple',
+        new: (
+          epAnnoValue: 'changed',
+        ),
+        old: (
+          epAnnoValue: 'annotation',
+        ),
+      ),
+    },
+    event: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        eventAnnoName: 'event',
+        eventName: 'event',
+        new: (
+          eventAnnoValue: 'changed',
+        ),
+        old: (
+          eventAnnoValue: 'annotation',
+        ),
+      ),
+    },
+    field: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        fieldAnnoName: 'field',
+        fieldName: 'Field1',
+        new: (
+          fieldAnnoValue: 'changed',
+        ),
+        old: (
+          fieldAnnoValue: 'annotation',
+        ),
+        typeName: 'Type',
+      ),
+    },
+    mixin: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        mixinAnnoName: 'mixin',
+        mixinName: 'mixin',
+        new: (
+          mixinAnnoValue: 'changed',
+        ),
+        old: (
+          mixinAnnoValue: 'annotation',
+        ),
+      ),
+    },
+    stmt: {},
+    type: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        new: (
+          typeAnnoValue: 'changed',
+        ),
+        old: (
+          typeAnnoValue: 'annotation',
+        ),
+        typeAnnoName: 'type',
+        typeName: 'Type',
+      ),
+    },
+    view: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        new: (
+          viewAnnoValue: 'changed',
+        ),
+        old: (
+          viewAnnoValue: 'annotation',
+        ),
+        viewAnnoName: 'view',
+        viewName: 'view',
+      ),
+    },
+  ),
+  app: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        appDocstring: 'different docstring',
+        appLongName: 'different long name',
+      ),
+      old: (
+        appDocstring: 'docstring',
+        appLongName: 'long name',
+      ),
+    ),
+  },
+  enum: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        enumItems: {
+          'ITEM_1': 1,
+          'ITEM_2': 2,
+          'NEW_ITEM': 3,
+        },
+      ),
+      old: (
+        enumItems: {
+          'ITEM_1': 1,
+          'ITEM_2': 2,
+        },
+      ),
+      typeName: 'Enum',
+    ),
+  },
+  ep: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'doc',
+        epEvent: {
+          (),
+        },
+        epLongName: 'simple',
+        epname: 'simple',
+        rest: {},
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: {},
+        epLongName: 'get_rest',
+        epname: 'GET rest/',
+        rest: {
+          (),
+        },
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'doc',
+        epEvent: {
+          (),
+        },
+        epLongName: 'simple',
+        epname: 'simple',
+        rest: {},
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: {},
+        epLongName: 'simple',
+        epname: 'simple',
+        rest: {},
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'doc',
+        epEvent: {
+          (),
+        },
+        epLongName: 'simple',
+        epname: 'simple',
+        rest: {},
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: (
+          appName: 'event',
+          eventName: 'simple',
+        ),
+        epLongName: 'event',
+        epname: 'event -> simple',
+        rest: {},
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'doc',
+        epEvent: (
+          appName: 'event',
+          eventName: 'simple',
+        ),
+        epLongName: 'event',
+        epname: 'event -> simple',
+        rest: {
+          (),
+        },
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: {},
+        epLongName: 'get_rest',
+        epname: 'GET rest/',
+        rest: {
+          (),
+        },
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'doc',
+        epEvent: (
+          appName: 'event',
+          eventName: 'simple',
+        ),
+        epLongName: 'event',
+        epname: 'event -> simple',
+        rest: {
+          (),
+        },
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: {},
+        epLongName: 'simple',
+        epname: 'simple',
+        rest: {},
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'doc',
+        epEvent: (
+          appName: 'event',
+          eventName: 'simple',
+        ),
+        epLongName: 'event',
+        epname: 'event -> simple',
+        rest: {
+          (),
+        },
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: (
+          appName: 'event',
+          eventName: 'simple',
+        ),
+        epLongName: 'event',
+        epname: 'event -> simple',
+        rest: {},
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'new doc',
+        epEvent: {},
+        epLongName: 'get_rest',
+        epname: 'GET rest/',
+        rest: {
+          (),
+        },
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: {},
+        epLongName: 'get_rest',
+        epname: 'GET rest/',
+        rest: {
+          (),
+        },
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'new doc',
+        epEvent: {},
+        epLongName: 'get_rest',
+        epname: 'GET rest/',
+        rest: {
+          (),
+        },
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: {},
+        epLongName: 'simple',
+        epname: 'simple',
+        rest: {},
+      ),
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        epDocstring: 'new doc',
+        epEvent: {},
+        epLongName: 'get_rest',
+        epname: 'GET rest/',
+        rest: {
+          (),
+        },
+      ),
+      old: (
+        epDocstring: 'doc',
+        epEvent: (
+          appName: 'event',
+          eventName: 'simple',
+        ),
+        epLongName: 'event',
+        epname: 'event -> simple',
+        rest: {},
+      ),
+    ),
+  },
+  event: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'added',
+      eventName: 'differentEvent',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'deleted',
+      eventName: 'event',
+    ),
+  },
+  field: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      fieldName: 'Field1',
+      new: (
+        fieldConstraint: (),
+        fieldOpt: {},
+        fieldType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        fieldConstraint: (),
+        fieldOpt: {
+          (),
+        },
+        fieldType: (
+          primitive: 'INT',
+        ),
+      ),
+      typeName: 'Type',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      fieldName: 'Field2',
+      new: (
+        fieldConstraint: (),
+        fieldOpt: {
+          (),
+        },
+        fieldType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        fieldConstraint: (),
+        fieldOpt: {
+          (),
+        },
+        fieldType: (
+          primitive: 'STRING',
+        ),
+      ),
+      typeName: 'Type',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      fieldName: 'Field3',
+      new: (
+        fieldConstraint: {
+          (),
+        },
+        fieldOpt: {},
+        fieldType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        fieldConstraint: (),
+        fieldOpt: {},
+        fieldType: (
+          primitive: 'STRING',
+        ),
+      ),
+      typeName: 'Type',
+    ),
+  },
+  mixin: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'added',
+      mixinName: 'differentMixin',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'deleted',
+      mixinName: 'mixin',
+    ),
+  },
+  param: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 0,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'STRING',
+        ),
+      ),
+      old: (
+        paramIndex: 0,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param1',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'method',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'path',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'method',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'query',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'method',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'path',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'path',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'query',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'method',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'path',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        paramIndex: 1,
+        paramLoc: 'query',
+        paramOpt: {
+          (),
+        },
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      old: (
+        paramIndex: 1,
+        paramLoc: 'query',
+        paramOpt: {},
+        paramType: (
+          primitive: 'INT',
+        ),
+      ),
+      paramName: 'param2',
+    ),
+  },
+  src: (
+    app: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        new: (
+          appSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          appSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+      ),
+    },
+    ep: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        epName: 'simple',
+        new: (
+          epSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          epSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+      ),
+    },
+    event: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        eventName: 'event',
+        new: (
+          eventSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          eventSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+      ),
+    },
+    field: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        fieldName: 'Field1',
+        new: (
+          fieldSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          fieldSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+        typeName: 'Type',
+      ),
+    },
+    mixin: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        mixinName: 'mixin',
+        new: (
+          mixinSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          mixinSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+      ),
+    },
+    stmt: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        epName: 'simple',
+        new: (
+          stmtSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          stmtSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+      ),
+    },
+    type: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        new: (
+          typeSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          typeSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+        typeName: 'Type',
+      ),
+    },
+    view: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        new: (
+          viewSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          viewSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+        viewName: 'view',
+      ),
+    },
+  ),
+  stmt: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      epName: 'simple',
+      new: (
+        stmtAction: {},
+        stmtAlt: {},
+        stmtCall: (
+          appName: ['part1', 'part2', 'part3'],
+          epName: 'GET rest/',
+        ),
+        stmtCond: {},
+        stmtForeach: {},
+        stmtGroup: {},
+        stmtLoop: {},
+        stmtLoopN: {},
+        stmtParent: {},
+        stmtRet: {},
+      ),
+      old: (
+        stmtAction: {},
+        stmtAlt: {},
+        stmtCall: (
+          appName: ['part1', 'part2', 'part3'],
+          epName: 'simple',
+        ),
+        stmtCond: {},
+        stmtForeach: {},
+        stmtGroup: {},
+        stmtLoop: {},
+        stmtLoopN: {},
+        stmtParent: {},
+        stmtRet: {},
+      ),
+      stmtIndex: 0,
+    ),
+  },
+  table: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        pk: ['Field2'],
+      ),
+      old: (
+        pk: ['Field1'],
+      ),
+      typeName: 'Table',
+    ),
+  },
+  tag: (
+    app: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        appTag: 'newTag',
+        change: 'added',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        appTag: 'tag',
+        change: 'deleted',
+      ),
+    },
+    ep: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'added',
+        epName: 'simple',
+        epTag: 'newTag',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'deleted',
+        epName: 'simple',
+        epTag: 'tag',
+      ),
+    },
+    event: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'added',
+        eventName: 'event',
+        eventTag: 'newTag',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'deleted',
+        eventName: 'event',
+        eventTag: 'tag',
+      ),
+    },
+    field: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'added',
+        fieldName: 'Field1',
+        fieldTag: 'newTag',
+        typeName: 'Type',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'deleted',
+        fieldName: 'Field1',
+        fieldTag: 'tag',
+        typeName: 'Type',
+      ),
+    },
+    mixin: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'added',
+        mixinName: 'mixin',
+        mixinTag: 'newTag',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'deleted',
+        mixinName: 'mixin',
+        mixinTag: 'tag',
+      ),
+    },
+    stmt: {},
+    type: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'added',
+        typeName: 'Type',
+        typeTag: 'newTag',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'deleted',
+        typeName: 'Type',
+        typeTag: 'tag',
+      ),
+    },
+    view: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'added',
+        viewName: 'view',
+        viewTag: 'newTag',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'deleted',
+        viewName: 'view',
+        viewTag: 'tag',
+      ),
+    },
+  ),
+  type: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        typeDocstring: 'doc',
+        typeOpt: {
+          (),
+        },
+      ),
+      old: (
+        typeDocstring: 'doc',
+        typeOpt: {},
+      ),
+      typeName: 'Enum',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        typeDocstring: 'new doc',
+        typeOpt: {},
+      ),
+      old: (
+        typeDocstring: 'doc',
+        typeOpt: {},
+      ),
+      typeName: 'Table',
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'deleted',
+      typeDocstring: 'doc',
+      typeName: 'Type',
+      typeOpt: {},
+    ),
+  },
+  view: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        viewType: 'STRING',
+      ),
+      old: (
+        viewType: 'INT',
+      ),
+      viewName: 'view',
+    ),
+  },
+)

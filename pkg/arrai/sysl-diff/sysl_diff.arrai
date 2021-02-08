@@ -1,0 +1,167 @@
+\lhs \rhs
+    let (
+        anno?:  lhsAnno:(),
+        src?:   lhsSrc:(),
+        tag?:   lhsTag:(),
+        app?:   lhsApp:{},
+        enum?:  lhsEnum:{},
+        ep?:    lhsEp:{},
+        event?: lhsEvent:{},
+        field?: lhsField:{},
+        mixin?: lhsMixin:{},
+        param?: lhsParam:{},
+        stmt?:  lhsStmt:{},
+        table?: lhsTable:{},
+        type?:  lhsType:{},
+        view?:  lhsView:{},
+    ) = lhs;
+    let (
+        app?:   lhsAnnoApp:{},
+        ep?:    lhsAnnoEp:{},
+        event?: lhsAnnoEvent:{},
+        field?: lhsAnnoField:{},
+        mixin?: lhsAnnoMixin:{},
+        stmt?:  lhsAnnoStmt:{},
+        type?:  lhsAnnoType:{},
+        view?:  lhsAnnoView:{},
+    ) = lhsAnno;
+    let (
+        app?:   lhsSrcApp:{},
+        ep?:    lhsSrcEp:{},
+        event?: lhsSrcEvent:{},
+        field?: lhsSrcField:{},
+        mixin?: lhsSrcMixin:{},
+        stmt?:  lhsSrcStmt:{},
+        type?:  lhsSrcType:{},
+        view?:  lhsSrcView:{},
+    ) = lhsSrc;
+    let (
+        app?:   lhsTagApp:{},
+        ep?:    lhsTagEp:{},
+        event?: lhsTagEvent:{},
+        field?: lhsTagField:{},
+        mixin?: lhsTagMixin:{},
+        stmt?:  lhsTagStmt:{},
+        type?:  lhsTagType:{},
+        view?:  lhsTagView:{},
+    ) = lhsTag;
+
+    let (
+        anno?:  rhsAnno:(),
+        src?:   rhsSrc:(),
+        tag?:   rhsTag:(),
+        app?:   rhsApp:{},
+        enum?:  rhsEnum:{},
+        ep?:    rhsEp:{},
+        event?: rhsEvent:{},
+        field?: rhsField:{},
+        mixin?: rhsMixin:{},
+        param?: rhsParam:{},
+        stmt?:  rhsStmt:{},
+        table?: rhsTable:{},
+        type?:  rhsType:{},
+        view?:  rhsView:{},
+    ) = rhs;
+    let (
+        app?:   rhsAnnoApp:{},
+        ep?:    rhsAnnoEp:{},
+        event?: rhsAnnoEvent:{},
+        field?: rhsAnnoField:{},
+        mixin?: rhsAnnoMixin:{},
+        stmt?:  rhsAnnoStmt:{},
+        type?:  rhsAnnoType:{},
+        view?:  rhsAnnoView:{},
+    ) = rhsAnno;
+    let (
+        app?:   rhsSrcApp:{},
+        ep?:    rhsSrcEp:{},
+        event?: rhsSrcEvent:{},
+        field?: rhsSrcField:{},
+        mixin?: rhsSrcMixin:{},
+        stmt?:  rhsSrcStmt:{},
+        type?:  rhsSrcType:{},
+        view?:  rhsSrcView:{},
+    ) = rhsSrc;
+    let (
+        app?:   rhsTagApp:{},
+        ep?:    rhsTagEp:{},
+        event?: rhsTagEvent:{},
+        field?: rhsTagField:{},
+        mixin?: rhsTagMixin:{},
+        stmt?:  rhsTagStmt:{},
+        type?:  rhsTagType:{},
+        view?:  rhsTagView:{},
+    ) = rhsTag;
+
+    # find all additions and deletions between two relational model set.
+    let additionAndDeletion = \lhsSet \rhsSet
+        ((lhsSet &~ rhsSet) => . +> (change: 'deleted')) | ((rhsSet &~ lhsSet) => . +> (change: 'added'))
+    ;
+
+    # merge all additions, deletions, and any value changes.
+    let delta = \deltaFn \lhsSet \rhsSet
+        let deltaSet = deltaFn(lhsSet, rhsSet);
+        additionAndDeletion(lhsSet &~ (lhsSet <&- deltaSet), rhsSet &~ (rhsSet <&- deltaSet)) | (deltaSet => . +> (change: 'modified'))
+    ;
+
+    # split a relational model structure into keys and values and transform them into a set of delta whose designated
+    # values have been changed. The old and new values are stored in the old and new fields.
+    let valueChangeDelta = \keysFn \valuesFn \lhs \rhs
+        (lhs => keysFn(.) +> (old: valuesFn(.))) <&> (rhs => keysFn(.) +> (new: valuesFn(.))) where .old != .new
+    ;
+
+    # create a valueChangeDelta by splitting keys and values using a function.
+    let splitKeyVal = \isKey
+        valueChangeDelta(\. //tuple(//dict(.) where isKey(.@)), \. //tuple(//dict(.) where !isKey(.@)))
+    ;
+
+    (
+        anno:
+            let delta = delta(splitKeyVal(\field !//seq.has_suffix('Value', field)));
+            (
+                app:   delta(lhsAnnoApp,   rhsAnnoApp),
+                ep:    delta(lhsAnnoEp,    rhsAnnoEp),
+                event: delta(lhsAnnoEvent, rhsAnnoEvent),
+                field: delta(lhsAnnoField, rhsAnnoField),
+                mixin: delta(lhsAnnoMixin, rhsAnnoMixin),
+                stmt:  delta(lhsAnnoStmt,  rhsAnnoStmt),
+                type:  delta(lhsAnnoType,  rhsAnnoType),
+                view:  delta(lhsAnnoView,  rhsAnnoView),
+            )
+        ,
+        src:
+            let delta = delta(splitKeyVal(\field !//seq.has_suffix('Src', field)));
+            (
+                ep:    delta(lhsSrcEp,    rhsSrcEp),
+                app:   delta(lhsSrcApp,   rhsSrcApp),
+                event: delta(lhsSrcEvent, rhsSrcEvent),
+                field: delta(lhsSrcField, rhsSrcField),
+                mixin: delta(lhsSrcMixin, rhsSrcMixin),
+                stmt:  delta(lhsSrcStmt,  rhsSrcStmt),
+                type:  delta(lhsSrcType,  rhsSrcType),
+                view:  delta(lhsSrcView,  rhsSrcView),
+            ),
+        tag: (
+            app:   additionAndDeletion(lhsTagApp,   rhsTagApp),
+            ep:    additionAndDeletion(lhsTagEp,    rhsTagEp),
+            event: additionAndDeletion(lhsTagEvent, rhsTagEvent),
+            field: additionAndDeletion(lhsTagField, rhsTagField),
+            mixin: additionAndDeletion(lhsTagMixin, rhsTagMixin),
+            stmt:  additionAndDeletion(lhsTagStmt,  rhsTagStmt),
+            type:  additionAndDeletion(lhsTagType,  rhsTagType),
+            view:  additionAndDeletion(lhsTagView,  rhsTagView),
+        ),
+
+        event: additionAndDeletion(lhsEvent, rhsEvent),
+        mixin: additionAndDeletion(lhsMixin, rhsMixin),
+
+        app:   delta(splitKeyVal(\. . <: {'appName'}                         ), lhsApp,   rhsApp),
+        table: delta(splitKeyVal(\. . <: {'appName', 'typeName'}             ), lhsTable, rhsTable),
+        type:  delta(splitKeyVal(\. . <: {'appName', 'typeName'}             ), lhsType,  rhsType),
+        enum:  delta(splitKeyVal(\. . <: {'appName', 'typeName'}             ), lhsEnum,  rhsEnum),
+        field: delta(splitKeyVal(\. . <: {'appName', 'typeName', 'fieldName'}), lhsField, rhsField),
+        ep:    delta(splitKeyVal(\. . <: {'appName', 'epName'}               ), lhsEp,    rhsEp),
+        param: delta(splitKeyVal(\. . <: {'appName', 'epName', 'paramName'}  ), lhsParam, rhsParam),
+        stmt:  delta(splitKeyVal(\. . <: {'appName', 'epName', 'stmtIndex'}  ), lhsStmt,  rhsStmt),
+        view:  delta(splitKeyVal(\. . <: {'appName', 'viewName'}             ), lhsView,  rhsView),
+    )

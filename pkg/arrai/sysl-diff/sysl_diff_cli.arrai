@@ -1,0 +1,4 @@
+let [_, model1, model2] = //os.args;
+let (:load, :newNormalize, ...) = //{/pkg/arrai/sysl};
+let normalize = \. newNormalize(load(.));
+//fmt.pretty(//{./sysl_diff}(normalize(model1), normalize(model2)))
