@@ -24,6 +24,10 @@ let nested = (
 
     simple: reconstruct(simple) = {'a.sysl': 'A:\n    !type T :\n        f <: int\n'},
 
+    optional:
+        let data = simple +> (field: simple.field => . +> (fieldOpt: true));
+        reconstruct(data) = {'a.sysl': 'A:\n    !type T :\n        f <: int?\n'},
+
     newline: reconstruct(simple +> (anno: (field: {
         (simple.field single) +> (fieldAnnoName: 'desc', fieldAnnoValue: '\n')
     }))) = {'a.sysl': 'A:\n    !type T :\n        f <: int:\n            @desc =:\n                |\n'},

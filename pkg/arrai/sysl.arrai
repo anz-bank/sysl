@@ -305,8 +305,8 @@ let newNormalize = \m
 
     # Parameters
     let _payload_params = //rel.union(
-        _eps => \(:appName, :epName, :ep) ep.param?:{} => 
-            let locs = tags(.@item.type?:{});
+        _eps => \(:appName, :epName, :ep) ep.param?:{} =>
+            let locs = tags(.@item.type?:());
             let loc = cond locs count {
                 0: 'method',
                 _: (locs orderby .)(0),
