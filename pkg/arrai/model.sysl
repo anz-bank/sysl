@@ -30,7 +30,7 @@ Source[~db]:
 
     # payload(header, body, cookie) and query parameters
     /post:
-        POST (accept <: string [~header, ~required, name="accept"], ssotoken <: string? [~cookie, ~required, name="ssotoken"], request <: Bar [mediatype="application/json", ~body]) ?page=int?&bar={Bar}?:
+        POST (x_request_id <: string [~header, ~required, name="x-request-id"], ssotoken <: string? [~cookie, ~required, name="ssotoken"], request <: Bar [mediatype="application/json", ~body]) ?page=int?&bar={Bar}?:
             return ok <: Foo
 
 A:

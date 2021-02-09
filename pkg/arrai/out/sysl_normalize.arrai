@@ -33,6 +33,32 @@
       ),
     },
     mixin: {},
+    param: {
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramAnnoName: 'mediatype',
+        paramAnnoValue: 'application/json',
+        paramIndex: 2,
+        paramName: 'request',
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramAnnoName: 'name',
+        paramAnnoValue: 'ssotoken',
+        paramIndex: 1,
+        paramName: 'ssotoken',
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramAnnoName: 'name',
+        paramAnnoValue: 'x-request-id',
+        paramIndex: 0,
+        paramName: 'x_request_id',
+      ),
+    },
     stmt: {},
     type: {
       (
@@ -194,12 +220,12 @@
               primitive: 'INT',
               source_context: (
                 end: (
-                  col: 190,
+                  col: 202,
                   line: 33,
                 ),
                 file: 'model.sysl',
                 start: (
-                  col: 182,
+                  col: 194,
                   line: 33,
                 ),
               ),
@@ -213,12 +239,12 @@
               },
               source_context: (
                 end: (
-                  col: 201,
+                  col: 213,
                   line: 33,
                 ),
                 file: 'model.sysl',
                 start: (
-                  col: 192,
+                  col: 204,
                   line: 33,
                 ),
               ),
@@ -428,7 +454,7 @@
       epName: 'POST /post',
       paramIndex: 0,
       paramLoc: 'header',
-      paramName: 'accept',
+      paramName: 'x_request_id',
       paramOpt: {},
       paramType: (
         primitive: 'STRING',
@@ -1003,6 +1029,50 @@
       ),
     },
     mixin: {},
+    param: {
+      (
+        appName: ['Source'],
+        epName: 'GET /get/{id}',
+        paramName: 'id',
+        paramSrc: {},
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'bar',
+        paramSrc: {},
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'page',
+        paramSrc: {},
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'request',
+        paramSrc: {},
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'ssotoken',
+        paramSrc: {},
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'x_request_id',
+        paramSrc: {},
+      ),
+      (
+        appName: ['Source'],
+        epName: 'Read',
+        paramName: 'accountNumber',
+        paramSrc: {},
+      ),
+    },
     stmt: {
       (
         appName: ['A'],
@@ -1778,6 +1848,38 @@
       ),
     },
     mixin: {},
+    param: {
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'request',
+        paramTag: 'body',
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'ssotoken',
+        paramTag: 'cookie',
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'ssotoken',
+        paramTag: 'required',
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'x_request_id',
+        paramTag: 'header',
+      ),
+      (
+        appName: ['Source'],
+        epName: 'POST /post',
+        paramName: 'x_request_id',
+        paramTag: 'required',
+      ),
+    },
     stmt: {},
     type: {},
     view: {},

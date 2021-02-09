@@ -13,6 +13,14 @@ let load = \path
     let syslDescriptor = //encoding.proto.descriptor(syslPb);
     //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
 
+let attrs = \x
+    cond x {
+        (:attrs, ...): attrs,
+        (@item: (:attrs, ...), ...): attrs,
+        (@item: (type: (:attrs, ...), ...), ...): attrs, # to handle attrs from param
+    }
+;
+
 # Extracts the dictionary of annotations of an element.
 let annotations =
     let rec resolveVal = \v
@@ -22,14 +30,16 @@ let annotations =
             (:s): resolveVal(s),
             _: v,
         };
-    \x cond x {
-        (attrs:attrs, ...): attrs,
-        (@item:(attrs:attrs, ...), ...): attrs,
-    } where .@ != 'patterns' >> resolveVal(.)
+    \x attrs(x) where .@ != 'patterns' >> resolveVal(.)
 ;
 
 # Extracts the set of pattern attributes of an element.
-let tags = \x x.attrs?('patterns')?.a.elt:{} => .@item.s;
+let tags = \x
+    cond attrs(x) {
+        {'patterns': (a: (:elt)), ...}: elt => .@item.s,
+        _: {},
+    }
+;
 
 # Returns a relation of annotations for a given type.
 let annoRel = \type \rel
@@ -38,7 +48,7 @@ let annoRel = \type \rel
         annotations(t(type)) =>
             let names = t where //seq.has_suffix('Name', .@);
             let anno = {$`${type}AnnoName`: .@, $`${type}AnnoValue`: .@value};
-            let indexes = cond type { "stmt": {'stmtIndex':t(type).@} };
+            let indexes = cond type {"stmt": {'stmtIndex':t(type).@}, "param": {'paramIndex':t(type).@}};
             //tuple(names | anno | indexes)
     );
 
@@ -354,6 +364,7 @@ let newNormalize = \m
         'type': _types,
         'field': _fields,
         'view': _views,
+        'param': _params,
     };
     let [anno, tag, src] = [annoRel, tagRel, srcRel] >> \builder
         //tuple(data >>> \k \v builder(k, v));
