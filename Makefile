@@ -66,6 +66,9 @@ buildlsp:
 build-docker: generate
 	docker build -t sysl .
 
+build-sysl-pb-version-docker: generate
+	docker build -t sysl-pb-version -f sysl-pb-version/Dockerfile .
+
 # Assumes that every arr.ai script depends on every other arr.ai script.
 %.arraiz: %.arrai $(shell find . -name '*.arrai')
 	$(ARRAI) bundle $< > $@

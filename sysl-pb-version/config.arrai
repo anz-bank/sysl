@@ -1,0 +1,48 @@
+# config takes appName and version, reads version config file, and returns the corresponding config
+\appName \version
+    let versionFile = cond {
+        //os.exists('.sysl/version.yml'): '.sysl/version.yml',
+        //os.exists('.sysl/version.yaml'): '.sysl/version.yaml',
+        _: //error('version config file is not found.')
+    };
+
+    let versionConf = //{github.com/arr-ai/arrai/contrib/json}.simplify(//encoding.yaml.decode(//os.file(versionFile)));
+
+    let conf = (versionConf => .@item) filter . {
+        # if version is a tag
+        {
+            'appName': (appName),
+            'filename': filename,
+            'tag': (version),
+        }: (:appName, :filename, tag: version, versionName: ''),
+        # if version is a tag
+        {
+            'appName': (appName),
+            'filename': filename,
+            'tag': (version),
+            'versionName': versionName,
+        }: (:appName, :filename, tag: version, :versionName),
+        # if version is a versionName/alias
+        {
+            'appName': (appName),
+            'filename': filename,
+            'tag': tag,
+            'versionName': (version),
+        }: (:appName, :filename, :tag, versionName: version),
+    };
+
+    cond conf count {
+        1: conf single,
+        0: //error($`missing config: config not found for application ${appName} version ${version}`),
+        _: //error($`
+            ambiguous config: found multiple configurations for application ${appName} version ${version}
+            ${
+                conf orderby . >> $`
+                    appName:     ${.appName}
+                    filename:    ${.filename}
+                    tag:         ${.tag}
+                    versionName: ${.versionName}
+                `
+            ::\i\n:\n}
+        `),
+    }

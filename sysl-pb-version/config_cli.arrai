@@ -1,0 +1,7 @@
+let [..., mode, appName, version] = //os.args;
+let (:tag, :filename, ...) = //{./config}(appName, version);
+cond mode {
+    'file': filename,
+    'tag': tag,
+    _: //error($`unrecognized mode: ${mode}`)
+}
