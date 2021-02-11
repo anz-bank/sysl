@@ -9,7 +9,7 @@ customeraccounts [package="com.example.package"]:
         Table <: string(32)?
 
     !table AccountAddress [interleave_in_parent="Account", interleave_on_delete="cascade"]:
-        AccountNum <: string(23) [~pk, ~asc]
+        AccountNum <: Account.AccountNum [~pk, ~asc]
         AddressPostCode <: string(10) [~pk, ~desc]
         LastUpdated <: datetime? [allow_commit_timestamp="true", ~pk]
         AddressLine1 <: bytes? [~max]

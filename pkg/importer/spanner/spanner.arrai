@@ -189,8 +189,8 @@ let concatOffset = \str1 \str2
 # parseKeyPart parses the primary_key generated from spanner sql
 let parseKeyPart = \t
     t.column_def >> \def cond {
-        (def.sort_by?:false): concatOffset(def.column_name.'', $`(${//str.lower(def.sort_by.'')})`),
-        _: def.column_name.'',
+        (def.sort_by?:false): concatOffset(def.column_name.'', $`(${//str.lower(def.sort_by.'')})`) rank (:.@),
+        _: def.column_name.'' rank (@:.@),
     };
 
 # evalDdl turns a ddl parse tree into a list of ddl statements ready to be applied to a model

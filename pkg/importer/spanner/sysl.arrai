@@ -85,19 +85,32 @@ let entityPatternsString = \entity \model cond entityPatterns(entity, model) {[]
 let attributePatternsString = \entity \attr cond attributePatterns(entity, attr) {[]: '', aPats: $`[${aPats ::, }]`};
 
 # typeInfo generates the type info for an attribute.
-let typeInfo = \entity \attr \type \isArray
-    let fks = matchingFKs(entity, attr);
-    let fkAttr = cond {
-        fks:  fks => .reference_attribute
-    };
-    let fkTable = cond {
-        fks:  fks => .reference_table
-    };
+let typeInfo = \entities \entity \attr
+    let interleavedType =
+        let parent = entities where .name <: (entity.cluster => .@item.interleaved_in);
+        cond //rel.union(parent => (.attributes => .@item)) where .name = attr.name {
+            {fk}: $`${parent.name}.${fk.name}`
+        }
+    ;
     cond {
-        fkAttr && fkTable: $`${fkTable orderby . ::}.${fkAttr orderby . ::}`,
-        isArray: $`sequence of ${type}`,
-        _: type,
-    };
+        interleavedType: interleavedType,
+        _:
+            let type = attr.type ++ cond {attr.type != 'bytes': size(attr)};
+            let isArray = attr.array;
+            let fks = matchingFKs(entity, attr);
+            let fkAttr = cond {
+                fks:  fks => .reference_attribute
+            };
+            let fkTable = cond {
+                fks:  fks => .reference_table
+            };
+            cond {
+                fkAttr && fkTable: $`${fkTable orderby . ::}.${fkAttr orderby . ::}`,
+                isArray: $`sequence of ${type}`,
+                _: type,
+            }
+    } ++ cond {attr.nullable: '?'}
+;
 
 
 # Trim trailing whitespace.
@@ -121,9 +134,9 @@ let transformModel = \model \package
                             ${entity.attributes >>
                                 let aps = //seq.sub(", , ", ", ", attributePatternsString(entity, .));
                                 let name = util.resolveValidIdentifier(//seq.sub("`", "", .name));
-                                let type = typeInfo(entity, ., .type ++ cond {.type != 'bytes': size(.)}, .array);
+                                let type = typeInfo(model.entities, entity, .);
                                 $`
-                                    ${name} <: ${type}${cond {.nullable:'?'}} ${aps}
+                                    ${name} <: ${type} ${aps}
                                 `
                             ::\n}
                     `

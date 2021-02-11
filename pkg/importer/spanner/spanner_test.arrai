@@ -2,6 +2,7 @@ let (
     emptyModel: empty,
     :parseDdl,
 
+    :applyStmt,
     :applyCreateTable,
     :applyCreateIndex,
     :applyCreateDatabase,
@@ -31,6 +32,12 @@ let [updateTable] = parseDdl('UPDATE foo SET a = 1 WHERE a >= 1;');
 let dropIndexSql = 'DROP INDEX i;';
 let [dropIndex] = parseDdl(dropIndexSql);
 let foo_ix = applyDropIndex(dropIndex.data, foo_i);
+
+let interleaved = applyStmt(parseDdl('
+    CREATE DATABASE test;
+    CREATE TABLE foo (a INT64) PRIMARY KEY (a);
+    CREATE TABLE bar (a INT64, b INT64) PRIMARY KEY (a, b), INTERLEAVE IN PARENT foo;
+'), empty);
 
 (
     parseDdl: (
@@ -101,7 +108,7 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
             attributes: [
                 (array: {}, length: 0, name: 'a', nullable: true, options: {}, type: 'int', scale: {}),
             ],
-            primary_key: [40\'a'],
+            primary_key: ['a'],
             foreign_keys: {},
             cluster: {},
         )}
@@ -111,7 +118,7 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
         foo_i: foo_i.indexes = {(
             name: 'i',
             table_name: 'foo',
-            key_part: [23\'a(desc)'],
+            key_part: ['a(desc)'],
             unique: {},
             nullfiltered: {},
             storing_col: {},
@@ -130,7 +137,7 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
                 (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
                 (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
             ],
-            primary_key: [40\'a'],
+            primary_key: ['a'],
             foreign_keys: {},
             cluster: {},
         )},
@@ -141,11 +148,37 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
                 (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
                 (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0, scale: {}),
             ],
-            primary_key: [40\'a'],
+            primary_key: ['a'],
             foreign_keys: {},
             cluster: {},
         )},
 
         dropCol: foo_bx = foo,
+    ),
+
+    applyStmt: (
+        interleaved: interleaved = (
+            entities: {
+                (
+                    name: 'foo',
+                    attributes: [(array: {}, length: 0, name: 'a', nullable: true, options: {}, scale: {}, type: 'int')],
+                    cluster: {},
+                    foreign_keys: {},
+                    primary_key: ['a'],
+                ),
+                (
+                    name: 'bar',
+                    attributes: [
+                        (array: {}, length: 0, name: 'a', nullable: true, options: {}, scale: {}, type: 'int'),
+                        (array: {}, length: 0, name: 'b', nullable: true, options: {}, scale: {}, type: 'int'),
+                    ],
+                    cluster: [(interleaved_in: 'foo', on_delete: {})],
+                    foreign_keys: {},
+                    primary_key: ['a', 'b'],
+                ),
+            },
+            indexes: {},
+            schema: {(name: 'test')},
+        ),
     ),
 )
