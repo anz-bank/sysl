@@ -71,8 +71,7 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
           repository: docker.io/anzbank/sysl-pb-version
-          file: ./sysl-pb-version/Dockerfile
-          context: .
+          dockerfile: ./sysl-pb-version/Dockerfile
           tag_with_ref: true
           add_git_labels: true
           tags: latest
