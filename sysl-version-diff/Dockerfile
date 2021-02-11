@@ -8,6 +8,11 @@ COPY . .
 RUN arrai bundle -o version_diff.arraiz ./sysl-version-diff/version_diff_cli.arrai
 
 FROM ${SYSL_PB_VERSION_IMAGE}:${SYSL_PB_VERSION_VERSION}
+
+# copy sysl.pb for newNormalize
+WORKDIR /sysl
+COPY --from=stage /sysl/pkg/sysl/sysl.pb .
+
 WORKDIR /scripts
 COPY --from=stage /sysl/sysl-version-diff/*.sh ./
 COPY --from=stage /sysl/version_diff.arraiz .
