@@ -1,0 +1,12 @@
+{
+  "replacementPatterns": [
+    {
+      "pattern": "^(/docs/.*)",
+      "replacement": "$1.md"
+    },
+    {
+      "pattern": "^/",
+      "replacement": "{{BASEURL}}/"
+    }
+  ]
+}

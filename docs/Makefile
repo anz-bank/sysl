@@ -1,15 +1,21 @@
-.PHONY: build start lint tidy
+.PHONY: install build start lint tidy update
 
 all: build
 
+install:
+	yarn install --frozen-lockfile
+
 build:
-	npm build
+	yarn build
 
 start:
-	npm start
+	yarn start
 
 lint:
-	find ./docs -name '*.md' | xargs -1 npx markdown-link-check --progress
+	find ./{blog,docs} -name '*.md' | xargs -n1 npx markdown-link-check --progress --config=.md-link-check-config.json
 
 tidy:
 	yarn format
+
+update:
+	npx npm-check-updates -u && yarn install

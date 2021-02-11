@@ -9,5 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
+      working-directory: docs
       with:
-        folder-path: 'docs'
+        config-file: '.md-link-check-config.json'
+        folder-path: 'docs,blog'

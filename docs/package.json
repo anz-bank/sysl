@@ -12,15 +12,19 @@
     "format": "yarn prettier --write ."
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.70",
-    "@docusaurus/plugin-google-analytics": "^2.0.0-alpha.70",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.70",
+    "@docusaurus/core": "^2.0.0-alpha.71",
+    "@docusaurus/plugin-google-analytics": "^2.0.0-alpha.71",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.71",
     "ace-builds": "^1.4.12",
     "classnames": "^2.2.6",
-    "elliptic": "^6.5.3",
+    "elliptic": "^6.5.4",
     "react": "^16.8.4",
-    "react-ace": "^9.1.2",
+    "react-ace": "^9.3.0",
     "react-dom": "^16.8.4"
+  },
+  "devDependencies": {
+    "markdown-link-check": "^3.8.6",
+    "prettier": "2.2.1"
   },
   "browserslist": {
     "production": [
@@ -33,9 +37,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "markdown-link-check": "^3.8.3",
-    "prettier": "2.0.5"
   }
 }
