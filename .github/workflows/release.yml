@@ -76,6 +76,17 @@ jobs:
           add_git_labels: true
           tags: latest
 
+      - name: "Build and push docker image: sysl-version-diff"
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+          repository: docker.io/anzbank/sysl-version-diff
+          dockerfile: sysl-version-diff/Dockerfile
+          tag_with_ref: true
+          add_git_labels: true
+          tags: latest
+
       # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
       # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets
       # and uncomment this step.
