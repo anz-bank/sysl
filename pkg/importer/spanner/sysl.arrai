@@ -88,8 +88,9 @@ let attributePatternsString = \entity \attr cond attributePatterns(entity, attr)
 let typeInfo = \entities \entity \attr
     let interleavedType =
         let parent = entities where .name <: (entity.cluster => .@item.interleaved_in);
-        cond //rel.union(parent => (.attributes => .@item)) where .name = attr.name {
-            {fk}: $`${parent.name}.${fk.name}`
+        let parentPk = //rel.union(parent => (.primary_key => .@item));
+        cond {
+            attr.name <: parentPk: $`${parent.name}.${attr.name}`
         }
     ;
     cond {
