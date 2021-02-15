@@ -1,3 +1,3 @@
 # this script expects target app name and the path to the files to diff
-let [_, appName, lhsFile, rhsFile] = //os.args;
-//fmt.pretty(//{./version_diff}(appName, lhsFile, rhsFile))
+let [_, lhsFile, rhsFile] = //os.args;
+//fmt.pretty(//{./version_diff}(lhsFile, rhsFile))

@@ -66,9 +66,6 @@ buildlsp:
 build-docker: generate
 	docker build -t sysl .
 
-build-sysl-pb-version-docker: generate
-	docker build -t sysl-pb-version -f sysl-pb-version/Dockerfile .
-
 build-sysl-version-diff-docker: generate
 	docker build -t sysl-version-diff -f sysl-version-diff/Dockerfile .
 

@@ -1,12 +1,6 @@
 # this script takes app name and two filepaths to sysl pb files. It will then find the diff
 # between two files or that specific application.
-\appName \lhsFile \rhsFile
-    let appName = //{/pkg/arrai/util}.appToParts(appName);
+\lhsFile \rhsFile
     let (:newNormalize, :load, ...) = //{/pkg/arrai/sysl};
-    let normalize = \file
-        newNormalize(load(file)) :> cond . {
-            (...): . :> ((.) where .appName = appName),
-            {...}: (.) where .appName = appName,
-        }
-    ;
+    let normalize = \file newNormalize(load(file));
     //{/pkg/arrai/sysl-diff/sysl_diff}(normalize(lhsFile), normalize(rhsFile))

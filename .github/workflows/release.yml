@@ -65,17 +65,6 @@ jobs:
           tags: latest
           labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
 
-      - name: "Build and push docker image: sysl-pb-version"
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}
-          repository: docker.io/anzbank/sysl-pb-version
-          dockerfile: ./sysl-pb-version/Dockerfile
-          tag_with_ref: true
-          add_git_labels: true
-          tags: latest
-
       - name: "Build and push docker image: sysl-version-diff"
         uses: docker/build-push-action@v1
         with:

@@ -1,13 +1,16 @@
-ARG SYSL_PB_VERSION_IMAGE=anzbank/sysl-pb-version
-ARG SYSL_PB_VERSION_VERSION="latest"
+ARG ARRAI_VERSION="v0.220.0"
+ARG ARRAI_IMAGE=anzbank/arrai
 
-FROM ${SYSL_PB_VERSION_IMAGE}:${SYSL_PB_VERSION_VERSION} AS stage
+FROM ${ARRAI_IMAGE}:${ARRAI_VERSION} AS stage
+RUN go get github.com/anz-bank/go-bindata/...
 
 WORKDIR /sysl
 COPY . .
+RUN make build
 RUN arrai bundle -o version_diff.arraiz ./sysl-version-diff/version_diff_cli.arrai
 
-FROM ${SYSL_PB_VERSION_IMAGE}:${SYSL_PB_VERSION_VERSION}
+FROM ${ARRAI_IMAGE}:${ARRAI_VERSION}
+COPY --from=stage /sysl/dist/sysl /bin/
 
 # copy sysl.pb for newNormalize
 WORKDIR /sysl
@@ -17,5 +20,5 @@ WORKDIR /scripts
 COPY --from=stage /sysl/sysl-version-diff/*.sh ./
 COPY --from=stage /sysl/version_diff.arraiz .
 
-WORKDIR /work
+WORKDIR /workdir
 ENTRYPOINT [ "/scripts/version-diff.sh" ]
