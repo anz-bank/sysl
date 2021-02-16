@@ -31,6 +31,8 @@ var Formats = []Format{
 	SpannerSQLDir,
 	Postgres,
 	PostgresDir,
+	MySQL,
+	MySQLDir,
 }
 
 // Factory takes in an absolute path and its contents (if path is a file) and returns an importer
@@ -83,6 +85,12 @@ func Factory(path string, isDir bool, format string, content []byte, logger *log
 	case PostgresDir.Name:
 		logger.Debugln("Detected PostgreSQL directory")
 		return MakePostgresqlDirImporter(logger), nil
+	case MySQL.Name:
+		logger.Debugln("Detected MySQL file")
+		return MakeMySQLImporter(logger), nil
+	case MySQLDir.Name:
+		logger.Debugln("Detected MySQL directory")
+		return MakeMySQLDirImporter(logger), nil
 	default:
 		return nil, fmt.Errorf("an importer does not exist for %s", fileType.Name)
 	}

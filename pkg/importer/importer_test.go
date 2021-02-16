@@ -154,6 +154,24 @@ func TestLoadPostgresqlDirFromTestFiles(t *testing.T) {
 	})
 }
 
+func TestLoadMySQLFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadMySQLFromTestDir",
+		testDir:       "mysql/tests",
+		testExtension: ".sql",
+		format:        "mysql",
+	})
+}
+
+func TestLoadMySQLDirFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadMySQLDirFromTestDir",
+		testDir:       "mysql/tests/migrations",
+		testExtension: "",
+		format:        "mysqlDir",
+	})
+}
+
 /*
 func TestLoadGrammarFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{

@@ -9,7 +9,7 @@ let (
     :applyDropTable,
     :applyDropIndex,
     ...
-) = //{./postgresql};
+) = //{./mysql};
 
 let [createTable] = parseDdl('CREATE TABLE foo (a INT PRIMARY KEY);');
 let foo = applyCreateTable(createTable.data, empty);

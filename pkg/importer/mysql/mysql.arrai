@@ -1,5 +1,5 @@
-# spanner ddl grammar
-# CREATE DATABASE statements are parsed to avoid errors but ignore by the modelling functions
+# MySQL DDL grammar.
+# Some non-DDL statements are parsed but ignored to prevent parser errors.
 let grammar = {://grammar.lang.wbnf:
 ddl                 -> stmt=(create_database
                             |create_table
@@ -88,15 +88,14 @@ not_null            -> "NOT" "NULL";
 if_not_exists       -> "IF" "NOT" "EXISTS";
 pk                  -> "PRIMARY" "KEY";
 ARRAY_TYPE          -> SCALAR_TYPE "[" size=\d* "]";
-// TODO: Migrate blobs to MySQL grammar.
 SCALAR_TYPE         -> BLOB      = "BLOB"
                      | LONGBLOB  = "LONGBLOB"
                      | DATETIME  = "DATETIME(" length ")"
-                     | DECIMAL   = "DECIMAL(" precision=length "," scale=length ")"
-                     | DOUBLE   = "DOUBLE"
+                     | DECIMAL   = ("NUMERIC" | "DECIMAL" | "DEC" | "FIXED") ("(" precision=length "," scale=length ")")?
+                     | DOUBLE    = "DOUBLE"
 
                      | BOOLEAN   = "BOOLEAN"
-                     | INT       = "INT"
+                     | INT       = ("INT" | "INTEGER" | "SMALLINT" | "TINYINT" | "MEDIUMINT")
                      | BIGINT    = "BIGINT"
                      | FLOAT     = "FLOAT"
                      | DATE      = "DATE"
@@ -104,7 +103,6 @@ SCALAR_TYPE         -> BLOB      = "BLOB"
                      | TEXT      = "TEXT"
                      | VARCHAR   = "VARCHAR(" length ")"
                      | BYTES     = "BYTES(" length ")"
-                     | NUMERIC   = "NUMERIC"
                      ;
 
 length              -> (int_value|"MAX");
@@ -129,7 +127,7 @@ time_value          -> "NOW" "(" ")" "at" "time" "zone" string_value;
 :};
 
 #################### PARSE TREE EVALUATORS ####################
-# These functions turn a spanner ddl parse tree into ddl statements
+# These functions turn a MySQL ddl parse tree into ddl statements
 
 # evalInt turns an int parse node into an integer
 let evalInt = \parsed cond parsed {
@@ -148,20 +146,23 @@ let evalType = \parsed
         (BOOLEAN: _, ...):                 (type: "bool", length: 0),
         (INT: _, ...):                     (type: "int", length: 0),
         (BIGINT: _, ...):                  (type: "int64", length: 0),
+        (DECIMAL: _, :precision, :scale, ...): (
+            type: "decimal",
+            length: evalInt(precision.int_value?:"MAX"),
+            scale: evalInt(scale.int_value?:"MAX"),
+        ),
+        (DECIMAL: _, ...):                 (type: "decimal", length: 38, scale: 9),
         (FLOAT: _, ...):                   (type: "float", length: 0),
-        (NUMERIC: _, ...):                 (type: "decimal", length: 38, scale: 9),
+        (DOUBLE: _, ...):                  (type: "float64", length: 0),
         (DATE: _, ...):                    (type: "date", length: 0),
         (TIMESTAMP: _, ...):               (type: "datetime", length: 0),
+        (DATETIME: _, :length, ...):       (type: "datetime", length: evalInt(length.int_value?:"MAX")),
         (TEXT: _, ...):                    (type: "string", length: "MAX"),
-        (VARCHAR: _, :length, ...): (type: "string", length: evalInt(length.int_value?:"MAX")),
-        (BYTES: _, :length, ...):   (type: "bytes", length: evalInt(length.int_value?:"MAX")),
-
-        # MySQL
-        (BLOB: _, ...):   (type: "bytes", length: 0),
-        (LONGBLOB: _, ...):   (type: "bytes", length: 0),
-        (DATETIME: _, :length, ...):   (type: "datetime", length: evalInt(length.int_value?:"MAX")),
-        (DECIMAL: _, :precision, :scale, ...):   (type: "decimal", length: evalInt(precision.int_value?:"MAX")), # TODO: scale
-        (DOUBLE: _, ...):   (type: "float64", length: 0),
+        (VARCHAR: _, :length, ...):        (type: "string", length: evalInt(length.int_value?:"MAX")),
+        (BYTES: _, :length, ...):          (type: "bytes", length: evalInt(length.int_value?:"MAX")),
+        (BLOB: _, ...):                    (type: "bytes", length: 0),
+        (LONGBLOB: _, ...):                (type: "bytes", length: 0),
+        _: //error($`unknown type: ${//fmt.pretty(data.scalar)}`)
     };
     (
         type: type.type,
@@ -250,7 +251,7 @@ let evalTableAlteration = \parsed cond parsed {
 let concatOffset = \str1 \str2
     (str1 => .@ orderby .)(0)\$`${str1}${str2}`;
 
-# parseKeyPart parses the primary_key generated from spanner sql
+# parseKeyPart parses the primary_key generated from MySQL sql
 let parseKeyPart = \t
     t.column_def >> \def cond {
         (def.sort_by?:false): concatOffset(def.column_name.'', $`(${//str.lower(def.sort_by.'')})`),
@@ -258,7 +259,7 @@ let parseKeyPart = \t
     };
 
 # evalDdl turns a ddl parse tree into a list of ddl statements ready to be applied to a model
-# Use applyStmt to apply these statements to a spanner model
+# Use applyStmt to apply these statements to a MySQL model
 let evalDdl = \parsed parsed.stmt?:[] >> cond . {
     (create_table: val, ...):
         let attributes = val.attr >> evalAttribute(.);
@@ -445,14 +446,14 @@ let rec applyStmt = \stmt \model
 
     # For testing.
     # empty model, use this as the base of an applyStmt call to create a model from a ddl statement
-    emptyModel:        (entities: {}, indexes: {}, schema: {}),
+    emptyModel:     (entities: {}, indexes: {}, schema: {}),
 
-    # parses a single byte array representing a spanner schema
-    parseDdl:          parseDdl,
+    # parses a single byte array representing a MySQL schema
+    parseDdl:       parseDdl,
 
     # parses a list of schema files. opens the files and calls parseDdl on them in the given order
-    parseSchema: parseSchema,
+    parseSchema:    parseSchema,
 
     # applies a ddl stmt to a model. Use emptyModel to get a model from scratch
-    applyStmt:         applyStmt,
+    applyStmt:      applyStmt,
 )

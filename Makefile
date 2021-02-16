@@ -77,6 +77,8 @@ internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \
 		pkg/importer/postgresql/import_postgresql_sql.arraiz \
 		pkg/importer/postgresql/import_migrations.arraiz \
+		pkg/importer/mysql/import_mysql_sql.arraiz \
+		pkg/importer/mysql/import_migrations.arraiz \
 		pkg/importer/spanner/import_spanner_sql.arraiz \
 		pkg/importer/spanner/import_migrations.arraiz \
 		pkg/exporter/spanner/spanner_cli.arraiz

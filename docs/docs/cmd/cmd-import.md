@@ -26,18 +26,19 @@ Currently, the supported formats include:
 - OpenAPI 3.0
 - XSD
 - Avro (Kafka)
-- Spanner SQL
-- A directory of Spanner SQL migration scripts
+- SQL (Spanner, PostgreSQL, MySQL)
+- A directory of SQL migration scripts
 
 ## Required Flags
 
-- `-i, --input=<FILE-TO-IMPORT.EXT>` Input filename.
-- `-a, --app-name=<APP-NAME>` Name of the sysl app to define in sysl model.
+- `-i, --input=<FILE-TO-IMPORT.EXT>`: Input filename.
+- `-a, --app-name=<APP-NAME>`: Name of the sysl app to define in sysl model.
 
 ## Optional flags
 
-- `-p, --package=PACKAGE` Name of the sysl package to define in sysl model.
-- `-o, --output="output.sysl"` Output filename.
+- `-f, --format=FORMAT`: Explicit format of the input file. This is only needed if it cannot be auto-detected (e.g. a particular dialect of SQL).
+- `-p, --package=PACKAGE`: Name of the Sysl package to define in the Sysl model.
+- `-o, --output="output.sysl"`: Output filename. If not provided, the output will be sent to `stdout`.
 
 [More common optional flags](common-flags.md)
 

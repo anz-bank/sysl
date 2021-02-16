@@ -64,6 +64,18 @@ var PostgresDir = Format{
 	FileExt:   []string{".up.sql"},
 }
 
+var MySQL = Format{
+	Name:      "mysql",
+	Signature: "",
+	FileExt:   []string{".sql"},
+}
+
+var MySQLDir = Format{
+	Name:      "mysqlDir",
+	Signature: "",
+	FileExt:   []string{".up.sql"},
+}
+
 // OpenAPI3 is identified by the openapi header. -  The value MUST be "3.x.x".
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasDocument
 var OpenAPI3 = Format{
@@ -90,8 +102,8 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 			for _, info := range files {
 				if strings.HasSuffix(info.Name(), ".up.sql") || strings.HasSuffix(info.Name(), ".up.ddl") {
 					return Format{}, fmt.Errorf(
-						"input file format for %s could be one of {%v, %v}; pass --format to specify",
-						path, SpannerSQLDir.Name, PostgresDir.Name)
+						"input file format for %s could be one of {%v, %v, %v}; pass --format to specify",
+						path, SpannerSQLDir.Name, PostgresDir.Name, MySQLDir.Name)
 				}
 			}
 		}
