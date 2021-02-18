@@ -24,8 +24,13 @@ create_table        -> "CREATE" "TABLE" table_name "("(
                         ):"," ","? ")";
 table_constraint    -> ("CONSTRAINT" constraint_name)? (unique | fk);
 unique              -> "UNIQUE" ("KEY" key_name=name)? "(" column_name:"," ")";
-fk                  -> "FOREIGN KEY" "(" column_name:"," ")" "REFERENCES" foreign=(table_name "(" column_name:"," ")");
-on_delete           -> CASCADE   = "CASCADE"
+fk                  -> "FOREIGN KEY" "(" column_name:"," ")"
+                       "REFERENCES" foreign=(table_name "(" column_name:"," ")")
+                       on_delete? on_update?;
+on_delete           -> "ON" "DELETE" action;
+on_update           -> "ON" "UPDATE" action;
+action              -> CASCADE   = "CASCADE"
+                     | RESTRICT = "RESTRICT"
                      | NO_ACTION = "NO" "ACTION";
 
 create_index        -> "CREATE" unique=("UNIQUE")? "INDEX" index_name "ON" table_name "(" key_part ")";
@@ -50,12 +55,13 @@ create_trigger      -> "CREATE" "TRIGGER" trigger_name=name
                        "EXECUTE" "PROCEDURE" function_name=name "(" ")";
 
 alter_table         -> "ALTER" "TABLE" table_name (alter=(table_alteration|attr_alteration)):",";
-table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN" column_name attr_type)
+table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name attr_type)
                      | DROP_COLUMN     = ("DROP" "COLUMN" column_name)
-                     | SET_COLUMN      = ("SET" "ON" "DELETE" on_delete)
+                     | SET_COLUMN      = ("SET" on_delete)
                      | ADD_CONSTRAINT  = ("ADD" table_constraint)
-                     | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name);
-attr_alteration     -> "ALTER" "COLUMN" column_name ("TYPE" attr_type | action=("SET" | "DROP") not_null);
+                     | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name)
+                     | DROP_INDEX      = drop_index;
+attr_alteration     -> ("ALTER"|"MODIFY") "COLUMN" column_name ("TYPE"? attr_type | action=("SET" | "DROP") not_null);
 
 drop_table          -> "DROP" "TABLE" table_name;
 
@@ -81,16 +87,19 @@ set                 -> "set" name "=" value;
 
 option              -> "allow_commit_timestamp" "=" ("true"|"false");
 key_part            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
-attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) not_null? default?;
+attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) (null|not_null)? default? generated?;
 default             -> "DEFAULT" value;
-
+null                -> "NULL";
 not_null            -> "NOT" "NULL";
+generated           -> "GENERATED" "ALWAYS" "AS" parens "STORED";
+parens              -> "(" head=/{[^()]*}? parens? tail=/{[^()]*}? ")";
+
 if_not_exists       -> "IF" "NOT" "EXISTS";
 pk                  -> "PRIMARY" "KEY";
 ARRAY_TYPE          -> SCALAR_TYPE "[" size=\d* "]";
 SCALAR_TYPE         -> BLOB      = "BLOB"
                      | LONGBLOB  = "LONGBLOB"
-                     | DATETIME  = "DATETIME(" length ")"
+                     | DATETIME  = "DATETIME" "(" length ")"
                      | DECIMAL   = ("NUMERIC" | "DECIMAL" | "DEC" | "FIXED") ("(" precision=length "," scale=length ")")?
                      | DOUBLE    = "DOUBLE"
 
@@ -101,8 +110,8 @@ SCALAR_TYPE         -> BLOB      = "BLOB"
                      | DATE      = "DATE"
                      | TIMESTAMP = "TIMESTAMP"
                      | TEXT      = "TEXT"
-                     | VARCHAR   = "VARCHAR(" length ")"
-                     | BYTES     = "BYTES(" length ")"
+                     | VARCHAR   = "VARCHAR" "(" length ")"
+                     | BYTES     = "BYTES" "(" length ")"
                      ;
 
 length              -> (int_value|"MAX");
@@ -241,6 +250,11 @@ let evalTableAlteration = \parsed cond parsed {
         alteration: data,
     ),
 
+    (table_alteration: (DROP_INDEX: data, ...), ...): (
+        type: "drop_index",
+        alteration: data,
+    ),
+
     (attr_alteration: data, ...): (
         type: "alter_column",
         alteration: evalAttribute(data),
@@ -283,7 +297,7 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
                 cluster: cond {
                     (val.cluster?:false): val.cluster >> (
                         interleaved_in: (.table_name.'' rank (:.@)),
-                        on_delete: cond (.).on_delete?:{} {
+                        on_delete: cond (.).on_delete?.action?:{} {
                             (CASCADE: ('': s), ...): s rank (:.@),
                             (NO_ACTION: ('': s), ...): s rank (:.@),
                         },
@@ -409,6 +423,7 @@ let stepAlt = \m \t \(:type, alteration:alt)
         # 'on_delete':  TODO,
         # 'add_constraint':  TODO,
         # 'drop_constraint':  TODO,
+        # 'drop_index':  TODO,
         _: m,
     };
 
@@ -434,7 +449,8 @@ let rec applyStmt = \stmt \model
         # match against an arrai of statements and recursively apply them in order
         [first, ...rem]: applyStmt(rem, applyStmt(first, model)),
         []:              model,
-    };
+    }
+;
 
 (
     :applyCreateTable,

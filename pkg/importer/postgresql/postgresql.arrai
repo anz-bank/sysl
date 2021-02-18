@@ -88,22 +88,15 @@ not_null            -> "NOT" "NULL";
 if_not_exists       -> "IF" "NOT" "EXISTS";
 pk                  -> "PRIMARY" "KEY";
 ARRAY_TYPE          -> SCALAR_TYPE "[" size=\d* "]";
-// TODO: Migrate blobs to MySQL grammar.
-SCALAR_TYPE         -> BLOB      = "BLOB"
-                     | LONGBLOB  = "LONGBLOB"
-                     | DATETIME  = "DATETIME(" length ")"
-                     | DECIMAL   = "DECIMAL(" precision=length "," scale=length ")"
-                     | DOUBLE   = "DOUBLE"
-
-                     | BOOLEAN   = "BOOLEAN"
+SCALAR_TYPE         -> BOOLEAN   = "BOOLEAN"
                      | INT       = "INT"
                      | BIGINT    = "BIGINT"
                      | FLOAT     = "FLOAT"
                      | DATE      = "DATE"
                      | TIMESTAMP = "TIMESTAMP"
                      | TEXT      = "TEXT"
-                     | VARCHAR   = "VARCHAR(" length ")"
-                     | BYTES     = "BYTES(" length ")"
+                     | VARCHAR   = "VARCHAR" "(" length ")"
+                     | BYTES     = "BYTES" "(" length ")"
                      | NUMERIC   = "NUMERIC"
                      ;
 
@@ -155,13 +148,6 @@ let evalType = \parsed
         (TEXT: _, ...):                    (type: "string", length: "MAX"),
         (VARCHAR: _, :length, ...): (type: "string", length: evalInt(length.int_value?:"MAX")),
         (BYTES: _, :length, ...):   (type: "bytes", length: evalInt(length.int_value?:"MAX")),
-
-        # MySQL
-        (BLOB: _, ...):   (type: "bytes", length: 0),
-        (LONGBLOB: _, ...):   (type: "bytes", length: 0),
-        (DATETIME: _, :length, ...):   (type: "datetime", length: evalInt(length.int_value?:"MAX")),
-        (DECIMAL: _, :precision, :scale, ...):   (type: "decimal", length: evalInt(precision.int_value?:"MAX")), # TODO: scale
-        (DOUBLE: _, ...):   (type: "float64", length: 0),
     };
     (
         type: type.type,

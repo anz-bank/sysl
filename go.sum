@@ -91,6 +91,10 @@ github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPd
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/arr-ai/arrai v0.213.0 h1:rf6I0Tbah8bKsuCwzidfxOunRLu4wm5jyVk15YOpwRI=
 github.com/arr-ai/arrai v0.213.0/go.mod h1:/jmRPKuBDJYaHPmOQAdFdhHZgosx8G9LxeGeDNmECz8=
+github.com/arr-ai/arrai v0.221.0 h1:xWOzWp2BrOdD7OwyiAQEfYBa4cijZVIMIDkFDaLwR9U=
+github.com/arr-ai/arrai v0.221.0/go.mod h1:/jmRPKuBDJYaHPmOQAdFdhHZgosx8G9LxeGeDNmECz8=
+github.com/arr-ai/arrai v0.222.0 h1:Lf01hW2kF3qj9U9PmoJ9U3VOvyYok7JYlTVTvbT05II=
+github.com/arr-ai/arrai v0.222.0/go.mod h1:/jmRPKuBDJYaHPmOQAdFdhHZgosx8G9LxeGeDNmECz8=
 github.com/arr-ai/frozen v0.11.1/go.mod h1:YEr4TubkrAoA3f9U1R4PcEVB5ocBUdiS3NKh03cbVts=
 github.com/arr-ai/frozen v0.13.0/go.mod h1:YEr4TubkrAoA3f9U1R4PcEVB5ocBUdiS3NKh03cbVts=
 github.com/arr-ai/frozen v0.14.0 h1:eByyaJpEPnIQ9drLxWEkn3lEXbQ0x18DZmTltfhefHA=
