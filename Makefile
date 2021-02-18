@@ -51,7 +51,7 @@ coverage: generate
 golden: generate
 	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
 
-check-tidy: generate
+check-tidy: generate tidy
 	git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
 build: generate
