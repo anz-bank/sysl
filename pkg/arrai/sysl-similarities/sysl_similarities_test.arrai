@@ -1,0 +1,63 @@
+let similarities = //{./sysl_similarities};
+let empty = (
+    anno: (
+        app:   {},
+        ep:    {},
+        event: {},
+        field: {},
+        param: {},
+        mixin: {},
+        stmt:  {},
+        type:  {},
+        view:  {},
+    ),
+    src: (
+        ep:    {},
+        app:   {},
+        event: {},
+        field: {},
+        param: {},
+        mixin: {},
+        stmt:  {},
+        type:  {},
+        view:  {},
+    ),
+    tag: (
+        app:   {},
+        ep:    {},
+        event: {},
+        field: {},
+        param: {},
+        mixin: {},
+        stmt:  {},
+        type:  {},
+        view:  {},
+    ),
+    event: {},
+    mixin: {},
+    app:   {},
+    table: {},
+    type:  {},
+    enum:  {},
+    field: {},
+    ep:    {},
+    param: {},
+    stmt:  {},
+    view:  {},
+);
+
+let (:model, :modified, ...) = //{/pkg/arrai/sysl-diff/test_cases};
+
+let rec addDifference = \model
+    model :> cond . {
+        {...}: . | (. => (. +> (appName: ['part1']))),
+        (...): . :> (. | (. => (appName: ['part1']))),
+    }
+;
+
+(
+    empty:   similarities(model, empty) = empty,
+    same:    similarities(model, model) = model,
+    diff:    similarities(model, modified) = empty,
+    regular: similarities(model, addDifference(model)) = model,
+)

@@ -70,6 +70,22 @@
         ),
       ),
     },
+    param: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        epName: 'simple',
+        new: (
+          paramAnnoValue: 'changed',
+        ),
+        old: (
+          paramAnnoValue: 'annotation',
+        ),
+        paramAnnoName: 'param',
+        paramIndex: 0,
+        paramName: 'x',
+      ),
+    },
     stmt: {},
     type: {
       (
@@ -1052,6 +1068,40 @@
         ),
       ),
     },
+    param: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'modified',
+        epName: 'simple',
+        new: (
+          paramSrc: (
+            end: (
+              col: 2,
+              line: 100,
+            ),
+            file: 'changed.sysl',
+            start: (
+              col: 3,
+              line: 500,
+            ),
+          ),
+        ),
+        old: (
+          paramSrc: (
+            end: (
+              col: 1,
+              line: 1,
+            ),
+            file: 'test.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ),
+        paramName: 'x',
+      ),
+    },
     stmt: {
       (
         appName: ['part1', 'part2', 'part3'],
@@ -1274,6 +1324,22 @@
         mixinTag: 'tag',
       ),
     },
+    param: {
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'added',
+        epName: 'simple',
+        paramName: 'x',
+        paramTag: 'newTag',
+      ),
+      (
+        appName: ['part1', 'part2', 'part3'],
+        change: 'deleted',
+        epName: 'simple',
+        paramName: 'x',
+        paramTag: 'tag',
+      ),
+    },
     stmt: {},
     type: {
       (
@@ -1307,6 +1373,13 @@
   type: {
     (
       appName: ['part1', 'part2', 'part3'],
+      change: 'deleted',
+      typeDocstring: 'doc',
+      typeName: 'Type',
+      typeOpt: {},
+    ),
+    (
+      appName: ['part1', 'part2', 'part3'],
       change: 'modified',
       new: (
         typeDocstring: 'doc',
@@ -1332,13 +1405,6 @@
         typeOpt: {},
       ),
       typeName: 'Table',
-    ),
-    (
-      appName: ['part1', 'part2', 'part3'],
-      change: 'deleted',
-      typeDocstring: 'doc',
-      typeName: 'Type',
-      typeOpt: {},
     ),
   },
   view: {

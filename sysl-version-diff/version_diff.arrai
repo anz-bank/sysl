@@ -3,4 +3,9 @@
 \lhsFile \rhsFile
     let (:newNormalize, :load, ...) = //{/pkg/arrai/sysl};
     let normalize = \file newNormalize(load(file));
-    //{/pkg/arrai/sysl-diff/sysl_diff}(normalize(lhsFile), normalize(rhsFile))
+    let lhs = normalize(lhsFile);
+    let rhs = normalize(rhsFile);
+    (
+        similarities: //{/pkg/arrai/sysl-similarities/sysl_similarities}(lhs, rhs),
+        diff:         //{/pkg/arrai/sysl-diff/sysl_diff}(lhs, rhs),
+    )
