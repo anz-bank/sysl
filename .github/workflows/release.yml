@@ -29,7 +29,7 @@ jobs:
         run: git fetch --prune --unshallow
 
       - name: Check go.mod and go.sum are tidy
-        run: make check-tidy
+        run: make check-clean
 
       - name: Test
         run: make coverage

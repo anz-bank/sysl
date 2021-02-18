@@ -1,6 +1,6 @@
 include ./scripts/version-report.mk
 
-.PHONY: all install grammar antlr build lint coverage clean check-tidy golden
+.PHONY: all install grammar antlr build lint coverage clean check-clean golden
 
 GOPATH		= $(shell go env GOPATH)
 GOVERSION	= $(shell go version | cut -d' ' -f3-4)
@@ -22,9 +22,7 @@ lint: generate
 lint-docker: generate
 	docker run --rm \
 		-v $(CURDIR):/app \
-		-v $(CURDIR)/.lint-cache:/cache/go \
 		-e GOCACHE=/cache/go \
-		-e GOLANGCI_LINT_CACHE=/cache/go \
 		-v ${GOPATH}/pkg:/go/pkg \
 		-w /app \
 		golangci/golangci-lint:v1.30.0 \
@@ -51,7 +49,7 @@ coverage: generate
 golden: generate
 	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
 
-check-tidy: generate tidy
+check-clean: generate
 	git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
 build: generate
@@ -83,7 +81,7 @@ internal/arrai/bindata.go: \
 		pkg/importer/spanner/import_migrations.arraiz \
 		pkg/exporter/spanner/spanner_cli.arraiz
 	# Binary files in bindata.go have metadata like size, mode and modification time(modTime).
-	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-tidy failed.
+	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-clean failed.
 	# So add parameter `-modtime 1` to set a fixed modTime.
 	# Add `-mode 0644` for similar reason as files' mode are possible different in CI and local development environments.
 	go-bindata -mode 0644 -modtime 1 -pkg arrai -o $@ $^

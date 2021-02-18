@@ -27,6 +27,8 @@ require (
 	github.com/spf13/afero v1.4.0
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
+	golang.org/x/net v0.0.0-20201021035429-f5854403a974 // indirect
+	golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	google.golang.org/grpc v1.32.0
 	google.golang.org/protobuf v1.25.0

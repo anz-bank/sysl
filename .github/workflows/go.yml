@@ -184,11 +184,11 @@ jobs:
         with:
           go-version: 1.13
 
-      - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/...
-
       - name: Check out code
         uses: actions/checkout@v2
+
+      - name: Install go-bindata
+        run: go get github.com/anz-bank/go-bindata/... && go mod tidy
 
       - name: Generate intermediate files
         run: make generate
@@ -197,7 +197,7 @@ jobs:
         run: make lint-docker
 
       - name: Check tidy
-        run: make check-tidy
+        run: make check-clean
 
   downstream:
     name: Test downstream repos
