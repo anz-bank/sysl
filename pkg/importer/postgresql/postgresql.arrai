@@ -76,10 +76,9 @@ right               -> "USAGE"
                      | "REFERENCES"
                      | "EXECUTE";
 
-use                 -> "use" name;
-set                 -> "set" name "=" value;
+use                 -> "USE" name;
+set                 -> "SET" name "=" value;
 
-option              -> "allow_commit_timestamp" "=" ("true"|"false");
 key_part            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
 attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) not_null? default?;
 default             -> "DEFAULT" value;
@@ -118,7 +117,7 @@ string_value        -> ('"' [^"]* '"' | "'" [^']* "'"); //'
 time_value          -> "NOW" "(" ")" "at" "time" "zone" string_value;
 
 // All tokens are case-insensitive and may be preceded by comments or whitespace.
-.wrapRE -> /{(?i)(--[^\n]*|/\*[^*]*\*/|\s)*()};
+.wrapRE -> /{(?i)(--[^\n]*(?:\n|\z)|/\*[^*]*\*/|\s)*()};
 :};
 
 #################### PARSE TREE EVALUATORS ####################

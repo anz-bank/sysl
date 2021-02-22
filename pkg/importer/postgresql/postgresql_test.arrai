@@ -83,6 +83,7 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
             /*==
              bar
              ==*/`) = {},
+        commentCommand: parseDdl("-- use\nSET a = 1") = [{}],
         use: parseDdl("use foo;") = [{}],
         set: parseDdl("set foreign_key_checks=0;") = [{}],
         fk: parseDdl("CREATE TABLE t (x INT, FOREIGN KEY (x) REFERENCES a (b))") = [(
