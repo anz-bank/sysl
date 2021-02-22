@@ -1,15 +1,24 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
-# Loads and returns a Sysl model.
+# String representing a placeholder.
 let empty = '...';
-let syslPbPath = '../sysl/sysl.pb';
-let syslPbFallbackPath = './sysl/sysl.pb';
-let syslPb = cond  {
-    //os.exists(syslPbPath): //os.file(syslPbPath),
-    //os.exists(syslPbFallbackPath): //os.file(syslPbFallbackPath),
-    _: //net.http.get((), 'https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.pb?raw=true').body,
-};
+
+# Loads and returns a Sysl model (binary protobuf format) from a path.
+# The load must first locate the sysl.pb descriptor to decode the model. It searches:
+# 1. The path given by $SYSL_PB_PATH env var (if present);
+# 2. A sibling "sysl" directory
+# 3. A child "sysl" directory
+# If a local sysl.pb file is not found, it is fetched from GitHub for convenience.
 let load = \path
+    let syslPbEnv = 'SYSL_PB_PATH';
+    let syslPbPath = '../sysl/sysl.pb';
+    let syslPbFallbackPath = './sysl/sysl.pb';
+    let syslPb = cond {
+        //os.get_env(syslPbEnv): //os.file(//os.get_env(syslPbEnv)),
+        //os.exists(syslPbPath): //os.file(syslPbPath),
+        //os.exists(syslPbFallbackPath): //os.file(syslPbFallbackPath),
+        _: //net.http.get((), 'https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.pb?raw=true').body,
+    };
     let syslDescriptor = //encoding.proto.descriptor(syslPb);
     //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
 
