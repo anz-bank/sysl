@@ -31,6 +31,9 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
 
 let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));');
 
+let [renameCol] = parseDdl('ALTER TABLE foo RENAME COLUMN b TO c;');
+let foo_c = applyAlterTable(renameCol.data, foo_b);
+
 (
     parseDdl: (
         createTable: createTable = (
@@ -73,6 +76,16 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
                 alterations: [(
                     type: 'alter_column',
                     alteration: (name: 'b', nullable: false),
+                )],
+            ),
+        ),
+        renameCol: renameCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'rename_column',
+                    alteration: (from: 'b', to: 'c'),
                 )],
             ),
         ),
@@ -155,6 +168,18 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
             attributes: [
                 (name: 'a', type: 'int', pk: true, nullable: true, array: {}, length: 0, scale: {}),
                 (name: 'b', type: 'int', nullable: false, array: {}, length: 0, scale: {}),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            unique_keys: {},
+            cluster: {},
+        )},
+
+        renameCol: foo_c.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int', pk: true, nullable: true, array: {}, length: 0, scale: {}),
+                (name: 'c', type: 'int', nullable: true, array: {}, length: 0, scale: {}),
             ],
             primary_key: ['a'],
             foreign_keys: {},

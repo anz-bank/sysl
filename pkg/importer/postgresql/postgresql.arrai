@@ -52,6 +52,7 @@ create_trigger      -> "CREATE" "TRIGGER" trigger_name=name
 alter_table         -> "ALTER" "TABLE" table_name (alter=(table_alteration|attr_alteration)):",";
 table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN" column_name attr_type)
                      | DROP_COLUMN     = ("DROP" "COLUMN" column_name)
+                     | RENAME_COLUMN   = ("RENAME" "COLUMN" from=column_name "TO" to=column_name)
                      | SET_COLUMN      = ("SET" "ON" "DELETE" on_delete)
                      | ADD_CONSTRAINT  = ("ADD" table_constraint)
                      | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name);
@@ -207,6 +208,14 @@ let evalTableAlteration = \parsed cond parsed {
         type: "drop_column",
         alteration: (
             name: data.column_name.'' rank (:.@),
+        ),
+    ),
+
+    (table_alteration: (RENAME_COLUMN: data, ...), ...): (
+        type: "rename_column",
+        alteration: (
+            from: data.from.column_name.'' rank (:.@),
+            to: data.to.column_name.'' rank (:.@),
         ),
     ),
 
@@ -383,6 +392,11 @@ let alterCol = \m \t \c changeCols(m, t, \cs
     let {old} = cs where .@item.name = c.name;
     cs without old with old +> (@item: old.@item +> c)
 );
+# renameCol updates the name of the "from" column in t's attributes in m to "to".
+let renameCol = \m \t \from \to changeCols(m, t, \cs
+    let {old} = cs where .@item.name = from;
+    cs without old with old +> (@item: old.@item +> (name: to))
+);
 
 # Applies a single table alteration given model, table name and alteration data.
 let stepAlt = \m \t \(:type, alteration:alt)
@@ -390,6 +404,7 @@ let stepAlt = \m \t \(:type, alteration:alt)
         'add_column': addCol(m, t, alt),
         'drop_column': dropCol(m, t, alt.name),
         'alter_column': alterCol(m, t, alt),
+        'rename_column': renameCol(m, t, alt.from, alt.to),
         # 'on_delete':  TODO,
         # 'add_constraint':  TODO,
         # 'drop_constraint':  TODO,
