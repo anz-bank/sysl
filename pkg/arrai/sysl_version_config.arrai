@@ -14,13 +14,8 @@
             'appName': (appName),
             'filename': filename,
             'tag': (version),
-        }: (:appName, :filename, tag: version, versionName: ''),
-        # if version is a tag
-        {
-            'appName': (appName),
-            'filename': filename,
-            'tag': (version),
-            'versionName': versionName,
+            'versionName'?: versionName:'',
+            ...
         }: (:appName, :filename, tag: version, :versionName),
         # if version is a versionName/alias
         {
@@ -28,12 +23,16 @@
             'filename': filename,
             'tag': tag,
             'versionName': (version),
+            ...
         }: (:appName, :filename, :tag, versionName: version),
     };
 
     cond conf count {
         1: conf single,
-        0: //error($`missing config: config not found for application ${appName} version ${version}`),
+        0:
+            let _ = //log.print($`missing config: config not found for application ${appName} version ${version}.`);
+            (:appName, :version, tag: version, filename: '')
+        ,
         _: //error($`
             ambiguous config: found multiple configurations for application ${appName} version ${version}
             ${
