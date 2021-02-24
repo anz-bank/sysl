@@ -3,13 +3,13 @@
 # String representing a placeholder.
 let empty = '...';
 
-# Loads and returns a Sysl model (binary protobuf format) from a path.
+# Loads and returns a Sysl model from bytes in binary protobuf format.
 # The load must first locate the sysl.pb descriptor to decode the model. It searches:
 # 1. The path given by $SYSL_PB_PATH env var (if present);
 # 2. A sibling "sysl" directory
 # 3. A child "sysl" directory
 # If a local sysl.pb file is not found, it is fetched from GitHub for convenience.
-let load = \path
+let loadBytes = \bytes
     let syslPbEnv = 'SYSL_PB_PATH';
     let syslPbPath = '../sysl/sysl.pb';
     let syslPbFallbackPath = './sysl/sysl.pb';
@@ -20,7 +20,11 @@ let load = \path
         _: //net.http.get((), 'https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.pb?raw=true').body,
     };
     let syslDescriptor = //encoding.proto.descriptor(syslPb);
-    //encoding.proto.decode(syslDescriptor, 'Module' , //os.file(path));
+    //encoding.proto.decode(syslDescriptor, 'Module' , bytes);
+
+# Loads and returns a Sysl model from a file path in binary protobuf format.
+let load = \path loadBytes(//os.file(path));
+
 
 let attrs = \x
     cond x {
@@ -488,6 +492,7 @@ let normalize = \m
 # Export the functions from the module.
 (
     :load,
+    :loadBytes,
     :polish,
     :normalize,
     :newNormalize,
