@@ -120,36 +120,33 @@ To do this, create the file in the path `internal\handlers\pet.go`
 package handlers
 
 import (
-	"context"
-  "net/http"
+    "context"
+    "net/http"
 
-	petdemo "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo"
-	"github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/petstore"
-	"github.com/anz-bank/sysl-go/common"
+    petdemo "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo"
+    "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/petstore"
+    "github.com/anz-bank/sysl-go/common"
 )
 
 // GetRandomPetPicListRead reads random pic from downstream
 func GetRandomPetPicListRead(ctx context.Context,
-	getRandomPetPicListRequest *petdemo.GetPetListRequest,
-	client petdemo.GetPetListClient) (*petdemo.Pet, error) {
+    getRandomPetPicListRequest *petdemo.GetPetListRequest,
+    client petdemo.GetPetListClient) (*petdemo.Pet, error) {
 
-	// Set response content type to JSON
-	headers := common.RequestHeaderFromContext(ctx)
-	headers.Set("Content-Type", "application/json; charset=utf-8")
+    // Retrieve the pets (using a fresh set of headers for the request)
+    // This is required because by default Sysl-go reuses inbound headers for downstream requests
+    ctx = common.RequestHeaderToContext(ctx, http.Header{})
+    reqPetstore := petstore.GetPetListRequest{}
+    pet, err := client.PetstoreGetPetList(ctx, &reqPetstore)
+    if err != nil {
+        return nil, err
+    }
 
-	reqPetstore := petstore.GetPetListRequest{}
-	pet, err := client.PetstoreGetPetList(ctx, &reqPetstore)
-	if err != nil {
-		return nil, err
-	}
-
-	// return the result
-	return &petdemo.Pet{
-		Breed: string(*pet),
-	}, nil
+    // Return the result
+    return &petdemo.Pet{
+        Breed: string(*pet),
+    }, nil
 }
-
-
 ```
 
 Now we need to register the handler
@@ -369,8 +366,9 @@ We'll be appending the result to the `Breed` field for now, but we'll fix this u
 We also need to set the `Accept-Encoding` header as sysl-go currently only supports `gzip` encoding. Put this before your `reqPokemon` definition.
 
 ```
-	headers = common.RequestHeaderFromContext(ctx)
-	headers.Set("Accept-Encoding", "gzip")
+    headers := http.Header{}
+    headers.Set("Accept-Encoding", "gzip")
+    ctx = common.RequestHeaderToContext(ctx, headers)
 ```
 
 Your `pet.go` file should now look like this:
@@ -379,45 +377,46 @@ Your `pet.go` file should now look like this:
 package handlers
 
 import (
-	"context"
+    "context"
     "net/http"
 
-	petdemo "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo"
-	"github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/petstore"
-	"github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/pokeapi"
-	"github.com/anz-bank/sysl-go/common"
+    petdemo "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo"
+    "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/petstore"
+    "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/pokeapi"
+    "github.com/anz-bank/sysl-go/common"
 )
 
 // GetRandomPetPicListRead reads random pic from downstream
 func GetRandomPetPicListRead(ctx context.Context,
-	getRandomPetPicListRequest *petdemo.GetPetListRequest,
-	client petdemo.GetPetListClient) (*petdemo.Pet, error) {
+    getRandomPetPicListRequest *petdemo.GetPetListRequest,
+    client petdemo.GetPetListClient) (*petdemo.Pet, error) {
 
-	// Set response content type to JSON
-	headers := common.RequestHeaderFromContext(ctx)
-	headers.Set("Content-Type", "application/json; charset=utf-8")
+    // Retrieve the pets (using a fresh set of headers for the request)
+    // This is required because by default Sysl-go reuses inbound headers for downstream requests
+    ctx = common.RequestHeaderToContext(ctx, http.Header{})
+    reqPetstore := petstore.GetPetListRequest{}
+    pet, err := client.PetstoreGetPetList(ctx, &reqPetstore)
+    if err != nil {
+        return nil, err
+    }
 
-	reqPetstore := petstore.GetPetListRequest{}
-	pet, err := client.PetstoreGetPetList(ctx, &reqPetstore)
-	if err != nil {
-		return nil, err
-	}
+    // Set the Accept-Encoding header for the PokeapiGetPokemon request
+    // This is required as only gzip encoding is currently supported by Sysl-go
+    headers := http.Header{}
+    headers.Set("Accept-Encoding", "gzip")
+    ctx = common.RequestHeaderToContext(ctx, headers)
 
-	// Set response encoding type to gzip
-	// This is required as only gzip encoding is currently supported by sysl-codegen
-	headers = common.RequestHeaderFromContext(ctx)
-	headers.Set("Accept-Encoding", "gzip")
+    // Retrieve the pokemon
+    reqPokemon := pokeapi.GetPokemonRequest{ID: int64(len(*pet))}
+    pokemon, err := client.PokeapiGetPokemon(ctx, &reqPokemon)
+    if err != nil {
+        return nil, err
+    }
 
-	reqPokemon := pokeapi.GetPokemonRequest{ID: int64(len(*pet))}
-	pokemon, err := client.PokeapiGetPokemon(ctx, &reqPokemon)
-	if err != nil {
-		return nil, err
-	}
-
-	// return the result
-	return &petdemo.Pet{
-		Breed: string(*pet) + " " + *pokemon.Name,
-	}, nil
+    // Return the result
+    return &petdemo.Pet{
+        Breed: string(*pet) + " " + *pokemon.Name,
+    }, nil
 }
 ```
 
@@ -461,48 +460,48 @@ Now run `make` and modify the return statement in `pet.go` so that we return the
 package handlers
 
 import (
-	"context"
+    "context"
     "net/http"
 
-	petdemo "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo"
-	"github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/petstore"
-	"github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/pokeapi"
-	"github.com/anz-bank/sysl-go/common"
+    petdemo "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo"
+    "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/petstore"
+    "github.com/anz-bank/sysl-go-demo/gen/pkg/servers/Petdemo/pokeapi"
+    "github.com/anz-bank/sysl-go/common"
 )
 
 // GetRandomPetPicListRead reads random pic from downstream
 func GetRandomPetPicListRead(ctx context.Context,
-	getRandomPetPicListRequest *petdemo.GetPetListRequest,
-	client petdemo.GetPetListClient) (*petdemo.Pet, error) {
+    getRandomPetPicListRequest *petdemo.GetPetListRequest,
+    client petdemo.GetPetListClient) (*petdemo.Pet, error) {
 
-	// Set response content type to JSON
-	headers := common.RequestHeaderFromContext(ctx)
-	headers.Set("Content-Type", "application/json; charset=utf-8")
+    // Retrieve the pets (using a fresh set of headers for the request)
+    // This is required because by default Sysl-go reuses inbound headers for downstream requests
+    ctx = common.RequestHeaderToContext(ctx, http.Header{})
+    reqPetstore := petstore.GetPetListRequest{}
+    pet, err := client.PetstoreGetPetList(ctx, &reqPetstore)
+    if err != nil {
+        return nil, err
+    }
 
-	reqPetstore := petstore.GetPetListRequest{}
-	pet, err := client.PetstoreGetPetList(ctx, &reqPetstore)
-	if err != nil {
-		return nil, err
-	}
+    // Set the Accept-Encoding header for the PokeapiGetPokemon request
+    // This is required as only gzip encoding is currently supported by Sysl-go
+    headers := http.Header{}
+    headers.Set("Accept-Encoding", "gzip")
+    ctx = common.RequestHeaderToContext(ctx, headers)
 
-	// Set response encoding type to gzip
-	// This is required as only gzip encoding is currently supported by sysl-codegen
-	headers = common.RequestHeaderFromContext(ctx)
-	headers.Set("Accept-Encoding", "gzip")
+    // Retrieve the pokemon
+    reqPokemon := pokeapi.GetPokemonRequest{ID: int64(len(*pet))}
+    pokemon, err := client.PokeapiGetPokemon(ctx, &reqPokemon)
+    if err != nil {
+        return nil, err
+    }
 
-	reqPokemon := pokeapi.GetPokemonRequest{ID: int64(len(*pet))}
-	pokemon, err := client.PokeapiGetPokemon(ctx, &reqPokemon)
-	if err != nil {
-		return nil, err
-	}
-
-	// return the result
-	return &petdemo.Pet{
-		Breed:   string(*pet),
-		Pokemon: *pokemon.Name,
-	}, nil
+    // Return the result
+    return &petdemo.Pet{
+        Breed:   string(*pet),
+        Pokemon: *pokemon.Name,
+    }, nil
 }
-
 ```
 
 Great, now run `go run cmd/Petdemo/main.go config/config.yaml` and navigate your browser to `http://localhost:6060/pet`
@@ -552,6 +551,27 @@ Run the command below and open your browser to `localhost:6900`. We're intereste
 ```
 
 You can see here that the sequence diagram shows the conditional logic defined in your Sysl file. These automatically-generated diagrams help you to easily understand the behavior of your application.
+
+## Headers
+
+You may have noticed a curious comment in some of the snippets above:
+
+```go
+// Retrieve the pets (using a fresh set of headers for the request)
+// This is required because by default Sysl-go reuses inbound headers for downstream requests
+ctx = common.RequestHeaderToContext(ctx, http.Header{})
+reqPetstore := petstore.GetPetListRequest{}
+pet, err := client.PetstoreGetPetList(ctx, &reqPetstore)
+```
+
+You'll notice that the `client.PetstoreGetPetList` method takes as arguments a `context.Context` and a request object but that the request object does not have any knowledge of HTTP headers.
+This is a deliberate decision designed to keep downstream request method signatures free from implementation details like HTTP headers and bodies.
+
+However, in order to support HTTP headers as an implementation detail where required, headers can be passed through the context by calling the `common.RequestHeaderToContext` method.
+The unfortunate outcome of this approach is that HTTP headers are also passed _into_ handlers using the same method and so, by default, inbound HTTP headers are passed into downstream requests.
+
+This is a known, legacy implementation detail that we aim to address soon but in the meantime we encourage that a fresh set of HTTP headers are set against the context before all downstream HTTP requests are made.
+
 
 ## Next steps
 
