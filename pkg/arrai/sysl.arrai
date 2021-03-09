@@ -300,6 +300,16 @@ let newNormalize = \m
         }
     ) where .;
 
+    let alias = //rel.union(m.apps => \(@value: app, ...)
+        app.types?:{} filter . {
+            (@:typeName, @value: typeValue): (
+                appName: app.name.part,
+                :typeName,
+                type: parseFieldType(typeValue),
+            )
+        }
+    ) where .type != '???';
+
     # Fields
     let _fields = //rel.union(m.apps => \(@value:app, ...)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
@@ -392,6 +402,7 @@ let newNormalize = \m
         :event,
         :field,
         :enum,
+        :alias,
         :view,
         :mixin,
         :anno,

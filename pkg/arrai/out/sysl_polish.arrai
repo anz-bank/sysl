@@ -7,12 +7,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 29,
+              line: 41,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 25,
+              line: 37,
             ),
           ),
           stmt: [
@@ -26,12 +26,12 @@
               source_context: (
                 end: (
                   col: 18,
-                  line: 26,
+                  line: 38,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 26,
+                  line: 38,
                 ),
               ),
             ),
@@ -64,12 +64,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 27,
+                  line: 39,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 27,
+                  line: 39,
                 ),
               ),
             ),
@@ -81,12 +81,12 @@
       ),
       source_context: (
         end: (
-          line: 24,
+          line: 36,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 24,
+          line: 36,
         ),
       ),
       types: {
@@ -94,12 +94,12 @@
           source_context: (
             end: (
               col: 1,
-              line: 33,
+              line: 45,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 29,
+              line: 41,
             ),
           ),
           tuple: (
@@ -109,12 +109,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 30,
+                    line: 42,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 30,
+                    line: 42,
                   ),
                 ),
               ),
@@ -123,12 +123,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 31,
+                    line: 43,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 31,
+                    line: 43,
                   ),
                 ),
               ),
@@ -144,12 +144,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 38,
+              line: 50,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 34,
+              line: 46,
             ),
           ),
           stmt: [
@@ -163,12 +163,12 @@
               source_context: (
                 end: (
                   col: 18,
-                  line: 35,
+                  line: 47,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 35,
+                  line: 47,
                 ),
               ),
             ),
@@ -201,12 +201,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 36,
+                  line: 48,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 36,
+                  line: 48,
                 ),
               ),
             ),
@@ -218,12 +218,12 @@
       ),
       source_context: (
         end: (
-          line: 33,
+          line: 45,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 33,
+          line: 45,
         ),
       ),
       types: {
@@ -231,12 +231,12 @@
           source_context: (
             end: (
               col: 1,
-              line: 42,
+              line: 54,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 38,
+              line: 50,
             ),
           ),
           tuple: (
@@ -246,12 +246,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 39,
+                    line: 51,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 39,
+                    line: 51,
                   ),
                 ),
               ),
@@ -260,12 +260,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 40,
+                    line: 52,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 40,
+                    line: 52,
                   ),
                 ),
               ),
@@ -281,12 +281,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 57,
+              line: 69,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 52,
+              line: 64,
             ),
           ),
           stmt: [
@@ -300,12 +300,12 @@
               source_context: (
                 end: (
                   col: 12,
-                  line: 53,
+                  line: 65,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 53,
+                  line: 65,
                 ),
               ),
             ),
@@ -319,12 +319,12 @@
               source_context: (
                 end: (
                   col: 12,
-                  line: 54,
+                  line: 66,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 54,
+                  line: 66,
                 ),
               ),
             ),
@@ -361,12 +361,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 55,
+                  line: 67,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 55,
+                  line: 67,
                 ),
               ),
             ),
@@ -377,12 +377,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 47,
+              line: 59,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 43,
+              line: 55,
             ),
           ),
           stmt: [
@@ -396,12 +396,12 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 44,
+                  line: 56,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 44,
+                  line: 56,
                 ),
               ),
             ),
@@ -434,12 +434,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 45,
+                  line: 57,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 45,
+                  line: 57,
                 ),
               ),
             ),
@@ -450,12 +450,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 52,
+              line: 64,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 47,
+              line: 59,
             ),
           ),
           stmt: [
@@ -469,12 +469,12 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 48,
+                  line: 60,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 48,
+                  line: 60,
                 ),
               ),
             ),
@@ -507,12 +507,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 49,
+                  line: 61,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 49,
+                  line: 61,
                 ),
               ),
             ),
@@ -524,12 +524,12 @@
       ),
       source_context: (
         end: (
-          line: 42,
+          line: 54,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 42,
+          line: 54,
         ),
       ),
       types: {
@@ -537,12 +537,12 @@
           source_context: (
             end: (
               col: 1,
-              line: 61,
+              line: 73,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 57,
+              line: 69,
             ),
           ),
           tuple: (
@@ -552,12 +552,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 58,
+                    line: 70,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 58,
+                    line: 70,
                   ),
                 ),
               ),
@@ -566,12 +566,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 59,
+                    line: 71,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 59,
+                    line: 71,
                   ),
                 ),
               ),
@@ -587,12 +587,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 76,
+              line: 88,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 72,
+              line: 84,
             ),
           ),
           stmt: [
@@ -606,12 +606,12 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 73,
+                  line: 85,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 73,
+                  line: 85,
                 ),
               ),
             ),
@@ -644,12 +644,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 74,
+                  line: 86,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 74,
+                  line: 86,
                 ),
               ),
             ),
@@ -661,40 +661,105 @@
       ),
       source_context: (
         end: (
-          line: 71,
+          line: 83,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 71,
+          line: 83,
         ),
       ),
       types: {
-        'Screen': (
+        'Digit': (
+          primitive: 'INT',
           source_context: (
             end: (
-              col: 3,
-              line: 80,
+              col: 4,
+              line: 97,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 76,
+              line: 94,
+            ),
+          ),
+        ),
+        'Digits': (
+          sequence: (
+            primitive: 'INT',
+            source_context: (
+              end: (
+                col: 3,
+                line: 100,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 97,
+              ),
+            ),
+          ),
+          source_context: (
+            end: (
+              col: 3,
+              line: 100,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 97,
+            ),
+          ),
+        ),
+        'Screen': (
+          source_context: (
+            end: (
+              col: 4,
+              line: 94,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 88,
             ),
           ),
           tuple: (
             attr_defs: {
+              'ww': (
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 89,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 89,
+                  ),
+                ),
+                type_ref: (
+                  context: (
+                    appname: (
+                      part: ['Client'],
+                    ),
+                    path: ['Screen'],
+                  ),
+                  ref: (
+                    path: ['Digit'],
+                  ),
+                ),
+              ),
               'xx': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 77,
+                    line: 90,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 77,
+                    line: 90,
                   ),
                 ),
               ),
@@ -703,12 +768,36 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 78,
+                    line: 91,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 78,
+                    line: 91,
+                  ),
+                ),
+              ),
+              'zz': (
+                source_context: (
+                  end: (
+                    col: 14,
+                    line: 92,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 14,
+                    line: 92,
+                  ),
+                ),
+                type_ref: (
+                  context: (
+                    appname: (
+                      part: ['Client'],
+                    ),
+                    path: ['Screen'],
+                  ),
+                  ref: (
+                    path: ['Digits'],
                   ),
                 ),
               ),
@@ -724,12 +813,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 67,
+              line: 79,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 62,
+              line: 74,
             ),
           ),
           stmt: [
@@ -743,12 +832,12 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 63,
+                  line: 75,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 63,
+                  line: 75,
                 ),
               ),
             ),
@@ -762,12 +851,12 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 64,
+                  line: 76,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 64,
+                  line: 76,
                 ),
               ),
             ),
@@ -804,12 +893,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 65,
+                  line: 77,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 65,
+                  line: 77,
                 ),
               ),
             ),
@@ -821,12 +910,12 @@
       ),
       source_context: (
         end: (
-          line: 61,
+          line: 73,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 61,
+          line: 73,
         ),
       ),
       types: {
@@ -834,12 +923,12 @@
           source_context: (
             end: (
               col: 6,
-              line: 71,
+              line: 83,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 67,
+              line: 79,
             ),
           ),
           tuple: (
@@ -849,12 +938,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 68,
+                    line: 80,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 68,
+                    line: 80,
                   ),
                 ),
               ),
@@ -863,12 +952,12 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 69,
+                    line: 81,
                   ),
                   file: 'model.sysl',
                   start: (
                     col: 14,
-                    line: 69,
+                    line: 81,
                   ),
                 ),
               ),
@@ -893,17 +982,292 @@
         ),
       },
       endpoints: {
-        'Read': (
-          name: 'Read',
+        'GET /get/{id}': (
+          attrs: {
+            'patterns': (
+              a: (
+                elt: [
+                  (
+                    s: 'rest',
+                  ),
+                ],
+              ),
+            ),
+          },
+          name: 'GET /get/{id}',
+          rest_params: (
+            method: 'GET',
+            path: '/get/{id}',
+            url_param: [
+              (
+                name: 'id',
+                type: (
+                  primitive: 'INT',
+                  source_context: (
+                    end: (
+                      col: 17,
+                      line: 27,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 9,
+                      line: 27,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          source_context: (
+            end: (
+              col: 4,
+              line: 32,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 12,
+              line: 28,
+            ),
+          ),
+          stmt: [
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    modifier: {},
+                    nvp: {},
+                  ),
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['Source'],
+                      ),
+                      path: ['Foo'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 22,
+                  line: 29,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 16,
+                  line: 29,
+                ),
+              ),
+            ),
+          ],
+        ),
+        'POST /post': (
+          attrs: {
+            'patterns': (
+              a: (
+                elt: [
+                  (
+                    s: 'rest',
+                  ),
+                ],
+              ),
+            ),
+          },
+          name: 'POST /post',
+          param: [
+            (
+              name: 'x_request_id',
+              type: (
+                attrs: {
+                  'name': (
+                    s: 'x-request-id',
+                  ),
+                  'patterns': (
+                    a: (
+                      elt: [
+                        (
+                          s: 'header',
+                        ),
+                        (
+                          s: 'required',
+                        ),
+                      ],
+                    ),
+                  ),
+                },
+                primitive: 'STRING',
+              ),
+            ),
+            (
+              name: 'ssotoken',
+              type: (
+                attrs: {
+                  'name': (
+                    s: 'ssotoken',
+                  ),
+                  'patterns': (
+                    a: (
+                      elt: [
+                        (
+                          s: 'cookie',
+                        ),
+                        (
+                          s: 'required',
+                        ),
+                      ],
+                    ),
+                  ),
+                },
+                opt: {
+                  (),
+                },
+                primitive: 'STRING',
+              ),
+            ),
+            (
+              name: 'request',
+              type: (
+                attrs: {
+                  'mediatype': (
+                    s: 'application/json',
+                  ),
+                  'patterns': (
+                    a: (
+                      elt: [
+                        (
+                          s: 'body',
+                        ),
+                      ],
+                    ),
+                  ),
+                },
+                type_ref: (
+                  ref: (
+                    path: ['Bar'],
+                  ),
+                ),
+              ),
+            ),
+          ],
+          rest_params: (
+            method: 'POST',
+            path: '/post',
+            query_param: [
+              (
+                name: 'page',
+                type: (
+                  opt: {
+                    (),
+                  },
+                  primitive: 'INT',
+                  source_context: (
+                    end: (
+                      col: 202,
+                      line: 33,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 194,
+                      line: 33,
+                    ),
+                  ),
+                ),
+              ),
+              (
+                name: 'bar',
+                type: (
+                  opt: {
+                    (),
+                  },
+                  source_context: (
+                    end: (
+                      col: 213,
+                      line: 33,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 204,
+                      line: 33,
+                    ),
+                  ),
+                  type_ref: (
+                    context: (
+                      appname: (
+                        part: ['Source'],
+                      ),
+                    ),
+                    ref: (
+                      path: ['Bar'],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
           source_context: (
             end: (
               col: 1,
-              line: 24,
+              line: 36,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 33,
+            ),
+          ),
+          stmt: [
+            (
+              ret: (
+                payload: (
+                  attr: (
+                    modifier: {},
+                    nvp: {},
+                  ),
+                  status: 'ok',
+                  type: (
+                    ref: (
+                      appname: (
+                        part: ['Source'],
+                      ),
+                      path: ['Foo'],
+                    ),
+                  ),
+                ),
+              ),
+              source_context: (
+                end: (
+                  col: 18,
+                  line: 34,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 12,
+                  line: 34,
+                ),
+              ),
+            ),
+          ],
+        ),
+        'Read': (
+          name: 'Read',
+          param: [
+            (
+              name: 'accountNumber',
+              type: (
+                primitive: 'STRING',
+              ),
+            ),
+          ],
+          source_context: (
+            end: (
+              col: 4,
+              line: 26,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 21,
+              line: 22,
             ),
           ),
           stmt: [
@@ -928,12 +1292,12 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 22,
+                  line: 23,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 22,
+                  line: 23,
                 ),
               ),
             ),
@@ -1019,7 +1383,7 @@
                 source_context: (
                   end: (
                     col: 4,
-                    line: 21,
+                    line: 22,
                   ),
                   file: 'model.sysl',
                   start: (
@@ -1047,7 +1411,7 @@
           source_context: (
             end: (
               col: 4,
-              line: 21,
+              line: 22,
             ),
             file: 'model.sysl',
             start: (
@@ -1119,12 +1483,12 @@
           name: 'all',
           source_context: (
             end: (
-              line: 88,
+              line: 108,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 81,
+              line: 101,
             ),
           ),
           stmt: [
@@ -1135,12 +1499,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 82,
+                  line: 102,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 82,
+                  line: 102,
                 ),
               ),
             ),
@@ -1151,12 +1515,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 83,
+                  line: 103,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 83,
+                  line: 103,
                 ),
               ),
             ),
@@ -1167,12 +1531,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 84,
+                  line: 104,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 84,
+                  line: 104,
                 ),
               ),
             ),
@@ -1183,12 +1547,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 85,
+                  line: 105,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 85,
+                  line: 105,
                 ),
               ),
             ),
@@ -1199,12 +1563,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 86,
+                  line: 106,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 86,
+                  line: 106,
                 ),
               ),
             ),
@@ -1215,12 +1579,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 87,
+                  line: 107,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 87,
+                  line: 107,
                 ),
               ),
             ),
@@ -1232,12 +1596,12 @@
       ),
       source_context: (
         end: (
-          line: 80,
+          line: 100,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 80,
+          line: 100,
         ),
       ),
     ),

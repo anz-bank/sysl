@@ -1,4 +1,22 @@
 (
+  alias: {
+    (
+      appName: ['Client'],
+      type: (
+        primitive: 'INT',
+      ),
+      typeName: 'Digit',
+    ),
+    (
+      appName: ['Client'],
+      type: (
+        sequence: (
+          primitive: 'INT',
+        ),
+      ),
+      typeName: 'Digits',
+    ),
+  },
   anno: (
     app: {
       (
@@ -345,6 +363,17 @@
     (
       appName: ['Client'],
       fieldConstraint: (),
+      fieldName: 'ww',
+      fieldOpt: {},
+      fieldType: (
+        appName: {},
+        typePath: ['Digit'],
+      ),
+      typeName: 'Screen',
+    ),
+    (
+      appName: ['Client'],
+      fieldConstraint: (),
       fieldName: 'xx',
       fieldOpt: {},
       fieldType: (
@@ -359,6 +388,17 @@
       fieldOpt: {},
       fieldType: (
         primitive: 'INT',
+      ),
+      typeName: 'Screen',
+    ),
+    (
+      appName: ['Client'],
+      fieldConstraint: (),
+      fieldName: 'zz',
+      fieldOpt: {},
+      fieldType: (
+        appName: {},
+        typePath: ['Digits'],
       ),
       typeName: 'Screen',
     ),
@@ -609,12 +649,12 @@
         appName: ['all'],
         appSrc: (
           end: (
-            line: 92,
+            line: 100,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 92,
+            line: 100,
           ),
         ),
       ),
@@ -775,12 +815,12 @@
         epName: 'all',
         epSrc: (
           end: (
-            line: 100,
+            line: 108,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 93,
+            line: 101,
           ),
         ),
       ),
@@ -885,7 +925,7 @@
       ),
       (
         appName: ['Client'],
-        fieldName: 'xx',
+        fieldName: 'ww',
         fieldSrc: (
           end: (
             col: 14,
@@ -901,7 +941,7 @@
       ),
       (
         appName: ['Client'],
-        fieldName: 'yy',
+        fieldName: 'xx',
         fieldSrc: (
           end: (
             col: 14,
@@ -911,6 +951,38 @@
           start: (
             col: 14,
             line: 90,
+          ),
+        ),
+        typeName: 'Screen',
+      ),
+      (
+        appName: ['Client'],
+        fieldName: 'yy',
+        fieldSrc: (
+          end: (
+            col: 14,
+            line: 91,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 14,
+            line: 91,
+          ),
+        ),
+        typeName: 'Screen',
+      ),
+      (
+        appName: ['Client'],
+        fieldName: 'zz',
+        fieldSrc: (
+          end: (
+            col: 14,
+            line: 92,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 14,
+            line: 92,
           ),
         ),
         typeName: 'Screen',
@@ -1178,11 +1250,41 @@
       ),
       (
         appName: ['Client'],
-        typeName: 'Screen',
+        typeName: 'Digit',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 97,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 4,
+            line: 94,
+          ),
+        ),
+      ),
+      (
+        appName: ['Client'],
+        typeName: 'Digits',
         typeSrc: (
           end: (
             col: 3,
-            line: 92,
+            line: 100,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 4,
+            line: 97,
+          ),
+        ),
+      ),
+      (
+        appName: ['Client'],
+        typeName: 'Screen',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 94,
           ),
           file: 'model.sysl',
           start: (
@@ -1901,6 +2003,18 @@
       appName: ['C'],
       typeDocstring: {},
       typeName: 'FetchResponse',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Client'],
+      typeDocstring: {},
+      typeName: 'Digit',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Client'],
+      typeDocstring: {},
+      typeName: 'Digits',
       typeOpt: {},
     ),
     (

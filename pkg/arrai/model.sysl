@@ -86,8 +86,16 @@ Client:
         return ok <: Client.Screen [dataflow={"Client.Screen.xx": "D.FetchResponse.dx", "Client.Screen.yy": "D.FetchResponse.dy"}, description="1:1 transform"]
 
     !type Screen:
+        ww <: Digit
         xx <: int
         yy <: int
+        zz <: Digits
+    
+    !alias Digit:
+        int
+        
+    !alias Digits:
+        sequence of int
 
 all:
     all:
