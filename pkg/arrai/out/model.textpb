@@ -15,20 +15,42 @@ apps:  {
       }
       endpoint:  "Read"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  38
+       col:  8
+      }
+      end:  {
+       line:  38
+       col:  18
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: A.FetchResponse [dataflow={\"A.FetchResponse.ax\": \"Source.Foo.x\", \"A.FetchResponse.ay\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  39
+       col:  8
+      }
+      end:  {
+       line:  39
+       col:  14
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  25
+      line:  37
       col:  4
      }
      end:  {
-      line:  29
+      line:  41
       col:  4
      }
     }
@@ -43,13 +65,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  30
+         line:  42
          col:  14
         }
         end:  {
-         line:  30
+         line:  42
          col:  14
         }
        }
@@ -60,13 +82,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  31
+         line:  43
          col:  14
         }
         end:  {
-         line:  31
+         line:  43
          col:  14
         }
        }
@@ -74,26 +96,26 @@ apps:  {
      }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  29
+      line:  41
       col:  4
      }
      end:  {
-      line:  33
+      line:  45
       col:  1
      }
     }
    }
   }
   source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
+   file:  "model.sysl"
    start:  {
-    line:  24
+    line:  36
     col:  1
    }
    end:  {
-    line:  24
+    line:  36
    }
   }
  }
@@ -115,20 +137,42 @@ apps:  {
       }
       endpoint:  "Read"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  47
+       col:  8
+      }
+      end:  {
+       line:  47
+       col:  18
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: B.FetchResponse [dataflow={\"B.FetchResponse.bx\": \"Source.Foo.x\", \"B.FetchResponse.by\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  48
+       col:  8
+      }
+      end:  {
+       line:  48
+       col:  14
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  34
+      line:  46
       col:  4
      }
      end:  {
-      line:  38
+      line:  50
       col:  4
      }
     }
@@ -143,13 +187,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  39
+         line:  51
          col:  14
         }
         end:  {
-         line:  39
+         line:  51
          col:  14
         }
        }
@@ -160,13 +204,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  40
+         line:  52
          col:  14
         }
         end:  {
-         line:  40
+         line:  52
          col:  14
         }
        }
@@ -174,26 +218,26 @@ apps:  {
      }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  38
+      line:  50
       col:  4
      }
      end:  {
-      line:  42
+      line:  54
       col:  1
      }
     }
    }
   }
   source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
+   file:  "model.sysl"
    start:  {
-    line:  33
+    line:  45
     col:  1
    }
    end:  {
-    line:  33
+    line:  45
    }
   }
  }
@@ -215,6 +259,17 @@ apps:  {
       }
       endpoint:  "FetchA"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  65
+       col:  8
+      }
+      end:  {
+       line:  65
+       col:  12
+      }
+     }
     }
     stmt:  {
      call:  {
@@ -223,20 +278,42 @@ apps:  {
       }
       endpoint:  "FetchB"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  66
+       col:  8
+      }
+      end:  {
+       line:  66
+       col:  12
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": [\"A.FetchResponse.ax\", \"B.FetchResponse.bx\"], \"C.FetchResponse.cy\": [\"A.FetchResponse.ay\", \"B.FetchResponse.by\"]}, description=\"1:1 transform\"]"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  67
+       col:  8
+      }
+      end:  {
+       line:  67
+       col:  14
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  52
+      line:  64
       col:  4
      }
      end:  {
-      line:  57
+      line:  69
       col:  4
      }
     }
@@ -253,20 +330,42 @@ apps:  {
       }
       endpoint:  "Fetch"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  56
+       col:  8
+      }
+      end:  {
+       line:  56
+       col:  13
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"A.FetchResponse.ax\", \"C.FetchResponse.cy\": \"A.FetchResponse.ay\"}, description=\"1:1 transform\"]"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  57
+       col:  8
+      }
+      end:  {
+       line:  57
+       col:  14
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  43
+      line:  55
       col:  4
      }
      end:  {
-      line:  47
+      line:  59
       col:  4
      }
     }
@@ -283,20 +382,42 @@ apps:  {
       }
       endpoint:  "Fetch"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  60
+       col:  8
+      }
+      end:  {
+       line:  60
+       col:  13
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"B.FetchResponse.bx\", \"C.FetchResponse.cy\": \"B.FetchResponse.by\"}, description=\"1:1 transform\"]"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  61
+       col:  8
+      }
+      end:  {
+       line:  61
+       col:  14
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  47
+      line:  59
       col:  4
      }
      end:  {
-      line:  52
+      line:  64
       col:  4
      }
     }
@@ -311,13 +432,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  58
+         line:  70
          col:  14
         }
         end:  {
-         line:  58
+         line:  70
          col:  14
         }
        }
@@ -328,13 +449,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  59
+         line:  71
          col:  14
         }
         end:  {
-         line:  59
+         line:  71
          col:  14
         }
        }
@@ -342,26 +463,26 @@ apps:  {
      }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  57
+      line:  69
       col:  4
      }
      end:  {
-      line:  61
+      line:  73
       col:  1
      }
     }
    }
   }
   source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
+   file:  "model.sysl"
    start:  {
-    line:  42
+    line:  54
     col:  1
    }
    end:  {
-    line:  42
+    line:  54
    }
   }
  }
@@ -383,20 +504,116 @@ apps:  {
       }
       endpoint:  "Fetch"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  85
+       col:  8
+      }
+      end:  {
+       line:  85
+       col:  13
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: Client.Screen [dataflow={\"Client.Screen.xx\": \"D.FetchResponse.dx\", \"Client.Screen.yy\": \"D.FetchResponse.dy\"}, description=\"1:1 transform\"]"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  86
+       col:  8
+      }
+      end:  {
+       line:  86
+       col:  14
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  72
+      line:  84
       col:  4
      }
      end:  {
-      line:  76
+      line:  88
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Digit"
+   value:  {
+    primitive:  INT
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  97
+      col:  4
+     }
+     end:  {
+      line:  100
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Digits"
+   value:  {
+    sequence:  {
+     primitive:  INT
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  100
+       col:  4
+      }
+      end:  {
+       line:  103
+       col:  3
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  100
+      col:  4
+     }
+     end:  {
+      line:  103
+      col:  3
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Display"
+   value:  {
+    type_ref:  {
+     context:  {
+      appname:  {
+       part:  "Client"
+      }
+      path:  "Display"
+     }
+     ref:  {
+      path:  "Screen"
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  94
+      col:  4
+     }
+     end:  {
+      line:  97
       col:  4
      }
     }
@@ -407,17 +624,44 @@ apps:  {
    value:  {
     tuple:  {
      attr_defs:  {
+      key:  "ww"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Client"
+         }
+         path:  "Screen"
+        }
+        ref:  {
+         path:  "Digit"
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  89
+         col:  14
+        }
+        end:  {
+         line:  89
+         col:  14
+        }
+       }
+      }
+     }
+     attr_defs:  {
       key:  "xx"
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  77
+         line:  90
          col:  14
         }
         end:  {
-         line:  77
+         line:  90
          col:  14
         }
        }
@@ -428,13 +672,40 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  78
+         line:  91
          col:  14
         }
         end:  {
-         line:  78
+         line:  91
+         col:  14
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "zz"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Client"
+         }
+         path:  "Screen"
+        }
+        ref:  {
+         path:  "Digits"
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  92
+         col:  14
+        }
+        end:  {
+         line:  92
          col:  14
         }
        }
@@ -442,26 +713,26 @@ apps:  {
      }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  76
+      line:  88
       col:  4
      }
      end:  {
-      line:  80
-      col:  5
+      line:  94
+      col:  4
      }
     }
    }
   }
   source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
+   file:  "model.sysl"
    start:  {
-    line:  71
+    line:  83
     col:  1
    }
    end:  {
-    line:  71
+    line:  83
    }
   }
  }
@@ -483,6 +754,17 @@ apps:  {
       }
       endpoint:  "Fetch"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  75
+       col:  8
+      }
+      end:  {
+       line:  75
+       col:  13
+      }
+     }
     }
     stmt:  {
      call:  {
@@ -491,20 +773,42 @@ apps:  {
       }
       endpoint:  "Fetch"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  76
+       col:  8
+      }
+      end:  {
+       line:  76
+       col:  13
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: D.FetchResponse [dataflow={\"D.FetchResponse.dx\": [\"A.FetchResponse.ax\", \"C.FetchResponse.cx\"], \"D.FetchResponse.dy\": [\"A.FetchResponse.ay\", \"C.FetchResponse.cy\"]}, description=\"1:1 transform\"]"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  77
+       col:  8
+      }
+      end:  {
+       line:  77
+       col:  14
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  62
+      line:  74
       col:  4
      }
      end:  {
-      line:  67
+      line:  79
       col:  4
      }
     }
@@ -519,13 +823,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  68
+         line:  80
          col:  14
         }
         end:  {
-         line:  68
+         line:  80
          col:  14
         }
        }
@@ -536,13 +840,13 @@ apps:  {
       value:  {
        primitive:  INT
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
-         line:  69
+         line:  81
          col:  14
         }
         end:  {
-         line:  69
+         line:  81
          col:  14
         }
        }
@@ -550,433 +854,26 @@ apps:  {
      }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  67
+      line:  79
       col:  4
      }
      end:  {
-      line:  71
+      line:  83
       col:  6
      }
     }
    }
   }
   source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
+   file:  "model.sysl"
    start:  {
-    line:  61
+    line:  73
     col:  1
    }
    end:  {
-    line:  61
-   }
-  }
- }
-}
-apps:  {
- key:  "Pizza :: Supreme"
- value:  {
-  name:  {
-   part:  "Pizza"
-   part:  "Supreme"
-  }
-  endpoints:  {
-   key:  "DoEverything"
-   value:  {
-    name:  "DoEverything"
-    param:  {
-     name:  "x"
-     type:  {
-      primitive:  STRING
-     }
-    }
-    param:  {
-     name:  "y"
-     type:  {
-      primitive:  STRING
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "an action"
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Pizza"
-       part:  "Supreme"
-      }
-      endpoint:  "DoEverything"
-      arg:  {
-       name:  "\"1\""
-      }
-      arg:  {
-       name:  "\"2\""
-      }
-     }
-    }
-    stmt:  {
-     cond:  {
-      test:  "test"
-      stmt:  {
-       action:  {
-        action:  "success"
-       }
-      }
-     }
-    }
-    stmt:  {
-     group:  {
-      title:  "else if test2"
-      stmt:  {
-       action:  {
-        action:  "success"
-       }
-      }
-     }
-    }
-    stmt:  {
-     group:  {
-      title:  "else"
-      stmt:  {
-       action:  {
-        action:  "failure"
-       }
-      }
-     }
-    }
-    stmt:  {
-     group:  {
-      title:  "loop pred"
-      stmt:  {
-       action:  {
-        action:  "do loop"
-       }
-      }
-     }
-    }
-    stmt:  {
-     foreach:  {
-      collection:  "pred"
-      stmt:  {
-       action:  {
-        action:  "do each"
-       }
-      }
-     }
-    }
-    stmt:  {
-     group:  {
-      title:  "alt pred"
-      stmt:  {
-       action:  {
-        action:  "do alt"
-       }
-      }
-     }
-    }
-    stmt:  {
-     group:  {
-      title:  "group label"
-      stmt:  {
-       action:  {
-        action:  "inner"
-       }
-      }
-     }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: int"
-     }
-    }
-    source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
-     start:  {
-      line:  81
-      col:  4
-     }
-     end:  {
-      line:  105
-      col:  4
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Event"
-   value:  {
-    name:  "Event"
-    is_pubsub:  true
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Pizza"
-       part:  "Supreme"
-      }
-      endpoint:  "Pizza :: Supreme -> Event"
-     }
-    }
-    source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
-     start:  {
-      line:  114
-      col:  4
-     }
-     end:  {
-      line:  114
-      col:  15
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "GET /a/{ap}"
-   value:  {
-    name:  "GET /a/{ap}"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
-      }
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-    }
-    rest_params:  {
-     method:  GET
-     path:  "/a/{ap}"
-     query_param:  {
-      name:  "aq"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
-        start:  {
-         line:  106
-         col:  12
-        }
-        end:  {
-         line:  106
-         col:  15
-        }
-       }
-      }
-     }
-     url_param:  {
-      name:  "ap"
-      type:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
-        start:  {
-         line:  105
-         col:  7
-        }
-        end:  {
-         line:  105
-         col:  20
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
-     start:  {
-      line:  106
-      col:  8
-     }
-     end:  {
-      line:  108
-      col:  4
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "POST /b/{bp}"
-   value:  {
-    name:  "POST /b/{bp}"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
-      }
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-    }
-    rest_params:  {
-     method:  POST
-     path:  "/b/{bp}"
-     query_param:  {
-      name:  "bq"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
-        start:  {
-         line:  109
-         col:  13
-        }
-        end:  {
-         line:  109
-         col:  16
-        }
-       }
-      }
-     }
-     url_param:  {
-      name:  "bp"
-      type:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
-        start:  {
-         line:  108
-         col:  7
-        }
-        end:  {
-         line:  108
-         col:  20
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
-     start:  {
-      line:  109
-      col:  8
-     }
-     end:  {
-      line:  111
-      col:  8
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "PUT /b/{bp}"
-   value:  {
-    name:  "PUT /b/{bp}"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
-      }
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-    }
-    rest_params:  {
-     method:  PUT
-     path:  "/b/{bp}"
-     query_param:  {
-      name:  "cq"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
-        start:  {
-         line:  111
-         col:  12
-        }
-        end:  {
-         line:  111
-         col:  15
-        }
-       }
-      }
-     }
-     url_param:  {
-      name:  "bp"
-      type:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
-        start:  {
-         line:  108
-         col:  7
-        }
-        end:  {
-         line:  108
-         col:  20
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
-     start:  {
-      line:  111
-      col:  8
-     }
-     end:  {
-      line:  114
-      col:  4
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Pizza :: Supreme -> Event"
-   value:  {
-    name:  "Pizza :: Supreme -> Event"
-    source:  {
-     part:  "Pizza"
-     part:  "Supreme"
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-    }
-    source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
-     start:  {
-      line:  116
-      col:  4
-     }
-     end:  {
-      line:  119
-      col:  3
-     }
-    }
-   }
-  }
-  source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
-   start:  {
-    line:  80
-    col:  1
-   }
-   end:  {
-    line:  80
-    col:  9
+    line:  73
    }
   }
  }
@@ -1004,23 +901,273 @@ apps:  {
    }
   }
   endpoints:  {
-   key:  "Read"
+   key:  "GET /get/{id}"
    value:  {
-    name:  "Read"
+    name:  "GET /get/{id}"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
     stmt:  {
      ret:  {
       payload:  "ok <: Foo"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  29
+       col:  16
+      }
+      end:  {
+       line:  29
+       col:  22
+      }
+     }
+    }
+    rest_params:  {
+     method:  GET
+     path:  "/get/{id}"
+     url_param:  {
+      name:  "id"
+      type:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  27
+         col:  9
+        }
+        end:  {
+         line:  27
+         col:  17
+        }
+       }
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  21
+      line:  28
+      col:  12
+     }
+     end:  {
+      line:  32
+      col:  4
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "POST /post"
+   value:  {
+    name:  "POST /post"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "x_request_id"
+     type:  {
+      primitive:  STRING
+      attrs:  {
+       key:  "name"
+       value:  {
+        s:  "x-request-id"
+       }
+      }
+      attrs:  {
+       key:  "patterns"
+       value:  {
+        a:  {
+         elt:  {
+          s:  "header"
+         }
+         elt:  {
+          s:  "required"
+         }
+        }
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "ssotoken"
+     type:  {
+      primitive:  STRING
+      attrs:  {
+       key:  "name"
+       value:  {
+        s:  "ssotoken"
+       }
+      }
+      attrs:  {
+       key:  "patterns"
+       value:  {
+        a:  {
+         elt:  {
+          s:  "cookie"
+         }
+         elt:  {
+          s:  "required"
+         }
+        }
+       }
+      }
+      opt:  true
+     }
+    }
+    param:  {
+     name:  "request"
+     type:  {
+      type_ref:  {
+       ref:  {
+        path:  "Bar"
+       }
+      }
+      attrs:  {
+       key:  "mediatype"
+       value:  {
+        s:  "application/json"
+       }
+      }
+      attrs:  {
+       key:  "patterns"
+       value:  {
+        a:  {
+         elt:  {
+          s:  "body"
+         }
+        }
+       }
+      }
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Foo"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  34
+       col:  12
+      }
+      end:  {
+       line:  34
+       col:  18
+      }
+     }
+    }
+    rest_params:  {
+     method:  POST
+     path:  "/post"
+     query_param:  {
+      name:  "page"
+      type:  {
+       primitive:  INT
+       opt:  true
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  33
+         col:  194
+        }
+        end:  {
+         line:  33
+         col:  202
+        }
+       }
+      }
+     }
+     query_param:  {
+      name:  "bar"
+      type:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Source"
+         }
+        }
+        ref:  {
+         path:  "Bar"
+        }
+       }
+       opt:  true
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  33
+         col:  204
+        }
+        end:  {
+         line:  33
+         col:  213
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  33
+      col:  8
+     }
+     end:  {
+      line:  36
+      col:  1
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "Read"
+   value:  {
+    name:  "Read"
+    param:  {
+     name:  "accountNumber"
+     type:  {
+      primitive:  STRING
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Foo"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  23
+       col:  8
+      }
+      end:  {
+       line:  23
+       col:  14
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  22
       col:  4
      }
      end:  {
-      line:  24
-      col:  1
+      line:  26
+      col:  4
      }
     }
    }
@@ -1034,12 +1181,6 @@ apps:  {
       value:  {
        primitive:  STRING
        attrs:  {
-        key:  "description"
-        value:  {
-         s:  "A bar table."
-        }
-       }
-       attrs:  {
         key:  "patterns"
         value:  {
          a:  {
@@ -1050,7 +1191,7 @@ apps:  {
         }
        }
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
          line:  15
          col:  13
@@ -1074,7 +1215,7 @@ apps:  {
        }
        opt:  true
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
          line:  17
          col:  13
@@ -1108,13 +1249,13 @@ apps:  {
         }
        }
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
          line:  19
          col:  13
         }
         end:  {
-         line:  21
+         line:  22
          col:  4
         }
        }
@@ -1131,13 +1272,13 @@ apps:  {
      }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
       line:  14
       col:  4
      }
      end:  {
-      line:  21
+      line:  22
       col:  4
      }
     }
@@ -1158,7 +1299,7 @@ apps:  {
         }
        }
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
          line:  10
          col:  13
@@ -1174,14 +1315,8 @@ apps:  {
       key:  "y"
       value:  {
        primitive:  INT
-       attrs:  {
-        key:  "description"
-        value:  {
-         s:  "A Foo.\n Represents foo things.\n"
-        }
-       }
        source_context:  {
-        file:  "dev/sysl/pkg/arrai/model.sysl"
+        file:  "model.sysl"
         start:  {
          line:  11
          col:  13
@@ -1201,7 +1336,7 @@ apps:  {
      }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
       line:  6
       col:  4
@@ -1214,7 +1349,7 @@ apps:  {
    }
   }
   source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
+   file:  "model.sysl"
    start:  {
     line:  1
     col:  1
@@ -1240,52 +1375,118 @@ apps:  {
      action:  {
       action:  "Source"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  105
+       col:  8
+      }
+      end:  {
+       line:  105
+       col:  8
+      }
+     }
     }
     stmt:  {
      action:  {
       action:  "Client"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  106
+       col:  8
+      }
+      end:  {
+       line:  106
+       col:  8
+      }
      }
     }
     stmt:  {
      action:  {
       action:  "A"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  107
+       col:  8
+      }
+      end:  {
+       line:  107
+       col:  8
+      }
+     }
     }
     stmt:  {
      action:  {
       action:  "B"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  108
+       col:  8
+      }
+      end:  {
+       line:  108
+       col:  8
+      }
      }
     }
     stmt:  {
      action:  {
       action:  "C"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  109
+       col:  8
+      }
+      end:  {
+       line:  109
+       col:  8
+      }
+     }
     }
     stmt:  {
      action:  {
       action:  "D"
      }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  110
+       col:  8
+      }
+      end:  {
+       line:  110
+       col:  8
+      }
+     }
     }
     source_context:  {
-     file:  "dev/sysl/pkg/arrai/model.sysl"
+     file:  "model.sysl"
      start:  {
-      line:  120
+      line:  104
       col:  4
      }
      end:  {
-      line:  127
+      line:  111
      }
     }
    }
   }
   source_context:  {
-   file:  "dev/sysl/pkg/arrai/model.sysl"
+   file:  "model.sysl"
    start:  {
-    line:  119
+    line:  103
     col:  1
    }
    end:  {
-    line:  119
+    line:  103
    }
   }
  }

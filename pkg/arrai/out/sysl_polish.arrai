@@ -675,12 +675,12 @@
           source_context: (
             end: (
               col: 4,
-              line: 97,
+              line: 100,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 94,
+              line: 97,
             ),
           ),
         ),
@@ -690,24 +690,48 @@
             source_context: (
               end: (
                 col: 3,
-                line: 100,
+                line: 103,
               ),
               file: 'model.sysl',
               start: (
                 col: 4,
-                line: 97,
+                line: 100,
               ),
             ),
           ),
           source_context: (
             end: (
               col: 3,
-              line: 100,
+              line: 103,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
+              line: 100,
+            ),
+          ),
+        ),
+        'Display': (
+          source_context: (
+            end: (
+              col: 4,
               line: 97,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 94,
+            ),
+          ),
+          type_ref: (
+            context: (
+              appname: (
+                part: ['Client'],
+              ),
+              path: ['Display'],
+            ),
+            ref: (
+              path: ['Screen'],
             ),
           ),
         ),
@@ -1483,12 +1507,12 @@
           name: 'all',
           source_context: (
             end: (
-              line: 108,
+              line: 111,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 101,
+              line: 104,
             ),
           ),
           stmt: [
@@ -1499,12 +1523,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 102,
+                  line: 105,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 102,
+                  line: 105,
                 ),
               ),
             ),
@@ -1515,12 +1539,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 103,
+                  line: 106,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 103,
+                  line: 106,
                 ),
               ),
             ),
@@ -1531,12 +1555,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 104,
+                  line: 107,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 104,
+                  line: 107,
                 ),
               ),
             ),
@@ -1547,12 +1571,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 105,
+                  line: 108,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 105,
+                  line: 108,
                 ),
               ),
             ),
@@ -1563,12 +1587,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 106,
+                  line: 109,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 106,
+                  line: 109,
                 ),
               ),
             ),
@@ -1579,12 +1603,12 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 107,
+                  line: 110,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 107,
+                  line: 110,
                 ),
               ),
             ),
@@ -1596,12 +1620,12 @@
       ),
       source_context: (
         end: (
-          line: 100,
+          line: 103,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 100,
+          line: 103,
         ),
       ),
     ),

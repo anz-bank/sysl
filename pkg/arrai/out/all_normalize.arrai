@@ -1,4 +1,48 @@
 (
+  alias: {
+    (
+      aliasType: (
+        appName: ['RestEndpoint'],
+        typePath: ['Type'],
+      ),
+      appName: ['Types'],
+      typeName: 'AliasForeignRef',
+    ),
+    (
+      aliasType: (
+        appName: ['Types'],
+        typePath: ['Type'],
+      ),
+      appName: ['Types'],
+      typeName: 'AliasRef',
+    ),
+    (
+      aliasType: (
+        primitive: 'INT',
+      ),
+      appName: ['Types'],
+      typeName: 'Alias',
+    ),
+    (
+      aliasType: (
+        sequence: (
+          primitive: 'STRING',
+        ),
+      ),
+      appName: ['Types'],
+      typeName: 'AliasSequence',
+    ),
+    (
+      aliasType: (
+        set: (
+          appName: ['RestEndpoint'],
+          typePath: ['Type'],
+        ),
+      ),
+      appName: ['Types'],
+      typeName: 'AliasForeignRefSet',
+    ),
+  },
   anno: (
     app: {
       (
@@ -79,7 +123,23 @@
       ),
     },
     mixin: {},
-    stmt: {},
+    param: {},
+    stmt: {
+      (
+        appName: ['Statements'],
+        epName: 'AnnotatedStatements',
+        stmtAnnoName: 'annotation',
+        stmtAnnoValue: 'annotation can be added for any statement as a string',
+        stmtIndex: 0,
+      ),
+      (
+        appName: ['Statements'],
+        epName: 'AnnotatedStatements',
+        stmtAnnoName: 'annotation',
+        stmtAnnoValue: [['or', 'as', 'an'], ['array', 'of', 'arrays']],
+        stmtIndex: 2,
+      ),
+    },
     type: {
       (
         appName: ['Types'],
@@ -150,17 +210,7 @@
       appName: ['App', 'with', 'subpackages'],
     ),
   },
-  enum: {
-    (
-      appName: ['Types'],
-      enumItems: {
-        'ENUM_1': 1,
-        'ENUM_2': 2,
-        'ENUM_3': 3,
-      },
-      typeName: 'Enum',
-    ),
-  },
+  enum: {},
   ep: {
     (
       appName: ['EventAndSubscriber'],
@@ -562,7 +612,9 @@
       fieldConstraint: (),
       fieldName: 'x',
       fieldOpt: {},
-      fieldType: 'INT',
+      fieldType: (
+        primitive: 'INT',
+      ),
       typeName: 'Type',
     ),
     (
@@ -570,7 +622,9 @@
       fieldConstraint: (),
       fieldName: 'a',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Table.inplace',
     ),
     (
@@ -578,15 +632,30 @@
       fieldConstraint: (),
       fieldName: 'a',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Type.inplace',
+    ),
+    (
+      appName: ['Types'],
+      fieldConstraint: (),
+      fieldName: 'aliasSequence',
+      fieldOpt: {},
+      fieldType: (
+        appName: ['Types'],
+        typePath: ['Alias'],
+      ),
+      typeName: 'Type',
     ),
     (
       appName: ['Types'],
       fieldConstraint: (),
       fieldName: 'b',
       fieldOpt: {},
-      fieldType: 'INT',
+      fieldType: (
+        primitive: 'INT',
+      ),
       typeName: 'Table.inplace',
     ),
     (
@@ -594,7 +663,9 @@
       fieldConstraint: (),
       fieldName: 'b',
       fieldOpt: {},
-      fieldType: 'INT',
+      fieldType: (
+        primitive: 'INT',
+      ),
       typeName: 'Type.inplace',
     ),
     (
@@ -602,7 +673,10 @@
       fieldConstraint: (),
       fieldName: 'inplace',
       fieldOpt: {},
-      fieldType: 'inplace',
+      fieldType: (
+        appName: ['Types'],
+        typePath: ['inplace'],
+      ),
       typeName: 'Table',
     ),
     (
@@ -610,7 +684,10 @@
       fieldConstraint: (),
       fieldName: 'inplace',
       fieldOpt: {},
-      fieldType: 'inplace',
+      fieldType: (
+        appName: ['Types'],
+        typePath: ['inplace'],
+      ),
       typeName: 'Type',
     ),
     (
@@ -618,7 +695,9 @@
       fieldConstraint: (),
       fieldName: 'nativeTypeField',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Table',
     ),
     (
@@ -626,7 +705,9 @@
       fieldConstraint: (),
       fieldName: 'nativeTypeField',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Type',
     ),
     (
@@ -636,7 +717,9 @@
       fieldOpt: {
         (),
       },
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Table',
     ),
     (
@@ -646,7 +729,9 @@
       fieldOpt: {
         (),
       },
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Type',
     ),
     (
@@ -654,7 +739,9 @@
       fieldConstraint: (),
       fieldName: 'primaryKey',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Table',
     ),
     (
@@ -662,7 +749,10 @@
       fieldConstraint: (),
       fieldName: 'reference',
       fieldOpt: {},
-      fieldType: 'RestEndpoint.Type',
+      fieldType: (
+        appName: ['RestEndpoint'],
+        typePath: ['Type'],
+      ),
       typeName: 'Table',
     ),
     (
@@ -670,7 +760,58 @@
       fieldConstraint: (),
       fieldName: 'reference',
       fieldOpt: {},
-      fieldType: 'RestEndpoint.Type',
+      fieldType: (
+        appName: ['RestEndpoint'],
+        typePath: ['Type'],
+      ),
+      typeName: 'Type',
+    ),
+    (
+      appName: ['Types'],
+      fieldConstraint: (),
+      fieldName: 'sequence',
+      fieldOpt: {},
+      fieldType: (
+        sequence: (
+          primitive: 'STRING',
+        ),
+      ),
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
+      fieldConstraint: (),
+      fieldName: 'sequence',
+      fieldOpt: {},
+      fieldType: (
+        sequence: (
+          primitive: 'STRING',
+        ),
+      ),
+      typeName: 'Type',
+    ),
+    (
+      appName: ['Types'],
+      fieldConstraint: (),
+      fieldName: 'set',
+      fieldOpt: {},
+      fieldType: (
+        set: (
+          primitive: 'STRING',
+        ),
+      ),
+      typeName: 'Table',
+    ),
+    (
+      appName: ['Types'],
+      fieldConstraint: (),
+      fieldName: 'set',
+      fieldOpt: {},
+      fieldType: (
+        set: (
+          primitive: 'STRING',
+        ),
+      ),
       typeName: 'Type',
     ),
     (
@@ -678,7 +819,9 @@
       fieldConstraint: (),
       fieldName: 'with_anno',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Table',
     ),
     (
@@ -686,7 +829,9 @@
       fieldConstraint: (),
       fieldName: 'with_anno',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Type',
     ),
     (
@@ -698,7 +843,9 @@
       ),
       fieldName: 'string_max_constraint',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Table',
     ),
     (
@@ -712,7 +859,9 @@
       ),
       fieldName: 'decimal_with_precision',
       fieldOpt: {},
-      fieldType: 'DECIMAL',
+      fieldType: (
+        primitive: 'DECIMAL',
+      ),
       typeName: 'Table',
     ),
     (
@@ -724,7 +873,9 @@
       ),
       fieldName: 'string_range_constraint',
       fieldOpt: {},
-      fieldType: 'STRING',
+      fieldType: (
+        primitive: 'STRING',
+      ),
       typeName: 'Table',
     ),
   },
@@ -734,9 +885,10 @@
       appName: ['RestEndpoint'],
       epName: 'DELETE /param',
       paramIndex: 0,
+      paramLoc: 'method',
       paramName: 'with_string',
+      paramOpt: {},
       paramType: (
-        docstring: 'this is a doc string for param',
         primitive: 'INT',
       ),
     ),
@@ -744,41 +896,86 @@
       appName: ['RestEndpoint'],
       epName: 'GET /param',
       paramIndex: 0,
-      paramName: (),
+      paramLoc: 'method',
+      paramName: {},
+      paramOpt: {},
       paramType: {},
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'GET /pathwithtype/{native}',
+      paramIndex: 0,
+      paramLoc: 'path',
+      paramName: 'native',
+      paramOpt: {},
+      paramType: (
+        primitive: 'INT',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'GET /query',
+      paramIndex: 0,
+      paramLoc: 'query',
+      paramName: 'native',
+      paramOpt: {},
+      paramType: (
+        primitive: 'STRING',
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'GET /query',
+      paramIndex: 1,
+      paramLoc: 'query',
+      paramName: 't',
+      paramOpt: {},
+      paramType: {},
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'GET /query',
+      paramIndex: 2,
+      paramLoc: 'query',
+      paramName: 'curly',
+      paramOpt: {},
+      paramType: (
+        appName: ['RestEndpoint'],
+        typePath: ['Type'],
+      ),
+    ),
+    (
+      appName: ['RestEndpoint'],
+      epName: 'GET /query',
+      paramIndex: 3,
+      paramLoc: 'query',
+      paramName: 'optional',
+      paramOpt: {
+        (),
+      },
+      paramType: (
+        primitive: 'STRING',
+      ),
     ),
     (
       appName: ['RestEndpoint'],
       epName: 'PATCH /param',
       paramIndex: 0,
+      paramLoc: 'body',
       paramName: 't',
+      paramOpt: {},
       paramType: (
-        attrs: {
-          'patterns': (
-            a: (
-              elt: [
-                (
-                  s: 'body',
-                ),
-              ],
-            ),
-          ),
-        },
-        type_ref: (
-          ref: (
-            appname: (
-              part: ['Types'],
-            ),
-            path: ['type'],
-          ),
-        ),
+        appName: ['Types'],
+        typePath: ['Type'],
       ),
     ),
     (
       appName: ['RestEndpoint'],
       epName: 'POST /param',
       paramIndex: 0,
+      paramLoc: 'method',
       paramName: 'native',
+      paramOpt: {},
       paramType: (
         primitive: 'STRING',
       ),
@@ -787,13 +984,10 @@
       appName: ['RestEndpoint'],
       epName: 'PUT /param',
       paramIndex: 0,
+      paramLoc: 'method',
       paramName: 'unlimited',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (),
-          ),
-        ],
         primitive: 'STRING',
       ),
     ),
@@ -801,15 +995,10 @@
       appName: ['RestEndpoint'],
       epName: 'PUT /param',
       paramIndex: 1,
+      paramLoc: 'method',
       paramName: 'limited',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (
-              max: 10,
-            ),
-          ),
-        ],
         primitive: 'STRING',
       ),
     ),
@@ -817,15 +1006,10 @@
       appName: ['RestEndpoint'],
       epName: 'PUT /param',
       paramIndex: 2,
+      paramLoc: 'method',
       paramName: 'num',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (
-              max: 5,
-            ),
-          ),
-        ],
         primitive: 'INT',
       ),
     ),
@@ -833,15 +1017,10 @@
       appName: ['RestEndpoint'],
       epName: 'PUT /param',
       paramIndex: 3,
+      paramLoc: 'method',
       paramName: 'limited_num',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (
-              max: 5,
-            ),
-          ),
-        ],
         primitive: 'INT',
       ),
     ),
@@ -849,37 +1028,19 @@
       appName: ['RestEndpoint'],
       epName: 'PUT /param',
       paramIndex: 4,
+      paramLoc: 'method',
       paramName: 'x',
-      paramType: (
-        list: (
-          type: (
-            primitive: 'INT',
-            source_context: (
-              end: (
-                col: 117,
-                line: 86,
-              ),
-              file: 'all.sysl',
-              start: (
-                col: 117,
-                line: 86,
-              ),
-            ),
-          ),
-        ),
-      ),
+      paramOpt: {},
+      paramType: {},
     ),
     (
       appName: ['SimpleEndpoint'],
       epName: 'SimpleEpWithArray',
       paramIndex: 0,
+      paramLoc: 'method',
       paramName: 'unlimited',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (),
-          ),
-        ],
         primitive: 'STRING',
       ),
     ),
@@ -887,15 +1048,10 @@
       appName: ['SimpleEndpoint'],
       epName: 'SimpleEpWithArray',
       paramIndex: 1,
+      paramLoc: 'method',
       paramName: 'limited',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (
-              max: 10,
-            ),
-          ),
-        ],
         primitive: 'STRING',
       ),
     ),
@@ -903,15 +1059,10 @@
       appName: ['SimpleEndpoint'],
       epName: 'SimpleEpWithArray',
       paramIndex: 2,
+      paramLoc: 'method',
       paramName: 'num',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (
-              max: 5,
-            ),
-          ),
-        ],
         primitive: 'INT',
       ),
     ),
@@ -919,15 +1070,10 @@
       appName: ['SimpleEndpoint'],
       epName: 'SimpleEpWithArray',
       paramIndex: 3,
+      paramLoc: 'method',
       paramName: 'limited_num',
+      paramOpt: {},
       paramType: (
-        constraint: [
-          (
-            length: (
-              max: 5,
-            ),
-          ),
-        ],
         primitive: 'INT',
       ),
     ),
@@ -935,40 +1081,27 @@
       appName: ['SimpleEndpoint'],
       epName: 'SimpleEpWithArray',
       paramIndex: 4,
+      paramLoc: 'method',
       paramName: 'x',
-      paramType: (
-        list: (
-          type: (
-            primitive: 'INT',
-            source_context: (
-              end: (
-                col: 127,
-                line: 31,
-              ),
-              file: 'all.sysl',
-              start: (
-                col: 127,
-                line: 31,
-              ),
-            ),
-          ),
-        ),
-      ),
+      paramOpt: {},
+      paramType: {},
     ),
     (
       appName: ['SimpleEndpoint'],
       epName: 'SimpleEpWithParamsRef',
       paramIndex: 0,
+      paramLoc: 'method',
       paramName: 'Types.type',
-      paramType: (
-        no_type: (),
-      ),
+      paramOpt: {},
+      paramType: {},
     ),
     (
       appName: ['SimpleEndpoint'],
       epName: 'SimpleEpWithTypes',
       paramIndex: 0,
+      paramLoc: 'method',
       paramName: 'native',
+      paramOpt: {},
       paramType: (
         primitive: 'STRING',
       ),
@@ -1021,12 +1154,12 @@
         appName: ['EventAndSubscriber'],
         appSrc: (
           end: (
-            line: 233,
+            line: 254,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 233,
+            line: 254,
           ),
         ),
       ),
@@ -1060,12 +1193,12 @@
         appName: ['Statements'],
         appSrc: (
           end: (
-            line: 132,
+            line: 153,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 132,
+            line: 153,
           ),
         ),
       ),
@@ -1090,12 +1223,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 249,
+            line: 270,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 245,
+            line: 266,
           ),
         ),
       ),
@@ -1390,12 +1523,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 208,
+            line: 229,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 203,
+            line: 224,
           ),
         ),
       ),
@@ -1405,12 +1538,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 203,
+            line: 224,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 195,
+            line: 216,
           ),
         ),
       ),
@@ -1420,12 +1553,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 176,
+            line: 197,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 169,
+            line: 190,
           ),
         ),
       ),
@@ -1435,12 +1568,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 195,
+            line: 216,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 190,
+            line: 211,
           ),
         ),
       ),
@@ -1450,12 +1583,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 144,
+            line: 165,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 133,
+            line: 154,
           ),
         ),
       ),
@@ -1465,12 +1598,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 164,
+            line: 185,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 144,
+            line: 165,
           ),
         ),
       ),
@@ -1480,12 +1613,12 @@
         epSrc: (
           end: (
             col: 18,
-            line: 233,
+            line: 254,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 208,
+            line: 229,
           ),
         ),
       ),
@@ -1495,12 +1628,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 190,
+            line: 211,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 176,
+            line: 197,
           ),
         ),
       ),
@@ -1510,12 +1643,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 169,
+            line: 190,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 164,
+            line: 185,
           ),
         ),
       ),
@@ -1532,12 +1665,12 @@
         eventSrc: (
           end: (
             col: 4,
-            line: 241,
+            line: 262,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 234,
+            line: 255,
           ),
         ),
       ),
@@ -1547,12 +1680,12 @@
         eventSrc: (
           end: (
             col: 4,
-            line: 245,
+            line: 266,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 241,
+            line: 262,
           ),
         ),
       ),
@@ -1580,12 +1713,12 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 102,
+            line: 105,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 102,
+            line: 105,
           ),
         ),
         typeName: 'Type.inplace',
@@ -1596,15 +1729,31 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 115,
+            line: 123,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 115,
+            line: 123,
           ),
         ),
         typeName: 'Table.inplace',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'aliasSequence',
+        fieldSrc: (
+          end: (
+            col: 25,
+            line: 101,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 25,
+            line: 101,
+          ),
+        ),
+        typeName: 'Type',
       ),
       (
         appName: ['Types'],
@@ -1612,12 +1761,12 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 103,
+            line: 106,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 103,
+            line: 106,
           ),
         ),
         typeName: 'Type.inplace',
@@ -1628,28 +1777,44 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 116,
+            line: 124,
           ),
           file: 'all.sysl',
           start: (
             col: 17,
-            line: 116,
+            line: 124,
           ),
         ),
         typeName: 'Table.inplace',
       ),
       (
         appName: ['Types'],
+        fieldName: 'decimal_with_precision',
+        fieldSrc: (
+          end: (
+            col: 45,
+            line: 119,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 34,
+            line: 119,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
         fieldName: 'inplace',
         fieldSrc: (
           end: (
             col: 4,
-            line: 105,
+            line: 108,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 101,
+            line: 104,
           ),
         ),
         typeName: 'Type',
@@ -1660,76 +1825,76 @@
         fieldSrc: (
           end: (
             col: 4,
-            line: 118,
+            line: 126,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
+            line: 122,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'nativeTypeField',
+        fieldSrc: (
+          end: (
+            col: 27,
+            line: 96,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 27,
+            line: 96,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'nativeTypeField',
+        fieldSrc: (
+          end: (
+            col: 27,
+            line: 112,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 27,
+            line: 112,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'optional',
+        fieldSrc: (
+          end: (
+            col: 26,
+            line: 98,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 98,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'optional',
+        fieldSrc: (
+          end: (
+            col: 26,
             line: 114,
           ),
-        ),
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'nativeTypeField',
-        fieldSrc: (
-          end: (
-            col: 27,
-            line: 96,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 27,
-            line: 96,
-          ),
-        ),
-        typeName: 'Type',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'nativeTypeField',
-        fieldSrc: (
-          end: (
-            col: 27,
-            line: 109,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 27,
-            line: 109,
-          ),
-        ),
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'optional',
-        fieldSrc: (
-          end: (
-            col: 26,
-            line: 98,
-          ),
           file: 'all.sysl',
           start: (
             col: 20,
-            line: 98,
-          ),
-        ),
-        typeName: 'Type',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'optional',
-        fieldSrc: (
-          end: (
-            col: 26,
-            line: 111,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 20,
-            line: 111,
+            line: 114,
           ),
         ),
         typeName: 'Table',
@@ -1740,12 +1905,12 @@
         fieldSrc: (
           end: (
             col: 33,
-            line: 108,
+            line: 111,
           ),
           file: 'all.sysl',
           start: (
             col: 22,
-            line: 108,
+            line: 111,
           ),
         ),
         typeName: 'Table',
@@ -1772,39 +1937,7 @@
         fieldSrc: (
           end: (
             col: 34,
-            line: 110,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 21,
-            line: 110,
-          ),
-        ),
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'with_anno',
-        fieldSrc: (
-          end: (
-            col: 8,
-            line: 101,
-          ),
-          file: 'all.sysl',
-          start: (
-            col: 21,
-            line: 100,
-          ),
-        ),
-        typeName: 'Type',
-      ),
-      (
-        appName: ['Types'],
-        fieldName: 'with_anno',
-        fieldSrc: (
-          end: (
-            col: 8,
-            line: 114,
+            line: 113,
           ),
           file: 'all.sysl',
           start: (
@@ -1814,8 +1947,264 @@
         ),
         typeName: 'Table',
       ),
+      (
+        appName: ['Types'],
+        fieldName: 'sequence',
+        fieldSrc: (
+          end: (
+            col: 32,
+            line: 100,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 100,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'sequence',
+        fieldSrc: (
+          end: (
+            col: 32,
+            line: 116,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 116,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'set',
+        fieldSrc: (
+          end: (
+            col: 22,
+            line: 99,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 15,
+            line: 99,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'set',
+        fieldSrc: (
+          end: (
+            col: 22,
+            line: 115,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 15,
+            line: 115,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'string_max_constraint',
+        fieldSrc: (
+          end: (
+            col: 41,
+            line: 120,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 33,
+            line: 120,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'string_range_constraint',
+        fieldSrc: (
+          end: (
+            col: 47,
+            line: 121,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 35,
+            line: 121,
+          ),
+        ),
+        typeName: 'Table',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'with_anno',
+        fieldSrc: (
+          end: (
+            col: 8,
+            line: 104,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 21,
+            line: 103,
+          ),
+        ),
+        typeName: 'Type',
+      ),
+      (
+        appName: ['Types'],
+        fieldName: 'with_anno',
+        fieldSrc: (
+          end: (
+            col: 8,
+            line: 119,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 21,
+            line: 118,
+          ),
+        ),
+        typeName: 'Table',
+      ),
     },
     mixin: {},
+    param: {
+      (
+        appName: ['RestEndpoint'],
+        epName: 'DELETE /param',
+        paramName: 'with_string',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /param',
+        paramName: {},
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /pathwithtype/{native}',
+        paramName: 'native',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        paramName: 'curly',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        paramName: 'native',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        paramName: 'optional',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'GET /query',
+        paramName: 't',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /param',
+        paramName: 't',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'POST /param',
+        paramName: 'native',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        paramName: 'limited',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        paramName: 'limited_num',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        paramName: 'num',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        paramName: 'unlimited',
+        paramSrc: {},
+      ),
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PUT /param',
+        paramName: 'x',
+        paramSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        paramName: 'limited',
+        paramSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        paramName: 'limited_num',
+        paramSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        paramName: 'num',
+        paramSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        paramName: 'unlimited',
+        paramSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithArray',
+        paramName: 'x',
+        paramSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithParamsRef',
+        paramName: 'Types.type',
+        paramSrc: {},
+      ),
+      (
+        appName: ['SimpleEndpoint'],
+        epName: 'SimpleEpWithTypes',
+        paramName: 'native',
+        paramSrc: {},
+      ),
+    },
     stmt: {
       (
         appName: ['EventAndSubscriber'],
@@ -1979,13 +2368,73 @@
         typeName: 'Alias',
         typeSrc: (
           end: (
-            col: 10,
-            line: 132,
+            col: 4,
+            line: 141,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 129,
+            line: 138,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'AliasForeignRef',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 150,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 147,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'AliasForeignRefSet',
+        typeSrc: (
+          end: (
+            col: 10,
+            line: 153,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 150,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'AliasRef',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 147,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 144,
+          ),
+        ),
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'AliasSequence',
+        typeSrc: (
+          end: (
+            col: 4,
+            line: 144,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 4,
+            line: 141,
           ),
         ),
       ),
@@ -1995,12 +2444,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 123,
+            line: 131,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 118,
+            line: 126,
           ),
         ),
       ),
@@ -2010,12 +2459,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 118,
+            line: 126,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 105,
+            line: 108,
           ),
         ),
       ),
@@ -2030,7 +2479,7 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 105,
+            line: 108,
           ),
           file: 'all.sysl',
           start: (
@@ -2050,12 +2499,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 129,
+            line: 138,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 123,
+            line: 131,
           ),
         ),
       ),
@@ -2077,17 +2526,17 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {
-              'annotation': (
-                a: ['as', 'an', 'array'],
-              ),
-            },
-          ),
-          status: 'ok',
-          type: 'string',
+        attr: (
+          modifier: {},
+          nvp: {
+            'annotation': (
+              a: ['as', 'an', 'array'],
+            ),
+          },
+        ),
+        status: 'ok',
+        type: (
+          primitive: ['string'],
         ),
       ),
     ),
@@ -2097,9 +2546,7 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['Statements'],
-        ),
+        appName: ['Statements'],
         epName: 'Miscellanous',
       ),
       stmtCond: {},
@@ -2132,9 +2579,7 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['RestEndpoint'],
-        ),
+        appName: ['RestEndpoint'],
         epName: 'GET /param',
       ),
       stmtCond: {},
@@ -2152,9 +2597,7 @@
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: (
-          part: ['Statements'],
-        ),
+        appName: ['Statements'],
         epName: 'Returns',
       ),
       stmtCond: {},
@@ -2209,7 +2652,7 @@
       stmtCond: {},
       stmtForeach: {},
       stmtGroup: (
-        title: 'else predicate2',
+        title: 'else if predicate2',
       ),
       stmtIndex: 1,
       stmtLoop: {},
@@ -2399,12 +2842,12 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 180,
+                    line: 201,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 180,
+                    line: 201,
                   ),
                 ),
               ),
@@ -2420,12 +2863,12 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 183,
+                    line: 204,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 183,
+                    line: 204,
                   ),
                 ),
               ),
@@ -2441,12 +2884,12 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 186,
+                    line: 207,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 186,
+                    line: 207,
                   ),
                 ),
               ),
@@ -2461,12 +2904,12 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 188,
+                    line: 209,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 188,
+                    line: 209,
                   ),
                 ),
               ),
@@ -2498,13 +2941,13 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {},
-          ),
-          status: 'ok',
-          type: 'string',
+        attr: (
+          modifier: {},
+          nvp: {},
+        ),
+        status: 'ok',
+        type: (
+          primitive: ['string'],
         ),
       ),
     ),
@@ -2522,13 +2965,14 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {},
-          ),
-          status: 'ok',
-          type: 'Types.Type',
+        attr: (
+          modifier: {},
+          nvp: {},
+        ),
+        status: 'ok',
+        type: (
+          appName: ['Types'],
+          typePath: ['Type'],
         ),
       ),
     ),
@@ -2546,13 +2990,14 @@
       stmtLoopN: {},
       stmtParent: {},
       stmtRet: (
-        payload: (
-          attr: (
-            modifier: {},
-            nvp: {},
-          ),
-          status: 'error',
-          type: 'Types.Type',
+        attr: (
+          modifier: {},
+          nvp: {},
+        ),
+        status: 'error',
+        type: (
+          appName: ['Types'],
+          typePath: ['Type'],
         ),
       ),
     ),
@@ -2653,6 +3098,14 @@
       ),
     },
     mixin: {},
+    param: {
+      (
+        appName: ['RestEndpoint'],
+        epName: 'PATCH /param',
+        paramName: 't',
+        paramTag: 'body',
+      ),
+    },
     stmt: {},
     type: {},
     view: {},
@@ -2668,6 +3121,30 @@
       appName: ['Types'],
       typeDocstring: {},
       typeName: 'Alias',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'AliasForeignRef',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'AliasForeignRefSet',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'AliasRef',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Types'],
+      typeDocstring: {},
+      typeName: 'AliasSequence',
       typeOpt: {},
     ),
     (

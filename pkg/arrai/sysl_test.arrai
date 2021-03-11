@@ -69,11 +69,10 @@ let _app = (
         model:
             let result = newNormalize(_model);
             //test.assert.unequal((), result),
-        # FIXME: reconstruct is not fully finished
-        # all:
-        #     let _all = load('out/all.pb');
-        #     let expected = //{./test_all_sysl_normalized};
-        #     let result = newNormalize(_all);
-        #     //test.assert.equal(expected, result),
+        all:
+            let _all = load('out/all.pb');
+            let expected = //{./test_all_sysl_normalized};
+            let result = newNormalize(_all);
+            //test.assert.equal(expected, result),
     ),
 )

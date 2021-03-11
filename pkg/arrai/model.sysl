@@ -90,10 +90,13 @@ Client:
         xx <: int
         yy <: int
         zz <: Digits
-    
+
+    !alias Display:
+        Screen
+
     !alias Digit:
         int
-        
+
     !alias Digits:
         sequence of int
 

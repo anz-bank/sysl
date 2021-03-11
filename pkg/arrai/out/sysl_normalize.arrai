@@ -1,19 +1,27 @@
 (
   alias: {
     (
+      aliasType: (
+        appName: ['Client'],
+        typePath: ['Screen'],
+      ),
       appName: ['Client'],
-      type: (
+      typeName: 'Display',
+    ),
+    (
+      aliasType: (
         primitive: 'INT',
       ),
+      appName: ['Client'],
       typeName: 'Digit',
     ),
     (
-      appName: ['Client'],
-      type: (
+      aliasType: (
         sequence: (
           primitive: 'INT',
         ),
       ),
+      appName: ['Client'],
       typeName: 'Digits',
     ),
   },
@@ -366,7 +374,7 @@
       fieldName: 'ww',
       fieldOpt: {},
       fieldType: (
-        appName: {},
+        appName: ['Client'],
         typePath: ['Digit'],
       ),
       typeName: 'Screen',
@@ -397,7 +405,7 @@
       fieldName: 'zz',
       fieldOpt: {},
       fieldType: (
-        appName: {},
+        appName: ['Client'],
         typePath: ['Digits'],
       ),
       typeName: 'Screen',
@@ -450,7 +458,7 @@
       fieldName: 'x',
       fieldOpt: {},
       fieldType: (
-        appName: {},
+        appName: ['Source'],
         typePath: ['Foo', 'x'],
       ),
       typeName: 'Bar',
@@ -536,7 +544,7 @@
         (),
       },
       paramType: (
-        appName: {},
+        appName: ['Source'],
         typePath: ['Bar'],
       ),
     ),
@@ -548,7 +556,7 @@
       paramName: 'request',
       paramOpt: {},
       paramType: (
-        appName: {},
+        appName: ['Source'],
         typePath: ['Bar'],
       ),
     ),
@@ -649,12 +657,12 @@
         appName: ['all'],
         appSrc: (
           end: (
-            line: 100,
+            line: 103,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 100,
+            line: 103,
           ),
         ),
       ),
@@ -815,12 +823,12 @@
         epName: 'all',
         epSrc: (
           end: (
-            line: 108,
+            line: 111,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 101,
+            line: 104,
           ),
         ),
       ),
@@ -1254,12 +1262,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 97,
+            line: 100,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 94,
+            line: 97,
           ),
         ),
       ),
@@ -1269,12 +1277,27 @@
         typeSrc: (
           end: (
             col: 3,
-            line: 100,
+            line: 103,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
+            line: 100,
+          ),
+        ),
+      ),
+      (
+        appName: ['Client'],
+        typeName: 'Display',
+        typeSrc: (
+          end: (
+            col: 4,
             line: 97,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 4,
+            line: 94,
           ),
         ),
       ),
@@ -2015,6 +2038,12 @@
       appName: ['Client'],
       typeDocstring: {},
       typeName: 'Digits',
+      typeOpt: {},
+    ),
+    (
+      appName: ['Client'],
+      typeDocstring: {},
+      typeName: 'Display',
       typeOpt: {},
     ),
     (

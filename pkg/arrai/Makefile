@@ -4,9 +4,13 @@ SYSL_PLANTUML=http://localhost:8080
 OUT=out
 
 # Raw targets that are generated directly by arr.ai.
-RAW=$(OUT)/data_dictionary.csv \
+RAW= \
+	$(OUT)/all.textpb \
+	$(OUT)/model.textpb \
+	$(OUT)/data_dictionary.csv \
 	$(OUT)/terraform_gdc.tf \
 	$(OUT)/sysl_polish.arrai \
+	$(OUT)/all_normalize.arrai \
 	$(OUT)/sysl_normalize.arrai
 
 # Diagram targets that require rendering.
@@ -25,7 +29,7 @@ $(OUT):
 
 # Generates outputs from the model by running named arr.ai scripts.
 .PRECIOUS: $(OUT)/%.puml
-$(OUT)/%.arrai $(OUT)/%.csv $(OUT)/%.puml $(OUT)/%.tf: %.arrai $(OUT)/model.pb
+$(OUT)/%.arrai $(OUT)/%.csv $(OUT)/%.puml $(OUT)/%.tf: %.arrai $(OUT)/model.pb $(OUT)/all.pb
 	arrai run $$(echo $* | cut -d'.' -f1).arrai > $@
 
 # Generates diagram outputs from the model by calling PlantUML with the generated .puml output.
@@ -42,12 +46,12 @@ catalog: $(OUT)/model.pb
 # Compiles Sysl specs for arr.ai import.
 .PRECIOUS: $(OUT)/%.pb
 $(OUT)/%.pb: $(OUT) %.sysl
-	sysl protobuf --mode=pb $*.sysl > $(OUT)/$*.pb
+	sysl protobuf --root=. --mode=pb $*.sysl > $(OUT)/$*.pb
 
 # Compiles Sysl specs for inspection.
 .PRECIOUS: $(OUT)/%.textpb
 $(OUT)/%.textpb: $(OUT) %.sysl
-	sysl protobuf --mode=textpb $*.sysl > $(OUT)/$*.textpb
+	sysl protobuf --root=. --mode=textpb $*.sysl > $(OUT)/$*.textpb
 
 # Initializes the environment to support diagram generation targets.
 init-diagram: plantuml

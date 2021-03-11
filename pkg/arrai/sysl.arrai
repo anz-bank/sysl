@@ -222,14 +222,18 @@ let newNormalize = \m
             rest: ep.rest_params?:{},
         );
 
-    let rec parseFieldType = \field cond field {
+    # Extracts the salient details of the type from a field's type spec.
+    # Note that types enum, relation, map, and one_of cannot be assigned to fields; fields may only
+    # have references to such types defined elsewhere, in which case the field type is type_ref.
+    # Tuples are possible in inline specifications.
+    let rec parseFieldType = \appName \fieldType cond fieldType {
         (:primitive, ...): (:primitive),
-        (ref:(path:p), ...): (appName: [], typePath: p),
+        (:tuple, ...): (:tuple),
+        (ref:(path:p), ...): (:appName, typePath: p),
         (ref:(appname: (part:a), path:p), ...): (appName: a, typePath: p),
-        (:type_ref, ...): parseFieldType(type_ref),
-        (:set, ...): (set: parseFieldType(set)),
-        (:sequence, ...): (sequence: parseFieldType(sequence)),
-        _: let _ = //log.print(field); '???',
+        (:type_ref, ...): parseFieldType(appName, type_ref),
+        (:set, ...): (set: parseFieldType(appName, set)),
+        (:sequence, ...): (sequence: parseFieldType(appName, sequence)),
     };
 
     # Statements
@@ -253,7 +257,7 @@ let newNormalize = \m
                 stmtForeach: cond stmt.foreach?:{} {(collection:coll, ...): (:coll)},
                 stmtAlt: cond stmt.alt?:{} {(:choice, ...): (:choice)},
                 stmtGroup: cond stmt.group?:{} {(:title, ...): (:title)},
-                stmtRet: let ret = stmt.ret?.payload?:{}; cond {ret: ret +> (type: parseFieldType(ret.type))},
+                stmtRet: let ret = stmt.ret?.payload?:{}; cond {ret: ret +> (type: parseFieldType(appName, ret.type))},
             )
         })
         where . != {}
@@ -290,9 +294,9 @@ let newNormalize = \m
             pk: rel.primary_key?.attr_name:{}
         );
 
-    let enum = //rel.union(m.apps => \(@value: app, ...)
+    let enum = //rel.union(m.apps => \(@value:app, ...)
         app.types?:{} filter . {
-            (@:typeName, @value: (enum: (:items, ...), ...)): (
+            (@:typeName, @value: (enum: (:items, ...))): (
                 appName: app.name.part,
                 :typeName,
                 enumItems: items,
@@ -300,15 +304,13 @@ let newNormalize = \m
         }
     ) where .;
 
-    let alias = //rel.union(m.apps => \(@value: app, ...)
-        app.types?:{} filter . {
-            (@:typeName, @value: typeValue): (
-                appName: app.name.part,
-                :typeName,
-                type: parseFieldType(typeValue),
-            )
-        }
-    ) where .type != '???';
+    # Aliases are not identified as such in the Sysl proto model.
+    # They can be inferred as any declared type that is assignable to a field, except tuples.
+    # The logic for this is that aliases, like fields, must reference other types or primitives;
+    # however a field's type can also be an inline tuple, while an alias's cannot.
+    let alias = (_types where !(.type.tuple?:{}) =>
+        .|appName, typeName| +> (aliasType: parseFieldType(.appName, .type))
+    ) where .aliasType;
 
     # Fields
     let _fields = //rel.union(m.apps => \(@value:app, ...)
@@ -328,7 +330,7 @@ let newNormalize = \m
             :typeName,
             :fieldName,
             fieldOpt: field.opt?:{},
-            fieldType: parseFieldType(field),
+            fieldType: parseFieldType(appName, field),
             fieldConstraint: let constraint = field.constraint?:{}; mergeArrayTuples(constraint),
             # fk: cond field.type_ref?.ref.path:{} {
             #     [t, f]: (appName:app.name.part, typeName: t, fieldName: f)
@@ -362,7 +364,7 @@ let newNormalize = \m
             :paramName,
             :paramLoc,
             paramIndex: @,
-            paramType: parseFieldType(param.type?:{}),
+            paramType: parseFieldType(appName, param.type?:{}),
             paramOpt: param.type?.opt?:false,
         );
 

@@ -98,6 +98,7 @@ Types:
         optional <: string?
         set <: set of string
         sequence <: sequence of string
+        aliasSequence <: Alias
         with_anno <: string:
             @annotation = "this is an annotation"
         inplace <:
@@ -131,10 +132,23 @@ Types:
         # FIXME: annotation not allowed
         # @another_annotation = "annotation"
         # any type
+        int
         string
 
     !alias Alias:
+        int
+
+    !alias AliasSequence:
         sequence of string
+
+    !alias AliasRef:
+        Type
+
+    !alias AliasForeignRef:
+        RestEndpoint.Type
+
+    !alias AliasForeignRefSet:
+        set of RestEndpoint.Type
 
 Statements:
     IfStmt:
