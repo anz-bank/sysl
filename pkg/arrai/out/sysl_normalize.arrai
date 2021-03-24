@@ -37,6 +37,20 @@
     event: {},
     field: {
       (
+        appName: ['A'],
+        fieldAnnoName: 'examples',
+        fieldAnnoValue: ['12', '42'],
+        fieldName: 'ay',
+        typeName: 'FetchResponse',
+      ),
+      (
+        appName: ['A'],
+        fieldAnnoName: 'examples',
+        fieldAnnoValue: ['12', '42'],
+        fieldName: 'ax',
+        typeName: 'FetchResponse',
+      ),
+      (
         appName: ['Source'],
         fieldAnnoName: 'description',
         fieldAnnoValue: 'A foreign key',
@@ -591,12 +605,12 @@
         appName: ['B'],
         appSrc: (
           end: (
-            line: 45,
+            line: 46,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 45,
+            line: 46,
           ),
         ),
       ),
@@ -604,12 +618,12 @@
         appName: ['C'],
         appSrc: (
           end: (
-            line: 54,
+            line: 55,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 54,
+            line: 55,
           ),
         ),
       ),
@@ -617,12 +631,12 @@
         appName: ['Client'],
         appSrc: (
           end: (
-            line: 83,
+            line: 84,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 83,
+            line: 84,
           ),
         ),
       ),
@@ -630,12 +644,12 @@
         appName: ['D'],
         appSrc: (
           end: (
-            line: 73,
+            line: 74,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 73,
+            line: 74,
           ),
         ),
       ),
@@ -657,12 +671,12 @@
         appName: ['all'],
         appSrc: (
           end: (
-            line: 103,
+            line: 104,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 103,
+            line: 104,
           ),
         ),
       ),
@@ -689,12 +703,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 50,
+            line: 51,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 46,
+            line: 47,
           ),
         ),
       ),
@@ -704,12 +718,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 69,
+            line: 70,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 64,
+            line: 65,
           ),
         ),
       ),
@@ -719,12 +733,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 59,
+            line: 60,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 55,
+            line: 56,
           ),
         ),
       ),
@@ -734,12 +748,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 64,
+            line: 65,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 59,
+            line: 60,
           ),
         ),
       ),
@@ -749,12 +763,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 88,
+            line: 89,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 84,
+            line: 85,
           ),
         ),
       ),
@@ -764,12 +778,12 @@
         epSrc: (
           end: (
             col: 4,
-            line: 79,
+            line: 80,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 74,
+            line: 75,
           ),
         ),
       ),
@@ -823,12 +837,12 @@
         epName: 'all',
         epSrc: (
           end: (
-            line: 111,
+            line: 112,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 104,
+            line: 105,
           ),
         ),
       ),
@@ -840,13 +854,13 @@
         fieldName: 'ax',
         fieldSrc: (
           end: (
-            col: 14,
-            line: 42,
+            col: 8,
+            line: 44,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 42,
+            line: 43,
           ),
         ),
         typeName: 'FetchResponse',
@@ -856,13 +870,13 @@
         fieldName: 'ay',
         fieldSrc: (
           end: (
-            col: 14,
-            line: 43,
+            col: 39,
+            line: 44,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 43,
+            line: 44,
           ),
         ),
         typeName: 'FetchResponse',
@@ -873,12 +887,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 51,
+            line: 52,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 51,
+            line: 52,
           ),
         ),
         typeName: 'FetchResponse',
@@ -889,12 +903,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 52,
+            line: 53,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 52,
+            line: 53,
           ),
         ),
         typeName: 'FetchResponse',
@@ -905,12 +919,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 70,
+            line: 71,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 70,
+            line: 71,
           ),
         ),
         typeName: 'FetchResponse',
@@ -921,12 +935,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 71,
+            line: 72,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 71,
+            line: 72,
           ),
         ),
         typeName: 'FetchResponse',
@@ -937,12 +951,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 89,
+            line: 90,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 89,
+            line: 90,
           ),
         ),
         typeName: 'Screen',
@@ -953,12 +967,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 90,
+            line: 91,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 90,
+            line: 91,
           ),
         ),
         typeName: 'Screen',
@@ -969,12 +983,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 91,
+            line: 92,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 91,
+            line: 92,
           ),
         ),
         typeName: 'Screen',
@@ -985,12 +999,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 92,
+            line: 93,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 92,
+            line: 93,
           ),
         ),
         typeName: 'Screen',
@@ -1001,12 +1015,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 80,
+            line: 81,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 80,
+            line: 81,
           ),
         ),
         typeName: 'FetchResponse',
@@ -1017,12 +1031,12 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 81,
+            line: 82,
           ),
           file: 'model.sysl',
           start: (
             col: 14,
-            line: 81,
+            line: 82,
           ),
         ),
         typeName: 'FetchResponse',
@@ -1217,7 +1231,7 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 45,
+            line: 46,
           ),
           file: 'model.sysl',
           start: (
@@ -1232,12 +1246,12 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 54,
+            line: 55,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 50,
+            line: 51,
           ),
         ),
       ),
@@ -1247,12 +1261,12 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 73,
+            line: 74,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 69,
+            line: 70,
           ),
         ),
       ),
@@ -1262,12 +1276,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 100,
+            line: 101,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 97,
+            line: 98,
           ),
         ),
       ),
@@ -1277,12 +1291,12 @@
         typeSrc: (
           end: (
             col: 3,
-            line: 103,
+            line: 104,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 100,
+            line: 101,
           ),
         ),
       ),
@@ -1292,12 +1306,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 97,
+            line: 98,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 94,
+            line: 95,
           ),
         ),
       ),
@@ -1307,12 +1321,12 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 94,
+            line: 95,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 88,
+            line: 89,
           ),
         ),
       ),
@@ -1322,12 +1336,12 @@
         typeSrc: (
           end: (
             col: 6,
-            line: 83,
+            line: 84,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 79,
+            line: 80,
           ),
         ),
       ),

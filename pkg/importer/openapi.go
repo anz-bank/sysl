@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -330,6 +331,17 @@ func (o *openapiv3) buildField(name string, prop *openapi3.SchemaRef) Field {
 		f.SizeSpec = makeSizeSpec(prop.Value.MinLength, prop.Value.MaxLength)
 		f.Attributes = attrsForStrings(prop.Value)
 	}
+
+	switch t := prop.Value.Example.(type) {
+	case string:
+		f.Attributes = append(f.Attributes, fmt.Sprintf(`examples=["%s"]`, t))
+	case float64:
+		f.Attributes = append(f.Attributes, fmt.Sprintf(`examples=["%s"]`, strconv.FormatFloat(t, 'f', -1, 64)))
+	case nil:
+	default:
+		fmt.Printf("Unhandled example type %T", t)
+	}
+
 	return f
 }
 

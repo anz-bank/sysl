@@ -39,8 +39,9 @@ A:
         return ok <: A.FetchResponse [dataflow={"A.FetchResponse.ax": "Source.Foo.x", "A.FetchResponse.ay": "Source.Foo.y"}, description="1:1 transform"]
 
     !type FetchResponse:
-        ax <: int
-        ay <: int
+        ax <: int:
+            @examples = ["12", "42"]
+        ay <: int [examples=["12", "42"]]
 
 B:
     Fetch:
