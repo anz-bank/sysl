@@ -30,14 +30,14 @@ let toErd = \tables $`
     hide methods
 
     ${tables orderby .typeName >> \(:appName, :typeName, columns:cols, ...) $`
-    entity ${appName}.${typeName} {
+    entity "${appName}.${typeName}" {
       ${toRows(cols where .pk) ++ cond {cols where .pk: ['--']} ++ toRows(cols where !.pk)::\i}
     }`
     ::\n\n}
 
     ${tables orderby .typeName >> \(:appName, :typeName, :columns, ...)
         let fks = columns where .fk orderby .;
-        $`${fks >> $`${appName}.${typeName:-15s} }o--${zo(.)}| ${.fk.appName}.${.fk.typeName}`::\i}`
+        $`${fks >> $`"${appName}.${typeName:-15s}" }o--${zo(.)}| "${.fk.appName}.${.fk.typeName}"`::\i}`
     ::\i}
     @enduml
 `;

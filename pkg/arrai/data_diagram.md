@@ -12,19 +12,19 @@ skinparam component {
 }
 hide methods
 
-entity Bar {
+entity "Bar" {
   *a : STRING
   --
   b : INT
   *x : Foo.x
 }
 
-entity Foo {
+entity "Foo" {
   *x : INT
   *y : INT
 }
 
-Bar             }o--|| Foo
+"Bar            " }o--|| "Foo"
 
 @enduml
 ```
