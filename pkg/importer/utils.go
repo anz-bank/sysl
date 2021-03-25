@@ -95,6 +95,7 @@ func getSyslSafeName(endpoint string) string {
 		".": `%2E`,
 		":": `%3A`,
 		"+": `%2B`,
+		"$": `%24`,
 	}
 	endpoint = url.PathEscape(endpoint)
 	for realChar, hex := range charsToReplace {

@@ -18,9 +18,8 @@ paths:
             $ref: '#/definitions/SimpleObj'
 definitions:
   SimpleObj:
-
     type: object
     properties:
-      name:
+      $name:
         type: string
 

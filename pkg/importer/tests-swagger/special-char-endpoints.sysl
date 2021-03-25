@@ -22,5 +22,5 @@ TestApp "Simple" [package="com.example.package"]:
     # definitions
 
     !type SimpleObj:
-        name <: string?:
-            @json_tag = "name"
+        %24name <: string?:
+            @json_tag = "$name"
