@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 )
 
@@ -30,12 +31,12 @@ type Union struct {
 func (u *Union) Name() string { return u.name }
 
 type SyslBuiltIn struct {
-	name string
+	name syslutil.BuiltInType
 }
 
 func (s *SyslBuiltIn) Name() string { return s.name }
 
-var StringAlias = &SyslBuiltIn{name: StringTypeName}
+var StringAlias = &SyslBuiltIn{name: syslutil.Type_STRING}
 
 // !alias type without the EXTERNAL_ prefix
 type Alias struct {
@@ -51,16 +52,6 @@ type ExternalAlias struct {
 	Target Type
 	Attrs  []string
 }
-
-const (
-	StringTypeName  = "string"
-	ObjectTypeName  = "object"
-	ArrayTypeName   = "array"
-	EmptyTypeName   = ""
-	BooleanTypeName = "boolean"
-	IntegerTypeName = "integer"
-	NumberTypeName  = "number"
-)
 
 func NewStringAlias(name string, attrs ...string) Type {
 	return &ExternalAlias{
@@ -107,6 +98,7 @@ type sizeSpec struct {
 	Max     int
 	MaxType maxType
 }
+
 type Field struct {
 	Name       string
 	Type       Type
@@ -132,15 +124,6 @@ func (t TypeList) Sort() {
 }
 
 type FieldList []Field
-
-// nolint:gochecknoglobals
-var builtIns = []string{"int32", "int64", "int",
-	"float", "string", "date", "bool", "decimal",
-	"datetime", "xml", "bytes"}
-
-func IsBuiltIn(name string) bool {
-	return contains(name, builtIns)
-}
 
 func (t TypeList) Find(name string) (Type, bool) {
 	if builtin, ok := checkBuiltInTypes(name); ok {
@@ -174,17 +157,8 @@ func (t *TypeList) AddAndRet(item Type) Type {
 }
 
 func checkBuiltInTypes(name string) (Type, bool) {
-	if IsBuiltIn(name) {
+	if syslutil.IsBuiltIn(name) {
 		return &SyslBuiltIn{name: name}, true
 	}
 	return &StandardType{}, false
-}
-
-func contains(needle string, haystack []string) bool {
-	for _, x := range haystack {
-		if x == needle {
-			return true
-		}
-	}
-	return false
 }

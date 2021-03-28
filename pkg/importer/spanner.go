@@ -6,5 +6,5 @@ import (
 
 // MakeSpannerImporter is a factory method for creating new Spanner SQL importer.
 func MakeSpannerImporter(logger *logrus.Logger) *ArraiImporter {
-	return MakeArraiImporterImporter("pkg/importer/spanner/import_spanner_sql.arraiz", logger)
+	return MakeArraiImporterImporter(ArraiImporterDir+"/spanner/import_spanner_sql.arraiz", logger)
 }

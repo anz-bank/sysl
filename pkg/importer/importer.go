@@ -24,7 +24,7 @@ type Importer interface {
 var Formats = []Format{
 	Grammar,
 	OpenAPI3,
-	Swagger,
+	OpenAPI2,
 	XSD,
 	Avro,
 	SpannerSQL,
@@ -58,7 +58,7 @@ func Factory(path string, isDir bool, format string, content []byte, logger *log
 	}
 
 	switch fileType.Name {
-	case Swagger.Name:
+	case OpenAPI2.Name:
 		logger.Debugln("Detected OpenAPI2")
 		return MakeOpenAPI2Importer(logger, "", path), nil
 	case OpenAPI3.Name:

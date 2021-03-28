@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/go-openapi/swag"
 
 	"github.com/sirupsen/logrus"
@@ -30,7 +31,7 @@ type SyslInfo struct {
 }
 
 type MethodEndpoints struct {
-	Method    string // one of GET, POST, PUT, OPTION, etc
+	Method    string
 	Endpoints []Endpoint
 }
 
@@ -159,7 +160,7 @@ func buildQueryString(params []Param) string {
 				optional = "?"
 			}
 			typeString := getSyslTypeName(p.Type)
-			if !IsBuiltIn(typeString) {
+			if !syslutil.IsBuiltIn(typeString) {
 				typeString = "{" + typeString + "}"
 			}
 			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), typeString, optional))
@@ -306,7 +307,7 @@ func (w *writer) writeDefinition(t *StandardType) {
 		suffix = appendAttributesString(suffix, prop.Attributes)
 
 		name := getSyslSafeName(prop.Name)
-		if IsBuiltIn(name) {
+		if syslutil.IsBuiltIn(name) {
 			name += "_"
 		}
 

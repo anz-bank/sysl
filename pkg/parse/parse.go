@@ -84,7 +84,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	switch fileType.Name {
 	case importer.SYSL.Name:
 		return input, nil
-	case importer.OpenAPI3.Name, importer.Swagger.Name:
+	case importer.OpenAPI3.Name, importer.OpenAPI2.Name:
 		imp, err := importer.Factory(fileName, false, "", []byte(file), logger)
 		imp.WithAppName(def.appname).WithPackage(def.pkg)
 		if err != nil {
@@ -103,7 +103,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 func detectFileType(fileName string, file []byte) (importer.Format, error) {
 	var ParserFormats = []importer.Format{
 		importer.OpenAPI3,
-		importer.Swagger,
+		importer.OpenAPI2,
 		importer.SYSL,
 	}
 	return importer.GuessFileType(fileName, false, file, ParserFormats)
@@ -655,12 +655,10 @@ func fixTypeRefScope(mod *sysl.Module, currApp string, ref *sysl.Scope) {
 
 func fixParamTypeRef(mod *sysl.Module, app *sysl.Application, appName string) {
 	for _, ep := range app.GetEndpoints() {
-		if params := ep.GetParam(); params != nil {
-			for _, param := range params {
-				t := param.GetType()
-				if ref := t.GetTypeRef(); ref != nil {
-					fixTypeRefScope(mod, appName, ref.GetRef())
-				}
+		for _, param := range ep.GetParam() {
+			t := param.GetType()
+			if ref := t.GetTypeRef(); ref != nil {
+				fixTypeRefScope(mod, appName, ref.GetRef())
 			}
 		}
 	}

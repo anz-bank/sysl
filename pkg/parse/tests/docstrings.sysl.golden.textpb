@@ -1,302 +1,302 @@
-apps: {
- key: "Another App"
- value: {
-  name: {
-   part: "Another App"
+apps:  {
+ key:  "Another App"
+ value:  {
+  name:  {
+   part:  "Another App"
   }
-  endpoints: {
-   key: "Endpoint"
-   value: {
-    name: "Endpoint"
-    attrs: {
-     key: "description"
-     value: {
-      s: "multi-line documentation comment\n use it for long comments\n"
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "multi-line documentation comment\n use it for long comments\n"
      }
     }
-    stmt: {
-     action: {
-      action: "..."
+    stmt:  {
+     action:  {
+      action:  "..."
      }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 12
-       col: 8
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  12
+       col:  8
       }
-      end: {
-       line: 12
-       col: 8
+      end:  {
+       line:  12
+       col:  8
       }
      }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 8
-      col: 4
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  8
+      col:  4
      }
-     end: {
-      line: 14
-      col: 15
-     }
-    }
-   }
-  }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 7
-    col: 1
-   }
-   end: {
-    line: 7
-   }
-  }
- }
-}
-apps: {
- key: "App"
- value: {
-  name: {
-   part: "App"
-  }
-  attrs: {
-   key: "description"
-   value: {
-    s: "multi-line documentation comment\n use it for long comments\n"
-   }
-  }
-  endpoints: {
-   key: "..."
-   value: {
-    name: "..."
-   }
-  }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 1
-    col: 1
-   }
-   end: {
-    line: 1
-   }
-  }
- }
-}
-apps: {
- key: "Model"
- value: {
-  name: {
-   part: "Model"
-  }
-  types: {
-   key: "TableName"
-   value: {
-    attrs: {
-     key: "description"
-     value: {
-      s: "multi-line documentation comment\n use it for long comments\n"
-     }
-    }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 25
-      col: 4
-     }
-     end: {
-      line: 30
-      col: 8
+     end:  {
+      line:  14
+      col:  15
      }
     }
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 23
-    col: 1
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  7
+    col:  1
    }
-   end: {
-    line: 23
+   end:  {
+    line:  7
    }
   }
  }
 }
-apps: {
- key: "ModelTwo"
- value: {
-  name: {
-   part: "ModelTwo"
+apps:  {
+ key:  "App"
+ value:  {
+  name:  {
+   part:  "App"
   }
-  types: {
-   key: "TableName"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "field"
-      value: {
-       primitive: STRING
-       attrs: {
-        key: "description"
-        value: {
-         s: "multi-line documentation comment\n use it for long comments\n"
+  attrs:  {
+   key:  "description"
+   value:  {
+    s:  "multi-line documentation comment\n use it for long comments\n"
+   }
+  }
+  endpoints:  {
+   key:  "..."
+   value:  {
+    name:  "..."
+   }
+  }
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+ }
+}
+apps:  {
+ key:  "Model"
+ value:  {
+  name:  {
+   part:  "Model"
+  }
+  types:  {
+   key:  "TableName"
+   value:  {
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "multi-line documentation comment\n use it for long comments\n"
+     }
+    }
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  25
+      col:  4
+     }
+     end:  {
+      line:  30
+      col:  8
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  23
+    col:  1
+   }
+   end:  {
+    line:  23
+   }
+  }
+ }
+}
+apps:  {
+ key:  "ModelTwo"
+ value:  {
+  name:  {
+   part:  "ModelTwo"
+  }
+  types:  {
+   key:  "TableName"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "field"
+      value:  {
+       primitive:  STRING
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "multi-line documentation comment\n use it for long comments\n"
         }
        }
-       source_context: {
-        file: "tests/docstrings.sysl"
-        start: {
-         line: 33
-         col: 17
+       source_context:  {
+        file:  "tests/docstrings.sysl"
+        start:  {
+         line:  33
+         col:  17
         }
-        end: {
-         line: 36
-         col: 8
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "field2"
-      value: {
-       primitive: STRING
-       docstring: "short description here"
-       source_context: {
-        file: "tests/docstrings.sysl"
-        start: {
-         line: 36
-         col: 18
-        }
-        end: {
-         line: 36
-         col: 18
+        end:  {
+         line:  36
+         col:  8
         }
        }
       }
      }
-    }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 31
-      col: 4
+     attr_defs:  {
+      key:  "field2"
+      value:  {
+       primitive:  STRING
+       docstring:  "short description here"
+       source_context:  {
+        file:  "tests/docstrings.sysl"
+        start:  {
+         line:  36
+         col:  18
+        }
+        end:  {
+         line:  36
+         col:  18
+        }
+       }
+      }
      }
-     end: {
-      line: 37
+    }
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  31
+      col:  4
+     }
+     end:  {
+      line:  37
      }
     }
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 30
-    col: 1
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  30
+    col:  1
    }
-   end: {
-    line: 30
+   end:  {
+    line:  30
    }
   }
  }
 }
-apps: {
- key: "Yet Another App"
- value: {
-  name: {
-   part: "Yet Another App"
+apps:  {
+ key:  "Yet Another App"
+ value:  {
+  name:  {
+   part:  "Yet Another App"
   }
-  endpoints: {
-   key: "AnotherEndpoint"
-   value: {
-    name: "AnotherEndpoint"
-    stmt: {
-     action: {
-      action: "| a multi line text statement use it to well"
+  endpoints:  {
+   key:  "AnotherEndpoint"
+   value:  {
+    name:  "AnotherEndpoint"
+    stmt:  {
+     action:  {
+      action:  "| a multi line text statement use it to well"
      }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 19
-       col: 8
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  19
+       col:  8
       }
-      end: {
-       line: 19
-       col: 9
-      }
-     }
-    }
-    stmt: {
-     action: {
-      action: "another text statement"
-     }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 21
-       col: 8
-      }
-      end: {
-       line: 21
-       col: 8
+      end:  {
+       line:  19
+       col:  9
       }
      }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 18
-      col: 4
+    stmt:  {
+     action:  {
+      action:  "another text statement"
      }
-     end: {
-      line: 23
-      col: 5
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  21
+       col:  8
+      }
+      end:  {
+       line:  21
+       col:  8
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  18
+      col:  4
+     }
+     end:  {
+      line:  23
+      col:  5
      }
     }
    }
   }
-  endpoints: {
-   key: "Endpoint"
-   value: {
-    name: "Endpoint"
-    stmt: {
-     action: {
-      action: "a simple text statement"
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    stmt:  {
+     action:  {
+      action:  "a simple text statement"
      }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 16
-       col: 8
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  16
+       col:  8
       }
-      end: {
-       line: 16
-       col: 8
+      end:  {
+       line:  16
+       col:  8
       }
      }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 15
-      col: 4
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  15
+      col:  4
      }
-     end: {
-      line: 18
-      col: 4
+     end:  {
+      line:  18
+      col:  4
      }
     }
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 14
-    col: 1
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  14
+    col:  1
    }
-   end: {
-    line: 14
+   end:  {
+    line:  14
    }
   }
  }

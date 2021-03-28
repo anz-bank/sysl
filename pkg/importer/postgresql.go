@@ -6,5 +6,5 @@ import (
 
 // MakePostgresqlImporter is a factory method for creating new PostgreSQL importer.
 func MakePostgresqlImporter(logger *logrus.Logger) *ArraiImporter {
-	return MakeArraiImporterImporter("pkg/importer/postgresql/import_postgresql_sql.arraiz", logger)
+	return MakeArraiImporterImporter(ArraiImporterDir+"/postgresql/import_postgresql_sql.arraiz", logger)
 }

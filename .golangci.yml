@@ -4,8 +4,6 @@ run:
     - pkg/grammar/sysl_lexer.go
     - pkg/grammar/sysl_parser.go
     - pkg/grammar/syslparser_base_listener.go
-    - pkg/importer/openapi2conv/openapi2_conv.go
-    - pkg/importer/openapi2conv/openapi2_conv_test.go
     - pkg/ui/pkged.go
   skip-dirs:
     - pkg/lspimpl
@@ -49,4 +47,3 @@ linters-settings:
   funlen:
     lines: 146
     statements: 64
-

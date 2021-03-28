@@ -6,5 +6,5 @@ import (
 
 // MakePostgresqlDirImporter is a factory method for creating new PostgreSQL directory importer.
 func MakePostgresqlDirImporter(logger *logrus.Logger) *ArraiImporter {
-	return MakeArraiImporterImporter("pkg/importer/postgresql/import_migrations.arraiz", logger)
+	return MakeArraiImporterImporter(ArraiImporterDir+"/postgresql/import_migrations.arraiz", logger)
 }

@@ -1,122 +1,122 @@
-apps: {
- key: "App"
- value: {
-  name: {
-   part: "App"
+apps:  {
+ key:  "App"
+ value:  {
+  name:  {
+   part:  "App"
   }
-  attrs: {
-   key: "a"
-   value: {
-    s: "a"
+  attrs:  {
+   key:  "a"
+   value:  {
+    s:  "a"
    }
   }
-  types: {
-   key: "Type"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "a"
-      value: {
-       primitive: INT
-       attrs: {
-        key: "c"
-        value: {
-         s: "c"
+  types:  {
+   key:  "Type"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "a"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "c"
+        value:  {
+         s:  "c"
         }
        }
-       attrs: {
-        key: "d"
-        value: {
-         s: "d"
+       attrs:  {
+        key:  "d"
+        value:  {
+         s:  "d"
         }
        }
-       attrs: {
-        key: "multiline1"
-        value: {
-         s: "line1\n line2\n"
+       attrs:  {
+        key:  "multiline1"
+        value:  {
+         s:  "line1\n line2\n"
         }
        }
-       source_context: {
-        file: "tests/anno_merge_import.sysl"
-        start: {
-         line: 8
-         col: 13
+       source_context:  {
+        file:  "tests/anno_merge_import.sysl"
+        start:  {
+         line:  8
+         col:  13
         }
-        end: {
-         line: 11
-         col: 8
+        end:  {
+         line:  11
+         col:  8
         }
        }
       }
      }
-     attr_defs: {
-      key: "b"
-      value: {
-       primitive: STRING
-       attrs: {
-        key: "e"
-        value: {
-         s: "e"
+     attr_defs:  {
+      key:  "b"
+      value:  {
+       primitive:  STRING
+       attrs:  {
+        key:  "e"
+        value:  {
+         s:  "e"
         }
        }
-       attrs: {
-        key: "multiline2"
-        value: {
-         s: "line1\n\n\n\n\n\n\nline2"
+       attrs:  {
+        key:  "multiline2"
+        value:  {
+         s:  "line1\n\n\n\n\n\n\nline2"
         }
        }
-       attrs: {
-        key: "patterns"
-        value: {
-         a: {
-          elt: {
-           s: "tag1"
+       attrs:  {
+        key:  "patterns"
+        value:  {
+         a:  {
+          elt:  {
+           s:  "tag1"
           }
-          elt: {
-           s: "tag2"
+          elt:  {
+           s:  "tag2"
           }
          }
         }
        }
-       source_context: {
-        file: "tests/anno_merge_import.sysl"
-        start: {
-         line: 12
-         col: 13
+       source_context:  {
+        file:  "tests/anno_merge_import.sysl"
+        start:  {
+         line:  12
+         col:  13
         }
-        end: {
-         line: 15
+        end:  {
+         line:  15
         }
        }
       }
      }
     }
-    attrs: {
-     key: "b"
-     value: {
-      s: "b"
+    attrs:  {
+     key:  "b"
+     value:  {
+      s:  "b"
      }
     }
-    source_context: {
-     file: "tests/anno_merge_import.sysl"
-     start: {
-      line: 4
-      col: 4
+    source_context:  {
+     file:  "tests/anno_merge_import.sysl"
+     start:  {
+      line:  4
+      col:  4
      }
-     end: {
-      line: 15
+     end:  {
+      line:  15
      }
     }
    }
   }
-  source_context: {
-   file: "tests/anno_merge_import.sysl"
-   start: {
-    line: 1
-    col: 1
+  source_context:  {
+   file:  "tests/anno_merge_import.sysl"
+   start:  {
+    line:  1
+    col:  1
    }
-   end: {
-    line: 1
+   end:  {
+    line:  1
    }
   }
  }

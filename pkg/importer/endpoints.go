@@ -1,5 +1,7 @@
 package importer
 
+import "github.com/anz-bank/sysl/pkg/syslutil"
+
 // Response is either going to be freetext or a type
 type Response struct {
 	Text string
@@ -16,4 +18,10 @@ type Endpoint struct {
 }
 
 // nolint:gochecknoglobals
-var methodDisplayOrder = []string{"GET", "PUT", "POST", "DELETE", "PATCH"}
+var methodDisplayOrder = []string{
+	syslutil.Method_GET,
+	syslutil.Method_PUT,
+	syslutil.Method_POST,
+	syslutil.Method_DELETE,
+	syslutil.Method_PATCH,
+}

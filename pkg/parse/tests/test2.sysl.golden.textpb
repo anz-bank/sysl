@@ -1,375 +1,375 @@
-apps: {
-  key: "Request"
-  value: {
-    name: {
-      part: "Request"
-    }
-    types: {
-      key: "Input"
-      value: {
-        tuple: {
-          attr_defs: {
-            key: "field1"
-            value: {
-              primitive: INT
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 22
-                  col: 18
-                }
-                end: {
-                  line: 22
-                  col: 18
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/test2.sysl"
-          start: {
-            line: 21
-            col: 4
-          }
-          end: {
-            line: 24
-            col: 8
-          }
-        }
-      }
-    }
-    source_context: {
-      file: "tests/test2.sysl"
-      start: {
-        line: 20
-        col: 1
-      }
-      end: {
-        line: 20
-      }
-    }
+apps:  {
+ key:  "Request"
+ value:  {
+  name:  {
+   part:  "Request"
   }
+  types:  {
+   key:  "Input"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "field1"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  22
+         col:  18
+        }
+        end:  {
+         line:  22
+         col:  18
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/test2.sysl"
+     start:  {
+      line:  21
+      col:  4
+     }
+     end:  {
+      line:  24
+      col:  8
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/test2.sysl"
+   start:  {
+    line:  20
+    col:  1
+   }
+   end:  {
+    line:  20
+   }
+  }
+ }
 }
-apps: {
-  key: "Response"
-  value: {
-    name: {
-      part: "Response"
-    }
-    types: {
-      key: "Output"
-      value: {
-        tuple: {
-          attr_defs: {
-            key: "field1"
-            value: {
-              type_ref: {
-                context: {
-                  appname: {
-                    part: "Response"
-                  }
-                  path: "Output"
-                }
-                ref: {
-                  path: "Request"
-                }
-              }
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 26
-                  col: 18
-                }
-                end: {
-                  line: 26
-                  col: 18
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/test2.sysl"
-          start: {
-            line: 25
-            col: 4
-          }
-          end: {
-            line: 27
-          }
-        }
-      }
-    }
-    source_context: {
-      file: "tests/test2.sysl"
-      start: {
-        line: 24
-        col: 1
-      }
-      end: {
-        line: 24
-      }
-    }
+apps:  {
+ key:  "Response"
+ value:  {
+  name:  {
+   part:  "Response"
   }
+  types:  {
+   key:  "Output"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "field1"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Response"
+         }
+         path:  "Output"
+        }
+        ref:  {
+         path:  "Request"
+        }
+       }
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  26
+         col:  18
+        }
+        end:  {
+         line:  26
+         col:  18
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/test2.sysl"
+     start:  {
+      line:  25
+      col:  4
+     }
+     end:  {
+      line:  27
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/test2.sysl"
+   start:  {
+    line:  24
+    col:  1
+   }
+   end:  {
+    line:  24
+   }
+  }
+ }
 }
-apps: {
-  key: "Tuple Model"
-  value: {
-    name: {
-      part: "Tuple Model"
-    }
-    types: {
-      key: "Foo"
-      value: {
-        tuple: {
-          attr_defs: {
-            key: "id"
-            value: {
-              primitive: INT
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 4
-                  col: 14
-                }
-                end: {
-                  line: 4
-                  col: 14
-                }
-              }
-            }
-          }
-        }
-        attrs: {
-          key: "description"
-          value: {
-            s: "some description"
-          }
-        }
-        source_context: {
-          file: "tests/test2.sysl"
-          start: {
-            line: 3
-            col: 4
-          }
-          end: {
-            line: 6
-            col: 4
-          }
-        }
-      }
-    }
-    types: {
-      key: "PersonName"
-      value: {
-        tuple: {
-          attr_defs: {
-            key: "first_name"
-            value: {
-              primitive: STRING
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 16
-                  col: 22
-                }
-                end: {
-                  line: 16
-                  col: 22
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "last_name"
-            value: {
-              primitive: STRING
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 18
-                  col: 21
-                }
-                end: {
-                  line: 18
-                  col: 21
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "middle_name"
-            value: {
-              list: {
-                type: {
-                  primitive: STRING
-                  source_context: {
-                    file: "tests/test2.sysl"
-                    start: {
-                      line: 17
-                      col: 29
-                    }
-                    end: {
-                      line: 17
-                      col: 29
-                    }
-                  }
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "title"
-            value: {
-              primitive: STRING
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 15
-                  col: 17
-                }
-                end: {
-                  line: 15
-                  col: 17
-                }
-              }
-            }
-          }
-        }
-        source_context: {
-          file: "tests/test2.sysl"
-          start: {
-            line: 14
-            col: 4
-          }
-          end: {
-            line: 20
-            col: 7
-          }
-        }
-      }
-    }
-    types: {
-      key: "TableName"
-      value: {
-        tuple: {
-          attr_defs: {
-            key: "fieldname"
-            value: {
-              primitive: STRING
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 10
-                  col: 21
-                }
-                end: {
-                  line: 10
-                  col: 21
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "fieldname2"
-            value: {
-              set: {
-                primitive: STRING
-                source_context: {
-                  file: "tests/test2.sysl"
-                  start: {
-                    line: 11
-                    col: 22
-                  }
-                  end: {
-                    line: 11
-                    col: 29
-                  }
-                }
-              }
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 11
-                  col: 22
-                }
-                end: {
-                  line: 11
-                  col: 29
-                }
-              }
-            }
-          }
-          attr_defs: {
-            key: "ids"
-            value: {
-              set: {
-                type_ref: {
-                  context: {
-                    appname: {
-                      part: "Tuple Model"
-                    }
-                    path: "TableName"
-                  }
-                  ref: {
-                    path: "Foo"
-                  }
-                }
-                source_context: {
-                  file: "tests/test2.sysl"
-                  start: {
-                    line: 12
-                    col: 15
-                  }
-                  end: {
-                    line: 12
-                    col: 22
-                  }
-                }
-              }
-              source_context: {
-                file: "tests/test2.sysl"
-                start: {
-                  line: 12
-                  col: 15
-                }
-                end: {
-                  line: 12
-                  col: 22
-                }
-              }
-            }
-          }
-        }
-        attrs: {
-          key: "description"
-          value: {
-            s: "Multi-line annotation\n statement\n"
-          }
-        }
-        source_context: {
-          file: "tests/test2.sysl"
-          start: {
-            line: 7
-            col: 4
-          }
-          end: {
-            line: 14
-            col: 4
-          }
-        }
-      }
-    }
-    source_context: {
-      file: "tests/test2.sysl"
-      start: {
-        line: 1
-        col: 1
-      }
-      end: {
-        line: 1
-      }
-    }
+apps:  {
+ key:  "Tuple Model"
+ value:  {
+  name:  {
+   part:  "Tuple Model"
   }
+  types:  {
+   key:  "Foo"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "id"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  4
+         col:  14
+        }
+        end:  {
+         line:  4
+         col:  14
+        }
+       }
+      }
+     }
+    }
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "some description"
+     }
+    }
+    source_context:  {
+     file:  "tests/test2.sysl"
+     start:  {
+      line:  3
+      col:  4
+     }
+     end:  {
+      line:  6
+      col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "PersonName"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "first_name"
+      value:  {
+       primitive:  STRING
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  16
+         col:  22
+        }
+        end:  {
+         line:  16
+         col:  22
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "last_name"
+      value:  {
+       primitive:  STRING
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  18
+         col:  21
+        }
+        end:  {
+         line:  18
+         col:  21
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "middle_name"
+      value:  {
+       list:  {
+        type:  {
+         primitive:  STRING
+         source_context:  {
+          file:  "tests/test2.sysl"
+          start:  {
+           line:  17
+           col:  29
+          }
+          end:  {
+           line:  17
+           col:  29
+          }
+         }
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "title"
+      value:  {
+       primitive:  STRING
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  15
+         col:  17
+        }
+        end:  {
+         line:  15
+         col:  17
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/test2.sysl"
+     start:  {
+      line:  14
+      col:  4
+     }
+     end:  {
+      line:  20
+      col:  7
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "TableName"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "fieldname"
+      value:  {
+       primitive:  STRING
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  10
+         col:  21
+        }
+        end:  {
+         line:  10
+         col:  21
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "fieldname2"
+      value:  {
+       set:  {
+        primitive:  STRING
+        source_context:  {
+         file:  "tests/test2.sysl"
+         start:  {
+          line:  11
+          col:  22
+         }
+         end:  {
+          line:  11
+          col:  29
+         }
+        }
+       }
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  11
+         col:  22
+        }
+        end:  {
+         line:  11
+         col:  29
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "ids"
+      value:  {
+       set:  {
+        type_ref:  {
+         context:  {
+          appname:  {
+           part:  "Tuple Model"
+          }
+          path:  "TableName"
+         }
+         ref:  {
+          path:  "Foo"
+         }
+        }
+        source_context:  {
+         file:  "tests/test2.sysl"
+         start:  {
+          line:  12
+          col:  15
+         }
+         end:  {
+          line:  12
+          col:  22
+         }
+        }
+       }
+       source_context:  {
+        file:  "tests/test2.sysl"
+        start:  {
+         line:  12
+         col:  15
+        }
+        end:  {
+         line:  12
+         col:  22
+        }
+       }
+      }
+     }
+    }
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "Multi-line annotation\n statement\n"
+     }
+    }
+    source_context:  {
+     file:  "tests/test2.sysl"
+     start:  {
+      line:  7
+      col:  4
+     }
+     end:  {
+      line:  14
+      col:  4
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/test2.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+ }
 }

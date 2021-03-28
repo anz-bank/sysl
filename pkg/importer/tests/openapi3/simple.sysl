@@ -8,10 +8,11 @@ TestApp "Simple" [package="com.example.package"]:
     @description =:
         | No description.
 
-    /test:
+    /docs/{docId<:bytes}:
         GET:
             | No description.
             return error
+            return error <: bytes
             return ok <: SimpleObj
 
     #---------------------------------------------------------------------------

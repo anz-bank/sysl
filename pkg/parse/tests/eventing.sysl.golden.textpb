@@ -1,174 +1,174 @@
-apps: {
- key: "NotifierApp"
- value: {
-  name: {
-   part: "NotifierApp"
+apps:  {
+ key:  "NotifierApp"
+ value:  {
+  name:  {
+   part:  "NotifierApp"
   }
-  endpoints: {
-   key: "Endpoint"
-   value: {
-    name: "Endpoint"
-    stmt: {
-     call: {
-      target: {
-       part: "PublishingApp"
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "PublishingApp"
       }
-      endpoint: "BusinessEvent"
+      endpoint:  "BusinessEvent"
      }
-     source_context: {
-      file: "tests/eventing.sysl"
-      start: {
-       line: 19
-       col: 4
+     source_context:  {
+      file:  "tests/eventing.sysl"
+      start:  {
+       line:  19
+       col:  4
       }
-      end: {
-       line: 19
-       col: 21
+      end:  {
+       line:  19
+       col:  21
       }
      }
     }
-    source_context: {
-     file: "tests/eventing.sysl"
-     start: {
-      line: 17
-      col: 2
+    source_context:  {
+     file:  "tests/eventing.sysl"
+     start:  {
+      line:  17
+      col:  2
      }
-     end: {
-      line: 20
-     }
-    }
-   }
-  }
-  source_context: {
-   file: "tests/eventing.sysl"
-   start: {
-    line: 16
-    col: 1
-   }
-   end: {
-    line: 16
-   }
-  }
- }
-}
-apps: {
- key: "PublishingApp"
- value: {
-  name: {
-   part: "PublishingApp"
-  }
-  endpoints: {
-   key: "BusinessEvent"
-   value: {
-    name: "BusinessEvent"
-    attrs: {
-     key: "patterns"
-     value: {
-      a: {
-       elt: {
-        s: "async"
-       }
-       elt: {
-        s: "mq"
-       }
-      }
-     }
-    }
-    is_pubsub: true
-    stmt: {
-     call: {
-      target: {
-       part: "SubscriberApp1"
-      }
-      endpoint: "PublishingApp -> BusinessEvent"
-     }
-     source_context: {
-      file: "tests/eventing.sysl"
-      start: {
-       line: 5
-       col: 4
-      }
-      end: {
-       line: 16
-       col: 11
-      }
-     }
-    }
-    source_context: {
-     file: "tests/eventing.sysl"
-     start: {
-      line: 2
-      col: 4
-     }
-     end: {
-      line: 2
-      col: 37
+     end:  {
+      line:  20
      }
     }
    }
   }
-  source_context: {
-   file: "tests/eventing.sysl"
-   start: {
-    line: 1
-    col: 1
+  source_context:  {
+   file:  "tests/eventing.sysl"
+   start:  {
+    line:  16
+    col:  1
    }
-   end: {
-    line: 1
+   end:  {
+    line:  16
    }
   }
  }
 }
-apps: {
- key: "SubscriberApp1"
- value: {
-  name: {
-   part: "SubscriberApp1"
+apps:  {
+ key:  "PublishingApp"
+ value:  {
+  name:  {
+   part:  "PublishingApp"
   }
-  endpoints: {
-   key: "PublishingApp -> BusinessEvent"
-   value: {
-    name: "PublishingApp -> BusinessEvent"
-    source: {
-     part: "PublishingApp"
-    }
-    stmt: {
-     action: {
-      action: "app1 got the BusinessEvent"
-     }
-     source_context: {
-      file: "tests/eventing.sysl"
-      start: {
-       line: 6
-       col: 8
-      }
-      end: {
-       line: 6
-       col: 8
+  endpoints:  {
+   key:  "BusinessEvent"
+   value:  {
+    name:  "BusinessEvent"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "async"
+       }
+       elt:  {
+        s:  "mq"
+       }
       }
      }
     }
-    source_context: {
-     file: "tests/eventing.sysl"
-     start: {
-      line: 5
-      col: 4
+    is_pubsub:  true
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "SubscriberApp1"
+      }
+      endpoint:  "PublishingApp -> BusinessEvent"
      }
-     end: {
-      line: 16
-      col: 11
+     source_context:  {
+      file:  "tests/eventing.sysl"
+      start:  {
+       line:  5
+       col:  4
+      }
+      end:  {
+       line:  16
+       col:  11
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/eventing.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  2
+      col:  37
      }
     }
    }
   }
-  source_context: {
-   file: "tests/eventing.sysl"
-   start: {
-    line: 4
-    col: 1
+  source_context:  {
+   file:  "tests/eventing.sysl"
+   start:  {
+    line:  1
+    col:  1
    }
-   end: {
-    line: 4
+   end:  {
+    line:  1
+   }
+  }
+ }
+}
+apps:  {
+ key:  "SubscriberApp1"
+ value:  {
+  name:  {
+   part:  "SubscriberApp1"
+  }
+  endpoints:  {
+   key:  "PublishingApp -> BusinessEvent"
+   value:  {
+    name:  "PublishingApp -> BusinessEvent"
+    source:  {
+     part:  "PublishingApp"
+    }
+    stmt:  {
+     action:  {
+      action:  "app1 got the BusinessEvent"
+     }
+     source_context:  {
+      file:  "tests/eventing.sysl"
+      start:  {
+       line:  6
+       col:  8
+      }
+      end:  {
+       line:  6
+       col:  8
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/eventing.sysl"
+     start:  {
+      line:  5
+      col:  4
+     }
+     end:  {
+      line:  16
+      col:  11
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/eventing.sysl"
+   start:  {
+    line:  4
+    col:  1
+   }
+   end:  {
+    line:  4
    }
   }
  }

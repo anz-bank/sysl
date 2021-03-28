@@ -84,9 +84,9 @@ var OpenAPI3 = Format{
 	FileExt:   []string{".yaml", ".json", ".yml"},
 }
 
-// Swagger only has 2.0.0 as the single valid format -  The value MUST be "2.0".
+// OpenAPI2 only has swagger 2.0.0 as the single valid format -  The value MUST be "2.0".
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#swaggerObject
-var Swagger = Format{
+var OpenAPI2 = Format{
 	Name:      "swagger",
 	Signature: `swagger:`,
 	FileExt:   []string{".yaml", ".json", ".yml"},

@@ -10,20 +10,22 @@ import (
 	"strings"
 
 	"aqwari.net/xml/xsd"
+	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/anz-bank/sysl/pkg/utils"
 	"github.com/sirupsen/logrus"
 )
-
-func MakeXSDImporter(logger *logrus.Logger) *XSDImporter {
-	return &XSDImporter{
-		logger: logger,
-	}
-}
 
 type XSDImporter struct {
 	appName string
 	pkg     string
 	types   TypeList
 	logger  *logrus.Logger
+}
+
+func MakeXSDImporter(logger *logrus.Logger) *XSDImporter {
+	return &XSDImporter{
+		logger: logger,
+	}
 }
 
 func (i *XSDImporter) LoadFile(path string) (string, error) {
@@ -85,16 +87,34 @@ func makeNamespacedType(name xml.Name, target Type) Type {
 	}
 }
 
+// nolint:golint,stylecheck
+var (
+	XSD_BOOLEAN  = strings.ToLower(xsd.Boolean.String())
+	XSD_BYTE     = strings.ToLower(xsd.Byte.String())
+	XSD_DATE     = strings.ToLower(xsd.Date.String())
+	XSD_DATETIME = strings.ToLower(xsd.DateTime.String())
+	XSD_DECIMAL  = strings.ToLower(xsd.Decimal.String())
+	XSD_INT      = strings.ToLower(xsd.Int.String())
+	XSD_INTEGER  = strings.ToLower(xsd.Integer.String())
+	XSD_STRING   = strings.ToLower(xsd.String.String())
+	XSD_TIME     = strings.ToLower(xsd.Time.String())
+	XSD_NMTOKEN  = strings.ToLower(xsd.NMTOKEN.String())
+)
+
 func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 	types := TypeList{}
 
 	var xsdToSyslMappings = map[string]string{
-		"NMTOKEN":      StringTypeName,
-		"integer":      "int",
-		"time":         StringTypeName,
-		"boolean":      "bool",
-		StringTypeName: StringTypeName,
-		"date":         "date",
+		XSD_BOOLEAN: syslutil.Type_BOOL,
+		// XSD_BYTE:     syslutil.Type_BYTES,
+		XSD_DATE: syslutil.Type_DATE,
+		// XSD_DATETIME: syslutil.Type_DATETIME,
+		// XSD_DECIMAL:  syslutil.Type_DECIMAL,
+		// XSD_INT:      syslutil.Type_INT,
+		XSD_INTEGER: syslutil.Type_INT,
+		XSD_STRING:  syslutil.Type_STRING,
+		XSD_TIME:    syslutil.Type_STRING,
+		XSD_NMTOKEN: syslutil.Type_STRING,
 	}
 	for swaggerName, syslName := range xsdToSyslMappings {
 		from := xml.Name{Space: "http://www.w3.org/2001/XMLSchema", Local: swaggerName}
@@ -141,7 +161,7 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 				}
 			}
 			x := t.(*StandardType)
-			if !contains("~xml_root", x.Attributes) {
+			if !utils.Contains("~xml_root", x.Attributes) {
 				x.Attributes = append(x.Attributes, "~xml_root")
 			}
 		} else if t := findType(data, &types); t == nil {
@@ -267,10 +287,10 @@ func makeSimpleType(from *xsd.SimpleType, knownTypes *TypeList, logger *logrus.L
 }
 
 func makeXsdBuiltinType(from xsd.Builtin, knownTypes *TypeList) Type {
-	typeStr := StringTypeName
+	typeStr := syslutil.Type_STRING
 	switch from {
 	case xsd.Integer, xsd.Int:
-		typeStr = "int"
+		typeStr = syslutil.Type_INT
 	}
 	t, _ := knownTypes.Find(typeStr)
 	return t

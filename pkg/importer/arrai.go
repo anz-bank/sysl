@@ -9,6 +9,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const ArraiImporterDir = "pkg/importer"
+
 // ArraiImporter encapsulates glue code for calling arr.ai scripts to import specs.
 type ArraiImporter struct {
 	appName string

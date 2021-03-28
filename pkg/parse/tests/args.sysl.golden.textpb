@@ -1,296 +1,296 @@
-apps: {
- key: "Client"
- value: {
-  name: {
-   part: "Client"
+apps:  {
+ key:  "Client"
+ value:  {
+  name:  {
+   part:  "Client"
   }
-  endpoints: {
-   key: "OnClick"
-   value: {
-    name: "OnClick"
-    param: {
-     name: "arg1"
-     type: {
-      type_ref: {
-       ref: {
-        path: "type1"
+  endpoints:  {
+   key:  "OnClick"
+   value:  {
+    name:  "OnClick"
+    param:  {
+     name:  "arg1"
+     type:  {
+      type_ref:  {
+       ref:  {
+        path:  "type1"
        }
       }
      }
     }
-    param: {
-     name: "arg2"
-     type: {
-      type_ref: {
-       ref: {
-        path: "type2"
+    param:  {
+     name:  "arg2"
+     type:  {
+      type_ref:  {
+       ref:  {
+        path:  "type2"
        }
       }
      }
     }
-    stmt: {
-     call: {
-      target: {
-       part: "Server"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Server"
       }
-      endpoint: "Endpoint"
-      arg: {
-       name: "id"
+      endpoint:  "Endpoint"
+      arg:  {
+       name:  "id"
       }
      }
-     attrs: {
-      key: "patterns"
-      value: {
-       a: {
-        elt: {
-         s: "https"
+     attrs:  {
+      key:  "patterns"
+      value:  {
+       a:  {
+        elt:  {
+         s:  "https"
         }
-        elt: {
-         s: "soap"
+        elt:  {
+         s:  "soap"
         }
        }
       }
      }
-     source_context: {
-      file: "tests/args.sysl"
-      start: {
-       line: 13
-       col: 8
+     source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  13
+       col:  8
       }
-      end: {
-       line: 13
-       col: 30
-      }
-     }
-    }
-    stmt: {
-     call: {
-      target: {
-       part: "Server"
-      }
-      endpoint: "PUT /foo/"
-     }
-     source_context: {
-      file: "tests/args.sysl"
-      start: {
-       line: 14
-       col: 8
-      }
-      end: {
-       line: 14
-       col: 18
+      end:  {
+       line:  13
+       col:  30
       }
      }
     }
-    stmt: {
-     call: {
-      target: {
-       part: "Server"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Server"
       }
-      endpoint: "PUT /foo"
-      arg: {
-       name: "bar"
-      }
+      endpoint:  "PUT /foo/"
      }
-     source_context: {
-      file: "tests/args.sysl"
-      start: {
-       line: 15
-       col: 8
+     source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  14
+       col:  8
       }
-      end: {
-       line: 15
-       col: 31
+      end:  {
+       line:  14
+       col:  18
       }
      }
     }
-    stmt: {
-     call: {
-      target: {
-       part: "Server"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Server"
       }
-      endpoint: "PUT /foo"
-      arg: {
-       name: "bar <: String"
+      endpoint:  "PUT /foo"
+      arg:  {
+       name:  "bar"
       }
      }
-     source_context: {
-      file: "tests/args.sysl"
-      start: {
-       line: 16
-       col: 8
+     source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  15
+       col:  8
       }
-      end: {
-       line: 16
-       col: 41
+      end:  {
+       line:  15
+       col:  31
       }
      }
     }
-    source_context: {
-     file: "tests/args.sysl"
-     start: {
-      line: 12
-      col: 4
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Server"
+      }
+      endpoint:  "PUT /foo"
+      arg:  {
+       name:  "bar <: String"
+      }
      }
-     end: {
-      line: 17
+     source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  16
+       col:  8
+      }
+      end:  {
+       line:  16
+       col:  41
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  12
+      col:  4
+     }
+     end:  {
+      line:  17
      }
     }
    }
   }
-  source_context: {
-   file: "tests/args.sysl"
-   start: {
-    line: 11
-    col: 1
+  source_context:  {
+   file:  "tests/args.sysl"
+   start:  {
+    line:  11
+    col:  1
    }
-   end: {
-    line: 11
+   end:  {
+    line:  11
    }
   }
  }
 }
-apps: {
- key: "Server"
- value: {
-  name: {
-   part: "Server"
+apps:  {
+ key:  "Server"
+ value:  {
+  name:  {
+   part:  "Server"
   }
-  endpoints: {
-   key: "Endpoint"
-   value: {
-    name: "Endpoint"
-    stmt: {
-     action: {
-      action: "..."
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    stmt:  {
+     action:  {
+      action:  "..."
      }
-     source_context: {
-      file: "tests/args.sysl"
-      start: {
-       line: 3
-       col: 8
+     source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  3
+       col:  8
       }
-      end: {
-       line: 3
-       col: 8
+      end:  {
+       line:  3
+       col:  8
       }
      }
     }
-    source_context: {
-     file: "tests/args.sysl"
-     start: {
-      line: 2
-      col: 4
+    source_context:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  2
+      col:  4
      }
-     end: {
-      line: 5
-      col: 4
+     end:  {
+      line:  5
+      col:  4
      }
     }
    }
   }
-  endpoints: {
-   key: "PUT /foo"
-   value: {
-    name: "PUT /foo"
-    attrs: {
-     key: "patterns"
-     value: {
-      a: {
-       elt: {
-        s: "rest"
+  endpoints:  {
+   key:  "PUT /foo"
+   value:  {
+    name:  "PUT /foo"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
        }
       }
      }
     }
-    stmt: {
-     action: {
-      action: "..."
+    stmt:  {
+     action:  {
+      action:  "..."
      }
-     source_context: {
-      file: "tests/args.sysl"
-      start: {
-       line: 7
-       col: 12
+     source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  7
+       col:  12
       }
-      end: {
-       line: 7
-       col: 12
+      end:  {
+       line:  7
+       col:  12
       }
      }
     }
-    rest_params: {
-     method: PUT
-     path: "/foo"
+    rest_params:  {
+     method:  PUT
+     path:  "/foo"
     }
-    source_context: {
-     file: "tests/args.sysl"
-     start: {
-      line: 6
-      col: 8
+    source_context:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  6
+      col:  8
      }
-     end: {
-      line: 8
-      col: 8
+     end:  {
+      line:  8
+      col:  8
      }
     }
    }
   }
-  endpoints: {
-   key: "PUT /foo/"
-   value: {
-    name: "PUT /foo/"
-    attrs: {
-     key: "patterns"
-     value: {
-      a: {
-       elt: {
-        s: "rest"
+  endpoints:  {
+   key:  "PUT /foo/"
+   value:  {
+    name:  "PUT /foo/"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
        }
       }
      }
     }
-    stmt: {
-     action: {
-      action: "..."
+    stmt:  {
+     action:  {
+      action:  "..."
      }
-     source_context: {
-      file: "tests/args.sysl"
-      start: {
-       line: 10
-       col: 16
+     source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  10
+       col:  16
       }
-      end: {
-       line: 10
-       col: 16
+      end:  {
+       line:  10
+       col:  16
       }
      }
     }
-    rest_params: {
-     method: PUT
-     path: "/foo/"
+    rest_params:  {
+     method:  PUT
+     path:  "/foo/"
     }
-    source_context: {
-     file: "tests/args.sysl"
-     start: {
-      line: 9
-      col: 12
+    source_context:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  9
+      col:  12
      }
-     end: {
-      line: 11
-      col: 6
+     end:  {
+      line:  11
+      col:  6
      }
     }
    }
   }
-  source_context: {
-   file: "tests/args.sysl"
-   start: {
-    line: 1
-    col: 1
+  source_context:  {
+   file:  "tests/args.sysl"
+   start:  {
+    line:  1
+    col:  1
    }
-   end: {
-    line: 1
+   end:  {
+    line:  1
    }
   }
  }

@@ -18,8 +18,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// https://swagger.io/blog/api-strategy/difference-between-swagger-and-openapi/
+//   OpenAPI = Specification
+//   Swagger = Tools for implementing the specification
+
+type OpenAPI2Importer struct {
+	openAPI2Spec string
+	filepath     string
+	*OpenAPI3Importer
+}
+
 func MakeOpenAPI2Importer(logger *logrus.Logger, basePath string, filePath string) *OpenAPI2Importer {
-	return &OpenAPI2Importer{openapiv3: &openapiv3{
+	return &OpenAPI2Importer{OpenAPI3Importer: &OpenAPI3Importer{
 		appName:  "",
 		pkg:      "",
 		basePath: basePath,
@@ -28,12 +38,6 @@ func MakeOpenAPI2Importer(logger *logrus.Logger, basePath string, filePath strin
 		types:    TypeList{},
 	},
 		filepath: filePath}
-}
-
-type OpenAPI2Importer struct {
-	openAPI2Spec string
-	filepath     string
-	*openapiv3
 }
 
 func (l *OpenAPI2Importer) LoadFile(path string) (string, error) {
@@ -49,7 +53,7 @@ func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec), u, NewOpenAPILoader(l.logger, l.fs))
+	oas3spec, basePath, err := convertToOpenAPI3([]byte(oas2spec), u, NewOpenAPI3Loader(l.logger, l.fs))
 	if err != nil {
 		return "", fmt.Errorf("error converting openapi 2:%w", err)
 	}
@@ -70,22 +74,22 @@ func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
 	return l
 }
 
-// convertToOpenAPI3 takes a swagger spec and converts it to openapi3
+// convertToOpenAPI3 takes a openapi2 spec and converts it to openapi3
 func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader) (*openapi3.Swagger, string, error) {
-	var swagger2 openapi2.Swagger
+	var openapiv2 openapi2.Swagger
 	jsondata, err := yaml.YAMLToJSON(data)
 	if err != nil {
 		return nil, "", err
 	}
-	err = json.Unmarshal(jsondata, &swagger2)
+	err = json.Unmarshal(jsondata, &openapiv2)
 	if err != nil {
 		return nil, "", err
 	}
 
-	if len(swagger2.Schemes) == 0 {
-		swagger2.Schemes = []string{"https"}
+	if len(openapiv2.Schemes) == 0 {
+		openapiv2.Schemes = []string{"https"}
 	}
-	openapiv3, err := openapi2conv.ToV3Swagger(&swagger2)
+	openapiv3, err := openapi2conv.ToV3Swagger(&openapiv2)
 	if err != nil {
 		return nil, "", err
 	}
@@ -107,47 +111,5 @@ func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader
 		return nil, "", err
 	}
 
-	return openapiv3, swagger2.BasePath, nil
-}
-
-// nolint:gochecknoglobals
-var swaggerFormats = []string{"int32", "int64", "float", "double", "date", "date-time", "byte", "binary"}
-
-func mapSwaggerTypeAndFormatToType(typeName, format string, logger *logrus.Logger) string {
-	typeName = strings.ToLower(typeName)
-	format = strings.ToLower(format)
-	if format != "" && !contains(format, swaggerFormats) {
-		logger.Warnf("unknown format '%s' being used, ignoring...\n", format)
-		format = ""
-	}
-
-	conversions := map[string]map[string]string{
-		StringTypeName: {
-			"":          StringTypeName,
-			"date":      "date",
-			"date-time": "datetime",
-			"byte":      StringTypeName,
-			"binary":    "bytes",
-		},
-		"integer": {
-			"":      "int",
-			"int32": "int32",
-			"int64": "int64",
-		},
-		"number": {
-			"":       "float",
-			"double": "float",
-			"float":  "float",
-		},
-	}
-
-	if formatMap, ok := conversions[typeName]; ok {
-		if result, ok := formatMap[format]; ok {
-			return result
-		}
-		logger.Warnf("Unhandled (type, format) -> (%s, %s)\n", typeName, format)
-		return mapSwaggerTypeAndFormatToType(typeName, "", logger)
-	}
-
-	return typeName
+	return openapiv3, openapiv2.BasePath, nil
 }

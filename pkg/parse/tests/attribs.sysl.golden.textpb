@@ -1,124 +1,124 @@
-apps: {
- key: "App"
- value: {
-  name: {
-   part: "App"
+apps:  {
+ key:  "App"
+ value:  {
+  name:  {
+   part:  "App"
   }
-  attrs: {
-   key: "arrays"
-   value: {
-    a: {
-     elt: {
-      a: {
-       elt: {
-        s: "a"
+  attrs:  {
+   key:  "arrays"
+   value:  {
+    a:  {
+     elt:  {
+      a:  {
+       elt:  {
+        s:  "a"
        }
       }
      }
-     elt: {
-      a: {
-       elt: {
-        s: "b"
+     elt:  {
+      a:  {
+       elt:  {
+        s:  "b"
        }
-       elt: {
-        s: "c"
-       }
-      }
-     }
-    }
-   }
-  }
-  attrs: {
-   key: "at_arrays"
-   value: {
-    a: {
-     elt: {
-      a: {
-       elt: {
-        s: "a"
-       }
-      }
-     }
-     elt: {
-      a: {
-       elt: {
-        s: "b"
-       }
-       elt: {
-        s: "c"
+       elt:  {
+        s:  "c"
        }
       }
      }
     }
    }
   }
-  attrs: {
-   key: "at_strings"
-   value: {
-    a: {
-     elt: {
-      s: "a"
-     }
-     elt: {
-      s: "b"
-     }
-    }
-   }
-  }
-  attrs: {
-   key: "strings"
-   value: {
-    a: {
-     elt: {
-      s: "a"
-     }
-     elt: {
-      s: "b"
-     }
-    }
-   }
-  }
-  endpoints: {
-   key: "Endpoint"
-   value: {
-    name: "Endpoint"
-    stmt: {
-     action: {
-      action: "..."
-     }
-     source_context: {
-      file: "tests/attribs.sysl"
-      start: {
-       line: 5
-       col: 8
+  attrs:  {
+   key:  "at_arrays"
+   value:  {
+    a:  {
+     elt:  {
+      a:  {
+       elt:  {
+        s:  "a"
+       }
       }
-      end: {
-       line: 5
-       col: 8
+     }
+     elt:  {
+      a:  {
+       elt:  {
+        s:  "b"
+       }
+       elt:  {
+        s:  "c"
+       }
       }
      }
     }
-    source_context: {
-     file: "tests/attribs.sysl"
-     start: {
-      line: 4
-      col: 4
+   }
+  }
+  attrs:  {
+   key:  "at_strings"
+   value:  {
+    a:  {
+     elt:  {
+      s:  "a"
      }
-     end: {
-      line: 6
+     elt:  {
+      s:  "b"
      }
     }
    }
   }
-  source_context: {
-   file: "tests/attribs.sysl"
-   start: {
-    line: 1
-    col: 1
+  attrs:  {
+   key:  "strings"
+   value:  {
+    a:  {
+     elt:  {
+      s:  "a"
+     }
+     elt:  {
+      s:  "b"
+     }
+    }
    }
-   end: {
-    line: 1
-    col: 51
+  }
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    stmt:  {
+     action:  {
+      action:  "..."
+     }
+     source_context:  {
+      file:  "tests/attribs.sysl"
+      start:  {
+       line:  5
+       col:  8
+      }
+      end:  {
+       line:  5
+       col:  8
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/attribs.sysl"
+     start:  {
+      line:  4
+      col:  4
+     }
+     end:  {
+      line:  6
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/attribs.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  51
    }
   }
  }

@@ -9,13 +9,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_openapiv3_loadTypeSchema(t *testing.T) {
+func Test_OpenAPI3Importer_loadTypeSchema(t *testing.T) {
 	t.Parallel()
 	loader := openapi3.NewSwaggerLoader()
 	loader.IsExternalRefsAllowed = true
-	schema, err := loader.LoadSwaggerFromFile("tests-openapi/one-of.yaml")
+	schema, err := loader.LoadSwaggerFromFile("tests/openapi3/one-of.yaml")
 	assert.NoError(t, err)
-	o := &openapiv3{logger: logrus.New()}
+	o := &OpenAPI3Importer{logger: logrus.New()}
 
 	catType := &SyslBuiltIn{
 		name: "Cat",
@@ -25,6 +25,6 @@ func Test_openapiv3_loadTypeSchema(t *testing.T) {
 	}
 	expected := &Union{name: "Pet", Options: []Field{{Name: "Cat", Type: catType}, {Name: "Dog", Type: dogType}}}
 	if got := o.loadTypeSchema("Pet", schema.Components.Schemas["Pet"].Value); !reflect.DeepEqual(got, expected) {
-		t.Errorf("openapiv3.loadTypeSchema() = %v, want %v", got, expected)
+		t.Errorf("OpenAPI3Importer.loadTypeSchema() = %v, want %v", got, expected)
 	}
 }

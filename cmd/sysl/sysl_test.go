@@ -1066,10 +1066,10 @@ func TestSyslSyntaxValidate(t *testing.T) {
 	t.Parallel()
 
 	dirs := []string{"../../pkg/importer/avro/tests",
-		"../../pkg/importer/tests-grammar",
-		"../../pkg/importer/tests-openapi",
-		"../../pkg/importer/tests-swagger",
-		"../../pkg/importer/tests-xsd",
+		"../../pkg/importer/tests/grammar",
+		"../../pkg/importer/tests/openapi3",
+		"../../pkg/importer/tests/openapi2",
+		"../../pkg/importer/tests/xsd",
 		"../../tests"}
 
 	for _, dir := range dirs {

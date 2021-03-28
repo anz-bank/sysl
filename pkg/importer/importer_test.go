@@ -31,6 +31,8 @@ type testConfig struct {
 }
 
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
+	t.Helper()
+
 	files, err := ioutil.ReadDir(cfg.testDir)
 	require.NoError(t, err)
 	for _, f := range files {
@@ -72,6 +74,8 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 }
 
 func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
+	t.Helper()
+
 	logger, _ := test.NewNullLogger()
 	syslFile := filepath.Join(cfg.testDir, filepath.Base(cfg.testDir)+".sysl")
 	path := syslutil.MustAbsolute(t, cfg.testDir)
@@ -86,26 +90,26 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	require.Equal(t, string(expected), out)
 }
 
-func TestLoadSwaggerJSONFromTestFiles(t *testing.T) {
+func TestLoadOpenAPI2JSONFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
-		name:          "TestLoadSwaggerFromTestFiles",
-		testDir:       "tests-swagger",
+		name:          "TestLoadOpenAPI2JSONFromTestFiles",
+		testDir:       "tests/openapi2",
 		testExtension: ".json",
 	})
 }
 
-func TestLoadSwaggerFromTestFiles(t *testing.T) {
+func TestLoadOpenAPI2FromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
-		name:          "TestLoadSwaggerFromTestFiles",
-		testDir:       "tests-swagger",
+		name:          "TestLoadOpenAPI2FromTestFiles",
+		testDir:       "tests/openapi2",
 		testExtension: ".yaml",
 	})
 }
 
-func TestLoadOpenAPIFromTestFiles(t *testing.T) {
+func TestLoadOpenAPI3FromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
-		name:          "TestLoadOpenAPIFromTestFiles",
-		testDir:       "tests-openapi",
+		name:          "TestLoadOpenAPI3FromTestFiles",
+		testDir:       "tests/openapi3",
 		testExtension: ".yaml",
 	})
 }
@@ -113,7 +117,7 @@ func TestLoadOpenAPIFromTestFiles(t *testing.T) {
 func TestLoadXSDFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadXSDFromTestFiles",
-		testDir:       "tests-xsd",
+		testDir:       "tests/xsd",
 		testExtension: ".xsd",
 	})
 }
@@ -138,7 +142,7 @@ func TestLoadSpannerDirFromTestDir(t *testing.T) {
 
 func TestLoadPostgresqlFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
-		name:          "TestLoadPostgresqlFromTestDir",
+		name:          "TestLoadPostgresqlFromTestFiles",
 		testDir:       "postgresql/tests",
 		testExtension: ".sql",
 		format:        "postgres",
@@ -147,7 +151,7 @@ func TestLoadPostgresqlFromTestFiles(t *testing.T) {
 
 func TestLoadPostgresqlDirFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
-		name:          "TestLoadPostgresqlDirFromTestDir",
+		name:          "TestLoadPostgresqlDirFromTestFiles",
 		testDir:       "postgresql/tests/migrations",
 		testExtension: "",
 		format:        "postgresDir",
@@ -156,7 +160,7 @@ func TestLoadPostgresqlDirFromTestFiles(t *testing.T) {
 
 func TestLoadMySQLFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
-		name:          "TestLoadMySQLFromTestDir",
+		name:          "TestLoadMySQLFromTestFiles",
 		testDir:       "mysql/tests",
 		testExtension: ".sql",
 		format:        "mysql",
@@ -165,7 +169,7 @@ func TestLoadMySQLFromTestFiles(t *testing.T) {
 
 func TestLoadMySQLDirFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
-		name:          "TestLoadMySQLDirFromTestDir",
+		name:          "TestLoadMySQLDirFromTestFiles",
 		testDir:       "mysql/tests/migrations",
 		testExtension: "",
 		format:        "mysqlDir",

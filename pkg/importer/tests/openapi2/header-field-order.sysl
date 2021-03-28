@@ -10,7 +10,7 @@ TestApp "foo" [package="com.example.package"]:
         | foo
 
     /random/createfoo:
-        POST (uuid <: string? [~header, name="UUID"], fooid <: string [~header, name="FooID"], requestid <: string [~header, name="RequestID"], sessionid <: string [~header, name="sessionId"], deviceid <: string? [~header, name="deviceId"], ipaddress <: string? [~header, name="ipAddress"]):
+        POST (uuid <: uuid? [~header, name="UUID"], fooid <: string [~header, name="FooID"], requestid <: string [~header, name="RequestID"], sessionid <: string [~header, name="sessionId"], deviceid <: string? [~header, name="deviceId"], ipaddress <: string? [~header, name="ipAddress"]):
             | Create a foo.
             return ok
 

@@ -3,6 +3,8 @@ package importer
 import (
 	"net/url"
 	"strings"
+
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 func getDescription(d string) string {
@@ -60,7 +62,7 @@ func getSyslTypeName(item Type) string {
 	}
 	if !isBuiltInType(item) {
 		lower := strings.ToLower(item.Name())
-		for _, bi := range builtIns {
+		for _, bi := range syslutil.BuiltInTypes {
 			if strings.HasPrefix(lower, bi) {
 				return "_" + item.Name()
 			}

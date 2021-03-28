@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/utils"
 )
 
 const namespaceSeparator = " :: "
@@ -37,6 +38,60 @@ func GetTypeDetail(t *sysl.Type) (typeName string, typeDetail string) {
 		typeName = "union"
 	}
 	return typeName, typeDetail
+}
+
+type BuiltInType = string
+
+// BuiltInTypes are the builtin types of Sysl.
+// There's no primitive int32 (and int64) type.
+// The parser interprets the Sysl syntax int32 value
+// as an int primitive with a bit width (sysl.Type_Constraint.BitWidth) of 32.
+var BuiltInTypes = []BuiltInType{
+	Type_NO_Primitive,
+	Type_EMPTY,
+	Type_ANY,
+	Type_BOOL,
+	Type_INT,
+	Type_INT32,
+	Type_INT64,
+	Type_FLOAT,
+	Type_DECIMAL,
+	Type_STRING,
+	Type_BYTES,
+	Type_STRING_8,
+	Type_DATE,
+	Type_DATETIME,
+	Type_XML,
+	Type_UUID,
+}
+
+// nolint:golint,stylecheck
+var (
+	Type_NO_Primitive BuiltInType = GetTypePrimitiveName(sysl.Type_NO_Primitive)
+	Type_EMPTY        BuiltInType = GetTypePrimitiveName(sysl.Type_EMPTY)
+	Type_ANY          BuiltInType = GetTypePrimitiveName(sysl.Type_ANY)
+	Type_BOOL         BuiltInType = GetTypePrimitiveName(sysl.Type_BOOL)
+	Type_INT          BuiltInType = GetTypePrimitiveName(sysl.Type_INT)
+	Type_INT32        BuiltInType = "int32"
+	Type_INT64        BuiltInType = "int64"
+	Type_FLOAT        BuiltInType = GetTypePrimitiveName(sysl.Type_FLOAT)
+	Type_DECIMAL      BuiltInType = GetTypePrimitiveName(sysl.Type_DECIMAL)
+	Type_STRING       BuiltInType = GetTypePrimitiveName(sysl.Type_STRING)
+	Type_BYTES        BuiltInType = GetTypePrimitiveName(sysl.Type_BYTES)
+	Type_STRING_8     BuiltInType = GetTypePrimitiveName(sysl.Type_STRING_8)
+	Type_DATE         BuiltInType = GetTypePrimitiveName(sysl.Type_DATE)
+	Type_DATETIME     BuiltInType = GetTypePrimitiveName(sysl.Type_DATETIME)
+	Type_XML          BuiltInType = GetTypePrimitiveName(sysl.Type_XML)
+	Type_UUID         BuiltInType = GetTypePrimitiveName(sysl.Type_UUID)
+)
+
+func IsBuiltIn(name string) bool {
+	return utils.Contains(name, BuiltInTypes)
+}
+
+// nolint:interfacer
+func GetTypePrimitiveName(t sysl.Type_Primitive) string {
+	return strings.ToLower(t.String())
 }
 
 // TypeNone returns none-type
