@@ -1,0 +1,61 @@
+openapi: "3.0"
+info:
+  title: Examples
+paths:
+  /examples:
+    get:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/req"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/unauth_no_meta"
+              examples:
+                Current. User not registered.:
+                  $ref: "#/components/examples/resp_create_prospect"
+                Current. User registered:
+                  $ref: "#/components/examples/resp_verify_pin"
+
+components:
+  schemas:
+    req:
+      type: object
+      properties:
+        response:
+          type: string
+          example: "[{\"assertions\":[{\"assertionScheme\":\"test\"}]}]"
+        responseCode:
+          type: integer
+          example: 1200
+        responseMsg:
+          type: string
+          example: Completed
+    unauth_no_meta:
+      properties:
+        authId:
+          type: string
+        nextStages:
+          type: array
+          items:
+            type: string
+            enum: [create_prospect, verify_pin,""]
+
+  examples:
+    resp_create_prospect:
+      value:
+        authId: string
+        nextStages:
+            - create_prospect
+
+    resp_verify_pin:
+      value:
+        authId: string
+        nextStages:
+            - verify_pin

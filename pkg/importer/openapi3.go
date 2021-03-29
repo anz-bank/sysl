@@ -2,6 +2,7 @@ package importer
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/url"
@@ -338,9 +339,13 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) Fie
 
 	switch t := prop.Value.Example.(type) {
 	case string:
-		f.Attributes = append(f.Attributes, fmt.Sprintf(`examples=["%s"]`, t))
+		b, err := json.Marshal(t)
+		if err != nil {
+			fmt.Printf("JSON marshal example string %s error %s", t, err.Error())
+		}
+		f.Attributes = append(f.Attributes, fmt.Sprintf(`openapi_example=%s`, string(b)))
 	case float64:
-		f.Attributes = append(f.Attributes, fmt.Sprintf(`examples=["%s"]`, strconv.FormatFloat(t, 'f', -1, 64)))
+		f.Attributes = append(f.Attributes, fmt.Sprintf(`openapi_example="%s"`, strconv.FormatFloat(t, 'f', -1, 64)))
 	case nil:
 	default:
 		fmt.Printf("Unhandled example type %T", t)

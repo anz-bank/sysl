@@ -16,25 +16,25 @@ TestApp [package="com.example.package"]:
             @json_tag = "events"
 
     !type TrackEventList_events:
-        action <: string? [examples=["impression"]]:
+        action <: string?:
             @json_tag = "action"
-        category <: string [examples=["tip"]]:
+        category <: string:
             @json_tag = "category"
-        label <: string? [examples=["wieufh23i72ujhfksd"]]:
+        label <: string?:
             @json_tag = "label"
         value <: TrackEventList_events_value?:
             @json_tag = "value"
 
     !type TrackEventList_events_value:
-        comment <: string? [examples=["Yay I learned something today"]]:
+        comment <: string?:
             @json_tag = "comment"
-        data <: string? [examples=["creditCardAppFormSubmitted"]]:
+        data <: string?:
             @json_tag = "data"
-        latency_days <: int? [examples=["90"]]:
+        latency_days <: int?:
             @json_tag = "latency_days"
-        latency_event <: string? [examples=["latency_event, end_of_month"]]:
+        latency_event <: string?:
             @json_tag = "latency_event"
-        reaction <: string? [examples=["like"]]:
+        reaction <: string?:
             @json_tag = "reaction"
         request_copy <: bool?:
             @json_tag = "request_copy"
