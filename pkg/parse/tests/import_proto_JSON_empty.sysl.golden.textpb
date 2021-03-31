@@ -20,5 +20,15 @@ apps:  {
     line:  3
    }
   }
+  source_contexts:  {
+   file:  "tests/import_proto_JSON_empty.sysl"
+   start:  {
+    line:  3
+    col:  1
+   }
+   end:  {
+    line:  3
+   }
+  }
  }
 }

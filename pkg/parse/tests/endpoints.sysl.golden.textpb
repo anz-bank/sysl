@@ -29,6 +29,17 @@ apps:  {
        col:  39
       }
      }
+     source_contexts:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  25
+       col:  8
+      }
+      end:  {
+       line:  25
+       col:  39
+      }
+     }
     }
     stmt:  {
      call:  {
@@ -44,6 +55,17 @@ apps:  {
       }
      }
      source_context:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  26
+       col:  8
+      }
+      end:  {
+       line:  26
+       col:  15
+      }
+     }
+     source_contexts:  {
       file:  "tests/endpoints.sysl"
       start:  {
        line:  26
@@ -80,8 +102,29 @@ apps:  {
        col:  24
       }
      }
+     source_contexts:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  27
+       col:  8
+      }
+      end:  {
+       line:  27
+       col:  24
+      }
+     }
     }
     source_context:  {
+     file:  "tests/endpoints.sysl"
+     start:  {
+      line:  24
+      col:  4
+     }
+     end:  {
+      line:  28
+     }
+    }
+    source_contexts:  {
      file:  "tests/endpoints.sysl"
      start:  {
       line:  24
@@ -142,6 +185,17 @@ apps:  {
        col:  28
       }
      }
+     source_contexts:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  18
+       col:  12
+      }
+      end:  {
+       line:  18
+       col:  28
+      }
+     }
     }
     stmt:  {
      ret:  {
@@ -158,12 +212,34 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  19
+       col:  12
+      }
+      end:  {
+       line:  19
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/serve.html"
     }
     source_context:  {
+     file:  "tests/endpoints.sysl"
+     start:  {
+      line:  17
+      col:  8
+     }
+     end:  {
+      line:  21
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/endpoints.sysl"
      start:  {
       line:  17
@@ -220,12 +296,34 @@ apps:  {
        col:  16
       }
      }
+     source_contexts:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  13
+       col:  12
+      }
+      end:  {
+       line:  13
+       col:  16
+      }
+     }
     }
     stmt:  {
      ret:  {
       payload:  "ok <: Response"
      }
      source_context:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  14
+       col:  12
+      }
+      end:  {
+       line:  14
+       col:  18
+      }
+     }
+     source_contexts:  {
       file:  "tests/endpoints.sysl"
       start:  {
        line:  14
@@ -255,10 +353,32 @@ apps:  {
          col:  40
         }
        }
+       source_contexts:  {
+        file:  "tests/endpoints.sysl"
+        start:  {
+         line:  11
+         col:  27
+        }
+        end:  {
+         line:  11
+         col:  40
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/endpoints.sysl"
+     start:  {
+      line:  12
+      col:  8
+     }
+     end:  {
+      line:  16
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/endpoints.sysl"
      start:  {
       line:  12
@@ -283,7 +403,18 @@ apps:  {
         file:  "tests/endpoints.sysl"
         start:  {
          line:  22
+         col:  8
+        }
+        end:  {
+         line:  22
          col:  20
+        }
+       }
+       source_contexts:  {
+        file:  "tests/endpoints.sysl"
+        start:  {
+         line:  22
+         col:  8
         }
         end:  {
          line:  22
@@ -304,9 +435,40 @@ apps:  {
       col:  3
      }
     }
+    source_contexts:  {
+     file:  "tests/endpoints.sysl"
+     start:  {
+      line:  21
+      col:  4
+     }
+     end:  {
+      line:  23
+      col:  3
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/endpoints.sysl"
+   start:  {
+    line:  23
+    col:  1
+   }
+   end:  {
+    line:  23
+   }
+  }
+  source_contexts:  {
+   file:  "tests/endpoints.sysl"
+   start:  {
+    line:  10
+    col:  1
+   }
+   end:  {
+    line:  10
+   }
+  }
+  source_contexts:  {
    file:  "tests/endpoints.sysl"
    start:  {
     line:  23
@@ -354,12 +516,34 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  4
+       col:  12
+      }
+      end:  {
+       line:  4
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/serve.html"
     }
     source_context:  {
+     file:  "tests/endpoints.sysl"
+     start:  {
+      line:  3
+      col:  8
+     }
+     end:  {
+      line:  6
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/endpoints.sysl"
      start:  {
       line:  3
@@ -401,6 +585,17 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/endpoints.sysl"
+      start:  {
+       line:  8
+       col:  12
+      }
+      end:  {
+       line:  8
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  POST
@@ -410,6 +605,17 @@ apps:  {
       type:  {
        primitive:  STRING
        source_context:  {
+        file:  "tests/endpoints.sysl"
+        start:  {
+         line:  6
+         col:  27
+        }
+        end:  {
+         line:  6
+         col:  40
+        }
+       }
+       source_contexts:  {
         file:  "tests/endpoints.sysl"
         start:  {
          line:  6
@@ -434,9 +640,31 @@ apps:  {
       col:  3
      }
     }
+    source_contexts:  {
+     file:  "tests/endpoints.sysl"
+     start:  {
+      line:  7
+      col:  8
+     }
+     end:  {
+      line:  10
+      col:  3
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/endpoints.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  6
+   }
+  }
+  source_contexts:  {
    file:  "tests/endpoints.sysl"
    start:  {
     line:  1

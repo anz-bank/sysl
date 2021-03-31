@@ -232,6 +232,18 @@ apps:  {
    }
    version:  "v0.0.2"
   }
+  source_contexts:  {
+   file:  "tests/import_proto_JSON.sysl"
+   start:  {
+    line:  3
+    col:  1
+   }
+   end:  {
+    line:  3
+    col:  38
+   }
+   version:  "v0.0.2"
+  }
  }
 }
 apps:  {

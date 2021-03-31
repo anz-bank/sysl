@@ -109,6 +109,18 @@ apps:  {
           }
           text:  "let out = ~~> foo1"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  4
+           col:  6
+          }
+          end:  {
+           line:  4
+           col:  20
+          }
+          text:  "let out = ~~> foo1"
+         }
         }
        }
       }
@@ -163,6 +175,18 @@ apps:  {
           }
           text:  "let out1 = . ~> foo1"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  5
+           col:  6
+          }
+          end:  {
+           line:  5
+           col:  22
+          }
+          text:  "let out1 = . ~> foo1"
+         }
         }
        }
       }
@@ -206,6 +230,18 @@ apps:  {
           no_type:  {}
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  6
+           col:  6
+          }
+          end:  {
+           line:  6
+           col:  24
+          }
+          text:  "let out2 = abc ~> foo1"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  6
@@ -276,6 +312,18 @@ apps:  {
           no_type:  {}
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  7
+           col:  6
+          }
+          end:  {
+           line:  7
+           col:  25
+          }
+          text:  "let out3 = .abc ~> foo1"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  7
@@ -362,6 +410,18 @@ apps:  {
           no_type:  {}
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  8
+           col:  6
+          }
+          end:  {
+           line:  8
+           col:  26
+          }
+          text:  "let out4 = .abc ~> .def"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  8
@@ -460,6 +520,18 @@ apps:  {
           }
           text:  "let out5 = .abc ~> .table of abc"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  9
+           col:  6
+          }
+          end:  {
+           line:  9
+           col:  35
+          }
+          text:  "let out5 = .abc ~> .table of abc"
+         }
         }
        }
       }
@@ -546,6 +618,18 @@ apps:  {
           }
           text:  "let out6 = .abc ~> -> foo"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  10
+           col:  6
+          }
+          end:  {
+           line:  10
+           col:  28
+          }
+          text:  "let out6 = .abc ~> -> foo"
+         }
         }
        }
       }
@@ -605,6 +689,18 @@ apps:  {
           no_type:  {}
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  11
+           col:  6
+          }
+          end:  {
+           line:  11
+           col:  30
+          }
+          text:  "let out7 = .abc ~[abc]> foo"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  11
@@ -687,6 +783,18 @@ apps:  {
           }
           text:  "let out7a = .abc ~[abc,def]> foo"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  12
+           col:  6
+          }
+          end:  {
+           line:  12
+           col:  35
+          }
+          text:  "let out7a = .abc ~[abc,def]> foo"
+         }
         }
        }
       }
@@ -747,6 +855,18 @@ apps:  {
           no_type:  {}
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  13
+           col:  6
+          }
+          end:  {
+           line:  13
+           col:  36
+          }
+          text:  "let out7b = .abc !~[abc,def]> foo"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  13
@@ -831,6 +951,18 @@ apps:  {
           attr:  "def"
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  14
+           col:  6
+          }
+          end:  {
+           line:  14
+           col:  39
+          }
+          text:  "let out8 = .abc !~[abc,def]> foo.def"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  14
@@ -931,6 +1063,18 @@ apps:  {
           attr:  "def"
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  15
+           col:  6
+          }
+          end:  {
+           line:  15
+           col:  41
+          }
+          text:  "let out8b = .abc !~[abc,def]> .foo.def"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  15
@@ -1081,6 +1225,18 @@ apps:  {
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def where(true)"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  16
+           col:  6
+          }
+          end:  {
+           line:  16
+           col:  54
+          }
+          text:  "let out9 = .abc !~[abc,def]> .foo.def where(true)"
+         }
         }
        }
       }
@@ -1197,6 +1353,18 @@ apps:  {
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def single"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  17
+           col:  6
+          }
+          end:  {
+           line:  17
+           col:  44
+          }
+          text:  "let out9 = .abc !~[abc,def]> .foo.def single"
+         }
         }
        }
       }
@@ -1302,6 +1470,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  18
+           col:  6
+          }
+          end:  {
+           line:  18
+           col:  44
+          }
+          text:  "let out9 = .abc !~[abc,def]> .foo.def singleOrNull"
+         }
+         source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
            line:  18
@@ -1450,6 +1630,18 @@ apps:  {
           }
           text:  "let out10 = if:\n        a == true => . ~> foo\n      let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)\n    )\n"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  19
+           col:  6
+          }
+          end:  {
+           line:  21
+           col:  6
+          }
+          text:  "let out10 = if:\n        a == true => . ~> foo\n      let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)\n    )\n"
+         }
         }
        }
       }
@@ -1521,6 +1713,18 @@ apps:  {
           }
           text:  "let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)"
          }
+         source_contexts:  {
+          file:  "tests/matching.sysl"
+          start:  {
+           line:  21
+           col:  6
+          }
+          end:  {
+           line:  21
+           col:  96
+          }
+          text:  "let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)"
+         }
         }
        }
       }
@@ -1548,9 +1752,31 @@ apps:  {
      }
      text:  "!view TestMatching(number <: int) -> int:"
     }
+    source_contexts:  {
+     file:  "tests/matching.sysl"
+     start:  {
+      line:  2
+      col:  2
+     }
+     end:  {
+      line:  23
+     }
+     text:  "!view TestMatching(number <: int) -> int:"
+    }
    }
   }
   source_context:  {
+   file:  "tests/matching.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  47
+   }
+  }
+  source_contexts:  {
    file:  "tests/matching.sysl"
    start:  {
     line:  1

@@ -19,9 +19,30 @@ apps:  {
       col:  20
      }
     }
+    source_contexts:  {
+     file:  "tests/alias_inline.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  2
+      col:  20
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/alias_inline.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/alias_inline.sysl"
    start:  {
     line:  1

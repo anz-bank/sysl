@@ -16,7 +16,18 @@ apps:  {
         file:  "tests/numbers_format.sysl"
         start:  {
          line:  3
+         col:  8
+        }
+        end:  {
+         line:  3
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/numbers_format.sysl"
+        start:  {
+         line:  3
+         col:  8
         }
         end:  {
          line:  3
@@ -44,7 +55,18 @@ apps:  {
         file:  "tests/numbers_format.sysl"
         start:  {
          line:  4
+         col:  8
+        }
+        end:  {
+         line:  4
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/numbers_format.sysl"
+        start:  {
+         line:  4
+         col:  8
         }
         end:  {
          line:  4
@@ -72,7 +94,18 @@ apps:  {
         file:  "tests/numbers_format.sysl"
         start:  {
          line:  5
+         col:  8
+        }
+        end:  {
+         line:  5
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/numbers_format.sysl"
+        start:  {
+         line:  5
+         col:  8
         }
         end:  {
          line:  5
@@ -83,6 +116,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/numbers_format.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  7
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/numbers_format.sysl"
      start:  {
       line:  2
@@ -107,7 +151,18 @@ apps:  {
         file:  "tests/numbers_format.sysl"
         start:  {
          line:  8
+         col:  8
+        }
+        end:  {
+         line:  8
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/numbers_format.sysl"
+        start:  {
+         line:  8
+         col:  8
         }
         end:  {
          line:  8
@@ -127,7 +182,18 @@ apps:  {
         file:  "tests/numbers_format.sysl"
         start:  {
          line:  9
+         col:  8
+        }
+        end:  {
+         line:  9
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/numbers_format.sysl"
+        start:  {
+         line:  9
+         col:  8
         }
         end:  {
          line:  9
@@ -147,7 +213,18 @@ apps:  {
         file:  "tests/numbers_format.sysl"
         start:  {
          line:  10
+         col:  8
+        }
+        end:  {
+         line:  10
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/numbers_format.sysl"
+        start:  {
+         line:  10
+         col:  8
         }
         end:  {
          line:  10
@@ -167,9 +244,29 @@ apps:  {
       line:  12
      }
     }
+    source_contexts:  {
+     file:  "tests/numbers_format.sysl"
+     start:  {
+      line:  7
+      col:  4
+     }
+     end:  {
+      line:  12
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/numbers_format.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/numbers_format.sysl"
    start:  {
     line:  1

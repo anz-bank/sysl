@@ -107,6 +107,18 @@ apps:  {
           }
           text:  "AppOrderId2 = int(.orderId, null)"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  4
+           col:  6
+          }
+          end:  {
+           line:  4
+           col:  38
+          }
+          text:  "AppOrderId2 = int(.orderId, null)"
+         }
         }
        }
       }
@@ -118,6 +130,18 @@ apps:  {
           func:  "autoinc"
          }
          source_context:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  5
+           col:  6
+          }
+          end:  {
+           line:  5
+           col:  24
+          }
+          text:  "let out = autoinc()"
+         }
+         source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
            line:  5
@@ -170,6 +194,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  6
+           col:  6
+          }
+          end:  {
+           line:  6
+           col:  25
+          }
+          text:  "let out = foo any(1)"
+         }
+         source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
            line:  6
@@ -248,6 +284,18 @@ apps:  {
           }
           text:  "let out = foo max(.bar)"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  7
+           col:  6
+          }
+          end:  {
+           line:  7
+           col:  28
+          }
+          text:  "let out = foo max(.bar)"
+         }
         }
        }
       }
@@ -304,6 +352,18 @@ apps:  {
           scopevar:  "."
          }
          source_context:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  8
+           col:  6
+          }
+          end:  {
+           line:  8
+           col:  31
+          }
+          text:  "let out = foo max(bar.baz)"
+         }
+         source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
            line:  8
@@ -477,6 +537,18 @@ apps:  {
           }
           text:  "let out = foo where(.x > 0) max(.bar.baz)"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  9
+           col:  6
+          }
+          end:  {
+           line:  9
+           col:  46
+          }
+          text:  "let out = foo where(.x > 0) max(.bar.baz)"
+         }
         }
        }
       }
@@ -581,6 +653,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  10
+           col:  6
+          }
+          end:  {
+           line:  10
+           col:  34
+          }
+          text:  "let out = foo where(.x > 0) count"
+         }
+         source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
            line:  10
@@ -755,6 +839,18 @@ apps:  {
           }
           text:  "let out = -> set of fo first 1 by (.id) single"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  11
+           col:  6
+          }
+          end:  {
+           line:  11
+           col:  46
+          }
+          text:  "let out = -> set of fo first 1 by (.id) single"
+         }
         }
        }
       }
@@ -840,6 +936,18 @@ apps:  {
           }
           text:  "AppDate = to_date(.createdDate ?? now())"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  12
+           col:  6
+          }
+          end:  {
+           line:  12
+           col:  45
+          }
+          text:  "AppDate = to_date(.createdDate ?? now())"
+         }
         }
        }
       }
@@ -892,6 +1000,18 @@ apps:  {
           }
           text:  "AppOrderId = str(.orderId)"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  13
+           col:  6
+          }
+          end:  {
+           line:  13
+           col:  31
+          }
+          text:  "AppOrderId = str(.orderId)"
+         }
         }
        }
       }
@@ -917,6 +1037,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  14
+           col:  6
+          }
+          end:  {
+           line:  14
+           col:  17
+          }
+          text:  "foo = bar(.)"
+         }
+         source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
            line:  14
@@ -1013,6 +1145,18 @@ apps:  {
           }
           text:  "foo = concat([1,2], 3)"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  15
+           col:  6
+          }
+          end:  {
+           line:  15
+           col:  27
+          }
+          text:  "foo = concat([1,2], 3)"
+         }
         }
        }
       }
@@ -1097,6 +1241,18 @@ apps:  {
           }
           text:  "foo = regsub(\"\\\\D+\", \"\", .a)"
          }
+         source_contexts:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  16
+           col:  6
+          }
+          end:  {
+           line:  16
+           col:  33
+          }
+          text:  "foo = regsub(\"\\\\D+\", \"\", .a)"
+         }
         }
        }
       }
@@ -1108,6 +1264,18 @@ apps:  {
           s:  "\r\n"
          }
          source_context:  {
+          file:  "tests/funcs.sysl"
+          start:  {
+           line:  17
+           col:  6
+          }
+          end:  {
+           line:  17
+           col:  12
+          }
+          text:  "foo = \"\\r\\n\""
+         }
+         source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
            line:  17
@@ -1195,9 +1363,31 @@ apps:  {
      }
      text:  "!view TestInbuiltFuncs(number <: int) -> int:"
     }
+    source_contexts:  {
+     file:  "tests/funcs.sysl"
+     start:  {
+      line:  2
+      col:  2
+     }
+     end:  {
+      line:  20
+     }
+     text:  "!view TestInbuiltFuncs(number <: int) -> int:"
+    }
    }
   }
   source_context:  {
+   file:  "tests/funcs.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  47
+   }
+  }
+  source_contexts:  {
    file:  "tests/funcs.sysl"
    start:  {
     line:  1

@@ -30,6 +30,17 @@ apps:  {
           col:  27
          }
         }
+        source_contexts:  {
+         file:  "tests/oneof.sysl"
+         start:  {
+          line:  10
+          col:  16
+         }
+         end:  {
+          line:  10
+          col:  27
+         }
+        }
        }
       }
       choice:  {
@@ -42,6 +53,17 @@ apps:  {
          endpoint:  "EP2"
         }
         source_context:  {
+         file:  "tests/oneof.sysl"
+         start:  {
+          line:  12
+          col:  16
+         }
+         end:  {
+          line:  12
+          col:  27
+         }
+        }
+        source_contexts:  {
          file:  "tests/oneof.sysl"
          start:  {
           line:  12
@@ -77,6 +99,17 @@ apps:  {
           col:  42
          }
         }
+        source_contexts:  {
+         file:  "tests/oneof.sysl"
+         start:  {
+          line:  14
+          col:  16
+         }
+         end:  {
+          line:  14
+          col:  42
+         }
+        }
        }
       }
      }
@@ -91,8 +124,30 @@ apps:  {
        col:  4
       }
      }
+     source_contexts:  {
+      file:  "tests/oneof.sysl"
+      start:  {
+       line:  8
+       col:  8
+      }
+      end:  {
+       line:  16
+       col:  4
+      }
+     }
     }
     source_context:  {
+     file:  "tests/oneof.sysl"
+     start:  {
+      line:  7
+      col:  4
+     }
+     end:  {
+      line:  16
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
       line:  7
@@ -127,6 +182,17 @@ apps:  {
           col:  16
          }
         }
+        source_contexts:  {
+         file:  "tests/oneof.sysl"
+         start:  {
+          line:  19
+          col:  16
+         }
+         end:  {
+          line:  19
+          col:  16
+         }
+        }
        }
       }
       choice:  {
@@ -135,6 +201,17 @@ apps:  {
          action:  "statement 2"
         }
         source_context:  {
+         file:  "tests/oneof.sysl"
+         start:  {
+          line:  21
+          col:  16
+         }
+         end:  {
+          line:  21
+          col:  16
+         }
+        }
+        source_contexts:  {
          file:  "tests/oneof.sysl"
          start:  {
           line:  21
@@ -158,8 +235,28 @@ apps:  {
        line:  22
       }
      }
+     source_contexts:  {
+      file:  "tests/oneof.sysl"
+      start:  {
+       line:  17
+       col:  8
+      }
+      end:  {
+       line:  22
+      }
+     }
     }
     source_context:  {
+     file:  "tests/oneof.sysl"
+     start:  {
+      line:  16
+      col:  4
+     }
+     end:  {
+      line:  22
+     }
+    }
+    source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
       line:  16
@@ -172,6 +269,16 @@ apps:  {
    }
   }
   source_context:  {
+   file:  "tests/oneof.sysl"
+   start:  {
+    line:  6
+    col:  1
+   }
+   end:  {
+    line:  6
+   }
+  }
+  source_contexts:  {
    file:  "tests/oneof.sysl"
    start:  {
     line:  6
@@ -204,6 +311,17 @@ apps:  {
       col:  9
      }
     }
+    source_contexts:  {
+     file:  "tests/oneof.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  2
+      col:  9
+     }
+    }
    }
   }
   endpoints:  {
@@ -211,6 +329,17 @@ apps:  {
    value:  {
     name:  "EP2"
     source_context:  {
+     file:  "tests/oneof.sysl"
+     start:  {
+      line:  3
+      col:  4
+     }
+     end:  {
+      line:  3
+      col:  9
+     }
+    }
+    source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
       line:  3
@@ -244,9 +373,30 @@ apps:  {
       col:  28
      }
     }
+    source_contexts:  {
+     file:  "tests/oneof.sysl"
+     start:  {
+      line:  4
+      col:  4
+     }
+     end:  {
+      line:  4
+      col:  28
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/oneof.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/oneof.sysl"
    start:  {
     line:  1

@@ -1,0 +1,561 @@
+apps: {
+ key: "Foo :: Bar"
+ value: {
+  name: {
+   part: "Foo"
+   part: "Bar"
+  }
+  endpoints: {
+   key: "DELETE /user"
+   value: {
+    name: "DELETE /user"
+    attrs: {
+     key: "action"
+     value: {
+      s: "Delete user"
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "ok <: string"
+     }
+     source_context: {
+      file: "file_merge.sysl"
+      start: {
+       line: 12
+       col: 12
+      }
+      end: {
+       line: 12
+       col: 18
+      }
+     }
+     source_contexts: {
+      file: "file_merge.sysl"
+      start: {
+       line: 12
+       col: 12
+      }
+      end: {
+       line: 12
+       col: 18
+      }
+     }
+    }
+    rest_params: {
+     method: DELETE
+     path: "/user"
+    }
+    source_context: {
+     file: "file_merge.sysl"
+     start: {
+      line: 10
+      col: 8
+     }
+     end: {
+      line: 13
+      col: 8
+     }
+    }
+    source_contexts: {
+     file: "file_merge.sysl"
+     start: {
+      line: 10
+      col: 8
+     }
+     end: {
+      line: 13
+      col: 8
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /user"
+   value: {
+    name: "GET /user"
+    attrs: {
+     key: "action"
+     value: {
+      s: "Get user"
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "ok <: string"
+     }
+     source_context: {
+      file: "file_merge_import.sysl"
+      start: {
+       line: 12
+       col: 12
+      }
+      end: {
+       line: 12
+       col: 18
+      }
+     }
+     source_contexts: {
+      file: "file_merge_import.sysl"
+      start: {
+       line: 12
+       col: 12
+      }
+      end: {
+       line: 12
+       col: 18
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/user"
+    }
+    source_context: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 10
+      col: 8
+     }
+     end: {
+      line: 14
+      col: 4
+     }
+    }
+    source_contexts: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 10
+      col: 8
+     }
+     end: {
+      line: 14
+      col: 4
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "POST /user"
+   value: {
+    name: "POST /user"
+    attrs: {
+     key: "action"
+     value: {
+      s: "Add user"
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "error <: string"
+     }
+     source_context: {
+      file: "file_merge.sysl"
+      start: {
+       line: 15
+       col: 12
+      }
+      end: {
+       line: 15
+       col: 18
+      }
+     }
+     source_contexts: {
+      file: "file_merge.sysl"
+      start: {
+       line: 15
+       col: 12
+      }
+      end: {
+       line: 15
+       col: 18
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "ok <: string"
+     }
+     source_context: {
+      file: "file_merge_import.sysl"
+      start: {
+       line: 9
+       col: 12
+      }
+      end: {
+       line: 9
+       col: 18
+      }
+     }
+     source_contexts: {
+      file: "file_merge_import.sysl"
+      start: {
+       line: 9
+       col: 12
+      }
+      end: {
+       line: 9
+       col: 18
+      }
+     }
+    }
+    rest_params: {
+     method: POST
+     path: "/user"
+    }
+    source_context: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 7
+      col: 8
+     }
+     end: {
+      line: 10
+      col: 8
+     }
+    }
+    source_contexts: {
+     file: "file_merge.sysl"
+     start: {
+      line: 13
+      col: 8
+     }
+     end: {
+      line: 17
+      col: 4
+     }
+    }
+    source_contexts: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 7
+      col: 8
+     }
+     end: {
+      line: 10
+      col: 8
+     }
+    }
+   }
+  }
+  types: {
+   key: "Profile"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "Desc"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "tag1"
+        value: {
+         s: "tag1"
+        }
+       }
+       source_context: {
+        file: "file_merge.sysl"
+        start: {
+         line: 22
+         col: 8
+        }
+        end: {
+         line: 24
+        }
+       }
+       source_contexts: {
+        file: "file_merge.sysl"
+        start: {
+         line: 22
+         col: 8
+        }
+        end: {
+         line: 24
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "ID"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "file_merge_import.sysl"
+        start: {
+         line: 15
+         col: 8
+        }
+        end: {
+         line: 15
+         col: 14
+        }
+       }
+       source_contexts: {
+        file: "file_merge_import.sysl"
+        start: {
+         line: 15
+         col: 8
+        }
+        end: {
+         line: 15
+         col: 14
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Name"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "tag1"
+        value: {
+         s: "tag1"
+        }
+       }
+       attrs: {
+        key: "tag2"
+        value: {
+         s: "tag2"
+        }
+       }
+       source_context: {
+        file: "file_merge_import.sysl"
+        start: {
+         line: 16
+         col: 8
+        }
+        end: {
+         line: 18
+        }
+       }
+       source_contexts: {
+        file: "file_merge.sysl"
+        start: {
+         line: 18
+         col: 8
+        }
+        end: {
+         line: 21
+         col: 4
+        }
+       }
+       source_contexts: {
+        file: "file_merge_import.sysl"
+        start: {
+         line: 16
+         col: 8
+        }
+        end: {
+         line: 18
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 14
+      col: 4
+     }
+     end: {
+      line: 18
+     }
+    }
+    source_contexts: {
+     file: "file_merge.sysl"
+     start: {
+      line: 17
+      col: 4
+     }
+     end: {
+      line: 21
+      col: 4
+     }
+    }
+    source_contexts: {
+     file: "file_merge.sysl"
+     start: {
+      line: 21
+      col: 4
+     }
+     end: {
+      line: 24
+     }
+    }
+    source_contexts: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 14
+      col: 4
+     }
+     end: {
+      line: 18
+     }
+    }
+   }
+  }
+  types: {
+   key: "User"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "Id"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "file_merge_import.sysl"
+        start: {
+         line: 4
+         col: 8
+        }
+        end: {
+         line: 4
+         col: 14
+        }
+       }
+       source_contexts: {
+        file: "file_merge_import.sysl"
+        start: {
+         line: 4
+         col: 8
+        }
+        end: {
+         line: 4
+         col: 14
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Name"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "file_merge.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 16
+        }
+       }
+       source_contexts: {
+        file: "file_merge.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 16
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 4
+     }
+    }
+    source_contexts: {
+     file: "file_merge.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 9
+      col: 4
+     }
+    }
+    source_contexts: {
+     file: "file_merge_import.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 4
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "file_merge_import.sysl"
+   start: {
+    line: 2
+    col: 1
+   }
+   end: {
+    line: 2
+    col: 7
+   }
+  }
+  source_contexts: {
+   file: "file_merge.sysl"
+   start: {
+    line: 4
+    col: 1
+   }
+   end: {
+    line: 4
+    col: 7
+   }
+  }
+  source_contexts: {
+   file: "file_merge_import.sysl"
+   start: {
+    line: 2
+    col: 1
+   }
+   end: {
+    line: 2
+    col: 7
+   }
+  }
+ }
+}

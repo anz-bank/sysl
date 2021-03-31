@@ -16,7 +16,18 @@ apps: {
         file: "type_merge2.sysl"
         start: {
          line: 7
+         col: 8
+        }
+        end: {
+         line: 7
          col: 13
+        }
+       }
+       source_contexts: {
+        file: "type_merge2.sysl"
+        start: {
+         line: 7
+         col: 8
         }
         end: {
          line: 7
@@ -55,9 +66,50 @@ apps: {
       line: 8
      }
     }
+    source_contexts: {
+     file: "type_merge2.sysl"
+     start: {
+      line: 2
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "type_merge2.sysl"
+     start: {
+      line: 6
+      col: 4
+     }
+     end: {
+      line: 8
+     }
+    }
    }
   }
   source_context: {
+   file: "type_merge2.sysl"
+   start: {
+    line: 5
+    col: 1
+   }
+   end: {
+    line: 5
+   }
+  }
+  source_contexts: {
+   file: "type_merge2.sysl"
+   start: {
+    line: 1
+    col: 1
+   }
+   end: {
+    line: 1
+   }
+  }
+  source_contexts: {
    file: "type_merge2.sysl"
    start: {
     line: 5

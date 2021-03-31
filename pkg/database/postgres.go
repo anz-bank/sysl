@@ -20,7 +20,7 @@ func (v *ScriptView) writeCreateSQLForATable(
 	lineNumberMap := map[int32]string{}
 	for columnName := range table.AttrDefs {
 		column := table.AttrDefs[columnName]
-		lineNumber := column.GetSourceContext().GetStart().GetLine()
+		lineNumber := column.GetSourceContext().GetStart().GetLine() //nolint:staticcheck
 		lineNumberMap[lineNumber] = columnName
 		lineNumbers = append(lineNumbers, lineNumber)
 	}

@@ -141,6 +141,13 @@ func TestMain2MultipleDefinitionsTypeMerge(t *testing.T) {
 	testAllMain2(t, []string{}, "namespace_merge.sysl", "namespace_merge.golden.textpb")
 }
 
+func TestMain2MultipleDefinitionsMerge(t *testing.T) {
+	t.Parallel()
+
+	testAllMain2(t, []string{}, "file_merge.sysl", "file_merge.sysl.golden.textpb")
+	testAllMain2(t, []string{"--mode", "json"}, "file_merge.sysl", "file_merge.sysl.golden.json")
+}
+
 func TestMain2JSON(t *testing.T) {
 	t.Parallel()
 

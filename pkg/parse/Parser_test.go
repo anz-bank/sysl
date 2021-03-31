@@ -64,7 +64,7 @@ func removeSourceContextFromExpr(expr *sysl.Expr) {
 	if expr == nil {
 		return
 	}
-	expr.SourceContext = nil
+	expr.SourceContext = nil //nolint:staticcheck
 	// All the Expr types which contain nested expressions
 	switch e := expr.Expr.(type) {
 	case *sysl.Expr_GetAttr_:
@@ -129,12 +129,12 @@ func parseComparable(
 	if stripSourceContext {
 		// remove stuff that does not match legacy.
 		for _, app := range module.Apps {
-			app.SourceContext = nil
+			app.SourceContext = nil //nolint:staticcheck
 			for _, ep := range app.Endpoints {
-				ep.SourceContext = nil
+				ep.SourceContext = nil //nolint:staticcheck
 			}
 			for _, t := range app.Types {
-				t.SourceContext = nil
+				t.SourceContext = nil //nolint:staticcheck
 			}
 			for _, t := range app.Views {
 				t.SourceContext = nil

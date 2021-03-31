@@ -27,8 +27,29 @@ apps:  {
        source_context:  {
         file:  "tests/merge_attrs_table.sysl"
         start:  {
-         line:  11
-         col:  13
+         line:  10
+         col:  8
+        }
+        end:  {
+         line:  12
+        }
+       }
+       source_contexts:  {
+        file:  "tests/merge_attrs_table.sysl"
+        start:  {
+         line:  3
+         col:  8
+        }
+        end:  {
+         line:  6
+         col:  8
+        }
+       }
+       source_contexts:  {
+        file:  "tests/merge_attrs_table.sysl"
+        start:  {
+         line:  10
+         col:  8
         }
         end:  {
          line:  12
@@ -44,7 +65,18 @@ apps:  {
         file:  "tests/merge_attrs_table.sysl"
         start:  {
          line:  6
+         col:  8
+        }
+        end:  {
+         line:  6
          col:  13
+        }
+       }
+       source_contexts:  {
+        file:  "tests/merge_attrs_table.sysl"
+        start:  {
+         line:  6
+         col:  8
         }
         end:  {
          line:  6
@@ -64,9 +96,40 @@ apps:  {
       line:  12
      }
     }
+    source_contexts:  {
+     file:  "tests/merge_attrs_table.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  9
+      col:  4
+     }
+    }
+    source_contexts:  {
+     file:  "tests/merge_attrs_table.sysl"
+     start:  {
+      line:  9
+      col:  4
+     }
+     end:  {
+      line:  12
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/merge_attrs_table.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/merge_attrs_table.sysl"
    start:  {
     line:  1

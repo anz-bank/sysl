@@ -43,6 +43,17 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/bad_order.sysl"
+      start:  {
+       line:  4
+       col:  12
+      }
+      end:  {
+       line:  4
+       col:  12
+      }
+     }
     }
     rest_params:  {
      method:  GET
@@ -52,6 +63,17 @@ apps:  {
       type:  {
        primitive:  INT
        source_context:  {
+        file:  "tests/bad_order.sysl"
+        start:  {
+         line:  3
+         col:  13
+        }
+        end:  {
+         line:  3
+         col:  19
+        }
+       }
+       source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
          line:  3
@@ -80,6 +102,17 @@ apps:  {
          col:  32
         }
        }
+       source_contexts:  {
+        file:  "tests/bad_order.sysl"
+        start:  {
+         line:  3
+         col:  23
+        }
+        end:  {
+         line:  3
+         col:  32
+        }
+       }
       }
      }
      query_param:  {
@@ -88,6 +121,17 @@ apps:  {
        primitive:  INT
        opt:  true
        source_context:  {
+        file:  "tests/bad_order.sysl"
+        start:  {
+         line:  3
+         col:  34
+        }
+        end:  {
+         line:  3
+         col:  44
+        }
+       }
+       source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
          line:  3
@@ -115,10 +159,32 @@ apps:  {
          col:  13
         }
        }
+       source_contexts:  {
+        file:  "tests/bad_order.sysl"
+        start:  {
+         line:  2
+         col:  5
+        }
+        end:  {
+         line:  2
+         col:  13
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/bad_order.sysl"
+     start:  {
+      line:  3
+      col:  8
+     }
+     end:  {
+      line:  6
+      col:  8
+     }
+    }
+    source_contexts:  {
      file:  "tests/bad_order.sysl"
      start:  {
       line:  3
@@ -160,6 +226,17 @@ apps:  {
        col:  16
       }
      }
+     source_contexts:  {
+      file:  "tests/bad_order.sysl"
+      start:  {
+       line:  8
+       col:  16
+      }
+      end:  {
+       line:  8
+       col:  16
+      }
+     }
     }
     rest_params:  {
      method:  POST
@@ -169,6 +246,17 @@ apps:  {
       type:  {
        primitive:  INT
        source_context:  {
+        file:  "tests/bad_order.sysl"
+        start:  {
+         line:  2
+         col:  5
+        }
+        end:  {
+         line:  2
+         col:  13
+        }
+       }
+       source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
          line:  2
@@ -196,6 +284,17 @@ apps:  {
          col:  25
         }
        }
+       source_contexts:  {
+        file:  "tests/bad_order.sysl"
+        start:  {
+         line:  6
+         col:  15
+        }
+        end:  {
+         line:  6
+         col:  25
+        }
+       }
       }
      }
     }
@@ -209,9 +308,30 @@ apps:  {
       line:  9
      }
     }
+    source_contexts:  {
+     file:  "tests/bad_order.sysl"
+     start:  {
+      line:  7
+      col:  12
+     }
+     end:  {
+      line:  9
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/bad_order.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  13
+   }
+  }
+  source_contexts:  {
    file:  "tests/bad_order.sysl"
    start:  {
     line:  1

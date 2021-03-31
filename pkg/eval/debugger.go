@@ -37,8 +37,8 @@ func (r *repl) run(scope *Scope, app *sysl.Application, expr *sysl.Expr) error {
 
 func (r *repl) handleInput(scope *Scope, app *sysl.Application, expr *sysl.Expr) error {
 	for {
-		if expr != nil && expr.SourceContext.Text != "" {
-			writeOutput(expr.SourceContext.Text+"\n", r.output)
+		if expr != nil && expr.SourceContext.Text != "" { //nolint:staticcheck
+			writeOutput(expr.SourceContext.Text+"\n", r.output) //nolint:staticcheck
 		}
 		writeOutput("sysl> ", r.output)
 		if !r.input.Scan() {
@@ -85,10 +85,10 @@ func (r *repl) handleInput(scope *Scope, app *sysl.Application, expr *sysl.Expr)
 	}
 }
 func (r *repl) isBreakpoint(expr *sysl.Expr) bool {
-	if expr.SourceContext == nil {
+	if expr.SourceContext == nil { //nolint:staticcheck
 		return false
 	}
-	sc := expr.SourceContext
+	sc := expr.SourceContext //nolint:staticcheck
 	for _, bsc := range r.breakpoints {
 		if strings.HasSuffix(sc.File, bsc.File) &&
 			sc.Start.Line == bsc.Start.Line &&

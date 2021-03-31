@@ -21,8 +21,19 @@ apps:  {
        source_context:  {
         file:  "tests/view_attr.sysl"
         start:  {
-         line:  5
-         col:  14
+         line:  4
+         col:  8
+        }
+        end:  {
+         line:  7
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/view_attr.sysl"
+        start:  {
+         line:  4
+         col:  8
         }
         end:  {
          line:  7
@@ -41,7 +52,18 @@ apps:  {
     source_context:  {
      file:  "tests/view_attr.sysl"
      start:  {
-      line:  3
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  7
+      col:  4
+     }
+    }
+    source_contexts:  {
+     file:  "tests/view_attr.sysl"
+     start:  {
+      line:  2
       col:  4
      }
      end:  {
@@ -96,9 +118,30 @@ apps:  {
      }
      text:  "!view getAccountUuid(accountNumber <: string) -> string [~abstract]:"
     }
+    source_contexts:  {
+     file:  "tests/view_attr.sysl"
+     start:  {
+      line:  7
+      col:  4
+     }
+     end:  {
+      line:  10
+     }
+     text:  "!view getAccountUuid(accountNumber <: string) -> string [~abstract]:"
+    }
    }
   }
   source_context:  {
+   file:  "tests/view_attr.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/view_attr.sysl"
    start:  {
     line:  1

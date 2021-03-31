@@ -44,12 +44,34 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/foreign_import_swagger.yaml"
+      start:  {
+       line:  14
+       col:  12
+      }
+      end:  {
+       line:  14
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/test"
     }
     source_context:  {
+     file:  "tests/foreign_import_swagger.yaml"
+     start:  {
+      line:  12
+      col:  8
+     }
+     end:  {
+      line:  19
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/foreign_import_swagger.yaml"
      start:  {
       line:  12
@@ -80,8 +102,18 @@ apps:  {
        source_context:  {
         file:  "tests/foreign_import_swagger.yaml"
         start:  {
-         line:  21
-         col:  16
+         line:  20
+         col:  8
+        }
+        end:  {
+         line:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/foreign_import_swagger.yaml"
+        start:  {
+         line:  20
+         col:  8
         }
         end:  {
          line:  22
@@ -100,9 +132,30 @@ apps:  {
       line:  22
      }
     }
+    source_contexts:  {
+     file:  "tests/foreign_import_swagger.yaml"
+     start:  {
+      line:  19
+      col:  4
+     }
+     end:  {
+      line:  22
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/foreign_import_swagger.yaml"
+   start:  {
+    line:  7
+    col:  1
+   }
+   end:  {
+    line:  7
+    col:  19
+   }
+  }
+  source_contexts:  {
    file:  "tests/foreign_import_swagger.yaml"
    start:  {
     line:  7
@@ -175,6 +228,17 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/foreign_import_swagger_namespace.sysl"
+      start:  {
+       line:  20
+       col:  12
+      }
+      end:  {
+       line:  20
+       col:  12
+      }
+     }
     }
     rest_params:  {
      method:  GET
@@ -183,6 +247,17 @@ apps:  {
       name:  "depth"
       type:  {
        source_context:  {
+        file:  "tests/foreign_import_swagger_namespace.sysl"
+        start:  {
+         line:  19
+         col:  13
+        }
+        end:  {
+         line:  19
+         col:  19
+        }
+       }
+       source_contexts:  {
         file:  "tests/foreign_import_swagger_namespace.sysl"
         start:  {
          line:  19
@@ -211,6 +286,17 @@ apps:  {
          col:  38
         }
        }
+       source_contexts:  {
+        file:  "tests/foreign_import_swagger_namespace.sysl"
+        start:  {
+         line:  19
+         col:  29
+        }
+        end:  {
+         line:  19
+         col:  38
+        }
+       }
       }
      }
      query_param:  {
@@ -229,10 +315,31 @@ apps:  {
          col:  50
         }
        }
+       source_contexts:  {
+        file:  "tests/foreign_import_swagger_namespace.sysl"
+        start:  {
+         line:  19
+         col:  40
+        }
+        end:  {
+         line:  19
+         col:  50
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/foreign_import_swagger_namespace.sysl"
+     start:  {
+      line:  19
+      col:  8
+     }
+     end:  {
+      line:  22
+     }
+    }
+    source_contexts:  {
      file:  "tests/foreign_import_swagger_namespace.sysl"
      start:  {
       line:  19
@@ -267,7 +374,18 @@ apps:  {
         file:  "tests/foreign_import_swagger_namespace.sysl"
         start:  {
          line:  16
-         col:  18
+         col:  8
+        }
+        end:  {
+         line:  16
+         col:  24
+        }
+       }
+       source_contexts:  {
+        file:  "tests/foreign_import_swagger_namespace.sysl"
+        start:  {
+         line:  16
+         col:  8
         }
         end:  {
          line:  16
@@ -288,9 +406,31 @@ apps:  {
       col:  4
      }
     }
+    source_contexts:  {
+     file:  "tests/foreign_import_swagger_namespace.sysl"
+     start:  {
+      line:  15
+      col:  4
+     }
+     end:  {
+      line:  18
+      col:  4
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/foreign_import_swagger_namespace.sysl"
+   start:  {
+    line:  9
+    col:  1
+   }
+   end:  {
+    line:  9
+    col:  46
+   }
+  }
+  source_contexts:  {
    file:  "tests/foreign_import_swagger_namespace.sysl"
    start:  {
     line:  9

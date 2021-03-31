@@ -27,7 +27,18 @@ apps:  {
     source_context:  {
      file:  "tests/alias.sysl"
      start:  {
-      line:  3
+      line:  2
+      col:  2
+     }
+     end:  {
+      line:  6
+      col:  2
+     }
+    }
+    source_contexts:  {
+     file:  "tests/alias.sysl"
+     start:  {
+      line:  2
       col:  2
      }
      end:  {
@@ -49,7 +60,18 @@ apps:  {
         file:  "tests/alias.sysl"
         start:  {
          line:  7
+         col:  6
+        }
+        end:  {
+         line:  7
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/alias.sysl"
+        start:  {
+         line:  7
+         col:  6
         }
         end:  {
          line:  7
@@ -60,6 +82,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/alias.sysl"
+     start:  {
+      line:  6
+      col:  2
+     }
+     end:  {
+      line:  9
+      col:  2
+     }
+    }
+    source_contexts:  {
      file:  "tests/alias.sysl"
      start:  {
       line:  6
@@ -94,7 +127,18 @@ apps:  {
         file:  "tests/alias.sysl"
         start:  {
          line:  10
+         col:  6
+        }
+        end:  {
+         line:  10
          col:  15
+        }
+       }
+       source_contexts:  {
+        file:  "tests/alias.sysl"
+        start:  {
+         line:  10
+         col:  6
         }
         end:  {
          line:  10
@@ -111,7 +155,18 @@ apps:  {
         file:  "tests/alias.sysl"
         start:  {
          line:  11
+         col:  6
+        }
+        end:  {
+         line:  11
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/alias.sysl"
+        start:  {
+         line:  11
+         col:  6
         }
         end:  {
          line:  11
@@ -122,6 +177,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/alias.sysl"
+     start:  {
+      line:  9
+      col:  2
+     }
+     end:  {
+      line:  13
+      col:  2
+     }
+    }
+    source_contexts:  {
      file:  "tests/alias.sysl"
      start:  {
       line:  9
@@ -159,8 +225,28 @@ apps:  {
        line:  15
       }
      }
+     source_contexts:  {
+      file:  "tests/alias.sysl"
+      start:  {
+       line:  13
+       col:  2
+      }
+      end:  {
+       line:  15
+      }
+     }
     }
     source_context:  {
+     file:  "tests/alias.sysl"
+     start:  {
+      line:  13
+      col:  2
+     }
+     end:  {
+      line:  15
+     }
+    }
+    source_contexts:  {
      file:  "tests/alias.sysl"
      start:  {
       line:  13
@@ -173,6 +259,16 @@ apps:  {
    }
   }
   source_context:  {
+   file:  "tests/alias.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/alias.sysl"
    start:  {
     line:  1

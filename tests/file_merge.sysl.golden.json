@@ -1,0 +1,567 @@
+{
+ "apps": {
+  "Foo :: Bar": {
+   "name": {
+    "part": [
+     "Foo",
+     "Bar"
+    ]
+   },
+   "endpoints": {
+    "DELETE /user": {
+     "name": "DELETE /user",
+     "attrs": {
+      "action": {
+       "s": "Delete user"
+      },
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "ret": {
+        "payload": "ok <: string"
+       },
+       "sourceContext": {
+        "file": "file_merge.sysl",
+        "start": {
+         "line": 12,
+         "col": 12
+        },
+        "end": {
+         "line": 12,
+         "col": 18
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "file_merge.sysl",
+         "start": {
+          "line": 12,
+          "col": 12
+         },
+         "end": {
+          "line": 12,
+          "col": 18
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "DELETE",
+      "path": "/user"
+     },
+     "sourceContext": {
+      "file": "file_merge.sysl",
+      "start": {
+       "line": 10,
+       "col": 8
+      },
+      "end": {
+       "line": 13,
+       "col": 8
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "file_merge.sysl",
+       "start": {
+        "line": 10,
+        "col": 8
+       },
+       "end": {
+        "line": 13,
+        "col": 8
+       }
+      }
+     ]
+    },
+    "GET /user": {
+     "name": "GET /user",
+     "attrs": {
+      "action": {
+       "s": "Get user"
+      },
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "ret": {
+        "payload": "ok <: string"
+       },
+       "sourceContext": {
+        "file": "file_merge_import.sysl",
+        "start": {
+         "line": 12,
+         "col": 12
+        },
+        "end": {
+         "line": 12,
+         "col": 18
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "file_merge_import.sysl",
+         "start": {
+          "line": 12,
+          "col": 12
+         },
+         "end": {
+          "line": 12,
+          "col": 18
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "GET",
+      "path": "/user"
+     },
+     "sourceContext": {
+      "file": "file_merge_import.sysl",
+      "start": {
+       "line": 10,
+       "col": 8
+      },
+      "end": {
+       "line": 14,
+       "col": 4
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "file_merge_import.sysl",
+       "start": {
+        "line": 10,
+        "col": 8
+       },
+       "end": {
+        "line": 14,
+        "col": 4
+       }
+      }
+     ]
+    },
+    "POST /user": {
+     "name": "POST /user",
+     "attrs": {
+      "action": {
+       "s": "Add user"
+      },
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         },
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "ret": {
+        "payload": "error <: string"
+       },
+       "sourceContext": {
+        "file": "file_merge.sysl",
+        "start": {
+         "line": 15,
+         "col": 12
+        },
+        "end": {
+         "line": 15,
+         "col": 18
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "file_merge.sysl",
+         "start": {
+          "line": 15,
+          "col": 12
+         },
+         "end": {
+          "line": 15,
+          "col": 18
+         }
+        }
+       ]
+      },
+      {
+       "ret": {
+        "payload": "ok <: string"
+       },
+       "sourceContext": {
+        "file": "file_merge_import.sysl",
+        "start": {
+         "line": 9,
+         "col": 12
+        },
+        "end": {
+         "line": 9,
+         "col": 18
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "file_merge_import.sysl",
+         "start": {
+          "line": 9,
+          "col": 12
+         },
+         "end": {
+          "line": 9,
+          "col": 18
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "POST",
+      "path": "/user"
+     },
+     "sourceContext": {
+      "file": "file_merge_import.sysl",
+      "start": {
+       "line": 7,
+       "col": 8
+      },
+      "end": {
+       "line": 10,
+       "col": 8
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "file_merge.sysl",
+       "start": {
+        "line": 13,
+        "col": 8
+       },
+       "end": {
+        "line": 17,
+        "col": 4
+       }
+      },
+      {
+       "file": "file_merge_import.sysl",
+       "start": {
+        "line": 7,
+        "col": 8
+       },
+       "end": {
+        "line": 10,
+        "col": 8
+       }
+      }
+     ]
+    }
+   },
+   "types": {
+    "Profile": {
+     "tuple": {
+      "attrDefs": {
+       "Desc": {
+        "primitive": "STRING",
+        "attrs": {
+         "tag1": {
+          "s": "tag1"
+         }
+        },
+        "sourceContext": {
+         "file": "file_merge.sysl",
+         "start": {
+          "line": 22,
+          "col": 8
+         },
+         "end": {
+          "line": 24
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "file_merge.sysl",
+          "start": {
+           "line": 22,
+           "col": 8
+          },
+          "end": {
+           "line": 24
+          }
+         }
+        ]
+       },
+       "ID": {
+        "primitive": "STRING",
+        "sourceContext": {
+         "file": "file_merge_import.sysl",
+         "start": {
+          "line": 15,
+          "col": 8
+         },
+         "end": {
+          "line": 15,
+          "col": 14
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "file_merge_import.sysl",
+          "start": {
+           "line": 15,
+           "col": 8
+          },
+          "end": {
+           "line": 15,
+           "col": 14
+          }
+         }
+        ]
+       },
+       "Name": {
+        "primitive": "STRING",
+        "attrs": {
+         "tag1": {
+          "s": "tag1"
+         },
+         "tag2": {
+          "s": "tag2"
+         }
+        },
+        "sourceContext": {
+         "file": "file_merge_import.sysl",
+         "start": {
+          "line": 16,
+          "col": 8
+         },
+         "end": {
+          "line": 18
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "file_merge.sysl",
+          "start": {
+           "line": 18,
+           "col": 8
+          },
+          "end": {
+           "line": 21,
+           "col": 4
+          }
+         },
+         {
+          "file": "file_merge_import.sysl",
+          "start": {
+           "line": 16,
+           "col": 8
+          },
+          "end": {
+           "line": 18
+          }
+         }
+        ]
+       }
+      }
+     },
+     "sourceContext": {
+      "file": "file_merge_import.sysl",
+      "start": {
+       "line": 14,
+       "col": 4
+      },
+      "end": {
+       "line": 18
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "file_merge.sysl",
+       "start": {
+        "line": 17,
+        "col": 4
+       },
+       "end": {
+        "line": 21,
+        "col": 4
+       }
+      },
+      {
+       "file": "file_merge.sysl",
+       "start": {
+        "line": 21,
+        "col": 4
+       },
+       "end": {
+        "line": 24
+       }
+      },
+      {
+       "file": "file_merge_import.sysl",
+       "start": {
+        "line": 14,
+        "col": 4
+       },
+       "end": {
+        "line": 18
+       }
+      }
+     ]
+    },
+    "User": {
+     "tuple": {
+      "attrDefs": {
+       "Id": {
+        "primitive": "STRING",
+        "sourceContext": {
+         "file": "file_merge_import.sysl",
+         "start": {
+          "line": 4,
+          "col": 8
+         },
+         "end": {
+          "line": 4,
+          "col": 14
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "file_merge_import.sysl",
+          "start": {
+           "line": 4,
+           "col": 8
+          },
+          "end": {
+           "line": 4,
+           "col": 14
+          }
+         }
+        ]
+       },
+       "Name": {
+        "primitive": "STRING",
+        "sourceContext": {
+         "file": "file_merge.sysl",
+         "start": {
+          "line": 6,
+          "col": 8
+         },
+         "end": {
+          "line": 6,
+          "col": 16
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "file_merge.sysl",
+          "start": {
+           "line": 6,
+           "col": 8
+          },
+          "end": {
+           "line": 6,
+           "col": 16
+          }
+         }
+        ]
+       }
+      }
+     },
+     "sourceContext": {
+      "file": "file_merge_import.sysl",
+      "start": {
+       "line": 3,
+       "col": 4
+      },
+      "end": {
+       "line": 6,
+       "col": 4
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "file_merge.sysl",
+       "start": {
+        "line": 5,
+        "col": 4
+       },
+       "end": {
+        "line": 9,
+        "col": 4
+       }
+      },
+      {
+       "file": "file_merge_import.sysl",
+       "start": {
+        "line": 3,
+        "col": 4
+       },
+       "end": {
+        "line": 6,
+        "col": 4
+       }
+      }
+     ]
+    }
+   },
+   "sourceContext": {
+    "file": "file_merge_import.sysl",
+    "start": {
+     "line": 2,
+     "col": 1
+    },
+    "end": {
+     "line": 2,
+     "col": 7
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "file_merge.sysl",
+     "start": {
+      "line": 4,
+      "col": 1
+     },
+     "end": {
+      "line": 4,
+      "col": 7
+     }
+    },
+    {
+     "file": "file_merge_import.sysl",
+     "start": {
+      "line": 2,
+      "col": 1
+     },
+     "end": {
+      "line": 2,
+      "col": 7
+     }
+    }
+   ]
+  }
+ }
+}

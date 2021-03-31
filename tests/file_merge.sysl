@@ -1,0 +1,23 @@
+# file_merge.sysl
+import file_merge_import.sysl
+
+Foo :: Bar:
+    !type User:
+        Name <: string
+
+
+    /user:
+        DELETE:
+            @action="Delete user"
+            return ok <: string
+        POST:
+            @action="Add user"
+            return error <: string
+
+    !type Profile:
+        Name <: string:
+            @tag1 = "tag1"
+
+    !type Profile:
+        Desc <: string:
+            @tag1 = "tag1"

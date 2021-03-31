@@ -29,7 +29,18 @@ apps:  {
         file:  "tests/school.sysl"
         start:  {
          line:  3
-         col:  14
+         col:  8
+        }
+        end:  {
+         line:  3
+         col:  32
+        }
+       }
+       source_contexts:  {
+        file:  "tests/school.sysl"
+        start:  {
+         line:  3
+         col:  8
         }
         end:  {
          line:  3
@@ -43,6 +54,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/school.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  4
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/school.sysl"
      start:  {
       line:  2
@@ -78,7 +100,18 @@ apps:  {
         file:  "tests/school.sysl"
         start:  {
          line:  7
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  7
+         col:  25
+        }
+       }
+       source_contexts:  {
+        file:  "tests/school.sysl"
+        start:  {
+         line:  7
+         col:  8
         }
         end:  {
          line:  7
@@ -105,7 +138,18 @@ apps:  {
         file:  "tests/school.sysl"
         start:  {
          line:  6
-         col:  14
+         col:  8
+        }
+        end:  {
+         line:  6
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/school.sysl"
+        start:  {
+         line:  6
+         col:  8
         }
         end:  {
          line:  6
@@ -127,7 +171,17 @@ apps:  {
     source_context:  {
      file:  "tests/school.sysl"
      start:  {
-      line:  5
+      line:  4
+      col:  4
+     }
+     end:  {
+      line:  8
+     }
+    }
+    source_contexts:  {
+     file:  "tests/school.sysl"
+     start:  {
+      line:  4
       col:  4
      }
      end:  {
@@ -137,6 +191,16 @@ apps:  {
    }
   }
   source_context:  {
+   file:  "tests/school.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/school.sysl"
    start:  {
     line:  1
@@ -166,7 +230,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  13
+         col:  8
+        }
+        end:  {
+         line:  13
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  13
+         col:  8
         }
         end:  {
          line:  13
@@ -196,7 +271,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  11
-         col:  18
+         col:  8
+        }
+        end:  {
+         line:  11
+         col:  36
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  11
+         col:  8
         }
         end:  {
          line:  11
@@ -213,7 +299,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  12
+         col:  8
+        }
+        end:  {
+         line:  12
          col:  16
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  12
+         col:  8
         }
         end:  {
          line:  12
@@ -227,6 +324,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/library.sysl"
+     start:  {
+      line:  10
+      col:  4
+     }
+     end:  {
+      line:  14
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/library.sysl"
      start:  {
       line:  10
@@ -272,7 +380,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  16
-         col:  18
+         col:  8
+        }
+        end:  {
+         line:  16
+         col:  34
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  16
+         col:  8
         }
         end:  {
          line:  16
@@ -289,7 +408,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  17
+         col:  8
+        }
+        end:  {
+         line:  17
          col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  17
+         col:  8
         }
         end:  {
          line:  17
@@ -327,7 +457,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  15
-         col:  20
+         col:  8
+        }
+        end:  {
+         line:  15
+         col:  40
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  15
+         col:  8
         }
         end:  {
          line:  15
@@ -342,6 +483,16 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/library.sysl"
+     start:  {
+      line:  14
+      col:  4
+     }
+     end:  {
+      line:  18
+     }
+    }
+    source_contexts:  {
      file:  "tests/library.sysl"
      start:  {
       line:  14
@@ -383,8 +534,19 @@ apps:  {
        source_context:  {
         file:  "tests/library.sysl"
         start:  {
-         line:  6
-         col:  20
+         line:  5
+         col:  8
+        }
+        end:  {
+         line:  7
+         col:  8
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  5
+         col:  8
         }
         end:  {
          line:  7
@@ -408,7 +570,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  9
-         col:  18
+         col:  8
+        }
+        end:  {
+         line:  9
+         col:  30
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  9
+         col:  8
         }
         end:  {
          line:  9
@@ -430,7 +603,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  8
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  8
+         col:  26
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  8
+         col:  8
         }
         end:  {
          line:  8
@@ -447,7 +631,18 @@ apps:  {
         file:  "tests/library.sysl"
         start:  {
          line:  7
+         col:  8
+        }
+        end:  {
+         line:  7
          col:  16
+        }
+       }
+       source_contexts:  {
+        file:  "tests/library.sysl"
+        start:  {
+         line:  7
+         col:  8
         }
         end:  {
          line:  7
@@ -468,9 +663,30 @@ apps:  {
       col:  4
      }
     }
+    source_contexts:  {
+     file:  "tests/library.sysl"
+     start:  {
+      line:  4
+      col:  4
+     }
+     end:  {
+      line:  10
+      col:  4
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/library.sysl"
+   start:  {
+    line:  3
+    col:  1
+   }
+   end:  {
+    line:  3
+   }
+  }
+  source_contexts:  {
    file:  "tests/library.sysl"
    start:  {
     line:  3

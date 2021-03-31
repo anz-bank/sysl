@@ -361,16 +361,16 @@ type exprEval struct {
 }
 
 func logentry(logger *logrus.Logger, expr *sysl.Expr) *logrus.Entry {
-	if expr.SourceContext == nil {
+	if expr.SourceContext == nil { //nolint:staticcheck
 		return logger.WithFields(logrus.Fields{})
 	}
 	fields := logrus.Fields{
-		"filename": expr.SourceContext.File,
-		"start":    fmt.Sprintf("%d:%d", expr.SourceContext.Start.Line, expr.SourceContext.Start.Col),
-		"end":      fmt.Sprintf("%d:%d", expr.SourceContext.End.Line, expr.SourceContext.End.Col),
+		"filename": expr.SourceContext.File,                                                           //nolint:staticcheck
+		"start":    fmt.Sprintf("%d:%d", expr.SourceContext.Start.Line, expr.SourceContext.Start.Col), //nolint:staticcheck
+		"end":      fmt.Sprintf("%d:%d", expr.SourceContext.End.Line, expr.SourceContext.End.Col),     //nolint:staticcheck
 	}
-	if expr.SourceContext.Text != "" {
-		fields["text"] = expr.SourceContext.Text
+	if expr.SourceContext.Text != "" { //nolint:staticcheck
+		fields["text"] = expr.SourceContext.Text //nolint:staticcheck
 	}
 	return logger.WithFields(fields)
 }
@@ -435,7 +435,7 @@ func (ee *exprEval) eval(scope Scope, expr *sysl.Expr) (val *sysl.Value, err err
 	default:
 		return nil, fmt.Errorf("unhandled sysl.Expr type '%s' @ %s:%d:%d",
 			reflect.TypeOf(expr.Expr).String(),
-			expr.SourceContext.File, expr.SourceContext.Start.Line, expr.SourceContext.Start.Col)
+			expr.SourceContext.File, expr.SourceContext.Start.Line, expr.SourceContext.Start.Col) //nolint:staticcheck
 	}
 	entry.Tracef("Result: %s", val.String())
 	return val, err

@@ -1,0 +1,17 @@
+# file_merge_import.sysl
+Foo :: Bar:
+    !type User:
+        Id <: string
+
+    /user:
+        POST:
+            @action="Add user"
+            return ok <: string
+        GET:
+            @action="Get user"
+            return ok <: string
+
+    !type Profile:
+        ID <: string
+        Name <: string:
+            @tag2 = "tag2"

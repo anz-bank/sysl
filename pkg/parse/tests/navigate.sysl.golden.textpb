@@ -72,6 +72,18 @@ apps:  {
           }
           text:  "let out1 = -> foo"
          }
+         source_contexts:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  4
+           col:  6
+          }
+          end:  {
+           line:  4
+           col:  20
+          }
+          text:  "let out1 = -> foo"
+         }
         }
        }
       }
@@ -97,6 +109,18 @@ apps:  {
           attr:  "foo"
          }
          source_context:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  5
+           col:  6
+          }
+          end:  {
+           line:  5
+           col:  24
+          }
+          text:  "let out2 = abc -> foo"
+         }
+         source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
            line:  5
@@ -134,6 +158,18 @@ apps:  {
           nullsafe:  true
          }
          source_context:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  6
+           col:  6
+          }
+          end:  {
+           line:  6
+           col:  26
+          }
+          text:  "let out2a = abc ?-> foo"
+         }
+         source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
            line:  6
@@ -197,6 +233,18 @@ apps:  {
           }
           text:  "let out2b = abc -> foo.bar"
          }
+         source_contexts:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  7
+           col:  6
+          }
+          end:  {
+           line:  7
+           col:  29
+          }
+          text:  "let out2b = abc -> foo.bar"
+         }
         }
        }
       }
@@ -249,6 +297,18 @@ apps:  {
           }
           text:  "let out3 = .abc -> foo"
          }
+         source_contexts:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  8
+           col:  6
+          }
+          end:  {
+           line:  8
+           col:  25
+          }
+          text:  "let out3 = .abc -> foo"
+         }
         }
        }
       }
@@ -290,6 +350,18 @@ apps:  {
           attr:  ".foo"
          }
          source_context:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  9
+           col:  6
+          }
+          end:  {
+           line:  9
+           col:  26
+          }
+          text:  "let out4 = .abc -> .foo"
+         }
+         source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
            line:  9
@@ -354,6 +426,18 @@ apps:  {
           }
           text:  "let out5 = .abc -> set of .foo"
          }
+         source_contexts:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  10
+           col:  6
+          }
+          end:  {
+           line:  10
+           col:  33
+          }
+          text:  "let out5 = .abc -> set of .foo"
+         }
         }
        }
       }
@@ -396,6 +480,18 @@ apps:  {
           setof:  true
          }
          source_context:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  11
+           col:  6
+          }
+          end:  {
+           line:  11
+           col:  32
+          }
+          text:  "let out6 = .abc -> set of foo"
+         }
+         source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
            line:  11
@@ -450,6 +546,18 @@ apps:  {
           via:  "bar"
          }
          source_context:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  12
+           col:  6
+          }
+          end:  {
+           line:  12
+           col:  40
+          }
+          text:  "let out7 = .abc -> set of foo via bar"
+         }
+         source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
            line:  12
@@ -613,6 +721,18 @@ apps:  {
           }
           text:  "let out8 = .abc -> set of foo via bar where(.a == true) snapshot"
          }
+         source_contexts:  {
+          file:  "tests/navigate.sysl"
+          start:  {
+           line:  13
+           col:  6
+          }
+          end:  {
+           line:  13
+           col:  62
+          }
+          text:  "let out8 = .abc -> set of foo via bar where(.a == true) snapshot"
+         }
         }
        }
       }
@@ -640,9 +760,31 @@ apps:  {
      }
      text:  "!view TestNavigate(number <: int) -> int:"
     }
+    source_contexts:  {
+     file:  "tests/navigate.sysl"
+     start:  {
+      line:  2
+      col:  2
+     }
+     end:  {
+      line:  15
+     }
+     text:  "!view TestNavigate(number <: int) -> int:"
+    }
    }
   }
   source_context:  {
+   file:  "tests/navigate.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  47
+   }
+  }
+  source_contexts:  {
    file:  "tests/navigate.sysl"
    start:  {
     line:  1

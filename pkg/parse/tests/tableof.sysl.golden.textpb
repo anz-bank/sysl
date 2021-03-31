@@ -73,6 +73,18 @@ apps:  {
           }
           text:  "let out1 = .table of abc"
          }
+         source_contexts:  {
+          file:  "tests/tableof.sysl"
+          start:  {
+           line:  5
+           col:  6
+          }
+          end:  {
+           line:  5
+           col:  27
+          }
+          text:  "let out1 = .table of abc"
+         }
         }
        }
       }
@@ -126,6 +138,18 @@ apps:  {
           }
           text:  "let out2 = .table of abc.def"
          }
+         source_contexts:  {
+          file:  "tests/tableof.sysl"
+          start:  {
+           line:  6
+           col:  6
+          }
+          end:  {
+           line:  6
+           col:  31
+          }
+          text:  "let out2 = .table of abc.def"
+         }
         }
        }
       }
@@ -152,6 +176,18 @@ apps:  {
           setof:  true
          }
          source_context:  {
+          file:  "tests/tableof.sysl"
+          start:  {
+           line:  8
+           col:  6
+          }
+          end:  {
+           line:  8
+           col:  33
+          }
+          text:  "let out3 = input .table of abc"
+         }
+         source_contexts:  {
           file:  "tests/tableof.sysl"
           start:  {
            line:  8
@@ -216,6 +252,18 @@ apps:  {
           }
           text:  "let out4 = input .table of abc.def"
          }
+         source_contexts:  {
+          file:  "tests/tableof.sysl"
+          start:  {
+           line:  9
+           col:  6
+          }
+          end:  {
+           line:  9
+           col:  37
+          }
+          text:  "let out4 = input .table of abc.def"
+         }
         }
        }
       }
@@ -258,6 +306,18 @@ apps:  {
           attr:  "def"
          }
          source_context:  {
+          file:  "tests/tableof.sysl"
+          start:  {
+           line:  10
+           col:  6
+          }
+          end:  {
+           line:  10
+           col:  37
+          }
+          text:  "let out4a = input.table of abc.def"
+         }
+         source_contexts:  {
           file:  "tests/tableof.sysl"
           start:  {
            line:  10
@@ -338,6 +398,18 @@ apps:  {
           }
           text:  "let out5 = input.foo .table of abc.def"
          }
+         source_contexts:  {
+          file:  "tests/tableof.sysl"
+          start:  {
+           line:  11
+           col:  6
+          }
+          end:  {
+           line:  11
+           col:  41
+          }
+          text:  "let out5 = input.foo .table of abc.def"
+         }
         }
        }
       }
@@ -407,6 +479,18 @@ apps:  {
           }
           text:  "let out6 = .foo .table of abc.def"
          }
+         source_contexts:  {
+          file:  "tests/tableof.sysl"
+          start:  {
+           line:  12
+           col:  6
+          }
+          end:  {
+           line:  12
+           col:  36
+          }
+          text:  "let out6 = .foo .table of abc.def"
+         }
         }
        }
       }
@@ -434,9 +518,31 @@ apps:  {
      }
      text:  "!view TestTableOf(number <: int) -> int:"
     }
+    source_contexts:  {
+     file:  "tests/tableof.sysl"
+     start:  {
+      line:  2
+      col:  2
+     }
+     end:  {
+      line:  14
+     }
+     text:  "!view TestTableOf(number <: int) -> int:"
+    }
    }
   }
   source_context:  {
+   file:  "tests/tableof.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  47
+   }
+  }
+  source_contexts:  {
    file:  "tests/tableof.sysl"
    start:  {
     line:  1

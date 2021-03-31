@@ -136,12 +136,35 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/import_proto_JSON_merge.sysl"
+      start:  {
+       line:  13
+       col:  12
+      }
+      end:  {
+       line:  13
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/cart"
     }
     source_context:  {
+     file:  "tests/import_proto_JSON_merge.sysl"
+     start:  {
+      line:  10
+      col:  8
+     }
+     end:  {
+      line:  15
+      col:  12
+     }
+     version:  "v0.0.2"
+    }
+    source_contexts:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
       line:  10
@@ -191,12 +214,35 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/import_proto_JSON_merge.sysl"
+      start:  {
+       line:  9
+       col:  12
+      }
+      end:  {
+       line:  9
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  POST
      path:  "/cart"
     }
     source_context:  {
+     file:  "tests/import_proto_JSON_merge.sysl"
+     start:  {
+      line:  6
+      col:  8
+     }
+     end:  {
+      line:  10
+      col:  8
+     }
+     version:  "v0.0.2"
+    }
+    source_contexts:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
       line:  6
@@ -249,6 +295,18 @@ apps:  {
    }
   }
   source_context:  {
+   file:  "tests/import_proto_JSON_merge.sysl"
+   start:  {
+    line:  3
+    col:  1
+   }
+   end:  {
+    line:  3
+    col:  38
+   }
+   version:  "v0.0.2"
+  }
+  source_contexts:  {
    file:  "tests/import_proto_JSON_merge.sysl"
    start:  {
     line:  3
@@ -830,8 +888,18 @@ apps:  {
        source_context:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  22
-         col:  20
+         line:  21
+         col:  8
+        }
+        end:  {
+         line:  23
+        }
+       }
+       source_contexts:  {
+        file:  "tests/import_proto_JSON_merge.sysl"
+        start:  {
+         line:  21
+         col:  8
         }
         end:  {
          line:  23
@@ -852,8 +920,20 @@ apps:  {
        source_context:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  18
-         col:  19
+         line:  17
+         col:  8
+        }
+        end:  {
+         line:  19
+         col:  8
+        }
+        version:  "v0.0.2"
+       }
+       source_contexts:  {
+        file:  "tests/import_proto_JSON_merge.sysl"
+        start:  {
+         line:  17
+         col:  8
         }
         end:  {
          line:  19
@@ -876,8 +956,20 @@ apps:  {
        source_context:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  20
-         col:  20
+         line:  19
+         col:  8
+        }
+        end:  {
+         line:  21
+         col:  8
+        }
+        version:  "v0.0.2"
+       }
+       source_contexts:  {
+        file:  "tests/import_proto_JSON_merge.sysl"
+        start:  {
+         line:  19
+         col:  8
         }
         end:  {
          line:  21
@@ -906,9 +998,33 @@ apps:  {
      }
      version:  "v0.0.2"
     }
+    source_contexts:  {
+     file:  "tests/import_proto_JSON_merge.sysl"
+     start:  {
+      line:  16
+      col:  4
+     }
+     end:  {
+      line:  23
+      col:  4
+     }
+     version:  "v0.0.2"
+    }
    }
   }
   source_context:  {
+   file:  "tests/import_proto_JSON_merge.sysl"
+   start:  {
+    line:  15
+    col:  1
+   }
+   end:  {
+    line:  15
+    col:  43
+   }
+   version:  "v0.0.2"
+  }
+  source_contexts:  {
    file:  "tests/import_proto_JSON_merge.sysl"
    start:  {
     line:  15

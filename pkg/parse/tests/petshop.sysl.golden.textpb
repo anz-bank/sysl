@@ -39,12 +39,34 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/petshop.sysl"
+      start:  {
+       line:  40
+       col:  12
+      }
+      end:  {
+       line:  40
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/petshop"
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  39
+      col:  8
+     }
+     end:  {
+      line:  42
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  39
@@ -70,7 +92,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  56
-         col:  23
+         col:  8
+        }
+        end:  {
+         line:  56
+         col:  30
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  56
+         col:  8
         }
         end:  {
          line:  56
@@ -97,7 +130,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  57
-         col:  17
+         col:  8
+        }
+        end:  {
+         line:  57
+         col:  36
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  57
+         col:  8
         }
         end:  {
          line:  57
@@ -115,7 +159,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  53
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  53
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  53
+         col:  8
         }
         end:  {
          line:  53
@@ -143,7 +198,18 @@ apps:  {
          file:  "tests/petshop.sysl"
          start:  {
           line:  55
-          col:  16
+          col:  8
+         }
+         end:  {
+          line:  55
+          col:  23
+         }
+        }
+        source_contexts:  {
+         file:  "tests/petshop.sysl"
+         start:  {
+          line:  55
+          col:  8
          }
          end:  {
           line:  55
@@ -155,7 +221,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  55
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  55
+         col:  23
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  55
+         col:  8
         }
         end:  {
          line:  55
@@ -173,7 +250,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  54
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  54
+         col:  25
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  54
+         col:  8
         }
         end:  {
          line:  54
@@ -184,6 +272,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  52
+      col:  4
+     }
+     end:  {
+      line:  59
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  52
@@ -209,7 +308,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  49
-         col:  15
+         col:  8
+        }
+        end:  {
+         line:  49
+         col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  49
+         col:  8
         }
         end:  {
          line:  49
@@ -236,7 +346,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  50
-         col:  17
+         col:  8
+        }
+        end:  {
+         line:  50
+         col:  36
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  50
+         col:  8
         }
         end:  {
          line:  50
@@ -254,7 +375,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  48
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  48
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  48
+         col:  8
         }
         end:  {
          line:  48
@@ -265,6 +397,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  47
+      col:  4
+     }
+     end:  {
+      line:  52
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  47
@@ -290,7 +433,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  61
-         col:  15
+         col:  8
+        }
+        end:  {
+         line:  61
+         col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  61
+         col:  8
         }
         end:  {
          line:  61
@@ -307,7 +461,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  63
+         col:  8
+        }
+        end:  {
+         line:  63
          col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  63
+         col:  8
         }
         end:  {
          line:  63
@@ -325,7 +490,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  60
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  60
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  60
+         col:  8
         }
         end:  {
          line:  60
@@ -343,7 +519,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  62
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  62
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  62
+         col:  8
         }
         end:  {
          line:  62
@@ -354,6 +541,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  59
+      col:  4
+     }
+     end:  {
+      line:  66
+      col:  17
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  59
@@ -389,7 +587,18 @@ apps:  {
          file:  "tests/petshop.sysl"
          start:  {
           line:  44
-          col:  18
+          col:  8
+         }
+         end:  {
+          line:  44
+          col:  25
+         }
+        }
+        source_contexts:  {
+         file:  "tests/petshop.sysl"
+         start:  {
+          line:  44
+          col:  8
          }
          end:  {
           line:  44
@@ -401,7 +610,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  44
-         col:  18
+         col:  8
+        }
+        end:  {
+         line:  44
+         col:  25
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  44
+         col:  8
         }
         end:  {
          line:  44
@@ -429,7 +649,18 @@ apps:  {
          file:  "tests/petshop.sysl"
          start:  {
           line:  43
-          col:  21
+          col:  8
+         }
+         end:  {
+          line:  43
+          col:  28
+         }
+        }
+        source_contexts:  {
+         file:  "tests/petshop.sysl"
+         start:  {
+          line:  43
+          col:  8
          }
          end:  {
           line:  43
@@ -441,7 +672,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  43
-         col:  21
+         col:  8
+        }
+        end:  {
+         line:  43
+         col:  28
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  43
+         col:  8
         }
         end:  {
          line:  43
@@ -459,7 +701,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  45
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  45
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  45
+         col:  8
         }
         end:  {
          line:  45
@@ -480,9 +733,31 @@ apps:  {
       col:  4
      }
     }
+    source_contexts:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  42
+      col:  4
+     }
+     end:  {
+      line:  47
+      col:  4
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/petshop.sysl"
+   start:  {
+    line:  37
+    col:  1
+   }
+   end:  {
+    line:  37
+    col:  46
+   }
+  }
+  source_contexts:  {
    file:  "tests/petshop.sysl"
    start:  {
     line:  37
@@ -654,6 +929,18 @@ apps:  {
               }
               text:  "let breedId = autoinc()"
              }
+             source_contexts:  {
+              file:  "tests/petshop.sysl"
+              start:  {
+               line:  128
+               col:  16
+              }
+              end:  {
+               line:  128
+               col:  38
+              }
+              text:  "let breedId = autoinc()"
+             }
             }
            }
           }
@@ -683,6 +970,18 @@ apps:  {
                 expr:  {
                  name:  "breedId"
                  source_context:  {
+                  file:  "tests/petshop.sysl"
+                  start:  {
+                   line:  131
+                   col:  20
+                  }
+                  end:  {
+                   line:  131
+                   col:  30
+                  }
+                  text:  "breedId = breedId"
+                 }
+                 source_contexts:  {
                   file:  "tests/petshop.sysl"
                   start:  {
                    line:  131
@@ -730,6 +1029,18 @@ apps:  {
                   }
                   text:  "species = .species"
                  }
+                 source_contexts:  {
+                  file:  "tests/petshop.sysl"
+                  start:  {
+                   line:  132
+                   col:  20
+                  }
+                  end:  {
+                   line:  132
+                   col:  31
+                  }
+                  text:  "species = .species"
+                 }
                 }
                }
               }
@@ -766,6 +1077,18 @@ apps:  {
                   }
                   text:  "breedName = .name"
                  }
+                 source_contexts:  {
+                  file:  "tests/petshop.sysl"
+                  start:  {
+                   line:  133
+                   col:  20
+                  }
+                  end:  {
+                   line:  133
+                   col:  33
+                  }
+                  text:  "breedName = .name"
+                 }
                 }
                }
               }
@@ -786,6 +1109,18 @@ apps:  {
               }
              }
              source_context:  {
+              file:  "tests/petshop.sysl"
+              start:  {
+               line:  130
+               col:  16
+              }
+              end:  {
+               line:  134
+               col:  17
+              }
+              text:  "breed = -> <PetShopModel.Breed>(:\n                    breedId = breedId\n                    species = .species\n                    breedName = .name\n                )\n"
+             }
+             source_contexts:  {
               file:  "tests/petshop.sysl"
               start:  {
                line:  130
@@ -855,6 +1190,18 @@ apps:  {
                   }
                   text:  "petId = autoinc()"
                  }
+                 source_contexts:  {
+                  file:  "tests/petshop.sysl"
+                  start:  {
+                   line:  137
+                   col:  20
+                  }
+                  end:  {
+                   line:  137
+                   col:  36
+                  }
+                  text:  "petId = autoinc()"
+                 }
                 }
                }
               }
@@ -864,6 +1211,18 @@ apps:  {
                 expr:  {
                  name:  "breedId"
                  source_context:  {
+                  file:  "tests/petshop.sysl"
+                  start:  {
+                   line:  138
+                   col:  20
+                  }
+                  end:  {
+                   line:  138
+                   col:  30
+                  }
+                  text:  "breedId = breedId"
+                 }
+                 source_contexts:  {
                   file:  "tests/petshop.sysl"
                   start:  {
                    line:  138
@@ -978,6 +1337,18 @@ apps:  {
               }
               text:  "pets = .pets -> <set of PetShopModel.Pet>(:\n                    petId = autoinc()\n                    breedId = breedId\n                    .name\n                    .dob\n                )\n"
              }
+             source_contexts:  {
+              file:  "tests/petshop.sysl"
+              start:  {
+               line:  136
+               col:  16
+              }
+              end:  {
+               line:  141
+               col:  17
+              }
+              text:  "pets = .pets -> <set of PetShopModel.Pet>(:\n                    petId = autoinc()\n                    breedId = breedId\n                    .name\n                    .dob\n                )\n"
+             }
             }
            }
           }
@@ -1000,6 +1371,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  127
+           col:  12
+          }
+          end:  {
+           line:  142
+           col:  13
+          }
+          text:  "let _breedsAndPets = .breeds -> <set of>(:\n                let breedId = autoinc()\n\n                breed = -> <PetShopModel.Breed>(:\n                    breedId = breedId\n                    species = .species\n                    breedName = .name\n                )\n\n                pets = .pets -> <set of PetShopModel.Pet>(:\n                    petId = autoinc()\n                    breedId = breedId\n                    .name\n                    .dob\n                )\n            )\n"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  127
@@ -1036,6 +1419,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  144
+           col:  12
+          }
+          end:  {
+           line:  144
+           col:  47
+          }
+          text:  "let breedsAndPets = _breedsAndPets snapshot"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  144
@@ -1130,6 +1525,18 @@ apps:  {
           }
           text:  "let minId1 = breedsAndPets max(.breed.breedId)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  146
+           col:  12
+          }
+          end:  {
+           line:  146
+           col:  57
+          }
+          text:  "let minId1 = breedsAndPets max(.breed.breedId)"
+         }
         }
        }
       }
@@ -1213,6 +1620,18 @@ apps:  {
           }
           text:  "let minId2 = breedsAndPets max(.breed.breedId)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  147
+           col:  12
+          }
+          end:  {
+           line:  147
+           col:  57
+          }
+          text:  "let minId2 = breedsAndPets max(.breed.breedId)"
+         }
         }
        }
       }
@@ -1281,6 +1700,18 @@ apps:  {
               }
               text:  "name = \"Bruce\""
              }
+             source_contexts:  {
+              file:  "tests/petshop.sysl"
+              start:  {
+               line:  150
+               col:  16
+              }
+              end:  {
+               line:  150
+               col:  23
+              }
+              text:  "name = \"Bruce\""
+             }
             }
            }
           }
@@ -1303,6 +1734,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  149
+           col:  12
+          }
+          end:  {
+           line:  151
+           col:  13
+          }
+          text:  "let lee = {{:}} -> <set of PetShopModel.Employee>(:\n                name = \"Bruce\"\n            )\n"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  149
@@ -1353,6 +1796,18 @@ apps:  {
           }
           text:  "let leeless = !lee"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  153
+           col:  12
+          }
+          end:  {
+           line:  153
+           col:  27
+          }
+          text:  "let leeless = !lee"
+         }
         }
        }
       }
@@ -1378,6 +1833,18 @@ apps:  {
           }
           text:  "let decimal1 = 1.2"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  155
+           col:  12
+          }
+          end:  {
+           line:  155
+           col:  27
+          }
+          text:  "let decimal1 = 1.2"
+         }
         }
        }
       }
@@ -1392,6 +1859,18 @@ apps:  {
           primitive:  DECIMAL
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  156
+           col:  12
+          }
+          end:  {
+           line:  156
+           col:  27
+          }
+          text:  "let decimal2 = 2.3"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  156
@@ -1475,6 +1954,18 @@ apps:  {
           }
           text:  "let decimal3 = +decimal1 + decimal2"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  157
+           col:  12
+          }
+          end:  {
+           line:  157
+           col:  39
+          }
+          text:  "let decimal3 = +decimal1 + decimal2"
+         }
         }
        }
       }
@@ -1538,6 +2029,18 @@ apps:  {
           }
           text:  "let one_third = 1.0 / 3.0"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  159
+           col:  12
+          }
+          end:  {
+           line:  159
+           col:  34
+          }
+          text:  "let one_third = 1.0 / 3.0"
+         }
         }
        }
       }
@@ -1585,6 +2088,18 @@ apps:  {
           primitive:  INT
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  160
+           col:  12
+          }
+          end:  {
+           line:  160
+           col:  41
+          }
+          text:  "let one_ninth = one_third ** 2"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  160
@@ -1733,6 +2248,18 @@ apps:  {
           }
           text:  "let bruce_lee = lee singleOrNull?.name + substr(\" Leek\", 0, 4)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  164
+           col:  12
+          }
+          end:  {
+           line:  164
+           col:  73
+          }
+          text:  "let bruce_lee = lee singleOrNull?.name + substr(\" Leek\", 0, 4)"
+         }
         }
        }
       }
@@ -1780,6 +2307,18 @@ apps:  {
               func:  "autoinc"
              }
              source_context:  {
+              file:  "tests/petshop.sysl"
+              start:  {
+               line:  167
+               col:  16
+              }
+              end:  {
+               line:  167
+               col:  37
+              }
+              text:  "employeeId = autoinc()"
+             }
+             source_contexts:  {
               file:  "tests/petshop.sysl"
               start:  {
                line:  167
@@ -1903,6 +2442,18 @@ apps:  {
               no_type:  {}
              }
              source_context:  {
+              file:  "tests/petshop.sysl"
+              start:  {
+               line:  170
+               col:  16
+              }
+              end:  {
+               line:  170
+               col:  33
+              }
+              text:  "error = minId2 - minId1"
+             }
+             source_contexts:  {
               file:  "tests/petshop.sysl"
               start:  {
                line:  170
@@ -2093,9 +2644,31 @@ apps:  {
      }
      text:  "!view apiToModel(petshop <: PetShopApi.PetShop):"
     }
+    source_contexts:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  125
+      col:  4
+     }
+     end:  {
+      line:  175
+     }
+     text:  "!view apiToModel(petshop <: PetShopApi.PetShop):"
+    }
    }
   }
   source_context:  {
+   file:  "tests/petshop.sysl"
+   start:  {
+    line:  124
+    col:  1
+   }
+   end:  {
+    line:  124
+    col:  55
+   }
+  }
+  source_contexts:  {
    file:  "tests/petshop.sysl"
    start:  {
     line:  124
@@ -2152,6 +2725,17 @@ apps:  {
     col:  52
    }
   }
+  source_contexts:  {
+   file:  "tests/petshop.sysl"
+   start:  {
+    line:  29
+    col:  1
+   }
+   end:  {
+    line:  29
+    col:  52
+   }
+  }
  }
 }
 apps:  {
@@ -2186,7 +2770,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  13
-         col:  23
+         col:  8
+        }
+        end:  {
+         line:  13
+         col:  36
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  13
+         col:  8
         }
         end:  {
          line:  13
@@ -2209,7 +2804,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  14
-         col:  21
+         col:  8
+        }
+        end:  {
+         line:  14
+         col:  32
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  14
+         col:  8
         }
         end:  {
          line:  14
@@ -2239,7 +2845,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  9
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  9
+         col:  37
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  9
+         col:  8
         }
         end:  {
          line:  9
@@ -2257,7 +2874,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  10
-         col:  21
+         col:  8
+        }
+        end:  {
+         line:  10
+         col:  27
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  10
+         col:  8
         }
         end:  {
          line:  10
@@ -2275,7 +2903,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  15
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  15
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  15
+         col:  8
         }
         end:  {
          line:  15
@@ -2293,7 +2932,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  12
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  12
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  12
+         col:  8
         }
         end:  {
          line:  12
@@ -2311,7 +2961,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  11
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  11
+         col:  25
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  11
+         col:  8
         }
         end:  {
          line:  11
@@ -2325,6 +2986,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  8
+      col:  4
+     }
+     end:  {
+      line:  17
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  8
@@ -2350,7 +3022,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  5
-         col:  15
+         col:  8
+        }
+        end:  {
+         line:  5
+         col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  5
+         col:  8
         }
         end:  {
          line:  5
@@ -2380,7 +3063,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  3
-         col:  22
+         col:  8
+        }
+        end:  {
+         line:  3
+         col:  40
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  3
+         col:  8
         }
         end:  {
          line:  3
@@ -2397,7 +3091,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  6
+         col:  8
+        }
+        end:  {
+         line:  6
          col:  17
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  6
+         col:  8
         }
         end:  {
          line:  6
@@ -2415,7 +3120,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  4
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  4
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  4
+         col:  8
         }
         end:  {
          line:  4
@@ -2429,6 +3145,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  8
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  2
@@ -2474,7 +3201,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  25
-         col:  22
+         col:  8
+        }
+        end:  {
+         line:  25
+         col:  46
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  25
+         col:  8
         }
         end:  {
          line:  25
@@ -2512,7 +3250,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  26
-         col:  17
+         col:  8
+        }
+        end:  {
+         line:  26
+         col:  31
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  26
+         col:  8
         }
         end:  {
          line:  26
@@ -2527,6 +3276,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  24
+      col:  4
+     }
+     end:  {
+      line:  29
+      col:  13
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  24
@@ -2562,7 +3322,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  19
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  19
+         col:  25
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  19
+         col:  8
         }
         end:  {
          line:  19
@@ -2580,7 +3351,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  21
-         col:  15
+         col:  8
+        }
+        end:  {
+         line:  21
+         col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  21
+         col:  8
         }
         end:  {
          line:  21
@@ -2598,7 +3380,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  20
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  20
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  20
+         col:  8
         }
         end:  {
          line:  20
@@ -2616,7 +3409,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  22
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  22
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  22
+         col:  8
         }
         end:  {
          line:  22
@@ -2646,7 +3450,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  18
-         col:  17
+         col:  8
+        }
+        end:  {
+         line:  18
+         col:  35
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  18
+         col:  8
         }
         end:  {
          line:  18
@@ -2670,9 +3485,31 @@ apps:  {
       col:  4
      }
     }
+    source_contexts:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  17
+      col:  4
+     }
+     end:  {
+      line:  24
+      col:  4
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/petshop.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  50
+   }
+  }
+  source_contexts:  {
    file:  "tests/petshop.sysl"
    start:  {
     line:  1
@@ -2709,7 +3546,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  117
+         col:  8
+        }
+        end:  {
+         line:  117
          col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  117
+         col:  8
         }
         end:  {
          line:  117
@@ -2727,7 +3575,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  119
-         col:  15
+         col:  8
+        }
+        end:  {
+         line:  119
+         col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  119
+         col:  8
         }
         end:  {
          line:  119
@@ -2745,7 +3604,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  121
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  121
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  121
+         col:  8
         }
         end:  {
          line:  121
@@ -2763,7 +3633,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  118
-         col:  16
+         col:  8
+        }
+        end:  {
+         line:  118
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  118
+         col:  8
         }
         end:  {
          line:  118
@@ -2781,7 +3662,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  120
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  120
+         col:  22
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  120
+         col:  8
         }
         end:  {
          line:  120
@@ -2798,7 +3690,18 @@ apps:  {
         file:  "tests/petshop.sysl"
         start:  {
          line:  116
+         col:  8
+        }
+        end:  {
+         line:  116
          col:  17
+        }
+       }
+       source_contexts:  {
+        file:  "tests/petshop.sysl"
+        start:  {
+         line:  116
+         col:  8
         }
         end:  {
          line:  116
@@ -2809,6 +3712,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  115
+      col:  4
+     }
+     end:  {
+      line:  124
+      col:  17
+     }
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  115
@@ -2910,6 +3824,18 @@ apps:  {
           attr:  "breedName"
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  98
+           col:  12
+          }
+          end:  {
+           line:  98
+           col:  20
+          }
+          text:  "name = .breedName"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  98
@@ -3040,6 +3966,18 @@ apps:  {
           }
           text:  "pets = petToApi(-> set of Pet ~[petId]> pet)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  100
+           col:  12
+          }
+          end:  {
+           line:  100
+           col:  55
+          }
+          text:  "pets = petToApi(-> set of Pet ~[petId]> pet)"
+         }
         }
        }
       }
@@ -3073,6 +4011,18 @@ apps:  {
           primitive:  INT
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  101
+           col:  12
+          }
+          end:  {
+           line:  101
+           col:  27
+          }
+          text:  "avgLifespan = -1.0"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  101
@@ -3122,6 +4072,18 @@ apps:  {
           }
           text:  "index = autoinc(\"Breed\")"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  102
+           col:  12
+          }
+          end:  {
+           line:  102
+           col:  35
+          }
+          text:  "index = autoinc(\"Breed\")"
+         }
         }
        }
       }
@@ -3156,6 +4118,18 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  96
+      col:  4
+     }
+     end:  {
+      line:  105
+      col:  4
+     }
+     text:  "!view breedToApi(breed <: set of PetShopModel.Breed, pet <: set of PetShopModelToApi.PetRankedByLeg):"
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  96
@@ -3326,6 +4300,18 @@ apps:  {
           }
           text:  "index = autoinc(\"Employee\")"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  93
+           col:  12
+          }
+          end:  {
+           line:  93
+           col:  38
+          }
+          text:  "index = autoinc(\"Employee\")"
+         }
         }
        }
       }
@@ -3371,6 +4357,18 @@ apps:  {
      }
      text:  "!view employeeToApi(employee <: set of PetShopModel.Employee):"
     }
+    source_contexts:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  89
+      col:  4
+     }
+     end:  {
+      line:  96
+      col:  4
+     }
+     text:  "!view employeeToApi(employee <: set of PetShopModel.Employee):"
+    }
    }
   }
   views:  {
@@ -3396,6 +4394,18 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  113
+      col:  4
+     }
+     end:  {
+      line:  113
+      col:  37
+     }
+     text:  "!view fibonacci(n <: int) -> int [~abstract]"
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  113
@@ -3579,6 +4589,18 @@ apps:  {
           }
           text:  "let rankedPets = .table of Pet rank<PetShopModelToApi.PetRankedByLeg>(.numLegs as legRank)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  69
+           col:  12
+          }
+          end:  {
+           line:  69
+           col:  101
+          }
+          text:  "let rankedPets = .table of Pet rank<PetShopModelToApi.PetRankedByLeg>(.numLegs as legRank)"
+         }
         }
        }
       }
@@ -3621,6 +4643,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  71
+           col:  12
+          }
+          end:  {
+           line:  71
+           col:  56
+          }
+          text:  "employees = employeeToApi(.table of Employee)"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  71
@@ -3688,6 +4722,18 @@ apps:  {
           }
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  72
+           col:  12
+          }
+          end:  {
+           line:  72
+           col:  59
+          }
+          text:  "breeds = breedToApi(.table of Breed, rankedPets)"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  72
@@ -3815,6 +4861,18 @@ apps:  {
           }
           text:  "numLegs = .table of Pet sum(.numLegs ?? 0)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  73
+           col:  12
+          }
+          end:  {
+           line:  73
+           col:  53
+          }
+          text:  "numLegs = .table of Pet sum(.numLegs ?? 0)"
+         }
         }
        }
       }
@@ -3920,6 +4978,18 @@ apps:  {
           scopevar:  "."
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  75
+           col:  12
+          }
+          end:  {
+           line:  75
+           col:  51
+          }
+          text:  "let m = .table of Pet min(.numLegs ?? 0)"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  75
@@ -4047,6 +5117,18 @@ apps:  {
           }
           text:  "let a = .table of Pet average(.numLegs ?? 0)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  76
+           col:  12
+          }
+          end:  {
+           line:  76
+           col:  55
+          }
+          text:  "let a = .table of Pet average(.numLegs ?? 0)"
+         }
         }
        }
       }
@@ -4073,6 +5155,18 @@ apps:  {
           setof:  true
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  79
+           col:  12
+          }
+          end:  {
+           line:  79
+           col:  31
+          }
+          text:  "let pp = .table of Pet"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  79
@@ -4155,6 +5249,18 @@ apps:  {
           }
           text:  "let bb = pp ~> .table of Breed"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  80
+           col:  12
+          }
+          end:  {
+           line:  80
+           col:  37
+          }
+          text:  "let bb = pp ~> .table of Breed"
+         }
         }
        }
       }
@@ -4215,6 +5321,18 @@ apps:  {
           no_type:  {}
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  81
+           col:  12
+          }
+          end:  {
+           line:  81
+           col:  38
+          }
+          text:  "let yy = pp !~> .table of Breed"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  81
@@ -4297,6 +5415,18 @@ apps:  {
           }
           text:  "let p = pp any(1) singleOrNull"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  83
+           col:  12
+          }
+          end:  {
+           line:  83
+           col:  30
+          }
+          text:  "let p = pp any(1) singleOrNull"
+         }
         }
        }
       }
@@ -4322,6 +5452,18 @@ apps:  {
           attr:  "Breed"
          }
          source_context:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  84
+           col:  12
+          }
+          end:  {
+           line:  84
+           col:  25
+          }
+          text:  "let b = p -> Breed"
+         }
+         source_contexts:  {
           file:  "tests/petshop.sysl"
           start:  {
            line:  84
@@ -4371,6 +5513,18 @@ apps:  {
           }
           text:  "let pp2 = b ?-> set of Pet"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  85
+           col:  12
+          }
+          end:  {
+           line:  85
+           col:  35
+          }
+          text:  "let pp2 = b ?-> set of Pet"
+         }
         }
        }
       }
@@ -4403,6 +5557,18 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  67
+      col:  4
+     }
+     end:  {
+      line:  89
+      col:  4
+     }
+     text:  "!view modelToApi(petshop <: PetShopModel):"
+    }
+    source_contexts:  {
      file:  "tests/petshop.sysl"
      start:  {
       line:  67
@@ -4622,6 +5788,18 @@ apps:  {
           }
           text:  "legRank = fibonacci(.legRank)"
          }
+         source_contexts:  {
+          file:  "tests/petshop.sysl"
+          start:  {
+           line:  110
+           col:  12
+          }
+          end:  {
+           line:  110
+           col:  40
+          }
+          text:  "legRank = fibonacci(.legRank)"
+         }
         }
        }
       }
@@ -4667,9 +5845,32 @@ apps:  {
      }
      text:  "!view petToApi(pet <: set of PetShopModelToApi.PetRankedByLeg):"
     }
+    source_contexts:  {
+     file:  "tests/petshop.sysl"
+     start:  {
+      line:  105
+      col:  4
+     }
+     end:  {
+      line:  113
+      col:  4
+     }
+     text:  "!view petToApi(pet <: set of PetShopModelToApi.PetRankedByLeg):"
+    }
    }
   }
   source_context:  {
+   file:  "tests/petshop.sysl"
+   start:  {
+    line:  66
+    col:  1
+   }
+   end:  {
+    line:  66
+    col:  55
+   }
+  }
+  source_contexts:  {
    file:  "tests/petshop.sysl"
    start:  {
     line:  66

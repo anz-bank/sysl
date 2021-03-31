@@ -39,8 +39,30 @@ apps:  {
        source_context:  {
         file:  "tests/anno_merge_import.sysl"
         start:  {
-         line:  8
-         col:  13
+         line:  5
+         col:  8
+        }
+        end:  {
+         line:  11
+         col:  8
+        }
+       }
+       source_contexts:  {
+        file:  "tests/anno_merge.sysl"
+        start:  {
+         line:  7
+         col:  8
+        }
+        end:  {
+         line:  13
+         col:  8
+        }
+       }
+       source_contexts:  {
+        file:  "tests/anno_merge_import.sysl"
+        start:  {
+         line:  5
+         col:  8
         }
         end:  {
          line:  11
@@ -81,8 +103,28 @@ apps:  {
        source_context:  {
         file:  "tests/anno_merge_import.sysl"
         start:  {
-         line:  12
-         col:  13
+         line:  11
+         col:  8
+        }
+        end:  {
+         line:  15
+        }
+       }
+       source_contexts:  {
+        file:  "tests/anno_merge.sysl"
+        start:  {
+         line:  13
+         col:  8
+        }
+        end:  {
+         line:  21
+        }
+       }
+       source_contexts:  {
+        file:  "tests/anno_merge_import.sysl"
+        start:  {
+         line:  11
+         col:  8
         }
         end:  {
          line:  15
@@ -100,7 +142,27 @@ apps:  {
     source_context:  {
      file:  "tests/anno_merge_import.sysl"
      start:  {
-      line:  4
+      line:  3
+      col:  4
+     }
+     end:  {
+      line:  15
+     }
+    }
+    source_contexts:  {
+     file:  "tests/anno_merge.sysl"
+     start:  {
+      line:  5
+      col:  4
+     }
+     end:  {
+      line:  21
+     }
+    }
+    source_contexts:  {
+     file:  "tests/anno_merge_import.sysl"
+     start:  {
+      line:  3
       col:  4
      }
      end:  {
@@ -110,6 +172,26 @@ apps:  {
    }
   }
   source_context:  {
+   file:  "tests/anno_merge_import.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
+   file:  "tests/anno_merge.sysl"
+   start:  {
+    line:  3
+    col:  1
+   }
+   end:  {
+    line:  3
+   }
+  }
+  source_contexts:  {
    file:  "tests/anno_merge_import.sysl"
    start:  {
     line:  1

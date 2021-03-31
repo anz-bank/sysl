@@ -37,8 +37,30 @@ apps:  {
        col:  24
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  49
+       col:  8
+      }
+      end:  {
+       line:  49
+       col:  24
+      }
+     }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  48
+      col:  4
+     }
+     end:  {
+      line:  51
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  48
@@ -60,6 +82,17 @@ apps:  {
       action:  "| Comment On click, initiate a server call"
      }
      source_context:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  60
+       col:  8
+      }
+      end:  {
+       line:  60
+       col:  9
+      }
+     }
+     source_contexts:  {
       file:  "tests/test_rest_api.sysl"
       start:  {
        line:  60
@@ -100,6 +133,17 @@ apps:  {
        col:  24
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  61
+       col:  8
+      }
+      end:  {
+       line:  61
+       col:  24
+      }
+     }
     }
     stmt:  {
      call:  {
@@ -119,8 +163,29 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  62
+       col:  8
+      }
+      end:  {
+       line:  62
+       col:  12
+      }
+     }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  59
+      col:  4
+     }
+     end:  {
+      line:  63
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  59
@@ -155,6 +220,17 @@ apps:  {
        col:  24
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  52
+       col:  8
+      }
+      end:  {
+       line:  52
+       col:  24
+      }
+     }
     }
     stmt:  {
      call:  {
@@ -175,8 +251,30 @@ apps:  {
        col:  24
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  53
+       col:  8
+      }
+      end:  {
+       line:  53
+       col:  24
+      }
+     }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  51
+      col:  4
+     }
+     end:  {
+      line:  55
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  51
@@ -212,6 +310,17 @@ apps:  {
        col:  24
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  56
+       col:  8
+      }
+      end:  {
+       line:  56
+       col:  24
+      }
+     }
     }
     stmt:  {
      ret:  {
@@ -228,8 +337,30 @@ apps:  {
        col:  14
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  57
+       col:  8
+      }
+      end:  {
+       line:  57
+       col:  14
+      }
+     }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  55
+      col:  4
+     }
+     end:  {
+      line:  59
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  55
@@ -254,7 +385,18 @@ apps:  {
         file:  "tests/test_rest_api.sysl"
         start:  {
          line:  46
+         col:  8
+        }
+        end:  {
+         line:  46
          col:  15
+        }
+       }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  46
+         col:  8
         }
         end:  {
          line:  46
@@ -273,7 +415,18 @@ apps:  {
     source_context:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
-      line:  43
+      line:  42
+      col:  4
+     }
+     end:  {
+      line:  48
+      col:  4
+     }
+    }
+    source_contexts:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  42
       col:  4
      }
      end:  {
@@ -284,6 +437,17 @@ apps:  {
    }
   }
   source_context:  {
+   file:  "tests/test_rest_api.sysl"
+   start:  {
+    line:  41
+    col:  1
+   }
+   end:  {
+    line:  41
+    col:  17
+   }
+  }
+  source_contexts:  {
    file:  "tests/test_rest_api.sysl"
    start:  {
     line:  41
@@ -342,12 +506,34 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  4
+       col:  12
+      }
+      end:  {
+       line:  4
+       col:  12
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/"
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  3
+      col:  8
+     }
+     end:  {
+      line:  5
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  3
@@ -399,12 +585,34 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  21
+       col:  12
+      }
+      end:  {
+       line:  21
+       col:  12
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/first"
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  20
+      col:  8
+     }
+     end:  {
+      line:  22
+      col:  8
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  20
@@ -453,6 +661,17 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  39
+       col:  12
+      }
+      end:  {
+       line:  39
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  GET
@@ -472,6 +691,17 @@ apps:  {
         }
        }
        source_context:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  35
+         col:  13
+        }
+        end:  {
+         line:  35
+         col:  26
+        }
+       }
+       source_contexts:  {
         file:  "tests/test_rest_api.sysl"
         start:  {
          line:  35
@@ -509,6 +739,17 @@ apps:  {
          col:  43
         }
        }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  35
+         col:  28
+        }
+        end:  {
+         line:  35
+         col:  43
+        }
+       }
       }
      }
      query_param:  {
@@ -536,6 +777,17 @@ apps:  {
          col:  67
         }
        }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  35
+         col:  45
+        }
+        end:  {
+         line:  35
+         col:  67
+        }
+       }
       }
      }
      url_param:  {
@@ -553,10 +805,32 @@ apps:  {
          col:  25
         }
        }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  34
+         col:  17
+        }
+        end:  {
+         line:  34
+         col:  25
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  35
+      col:  8
+     }
+     end:  {
+      line:  41
+      col:  10
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  35
@@ -613,6 +887,17 @@ apps:  {
        col:  16
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  24
+       col:  16
+      }
+      end:  {
+       line:  24
+       col:  16
+      }
+     }
     }
     rest_params:  {
      method:  GET
@@ -622,6 +907,17 @@ apps:  {
       type:  {
        primitive:  INT
        source_context:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  23
+         col:  17
+        }
+        end:  {
+         line:  23
+         col:  23
+        }
+       }
+       source_contexts:  {
         file:  "tests/test_rest_api.sysl"
         start:  {
          line:  23
@@ -650,6 +946,17 @@ apps:  {
          col:  36
         }
        }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  23
+         col:  27
+        }
+        end:  {
+         line:  23
+         col:  36
+        }
+       }
       }
      }
      query_param:  {
@@ -658,6 +965,17 @@ apps:  {
        primitive:  INT
        opt:  true
        source_context:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  23
+         col:  38
+        }
+        end:  {
+         line:  23
+         col:  48
+        }
+       }
+       source_contexts:  {
         file:  "tests/test_rest_api.sysl"
         start:  {
          line:  23
@@ -685,10 +1003,32 @@ apps:  {
          col:  17
         }
        }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  22
+         col:  9
+        }
+        end:  {
+         line:  22
+         col:  17
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  23
+      col:  12
+     }
+     end:  {
+      line:  25
+      col:  12
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  23
@@ -736,12 +1076,34 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  7
+       col:  12
+      }
+      end:  {
+       line:  7
+       col:  12
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/foo"
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  6
+      col:  8
+     }
+     end:  {
+      line:  8
+      col:  8
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  6
@@ -789,12 +1151,34 @@ apps:  {
        col:  16
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  10
+       col:  16
+      }
+      end:  {
+       line:  10
+       col:  16
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/foo/"
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  9
+      col:  12
+     }
+     end:  {
+      line:  11
+      col:  8
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  9
@@ -854,12 +1238,34 @@ apps:  {
        col:  16
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  18
+       col:  16
+      }
+      end:  {
+       line:  18
+       col:  16
+      }
+     }
     }
     rest_params:  {
      method:  GET
      path:  "/foo/blah"
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  17
+      col:  12
+     }
+     end:  {
+      line:  19
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  17
@@ -910,6 +1316,17 @@ apps:  {
        col:  20
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  33
+       col:  20
+      }
+      end:  {
+       line:  33
+       col:  20
+      }
+     }
     }
     rest_params:  {
      method:  POST
@@ -929,10 +1346,32 @@ apps:  {
          col:  17
         }
        }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  22
+         col:  9
+        }
+        end:  {
+         line:  22
+         col:  17
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  32
+      col:  16
+     }
+     end:  {
+      line:  34
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  32
@@ -996,6 +1435,17 @@ apps:  {
        col:  24
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  30
+       col:  24
+      }
+      end:  {
+       line:  30
+       col:  24
+      }
+     }
     }
     rest_params:  {
      method:  POST
@@ -1015,10 +1465,32 @@ apps:  {
          col:  17
         }
        }
+       source_contexts:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  22
+         col:  9
+        }
+        end:  {
+         line:  22
+         col:  17
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  29
+      col:  20
+     }
+     end:  {
+      line:  31
+      col:  12
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  29
@@ -1085,12 +1557,34 @@ apps:  {
        col:  20
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  15
+       col:  20
+      }
+      end:  {
+       line:  15
+       col:  20
+      }
+     }
     }
     rest_params:  {
      method:  POST
      path:  "/foo/bar/baz"
     }
     source_context:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  13
+      col:  16
+     }
+     end:  {
+      line:  16
+      col:  8
+     }
+    }
+    source_contexts:  {
      file:  "tests/test_rest_api.sysl"
      start:  {
       line:  13
@@ -1141,6 +1635,17 @@ apps:  {
        col:  26
       }
      }
+     source_contexts:  {
+      file:  "tests/test_rest_api.sysl"
+      start:  {
+       line:  27
+       col:  20
+      }
+      end:  {
+       line:  27
+       col:  26
+      }
+     }
     }
     rest_params:  {
      method:  PUT
@@ -1150,6 +1655,17 @@ apps:  {
       type:  {
        primitive:  INT
        source_context:  {
+        file:  "tests/test_rest_api.sysl"
+        start:  {
+         line:  22
+         col:  9
+        }
+        end:  {
+         line:  22
+         col:  17
+        }
+       }
+       source_contexts:  {
         file:  "tests/test_rest_api.sysl"
         start:  {
          line:  22
@@ -1174,9 +1690,31 @@ apps:  {
       col:  16
      }
     }
+    source_contexts:  {
+     file:  "tests/test_rest_api.sysl"
+     start:  {
+      line:  26
+      col:  16
+     }
+     end:  {
+      line:  28
+      col:  16
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/test_rest_api.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  19
+   }
+  }
+  source_contexts:  {
    file:  "tests/test_rest_api.sysl"
    start:  {
     line:  1

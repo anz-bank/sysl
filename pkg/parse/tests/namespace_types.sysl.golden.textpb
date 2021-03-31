@@ -29,7 +29,18 @@ apps:  {
          file:  "tests/namespace_types.sysl"
          start:  {
           line:  3
-          col:  19
+          col:  8
+         }
+         end:  {
+          line:  3
+          col:  31
+         }
+        }
+        source_contexts:  {
+         file:  "tests/namespace_types.sysl"
+         start:  {
+          line:  3
+          col:  8
          }
          end:  {
           line:  3
@@ -41,7 +52,18 @@ apps:  {
         file:  "tests/namespace_types.sysl"
         start:  {
          line:  3
-         col:  19
+         col:  8
+        }
+        end:  {
+         line:  3
+         col:  31
+        }
+       }
+       source_contexts:  {
+        file:  "tests/namespace_types.sysl"
+        start:  {
+         line:  3
+         col:  8
         }
         end:  {
          line:  3
@@ -52,6 +74,17 @@ apps:  {
      }
     }
     source_context:  {
+     file:  "tests/namespace_types.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  5
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/namespace_types.sysl"
      start:  {
       line:  2
@@ -76,7 +109,18 @@ apps:  {
         file:  "tests/namespace_types.sysl"
         start:  {
          line:  6
+         col:  8
+        }
+        end:  {
+         line:  6
          col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "tests/namespace_types.sysl"
+        start:  {
+         line:  6
+         col:  8
         }
         end:  {
          line:  6
@@ -97,9 +141,31 @@ apps:  {
       col:  6
      }
     }
+    source_contexts:  {
+     file:  "tests/namespace_types.sysl"
+     start:  {
+      line:  5
+      col:  4
+     }
+     end:  {
+      line:  8
+      col:  6
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/namespace_types.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  9
+   }
+  }
+  source_contexts:  {
    file:  "tests/namespace_types.sysl"
    start:  {
     line:  1
@@ -147,7 +213,18 @@ apps:  {
          file:  "tests/namespace_types.sysl"
          start:  {
           line:  10
-          col:  23
+          col:  8
+         }
+         end:  {
+          line:  10
+          col:  48
+         }
+        }
+        source_contexts:  {
+         file:  "tests/namespace_types.sysl"
+         start:  {
+          line:  10
+          col:  8
          }
          end:  {
           line:  10
@@ -159,7 +236,18 @@ apps:  {
         file:  "tests/namespace_types.sysl"
         start:  {
          line:  10
-         col:  23
+         col:  8
+        }
+        end:  {
+         line:  10
+         col:  48
+        }
+       }
+       source_contexts:  {
+        file:  "tests/namespace_types.sysl"
+        start:  {
+         line:  10
+         col:  8
         }
         end:  {
          line:  10
@@ -179,9 +267,30 @@ apps:  {
       line:  11
      }
     }
+    source_contexts:  {
+     file:  "tests/namespace_types.sysl"
+     start:  {
+      line:  9
+      col:  4
+     }
+     end:  {
+      line:  11
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/namespace_types.sysl"
+   start:  {
+    line:  8
+    col:  1
+   }
+   end:  {
+    line:  8
+    col:  10
+   }
+  }
+  source_contexts:  {
    file:  "tests/namespace_types.sysl"
    start:  {
     line:  8

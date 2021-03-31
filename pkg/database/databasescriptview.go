@@ -78,7 +78,7 @@ func (v *ScriptView) GenerateDatabaseScriptCreate(tableMap map[string]*sysl.Type
 		lineNumberMap := map[int32]string{}
 		for _, tableName := range tableNames {
 			table := tableMap[tableName]
-			lineNumber := table.GetSourceContext().GetStart().GetLine()
+			lineNumber := table.GetSourceContext().GetStart().GetLine() //nolint:staticcheck
 			lineNumberMap[lineNumber] = tableName
 			lineNumbers = append(lineNumbers, lineNumber)
 		}

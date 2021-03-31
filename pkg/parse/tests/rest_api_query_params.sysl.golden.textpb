@@ -44,6 +44,17 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/rest_api_query_params.sysl"
+      start:  {
+       line:  4
+       col:  12
+      }
+      end:  {
+       line:  4
+       col:  12
+      }
+     }
     }
     rest_params:  {
      method:  GET
@@ -53,6 +64,17 @@ apps:  {
       type:  {
        primitive:  INT
        source_context:  {
+        file:  "tests/rest_api_query_params.sysl"
+        start:  {
+         line:  3
+         col:  13
+        }
+        end:  {
+         line:  3
+         col:  19
+        }
+       }
+       source_contexts:  {
         file:  "tests/rest_api_query_params.sysl"
         start:  {
          line:  3
@@ -81,6 +103,17 @@ apps:  {
          col:  32
         }
        }
+       source_contexts:  {
+        file:  "tests/rest_api_query_params.sysl"
+        start:  {
+         line:  3
+         col:  23
+        }
+        end:  {
+         line:  3
+         col:  32
+        }
+       }
       }
      }
      query_param:  {
@@ -99,10 +132,32 @@ apps:  {
          col:  44
         }
        }
+       source_contexts:  {
+        file:  "tests/rest_api_query_params.sysl"
+        start:  {
+         line:  3
+         col:  34
+        }
+        end:  {
+         line:  3
+         col:  44
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/rest_api_query_params.sysl"
+     start:  {
+      line:  3
+      col:  8
+     }
+     end:  {
+      line:  5
+      col:  8
+     }
+    }
+    source_contexts:  {
      file:  "tests/rest_api_query_params.sysl"
      start:  {
       line:  3
@@ -144,6 +199,17 @@ apps:  {
        col:  14
       }
      }
+     source_contexts:  {
+      file:  "tests/rest_api_query_params.sysl"
+      start:  {
+       line:  7
+       col:  14
+      }
+      end:  {
+       line:  7
+       col:  14
+      }
+     }
     }
     rest_params:  {
      method:  GET
@@ -174,10 +240,32 @@ apps:  {
          col:  23
         }
        }
+       source_contexts:  {
+        file:  "tests/rest_api_query_params.sysl"
+        start:  {
+         line:  5
+         col:  9
+        }
+        end:  {
+         line:  5
+         col:  23
+        }
+       }
       }
      }
     }
     source_context:  {
+     file:  "tests/rest_api_query_params.sysl"
+     start:  {
+      line:  6
+      col:  10
+     }
+     end:  {
+      line:  8
+      col:  10
+     }
+    }
+    source_contexts:  {
      file:  "tests/rest_api_query_params.sysl"
      start:  {
       line:  6
@@ -228,6 +316,17 @@ apps:  {
        col:  18
       }
      }
+     source_contexts:  {
+      file:  "tests/rest_api_query_params.sysl"
+      start:  {
+       line:  10
+       col:  18
+      }
+      end:  {
+       line:  10
+       col:  18
+      }
+     }
     }
     rest_params:  {
      method:  GET
@@ -237,6 +336,17 @@ apps:  {
       type:  {
        primitive:  INT
        source_context:  {
+        file:  "tests/rest_api_query_params.sysl"
+        start:  {
+         line:  9
+         col:  32
+        }
+        end:  {
+         line:  9
+         col:  38
+        }
+       }
+       source_contexts:  {
         file:  "tests/rest_api_query_params.sysl"
         start:  {
          line:  9
@@ -275,6 +385,17 @@ apps:  {
          col:  23
         }
        }
+       source_contexts:  {
+        file:  "tests/rest_api_query_params.sysl"
+        start:  {
+         line:  5
+         col:  9
+        }
+        end:  {
+         line:  5
+         col:  23
+        }
+       }
       }
      }
     }
@@ -288,9 +409,30 @@ apps:  {
       line:  11
      }
     }
+    source_contexts:  {
+     file:  "tests/rest_api_query_params.sysl"
+     start:  {
+      line:  9
+      col:  14
+     }
+     end:  {
+      line:  11
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/rest_api_query_params.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+    col:  19
+   }
+  }
+  source_contexts:  {
    file:  "tests/rest_api_query_params.sysl"
    start:  {
     line:  1

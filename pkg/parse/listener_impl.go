@@ -193,9 +193,10 @@ func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
 func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specContext) (type1, newType1 *sysl.Type) {
 	type1 = s.currentType()
 	newType1 = &sysl.Type{
-		SourceContext: type1.SourceContext,
-		Opt:           type1.Opt,
-		Attrs:         type1.Attrs,
+		SourceContext:  type1.SourceContext, //nolint:staticcheck
+		SourceContexts: type1.SourceContexts,
+		Opt:            type1.Opt,
+		Attrs:          type1.Attrs,
 	}
 	s.setCurrentType(newType1)
 
@@ -318,11 +319,6 @@ func (s *TreeShapeListener) EnterAnnotation(ctx *parser.AnnotationContext) {
 		attrs[attr_name] = &sysl.Attribute{}
 	}
 	s.annotation = attr_name
-	if t, ok := s.peekScope().(*sysl.Type); ok {
-		if t.SourceContext != nil {
-			t.SourceContext.Start.Line = int32(ctx.GetStart().GetLine())
-		}
-	}
 }
 
 // ExitAnnotation is called when production annotation is exited.
@@ -342,7 +338,6 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	if ctx.QN() != nil {
 		type1.Opt = true
 	}
-	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
 
 	if ctx.Annotations() != nil {
 		if type1.Attrs == nil {
@@ -639,7 +634,8 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 		}
 	}
 
-	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)                //nolint:staticcheck
+	type1.SourceContexts = append(type1.SourceContexts, type1.SourceContext) //nolint:staticcheck
 	if ctx.QSTRING() != nil {
 		type1.Docstring = fromQString(ctx.QSTRING().GetText())
 	}
@@ -757,7 +753,8 @@ func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
 	}
 	type1 := types[s.currentTypePath.Get()]
 	s.pushScope(type1)
-	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)                //nolint:staticcheck
+	type1.SourceContexts = append(type1.SourceContexts, type1.SourceContext) //nolint:staticcheck
 }
 
 func attributesForType(collection *sysl.Type) map[string]*sysl.Type {
@@ -854,7 +851,8 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 		}
 	}
 	s.pushScope(type1)
-	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)                //nolint:staticcheck
+	type1.SourceContexts = append(type1.SourceContexts, type1.SourceContext) //nolint:staticcheck
 }
 
 // EnterUnion_type is called when production union_type is entered.
@@ -872,7 +870,8 @@ func (s *TreeShapeListener) EnterUnion_type(ctx *parser.Union_typeContext) {
 		}
 	}
 
-	dataType.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	dataType.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)                      //nolint:staticcheck
+	dataType.SourceContexts = append(dataType.SourceContexts, dataType.SourceContext) //nolint:staticcheck
 	s.typemap[fieldName] = dataType
 }
 
@@ -920,7 +919,8 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 	}
 	sc := s.sc.Get(ctx.BaseParserRuleContext)
 	sc.Start.Col += 1
-	s.currentApp().SourceContext = sc
+	s.currentApp().SourceContext = sc //nolint:staticcheck
+	s.currentApp().SourceContexts = append(s.currentApp().SourceContexts, sc)
 }
 
 // ExitName_with_attribs is called when production name_with_attribs is exited.
@@ -990,7 +990,10 @@ func (s *TreeShapeListener) EnterQuery_var(ctx *parser.Query_varContext) {
 		rest_param.Type.Opt = true
 	}
 
+	//nolint:staticcheck
 	rest_param.Type.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	//nolint:staticcheck
+	rest_param.Type.SourceContexts = append(rest_param.Type.SourceContexts, rest_param.Type.SourceContext)
 	s.method_urlparams = append(s.method_urlparams, rest_param)
 }
 
@@ -1033,8 +1036,10 @@ func (s *TreeShapeListener) EnterHttp_path_var_with_type(ctx *parser.Http_path_v
 		Name: MustUnescape(var_name),
 		Type: type1,
 	}
-
+	//nolint:staticcheck
 	rest_param.Type.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	//nolint:staticcheck
+	rest_param.Type.SourceContexts = append(rest_param.Type.SourceContexts, rest_param.Type.SourceContext)
 
 	s.rest_urlparams = append(s.rest_urlparams, rest_param)
 	s.endpointName += ctx.CURLY_OPEN().GetText() + var_name + ctx.CURLY_CLOSE().GetText()
@@ -1087,7 +1092,8 @@ func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
 				Payload: payload,
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	})
 }
 
@@ -1139,7 +1145,8 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 				Endpoint: endpoint,
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	})
 
 	if ctx.Call_args() != nil {
@@ -1156,7 +1163,8 @@ func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
 				Stmt: []*sysl.Statement{},
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	}
 	s.addToCurrentScope(if_stmt)
 	s.pushScope(if_stmt.GetCond())
@@ -1181,7 +1189,8 @@ func (s *TreeShapeListener) EnterElse_stmt(ctx *parser.Else_stmtContext) {
 				Stmt:  []*sysl.Statement{},
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	}
 	s.addToCurrentScope(else_stmt)
 	s.pushScope(else_stmt.GetGroup())
@@ -1299,8 +1308,9 @@ func (s *TreeShapeListener) EnterOne_of_stmt(ctx *parser.One_of_stmtContext) {
 		},
 	}
 	s.addToCurrentScope(&sysl.Statement{
-		Stmt:          alt,
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		Stmt:           alt,
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	})
 	s.pushScope(alt.Alt)
 }
@@ -1332,7 +1342,8 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 					Action: str,
 				},
 			},
-			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+			SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+			SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 		})
 		s.pendingDocString = false
 	} else {
@@ -1356,7 +1367,8 @@ func (s *TreeShapeListener) EnterText_stmt(ctx *parser.Text_stmtContext) {
 						Action: "|",
 					},
 				},
-				SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+				SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+				SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 			})
 		}
 	}
@@ -1414,7 +1426,8 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 		switch t := type1.Type.(type) {
 		case *sysl.Type_Set:
 			t.Set.GetTypeRef().Context = nil
-			t.Set.SourceContext = nil
+			t.Set.SourceContext = nil //nolint:staticcheck
+			t.Set.SourceContexts = nil
 		case *sysl.Type_TypeRef:
 			t.TypeRef.Context = nil
 			ref := t.TypeRef.GetRef()
@@ -1428,7 +1441,8 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 				NoType: &sysl.Type_NoType{},
 			}
 		}
-		type1.SourceContext = nil
+		type1.SourceContext = nil //nolint:staticcheck
+		type1.SourceContexts = nil
 
 		p := sysl.Param{
 			Name: fieldname,
@@ -1641,8 +1655,9 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 			qcopy := &sysl.Endpoint_RestParams_QueryParam{
 				Name: MustUnescape(q.Name),
 				Type: &sysl.Type{
-					Type:          q.Type.Type,
-					SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+					Type:           q.Type.Type,
+					SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+					SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 				},
 			}
 			qparams = append(qparams, qcopy)
@@ -1657,7 +1672,10 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 		}
 		restEndpoint.RestParams.UrlParam = qparams
 	}
+	//nolint:staticcheck
 	restEndpoint.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	//nolint:staticcheck
+	restEndpoint.SourceContexts = append(restEndpoint.SourceContexts, restEndpoint.SourceContext)
 }
 
 // ExitMethod_def is called when production method_def is exited.
@@ -1732,7 +1750,8 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 
 		s.pushScope(s.currentApp().Endpoints[s.endpointName])
 	}
-	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)          //nolint:staticcheck
+	ep.SourceContexts = append(ep.SourceContexts, ep.SourceContext) //nolint:staticcheck
 }
 
 // ExitSimple_endpoint is called when production simple_endpoint is exited.
@@ -1786,7 +1805,8 @@ func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_
 				Endpoint: MustUnescape(ctx.Target_endpoint().GetText()),
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	})
 }
 
@@ -1801,7 +1821,8 @@ func (s *TreeShapeListener) EnterCollector_http_stmt(ctx *parser.Collector_http_
 				Action: text,
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	})
 }
 
@@ -1823,7 +1844,8 @@ func (s *TreeShapeListener) EnterCollector_pubsub_call(ctx *parser.Collector_pub
 				Endpoint: strings.TrimSpace(publisher + ctx.Name_str().GetText()),
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	})
 }
 
@@ -1836,7 +1858,8 @@ func (s *TreeShapeListener) EnterCollector_action_stmt(ctx *parser.Collector_act
 				Action: text,
 			},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	})
 }
 
@@ -1867,7 +1890,8 @@ func (s *TreeShapeListener) EnterCollector(ctx *parser.CollectorContext) {
 		}
 		s.pushScope(ep)
 	}
-	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	ep.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)          //nolint:staticcheck
+	ep.SourceContexts = append(ep.SourceContexts, ep.SourceContext) //nolint:staticcheck
 }
 
 // ExitCollector is called when production collector is exited.
@@ -1890,9 +1914,10 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 		ep := s.currentApp().Endpoints[s.endpointName]
 		if ep == nil {
 			ep = &sysl.Endpoint{
-				Name:          s.endpointName,
-				IsPubsub:      true,
-				SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+				Name:           s.endpointName,
+				IsPubsub:       true,
+				SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+				SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 			}
 			s.currentApp().Endpoints[s.endpointName] = ep
 		}
@@ -1930,10 +1955,11 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 			Part: str,
 		}
 		typeEndpoint := &sysl.Endpoint{
-			Name:          s.endpointName,
-			Source:        app_src,
-			Attrs:         map[string]*sysl.Attribute{},
-			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+			Name:           s.endpointName,
+			Source:         app_src,
+			Attrs:          map[string]*sysl.Attribute{},
+			SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+			SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 		}
 		if ctx.Attribs_or_modifiers() != nil {
 			typeEndpoint.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
@@ -1971,7 +1997,8 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 					Endpoint: s.endpointName,
 				},
 			},
-			SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+			SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+			SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 		}
 		ep.Stmt = append(ep.Stmt, stmt)
 	}
@@ -2756,7 +2783,8 @@ func (s *TreeShapeListener) EnterIf_multiple_lines(ctx *parser.If_multiple_lines
 // ExitExpr_simple_assign is called when production expr_simple_assign is exited.
 func (s *TreeShapeListener) ExitExpr_simple_assign(ctx *parser.Expr_simple_assignContext) {
 	expr := s.popExpr()
-	expr.SourceContext = s.sc.GetWithText(ctx.BaseParserRuleContext)
+	expr.SourceContext = s.sc.GetWithText(ctx.BaseParserRuleContext) //nolint:staticcheck
+	expr.SourceContexts = []*sysl.SourceContext{expr.SourceContext}  //nolint:staticcheck
 	tx := s.TopExpr().GetTransform()
 	if tx == nil {
 		fmt.Printf("%v\n", s.TopExpr())
@@ -2776,7 +2804,8 @@ func (s *TreeShapeListener) ExitExpr_simple_assign(ctx *parser.Expr_simple_assig
 // ExitExpr_let_statement is called when production expr_let_statement is exited.
 func (s *TreeShapeListener) ExitExpr_let_statement(ctx *parser.Expr_let_statementContext) {
 	expr := s.popExpr()
-	expr.SourceContext = s.sc.GetWithText(ctx.BaseParserRuleContext)
+	expr.SourceContext = s.sc.GetWithText(ctx.BaseParserRuleContext) //nolint:staticcheck
+	expr.SourceContexts = []*sysl.SourceContext{expr.SourceContext}  //nolint:staticcheck
 	tx := s.TopExpr().GetTransform()
 	if tx == nil {
 		fmt.Printf("%v", s.TopExpr())
@@ -2961,7 +2990,8 @@ func (s *TreeShapeListener) ExitTransform_return_type(ctx *parser.Transform_retu
 		expr := s.TopExpr()
 		expr.Type = type1
 		if type1.GetSet() != nil {
-			type1.SourceContext = nil
+			type1.SourceContext = nil //nolint:staticcheck
+			type1.SourceContexts = nil
 			type1 = type1.GetSet()
 		}
 		if type1.GetTypeRef() != nil {
@@ -2983,7 +3013,8 @@ func (s *TreeShapeListener) EnterView_return_type(ctx *parser.View_return_typeCo
 func (s *TreeShapeListener) ExitView_return_type(*parser.View_return_typeContext) {
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 	if type1.GetSet() != nil {
-		type1.SourceContext = nil
+		type1.SourceContext = nil //nolint:staticcheck
+		type1.SourceContexts = nil
 		type1 = type1.GetSet()
 	}
 	if type1.GetTypeRef() != nil {
@@ -3043,7 +3074,8 @@ func (s *TreeShapeListener) ExitView_param(*parser.View_paramContext) {
 
 	if type1.GetSet() != nil && type1.GetSet().GetTypeRef() != nil {
 		type1.GetSet().GetTypeRef().Context = nil
-		type1.SourceContext = nil
+		type1.SourceContext = nil //nolint:staticcheck
+		type1.SourceContexts = nil
 	}
 	if type1.GetTypeRef() != nil {
 		type1.GetTypeRef().Context = nil
@@ -3078,9 +3110,10 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 	}
 
 	s.currentApp().Views[s.viewName] = &sysl.View{
-		Param:         []*sysl.Param{},
-		RetType:       &sysl.Type{},
-		SourceContext: sc,
+		Param:          []*sysl.Param{},
+		RetType:        &sysl.Type{},
+		SourceContext:  sc,
+		SourceContexts: []*sysl.SourceContext{sc},
 	}
 	if ctx.Attribs_or_modifiers() != nil {
 		v := s.currentApp().Views[s.viewName]
@@ -3160,7 +3193,8 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 		Type: &sysl.Type_Enum_{
 			Enum: &sysl.Type_Enum{Items: items},
 		},
-		SourceContext: s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContext:  s.sc.Get(ctx.BaseParserRuleContext),
+		SourceContexts: []*sysl.SourceContext{s.sc.Get(ctx.BaseParserRuleContext)},
 	}
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		enumType.Attrs = makeAttributeArray(attribs)
@@ -3188,7 +3222,8 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 		}
 		s.pushScope(type1)
 	}
-	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)
+	type1.SourceContext = s.sc.Get(ctx.BaseParserRuleContext)                //nolint:staticcheck
+	type1.SourceContexts = append(type1.SourceContexts, type1.SourceContext) //nolint:staticcheck
 }
 
 // ExitAlias is called when production alias is exited.

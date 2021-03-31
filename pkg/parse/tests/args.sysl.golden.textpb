@@ -62,6 +62,17 @@ apps:  {
        col:  30
       }
      }
+     source_contexts:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  13
+       col:  8
+      }
+      end:  {
+       line:  13
+       col:  30
+      }
+     }
     }
     stmt:  {
      call:  {
@@ -71,6 +82,17 @@ apps:  {
       endpoint:  "PUT /foo/"
      }
      source_context:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  14
+       col:  8
+      }
+      end:  {
+       line:  14
+       col:  18
+      }
+     }
+     source_contexts:  {
       file:  "tests/args.sysl"
       start:  {
        line:  14
@@ -103,6 +125,17 @@ apps:  {
        col:  31
       }
      }
+     source_contexts:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  15
+       col:  8
+      }
+      end:  {
+       line:  15
+       col:  31
+      }
+     }
     }
     stmt:  {
      call:  {
@@ -125,8 +158,29 @@ apps:  {
        col:  41
       }
      }
+     source_contexts:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  16
+       col:  8
+      }
+      end:  {
+       line:  16
+       col:  41
+      }
+     }
     }
     source_context:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  12
+      col:  4
+     }
+     end:  {
+      line:  17
+     }
+    }
+    source_contexts:  {
      file:  "tests/args.sysl"
      start:  {
       line:  12
@@ -139,6 +193,16 @@ apps:  {
    }
   }
   source_context:  {
+   file:  "tests/args.sysl"
+   start:  {
+    line:  11
+    col:  1
+   }
+   end:  {
+    line:  11
+   }
+  }
+  source_contexts:  {
    file:  "tests/args.sysl"
    start:  {
     line:  11
@@ -175,8 +239,30 @@ apps:  {
        col:  8
       }
      }
+     source_contexts:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  3
+       col:  8
+      }
+      end:  {
+       line:  3
+       col:  8
+      }
+     }
     }
     source_context:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  2
+      col:  4
+     }
+     end:  {
+      line:  5
+      col:  4
+     }
+    }
+    source_contexts:  {
      file:  "tests/args.sysl"
      start:  {
       line:  2
@@ -218,12 +304,34 @@ apps:  {
        col:  12
       }
      }
+     source_contexts:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  7
+       col:  12
+      }
+      end:  {
+       line:  7
+       col:  12
+      }
+     }
     }
     rest_params:  {
      method:  PUT
      path:  "/foo"
     }
     source_context:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  6
+      col:  8
+     }
+     end:  {
+      line:  8
+      col:  8
+     }
+    }
+    source_contexts:  {
      file:  "tests/args.sysl"
      start:  {
       line:  6
@@ -265,6 +373,17 @@ apps:  {
        col:  16
       }
      }
+     source_contexts:  {
+      file:  "tests/args.sysl"
+      start:  {
+       line:  10
+       col:  16
+      }
+      end:  {
+       line:  10
+       col:  16
+      }
+     }
     }
     rest_params:  {
      method:  PUT
@@ -281,9 +400,30 @@ apps:  {
       col:  6
      }
     }
+    source_contexts:  {
+     file:  "tests/args.sysl"
+     start:  {
+      line:  9
+      col:  12
+     }
+     end:  {
+      line:  11
+      col:  6
+     }
+    }
    }
   }
   source_context:  {
+   file:  "tests/args.sysl"
+   start:  {
+    line:  1
+    col:  1
+   }
+   end:  {
+    line:  1
+   }
+  }
+  source_contexts:  {
    file:  "tests/args.sysl"
    start:  {
     line:  1
